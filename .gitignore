@@ -7,3 +7,37 @@ app.json
 !web/src/routes/(admin)/detections
 web/static/_internal/ffmpeg
 web/static/_internal/ffmpeg.exe
+
+# Local tooling and download caches
+.DS_Store
+.cache/
+.pytest_cache/
+.ruff_cache/
+.venv-test/
+
+# Downloaded datasets and ordinary video recordings
+/datasets/
+/videos/
+/detector/videos/
+
+# Inference caches, replay output and local identity catalogs
+/detector/benchmark-cache/
+/detector/passage-runs/
+/detector/identities/
+/web/identities
+
+# Downloaded/exported detector weights
+/detector/*.onnx
+/detector/*.pt
+/detector/*.pth
+/detector/*.safetensors
+
+# Local research reports and generated evidence
+/reports/
+/detector/reports/
+
+# Local cow identity implementation and supporting material
+/detector/docs/
+/detector/examples/
+/detector/fixtures/
+/docs/

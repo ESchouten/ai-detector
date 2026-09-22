@@ -40,7 +40,7 @@
 	let detector = $state(untrack(() => createDetectorDraft(initial)));
 	const streams = $derived(await getStreams());
 	const telegrams = $derived(await getTelegrams());
-	const presets = await getDetectorPresets();
+	const { catalogue, warning: catalogueWarning } = await getDetectorPresets();
 	const schema = await getDetectorSchema();
 	let advanced = $state(false);
 	let jsonDraft = $state('');
@@ -49,6 +49,7 @@
 	let pending = $state(false);
 	let testing = $state<string | null>(null);
 	let preset = $state('');
+	const selectedPreset = $derived(catalogue.presets.find((item) => item.id === preset));
 	let previousYolo = $state(untrack(() => detector.yolo));
 	const selectedChannels = $derived(detector.exporters.telegram ?? []);
 	const sources = $derived([
@@ -78,19 +79,20 @@
 	}
 
 	function changeDetection(enabled: boolean) {
-		if (enabled) detector.yolo = previousYolo ?? { model: 'yolo11n.pt', confidence: 0.8 };
+		if (enabled) detector.yolo = previousYolo ?? { model: '' };
 		else {
 			previousYolo = detector.yolo;
 			detector.yolo = null;
 		}
 	}
 
-	async function loadPreset(file: string) {
-		if (!file) return;
+	async function loadPreset(id: string) {
+		if (!id) return;
 		pending = true;
 		error = '';
 		try {
-			detector = applyDetectorPreset(detector, await getDetectorPreset({ file }));
+			detector = applyDetectorPreset(detector, await getDetectorPreset({ id }));
+			preset = id;
 			previousYolo = detector.yolo;
 		} catch (cause) {
 			showError(cause, 'The preset could not be loaded.');
@@ -167,6 +169,14 @@
 			Choose sources, detection rules and notification channels.
 		</p>
 	</header>
+	{#if catalogueWarning}
+		<Alert.Root variant="destructive">
+			<Alert.Title>Monitoring presets are unavailable</Alert.Title>
+			<Alert.Description>
+				{catalogueWarning} You can still edit and save the current configuration.
+			</Alert.Description>
+		</Alert.Root>
+	{/if}
 	<form class="flex w-full max-w-2xl min-w-0 flex-col gap-6" onsubmit={save}>
 		<Field.Group>
 			<Field.Field>
@@ -176,7 +186,7 @@
 					bind:value={label}
 					required
 					disabled={pending}
-					placeholder="e.g. Barn camera"
+					placeholder="e.g. Front entrance"
 				/>
 			</Field.Field>
 			<Field.Field orientation="horizontal">
@@ -212,24 +222,26 @@
 					<Field.Label for="detector-preset">Preset</Field.Label>
 					<Select.Root
 						type="single"
-						bind:value={preset}
+						value={preset}
 						onValueChange={loadPreset}
-						disabled={pending}
+						disabled={pending || Boolean(catalogueWarning)}
 					>
 						<Select.Trigger id="detector-preset" class="w-full"
-							>{preset || 'Custom configuration'}</Select.Trigger
+							>{selectedPreset?.name ?? 'Custom configuration'}</Select.Trigger
 						>
 						<Select.Content>
 							<Select.Group>
-								{#each presets as file (file)}
-									<Select.Item
-										value={file}
-										label={file.replace(/\.json$/i, '').replaceAll('-', ' ')}
-									/>
+								{#each catalogue.presets as item (item.id)}
+									<Select.Item value={item.id} label={item.name} />
 								{/each}
 							</Select.Group>
 						</Select.Content>
 					</Select.Root>
+					{#if selectedPreset}<Field.Description>{selectedPreset.description}</Field.Description
+						>{/if}
+					{#if selectedPreset?.guidance}<Field.Description
+							>{selectedPreset.guidance}</Field.Description
+						>{/if}
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="detector-sources">Sources</Field.Label>
@@ -277,6 +289,7 @@
 						<Input
 							id="detector-model"
 							bind:value={detector.yolo.model}
+							placeholder="Model name or file path"
 							required
 							disabled={pending}
 						/>

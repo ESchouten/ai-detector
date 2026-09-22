@@ -1,0 +1,19 @@
+{
+    "defaultPreset": "general",
+    "presets": [
+        {
+            "id": "calving",
+            "name": "Calving signs",
+            "description": "Watch for signs of calving.",
+            "guidance": "Keep the cow’s rear and the floor behind her clearly visible. Detection can miss events; keep your usual animal checks.",
+            "configuration": "detector/calving-catcher.json"
+        },
+        {
+            "id": "mounts",
+            "name": "Cow mounting behaviour",
+            "description": "Watch for cow mounting behaviour.",
+            "guidance": "Use a clear side view with the animals’ full bodies visible.",
+            "configuration": "detector/cow-catcher.json"
+        }
+    ]
+}

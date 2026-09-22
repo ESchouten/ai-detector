@@ -1,3 +1,4 @@
+import { readTestPresets } from './support/presets.ts';
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
 import fs, { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
@@ -11,7 +12,7 @@ import {
 	configurationSchema
 } from '../src/lib/configuration.ts';
 import { DEFAULT_SCHEMA_URL, type DetectorConfig, type StreamMeta } from '../src/lib/schema.ts';
-import { getEditorSchema } from '../src/lib/server/configuration/presets.ts';
+import { getEditorSchema } from '../src/lib/server/configuration/editor-schema.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
 import { configurationAction } from '../src/lib/server/configuration/request.ts';
 import { isHttpError } from '@sveltejs/kit';
@@ -33,7 +34,7 @@ async function fixture(
 	};
 	await writeJson(files.config, config);
 	await writeJson(files.app, app);
-	return { files, store: new ConfigurationStore(files) };
+	return { files, store: new ConfigurationStore(files, readTestPresets) };
 }
 
 test('scalar/list input normalizes without dropping detector or exporter options', () => {
@@ -219,7 +220,7 @@ test('concurrent edits are serialized from read through apply and rejected write
 			throw error;
 		}
 	};
-	const store = new ConfigurationStore(files, () => runtime);
+	const store = new ConfigurationStore(files, readTestPresets, () => runtime);
 	const first = store.saveDetector({ detector, meta: { label: 'First' } });
 	await validating;
 	const second = store.saveDetector({
@@ -241,7 +242,7 @@ test('concurrent edits are serialized from read through apply and rejected write
 test('runtime validation happens before writing either configuration file', async (t) => {
 	const { files } = await fixture(t);
 	const before = await Promise.all([readFile(files.config, 'utf8'), readFile(files.app, 'utf8')]);
-	const store = new ConfigurationStore(files, () => ({
+	const store = new ConfigurationStore(files, readTestPresets, () => ({
 		async validate() {
 			throw new Error('Model is unavailable');
 		},
@@ -281,7 +282,7 @@ test('a configuration staging failure leaves both settings files unchanged', asy
 		return write(...args);
 	});
 	await assert.rejects(
-		store.saveCamera({ source, label: 'Barn', preset: 'general' }),
+		store.saveCamera({ source, label: 'Barn', mode: 'preset', preset: 'general' }),
 		(error) => error === failure
 	);
 	assert.deepEqual(await Promise.all([readFile(files.app), readFile(files.config)]), before);
@@ -296,7 +297,7 @@ for (const existingApp of [true, false]) {
 		const previousApp = existingApp ? await readFile(files.app) : null;
 		const previousConfig = await readFile(files.config);
 		let applied = 0;
-		const store = new ConfigurationStore(files, () => ({
+		const store = new ConfigurationStore(files, readTestPresets, () => ({
 			async validate() {},
 			async apply() {
 				applied++;
@@ -319,7 +320,7 @@ for (const existingApp of [true, false]) {
 			}
 		);
 		await assert.rejects(
-			store.saveCamera({ source, label: 'Barn', preset: 'general' }),
+			store.saveCamera({ source, label: 'Barn', mode: 'preset', preset: 'general' }),
 			(error) => error === failure
 		);
 		assert.equal(applied, 0);
@@ -331,7 +332,7 @@ for (const existingApp of [true, false]) {
 			existingApp ? ['app.json', 'config.json'] : ['config.json']
 		);
 		replacement.mock.restore();
-		await store.saveCamera({ source, label: 'Barn', preset: 'general' });
+		await store.saveCamera({ source, label: 'Barn', mode: 'preset', preset: 'general' });
 		assert.equal(applied, 1);
 		const saved = await store.read();
 		assert.equal(saved.app.streams.length, 1);
@@ -356,13 +357,16 @@ test('a rollback failure is explicit and retains the previous metadata for recov
 			return rename(from, to);
 		}
 	);
-	await assert.rejects(store.saveCamera({ source, label: 'Barn', preset: 'general' }), (error) => {
-		assert.ok(error instanceof AggregateError);
-		assert.deepEqual(error.errors, [commitFailure, rollbackFailure]);
-		assert.equal(error.cause, commitFailure);
-		assert.match(error.message, /Recovery is required/);
-		return true;
-	});
+	await assert.rejects(
+		store.saveCamera({ source, label: 'Barn', mode: 'preset', preset: 'general' }),
+		(error) => {
+			assert.ok(error instanceof AggregateError);
+			assert.deepEqual(error.errors, [commitFailure, rollbackFailure]);
+			assert.equal(error.cause, commitFailure);
+			assert.match(error.message, /Recovery is required/);
+			return true;
+		}
+	);
 	assert.deepEqual(await readFile(files.config), previousConfig);
 	const backups = (await readdir(path.dirname(files.app))).filter((file) =>
 		file.endsWith('.previous')
@@ -381,7 +385,12 @@ test('cleanup failure is logged without misreporting a committed save as failed'
 		return remove(...args);
 	});
 	const logged = t.mock.method(console, 'error', () => {});
-	const camera = await store.saveCamera({ source, label: 'Barn', preset: 'general' });
+	const camera = await store.saveCamera({
+		source,
+		label: 'Barn',
+		mode: 'preset',
+		preset: 'general'
+	});
 	const saved = await store.read();
 	assert.equal(saved.app.streams[0].id, camera.id);
 	assert.equal(saved.config.detectors.length, 1);
@@ -398,7 +407,7 @@ test('a committed camera save succeeds while an apply failure is reported to run
 	const { files } = await fixture(t, { detectors: [] });
 	const failure = new Error('Detector could not restart');
 	const reported: unknown[] = [];
-	const store = new ConfigurationStore(files, () => ({
+	const store = new ConfigurationStore(files, readTestPresets, () => ({
 		async validate() {},
 		async apply() {
 			throw failure;
@@ -410,14 +419,19 @@ test('a committed camera save succeeds while an apply failure is reported to run
 			reported.push(error);
 		}
 	}));
-	const camera = await store.saveCamera({ source, label: 'Barn', preset: 'general' });
+	const camera = await store.saveCamera({
+		source,
+		label: 'Barn',
+		mode: 'preset',
+		preset: 'general'
+	});
 	assert.equal(camera.monitored, true);
 	assert.deepEqual(reported, [failure]);
 	const saved = await store.read();
 	assert.equal(saved.app.streams[0].id, camera.id);
 	assert.deepEqual(saved.config.detectors[0].detection.source, [source]);
 	assert.equal(saved.app.streams.length, 1);
-	await store.saveCamera({ id: camera.id, source, label: 'Renamed barn', preset: 'keep' });
+	await store.saveCamera({ id: camera.id, source, label: 'Renamed barn', mode: 'keep' });
 	assert.deepEqual(reported, [failure]);
 	assert.equal((await store.read()).app.streams[0].label, 'Renamed barn');
 });
@@ -429,7 +443,7 @@ test('failed managed stop settings remain visible without rejecting the saved em
 	// An occupied path reproduces an actual filesystem rejection in stop(), without
 	// launching a child process or depending on platform-specific permission behavior.
 	await mkdir(path.join(directory, 'runtime.json'));
-	const store = new ConfigurationStore(files, () => runtime);
+	const store = new ConfigurationStore(files, readTestPresets, () => runtime);
 	await store.deleteDetector('Detector 1');
 	assert.deepEqual((await store.read()).config.detectors, []);
 	assert.deepEqual((await store.read()).app.detectors, []);
@@ -445,7 +459,7 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 	});
 	const before = await readFile(files.config, 'utf8');
 	const calls: string[] = [];
-	const store = new ConfigurationStore(files, () => ({
+	const store = new ConfigurationStore(files, readTestPresets, () => ({
 		async validate() {
 			calls.push('validate');
 		},
@@ -527,7 +541,12 @@ test('advanced detection changes invalidate an inherited preset without losing c
 	for (const { name, change } of changes) {
 		await t.test(name, async (t) => {
 			const { store } = await fixture(t, { detectors: [] });
-			const camera = await store.saveCamera({ label: 'Barn', source, preset: 'calving' });
+			const camera = await store.saveCamera({
+				label: 'Barn',
+				source,
+				mode: 'preset',
+				preset: 'calving'
+			});
 			const original = await store.read();
 			const changed = structuredClone(original.config.detectors[0]);
 			change(changed);
@@ -548,7 +567,12 @@ test('advanced detection changes invalidate an inherited preset without losing c
 
 test('renaming or changing delivery settings keeps the monitoring preset and camera identity', async (t) => {
 	const { store } = await fixture(t, { detectors: [] });
-	const camera = await store.saveCamera({ label: 'Barn', source, preset: 'calving' });
+	const camera = await store.saveCamera({
+		label: 'Barn',
+		source,
+		mode: 'preset',
+		preset: 'calving'
+	});
 	const original = (await store.read()).config.detectors[0];
 	await store.saveDetector({
 		original: 'Barn',
@@ -589,7 +613,7 @@ test('metadata-only first save still creates the missing empty configuration', a
 test('deleting the last detector saves the empty setup and stops managed detection', async (t) => {
 	const { files } = await fixture(t);
 	let stopped = 0;
-	const store = new ConfigurationStore(files, () => ({
+	const store = new ConfigurationStore(files, readTestPresets, () => ({
 		async validate() {
 			assert.fail('Empty setup is not executable configuration');
 		},
@@ -696,8 +720,8 @@ test('concurrent camera additions each save their rules and preserve notificatio
 		}
 	);
 	const results = await Promise.allSettled([
-		store.saveCamera({ label: 'Barn', source, preset: 'general' }),
-		store.saveCamera({ label: 'Second', source: other, preset: 'general' })
+		store.saveCamera({ label: 'Barn', source, mode: 'preset', preset: 'general' }),
+		store.saveCamera({ label: 'Second', source: other, mode: 'preset', preset: 'general' })
 	]);
 	assert.deepEqual(
 		results.map((item) => item.status),

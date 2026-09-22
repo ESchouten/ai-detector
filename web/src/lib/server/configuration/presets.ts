@@ -1,79 +1,27 @@
-import * as v from 'valibot';
-import type { AppConfig, Config, DetectorConfig } from '../../schema.ts';
-import { DEFAULT_SCHEMA_URL } from '../../schema.ts';
-import { configurationSchema } from '../../configuration.ts';
-import calving from '../../../../../config/detector/calving-catcher.json' with { type: 'json' };
-import mounts from '../../../../../config/detector/cow-catcher.json' with { type: 'json' };
+import path from 'node:path';
+import catalog from '../../../../../config/presets.json' with { type: 'json' };
+import { ConfigurationError } from '../../configuration.ts';
+import { DATA_DIRECTORY } from '../application-paths.ts';
+import { readPresetJson, resolvePresetCatalog } from './preset-catalog.ts';
 
-export const detectorPresets: Record<string, DetectorConfig> = {
-	'calving-catcher.json': {
-		...calving,
-		detection: { ...calving.detection, source: [] },
-		exporters: { disk: [calving.exporters.disk] }
-	},
-	'cow-catcher.json': {
-		...mounts,
-		detection: { source: [] },
-		exporters: { disk: [mounts.exporters.disk] }
-	}
-};
-
-const editorSchema = v.looseObject({
-	$defs: v.looseObject({ DetectorConfig: v.record(v.string(), v.unknown()) })
+const bundledConfigurations = import.meta.glob('../../../../../config/detector/*.json', {
+	eager: true,
+	import: 'default'
 });
 
-export async function getEditorSchema(schemaUrl?: string | null) {
-	if (!schemaUrl || schemaUrl === DEFAULT_SCHEMA_URL) return configurationSchema;
-	try {
-		const response = await fetch(schemaUrl, { signal: AbortSignal.timeout(10000) });
-		if (!response.ok) return configurationSchema;
-		return v.parse(editorSchema, await response.json());
-	} catch {
-		return configurationSchema;
+export async function readPresetCatalog() {
+	const override = process.env.AIDETECTOR_PRESETS;
+	const file = override ? path.resolve(override) : path.join(DATA_DIRECTORY, 'presets.json');
+	const definition = await readPresetJson(file, !override);
+	if (definition === undefined) {
+		return resolvePresetCatalog(catalog, async (configuration) => {
+			const key = `../../../../../config/${configuration}`;
+			if (!Object.hasOwn(bundledConfigurations, key))
+				throw new ConfigurationError(`Bundled preset configuration "${configuration}" is missing.`);
+			return bundledConfigurations[key];
+		});
 	}
-}
-
-export const setupInput = v.object({
-	label: v.pipe(v.string(), v.trim(), v.minLength(1, 'Give this camera a name.')),
-	source: v.pipe(
-		v.string(),
-		v.trim(),
-		v.check((value) => {
-			try {
-				const url = new URL(value);
-				return ['rtsp:', 'rtsps:', 'http:', 'https:'].includes(url.protocol) && !!url.hostname;
-			} catch {
-				return false;
-			}
-		}, 'Enter the camera’s RTSP or HTTP stream address.')
-	),
-	preset: v.picklist(['calving', 'mounts', 'general'])
-});
-
-export function initialSetup(input: v.InferOutput<typeof setupInput>): {
-	config: Config;
-	app: AppConfig;
-} {
-	const preset =
-		input.preset === 'calving'
-			? calving
-			: input.preset === 'mounts'
-				? mounts
-				: {
-						yolo: { model: 'yolo11n.pt', confidence: 0.5, frames_min: 3 },
-						exporters: { disk: {} }
-					};
-	const detector: DetectorConfig = {
-		...preset,
-		detection: { ...('detection' in preset ? preset.detection : {}), source: [input.source] },
-		exporters: { disk: [preset.exporters.disk] }
-	};
-	return {
-		config: { detectors: [detector] },
-		app: {
-			streams: [{ label: input.label, source: input.source }],
-			telegrams: [],
-			detectors: [{ label: input.label }]
-		}
-	};
+	return resolvePresetCatalog(definition, (configuration) =>
+		readPresetJson(path.resolve(path.dirname(file), configuration))
+	);
 }

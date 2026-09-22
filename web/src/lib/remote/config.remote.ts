@@ -2,7 +2,7 @@ import { configurationAction } from '$lib/server/configuration/request';
 import { command, query } from '$app/server';
 import * as v from 'valibot';
 import { configuration } from '$lib/server/configuration';
-import { getEditorSchema } from '$lib/server/configuration/presets';
+import { getEditorSchema } from '$lib/server/configuration/editor-schema';
 
 export const getConfig = query(() => configuration.read());
 

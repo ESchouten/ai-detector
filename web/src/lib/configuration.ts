@@ -9,7 +9,7 @@ const text = v.pipe(v.string(), v.trim(), v.minLength(1));
 export const detectorMeta = v.object({
 	label: text,
 	cameraId: v.optional(text),
-	preset: v.optional(v.picklist(['calving', 'mounts', 'general']))
+	preset: v.optional(text)
 });
 export const cameraConnectionMeta = v.object({
 	address: v.pipe(
@@ -83,17 +83,26 @@ const cameraDetails = {
 	checkId: v.optional(text),
 	connection: v.optional(v.nullable(cameraConnectionMeta))
 };
-export const cameraInput = v.variant('preset', [
+export const cameraInput = v.variant('mode', [
 	v.object({
 		...cameraDetails,
 		id: v.optional(text),
-		preset: v.picklist(['calving', 'mounts', 'general', 'view-only', 'keep']),
+		mode: v.literal('preset'),
+		preset: text,
 		copyFromCameraId: v.optional(v.never('Choose either a watched event or an existing camera.'))
 	}),
 	v.object({
 		...cameraDetails,
+		id: v.optional(text),
+		mode: v.picklist(['view-only', 'keep']),
+		preset: v.optional(v.never('Choose a preset only when changing monitoring settings.')),
+		copyFromCameraId: v.optional(v.never('Choose an existing camera only when copying settings.'))
+	}),
+	v.object({
+		...cameraDetails,
 		id: v.optional(v.never('Copy monitoring settings when adding a new camera.')),
-		preset: v.literal('copy'),
+		mode: v.literal('copy'),
+		preset: v.optional(v.never('Choose either a preset or an existing camera.')),
 		copyFromCameraId: text
 	})
 ]);

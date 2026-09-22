@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { execFile, spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { createServer, request } from 'node:http';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
@@ -74,6 +74,7 @@ async function startServer(t, origin) {
 		'HOST_HEADER',
 		'PORT_HEADER',
 		'SOCKET_PATH',
+		'AIDETECTOR_PRESETS',
 		'LISTEN_PID',
 		'LISTEN_FDS'
 	])
@@ -163,12 +164,38 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 				deployment === 'HTTPS proxy' ? 'https://detector.example.test' : undefined;
 			const { directory, base, stop, logs } = await startServer(t, publicOrigin);
 			const source = await cameraSource(t, directory);
-			const cameraInput = { label: 'Barn camera', source, preset: 'general' };
+			await writeFile(
+				path.join(directory, 'presets.json'),
+				JSON.stringify({
+					defaultPreset: 'copy',
+					presets: [
+						{
+							id: 'copy',
+							name: 'Workshop safety',
+							description: 'Watch the work area.',
+							guidance: 'Keep the entrance visible.',
+							configuration: 'workshop.json'
+						}
+					]
+				})
+			);
+			await writeFile(
+				path.join(directory, 'workshop.json'),
+				JSON.stringify({
+					yolo: { model: 'safety.onnx', confidence: { helmet: 0.75 } },
+					exporters: { disk: { directory: 'safety' } }
+				})
+			);
+			const cameraInput = { label: 'Workshop camera', source, mode: 'preset', preset: 'copy' };
 			const host = deployment === 'LAN HTTP' ? 'barn.local:8080' : new URL(base).host;
 			const origin = publicOrigin ?? `http://${host}`;
 			const page = await send(`${base}/setup`, { headers: { Host: host } });
 			assert.equal(page.status, 200);
-			assert.ok((await page.text()).includes('<title>Setup · AI Detector</title>'));
+			const html = await page.text();
+			assert.ok(html.includes('<title>Setup · AI Detector</title>'));
+			assert.ok(html.includes('Workshop safety'));
+			assert.ok(html.includes('Keep the entrance visible.'));
+			assert.ok(!html.includes('Calving signs'));
 			const headers = {
 				Host: host,
 				Origin: origin,
@@ -210,7 +237,12 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			assert.equal((await saved.json()).type, 'result');
 			const config = JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8'));
 			assert.deepEqual(config.detectors[0].detection.source, [source]);
+			assert.deepEqual(config.detectors[0].yolo, {
+				model: 'safety.onnx',
+				confidence: { helmet: 0.75 }
+			});
 			const app = JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8'));
+			assert.equal(app.detectors[0].preset, 'copy');
 			const archiveCheck = `${base}/cameras/${app.streams[0].id}/archive-check`;
 			const rejectedArchive = await send(archiveCheck, {
 				method: 'POST',
@@ -272,7 +304,12 @@ test(
 			assert.equal(response.status, 200, await response.clone().text());
 			return response.json();
 		}
-		const unverified = await command('saveCamera', { label: 'Pen', source, preset: 'general' });
+		const unverified = await command('saveCamera', {
+			label: 'Pen',
+			source,
+			mode: 'preset',
+			preset: 'general'
+		});
 		assert.equal(unverified.type, 'error');
 		assert.equal(unverified.status, 400);
 		await assert.rejects(readFile(path.join(directory, 'config.json')), { code: 'ENOENT' });
@@ -303,6 +340,7 @@ test(
 		const saved = await command('saveCamera', {
 			label: 'Pen',
 			source: result.source,
+			mode: 'preset',
 			preset: 'general',
 			checkId: result.checkId
 		});
@@ -312,7 +350,7 @@ test(
 			id,
 			label: 'Calving pen',
 			source: result.source,
-			preset: 'keep'
+			mode: 'keep'
 		});
 		assert.equal(renamed.type, 'result', JSON.stringify(renamed));
 		const other = await checkCamera(source + '-yard');
@@ -321,6 +359,7 @@ test(
 				await command('saveCamera', {
 					label: 'Yard',
 					source: other.source,
+					mode: 'preset',
 					preset: 'general',
 					checkId: other.checkId
 				})
@@ -340,5 +379,84 @@ test(
 		const html = await page.text();
 		assert.ok(html.includes('Calving pen') && html.includes('Yard'));
 		assert.ok(!html.includes(`/streams/${encodeURIComponent(source)}`));
+	}
+);
+
+test(
+	'production saved cameras remain editable when a referenced preset file becomes invalid',
+	{ skip: process.platform === 'win32', timeout: 20000 },
+	async (t) => {
+		const { directory, base } = await startServer(t);
+		const source = 'rtsp://camera.example.test/workshop';
+		const cameraId = 'workshop-camera';
+		const detector = {
+			detection: { source: [source], interval: 2 },
+			yolo: { model: 'workshop-safety.onnx', confidence: { helmet: 0.75 } },
+			exporters: { disk: [{ directory: 'workshop-recordings' }] }
+		};
+		const detectorMeta = { label: 'Workshop rule', cameraId, preset: 'workshop' };
+		const configPath = path.join(directory, 'config.json');
+		const configText = JSON.stringify({ detectors: [detector] });
+		const templatePath = path.join(directory, 'workshop.json');
+		await Promise.all([
+			writeFile(configPath, configText),
+			writeFile(
+				path.join(directory, 'app.json'),
+				JSON.stringify({
+					streams: [{ id: cameraId, label: 'Workshop camera', source }],
+					detectors: [detectorMeta],
+					telegrams: []
+				})
+			),
+			writeFile(
+				path.join(directory, 'presets.json'),
+				JSON.stringify({
+					defaultPreset: 'workshop',
+					presets: [
+						{
+							id: 'workshop',
+							name: 'Workshop safety',
+							description: 'Watch the work area.',
+							configuration: 'workshop.json'
+						}
+					]
+				})
+			),
+			writeFile(templatePath, JSON.stringify(detector))
+		]);
+		const before = await send(`${base}/streams`);
+		assert.equal(before.status, 200);
+		assert.ok((await before.text()).includes('Workshop safety'));
+		await writeFile(templatePath, '{"yolo":');
+		for (const [route, savedValue] of [
+			['/streams', 'Workshop camera'],
+			[`/streams/add?id=${cameraId}`, 'Workshop camera'],
+			['/detectors/add?label=Workshop%20rule', 'workshop-safety.onnx']
+		]) {
+			const response = await send(base + route);
+			const html = await response.text();
+			assert.equal(response.status, 200, `${route}: ${html}`);
+			assert.match(html, /Monitoring preset(?: names|s) are unavailable/, route);
+			assert.ok(html.includes(savedValue), `${route} must retain ${savedValue}`);
+		}
+		const renamed = await send(base + commands.saveCamera, {
+			method: 'POST',
+			headers: {
+				Origin: base,
+				'Content-Type': 'application/json',
+				'x-sveltekit-pathname': '/streams/add',
+				'x-sveltekit-search': `?id=${cameraId}`
+			},
+			body: commandBody({ id: cameraId, label: 'Main workshop', source, mode: 'keep' })
+		});
+		assert.equal(renamed.status, 200, await renamed.clone().text());
+		const result = await renamed.json();
+		assert.equal(result.type, 'result', JSON.stringify(result));
+		assert.deepEqual(parse(result.result), { id: cameraId, monitored: true });
+		assert.equal(await readFile(configPath, 'utf8'), configText);
+		const app = JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8'));
+		assert.deepEqual(app.streams, [{ id: cameraId, label: 'Main workshop', source }]);
+		assert.deepEqual(app.detectors, [detectorMeta]);
+		await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
 	}
 );

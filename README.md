@@ -1,6 +1,6 @@
 # AI Detector
 
-Watch farm cameras, detect events locally, and review recordings in your browser. Optional Telegram alerts and AI verification are available in the settings.
+Watch cameras, detect configured events locally, and review recordings in your browser. Models, watched classes and event rules are configurable. Optional Telegram alerts and AI verification are available in the settings.
 
 For a visual explanation of how the application works, see the [system overview and diagrams](SYSTEM_OVERVIEW.md) (Dutch), from the web app and detector to the event-processing flow and domain model.
 
@@ -12,6 +12,8 @@ For a visual explanation of how the application works, see the [system overview 
 4. Confirm the camera picture and choose what to watch for. Setup remembers your progress, checks the recording location and confirms current monitoring. Connect Telegram alerts or choose **No alerts for now**, then finish.
 
 Telegram setup opens BotFather with the creation command prepared. After pasting its token once, open the verified bot link or scan its QR code, choose Start in Telegram, and confirm a test alert. Adding another camera offers your existing recipients; changing a recipient name or camera assignment does not require another connection test. **Finish setup** resumes an incomplete camera setup after reopening the application.
+
+Setup choices come from a [configurable preset catalogue](config/README.md). The included general and cattle presets are examples; an installation can supply its own models, names, guidance and default without changing application code or rebuilding the executable. Existing cameras retain their saved settings when the catalogue changes.
 
 Closing the browser leaves monitoring active. Open **AI Detector** again to return to its dashboard; a verified second launch reuses the existing application. **Pause monitoring** keeps monitoring paused on future launches. Quitting the application stops it for the current session and preserves the enabled choice for next launch. Keep the computer awake while monitoring is needed.
 
@@ -52,7 +54,7 @@ That deployment uses separately managed containers; the browser cannot start or 
 
 ### Start automatically on a Jetson or Linux desktop
 
-For an installed **JetPack 6** system with Docker Compose and the NVIDIA Container Runtime available, run this once from the repository folder, as the account the farmer uses on the desktop:
+For an installed **JetPack 6** system with Docker Compose and the NVIDIA Container Runtime available, run this once from the repository folder, as the account used on the desktop:
 
 ```sh
 python3 distribution/linux_startup.py install --compose example/compose.jetson.yml

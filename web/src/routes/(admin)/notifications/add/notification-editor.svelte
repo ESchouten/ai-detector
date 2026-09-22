@@ -21,7 +21,7 @@
 		cameraId = ''
 	}: { originalLabel: string; initial?: TelegramMeta; cameraId?: string } = $props();
 	const cameras = await getCameras();
-	let label = $state(untrack(() => initial?.label ?? 'Farm alerts'));
+	let label = $state(untrack(() => initial?.label ?? 'My phone'));
 	let token = $state(untrack(() => initial?.token ?? ''));
 	let chat = $state(untrack(() => initial?.chat ?? ''));
 	let cameraIds = $state(untrack(() => recipientCameraIds(cameras, originalLabel, cameraId)));
@@ -122,7 +122,7 @@
 							bind:value={label}
 							disabled={pending}
 							required
-							placeholder="e.g. Farmer’s phone"
+							placeholder="e.g. My phone"
 						/></Field.Field
 					>
 					<TelegramConnection

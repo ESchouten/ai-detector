@@ -11,10 +11,10 @@ import type {
 	Configuration,
 	DetectorConfig,
 	DetectorMeta,
+	DetectorPreset,
 	StreamMeta,
 	TelegramMeta
 } from '../../schema.ts';
-import { initialSetup } from './presets.ts';
 
 export function identifyCameras(document: Configuration): Configuration {
 	for (const stream of document.app.streams) {
@@ -110,7 +110,7 @@ function updateCameraMetadata(
 	if (input.connection === null) delete camera.connection;
 	else if (input.connection) camera.connection = input.connection;
 	if (pictureVerifiedAt) camera.setup = { ...camera.setup, pictureVerifiedAt };
-	if (camera.setup && input.preset !== 'keep') {
+	if (camera.setup && input.mode !== 'keep') {
 		delete camera.setup.archiveVerifiedAt;
 		delete camera.setup.archiveSignature;
 		delete camera.setup.completedAt;
@@ -119,11 +119,24 @@ function updateCameraMetadata(
 	Object.assign(camera, { label: input.label, source: input.source });
 }
 
+function monitoringForCamera(input: v.InferOutput<typeof cameraInput>, preset?: DetectorPreset) {
+	if (input.mode !== 'preset') return;
+	if (!preset || preset.id !== input.preset)
+		throw new ConfigurationError(
+			'This monitoring preset is no longer available. Choose another preset, or keep the current monitoring settings.'
+		);
+	const detector = structuredClone(preset.detector);
+	detector.detection.source = [input.source];
+	return { id: preset.id, detector };
+}
+
 export function saveCamera(
 	document: Configuration,
 	input: v.InferOutput<typeof cameraInput>,
+	preset?: DetectorPreset,
 	pictureVerifiedAt?: string
 ) {
+	const monitoring = monitoringForCamera(input, preset);
 	const existing = input.id
 		? document.app.streams.find((stream) => stream.id === input.id)
 		: undefined;
@@ -132,10 +145,10 @@ export function saveCamera(
 		throw new ConfigurationError('This camera is already saved. Edit it from Cameras.');
 	if (document.app.streams.some((stream) => stream !== existing && stream.label === input.label))
 		throw new ConfigurationError('A camera with this name already exists. Choose another name.');
-	if (!existing && input.preset === 'keep')
+	if (!existing && input.mode === 'keep')
 		throw new ConfigurationError('Choose what this camera should watch for.');
 	const copiedRules =
-		input.preset === 'copy' ? monitoringToCopy(document, input.copyFromCameraId) : [];
+		input.mode === 'copy' ? monitoringToCopy(document, input.copyFromCameraId) : [];
 	const camera: StreamMeta = existing ?? { source: input.source };
 	const previousSource = camera.source;
 	updateCameraMetadata(camera, input, pictureVerifiedAt);
@@ -145,25 +158,21 @@ export function saveCamera(
 		detector.detection.source = detector.detection.source.map((source) =>
 			source === previousSource ? input.source : source
 		);
-	if (input.preset === 'copy') {
+	if (input.mode === 'copy') {
 		addCopiedMonitoring(document, copiedRules, input.source, {
 			label: input.label,
 			cameraId: camera.id
 		});
-	} else if (input.preset !== 'keep') {
+	} else if (input.mode !== 'keep') {
 		const previous = detachCamera(document, input.source);
-		if (input.preset !== 'view-only') {
-			const detector = initialSetup({
-				label: input.label,
-				source: input.source,
-				preset: input.preset
-			}).config.detectors[0];
+		if (monitoring) {
+			const detector = monitoring.detector;
 			preserveDeliverySettings(detector, previous);
 			document.config.detectors.push(detector);
 			document.app.detectors.push({
 				label: availableLabel(document, input.label),
 				cameraId: camera.id,
-				preset: input.preset
+				preset: monitoring.id
 			});
 		}
 	}

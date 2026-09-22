@@ -2,11 +2,50 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
 	applyDetectorPreset,
+	cameraMonitoringChoice,
+	cameraRuleNames,
 	createDetectorDraft,
 	parseDetectorDraft,
 	selectTelegram
 } from '../src/lib/detector-editor.ts';
 import type { DetectorConfig, TelegramConfig } from '../src/lib/schema.ts';
+
+test('camera rule descriptions use catalogue names and preserve removed or custom rule labels', () => {
+	const rules = [
+		{ label: 'Saved entrance rule', preset: 'entry' },
+		{ label: 'Legacy delivery rule', preset: 'removed' },
+		{ label: 'Custom rule' }
+	];
+	const presets = [{ id: 'entry', name: 'Entrance activity', description: 'Watch the entrance.' }];
+	assert.equal(
+		cameraRuleNames(rules, presets),
+		'Entrance activity, Legacy delivery rule, Custom rule'
+	);
+	assert.equal(
+		cameraRuleNames(rules, []),
+		'Saved entrance rule, Legacy delivery rule, Custom rule'
+	);
+});
+
+test('catalogue preset IDs do not collide with camera actions', () => {
+	for (const id of ['keep', 'copy', 'view-only', 'warehouse-entrance', 'custom:delivery']) {
+		assert.deepEqual(cameraMonitoringChoice(`preset:${id}`), { mode: 'preset', preset: id });
+	}
+	for (const mode of ['keep', 'copy', 'view-only']) {
+		assert.deepEqual(cameraMonitoringChoice(mode), { mode });
+	}
+});
+
+test('monitoring requires an explicit selection and accepts saved arbitrary preset IDs', () => {
+	for (const selection of ['', 'preset:', 'unknown-action']) {
+		assert.equal(cameraMonitoringChoice(selection), undefined);
+	}
+	const restored = JSON.parse(JSON.stringify({ monitoringSelection: 'preset:custom-camera-rule' }));
+	assert.deepEqual(cameraMonitoringChoice(restored.monitoringSelection), {
+		mode: 'preset',
+		preset: 'custom-camera-rule'
+	});
+});
 
 for (const yolo of [undefined, null]) {
 	test(`opening a snapshot detector preserves yolo=${String(yolo)} and isolates edits`, () => {
@@ -79,7 +118,17 @@ test('new detectors receive their own source and archive settings', () => {
 	const second = createDetectorDraft();
 	assert.deepEqual(second.detection.source, []);
 	assert.deepEqual(second.exporters.disk, [{}]);
-	assert.equal(second.yolo?.model, 'yolo11n.pt');
+	assert.deepEqual(second.yolo, { model: '' });
+});
+
+test('new custom detectors require an explicit model and do not invent model thresholds', () => {
+	const draft = createDetectorDraft();
+	draft.detection.source.push('rtsp://camera.example/entrance');
+	assert.throws(() => parseDetectorDraft(JSON.stringify(draft)));
+	draft.yolo!.model = 'custom-entrance-model.pt';
+	const valid = parseDetectorDraft(JSON.stringify(draft));
+	assert.deepEqual(valid.yolo, { model: 'custom-entrance-model.pt' });
+	assert.deepEqual(valid.detection.source, ['rtsp://camera.example/entrance']);
 });
 
 test('changing a preset preserves sources, notification recipients and custom delivery settings', () => {

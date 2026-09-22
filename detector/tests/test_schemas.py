@@ -23,6 +23,28 @@ def test_schema_validates_example_and_offline_template():
         Config.model_validate(document)
 
 
+@pytest.mark.parametrize(
+    "path",
+    sorted((ROOT / "config" / "detector").glob("*.json")),
+    ids=lambda path: path.stem,
+)
+def test_detector_presets_satisfy_the_canonical_contract_after_source_binding(path):
+    preset = json.loads(path.read_text(encoding="utf-8"))
+    document = {
+        "detectors": [
+            {
+                **preset,
+                "detection": {
+                    **preset.get("detection", {}),
+                    "source": ["rtsp://preset.invalid/stream"],
+                },
+            }
+        ]
+    }
+    Draft202012Validator(schemas()["config.schema.json"]).validate(document)
+    Config.model_validate(document)
+
+
 @pytest.mark.parametrize("source", [[], "", " ", ["camera", "camera"]])
 def test_schema_rejects_invalid_sources_at_the_external_boundary(source):
     validator = Draft202012Validator(schemas()["config.schema.json"])

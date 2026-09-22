@@ -1,3 +1,4 @@
+import { readTestPresets } from './support/presets.ts';
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
@@ -8,6 +9,8 @@ import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { alertsInput, cameraInput } from '../src/lib/configuration.ts';
 import { saveCamera as saveCameraDocument } from '../src/lib/server/configuration/cameras.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
+import { loadPresetCatalog } from '../src/lib/server/configuration/preset-catalog.ts';
+import type { PresetCatalog } from '../src/lib/schema.ts';
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'camera-setup-'));
@@ -16,19 +19,29 @@ async function fixture(t: TestContext) {
 		config: path.join(directory, 'config.json'),
 		app: path.join(directory, 'app.json')
 	};
-	return { files, store: new ConfigurationStore(files) };
+	return { files, store: new ConfigurationStore(files, readTestPresets) };
 }
 const first = 'rtsp://first.example.test/live';
 const second = 'rtsp://second.example.test/live';
 
 test('first and additional cameras are assigned actual monitoring rules; view-only is explicit', async (t) => {
 	const { store } = await fixture(t);
-	const one = await store.saveCamera({ label: 'Calving pen', source: first, preset: 'calving' });
-	const two = await store.saveCamera({ label: 'Yard', source: second, preset: 'general' });
+	const one = await store.saveCamera({
+		label: 'Calving pen',
+		source: first,
+		mode: 'preset',
+		preset: 'calving'
+	});
+	const two = await store.saveCamera({
+		label: 'Yard',
+		source: second,
+		mode: 'preset',
+		preset: 'general'
+	});
 	const view = await store.saveCamera({
 		label: 'Gate',
 		source: 'rtsp://gate.example.test/live',
-		preset: 'view-only'
+		mode: 'view-only'
 	});
 	assert.equal(one.monitored, true);
 	assert.equal(two.monitored, true);
@@ -46,16 +59,19 @@ test('first and additional cameras are assigned actual monitoring rules; view-on
 test('copying requires an existing camera choice instead of a preset and only applies to new cameras', () => {
 	const input = { label: 'Second pen', source: second };
 	assert.equal(
-		v.safeParse(cameraInput, { ...input, preset: 'copy', copyFromCameraId: 'pen' }).success,
+		v.safeParse(cameraInput, { ...input, mode: 'copy', copyFromCameraId: 'pen' }).success,
 		true
 	);
-	assert.equal(v.safeParse(cameraInput, { ...input, preset: 'calving' }).success, true);
+	assert.equal(
+		v.safeParse(cameraInput, { ...input, mode: 'preset', preset: 'calving' }).success,
+		true
+	);
 	for (const selection of [
-		{ preset: 'copy' },
-		{ preset: 'copy', copyFromCameraId: '' },
-		{ preset: 'general', copyFromCameraId: 'pen' },
-		{ preset: 'view-only', copyFromCameraId: 'pen' },
-		{ preset: 'copy', copyFromCameraId: 'pen', id: 'existing' }
+		{ mode: 'copy' },
+		{ mode: 'copy', copyFromCameraId: '' },
+		{ mode: 'preset', preset: 'general', copyFromCameraId: 'pen' },
+		{ mode: 'view-only', copyFromCameraId: 'pen' },
+		{ mode: 'copy', copyFromCameraId: 'pen', id: 'existing' }
 	])
 		assert.equal(v.safeParse(cameraInput, { ...input, ...selection }).success, false);
 });
@@ -98,7 +114,7 @@ test('copying preserves every matching rule, model and delivery setting without 
 	const added = await store.saveCamera({
 		label: 'Second barn',
 		source: third,
-		preset: 'copy',
+		mode: 'copy',
 		copyFromCameraId: original.app.streams[0].id!
 	});
 	const saved = await store.read();
@@ -124,6 +140,7 @@ test('copied rules own their nested settings so later changes cannot mutate the 
 	const firstCamera = await store.saveCamera({
 		label: 'First pen',
 		source: first,
+		mode: 'preset',
 		preset: 'calving'
 	});
 	await store.saveAlerts({
@@ -138,7 +155,7 @@ test('copied rules own their nested settings so later changes cannot mutate the 
 	saveCameraDocument(document, {
 		label: 'Second pen',
 		source: second,
-		preset: 'copy',
+		mode: 'copy',
 		copyFromCameraId: firstCamera.id
 	});
 	const copied = document.config.detectors[1];
@@ -150,14 +167,14 @@ test('copied rules own their nested settings so later changes cannot mutate the 
 
 test('missing and view-only cameras cannot silently provide empty monitoring settings', async (t) => {
 	const { files, store } = await fixture(t);
-	const camera = await store.saveCamera({ label: 'Gate', source: first, preset: 'view-only' });
+	const camera = await store.saveCamera({ label: 'Gate', source: first, mode: 'view-only' });
 	const before = await Promise.all([readFile(files.config, 'utf8'), readFile(files.app, 'utf8')]);
 	for (const [copyFromCameraId, message] of [
 		[camera.id, /view only/],
 		['missing', /no longer exists/]
 	] as const) {
 		await assert.rejects(
-			store.saveCamera({ label: 'Second gate', source: second, preset: 'copy', copyFromCameraId }),
+			store.saveCamera({ label: 'Second gate', source: second, mode: 'copy', copyFromCameraId }),
 			message
 		);
 	}
@@ -171,14 +188,17 @@ test('legacy identities are stable across reads, persistence, rename and passwor
 	const { files, store } = await fixture(t);
 	await writeJson(files.config, { detectors: [{ detection: { source: first } }] });
 	const original = (await store.read()).app.streams[0].id;
-	assert.equal((await new ConfigurationStore(files).read()).app.streams[0].id, original);
+	assert.equal(
+		(await new ConfigurationStore(files, readTestPresets).read()).app.streams[0].id,
+		original
+	);
 	await store.saveCamera({
 		id: original,
 		label: 'New name',
 		source: 'rtsp://user:changed@first.example.test/live',
-		preset: 'keep'
+		mode: 'keep'
 	});
-	const reopened = await new ConfigurationStore(files).read();
+	const reopened = await new ConfigurationStore(files, readTestPresets).read();
 	assert.equal(reopened.app.streams[0].id, original);
 	assert.deepEqual(reopened.config.detectors[0].detection.source, [
 		'rtsp://user:changed@first.example.test/live'
@@ -193,7 +213,13 @@ test('changing a watched event preserves alert options and another camera sharin
 		detectors: [{ detection: { source: [first, second] }, exporters: { telegram: channel } }]
 	});
 	const camera = (await store.read()).app.streams[0];
-	await store.saveCamera({ id: camera.id, label: 'Calving pen', source: first, preset: 'calving' });
+	await store.saveCamera({
+		id: camera.id,
+		label: 'Calving pen',
+		source: first,
+		mode: 'preset',
+		preset: 'calving'
+	});
 	const saved = await store.read();
 	assert.deepEqual(saved.config.detectors[0].detection.source, [second]);
 	assert.deepEqual(saved.config.detectors[1].detection.source, [first]);
@@ -228,8 +254,18 @@ test('alerts attach only to selected cameras even when existing rules share a so
 
 test('editing alert assignments removes old recipients from unselected cameras and updates credentials', async (t) => {
 	const { store } = await fixture(t);
-	const one = await store.saveCamera({ label: 'One', source: first, preset: 'general' });
-	const two = await store.saveCamera({ label: 'Two', source: second, preset: 'general' });
+	const one = await store.saveCamera({
+		label: 'One',
+		source: first,
+		mode: 'preset',
+		preset: 'general'
+	});
+	const two = await store.saveCamera({
+		label: 'Two',
+		source: second,
+		mode: 'preset',
+		preset: 'general'
+	});
 	await store.saveAlerts({
 		label: 'Phone',
 		token: 'old',
@@ -367,7 +403,7 @@ test('unconfirmed alerts, unknown cameras and view-only assignments are rejected
 	});
 	const { store } = await fixture(t);
 	await assert.rejects(store.saveAlerts(unconfirmed), /Confirm that you received/);
-	const camera = await store.saveCamera({ label: 'Gate', source: first, preset: 'view-only' });
+	const camera = await store.saveCamera({ label: 'Gate', source: first, mode: 'view-only' });
 	await assert.rejects(
 		store.saveAlerts({
 			label: 'Phone',
@@ -426,7 +462,12 @@ test('unchanged alert connections can be renamed and reused without another test
 
 test('unconfirmed new or changed alert credentials leave both files unchanged', async (t) => {
 	const { files, store } = await fixture(t);
-	const camera = await store.saveCamera({ label: 'Pen', source: first, preset: 'calving' });
+	const camera = await store.saveCamera({
+		label: 'Pen',
+		source: first,
+		mode: 'preset',
+		preset: 'calving'
+	});
 	const channel = { label: 'Phone', token: 'token', chat: 'chat', cameraIds: [camera.id] };
 	await store.saveAlerts({ ...channel, received: true });
 	const before = await Promise.all([readFile(files.config, 'utf8'), readFile(files.app, 'utf8')]);
@@ -452,8 +493,13 @@ test('unconfirmed new or changed alert credentials leave both files unchanged', 
 
 test('removing a camera removes its rules but preserves other cameras and archived data', async (t) => {
 	const { files, store } = await fixture(t);
-	const one = await store.saveCamera({ label: 'One', source: first, preset: 'general' });
-	await store.saveCamera({ label: 'Two', source: second, preset: 'general' });
+	const one = await store.saveCamera({
+		label: 'One',
+		source: first,
+		mode: 'preset',
+		preset: 'general'
+	});
+	await store.saveCamera({ label: 'Two', source: second, mode: 'preset', preset: 'general' });
 	const archiveMarker = path.join(path.dirname(files.config), 'recording.json');
 	await writeJson(archiveMarker, { existing: true });
 	await store.removeCamera(one.id);
@@ -464,4 +510,150 @@ test('removing a camera removes its rules but preserves other cameras and archiv
 	);
 	assert.equal(saved.app.streams.length, 1);
 	assert.deepEqual(JSON.parse(await readFile(archiveMarker, 'utf8')), { existing: true });
+});
+
+test('a runtime catalogue saves non-agricultural presets and reloads edited templates without changing existing cameras', async (t) => {
+	const { files } = await fixture(t);
+	const directory = path.dirname(files.app);
+	const catalogFile = path.join(directory, 'presets.json');
+	const templateFile = path.join(directory, 'workshop.json');
+	await writeJson(catalogFile, {
+		defaultPreset: 'keep',
+		presets: [
+			{
+				id: 'keep',
+				name: 'Workshop safety',
+				description: 'Watch for people near forklifts.',
+				configuration: 'workshop.json'
+			}
+		]
+	});
+	await writeJson(templateFile, {
+		detection: { interval: 2 },
+		yolo: { model: 'workshop.onnx', confidence: { person: 0.75, forklift: 0.65 }, frames_min: 7 },
+		exporters: { disk: { directory: 'workshop-recordings' } }
+	});
+	const store = new ConfigurationStore(files, () => loadPresetCatalog(catalogFile));
+	const one = await store.saveCamera({
+		label: 'Loading area',
+		source: first,
+		mode: 'preset',
+		preset: 'keep'
+	});
+	const original = (await store.read()).config.detectors[0];
+	assert.equal(one.monitored, true);
+	assert.deepEqual(original, {
+		detection: { source: [first], interval: 2 },
+		yolo: { model: 'workshop.onnx', confidence: { person: 0.75, forklift: 0.65 }, frames_min: 7 },
+		exporters: { disk: [{ directory: 'workshop-recordings' }] }
+	});
+	await writeJson(templateFile, {
+		yolo: { model: 'workshop-v2.pt' },
+		exporters: { disk: { directory: 'workshop-v2' } }
+	});
+	await store.saveCamera({ label: 'Work bench', source: second, mode: 'preset', preset: 'keep' });
+	const saved = await store.read();
+	assert.deepEqual(saved.config.detectors[0], original);
+	assert.equal(saved.config.detectors[1].yolo?.model, 'workshop-v2.pt');
+	assert.deepEqual(saved.config.detectors[1].detection.source, [second]);
+	assert.deepEqual(
+		saved.app.detectors.map((meta) => meta.preset),
+		['keep', 'keep']
+	);
+	assert.deepEqual((await loadPresetCatalog(catalogFile)).presets[0].detector.detection.source, []);
+});
+
+test('arbitrary preset IDs do not collide with camera actions and templates are not mutated', async (t) => {
+	const { files } = await fixture(t);
+	const catalog: PresetCatalog = {
+		presets: ['keep', 'copy', 'view-only'].map((id) => ({
+			id,
+			name: id,
+			description: 'Custom security monitoring',
+			detector: {
+				detection: { source: [] },
+				yolo: { model: 'security.pt' },
+				exporters: { disk: [{}] }
+			}
+		}))
+	};
+	const before = structuredClone(catalog);
+	const store = new ConfigurationStore(files, async () => catalog);
+	for (const preset of catalog.presets) {
+		const input = v.parse(cameraInput, {
+			mode: 'preset',
+			preset: preset.id,
+			source: `rtsp://${preset.id}.example.test/live`,
+			label: preset.name
+		});
+		assert.equal((await store.saveCamera(input)).monitored, true);
+	}
+	assert.deepEqual(catalog, before);
+	assert.equal((await store.read()).config.detectors.length, 3);
+});
+
+test('unknown preset IDs reject saves without changing either settings file', async (t) => {
+	const { files, store } = await fixture(t);
+	const camera = await store.saveCamera({
+		label: 'Yard',
+		source: first,
+		mode: 'preset',
+		preset: 'general'
+	});
+	const before = await Promise.all([readFile(files.config, 'utf8'), readFile(files.app, 'utf8')]);
+	for (const input of [
+		{ label: 'Another camera', source: second },
+		{ id: camera.id, label: 'Renamed camera', source: first }
+	])
+		await assert.rejects(
+			store.saveCamera({ ...input, mode: 'preset', preset: 'removed-preset' }),
+			/no longer available/
+		);
+	assert.deepEqual(
+		await Promise.all([readFile(files.config, 'utf8'), readFile(files.app, 'utf8')]),
+		before
+	);
+});
+
+test('changing to a custom preset preserves existing alert and recording destinations', async (t) => {
+	const { files, store } = await fixture(t);
+	const camera = await store.saveCamera({
+		label: 'Entrance',
+		source: first,
+		mode: 'preset',
+		preset: 'general'
+	});
+	await store.saveAlerts({
+		label: 'Security desk',
+		token: 'token',
+		chat: 'chat',
+		cameraIds: [camera.id],
+		received: true
+	});
+	const previous = (await store.read()).config.detectors[0].exporters;
+	const custom = new ConfigurationStore(files, async () => ({
+		presets: [
+			{
+				id: 'intrusion',
+				name: 'Restricted area',
+				description: 'Watch for people in the restricted area.',
+				detector: {
+					detection: { source: [], interval: 1 },
+					yolo: { model: 'intrusion.onnx', confidence: { person: 0.8 } },
+					exporters: { disk: [{ directory: 'new-default' }] }
+				}
+			}
+		]
+	}));
+	await custom.saveCamera({
+		id: camera.id,
+		label: 'Entrance',
+		source: first,
+		mode: 'preset',
+		preset: 'intrusion'
+	});
+	const saved = await custom.read();
+	assert.equal(saved.config.detectors[0].yolo?.model, 'intrusion.onnx');
+	assert.deepEqual(saved.config.detectors[0].exporters, previous);
+	assert.equal(saved.app.detectors[0].preset, 'intrusion');
 });

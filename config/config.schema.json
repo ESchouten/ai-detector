@@ -111,7 +111,7 @@
             }
           ],
           "default": null,
-          "description": "Single category directory name under detections/ (for example, mounts).",
+          "description": "Single category directory name under detections/.",
           "title": "Directory"
         },
         "strategy": {

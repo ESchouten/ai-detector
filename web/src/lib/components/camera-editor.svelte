@@ -18,16 +18,27 @@
 	import { checkCameraRecording } from '$lib/camera-check';
 	import { cameraDraftAddress, cameraEditConnection } from '$lib/cameras';
 	import { getCameras, removeCamera, saveCamera } from '$lib/remote/stream.remote';
+	import { getDetectorPresets } from '$lib/remote/detector.remote';
+	import { cameraMonitoringChoice } from '$lib/detector-editor';
 	import { startDetector } from '$lib/remote/runtime.remote';
 
 	let { initial }: { initial?: StreamMeta & { id: string; monitored: boolean } } = $props();
-	const newCameraPresets = ['calving', 'mounts', 'general', 'view-only', 'copy'] as const;
-	type Preset = (typeof newCameraPresets)[number] | 'keep';
+	const { catalogue, warning: catalogueWarning } = await getDetectorPresets();
 	const cameras = $derived(await getCameras());
 	const monitoredCameras = $derived(cameras.filter((camera) => camera.monitored));
 	let label = $state(untrack(() => initial?.label ?? ''));
 	let source = $state(untrack(() => initial?.source ?? ''));
-	let preset = $state<Preset>(untrack(() => (initial ? 'keep' : 'calving')));
+	let monitoringSelection = $state(
+		untrack(() =>
+			initial ? 'keep' : catalogue.defaultPreset ? `preset:${catalogue.defaultPreset}` : ''
+		)
+	);
+	const monitoring = $derived(cameraMonitoringChoice(monitoringSelection));
+	const selectedPreset = $derived(
+		monitoring?.mode === 'preset'
+			? catalogue.presets.find((preset) => preset.id === monitoring.preset)
+			: undefined
+	);
 	let copyFromCameraId = $state('');
 	const copiedCamera = $derived(monitoredCameras.find((camera) => camera.id === copyFromCameraId));
 	const editing = untrack(() => cameraEditConnection(initial?.source ?? ''));
@@ -63,7 +74,9 @@
 		label.trim() &&
 			!connectionChanged &&
 			(!check || confirmed) &&
-			(preset !== 'copy' || copiedCamera)
+			monitoring &&
+			(monitoring.mode !== 'preset' || selectedPreset) &&
+			(monitoring.mode !== 'copy' || copiedCamera)
 	);
 
 	onMount(() => {
@@ -74,7 +87,16 @@
 				const parsed = JSON.parse(draft);
 				if (typeof parsed.label === 'string') label = parsed.label;
 				if (typeof parsed.address === 'string') address = cameraDraftAddress(parsed.address) ?? '';
-				if (newCameraPresets.includes(parsed.preset)) preset = parsed.preset;
+				const selection =
+					typeof parsed.monitoringSelection === 'string'
+						? parsed.monitoringSelection
+						: typeof parsed.preset === 'string'
+							? ['copy', 'view-only'].includes(parsed.preset)
+								? parsed.preset
+								: `preset:${parsed.preset}`
+							: '';
+				if (cameraMonitoringChoice(selection) && selection !== 'keep')
+					monitoringSelection = selection;
 				if (typeof parsed.copyFromCameraId === 'string') copyFromCameraId = parsed.copyFromCameraId;
 			} catch {
 				sessionStorage.removeItem('camera-setup');
@@ -90,8 +112,8 @@
 				JSON.stringify({
 					label,
 					address: cameraDraftAddress(address),
-					preset,
-					copyFromCameraId: preset === 'copy' ? copyFromCameraId : undefined
+					monitoringSelection,
+					copyFromCameraId: monitoring?.mode === 'copy' ? copyFromCameraId : undefined
 				})
 			);
 	});
@@ -167,14 +189,16 @@
 	}
 	async function submit(event: SubmitEvent) {
 		event.preventDefault();
-		if (!canSave) return;
+		if (!canSave || !monitoring) return;
 		saving = true;
 		error = '';
 		try {
 			saved = await saveCamera({
 				label,
 				source,
-				...(preset === 'copy' ? { preset, copyFromCameraId } : { preset, id: initial?.id }),
+				...(monitoring.mode === 'copy'
+					? { mode: 'copy' as const, copyFromCameraId }
+					: { ...monitoring, id: initial?.id }),
 				checkId: check?.checkId,
 				...(changingConnection ? { connection: verifiedConnection ?? null } : {})
 			}).updates(getCameras());
@@ -212,7 +236,7 @@
 		username = '';
 		password = '';
 		streamUri = '';
-		preset = 'calving';
+		monitoringSelection = catalogue.defaultPreset ? `preset:${catalogue.defaultPreset}` : '';
 		copyFromCameraId = '';
 		advancedAddress = false;
 		manualAddress = false;
@@ -237,6 +261,15 @@
 				: 'Choose a camera, confirm its picture, then choose what to watch for.'}
 		</p>
 	</header>
+	{#if catalogueWarning}
+		<Alert.Root variant="destructive">
+			<Alert.Title>Monitoring presets are unavailable</Alert.Title>
+			<Alert.Description>
+				{catalogueWarning} You can still keep existing settings, copy another camera’s settings, or choose
+				viewing only.
+			</Alert.Description>
+		</Alert.Root>
+	{/if}
 	{#if saved}
 		{#if error}<div tabindex="-1" bind:this={errorPanel}>
 				<Alert.Root variant="destructive"
@@ -459,7 +492,7 @@
 							bind:value={label}
 							disabled={saving}
 							required
-							placeholder="e.g. Calving pen"
+							placeholder="e.g. Front entrance"
 						/></Field.Field
 					>
 				</Card.Content>
@@ -475,39 +508,48 @@
 						><Field.Field
 							><Field.Label for="camera-purpose">Watch for</Field.Label><NativeSelect.Root
 								id="camera-purpose"
-								bind:value={preset}
+								bind:value={monitoringSelection}
 								disabled={saving}
+								required
 							>
+								<NativeSelect.Option value="">Choose what to watch for</NativeSelect.Option>
 								{#if initial}<NativeSelect.Option value="keep"
 										>Keep current monitoring settings</NativeSelect.Option
 									>{/if}
-								{#if !initial && (monitoredCameras.length || preset === 'copy')}
+								{#if !initial && (monitoredCameras.length || monitoring?.mode === 'copy')}
 									<NativeSelect.Option value="copy"
 										>Use the same settings as an existing camera</NativeSelect.Option
 									>
 								{/if}
-								<NativeSelect.Option value="calving">Calving signs</NativeSelect.Option
-								><NativeSelect.Option value="mounts">Cow mounting behaviour</NativeSelect.Option
-								><NativeSelect.Option value="general"
-									>People, animals and vehicles</NativeSelect.Option
-								><NativeSelect.Option value="view-only"
+								{#each catalogue.presets as preset (preset.id)}
+									<NativeSelect.Option value={`preset:${preset.id}`}
+										>{preset.name}</NativeSelect.Option
+									>
+								{/each}
+								{#if monitoring?.mode === 'preset' && !selectedPreset}
+									<NativeSelect.Option value={monitoringSelection} disabled
+										>Previous choice unavailable — choose another</NativeSelect.Option
+									>
+								{/if}
+								<NativeSelect.Option value="view-only"
 									>View only — do not monitor events</NativeSelect.Option
 								>
 							</NativeSelect.Root></Field.Field
 						><Field.Description
-							>{preset === 'calving'
-								? 'Keep the cow’s rear and the floor behind her clearly visible. Detection can miss events; keep your usual animal checks.'
-								: preset === 'mounts'
-									? 'Use a clear side view with the animals’ full bodies visible.'
-									: preset === 'general'
-										? 'Records recognised people, animals and vehicles. Fine-tune watched classes in Advanced settings.'
-										: preset === 'view-only'
-											? 'The camera will appear in Cameras, but no events or alerts will be generated.'
-											: preset === 'copy'
-												? 'Copy watched events, recording options and alert recipients. Each camera can be changed separately afterward.'
-												: 'Existing watched events and alert recipients are preserved.'}</Field.Description
+							>{selectedPreset
+								? selectedPreset.description
+								: monitoring?.mode === 'view-only'
+									? 'The camera will appear in Cameras, but no events or alerts will be generated.'
+									: monitoring?.mode === 'copy'
+										? 'Copy watched events, recording options and alert recipients. Each camera can be changed separately afterward.'
+										: monitoring?.mode === 'keep'
+											? 'Existing watched events and alert recipients are preserved.'
+											: 'Choose a monitoring option, or use this camera for viewing only.'}</Field.Description
 						>
-						{#if preset === 'copy'}
+						{#if selectedPreset?.guidance}<Field.Description
+								>{selectedPreset.guidance}</Field.Description
+							>{/if}
+						{#if monitoring?.mode === 'copy'}
 							<Field.Field>
 								<Field.Label for="copy-camera">Use the same monitoring settings as</Field.Label>
 								<NativeSelect.Root
@@ -550,7 +592,7 @@
 						? 'Saving camera…'
 						: initial
 							? 'Save changes'
-							: preset === 'view-only'
+							: monitoring?.mode === 'view-only'
 								? 'Save for viewing'
 								: 'Save and start monitoring'}</Button
 				><Button href={resolve('/streams')} variant="outline">Cancel</Button>

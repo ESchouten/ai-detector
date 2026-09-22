@@ -5,11 +5,15 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import * as Card from '$lib/components/ui/card';
 	import * as Empty from '$lib/components/ui/empty';
+	import * as Alert from '$lib/components/ui/alert';
+	import { cameraRuleNames } from '$lib/detector-editor';
 	import { getCameras } from '$lib/remote/stream.remote';
+	import { getDetectorPresets } from '$lib/remote/detector.remote';
 	import { getRuntime } from '$lib/remote/runtime.remote';
 	import DetectorRuntime from '$lib/components/detector-runtime.svelte';
 	import CameraPicture from '$lib/components/camera-picture.svelte';
 	const cameras = $derived(await getCameras());
+	const { catalogue, warning: catalogueWarning } = await getDetectorPresets();
 	let runtime = $state(await getRuntime());
 	let connectionLost = $state(false);
 	let lastCheckedAt = $state(Date.now());
@@ -50,6 +54,14 @@
 		</div>
 		<Button href={resolve('/streams/add')}>Add camera</Button>
 	</header>
+	{#if catalogueWarning}
+		<Alert.Root variant="destructive">
+			<Alert.Title>Monitoring preset names are unavailable</Alert.Title>
+			<Alert.Description>
+				{catalogueWarning} Cameras below show their saved rule names. Their settings are unchanged.
+			</Alert.Description>
+		</Alert.Root>
+	{/if}
 	<DetectorRuntime configured={cameras.some((camera) => camera.monitored)} compact />
 	{#if stale}<p role="alert" class="text-sm text-destructive">
 			No recent status from the app. Last checked {new Date(lastCheckedAt).toLocaleTimeString()}.
@@ -83,17 +95,7 @@
 						></Card.Title
 					><Card.Description
 						>{camera.monitored
-							? camera.rules
-									.map((rule) =>
-										rule.preset === 'calving'
-											? 'Calving signs'
-											: rule.preset === 'mounts'
-												? 'Cow mounting behaviour'
-												: rule.preset === 'general'
-													? 'People, animals and vehicles'
-													: rule.label
-									)
-									.join(', ')
+							? cameraRuleNames(camera.rules, catalogue.presets)
 							: 'Live viewing only. No events or alerts.'}</Card.Description
 					></Card.Header
 				>

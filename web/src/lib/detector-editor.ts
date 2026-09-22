@@ -1,16 +1,40 @@
 import { normalizeConfig, sameTelegram } from './configuration.ts';
-import type { DetectorConfig, TelegramConfig, TelegramMeta } from './schema.ts';
+import type { DetectorConfig, PresetInfo, TelegramConfig, TelegramMeta } from './schema.ts';
+
+export function cameraRuleNames(
+	rules: { label: string; preset?: string }[],
+	presets: PresetInfo[]
+): string {
+	return rules
+		.map((rule) => presets.find((preset) => preset.id === rule.preset)?.name ?? rule.label)
+		.join(', ');
+}
 
 export type DetectorDraft = DetectorConfig & {
 	exporters: NonNullable<DetectorConfig['exporters']>;
 };
+
+export type CameraMonitoringChoice =
+	| { mode: 'preset'; preset: string }
+	| { mode: 'keep' }
+	| { mode: 'view-only' }
+	| { mode: 'copy' };
+
+/** Preset IDs live in their own namespace so they cannot collide with camera actions. */
+export function cameraMonitoringChoice(selection: string): CameraMonitoringChoice | undefined {
+	if (selection === 'keep' || selection === 'view-only' || selection === 'copy')
+		return { mode: selection };
+	if (selection.startsWith('preset:') && selection.length > 'preset:'.length)
+		return { mode: 'preset', preset: selection.slice('preset:'.length) };
+	return undefined;
+}
 
 export function createDetectorDraft(saved?: DetectorConfig): DetectorDraft {
 	const detector = saved
 		? structuredClone(saved)
 		: {
 				detection: { source: [] },
-				yolo: { model: 'yolo11n.pt', confidence: 0.8 },
+				yolo: { model: '' },
 				exporters: { disk: [{}] }
 			};
 	return { ...detector, exporters: detector.exporters ?? {} };

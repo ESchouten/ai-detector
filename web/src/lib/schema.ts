@@ -55,7 +55,23 @@ export interface AppConfig {
 export interface DetectorMeta {
 	label: string;
 	cameraId?: string;
-	preset?: 'calving' | 'mounts' | 'general';
+	preset?: string;
+}
+
+export interface PresetInfo {
+	id: string;
+	name: string;
+	description: string;
+	guidance?: string;
+}
+
+export interface DetectorPreset extends PresetInfo {
+	detector: DetectorConfig;
+}
+
+export interface PresetCatalog {
+	defaultPreset?: string;
+	presets: DetectorPreset[];
 }
 
 export interface TelegramMeta extends TelegramConfig {

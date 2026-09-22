@@ -207,7 +207,7 @@ class DiskConfig(ExporterConfig):
     directory: str | None = Field(
         default=None,
         pattern=r"^[^/\\:]*[^./\\:\s][^/\\:]*$",
-        description="Single category directory name under detections/ (for example, mounts).",
+        description="Single category directory name under detections/.",
     )
     strategy: Literal["ALL", "BEST"] = "BEST"
     export_rejected: bool = True

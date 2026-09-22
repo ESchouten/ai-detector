@@ -1,24 +1,33 @@
 [project]
 name = "aidetector"
 version = "0.1.0"
-description = "Add your description here"
+description = "Video event detection with optional AI verification and configurable delivery"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "imageio-ffmpeg>=0.6.0",
     "litellm>=1.81.6",
-    "opencv-stubs>=0.1.1",
+    "numpy>=1.26",
+    "opencv-python>=4.10",
+    "openai>=2,<3",
     "pydantic>=2.12.5",
-    "tiktoken[openai]>=0.12.0",
-    "ultralytics>=8.4.10",
-    "typing-extensions>=4.15.0",
+    "requests>=2.32",
+    "ultralytics>=8.4.80,<9",
+    "lap>=0.5.12",
 ]
 
 [project.optional-dependencies]
 default = [
     "onnx>=1.20.1",
     "onnxslim>=0.1.87",
-    "onnxruntime>=1.24.1",
+    "onnxruntime>=1.23.2,<1.24; python_version < '3.11'",
+    "onnxruntime>=1.24.1; python_version >= '3.11'",
+]
+nvidia = [
+    "onnx>=1.20.1",
+    "onnxslim>=0.1.87",
+    "onnxruntime-gpu>=1.23.2,<1.24; python_version < '3.11'",
+    "onnxruntime-gpu>=1.24.1; python_version >= '3.11'",
 ]
 windowsml = [
     "onnx>=1.20.1",
@@ -33,8 +42,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-main = "aidetector:main"
-generate-schema = "aidetector.utils.generate_schema:main"
+main = "aidetector.cli:main"
+aidetector = "aidetector.cli:main"
+generate-schema = "aidetector.schema:main"
 
 [dependency-groups]
 dev = [
@@ -42,10 +52,78 @@ dev = [
     "ty>=0.0.14",
     "pyinstaller>=6.18.0",
     "pytest>=9.1.1",
+    "opencv-stubs>=0.1.1",
+    "jsonschema>=4.23",
+    "radon>=6.0.1,<7",
+    "coverage[toml]>=7.10.6,<8",
+    "import-linter>=2.15,<3",
+    "grimp>=3.17,<4",
+    "mutmut>=3.8,<4; sys_platform != 'win32'",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = ["error::pytest.PytestUnhandledThreadExceptionWarning"]
+
+[tool.mutmut]
+source_paths = ["src/"]
+only_mutate = [
+    "src/aidetector/domain/events.py",
+    "src/aidetector/domain/policy.py",
+    "src/aidetector/domain/models.py",
+]
+pytest_add_cli_args_test_selection = [
+    "tests/domain/test_events.py",
+    "tests/domain/test_policy.py",
+    "tests/domain/test_models.py",
+    "tests/application/test_delivery.py",
+]
+pytest_add_cli_args = ["-q"]
+use_setproctitle = false
+on_dependency_change = "rerun"
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B", "C901", "PLR0912", "PLR0915", "TID252"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+max-branches = 12
+max-statements = 50
+
+[tool.coverage.run]
+branch = true
+source = ["aidetector"]
+# Include the CLI and import checks executed in child Python processes.
+parallel = true
+patch = ["subprocess"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+precision = 1
+
+[tool.coverage.html]
+directory = ".reports/coverage"
+
+[tool.coverage.xml]
+output = ".reports/coverage.xml"
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aidetector"]
+
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "src/aidetector", "pyproject.toml", "uv.lock", "README.md", "LICENSE",
+    "ARCHITECTURE.md", "MIGRATION.md", "QUALITY.md", "REVIEW.md", ".importlinter",
+]

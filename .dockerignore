@@ -1,0 +1,15 @@
+**
+!web/
+!web/**
+!config/
+!config/**
+web/node_modules
+web/.svelte-kit
+web/dist
+web/build
+web/config.json
+web/app.json
+web/runtime.json
+web/detections
+web/models
+web/.env*

@@ -138,10 +138,7 @@
 			detector,
 			meta: { label }
 		});
-		toast.warning(
-			`Detector configuration '${label}' saved. Restart the detector to apply the changes.`,
-			{ duration: Number.POSITIVE_INFINITY, closeButton: true }
-		);
+		toast.success(`Detector configuration '${label}' saved.`);
 		await goto(resolve(setupMode ? '/setup?complete=1' : '/detectors'));
 	}
 
@@ -256,16 +253,19 @@
 				type="multiple"
 				bind:value={
 					() =>
-						(detector.exporters.telegram ?? []).map(
-							(telegram) =>
-								telegrams.find((t) => t.token === telegram.token && t.chat === telegram.chat)?.label
-						),
+						(detector.exporters.telegram ?? [])
+							.map(
+								(telegram) =>
+									telegrams.find((t) => t.token === telegram.token && t.chat === telegram.chat)
+										?.label
+							)
+							.filter((label): label is string => label !== undefined),
 					(selectedTelegrams) => {
 						detector.exporters.telegram = (selectedTelegrams ?? [])
 							.map((telegram) => {
 								const t = telegrams.find((t) => t.label === telegram);
 								const curr = detector.exporters.telegram?.find(
-									(t) => t.token === t.token && t.chat === t.chat
+									(current) => current.token === t?.token && current.chat === t?.chat
 								);
 								return { token: t!.token, chat: t!.chat, alert_every: curr?.alert_every ?? 1 };
 							})

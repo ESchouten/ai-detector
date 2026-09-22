@@ -1,0 +1,86 @@
+{
+  "version": "2.0.0",
+  "options": {
+    "cwd": "${workspaceFolder}/detector"
+  },
+  "tasks": [
+    {
+      "label": "Detector: install dependencies",
+      "type": "process",
+      "command": "uv",
+      "args": ["sync", "--locked", "--extra", "default"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Detector: lint",
+      "type": "process",
+      "command": "uv",
+      "args": ["run", "--no-sync", "ruff", "check", "src/aidetector", "tests", "tools"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Detector: formatting",
+      "type": "process",
+      "command": "uv",
+      "args": ["run", "--no-sync", "ruff", "format", "--check", "src/aidetector", "tests", "tools"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Detector: types",
+      "type": "process",
+      "command": "uv",
+      "args": ["run", "--no-sync", "ty", "check", "src/aidetector", "tools"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Detector: architecture",
+      "type": "process",
+      "command": "uv",
+      "args": ["run", "--no-sync", "pytest", "-q", "tests/test_architecture.py"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Detector: schemas",
+      "type": "process",
+      "command": "uv",
+      "args": ["run", "--no-sync", "generate-schema", "--check"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Detector: tests",
+      "type": "process",
+      "command": "uv",
+      "args": ["run", "--no-sync", "pytest", "-q"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Detector: reference flow",
+      "type": "process",
+      "command": "uv",
+      "args": [
+        "run",
+        "--no-sync",
+        "pytest",
+        "-q",
+        "tests/test_reference_flow.py::test_video_to_validated_archive_uses_real_media_and_flushes_at_eof"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Detector: check",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Detector: lint",
+        "Detector: formatting",
+        "Detector: types",
+        "Detector: schemas",
+        "Detector: tests"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

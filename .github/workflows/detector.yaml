@@ -15,9 +15,10 @@ permissions:
   packages: write
 
 env:
-  PYTHON_VERSION: "3.11"
-  PYINSTALLER_ARGS: --onefile --hidden-import ultralytics --collect-all litellm --collect-all onnxruntime --collect-all onnx --hidden-import=tiktoken_ext.openai_public --hidden-import=tiktoken_ext --paths src --clean --noconfirm
-  VERSION_FILE: src/aidetector/utils/version.py
+  UV_PYTHON: "3.11"
+  LITELLM_LOCAL_MODEL_COST_MAP: "true"
+  PYINSTALLER_ARGS: --onefile --collect-all ultralytics --collect-all litellm --collect-all imageio_ffmpeg --collect-all onnxruntime --collect-all onnx --hidden-import=tiktoken_ext.openai_public --hidden-import=tiktoken_ext --paths src --clean --noconfirm
+  VERSION_FILE: src/aidetector/version.py
 
 jobs:
   build:
@@ -210,7 +211,8 @@ jobs:
           - job_name: Windows WindowsML Executable
             artifact_prefix: aidetector-winml
             type: windowsml
-            uv_run_args: --extra windowsml
+            uv_run_args: --locked --extra windowsml
+            pyinstaller_args: --collect-all winui3 --collect-all winrt
             needs_cuda_install: false
             publish_release_asset: "true"
           - job_name: Windows CUDA 13.0 Executable
@@ -253,19 +255,26 @@ jobs:
         uses: astral-sh/setup-uv@v7
 
       - name: Set up Python
-        run: uv python install ${{ env.PYTHON_VERSION }}
+        run: uv python install
 
       - name: Install Dependencies
         if: ${{ matrix.needs_cuda_install }}
         run: |
-          uv venv --python ${{ env.PYTHON_VERSION }}
-          uv pip install --pre . torch torchvision pyinstaller --index-url ${{ matrix.cuda_index_url }} --extra-index-url https://pypi.org/simple --index-strategy unsafe-best-match
+          uv venv --python ${{ env.UV_PYTHON }}
+          uv pip install --pre ".[nvidia]" torch torchvision pyinstaller --index-url ${{ matrix.cuda_index_url }} --extra-index-url https://pypi.org/simple --index-strategy unsafe-best-match
 
       - name: Build Executable
         run: |
           echo 'TYPE = "${{ matrix.type }}"' > ${{ env.VERSION_FILE }}
           echo 'REF_NAME = "${{ github.ref_name }}"' >> ${{ env.VERSION_FILE }}
-          uv run ${{ matrix.uv_run_args }} pyinstaller src/aidetector/__init__.py --name $env:ARTIFACT_NAME ${{ env.PYINSTALLER_ARGS }}
+          uv run ${{ matrix.uv_run_args }} pyinstaller src/aidetector/__main__.py --name $env:ARTIFACT_NAME ${{ env.PYINSTALLER_ARGS }} ${{ matrix.pyinstaller_args }}
+
+      - name: Executable smoke test
+        run: |
+          uv run --no-sync python -m tests.support.smoke_package "dist/${env:ARTIFACT_NAME}.exe"
+          if ($LASTEXITCODE -ne 0) { throw "Executable smoke test failed" }
+          uv run --no-sync python -m tests.support.smoke_package "dist/${env:ARTIFACT_NAME}.exe" --model-format pt
+          if ($LASTEXITCODE -ne 0) { throw "Checkpoint smoke test failed" }
 
       - name: Upload Executable
         uses: actions/upload-artifact@v7
@@ -318,13 +327,18 @@ jobs:
         uses: astral-sh/setup-uv@v7
 
       - name: Set up Python
-        run: uv python install ${{ env.PYTHON_VERSION }}
+        run: uv python install
 
       - name: Build Executable
         run: |
           echo 'TYPE = "default"' > ${{ env.VERSION_FILE }}
           echo 'REF_NAME = "${{ github.ref_name }}"' >> ${{ env.VERSION_FILE }}
-          uv run --extra default pyinstaller src/aidetector/__init__.py --name "${ARTIFACT_NAME}.command" ${{ env.PYINSTALLER_ARGS }}
+          uv run --locked --extra default pyinstaller src/aidetector/__main__.py --name "${ARTIFACT_NAME}.command" ${{ env.PYINSTALLER_ARGS }}
+
+      - name: Executable smoke test
+        run: |
+          uv run --no-sync python -m tests.support.smoke_package "dist/${ARTIFACT_NAME}.command"
+          uv run --no-sync python -m tests.support.smoke_package "dist/${ARTIFACT_NAME}.command" --model-format pt
 
       - name: Zip Executable
         run: |

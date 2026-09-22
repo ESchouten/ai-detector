@@ -1,0 +1,297 @@
+from contextlib import nullcontext
+from types import SimpleNamespace
+
+import pytest
+
+from aidetector.adapters.inference.onnx import (
+    ModelRequirements,
+    inference_runtime,
+    select_devices,
+    select_providers,
+    tensorrt_profiles,
+)
+from aidetector.configuration import OnnxConfig
+
+ONNX_MODELS = (ModelRequirements("model.onnx", image_size=640, batch_size=1),)
+
+
+def test_explicit_provider_filters_out_other_registered_devices():
+    gpu = SimpleNamespace(
+        ep_name="OpenVINOExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+    selection = select_providers(
+        ["CPUExecutionProvider"], [gpu], "CPUExecutionProvider"
+    )
+    assert selection.names == ("CPUExecutionProvider",)
+    assert selection.devices == ()
+    assert selection.inference_options.half is False
+
+
+def test_registered_devices_define_provider_order_and_inference_options():
+    openvino = SimpleNamespace(
+        ep_name="OpenVINOExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+    tensorrt = SimpleNamespace(
+        ep_name="NvTensorRTRTXExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+    selection = select_providers(["CPUExecutionProvider"], [openvino, tensorrt], None)
+    assert selection.names == (
+        "NvTensorRTRTXExecutionProvider",
+        "OpenVINOExecutionProvider",
+    )
+    assert selection.inference_options.half is True
+    assert selection.inference_options.rectangular is False
+
+
+@pytest.mark.parametrize("inference_fails", [False, True])
+def test_windows_ml_session_uses_registered_device_and_releases_sdk_resources(
+    monkeypatch,
+    inference_fails,
+):
+    import json
+    import sys
+    from contextlib import contextmanager
+    from pathlib import Path
+
+    lifecycle, sessions, options = [], [], []
+
+    @contextmanager
+    def initialize(**kwargs):
+        lifecycle.append("initialize")
+        try:
+            yield
+        finally:
+            lifecycle.append("close")
+
+    class SessionOptions:
+        def add_provider_for_devices(self, devices, settings):
+            options.append((devices, settings))
+
+    def session(path, **kwargs):
+        sessions.append(kwargs)
+        return "session"
+
+    provider = SimpleNamespace(
+        name="OpenVINOExecutionProvider",
+        library_path="openvino.dll",
+        ensure_ready_async=lambda: SimpleNamespace(get=lambda: None),
+    )
+    device = SimpleNamespace(ep_name=provider.name, device=SimpleNamespace(type="GPU"))
+    ort = SimpleNamespace(
+        SessionOptions=SessionOptions,
+        InferenceSession=session,
+        get_available_providers=lambda: ["CPUExecutionProvider"],
+        get_ep_devices=lambda: [device],
+        register_execution_provider_library=lambda *args: lifecycle.append("register"),
+        unregister_execution_provider_library=lambda *args: lifecycle.append(
+            "unregister"
+        ),
+    )
+    monkeypatch.setitem(sys.modules, "onnxruntime", ort)
+    monkeypatch.setitem(
+        sys.modules,
+        "winui3.microsoft.windows.ai.machinelearning",
+        SimpleNamespace(
+            ExecutionProviderCatalog=SimpleNamespace(
+                get_default=lambda: SimpleNamespace(
+                    find_all_providers=lambda: [provider]
+                )
+            )
+        ),
+    )
+    monkeypatch.setitem(
+        sys.modules,
+        "winui3.microsoft.windows.applicationmodel.dynamicdependency.bootstrap",
+        SimpleNamespace(
+            initialize=initialize,
+            InitializeOptions=SimpleNamespace(ON_NO_MATCH_SHOW_UI=1),
+        ),
+    )
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+    supplied = SessionOptions()
+
+    outcome = (
+        pytest.raises(RuntimeError, match="inference failed")
+        if inference_fails
+        else nullcontext()
+    )
+    with (
+        outcome,
+        inference_runtime(OnnxConfig(), ONNX_MODELS, "windowsml") as inference,
+    ):
+        assert inference.half is False
+        assert (
+            ort.InferenceSession(
+                "model.onnx", sess_options=supplied, providers=["CPUExecutionProvider"]
+            )
+            == "session"
+        )
+        assert sessions == [{"sess_options": supplied}]
+        assert options[0][0] == [device]
+        settings_path = Path(options[0][1]["load_config"])
+        assert json.loads(settings_path.read_text()) == {
+            "GPU": {"INFERENCE_PRECISION_HINT": "f32"}
+        }
+        if inference_fails:
+            raise RuntimeError("inference failed")
+
+    assert lifecycle == ["initialize", "register", "unregister", "close"]
+    assert ort.InferenceSession is session
+    assert not settings_path.exists()
+
+
+def test_tensorrt_profiles_use_all_detector_dimensions_and_source_counts():
+    models = (
+        ModelRequirements("model.pt", image_size=320, batch_size=1),
+        ModelRequirements("model.pt", image_size=640, batch_size=2),
+    )
+    assert tensorrt_profiles(models) == {
+        "nv_profile_min_shapes": "images:1x3x320x320",
+        "nv_profile_opt_shapes": "images:2x3x640x640",
+        "nv_profile_max_shapes": "images:2x3x640x640",
+    }
+
+
+@pytest.mark.parametrize("build_type", ["default", "cuda", "tensorrt", "windowsml"])
+def test_disabled_inference_does_not_load_onnx_runtime(monkeypatch, build_type):
+    import sys
+
+    monkeypatch.setitem(sys.modules, "onnxruntime", None)
+    with inference_runtime(OnnxConfig(), (), build_type) as options:
+        assert options.half is False
+        assert options.rectangular is True
+    assert tensorrt_profiles(()) == {}
+
+
+@pytest.mark.parametrize("build_type", ["cuda", "tensorrt"])
+def test_native_cuda_models_do_not_load_onnx_runtime(monkeypatch, build_type):
+    import sys
+
+    monkeypatch.setitem(sys.modules, "onnxruntime", None)
+    models = (
+        ModelRequirements("model.pt", image_size=320, batch_size=1),
+        ModelRequirements("model.engine", image_size=640, batch_size=2),
+    )
+    with inference_runtime(OnnxConfig(), models, build_type) as options:
+        assert options.half is True
+        assert options.rectangular is True
+
+
+def test_device_selection_prefers_openvino_gpu_and_puts_provider_last():
+    cpu = SimpleNamespace(
+        ep_name="OpenVINOExecutionProvider", device=SimpleNamespace(type="CPU")
+    )
+    gpu = SimpleNamespace(
+        ep_name="OpenVINOExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+    other = SimpleNamespace(
+        ep_name="NvTensorRTRTXExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+    assert select_devices([cpu, gpu, other]) == [other, gpu]
+
+
+@pytest.mark.parametrize("inference_fails", [False, True])
+def test_onnx_runtime_restores_session_factory_and_environment(
+    monkeypatch, inference_fails
+):
+    import onnxruntime as ort
+
+    calls = []
+
+    def session(*args, **kwargs):
+        calls.append(kwargs)
+        return "session"
+
+    monkeypatch.setattr(ort, "InferenceSession", session)
+    monkeypatch.setattr(
+        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
+    )
+    monkeypatch.setattr(ort, "get_ep_devices", list)
+    monkeypatch.setenv("ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS", "original")
+    outcome = (
+        pytest.raises(RuntimeError, match="inference failed")
+        if inference_fails
+        else nullcontext()
+    )
+    with (
+        outcome,
+        inference_runtime(OnnxConfig(), ONNX_MODELS, "default") as options,
+    ):
+        assert options.half is False
+        assert ort.InferenceSession("model.onnx") == "session"
+        assert calls[0]["providers"] == [("CPUExecutionProvider", {})]
+        if inference_fails:
+            raise RuntimeError("inference failed")
+    import os
+
+    assert ort.InferenceSession is session
+    assert os.environ["ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS"] == "original"
+
+
+def test_unavailable_explicit_provider_fails_and_rolls_back_environment(monkeypatch):
+    import os
+
+    import onnxruntime as ort
+
+    monkeypatch.setattr(
+        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
+    )
+    monkeypatch.setattr(ort, "get_ep_devices", list)
+    monkeypatch.delenv("ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS", raising=False)
+    config = OnnxConfig(provider="UnavailableProvider")
+    with (
+        pytest.raises(ValueError, match="Configured ONNX provider is unavailable"),
+        inference_runtime(config, ONNX_MODELS, "default"),
+    ):
+        pytest.fail("An unavailable provider must not silently fall back")
+    assert "ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS" not in os.environ
+
+
+@pytest.mark.parametrize("build_type", ["cuda", "tensorrt"])
+@pytest.mark.parametrize(
+    "model_path",
+    [
+        "model.onnx",
+        "https://example.test/model.onnx?signature=fake",
+        "https://example.test/model.onnx#download",
+    ],
+)
+def test_cuda_onnx_preloads_runtime_libraries(monkeypatch, build_type, model_path):
+    import onnxruntime as ort
+
+    calls = []
+    monkeypatch.setattr(ort, "preload_dlls", lambda **kwargs: calls.append(kwargs))
+    monkeypatch.setattr(
+        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
+    )
+    monkeypatch.setattr(ort, "get_ep_devices", list)
+    models = (ModelRequirements(model_path, image_size=640, batch_size=1),)
+    with inference_runtime(OnnxConfig(), models, build_type):
+        assert calls == [{"directory": ""}]
+
+
+@pytest.mark.parametrize("build_type", ["cuda", "tensorrt"])
+def test_signed_onnx_url_still_checks_the_configured_provider(monkeypatch, build_type):
+    import onnxruntime as ort
+
+    monkeypatch.setattr(ort, "preload_dlls", lambda **kwargs: None)
+    monkeypatch.setattr(
+        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
+    )
+    monkeypatch.setattr(ort, "get_ep_devices", list)
+    original_session = ort.InferenceSession
+    config = OnnxConfig(provider="UnavailableProvider")
+    models = (
+        ModelRequirements(
+            "https://example.test/model.onnx?signature=fake",
+            image_size=640,
+            batch_size=1,
+        ),
+    )
+    with (
+        pytest.raises(ValueError, match="Configured ONNX provider is unavailable"),
+        inference_runtime(config, models, build_type),
+    ):
+        pytest.fail("A query string must not bypass provider validation")
+    assert ort.InferenceSession is original_session

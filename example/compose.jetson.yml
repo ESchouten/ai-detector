@@ -1,0 +1,25 @@
+# JetPack 6: the NVIDIA runtime and image must match the Jetson's JetPack version.
+services:
+  aidetector:
+    image: "ghcr.io/eschouten/ai-detector:latest-jetpack6"
+    restart: unless-stopped
+    runtime: nvidia
+    ipc: host
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    volumes:
+      - .:/data
+
+  web:
+    image: "ghcr.io/eschouten/ai-detector-web:latest"
+    restart: unless-stopped
+    depends_on:
+      - aidetector
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+    ports:
+      - "80:3000"
+    volumes_from:
+      - aidetector

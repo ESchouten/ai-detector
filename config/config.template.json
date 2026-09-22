@@ -1,3 +1,20 @@
 {
-    "$schema": "https://raw.githubusercontent.com/ESchouten/ai-detector/main/config/config.schema.json"
+  "$schema": "https://raw.githubusercontent.com/ESchouten/ai-detector/main/config/config.schema.json",
+  "detectors": [
+    {
+      "detection": {
+        "source": [
+          "video.mp4"
+        ]
+      },
+      "yolo": {
+        "model": "yolo11n.pt",
+        "confidence": 0.5,
+        "frames_min": 3
+      },
+      "exporters": {
+        "disk": {}
+      }
+    }
+  ]
 }

@@ -1,9 +1,9 @@
-await import('reflect-metadata');
+import 'reflect-metadata';
+import type { Handle } from '@sveltejs/kit';
+import { building } from '$app/environment';
+import { initializeDetector } from '$lib/server/detector-service';
 
-if (typeof Reflect === 'undefined' || typeof Reflect.getMetadata !== 'function') {
-	throw new Error('Failed to initialize reflect-metadata for server startup.');
-}
-
-import { getConfig } from "$lib/remote/config.remote";
-
-// getConfig();
+export const handle: Handle = async ({ event, resolve }) => {
+	if (!building) await initializeDetector();
+	return resolve(event);
+};

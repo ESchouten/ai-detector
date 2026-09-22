@@ -1,6 +1,7 @@
 services:
   aidetector:
     image: "ghcr.io/eschouten/ai-detector:latest"
+    restart: unless-stopped
     ipc: host
     ulimits:
       memlock: -1
@@ -18,6 +19,7 @@ services:
 
   web:
     image: "ghcr.io/eschouten/ai-detector-web:latest"
+    restart: unless-stopped
     depends_on:
       - aidetector
     environment:

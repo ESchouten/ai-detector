@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@jesterkit/exe-sveltekit@0.1.7':
-    hash: 4pdl6y5z4w3mjvm6z7aaoy3i3q
+    hash: zebocw4vlqyazbpofmd3f2w5qu
     path: patches/@jesterkit__exe-sveltekit@0.1.7.patch
 
 importers:
@@ -15,7 +15,7 @@ importers:
     dependencies:
       '@jesterkit/exe-sveltekit':
         specifier: ^0.1.7
-        version: 0.1.7(patch_hash=4pdl6y5z4w3mjvm6z7aaoy3i3q)(typescript@5.9.3)
+        version: 0.1.7(patch_hash=zebocw4vlqyazbpofmd3f2w5qu)(typescript@5.9.3)
       '@monaco-editor/loader':
         specifier: ^1.7.0
         version: 1.7.0
@@ -2312,7 +2312,7 @@ snapshots:
     dependencies:
       '@swc/helpers': 0.5.18
 
-  '@jesterkit/exe-sveltekit@0.1.7(patch_hash=4pdl6y5z4w3mjvm6z7aaoy3i3q)(typescript@5.9.3)':
+  '@jesterkit/exe-sveltekit@0.1.7(patch_hash=zebocw4vlqyazbpofmd3f2w5qu)(typescript@5.9.3)':
     dependencies:
       typescript: 5.9.3
 

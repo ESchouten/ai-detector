@@ -3,6 +3,8 @@ config.json
 config.**.json
 yolo11**
 app.json
+runtime.json
+/application-dist/
 !example/config.json
 !web/src/routes/(admin)/detections
 web/static/_internal/ffmpeg
@@ -13,6 +15,8 @@ web/static/_internal/ffmpeg.exe
 .cache/
 .pytest_cache/
 .ruff_cache/
+.pnpm-store/
+__pycache__/
 .venv-test/
 
 # Downloaded datasets and ordinary video recordings

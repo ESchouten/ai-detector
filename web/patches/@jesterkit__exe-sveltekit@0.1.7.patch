@@ -1,5 +1,5 @@
 diff --git a/dist/server/index.ts b/dist/server/index.ts
-index 8eff4c4d353b96d9d7ee756f6ecbc2674aa84b89..09413a9ce47291a660e04976108921cd8fd25666 100644
+index b612b3fa0d80710e313335cc0b1843f0d7519031..03f86cc3ec27a7dbb6f6becbe3e931d2fff854b7 100644
 --- a/dist/server/index.ts
 +++ b/dist/server/index.ts
 @@ -1,7 +1,11 @@
@@ -15,7 +15,7 @@ index 8eff4c4d353b96d9d7ee756f6ecbc2674aa84b89..09413a9ce47291a660e04976108921cd
  
  // @ts-ignore
  import { assetMap } from "./assets.generated.ts";
-@@ -104,8 +108,249 @@ async function gracefulShutdown(reason: 'SIGINT' | 'SIGTERM') {
+@@ -104,8 +108,250 @@ async function gracefulShutdown(reason: 'SIGINT' | 'SIGTERM') {
  process.on('SIGTERM', gracefulShutdown);
  process.on('SIGINT', gracefulShutdown);
  
@@ -28,6 +28,7 @@ index 8eff4c4d353b96d9d7ee756f6ecbc2674aa84b89..09413a9ce47291a660e04976108921cd
 +
 +	try {
 +		const child = spawn(command, args, { detached: true, stdio: "ignore" });
++		child.on("error", () => console.warn(`Open ${url} in your browser to continue setup.`));
 +		child.unref();
 +	} catch (error) {
 +		console.warn(`Could not open browser for ${url}:`, error);
@@ -262,11 +263,12 @@ index 8eff4c4d353b96d9d7ee756f6ecbc2674aa84b89..09413a9ce47291a660e04976108921cd
 +
  const server = Bun.serve({
 -	port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
-+	port: process.env.PORT ? parseInt(process.env.PORT) : 80,
- 	hostname: "0.0.0.0",
+-	hostname: "0.0.0.0",
++	port: process.env.PORT ? parseInt(process.env.PORT) : 8765,
++	hostname: process.env.HOST || "127.0.0.1",
  	idleTimeout: process.env.BUN_IDLE_TIMEOUT ? parseInt(process.env.BUN_IDLE_TIMEOUT) : 255,
  	async fetch(req: Request, bunServer: Bun.Server) {
-@@ -131,4 +376,21 @@ const server = Bun.serve({
+@@ -131,4 +377,17 @@ const server = Bun.serve({
  	},
  });
  
@@ -277,15 +279,11 @@ index 8eff4c4d353b96d9d7ee756f6ecbc2674aa84b89..09413a9ce47291a660e04976108921cd
 +const localNameUrl = localHostname ? `http://${localHost}${portSuffix}` : null;
 +const lanUrls = getLanUrls(portSuffix);
 +
-+console.log(`💿 Listening on http://localhost${portSuffix}`);
-+if (platform === "win32") {
-+	console.log(`🛡️ If another device cannot connect, allow this app through Windows Firewall on Private networks (TCP ${server.port}, UDP ${MDNS_PORT}).`);
++const browserUrl = `http://localhost${portSuffix}/`;
++console.log(`AI Detector is ready at ${browserUrl}`);
++console.log("Keep this application open while detection is needed.");
++openBrowser(browserUrl);
++if (process.env.HOST === "0.0.0.0") {
++    for (const url of lanUrls) console.log(`LAN URL: ${url}`);
++    if (localNameUrl) startMdnsResponder(localHost);
 +}
-+if (lanUrls.length) {
-+	for (const url of lanUrls) console.log(`🌐 LAN URL: ${url}`);
-+	openBrowser(localNameUrl ?? lanUrls[0]);
-+} else if (localNameUrl) {
-+	console.log(`🌐 LAN URL: ${localNameUrl}`);
-+	openBrowser(localNameUrl);
-+}
-+if (localNameUrl) startMdnsResponder(localHost);

@@ -1,0 +1,162 @@
+name: Application download
+
+on:
+  push:
+    tags: ['app/v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    name: Matching NVIDIA image
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+          docker-images: true
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        id: build
+        with:
+          context: detector
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/eschouten/ai-detector:app-${{ github.sha }}
+          build-args: REF_NAME=${{ github.ref_name }}
+          cache-from: type=gha,scope=application
+          cache-to: type=gha,mode=max,scope=application
+
+  native:
+    name: ${{ matrix.platform }} application
+    needs: image
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-x64
+            runner: windows-latest
+            target: windows-x64-baseline
+            extra: windowsml
+            suffix: .exe
+            pyinstaller: --collect-all winui3 --collect-all winrt
+          - platform: macos-arm64
+            runner: macos-latest
+            target: darwin-arm64
+            extra: default
+            suffix: ''
+            pyinstaller: ''
+          - platform: linux-x64
+            runner: ubuntu-22.04
+            target: linux-x64-baseline
+            extra: default
+            suffix: ''
+            pyinstaller: ''
+    defaults:
+      run:
+        shell: bash
+    env:
+      UV_PYTHON: '3.11'
+      LITELLM_LOCAL_MODEL_COST_MAP: 'true'
+      YOLO_AUTOINSTALL: 'false'
+      ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.9'
+      - name: Build detector
+        working-directory: detector
+        run: |
+          uv python install
+          uv sync --locked --extra ${{ matrix.extra }}
+          printf 'TYPE = "${{ matrix.extra }}"\nREF_NAME = "${{ github.ref_name }}"\n' > src/aidetector/version.py
+          uv run --no-sync pyinstaller src/aidetector/__main__.py --name aidetector --onedir --collect-all ultralytics --collect-all litellm --collect-all imageio_ffmpeg --collect-all onnxruntime --collect-all onnx --hidden-import=tiktoken_ext.openai_public --hidden-import=tiktoken_ext --paths src --clean --noconfirm ${{ matrix.pyinstaller }}
+      - name: Smoke test packaged detector
+        working-directory: detector
+        run: |
+          uv run --no-sync python -m tests.support.smoke_package "dist/aidetector/aidetector${{ matrix.suffix }}"
+          uv run --no-sync python -m tests.support.smoke_package "dist/aidetector/aidetector${{ matrix.suffix }}" --model-format pt
+      - name: Install web dependencies
+        working-directory: web
+        run: pnpm install --frozen-lockfile
+      - name: Check web application
+        working-directory: web
+        run: |
+          pnpm check
+          pnpm test
+      - name: Warm Bun compiler on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $folder = "C:\bun-warmup-${env:GITHUB_RUN_ID}"
+          New-Item -ItemType Directory -Path $folder -Force | Out-Null
+          Set-Content -Path "$folder\index.ts" -Value 'console.log("warmup");'
+          Push-Location $folder
+          bun build --compile --target=bun-windows-x64-baseline index.ts --outfile warmup.exe
+          if ($LASTEXITCODE -ne 0) { throw "Bun warmup failed" }
+          Pop-Location
+      - name: Build web executable
+        working-directory: web
+        env:
+          AI_DETECTOR_WEB_TARGET: ${{ matrix.target }}
+        run: |
+          node -e 'require("fs").writeFileSync("src/lib/version.ts", "export const version = " + JSON.stringify(process.env.GITHUB_REF_NAME) + ";\n")'
+          pnpm build
+      - name: Assemble application
+        run: |
+          ffmpeg=$(cd web && node -p 'require("ffmpeg-static")')
+          uv run --project detector --no-sync python distribution/package.py --detector detector/dist/aidetector --web "web/dist/ai-detector-web${{ matrix.suffix }}" --ffmpeg "$ffmpeg" --output application-dist --platform '${{ matrix.platform }}' --image 'ghcr.io/eschouten/ai-detector@${{ needs.image.outputs.digest }}'
+      - name: Smoke test complete download
+        run: uv run --project detector --no-sync python distribution/smoke.py 'application-dist/AI-Detector-${{ matrix.platform }}'
+      - uses: actions/upload-artifact@v7
+        with:
+          name: AI-Detector-${{ matrix.platform }}
+          path: |
+            application-dist/*.zip
+            application-dist/*.sha256
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/app/v')
+    needs: native
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: AI-Detector-*
+          path: downloads
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: AI Detector ${{ github.ref_name }}
+          files: downloads/*
+          body: |
+            Download the ZIP for your computer and extract it completely. Open **AI Detector**; your browser opens the camera setup. Python and Node are included.
+
+            NVIDIA detection can use Docker; the setup checks its GPU support and links to missing prerequisites. Other systems use the included native detector. These builds are currently unsigned, so your operating system may request permission to open them.
+
+            Supported downloads: Windows x64, Apple Silicon macOS, Linux x64 (glibc 2.35 or newer). Existing detector-only and Docker deployments remain available separately.

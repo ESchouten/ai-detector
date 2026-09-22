@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Detector: debug reference flow",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "cwd": "${workspaceFolder}/detector",
+      "args": [
+        "-q",
+        "-s",
+        "tests/test_reference_flow.py::test_video_to_validated_archive_uses_real_media_and_flushes_at_eof"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

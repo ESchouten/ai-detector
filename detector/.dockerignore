@@ -1,5 +1,14 @@
-# Exclude the project virtual environment from image builds
-.venv
-.cache
-detections
-__pycache__
+**
+!Dockerfile
+!pyproject.toml
+!uv.lock
+!README.md
+!ARCHITECTURE.md
+!MIGRATION.md
+!QUALITY.md
+!REVIEW.md
+!LICENSE
+!src/
+!src/**
+src/**/__pycache__
+src/**/*.pyc

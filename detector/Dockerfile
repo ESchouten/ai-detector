@@ -2,9 +2,10 @@ ARG TARGETARCH
 ARG ULTRALYTICS_TAG_AMD64=latest
 ARG ULTRALYTICS_TAG_ARM64=latest-nvidia-arm64
 
-FROM ultralytics/ultralytics:${ULTRALYTICS_TAG_AMD64} AS runtime-amd64
-FROM ultralytics/ultralytics:${ULTRALYTICS_TAG_ARM64} AS runtime-arm64
+FROM --platform=linux/amd64 ultralytics/ultralytics:${ULTRALYTICS_TAG_AMD64} AS runtime-amd64
+FROM --platform=linux/arm64 ultralytics/ultralytics:${ULTRALYTICS_TAG_ARM64} AS runtime-arm64
 FROM runtime-${TARGETARCH} AS runtime
+ARG TARGETARCH
 
 # Install uv for fast package installation
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
@@ -16,8 +17,8 @@ COPY . /app
 
 # Write version file with REF_NAME (defaults to "main" if not provided)
 ARG REF_NAME=main
-RUN echo "TYPE = \"cuda\"" > /app/src/aidetector/utils/version.py
-RUN echo "REF_NAME = \"${REF_NAME}\"" >> /app/src/aidetector/utils/version.py
+RUN echo "TYPE = \"cuda\"" > /app/src/aidetector/version.py
+RUN echo "REF_NAME = \"${REF_NAME}\"" >> /app/src/aidetector/version.py
 
 # Lock torch versions to prevent replacement by system packages
 RUN pip freeze | grep -E "^(torch|torchvision|torchaudio)" > constraints.txt
@@ -48,4 +49,4 @@ USER nonroot
 WORKDIR /data
 
 # Run the application
-CMD ["python3", "/app/src/aidetector/__init__.py"]
+CMD ["python3", "-m", "aidetector"]

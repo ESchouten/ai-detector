@@ -1,0 +1,39 @@
+name: Web and setup tests
+
+on:
+  pull_request:
+    paths: ['web/**', 'config/**', 'distribution/**', 'compose.yml', 'example/compose*.yml', '.github/workflows/web-tests.yml', '.github/workflows/application.yml']
+  push:
+    paths: ['web/**', 'config/**', 'distribution/**', 'compose.yml', 'example/compose*.yml', '.github/workflows/web-tests.yml', '.github/workflows/application.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - run: pnpm install --frozen-lockfile
+        working-directory: web
+      - run: pnpm check && pnpm test && pnpm build
+        working-directory: web
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install desktop launcher test tools
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
+      - run: python -m unittest discover -s distribution -p 'test_*.py'
+      - name: Validate Docker Compose deployments
+        run: |
+          docker compose -f compose.yml config --quiet
+          docker compose -f example/compose.yml config --quiet
+          docker compose -f example/compose.jetson.yml config --quiet

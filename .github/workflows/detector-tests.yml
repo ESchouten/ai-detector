@@ -4,13 +4,17 @@ on:
   pull_request:
     paths:
       - "detector/**"
+      - "config/**"
       - ".github/workflows/detector-tests.yml"
+      - ".github/workflows/detector.yaml"
   push:
     branches:
       - "**"
     paths:
       - "detector/**"
+      - "config/**"
       - ".github/workflows/detector-tests.yml"
+      - ".github/workflows/detector.yaml"
   workflow_dispatch:
 
 permissions:
@@ -18,21 +22,34 @@ permissions:
 
 jobs:
   test:
-    name: Python ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest]
         python-version:
           - "3.10"
           - "3.11"
+          - "3.12"
+        include:
+          - os: windows-latest
+            python-version: "3.11"
+          - os: macos-latest
+            python-version: "3.11"
     env:
       UV_PYTHON: ${{ matrix.python-version }}
+      LITELLM_LOCAL_MODEL_COST_MAP: "true"
+      YOLO_CONFIG_DIR: ${{ runner.temp }}/yolo
+      MPLCONFIGDIR: ${{ runner.temp }}/matplotlib
     defaults:
       run:
         working-directory: detector
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -42,11 +59,128 @@ jobs:
       - name: Set up Python
         run: uv python install
 
+      - name: Install locked dependencies
+        run: uv sync --locked --extra default
+
       - name: Ruff
-        run: uv run ruff check src/aidetector tests
+        run: uv run --no-sync ruff check src/aidetector tests tools
 
-      - name: Compile
-        run: uv run python -m compileall src/aidetector
+      - name: Formatting
+        run: uv run --no-sync ruff format --check src/aidetector tests tools
 
-      - name: Pytest
-        run: uv run pytest
+      - name: Types
+        run: uv run --no-sync ty check src/aidetector tools
+
+      - name: Architecture contracts
+        run: uv run --no-sync lint-imports --no-cache
+
+      - name: Pytest with branch coverage
+        run: uv run --no-sync coverage run -m pytest
+
+      - name: Coverage report
+        run: |
+          uv run --no-sync coverage combine
+          uv run --no-sync coverage report
+
+      - name: Complexity and coverage reports
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        run: |
+          mkdir -p .reports
+          uv run --no-sync radon cc --show-complexity --show-closures --min B src/aidetector
+          uv run --no-sync radon cc --show-closures --json --output-file .reports/complexity.json src/aidetector
+          uv run --no-sync coverage json -o .reports/coverage.json
+          uv run --no-sync coverage html
+          uv run --no-sync coverage xml
+
+      - name: Changes in complexity and dependencies
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          base="$BASE_SHA"
+          if [[ -z "$base" || "$base" =~ ^0+$ ]]; then
+            base=$(git rev-parse --verify HEAD^ 2>/dev/null || true)
+            base=${base:-empty}
+          fi
+          if [[ "$base" != empty ]] && ! git cat-file -e "${base}^{commit}"; then
+            git fetch --no-tags origin "$base"
+          fi
+          uv run --no-sync python tools/quality_report.py --base "$base" --output .reports/quality
+          cat .reports/quality.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload quality reports
+        if: always() && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v7
+        with:
+          name: detector-quality
+          path: detector/.reports/
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Schemas
+        run: uv run --no-sync generate-schema --check
+
+      - name: Build wheel and source distribution
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        run: uv build
+
+  mutation:
+    name: Domain mutation testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      UV_PYTHON: "3.12"
+    defaults:
+      run:
+        working-directory: detector
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv python install
+      - run: uv sync --locked --extra default
+      - name: Mutate domain rules
+        run: uv run --no-sync mutmut run --max-children 2
+      - name: Mutation results
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p .reports
+          uv run --no-sync mutmut export-cicd-stats
+          uv run --no-sync mutmut results > .reports/mutations.txt
+          cp mutants/mutmut-cicd-stats.json .reports/mutations.json
+          {
+            echo '### Domain mutation results'
+            echo 'Survivors need review; mutation counts are advisory, not a correctness score.'
+            echo '```json'
+            cat .reports/mutations.json
+            echo '```'
+            echo '```text'
+            cat .reports/mutations.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Check mutation run completed
+        run: |
+          uv run --no-sync python - <<'PY'
+          import json
+          from pathlib import Path
+
+          stats = json.loads(Path(".reports/mutations.json").read_text())
+          incomplete = (
+              "skipped", "suspicious", "timeout",
+              "check_was_interrupted_by_user", "segfault",
+          )
+          assert stats["total"] > 0, "No domain mutations were evaluated"
+          assert not any(stats[name] for name in incomplete), stats
+          assert stats["killed"] + stats["survived"] + stats["no_tests"] == stats["total"], stats
+          PY
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: detector-mutations
+          path: detector/.reports/mutations.*
+          retention-days: 14
+          if-no-files-found: error

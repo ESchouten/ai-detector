@@ -1,36 +1,20 @@
-import { spawnSync } from 'node:child_process';
+import { execFile } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
-import { chmod, mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
+import { promisify } from 'node:util';
 import ffmpegStatic from 'ffmpeg-static';
 
-let cachedPath: string | null | undefined;
-let pendingPath: Promise<string | null> | null = null;
+export { sanitizeSourceForLogs, sanitizeTextForLogs } from './runtime-logs.ts';
+
+const execute = promisify(execFile);
+let cachedPath: string | undefined;
+let pendingPath: Promise<string | null> | undefined;
 
 export const getExecutableName = () => (process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg');
-
 export const isRtspSource = (source: string) => /^rtsps?:\/\//i.test(source.trim());
-
-export function sanitizeSourceForLogs(source: string): string {
-	const sanitized = source.replace(
-		/((?:^|[?&;/])(?:user(?:name)?|pass(?:word)?|pwd|token|key)=)([^&;/?\s]+)/gi,
-		'$1***'
-	);
-
-	try {
-		const url = new URL(sanitized);
-		url.username = url.username ? '***' : '';
-		url.password = url.password ? '***' : '';
-		return url.toString();
-	} catch {
-		return sanitized;
-	}
-}
-
-export function sanitizeTextForLogs(text: string): string {
-	return text.replace(/rtsps?:\/\/[^\s\r\n]+/gi, (source) => sanitizeSourceForLogs(source));
-}
 
 export function getRtspInputArgs(source: string): string[] {
 	return [
@@ -49,55 +33,45 @@ export function getRtspInputArgs(source: string): string[] {
 	];
 }
 
-function canRun(command: string): boolean {
-	const probe = spawnSync(command, ['-version'], {
-		stdio: ['ignore', 'ignore', 'ignore'],
-		windowsHide: true
-	});
-	return !probe.error && probe.status === 0;
-}
-
-async function extractFfmpeg(requestUrl: URL): Promise<string | null> {
-	const name = getExecutableName();
-	const file = path.resolve(tmpdir(), 'ai-detector-web', 'bin', name);
-	if (existsSync(file)) {
-		return file;
-	}
-
-	let response: Response;
+async function canRun(command: string): Promise<boolean> {
 	try {
-		response = await fetch(new URL(`/_internal/${name}`, requestUrl));
+		await execute(command, ['-version'], {
+			timeout: 5000,
+			killSignal: 'SIGKILL',
+			windowsHide: true
+		});
+		return true;
 	} catch {
-		return null;
+		return false;
 	}
-
-	if (!response.ok) {
-		return null;
-	}
-
-	const bytes = new Uint8Array(await response.arrayBuffer());
-	if (bytes.byteLength === 0) {
-		return null;
-	}
-
-	await mkdir(path.dirname(file), { recursive: true });
-	await writeFile(file, bytes);
-	if (process.platform !== 'win32') {
-		await chmod(file, 0o755);
-	}
-	return file;
 }
 
-async function resolveFfmpegPath(requestUrl: URL): Promise<string | null> {
+async function extractBundledFfmpeg(): Promise<string | null> {
+	// The executable adapter embeds static/_internal/ffmpeg as a Bun file asset.
+	// Read those trusted bytes locally; request headers never choose executable content.
+	const bun = (globalThis as typeof globalThis & { Bun?: { embeddedFiles: File[] } }).Bun;
+	const suffix = process.platform === 'win32' ? '.exe' : '.';
+	const asset = bun?.embeddedFiles.find(
+		(file) => /^ffmpeg-[a-z0-9]+\.(?:exe)?$/.test(file.name) && file.name.endsWith(suffix)
+	);
+	if (!asset) return null;
+	const target = path.join(tmpdir(), 'ai-detector-web', 'bin', asset.name);
+	if (existsSync(target)) return target;
+	await mkdir(path.dirname(target), { recursive: true });
+	const pending = `${target}.${randomUUID()}.tmp`;
+	try {
+		await writeFile(pending, new Uint8Array(await asset.arrayBuffer()), { mode: 0o755 });
+		await rename(pending, target);
+	} finally {
+		await rm(pending, { force: true });
+	}
+	return target;
+}
+
+async function resolveFfmpegPath(): Promise<string | null> {
 	const configured = process.env.FFMPEG_PATH?.trim();
-	if (configured && (existsSync(configured) || canRun(configured))) {
-		return configured;
-	}
-
-	if (typeof ffmpegStatic === 'string' && existsSync(ffmpegStatic)) {
-		return ffmpegStatic;
-	}
-
+	if (configured && (existsSync(configured) || (await canRun(configured)))) return configured;
+	if (typeof ffmpegStatic === 'string' && existsSync(ffmpegStatic)) return ffmpegStatic;
 	const name = getExecutableName();
 	for (const candidate of [
 		path.resolve(path.dirname(process.execPath), name),
@@ -105,22 +79,17 @@ async function resolveFfmpegPath(requestUrl: URL): Promise<string | null> {
 		path.resolve(process.cwd(), name),
 		path.resolve(process.cwd(), 'bin', name)
 	]) {
-		if (existsSync(candidate)) {
-			return candidate;
-		}
+		if (existsSync(candidate)) return candidate;
 	}
-
-	return (await extractFfmpeg(requestUrl)) ?? (canRun('ffmpeg') ? 'ffmpeg' : null);
+	return (await extractBundledFfmpeg()) ?? ((await canRun('ffmpeg')) ? 'ffmpeg' : null);
 }
 
-export async function getFfmpegPathWithFallback(requestUrl: URL): Promise<string | null> {
-	if (cachedPath !== undefined) {
-		return cachedPath;
-	}
-
-	pendingPath ??= resolveFfmpegPath(requestUrl).finally(() => {
-		pendingPath = null;
+export async function getFfmpegPathWithFallback(): Promise<string | null> {
+	if (cachedPath) return cachedPath;
+	pendingPath ??= resolveFfmpegPath().finally(() => {
+		pendingPath = undefined;
 	});
-	cachedPath = await pendingPath;
-	return cachedPath;
+	const result = await pendingPath;
+	if (result) cachedPath = result;
+	return result;
 }

@@ -23,7 +23,8 @@ export interface DetectorConfig {
 		model: string;
 		confidence?: number | Record<string, number>;
 		frames_min?: number;
-	};
+		[key: string]: unknown;
+	} | null;
 	exporters?: {
 		telegram?: TelegramConfig[];
 		[key: string]: unknown[] | undefined;
@@ -35,10 +36,11 @@ export interface TelegramConfig {
 	token: string;
 	chat: string;
 	alert_every?: number;
+	[key: string]: unknown;
 }
 
 export interface Config {
-	$schema?: string;
+	$schema?: string | null;
 	detectors: DetectorConfig[];
 	[key: string]: unknown;
 }
@@ -60,4 +62,9 @@ export interface TelegramMeta extends TelegramConfig {
 export interface StreamMeta {
 	label?: string;
 	source: string;
+}
+
+export interface Configuration {
+	config: Config;
+	app: AppConfig;
 }

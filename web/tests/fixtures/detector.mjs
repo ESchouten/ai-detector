@@ -3,7 +3,12 @@ import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 const configPath = process.argv[process.argv.indexOf('--config') + 1];
 const config = JSON.parse(readFileSync(configPath, 'utf8'));
 if (process.argv.includes('--check-config')) {
-	if (config.holdCheck) await new Promise((resolve) => setTimeout(resolve, 60000));
+	if (config.holdCheck) {
+		process.on('SIGTERM', () => {});
+		writeFileSync('check-pid.txt', String(process.pid));
+		console.log('Checking configuration');
+		await new Promise((resolve) => setTimeout(resolve, 60000));
+	}
 	if (!config.detectors?.length) {
 		console.error('Add a detector');
 		process.exit(2);

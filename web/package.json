@@ -6,15 +6,22 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
+		"start": "node node-server.mjs",
 		"build": "vite build",
 		"preview": "vite preview",
-		"prepare": "svelte-kit sync || echo ''",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"prepare": "svelte-kit sync",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"shadcn": "pnpx shadcn-svelte@latest update --all --yes && pnpm format",
-		"test": "node --test tests/*.test.ts"
+		"test": "node --test tests/*.test.ts",
+		"test:production": "node --test tests/production/*.test.mjs",
+		"architecture": "svelte-kit sync && depcruise src --config .dependency-cruiser.cjs",
+		"architecture:graph": "svelte-kit sync && node -e \"require('node:fs').mkdirSync('.reports', {recursive:true})\" && depcruise src/lib/server --config .dependency-cruiser.cjs --include-only \"^(src/|../config/)\" --output-type mermaid --output-to .reports/dependencies.mmd",
+		"test:coverage": "node --test --experimental-test-coverage --test-coverage-include=\"src/lib/**/*.ts\" tests/*.test.ts",
+		"quality": "pnpm lint && pnpm check && pnpm architecture && pnpm test",
+		"architecture:metrics": "svelte-kit sync && depcruise src --config .dependency-cruiser.cjs --output-type metrics"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.4.1",
@@ -29,6 +36,7 @@
 		"@types/node": "^22.19.11",
 		"bits-ui": "^2.15.5",
 		"clsx": "^2.1.1",
+		"dependency-cruiser": "^18.4.0",
 		"embla-carousel-svelte": "^8.6.0",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^10.1.8",
@@ -59,14 +67,18 @@
 	},
 	"dependencies": {
 		"@jesterkit/exe-sveltekit": "^0.1.7",
-		"@monaco-editor/loader": "^1.7.0",
+		"ajv": "^8.17.1",
 		"ffmpeg-static": "^5.3.0",
-		"monaco-editor": "^0.55.1",
-		"reflect-metadata": "^0.2.2"
+		"monaco-editor": "^0.55.1"
 	},
 	"pnpm": {
 		"patchedDependencies": {
-			"@jesterkit/exe-sveltekit@0.1.7": "patches/@jesterkit__exe-sveltekit@0.1.7.patch"
+			"@jesterkit/exe-sveltekit@0.1.7": "patches/@jesterkit__exe-sveltekit@0.1.7.patch",
+			"dependency-cruiser@18.4.0": "patches/dependency-cruiser@18.4.0.patch"
 		}
+	},
+	"engines": {
+		"node": ">=24 <25",
+		"pnpm": ">=9.15.9 <10"
 	}
 }

@@ -63,3 +63,7 @@ Use the Compose file belonging to your existing installation so it keeps the sam
 Both services use `restart: unless-stopped`. A deliberate `docker compose stop` keeps them stopped across reboots; run `docker compose up -d` with the same Compose file to resume them. Closing the browser does not stop either service.
 
 Remove browser autostart with `python3 distribution/linux_startup.py uninstall`. This keeps Docker, services, settings and recordings. The helper copies its launcher into the user's data folder, so browser autostart does not depend on keeping a checkout of the installer; keep the installation's mounted data folder in place.
+
+## Developing the system
+
+See [the contributor guide](CONTRIBUTING.md) for the repository map, local setup and the **Repository: check** VS Code task. The [web architecture guide](web/ARCHITECTURE.md) explains request, configuration, process and archive boundaries; the [detector architecture](detector/ARCHITECTURE.md) explains event processing.

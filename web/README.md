@@ -17,16 +17,17 @@ Use Node 24 and pnpm 9.15.9:
 ```sh
 pnpm install --frozen-lockfile
 pnpm dev
-pnpm check
-pnpm test
+pnpm quality
 pnpm build
 ```
 
+Run a built Node deployment with `pnpm start` (or `node node-server.mjs`). This entry point keeps the adapter's server and graceful shutdown, while correctly identifying direct HTTP requests on localhost and LAN addresses. `HOST` and `PORT` select the listening interface and port. Run `pnpm test:production` after building to check first-run setup, origin protection and shutdown against the actual server.
+
 To exercise managed detection from source, point `AIDETECTOR_EXECUTABLE` to the detector executable and `AIDETECTOR_DATA_DIR` to a disposable data directory before starting the web server. `AIDETECTOR_DOCKER_IMAGE` optionally selects the exact matching image. With no detector executable configured, the web server remains a frontend for a separately managed detector.
 
-Settings are read without creating or rewriting files. Saves use temporary files and atomic rename; malformed JSON remains an error. The built-in first-run presets are bundled from `../config/detector`, so setup does not fetch them from GitHub. Camera connections and the first model download still need network access.
+Settings are read without creating or rewriting files. The checked-in Python JSON schema validates every save, including separately managed installations. Web requests share a serialized configuration store, so concurrent edits cannot overwrite each other. Saves use temporary files and atomic rename; malformed JSON remains an error. The built-in first-run presets are bundled from `../config/detector`, so setup does not fetch them from GitHub. Camera connections and the first model download still need network access.
 
-`pnpm test` runs platform selection, process lifecycle, cancellation, restart, configuration failure, GPU check failure, credential redaction and data persistence tests. Process fixture tests run on POSIX; Windows shutdown is covered by the Python stdin-control tests and the complete bundle smoke in release CI. `pnpm check` currently reports eight existing Svelte initial-value warnings in unrelated components/editor state.
+`pnpm test` runs platform selection, process lifecycle, cancellation, restart, configuration failure, GPU check failure, credential redaction and data persistence tests. Process fixture tests run on POSIX; Windows shutdown is covered by the Python stdin-control tests and the complete bundle smoke in release CI. `pnpm check` fails on errors and warnings. See the [architecture and reading map](ARCHITECTURE.md) for the source boundaries, test map, complexity limits and generated dependency graph.
 
 ## Building executables
 
@@ -43,5 +44,7 @@ docker build -f web/Dockerfile -t ai-detector-web .
 ```
 
 The image serves port 3000 and reads configuration/recordings in `/data`. The existing Compose files expose port 80. This separately managed deployment intentionally has no Docker socket mount and cannot launch another detector from the web UI.
+
+Direct HTTP works with the hostname or IP address used in the browser; no fixed `ORIGIN` is needed. Behind an HTTPS reverse proxy, set `ORIGIN` to the public origin, for example `https://detector.example.com`. The Node entry point always supplies its own HTTP transport header; it does not trust a browser's forwarded protocol header. SvelteKit's cross-origin request protection remains enabled.
 
 Containers restart at boot when Docker starts, unless deliberately stopped. A web server inside Docker cannot open the host's desktop browser; the [Linux startup helper](../README.md#start-automatically-on-a-jetson-or-linux-desktop) installs a separate desktop-login launcher that waits for the web app and opens its home route.

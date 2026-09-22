@@ -4,7 +4,6 @@
 	import CardOverlay from '$lib/components/card-overlay.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Spinner } from '$lib/components/ui/spinner';
-	import { onDestroy } from 'svelte';
 
 	type Props = {
 		label: string;
@@ -24,7 +23,6 @@
 
 	let imageReady = $state(false);
 	let unavailable = $state(false);
-	let image: HTMLImageElement | null = null;
 
 	const streamUrl = $derived(resolve(`/streams/${encodeURIComponent(source)}`));
 	const loading = $derived(!imageReady && !unavailable);
@@ -39,24 +37,15 @@
 		unavailable = true;
 	}
 
-	function stopStream() {
-		if (!image) {
-			return;
-		}
-
-		image.removeAttribute('src');
-		image.src = 'data:,';
-	}
-
-	$effect(() => {
-		streamUrl;
+	function preview(node: HTMLImageElement) {
 		imageReady = false;
 		unavailable = false;
-
-		return stopStream;
-	});
-
-	onDestroy(stopStream);
+		return {
+			destroy() {
+				node.src = 'data:,';
+			}
+		};
+	}
 </script>
 
 {#if showLoading && loading}
@@ -74,14 +63,16 @@
 						)
 					)}
 	>
-		<img
-			bind:this={image}
-			src={streamUrl}
-			alt={label}
-			class="block h-full w-full object-contain"
-			onload={handleLoad}
-			onerror={handleError}
-		/>
+		{#key streamUrl}
+			<img
+				use:preview
+				src={streamUrl}
+				alt={label}
+				class="block h-full w-full object-contain"
+				onload={handleLoad}
+				onerror={handleError}
+			/>
+		{/key}
 
 		{#if unavailable}
 			<div

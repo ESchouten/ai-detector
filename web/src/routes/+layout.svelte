@@ -7,6 +7,7 @@
 </script>
 
 <svelte:head>
+	<title>AI Detector</title>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 

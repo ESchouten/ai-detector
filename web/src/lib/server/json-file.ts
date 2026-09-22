@@ -2,11 +2,11 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-export async function readJson<T>(file: string): Promise<T | null> {
+export async function readJson<T>(file: string, missing: T | null = null): Promise<T | null> {
 	try {
 		return JSON.parse(await readFile(file, 'utf8')) as T;
 	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
+		if ((error as NodeJS.ErrnoException).code === 'ENOENT') return missing;
 		throw error;
 	}
 }

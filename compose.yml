@@ -20,12 +20,10 @@ services:
   web:
     image: "ghcr.io/eschouten/ai-detector-web:latest"
     restart: unless-stopped
-    depends_on:
-      - aidetector
     environment:
       HOST: 0.0.0.0
       PORT: 3000
     ports:
       - "80:3000"
-    volumes_from:
-      - aidetector
+    volumes:
+      - ./example:/data

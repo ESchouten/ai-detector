@@ -2,7 +2,7 @@
 
 The release boundary is the entire application: one web executable, one native detector directory, FFmpeg, and a small `application.json` recording the exact NVIDIA image digest. The web executable is the user's single entry point.
 
-`application.yml` builds Windows x64, macOS ARM64 and Linux x64 from the same commit as the NVIDIA image. It smoke-tests both ONNX and PT inference in each frozen detector, checks/builds the web app, assembles a ZIP with a SHA-256 checksum, then boots the complete bundle on that runner. `smoke.py` uses a generated BMP and a fresh temporary data folder to verify browser setup, automatic detector startup and a real archived event without cameras, external services or weight downloads. A release is published only after all three native jobs succeed. `workflow_dispatch` produces test artifacts without creating a release.
+`application.yml` builds Windows x64, macOS ARM64 and Linux x64 from the same commit as the NVIDIA image. It checks the distribution scripts, smoke-tests both ONNX and PT inference in each frozen detector, checks/builds the web app, assembles a ZIP with a SHA-256 checksum, then boots the complete bundle on that runner. `smoke.py` uses a generated BMP and a fresh temporary data folder to verify browser setup, automatic detector startup and a real archived event without cameras, external services or weight downloads. Both setup and archive waits report an application exit immediately and share a bounded startup deadline. A release is published only after all three native jobs succeed. `workflow_dispatch` produces test artifacts without creating a release.
 
 For local assembly (Python 3.11+):
 
@@ -18,6 +18,8 @@ python -m unittest discover -s distribution -p 'test_*.py'
 ```
 
 Build the detector with PyInstaller `--onedir --name aidetector`; the workflow contains the required hooks. ZIPs keep the executable permissions and include a plain-language `START HERE.txt`. Package output directories must be fresh, preventing an accidental mix of old and new binaries. User data is never put in release archives.
+
+The standard-library tests cover the three archive layouts, checksums, POSIX executable permissions, native-only previews and refusal to overwrite an existing package. Smoke-helper tests use a local HTTP server and subprocesses to check readiness, process failures, archive validation and timeout behavior. They complement the release workflow's actual executable smoke tests.
 
 The managed runtime lives in `web/src/lib/server/managed-detector.ts`; platform probes and Docker arguments live in `runtime-platform.ts`. SvelteKit hooks construct the manager only at runtime. The first browser request initializes saved startup state, keeping port binding and SvelteKit build operations free of detector starts. The application's automatic browser opening triggers that request; headless launchers must request `/` once. The home route redirects to Setup on first run and Detections after configuration. Standalone web/Docker installations remain unmanaged unless an executable is explicitly configured.
 

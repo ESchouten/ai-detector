@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Badge } from '$lib/components/ui/badge';
 	import CardOverlay from '$lib/components/card-overlay.svelte';
-	import type { Metadata } from '$lib/schema';
+	import type { Detection } from '$lib/detections';
 
 	const stageLabels = {
 		approved: 'Approved',
@@ -24,15 +24,13 @@
 	const overlayBadgeClass = 'bg-black/50 text-white';
 
 	type Props = {
-		entry: Metadata;
+		entry: Detection;
 	};
 
 	let { entry }: Props = $props();
 	let isPlaying = $state(false);
 
-	const stage = $derived(
-		entry.validated === true ? 'approved' : entry.validated === false ? 'rejected' : 'unvalidated'
-	);
+	const stage = $derived(entry.stage);
 
 	function getResource(resource: string) {
 		return `/detections/${[entry.type, stage, entry.timestamp, resource]
@@ -70,7 +68,7 @@
 	{#snippet overlay()}
 		<div class="flex flex-wrap items-center gap-2 text-xs">
 			<Badge variant={stageBadgeVariants[stage]} class={stageBadgeClasses[stage]}>
-				{stageLabels[stage]}
+				{entry.validation_error ? 'Verification failed' : stageLabels[stage]}
 			</Badge>
 			<Badge variant="secondary" class={overlayBadgeClass}>
 				{capitalize(entry.type)}

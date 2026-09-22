@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
+	import type { NavMenu } from '$lib/components/types';
 	import AppSidebar from '$lib/components/app-sidebar.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
@@ -14,18 +16,18 @@
 
 	let { children } = $props();
 
-	const menu = [
+	const menu: NavMenu[] = [
 		{
 			title: 'Overview',
 			items: [
 				{
 					title: 'Detections',
-					url: '/detections',
+					url: resolve('/detections'),
 					icon: CameraIcon
 				},
 				{
 					title: 'Streams',
-					url: '/streams',
+					url: resolve('/streams'),
 					icon: TVIcon
 				}
 			]
@@ -35,24 +37,24 @@
 			items: [
 				{
 					title: 'Setup',
-					url: '/setup',
+					url: resolve('/setup'),
 					icon: CircleCheckIcon
 				},
 				{
 					title: 'Notifications',
-					url: '/notifications',
+					url: resolve('/notifications'),
 					icon: BellIcon
 				},
 				{
 					title: 'Detectors',
-					url: '/detectors',
+					url: resolve('/detectors'),
 					icon: WrenchIcon
 				}
 			]
 		}
 	];
 
-	const secondaryMenu = [
+	const secondaryMenu: NavMenu[] = [
 		{
 			title: 'Support',
 			items: [
@@ -64,19 +66,6 @@
 			]
 		}
 	];
-
-	// const user = {
-	// 	name: 'User',
-	// 	email: 'AI Detector',
-	// 	items: [
-	// 		{
-	// 			title: 'Account',
-	// 			url: '/account',
-	// 			icon: BadgeCheckIcon
-	// 		}
-	// 	],
-	// 	logout: () => console.log('logout')
-	// };
 </script>
 
 <Sidebar.Provider>

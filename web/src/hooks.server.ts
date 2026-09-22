@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import type { Handle } from '@sveltejs/kit';
 import { building } from '$app/environment';
 import { initializeDetector } from '$lib/server/detector-service';

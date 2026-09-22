@@ -7,3 +7,12 @@ bun.lockb
 
 # Miscellaneous
 /static/
+
+# Local settings and recordings (never format user data)
+/config.json
+/app.json
+/runtime.json
+/detections/
+/models/
+
+.reports/

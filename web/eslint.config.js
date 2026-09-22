@@ -37,5 +37,22 @@ export default defineConfig(
 				svelteConfig
 			}
 		}
+	},
+	{
+		files: [
+			'src/lib/components/ui/button/button.svelte',
+			'src/lib/components/nav-main.svelte',
+			'src/lib/components/nav-user.svelte'
+		],
+		// Reusable link components receive already resolved hrefs from their callers.
+		rules: { 'svelte/no-navigation-without-resolve': ['error', { ignoreLinks: true }] }
+	},
+	{
+		files: ['src/**/*.{ts,svelte}'],
+		ignores: ['src/lib/components/ui/**'],
+		rules: {
+			complexity: ['error', 15],
+			'max-depth': ['error', 4]
+		}
 	}
 );

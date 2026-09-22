@@ -2,8 +2,7 @@ diff --git a/dist/server/index.ts b/dist/server/index.ts
 index b612b3fa0d80710e313335cc0b1843f0d7519031..03f86cc3ec27a7dbb6f6becbe3e931d2fff854b7 100644
 --- a/dist/server/index.ts
 +++ b/dist/server/index.ts
-@@ -1,7 +1,11 @@
-+import "reflect-metadata";
+@@ -1,7 +1,10 @@
  ﻿// Libs
  import { file } from "bun";
 +import { createSocket, type Socket } from "node:dgram";
@@ -15,7 +14,7 @@ index b612b3fa0d80710e313335cc0b1843f0d7519031..03f86cc3ec27a7dbb6f6becbe3e931d2
  
  // @ts-ignore
  import { assetMap } from "./assets.generated.ts";
-@@ -104,8 +108,250 @@ async function gracefulShutdown(reason: 'SIGINT' | 'SIGTERM') {
+@@ -104,8 +107,250 @@ async function gracefulShutdown(reason: 'SIGINT' | 'SIGTERM') {
  process.on('SIGTERM', gracefulShutdown);
  process.on('SIGINT', gracefulShutdown);
  
@@ -268,7 +267,7 @@ index b612b3fa0d80710e313335cc0b1843f0d7519031..03f86cc3ec27a7dbb6f6becbe3e931d2
 +	hostname: process.env.HOST || "127.0.0.1",
  	idleTimeout: process.env.BUN_IDLE_TIMEOUT ? parseInt(process.env.BUN_IDLE_TIMEOUT) : 255,
  	async fetch(req: Request, bunServer: Bun.Server) {
-@@ -131,4 +377,17 @@ const server = Bun.serve({
+@@ -131,4 +376,17 @@ const server = Bun.serve({
  	},
  });
  

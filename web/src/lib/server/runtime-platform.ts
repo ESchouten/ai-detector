@@ -15,14 +15,17 @@ export class SetupError extends Error {
 	}
 }
 
-export async function hasNvidiaGpu(): Promise<boolean> {
+export async function hasNvidiaGpu(signal?: AbortSignal): Promise<boolean> {
 	try {
 		const result = await execute('nvidia-smi', ['--query-gpu=name', '--format=csv,noheader'], {
 			timeout: 10000,
-			windowsHide: true
+			windowsHide: true,
+			signal,
+			killSignal: 'SIGKILL'
 		});
 		return result.stdout.trim().length > 0;
 	} catch {
+		signal?.throwIfAborted();
 		// A failed driver probe is not evidence of a usable NVIDIA GPU.
 		return false;
 	}
@@ -37,15 +40,18 @@ export function chooseRuntime(
 	return nvidia && (platform === 'linux' || platform === 'win32') ? 'docker' : 'native';
 }
 
-export async function checkDocker(platform: string): Promise<void> {
+export async function checkDocker(platform: string, signal?: AbortSignal): Promise<void> {
 	const help = platform === 'win32' ? DOCKER_HELP : NVIDIA_HELP;
 	try {
 		const { stdout } = await execute('docker', ['info', '--format', '{{.OSType}}'], {
 			timeout: 15000,
-			windowsHide: true
+			windowsHide: true,
+			signal,
+			killSignal: 'SIGKILL'
 		});
 		if (stdout.trim() === 'linux') return;
 	} catch {
+		signal?.throwIfAborted();
 		throw new SetupError(
 			'Install or open Docker, then try again. Docker must be running on this computer.',
 			help

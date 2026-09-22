@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -204,5 +204,70 @@ test(
 		assert.match(detector.status().logs, /CUDA driver unavailable/);
 		assert.match(detector.status().helpUrl!, /^https:\/\/docs.nvidia.com/);
 		assert.equal(await readJson(path.join(directory, 'runtime.json')), null);
+	}
+);
+
+for (const action of ['start', 'resume', 'apply'] as const) {
+	test(`stop cancels a queued ${action} before it can launch or restart`, posixOnly, async (t) => {
+		const directory = await mkdtemp(path.join(tmpdir(), 'detector-queued-'));
+		const detector = new ManagedDetector({ executable, dataDirectory: directory });
+		t.after(async () => {
+			await detector.stop();
+			await rm(directory, { recursive: true, force: true });
+		});
+		await writeJson(path.join(directory, 'config.json'), config);
+		if (action === 'resume')
+			await writeJson(path.join(directory, 'runtime.json'), { mode: 'native', enabled: true });
+		if (action === 'apply') {
+			await detector.start('native');
+			await waitFor(() => detector.status().logs.includes('camera.local'));
+		}
+		const pending =
+			action === 'start'
+				? detector.start('native')
+				: action === 'resume'
+					? detector.initialize()
+					: detector.apply();
+		await detector.stop();
+		await pending;
+		assert.equal(detector.status().phase, 'stopped');
+		assert.equal(
+			(await readJson<{ enabled: boolean }>(path.join(directory, 'runtime.json')))!.enabled,
+			false
+		);
+		if (action === 'apply')
+			assert.equal(await readFile(path.join(directory, 'starts.txt'), 'utf8'), 'started\n');
+		else await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
+	});
+}
+
+test('an aborted hardware probe cannot select a fallback runtime', async () => {
+	const { hasNvidiaGpu, checkDocker } = await import('../src/lib/server/runtime-platform.ts');
+	const signal = AbortSignal.abort(new Error('startup cancelled'));
+	await assert.rejects(hasNvidiaGpu(signal), /startup cancelled/);
+	await assert.rejects(checkDocker(process.platform, signal), /startup cancelled/);
+});
+
+test(
+	'cancelled validation reaps its child and removes the temporary configuration',
+	posixOnly,
+	async (t) => {
+		const directory = await mkdtemp(path.join(tmpdir(), 'detector-validation-'));
+		const detector = new ManagedDetector({ executable, dataDirectory: directory });
+		const abort = new AbortController();
+		const validation = detector.validate({ ...config, holdCheck: true }, abort.signal);
+		// Observe rejection immediately so cancellation never creates an unhandled promise.
+		const cancelled = assert.rejects(validation, { name: 'AbortError' });
+		t.after(async () => {
+			abort.abort();
+			await cancelled;
+			await rm(directory, { recursive: true, force: true });
+		});
+		await waitFor(() => detector.status().logs.includes('Checking configuration'));
+		const pid = Number(await readFile(path.join(directory, 'check-pid.txt'), 'utf8'));
+		abort.abort();
+		await cancelled;
+		assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
+		assert.equal((await readdir(directory)).filter((name) => name.endsWith('.json')).length, 0);
 	}
 );

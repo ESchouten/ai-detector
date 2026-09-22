@@ -88,11 +88,30 @@ jobs:
           bun-version: '1.3.9'
       - name: Build detector
         working-directory: detector
+        env:
+          AIDETECTOR_BUILD_TYPE: ${{ matrix.extra }}
         run: |
           uv python install
           uv sync --locked --extra ${{ matrix.extra }}
-          printf 'TYPE = "${{ matrix.extra }}"\nREF_NAME = "${{ github.ref_name }}"\n' > src/aidetector/version.py
+          uv run --no-sync python - <<'PY'
+          import os
+          from pathlib import Path
+
+          Path("src/aidetector/version.py").write_text(
+              f"TYPE = {os.environ['AIDETECTOR_BUILD_TYPE']!r}\n"
+              f"REF_NAME = {os.environ['GITHUB_REF_NAME']!r}\n",
+              encoding="utf-8",
+          )
+          PY
           uv run --no-sync pyinstaller src/aidetector/__main__.py --name aidetector --onedir --collect-all ultralytics --collect-all litellm --collect-all imageio_ffmpeg --collect-all onnxruntime --collect-all onnx --hidden-import=tiktoken_ext.openai_public --hidden-import=tiktoken_ext --paths src --clean --noconfirm ${{ matrix.pyinstaller }}
+      - name: Install desktop launcher test tools
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
+      - name: Check distribution scripts
+        run: |
+          uv run --project detector --no-sync ruff check --config detector/pyproject.toml distribution
+          uv run --project detector --no-sync ruff format --check --config detector/pyproject.toml distribution
+          uv run --project detector --no-sync python -m unittest discover -s distribution -p 'test_*.py'
       - name: Smoke test packaged detector
         working-directory: detector
         run: |
@@ -104,8 +123,7 @@ jobs:
       - name: Check web application
         working-directory: web
         run: |
-          pnpm check
-          pnpm test
+          pnpm quality
       - name: Warm Bun compiler on Windows
         if: runner.os == 'Windows'
         shell: pwsh

@@ -1,4 +1,4 @@
-FROM node:22-bookworm-slim AS base
+FROM node:24-bookworm-slim AS base
 
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
@@ -28,6 +28,7 @@ ENV PORT=3000
 
 COPY --from=build --chown=node:node /app/web/build ./build
 COPY --from=build --chown=node:node /app/web/package.json ./package.json
+COPY --from=build --chown=node:node /app/web/node-server.mjs ./node-server.mjs
 COPY --from=build --chown=node:node /app/web/node_modules ./node_modules
 
 RUN mkdir -p /data && chown node:node /data
@@ -37,4 +38,4 @@ WORKDIR /data
 
 EXPOSE 3000
 
-CMD ["node", "/app/build"]
+CMD ["node", "/app/node-server.mjs"]

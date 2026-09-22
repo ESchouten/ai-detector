@@ -1,37 +1,7 @@
-import { DETECTIONS_DIR } from '$lib/server/shared-paths';
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import type { RequestHandler } from './$types';
+import { DETECTIONS_DIR } from '$lib/server/application-paths';
+import { archiveMedia } from '$lib/server/archive-media';
 
-const contentTypes: Record<string, string> = {
-	'.jpg': 'image/jpeg',
-	'.jpeg': 'image/jpeg',
-	'.png': 'image/png',
-	'.gif': 'image/gif',
-	'.webp': 'image/webp',
-	'.bmp': 'image/bmp',
-	'.svg': 'image/svg+xml',
-	'.mp4': 'video/mp4',
-	'.webm': 'video/webm',
-	'.mov': 'video/quicktime',
-	'.json': 'application/json'
-};
-
-export async function GET({ params }) {
-	const resolvedPath = path.join(
-		DETECTIONS_DIR,
-		params.category,
-		params.stage,
-		params.timestamp,
-		params.resource
-	);
-
-	const file = await fs.readFile(resolvedPath);
-	const extension = path.extname(resolvedPath).toLowerCase();
-
-	return new Response(file, {
-		headers: {
-			'Content-Type': contentTypes[extension] ?? 'application/octet-stream',
-			'Cache-Control': 'public, max-age=30'
-		}
-	});
-}
+export const GET: RequestHandler = ({ params, request }) =>
+	archiveMedia(DETECTIONS_DIR, params, request);
+export const HEAD = GET;

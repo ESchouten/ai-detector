@@ -2,7 +2,10 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import { getDetectionPage, getTypes } from '$lib/remote/detections.remote';
-	import { STAGES, type Metadata, type Stage } from '$lib/schema';
+	import { STAGES } from '$lib/schema';
+	import { detectionKey, mergeDetections, type Detection } from '$lib/detections';
+	import { resolve } from '$app/paths';
+	import { untrack } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { Action } from 'svelte/action';
@@ -13,10 +16,10 @@
 	const dayFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'full' });
 
 	const type = $derived(page.url.searchParams.get('type') || undefined);
-	const stage = $derived((page.url.searchParams.get('stage') as Stage | null) || undefined);
+	const stage = $derived(STAGES.find((value) => value === page.url.searchParams.get('stage')));
 	const types = $derived(await getTypes());
 
-	let entries = $state<Metadata[]>([]);
+	let entries = $state<Detection[]>([]);
 	let isLoading = $state(false);
 	let hasMore = $state(true);
 	let nextOffset = $state(0);
@@ -24,7 +27,7 @@
 	let requestVersion = 0;
 
 	const detectionsByDay = $derived.by(() => {
-		const dayDetections = new SvelteMap<string, Array<Metadata>>();
+		const dayDetections = new SvelteMap<string, Detection[]>();
 		for (const detection of entries) {
 			const day = String(detection.timestamp).split('T')[0];
 			if (!dayDetections.has(day)) {
@@ -39,7 +42,7 @@
 		return value.charAt(0).toUpperCase() + value.slice(1);
 	}
 
-	async function loadNextPage(reset = false) {
+	async function loadNextPage(reset = false, filters = { type, stage }) {
 		if (!reset && (isLoading || !hasMore)) {
 			return;
 		}
@@ -54,11 +57,11 @@
 		const version = requestVersion;
 
 		isLoading = true;
+		errorMessage = null;
 
 		try {
 			const result = await getDetectionPage({
-				type,
-				stage,
+				...filters,
 				offset: reset ? 0 : nextOffset,
 				limit: PAGE_SIZE
 			});
@@ -67,7 +70,7 @@
 				return;
 			}
 
-			entries = reset ? result.items : [...entries, ...result.items];
+			entries = reset ? result.items : mergeDetections(entries, result.items);
 			nextOffset = result.nextOffset;
 			hasMore = result.hasMore;
 		} catch (error) {
@@ -97,7 +100,7 @@
 		}
 
 		const search = searchParams.toString();
-		const nextUrl = search ? `${page.url.pathname}?${search}` : page.url.pathname;
+		const nextUrl = resolve(`/detections${search ? `?${search}` : ''}`);
 		const currentUrl = `${page.url.pathname}${page.url.search}`;
 
 		if (nextUrl !== currentUrl) {
@@ -133,13 +136,17 @@
 	};
 
 	$effect(() => {
-		type;
-		stage;
-		void loadNextPage(true);
+		const filters = { type, stage };
+		untrack(() => void loadNextPage(true, filters));
+		return () => {
+			requestVersion += 1;
+		};
 	});
 </script>
 
-<section class="space-y-6">
+<svelte:head><title>Detections · AI Detector</title></svelte:head>
+
+<section class="flex flex-col gap-6">
 	<header class="space-y-1">
 		<h1 class="text-2xl font-semibold tracking-tight">Detections</h1>
 		<p class="text-sm text-muted-foreground">
@@ -163,47 +170,43 @@
 				{/each}
 			</div>
 		{/if}
-		{#if STAGES.length > 0}
-			<div class="flex flex-wrap gap-2">
-				{#each [undefined, ...STAGES] as s (s)}
-					<Button
-						type="button"
-						size="sm"
-						variant={s === stage ? 'default' : 'outline'}
-						aria-pressed={s === stage}
-						onclick={() => updateSearchParams(type || undefined, s)}
-					>
-						{s ? capitalize(s) : 'All stages'}
-					</Button>
-				{/each}
-			</div>
-		{/if}
+		<div class="flex flex-wrap gap-2">
+			{#each [undefined, ...STAGES] as s (s)}
+				<Button
+					type="button"
+					size="sm"
+					variant={s === stage ? 'default' : 'outline'}
+					aria-pressed={s === stage}
+					onclick={() => updateSearchParams(type || undefined, s)}
+				>
+					{s ? capitalize(s) : 'All stages'}
+				</Button>
+			{/each}
+		</div>
 	</div>
 
 	{#if entries.length === 0 && isLoading}
 		<h2 class="text-sm font-semibold text-muted-foreground">Loading detections...</h2>
+	{:else if detectionsByDay.length === 0 && !errorMessage}
+		<p class="text-sm font-semibold text-muted-foreground">No detections found.</p>
 	{:else}
-		{#if detectionsByDay.length === 0}
-			<p class="text-sm font-semibold text-muted-foreground">No detections found.</p>
-		{:else}
-			<div class="space-y-8">
-				{#each detectionsByDay as dayGroup (dayGroup[0])}
-					<section class="space-y-3">
-						<div class="flex items-center gap-2">
-							<h2 class="text-sm font-semibold text-muted-foreground">
-								{dayFormatter.format(new Date(dayGroup[0]))}
-							</h2>
-							<Badge variant="outline">{dayGroup[1].length}</Badge>
-						</div>
-						<div class="grid gap-2 lg:grid-cols-2 2xl:grid-cols-3">
-							{#each dayGroup[1] as entry (String(entry.timestamp))}
-								<DetectionCard {entry} />
-							{/each}
-						</div>
-					</section>
-				{/each}
-			</div>
-		{/if}
+		<div class="space-y-8">
+			{#each detectionsByDay as dayGroup (dayGroup[0])}
+				<section class="space-y-3">
+					<div class="flex items-center gap-2">
+						<h2 class="text-sm font-semibold text-muted-foreground">
+							{dayFormatter.format(new Date(`${dayGroup[0]}T00:00:00`))}
+						</h2>
+						<Badge variant="outline">{dayGroup[1].length}</Badge>
+					</div>
+					<div class="grid gap-2 lg:grid-cols-2 2xl:grid-cols-3">
+						{#each dayGroup[1] as entry (detectionKey(entry))}
+							<DetectionCard {entry} />
+						{/each}
+					</div>
+				</section>
+			{/each}
+		</div>
 	{/if}
 
 	{#if errorMessage}

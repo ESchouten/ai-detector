@@ -1,8 +1,7 @@
 import { redirect } from '@sveltejs/kit';
-import { getDetectors } from '$lib/remote/detector.remote';
+import { configuration } from '$lib/server/configuration';
 
 export async function load() {
-	const detectors = await getDetectors();
-
-	throw redirect(302, detectors.length > 0 ? '/detections' : '/setup');
+	const { config } = await configuration.read();
+	redirect(302, config.detectors.length > 0 ? '/detections' : '/setup');
 }

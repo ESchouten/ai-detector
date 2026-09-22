@@ -73,7 +73,7 @@ jobs:
       - name: Version
         id: version
         run: |
-          $version = "${{ github.ref_name }}"
+          $version = $env:GITHUB_REF_NAME
           if ($version.StartsWith("web/")) {
             $version = $version.Substring("web/".Length)
           } else {
@@ -83,6 +83,10 @@ jobs:
           "version=$version" >> $env:GITHUB_OUTPUT
           "ARTIFACT_NAME=$artifactName" >> $env:GITHUB_ENV
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -90,9 +94,11 @@ jobs:
 
       - name: Install Bun
         uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.9'
 
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: "Warm Bun compile cache (Windows D: workaround)"
         run: |
@@ -124,6 +130,9 @@ jobs:
           }
 
           Write-Host "FFmpeg asset staged at $targetPath ($($fileInfo.Length) bytes)"
+
+      - name: Check application
+        run: pnpm quality
 
       - name: Build
         env:
@@ -180,6 +189,10 @@ jobs:
           echo "version=${version}" >> "$GITHUB_OUTPUT"
           echo "ARTIFACT_NAME=aidetector-web-osx-${version}" >> "$GITHUB_ENV"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -187,9 +200,11 @@ jobs:
 
       - name: Install Bun
         uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.9'
 
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Stage FFmpeg static asset
         run: |
@@ -209,6 +224,9 @@ jobs:
           fi
 
           echo "FFmpeg asset staged at static/_internal/ffmpeg ($(wc -c < static/_internal/ffmpeg) bytes)"
+
+      - name: Check application
+        run: pnpm quality
 
       - name: Build
         env:

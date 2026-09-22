@@ -83,6 +83,8 @@
 	}
 </script>
 
+<svelte:head><title>Streams · AI Detector</title></svelte:head>
+
 <section class="space-y-6">
 	<header class="space-y-1">
 		<div class="flex items-center justify-between">

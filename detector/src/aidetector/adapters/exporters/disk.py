@@ -9,6 +9,7 @@ from aidetector.adapters.media import MediaError
 from aidetector.adapters.media.event_media import EventMedia
 from aidetector.adapters.media.images import encode_jpeg
 from aidetector.application.ports import DeliveryError
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import DiskConfig
 from aidetector.domain.models import EventResult, ValidationStatus
 
@@ -34,16 +35,38 @@ def _publish_event(pending: Path, destination: Path, result: EventResult) -> Non
 
 
 class DiskExporter:
-    def __init__(self, config: DiskConfig, root: Path, media: EventMedia):
+    def __init__(
+        self,
+        config: DiskConfig,
+        root: Path,
+        media: EventMedia,
+        report_status: ReportStatus = ignore_status,
+        destination_id: str = "disk-1",
+    ):
         self.config = config
         self.root = root
         self.media = media
+        self.report_status = report_status
+        self.destination_id = destination_id
 
     def export(self, result: EventResult) -> None:
         try:
             self._write_event(result)
         except (OSError, MediaError) as error:
+            self.report_status(
+                StatusEvent(
+                    "recording_failed",
+                    result.event.source,
+                    "A recording could not be saved. Check free disk space and the storage folder.",
+                    destination_id=self.destination_id,
+                )
+            )
             raise DeliveryError(f"Cannot archive event: {error}") from error
+        self.report_status(
+            StatusEvent(
+                "recording", result.event.source, destination_id=self.destination_id
+            )
+        )
 
     def _write_event(self, result: EventResult) -> None:
         event = result.event

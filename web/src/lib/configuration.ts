@@ -6,8 +6,47 @@ import type { AppConfig, Config, Configuration, DetectorConfig, TelegramConfig }
 export class ConfigurationError extends Error {}
 
 const text = v.pipe(v.string(), v.trim(), v.minLength(1));
-export const detectorMeta = v.object({ label: text });
-export const streamMeta = v.object({ label: v.optional(text), source: text });
+export const detectorMeta = v.object({
+	label: text,
+	cameraId: v.optional(text),
+	preset: v.optional(v.picklist(['calving', 'mounts', 'general']))
+});
+export const cameraConnectionMeta = v.object({
+	address: v.pipe(
+		text,
+		v.check((value) => {
+			try {
+				const url = new URL(value);
+				return (
+					['http:', 'https:'].includes(url.protocol) &&
+					!url.username &&
+					!url.password &&
+					!url.search &&
+					!url.hash
+				);
+			} catch {
+				return false;
+			}
+		}, 'Camera connection details must not contain login details or access tokens.')
+	),
+	profileToken: v.optional(text)
+});
+const timestamp = v.pipe(v.string(), v.isoTimestamp());
+const cameraSetup = v.object({
+	pictureVerifiedAt: v.optional(timestamp),
+	archiveVerifiedAt: v.optional(timestamp),
+	archiveSignature: v.optional(text),
+	alerts: v.optional(v.literal('skipped')),
+	completedAt: v.optional(timestamp),
+	completionSignature: v.optional(text)
+});
+export const streamMeta = v.object({
+	id: v.optional(text),
+	label: v.optional(text),
+	source: text,
+	connection: v.optional(cameraConnectionMeta),
+	setup: v.optional(cameraSetup)
+});
 const identity = v.pipe(v.string(), v.minLength(1));
 export const telegramMeta = v.object({ label: text, token: identity, chat: identity });
 const appSchema = v.object({
@@ -21,7 +60,7 @@ export const detectorInput = v.object({
 	meta: detectorMeta
 });
 export const streamInput = v.object({
-	...streamMeta.entries,
+	...v.pick(streamMeta, ['id', 'label', 'source']).entries,
 	label: text,
 	original: v.optional(v.string()),
 	next: v.optional(v.string())
@@ -36,6 +75,33 @@ export const telegramInput = v.object({
 export const streamOrder = v.object({
 	index0: v.pipe(v.number(), v.integer(), v.minValue(0)),
 	index1: v.pipe(v.number(), v.integer(), v.minValue(0))
+});
+
+const cameraDetails = {
+	label: text,
+	source: text,
+	checkId: v.optional(text),
+	connection: v.optional(v.nullable(cameraConnectionMeta))
+};
+export const cameraInput = v.variant('preset', [
+	v.object({
+		...cameraDetails,
+		id: v.optional(text),
+		preset: v.picklist(['calving', 'mounts', 'general', 'view-only', 'keep']),
+		copyFromCameraId: v.optional(v.never('Choose either a watched event or an existing camera.'))
+	}),
+	v.object({
+		...cameraDetails,
+		id: v.optional(v.never('Copy monitoring settings when adding a new camera.')),
+		preset: v.literal('copy'),
+		copyFromCameraId: text
+	})
+]);
+
+export const alertsInput = v.object({
+	...telegramInput.entries,
+	cameraIds: v.array(text),
+	received: v.boolean()
 });
 
 interface ConfigInput {
@@ -102,11 +168,12 @@ export function normalizeConfiguration(configInput: unknown, appInput: unknown):
 	const app: AppConfig = v.parse(appSchema, appInput);
 	const labels = new Set<string>();
 	app.detectors = config.detectors.map((_, index) => ({
+		...app.detectors[index],
 		label: uniqueLabel(app.detectors[index]?.label ?? `Detector ${index + 1}`, labels)
 	}));
 	const streams = new Map(app.streams.map((stream) => [stream.source, stream]));
 	for (const source of config.detectors.flatMap((detector) => detector.detection.source)) {
-		if (!streams.has(source)) streams.set(source, { label: source, source });
+		if (!streams.has(source)) streams.set(source, { label: `Camera ${streams.size + 1}`, source });
 	}
 	app.streams = [...streams.values()];
 	app.telegrams = app.telegrams.filter(

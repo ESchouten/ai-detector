@@ -33,6 +33,12 @@ export function getRtspInputArgs(source: string): string[] {
 	];
 }
 
+export function getCameraInputArgs(source: string): string[] {
+	return isRtspSource(source)
+		? getRtspInputArgs(source)
+		: ['-rw_timeout', '10000000', '-i', source];
+}
+
 async function canRun(command: string): Promise<boolean> {
 	try {
 		await execute(command, ['-version'], {

@@ -17,6 +17,7 @@ export const DEFAULT_SCHEMA_URL =
 export interface DetectorConfig {
 	detection: {
 		source: string[];
+		interval?: number;
 		[key: string]: unknown;
 	};
 	yolo?: {
@@ -53,6 +54,8 @@ export interface AppConfig {
 
 export interface DetectorMeta {
 	label: string;
+	cameraId?: string;
+	preset?: 'calving' | 'mounts' | 'general';
 }
 
 export interface TelegramMeta extends TelegramConfig {
@@ -60,8 +63,20 @@ export interface TelegramMeta extends TelegramConfig {
 }
 
 export interface StreamMeta {
+	id?: string;
 	label?: string;
 	source: string;
+	connection?: { address: string; profileToken?: string };
+	setup?: CameraSetup;
+}
+
+export interface CameraSetup {
+	pictureVerifiedAt?: string;
+	archiveVerifiedAt?: string;
+	archiveSignature?: string;
+	alerts?: 'skipped';
+	completedAt?: string;
+	completionSignature?: string;
 }
 
 export interface Configuration {

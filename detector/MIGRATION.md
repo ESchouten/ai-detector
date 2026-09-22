@@ -95,6 +95,12 @@ Architecture tests now reject Python modules omitted from the import graph, incl
 
 ## Rollout and recovery
 
+The desktop onboarding runtime now defaults to its bundled native executable; NVIDIA presence no longer selects Docker or requires its installation. Explicit Docker selections remain supported. Python configuration and archive formats are unchanged. The launcher adds `--status-json`, a versioned operational status stream whose source identifiers are hashes rather than camera addresses. Deploy the web application and detector from the same complete application release so the detector understands that flag. Source callers may optionally inject the status reporter; existing callers need no change.
+
+Automatic Windows ML provider discovery can fall back to CPU when the optional Windows acceleration service/library cannot be prepared. Explicit provider choices and invalid models remain visible failures. Hardware performance and provider-specific execution still require testing on the supported Windows machines.
+
+Native `.pt` conversion now writes reusable ONNX artifacts under the runtime data folder's `models/prepared/`. Existing `.onnx` files beside old checkpoints are left unchanged; new conversion cache entries are derived from checkpoint contents and settings, so an unrelated or stale sidecar cannot be mistaken for a matching model. Updating the model or conversion contract generates another cache entry. No configuration migration is required.
+
 The architecture-boundary cleanup narrows the internal ONNX setup API, separates archive publication from media writing and simplifies delivery error storage. User configuration, archive metadata and runtime dependencies are unchanged. Runtime-only source installation can use `uv sync --locked --extra default --no-dev`; contributors retain the development group for quality checks.
 
 The architecture/quality-tooling update adds development dependencies and CI reports only. Run `uv sync --locked --extra default` in a checkout to install them. No application configuration, archive or runtime dependency migration is required. Mutation testing runs on Linux/macOS (or Windows through WSL); Windows development sync omits that tool.
@@ -126,5 +132,7 @@ Review `unvalidated/*/metadata.json` for `validation_error` when checking provid
 See [AUDIT.md](AUDIT.md) for the exact local checks and results. Automated tests and distribution checks use local fake services; they do not establish model quality or production provider accuracy. Windows ML registration and NVIDIA/Jetson hardware execution require those target systems. Existing archives, live configuration, and research/model assets are not migrated or deleted.
 
 ## Combined application setup
+
+Model preparation now reports download/conversion/loading stages and an explicit `preparation_failed` observation for expected download failures. The launcher preserves that retry guidance after exit and resets it for a new run. These additions do not change model files, configuration, event rules or archive formats.
 
 The new complete application download owns detector startup from the browser; separately managed CLI and Compose installations keep their existing lifecycle. `--control-stdin` opts into graceful `stop`/EOF control from the parent application, including Windows. No stdin handling is added to ordinary runs. Data remains under the configured runtime directory. See the [application guide](../README.md) for download targets and data locations.

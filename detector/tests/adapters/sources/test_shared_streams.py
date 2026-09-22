@@ -82,6 +82,28 @@ def pixels(batch, source):
     return [int(frame.image[0, 0, 0]) for frame in batch.frames[source]]
 
 
+def test_capture_status_tracks_decoded_frames_and_disconnects(cameras):
+    reports = []
+    offline = Event()
+
+    def report(event):
+        reports.append(event)
+        if event.kind == "offline":
+            offline.set()
+
+    streams = StreamPool(report)
+    streams.subscribe(("0",))
+    with running(streams, cameras):
+        camera = cameras["0"]
+        camera.send(1)
+        camera.flush()
+        assert reports[0].kind == "frame"
+        assert reports[0].source == "0"
+        camera.finish()
+        assert offline.wait(3), "A failed capture read did not report disconnection"
+        assert reports[-1].kind == "offline"
+
+
 def test_one_camera_feeds_fast_and_slow_detectors_without_consuming_each_others_frames(
     cameras,
 ):

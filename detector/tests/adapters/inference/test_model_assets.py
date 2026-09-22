@@ -12,6 +12,8 @@ import pytest
 from ultralytics.utils import downloads
 
 from aidetector.adapters.inference.model_assets import resolve_model_path
+from aidetector.bootstrap import run_application
+from aidetector.configuration import Config
 
 _CONNECT = socket.socket.connect
 
@@ -145,6 +147,32 @@ def test_failed_sdk_download_can_be_retried_without_reusing_a_partial_file(
     model = Path(resolve_model_path(base + path, tmp_path, cache))
     assert model.read_bytes() == b"complete checkpoint"
     assert requests == [path, path]
+
+
+def test_startup_reports_actionable_download_failure_without_losing_its_cause(
+    tmp_path, asset_server
+):
+    base, assets, _ = asset_server
+    assets["/model.onnx?token=secret"] = Asset(b"unavailable", status=503)
+    config = Config.model_validate(
+        {
+            "detectors": [
+                {
+                    "detection": {"source": "rtsp://camera.example.test/live"},
+                    "yolo": {"model": base + "/model.onnx?token=secret"},
+                }
+            ]
+        }
+    )
+    observations = []
+    with pytest.raises(RuntimeError, match="download failed"):
+        run_application(config, tmp_path, tmp_path, report_status=observations.append)
+    failure = observations[-1]
+    assert failure.kind == "preparation_failed"
+    assert failure.rule_id == "detector-1"
+    assert "internet" in failure.message
+    assert "secret" not in repr(observations)
+    assert all(event.kind != "ready" for event in observations)
 
 
 def test_sdk_diagnostics_hide_credentials_without_muting_other_threads(

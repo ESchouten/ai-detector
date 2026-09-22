@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
+	applyDetectorPreset,
 	createDetectorDraft,
 	parseDetectorDraft,
 	selectTelegram
@@ -79,4 +80,25 @@ test('new detectors receive their own source and archive settings', () => {
 	assert.deepEqual(second.detection.source, []);
 	assert.deepEqual(second.exporters.disk, [{}]);
 	assert.equal(second.yolo?.model, 'yolo11n.pt');
+});
+
+test('changing a preset preserves sources, notification recipients and custom delivery settings', () => {
+	const saved = {
+		detection: { source: ['rtsp://camera.example/live'] },
+		yolo: { model: 'old.pt' },
+		exporters: {
+			telegram: [{ token: 'token', chat: 'chat', include_video: false }],
+			disk: [{ directory: 'custom' }]
+		}
+	};
+	const preset = {
+		detection: { source: [], interval: 1 },
+		yolo: { model: 'new.pt' },
+		exporters: { disk: [{}] }
+	};
+	const updated = applyDetectorPreset(saved, preset);
+	assert.deepEqual(updated.detection.source, saved.detection.source);
+	assert.deepEqual(updated.exporters, saved.exporters);
+	assert.equal(updated.yolo?.model, 'new.pt');
+	assert.equal(updated.detection.interval, 1);
 });

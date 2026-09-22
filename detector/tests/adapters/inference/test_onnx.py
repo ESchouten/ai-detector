@@ -15,6 +15,94 @@ from aidetector.configuration import OnnxConfig
 ONNX_MODELS = (ModelRequirements("model.onnx", image_size=640, batch_size=1),)
 
 
+@pytest.fixture
+def unavailable_windows_ml(monkeypatch):
+    import sys
+    from contextlib import contextmanager
+
+    @contextmanager
+    def initialize(**kwargs):
+        raise OSError("Windows acceleration package is unavailable offline")
+        yield
+
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+    monkeypatch.setitem(
+        sys.modules, "winui3.microsoft.windows.ai.machinelearning", SimpleNamespace()
+    )
+    monkeypatch.setitem(
+        sys.modules,
+        "winui3.microsoft.windows.applicationmodel.dynamicdependency.bootstrap",
+        SimpleNamespace(
+            initialize=initialize,
+            InitializeOptions=SimpleNamespace(ON_NO_MATCH_SHOW_UI=1),
+        ),
+    )
+
+
+def test_optional_windows_provider_failure_falls_back_to_real_cpu_inference(
+    tmp_path, unavailable_windows_ml
+):
+    import numpy as np
+    import onnxruntime as ort
+
+    from tests.support.onnx_model import write_detection_model
+
+    path = tmp_path / "model.onnx"
+    write_detection_model(path)
+    notices = []
+    with inference_runtime(
+        OnnxConfig(), ONNX_MODELS, "windowsml", notices.append
+    ) as options:
+        assert options.half is False
+        session = ort.InferenceSession(str(path))
+        assert session.get_providers() == ["CPUExecutionProvider"]
+        outputs = session.run(
+            None, {"images": np.zeros((1, 3, 64, 64), dtype=np.float32)}
+        )
+        assert outputs[0].shape == (1, 1, 6)
+    assert len(notices) == 1
+    assert notices[0].kind == "notice"
+    assert "CPU" in notices[0].message
+
+
+def test_explicit_cpu_selection_skips_unavailable_windows_acceleration(
+    unavailable_windows_ml,
+):
+    notices = []
+    with inference_runtime(
+        OnnxConfig(provider="CPUExecutionProvider"),
+        ONNX_MODELS,
+        "windowsml",
+        notices.append,
+    ) as options:
+        assert options.half is False
+    assert notices == []
+
+
+def test_explicit_accelerator_does_not_silently_fall_back(unavailable_windows_ml):
+    with (
+        pytest.raises(OSError, match="unavailable offline"),
+        inference_runtime(
+            OnnxConfig(provider="OpenVINOExecutionProvider"), ONNX_MODELS, "windowsml"
+        ),
+    ):
+        pytest.fail("An explicitly requested provider must remain a visible failure")
+
+
+def test_invalid_model_is_not_treated_as_an_optional_acceleration_failure(
+    tmp_path, unavailable_windows_ml
+):
+    import onnxruntime as ort
+    from onnxruntime.capi.onnxruntime_pybind11_state import InvalidProtobuf
+
+    path = tmp_path / "broken.onnx"
+    path.write_text("not an ONNX model")
+    with inference_runtime(OnnxConfig(), ONNX_MODELS, "windowsml"):
+        with pytest.raises(InvalidProtobuf):
+            ort.InferenceSession(str(path))
+
+
 def test_explicit_provider_filters_out_other_registered_devices():
     gpu = SimpleNamespace(
         ep_name="OpenVINOExecutionProvider", device=SimpleNamespace(type="GPU")

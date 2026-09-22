@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import StreamEditor from './stream-editor.svelte';
-	const source = $derived(page.url.searchParams.get('source') ?? '');
-	const label = $derived(page.url.searchParams.get('label') ?? '');
-	const setupMode = $derived(page.url.searchParams.get('setup') === '1');
+	import CameraEditor from '$lib/components/camera-editor.svelte';
+	import * as Alert from '$lib/components/ui/alert';
+	import { getCamera } from '$lib/remote/stream.remote';
+	const id = $derived(page.url.searchParams.get('id') ?? '');
+	const camera = $derived(id ? await getCamera(id) : undefined);
 </script>
 
 <svelte:head><title>Camera settings · AI Detector</title></svelte:head>
-
-{#key source}
-	<StreamEditor originalSource={source} initialLabel={label} {setupMode} />
-{/key}
+{#if id && !camera}<Alert.Root variant="destructive"
+		><Alert.Title>Camera not found</Alert.Title><Alert.Description
+			>Return to Cameras and choose a saved camera.</Alert.Description
+		></Alert.Root
+	>{:else}{#key id}<CameraEditor initial={camera} />{/key}{/if}

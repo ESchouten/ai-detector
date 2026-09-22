@@ -1,15 +1,16 @@
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import fs, { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
+import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import {
 	normalizeConfiguration,
 	ConfigurationError,
 	configurationSchema
 } from '../src/lib/configuration.ts';
-import { DEFAULT_SCHEMA_URL } from '../src/lib/schema.ts';
+import { DEFAULT_SCHEMA_URL, type DetectorConfig, type StreamMeta } from '../src/lib/schema.ts';
 import { getEditorSchema } from '../src/lib/server/configuration/presets.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
 import { configurationAction } from '../src/lib/server/configuration/request.ts';
@@ -213,7 +214,10 @@ test('concurrent edits are serialized from read through apply and rejected write
 		async apply() {
 			applied.push(JSON.parse(await readFile(files.config, 'utf8')).detectors.length);
 		},
-		async stop() {}
+		async stop() {},
+		fail(error: unknown) {
+			throw error;
+		}
 	};
 	const store = new ConfigurationStore(files, () => runtime);
 	const first = store.saveDetector({ detector, meta: { label: 'First' } });
@@ -246,6 +250,9 @@ test('runtime validation happens before writing either configuration file', asyn
 		},
 		async stop() {
 			assert.fail('Existing detection must not stop');
+		},
+		fail(error: unknown) {
+			throw error;
 		}
 	}));
 	await assert.rejects(
@@ -260,6 +267,175 @@ test('runtime validation happens before writing either configuration file', asyn
 		await Promise.all([readFile(files.config, 'utf8'), readFile(files.app, 'utf8')]),
 		before
 	);
+});
+
+test('a configuration staging failure leaves both settings files unchanged', async (t) => {
+	const { files, store } = await fixture(t, { detectors: [] });
+	const before = await Promise.all([readFile(files.app), readFile(files.config)]);
+	const failure = Object.assign(new Error('Configuration directory is not writable'), {
+		code: 'EACCES'
+	});
+	const write = fs.writeFile;
+	t.mock.method(fs, 'writeFile', async (...args: Parameters<typeof fs.writeFile>) => {
+		if (String(args[0]).startsWith(files.config)) throw failure;
+		return write(...args);
+	});
+	await assert.rejects(
+		store.saveCamera({ source, label: 'Barn', preset: 'general' }),
+		(error) => error === failure
+	);
+	assert.deepEqual(await Promise.all([readFile(files.app), readFile(files.config)]), before);
+	assert.deepEqual((await readdir(path.dirname(files.app))).sort(), ['app.json', 'config.json']);
+});
+
+for (const existingApp of [true, false]) {
+	test(`failed second file replacement restores ${existingApp ? 'exact previous metadata' : 'missing metadata'} and permits retry`, async (t) => {
+		const { files } = await fixture(t, { detectors: [] });
+		if (existingApp) await writeFile(files.app, '{ "streams": [] }');
+		else await rm(files.app);
+		const previousApp = existingApp ? await readFile(files.app) : null;
+		const previousConfig = await readFile(files.config);
+		let applied = 0;
+		const store = new ConfigurationStore(files, () => ({
+			async validate() {},
+			async apply() {
+				applied++;
+			},
+			async stop() {
+				assert.fail('Failed save must not stop monitoring');
+			},
+			fail(error) {
+				throw error;
+			}
+		}));
+		const failure = Object.assign(new Error('Configuration replacement failed'), { code: 'EIO' });
+		const rename = fs.rename;
+		const replacement = t.mock.method(
+			fs,
+			'rename',
+			async (from: Parameters<typeof fs.rename>[0], to: Parameters<typeof fs.rename>[1]) => {
+				if (to === files.config) throw failure;
+				return rename(from, to);
+			}
+		);
+		await assert.rejects(
+			store.saveCamera({ source, label: 'Barn', preset: 'general' }),
+			(error) => error === failure
+		);
+		assert.equal(applied, 0);
+		assert.deepEqual(await readFile(files.config), previousConfig);
+		if (existingApp) assert.deepEqual(await readFile(files.app), previousApp);
+		else await assert.rejects(readFile(files.app), { code: 'ENOENT' });
+		assert.deepEqual(
+			(await readdir(path.dirname(files.app))).sort(),
+			existingApp ? ['app.json', 'config.json'] : ['config.json']
+		);
+		replacement.mock.restore();
+		await store.saveCamera({ source, label: 'Barn', preset: 'general' });
+		assert.equal(applied, 1);
+		const saved = await store.read();
+		assert.equal(saved.app.streams.length, 1);
+		assert.equal(saved.config.detectors.length, 1);
+	});
+}
+
+test('a rollback failure is explicit and retains the previous metadata for recovery', async (t) => {
+	const { files, store } = await fixture(t, { detectors: [] });
+	const previousApp = await readFile(files.app);
+	const previousConfig = await readFile(files.config);
+	const commitFailure = new Error('Cannot replace configuration');
+	const rollbackFailure = new Error('Cannot restore metadata');
+	const rename = fs.rename;
+	let appReplacements = 0;
+	t.mock.method(
+		fs,
+		'rename',
+		async (from: Parameters<typeof fs.rename>[0], to: Parameters<typeof fs.rename>[1]) => {
+			if (to === files.config) throw commitFailure;
+			if (to === files.app && ++appReplacements === 2) throw rollbackFailure;
+			return rename(from, to);
+		}
+	);
+	await assert.rejects(store.saveCamera({ source, label: 'Barn', preset: 'general' }), (error) => {
+		assert.ok(error instanceof AggregateError);
+		assert.deepEqual(error.errors, [commitFailure, rollbackFailure]);
+		assert.equal(error.cause, commitFailure);
+		assert.match(error.message, /Recovery is required/);
+		return true;
+	});
+	assert.deepEqual(await readFile(files.config), previousConfig);
+	const backups = (await readdir(path.dirname(files.app))).filter((file) =>
+		file.endsWith('.previous')
+	);
+	assert.equal(backups.length, 1);
+	assert.deepEqual(await readFile(path.join(path.dirname(files.app), backups[0])), previousApp);
+	assert.ok((await readdir(path.dirname(files.app))).every((file) => !file.endsWith('.next')));
+});
+
+test('cleanup failure is logged without misreporting a committed save as failed', async (t) => {
+	const { files, store } = await fixture(t, { detectors: [] });
+	const failure = new Error('Cannot remove backup');
+	const remove = fs.rm;
+	t.mock.method(fs, 'rm', async (...args: Parameters<typeof fs.rm>) => {
+		if (String(args[0]).endsWith('.previous')) throw failure;
+		return remove(...args);
+	});
+	const logged = t.mock.method(console, 'error', () => {});
+	const camera = await store.saveCamera({ source, label: 'Barn', preset: 'general' });
+	const saved = await store.read();
+	assert.equal(saved.app.streams[0].id, camera.id);
+	assert.equal(saved.config.detectors.length, 1);
+	assert.equal(logged.mock.callCount(), 1);
+	assert.match(logged.mock.calls[0].arguments[0], /Could not remove temporary settings file/);
+	assert.equal(logged.mock.calls[0].arguments[1], failure);
+	assert.equal(
+		(await readdir(path.dirname(files.app))).filter((file) => file.endsWith('.previous')).length,
+		1
+	);
+});
+
+test('a committed camera save succeeds while an apply failure is reported to runtime status', async (t) => {
+	const { files } = await fixture(t, { detectors: [] });
+	const failure = new Error('Detector could not restart');
+	const reported: unknown[] = [];
+	const store = new ConfigurationStore(files, () => ({
+		async validate() {},
+		async apply() {
+			throw failure;
+		},
+		async stop() {
+			assert.fail('A monitored camera does not stop monitoring');
+		},
+		fail(error) {
+			reported.push(error);
+		}
+	}));
+	const camera = await store.saveCamera({ source, label: 'Barn', preset: 'general' });
+	assert.equal(camera.monitored, true);
+	assert.deepEqual(reported, [failure]);
+	const saved = await store.read();
+	assert.equal(saved.app.streams[0].id, camera.id);
+	assert.deepEqual(saved.config.detectors[0].detection.source, [source]);
+	assert.equal(saved.app.streams.length, 1);
+	await store.saveCamera({ id: camera.id, source, label: 'Renamed barn', preset: 'keep' });
+	assert.deepEqual(reported, [failure]);
+	assert.equal((await store.read()).app.streams[0].label, 'Renamed barn');
+});
+
+test('failed managed stop settings remain visible without rejecting the saved empty setup', async (t) => {
+	const { files } = await fixture(t);
+	const directory = path.dirname(files.app);
+	const runtime = new ManagedDetector({ executable: 'unused', dataDirectory: directory });
+	// An occupied path reproduces an actual filesystem rejection in stop(), without
+	// launching a child process or depending on platform-specific permission behavior.
+	await mkdir(path.join(directory, 'runtime.json'));
+	const store = new ConfigurationStore(files, () => runtime);
+	await store.deleteDetector('Detector 1');
+	assert.deepEqual((await store.read()).config.detectors, []);
+	assert.deepEqual((await store.read()).app.detectors, []);
+	assert.equal(runtime.status().phase, 'failed');
+	assert.equal(runtime.status().readiness, 'failed');
+	assert.match(runtime.status().message, /runtime\.json/);
 });
 
 test('metadata-only edits persist without rewriting config or restarting detection', async (t) => {
@@ -278,6 +454,9 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 		},
 		async stop() {
 			calls.push('stop');
+		},
+		fail(error: unknown) {
+			throw error;
 		}
 	}));
 	await store.saveStream({ source: other, label: 'Unused camera' });
@@ -296,10 +475,13 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 	assert.equal(await readFile(files.config, 'utf8'), before);
 	const saved = JSON.parse(await readFile(files.app, 'utf8'));
 	assert.deepEqual(saved.detectors, [{ label: 'Renamed detector' }]);
-	assert.deepEqual(saved.streams, [
-		{ label: 'Unused camera', source: other },
-		{ label: 'Renamed camera', source }
-	]);
+	assert.deepEqual(
+		saved.streams.map(({ label, source }: StreamMeta) => ({ label, source })),
+		[
+			{ label: 'Unused camera', source: other },
+			{ label: 'Renamed camera', source }
+		]
+	);
 	assert.equal(saved.telegrams.length, 2);
 	const replacement = 'rtsp://camera.local/replacement';
 	await store.saveStream({ original: source, source: replacement, label: 'Renamed camera' });
@@ -315,6 +497,81 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 	assert.equal(updated.exporters?.telegram?.[0].token, 'new');
 });
 
+test('advanced detection changes invalidate an inherited preset without losing camera identity', async (t) => {
+	const changes: { name: string; change: (detector: DetectorConfig) => void }[] = [
+		{
+			name: 'different model',
+			change: (detector) => {
+				detector.yolo = { model: 'yolo11n.pt' };
+			}
+		},
+		{
+			name: 'snapshot only',
+			change: (detector) => {
+				detector.yolo = null;
+			}
+		},
+		{
+			name: 'different watched classes',
+			change: (detector) => {
+				detector.yolo!.confidence = { person: 0.7 };
+			}
+		},
+		{
+			name: 'different sampling interval',
+			change: (detector) => {
+				detector.detection.interval = 7;
+			}
+		}
+	];
+	for (const { name, change } of changes) {
+		await t.test(name, async (t) => {
+			const { store } = await fixture(t, { detectors: [] });
+			const camera = await store.saveCamera({ label: 'Barn', source, preset: 'calving' });
+			const original = await store.read();
+			const changed = structuredClone(original.config.detectors[0]);
+			change(changed);
+			await store.saveDetector({
+				original: 'Barn',
+				detector: changed,
+				meta: { label: 'Updated monitoring' }
+			});
+			const saved = await store.read();
+			assert.deepEqual(saved.app.detectors[0], {
+				label: 'Updated monitoring',
+				cameraId: camera.id
+			});
+			assert.deepEqual(saved.config.detectors[0], changed);
+		});
+	}
+});
+
+test('renaming or changing delivery settings keeps the monitoring preset and camera identity', async (t) => {
+	const { store } = await fixture(t, { detectors: [] });
+	const camera = await store.saveCamera({ label: 'Barn', source, preset: 'calving' });
+	const original = (await store.read()).config.detectors[0];
+	await store.saveDetector({
+		original: 'Barn',
+		detector: original,
+		meta: { label: 'Calving pen' }
+	});
+	const meta = { label: 'Calving pen', cameraId: camera.id, preset: 'calving' };
+	assert.deepEqual((await store.read()).app.detectors[0], meta);
+	const changed = structuredClone(original);
+	changed.exporters = {
+		disk: [{ directory: 'calving-recordings', strategy: 'ALL' }],
+		telegram: [{ token: 'new-token', chat: 'new-chat', alert_every: 2 }]
+	};
+	await store.saveDetector({
+		original: 'Calving pen',
+		detector: changed,
+		meta: { label: 'Calving pen' }
+	});
+	const saved = await store.read();
+	assert.deepEqual(saved.app.detectors[0], meta);
+	assert.deepEqual(saved.config.detectors[0], changed);
+});
+
 test('metadata-only first save still creates the missing empty configuration', async (t) => {
 	const { files, store } = await fixture(t);
 	await rm(files.config);
@@ -323,7 +580,10 @@ test('metadata-only first save still creates the missing empty configuration', a
 		$schema: DEFAULT_SCHEMA_URL,
 		detectors: []
 	});
-	assert.deepEqual((await store.read()).app.streams, [{ label: 'First camera', source }]);
+	assert.deepEqual(
+		(await store.read()).app.streams.map(({ label, source }) => ({ label, source })),
+		[{ label: 'First camera', source }]
+	);
 });
 
 test('deleting the last detector saves the empty setup and stops managed detection', async (t) => {
@@ -338,6 +598,9 @@ test('deleting the last detector saves the empty setup and stops managed detecti
 		},
 		async stop() {
 			stopped++;
+		},
+		fail(error: unknown) {
+			throw error;
 		}
 	}));
 	await store.deleteDetector('Detector 1');
@@ -423,25 +686,32 @@ test('source reorder validates indices and reorders the latest saved list', asyn
 	);
 });
 
-test('concurrent first setup completes once and preserves saved cameras and notification channels', async (t) => {
+test('concurrent camera additions each save their rules and preserve notification channels', async (t) => {
 	const { store } = await fixture(
 		t,
 		{ detectors: [], onnx: { provider: 'CPUExecutionProvider' } },
 		{
-			streams: [{ label: 'Other', source: other }],
+			streams: [],
 			telegrams: [{ label: 'Alerts', token: 'token', chat: 'chat' }]
 		}
 	);
 	const results = await Promise.allSettled([
-		store.finishSetup({ label: 'Barn', source, preset: 'general' }),
-		store.finishSetup({ label: 'Second', source: other, preset: 'general' })
+		store.saveCamera({ label: 'Barn', source, preset: 'general' }),
+		store.saveCamera({ label: 'Second', source: other, preset: 'general' })
 	]);
 	assert.deepEqual(
 		results.map((item) => item.status),
-		['fulfilled', 'rejected']
+		['fulfilled', 'fulfilled']
 	);
 	const document = await store.read();
-	assert.deepEqual(document.app.detectors, [{ label: 'Barn' }]);
+	assert.deepEqual(
+		document.app.detectors.map((detector) => detector.label),
+		['Barn', 'Second']
+	);
+	assert.deepEqual(
+		document.config.detectors.map((detector) => detector.detection.source),
+		[[source], [other]]
+	);
 	assert.equal(document.app.streams.length, 2);
 	assert.equal(document.app.telegrams.length, 1);
 	assert.deepEqual(document.config.onnx, { provider: 'CPUExecutionProvider' });

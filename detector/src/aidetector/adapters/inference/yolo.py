@@ -13,8 +13,10 @@ from ultralytics import YOLO
 from ultralytics.data.loaders import LoadStreams, SourceTypes
 from ultralytics.engine.results import Results
 
+from aidetector.adapters.inference.model_assets import MODEL_DOWNLOAD_HELP
 from aidetector.adapters.inference.onnx import InferenceOptions
 from aidetector.application.ports import Frames
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig, YoloConfig
 from aidetector.domain.models import BoundingBox, Frame, Observation
 
@@ -177,14 +179,50 @@ def open_detector(
     sources: tuple[str, ...],
     build_type: str,
     options: InferenceOptions,
+    cache_directory: pathlib.Path | None = None,
+    report_status: ReportStatus = ignore_status,
 ) -> Iterator[YoloDetector]:
     """Prepare inference and own its model and tracking frames until shutdown."""
     loaded: YOLO | None = None
     detector: YoloDetector | None = None
     try:
         with _restore_path_classes():
-            loaded = YOLO(config.model, task=config.task)
-            if not config.model.endswith((".onnx", ".engine")) and build_type != "cuda":
+            model_path = config.model
+            if (
+                cache_directory is not None
+                and model_path.endswith(".pt")
+                and build_type not in {"cuda", "tensorrt"}
+            ):
+                from aidetector.adapters.inference.prepared_models import prepare_onnx
+
+                model_path = str(
+                    prepare_onnx(
+                        config,
+                        onnx,
+                        len(sources),
+                        options,
+                        cache_directory,
+                        report_status,
+                    )
+                )
+            report_status(
+                StatusEvent(
+                    "preparing", message="Loading the detection model on this computer…"
+                )
+            )
+            try:
+                loaded = YOLO(model_path, task=config.task)
+            except ConnectionError:
+                report_status(
+                    StatusEvent("preparation_failed", message=MODEL_DOWNLOAD_HELP)
+                )
+                raise
+            if not model_path.endswith((".onnx", ".engine")) and build_type != "cuda":
+                report_status(
+                    StatusEvent(
+                        "preparing", message="Preparing the model for this computer…"
+                    )
+                )
                 exported = loaded.export(
                     format="engine" if build_type == "tensorrt" else "onnx",
                     batch=len(sources),

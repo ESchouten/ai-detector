@@ -111,6 +111,120 @@ def test_cli_runs_no_model_detection_relative_to_config_with_separate_output(tmp
     assert not (configured / "detections").exists()
 
 
+@pytest.mark.parametrize("blocked_archive", [False, True])
+def test_launcher_status_reports_real_capture_processing_and_archive_outcome(
+    tmp_path, blocked_archive
+):
+    source = tmp_path / "input.png"
+    assert cv2.imwrite(str(source), np.zeros((24, 32, 3), dtype=np.uint8))
+    (tmp_path / "config.json").write_text(
+        json.dumps(
+            {
+                "detectors": [
+                    {"detection": {"source": str(source)}, "exporters": {"disk": {}}}
+                ]
+            }
+        )
+    )
+    if blocked_archive:
+        (tmp_path / "detections").write_text("Cannot create a directory here")
+    process = run_cli(tmp_path, "--status-json")
+    records = [
+        json.loads(line.removeprefix("AIDETECTOR_STATUS "))
+        for line in process.stdout.splitlines()
+        if line.startswith("AIDETECTOR_STATUS ")
+    ]
+    events = [record["event"] for record in records]
+    assert events[:2] == ["preparing", "ready"]
+    assert events[2:4] == ["frame", "processed"]
+    assert "inference" not in events
+    assert events[-1] == ("recording_failed" if blocked_archive else "recording")
+    assert records[3]["ruleId"] == "detector-1"
+    assert records[-1]["ruleId"] == "detector-1"
+    assert records[-1]["destinationId"] == "disk-1"
+    assert process.returncode == (1 if blocked_archive else 0), process.stderr
+    assert str(source) not in "\n".join(json.dumps(record) for record in records)
+
+
+def test_launcher_inference_status_follows_real_onnx_prediction(tmp_path):
+    from tests.support.onnx_model import write_detection_model
+
+    source = tmp_path / "input.png"
+    model = tmp_path / "model.onnx"
+    assert cv2.imwrite(str(source), np.zeros((64, 64, 3), dtype=np.uint8))
+    write_detection_model(model)
+    (tmp_path / "config.json").write_text(
+        json.dumps(
+            {
+                "onnx": {"provider": "CPUExecutionProvider"},
+                "detectors": [
+                    {
+                        "detection": {"source": str(source)},
+                        "yolo": {"model": str(model), "imgsz": 64, "frames_min": 1},
+                        "exporters": {"disk": {}},
+                    }
+                ],
+            }
+        )
+    )
+    process = run_cli(tmp_path, "--status-json")
+    assert process.returncode == 0, process.stderr
+    records = [
+        json.loads(line.removeprefix("AIDETECTOR_STATUS "))
+        for line in process.stdout.splitlines()
+        if line.startswith("AIDETECTOR_STATUS ")
+    ]
+    events = [record["event"] for record in records]
+    assert events.index("frame") < events.index("inference") < events.index("recording")
+    assert "processed" not in events
+
+
+def test_launcher_keeps_shared_camera_rule_and_archive_failures_distinct(tmp_path):
+    source = tmp_path / "input.png"
+    assert cv2.imwrite(str(source), np.zeros((16, 16, 3), dtype=np.uint8))
+    archive = tmp_path / "detections"
+    archive.mkdir()
+    (archive / "blocked").write_text("This destination cannot become a directory")
+    (tmp_path / "config.json").write_text(
+        json.dumps(
+            {
+                "detectors": [
+                    {
+                        "detection": {"source": str(source)},
+                        "exporters": {
+                            "disk": [
+                                {"directory": "blocked"},
+                                {"directory": "first-ok"},
+                            ]
+                        },
+                    },
+                    {
+                        "detection": {"source": str(source)},
+                        "exporters": {"disk": {"directory": "second-ok"}},
+                    },
+                ]
+            }
+        )
+    )
+    process = run_cli(tmp_path, "--status-json")
+    assert process.returncode == 1, process.stderr
+    records = [
+        json.loads(line.removeprefix("AIDETECTOR_STATUS "))
+        for line in process.stdout.splitlines()
+        if line.startswith("AIDETECTOR_STATUS ")
+    ]
+    outcomes = {
+        (record["event"], record["ruleId"], record["destinationId"])
+        for record in records
+        if record["event"].startswith("recording")
+    }
+    assert outcomes == {
+        ("recording_failed", "detector-1", "disk-1"),
+        ("recording", "detector-1", "disk-2"),
+        ("recording", "detector-2", "disk-1"),
+    }
+
+
 def test_cli_identifies_each_detector_when_the_same_destination_fails(tmp_path):
     assert cv2.imwrite(str(tmp_path / "input.png"), np.zeros((8, 8, 3), dtype=np.uint8))
     config = tmp_path / "config.json"

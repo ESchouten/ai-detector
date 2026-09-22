@@ -18,6 +18,14 @@ if (process.argv.includes('--check-config')) {
 appendFileSync('starts.txt', 'started\n');
 console.log('Camera rtsp://farmer:secret@camera.local/live?token=secret');
 if (config.crash) process.exit(1);
+for (const event of config.statusEvents ?? []) {
+	const record = 'AIDETECTOR_STATUS ' + JSON.stringify(event) + '\n';
+	process.stdout.write(record.slice(0, 20));
+	await new Promise((resolve) => setImmediate(resolve));
+	process.stdout.write(record.slice(20));
+}
+if (config.crashAfterStatus) process.exit(1);
+
 process.stdin.on('data', () => {
 	writeFileSync('flushed.txt', 'flushed');
 	process.exit(0);

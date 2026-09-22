@@ -21,12 +21,15 @@ def wait_for_setup(process: subprocess.Popen, url: str, deadline: float) -> None
             )
         try:
             with urllib.request.urlopen(url, timeout=min(5, remaining)) as response:
-                assert b"Your detector" in response.read(), (
+                assert b"AI Detector" in response.read(), (
                     "Setup page content is missing"
                 )
             return
+        except urllib.error.HTTPError as error:
+            error.close()
         except (urllib.error.URLError, TimeoutError):
-            time.sleep(min(0.2, max(0, deadline - time.monotonic())))
+            pass
+        time.sleep(min(0.2, max(0, deadline - time.monotonic())))
     raise TimeoutError("Setup page never became available")
 
 
@@ -46,7 +49,12 @@ def wait_for_detection(process: subprocess.Popen, data: Path, deadline: float) -
 
 
 def smoke(folder: Path) -> None:
-    launch = next(folder.glob("AI Detector*"))
+    app = folder / "AI Detector.app"
+    launch = (
+        (app / "Contents/MacOS/ai-detector-web")
+        if app.exists()
+        else next(folder.glob("AI Detector*"))
+    )
     with tempfile.TemporaryDirectory(prefix="ai-detector-bundle-") as temporary:
         data = Path(temporary)
         # A 16 x 16 uncompressed BMP needs no third-party image library.

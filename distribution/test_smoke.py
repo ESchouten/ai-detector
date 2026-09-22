@@ -31,7 +31,7 @@ class SmokeTest(unittest.TestCase):
                 requests.append(self.path)
                 self.send_response(503 if len(requests) == 1 else 200)
                 self.end_headers()
-                self.wfile.write(b"Your detector")
+                self.wfile.write(b"AI Detector")
 
             def log_message(self, *args):
                 pass

@@ -36,16 +36,17 @@ async function initialize(): Promise<void> {
 	} catch (error) {
 		detector.fail(error);
 	}
-	process.once('sveltekit:shutdown', () => {
-		void detector?.stop(false).catch((error) => detector?.fail(error));
-	});
+	process.once('sveltekit:shutdown', () =>
+		detector?.stop(false).catch((error) => detector?.fail(error))
+	);
 }
 
 export function managedDetector(): ManagedDetector | null {
 	return detector;
 }
 
-export function detectorStatus(): RuntimeStatus {
+export async function detectorStatus(): Promise<RuntimeStatus> {
+	await detector?.refreshMetadata();
 	return (
 		detector?.status() ?? {
 			managed: false,
@@ -55,7 +56,9 @@ export function detectorStatus(): RuntimeStatus {
 			message:
 				'This web server uses a separately managed detector. Download the complete application to start and stop it here.',
 			logs: '',
-			dataDirectory: DATA_DIRECTORY
+			dataDirectory: DATA_DIRECTORY,
+			readiness: 'idle',
+			cameras: []
 		}
 	);
 }

@@ -15,29 +15,8 @@ export class SetupError extends Error {
 	}
 }
 
-export async function hasNvidiaGpu(signal?: AbortSignal): Promise<boolean> {
-	try {
-		const result = await execute('nvidia-smi', ['--query-gpu=name', '--format=csv,noheader'], {
-			timeout: 10000,
-			windowsHide: true,
-			signal,
-			killSignal: 'SIGKILL'
-		});
-		return result.stdout.trim().length > 0;
-	} catch {
-		signal?.throwIfAborted();
-		// A failed driver probe is not evidence of a usable NVIDIA GPU.
-		return false;
-	}
-}
-
-export function chooseRuntime(
-	mode: RuntimeMode,
-	nvidia: boolean,
-	platform: string
-): 'native' | 'docker' {
-	if (mode !== 'auto') return mode;
-	return nvidia && (platform === 'linux' || platform === 'win32') ? 'docker' : 'native';
+export function chooseRuntime(mode: RuntimeMode): 'native' | 'docker' {
+	return mode === 'docker' ? 'docker' : 'native';
 }
 
 export async function checkDocker(platform: string, signal?: AbortSignal): Promise<void> {
@@ -77,7 +56,8 @@ export function dockerArguments(
 		'python3',
 		'-m',
 		'aidetector',
-		'--control-stdin'
+		'--control-stdin',
+		'--status-json'
 	);
 	return args;
 }

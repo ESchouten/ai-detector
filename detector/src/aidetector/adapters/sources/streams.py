@@ -10,6 +10,7 @@ import cv2
 
 from aidetector.adapters.media.images import shrink_image
 from aidetector.application.ports import SourceBatch, SourceError
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.domain.models import Frame
 
 logger = logging.getLogger(__name__)
@@ -92,7 +93,8 @@ class StreamSource:
 class StreamPool:
     """Own one capture per source. Register subscriptions before opening the pool."""
 
-    def __init__(self):
+    def __init__(self, report_status: ReportStatus = ignore_status):
+        self.report_status = report_status
         self._subscribers: dict[str, list[StreamSource]] = {}
         self._stop = Event()
         self._threads: list[Thread] = []
@@ -152,6 +154,13 @@ class StreamPool:
                     )
                 )
                 if not capture.isOpened():
+                    self.report_status(
+                        StatusEvent(
+                            "offline",
+                            source,
+                            "Camera could not be reached. Reconnecting…",
+                        )
+                    )
                     logger.warning(
                         "Stream %d could not be opened; reconnecting", index + 1
                     )
@@ -159,6 +168,13 @@ class StreamPool:
                     while not self._stop.is_set():
                         available, image = capture.read()
                         if not available:
+                            self.report_status(
+                                StatusEvent(
+                                    "offline",
+                                    source,
+                                    "Camera connection was lost. Reconnecting…",
+                                )
+                            )
                             logger.warning(
                                 "Stream %d disconnected; reconnecting", index + 1
                             )
@@ -166,9 +182,15 @@ class StreamPool:
                         sampled_at = monotonic()
                         image.setflags(write=False)
                         frame = Frame(datetime.now(), image)
+                        self.report_status(StatusEvent("frame", source))
                         for subscriber in self._subscribers[source]:
                             subscriber.publish(source, frame, sampled_at)
             except cv2.error:
+                self.report_status(
+                    StatusEvent(
+                        "offline", source, "Camera could not be read. Reconnecting…"
+                    )
+                )
                 logger.warning("Stream %d capture failed; reconnecting", index + 1)
             finally:
                 if capture is not None:

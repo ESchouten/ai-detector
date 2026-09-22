@@ -1,4 +1,5 @@
 from contextlib import ExitStack
+from dataclasses import replace
 from pathlib import Path
 from threading import Event
 from urllib.parse import urlsplit
@@ -15,14 +16,25 @@ from aidetector.adapters.sources.streams import StreamPool, StreamSource
 from aidetector.application.delivery import Destination, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import EventValidator, ObjectDetector
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import Config, ExportersConfig, SourceConfig, source_kind
 from aidetector.domain.policy import Cooldown, EventPolicy, ExportPolicy
 from aidetector.runtime import DetectorWorker, RunStats, run_detectors
 from aidetector.version import TYPE
 
 
+def _rule_reporter(report_status: ReportStatus, rule_id: str) -> ReportStatus:
+    def report(event: StatusEvent) -> None:
+        report_status(replace(event, rule_id=rule_id))
+
+    return report
+
+
 def build_source(
-    settings: SourceConfig, directory: Path, streams: StreamPool
+    settings: SourceConfig,
+    directory: Path,
+    streams: StreamPool,
+    report_status: ReportStatus = ignore_status,
 ) -> FileSource | StreamSource:
     if source_kind(settings.source[0]) != "stream":
         sources = tuple(
@@ -32,7 +44,10 @@ def build_source(
             for source in settings.source
         )
         return FileSource(
-            sources, width=settings.frames_width, interval=settings.interval
+            sources,
+            width=settings.frames_width,
+            interval=settings.interval,
+            report_status=report_status,
         )
     return streams.subscribe(
         settings.source,
@@ -43,14 +58,23 @@ def build_source(
 
 
 def build_destinations(
-    config: ExportersConfig, directory: Path, media: EventMedia
+    config: ExportersConfig,
+    directory: Path,
+    media: EventMedia,
+    report_status: ReportStatus = ignore_status,
 ) -> tuple[Destination, ...]:
     destinations: list[Destination] = []
     for index, settings in enumerate(config.disk):
         destinations.append(
             Destination(
                 f"disk-{index + 1}",
-                DiskExporter(settings, directory / "detections", media),
+                DiskExporter(
+                    settings,
+                    directory / "detections",
+                    media,
+                    report_status,
+                    f"disk-{index + 1}",
+                ),
                 ExportPolicy(
                     settings.confidence,
                     settings.export_rejected,
@@ -82,6 +106,7 @@ def run_application(
     config_directory: Path,
     data_directory: Path,
     stop_requested: Event | None = None,
+    report_status: ReportStatus = ignore_status,
 ) -> tuple[RunStats, ...]:
     """Construct workers and own their shared captures, models and providers."""
     models = tuple(
@@ -92,23 +117,38 @@ def run_application(
         if settings.yolo is not None
     )
     with ExitStack() as resources:
-        options = resources.enter_context(inference_runtime(config.onnx, models, TYPE))
-        streams = StreamPool()
+        report_status(
+            StatusEvent("preparing", message="Preparing detection on this computer…")
+        )
+        options = resources.enter_context(
+            inference_runtime(config.onnx, models, TYPE, report_status)
+        )
+        streams = StreamPool(report_status)
         workers: list[DetectorWorker] = []
         for index, settings in enumerate(config.detectors, start=1):
-            source = build_source(settings.detection, config_directory, streams)
+            rule_status = _rule_reporter(report_status, f"detector-{index}")
+            source = build_source(
+                settings.detection, config_directory, streams, report_status
+            )
             resources.callback(source.close)
             detector: ObjectDetector | None = None
             event_policy = EventPolicy()
             if settings.yolo is not None:
                 from aidetector.adapters.inference.yolo import open_detector
 
+                report_status(
+                    StatusEvent(
+                        "preparing",
+                        message=f"Opening detection rule {index}…",
+                    )
+                )
                 model_settings = settings.yolo.model_copy(
                     update={
                         "model": resolve_model_path(
                             settings.yolo.model,
                             config_directory,
                             data_directory / "models",
+                            rule_status,
                         )
                     }
                 )
@@ -119,6 +159,8 @@ def run_application(
                         source.sources,
                         TYPE,
                         options,
+                        cache_directory=data_directory / "models" / "prepared",
+                        report_status=rule_status,
                     )
                 )
                 event_policy = EventPolicy(
@@ -136,9 +178,11 @@ def run_application(
             cooldown = Cooldown(
                 settings.yolo.cooldown if settings.yolo is not None else 0
             )
-            pipeline = DetectionPipeline(detector, event_policy)
+            pipeline = DetectionPipeline(detector, event_policy, rule_status)
             delivery = EventDelivery(
-                build_destinations(settings.exporters, data_directory, media),
+                build_destinations(
+                    settings.exporters, data_directory, media, rule_status
+                ),
                 cooldown,
                 validator,
             )
@@ -153,4 +197,5 @@ def run_application(
             )
         health = Healthcheck(config.health) if config.health is not None else None
         resources.enter_context(streams.open())
+        report_status(StatusEvent("ready"))
         return run_detectors(tuple(workers), health, stop_requested)

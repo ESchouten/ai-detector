@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { Readable } from 'node:stream';
-import { getRtspInputArgs, sanitizeSourceForLogs, sanitizeTextForLogs } from './ffmpeg.ts';
+import { getCameraInputArgs, sanitizeSourceForLogs, sanitizeTextForLogs } from './ffmpeg.ts';
 
 export const MJPEG_BOUNDARY = 'frame';
 const FIRST_FRAME_TIMEOUT_MS = 20_000;
@@ -22,7 +22,7 @@ export function createPreviewStream(source: string, executable: string, signal: 
 			'-loglevel',
 			'error',
 			'-nostdin',
-			...getRtspInputArgs(source),
+			...getCameraInputArgs(source),
 			'-map',
 			'0:v:0',
 			'-an',

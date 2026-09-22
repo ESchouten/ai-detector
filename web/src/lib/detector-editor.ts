@@ -21,6 +21,18 @@ export function parseDetectorDraft(text: string): DetectorDraft {
 	return createDetectorDraft(config.detectors[0]);
 }
 
+/** Change the watched behavior without changing the camera or its delivery destinations. */
+export function applyDetectorPreset(
+	current: DetectorConfig,
+	preset: DetectorConfig
+): DetectorDraft {
+	return createDetectorDraft({
+		...structuredClone(preset),
+		detection: { ...preset.detection, source: [...current.detection.source] },
+		exporters: structuredClone(current.exporters ?? preset.exporters)
+	});
+}
+
 export function selectTelegram(
 	current: TelegramConfig[],
 	channel: TelegramMeta,

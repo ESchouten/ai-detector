@@ -2,14 +2,16 @@ import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, rm } from 'node:fs/promises';
 import path from 'node:path';
+import { createInterface } from 'node:readline';
 import type { RuntimeMode, RuntimeStatus } from '../runtime.ts';
+import type { AppConfig, Config } from '../schema.ts';
 import { readJson, writeJson } from './json-file.ts';
 import { sanitizeTextForLogs as redact } from './runtime-logs.ts';
+import { RuntimeProgress, STATUS_PREFIX } from './runtime-status.ts';
 import {
 	checkDocker,
 	chooseRuntime,
 	dockerArguments,
-	hasNvidiaGpu,
 	NVIDIA_HELP,
 	SetupError
 } from './runtime-platform.ts';
@@ -35,6 +37,7 @@ export class ManagedDetector {
 	private readonly settingsPath: string;
 	private readonly containerName: string;
 	private readonly options: Options;
+	private progress = new RuntimeProgress();
 
 	constructor(options: Options) {
 		this.options = options;
@@ -49,18 +52,53 @@ export class ManagedDetector {
 			phase: 'stopped',
 			message: 'Ready to set up your camera.',
 			logs: '',
-			dataDirectory: options.dataDirectory
+			dataDirectory: options.dataDirectory,
+			readiness: 'idle',
+			cameras: []
 		};
 	}
 
 	status(): RuntimeStatus {
-		return { ...this.state, logs: redact(this.state.logs) };
+		const progress = this.progress.snapshot();
+		const readiness =
+			this.state.phase === 'failed'
+				? 'failed'
+				: this.state.phase === 'stopped' || this.state.phase === 'stopping'
+					? 'idle'
+					: progress.readiness;
+		const cameras = progress.cameras.map((camera) => ({
+			...camera,
+			...(readiness === 'failed' ? { state: 'failed' as const } : {}),
+			...(readiness === 'idle' ? { state: 'paused' as const } : {})
+		}));
+		const message =
+			readiness === 'monitoring'
+				? `Monitoring ${cameras.length} camera${cameras.length === 1 ? '' : 's'}.`
+				: readiness === 'degraded'
+					? 'Monitoring needs attention.'
+					: readiness === 'failed'
+						? (this.progress.preparationFailure ?? this.state.message)
+						: this.state.message;
+		return {
+			...this.state,
+			message,
+			readiness,
+			cameras,
+			logs: redact(this.state.logs),
+			preparation: readiness === 'preparing' ? this.progress.preparation : undefined,
+			notice: this.progress.notice
+		};
 	}
 
 	private enqueue<T>(action: () => Promise<T>): Promise<T> {
 		const result = this.operation.then(action);
 		this.operation = result.catch(() => undefined);
 		return result;
+	}
+
+	async refreshMetadata(): Promise<void> {
+		const app = await readJson<AppConfig>(path.join(this.options.dataDirectory, 'app.json'));
+		if (app) this.progress.updateMetadata(app);
 	}
 
 	initialize(): Promise<void> {
@@ -106,6 +144,7 @@ export class ManagedDetector {
 
 	private async startChild(mode: RuntimeMode, signal: AbortSignal): Promise<void> {
 		if (this.child || signal.aborted) return;
+		this.progress = new RuntimeProgress();
 		this.state = {
 			...this.state,
 			phase: 'checking',
@@ -116,14 +155,16 @@ export class ManagedDetector {
 			logs: ''
 		};
 		try {
-			const config = await readJson(path.join(this.options.dataDirectory, 'config.json'));
+			const config = await readJson<Config>(path.join(this.options.dataDirectory, 'config.json'));
 			if (!config) throw new SetupError('Add a camera and choose what to detect first.');
 			await this.validate(config, signal);
-			const selected = chooseRuntime(
-				mode,
-				mode === 'auto' && (await hasNvidiaGpu(signal)),
-				process.platform
+			const app = await readJson<AppConfig>(path.join(this.options.dataDirectory, 'app.json'));
+			this.progress.configure(
+				config,
+				app ?? { streams: [], telegrams: [], detectors: [] },
+				this.options.dataDirectory
 			);
+			const selected = chooseRuntime(mode);
 			this.state.selected = selected;
 			signal.throwIfAborted();
 			const command = await this.prepare(selected, signal);
@@ -152,7 +193,8 @@ export class ManagedDetector {
 					path.join(this.options.dataDirectory, 'config.json'),
 					'--data-dir',
 					this.options.dataDirectory,
-					'--control-stdin'
+					'--control-stdin',
+					'--status-json'
 				]
 			};
 		}
@@ -267,17 +309,22 @@ export class ManagedDetector {
 		child.stdin.on('error', (error: NodeJS.ErrnoException) => {
 			if (error.code !== 'EPIPE') this.fail(error);
 		});
-		child.stdout.on('data', (chunk: Buffer) => this.append(chunk));
+		const records = createInterface({ input: child.stdout, crlfDelay: Infinity });
+		records.on('line', (line) => {
+			if (line.startsWith(STATUS_PREFIX)) this.progress.accept(line);
+			else this.append(Buffer.from(line + '\n'));
+		});
 		child.stderr.on('data', (chunk: Buffer) => this.append(chunk));
 		child.on('spawn', () => {
 			if (this.state.phase !== 'starting') return;
 			this.state.phase = 'running';
 			this.state.message =
-				'The detector process is running. The first start may take several minutes to download and prepare the model.';
+				'Preparing detection and connecting cameras. Monitoring will be confirmed after frames are processed.';
 		});
 		child.on('error', (error) => this.fail(error));
 		this.finished = new Promise((resolve) =>
 			child.on('close', (code) => {
+				records.close();
 				this.child = null;
 				if (code === 0 && this.state.phase !== 'failed') {
 					this.state.phase = 'stopped';
@@ -285,7 +332,8 @@ export class ManagedDetector {
 				} else if (this.state.phase !== 'failed')
 					this.fail(
 						new SetupError(
-							'The detector stopped unexpectedly. Check the details below, then try again.'
+							this.progress.preparationFailure ??
+								'The detector stopped unexpectedly. Check the details below, then try again.'
 						)
 					);
 				resolve();

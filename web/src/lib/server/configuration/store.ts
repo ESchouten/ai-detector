@@ -11,12 +11,16 @@ import {
 	streamInput,
 	telegramInput
 } from '../../configuration.ts';
-import { initialSetup, type setupInput } from './presets.ts';
+import { alertsInput, cameraInput } from '../../configuration.ts';
+import { identifyCameras, saveCamera, removeCamera, saveAlerts } from './cameras.ts';
+import { writeConfiguration } from './files.ts';
+import { recordArchiveCheck, skipCameraAlerts, finishCameraSetup } from './camera-setup.ts';
 
 interface Runtime {
 	validate(config: Config): Promise<void>;
 	apply(): Promise<void>;
 	stop(): Promise<void>;
+	fail(error: unknown): void;
 }
 
 export class ConfigurationStore {
@@ -40,7 +44,7 @@ export class ConfigurationStore {
 			readJson<unknown>(this.files.config, { $schema: DEFAULT_SCHEMA_URL, detectors: [] }),
 			readJson<unknown>(this.files.app, {})
 		]);
-		return normalizeConfiguration(config, app);
+		return identifyCameras(normalizeConfiguration(config, app));
 	}
 
 	read(): Promise<Configuration> {
@@ -48,25 +52,59 @@ export class ConfigurationStore {
 	}
 
 	private async persist(input: { config: unknown; app: unknown }): Promise<void> {
-		const { config, app } = normalizeConfiguration(input.config, input.app);
+		const { config, app } = identifyCameras(normalizeConfiguration(input.config, input.app));
 		const previous = await readJson<unknown>(this.files.config);
 		const configChanged =
 			previous === null || !isDeepStrictEqual(normalizeConfig(previous), config);
 		const runtime = this.runtime();
 		if (configChanged && config.detectors.length) await runtime?.validate(config);
-		await writeJson(this.files.app, app);
-		if (!configChanged) return;
-		await writeJson(this.files.config, config);
-		if (config.detectors.length) await runtime?.apply();
-		else await runtime?.stop();
+		if (!configChanged) {
+			await writeJson(this.files.app, app);
+			return;
+		}
+		await writeConfiguration(this.files, { config, app });
+		if (!runtime) return;
+		try {
+			if (config.detectors.length) await runtime.apply();
+			else await runtime.stop();
+		} catch (error) {
+			// Persistence succeeded. Report the operational failure through runtime status,
+			// so a client does not retry an already saved camera or detector.
+			runtime.fail(error);
+		}
 	}
 
-	private update(change: (document: Configuration) => void): Promise<void> {
+	private update<T>(change: (document: Configuration) => T | Promise<T>): Promise<T> {
 		return this.enqueue(async () => {
 			const document = await this.load();
-			change(document);
+			const result = await change(document);
 			await this.persist(document);
+			return result;
 		});
+	}
+
+	saveCamera(input: v.InferOutput<typeof cameraInput>, pictureVerifiedAt?: string) {
+		return this.update((document) => saveCamera(document, input, pictureVerifiedAt));
+	}
+
+	removeCamera(id: string): Promise<void> {
+		return this.update((document) => removeCamera(document, id));
+	}
+
+	saveAlerts(input: v.InferOutput<typeof alertsInput>): Promise<void> {
+		return this.update((document) => saveAlerts(document, input));
+	}
+
+	recordArchiveCheck(id: string, signature: string, verifiedAt: string): Promise<void> {
+		return this.update((document) => recordArchiveCheck(document, id, signature, verifiedAt));
+	}
+
+	skipCameraAlerts(id: string): Promise<void> {
+		return this.update((document) => skipCameraAlerts(document, id));
+	}
+
+	finishCameraSetup(id: string, monitoring: () => Promise<boolean>): Promise<void> {
+		return this.update(async (document) => finishCameraSetup(document, id, await monitoring()));
 	}
 
 	replace(document: { config: unknown; app: unknown }): Promise<void> {
@@ -89,8 +127,16 @@ export class ConfigurationStore {
 				config.detectors.push(normalized);
 				app.detectors.push(input.meta);
 			} else {
+				const meta = { ...app.detectors[index], ...input.meta };
+				if (
+					!isDeepStrictEqual(
+						{ ...config.detectors[index], exporters: undefined },
+						{ ...normalized, exporters: undefined }
+					)
+				)
+					delete meta.preset;
 				config.detectors[index] = normalized;
-				app.detectors[index] = input.meta;
+				app.detectors[index] = meta;
 			}
 		});
 	}
@@ -114,7 +160,11 @@ export class ConfigurationStore {
 			if (app.streams.some((item, i) => i !== index && item.source === input.source)) {
 				throw new ConfigurationError('This camera source already exists.');
 			}
-			const stream = { label: input.label, source: input.source };
+			const stream = { ...app.streams[index], label: input.label, source: input.source };
+			if (input.original !== input.source) {
+				stream.setup = stream.setup?.alerts ? { alerts: stream.setup.alerts } : undefined;
+				delete stream.connection;
+			}
 			if (index < 0) app.streams.push(stream);
 			else app.streams[index] = stream;
 			for (const detector of config.detectors) {
@@ -198,20 +248,6 @@ export class ConfigurationStore {
 						(item) => !sameTelegram(item, telegram)
 					);
 			}
-		});
-	}
-
-	finishSetup(input: v.InferOutput<typeof setupInput>): Promise<void> {
-		return this.update((document) => {
-			if (document.config.detectors.length)
-				throw new ConfigurationError('A detector is already configured. Edit it under Detectors.');
-			const initial = initialSetup(input);
-			document.config = { ...document.config, ...initial.config };
-			document.app.detectors = initial.app.detectors;
-			document.app.streams = [
-				...document.app.streams.filter((stream) => stream.source !== input.source),
-				...initial.app.streams
-			];
 		});
 	}
 }

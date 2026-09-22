@@ -58,7 +58,9 @@ class Health:
         self.stopped.set()
 
 
-def run(config, config_directory, data_directory, stop_requested=None):
+def run(
+    config, config_directory, data_directory, stop_requested=None, report_status=None
+):
     worker = DetectorWorker(
         HoldingSource(),
         DetectionPipeline(Detector(), EventPolicy(min_frames=1)),

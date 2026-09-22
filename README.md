@@ -4,36 +4,38 @@ Watch farm cameras, detect events locally, and review recordings in your browser
 
 For a visual explanation of how the application works, see the [system overview and diagrams](SYSTEM_OVERVIEW.md) (Dutch), from the web app and detector to the event-processing flow and domain model.
 
-## Download, open, set up
+## Install, open, set up
 
-1. Download the **complete application ZIP** for your computer from an **AI Detector app/** [release](https://github.com/ESchouten/ai-detector/releases). Extract the entire ZIP.
-2. Open **AI Detector**. Keep the accompanying `detector` and `bin` folders beside it. Python, Node and FFmpeg do not need to be installed separately.
-3. On first launch, your browser opens the setup page. Give your camera a name, enter its stream address and choose a detection preset. Later launches open **Detections**.
-4. Save the camera and select **Start detection**. Add Telegram alerts later if needed.
+1. Download the complete application for your computer from an **AI Detector app/** [release](https://github.com/ESchouten/ai-detector/releases).
+2. Run the Windows installer, drag the macOS app from its disk image into Applications, or install the Ubuntu `.deb` with the desktop package manager.
+3. Open **AI Detector**. Its browser setup helps you connect a camera and choose what to watch for. Python, the web server and FFmpeg are included.
+4. Confirm the camera picture and choose what to watch for. Setup remembers your progress, checks the recording location and confirms current monitoring. Connect Telegram alerts or choose **No alerts for now**, then finish.
 
-If the browser does not open, visit [localhost:8765](http://localhost:8765/). Keep the application open and the computer awake while monitoring is needed. Closing the browser tab does not stop detection. The application remembers whether detection was enabled and resumes it at the next launch; **Stop detection** disables that automatic resume.
+Telegram setup opens BotFather with the creation command prepared. After pasting its token once, open the verified bot link or scan its QR code, choose Start in Telegram, and confirm a test alert. Adding another camera offers your existing recipients; changing a recipient name or camera assignment does not require another connection test. **Finish setup** resumes an incomplete camera setup after reopening the application.
 
-The combined downloads are produced by the new [Application download workflow](.github/workflows/application.yml) on `app/v*` tags. Older `detector/v*` and `web/v*` releases contain separate components and do not provide this combined setup. These builds are not yet signed or notarized; the operating system may require permission to open a downloaded executable.
+Closing the browser leaves monitoring active. Open **AI Detector** again to return to its dashboard; a verified second launch reuses the existing application. **Pause monitoring** keeps monitoring paused on future launches. Quitting the application stops it for the current session and preserves the enabled choice for next launch. Keep the computer awake while monitoring is needed.
 
-| Computer | Complete download | Automatic detection runtime |
-| --- | --- | --- |
-| Windows x64 | `AI-Detector-windows-x64.zip` | NVIDIA Docker when an NVIDIA driver reports a GPU; otherwise native Windows ML |
-| Apple Silicon Mac | `AI-Detector-macos-arm64.zip` | Native detector with available ONNX/Core ML providers |
-| Linux x64, glibc 2.35+ | `AI-Detector-linux-x64.zip` | NVIDIA Docker when a GPU is detected; otherwise native CPU runtime |
+| Packaging target         | Normal installer                            | Automatic runtime                                                               |
+| ------------------------ | ------------------------------------------- | ------------------------------------------------------------------------------- |
+| Windows 11 24H2+ x64     | `AI-Detector-VERSION-windows-x64-setup.exe` | Bundled native runtime, with available Windows ML acceleration and CPU fallback |
+| macOS 14+ Apple Silicon  | `AI-Detector-VERSION-macos-arm64.dmg`       | Bundled native runtime, with available Core ML acceleration and CPU fallback    |
+| Ubuntu 22.04/24.04 amd64 | `AI-Detector-VERSION-linux-amd64.deb`       | Bundled native CPU baseline                                                     |
 
-GPU availability depends on the installed driver and model. Windows Docker GPU support requires its [WSL 2 backend](https://docs.docker.com/desktop/features/gpu/). Linux NVIDIA containers need the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). Setup checks a real CUDA operation before starting the Docker detector, gives instructions when a prerequisite is missing, and lets you choose **On this computer** instead. It does not silently install drivers or Docker, or request administrator access.
+The [Application download workflow](.github/workflows/application.yml) builds these formats for `app/v*` tags. Tagged publication now requires Windows signing and macOS signing/notarization credentials; older ZIP releases remain as originally published. Clean installation and hardware qualification are release gates, not outcomes established by source changes. See [packaging, signing requirements and verification](distribution/README.md). Manual workflow artifacts are unsigned developer previews.
 
-Intel Macs, Windows ARM and Jetson do not yet have combined downloads. The existing JetPack image and [detector installation options](detector/README.md) remain available.
+Windows setup offers **Open when I sign in**. On macOS choose **Open at login** in the AI Detector menu-bar menu; macOS may require approval in System Settings. The Ubuntu package adds a login entry which can be disabled in Startup Applications. These options run under your desktop account **after login**. They do not promise unattended monitoring before login. Closing the browser does not change that preference.
+
+Portable ZIPs remain available for technical users; extract them completely and keep their files together. If a browser does not open, the default dashboard is [localhost:8765](http://localhost:8765/). GPU availability depends on the operating system, driver and model. Docker is an explicit advanced runtime, not a prerequisite inferred from an NVIDIA card. Intel Macs, Windows ARM and Jetson do not yet have combined native installers; existing [detector installation options](detector/README.md) remain available.
 
 ## Your settings and recordings
 
-The setup page shows the storage folder under **Details for troubleshooting**:
+The monitoring controls show the storage folder under **Advanced and troubleshooting**:
 
 - Windows: `%LOCALAPPDATA%\AI Detector`
 - macOS: `~/Library/Application Support/AI Detector`
 - Linux: `$XDG_DATA_HOME/ai-detector`, or `~/.local/share/ai-detector`
 
-Existing portable installations with `config.json` beside the executable continue using that directory. `AIDETECTOR_DATA_DIR` explicitly selects another location. Back up the whole data folder. When upgrading, close the old application and replace the extracted application folder; keep the data folder.
+Existing portable installations with `config.json` beside the executable continue using that directory. `AIDETECTOR_DATA_DIR` explicitly selects another location. Back up the whole data folder. When upgrading, use the new installer; on macOS quit AI Detector before replacing the app in Applications. Keep the data folder. For a portable ZIP, close the old application and replace its extracted application folder. Uninstalling a normal desktop package preserves settings and recordings.
 
 The bundled web app listens on this computer only by default. Setting `HOST=0.0.0.0` deliberately enables LAN access; the web app does not provide authentication, so this is for a trusted network only.
 

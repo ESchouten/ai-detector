@@ -5,7 +5,9 @@
 	import { STAGES } from '$lib/schema';
 	import { detectionKey, mergeDetections, type Detection } from '$lib/detections';
 	import { resolve } from '$app/paths';
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
+	import DetectorRuntime from '$lib/components/detector-runtime.svelte';
+	import { getCameras } from '$lib/remote/stream.remote';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { Action } from 'svelte/action';
@@ -17,7 +19,7 @@
 
 	const type = $derived(page.url.searchParams.get('type') || undefined);
 	const stage = $derived(STAGES.find((value) => value === page.url.searchParams.get('stage')));
-	const types = $derived(await getTypes());
+	const [types, cameras] = $derived(await Promise.all([getTypes(), getCameras()]));
 
 	let entries = $state<Detection[]>([]);
 	let isLoading = $state(false);
@@ -25,6 +27,8 @@
 	let nextOffset = $state(0);
 	let errorMessage = $state<string | null>(null);
 	let requestVersion = 0;
+	let hasNewRecordings = $state(false);
+	let refreshError = $state(false);
 
 	const detectionsByDay = $derived.by(() => {
 		const dayDetections = new SvelteMap<string, Detection[]>();
@@ -49,6 +53,7 @@
 
 		if (reset) {
 			requestVersion += 1;
+			hasNewRecordings = false;
 			entries = [];
 			nextOffset = 0;
 			hasMore = true;
@@ -83,6 +88,47 @@
 			}
 		}
 	}
+
+	async function refreshRecordings() {
+		if (isLoading || document.visibilityState !== 'visible') return;
+		const version = requestVersion;
+		try {
+			const query = getDetectionPage({ type, stage, offset: 0, limit: PAGE_SIZE });
+			await query.refresh();
+			const result = await query;
+			if (version !== requestVersion) return;
+			const current = new Set(entries.map(detectionKey));
+			const added = result.items.filter((item) => !current.has(detectionKey(item)));
+			refreshError = false;
+			if (!added.length) return;
+			const playing = [...document.querySelectorAll('video')].some((video) => !video.paused);
+			const overlaps = result.items.some((item) => current.has(detectionKey(item)));
+			if (playing || window.scrollY > 80 || (entries.length > 0 && !overlaps)) {
+				hasNewRecordings = true;
+				return;
+			}
+			entries = mergeDetections(result.items, entries);
+			nextOffset += added.length;
+			hasMore ||= result.hasMore;
+			await getTypes().refresh();
+		} catch {
+			refreshError = true;
+		}
+	}
+
+	onMount(() => {
+		let active = true;
+		let timer: ReturnType<typeof setTimeout>;
+		async function refresh() {
+			await refreshRecordings();
+			if (active) timer = setTimeout(refresh, 10000);
+		}
+		timer = setTimeout(refresh, 10000);
+		return () => {
+			active = false;
+			clearTimeout(timer);
+		};
+	});
 
 	async function updateSearchParams(type?: string, stage?: string) {
 		const searchParams = new SvelteURLSearchParams(page.url.searchParams);
@@ -144,15 +190,22 @@
 	});
 </script>
 
-<svelte:head><title>Detections · AI Detector</title></svelte:head>
+<svelte:head><title>Recordings · AI Detector</title></svelte:head>
 
 <section class="flex flex-col gap-6">
 	<header class="space-y-1">
-		<h1 class="text-2xl font-semibold tracking-tight">Detections</h1>
+		<h1 class="text-2xl font-semibold tracking-tight">Recordings</h1>
 		<p class="text-sm text-muted-foreground">
-			Review detections grouped by day and quickly play each clip.
+			Review recorded events and play each clip. New recordings appear automatically.
 		</p>
 	</header>
+	<DetectorRuntime configured={cameras.some((camera) => camera.monitored)} compact />
+	{#if hasNewRecordings}<Button variant="outline" onclick={() => loadNextPage(true)}
+			>New recordings are available — show latest</Button
+		>{/if}
+	{#if refreshError}<p role="status" class="text-sm text-muted-foreground">
+			Could not check for new recordings. Retrying automatically.
+		</p>{/if}
 
 	<div class="flex flex-col gap-2">
 		{#if types.length > 0}
@@ -188,7 +241,11 @@
 	{#if entries.length === 0 && isLoading}
 		<h2 class="text-sm font-semibold text-muted-foreground">Loading detections...</h2>
 	{:else if detectionsByDay.length === 0 && !errorMessage}
-		<p class="text-sm font-semibold text-muted-foreground">No detections found.</p>
+		<p class="text-sm text-muted-foreground">
+			{type || stage
+				? 'No recordings match these filters.'
+				: 'No events recorded yet. Check the monitoring status above; recordings will appear here when an event is detected.'}
+		</p>
 	{:else}
 		<div class="space-y-8">
 			{#each detectionsByDay as dayGroup (dayGroup[0])}

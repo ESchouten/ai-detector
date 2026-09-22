@@ -7,6 +7,7 @@ from pathlib import Path
 from threading import Event, Thread
 from typing import TextIO
 
+from aidetector.application.status import ReportStatus, ignore_status
 from aidetector.configuration import ConfigurationError, load_config
 from aidetector.version import REF_NAME, TYPE
 
@@ -44,7 +45,7 @@ def _read_stop_request(stream: TextIO, stopped: Event) -> None:
     stopped.set()
 
 
-def main(argv: list[str] | None = None) -> int:
+def _arguments(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Detect and validate events in video sources."
     )
@@ -67,6 +68,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Gracefully stop on a 'stop' line or EOF from the parent application",
     )
+    parser.add_argument(
+        "--status-json",
+        action="store_true",
+        help="Emit versioned operational status records for the application launcher",
+    )
     action = parser.add_mutually_exclusive_group()
     action.add_argument(
         "--check-config",
@@ -78,7 +84,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Create an offline example configuration without overwriting a file",
     )
-    args = parser.parse_args(argv)
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = _arguments(argv)
     config_path = args.config.expanduser().resolve()
     if args.init_config:
         try:
@@ -124,7 +134,14 @@ def main(argv: list[str] | None = None) -> int:
                 name="launcher-control",
                 daemon=True,
             ).start()
-        stats = run_application(config, config_path.parent, directory, stop_requested)
+        report_status: ReportStatus = ignore_status
+        if args.status_json:
+            from aidetector.adapters.operational_status import JsonStatusReporter
+
+            report_status = JsonStatusReporter(sys.stdout)
+        stats = run_application(
+            config, config_path.parent, directory, stop_requested, report_status
+        )
         logger.info(
             "Processing finished: %d event(s), %d skipped, %d delivery failure(s), %d validation failure(s)",
             sum(item.events for item in stats),

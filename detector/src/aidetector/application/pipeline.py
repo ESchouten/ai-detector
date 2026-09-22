@@ -1,4 +1,5 @@
 from aidetector.application.ports import ObjectDetector, SourceBatch
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.domain.events import EventAssembler
 from aidetector.domain.models import DetectionEvent, Observation
 from aidetector.domain.policy import EventPolicy
@@ -13,21 +14,27 @@ class DetectionPipeline:
         self,
         detector: ObjectDetector | None = None,
         policy: EventPolicy = _DEFAULT_POLICY,
+        report_status: ReportStatus = ignore_status,
     ):
         self.detector = detector
         self.events = EventAssembler(policy)
+        self.report_status = report_status
 
     def process(self, batch: SourceBatch) -> list[DetectionEvent]:
         if self.detector is None:
-            return [
+            snapshots = [
                 DetectionEvent(
                     source, (Observation(frames[-1].date, frames[-1].image, {}),)
                 )
                 for source, frames in batch.frames.items()
             ]
+            for event in snapshots:
+                self.report_status(StatusEvent("processed", event.source))
+            return snapshots
         completed: list[DetectionEvent] = []
         if batch.frames:
             for source, observations in self.detector.detect(batch.frames).items():
+                self.report_status(StatusEvent("inference", source))
                 completed.extend(self.events.observe(source, observations))
         if batch.advance_to is not None:
             completed.extend(self.events.advance(batch.advance_to))

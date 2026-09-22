@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig
 
 logger = logging.getLogger(__name__)
@@ -177,6 +178,7 @@ def inference_runtime(
     config: OnnxConfig,
     models: tuple[ModelRequirements, ...],
     build_type: str,
+    report_status: ReportStatus = ignore_status,
 ) -> Iterator[InferenceOptions]:
     """Keep provider libraries, session hooks and environment in one cleanup scope."""
     with ExitStack() as resources:
@@ -199,22 +201,45 @@ def inference_runtime(
         if uses_cuda:
             ort.preload_dlls(directory="")
 
-        providers = _providers(config, build_type, resources, ort)
+        providers = _providers(config, build_type, resources, ort, report_status)
         _install_sessions(tensorrt_profiles(models), resources, ort, providers)
         logger.info("ONNX execution providers: %s", providers.names)
         yield providers.inference_options
 
 
 def _providers(
-    config: OnnxConfig, build_type: str, resources: ExitStack, ort: Any
+    config: OnnxConfig,
+    build_type: str,
+    resources: ExitStack,
+    ort: Any,
+    report_status: ReportStatus = ignore_status,
 ) -> ProviderSelection:
     registered: set[str] = set()
     in_ci = any(
         os.environ.get(name, "").lower() in {"1", "true", "yes"}
         for name in ("CI", "GITHUB_ACTIONS")
     )
-    if build_type == "windowsml" and config.winml and not in_ci:
-        registered = _register_windows_ml(resources, ort)
+    if (
+        build_type == "windowsml"
+        and config.winml
+        and not in_ci
+        and config.provider != "CPUExecutionProvider"
+    ):
+        try:
+            registered = _register_windows_ml(resources, ort)
+        except (OSError, RuntimeError):
+            # Windows-managed acceleration is optional in automatic mode. This
+            # boundary runs before model loading, so model/configuration errors
+            # are never swallowed as a hardware fallback.
+            if (
+                config.provider is not None
+                or "CPUExecutionProvider" not in ort.get_available_providers()
+            ):
+                raise
+            message = "Hardware acceleration could not be prepared. Detection will use the CPU."
+            logger.warning(message, exc_info=True)
+            report_status(StatusEvent("notice", message=message))
+            return ProviderSelection(("CPUExecutionProvider",))
     devices = [
         device for device in ort.get_ep_devices() if device.ep_name in registered
     ]

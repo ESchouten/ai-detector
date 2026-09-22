@@ -7,7 +7,17 @@ const { server } = await import('./build/index.js');
 
 server.server.prependListener(
 	'request',
-	/** @param {import('node:http').IncomingMessage} request */ (request) => {
+	/**
+	 * @param {import('node:http').IncomingMessage} request
+	 * @param {import('node:http').ServerResponse} response
+	 */
+	(request, response) => {
 		request.headers[protocolHeader] = 'http';
+		// The adapter's body signal stops tracking disconnects once the POST body is read.
+		const controller = new AbortController();
+		request.disconnectSignal = controller.signal;
+		response.once('close', () => {
+			if (!response.writableFinished) controller.abort();
+		});
 	}
 );

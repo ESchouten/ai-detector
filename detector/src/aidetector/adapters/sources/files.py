@@ -8,6 +8,7 @@ import cv2
 
 from aidetector.adapters.media.images import shrink_image
 from aidetector.application.ports import SourceBatch, SourceError
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import source_kind
 from aidetector.domain.models import Frame
 
@@ -19,11 +20,13 @@ class FileSource:
         width: int = 1280,
         interval: float = 0,
         started_at: datetime | None = None,
+        report_status: ReportStatus = ignore_status,
     ):
         self.sources = sources
         self.width = width
         self.interval = interval
         self.started_at = started_at
+        self.report_status = report_status
         self._stop = Event()
 
     def batches(self) -> Generator[SourceBatch, None, None]:
@@ -35,6 +38,7 @@ class FileSource:
                 image = cv2.imread(source)
                 if image is None:
                     raise SourceError(f"Cannot read image source {index + 1}")
+                self.report_status(StatusEvent("frame", source))
                 yield SourceBatch(
                     {source: (Frame(started_at, shrink_image(image, self.width)),)}
                 )
@@ -80,6 +84,7 @@ class FileSource:
                     started_at + elapsed,
                     shrink_image(image, self.width),
                 )
+                self.report_status(StatusEvent("frame", source))
                 yield SourceBatch({source: (frame,)})
         finally:
             capture.release()

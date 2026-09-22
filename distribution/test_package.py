@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+import plistlib
 import tempfile
 import unittest
 import zipfile
@@ -23,6 +24,8 @@ class PackageTest(unittest.TestCase):
         (runtime / "library").write_bytes(b"runtime dependency")
         self.web = self.root / "web"
         self.web.write_bytes(b"web")
+        self.launcher = self.root / "launcher"
+        self.launcher.write_bytes(b"native launcher")
         self.ffmpeg = self.root / "ffmpeg"
         self.ffmpeg.write_bytes(b"ffmpeg")
         self.ffmpeg.chmod(0o755)
@@ -30,7 +33,7 @@ class PackageTest(unittest.TestCase):
     def test_complete_download_and_checksum(self):
         for platform, launcher, encoder in (
             ("windows-x64", "AI Detector.exe", "ffmpeg.exe"),
-            ("macos-arm64", "AI Detector.command", "ffmpeg"),
+            ("macos-arm64", "ai-detector-web", "ffmpeg"),
             ("linux-x64", "AI Detector", "ffmpeg"),
         ):
             with self.subTest(platform=platform):
@@ -41,9 +44,16 @@ class PackageTest(unittest.TestCase):
                     self.root / "out",
                     platform,
                     "image@sha256:123",
+                    version="app/v1.2.3",
+                    mac_launcher=self.launcher if platform == "macos-arm64" else None,
                 )
                 with zipfile.ZipFile(archive) as download:
-                    prefix = f"AI-Detector-{platform}/"
+                    base = f"AI-Detector-{platform}/"
+                    prefix = (
+                        base + "AI Detector.app/Contents/MacOS/"
+                        if platform == "macos-arm64"
+                        else base
+                    )
                     self.assertEqual(
                         download.read(prefix + "detector/aidetector"), b"detector"
                     )
@@ -70,10 +80,24 @@ class PackageTest(unittest.TestCase):
                                 >> 16
                                 & 0o111
                             )
-                    self.assertIn(
-                        f"Open {launcher}.",
-                        download.read(prefix + "START HERE.txt").decode("utf-8"),
+                    instructions = download.read(base + "START HERE.txt").decode(
+                        "utf-8"
                     )
+                    self.assertIn(
+                        "Closing the browser leaves monitoring active", instructions
+                    )
+                    self.assertNotIn("Use Stop detection before closing", instructions)
+                    if platform == "macos-arm64":
+                        info = plistlib.loads(
+                            download.read(base + "AI Detector.app/Contents/Info.plist")
+                        )
+                        self.assertEqual(info["CFBundleShortVersionString"], "1.2.3")
+                        self.assertEqual(info["LSMinimumSystemVersion"], "14.0")
+                        self.assertTrue(info["LSUIElement"])
+                        self.assertEqual(
+                            download.read(prefix + info["CFBundleExecutable"]),
+                            b"native launcher",
+                        )
                     self.assertNotIn(prefix + "config.json", download.namelist())
                 with archive.open("rb") as stream:
                     digest = hashlib.file_digest(stream, "sha256").hexdigest()

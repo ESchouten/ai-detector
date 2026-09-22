@@ -5,6 +5,7 @@ No camera, external model download, external API, or real credentials are used.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import subprocess
@@ -19,6 +20,53 @@ import numpy as np
 from tests.support.onnx_model import write_detection_model
 
 
+def run_executable(
+    executable: Path, config: Path, root: Path
+) -> subprocess.CompletedProcess[str]:
+    process = subprocess.run(
+        [str(executable), "--config", str(config), "--status-json"],
+        cwd=root,
+        env={
+            **os.environ,
+            "LITELLM_LOCAL_MODEL_COST_MAP": "true",
+            "YOLO_CONFIG_DIR": str(root / "yolo"),
+        },
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert process.returncode == 0, process.stdout + process.stderr
+    records = [
+        json.loads(line.removeprefix("AIDETECTOR_STATUS "))
+        for line in process.stdout.splitlines()
+        if line.startswith("AIDETECTOR_STATUS ")
+    ]
+    assert all(record["version"] == 1 for record in records)
+    sources = {record["sourceKey"] for record in records if record["event"] == "frame"}
+    assert len(sources) == 2, process.stdout + process.stderr
+    for kind in ("inference", "recording"):
+        observations = [record for record in records if record["event"] == kind]
+        assert {record["sourceKey"] for record in observations} == sources
+        assert all(record["ruleId"] == "detector-1" for record in observations)
+    assert all(
+        record["destinationId"] == "disk-1"
+        for record in records
+        if record["event"] == "recording"
+    )
+    return process
+
+
+def verify_prepared_cache(executable: Path, config: Path, root: Path) -> None:
+    [prepared] = (root / "models/prepared").glob("*/model.onnx")
+    modified = prepared.stat().st_mtime_ns
+    digest = hashlib.sha256(prepared.read_bytes()).hexdigest()
+    run_executable(executable, config, root)
+    assert prepared.stat().st_mtime_ns == modified, (
+        "The second launch re-exported the model"
+    )
+    assert hashlib.sha256(prepared.read_bytes()).hexdigest() == digest
+
+
 def assert_verification_schema(request: dict) -> None:
     response_format = request["response_format"]
     assert response_format["type"] == "json_schema"
@@ -28,6 +76,19 @@ def assert_verification_schema(request: dict) -> None:
     assert set(schema["properties"]) == {"detected"}
     assert schema["properties"]["detected"]["type"] == "boolean"
     assert schema["additionalProperties"] is False
+
+
+def verify_archives(root: Path, expected_events: int, diagnostics: str) -> None:
+    archives = list((root / "detections/smoke/approved").glob("*/metadata.json"))
+    assert len(archives) == expected_events, diagnostics
+    for path in archives:
+        assert json.loads(path.read_text())["validated"] is True
+        assert cv2.imread(str(path.parent / "best.jpg")).shape == (64, 64, 3)
+        capture = cv2.VideoCapture(str(path.parent / "video.mp4"))
+        try:
+            assert capture.isOpened() and capture.read()[0]
+        finally:
+            capture.release()
 
 
 def verify(executable: Path, model_format: str = "onnx") -> None:
@@ -132,42 +193,25 @@ def verify(executable: Path, model_format: str = "onnx") -> None:
         }
         config_path = root / "config.json"
         config_path.write_text(json.dumps(config), encoding="utf-8")
+        expected_events = 2
         try:
-            process = subprocess.run(
-                [str(executable), "--config", str(config_path)],
-                cwd=root,
-                env={
-                    **os.environ,
-                    "LITELLM_LOCAL_MODEL_COST_MAP": "true",
-                    "YOLO_CONFIG_DIR": str(root / "yolo"),
-                },
-                capture_output=True,
-                text=True,
-                timeout=120,
-            )
+            process = run_executable(executable, config_path, root)
+            if model_format == "pt":
+                verify_prepared_cache(executable, config_path, root)
+                expected_events = 4
         finally:
             server.shutdown()
             server.server_close()
             thread.join()
-        assert process.returncode == 0, process.stdout + process.stderr
         assert [path for path, _ in requests].count(f"/{model.name}") == 1
         [cached] = (root / "models").glob(f"*/{model.name}")
         assert cached.read_bytes() == model.read_bytes()
-        archives = list((root / "detections/smoke/approved").glob("*/metadata.json"))
-        assert len(archives) == 2, process.stdout + process.stderr
-        for path in archives:
-            assert json.loads(path.read_text())["validated"] is True
-            assert cv2.imread(str(path.parent / "best.jpg")).shape == (64, 64, 3)
-            capture = cv2.VideoCapture(str(path.parent / "video.mp4"))
-            try:
-                assert capture.isOpened() and capture.read()[0]
-            finally:
-                capture.release()
+        verify_archives(root, expected_events, process.stdout + process.stderr)
         ai_requests = [
             body for path, body in requests if path == "/v1/chat/completions"
         ]
         webhooks = [body for path, body in requests if path == "/events"]
-        assert len(ai_requests) == len(webhooks) == 2
+        assert len(ai_requests) == len(webhooks) == expected_events
         assert any(path == "/health" for path, _ in requests)
         for body in ai_requests:
             assert_verification_schema(body)
@@ -176,7 +220,7 @@ def verify(executable: Path, model_format: str = "onnx") -> None:
             for body in webhooks
         )
     print(
-        f"Executable passed ({model_format}): model loading, two-source inference, local VLM verification, JPEG/MP4 archives, HTTP delivery, health monitoring, and EOF shutdown."
+        f"Executable passed ({model_format}): model loading, two-source inference, structured readiness, local VLM verification, JPEG/MP4 archives, HTTP delivery, health monitoring, and EOF shutdown."
     )
 
 

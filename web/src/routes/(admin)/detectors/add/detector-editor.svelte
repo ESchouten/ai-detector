@@ -12,7 +12,12 @@
 	import * as Field from '$lib/components/ui/field';
 	import * as Select from '$lib/components/ui/select';
 	import * as Alert from '$lib/components/ui/alert';
-	import { createDetectorDraft, parseDetectorDraft, selectTelegram } from '$lib/detector-editor';
+	import {
+		applyDetectorPreset,
+		createDetectorDraft,
+		parseDetectorDraft,
+		selectTelegram
+	} from '$lib/detector-editor';
 	import { sameTelegram } from '$lib/configuration';
 	import type { DetectorConfig, TelegramMeta } from '$lib/schema';
 	import {
@@ -85,7 +90,7 @@
 		pending = true;
 		error = '';
 		try {
-			detector = createDetectorDraft(await getDetectorPreset({ file }));
+			detector = applyDetectorPreset(detector, await getDetectorPreset({ file }));
 			previousYolo = detector.yolo;
 		} catch (cause) {
 			showError(cause, 'The preset could not be loaded.');

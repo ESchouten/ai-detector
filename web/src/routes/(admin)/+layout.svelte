@@ -8,7 +8,6 @@
 	import { version } from '$lib/version';
 	import TVIcon from '@lucide/svelte/icons/tv';
 	import CameraIcon from '@lucide/svelte/icons/camera';
-	import WrenchIcon from '@lucide/svelte/icons/wrench';
 	import BellIcon from '@lucide/svelte/icons/bell';
 	import { page } from '$app/state';
 	import GithubIcon from '@lucide/svelte/icons/github';
@@ -21,38 +20,41 @@
 			title: 'Overview',
 			items: [
 				{
-					title: 'Detections',
+					title: 'Recordings',
 					url: resolve('/detections'),
 					icon: CameraIcon
 				},
 				{
-					title: 'Streams',
+					title: 'Cameras',
 					url: resolve('/streams'),
 					icon: TVIcon
 				}
 			]
 		},
 		{
-			title: 'Settings',
+			title: 'Manage',
 			items: [
 				{
-					title: 'Setup',
+					title: 'Settings',
 					url: resolve('/setup'),
 					icon: CircleCheckIcon
 				},
 				{
-					title: 'Notifications',
+					title: 'Alerts',
 					url: resolve('/notifications'),
 					icon: BellIcon
-				},
-				{
-					title: 'Detectors',
-					url: resolve('/detectors'),
-					icon: WrenchIcon
 				}
 			]
 		}
 	];
+	const pageNames: Record<string, string> = {
+		detections: 'Recordings',
+		streams: 'Cameras',
+		notifications: 'Alerts',
+		setup: 'Settings',
+		detectors: 'Advanced monitoring',
+		add: 'Settings'
+	};
 
 	const secondaryMenu: NavMenu[] = [
 		{
@@ -83,7 +85,7 @@
 						{#each page.url.pathname.split('/').filter(Boolean) as path, index (`${index}:${path}`)}
 							<Breadcrumb.Separator class="hidden md:block" />
 							<Breadcrumb.Item>
-								<Breadcrumb.Page>{path.charAt(0).toUpperCase() + path.slice(1)}</Breadcrumb.Page>
+								<Breadcrumb.Page>{pageNames[path] ?? path}</Breadcrumb.Page>
 							</Breadcrumb.Item>
 						{/each}
 					</Breadcrumb.List>

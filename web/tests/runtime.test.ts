@@ -4,6 +4,7 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { setTimeout } from 'node:timers/promises';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { chooseRuntime, dockerArguments } from '../src/lib/server/runtime-platform.ts';
@@ -13,6 +14,42 @@ const executable = fileURLToPath(new URL('./fixtures/detector.mjs', import.meta.
 const posixOnly = { skip: process.platform === 'win32' };
 const config = { detectors: [{ detection: { source: 'rtsp://camera.local/live' } }] };
 
+test(
+	'a model download failure survives process exit and retry clears the old failure',
+	posixOnly,
+	async (t) => {
+		const directory = await mkdtemp(path.join(tmpdir(), 'detector-download-failure-'));
+		const detector = new ManagedDetector({ executable, dataDirectory: directory });
+		t.after(async () => {
+			await detector.stop();
+			await rm(directory, { recursive: true, force: true });
+		});
+		const message =
+			'The detection model could not be downloaded. Check the internet connection and try again.';
+		await writeJson(path.join(directory, 'config.json'), {
+			...config,
+			crashAfterStatus: true,
+			statusEvents: [
+				{ version: 1, event: 'preparation_failed', at: new Date().toISOString(), message }
+			]
+		});
+		await detector.start('native');
+		await waitFor(() => detector.status().phase === 'failed');
+		assert.equal(detector.status().message, message);
+		assert.equal(detector.status().readiness, 'failed');
+		await writeJson(path.join(directory, 'config.json'), { detectors: [] });
+		await detector.start('native');
+		assert.equal(detector.status().phase, 'failed');
+		assert.match(detector.status().message, /Add a detector/);
+		assert.notEqual(detector.status().message, message);
+		await writeJson(path.join(directory, 'config.json'), config);
+		await detector.start('native');
+		await waitFor(() => detector.status().phase === 'running');
+		assert.notEqual(detector.status().message, message);
+		assert.equal(detector.status().readiness, 'preparing');
+	}
+);
+
 async function waitFor(predicate: () => boolean | Promise<boolean>) {
 	for (let i = 0; i < 200; i++) {
 		if (await predicate()) return;
@@ -21,17 +58,12 @@ async function waitFor(predicate: () => boolean | Promise<boolean>) {
 	assert.fail('Expected process state was not reached');
 }
 
-for (const [platform, gpu, mode, expected] of [
-	['linux', true, 'auto', 'docker'],
-	['win32', true, 'auto', 'docker'],
-	['darwin', false, 'auto', 'native'],
-	['linux', false, 'auto', 'native'],
-	['win32', false, 'auto', 'native'],
-	['linux', true, 'native', 'native'],
-	['win32', false, 'docker', 'docker']
+for (const [mode, expected] of [
+	['auto', 'native'],
+	['native', 'native'],
+	['docker', 'docker']
 ] as const) {
-	test(`${platform} GPU=${gpu} ${mode} selects ${expected}`, () =>
-		assert.equal(chooseRuntime(mode, gpu, platform), expected));
+	test(`${mode} selects ${expected}`, () => assert.equal(chooseRuntime(mode), expected));
 }
 
 test('Docker mounts the same data, requests a GPU and runs as the Linux user without a shell', () => {
@@ -45,7 +77,8 @@ test('Docker mounts the same data, requests a GPU and runs as the Linux user wit
 	assert.ok(args.includes('/farm data/$cash:/data'));
 	assert.ok(args.includes('1001:1001'));
 	assert.equal(args[args.indexOf('--gpus') + 1], 'all');
-	assert.equal(args.at(-1), '--control-stdin');
+	assert.ok(args.includes('--control-stdin'));
+	assert.ok(args.includes('--status-json'));
 	assert.ok(!dockerArguments('image', 'C:\\Farm data', 'farm', 'win32').includes('--user'));
 });
 
@@ -242,9 +275,8 @@ for (const action of ['start', 'resume', 'apply'] as const) {
 }
 
 test('an aborted hardware probe cannot select a fallback runtime', async () => {
-	const { hasNvidiaGpu, checkDocker } = await import('../src/lib/server/runtime-platform.ts');
+	const { checkDocker } = await import('../src/lib/server/runtime-platform.ts');
 	const signal = AbortSignal.abort(new Error('startup cancelled'));
-	await assert.rejects(hasNvidiaGpu(signal), /startup cancelled/);
 	await assert.rejects(checkDocker(process.platform, signal), /startup cancelled/);
 });
 
@@ -269,5 +301,77 @@ test(
 		await cancelled;
 		assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
 		assert.equal((await readdir(directory)).filter((name) => name.endsWith('.json')).length, 0);
+	}
+);
+
+test('automatic detection never invokes NVIDIA or Docker prerequisites', posixOnly, async (t) => {
+	const directory = await mkdtemp(path.join(tmpdir(), 'detector-native-auto-'));
+	const detector = new ManagedDetector({ executable, dataDirectory: directory });
+	const oldPath = process.env.PATH;
+	t.after(async () => {
+		process.env.PATH = oldPath;
+		await detector.stop();
+		await rm(directory, { recursive: true, force: true });
+	});
+	for (const tool of ['nvidia-smi', 'docker'])
+		await writeFile(path.join(directory, tool), '#!/bin/sh\necho invoked >> probes.txt\nexit 1\n', {
+			mode: 0o755
+		});
+	process.env.PATH = directory + path.delimiter + oldPath;
+	await writeJson(path.join(directory, 'config.json'), config);
+	await detector.start('auto');
+	await waitFor(() => detector.status().phase === 'running');
+	assert.equal(detector.status().selected, 'native');
+	assert.equal(detector.status().readiness, 'preparing');
+	await assert.rejects(readFile(path.join(directory, 'probes.txt')), { code: 'ENOENT' });
+});
+
+test(
+	'split structured records establish readiness while process spawn and human logs do not',
+	posixOnly,
+	async (t) => {
+		const directory = await mkdtemp(path.join(tmpdir(), 'detector-status-protocol-'));
+		const detector = new ManagedDetector({ executable, dataDirectory: directory });
+		t.after(async () => {
+			await detector.stop();
+			await rm(directory, { recursive: true, force: true });
+		});
+		const source = config.detectors[0].detection.source;
+		const sourceKey = createHash('sha256').update(source).digest('hex');
+		await writeJson(path.join(directory, 'app.json'), {
+			streams: [{ id: 'barn-camera', source, label: 'Barn' }]
+		});
+		await writeJson(path.join(directory, 'config.json'), {
+			...config,
+			statusEvents: ['ready', 'frame', 'inference'].map((event) => ({
+				version: 1,
+				event,
+				ruleId: 'detector-1',
+				sourceKey,
+				at: new Date().toISOString()
+			}))
+		});
+		await detector.start('auto');
+		await waitFor(() => detector.status().readiness === 'monitoring');
+		assert.equal(detector.status().cameras[0].id, 'barn-camera');
+		assert.ok(detector.status().cameras[0].lastInferenceAt);
+		assert.ok(!detector.status().logs.includes('AIDETECTOR_STATUS'));
+		await writeJson(path.join(directory, 'app.json'), {
+			streams: [{ id: 'barn-camera', source, label: 'North barn' }]
+		});
+		await detector.refreshMetadata();
+		assert.equal(detector.status().cameras[0].label, 'North barn');
+		assert.equal(detector.status().readiness, 'monitoring');
+		assert.equal(await readFile(path.join(directory, 'starts.txt'), 'utf8'), 'started\n');
+		await detector.stop();
+		assert.equal(detector.status().readiness, 'idle');
+		assert.equal(detector.status().cameras[0].state, 'paused');
+		await writeJson(path.join(directory, 'config.json'), { ...config, holdCheck: true });
+		const restarting = detector.start('auto');
+		await waitFor(() => detector.status().phase === 'checking');
+		assert.equal(detector.status().readiness, 'preparing');
+		assert.deepEqual(detector.status().cameras, []);
+		await detector.stop();
+		await restarting;
 	}
 );

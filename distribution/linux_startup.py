@@ -8,6 +8,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import urlopen
 
 
@@ -93,9 +94,12 @@ def wait_for_webapp(url: str, timeout: float = 300) -> None:
         try:
             with urlopen(url, timeout=min(5, remaining)):
                 return
+        except HTTPError as error:
+            error.close()
         except OSError:
-            # The desktop can start before Docker has finished starting the web service.
-            time.sleep(min(2, max(0, deadline - time.monotonic())))
+            pass
+        # The desktop can start before Docker has finished starting the web service.
+        time.sleep(min(2, max(0, deadline - time.monotonic())))
     raise TimeoutError(
         f"AI Detector did not respond within {timeout:g} seconds. Check Docker and open {url}."
     )

@@ -1,4 +1,4 @@
-from collections.abc import Generator, Mapping
+from collections.abc import Callable, Generator, Mapping
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
@@ -12,6 +12,11 @@ from aidetector.domain.models import (
 )
 
 Frames = Mapping[str, tuple[Frame, ...]]
+PublishObservation = Callable[[str, Observation], None]
+
+
+def ignore_observation(source: str, observation: Observation) -> None:
+    pass
 
 
 @dataclass(frozen=True)

@@ -264,6 +264,102 @@ def test_native_cuda_models_do_not_load_onnx_runtime(monkeypatch, build_type):
     with inference_runtime(OnnxConfig(), models, build_type) as options:
         assert options.half is True
         assert options.rectangular is True
+        assert options.native_mps is False
+
+
+@pytest.mark.parametrize(
+    "model_path", ["model.pt", "https://example.test/model.pt?signature=fake"]
+)
+def test_available_mps_skips_onnx_setup_for_native_checkpoints(monkeypatch, model_path):
+    import sys
+
+    import torch
+
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(torch.backends.mps, "is_available", lambda: True)
+    monkeypatch.setitem(sys.modules, "onnxruntime", None)
+    models = (ModelRequirements(model_path, image_size=640, batch_size=1),)
+    with inference_runtime(OnnxConfig(), models, "default") as options:
+        assert options.native_mps is True
+
+
+@pytest.mark.parametrize("platform, available", [("darwin", False), ("linux", True)])
+def test_native_checkpoints_keep_onnx_when_mps_is_not_available_on_mac(
+    monkeypatch, platform, available
+):
+    import sys
+
+    import onnxruntime as ort
+    import torch
+
+    monkeypatch.setattr(sys, "platform", platform)
+    monkeypatch.setattr(torch.backends.mps, "is_available", lambda: available)
+    monkeypatch.setattr(
+        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
+    )
+    monkeypatch.setattr(ort, "get_ep_devices", list)
+    original = ort.InferenceSession
+    models = (ModelRequirements("model.pt", image_size=640, batch_size=1),)
+    with inference_runtime(OnnxConfig(), models, "default") as options:
+        assert options.native_mps is False
+        assert options.half is False
+        assert ort.InferenceSession is not original
+    assert ort.InferenceSession is original
+
+
+@pytest.mark.parametrize("explicit_provider", [False, True])
+def test_mixed_models_keep_onnx_and_explicit_provider_overrides_mps(
+    monkeypatch, explicit_provider
+):
+    import sys
+
+    import onnxruntime as ort
+    import torch
+
+    calls = []
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(torch.backends.mps, "is_available", lambda: True)
+    monkeypatch.setattr(
+        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
+    )
+    monkeypatch.setattr(ort, "get_ep_devices", list)
+    monkeypatch.setattr(
+        ort, "InferenceSession", lambda *args, **kwargs: calls.append(kwargs)
+    )
+    models = (
+        ModelRequirements("model.pt", image_size=640, batch_size=1),
+        ModelRequirements("model.onnx", image_size=320, batch_size=2),
+    )
+    config = OnnxConfig(provider="CPUExecutionProvider" if explicit_provider else None)
+    with inference_runtime(config, models, "default") as options:
+        assert options.native_mps is not explicit_provider
+        assert options.half is False
+        ort.InferenceSession("model.onnx")
+    assert calls[0]["providers"] == [("CPUExecutionProvider", {})]
+
+
+def test_unavailable_explicit_onnx_provider_is_not_replaced_by_available_mps(
+    monkeypatch,
+):
+    import sys
+
+    import onnxruntime as ort
+    import torch
+
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(torch.backends.mps, "is_available", lambda: True)
+    monkeypatch.setattr(
+        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
+    )
+    monkeypatch.setattr(ort, "get_ep_devices", list)
+    models = (ModelRequirements("model.pt", image_size=640, batch_size=1),)
+    with (
+        pytest.raises(ValueError, match="Configured ONNX provider is unavailable"),
+        inference_runtime(
+            OnnxConfig(provider="UnavailableProvider"), models, "default"
+        ),
+    ):
+        pytest.fail("An explicit provider must not silently become native MPS")
 
 
 def test_device_selection_prefers_openvino_gpu_and_puts_provider_last():

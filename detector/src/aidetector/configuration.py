@@ -108,6 +108,8 @@ class YoloConfig(_ConfigModel):
     include_trailing_time: Duration = 1
     frames_min: PositiveInt = 3
     imgsz: PositiveInt = 640
+    iou: Probability | None = None
+    tracker: Literal["botsort.yaml", "bytetrack.yaml"] | None = None
 
 
 class SourceConfig(_ConfigModel):

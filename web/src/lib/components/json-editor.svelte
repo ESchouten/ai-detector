@@ -1,16 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type * as Monaco from 'monaco-editor';
+	import * as Alert from '$lib/components/ui/alert';
 
 	let {
 		value = $bindable(''),
 		schema,
 		height = 420,
+		ariaLabel = 'JSON configuration',
 		hasErrors = $bindable(false)
 	}: {
 		value?: string;
 		schema?: Record<string, unknown>;
 		height?: number | string;
+		ariaLabel?: string;
 		hasErrors?: boolean;
 	} = $props();
 
@@ -54,6 +57,7 @@
 			const model = monaco.editor.createModel(value, 'json', uri);
 			editor = monaco.editor.create(container, {
 				model,
+				ariaLabel,
 				automaticLayout: true,
 				formatOnPaste: true,
 				formatOnType: true,
@@ -110,11 +114,13 @@
 		style:height={typeof height === 'number' ? `${height}px` : height}
 	></div>
 	{#if issues.length > 0}
-		<div
-			role="alert"
-			class="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"
-		>
-			{#each issues as issue, index (index)}<p>{issue}</p>{/each}
-		</div>
+		<Alert.Root variant="destructive">
+			<Alert.Title>Check the JSON configuration</Alert.Title>
+			<Alert.Description>
+				<ul class="flex flex-col gap-1">
+					{#each issues as issue, index (index)}<li>{issue}</li>{/each}
+				</ul>
+			</Alert.Description>
+		</Alert.Root>
 	{/if}
 </div>

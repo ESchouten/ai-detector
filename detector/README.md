@@ -40,6 +40,7 @@ Tests mirror the `domain`, `application`, and `adapters` packages; tests spannin
 | Inference/verification sequencing or delivery policy | [pipeline](src/aidetector/application/pipeline.py), [delivery](src/aidetector/application/delivery.py), [ports](src/aidetector/application/ports.py) | [pipeline](tests/application/test_pipeline.py), [delivery](tests/application/test_delivery.py) |
 | Startup, shutdown, or worker supervision | [CLI](src/aidetector/cli.py), [bootstrap](src/aidetector/bootstrap.py), [runtime](src/aidetector/runtime.py) | [CLI](tests/test_cli.py), [runtime](tests/test_runtime.py) |
 | Launcher readiness and camera health | [status contract](src/aidetector/application/status.py), [JSON status writer](src/aidetector/adapters/operational_status.py) | [status protocol](tests/adapters/test_operational_status.py), [CLI integration](tests/test_cli.py), [shared capture](tests/adapters/sources/test_shared_streams.py) |
+| Live analyzed pictures | [protocol](LIVE_PREVIEW.md), [live preview adapter](src/aidetector/adapters/live_preview.py), [pipeline](src/aidetector/application/pipeline.py) | [publisher lifecycle](tests/adapters/test_live_preview.py), [pipeline observations](tests/application/test_pipeline.py), [web bridge](../web/tests/live-preview.test.ts) |
 | Camera sharing or file sampling | [streams](src/aidetector/adapters/sources/streams.py), [files](src/aidetector/adapters/sources/files.py) | [shared streams](tests/adapters/sources/test_shared_streams.py), [sources](tests/adapters/sources/test_sources.py), [file sampling](tests/adapters/sources/test_files.py) |
 | YOLO, model assets, or ONNX providers | [inference adapters](src/aidetector/adapters/inference/) | [YOLO](tests/adapters/inference/test_yolo.py), [ONNX](tests/adapters/inference/test_onnx.py), [model assets](tests/adapters/inference/test_model_assets.py), [model loading](tests/adapters/inference/test_model_loading.py), [SDK lifetime](tests/adapters/inference/test_yolo_runtime.py) |
 | Cropping, annotations, or encoded media | [media adapters](src/aidetector/adapters/media/) | [media encoding](tests/adapters/media/test_encoding.py), [event media](tests/adapters/media/test_event_media.py) |
@@ -81,15 +82,19 @@ uv run --no-sync aidetector --config /path/to/config.json --data-dir /path/to/ru
 
 Relative input and model paths resolve against the configuration directory. The data directory defaults to that directory and contains `detections/` and downloaded `models/`. No process-wide working-directory change is required.
 
+Add `--live-preview` to publish live analyzed pictures for the web application. The combined application supplies this flag automatically. Standalone detector and web processes must share the data directory; pictures are encoded only while someone is viewing that camera. The [live preview protocol](LIVE_PREVIEW.md) explains freshness, resource limits and troubleshooting. Preview pictures do not imply that a recording or alert was delivered.
+
 Standard names such as `yolo11n.pt` use Ultralytics' automatic model download. HTTP(S) model URLs also use Ultralytics' downloader, with separate cache directories for distinct URLs. Completed downloads are reused; failed or partial downloads are not published into the cache. The application has no custom HTTP transfer loop. URL downloads use one SDK attempt and its network timeout behavior; restart after correcting an unavailable URL or connection.
 
-Native ONNX conversions are reused from `models/prepared/` when the checkpoint contents, conversion settings and SDK versions are unchanged. Changing an image size, camera batch, precision, model or relevant library version produces a separate prepared model. Only successfully exported and checked graphs are published. This cache can be removed while detection is stopped; the next start prepares the models again. CUDA-native inference and hardware-specific TensorRT engine export retain their existing behavior.
+On macOS, `.pt` models use native PyTorch MPS with FP16 when Torch reports an available MPS device. No ONNX conversion is needed for that route. If MPS is unavailable, the existing ONNX route remains available. Set `onnx.provider` explicitly to select an ONNX provider instead; `.onnx` and `.engine` files keep their respective backends. Model loading or inference failures remain visible rather than silently switching backends.
+
+Native ONNX conversions are reused from `models/prepared/` when the checkpoint contents, conversion settings and SDK versions are unchanged. Changing an image size, camera batch, precision, model or relevant library version produces a separate prepared model. Only successfully exported and checked graphs are published. This cache can be removed while detection is stopped; the next ONNX start prepares the models again. CUDA-native inference and hardware-specific TensorRT engine export retain their existing behavior.
 
 Select **one** runtime extra per environment:
 
 | Extra | Intended runtime |
 | --- | --- |
-| `default` | Standard ONNX Runtime, including CPU and available macOS providers |
+| `default` | Native MPS for macOS `.pt` models; standard ONNX Runtime for exported models and other supported hosts |
 | `nvidia` | ONNX Runtime GPU; requires compatible NVIDIA drivers/libraries |
 | `windowsml` | Windows ML runtime and Windows App SDK bindings |
 
@@ -145,6 +150,8 @@ Use separate detector definitions for finite files and live streams. Unsupported
 | `task` | `"detect"` | `"detect"` or `"segment"`; must match the model |
 | `confidence` | `0` | Minimum score, or a class map such as `{"person": 0.8, "car": 0.6}`; maps select only those classes |
 | `tracking` | `false` | Persistent Ultralytics tracking with a stable slot for each source |
+| `iou` | unset | Optional overlap threshold from `0` to `1` for Ultralytics non-maximum suppression; omission preserves the SDK default |
+| `tracker` | unset | Optional `"botsort.yaml"` or `"bytetrack.yaml"` when tracking; omission preserves the SDK default |
 | `frames_min` | `3` | Required matching observations in an event; context frames do not count, and matches need not be consecutive |
 | `time_max` | `60` | Event duration limit measured from the first matching observation |
 | `timeout` | `5` | Inactivity limit since the last matching observation; `0` disables this timeout |

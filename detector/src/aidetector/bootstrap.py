@@ -10,12 +10,17 @@ from aidetector.adapters.exporters.webhook import WebhookExporter
 from aidetector.adapters.health import Healthcheck
 from aidetector.adapters.inference.model_assets import resolve_model_path
 from aidetector.adapters.inference.onnx import ModelRequirements, inference_runtime
+from aidetector.adapters.live_preview import LivePreview
 from aidetector.adapters.media.event_media import EventMedia
 from aidetector.adapters.sources.files import FileSource
 from aidetector.adapters.sources.streams import StreamPool, StreamSource
 from aidetector.application.delivery import Destination, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
-from aidetector.application.ports import EventValidator, ObjectDetector
+from aidetector.application.ports import (
+    EventValidator,
+    ObjectDetector,
+    ignore_observation,
+)
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import Config, ExportersConfig, SourceConfig, source_kind
 from aidetector.domain.policy import Cooldown, EventPolicy, ExportPolicy
@@ -107,6 +112,7 @@ def run_application(
     data_directory: Path,
     stop_requested: Event | None = None,
     report_status: ReportStatus = ignore_status,
+    live_preview: bool = False,
 ) -> tuple[RunStats, ...]:
     """Construct workers and own their shared captures, models and providers."""
     models = tuple(
@@ -124,6 +130,7 @@ def run_application(
             inference_runtime(config.onnx, models, TYPE, report_status)
         )
         streams = StreamPool(report_status)
+        preview = LivePreview(data_directory / "live") if live_preview else None
         workers: list[DetectorWorker] = []
         for index, settings in enumerate(config.detectors, start=1):
             rule_status = _rule_reporter(report_status, f"detector-{index}")
@@ -178,7 +185,12 @@ def run_application(
             cooldown = Cooldown(
                 settings.yolo.cooldown if settings.yolo is not None else 0
             )
-            pipeline = DetectionPipeline(detector, event_policy, rule_status)
+            publish = (
+                preview.observer(f"detector-{index}", source.sources)
+                if preview is not None
+                else ignore_observation
+            )
+            pipeline = DetectionPipeline(detector, event_policy, rule_status, publish)
             delivery = EventDelivery(
                 build_destinations(
                     settings.exporters, data_directory, media, rule_status
@@ -196,6 +208,8 @@ def run_application(
                 )
             )
         health = Healthcheck(config.health) if config.health is not None else None
+        if preview is not None:
+            resources.enter_context(preview.open())
         resources.enter_context(streams.open())
         report_status(StatusEvent("ready"))
         return run_detectors(tuple(workers), health, stop_requested)

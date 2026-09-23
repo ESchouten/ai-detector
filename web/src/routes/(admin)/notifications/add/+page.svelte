@@ -15,8 +15,8 @@
 
 {#if label && !saved}
 	<Alert.Root variant="destructive">
-		<Alert.Title>Notification channel not found</Alert.Title>
-		<Alert.Description>Return to Notifications to select a saved channel.</Alert.Description>
+		<Alert.Title>Alert recipient not found</Alert.Title>
+		<Alert.Description>Return to Alerts to select a saved recipient.</Alert.Description>
 	</Alert.Root>
 {:else if !label && !createNew && recipients.length}
 	<RecipientChoice {recipients} {cameraId} />

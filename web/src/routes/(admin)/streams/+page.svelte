@@ -100,7 +100,7 @@
 					></Card.Header
 				>
 				<Card.Content class="flex flex-col gap-3"
-					><CameraPicture id={camera.id} label={camera.label} />
+					><CameraPicture id={camera.id} label={camera.label} monitored={camera.monitored} />
 					<p class="text-sm text-muted-foreground">
 						Alerts: {camera.alerts.length ? camera.alerts.join(', ') : 'Not connected'}
 					</p>

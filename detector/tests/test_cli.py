@@ -78,7 +78,10 @@ def test_config_check_rejects_unsupported_sources_without_side_effects(
     assert list(tmp_path.iterdir()) == [path]
 
 
-def test_cli_runs_no_model_detection_relative_to_config_with_separate_output(tmp_path):
+@pytest.mark.parametrize("live_preview", [False, True])
+def test_cli_runs_no_model_detection_relative_to_config_with_separate_output(
+    tmp_path, live_preview
+):
     configured = tmp_path / "configured"
     configured.mkdir()
     image = configured / "input.png"
@@ -97,7 +100,8 @@ def test_cli_runs_no_model_detection_relative_to_config_with_separate_output(tmp
         )
     )
     output = tmp_path / "output"
-    process = run_cli(tmp_path, "--config", config, "--data-dir", output)
+    preview = ["--live-preview"] if live_preview else []
+    process = run_cli(tmp_path, "--config", config, "--data-dir", output, *preview)
     assert process.returncode == 0, process.stderr
     records = list(
         (output / "detections" / "unclassified" / "unvalidated").glob("*/metadata.json")
@@ -109,6 +113,8 @@ def test_cli_runs_no_model_detection_relative_to_config_with_separate_output(tmp
     assert "Processing finished: 1 event(s)" in process.stderr
     assert not (tmp_path / "detections").exists()
     assert not (configured / "detections").exists()
+    assert (output / "live" / "frames").is_dir() is live_preview
+    assert not (output / "live" / "session.json").exists()
 
 
 @pytest.mark.parametrize("blocked_archive", [False, True])

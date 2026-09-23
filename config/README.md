@@ -42,6 +42,8 @@ Create the referenced `presets/entrance.json`:
 
 The `configuration` filename is resolved relative to the catalogue. Model identifiers, download URLs and local model paths retain the detector's normal interpretation; relative model paths are relative to the detector's working data directory, not the catalogue file. The selected camera supplies `detection.source`. Other detector fields, including class names, thresholds, timing, optional VLM configuration and exporters, use the canonical [configuration schema](config.schema.json).
 
+YOLO presets can optionally set `iou` (0–1), `tracking: true` and `tracker` (`botsort.yaml` or `bytetrack.yaml`). Omitting `iou` and `tracker` preserves Ultralytics defaults. Tracking supplies temporary IDs for objects between frames; it does not recognise individuals across sessions. On macOS, native `.pt` models use available PyTorch MPS automatically; exported ONNX models and explicit ONNX provider choices retain their configured path.
+
 IDs must be nonempty and unique. Display names and descriptions are required; guidance and `defaultPreset` are optional. Without a default, setup asks the user to choose. Preset IDs are independent of application actions such as copying a camera or keeping existing settings.
 
 ## Existing cameras

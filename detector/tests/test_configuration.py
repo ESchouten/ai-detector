@@ -76,11 +76,27 @@ def test_explicit_models_can_be_composed_without_json_conversion():
         {"time_max": 0},
         {"timeout": -1},
         {"strategy": "LATEST"},
+        {"iou": -0.1},
+        {"iou": 1.1},
+        {"iou": float("nan")},
+        {"tracker": ""},
+        {"tracker": "unknown.yaml"},
     ],
 )
 def test_invalid_yolo_settings_fail_at_input_boundary(overrides):
     with pytest.raises(ValidationError):
         YoloConfig.model_validate({"model": "model.pt", **overrides})
+
+
+@pytest.mark.parametrize("iou", [0, 1])
+@pytest.mark.parametrize("tracker", ["botsort.yaml", "bytetrack.yaml"])
+def test_optional_inference_settings_accept_supported_values(iou, tracker):
+    settings = YoloConfig(model="model.pt", iou=iou, tracker=tracker)
+    assert settings.iou == iou
+    assert settings.tracker == tracker
+    defaults = YoloConfig(model="model.pt")
+    assert defaults.iou is None
+    assert defaults.tracker is None
 
 
 @pytest.mark.parametrize("source", [[], "", "  ", ["camera", "camera"], None])

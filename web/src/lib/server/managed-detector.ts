@@ -194,7 +194,8 @@ export class ManagedDetector {
 					'--data-dir',
 					this.options.dataDirectory,
 					'--control-stdin',
-					'--status-json'
+					'--status-json',
+					'--live-preview'
 				]
 			};
 		}

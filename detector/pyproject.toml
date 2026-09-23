@@ -125,5 +125,5 @@ packages = ["src/aidetector"]
 [tool.hatch.build.targets.sdist]
 only-include = [
     "src/aidetector", "pyproject.toml", "uv.lock", "README.md", "LICENSE",
-    "ARCHITECTURE.md", "MIGRATION.md", "QUALITY.md", "REVIEW.md", ".importlinter",
+    "ARCHITECTURE.md", "MIGRATION.md", "QUALITY.md", "REVIEW.md", "LIVE_PREVIEW.md", ".importlinter",
 ]

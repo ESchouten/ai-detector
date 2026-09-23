@@ -57,7 +57,8 @@ export function dockerArguments(
 		'-m',
 		'aidetector',
 		'--control-stdin',
-		'--status-json'
+		'--status-json',
+		'--live-preview'
 	);
 	return args;
 }

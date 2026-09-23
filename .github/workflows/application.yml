@@ -37,7 +37,7 @@ jobs:
           tags: ghcr.io/eschouten/ai-detector:app-${{ github.sha }}
           build-args: REF_NAME=${{ github.ref_name }}
           cache-from: type=gha,scope=application
-          cache-to: type=gha,mode=max,scope=application
+          cache-to: type=gha,mode=max,scope=application,ignore-error=true
 
   native:
     name: ${{ matrix.platform }} application

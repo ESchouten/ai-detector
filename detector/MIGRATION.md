@@ -95,6 +95,10 @@ Architecture tests now reject Python modules omitted from the import graph, incl
 
 ## Rollout and recovery
 
+On macOS, `.pt` checkpoints now use native PyTorch MPS with FP16 when the device is available and no `onnx.provider` is explicitly configured. This avoids exporting those checkpoints to ONNX. An explicit provider retains ONNX preparation, and an unavailable MPS device retains the existing automatic ONNX route. `.onnx`, `.engine`, CUDA and TensorRT behavior is unchanged. Model errors remain failures; they do not silently choose another backend. Existing prepared ONNX cache entries are left intact.
+
+The optional `yolo.iou` field accepts `0` through `1`; `yolo.tracker` accepts `botsort.yaml` or `bytetrack.yaml`. Omission (or null) keeps the SDK defaults, and the tracker option is used only when `tracking` is enabled. Configuration schemas include these additive fields; existing documents require no migration. Internal boxes now retain optional tracker IDs for live observations without changing archive metadata or event qualification. Tracker IDs are not persistent object identities.
+
 The desktop onboarding runtime now defaults to its bundled native executable; NVIDIA presence no longer selects Docker or requires its installation. Explicit Docker selections remain supported. Python configuration and archive formats are unchanged. The launcher adds `--status-json`, a versioned operational status stream whose source identifiers are hashes rather than camera addresses. Deploy the web application and detector from the same complete application release so the detector understands that flag. Source callers may optionally inject the status reporter; existing callers need no change.
 
 Automatic Windows ML provider discovery can fall back to CPU when the optional Windows acceleration service/library cannot be prepared. Explicit provider choices and invalid models remain visible failures. Hardware performance and provider-specific execution still require testing on the supported Windows machines.
@@ -132,6 +136,8 @@ Review `unvalidated/*/metadata.json` for `validation_error` when checking provid
 See [AUDIT.md](AUDIT.md) for the exact local checks and results. Automated tests and distribution checks use local fake services; they do not establish model quality or production provider accuracy. Windows ML registration and NVIDIA/Jetson hardware execution require those target systems. Existing archives, live configuration, and research/model assets are not migrated or deleted.
 
 ## Combined application setup
+
+Live analyzed pictures are opt-in for standalone detector runs through `--live-preview`; the combined application supplies the flag. They reuse existing analyzed frames and add only bounded temporary operational data under `live/`. Camera credentials are not included in frame records. No configuration or archive migration is required, and disabling the flag preserves ordinary detection behavior. See [LIVE_PREVIEW.md](LIVE_PREVIEW.md) for the shared-data and single-publisher assumptions.
 
 Model preparation now reports download/conversion/loading stages and an explicit `preparation_failed` observation for expected download failures. The launcher preserves that retry guidance after exit and resets it for a new run. These additions do not change model files, configuration, event rules or archive formats.
 

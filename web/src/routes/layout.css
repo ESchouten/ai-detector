@@ -119,3 +119,21 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+@layer components {
+	.settings-page {
+		@apply flex w-full max-w-7xl flex-col gap-6;
+	}
+	.settings-heading {
+		@apply text-2xl font-semibold tracking-tight;
+	}
+	.settings-description {
+		@apply text-sm leading-relaxed text-muted-foreground;
+	}
+	.settings-layout {
+		@apply grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_17.5rem];
+	}
+	.settings-aside {
+		@apply flex min-w-0 flex-col gap-6 border-t pt-6 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-6;
+	}
+}

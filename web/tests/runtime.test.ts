@@ -79,6 +79,7 @@ test('Docker mounts the same data, requests a GPU and runs as the Linux user wit
 	assert.equal(args[args.indexOf('--gpus') + 1], 'all');
 	assert.ok(args.includes('--control-stdin'));
 	assert.ok(args.includes('--status-json'));
+	assert.ok(args.includes('--live-preview'));
 	assert.ok(!dockerArguments('image', 'C:\\Farm data', 'farm', 'win32').includes('--user'));
 });
 

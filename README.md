@@ -15,12 +15,16 @@ Telegram setup opens BotFather with the creation command prepared. After pasting
 
 Setup choices come from a [configurable preset catalogue](config/README.md). The included general and cattle presets are examples; an installation can supply its own models, names, guidance and default without changing application code or rebuilding the executable. Existing cameras retain their saved settings when the catalogue changes.
 
+For several cameras, choose **Set up several cameras** in Add camera. Select discovered devices that share a login, then check and save each picture and test recording. Successful connections stay ready if another camera fails. The next camera keeps your monitoring choice; each saved camera still has its own recording and alert checks.
+
+On **Cameras**, **Show detections** displays the frame actually analysed, with boxes, confidence and temporary tracking numbers when tracking is enabled. Choose a rule when a camera has several. Previews pause outside the visible page, and at most four run per browser tab. Monitoring continues when previews are closed.
+
 Closing the browser leaves monitoring active. Open **AI Detector** again to return to its dashboard; a verified second launch reuses the existing application. **Pause monitoring** keeps monitoring paused on future launches. Quitting the application stops it for the current session and preserves the enabled choice for next launch. Keep the computer awake while monitoring is needed.
 
 | Packaging target         | Normal installer                            | Automatic runtime                                                               |
 | ------------------------ | ------------------------------------------- | ------------------------------------------------------------------------------- |
 | Windows 11 24H2+ x64     | `AI-Detector-VERSION-windows-x64-setup.exe` | Bundled native runtime, with available Windows ML acceleration and CPU fallback |
-| macOS 14+ Apple Silicon  | `AI-Detector-VERSION-macos-arm64.dmg`       | Bundled native runtime, with available Core ML acceleration and CPU fallback    |
+| macOS 14+ Apple Silicon  | `AI-Detector-VERSION-macos-arm64.dmg`       | Native PyTorch MPS for `.pt` models; ONNX/Core ML and CPU fallback when unavailable |
 | Ubuntu 22.04/24.04 amd64 | `AI-Detector-VERSION-linux-amd64.deb`       | Bundled native CPU baseline                                                     |
 
 The [Application download workflow](.github/workflows/application.yml) builds these formats for `app/v*` tags. Tagged publication now requires Windows signing and macOS signing/notarization credentials; older ZIP releases remain as originally published. Clean installation and hardware qualification are release gates, not outcomes established by source changes. See [packaging, signing requirements and verification](distribution/README.md). Manual workflow artifacts are unsigned developer previews.

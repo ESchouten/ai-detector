@@ -7,7 +7,7 @@ import sys
 import tempfile
 from collections.abc import Iterator
 from contextlib import ExitStack, contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from importlib import import_module, util
 from pathlib import Path
 from typing import Any
@@ -21,8 +21,11 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class InferenceOptions:
+    """Prepared inference options; native MPS applies only to .pt checkpoints."""
+
     half: bool = False
     rectangular: bool = True
+    native_mps: bool = False
 
 
 @dataclass(frozen=True)
@@ -167,10 +170,18 @@ def tensorrt_profiles(models: tuple[ModelRequirements, ...]) -> dict[str, str]:
     }
 
 
-def _is_onnx_model(model: str) -> bool:
+def _model_suffix(model: str) -> str:
     url = urlsplit(model)
     path = url.path if url.scheme in {"http", "https"} else model
-    return path.endswith(".onnx")
+    return Path(path).suffix
+
+
+def _mps_available() -> bool:
+    if sys.platform != "darwin":
+        return False
+    import torch
+
+    return torch.backends.mps.is_available()
 
 
 @contextmanager
@@ -192,8 +203,23 @@ def inference_runtime(
         if not models:
             yield InferenceOptions()
             return
-        if uses_cuda and all(not _is_onnx_model(model.path) for model in models):
+        if uses_cuda and all(_model_suffix(model.path) != ".onnx" for model in models):
             yield InferenceOptions(half=True)
+            return
+
+        native_mps = (
+            not uses_cuda
+            and config.provider is None
+            and any(_model_suffix(model.path) == ".pt" for model in models)
+            and _mps_available()
+        )
+        onnx_models = tuple(
+            model
+            for model in models
+            if not (native_mps and _model_suffix(model.path) == ".pt")
+        )
+        if not onnx_models:
+            yield InferenceOptions(native_mps=True)
             return
 
         import onnxruntime as ort
@@ -202,9 +228,9 @@ def inference_runtime(
             ort.preload_dlls(directory="")
 
         providers = _providers(config, build_type, resources, ort, report_status)
-        _install_sessions(tensorrt_profiles(models), resources, ort, providers)
+        _install_sessions(tensorrt_profiles(onnx_models), resources, ort, providers)
         logger.info("ONNX execution providers: %s", providers.names)
-        yield providers.inference_options
+        yield replace(providers.inference_options, native_mps=native_mps)
 
 
 def _providers(

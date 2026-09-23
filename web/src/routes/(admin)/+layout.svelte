@@ -11,7 +11,7 @@
 	import BellIcon from '@lucide/svelte/icons/bell';
 	import { page } from '$app/state';
 	import GithubIcon from '@lucide/svelte/icons/github';
-	import CircleCheckIcon from '@lucide/svelte/icons/circle-check';
+	import SettingsIcon from '@lucide/svelte/icons/settings';
 
 	let { children } = $props();
 
@@ -37,7 +37,7 @@
 				{
 					title: 'Settings',
 					url: resolve('/setup'),
-					icon: CircleCheckIcon
+					icon: SettingsIcon
 				},
 				{
 					title: 'Alerts',
@@ -52,7 +52,7 @@
 		streams: 'Cameras',
 		notifications: 'Alerts',
 		setup: 'Settings',
-		detectors: 'Advanced monitoring',
+		detectors: 'Monitoring rules',
 		add: 'Settings'
 	};
 
@@ -61,7 +61,7 @@
 			title: 'Support',
 			items: [
 				{
-					title: 'Github',
+					title: 'GitHub',
 					url: 'https://github.com/ESchouten/ai-detector',
 					icon: GithubIcon
 				}
@@ -83,7 +83,7 @@
 							<Breadcrumb.Link href="/">AI Detector</Breadcrumb.Link>
 						</Breadcrumb.Item>
 						{#each page.url.pathname.split('/').filter(Boolean) as path, index (`${index}:${path}`)}
-							<Breadcrumb.Separator class="hidden md:block" />
+							<Breadcrumb.Separator class={index === 0 ? 'hidden md:block' : ''} />
 							<Breadcrumb.Item>
 								<Breadcrumb.Page>{pageNames[path] ?? path}</Breadcrumb.Page>
 							</Breadcrumb.Item>
@@ -92,7 +92,7 @@
 				</Breadcrumb.Root>
 			</div>
 		</header>
-		<div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+		<div class="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-0 md:px-6 md:pb-6 lg:px-8 lg:pb-8">
 			{@render children()}
 		</div>
 	</Sidebar.Inset>

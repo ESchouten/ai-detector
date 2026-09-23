@@ -73,6 +73,11 @@ def _arguments(argv: list[str] | None) -> argparse.Namespace:
         action="store_true",
         help="Emit versioned operational status records for the application launcher",
     )
+    parser.add_argument(
+        "--live-preview",
+        action="store_true",
+        help="Publish analyzed frames only while the web application has a live viewer",
+    )
     action = parser.add_mutually_exclusive_group()
     action.add_argument(
         "--check-config",
@@ -140,7 +145,12 @@ def main(argv: list[str] | None = None) -> int:
 
             report_status = JsonStatusReporter(sys.stdout)
         stats = run_application(
-            config, config_path.parent, directory, stop_requested, report_status
+            config,
+            config_path.parent,
+            directory,
+            stop_requested,
+            report_status,
+            live_preview=args.live_preview,
         )
         logger.info(
             "Processing finished: %d event(s), %d skipped, %d delivery failure(s), %d validation failure(s)",

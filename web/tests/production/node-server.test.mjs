@@ -428,15 +428,23 @@ test(
 		assert.equal(before.status, 200);
 		assert.ok((await before.text()).includes('Workshop safety'));
 		await writeFile(templatePath, '{"yolo":');
-		for (const [route, savedValue] of [
-			['/streams', 'Workshop camera'],
-			[`/streams/add?id=${cameraId}`, 'Workshop camera'],
-			['/detectors/add?label=Workshop%20rule', 'workshop-safety.onnx']
+		for (const [route, savedValue, expectedContent] of [
+			['/streams', 'Workshop camera', /Monitoring preset names are unavailable/],
+			[
+				`/streams/add?id=${cameraId}`,
+				'Workshop camera',
+				/Your saved connection is kept[\s\S]*Continue to monitoring/
+			],
+			[
+				'/detectors/add?label=Workshop%20rule',
+				'workshop-safety.onnx',
+				/Monitoring presets are unavailable/
+			]
 		]) {
 			const response = await send(base + route);
 			const html = await response.text();
 			assert.equal(response.status, 200, `${route}: ${html}`);
-			assert.match(html, /Monitoring preset(?: names|s) are unavailable/, route);
+			assert.match(html, expectedContent, route);
 			assert.ok(html.includes(savedValue), `${route} must retain ${savedValue}`);
 		}
 		const renamed = await send(base + commands.saveCamera, {

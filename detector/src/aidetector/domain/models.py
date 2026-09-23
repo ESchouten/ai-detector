@@ -21,6 +21,7 @@ class BoundingBox:
     y2: int
     label: str | None = None
     confidence: float | None = None
+    track_id: int | None = None
 
     @classmethod
     def enclosing(cls, boxes: Sequence[BoundingBox]) -> BoundingBox | None:

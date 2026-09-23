@@ -14,9 +14,11 @@ from aidetector.domain.models import Frame
 from tests.support.onnx_model import write_detection_model
 
 
-@pytest.mark.parametrize("tracking", [False, True])
+@pytest.mark.parametrize(
+    "tracking, tracker", [(False, None), (True, None), (True, "bytetrack.yaml")]
+)
 def test_real_onnx_yolo_batching_tracking_and_session_lifetime(
-    tmp_path, monkeypatch, tracking
+    tmp_path, monkeypatch, tracking, tracker
 ):
     path = tmp_path / "detector.onnx"
     write_detection_model(path)
@@ -30,6 +32,8 @@ def test_real_onnx_yolo_batching_tracking_and_session_lifetime(
                         "imgsz": 64,
                         "confidence": {"cow": 0.5},
                         "tracking": tracking,
+                        "tracker": tracker,
+                        "iou": 0.45,
                     },
                 }
             ],
@@ -61,6 +65,7 @@ def test_real_onnx_yolo_batching_tracking_and_session_lifetime(
             assert first["0"][0].confidence == {"cow": pytest.approx(0.9)}
             assert second["1"][0].date == later.date
             assert second["1"][0].boxes[0].x1 == 10
+            assert (second["1"][0].boxes[0].track_id is not None) is tracking
             assert len(sessions) == 1
             del frame, later, first, second
             gc.collect()

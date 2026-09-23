@@ -2,6 +2,13 @@
     "defaultPreset": "general",
     "presets": [
         {
+            "id": "general",
+            "name": "General object detection",
+            "description": "Watch for common objects using a general-purpose model.",
+            "guidance": "Check the live detections to see which objects the model recognises. Choose a specialised preset or model when needed.",
+            "configuration": "detector/general.json"
+        },
+        {
             "id": "calving",
             "name": "Calving signs",
             "description": "Watch for signs of calving.",

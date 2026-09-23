@@ -17,12 +17,12 @@ from aidetector.configuration import YoloConfig
 from aidetector.domain.models import Frame
 
 
-def result(boxes=()):
+def result(boxes=(), *, tracking=False):
     return Results(
         orig_img=np.zeros((64, 64, 3), dtype=np.uint8),
         path="frame.jpg",
         names={0: "cow", 1: "horse"},
-        boxes=np.asarray(boxes, dtype=np.float32).reshape(-1, 6),
+        boxes=np.asarray(boxes, dtype=np.float32).reshape(-1, 7 if tracking else 6),
     )
 
 
@@ -49,6 +49,19 @@ def test_real_ultralytics_results_are_mapped_at_the_boundary():
     assert observations[1].confidence["cow"] == pytest.approx(0.8)
     assert len(observations[1].boxes) == 2
     assert observations[1].boxes[0].label == "cow"
+    assert observations[1].boxes[0].track_id is None
+
+
+def test_tracker_ids_are_preserved_without_changing_context_frame_scores():
+    observations = map_observations(
+        result([[10, 20, 30, 40, 7, 0.8, 0]], tracking=True),
+        (frame(0), frame(1)),
+        {0: ("cow", 0.5)},
+    )
+    assert observations[0].confidence == {}
+    assert observations[1].confidence == {"cow": pytest.approx(0.8)}
+    assert observations[0].boxes == observations[1].boxes
+    assert observations[1].boxes[0].track_id == 7
 
 
 def test_no_boxes_still_produce_unscored_observations_for_trailing_footage():
@@ -112,6 +125,27 @@ def test_tracking_preserves_source_slots_when_camera_is_temporarily_absent():
     assert second_batch.images[0] is first_frame.image
     assert second_batch.images[1] is second_frame.image
     assert all(call["persist"] and call["batch"] == 2 for call in model.calls)
+
+
+@pytest.mark.parametrize("tracking", [False, True])
+@pytest.mark.parametrize("specified", [False, True])
+def test_optional_nms_and_tracker_settings_preserve_sdk_defaults(tracking, specified):
+    model = Model()
+    settings = {"iou": 0.45, "tracker": "bytetrack.yaml"} if specified else {}
+    detector = YoloDetector(
+        model,
+        YoloConfig(model="model.onnx", tracking=tracking, **settings),
+        ("one",),
+        InferenceOptions(),
+    )
+    detector.detect({"one": (frame(),)})
+    arguments = model.calls[0]
+    assert ("iou" in arguments) is specified
+    if specified:
+        assert arguments["iou"] == 0.45
+    assert ("tracker" in arguments) is (specified and tracking)
+    if specified and tracking:
+        assert arguments["tracker"] == "bytetrack.yaml"
 
 
 def test_unknown_model_class_fails_with_available_names():

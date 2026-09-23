@@ -1,0 +1,14 @@
+{
+    "detection": {
+        "interval": 1
+    },
+    "yolo": {
+        "model": "yolo11n.pt",
+        "confidence": 0.5
+    },
+    "exporters": {
+        "disk": {
+            "directory": "general"
+        }
+    }
+}

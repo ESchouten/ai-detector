@@ -24,6 +24,9 @@ export interface DetectorConfig {
 		model: string;
 		confidence?: number | Record<string, number>;
 		frames_min?: number;
+		iou?: number | null;
+		tracking?: boolean;
+		tracker?: 'botsort.yaml' | 'bytetrack.yaml' | null;
 		[key: string]: unknown;
 	} | null;
 	exporters?: {

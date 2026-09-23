@@ -1,6 +1,7 @@
 import gc
 import os
 import pathlib
+import sys
 from datetime import datetime
 from types import SimpleNamespace
 from weakref import ref
@@ -84,6 +85,89 @@ def test_native_model_precision_is_selected_when_the_predictor_is_created(
         assert model.predictor.args.quantize == (16 if half else None)
         assert model_sdk.exports == []
     assert model.predictor is None
+
+
+def test_native_mps_model_skips_export_and_uses_fp16(model_sdk, tmp_path):
+    cache = tmp_path / "prepared"
+    with open_detector(
+        YoloConfig(model="weights.pt"),
+        OnnxConfig(),
+        ("0",),
+        "default",
+        InferenceOptions(native_mps=True),
+        cache_directory=cache,
+    ) as detector:
+        assert detector.model.model == "weights.pt"
+        assert detector.model.predictor.args.device == "mps"
+        assert detector.model.predictor.args.quantize == 16
+        assert len(model_sdk.created) == 1
+        assert model_sdk.exports == []
+        assert not cache.exists()
+    assert detector.model.predictor is None
+
+
+@pytest.mark.parametrize("suffix", ["onnx", "engine"])
+def test_exported_model_is_not_redirected_to_mps(model_sdk, suffix):
+    with open_detector(
+        YoloConfig(model=f"weights.{suffix}"),
+        OnnxConfig(),
+        ("0",),
+        "default",
+        InferenceOptions(native_mps=True),
+    ) as detector:
+        assert detector.model.model == f"weights.{suffix}"
+        assert detector.model.predictor.args.device is None
+        assert detector.model.predictor.args.quantize is None
+        assert model_sdk.exports == []
+
+
+def test_failed_mps_model_load_remains_a_visible_failure(monkeypatch):
+    def failed_load(*args, **kwargs):
+        raise RuntimeError("Broken checkpoint")
+
+    monkeypatch.setattr("aidetector.adapters.inference.yolo.YOLO", failed_load)
+    with (
+        pytest.raises(RuntimeError, match="Broken checkpoint"),
+        open_detector(
+            YoloConfig(model="broken.pt"),
+            OnnxConfig(),
+            ("0",),
+            "default",
+            InferenceOptions(native_mps=True),
+        ),
+    ):
+        pytest.fail("A model error must not trigger another backend")
+
+
+@pytest.mark.skipif(
+    sys.platform != "darwin" or not torch.backends.mps.is_available(),
+    reason="Requires an available Apple MPS device",
+)
+@pytest.mark.parametrize("tracking", [False, True])
+def test_real_mps_checkpoint_inference_without_export_or_download(tmp_path, tracking):
+    checkpoint = tmp_path / "fixture.pt"
+    YOLO("yolo11n.yaml").save(checkpoint)
+    settings = YoloConfig(model=str(checkpoint), imgsz=64, tracking=tracking)
+    onnx = OnnxConfig()
+    models = (ModelRequirements(str(checkpoint), image_size=64, batch_size=1),)
+    cache = tmp_path / "prepared"
+    with (
+        inference_runtime(onnx, models, "default") as options,
+        open_detector(
+            settings, onnx, ("0",), "default", options, cache_directory=cache
+        ) as detector,
+    ):
+        assert options.native_mps is True
+        backend = detector.model.predictor.model
+        assert backend.device.type == "mps"
+        assert backend.fp16 is True
+        frame = Frame(datetime(2026, 1, 1), np.zeros((64, 64, 3), dtype=np.uint8))
+        [observation] = detector.detect({"0": (frame,)})["0"]
+        assert observation.date == frame.date
+        assert observation.image is frame.image
+        assert not cache.exists()
+        assert list(tmp_path.glob("*.onnx")) == []
+    assert detector.model.predictor is None
 
 
 @pytest.mark.parametrize("half, dtype", [(False, torch.float32), (True, torch.float16)])

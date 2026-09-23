@@ -68,7 +68,8 @@ def map_observations(
             if score < threshold:
                 continue
             x1, y1, x2, y2 = map(int, box.xyxy[0])
-            boxes.append(BoundingBox(x1, y1, x2, y2, name, score))
+            track_id = int(box.id.item()) if box.id is not None else None
+            boxes.append(BoundingBox(x1, y1, x2, y2, name, score, track_id))
             confidences[name] = max(confidences.get(name, 0), score)
     detected_boxes = tuple(boxes)
     context = tuple(
@@ -101,6 +102,10 @@ class YoloDetector:
             "rect": options.rectangular,
             "verbose": False,
         }
+        if config.iou is not None:
+            self._arguments["iou"] = config.iou
+        if config.tracker is not None and config.tracking:
+            self._arguments["tracker"] = config.tracker
         self._last_frames: dict[str, NDArray[np.uint8]] = {}
 
     def detect(self, frames: Frames) -> dict[str, tuple[Observation, ...]]:
@@ -188,10 +193,12 @@ def open_detector(
     try:
         with _restore_path_classes():
             model_path = config.model
+            native_mps = options.native_mps and model_path.endswith(".pt")
             if (
                 cache_directory is not None
                 and model_path.endswith(".pt")
                 and build_type not in {"cuda", "tensorrt"}
+                and not native_mps
             ):
                 from aidetector.adapters.inference.prepared_models import prepare_onnx
 
@@ -217,7 +224,11 @@ def open_detector(
                     StatusEvent("preparation_failed", message=MODEL_DOWNLOAD_HELP)
                 )
                 raise
-            if not model_path.endswith((".onnx", ".engine")) and build_type != "cuda":
+            if (
+                not model_path.endswith((".onnx", ".engine"))
+                and build_type != "cuda"
+                and not native_mps
+            ):
                 report_status(
                     StatusEvent(
                         "preparing", message="Preparing the model for this computer…"
@@ -236,11 +247,15 @@ def open_detector(
             # Ultralytics' .names property creates a temporary backend for exported
             # models. Retain its predictor here so class lookup and inference share
             # one session. This SDK-specific setup is covered by a real ONNX test.
+            overrides = {
+                **loaded.overrides,
+                "quantize": 16 if native_mps or options.half else None,
+            }
+            if native_mps:
+                overrides["device"] = "mps"
+                logger.info("Native PyTorch inference on MPS (FP16)")
             loaded.predictor = loaded._smart_load("predictor")(
-                overrides={
-                    **loaded.overrides,
-                    "quantize": 16 if options.half else None,
-                },
+                overrides=overrides,
                 _callbacks=loaded.callbacks,
             )
             loaded.predictor.setup_model(model=loaded.model, verbose=False)

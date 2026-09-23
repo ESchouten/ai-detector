@@ -74,3 +74,36 @@ def test_source_completion_flushes_only_that_source_and_shutdown_flushes_the_res
     assert drained.source == "two"
     assert detector.calls == 1
     assert pipeline.finish() == []
+
+
+def test_observation_callback_receives_the_analyzed_frame_before_event_completion():
+    published = []
+    pipeline = DetectionPipeline(
+        ScoringDetector(),
+        EventPolicy(min_frames=3),
+        publish_observation=lambda source, result: published.append((source, result)),
+    )
+    frame = Frame(datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8))
+
+    assert pipeline.process(SourceBatch({"camera": (frame,)})) == []
+
+    [(source, result)] = published
+    assert source == "camera"
+    assert result.image is frame.image
+    assert result.date == frame.date
+    assert result.confidence == {"cow": 0.9}
+
+
+def test_snapshot_pipeline_publishes_without_fabricating_detections():
+    published = []
+    pipeline = DetectionPipeline(
+        publish_observation=lambda source, result: published.append(result)
+    )
+    frame = Frame(datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8))
+
+    pipeline.process(SourceBatch({"camera": (frame,)}))
+
+    [result] = published
+    assert result.image is frame.image
+    assert result.confidence == {}
+    assert result.boxes == ()

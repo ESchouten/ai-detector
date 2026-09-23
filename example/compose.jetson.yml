@@ -3,6 +3,7 @@ services:
   aidetector:
     image: "ghcr.io/eschouten/ai-detector:latest-jetpack6"
     restart: unless-stopped
+    command: ["python3", "-m", "aidetector", "--live-preview"]
     runtime: nvidia
     ipc: host
     ulimits:

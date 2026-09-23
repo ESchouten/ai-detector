@@ -2,6 +2,7 @@ services:
   aidetector:
     image: "ghcr.io/eschouten/ai-detector:latest"
     restart: unless-stopped
+    command: ["python3", "-m", "aidetector", "--live-preview"]
 
     ipc: host
     ulimits:

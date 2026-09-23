@@ -59,7 +59,12 @@ class Health:
 
 
 def run(
-    config, config_directory, data_directory, stop_requested=None, report_status=None
+    config,
+    config_directory,
+    data_directory,
+    stop_requested=None,
+    report_status=None,
+    live_preview=False,
 ):
     worker = DetectorWorker(
         HoldingSource(),

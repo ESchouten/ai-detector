@@ -28,6 +28,7 @@ def server_fixture(folder: Path, adapter: Path) -> Path:
     )
     (entry / "index.ts").write_text(source)
     shutil.copy2(Path(__file__).with_name("desktop-instance.ts"), entry)
+    shutil.copy2(Path(__file__).with_name("windows-tray.ts"), entry)
     (entry / "assets.generated.ts").write_text("export const assetMap = new Map();\n")
     (folder / "manifest.js").write_text(
         "export default { _: { prerendered_routes: new Set() }, appDir: '_app' };\n"

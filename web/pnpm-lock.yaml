@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@jesterkit/exe-sveltekit@0.1.7':
-    hash: bu3thjasyscdf7alxi6y2522zq
+    hash: 3xnkurp6b36pcyysccyykymicy
     path: patches/@jesterkit__exe-sveltekit@0.1.7.patch
   dependency-cruiser@18.4.0:
     hash: 2ujrwbweknxmmi2xcixxlw4jby
@@ -18,7 +18,7 @@ importers:
     dependencies:
       '@jesterkit/exe-sveltekit':
         specifier: ^0.1.7
-        version: 0.1.7(patch_hash=bu3thjasyscdf7alxi6y2522zq)(typescript@5.9.3)
+        version: 0.1.7(patch_hash=3xnkurp6b36pcyysccyykymicy)(typescript@5.9.3)
       ajv:
         specifier: ^8.17.1
         version: 8.20.0
@@ -2557,7 +2557,7 @@ snapshots:
     dependencies:
       '@swc/helpers': 0.5.18
 
-  '@jesterkit/exe-sveltekit@0.1.7(patch_hash=bu3thjasyscdf7alxi6y2522zq)(typescript@5.9.3)':
+  '@jesterkit/exe-sveltekit@0.1.7(patch_hash=3xnkurp6b36pcyysccyykymicy)(typescript@5.9.3)':
     dependencies:
       typescript: 5.9.3
 

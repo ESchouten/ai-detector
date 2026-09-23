@@ -26,6 +26,10 @@ class PackageTest(unittest.TestCase):
         self.web.write_bytes(b"web")
         self.launcher = self.root / "launcher"
         self.launcher.write_bytes(b"native launcher")
+        self.tray = self.root / "tray"
+        self.tray.mkdir()
+        (self.tray / "AI Detector Tray.exe").write_bytes(b"native tray")
+        (self.tray / "AI Detector Tray.exe.config").write_text("<configuration/>")
         self.ffmpeg = self.root / "ffmpeg"
         self.ffmpeg.write_bytes(b"ffmpeg")
         self.ffmpeg.chmod(0o755)
@@ -46,6 +50,7 @@ class PackageTest(unittest.TestCase):
                     "image@sha256:123",
                     version="app/v1.2.3",
                     mac_launcher=self.launcher if platform == "macos-arm64" else None,
+                    windows_tray=self.tray if platform == "windows-x64" else None,
                 )
                 with zipfile.ZipFile(archive) as download:
                     base = f"AI-Detector-{platform}/"
@@ -62,6 +67,18 @@ class PackageTest(unittest.TestCase):
                         b"runtime dependency",
                     )
                     self.assertEqual(download.read(prefix + launcher), b"web")
+                    if platform == "windows-x64":
+                        self.assertEqual(
+                            download.read(prefix + "tray/AI Detector Tray.exe"),
+                            b"native tray",
+                        )
+                        self.assertIn(
+                            prefix + "tray/AI Detector Tray.exe.config",
+                            download.namelist(),
+                        )
+                        self.assertIn(
+                            prefix + "tray/Lucide.LICENSE", download.namelist()
+                        )
                     self.assertEqual(
                         download.read(prefix + "bin/" + encoder), b"ffmpeg"
                     )
@@ -119,6 +136,12 @@ class PackageTest(unittest.TestCase):
             self.assertEqual(
                 json.loads(download.read("AI-Detector-linux-x64/application.json")), {}
             )
+
+    def test_windows_requires_its_tray_before_creating_a_package(self):
+        output = self.root / "out"
+        with self.assertRaisesRegex(ValueError, "compiled native tray"):
+            package(self.detector, self.web, self.ffmpeg, output, "windows-x64", None)
+        self.assertFalse(output.exists())
 
     def test_existing_package_is_not_overwritten(self):
         arguments = (

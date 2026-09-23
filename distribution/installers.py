@@ -6,39 +6,42 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from package import INSTRUCTIONS, checksum, version_number
+from package import checksum, version_number
 
 ASSETS = Path(__file__).parent
 
 
 def macos(folder: Path, version: str) -> Path:
-    staging = folder.parent / "macos-dmg"
-    staging.mkdir()
-    shutil.copytree(
-        folder / "AI Detector.app", staging / "AI Detector.app", symlinks=True
-    )
-    (staging / "Applications").symlink_to("/Applications")
-    (staging / "READ ME.txt").write_text(
-        "Drag AI Detector to Applications, then open it there.\n"
-        "The menu bar provides Open dashboard, Open at login and Quit.\n\n"
-        + INSTRUCTIONS,
-        encoding="utf-8",
-    )
+    from dmgbuild import build_dmg
+
     image = folder.parent / f"AI-Detector-{version}-macos-arm64.dmg"
-    subprocess.run(
-        [
-            "hdiutil",
-            "create",
-            "-volname",
-            "AI Detector",
-            "-srcfolder",
-            str(staging),
-            "-ov",
-            "-format",
-            "UDZO",
-            str(image),
-        ],
-        check=True,
+    if image.exists():
+        raise FileExistsError(image)
+    build_dmg(
+        str(image),
+        "AI Detector",
+        settings={
+            "format": "UDZO",
+            "files": [str(folder / "AI Detector.app")],
+            "symlinks": {"Applications": "/Applications"},
+            "hide_extensions": ["AI Detector.app"],
+            "icon": str(ASSETS / "macos" / "AI Detector.icns"),
+            "background": str(ASSETS / "macos" / "background.png"),
+            "window_rect": ((180, 180), (660, 420)),
+            "default_view": "icon-view",
+            "icon_locations": {
+                "AI Detector.app": (175, 210),
+                "Applications": (485, 210),
+            },
+            "icon_size": 112,
+            "text_size": 14,
+            "grid_spacing": 80,
+            "show_status_bar": False,
+            "show_tab_view": False,
+            "show_toolbar": False,
+            "show_pathbar": False,
+            "show_sidebar": False,
+        },
     )
     checksum(image)
     return image

@@ -9,7 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from installers import linux_tree
+from installers import linux_tree, macos
 from package import archive, macos_bundle, version_number
 from sign_macos import sign_app
 
@@ -105,6 +105,54 @@ class InstallerTest(unittest.TestCase):
             (binary / info["CFBundleExecutable"]).read_bytes(), launcher.read_bytes()
         )
         self.assertEqual(info["CFBundlePackageType"], "APPL")
+        icon = binary.parent / "Resources" / info["CFBundleIconFile"]
+        self.assertEqual(icon.read_bytes()[:4], b"icns")
+
+    @unittest.skipUnless(sys.platform == "darwin", "Disk images require macOS")
+    def test_macos_image_opens_as_a_visual_drag_and_drop_installer(self):
+        from ds_store import DSStore
+
+        binary = macos_bundle(self.payload, self.payload / "AI Detector", "1.2.3")
+        (binary / "current").symlink_to("AI Detector")
+        image = macos(self.payload, "1.2.3")
+        subprocess.run(
+            ["hdiutil", "verify", str(image)], check=True, capture_output=True
+        )
+        mounted = self.root / "mounted"
+        subprocess.run(
+            [
+                "hdiutil",
+                "attach",
+                "-readonly",
+                "-nobrowse",
+                "-mountpoint",
+                str(mounted),
+                str(image),
+            ],
+            check=True,
+            capture_output=True,
+        )
+        try:
+            visible = {p.name for p in mounted.iterdir() if not p.name.startswith(".")}
+            self.assertEqual(visible, {"AI Detector.app", "Applications"})
+            self.assertEqual(os.readlink(mounted / "Applications"), "/Applications")
+            self.assertEqual(
+                os.readlink(mounted / "AI Detector.app/Contents/MacOS/current"),
+                "AI Detector",
+            )
+            self.assertTrue((mounted / ".background.tiff").is_file())
+            with DSStore.open(str(mounted / ".DS_Store"), "r") as settings:
+                app_x, app_y = settings["AI Detector.app"]["Iloc"]
+                folder_x, folder_y = settings["Applications"]["Iloc"]
+                self.assertLess(app_x, folder_x)
+                self.assertEqual(app_y, folder_y)
+                self.assertEqual(settings["."]["icvp"]["backgroundType"], 2)
+                self.assertFalse(settings["."]["bwsp"]["ShowToolbar"])
+                self.assertFalse(settings["."]["bwsp"]["ShowSidebar"])
+        finally:
+            subprocess.run(
+                ["hdiutil", "detach", str(mounted)], check=True, capture_output=True
+            )
 
     @unittest.skipIf(
         os.name == "nt", "Unprivileged Windows fixtures cannot create symlinks"

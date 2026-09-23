@@ -66,7 +66,10 @@ def macos_bundle(folder: Path, launcher: Path, version: str) -> Path:
     binary.mkdir(parents=True)
     shutil.copy2(launcher, binary / "AI Detector")
     (binary / "AI Detector").chmod(0o755)
-    (contents / "Resources").mkdir()
+    resources = contents / "Resources"
+    resources.mkdir()
+    for asset in ("AI Detector.icns", "Lucide.LICENSE"):
+        shutil.copy2(Path(__file__).parent / "macos" / asset, resources)
     with (contents / "Info.plist").open("wb") as stream:
         plistlib.dump(
             {
@@ -74,6 +77,7 @@ def macos_bundle(folder: Path, launcher: Path, version: str) -> Path:
                 "CFBundleName": "AI Detector",
                 "CFBundleDisplayName": "AI Detector",
                 "CFBundleExecutable": "AI Detector",
+                "CFBundleIconFile": "AI Detector.icns",
                 "CFBundlePackageType": "APPL",
                 "CFBundleShortVersionString": version_number(version),
                 "CFBundleVersion": version_number(version),
@@ -96,9 +100,12 @@ def package(
     image: str | None,
     version: str = "0.0.0",
     mac_launcher: Path | None = None,
+    windows_tray: Path | None = None,
 ) -> Path:
     if platform == "macos-arm64" and mac_launcher is None:
         raise ValueError("macOS packages require the compiled native app launcher")
+    if platform == "windows-x64" and windows_tray is None:
+        raise ValueError("Windows packages require the compiled native tray helper")
     version_number(version)
     output.mkdir(parents=True, exist_ok=True)
     folder = output / f"AI-Detector-{platform}"
@@ -114,6 +121,12 @@ def package(
         launch = "ai-detector-web"
     shutil.copy2(web, payload / launch)
     (payload / launch).chmod(0o755)
+    if platform == "windows-x64":
+        tray = payload / "tray"
+        tray.mkdir()
+        for name in ("AI Detector Tray.exe", "AI Detector Tray.exe.config"):
+            shutil.copy2(windows_tray / name, tray)
+        shutil.copy2(Path(__file__).parent / "macos" / "Lucide.LICENSE", tray)
     (payload / "bin").mkdir()
     encoder = "ffmpeg.exe" if platform == "windows-x64" else "ffmpeg"
     shutil.copy2(ffmpeg, payload / "bin" / encoder)
@@ -134,6 +147,9 @@ if __name__ == "__main__":
     )
     parser.add_argument("--version", default="0.0.0")
     parser.add_argument("--mac-launcher", type=Path)
+    parser.add_argument(
+        "--windows-tray", type=Path, help="Compiled Windows tray folder"
+    )
     parser.add_argument(
         "--image", help="Matching image digest; omit for native-only previews"
     )

@@ -97,6 +97,16 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: '1.3.9'
+      - uses: actions/setup-dotnet@v5
+        if: runner.os == 'Windows'
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build and test Windows tray
+        if: runner.os == 'Windows'
+        run: |
+          dotnet restore distribution/windows/tray-tests/Tray.Tests.csproj --locked-mode
+          dotnet build distribution/windows/tray/Tray.csproj --no-restore --configuration Release --output "$RUNNER_TEMP/windows-tray"
+          dotnet test distribution/windows/tray-tests/Tray.Tests.csproj --no-restore --configuration Release
       - name: Build detector
         working-directory: detector
         env:
@@ -121,12 +131,16 @@ jobs:
       - name: Install web dependencies
         working-directory: web
         run: pnpm install --frozen-lockfile
+      - name: Install macOS disk image tools
+        if: runner.os == 'macOS'
+        run: uv pip install --python detector/.venv/bin/python --requirement distribution/macos/requirements.txt
       - name: Check distribution scripts
         run: |
           uv run --project detector --no-sync ruff check --config detector/pyproject.toml distribution
           uv run --project detector --no-sync ruff format --check --config detector/pyproject.toml distribution
           uv run --project detector --no-sync python -m unittest discover -s distribution -p 'test_*.py'
-          node --test distribution/desktop-instance.test.ts
+          node --test distribution/*.test.ts
+          bun test ./distribution/windows-tray.test.ts
       - name: Smoke test packaged detector
         working-directory: detector
         run: |
@@ -136,8 +150,8 @@ jobs:
         working-directory: web
         run: |
           pnpm quality
-          pnpm exec prettier --config .prettierrc --check ../distribution/desktop-instance.ts ../distribution/desktop-instance.test.ts ../distribution/fixtures/desktop-server.ts
-          pnpm exec tsc --noEmit --target es2022 --module esnext --moduleResolution bundler --allowImportingTsExtensions --esModuleInterop --types node ../distribution/desktop-instance.ts ../distribution/desktop-instance.test.ts ../distribution/fixtures/desktop-server.ts
+          pnpm exec prettier --config .prettierrc --check ../distribution/*.ts ../distribution/fixtures/*
+          pnpm exec tsc --noEmit --target es2022 --module esnext --moduleResolution bundler --allowImportingTsExtensions --esModuleInterop --types node ../distribution/*.ts ../distribution/fixtures/*.ts
       - name: Warm Bun compiler on Windows
         if: runner.os == 'Windows'
         shell: pwsh
@@ -164,6 +178,7 @@ jobs:
           ffmpeg=$(cd web && node -p 'require("ffmpeg-static")')
           launcher=()
           if [ '${{ runner.os }}' = macOS ]; then launcher=(--mac-launcher "$RUNNER_TEMP/ai-detector-launcher"); fi
+          if [ '${{ runner.os }}' = Windows ]; then launcher=(--windows-tray "$RUNNER_TEMP/windows-tray"); fi
           uv run --project detector --no-sync python distribution/package.py --detector detector/dist/aidetector --web "web/dist/ai-detector-web${{ matrix.suffix }}" --ffmpeg "$ffmpeg" --output application-dist --platform '${{ matrix.platform }}' --version "$APP_VERSION" "${launcher[@]}" --image 'ghcr.io/eschouten/ai-detector@${{ needs.image.outputs.digest }}'
       - name: Smoke test complete download
         run: uv run --project detector --no-sync python distribution/smoke.py 'application-dist/AI-Detector-${{ matrix.platform }}'

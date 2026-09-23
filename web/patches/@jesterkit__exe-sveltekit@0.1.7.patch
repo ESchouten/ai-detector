@@ -1,26 +1,58 @@
 diff --git a/dist/index.js b/dist/index.js
+index 87f9cb2cf7a8471df032cbea70f28e61cc7b429d..6c4dec0c236975ea897095602a36d9c9b3759cb7 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -116,6 +116,7 @@
+@@ -89,7 +89,7 @@ function generateAssetImports(assets) {
+ }
+ 
+ // src/utils/compile.ts
+-import { execSync } from "child_process";
++import { execFileSync, execSync } from "child_process";
+ import { join as join2 } from "path";
+ import { stat as stat2 } from "fs/promises";
+ async function compileApplication(builder, options) {
+@@ -113,16 +113,24 @@ async function compileApplication(builder, options) {
+     builder.log.error("Bun is not installed. Please install Bun and try again.");
+     process.exit(1);
+   }
++  const isWindows = options.target ? options.target.startsWith("windows-") : process.platform === "win32";
    const compileArgs = [
      "build",
      "--compile",
-+    ...(options.target?.startsWith("windows-") ? ["--windows-hide-console"] : []),
++    ...(isWindows ? [
++      "--windows-hide-console",
++      "--windows-icon=../distribution/windows/artwork/app.ico",
++      "--windows-title=AI Detector",
++      "--windows-publisher=AI Detector",
++      "--windows-description=AI Detector camera monitoring",
++      `--windows-version=${process.env.APP_VERSION ?? "0.0.0"}`
++    ] : []),
      ...options.target ? [`--target=${TARGETS_MAP[options.target]}`] : [],
      join2(SVELTEKIT_DIR, "temp-server/index.ts"),
      "--outfile",
-@@ -177,6 +178,7 @@
+     join2(options.out, options.binaryName)
+-  ].join(" ");
+-  execSync(`bun ${compileArgs}`, { stdio: "inherit" });
+-  const isWindows = process.platform === "win32";
++  ];
++  execFileSync("bun", compileArgs, { stdio: "inherit" });
+   const binaryPath = join2(options.out, options.binaryName + (isWindows ? ".exe" : ""));
+   const { size: sizeInBytes } = await stat2(binaryPath);
+   const sizeInMb = (sizeInBytes / (1024 * 1024)).toFixed(1);
+@@ -177,6 +185,8 @@ var adapter = (options) => {
        builder.log.success("[JesterKit] SvelteKit build complete");
        const path = join4(import.meta.dirname, "server");
        builder.copy(path, join4(SVELTEKIT_DIR, "temp-server"));
 +      builder.copy(join4("..", "distribution", "desktop-instance.ts"), join4(SVELTEKIT_DIR, "temp-server", "desktop-instance.ts"));
++      builder.copy(join4("..", "distribution", "windows-tray.ts"), join4(SVELTEKIT_DIR, "temp-server", "windows-tray.ts"));
        builder.log.success("[JesterKit] Server copied");
        const manifest = builder.generateManifest({ relativePath: "./server" });
        const manifestModule = `const manifest = ${manifest};
 diff --git a/dist/server/index.ts b/dist/server/index.ts
+index b612b3fa0d80710e313335cc0b1843f0d7519031..13b3f2dcde499fce04c8d2798f2445320eca4536 100644
 --- a/dist/server/index.ts
 +++ b/dist/server/index.ts
-@@ -1,7 +1,11 @@
+@@ -1,7 +1,12 @@
  ﻿// Libs
  import { file } from "bun";
 +import { createSocket, type Socket } from "node:dgram";
@@ -30,10 +62,11 @@ diff --git a/dist/server/index.ts b/dist/server/index.ts
 -import { execPath } from "process";
 +import { execPath, platform } from "process";
 +import { DesktopInstance, dataDirectory } from "./desktop-instance.ts";
++import { startWindowsTray } from "./windows-tray.ts";
  
  // @ts-ignore
  import { assetMap } from "./assets.generated.ts";
-@@ -11,9 +15,17 @@
+@@ -11,9 +16,17 @@ import type { Server as ServerType } from "@sveltejs/kit";
  import type { SSRManifest } from "@sveltejs/kit";
  
  // Variables
@@ -54,11 +87,12 @@ diff --git a/dist/server/index.ts b/dist/server/index.ts
  const staticServer = {
  	respond: async (req: Request) => {
  		const url = new URL(req.url);
-@@ -90,10 +102,15 @@
+@@ -90,11 +103,18 @@ async function getFile(pathname: string) {
  	}
  }
  
 +let mdnsSocket: Socket | undefined;
++let closeTray: (() => Promise<void>) | undefined;
 +let shuttingDown = false;
  async function gracefulShutdown(reason: 'SIGINT' | 'SIGTERM') {
 +	if (shuttingDown) return;
@@ -70,24 +104,26 @@ diff --git a/dist/server/index.ts b/dist/server/index.ts
 +
 +	mdnsSocket?.close();
  	await server.stop(true);
++	await closeTray?.();
  	console.info('Stopped server');
  
-@@ -104,11 +121,260 @@
+ 	process.removeListener('SIGINT', gracefulShutdown);
+@@ -104,11 +124,260 @@ async function gracefulShutdown(reason: 'SIGINT' | 'SIGTERM') {
  process.on('SIGTERM', gracefulShutdown);
  process.on('SIGINT', gracefulShutdown);
  
 -const server = Bun.serve({
 -	port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
 -	hostname: "0.0.0.0",
-+function openBrowser(url: string) {
-+	if (process.env.OPEN_BROWSER?.trim().toLowerCase() === "false") return;
++function openBrowser(url: string, requested = false) {
++	if (!requested && process.env.OPEN_BROWSER?.trim().toLowerCase() === "false") return;
 +
 +	const command =
 +		platform === "win32" ? "cmd" : platform === "darwin" ? "open" : "xdg-open";
 +	const args = platform === "win32" ? ["/c", "start", "", url] : [url];
 +
 +	try {
-+		const child = spawn(command, args, { detached: true, stdio: "ignore" });
++		const child = spawn(command, args, { detached: true, stdio: "ignore", windowsHide: true });
 +		child.on("error", () => console.warn(`Open ${url} in your browser to continue setup.`));
 +		child.unref();
 +	} catch (error) {
@@ -336,7 +372,7 @@ diff --git a/dist/server/index.ts b/dist/server/index.ts
  		// Handle static assets
  		const staticResponse = await staticServer.respond(req);
  		if (staticResponse) return staticResponse;
-@@ -131,4 +397,34 @@
+@@ -131,4 +400,38 @@ const server = Bun.serve({
  	},
  });
  
@@ -358,6 +394,10 @@ diff --git a/dist/server/index.ts b/dist/server/index.ts
 +manifest = await getSvelteKitManifest();
 +prerenderedRoutes = await getPrerenderedRoutes(manifest);
 +svelteKitServer = await instantiateServer(manifest);
++// Source-mode fixtures have no bundled desktop helper.
++if (platform === "win32" && Bun.embeddedFiles.length > 0) {
++	closeTray = startWindowsTray(() => openBrowser(browserUrl, true), () => { void gracefulShutdown('SIGTERM'); });
++}
 +
 +const localHostname = hostname().trim().replace(/\.$/, "");
 +const localHost = localHostname.toLowerCase().endsWith(".local") ? localHostname : `${localHostname}.local`;

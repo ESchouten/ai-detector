@@ -2,8 +2,8 @@ import type { Metadata, Stage } from './schema.ts';
 
 /** The archive location is authoritative, even for older metadata documents. */
 export interface Detection extends Metadata {
+	type: string;
 	stage: Stage;
-	validation_error?: string | null;
 }
 
 export interface DetectionPage {

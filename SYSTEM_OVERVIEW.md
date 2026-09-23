@@ -183,7 +183,7 @@ De afhankelijkheden wijzen naar binnen: de applicatielaag gebruikt domeinobjecte
 
 Binnen `adapters/` staan de bronlezers in `sources/`, modelintegraties in `inference/`, bestemmingen in `exporters/` en beeldbewerking in `media/`. Healthmonitoring, gedeeld HTTP-transport en VLM-verificatie blijven afzonderlijke modules. Importregels voorkomen dat bronnen, inference en exporters elkaar rechtstreeks of via andere modules gebruiken; bootstrap verbindt ze via de applicatielaag. De [pakketkaart](detector/ARCHITECTURE.md#dependency-direction) toont deze structuur en de gedeelde afhankelijkheden.
 
-De [uitgebreide detectorarchitectuur](detector/ARCHITECTURE.md) beschrijft de precieze tijdregels, resource-eigenaren en foutafhandeling. De [review](detector/REVIEW.md) legt de gemaakte afwegingen vast.
+De [uitgebreide detectorarchitectuur](detector/ARCHITECTURE.md) beschrijft de precieze tijdregels, resource-eigenaren en foutafhandeling. De [review](docs/history/detector/REVIEW.md) legt de gemaakte afwegingen vast.
 
 ## Bijhouden
 

@@ -112,6 +112,9 @@ def test_invalid_sources_are_rejected(source):
         ("rtsps://camera/live.mp4", "stream"),
         ("tcp://camera:8000", "stream"),
         ("udp://camera:8000", "stream"),
+        ("udp://@239.0.0.1:1234", "stream"),
+        ("rtsp://user:p%40ss@[::1]:554/live?token=fake", "stream"),
+        ("http://camera", "stream"),
         ("HTTPS://camera/live", "stream"),
         ("https://camera/video.MP4?token=fake#clip", "video"),
         ("video.mp4", "video"),
@@ -136,13 +139,20 @@ def test_source_groups_are_validated_before_startup():
     )
 
 
-def test_malformed_source_url_error_does_not_echo_credentials(tmp_path):
+@pytest.mark.parametrize(
+    "source",
+    [
+        "rtsp://private-secret@[bad",
+        "rtsp://private-secret@camera with spaces/live",
+        "http://private-secret@camera with spaces/live",
+        "rtsp://private-secret@camera:65536/live",
+        "tcp://private-secret@camera:notaport",
+        "rtsp://private-secret@camera\n/live",
+    ],
+)
+def test_malformed_source_url_error_does_not_echo_credentials(tmp_path, source):
     path = tmp_path / "config.json"
-    path.write_text(
-        json.dumps(
-            {"detectors": [{"detection": {"source": "rtsp://private-secret@[bad"}}]}
-        )
-    )
+    path.write_text(json.dumps({"detectors": [{"detection": {"source": source}}]}))
     with pytest.raises(ConfigurationError, match="Source URL is invalid") as error:
         load_config(path)
     assert "private-secret" not in str(error.value)

@@ -1,6 +1,6 @@
-import { randomUUID } from 'node:crypto';
-import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import writeFileAtomic from 'write-file-atomic';
 
 export async function readJson<T>(file: string, missing: T | null = null): Promise<T | null> {
 	try {
@@ -13,11 +13,7 @@ export async function readJson<T>(file: string, missing: T | null = null): Promi
 
 export async function writeJson(file: string, value: unknown): Promise<void> {
 	await mkdir(path.dirname(file), { recursive: true });
-	const temporary = `${file}.${randomUUID()}.tmp`;
-	try {
-		await writeFile(temporary, JSON.stringify(value, null, 2) + '\n', { mode: 0o600 });
-		await rename(temporary, file);
-	} finally {
-		await rm(temporary, { force: true });
-	}
+	await writeFileAtomic(file, JSON.stringify(value, null, 2) + '\n', {
+		mode: 0o600
+	});
 }

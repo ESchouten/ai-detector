@@ -29,7 +29,7 @@ interface Options {
 /** One owner for the detector process. Commands are serialized; polling has no side effects. */
 export class ManagedDetector {
 	private child: ChildProcessWithoutNullStreams | null = null;
-	private finished: Promise<void> = Promise.resolve();
+	private finished: Promise<number | null> = Promise.resolve(0);
 	private operation: Promise<unknown> = Promise.resolve();
 	private startup = new AbortController();
 	private settings: Settings = { mode: 'auto', enabled: false };
@@ -337,7 +337,7 @@ export class ManagedDetector {
 								'The detector stopped unexpectedly. Check the details below, then try again.'
 						)
 					);
-				resolve();
+				resolve(code);
 			})
 		);
 	}
@@ -348,8 +348,11 @@ export class ManagedDetector {
 		this.startup = new AbortController();
 		return this.enqueue(async () => {
 			if (disable) this.settings.enabled = false;
-			await this.stopChild();
-			if (disable) await writeJson(this.settingsPath, this.settings);
+			try {
+				await this.stopChild();
+			} finally {
+				if (disable) await writeJson(this.settingsPath, this.settings);
+			}
 		});
 	}
 
@@ -360,7 +363,9 @@ export class ManagedDetector {
 		this.state.message = 'Finishing detections and stopping…';
 		child.stdin.end('stop\n');
 		let forcedStop: Promise<void> | undefined;
+		let timedOut = false;
 		const timer = setTimeout(() => {
+			timedOut = true;
 			this.fail(
 				new SetupError(
 					'The detector did not finish shutting down within 30 seconds. It was forced to stop; the last detection may be incomplete.'
@@ -376,8 +381,9 @@ export class ManagedDetector {
 			child.kill('SIGKILL');
 		}, 30000);
 		try {
-			await this.finished;
+			const code = await this.finished;
 			await forcedStop;
+			if (code !== 0 || timedOut) throw new SetupError(this.state.message);
 		} finally {
 			clearTimeout(timer);
 		}

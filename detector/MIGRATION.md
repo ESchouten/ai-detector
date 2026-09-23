@@ -69,6 +69,10 @@ Box and label rendering now uses Ultralytics' `Annotator`; label placement and l
 
 Health and webhook URLs now use strict Pydantic validation. Malformed hosts, whitespace and URLs requiring repair fail the offline config check. Accepted URL strings retain their original representation. Configuration and archive schemas remain unchanged; no data migration is required.
 
+## Source URL validation — 2026-09-23
+
+Camera and HTTP media URLs now use strict Pydantic validation with the supported protocols and a required host. Invalid/out-of-range ports, hostnames containing spaces, and embedded control characters fail the offline configuration check before opening a capture. URL failures use one credential-free message describing the accepted protocols, host and port requirements. Valid source strings, including IPv6, multicast addresses and encoded credentials or queries, retain their original representation. Camera indices, local files, source grouping and JSON schemas are unchanged.
+
 ## Developer navigation cleanup — 2026-09-22
 
 The internal adapter modules now group related operations. `adapters/media.py`, `video.py` and `rendering.py` become `adapters/media/images.py`, `media/video.py` and `media/event_media.py`. `MediaError` belongs to the `adapters.media` package. `adapters/model_files.py`, `onnx.py` and `yolo.py` become `adapters/inference/model_assets.py`, `inference/onnx.py` and `inference/yolo.py`. The concrete verifier is `adapters/vlm.py`, previously `validation.py`. Internal Python callers must use these paths; no forwarding modules remain.
@@ -94,6 +98,8 @@ Bootstrap's `build_source` helper takes `SourceConfig`, and `build_destinations`
 Architecture tests now reject Python modules omitted from the import graph, including folders missing `__init__.py`. Source-only and disk-only tests moved out of `test_reference_flow.py`; that file retains the cross-layer example used by the new VS Code debug profile. VS Code tasks invoke the existing tools and require the same locked development environment; no runtime dependency was added.
 
 ## Rollout and recovery
+
+The model-preparation cleanup separates conversion selection, SDK loading and predictor setup while retaining one context-managed owner. Cached and direct exports now share their argument construction. Existing model caches, configuration, provider choices and archive formats remain compatible; no migration is required.
 
 On macOS, `.pt` checkpoints now use native PyTorch MPS with FP16 when the device is available and no `onnx.provider` is explicitly configured. This avoids exporting those checkpoints to ONNX. An explicit provider retains ONNX preparation, and an unavailable MPS device retains the existing automatic ONNX route. `.onnx`, `.engine`, CUDA and TensorRT behavior is unchanged. Model errors remain failures; they do not silently choose another backend. Existing prepared ONNX cache entries are left intact.
 
@@ -133,7 +139,7 @@ Review `unvalidated/*/metadata.json` for `validation_error` when checking provid
 
 ## Verification limits
 
-See [AUDIT.md](AUDIT.md) for the exact local checks and results. Automated tests and distribution checks use local fake services; they do not establish model quality or production provider accuracy. Windows ML registration and NVIDIA/Jetson hardware execution require those target systems. Existing archives, live configuration, and research/model assets are not migrated or deleted.
+See [AUDIT.md](../docs/history/detector/AUDIT.md) for the exact local checks and results. Automated tests and distribution checks use local fake services; they do not establish model quality or production provider accuracy. Windows ML registration and NVIDIA/Jetson hardware execution require those target systems. Existing archives, live configuration, and research/model assets are not migrated or deleted.
 
 ## Combined application setup
 

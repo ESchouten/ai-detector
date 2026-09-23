@@ -16,11 +16,7 @@ export function cameraArchiveSelection(document: Configuration, id: string) {
 	);
 	const categories = [
 		...new Set(
-			rules.flatMap((rule) =>
-				(rule.exporters?.disk ?? []).map(
-					(value) => (value as { directory?: string | null }).directory ?? ''
-				)
-			)
+			rules.flatMap((rule) => (rule.exporters?.disk ?? []).map((value) => value.directory ?? ''))
 		)
 	].sort();
 	const signature = createHash('sha256')

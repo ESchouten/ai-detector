@@ -8,7 +8,18 @@ const adapter =
 		? nodeAdapter()
 		: exeAdapter({
 				binaryName: 'ai-detector-web',
-				target: buildTarget
+				target: buildTarget,
+				runtimeDirectory: 'desktop',
+				compileArgs: buildTarget.startsWith('windows-')
+					? [
+							'--windows-hide-console',
+							'--windows-icon=../distribution/windows/artwork/app.ico',
+							'--windows-title=AI Detector',
+							'--windows-publisher=AI Detector',
+							'--windows-description=AI Detector camera monitoring',
+							`--windows-version=${process.env.APP_VERSION ?? '0.0.0'}`
+						]
+					: []
 			});
 
 /** @type {import('@sveltejs/kit').Config} */

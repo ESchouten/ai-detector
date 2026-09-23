@@ -1,8 +1,8 @@
 import { readTestPresets } from './support/presets.ts';
 import assert from 'node:assert/strict';
-import fs, { mkdtemp, readFile, rm } from 'node:fs/promises';
+import fs from 'node:fs';
+import { mkdtemp, readFile, realpath, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { syncBuiltinESMExports } from 'node:module';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import * as v from 'valibot';
@@ -189,20 +189,12 @@ test('failed progress persistence does not claim completion and retry succeeds',
 	const { files, store } = await fixture(t);
 	const camera = await readyCamera(store);
 	const before = await readFile(files.app, 'utf8');
-	const write = fs.writeFile;
+	const destination = await realpath(files.app);
+	const rename = fs.rename;
 	const failure = Object.assign(new Error('Settings are not writable'), { code: 'EACCES' });
-	const blocked = t.mock.method(
-		fs,
-		'writeFile',
-		async (...args: Parameters<typeof fs.writeFile>) => {
-			if (String(args[0]).startsWith(files.app)) throw failure;
-			return write(...args);
-		}
-	);
-	syncBuiltinESMExports();
-	t.after(() => {
-		blocked.mock.restore();
-		syncBuiltinESMExports();
+	const blocked = t.mock.method(fs, 'rename', (...args: Parameters<typeof fs.rename>) => {
+		if (String(args[1]) === destination) return args[2](failure);
+		return rename(...args);
 	});
 	await assert.rejects(
 		store.finishCameraSetup(camera.id, async () => true),
@@ -211,7 +203,6 @@ test('failed progress persistence does not claim completion and retry succeeds',
 	assert.equal(await readFile(files.app, 'utf8'), before);
 	assert.equal(cameraSetupStatus(await store.read(), camera.id).completedAt, undefined);
 	blocked.mock.restore();
-	syncBuiltinESMExports();
 	await store.finishCameraSetup(camera.id, async () => true);
 	assert.ok(cameraSetupStatus(await store.read(), camera.id).completedAt);
 });

@@ -27,8 +27,12 @@ for (const event of config.statusEvents ?? []) {
 if (config.crashAfterStatus) process.exit(1);
 
 process.stdin.on('data', () => {
+	if (config.ignoreStop) return;
 	writeFileSync('flushed.txt', 'flushed');
-	process.exit(0);
+	process.exit(config.stopExitCode ?? 0);
 });
-process.stdin.on('end', () => process.exit(0));
+process.stdin.on('end', () => {
+	if (!config.ignoreStop) process.exit(config.stopExitCode ?? 0);
+});
+if (config.ignoreStop) setInterval(() => {}, 1000);
 process.stdin.resume();

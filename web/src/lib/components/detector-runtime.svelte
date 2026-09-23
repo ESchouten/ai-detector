@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { errorMessage } from '$lib/remote-errors';
-	import { onMount, untrack } from 'svelte';
+	import { untrack } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
@@ -10,16 +10,17 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as Field from '$lib/components/ui/field';
 	import * as NativeSelect from '$lib/components/ui/native-select';
-	import { getRuntime, startDetector, stopDetector } from '$lib/remote/runtime.remote';
+	import { startDetector, stopDetector } from '$lib/remote/runtime.remote';
+	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import type { RuntimeMode } from '$lib/runtime';
 	let { configured, compact = false }: { configured: boolean; compact?: boolean } = $props();
-	let runtime = $state(await getRuntime());
+	const monitor = useRuntimeStatus();
+	// Query.current is client-only; the awaited value also supports server rendering.
+	const initial = monitor.query.current ?? (await monitor.query);
+	const runtime = $derived(monitor.query.current ?? initial);
 	let mode = $state<RuntimeMode>(untrack(() => runtime.mode));
 	let requestError = $state('');
-	let connectionLost = $state(false);
-	let lastCheckedAt = $state(Date.now());
-	let now = $state(Date.now());
-	const stale = $derived(connectionLost || now - lastCheckedAt > 10000);
+	const stale = $derived(monitor.stale);
 	let controlling = $state(false);
 	const busy = $derived(
 		controlling || ['checking', 'starting', 'stopping'].includes(runtime.phase)
@@ -40,37 +41,11 @@
 		offline: 'Needs attention',
 		failed: 'Needs attention'
 	};
-	onMount(() => {
-		let active = true;
-		const clock = setInterval(() => (now = Date.now()), 1000);
-		let timer: ReturnType<typeof setTimeout>;
-		async function refresh() {
-			try {
-				await getRuntime().refresh();
-				runtime = await getRuntime();
-				connectionLost = false;
-				lastCheckedAt = Date.now();
-			} catch {
-				connectionLost = true;
-			}
-			if (active) timer = setTimeout(refresh, 2000);
-		}
-		timer = setTimeout(refresh, 2000);
-		return () => {
-			active = false;
-			clearTimeout(timer);
-			clearInterval(clock);
-		};
-	});
 	async function control(action: 'start' | 'stop') {
 		requestError = '';
 		controlling = true;
 		try {
-			runtime = action === 'start' ? await startDetector(mode) : await stopDetector();
-			await getRuntime().refresh();
-			runtime = await getRuntime();
-			connectionLost = false;
-			lastCheckedAt = Date.now();
+			await (action === 'start' ? startDetector(mode) : stopDetector()).updates(monitor.query);
 		} catch (cause) {
 			requestError = errorMessage(
 				cause,
@@ -99,7 +74,7 @@
 		</div>
 		<Card.Description aria-live="polite">
 			{stale
-				? `No recent status from the app. Last checked ${new Date(lastCheckedAt).toLocaleTimeString()}. Reopen AI Detector if it does not reconnect.`
+				? `No recent status from the app. Last checked ${new Date(monitor.lastCheckedAt).toLocaleTimeString()}. Reopen AI Detector if it does not reconnect.`
 				: (runtime.preparation ?? runtime.message)}
 		</Card.Description>
 	</Card.Header>

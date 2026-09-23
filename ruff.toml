@@ -1,0 +1,16 @@
+# Shared by detector source, tests, developer tools and distribution scripts.
+target-version = "py310"
+src = ["detector", "detector/src", "distribution"]
+
+[lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B", "C901", "PLR0912", "PLR0915", "TID252"]
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[lint.mccabe]
+max-complexity = 10
+
+[lint.pylint]
+max-branches = 12
+max-statements = 50

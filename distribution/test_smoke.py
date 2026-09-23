@@ -9,7 +9,7 @@ from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from smoke import wait_for_detection, wait_for_setup
+from smoke import stop_application, wait_for_detection, wait_for_setup
 
 
 @contextmanager
@@ -23,6 +23,36 @@ def running_application():
 
 
 class SmokeTest(unittest.TestCase):
+    def test_shutdown_requires_a_successful_exit_after_quit(self):
+        for status in (0, 7):
+            with self.subTest(status=status):
+                with subprocess.Popen(
+                    [
+                        sys.executable,
+                        "-c",
+                        f"assert input() == 'quit'; raise SystemExit({status})",
+                    ],
+                    stdin=subprocess.PIPE,
+                ) as process:
+                    if status == 0:
+                        stop_application(process, timeout=5)
+                    else:
+                        with self.assertRaisesRegex(RuntimeError, "status 7"):
+                            stop_application(process, timeout=5)
+
+    def test_hung_shutdown_fails_instead_of_reporting_success(self):
+        process = subprocess.Popen(
+            [sys.executable, "-c", "input(); import time; time.sleep(30)"],
+            stdin=subprocess.PIPE,
+        )
+        try:
+            with self.assertRaisesRegex(TimeoutError, "graceful shutdown"):
+                stop_application(process, timeout=0.1)
+        finally:
+            process.kill()
+            process.wait(timeout=5)
+            process.stdin.close()
+
     def test_waits_for_setup_after_a_temporary_http_failure(self):
         requests = []
 

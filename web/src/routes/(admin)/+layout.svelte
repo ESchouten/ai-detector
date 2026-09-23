@@ -12,8 +12,10 @@
 	import { page } from '$app/state';
 	import GithubIcon from '@lucide/svelte/icons/github';
 	import SettingsIcon from '@lucide/svelte/icons/settings';
+	import { createRuntimeStatus, provideRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 
 	let { children } = $props();
+	provideRuntimeStatus(createRuntimeStatus());
 
 	const menu: NavMenu[] = [
 		{

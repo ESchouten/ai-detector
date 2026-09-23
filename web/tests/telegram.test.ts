@@ -67,3 +67,19 @@ test('an invalid Telegram response offers retry instead of a JSON or schema erro
 		t.mock.restoreAll();
 	}
 });
+
+test('the Telegram request deadline aborts the fetch and gives connection guidance', async (t) => {
+	t.mock.timers.enable({ apis: ['setTimeout'] });
+	let signal: AbortSignal | undefined;
+	t.mock.method(globalThis, 'fetch', (_input: string, init: RequestInit) => {
+		signal = init.signal!;
+		return new Promise((_resolve, reject) => {
+			signal!.addEventListener('abort', () => reject(signal!.reason), { once: true });
+		});
+	});
+	const request = assert.rejects(findTelegramChats('fixture-token'), /internet connection/);
+	assert.ok(signal);
+	t.mock.timers.tick(10000);
+	await request;
+	assert.equal(signal.aborted, true);
+});

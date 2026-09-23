@@ -1,4 +1,4 @@
-"""Exercise the patched executable bootstrap with a tiny SvelteKit-shaped server."""
+"""Exercise the actual desktop runtime with a small local application fixture."""
 
 import os
 import shutil
@@ -11,67 +11,80 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+from fixtures.processes import cleanup_process, wait_for
 
-def server_fixture(folder: Path, adapter: Path) -> Path:
-    entry = folder / "temp-server"
-    entry.mkdir()
-    source = adapter.read_text()
-    beginning = source.index("function startMdnsResponder(")
-    ending = source.index("function sendMdnsMulticast", beginning)
-    source = (
-        source[:beginning]
-        + (
-            "function startMdnsResponder() { const socket = createSocket('udp4'); "
-            "socket.bind(0, '127.0.0.1'); return socket; }\n\n"
-        )
-        + source[ending:]
-    )
-    (entry / "index.ts").write_text(source)
-    shutil.copy2(Path(__file__).with_name("desktop-instance.ts"), entry)
-    shutil.copy2(Path(__file__).with_name("windows-tray.ts"), entry)
-    (entry / "assets.generated.ts").write_text("export const assetMap = new Map();\n")
-    (folder / "manifest.js").write_text(
-        "export default { _: { prerendered_routes: new Set() }, appDir: '_app' };\n"
-    )
-    (folder / "server").mkdir()
-    (folder / "server/index.js").write_text(
-        "import { appendFileSync } from 'node:fs';\n"
-        "process.once('sveltekit:shutdown', async () => { "
-        "const response = await fetch('http://127.0.0.1:' + process.env.PORT + '/'); "
-        "appendFileSync(process.env.AIDETECTOR_DATA_DIR + '/drained', String(response.status)); });\n"
-        "export class Server { async init() { appendFileSync(process.env.AIDETECTOR_DATA_DIR + '/starts', 'started\\n'); } "
-        "async respond() { return new Response('fixture dashboard'); } }\n"
-    )
-    return entry
+FIXTURE = (
+    Path(__file__).resolve().parent.parent / "web/desktop/fixtures/runtime-server.ts"
+)
 
 
 @unittest.skipUnless(
     shutil.which("bun"), "Bun is required for executable launcher integration"
 )
 class LauncherTest(unittest.TestCase):
+    def test_native_shell_quit_and_lost_pipe_both_drain_monitoring(self):
+        for command in (b"quit\n", None):
+            with (
+                self.subTest(command=command),
+                tempfile.TemporaryDirectory(prefix="ai-host-") as temporary,
+            ):
+                folder = Path(temporary)
+                with socket.socket() as listener:
+                    listener.bind(("127.0.0.1", 0))
+                    port = listener.getsockname()[1]
+                env = {
+                    **os.environ,
+                    "AIDETECTOR_DATA_DIR": str(folder / "data"),
+                    "AIDETECTOR_DESKTOP_HOST": "1",
+                    "HOST": "127.0.0.1",
+                    "PORT": str(port),
+                    "OPEN_BROWSER": "false",
+                }
+                log_path = folder / "launcher.log"
+                log = log_path.open("w")
+                process = subprocess.Popen(
+                    [shutil.which("bun"), str(FIXTURE)],
+                    env=env,
+                    stdin=subprocess.PIPE,
+                    stdout=log,
+                    stderr=log,
+                )
+                try:
+                    wait_for(
+                        process,
+                        lambda log_path=log_path: (
+                            "AI_DETECTOR_READY" in log_path.read_text()
+                        ),
+                        log_path,
+                    )
+                    if command:
+                        process.stdin.write(command)
+                        process.stdin.flush()
+                    else:
+                        process.stdin.close()
+                    process.wait(timeout=10)
+                    self.assertEqual(process.returncode, 0, log_path.read_text())
+                    self.assertEqual((folder / "data/drained").read_text(), "200")
+                finally:
+                    cleanup_process(process)
+                    log.close()
+
     def test_second_launch_does_not_initialize_another_server_and_quit_is_graceful(
         self,
     ):
-        repo = Path(__file__).resolve().parent.parent
-        adapter = (
-            repo / "web/node_modules/@jesterkit/exe-sveltekit/dist/server/index.ts"
-        )
-        if not adapter.exists():
-            self.skipTest("Install web dependencies before testing the adapter")
         with tempfile.TemporaryDirectory(prefix="ai-launcher-") as temporary:
             folder = Path(temporary)
-            entry = server_fixture(folder, adapter)
             with socket.socket() as listener:
                 listener.bind(("127.0.0.1", 0))
                 port = listener.getsockname()[1]
             env = {
                 **os.environ,
                 "AIDETECTOR_DATA_DIR": str(folder / "data"),
-                "HOST": "0.0.0.0",
+                "HOST": "127.0.0.1",
                 "PORT": str(port),
                 "OPEN_BROWSER": "false",
             }
-            arguments = [shutil.which("bun"), str(entry / "index.ts")]
+            arguments = [shutil.which("bun"), str(FIXTURE)]
             with (folder / "log").open("w+") as log:
                 process = subprocess.Popen(arguments, env=env, stdout=log, stderr=log)
                 try:

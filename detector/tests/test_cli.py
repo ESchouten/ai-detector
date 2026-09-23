@@ -57,9 +57,11 @@ def test_invalid_and_missing_config_have_actionable_exit_status(tmp_path):
     [
         (["video.mp4", "0"], "separate detector definitions"),
         ("camera", "camera index"),
-        ("ftp://private:secret@camera/video.mp4", "Unsupported source URL"),
-        ("rtsp://", "Source URL needs a host"),
-        ("rtsp://private:secret@", "Source URL needs a host"),
+        ("ftp://private:secret@camera/video.mp4", "Source URL is invalid"),
+        ("rtsp://", "Source URL is invalid"),
+        ("rtsp://private:secret@", "Source URL is invalid"),
+        ("rtsp://private:secret@camera:99999/live", "Source URL is invalid"),
+        ("rtsp://private:secret@camera with spaces/live", "Source URL is invalid"),
         ("https://camera/photo.jpg", "local image file"),
     ],
 )

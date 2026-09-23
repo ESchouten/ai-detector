@@ -8,17 +8,19 @@ import {
 } from '../../schema.ts';
 import { readJson, writeJson } from '../json-file.ts';
 import {
-	ConfigurationError,
+	alertsInput,
+	cameraInput,
 	detectorInput,
 	normalizeConfig,
 	normalizeConfiguration,
-	sameTelegram,
 	streamInput,
 	telegramInput
 } from '../../configuration.ts';
-import { alertsInput, cameraInput } from '../../configuration.ts';
 import { identifyCameras, saveCamera, removeCamera, saveAlerts } from './cameras.ts';
 import { writeConfiguration } from './files.ts';
+import { saveDetector, deleteDetector } from './detectors.ts';
+import { saveStream, deleteStream, reorderStream } from './streams.ts';
+import { saveTelegram, deleteTelegram } from './telegrams.ts';
 import { recordArchiveCheck, skipCameraAlerts, finishCameraSetup } from './camera-setup.ts';
 
 interface Runtime {
@@ -129,142 +131,30 @@ export class ConfigurationStore {
 	}
 
 	saveDetector(input: v.InferOutput<typeof detectorInput>): Promise<void> {
-		return this.update(({ config, app }) => {
-			const index = input.original
-				? app.detectors.findIndex((item) => item.label === input.original)
-				: -1;
-			if (input.original && index < 0)
-				throw new ConfigurationError('This detector no longer exists.');
-			if (app.detectors.some((item, i) => i !== index && item.label === input.meta.label)) {
-				throw new ConfigurationError('A detector with this name already exists.');
-			}
-			const normalized = normalizeConfiguration({ detectors: [input.detector] }, {}).config
-				.detectors[0];
-			if (index < 0) {
-				config.detectors.push(normalized);
-				app.detectors.push(input.meta);
-			} else {
-				const meta = { ...app.detectors[index], ...input.meta };
-				if (
-					!isDeepStrictEqual(
-						{ ...config.detectors[index], exporters: undefined },
-						{ ...normalized, exporters: undefined }
-					)
-				)
-					delete meta.preset;
-				config.detectors[index] = normalized;
-				app.detectors[index] = meta;
-			}
-		});
+		return this.update((document) => saveDetector(document, input));
 	}
 
 	deleteDetector(label: string): Promise<void> {
-		return this.update(({ config, app }) => {
-			const index = app.detectors.findIndex((item) => item.label === label);
-			if (index < 0) throw new ConfigurationError('This detector no longer exists.');
-			config.detectors.splice(index, 1);
-			app.detectors.splice(index, 1);
-		});
+		return this.update((document) => deleteDetector(document, label));
 	}
 
 	saveStream(input: v.InferOutput<typeof streamInput>): Promise<void> {
-		return this.update(({ config, app }) => {
-			const index = input.original
-				? app.streams.findIndex((item) => item.source === input.original)
-				: -1;
-			if (input.original && index < 0)
-				throw new ConfigurationError('This camera source no longer exists.');
-			if (app.streams.some((item, i) => i !== index && item.source === input.source)) {
-				throw new ConfigurationError('This camera source already exists.');
-			}
-			const stream = { ...app.streams[index], label: input.label, source: input.source };
-			if (input.original !== input.source) {
-				stream.setup = stream.setup?.alerts ? { alerts: stream.setup.alerts } : undefined;
-				delete stream.connection;
-			}
-			if (index < 0) app.streams.push(stream);
-			else app.streams[index] = stream;
-			for (const detector of config.detectors) {
-				detector.detection.source = detector.detection.source.map((source) =>
-					source === input.original ? input.source : source
-				);
-			}
-		});
+		return this.update((document) => saveStream(document, input));
 	}
 
 	deleteStream(source: string): Promise<void> {
-		return this.update(({ config, app }) => {
-			if (!app.streams.some((item) => item.source === source))
-				throw new ConfigurationError('This camera source no longer exists.');
-			if (
-				config.detectors.some(
-					(item) => item.detection.source.length === 1 && item.detection.source[0] === source
-				)
-			) {
-				throw new ConfigurationError(
-					'This camera is a detector’s only source. Update or remove that detector first.'
-				);
-			}
-			app.streams = app.streams.filter((item) => item.source !== source);
-			for (const detector of config.detectors)
-				detector.detection.source = detector.detection.source.filter((item) => item !== source);
-		});
+		return this.update((document) => deleteStream(document, source));
 	}
 
 	reorderStream(index0: number, index1: number): Promise<void> {
-		return this.update(({ app }) => {
-			if (
-				![index0, index1].every(
-					(index) => Number.isInteger(index) && index >= 0 && index < app.streams.length
-				)
-			) {
-				throw new ConfigurationError('The camera order changed. Reload and try again.');
-			}
-			const [stream] = app.streams.splice(index0, 1);
-			app.streams.splice(index1, 0, stream);
-		});
+		return this.update((document) => reorderStream(document, index0, index1));
 	}
 
 	saveTelegram(input: v.InferOutput<typeof telegramInput>): Promise<void> {
-		return this.update(({ config, app }) => {
-			const index = input.original
-				? app.telegrams.findIndex((item) => item.label === input.original)
-				: -1;
-			if (input.original && index < 0)
-				throw new ConfigurationError('This notification channel no longer exists.');
-			if (
-				app.telegrams.some(
-					(item, i) => i !== index && (item.label === input.label || sameTelegram(item, input))
-				)
-			) {
-				throw new ConfigurationError('This notification channel or name already exists.');
-			}
-			const previous = app.telegrams[index];
-			const telegram = { label: input.label, token: input.token, chat: input.chat };
-			if (index < 0) app.telegrams.push(telegram);
-			else app.telegrams[index] = telegram;
-			if (previous) {
-				for (const detector of config.detectors) {
-					for (const exporter of detector.exporters?.telegram ?? []) {
-						if (sameTelegram(exporter, previous))
-							Object.assign(exporter, { token: input.token, chat: input.chat });
-					}
-				}
-			}
-		});
+		return this.update((document) => saveTelegram(document, input));
 	}
 
 	deleteTelegram(label: string): Promise<void> {
-		return this.update(({ config, app }) => {
-			const telegram = app.telegrams.find((item) => item.label === label);
-			if (!telegram) throw new ConfigurationError('This notification channel no longer exists.');
-			app.telegrams = app.telegrams.filter((item) => item !== telegram);
-			for (const detector of config.detectors) {
-				if (detector.exporters?.telegram)
-					detector.exporters.telegram = detector.exporters.telegram.filter(
-						(item) => !sameTelegram(item, telegram)
-					);
-			}
-		});
+		return this.update((document) => deleteTelegram(document, label));
 	}
 }

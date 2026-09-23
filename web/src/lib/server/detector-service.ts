@@ -36,9 +36,7 @@ async function initialize(): Promise<void> {
 	} catch (error) {
 		detector.fail(error);
 	}
-	process.once('sveltekit:shutdown', () =>
-		detector?.stop(false).catch((error) => detector?.fail(error))
-	);
+	process.once('sveltekit:shutdown', () => detector?.stop(false));
 }
 
 export function managedDetector(): ManagedDetector | null {

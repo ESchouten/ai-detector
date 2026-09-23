@@ -15,7 +15,11 @@ const sourceKey = liveSourceKey('rtsp://user:secret@camera/live', '/data');
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-live-'));
 	await mkdir(path.join(directory, 'frames'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const readers: ReadableStreamDefaultReader<Uint8Array>[] = [];
+	t.after(async () => {
+		for (const reader of readers) await reader.cancel();
+		await rm(directory, { recursive: true, force: true });
+	});
 	const session = async (runId = 'run-1', updatedAt = new Date().toISOString()) => {
 		await writeFile(
 			path.join(directory, 'session.json'),
@@ -41,10 +45,7 @@ async function fixture(t: TestContext) {
 	const open = () => {
 		const abort = new AbortController();
 		const reader = createLivePreviewStream(directory, sourceKey, rules, abort.signal).getReader();
-		t.after(async () => {
-			abort.abort();
-			await reader.cancel();
-		});
+		readers.push(reader);
 		return { reader, abort };
 	};
 	const lease = path.join(directory, 'leases', `${sourceKey}.json`);

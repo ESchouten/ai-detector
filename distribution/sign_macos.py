@@ -1,7 +1,7 @@
-"""Sign nested Mach-O code, then notarize and staple with release credentials."""
+"""Apply local ad-hoc code signatures; Sparkle separately authenticates updates."""
 
 import argparse
-import os
+import plistlib
 import subprocess
 from pathlib import Path
 
@@ -17,12 +17,12 @@ MACH_O = {
 }
 
 
-def sign_app(app: Path, identity: str) -> None:
-    if not identity.startswith("Developer ID Application:"):
-        raise ValueError("Release signing requires a Developer ID Application identity")
+def sign_app(app: Path) -> None:
     entitlements = Path(__file__).parent / "macos" / "entitlements.plist"
+    info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
+    main = app / "Contents/MacOS" / info["CFBundleExecutable"]
     for file in sorted(app.rglob("*"), key=lambda item: len(item.parts), reverse=True):
-        if file.is_symlink() or not file.is_file():
+        if file == main or file.is_symlink() or not file.is_file():
             continue
         with file.open("rb") as stream:
             native = stream.read(4) in MACH_O
@@ -31,29 +31,37 @@ def sign_app(app: Path, identity: str) -> None:
         command = [
             "codesign",
             "--force",
-            "--options",
-            "runtime",
-            "--timestamp",
             "--sign",
-            identity,
+            "-",
         ]
-        if file.name in {"ai-detector-web", "aidetector"}:
+        if file.name == "ai-detector-web":
             command += ["--entitlements", str(entitlements)]
+        elif file.name == "Downloader":
+            command += ["--preserve-metadata=entitlements"]
         subprocess.run([*command, str(file)], check=True)
-    for framework in sorted(
-        app.rglob("*.framework"), key=lambda item: len(item.parts), reverse=True
+    for bundle in sorted(
+        (
+            path
+            for path in app.rglob("*")
+            if path.suffix in {".framework", ".app", ".xpc"}
+        ),
+        key=lambda item: len(item.parts),
+        reverse=True,
     ):
-        if not framework.is_symlink():
+        if not bundle.is_symlink():
+            options = []
+            if bundle.name == "Detector.app":
+                options = ["--entitlements", str(entitlements)]
+            elif bundle.name == "Downloader.xpc":
+                options = ["--preserve-metadata=entitlements"]
             subprocess.run(
                 [
                     "codesign",
                     "--force",
-                    "--options",
-                    "runtime",
-                    "--timestamp",
                     "--sign",
-                    identity,
-                    str(framework),
+                    "-",
+                    *options,
+                    str(bundle),
                 ],
                 check=True,
             )
@@ -61,11 +69,8 @@ def sign_app(app: Path, identity: str) -> None:
         [
             "codesign",
             "--force",
-            "--options",
-            "runtime",
-            "--timestamp",
             "--sign",
-            identity,
+            "-",
             str(app),
         ],
         check=True,
@@ -76,35 +81,8 @@ def sign_app(app: Path, identity: str) -> None:
     )
 
 
-def notarize(artifact: Path, profile: str, staple: Path | None = None) -> None:
-    subprocess.run(
-        [
-            "xcrun",
-            "notarytool",
-            "submit",
-            str(artifact),
-            "--keychain-profile",
-            profile,
-            "--wait",
-            "--timeout",
-            "30m",
-        ],
-        check=True,
-    )
-    artifact = staple or artifact
-    subprocess.run(["xcrun", "stapler", "staple", str(artifact)], check=True)
-    subprocess.run(["xcrun", "stapler", "validate", str(artifact)], check=True)
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("artifact", type=Path)
-    parser.add_argument("--notarize", action="store_true")
-    parser.add_argument("--staple", type=Path)
     args = parser.parse_args()
-    if args.notarize:
-        notarize(
-            args.artifact, os.environ["MACOS_NOTARY_KEYCHAIN_PROFILE"], args.staple
-        )
-    else:
-        sign_app(args.artifact, os.environ["MACOS_SIGN_IDENTITY"])
+    sign_app(args.artifact)

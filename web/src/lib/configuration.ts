@@ -1,59 +1,24 @@
 import Ajv from 'ajv';
 import * as v from 'valibot';
 import schema from '../../../config/config.schema.json' with { type: 'json' };
-import type { AppConfig, Config, Configuration, DetectorConfig, TelegramConfig } from './schema.ts';
+import type { Config as SchemaConfig } from './generated/config.js';
+import {
+	appSchema,
+	cameraConnectionMeta,
+	detectorMeta,
+	streamMeta,
+	telegramMeta,
+	type Config,
+	type Configuration,
+	type DetectorConfig,
+	type TelegramConfig
+} from './schema.ts';
+
+export { cameraConnectionMeta, detectorMeta, streamMeta, telegramMeta } from './schema.ts';
 
 export class ConfigurationError extends Error {}
 
 const text = v.pipe(v.string(), v.trim(), v.minLength(1));
-export const detectorMeta = v.object({
-	label: text,
-	cameraId: v.optional(text),
-	preset: v.optional(text)
-});
-export const cameraConnectionMeta = v.object({
-	address: v.pipe(
-		text,
-		v.check((value) => {
-			try {
-				const url = new URL(value);
-				return (
-					['http:', 'https:'].includes(url.protocol) &&
-					!url.username &&
-					!url.password &&
-					!url.search &&
-					!url.hash
-				);
-			} catch {
-				return false;
-			}
-		}, 'Camera connection details must not contain login details or access tokens.')
-	),
-	profileToken: v.optional(text)
-});
-const timestamp = v.pipe(v.string(), v.isoTimestamp());
-const cameraSetup = v.object({
-	pictureVerifiedAt: v.optional(timestamp),
-	archiveVerifiedAt: v.optional(timestamp),
-	archiveSignature: v.optional(text),
-	alerts: v.optional(v.literal('skipped')),
-	completedAt: v.optional(timestamp),
-	completionSignature: v.optional(text)
-});
-export const streamMeta = v.object({
-	id: v.optional(text),
-	label: v.optional(text),
-	source: text,
-	connection: v.optional(cameraConnectionMeta),
-	setup: v.optional(cameraSetup)
-});
-const identity = v.pipe(v.string(), v.minLength(1));
-export const telegramMeta = v.object({ label: text, token: identity, chat: identity });
-const appSchema = v.object({
-	streams: v.optional(v.array(streamMeta), []),
-	telegrams: v.optional(v.array(telegramMeta), []),
-	detectors: v.optional(v.array(detectorMeta), [])
-});
 export const detectorInput = v.object({
 	original: v.optional(v.string()),
 	detector: v.unknown(),
@@ -113,14 +78,8 @@ export const alertsInput = v.object({
 	received: v.boolean()
 });
 
-interface ConfigInput {
-	$schema?: string | null;
-	detectors: {
-		detection: { source: string | string[]; [key: string]: unknown };
-		exporters?: Record<string, Record<string, unknown> | Record<string, unknown>[] | null> | null;
-		[key: string]: unknown;
-	}[];
-	[key: string]: unknown;
+interface ConfigInput extends Omit<SchemaConfig, 'detectors'> {
+	detectors: SchemaConfig['detectors'][number][];
 }
 
 // The web app can save an empty setup or stop after deleting the last detector.
@@ -145,10 +104,12 @@ export function normalizeConfig(input: unknown): Config {
 			);
 			if (new Set(sources).size !== sources.length)
 				throw new ConfigurationError('A detector cannot use the same source more than once.');
-			const normalized: NonNullable<DetectorConfig['exporters']> = {};
-			for (const [name, values] of Object.entries(exporters ?? {})) {
-				normalized[name] = values == null ? [] : Array.isArray(values) ? values : [values];
-			}
+			const normalized = Object.fromEntries(
+				Object.entries(exporters ?? {}).map(([name, values]) => [
+					name,
+					values == null ? [] : Array.isArray(values) ? values : [values]
+				])
+			) as NonNullable<DetectorConfig['exporters']>;
 			return {
 				...detector,
 				detection: {
@@ -174,7 +135,7 @@ export function sameTelegram(left: TelegramConfig, right: TelegramConfig): boole
 
 export function normalizeConfiguration(configInput: unknown, appInput: unknown): Configuration {
 	const config = normalizeConfig(configInput);
-	const app: AppConfig = v.parse(appSchema, appInput);
+	const app = v.parse(appSchema, appInput);
 	const labels = new Set<string>();
 	app.detectors = config.detectors.map((_, index) => ({
 		...app.detectors[index],

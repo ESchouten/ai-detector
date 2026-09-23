@@ -5,7 +5,7 @@ import pathlib
 from collections.abc import Iterator
 from contextlib import contextmanager
 from time import perf_counter
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 import numpy as np
 from numpy.typing import NDArray
@@ -13,6 +13,7 @@ from ultralytics import YOLO
 from ultralytics.data.loaders import LoadStreams, SourceTypes
 from ultralytics.engine.results import Results
 
+from aidetector.adapters.inference.export_settings import export_arguments
 from aidetector.adapters.inference.model_assets import MODEL_DOWNLOAD_HELP
 from aidetector.adapters.inference.onnx import InferenceOptions
 from aidetector.application.ports import Frames
@@ -194,11 +195,11 @@ def open_detector(
         with _restore_path_classes():
             model_path = config.model
             native_mps = options.native_mps and model_path.endswith(".pt")
+            conversion = _export_format(model_path, build_type, native_mps)
             if (
-                cache_directory is not None
+                conversion == "onnx"
+                and cache_directory is not None
                 and model_path.endswith(".pt")
-                and build_type not in {"cuda", "tensorrt"}
-                and not native_mps
             ):
                 from aidetector.adapters.inference.prepared_models import prepare_onnx
 
@@ -212,53 +213,19 @@ def open_detector(
                         report_status,
                     )
                 )
-            report_status(
-                StatusEvent(
-                    "preparing", message="Loading the detection model on this computer…"
-                )
-            )
-            try:
-                loaded = YOLO(model_path, task=config.task)
-            except ConnectionError:
-                report_status(
-                    StatusEvent("preparation_failed", message=MODEL_DOWNLOAD_HELP)
-                )
-                raise
-            if (
-                not model_path.endswith((".onnx", ".engine"))
-                and build_type != "cuda"
-                and not native_mps
-            ):
+                conversion = None
+            loaded = _load_model(model_path, config.task, report_status)
+            if conversion:
                 report_status(
                     StatusEvent(
                         "preparing", message="Preparing the model for this computer…"
                     )
                 )
                 exported = loaded.export(
-                    format="engine" if build_type == "tensorrt" else "onnx",
-                    batch=len(sources),
-                    dynamic=True,
-                    quantize=16 if options.half else None,
-                    imgsz=config.imgsz,
-                    simplify=True,
-                    opset=onnx.opset,
+                    **export_arguments(config, onnx, len(sources), options, conversion)
                 )
                 loaded = YOLO(str(exported), task=config.task)
-            # Ultralytics' .names property creates a temporary backend for exported
-            # models. Retain its predictor here so class lookup and inference share
-            # one session. This SDK-specific setup is covered by a real ONNX test.
-            overrides = {
-                **loaded.overrides,
-                "quantize": 16 if native_mps or options.half else None,
-            }
-            if native_mps:
-                overrides["device"] = "mps"
-                logger.info("Native PyTorch inference on MPS (FP16)")
-            loaded.predictor = loaded._smart_load("predictor")(
-                overrides=overrides,
-                _callbacks=loaded.callbacks,
-            )
-            loaded.predictor.setup_model(model=loaded.model, verbose=False)
+            _initialize_predictor(loaded, options, native_mps)
         detector = YoloDetector(loaded, config, sources, options)
         yield detector
     finally:
@@ -266,3 +233,42 @@ def open_detector(
             detector._last_frames.clear()
         if loaded is not None:
             loaded.predictor = None
+
+
+def _export_format(
+    path: str, build_type: str, native_mps: bool
+) -> Literal["onnx", "engine"] | None:
+    if path.endswith((".onnx", ".engine")) or build_type == "cuda" or native_mps:
+        return None
+    return "engine" if build_type == "tensorrt" else "onnx"
+
+
+def _load_model(path: str, task: str, report_status: ReportStatus) -> YOLO:
+    report_status(
+        StatusEvent(
+            "preparing", message="Loading the detection model on this computer…"
+        )
+    )
+    try:
+        return YOLO(path, task=task)
+    except ConnectionError:
+        report_status(StatusEvent("preparation_failed", message=MODEL_DOWNLOAD_HELP))
+        raise
+
+
+def _initialize_predictor(
+    model: YOLO, options: InferenceOptions, native_mps: bool
+) -> None:
+    # Ultralytics' .names property otherwise creates a temporary second backend.
+    # Keep SDK-specific predictor setup here; open_detector owns its cleanup.
+    overrides = {
+        **model.overrides,
+        "quantize": 16 if native_mps or options.half else None,
+    }
+    if native_mps:
+        overrides["device"] = "mps"
+        logger.info("Native PyTorch inference on MPS (FP16)")
+    model.predictor = model._smart_load("predictor")(
+        overrides=overrides, _callbacks=model.callbacks
+    )
+    model.predictor.setup_model(model=model.model, verbose=False)

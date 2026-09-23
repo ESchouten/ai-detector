@@ -1,0 +1,2 @@
+# Small build dependencies used before the detector is frozen.
+semver==3.0.4

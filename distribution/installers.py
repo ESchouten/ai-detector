@@ -1,7 +1,6 @@
 """Build native installers from an assembled application; never install them locally."""
 
 import argparse
-import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -47,19 +46,46 @@ def macos(folder: Path, version: str) -> Path:
     return image
 
 
-def windows(folder: Path, version: str, *, signed: bool) -> Path:
-    output = folder.parent.resolve()
+def windows(folder: Path, version: str) -> Path:
+    output = folder.parent.resolve() / "windows-updates"
     arguments = [
-        os.environ.get("ISCC", r"C:\Program Files (x86)\Inno Setup 6\ISCC.exe"),
-        f"/DSourceDir={folder.resolve()}",
-        f"/DOutputDir={output}",
-        f"/DVersion={version}",
+        "dotnet",
+        "tool",
+        "run",
+        "vpk",
+        "--",
+        "pack",
+        "--packId",
+        "AIDetector",
+        "--packTitle",
+        "AI Detector",
+        "--packAuthors",
+        "AI Detector contributors",
+        "--packVersion",
+        version,
+        "--packDir",
+        str(folder.resolve()),
+        "--mainExe",
+        "AI Detector.exe",
+        "--runtime",
+        "win-x64",
+        "--channel",
+        "win",
+        "--outputDir",
+        str(output),
+        "--icon",
+        str((ASSETS / "windows/artwork/app.ico").resolve()),
+        "--shortcuts",
+        "Desktop,StartMenuRoot",
+        "--exclude",
+        r"START HERE\.txt",
+        "--noPortable",
+        "--delta",
+        "BestSize",
     ]
-    if signed:
-        arguments += ["/DSigned", "/Srelease=" + os.environ["INNO_SIGN_COMMAND"]]
-    arguments.append(str(ASSETS / "windows" / "installer.iss"))
     subprocess.run(arguments, check=True)
-    installer = output / f"AI-Detector-{version}-windows-x64-setup.exe"
+    installer = folder.parent / f"AI-Detector-{version}-windows-x64-setup.exe"
+    shutil.copy2(output / "AIDetector-win-Setup.exe", installer)
     checksum(installer)
     return installer
 
@@ -114,6 +140,13 @@ def linux(folder: Path, version: str) -> Path:
     return artifact
 
 
+def build_installer(folder: Path, platform: str, version: str) -> Path:
+    builder = {"macos-arm64": macos, "windows-x64": windows, "linux-x64": linux}[
+        platform
+    ]
+    return builder(folder, version_number(version))
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("folder", type=Path)
@@ -121,12 +154,5 @@ if __name__ == "__main__":
         "--platform", choices=["windows-x64", "macos-arm64", "linux-x64"], required=True
     )
     parser.add_argument("--version", required=True)
-    parser.add_argument("--signed", action="store_true")
     args = parser.parse_args()
-    version = version_number(args.version)
-    if args.platform == "macos-arm64":
-        print(macos(args.folder, version))
-    elif args.platform == "windows-x64":
-        print(windows(args.folder, version, signed=args.signed))
-    else:
-        print(linux(args.folder, version))
+    print(build_installer(args.folder, args.platform, args.version))

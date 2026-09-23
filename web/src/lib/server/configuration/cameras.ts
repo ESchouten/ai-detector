@@ -50,7 +50,7 @@ function detachCamera(document: Configuration, source: string): DetectorConfig[]
 }
 
 function preserveDeliverySettings(detector: DetectorConfig, previous: DetectorConfig[]): void {
-	const exporters: NonNullable<DetectorConfig['exporters']> = {};
+	const exporters: Record<string, unknown[]> = {};
 	for (const original of previous) {
 		for (const [name, destinations] of Object.entries(original.exporters ?? {})) {
 			const combined = [...(exporters[name] ?? []), ...(destinations ?? [])];

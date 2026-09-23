@@ -1,15 +1,17 @@
 import AppKit
 import ServiceManagement
+import Sparkle
 
 // The native shell owns only the menu and login preference. The bundled web
 // executable owns instance identity, detection and graceful shutdown.
 @MainActor
 final class Application: NSObject, NSApplicationDelegate {
-    private var child: Process?
+    private var child: DesktopProcess?
     private var item: NSStatusItem!
     private var loginItem: NSMenuItem!
     private var quitting = false
     private let service = SMAppService.mainApp
+    private var updater: SPUStandardUpdaterController?
     private var executable: URL {
         Bundle.main.bundleURL.appendingPathComponent("Contents/MacOS/ai-detector-web")
     }
@@ -23,6 +25,13 @@ final class Application: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
         menu.addItem(withTitle: "Quit AI Detector", action: #selector(quit), keyEquivalent: "q")
         for entry in menu.items { entry.target = self }
+        if Bundle.main.object(forInfoDictionaryKey: "SUFeedURL") != nil {
+            let controller = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+            updater = controller
+            let check = NSMenuItem(title: "Check for Updates…", action: #selector(SPUStandardUpdaterController.checkForUpdates(_:)), keyEquivalent: "")
+            check.target = controller
+            menu.insertItem(check, at: 2)
+        }
         item.menu = menu
         updateLoginState()
         launch()
@@ -38,21 +47,24 @@ final class Application: NSObject, NSApplicationDelegate {
     }
 
     private func launch() {
-        let process = Process()
-        process.executableURL = executable
-        process.terminationHandler = { [weak self] process in
-            Task { @MainActor in
-                guard let self else { return }
-                self.child = nil
-                if self.quitting {
-                    NSApp.reply(toApplicationShouldTerminate: true)
-                } else if process.terminationStatus != 0 {
-                    self.showError("AI Detector could not start. Reopen the application to retry.")
+        let process = DesktopProcess()
+        do {
+            try process.start(executable: executable) { [weak self] status, message in
+                Task { @MainActor in
+                    guard let self else { return }
+                    self.child = nil
+                    if self.quitting {
+                        NSApp.reply(toApplicationShouldTerminate: status == 0)
+                        self.quitting = false
+                    } else if status == 0 {
+                        // A second invocation opened the existing owner's dashboard.
+                        NSApp.terminate(nil)
+                    }
+                    if status != 0 {
+                        self.showError(message ?? "AI Detector stopped unexpectedly. Reopen the application to retry.")
+                    }
                 }
             }
-        }
-        do {
-            try process.run()
             child = process
         } catch { showError(error.localizedDescription) }
     }
@@ -90,9 +102,14 @@ final class Application: NSObject, NSApplicationDelegate {
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         guard let child, child.isRunning else { return .terminateNow }
-        quitting = true
-        child.terminate()
-        return .terminateLater
+        do {
+            try child.stop()
+            quitting = true
+            return .terminateLater
+        } catch {
+            showError("AI Detector could not request shutdown: \(error.localizedDescription)")
+            return .terminateCancel
+        }
     }
 
     private func showError(_ text: String) {

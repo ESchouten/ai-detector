@@ -48,7 +48,7 @@ export default defineConfig(
 		rules: { 'svelte/no-navigation-without-resolve': ['error', { ignoreLinks: true }] }
 	},
 	{
-		files: ['src/**/*.{ts,svelte}'],
+		files: ['src/**/*.{ts,svelte}', 'desktop/**/*.ts'],
 		ignores: ['src/lib/components/ui/**'],
 		rules: {
 			complexity: ['error', 15],

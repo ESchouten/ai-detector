@@ -11,7 +11,6 @@ from pathlib import Path
 
 from installers import linux_tree, macos
 from package import archive, macos_bundle, version_number
-from sign_macos import sign_app
 
 
 class InstallerTest(unittest.TestCase):
@@ -94,6 +93,7 @@ class InstallerTest(unittest.TestCase):
             calls.count(["-k", "-TERM", "/opt/ai-detector/AI Detector"]), 2
         )
 
+    @unittest.skipIf(os.name == "nt", "macOS bundles require symlinks")
     def test_macos_layout_targets_a_real_application_executable(self):
         launcher = self.root / "launcher"
         launcher.write_bytes(b"native menu bar executable")
@@ -167,10 +167,28 @@ class InstallerTest(unittest.TestCase):
             self.assertTrue(stat.S_ISLNK(info.external_attr >> 16))
             self.assertEqual(packed.read(info), b"Versions/A")
 
-    def test_invalid_versions_and_fake_release_identities_fail_before_signing(self):
-        for value in ("main", "1.2", "1.2.3\nInjected=command", "../1.2.3"):
+    def test_invalid_versions_fail_before_packaging(self):
+        for value in (
+            "main",
+            "1.2",
+            "1.2.3\nInjected=command",
+            "../1.2.3",
+            "01.2.3",
+            "1.2.3-alpha_beta",
+            "1.2.3-01",
+            "1.2.3-alpha..1",
+            "app/vv1.2.3",
+        ):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 version_number(value)
-        for identity in ("-", "Apple Development: local", ""):
-            with self.subTest(identity=identity), self.assertRaises(ValueError):
-                sign_app(self.payload, identity)
+
+    def test_semantic_versions_map_to_numeric_installer_versions(self):
+        for value in (
+            "1.2.3",
+            "v1.2.3",
+            "app/v1.2.3",
+            "1.2.3-rc.1+build.2",
+            "app/v1.2.3+build.02",
+        ):
+            with self.subTest(value=value):
+                self.assertEqual(version_number(value), "1.2.3")

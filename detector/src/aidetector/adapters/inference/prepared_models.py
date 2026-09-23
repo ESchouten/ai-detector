@@ -14,6 +14,7 @@ import ultralytics
 from ultralytics import YOLO
 from ultralytics.utils.downloads import attempt_download_asset
 
+from aidetector.adapters.inference.export_settings import export_arguments
 from aidetector.adapters.inference.model_assets import MODEL_DOWNLOAD_HELP
 from aidetector.adapters.inference.onnx import InferenceOptions
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
@@ -61,15 +62,7 @@ def prepare_onnx(
     except ConnectionError:
         report_status(StatusEvent("preparation_failed", message=MODEL_DOWNLOAD_HELP))
         raise
-    arguments = {
-        "format": "onnx",
-        "batch": batch,
-        "dynamic": True,
-        "quantize": 16 if options.half else None,
-        "imgsz": config.imgsz,
-        "simplify": True,
-        "opset": onnx_config.opset,
-    }
+    arguments = export_arguments(config, onnx_config, batch, options)
     destination = cache / _cache_key(source, config.task, arguments)
     model_path = destination / "model.onnx"
     if model_path.is_file():

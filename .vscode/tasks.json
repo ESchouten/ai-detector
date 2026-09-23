@@ -183,8 +183,6 @@
         "--no-sync",
         "ruff",
         "check",
-        "--config",
-        "detector/pyproject.toml",
         "distribution"
       ],
       "options": {
@@ -204,8 +202,6 @@
         "ruff",
         "format",
         "--check",
-        "--config",
-        "detector/pyproject.toml",
         "distribution"
       ],
       "options": {
@@ -222,6 +218,8 @@
         "--project",
         "detector",
         "--no-sync",
+        "--with-requirements",
+        "distribution/requirements.txt",
         "python",
         "-m",
         "unittest",

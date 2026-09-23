@@ -1,4 +1,21 @@
-# Configuring presets
+# Configuration and presets
+
+## Settings ownership
+
+User settings live in the application's data directory, outside the installed binaries. The [application guide](../distribution/README.md#installation-and-data) lists its location on each platform.
+
+| File | Purpose | Code owner |
+| --- | --- | --- |
+| `config.json` | Sources, models, event rules, verification and delivery | Python [configuration models](../detector/src/aidetector/configuration.py); the web app validates with their generated schema |
+| `app.json` | Camera identities, labels, setup progress and notification metadata | Web [configuration validation](../web/src/lib/configuration.ts) and [configuration store](../web/src/lib/server/configuration/store.ts) |
+| `runtime.json` | Monitoring resume preference and native/Docker selection | Web [managed detector](../web/src/lib/server/managed-detector.ts) |
+| `presets.json` | Optional installation-specific choices for adding monitoring rules | Web [preset catalogue](../web/src/lib/server/configuration/preset-catalog.ts) |
+
+The `application.json` shipped beside the executable is build metadata, not user settings. Build dependencies and tool versions belong in the component manifests and `distribution/toolchain.json`, not in these runtime files.
+
+`config.schema.json` and `metadata.schema.json` are generated contracts. Edit their Python models, then run `uv run --project detector --no-sync generate-schema --output-directory config` from the repository root. Verify with the same command plus `--check`. Run `pnpm --dir web schema:generate` afterward to update the web's TypeScript declarations; `pnpm --dir web schema:check` verifies them without writing. Both checks run in CI. Do not maintain another detector schema in the web application.
+
+## Presets
 
 AI Detector's application handles camera connections, monitoring, recordings and delivery. A preset supplies the model, watched classes, event rules, display name and setup guidance. Model support follows the detector's supported YOLO detection/segmentation adapters and compatible exports; adding another inference framework still requires an adapter.
 

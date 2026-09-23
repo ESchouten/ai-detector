@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
@@ -9,38 +8,15 @@
 	import { cameraRuleNames } from '$lib/detector-editor';
 	import { getCameras } from '$lib/remote/stream.remote';
 	import { getDetectorPresets } from '$lib/remote/detector.remote';
-	import { getRuntime } from '$lib/remote/runtime.remote';
+	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import DetectorRuntime from '$lib/components/detector-runtime.svelte';
 	import CameraPicture from '$lib/components/camera-picture.svelte';
 	const cameras = $derived(await getCameras());
 	const { catalogue, warning: catalogueWarning } = await getDetectorPresets();
-	let runtime = $state(await getRuntime());
-	let connectionLost = $state(false);
-	let lastCheckedAt = $state(Date.now());
-	let now = $state(Date.now());
-	const stale = $derived(connectionLost || now - lastCheckedAt > 10000);
-	onMount(() => {
-		let active = true;
-		const clock = setInterval(() => (now = Date.now()), 1000);
-		let timer: ReturnType<typeof setTimeout>;
-		async function refresh() {
-			try {
-				await getRuntime().refresh();
-				runtime = await getRuntime();
-				connectionLost = false;
-				lastCheckedAt = Date.now();
-			} catch {
-				connectionLost = true;
-			}
-			if (active) timer = setTimeout(refresh, 3000);
-		}
-		timer = setTimeout(refresh, 3000);
-		return () => {
-			active = false;
-			clearTimeout(timer);
-			clearInterval(clock);
-		};
-	});
+	const monitor = useRuntimeStatus();
+	const initial = monitor.query.current ?? (await monitor.query);
+	const runtime = $derived(monitor.query.current ?? initial);
+	const stale = $derived(monitor.stale);
 </script>
 
 <svelte:head><title>Cameras · AI Detector</title></svelte:head>
@@ -64,8 +40,9 @@
 	{/if}
 	<DetectorRuntime configured={cameras.some((camera) => camera.monitored)} compact />
 	{#if stale}<p role="alert" class="text-sm text-destructive">
-			No recent status from the app. Last checked {new Date(lastCheckedAt).toLocaleTimeString()}.
-			Reopen AI Detector if it does not reconnect.
+			No recent status from the app. Last checked {new Date(
+				monitor.lastCheckedAt
+			).toLocaleTimeString()}. Reopen AI Detector if it does not reconnect.
 		</p>{/if}
 	<div class="grid gap-4 lg:grid-cols-2">
 		{#each cameras as camera (camera.id)}

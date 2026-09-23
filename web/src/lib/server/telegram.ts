@@ -1,3 +1,5 @@
+import { Api, GrammyError, HttpError } from 'grammy/web';
+import type { Update } from 'grammy/types';
 import * as v from 'valibot';
 import { ConfigurationError } from '../configuration.ts';
 import type { TelegramRecipient } from '../telegram.ts';
@@ -37,47 +39,53 @@ function result<T extends v.GenericSchema>(schema: T, value: unknown): v.InferOu
 	return parsed.output;
 }
 
-async function request(
-	token: string,
-	method: string,
-	body: Record<string, unknown> = {},
-	signal?: AbortSignal
-) {
-	let response: Response;
+function api(token: string, signal?: AbortSignal): Api {
+	const client = new Api(token, { fetch: globalThis.fetch, timeoutSeconds: 10 });
+	// grammy/web uses native signals; its declarations still name the Node polyfill.
+	const sdkSignal = signal as Parameters<Api['getMe']>[0];
+	// The SDK supplies API types; validate external replies at the integration boundary.
+	client.config.use(async (previous, method, payload) => {
+		const reply = await previous(method, payload, sdkSignal);
+		result(responseSchema, reply);
+		return reply;
+	});
+	return client;
+}
+
+async function request<T>(operation: Promise<T>, signal?: AbortSignal): Promise<T> {
 	try {
-		response = await fetch(`https://api.telegram.org/bot${token}/${method}`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(body),
-			signal: signal
-				? AbortSignal.any([signal, AbortSignal.timeout(10000)])
-				: AbortSignal.timeout(10000)
-		});
+		const reply = await operation;
+		signal?.throwIfAborted();
+		return reply;
 	} catch (cause) {
 		signal?.throwIfAborted();
-		if (cause instanceof TypeError || (cause instanceof Error && cause.name === 'TimeoutError'))
+		if (cause instanceof GrammyError) throw apiError(cause);
+		if (cause instanceof HttpError) {
+			if (cause.error instanceof SyntaxError)
+				throw new ConfigurationError(
+					'Telegram returned an unexpected reply. Please try again later.'
+				);
 			throw new ConfigurationError(
 				'Telegram could not be reached. Check this computer’s internet connection, then try again. Local monitoring can continue without alerts.'
 			);
+		}
 		throw cause;
 	}
-	const payload = await response.json().catch(() => undefined);
-	signal?.throwIfAborted();
-	const reply = result(responseSchema, payload);
-	if (reply.error_code === 401 || (method === 'getMe' && reply.error_code === 404))
-		throw new ConfigurationError(
+}
+
+function apiError(error: GrammyError): ConfigurationError {
+	if (error.error_code === 401 || (error.method === 'getMe' && error.error_code === 404))
+		return new ConfigurationError(
 			'This bot token is not valid. Copy the current token from BotFather.'
 		);
-	if (reply.error_code === 409)
-		throw new ConfigurationError(
+	if (error.error_code === 409)
+		return new ConfigurationError(
 			'This bot is receiving messages in another application or has a webhook. Use a dedicated bot for AI Detector, or enter its chat ID manually.'
 		);
-	if (!reply.ok)
-		throw new ConfigurationError(
-			reply.description ??
-				'Telegram could not complete this request. Check your bot token and try again.'
-		);
-	return reply.result;
+	return new ConfigurationError(
+		error.description ??
+			'Telegram could not complete this request. Check your bot token and try again.'
+	);
 }
 
 export async function getTelegramBot(token: string, signal?: AbortSignal) {
@@ -87,7 +95,7 @@ export async function getTelegramBot(token: string, signal?: AbortSignal) {
 			first_name: v.string(),
 			username: v.pipe(v.string(), v.regex(/^[A-Za-z0-9_]+$/))
 		}),
-		await request(token, 'getMe', {}, signal)
+		await request(api(token, signal).getMe(), signal)
 	);
 	return { name: bot.first_name, username: bot.username };
 }
@@ -95,7 +103,7 @@ export async function getTelegramBot(token: string, signal?: AbortSignal) {
 export async function assertTelegramPollingAvailable(token: string, signal?: AbortSignal) {
 	const webhook = result(
 		v.object({ url: v.string() }),
-		await request(token, 'getWebhookInfo', {}, signal)
+		await request(api(token, signal).getWebhookInfo(), signal)
 	);
 	if (webhook.url)
 		throw new ConfigurationError(
@@ -105,19 +113,21 @@ export async function assertTelegramPollingAvailable(token: string, signal?: Abo
 
 export async function getTelegramUpdates(
 	token: string,
-	options: { offset?: number; signal?: AbortSignal; allowedUpdates?: string[] } = {}
+	options: {
+		offset?: number;
+		signal?: AbortSignal;
+		allowedUpdates?: Exclude<keyof Update, 'update_id'>[];
+	} = {}
 ) {
 	return result(
 		updatesSchema,
 		await request(
-			token,
-			'getUpdates',
-			{
+			api(token, options.signal).getUpdates({
 				timeout: 3,
 				limit: 100,
-				...(options.offset === undefined ? {} : { offset: options.offset }),
-				...(options.allowedUpdates ? { allowed_updates: options.allowedUpdates } : {})
-			},
+				offset: options.offset,
+				allowed_updates: options.allowedUpdates
+			}),
 			options.signal
 		)
 	);
@@ -145,8 +155,10 @@ export async function findTelegramChats(token: string) {
 }
 
 export async function sendTelegramTest(token: string, chat: string): Promise<void> {
-	await request(token, 'sendMessage', {
-		chat_id: chat,
-		text: 'AI Detector setup test. If you received this message on the intended device, confirm receipt in AI Detector to enable alerts.'
-	});
+	await request(
+		api(token).sendMessage(
+			chat,
+			'AI Detector setup test. If you received this message on the intended device, confirm receipt in AI Detector to enable alerts.'
+		)
+	);
 }

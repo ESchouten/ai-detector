@@ -158,6 +158,8 @@ Defaults are deterministic. Invalid bounds, empty source/model lists, misspelled
 
 Health and webhook destinations use Pydantic's strict `AnyHttpUrl` validation at this boundary. Malformed schemes, hosts, ports and URLs that need repair are rejected with a static diagnostic. The validated input string is retained, including credentials, IPv6 literals, encoded queries and fragments; URL normalization does not rewrite it.
 
+Source URLs use the same strict Pydantic boundary with `AnyUrl` constrained to the supported camera/media protocols and a required host. Invalid ports, hostnames and embedded control characters fail before capture starts. The classifier still owns camera indices, local media extensions, HTTP image rejection and finite/live grouping; accepted source strings retain their original representation.
+
 Disk categories are single directory names, validated by the same constraint in Python and the generated JSON schema. This preserves the web reader's `detections/<category>/<stage>/<timestamp>/` layout.
 
 ## Resource ownership
@@ -171,6 +173,8 @@ A detector's pipeline owns event assembly; its YOLO adapter owns tracking state.
 Bootstrap gives workers a diagnostic name from configuration order (`detector-1`, `detector-2`, and so on). Processing and delivery threads carry that name, and the CLI includes the thread name in each log line. A worker restores its caller's thread name on exit, including failure. Shared capture/health work retains a separate identity because it does not belong to one detector.
 
 Bootstrap enters `inference_runtime` once per application run, then `open_detector` for each configured YOLO model. These context functions own resources in lexical cleanup scopes. `open_detector` yields a ready `YoloDetector` and releases both its predictor and tracking-frame cache; bootstrap never constructs or separately closes the raw SDK model. Class-validation and later startup failures release the predictor before `inference_runtime` restores session hooks, environment and provider libraries. Export-only Torch weights are released when the exported model replaces them, before inference starts. Selected precision applies to export and predictor construction through the SDK's `quantize` option.
+
+Within the YOLO adapter, conversion selection, SDK model loading and predictor initialization are explicit functions. `export_settings.py` defines the conversion arguments used by both direct exports and `prepared_models.py`'s cache; the same settings participate in the cache identity. `open_detector` retains the complete resource lifetime, including cleanup after a helper fails. This separation does not change provider selection, precision, cache keys or inference behavior.
 
 Expected live-source failures reconnect with an interruptible delay. Invalid config and programming errors do not enter an endless restart loop. Source failure, delivery failure, and intentional user shutdown are distinguishable. The supervisor observes delivery results during signal-driven draining as well. Health pings stop with the detector, including when finite inputs end normally; unexpected health-worker errors reach the supervisor.
 
@@ -202,7 +206,7 @@ Ultralytics also handles cross-platform paths inside Torch checkpoints. The adap
 
 The runtime lockfile is authoritative for development/test environments. Direct application dependencies are declared explicitly; platform extras provide one ONNX implementation each. The source distribution has an explicit file list to prevent local research data, recordings, model weights, and virtual environments from entering packages.
 
-The complete maintainability review, completed changes, and retained tradeoffs are in [REVIEW.md](REVIEW.md). Enforced limits and current measurements are in [QUALITY.md](QUALITY.md).
+The historical maintainability review and its design decisions are in [REVIEW.md](../docs/history/detector/REVIEW.md). Enforced limits, measurement commands and a dated baseline are in [QUALITY.md](QUALITY.md).
 
 ## Desktop application integration
 

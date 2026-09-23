@@ -17,8 +17,6 @@ permissions:
 env:
   UV_PYTHON: "3.11"
   LITELLM_LOCAL_MODEL_COST_MAP: "true"
-  PYINSTALLER_ARGS: --onefile --collect-all ultralytics --collect-all litellm --collect-all imageio_ffmpeg --collect-all onnxruntime --collect-all onnx --hidden-import=tiktoken_ext.openai_public --hidden-import=tiktoken_ext --paths src --clean --noconfirm
-  VERSION_FILE: src/aidetector/version.py
 
 jobs:
   build:
@@ -211,21 +209,17 @@ jobs:
           - job_name: Windows WindowsML Executable
             artifact_prefix: aidetector-winml
             type: windowsml
-            uv_run_args: --locked --extra windowsml
-            pyinstaller_args: --collect-all winui3 --collect-all winrt
             needs_cuda_install: false
             publish_release_asset: "true"
           - job_name: Windows CUDA 13.0 Executable
             artifact_prefix: aidetector-cuda130
             type: cuda
-            uv_run_args: --no-sync
             needs_cuda_install: true
             cuda_index_url: https://download.pytorch.org/whl/cu130
             publish_release_asset: "false"
           - job_name: Windows CUDA 12.6 Executable
             artifact_prefix: aidetector-cuda126
             type: cuda
-            uv_run_args: --no-sync
             needs_cuda_install: true
             cuda_index_url: https://download.pytorch.org/whl/cu126
             publish_release_asset: "false"
@@ -265,9 +259,9 @@ jobs:
 
       - name: Build Executable
         run: |
-          echo 'TYPE = "${{ matrix.type }}"' > ${{ env.VERSION_FILE }}
-          echo 'REF_NAME = "${{ github.ref_name }}"' >> ${{ env.VERSION_FILE }}
-          uv run ${{ matrix.uv_run_args }} pyinstaller src/aidetector/__main__.py --name $env:ARTIFACT_NAME ${{ env.PYINSTALLER_ARGS }} ${{ matrix.pyinstaller_args }}
+          $arguments = @('detector', '--platform', 'windows-x64', '--onefile', '--name', $env:ARTIFACT_NAME, '--type', '${{ matrix.type }}')
+          if ('${{ matrix.needs_cuda_install }}' -eq 'true') { $arguments += '--skip-dependencies' }
+          python ../distribution/build.py @arguments
 
       - name: Executable smoke test
         run: |
@@ -331,9 +325,7 @@ jobs:
 
       - name: Build Executable
         run: |
-          echo 'TYPE = "default"' > ${{ env.VERSION_FILE }}
-          echo 'REF_NAME = "${{ github.ref_name }}"' >> ${{ env.VERSION_FILE }}
-          uv run --locked --extra default pyinstaller src/aidetector/__main__.py --name "${ARTIFACT_NAME}.command" ${{ env.PYINSTALLER_ARGS }}
+          python ../distribution/build.py detector --platform macos-arm64 --onefile --name "${ARTIFACT_NAME}.command"
 
       - name: Executable smoke test
         run: |

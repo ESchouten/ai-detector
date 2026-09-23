@@ -1,8 +1,7 @@
 diff --git a/dist/index.js b/dist/index.js
-index 87f9cb2cf7a8471df032cbea70f28e61cc7b429d..6c4dec0c236975ea897095602a36d9c9b3759cb7 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -89,7 +89,7 @@ function generateAssetImports(assets) {
+@@ -89,7 +89,7 @@
  }
  
  // src/utils/compile.ts
@@ -11,7 +10,7 @@ index 87f9cb2cf7a8471df032cbea70f28e61cc7b429d..6c4dec0c236975ea897095602a36d9c9
  import { join as join2 } from "path";
  import { stat as stat2 } from "fs/promises";
  async function compileApplication(builder, options) {
-@@ -113,16 +113,24 @@ async function compileApplication(builder, options) {
+@@ -113,16 +113,17 @@
      builder.log.error("Bun is not installed. Please install Bun and try again.");
      process.exit(1);
    }
@@ -19,14 +18,7 @@ index 87f9cb2cf7a8471df032cbea70f28e61cc7b429d..6c4dec0c236975ea897095602a36d9c9
    const compileArgs = [
      "build",
      "--compile",
-+    ...(isWindows ? [
-+      "--windows-hide-console",
-+      "--windows-icon=../distribution/windows/artwork/app.ico",
-+      "--windows-title=AI Detector",
-+      "--windows-publisher=AI Detector",
-+      "--windows-description=AI Detector camera monitoring",
-+      `--windows-version=${process.env.APP_VERSION ?? "0.0.0"}`
-+    ] : []),
++    ...(options.compileArgs ?? []),
      ...options.target ? [`--target=${TARGETS_MAP[options.target]}`] : [],
      join2(SVELTEKIT_DIR, "temp-server/index.ts"),
      "--outfile",
@@ -39,376 +31,90 @@ index 87f9cb2cf7a8471df032cbea70f28e61cc7b429d..6c4dec0c236975ea897095602a36d9c9
    const binaryPath = join2(options.out, options.binaryName + (isWindows ? ".exe" : ""));
    const { size: sizeInBytes } = await stat2(binaryPath);
    const sizeInMb = (sizeInBytes / (1024 * 1024)).toFixed(1);
-@@ -177,6 +185,8 @@ var adapter = (options) => {
+@@ -177,6 +178,7 @@
        builder.log.success("[JesterKit] SvelteKit build complete");
        const path = join4(import.meta.dirname, "server");
        builder.copy(path, join4(SVELTEKIT_DIR, "temp-server"));
-+      builder.copy(join4("..", "distribution", "desktop-instance.ts"), join4(SVELTEKIT_DIR, "temp-server", "desktop-instance.ts"));
-+      builder.copy(join4("..", "distribution", "windows-tray.ts"), join4(SVELTEKIT_DIR, "temp-server", "windows-tray.ts"));
++      builder.copy(adapterOptions.runtimeDirectory, join4(SVELTEKIT_DIR, "temp-server", "desktop"));
        builder.log.success("[JesterKit] Server copied");
        const manifest = builder.generateManifest({ relativePath: "./server" });
        const manifestModule = `const manifest = ${manifest};
 diff --git a/dist/server/index.ts b/dist/server/index.ts
-index b612b3fa0d80710e313335cc0b1843f0d7519031..13b3f2dcde499fce04c8d2798f2445320eca4536 100644
 --- a/dist/server/index.ts
 +++ b/dist/server/index.ts
-@@ -1,7 +1,12 @@
+@@ -1,5 +1,6 @@
  ﻿// Libs
  import { file } from "bun";
-+import { createSocket, type Socket } from "node:dgram";
-+import { spawn } from "node:child_process";
-+import { hostname, networkInterfaces } from "node:os";
++import { startDesktop } from "./desktop/runtime.ts";
  import path from "node:path";
--import { execPath } from "process";
-+import { execPath, platform } from "process";
-+import { DesktopInstance, dataDirectory } from "./desktop-instance.ts";
-+import { startWindowsTray } from "./windows-tray.ts";
+ import { execPath } from "process";
  
- // @ts-ignore
- import { assetMap } from "./assets.generated.ts";
-@@ -11,9 +16,17 @@ import type { Server as ServerType } from "@sveltejs/kit";
+@@ -11,9 +12,8 @@
  import type { SSRManifest } from "@sveltejs/kit";
  
  // Variables
 -const manifest = await getSvelteKitManifest();
 -const prerenderedRoutes = await getPrerenderedRoutes(manifest);
 -const svelteKitServer = await instantiateServer(manifest);
-+if (process.argv.includes("--background")) process.env.OPEN_BROWSER = "false";
-+process.env.AIDETECTOR_DATA_DIR = dataDirectory();
-+const instance = new DesktopInstance(process.env.AIDETECTOR_DATA_DIR);
-+const port = process.env.PORT ? Number(process.env.PORT) : 8765;
-+const browserUrl = `http://127.0.0.1:${port}/`;
-+if (process.argv.includes("--quit")) {
-+	process.exit(await instance.existing(port, true) ? 0 : 1);
-+}
 +let manifest: SSRManifest;
-+let prerenderedRoutes: string[] = [];
-+let svelteKitServer: ServerType | undefined;
++let prerenderedRoutes: string[];
  const staticServer = {
  	respond: async (req: Request) => {
  		const url = new URL(req.url);
-@@ -90,11 +103,18 @@ async function getFile(pathname: string) {
+@@ -90,45 +90,15 @@
  	}
  }
  
-+let mdnsSocket: Socket | undefined;
-+let closeTray: (() => Promise<void>) | undefined;
-+let shuttingDown = false;
- async function gracefulShutdown(reason: 'SIGINT' | 'SIGTERM') {
-+	if (shuttingDown) return;
-+	shuttingDown = true;
- 	console.info('Stopping server...');
+-async function gracefulShutdown(reason: 'SIGINT' | 'SIGTERM') {
+-	console.info('Stopping server...');
 -	// @ts-expect-error custom events cannot be typed
 -	process.emit('sveltekit:shutdown', reason);
-+	await Promise.all(process.rawListeners('sveltekit:shutdown').map(listener => listener.call(process, reason)));
-+
-+	mdnsSocket?.close();
- 	await server.stop(true);
-+	await closeTray?.();
- 	console.info('Stopped server');
- 
- 	process.removeListener('SIGINT', gracefulShutdown);
-@@ -104,11 +124,260 @@ async function gracefulShutdown(reason: 'SIGINT' | 'SIGTERM') {
- process.on('SIGTERM', gracefulShutdown);
- process.on('SIGINT', gracefulShutdown);
- 
+-	await server.stop(true);
+-	console.info('Stopped server');
+-
+-	process.removeListener('SIGINT', gracefulShutdown);
+-	process.removeListener('SIGTERM', gracefulShutdown);
+-}
+-
+-process.on('SIGTERM', gracefulShutdown);
+-process.on('SIGINT', gracefulShutdown);
+-
 -const server = Bun.serve({
 -	port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
 -	hostname: "0.0.0.0",
-+function openBrowser(url: string, requested = false) {
-+	if (!requested && process.env.OPEN_BROWSER?.trim().toLowerCase() === "false") return;
-+
-+	const command =
-+		platform === "win32" ? "cmd" : platform === "darwin" ? "open" : "xdg-open";
-+	const args = platform === "win32" ? ["/c", "start", "", url] : [url];
-+
-+	try {
-+		const child = spawn(command, args, { detached: true, stdio: "ignore", windowsHide: true });
-+		child.on("error", () => console.warn(`Open ${url} in your browser to continue setup.`));
-+		child.unref();
-+	} catch (error) {
-+		console.warn(`Could not open browser for ${url}:`, error);
-+	}
-+}
-+
-+type LanAddress = {
-+	address: string;
-+	interfaceName: string;
-+	netmask: string;
-+};
-+
-+const MDNS_ADDRESS = "224.0.0.251";
-+const MDNS_PORT = 5353;
-+
-+function getLanAddresses(peerAddress?: string) {
-+	return getLanAddressEntries(peerAddress).map((entry) => entry.address);
-+}
-+
-+function getLanAddressEntries(peerAddress?: string) {
-+	const entries: LanAddress[] = [];
-+
-+	for (const [interfaceName, interfaceEntries] of Object.entries(networkInterfaces())) {
-+		for (const entry of interfaceEntries ?? []) {
-+			if (entry.family !== "IPv4" || entry.internal) continue;
-+			if (entry.address.startsWith("169.254.")) continue;
-+			entries.push({ address: entry.address, interfaceName, netmask: entry.netmask });
-+		}
-+	}
-+
-+	const physicalEntries = entries.filter((entry) => !isVirtualInterface(entry.interfaceName));
-+	const candidates = physicalEntries.length ? physicalEntries : entries;
-+	const sameSubnetEntries = peerAddress
-+		? candidates.filter((entry) => isSameSubnet(entry.address, peerAddress, entry.netmask))
-+		: [];
-+
-+	return (sameSubnetEntries.length ? sameSubnetEntries : candidates).sort(
-+		(a, b) =>
-+			Number(isPrivateAddress(b.address)) - Number(isPrivateAddress(a.address)) ||
-+			a.address.localeCompare(b.address, undefined, { numeric: true })
-+	);
-+}
-+
-+function getLanUrls(portSuffix: string) {
-+	return getLanAddresses().map((address) => `http://${address}${portSuffix}`);
-+}
-+
-+function isPrivateAddress(address: string) {
-+	return /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(address);
-+}
-+
-+function isVirtualInterface(name: string) {
-+	return /(?:loopback|docker|veth|vEthernet|virtual|vmware|virtualbox|vbox|hyper-v|wsl|tailscale|zerotier|vpn|tap|tunnel|utun|bridge|br-)/i.test(
-+		name
-+	);
-+}
-+
-+function isSameSubnet(address: string, peerAddress: string, netmask: string) {
-+	const addressNumber = ipv4ToNumber(address);
-+	const peerNumber = ipv4ToNumber(peerAddress);
-+	const maskNumber = ipv4ToNumber(netmask);
-+	if (addressNumber === null || peerNumber === null || maskNumber === null) return false;
-+	return (addressNumber & maskNumber) === (peerNumber & maskNumber);
-+}
-+
-+function ipv4ToNumber(address: string) {
-+	const parts = address.split(".").map(Number);
-+	if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) {
-+		return null;
-+	}
-+	return parts.reduce((value, part) => (value << 8) + part, 0) >>> 0;
-+}
-+
-+function startMdnsResponder(localHost: string) {
-+	const mdnsHost = localHost.toLowerCase();
-+	const socket = createSocket({ type: "udp4", reuseAddr: true });
-+	socket.once("close", () => { if (mdnsSocket === socket) mdnsSocket = undefined; });
-+
-+	socket.on("error", (error) => {
-+		console.warn(`Could not start mDNS responder for ${localHost}:`, error);
-+		socket.close();
-+	});
-+
-+	socket.on("message", (message, remote) => {
-+		const response = createMdnsResponse(message, mdnsHost, remote.address);
-+		if (!response) return;
-+		socket.send(response, 0, response.length, remote.port, remote.address);
-+		sendMdnsMulticast(socket, response);
-+	});
-+
-+	socket.bind(MDNS_PORT, () => {
-+		try {
-+			socket.setMulticastTTL(255);
-+			socket.setMulticastLoopback(false);
-+			const entries = getLanAddressEntries();
-+			for (const entry of entries) {
-+				try {
-+					socket.addMembership(MDNS_ADDRESS, entry.address);
-+				} catch (error) {
-+					console.warn(`Could not join mDNS on ${entry.interfaceName} (${entry.address}):`, error);
-+				}
-+			}
-+			if (!entries.length) socket.addMembership(MDNS_ADDRESS);
-+			const announcement = createMdnsAnnouncement(mdnsHost);
-+			if (announcement) sendMdnsMulticast(socket, announcement);
-+			console.log(`🏷️ mDNS responder: http://${localHost}`);
-+		} catch (error) {
-+			console.warn(`Could not announce ${localHost} over mDNS:`, error);
-+		}
-+	});
-+	return socket;
-+}
-+
-+function sendMdnsMulticast(socket: Socket, message: Buffer) {
-+	const entries = getLanAddressEntries();
-+	if (!entries.length) {
-+		socket.send(message, 0, message.length, MDNS_PORT, MDNS_ADDRESS);
-+		return;
-+	}
-+
-+	let sent = false;
-+	for (const entry of entries) {
-+		try {
-+			socket.setMulticastInterface(entry.address);
-+			socket.send(message, 0, message.length, MDNS_PORT, MDNS_ADDRESS);
-+			sent = true;
-+		} catch (error) {
-+			console.warn(`Could not send mDNS on ${entry.interfaceName} (${entry.address}):`, error);
-+		}
-+	}
-+	if (!sent) socket.send(message, 0, message.length, MDNS_PORT, MDNS_ADDRESS);
-+}
-+
-+function createMdnsAnnouncement(hostname: string) {
-+	const addresses = getLanAddresses();
-+	if (!addresses.length) return null;
-+
-+	const name = encodeDnsName(hostname);
-+	const answers = addresses.map((address) => createARecord(name, address, 120));
-+	return createDnsMessage(0, Buffer.alloc(0), answers);
-+}
-+
-+function createMdnsResponse(query: Buffer, hostname: string, peerAddress: string) {
-+	if (query.length < 12) return null;
-+
-+	const questionCount = query.readUInt16BE(4);
-+	let offset = 12;
-+	const questions: { name: Buffer; type: number; raw: Buffer }[] = [];
-+
-+	for (let index = 0; index < questionCount; index += 1) {
-+		const parsedName = readDnsName(query, offset);
-+		if (!parsedName) return null;
-+		offset = parsedName.offset;
-+		if (offset + 4 > query.length) return null;
-+
-+		const type = query.readUInt16BE(offset);
-+		const raw = query.subarray(parsedName.start, offset + 4);
-+		offset += 4;
-+		questions.push({ name: parsedName.nameBuffer, type, raw });
-+	}
-+
-+	const addresses = getLanAddresses(peerAddress);
-+	if (!addresses.length) return null;
-+
-+	const answers: Buffer[] = [];
-+	for (const question of questions) {
-+		const name = decodeDnsName(question.name).toLowerCase();
-+		if (name !== hostname || (question.type !== 1 && question.type !== 255)) continue;
-+		for (const address of addresses) answers.push(createARecord(question.name, address, 120));
-+	}
-+	if (!answers.length) return null;
-+
-+	const questionsBuffer = Buffer.concat(questions.map((question) => question.raw));
-+	return createDnsMessage(query.readUInt16BE(0), questionsBuffer, answers, questions.length);
-+}
-+
-+function createDnsMessage(id: number, questions: Buffer, answers: Buffer[], questionCount = 0) {
-+	const header = Buffer.alloc(12);
-+	header.writeUInt16BE(id, 0);
-+	header.writeUInt16BE(0x8400, 2);
-+	header.writeUInt16BE(questionCount, 4);
-+	header.writeUInt16BE(answers.length, 6);
-+	return Buffer.concat([header, questions, ...answers]);
-+}
-+
-+function createARecord(name: Buffer, address: string, ttl: number) {
-+	const record = Buffer.alloc(10);
-+	record.writeUInt16BE(1, 0);
-+	record.writeUInt16BE(0x8001, 2);
-+	record.writeUInt32BE(ttl, 4);
-+	record.writeUInt16BE(4, 8);
-+	return Buffer.concat([name, record, Buffer.from(address.split(".").map(Number))]);
-+}
-+
-+function encodeDnsName(name: string) {
-+	const parts = name.replace(/\.$/, "").split(".");
-+	return Buffer.concat([
-+		...parts.map((part) => Buffer.concat([Buffer.from([Buffer.byteLength(part)]), Buffer.from(part)])),
-+		Buffer.from([0])
-+	]);
-+}
-+
-+function readDnsName(message: Buffer, offset: number) {
-+	const start = offset;
-+	while (offset < message.length) {
-+		const length = message[offset];
-+		if ((length & 0xc0) !== 0) return null;
-+		offset += 1;
-+		if (length === 0) {
-+			const nameBuffer = message.subarray(start, offset);
-+			return { nameBuffer, offset, start };
-+		}
-+		if (offset + length > message.length) return null;
-+		offset += length;
-+	}
-+
-+	return null;
-+}
-+
-+function decodeDnsName(name: Buffer) {
-+	const parts: string[] = [];
-+	let offset = 0;
-+
-+	while (offset < name.length) {
-+		const length = name[offset];
-+		offset += 1;
-+		if (length === 0) break;
-+		parts.push(name.subarray(offset, offset + length).toString("utf8"));
-+		offset += length;
-+	}
-+
-+	return parts.join(".");
-+}
-+
-+let server: ReturnType<typeof Bun.serve>;
-+try {
-+server = Bun.serve({
-+	port,
-+	hostname: process.env.HOST || "127.0.0.1",
- 	idleTimeout: process.env.BUN_IDLE_TIMEOUT ? parseInt(process.env.BUN_IDLE_TIMEOUT) : 255,
- 	async fetch(req: Request, bunServer: Bun.Server) {
-+		if (!svelteKitServer) return new Response("Starting AI Detector…", { status: 503 });
-+		const control = instance.respond(req, () => { void gracefulShutdown('SIGTERM'); });
-+		if (control) return control;
- 		// Handle static assets
- 		const staticResponse = await staticServer.respond(req);
- 		if (staticResponse) return staticResponse;
-@@ -131,4 +400,38 @@ const server = Bun.serve({
- 	},
+-	idleTimeout: process.env.BUN_IDLE_TIMEOUT ? parseInt(process.env.BUN_IDLE_TIMEOUT) : 255,
+-	async fetch(req: Request, bunServer: Bun.Server) {
+-		// Handle static assets
+-		const staticResponse = await staticServer.respond(req);
+-		if (staticResponse) return staticResponse;
+-
+-		// Handle other routes (SSR, API endpoints, etc.)
+-		return await svelteKitServer.respond(req, {
+-			getClientAddress() {
+-				return bunServer.requestIP(req)?.address || "127.0.0.1";
+-			},
+-		});
+-	},
+-	error(e: Error) {
+-		return Response.json(
+-			{
+-				code: 500,
+-				message: "Something went wrong",
+-			},
+-			{ status: 500 }
+-		);
+-	},
++await startDesktop(async () => {
++    manifest = await getSvelteKitManifest();
++    prerenderedRoutes = await getPrerenderedRoutes(manifest);
++    const svelteKitServer = await instantiateServer(manifest);
++    return async (req, bunServer) => {
++        const staticResponse = await staticServer.respond(req);
++        if (staticResponse) return staticResponse;
++        return svelteKitServer.respond(req, {
++            getClientAddress() { return bunServer.requestIP(req)?.address || "127.0.0.1"; }
++        });
++    };
  });
- 
+-
 -console.log(`💿 Listening on http://localhost:${server.port}`);
-+} catch (error) {
-+	if ((error as NodeJS.ErrnoException).code === "EADDRINUSE" && await instance.existing(port)) {
-+		openBrowser(browserUrl);
-+		process.exit(0);
-+	}
-+	const message = `AI Detector cannot open its dashboard on port ${port}. Another application may be using that port. Close the other application and reopen AI Detector.`;
-+	if (platform === "win32" && process.env.OPEN_BROWSER !== "false") {
-+		const dialog = spawn("powershell.exe", ["-NoProfile", "-Command", `Add-Type -AssemblyName PresentationFramework; [System.Windows.MessageBox]::Show('${message}', 'AI Detector')`], { stdio: "ignore", windowsHide: true });
-+		await new Promise<void>(resolve => { dialog.once("exit", () => resolve()); dialog.once("error", () => resolve()); });
-+	}
-+	throw new Error(message, { cause: error });
-+}
-+instance.publish(server.port);
-+process.once("exit", () => instance.remove());
-+manifest = await getSvelteKitManifest();
-+prerenderedRoutes = await getPrerenderedRoutes(manifest);
-+svelteKitServer = await instantiateServer(manifest);
-+// Source-mode fixtures have no bundled desktop helper.
-+if (platform === "win32" && Bun.embeddedFiles.length > 0) {
-+	closeTray = startWindowsTray(() => openBrowser(browserUrl, true), () => { void gracefulShutdown('SIGTERM'); });
-+}
-+
-+const localHostname = hostname().trim().replace(/\.$/, "");
-+const localHost = localHostname.toLowerCase().endsWith(".local") ? localHostname : `${localHostname}.local`;
-+const portSuffix = server.port === 80 ? "" : `:${server.port}`;
-+const localNameUrl = localHostname ? `http://${localHost}${portSuffix}` : null;
-+const lanUrls = getLanUrls(portSuffix);
-+
-+console.log(`AI Detector is ready at ${browserUrl}`);
-+console.log("Keep this application open while detection is needed.");
-+openBrowser(browserUrl);
-+if (process.env.HOST === "0.0.0.0") {
-+    for (const url of lanUrls) console.log(`LAN URL: ${url}`);
-+    if (localNameUrl) mdnsSocket = startMdnsResponder(localHost);
-+}

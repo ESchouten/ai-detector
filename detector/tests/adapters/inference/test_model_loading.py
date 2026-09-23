@@ -70,6 +70,32 @@ def test_export_model_is_released_before_inference_starts(model_sdk):
     assert model.predictor is None
 
 
+@pytest.mark.parametrize(
+    "build_type, model_format", [("default", "onnx"), ("tensorrt", "engine")]
+)
+def test_conversion_passes_the_selected_format_and_settings_to_the_sdk(
+    model_sdk, build_type, model_format
+):
+    with open_detector(
+        YoloConfig(model="weights.pt", imgsz=128),
+        OnnxConfig(opset=19),
+        ("camera-1", "camera-2"),
+        build_type,
+        InferenceOptions(half=True),
+    ):
+        assert model_sdk.exports == [
+            {
+                "format": model_format,
+                "batch": 2,
+                "dynamic": True,
+                "quantize": 16,
+                "imgsz": 128,
+                "simplify": True,
+                "opset": 19,
+            }
+        ]
+
+
 @pytest.mark.parametrize("half", [False, True])
 def test_native_model_precision_is_selected_when_the_predictor_is_created(
     model_sdk, half

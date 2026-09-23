@@ -4,14 +4,15 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Annotated, Literal
-from urllib.parse import urlsplit
 
 from pydantic import (
     AnyHttpUrl,
+    AnyUrl,
     BaseModel,
     ConfigDict,
     Field,
     TypeAdapter,
+    UrlConstraints,
     ValidationError,
     field_validator,
 )
@@ -30,6 +31,15 @@ ProbabilityMap = Annotated[dict[NonEmptyString, Probability], Field(min_length=1
 DurationMap = Annotated[dict[NonEmptyString, Duration], Field(min_length=1)]
 HttpMethod = Literal["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"]
 _HTTP_URL = TypeAdapter(AnyHttpUrl)
+_SOURCE_URL = TypeAdapter(
+    Annotated[
+        AnyUrl,
+        UrlConstraints(
+            allowed_schemes=["rtsp", "rtsps", "http", "https", "tcp", "udp"],
+            host_required=True,
+        ),
+    ]
+)
 
 
 SourceKind = Literal["image", "video", "stream"]
@@ -68,16 +78,14 @@ def source_kind(source: str) -> SourceKind:
             )
         return kind
     try:
-        url = urlsplit(source)
-    except ValueError:
-        raise ValueError("Source URL is invalid") from None
-    if url.scheme not in {"rtsp", "rtsps", "http", "https", "tcp", "udp"}:
-        raise ValueError("Unsupported source URL; use RTSP, HTTP(S), TCP, or UDP")
-    if not url.hostname:
-        raise ValueError("Source URL needs a host")
+        url = _SOURCE_URL.validate_python(source, strict=True)
+    except ValidationError:
+        raise ValueError(
+            "Source URL is invalid; use RTSP, HTTP(S), TCP, or UDP with a valid host and port"
+        ) from None
     if url.scheme not in {"http", "https"}:
         return "stream"
-    kind = _MEDIA_KINDS.get(Path(url.path).suffix.lower(), "stream")
+    kind = _MEDIA_KINDS.get(Path(url.path or "").suffix.lower(), "stream")
     if kind == "image":
         raise ValueError("HTTP image sources are not supported; use a local image file")
     return kind

@@ -208,11 +208,17 @@ for (const [range, status, body, contentRange] of [
 	['bytes=2-5', 206, '2345', 'bytes 2-5/10'],
 	['bytes=7-', 206, '789', 'bytes 7-9/10'],
 	['bytes=-3', 206, '789', 'bytes 7-9/10'],
+	['bytes=-99', 206, '0123456789', 'bytes 0-9/10'],
+	['bytes=0-0', 206, '0', 'bytes 0-0/10'],
 	['bytes=7-99', 206, '789', 'bytes 7-9/10'],
 	['bytes=10-', 416, '', 'bytes */10'],
 	['bytes=5-2', 416, '', 'bytes */10'],
 	['bytes=-0', 416, '', 'bytes */10'],
 	['bytes=0-1,4-5', 200, '0123456789', null],
+	['bytes=0-1,2-3', 200, '0123456789', null],
+	['items=10-', 200, '0123456789', null],
+	['bytes=word-3', 200, '0123456789', null],
+	['bytes=-', 200, '0123456789', null],
 	['invalid', 200, '0123456789', null]
 ] as const) {
 	test(`archive media serves ${range ?? 'a full file'} with status ${status}`, async (t) => {
@@ -231,6 +237,22 @@ for (const [range, status, body, contentRange] of [
 		}
 	});
 }
+
+test('empty media has no satisfiable byte range', async (t) => {
+	const { root, event } = await fixture(t);
+	await truncate(path.join(event, 'video.mp4'), 0);
+	const full = await archiveMedia(root, location, new Request('http://localhost'));
+	assert.equal(full.status, 200);
+	assert.equal(full.headers.get('content-length'), '0');
+	assert.equal(await full.text(), '');
+	const partial = await archiveMedia(
+		root,
+		location,
+		new Request('http://localhost', { headers: { Range: 'bytes=0-' } })
+	);
+	assert.equal(partial.status, 416);
+	assert.equal(partial.headers.get('content-range'), 'bytes */0');
+});
 
 test('HEAD and conditional ranges do not claim an unsupported partial representation', async (t) => {
 	const { root } = await fixture(t);

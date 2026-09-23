@@ -30,7 +30,9 @@ test('architecture rules reject cycles, reverse dependencies, aliases and dynami
 			"import 'node:fs'; import './other.remote'; export const save = true;",
 		'src/lib/remote/other.remote.ts': 'export const other = true;',
 		'src/lib/schema.ts':
-			"import type { Runtime } from './server/runtime'; export type Model = Runtime;",
+			"import type { Model } from './generated/config.js'; export type Config = Model;",
+		'src/lib/generated/config.d.ts':
+			"import type { Runtime } from '../server/runtime'; export type Model = Runtime;",
 		'src/lib/server/runtime.ts': 'export interface Runtime { name: string }',
 		'src/lib/components/Async.svelte':
 			'<script lang="ts">const service = await import("$lib/server/database");</script><p>{service.result}</p>',
@@ -69,6 +71,13 @@ test('architecture rules reject cycles, reverse dependencies, aliases and dynami
 	assert.ok(
 		component.dependencies.some(
 			(dependency: { resolved: string }) => dependency.resolved === 'src/lib/server/database.ts'
+		)
+	);
+	assert.ok(
+		graph.summary.violations.some(
+			(entry: { from: string; rule: { name: string } }) =>
+				entry.from === 'src/lib/generated/config.d.ts' &&
+				entry.rule.name === 'shared-models-stay-independent'
 		)
 	);
 	// Each fixture source must be analyzed, including Svelte and standalone type files.

@@ -82,22 +82,6 @@ pytest_add_cli_args = ["-q"]
 use_setproctitle = false
 on_dependency_change = "rerun"
 
-[tool.ruff]
-target-version = "py310"
-
-[tool.ruff.lint]
-select = ["E4", "E7", "E9", "F", "I", "UP", "B", "C901", "PLR0912", "PLR0915", "TID252"]
-
-[tool.ruff.lint.flake8-tidy-imports]
-ban-relative-imports = "all"
-
-[tool.ruff.lint.mccabe]
-max-complexity = 10
-
-[tool.ruff.lint.pylint]
-max-branches = 12
-max-statements = 50
-
 [tool.coverage.run]
 branch = true
 source = ["aidetector"]
@@ -125,5 +109,5 @@ packages = ["src/aidetector"]
 [tool.hatch.build.targets.sdist]
 only-include = [
     "src/aidetector", "pyproject.toml", "uv.lock", "README.md", "LICENSE",
-    "ARCHITECTURE.md", "MIGRATION.md", "QUALITY.md", "REVIEW.md", "LIVE_PREVIEW.md", ".importlinter",
+    "ARCHITECTURE.md", "MIGRATION.md", "QUALITY.md", "LIVE_PREVIEW.md", ".importlinter",
 ]

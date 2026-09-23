@@ -5,6 +5,6 @@ import path from 'node:path';
 export default {
 	resolve: {
 		alias: { $lib: path.resolve(import.meta.dirname, '../src/lib') },
-		extensionAlias: { '.js': ['.ts', '.js'] }
+		extensionAlias: { '.js': ['.ts', '.d.ts', '.js'] }
 	}
 };

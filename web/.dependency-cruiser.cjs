@@ -5,8 +5,14 @@ module.exports = {
 			name: 'no-application-cycles',
 			severity: 'error',
 			comment: 'Feature code must have an unambiguous dependency direction.',
-			from: { path: '^src/', pathNot: '^src/lib/components/ui/' },
+			from: { path: '^(src/|desktop/)', pathNot: '^src/lib/components/ui/' },
 			to: { circular: true }
+		},
+		{
+			name: 'desktop-runtime-does-not-import-web-features',
+			severity: 'error',
+			from: { path: '^desktop/' },
+			to: { path: '^src/' }
 		},
 		{
 			name: 'server-does-not-import-presentation',
@@ -35,8 +41,11 @@ module.exports = {
 		{
 			name: 'shared-models-stay-independent',
 			severity: 'error',
-			from: { path: '^src/lib/(schema|runtime|detections)\\.ts$' },
-			to: { pathNot: '^src/lib/(schema|runtime|detections)\\.ts$' }
+			from: { path: '^src/lib/((schema|runtime|detections|live-preview)\\.ts$|generated/)' },
+			to: {
+				pathNot:
+					'^src/lib/((schema|runtime|detections|live-preview)\\.ts$|generated/)|(?:^|/)node_modules/valibot/'
+			}
 		},
 		{
 			name: 'resolve-project-imports',

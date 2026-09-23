@@ -1,0 +1,63 @@
+name: Desktop distribution tests
+
+on:
+  pull_request:
+    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', '.config/**', '.github/actions/setup-distribution/**', '.github/workflows/distribution-tests.yml', '.github/workflows/application.yml']
+  push:
+    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', '.config/**', '.github/actions/setup-distribution/**', '.github/workflows/distribution-tests.yml', '.github/workflows/application.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-distribution
+        with:
+          dotnet: 'true'
+      - run: pnpm --dir web install --frozen-lockfile
+      - run: python -m pip install -r distribution/requirements.txt
+      - name: Distribution lint and formatting
+        run: |
+          uvx --from ruff==0.15.20 ruff check distribution
+          uvx --from ruff==0.15.20 ruff format --check distribution
+      - name: Desktop TypeScript checks
+        run: |
+          pnpm --dir web check:desktop
+          pnpm --dir web test:desktop
+          bun test ./web/desktop/host.test.ts
+      - name: Compile desktop web executable
+        run: python distribution/build.py web --skip-dependencies
+      - name: Linux desktop tools
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
+      - name: Compile Mac launcher
+        if: runner.os == 'macOS'
+        run: python distribution/build.py launcher --output "$RUNNER_TEMP"
+      - name: Build and test Windows launcher
+        if: runner.os == 'Windows'
+        run: |
+          python distribution/build.py launcher --output "$RUNNER_TEMP"
+          dotnet restore distribution/windows/launcher-tests/Launcher.Tests.csproj --locked-mode
+          dotnet test distribution/windows/launcher-tests/Launcher.Tests.csproj --no-restore --configuration Release
+      - name: Portable update recovery tests
+        run: |
+          dotnet restore distribution/windows/update-tests/Update.Tests.csproj --locked-mode
+          dotnet test distribution/windows/update-tests/Update.Tests.csproj --no-restore --configuration Release
+      - name: Packaging and process lifecycle tests
+        env:
+          SPARKLE_SDK: ${{ runner.temp }}/sparkle
+          WINDOWS_LAUNCHER: ${{ runner.temp }}/windows-launcher
+          DESKTOP_WEB_EXECUTABLE: ${{ github.workspace }}/web/dist/ai-detector-web${{ runner.os == 'Windows' && '.exe' || '' }}
+        run: python -m unittest discover -s distribution -p 'test_*.py'

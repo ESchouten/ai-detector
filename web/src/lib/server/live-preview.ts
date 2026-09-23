@@ -1,8 +1,9 @@
-import { createHash, randomUUID } from 'node:crypto';
-import { mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { mkdir, readFile, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import * as v from 'valibot';
-import type { LivePreviewFrame, LivePreviewStatus } from '../live-preview.ts';
+import writeFileAtomic from 'write-file-atomic';
+import { frameSchema, type LivePreviewFrame, type LivePreviewStatus } from '../live-preview.ts';
 
 export interface LivePreviewRule {
 	id: string;
@@ -14,31 +15,6 @@ const sessionSchema = v.object({
 	version: v.literal(1),
 	runId: v.string(),
 	updatedAt: v.pipe(v.string(), v.isoTimestamp())
-});
-const coordinate = v.pipe(v.number(), v.finite());
-const frameSchema = v.object({
-	version: v.literal(1),
-	runId: v.string(),
-	sourceKey: v.string(),
-	ruleId: v.string(),
-	capturedAt: v.string(),
-	publishedAt: v.pipe(v.string(), v.isoTimestamp()),
-	image: v.object({
-		width: v.pipe(v.number(), v.integer(), v.minValue(1)),
-		height: v.pipe(v.number(), v.integer(), v.minValue(1)),
-		jpeg: v.pipe(v.string(), v.minLength(1))
-	}),
-	boxes: v.array(
-		v.object({
-			x1: coordinate,
-			y1: coordinate,
-			x2: coordinate,
-			y2: coordinate,
-			label: v.nullable(v.string()),
-			confidence: v.nullable(coordinate),
-			trackId: v.nullable(v.pipe(v.number(), v.integer()))
-		})
-	)
 });
 
 export function liveSourceKey(source: string, configurationDirectory: string): string {
@@ -72,19 +48,17 @@ function newLease(file: string): Lease {
 		renew() {
 			lease.pending = lease.pending.then(async () => {
 				if (!lease.viewers) return;
-				const temporary = `${file}.${randomUUID()}.tmp`;
 				try {
 					await mkdir(path.dirname(file), { recursive: true });
-					await writeFile(
-						temporary,
-						JSON.stringify({ version: 1, expiresAt: Date.now() / 1000 + 12 })
+					await writeFileAtomic(
+						file,
+						JSON.stringify({ version: 1, expiresAt: Date.now() / 1000 + 12 }),
+						// Viewer leases are transient and do not need disk synchronization.
+						{ fsync: false }
 					);
-					await rename(temporary, file);
 					lease.error = undefined;
 				} catch (error) {
 					lease.error = error;
-				} finally {
-					await unlink(temporary).catch(() => undefined);
 				}
 			});
 		}

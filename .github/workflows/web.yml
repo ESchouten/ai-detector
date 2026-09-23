@@ -83,61 +83,16 @@ jobs:
           "version=$version" >> $env:GITHUB_OUTPUT
           "ARTIFACT_NAME=$artifactName" >> $env:GITHUB_ENV
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9.15.9
-
-      - name: Install Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: '1.3.9'
+      - uses: ./.github/actions/setup-distribution
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: "Warm Bun compile cache (Windows D: workaround)"
-        run: |
-          $warmupRoot = "C:\bun-warmup-${env:GITHUB_RUN_ID}"
-          New-Item -ItemType Directory -Path $warmupRoot -Force | Out-Null
-          Set-Content -Path "$warmupRoot\index.ts" -Encoding UTF8 -Value 'console.log("bun warmup");'
-          Push-Location $warmupRoot
-          bun build --compile --target=bun-windows-x64-baseline .\index.ts --outfile .\warmup-baseline.exe
-          bun build --compile --target=bun-windows-x64 .\index.ts --outfile .\warmup.exe
-          Pop-Location
-          Remove-Item -Path $warmupRoot -Recurse -Force
-
-      - name: Stage FFmpeg static asset
-        run: |
-          $ffmpegPath = node -e "const ffmpegPath = require('ffmpeg-static'); if (!ffmpegPath) { throw new Error('ffmpeg-static did not resolve a binary path'); } process.stdout.write(ffmpegPath);"
-          if (-not (Test-Path $ffmpegPath -PathType Leaf)) {
-            throw "ffmpeg-static binary path does not exist: $ffmpegPath"
-          }
-
-          $targetDirectory = Join-Path (Get-Location) "static\_internal"
-          New-Item -ItemType Directory -Path $targetDirectory -Force | Out-Null
-
-          $targetPath = Join-Path $targetDirectory "ffmpeg.exe"
-          Copy-Item -Path $ffmpegPath -Destination $targetPath -Force
-
-          $fileInfo = Get-Item $targetPath
-          if ($fileInfo.Length -le 0) {
-            throw "Copied ffmpeg.exe is empty: $targetPath"
-          }
-
-          Write-Host "FFmpeg asset staged at $targetPath ($($fileInfo.Length) bytes)"
 
       - name: Check application
         run: pnpm quality
 
       - name: Build
-        env:
-          AI_DETECTOR_WEB_TARGET: windows-x64-baseline
-        run: pnpm run build
+        run: python ../distribution/build.py web --platform windows-x64 --skip-dependencies --standalone-web
 
       - name: Name Executable
         run: |
@@ -189,49 +144,16 @@ jobs:
           echo "version=${version}" >> "$GITHUB_OUTPUT"
           echo "ARTIFACT_NAME=aidetector-web-osx-${version}" >> "$GITHUB_ENV"
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9.15.9
-
-      - name: Install Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: '1.3.9'
+      - uses: ./.github/actions/setup-distribution
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Stage FFmpeg static asset
-        run: |
-          ffmpegPath=$(node -e "const ffmpegPath = require('ffmpeg-static'); if (!ffmpegPath) { throw new Error('ffmpeg-static did not resolve a binary path'); } process.stdout.write(ffmpegPath);")
-          if [ ! -f "$ffmpegPath" ]; then
-            echo "ffmpeg-static binary path does not exist: $ffmpegPath" >&2
-            exit 1
-          fi
-
-          mkdir -p static/_internal
-          cp "$ffmpegPath" static/_internal/ffmpeg
-          chmod +x static/_internal/ffmpeg
-
-          if [ ! -s static/_internal/ffmpeg ]; then
-            echo "Copied ffmpeg is empty: static/_internal/ffmpeg" >&2
-            exit 1
-          fi
-
-          echo "FFmpeg asset staged at static/_internal/ffmpeg ($(wc -c < static/_internal/ffmpeg) bytes)"
 
       - name: Check application
         run: pnpm quality
 
       - name: Build
-        env:
-          AI_DETECTOR_WEB_TARGET: darwin-arm64
-        run: pnpm run build
+        run: python ../distribution/build.py web --platform macos-arm64 --skip-dependencies --standalone-web
 
       - name: Name Executable
         run: |

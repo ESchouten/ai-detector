@@ -113,9 +113,11 @@ This is evidence that the selected tests detect these generated faults. mutmut 3
 
 The separate Ubuntu CI job bounds execution to two children and 15 minutes. It publishes native JSON and survivor listings as `detector-mutations` and in the workflow summary. `mutmut run` returns success even with survivors: CI explicitly verifies a nonempty, complete run and rejects crashes, timeouts, interruptions or skipped/inconsistent outcomes. Survivor/missing-test counts remain advisory and visible for review.
 
-## Current measurements
+## Recorded measurements — 2026-09-22
 
-Measured after the contributor clarity pass on macOS with Python 3.12 on 2026-09-22, using Ruff 0.15.20, Radon 6.0.1, and Coverage.py 7.16.1. All 397 tests passed. The 19 added cases cover architecture discovery, HTTP/Telegram outcomes, complete archives and detector-specific CLI diagnostics. The earlier architecture-boundary cleanup also passed on Python 3.10 and 3.11; their full suites were not rerun for this pass. [REVIEW.md](REVIEW.md) records the responsibility and code-placement decisions. Measurements cover `src/aidetector`, not third-party libraries or development tooling/test code.
+These numbers describe the dated baseline below. Run the commands above or read the latest CI artifacts to measure the current checkout; the table is not a continuously updated score.
+
+Measured after the contributor clarity pass on macOS with Python 3.12 on 2026-09-22, using Ruff 0.15.20, Radon 6.0.1, and Coverage.py 7.16.1. All 397 tests passed. The 19 added cases cover architecture discovery, HTTP/Telegram outcomes, complete archives and detector-specific CLI diagnostics. The earlier architecture-boundary cleanup also passed on Python 3.10 and 3.11; their full suites were not rerun for this pass. [REVIEW.md](../docs/history/detector/REVIEW.md) records the responsibility and code-placement decisions. Measurements cover `src/aidetector`, not third-party libraries or development tooling/test code.
 
 | Scope | Line coverage | Branch coverage | Highest Radon complexity |
 | --- | --- | --- | --- |
@@ -150,7 +152,7 @@ Counts come from Python AST definitions. When using Radon's records instead, ded
 
 No production module, class or callable was added. The extra lines chiefly document image/event/clock contracts and the scoped diagnostic thread names. Bootstrap helpers receive only their relevant settings. Both public schema files are byte-identical to the previous pass. All existing reference-flow test bodies and assertions were preserved while source-only and disk-only cases moved beside their adapters.
 
-Tests follow production responsibilities; subprocess/model/media helpers live under `tests/support`. Mutation selectors include event, policy and model tests. Ruff, formatting, ty, all five architecture contracts, graph completeness, schema checks and the full behavioral suite pass. The VS Code task commands use the same tools, and the reference flow passes under the installed debugger. No complexity threshold or coverage exclusion changed; earlier measurements and packaging checks remain in [AUDIT.md](AUDIT.md).
+Tests follow production responsibilities; subprocess/model/media helpers live under `tests/support`. Mutation selectors include event, policy and model tests. Ruff, formatting, ty, all five architecture contracts, graph completeness, schema checks and the full behavioral suite pass. The VS Code task commands use the same tools, and the reference flow passes under the installed debugger. No complexity threshold or coverage exclusion changed; earlier measurements and packaging checks remain in [AUDIT.md](../docs/history/detector/AUDIT.md).
 
 The previous grouping pass's installed wheel passed both generated ONNX and Torch smoke variants on Python 3.11, exercising local model downloads, inference, VLM verification, JPEG/MP4 archives, HTTP delivery, health and EOF shutdown. This pass's source suite exercises those adapter contracts, the local reference flow and real CLI diagnostics. Native executables and target hardware were not rebuilt or rerun.
 

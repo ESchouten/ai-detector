@@ -1,102 +1,146 @@
-# Application installers and startup
+# Application installers and updates
 
-The release boundary is the complete application: browser app, native detector, FFmpeg and optional pinned Docker image metadata. Users open **AI Detector**, follow setup in their browser and reopen the same shortcut for later use. Native execution is the automatic default; Docker remains an explicit advanced option.
+One application release contains the browser app, native detector, FFmpeg and optional pinned Docker image metadata. Users open **AI Detector** and configure it in their browser. Native execution is the default; Docker is an advanced option.
 
-## Platform packages
+## Installation and data
 
-| Target                   | Installer                                   | Desktop integration                                                                                                                                                                                                                                             |
-| ------------------------ | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| macOS 14+ Apple Silicon  | `AI-Detector-VERSION-macos-arm64.dmg`       | Drag the `.app` to Applications. Tagged releases require signing and notarization. A menu-bar app provides Open dashboard, Open at login and Quit. Login startup uses Apple's `SMAppService`, with the user's choice and any required System Settings approval. |
-| Windows 11 24H2+ x64     | `AI-Detector-VERSION-windows-x64-setup.exe` | Branded per-user installer with login startup selected by default. A native tray menu provides Open dashboard, Start at login and Quit. Updates preserve the startup preference and wait for graceful shutdown. |
-| Ubuntu 22.04/24.04 amd64 | `AI-Detector-VERSION-linux-amd64.deb`       | The package manager installs under `/opt/ai-detector`, adds an Applications entry and a standard XDG login-startup entry. Startup Applications can disable it. Removal/upgrade first requests graceful shutdown of the installed executable.                    |
+| Target | Installer | Desktop integration |
+| --- | --- | --- |
+| macOS 14+ Apple Silicon | `AI-Detector-VERSION-macos-arm64.dmg` | Drag to Applications. The menu bar offers Open dashboard, Open at login, Check for Updates and Quit. Login startup uses Apple's `SMAppService`. |
+| Windows 11 24H2+ x64 | `AI-Detector-VERSION-windows-x64-setup.exe` | Velopack installs for the current user and opens the app. First launch offers login startup. The tray offers Open dashboard, Start at login, Check for Updates and Quit. |
+| Ubuntu 22.04/24.04 amd64 | `AI-Detector-VERSION-linux-amd64.deb` | Installs under `/opt/ai-detector` with Applications and XDG login entries. Upgrade through the package manager. |
 
-These are packaging targets. Clean-machine installation, actual camera operation and hardware acceleration must be qualified on each supported target before claiming a verified release. This change does not retroactively sign older downloads. Portable ZIPs remain available for technical users; keep their files together. The macOS ZIP contains the same app bundle.
+Closing the browser leaves monitoring active. **Pause** disables saved automatic resume. **Quit** drains monitoring and preserves the enabled choice for next launch. Desktop startup runs after login, under that user's account; keep the computer awake while monitoring is needed.
 
-The macOS disk image opens in icon view with two visible items: **AI Detector** and **Applications**. A Retina background shows the drag direction and explains that opening the installed app starts browser setup. The app bundle carries the same camera symbol as the dashboard. Help remains in the application; the disk image has no README to open.
+The first download must come from the official repository and be trusted independently. Updates prove continuity with the key bundled in that installed copy. Releases are not Apple-notarized or signed with a Windows publisher certificate. macOS may require explicit approval in Privacy & Security; Windows may show SmartScreen warnings or block unknown applications under Smart App Control or managed policies. The application does not disable these OS protections.
 
-`dmgbuild` writes the Finder layout during packaging without controlling Finder or requiring a logged-in desktop session. Its build-only dependencies are pinned in `macos/requirements.txt`. The SVG artwork and generated PNG/ICNS files live in `macos/`; after editing an SVG, run `swift distribution/macos/render-artwork.swift` on macOS and include the regenerated assets. The Lucide notice is included inside the app's Resources folder.
+Settings, models and recordings stay outside installed application files:
 
-The Windows installer asks only whether to start at login, then installs and offers to open the browser setup. Directory, program-group and confirmation pages are omitted. The app, installer and tray share the dashboard's camera icon. Regenerate the Windows ICO and high-DPI wizard artwork with `python distribution/windows/render-artwork.py` after updating the Mac artwork; this conversion needs Pillow only on the contributor's machine.
+- macOS: `~/Library/Application Support/AI Detector`
+- Windows: `%LOCALAPPDATA%\AI Detector` (the application itself uses `%LOCALAPPDATA%\AIDetector\current`)
+- Linux: `$XDG_DATA_HOME/ai-detector`, defaulting to `~/.local/share/ai-detector`
 
-Closing a browser tab leaves monitoring active. **Pause** disables saved automatic resume. Quitting the application stops its runtime gracefully and preserves the enabled choice for next launch. Use Quit in the macOS menu bar, the Windows tray menu (or Start-menu “Quit AI Detector” shortcut), or the Ubuntu application’s Quit context action. Windows uninstall/upgrade and Linux package removal/upgrade also coordinate shutdown. New desktop installations keep data in the user's data directory; existing portable installations with adjacent `config.json` retain that location. Ordinary installer updates and uninstallers do not delete settings or recordings. Monitoring status and Pause are browser controls; Linux currently uses desktop shortcuts rather than a tray menu.
+`AIDETECTOR_DATA_DIR` selects another data directory. Legacy portable installations with adjacent `config.json` retain their location. Keep a backup of the complete data folder. Updates and normal uninstallers preserve data. Windows portable ZIPs require manual replacement and do not offer in-app updates.
 
-Desktop automatic startup means **after login**, under the same account as interactive operation. It is not a pre-login service or a promise that GPU providers work under another account. The app must stay running and the computer must stay awake. The existing Jetson Docker helper below has a separate boot contract.
+The first updater-enabled release must be installed manually. On Mac, quit the previous application and replace it in Applications. For an older Windows **Inno Setup** installation, quit AI Detector, uninstall the old program, then run the new setup; its external data remains available. This avoids two installed copies and an old uninstaller that owns the same startup entry. Subsequent installed Windows releases update through Velopack.
 
-## Executable lifecycle
+## Update behavior
 
-`distribution/desktop-instance.ts` is copied by the executable adapter into its compilation input. The server binds its port before initializing SvelteKit, so a second launch cannot start a second detector. It publishes a random identity token in the user's data directory (owner-only permissions on POSIX). A second invocation verifies a nonce-based HMAC response from the fixed loopback endpoint before opening the existing dashboard. A port occupied by an unrelated service is an error, not an invitation to open that service. Redirects are refused. The token is never sent to the endpoint.
+[Sparkle 2.10.0](https://sparkle-project.org/documentation/) handles Mac updates. [Velopack 1.2.158](https://docs.velopack.io/integrating/overview) handles Windows installation and updates. Their versions are pinned in `macos/build-launcher.sh`, `.config/dotnet-tools.json` and `windows/Directory.Packages.props` and the lockfiles.
 
-`--background` starts without opening a browser. `--quit` requires the same authenticated local protocol and waits for the original process to finish draining; a shutdown timeout fails the operation. Normal launch and login startup open the browser. The endpoint is a narrow desktop-instance protocol, not an authenticated remote-control API. It does not make the web app suitable for public exposure.
+The native menu checks for updates, downloads after confirmation, then offers a restart. Downloads leave monitoring running. Automatic checks run daily; they do not silently restart monitoring. Windows disables Velopack's automatic apply-on-startup. Mac disables Sparkle's automatic download/install option. Deferred Windows downloads remain available as **Update and restart**.
 
-On Windows, the compiled dashboard starts `tray/AI Detector Tray.exe` only after acquiring the instance and initializing the server. `windows-tray.ts` connects its two commands, `open` and `quit`, to the existing browser and shutdown functions. Explicitly opening the dashboard from the tray also works after `--background`. The helper exits when its stdin closes, including after an unexpected parent exit. It has no detector logic or second instance lock. The native WinForms code uses .NET Framework 4.8, included in the supported Windows versions, so users do not install an extra runtime. Startup uses the same per-user Run entry as Inno Setup.
+On Mac, Sparkle's normal termination request asks the web child to stop through its private pipe and waits for a successful exit. Losing the native parent also drains the child; a failed shutdown cancels the termination request. On Windows, the launcher first asks the web child to drain, waits for its successful exit, then calls `WaitExitThenApplyUpdates` before exiting itself. This also keeps a slow detector shutdown outside Velopack's 60-second exit-wait deadline. A failed download leaves the running version available and offers a retry. Unusable cached packages are removed so retry downloads a fresh copy; a deferred update with unreadable metadata returns to that same download path.
 
-SvelteKit's `init` hook initializes saved monitoring at server startup, independently of any HTTP request. Build-time imports do not start detection. The parent sends `stop\n` through stdin; EOF also requests shutdown. The detector drains accepted work. Application shutdown preserves enabled monitoring; an explicit dashboard pause disables it. Runtime health and readiness remain separate from successful process launch.
+Framework tools generate binary deltas against previous full packages. The last three versions remain in the feed; Sparkle can generate direct deltas from the previous two, and Velopack can chain retained deltas. Both frameworks can fall back to a full download. Download savings depend on the actual changed bytes; rebuilding or re-signing components can affect delta size. The current workflow still rebuilds the detector for each application release.
 
-## Build and verification
+## Launcher boundaries
 
-`application.yml` builds each installer from the same commit as the optional NVIDIA image. It checks distribution scripts and launcher protocol tests, smoke-tests ONNX and PT inference in each frozen detector, checks/builds the web app, assembles the payload and boots the complete bundle with generated local media. No camera, external alert service or pretrained-weight download is needed for that smoke.
+`web/desktop/runtime.ts` binds the dashboard port before SvelteKit initialization. A second invocation verifies a nonce-based HMAC response from the local instance before opening its dashboard. It cannot start a second detector or mistake an unrelated service for AI Detector. `--background` suppresses the initial browser launch. `--quit` requests authenticated shutdown and waits for the existing process to exit.
 
-Run the commands below from the repository root with Python 3.12, Node 24 and Bun 1.3.9 available. Install the pinned web dependencies first (`pnpm --dir web install --frozen-lockfile` with pnpm 9.15.9). Build the frozen detector using the complete **Build detector** step in [the workflow](../.github/workflows/application.yml), which includes its required PyInstaller hooks. Build the web payload with `AI_DETECTOR_WEB_TARGET=darwin-arm64 pnpm --dir web build` for the macOS example. These commands require macOS and Xcode Command Line Tools and produce an **unsigned local preview**, not a release.
+`windows/launcher` is a small .NET Framework 4.8 application, using the runtime already included in supported Windows versions. It calls Velopack's startup hooks before starting the bundled `ai-detector-web.exe`. The web child announces readiness through stdout; only the process that owns the dashboard port announces readiness and gets a tray icon. `web/desktop/host.ts` accepts `quit` through stdin. Losing the native parent pipe also drains monitoring. Detector configuration and supervision remain in the web application.
 
-Compile the menu-bar executable before packaging:
+Both native launchers retain the web child's `AI_DETECTOR_ERROR ` diagnostic from stderr and display it once. Diagnostics are single-line, bounded summaries; ordinary logs keep flowing without being retained in the Mac launcher. The web runtime only opens its own error dialog for standalone Windows execution. A detector that exits unsuccessfully during draining, or needs a forced stop, causes an unsuccessful web-process exit and prevents the native updater from treating that shutdown as successful. Pausing still saves the disabled startup choice when draining fails.
+
+`windows/launcher/Updates` adds signature verification at Velopack’s update-source boundary. `SignedFeed` verifies the Ed25519 signature with Bouncy Castle before parsing the release list; `SignedUpdateSource` supplies verified metadata to Velopack and retains a signed copy for a deferred restart. `VerifiedUpdateManager` checks cached packages against signed SHA256 hashes, including immediately before shutdown. Downloads, delta reconstruction and replacement remain Velopack’s responsibility.
+
+The native shell and web executable are separate files within one tested application version. There is no separate user-facing web/detector update choice. The optional NVIDIA image remains identified by its matching digest.
+
+The Mac payload embeds PyInstaller's `aidetector.app` under `Contents/Helpers/Detector.app`. PyInstaller separates Python resources from native libraries and preserves their runtime paths. Relative links expose the detector and application metadata beside the web executable without putting unsigned Python files in `Contents/MacOS`.
+
+## Code map
+
+| Change | Owner |
+| --- | --- |
+| Port ownership, parent pipe, browser launch and graceful shutdown | `web/desktop/runtime.ts`, `host.ts`, `instance.ts`, `browser.ts` |
+| Installed and development data-directory rules | `web/desktop/paths.ts`, also imported by the server stores |
+| Optional LAN discovery | `web/desktop/network.ts`, using `bonjour-service` |
+| Native menus and process ownership | `macos/Launcher.swift`, `macos/DesktopProcess.swift`, `windows/launcher/` |
+| Common build stages | `build.py`; release automation invokes these same commands |
+| Platform payload layouts and archives | `package.py`, with one assembly function per platform |
+| Native installer creation | `installers.py` |
+| Shared public test data | `fixtures/` |
+
+The executable adapter still needs a small integration patch: upstream 0.1.7 has no application-bootstrap hook or extra Bun compiler arguments. The patch copies `web/desktop`, delegates startup to `startDesktop`, passes compile arguments and fixes target-dependent executable naming. SvelteKit asset discovery, embedding and HTTP handling remain with the adapter. Remove the patch when upstream provides equivalent hooks; do not move application logic back into it.
+
+The desktop source participates in normal web formatting, ESLint complexity limits, TypeScript checks and dependency rules. It does not import web feature services. Test fixtures import the actual runtime; no test rewrites production source text.
+
+## Local builds and tests
+
+Install uv, Node, pnpm and Bun. Pinned CI versions live in `toolchain.json`; pnpm follows `web/package.json`. Windows launcher builds also need the listed .NET SDK. Linux installer builds need `desktop-file-validate` and `dpkg-deb`.
+
+From the repository root, one command builds a complete native preview, checks setup/detection/graceful shutdown, and creates its installer:
 
 ```sh
-python -m pip install -r distribution/macos/requirements.txt
-xcrun swiftc -parse-as-library -target arm64-apple-macos14.0 \
-  distribution/macos/Launcher.swift -o /tmp/ai-detector-launcher
-python distribution/package.py \
-  --detector detector/dist/aidetector --web web/dist/ai-detector-web \
-  --ffmpeg web/node_modules/ffmpeg-static/ffmpeg \
-  --output application-dist --platform macos-arm64 --version 0.0.0 \
-  --mac-launcher /tmp/ai-detector-launcher
-python distribution/smoke.py application-dist/AI-Detector-macos-arm64
-python distribution/installers.py application-dist/AI-Detector-macos-arm64 \
-  --platform macos-arm64 --version 0.0.0
+uv run --no-project --python 3.11 --with-requirements distribution/requirements.txt python distribution/build.py all
 ```
 
-Output payload directories must be fresh. Packaging preserves framework symlinks, executable permissions and the data boundary. Version inputs are validated before entering native installer metadata. The CLI platform name for Linux is `linux-x64`; its Debian artifact uses the architecture name `amd64`. Windows installer creation requires Inno Setup; Linux installer creation requires `desktop-file-validate` and `dpkg-deb`. Building an installer does not install it.
+The command checks the host OS and CPU architecture, required tools, an optional frozen detector and the output destination before compilation. It rejects unsupported or mismatched targets. Previews use version `0.0.0` with production updates disabled. The command installs locked component dependencies and uses an isolated environment for packaging tools. It never installs the resulting application or enables startup.
 
-Windows builds also require the .NET 10 SDK on the build machine. Compile the tray before packaging and pass `--windows-tray application-dist/windows-tray` to `package.py`:
+Use `--output /path/to/a/fresh/directory` for another build. To iterate on the desktop without freezing Python again, add `--detector /path/to/aidetector.app` on Mac or the frozen `aidetector` folder on Windows/Linux. Relative input/output paths resolve from the directory where the command is launched, including when a build stage runs a tool from the repository root. Nonempty preview output folders are rejected before building. Build metadata and existing standalone FFmpeg staging are restored after each stage, including a failed build. Combined builds exclude standalone FFmpeg assets. PyInstaller specifications and intermediates stay under `detector/build/`; frozen programs go under `detector/dist/`, and the compiled web executable goes under `web/dist/`. Run one build at a time in a checkout because compilation uses the component build directories.
+
+CI uses `python distribution/build.py detector --platform PLATFORM`, `web --platform PLATFORM` and `launcher --platform PLATFORM --output DIRECTORY` as separate stages. The launcher stage writes `mac-launcher` plus `sparkle/`, or `windows-launcher/`, under its output directory. Standalone component releases use the same PyInstaller hooks, compiler warmup and FFmpeg staging. The detector stage's `--type default` or `--type windowsml` selects both build metadata and the installed dependency extra; Windows ML requires Windows. CUDA and TensorRT builds require an explicitly prepared GPU dependency environment and `--skip-dependencies`, so a normal dependency sync cannot replace it. `--name` accepts an artifact filename rather than an output path.
+
+Application version parsing uses `semver`, pinned in `build-requirements.txt`. The shared CI setup action installs these small build dependencies before running stages; `requirements.txt` includes them for local builds and packaging tests. For individual web or launcher stages outside CI, install `build-requirements.txt` first. Detector-only builds do not load packaging dependencies. Tag prefixes and the numeric installer version remain application policy; semantic-version validation belongs to the library.
+
+Detector and distribution Python tooling uses the repository's `ruff.toml`; CI does not maintain separate distribution lint rules. The root `.dockerignore` owns the web Docker build context and excludes local settings, recordings, reports and staged native FFmpeg assets. The detector's Docker context is its own directory and uses `detector/.dockerignore`.
+
+`package.py` assembles the application folder without archiving it. After validation and installer creation, `python distribution/build.py archive APPLICATION_FOLDER` creates the final ZIP and checksum once. The complete local build follows the same ordering.
+
+Fast checks:
 
 ```sh
-dotnet restore distribution/windows/tray-tests/Tray.Tests.csproj --locked-mode
-dotnet build distribution/windows/tray/Tray.csproj --no-restore --configuration Release --output application-dist/windows-tray
-dotnet test distribution/windows/tray-tests/Tray.Tests.csproj --no-restore --configuration Release
+uv run --no-project --python 3.11 --with-requirements distribution/requirements.txt python -m unittest discover -s distribution -p 'test_*.py'
+pnpm --dir web quality
+bun test ./web/desktop/host.test.ts
 ```
 
-The helper and test project can be compiled on macOS using the pinned reference assemblies. Running the native tests requires Windows. They exercise real menu controls, startup changes under a temporary registry key, and helper shutdown when the dashboard closes its pipe. They do not enable login startup on the test machine.
+The VS Code **Distribution: tests** task supplies these Python dependencies automatically. `Desktop distribution tests` runs on pull requests on Mac, Windows and Linux, without requiring an NVIDIA build or production credentials. It includes native compilation, Windows tray tests, packaging tests and parent-process lifecycle tests.
 
-For contributors, after installing the web dependencies above:
+Windows checks can also run directly:
 
 ```sh
-python -m unittest discover -s distribution -p 'test_*.py'
-node --test distribution/*.test.ts
-bun test ./distribution/windows-tray.test.ts
+dotnet tool restore
+dotnet restore distribution/windows/launcher-tests/Launcher.Tests.csproj --locked-mode
+dotnet build distribution/windows/launcher/Launcher.csproj --no-restore --configuration Release --warnaserror
+dotnet test distribution/windows/launcher-tests/Launcher.Tests.csproj --no-restore --configuration Release
+dotnet restore distribution/windows/update-tests/Update.Tests.csproj --locked-mode
+dotnet test distribution/windows/update-tests/Update.Tests.csproj --no-restore --configuration Release
 ```
 
-Tests build only temporary package trees and launch local fixture processes. They never register login items, install a package, enable a service or contact a camera. On macOS, install the disk-image requirements first; the installer test creates, verifies and temporarily mounts a small DMG to check its two visible items, application symlinks, background and Finder layout. The Bun integration fixture proves initialization without a browser request, a second launch without a second initialization, retention of the HTTP port while async shutdown completes, and release of its UDP socket on quit. A separate child-process fixture verifies that the quit command waits through delayed draining. Tests also check package layouts/checksums, symlinks, refusal to overwrite, desktop-entry validity where available, source-independent startup and bounded failure handling. macOS launcher compilation is checked on the macOS release runner. Windows installer compilation and `.deb` construction run on their native runners.
+NuGet package versions live in `windows/Directory.Packages.props`. A configuration test checks that the separately pinned Velopack CLI matches the runtime package. Portable update/recovery tests run on every OS; WinForms tray tests execute only on Windows.
 
-The Bun fixture is skipped if Bun or the installed adapter is missing; Linux desktop-entry integration is skipped on other platforms. Check the skip reasons rather than treating a shorter successful run as equivalent coverage. The release workflow installs these dependencies before running the fixtures and runs native tray tests on Windows. The complete-bundle smoke on macOS starts the bundled web executable directly; it does not exercise clicking the AppKit launcher, approving a login item or reopening after desktop login. Local unsigned DMG creation and `hdiutil verify` passed; those checks establish image construction and integrity, not publisher trust or OS acceptance. Windows visual installation, upgrade and sign-in checks remain manual release qualification.
+Set `SPARKLE_SDK` to the extracted SDK on Mac for the real delta round-trip test. Set `WINDOWS_LAUNCHER` to the compiled launcher directory on Windows for the Velopack package/delta reconstruction test. Set `DESKTOP_WEB_EXECUTABLE` to the built web executable to exercise normal, failed and hung detector shutdowns and an occupied dashboard port. These tests compile a small detector fixture and allow the real 30-second shutdown deadline to expire. CI supplies the paths on each matching runner. Fixtures use temporary data and public test keys; they never install the app, enable login startup or contact cameras. Mac bundle tests need LaunchServices access, and disk-image creation needs `hdiutil`.
 
-## Signing and release gates
+The payload smoke starts the web executable directly, verifies browser setup, native detection and a real image archive, then requires successful graceful shutdown. A timeout or nonzero exit fails the smoke; force-killing is failure cleanup only. Separate lifecycle tests exercise the actual Mac process owner through quit, parent crash, reopen, failed drain and diagnostic delivery. Readiness waits have explicit deadlines and report the captured logs. Downloaded-app installation, update/relaunch UI, login startup and hardware inference still require qualification on each target OS.
 
-A tag matching `app/v*` cannot publish through the release job unless every native build and signing step succeeds. Manual workflow runs produce **unsigned preview artifacts** for developers, never production releases. No Gatekeeper or Windows signature bypass is part of installation.
+Mac artwork lives in `macos/`; regenerate it with `swift distribution/macos/render-artwork.swift`. Regenerate the Windows icon with `python distribution/windows/render-artwork.py` (Pillow required). Include the generated assets when changing the artwork.
 
-Configure these GitHub release secrets:
+## Release publishing
 
-- macOS: `MACOS_CERTIFICATE_BASE64` (Developer ID Application `.p12`), `MACOS_CERTIFICATE_PASSWORD`, `MACOS_SIGN_IDENTITY` (full `Developer ID Application: …` name), `APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_APP_PASSWORD` for notarization.
-- Windows: `WINDOWS_CERTIFICATE_BASE64` (trusted code-signing `.pfx`) and `WINDOWS_CERTIFICATE_PASSWORD`. The signing helper uses Windows SDK SignTool with SHA-256 and a timestamp, preserves already-valid vendor signatures, verifies new signatures, and also signs the installer and uninstaller through Inno Setup. Organizations using hardware-backed or hosted signing must connect their approved signing service in that helper; a nonexportable key cannot be converted into this PFX credential.
+Use increasing, stable `app/vX.Y.Z` tags. Prerelease/build-suffix versions are rejected by this stable channel. Manual workflow runs create previews with production updates disabled.
 
-Apple signing runs from a temporary CI keychain, signs nested native code before the enclosing app, enables hardened runtime, notarizes/staples the app, then creates and notarizes/staples the disk image. The JIT entitlement applies only to the bundled Bun/Python executables. Signing keys are removed in the workflow's final cleanup. The signed application payload is launch-tested again. Checksums and ZIPs are regenerated after signing. A checksum is integrity metadata, not a publisher signature.
+The workflow downloads the previous update bases, verifies the signed Windows feed and base checksum, and invokes `generate_appcast` or `vpk pack`. It uploads complete installers, full update packages and deltas to the versioned application release. Once every platform succeeds, it publishes that release and promotes only `appcast.xml` and `releases.win.json` to the fixed **app-updates** GitHub release. Asset URLs point at immutable `app/vX.Y.Z` releases. The fixed feed avoids GitHub's ambiguous “latest release”, which may refer to a separate web or detector release. Builds are serialized, and a stable version cannot replace an equal or newer version in the feed. Keep historical versioned assets available; existing clients and retained deltas reference them. Do not edit a published application version in place.
 
-External gates remain real: trusted signing credentials, clean downloaded-artifact installation, Windows/macOS hardware inference and login startup, OS local-network permissions, clean Ubuntu package installation and upgrade, sleep/lid behavior, reboot tests and the precise Jetson appliance image. CI fixtures and compilation cannot establish those outcomes. New Windows publishers can still encounter reputation prompts despite a valid signature.
+Configure two entries in **Settings → Secrets and variables → Actions**:
 
-References: [Apple login items](https://developer.apple.com/documentation/servicemanagement/smappservice), [Apple notarization](https://developer.apple.com/documentation/security/customizing-the-notarization-workflow), [Inno per-user installation](https://jrsoftware.org/ishelp/topic_setup_privilegesrequired.htm), [Inno signed uninstallers](https://jrsoftware.org/ishelp/topic_setup_signeduninstaller.htm), [.NET Framework included in Windows](https://learn.microsoft.com/en-us/dotnet/framework/install/on-windows-and-server), [desktop entries](https://specifications.freedesktop.org/desktop-entry/latest-single/).
+- Repository variable `SPARKLE_PUBLIC_KEY`: the base64 public Ed25519 key, pinned in both desktop applications.
+- Repository secret `SPARKLE_PRIVATE_KEY`: the exact 32-byte seed, base64-encoded, exported by Sparkle 2.10's `generate_keys -x`. This existing key is used for both platforms. Keep it backed up; fixtures' public test keys must never be used for releases.
+
+Every tagged release reuses the same key. The workflow checks that both entries exist before building; it exposes the private key only to the signing steps, and never puts it in a download. No Apple, Microsoft or certificate-authority account is required.
+
+AI Detector's production Sparkle key is backed up in the maintainer's macOS login Keychain under account `io.github.eschouten.ai-detector`. Use Sparkle's `generate_keys --account io.github.eschouten.ai-detector -p` to retrieve its public key. When transferring the key to another Mac, follow [Sparkle's key export/import instructions](https://sparkle-project.org/documentation/#eddsa-ed25519-signatures) with that same account. Keep private exports outside the checkout, restrict file permissions, and remove them after transfer. GitHub Secrets cannot be read back as a backup. Do not replace either key independently: installed applications trust the public key embedded in their release.
+
+Mac payloads receive ad-hoc code signatures, which satisfy local code integrity requirements without establishing a publisher identity. Sparkle signs the feed and update archives with our Ed25519 key. Both feed and pre-extraction signature verification are required; feed verification failures never expire into an unsigned fallback.
+
+For Windows, `release_signatures.py` signs the exact UTF-8 Velopack feed bytes prefixed with `AI Detector Windows updates v1\n`. The published `releases.win.json` is a JSON envelope containing base64 `payload` and `signature` fields. Keeping both in one asset avoids a feed/signature publication race. Python's `cryptography` signs at build time; Bouncy Castle verifies on the client. Versions, package URLs, sizes and SHA256 hashes are all covered by the signature. Velopack verifies packages against these authenticated hashes. Unsigned feeds, mismatched keys and modified packages fail closed; cached updates are verified again before monitoring shuts down. A deferred restart can use its cached signed feed without an internet connection.
+
+Signature verification prevents an attacker without our private key from introducing a new update. It cannot stop a host from hiding updates or replaying a previously signed feed. Velopack rejects downgrades relative to the installed version. The first installer still needs an independently trusted source, and compromising the release signing key or its build workflow compromises update trust. OS publisher trust and reputation are separate from this guarantee.
+
+Before publishing the first real pair of versions, qualify a signed update on Mac and Windows: leave monitoring active during download, defer the restart, then apply it and confirm monitoring resumes with the same configuration, recordings and login preference. Also test a missed-version/full-download fallback and recovery from an interrupted download. Fixtures do not establish successful installation on a clean machine, OS acceptance or hardware behavior.
 
 ## Existing Linux Docker startup
 
-`linux_startup.py` remains a separate Python 3.10+ helper for an existing systemd Docker Engine installation. Run it as the desktop user; it requests sudo for Docker configuration and daemon startup. See the [installation command](../README.md#start-automatically-on-a-jetson-or-linux-desktop). It validates Compose restart policies, enables Docker's existing service, and starts the same Compose project. Docker remains the container supervisor; no competing detector service is installed.
+`linux_startup.py` remains a separate Python 3.10+ helper for an existing systemd Docker Engine installation. Run it as the desktop user; it requests sudo for Docker configuration and daemon startup. See the [installation command](../README.md#start-automatically-on-a-jetson-or-linux-desktop). Docker supervises the existing Compose project.
 
-It copies its launcher to `$XDG_DATA_HOME/ai-detector/startup.py` and writes `$XDG_CONFIG_HOME/autostart/ai-detector.desktop`, using the standard home-directory defaults. At login it waits up to five minutes for HTTP success, follows the home redirect, then opens the browser. Reinstall updates the same files; uninstall removes only those files. It does not alter automatic-login settings. Headless containers run without browser activity.
-
-The JetPack 6 Compose example uses the matching NVIDIA image/runtime. This helper does not install Docker/drivers, add browser control of separately managed detectors or turn the native desktop application into a pre-login service. Detector configuration changes in that separate Compose deployment still require its documented restart.
+The helper copies its launcher to `$XDG_DATA_HOME/ai-detector/startup.py` and writes `$XDG_CONFIG_HOME/autostart/ai-detector.desktop`. At login it waits for the dashboard before opening the browser. It does not change automatic-login settings. Uninstalling the helper removes only those startup files. Jetson image/runtime qualification and independently managed Compose updates remain separate from native desktop updates.

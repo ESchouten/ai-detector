@@ -8,9 +8,39 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: application-releases
+  cancel-in-progress: false
+
 jobs:
+  configuration:
+    name: Release signing configuration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check required secrets and public key
+        if: startsWith(github.ref, 'refs/tags/app/v')
+        # Only presence flags reach this job. Keys stay in the signing steps below.
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY != '' }}
+          SPARKLE_PUBLIC_KEY: ${{ vars.SPARKLE_PUBLIC_KEY != '' }}
+        run: |
+          python - <<'PY'
+          import os
+          import sys
+
+          required = (
+              'SPARKLE_PRIVATE_KEY', 'SPARKLE_PUBLIC_KEY',
+          )
+          missing = [name for name in required if os.environ[name] != 'true']
+          for name in missing:
+              kind = 'variable' if name == 'SPARKLE_PUBLIC_KEY' else 'secret'
+              print(f'::error::Missing repository {kind}: {name}')
+          sys.exit(bool(missing))
+          PY
+
   image:
     name: Matching NVIDIA image
+    needs: configuration
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -43,34 +73,29 @@ jobs:
     name: ${{ matrix.platform }} application
     needs: image
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 90
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
         include:
           - platform: windows-x64
             runner: windows-latest
-            target: windows-x64-baseline
-            extra: windowsml
             suffix: .exe
-            pyinstaller: --collect-all winui3 --collect-all winrt
+            detector: aidetector
           - platform: macos-arm64
             runner: macos-latest
-            target: darwin-arm64
-            extra: default
             suffix: ''
-            pyinstaller: ''
+            detector: aidetector.app
           - platform: linux-x64
             runner: ubuntu-22.04
-            target: linux-x64-baseline
-            extra: default
             suffix: ''
-            pyinstaller: ''
+            detector: aidetector
     defaults:
       run:
         shell: bash
     env:
-      UV_PYTHON: '3.11'
+      UPDATE_FEED: https://github.com/${{ github.repository }}/releases/download/app-updates
+      SPARKLE_PUBLIC_KEY: ${{ vars.SPARKLE_PUBLIC_KEY }}
       LITELLM_LOCAL_MODEL_COST_MAP: 'true'
       YOLO_AUTOINSTALL: 'false'
       ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS: '1'
@@ -81,177 +106,108 @@ jobs:
           python - <<'PYVERSION'
           import os
           import sys
+          from urllib.parse import quote
           sys.path.insert(0, 'distribution')
-          from package import version_number
-          version = version_number(os.environ['GITHUB_REF_NAME']) if os.environ['GITHUB_REF'].startswith('refs/tags/app/v') else '0.0.0'
+          from updates import stable_version
+          version = os.environ['GITHUB_REF_NAME'].removeprefix('app/v') if os.environ['GITHUB_REF'].startswith('refs/tags/app/v') else '0.0.0'
+          stable_version(version)
           with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
               output.write(f'APP_VERSION={version}\n')
+              tag = quote(os.environ['GITHUB_REF_NAME'], safe='')
+              output.write(f"RELEASE_URL=https://github.com/{os.environ['GITHUB_REPOSITORY']}/releases/download/{tag}\n")
           PYVERSION
-      - uses: astral-sh/setup-uv@v7
-      - uses: actions/setup-node@v4
+      - uses: ./.github/actions/setup-distribution
         with:
-          node-version: '24'
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9.15.9
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: '1.3.9'
-      - uses: actions/setup-dotnet@v5
-        if: runner.os == 'Windows'
-        with:
-          dotnet-version: '10.0.x'
-      - name: Build and test Windows tray
+          dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+      - name: Build and test Windows launcher
         if: runner.os == 'Windows'
         run: |
-          dotnet restore distribution/windows/tray-tests/Tray.Tests.csproj --locked-mode
-          dotnet build distribution/windows/tray/Tray.csproj --no-restore --configuration Release --output "$RUNNER_TEMP/windows-tray"
-          dotnet test distribution/windows/tray-tests/Tray.Tests.csproj --no-restore --configuration Release
+          python distribution/build.py launcher --platform '${{ matrix.platform }}' --version "$APP_VERSION" --output "$RUNNER_TEMP"
+          dotnet restore distribution/windows/launcher-tests/Launcher.Tests.csproj --locked-mode
+          dotnet test distribution/windows/launcher-tests/Launcher.Tests.csproj --no-restore --configuration Release
+          dotnet restore distribution/windows/update-tests/Update.Tests.csproj --locked-mode
+          dotnet test distribution/windows/update-tests/Update.Tests.csproj --no-restore --configuration Release
       - name: Build detector
-        working-directory: detector
-        env:
-          AIDETECTOR_BUILD_TYPE: ${{ matrix.extra }}
-        run: |
-          uv python install
-          uv sync --locked --extra ${{ matrix.extra }}
-          uv run --no-sync python - <<'PY'
-          import os
-          from pathlib import Path
-
-          Path("src/aidetector/version.py").write_text(
-              f"TYPE = {os.environ['AIDETECTOR_BUILD_TYPE']!r}\n"
-              f"REF_NAME = {os.environ['GITHUB_REF_NAME']!r}\n",
-              encoding="utf-8",
-          )
-          PY
-          uv run --no-sync pyinstaller src/aidetector/__main__.py --name aidetector --onedir --collect-all ultralytics --collect-all litellm --collect-all imageio_ffmpeg --collect-all onnxruntime --collect-all onnx --hidden-import=tiktoken_ext.openai_public --hidden-import=tiktoken_ext --paths src --clean --noconfirm ${{ matrix.pyinstaller }}
+        run: python distribution/build.py detector --platform '${{ matrix.platform }}' --version "$GITHUB_REF_NAME"
+      - name: Install release signing tools
+        run: uv pip install --python detector/.venv --requirement distribution/requirements.txt
       - name: Install desktop launcher test tools
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
       - name: Install web dependencies
         working-directory: web
         run: pnpm install --frozen-lockfile
-      - name: Install macOS disk image tools
+      - name: Compile macOS menu bar launcher
         if: runner.os == 'macOS'
-        run: uv pip install --python detector/.venv/bin/python --requirement distribution/macos/requirements.txt
+        run: python distribution/build.py launcher --platform '${{ matrix.platform }}' --version "$APP_VERSION" --output "$RUNNER_TEMP"
       - name: Check distribution scripts
+        env:
+          SPARKLE_SDK: ${{ runner.temp }}/sparkle
+          WINDOWS_LAUNCHER: ${{ runner.temp }}/windows-launcher
         run: |
-          uv run --project detector --no-sync ruff check --config detector/pyproject.toml distribution
-          uv run --project detector --no-sync ruff format --check --config detector/pyproject.toml distribution
+          uv run --project detector --no-sync ruff check distribution
+          uv run --project detector --no-sync ruff format --check distribution
           uv run --project detector --no-sync python -m unittest discover -s distribution -p 'test_*.py'
-          node --test distribution/*.test.ts
-          bun test ./distribution/windows-tray.test.ts
+          pnpm --dir web test:desktop
+          bun test ./web/desktop/host.test.ts
       - name: Smoke test packaged detector
         working-directory: detector
         run: |
-          uv run --no-sync python -m tests.support.smoke_package "dist/aidetector/aidetector${{ matrix.suffix }}"
-          uv run --no-sync python -m tests.support.smoke_package "dist/aidetector/aidetector${{ matrix.suffix }}" --model-format pt
+          executable="dist/${{ matrix.detector }}/aidetector${{ matrix.suffix }}"
+          if [ '${{ runner.os }}' = macOS ]; then executable="dist/${{ matrix.detector }}/Contents/MacOS/aidetector"; fi
+          uv run --no-sync python -m tests.support.smoke_package "$executable"
+          uv run --no-sync python -m tests.support.smoke_package "$executable" --model-format pt
       - name: Check web application
-        working-directory: web
-        run: |
-          pnpm quality
-          pnpm exec prettier --config .prettierrc --check ../distribution/*.ts ../distribution/fixtures/*
-          pnpm exec tsc --noEmit --target es2022 --module esnext --moduleResolution bundler --allowImportingTsExtensions --esModuleInterop --types node ../distribution/*.ts ../distribution/fixtures/*.ts
-      - name: Warm Bun compiler on Windows
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          $folder = "C:\bun-warmup-${env:GITHUB_RUN_ID}"
-          New-Item -ItemType Directory -Path $folder -Force | Out-Null
-          Set-Content -Path "$folder\index.ts" -Value 'console.log("warmup");'
-          Push-Location $folder
-          bun build --compile --target=bun-windows-x64-baseline index.ts --outfile warmup.exe
-          if ($LASTEXITCODE -ne 0) { throw "Bun warmup failed" }
-          Pop-Location
+        run: pnpm --dir web quality
       - name: Build web executable
-        working-directory: web
+        run: python distribution/build.py web --platform '${{ matrix.platform }}' --version "$APP_VERSION" --skip-dependencies
+      - name: Test compiled desktop failure paths
         env:
-          AI_DETECTOR_WEB_TARGET: ${{ matrix.target }}
-        run: |
-          node -e 'require("fs").writeFileSync("src/lib/version.ts", "export const version = " + JSON.stringify(process.env.GITHUB_REF_NAME) + ";\n")'
-          pnpm build
-      - name: Compile macOS menu bar launcher
-        if: runner.os == 'macOS'
-        run: xcrun swiftc -parse-as-library -target arm64-apple-macos14.0 distribution/macos/Launcher.swift -o "$RUNNER_TEMP/ai-detector-launcher"
+          DESKTOP_WEB_EXECUTABLE: ${{ github.workspace }}/web/dist/ai-detector-web${{ matrix.suffix }}
+        run: python -m unittest discover -s distribution -p test_compiled_desktop.py
       - name: Assemble application
         run: |
           ffmpeg=$(cd web && node -p 'require("ffmpeg-static")')
           launcher=()
-          if [ '${{ runner.os }}' = macOS ]; then launcher=(--mac-launcher "$RUNNER_TEMP/ai-detector-launcher"); fi
-          if [ '${{ runner.os }}' = Windows ]; then launcher=(--windows-tray "$RUNNER_TEMP/windows-tray"); fi
-          uv run --project detector --no-sync python distribution/package.py --detector detector/dist/aidetector --web "web/dist/ai-detector-web${{ matrix.suffix }}" --ffmpeg "$ffmpeg" --output application-dist --platform '${{ matrix.platform }}' --version "$APP_VERSION" "${launcher[@]}" --image 'ghcr.io/eschouten/ai-detector@${{ needs.image.outputs.digest }}'
+          if [ '${{ runner.os }}' = macOS ]; then launcher=(--mac-launcher "$RUNNER_TEMP/mac-launcher" --sparkle "$RUNNER_TEMP/sparkle"); fi
+          if [ '${{ runner.os }}' = Windows ]; then launcher=(--windows-launcher "$RUNNER_TEMP/windows-launcher"); fi
+          if [[ "$GITHUB_REF" == refs/tags/app/v* ]] && [ '${{ runner.os }}' != Linux ]; then
+            launcher+=(--update-feed "$UPDATE_FEED")
+            launcher+=(--sparkle-public-key "$SPARKLE_PUBLIC_KEY")
+          fi
+          uv run --project detector --no-sync python distribution/package.py --detector 'detector/dist/${{ matrix.detector }}' --web "web/dist/ai-detector-web${{ matrix.suffix }}" --ffmpeg "$ffmpeg" --output application-dist --platform '${{ matrix.platform }}' --version "$APP_VERSION" "${launcher[@]}" --image 'ghcr.io/eschouten/ai-detector@${{ needs.image.outputs.digest }}'
+      - name: Ad-hoc sign macOS application
+        if: runner.os == 'macOS'
+        run: uv run --project detector --no-sync python distribution/sign_macos.py 'application-dist/AI-Detector-macos-arm64/AI Detector.app'
       - name: Smoke test complete download
         run: uv run --project detector --no-sync python distribution/smoke.py 'application-dist/AI-Detector-${{ matrix.platform }}'
-      - name: Prepare Apple release signing
-        if: runner.os == 'macOS' && startsWith(github.ref, 'refs/tags/app/v')
-        env:
-          MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
-          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
-          MACOS_SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
-        run: bash distribution/macos/prepare-signing.sh
-      - name: Sign and notarize macOS application
-        if: runner.os == 'macOS' && startsWith(github.ref, 'refs/tags/app/v')
-        env:
-          MACOS_SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY }}
-        run: |
-          app='application-dist/AI-Detector-macos-arm64/AI Detector.app'
-          uv run --project detector --no-sync python distribution/sign_macos.py "$app"
-          ditto -c -k --keepParent "$app" "$RUNNER_TEMP/notarize.zip"
-          uv run --project detector --no-sync python distribution/sign_macos.py "$RUNNER_TEMP/notarize.zip" --notarize --staple "$app"
-          spctl --assess --type execute --verbose "$app"
-      - name: Prepare and sign Windows application
-        if: runner.os == 'Windows' && startsWith(github.ref, 'refs/tags/app/v')
-        shell: pwsh
-        env:
-          WINDOWS_CERTIFICATE_BASE64: ${{ secrets.WINDOWS_CERTIFICATE_BASE64 }}
-          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
-        run: |
-          if (-not $env:WINDOWS_CERTIFICATE_BASE64 -or -not $env:WINDOWS_CERTIFICATE_PASSWORD) { throw 'A trusted Windows code-signing certificate is required for release.' }
-          $certificate = Join-Path $env:RUNNER_TEMP 'ai-detector-signing.pfx'
-          [IO.File]::WriteAllBytes($certificate, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_BASE64))
-          $env:WINDOWS_CERTIFICATE_FILE = $certificate
-          "WINDOWS_CERTIFICATE_FILE=$certificate" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          Get-ChildItem 'application-dist/AI-Detector-windows-x64' -Recurse -File | Where-Object { $_.Extension -in '.exe', '.dll', '.pyd' } | ForEach-Object { if ((Get-AuthenticodeSignature $_.FullName).Status -ne 'Valid') { & ./distribution/windows/sign.ps1 -File $_.FullName } }
-      - name: Build native installer
-        env:
-          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
-        run: |
-          signed=()
-          if [ '${{ runner.os }}' = Windows ] && [[ "$GITHUB_REF" == refs/tags/app/v* ]]; then
-            export INNO_SIGN_COMMAND="powershell.exe -NoProfile -File \"$(cygpath -w "$GITHUB_WORKSPACE/distribution/windows/sign.ps1")\" -File \$f"
-            signed=(--signed)
-          fi
-          uv run --project detector --no-sync python distribution/installers.py 'application-dist/AI-Detector-${{ matrix.platform }}' --platform '${{ matrix.platform }}' --version "$APP_VERSION" "${signed[@]}"
-      - name: Sign and notarize disk image
-        if: runner.os == 'macOS' && startsWith(github.ref, 'refs/tags/app/v')
-        env:
-          MACOS_SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY }}
-        run: |
-          codesign --force --timestamp --sign "$MACOS_SIGN_IDENTITY" "application-dist/AI-Detector-$APP_VERSION-macos-arm64.dmg"
-          uv run --project detector --no-sync python distribution/sign_macos.py "application-dist/AI-Detector-$APP_VERSION-macos-arm64.dmg" --notarize
-      - name: Smoke test signed application payload
+      - name: Retrieve previous release for delta generation
         if: startsWith(github.ref, 'refs/tags/app/v') && runner.os != 'Linux'
-        run: uv run --project detector --no-sync python distribution/smoke.py 'application-dist/AI-Detector-${{ matrix.platform }}'
-      - name: Refresh signed archives and checksums
+        run: uv run --project detector --no-sync python distribution/updates.py prepare --platform '${{ matrix.platform }}' --version "$APP_VERSION" --feed-url "$UPDATE_FEED"
+      - name: Build native installer
+        run: uv run --project detector --no-sync python distribution/installers.py 'application-dist/AI-Detector-${{ matrix.platform }}' --platform '${{ matrix.platform }}' --version "$APP_VERSION"
+      - name: Generate signed Sparkle feed and deltas
+        if: runner.os == 'macOS' && startsWith(github.ref, 'refs/tags/app/v')
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: uv run --project detector --no-sync python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --sparkle "$RUNNER_TEMP/sparkle" --release-url "$RELEASE_URL"
+      - name: Sign Velopack feed and package hashes
+        if: runner.os == 'Windows' && startsWith(github.ref, 'refs/tags/app/v')
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: uv run --project detector --no-sync python distribution/updates.py publish --platform windows-x64 --version "$APP_VERSION" --release-url "$RELEASE_URL"
+      - name: Refresh archives and checksums
         run: |
+          python distribution/build.py archive 'application-dist/AI-Detector-${{ matrix.platform }}'
           uv run --project detector --no-sync python - <<'PYARCHIVE'
           import sys
           from pathlib import Path
           sys.path.insert(0, 'distribution')
-          from package import archive, checksum
-          archive(Path('application-dist/AI-Detector-${{ matrix.platform }}'))
-          for pattern in ('*.dmg', '*.exe', '*.deb'):
+          from package import checksum
+          for pattern in ('*.dmg', '*.exe', '*.deb', '*.nupkg', '*.delta'):
               for artifact in Path('application-dist').glob(pattern):
                   checksum(artifact)
           PYARCHIVE
-      - name: Remove release keys
-        if: always()
-        run: |
-          rm -f "$RUNNER_TEMP/ai-detector-signing.pfx" "$RUNNER_TEMP/ai-detector-signing.p12"
-          if [ '${{ runner.os }}' = macOS ] && [ -f "$RUNNER_TEMP/ai-detector-signing.keychain-db" ]; then security delete-keychain "$RUNNER_TEMP/ai-detector-signing.keychain-db"; fi
       - uses: actions/upload-artifact@v7
         with:
           name: AI-Detector-${{ matrix.platform }}
@@ -261,6 +217,10 @@ jobs:
             application-dist/*-setup.exe
             application-dist/*.deb
             application-dist/*.sha256
+            application-dist/*.nupkg
+            application-dist/*.delta
+            application-dist/appcast.xml
+            application-dist/releases.win.json
           if-no-files-found: error
 
   release:
@@ -279,9 +239,20 @@ jobs:
         with:
           name: AI Detector ${{ github.ref_name }}
           files: downloads/*
+          draft: true
           body: |
             Install the download for your computer: the Windows setup program, macOS disk image (drag AI Detector to Applications), or Ubuntu desktop package. Open **AI Detector** and follow the setup. Python, the web server and FFmpeg are included.
 
             Closing the browser leaves monitoring active. Pause explicitly when you want monitoring to stay paused. Desktop startup runs after you sign in; monitoring before login is not promised.
 
-            Windows installers and macOS apps require valid release signatures; macOS releases also pass notarization. Supported packaging targets: Windows 11 24H2+ x64, macOS 14+ Apple Silicon, Ubuntu 22.04/24.04 amd64. GPU and camera qualification remains specific to the tested hardware. Portable ZIPs remain available for technical users.
+            Updates are authenticated using AI Detector’s own signing key. These downloads have no Windows publisher certificate or Apple notarization; OS warnings or execution restrictions can apply. Supported packaging targets: Windows 11 24H2+ x64, macOS 14+ Apple Silicon, Ubuntu 22.04/24.04 amd64. GPU and camera qualification remains specific to the tested hardware. Portable ZIPs remain available for technical users.
+      - name: Publish application before promoting update feeds
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release edit "$GITHUB_REF_NAME" --draft=false
+          if ! gh release view app-updates >/dev/null 2>&1; then
+            gh release create app-updates --title "Application update feeds" --notes "Stable desktop updater metadata. Installers are attached to app/v releases." --prerelease --latest=false
+          fi
+          gh release upload app-updates downloads/appcast.xml downloads/releases.win.json --clobber

@@ -7,8 +7,7 @@ runtime.json
 /application-dist/
 !example/config.json
 !web/src/routes/(admin)/detections
-web/static/_internal/ffmpeg
-web/static/_internal/ffmpeg.exe
+web/static/_internal/
 
 # Local tooling and download caches
 .DS_Store
@@ -44,4 +43,5 @@ __pycache__/
 /detector/docs/
 /detector/examples/
 /detector/fixtures/
-/docs/
+/docs/*
+!/docs/history/

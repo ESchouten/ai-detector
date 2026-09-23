@@ -147,6 +147,33 @@ test('closing and reopening the application resumes enabled detection', posixOnl
 });
 
 test(
+	'a failed drain rejects stop, preserves the pause choice and permits a later restart',
+	posixOnly,
+	async (t) => {
+		const directory = await mkdtemp(path.join(tmpdir(), 'detector-failed-stop-'));
+		const detector = new ManagedDetector({ executable, dataDirectory: directory });
+		t.after(async () => {
+			await detector.stop();
+			await rm(directory, { recursive: true, force: true });
+		});
+		await writeJson(path.join(directory, 'config.json'), { ...config, stopExitCode: 17 });
+		await detector.start('native');
+		await waitFor(() => detector.status().logs.includes('camera.local'));
+		await assert.rejects(detector.stop(), /stopped unexpectedly/);
+		assert.equal(detector.status().phase, 'failed');
+		assert.equal(
+			(await readJson<{ enabled: boolean }>(path.join(directory, 'runtime.json')))?.enabled,
+			false
+		);
+		await writeJson(path.join(directory, 'config.json'), config);
+		await detector.start('native');
+		await waitFor(() => detector.status().phase === 'running');
+		await detector.stop();
+		assert.equal(detector.status().phase, 'stopped');
+	}
+);
+
+test(
 	'invalid configuration and crashed processes remain visible failures',
 	posixOnly,
 	async (t) => {

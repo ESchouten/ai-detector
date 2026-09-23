@@ -42,6 +42,7 @@
 			const uri = monaco.Uri.parse(`inmemory://model/${encodeURIComponent(id)}.json`);
 			monaco.json.jsonDefaults.setDiagnosticsOptions({
 				validate: true,
+				schemaValidation: 'error',
 				allowComments: false,
 				enableSchemaRequest: false,
 				schemas: schema
@@ -49,7 +50,7 @@
 							{
 								uri: `inmemory://schema/${encodeURIComponent(id)}.json`,
 								fileMatch: [uri.toString()],
-								schema: JSON.parse(JSON.stringify(schema))
+								schema: $state.snapshot(schema)
 							}
 						]
 					: []

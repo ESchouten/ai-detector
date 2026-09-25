@@ -6,9 +6,12 @@ export class PreviewSlots {
 		this.limit = limit;
 	}
 
-	request(notify: (active: boolean) => void): () => void {
+	/** An explicit request takes priority over previews already waiting for a slot. */
+	request(notify: (active: boolean) => void, priority = false): () => void {
 		const key = Symbol();
-		this.viewers.set(key, { notify, active: false });
+		const viewer = { notify, active: false };
+		if (priority) this.viewers = new Map([[key, viewer], ...this.viewers]);
+		else this.viewers.set(key, viewer);
 		this.refresh();
 		return () => {
 			this.viewers.delete(key);

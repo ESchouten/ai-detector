@@ -133,6 +133,15 @@ export function sameTelegram(left: TelegramConfig, right: TelegramConfig): boole
 	return left.token === right.token && left.chat === right.chat;
 }
 
+/** A preset describes detection behaviour independently of cameras and delivery destinations. */
+export function detectorSettings(detector: DetectorConfig) {
+	return {
+		...detector,
+		exporters: undefined,
+		detection: { ...detector.detection, source: undefined }
+	};
+}
+
 export function normalizeConfiguration(configInput: unknown, appInput: unknown): Configuration {
 	const config = normalizeConfig(configInput);
 	const app = v.parse(appSchema, appInput);

@@ -3,7 +3,6 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
-	import { ArrowLeft } from '@lucide/svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Field from '$lib/components/ui/field';
@@ -20,8 +19,14 @@
 	let {
 		originalLabel,
 		initial,
-		cameraId = ''
-	}: { originalLabel: string; initial?: TelegramMeta; cameraId?: string } = $props();
+		cameraId = '',
+		setupMode = false
+	}: {
+		originalLabel: string;
+		initial?: TelegramMeta;
+		cameraId?: string;
+		setupMode?: boolean;
+	} = $props();
 	const cameras = await getCameras();
 	let label = $state(untrack(() => initial?.label ?? 'My phone'));
 	let token = $state(untrack(() => initial?.token ?? ''));
@@ -33,11 +38,12 @@
 	let error = $state('');
 	let saved = $state<{ label: string; cameras: string[] }>();
 	const connectionUnchanged = $derived(initial && token === initial.token && chat === initial.chat);
+	const readyForCameras = $derived(Boolean(connectionUnchanged || received));
 	const canSave = $derived(
 		label.trim() && cameraIds.length && token && chat && (connectionUnchanged || received)
 	);
 	const back = $derived(
-		cameraId ? resolve(`/setup?camera=${encodeURIComponent(cameraId)}`) : resolve('/notifications')
+		resolve(setupMode ? '/setup?step=finish' : cameraId ? '/streams' : '/notifications')
 	);
 	async function save(event: SubmitEvent) {
 		event.preventDefault();
@@ -82,16 +88,13 @@
 
 <section class="settings-page">
 	<header class="flex flex-col items-start gap-3">
-		<Button href={back} variant="ghost" size="sm"
-			><ArrowLeft data-icon="inline-start" />{cameraId ? 'Camera setup' : 'Alerts'}</Button
-		>
 		<h1 class="settings-heading">
 			{saved ? 'Alerts are connected' : initial ? 'Manage alerts' : 'Connect alerts'}
 		</h1>
 		<p class="settings-description">
 			{saved
-				? cameraId
-					? 'Return to setup to check the remaining steps for your camera.'
+				? setupMode
+					? 'Return to setup to finish checking your cameras.'
 					: 'Your choices are saved. Open alerts to manage your recipients.'
 				: initial
 					? 'Keep using your saved recipient and choose which cameras send alerts.'
@@ -104,32 +107,17 @@
 				>Alerts are connected to {saved.cameras.join(', ')}.</Alert.Description
 			></Alert.Root
 		>
-		<div class="flex flex-wrap gap-3">
-			{#if cameraId}<Button href={back}>Back to setup</Button>{/if}
-			<Button href={resolve('/notifications')} variant={cameraId ? 'outline' : 'default'}
-				>Open alerts</Button
-			>
-			<Button href={resolve('/detections')} variant="outline">Open recordings</Button>
-		</div>
+		<Button href={back} class="self-start">{setupMode ? 'Back to setup' : 'Done'}</Button>
 	{:else}
-		<form class="settings-layout" onsubmit={save}>
+		<form class="flex max-w-3xl flex-col gap-6" onsubmit={save}>
 			<div class="flex min-w-0 flex-col gap-6">
 				<Card.Root>
 					<Card.Header
-						><Card.Title>1. Your Telegram recipient</Card.Title><Card.Description
-							>Alerts are optional. Local monitoring works without Telegram.</Card.Description
+						><Card.Title>1. Connect your phone</Card.Title><Card.Description
+							>Connect Telegram and confirm that a test alert reaches your phone.</Card.Description
 						></Card.Header
 					>
 					<Card.Content class="flex flex-col gap-5">
-						<Field.Field
-							><Field.Label for="notification-label">Recipient name</Field.Label><Input
-								id="notification-label"
-								bind:value={label}
-								disabled={pending}
-								required
-								placeholder="e.g. My phone"
-							/></Field.Field
-						>
 						<TelegramConnection
 							{initial}
 							bind:token
@@ -140,71 +128,68 @@
 						/>
 					</Card.Content>
 				</Card.Root>
-				<Card.Root>
-					<Card.Header
-						><Card.Title>2. Choose your cameras</Card.Title><Card.Description
-							>{initial
-								? 'Existing camera assignments are already selected. Add another camera below.'
-								: 'Choose which cameras will send alerts to this recipient.'}</Card.Description
-						></Card.Header
-					>
-					<Card.Content>
-						<Field.Set
-							><Field.Legend>Cameras that send alerts</Field.Legend><Field.Group>
-								{#each cameras as camera (camera.id)}
-									<Field.Field orientation="horizontal">
-										<Checkbox
-											id={`alerts-${camera.id}`}
-											checked={cameraIds.includes(camera.id)}
-											disabled={pending || !camera.monitored}
-											onCheckedChange={(enabled) =>
-												(cameraIds = enabled
-													? [...cameraIds, camera.id]
-													: cameraIds.filter((id) => id !== camera.id))}
-										/>
-										<Field.Label for={`alerts-${camera.id}`}
-											>{camera.label}{!camera.monitored ? ' (view only)' : ''}</Field.Label
-										>
-									</Field.Field>
-								{:else}<Field.Description>Add and monitor a camera first.</Field.Description>{/each}
-							</Field.Group></Field.Set
+				{#if readyForCameras}
+					<Card.Root>
+						<Card.Header
+							><Card.Title>2. Choose your cameras</Card.Title><Card.Description
+								>{initial
+									? 'Existing camera assignments are already selected. Add another camera below.'
+									: 'Choose which cameras will send alerts to this recipient.'}</Card.Description
+							></Card.Header
 						>
-					</Card.Content>
-				</Card.Root>
+						<Card.Content class="flex flex-col gap-5">
+							<Field.Field
+								><Field.Label for="notification-label">Recipient name</Field.Label><Input
+									id="notification-label"
+									bind:value={label}
+									disabled={pending}
+									required
+									placeholder="e.g. My phone"
+								/></Field.Field
+							>
+							<Field.Set
+								><Field.Legend>Cameras that send alerts</Field.Legend><Field.Group>
+									{#each cameras as camera (camera.id)}
+										<Field.Field orientation="horizontal">
+											<Checkbox
+												id={`alerts-${camera.id}`}
+												checked={cameraIds.includes(camera.id)}
+												disabled={pending || !camera.monitored}
+												onCheckedChange={(enabled) =>
+													(cameraIds = enabled
+														? [...cameraIds, camera.id]
+														: cameraIds.filter((id) => id !== camera.id))}
+											/>
+											<Field.Label for={`alerts-${camera.id}`}
+												>{camera.label}{!camera.monitored ? ' (view only)' : ''}</Field.Label
+											>
+										</Field.Field>
+									{:else}<Field.Description>Add and monitor a camera first.</Field.Description
+										>{/each}
+								</Field.Group></Field.Set
+							>
+						</Card.Content>
+					</Card.Root>
+				{/if}
 				{#if error}<Alert.Root variant="destructive"
 						><Alert.Title>Alerts need attention</Alert.Title><Alert.Description
 							>{error}</Alert.Description
 						></Alert.Root
 					>{/if}
 				<div class="flex flex-wrap gap-3">
-					<Button type="submit" disabled={pending || connecting || !canSave}
-						>{pending
-							? 'Saving alerts…'
-							: initial
-								? 'Save alert settings'
-								: 'Enable alerts for selected cameras'}</Button
-					>
-					<Button href={back} variant="outline">{cameraId ? 'Back to setup' : 'Cancel'}</Button>
+					{#if readyForCameras}<Button type="submit" disabled={pending || connecting || !canSave}
+							>{pending
+								? 'Saving alerts…'
+								: initial
+									? 'Save alert settings'
+									: 'Enable alerts for selected cameras'}</Button
+						>{/if}
+					<Button href={back} variant="outline">Cancel</Button>
 				</div>
 			</div>
-			<aside class="settings-aside">
-				<div class="flex flex-col gap-2">
-					<h2 class="text-sm font-semibold">One recipient, several cameras</h2>
-					<p class="text-sm text-muted-foreground">
-						Select every camera that should send alerts here. You can reuse this recipient when you
-						add more cameras.
-					</p>
-				</div>
-				<div class="flex flex-col gap-2">
-					<h2 class="text-sm font-semibold">Check delivery before saving</h2>
-					<p class="text-sm text-muted-foreground">
-						For a new or changed Telegram connection, send a test message and confirm it arrived on
-						your phone.
-					</p>
-				</div>
-				{#if initial}
+			{#if initial}<details>
+					<summary class="cursor-pointer text-sm text-muted-foreground">Remove recipient</summary>
 					<div class="flex flex-col items-start gap-3">
-						<h2 class="text-sm font-semibold">Remove this recipient</h2>
 						<p class="text-sm text-muted-foreground">
 							This stops its alerts for every camera. Monitoring and recordings continue.
 						</p>
@@ -233,8 +218,7 @@
 							</AlertDialog.Content>
 						</AlertDialog.Root>
 					</div>
-				{/if}
-			</aside>
+				</details>{/if}
 		</form>
 	{/if}
 </section>

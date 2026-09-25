@@ -14,21 +14,6 @@ export type DetectorDraft = DetectorConfig & {
 	exporters: NonNullable<DetectorConfig['exporters']>;
 };
 
-export type CameraMonitoringChoice =
-	| { mode: 'preset'; preset: string }
-	| { mode: 'keep' }
-	| { mode: 'view-only' }
-	| { mode: 'copy' };
-
-/** Preset IDs live in their own namespace so they cannot collide with camera actions. */
-export function cameraMonitoringChoice(selection: string): CameraMonitoringChoice | undefined {
-	if (selection === 'keep' || selection === 'view-only' || selection === 'copy')
-		return { mode: selection };
-	if (selection.startsWith('preset:') && selection.length > 'preset:'.length)
-		return { mode: 'preset', preset: selection.slice('preset:'.length) };
-	return undefined;
-}
-
 export function createDetectorDraft(saved?: DetectorConfig): DetectorDraft {
 	const detector = saved
 		? structuredClone(saved)
@@ -45,15 +30,16 @@ export function parseDetectorDraft(text: string): DetectorDraft {
 	return createDetectorDraft(config.detectors[0]);
 }
 
-/** Change the watched behavior without changing the camera or its delivery destinations. */
+/** Keep camera choices; existing detectors also keep their delivery destinations. */
 export function applyDetectorPreset(
 	current: DetectorConfig,
-	preset: DetectorConfig
+	preset: DetectorConfig,
+	{ keepDelivery = true }: { keepDelivery?: boolean } = {}
 ): DetectorDraft {
 	return createDetectorDraft({
 		...structuredClone(preset),
 		detection: { ...preset.detection, source: [...current.detection.source] },
-		exporters: structuredClone(current.exporters ?? preset.exporters)
+		exporters: structuredClone(keepDelivery ? current.exporters : preset.exporters)
 	});
 }
 

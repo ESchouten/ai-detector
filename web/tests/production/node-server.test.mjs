@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { execFile, spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { createServer, request } from 'node:http';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
@@ -19,12 +19,22 @@ const executable = fileURLToPath(new URL('../fixtures/detector.mjs', import.meta
 const commands = {};
 for (const [id, load] of Object.entries(manifest._.remotes)) {
 	const { default: remote } = await load();
-	for (const name of ['startDetector', 'getCameraConnection', 'saveCamera']) {
+	for (const name of [
+		'startDetector',
+		'getCameraConnection',
+		'saveCamera',
+		'saveDetector',
+		'finishSetup'
+	]) {
 		if (name in remote) commands[name] = `/${manifest.appPath}/remote/${id}/${name}`;
 	}
 }
 assert.ok(
-	commands.saveCamera && commands.getCameraConnection && commands.startDetector,
+	commands.saveCamera &&
+		commands.getCameraConnection &&
+		commands.startDetector &&
+		commands.saveDetector &&
+		commands.finishSetup,
 	'Build is missing setup/runtime commands'
 );
 
@@ -152,6 +162,21 @@ async function cameraSource(t, directory) {
 	return `http://127.0.0.1:${camera.address().port}/pen`;
 }
 
+test(
+	'production detector setup discovers the bundled preset files',
+	{ timeout: 20000 },
+	async (t) => {
+		const { base } = await startServer(t);
+		const response = await send(`${base}/detectors/add?setup=1`);
+		assert.equal(response.status, 200);
+		const html = await response.text();
+		for (const name of ['Calving Catcher', 'Cow Catcher', 'General'])
+			assert.ok(html.includes(name), `Bundled preset ${name} should be available`);
+		assert.ok(html.includes('Choose a preset'));
+		assert.ok(!html.includes('Cow mounting behaviour'));
+	}
+);
+
 for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 	test(
 		`production ${deployment} setup protects origins and drains the detector on shutdown`,
@@ -164,23 +189,9 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 				deployment === 'HTTPS proxy' ? 'https://detector.example.test' : undefined;
 			const { directory, base, stop, logs } = await startServer(t, publicOrigin);
 			const source = await cameraSource(t, directory);
+			await mkdir(path.join(directory, 'presets'));
 			await writeFile(
-				path.join(directory, 'presets.json'),
-				JSON.stringify({
-					defaultPreset: 'copy',
-					presets: [
-						{
-							id: 'copy',
-							name: 'Workshop safety',
-							description: 'Watch the work area.',
-							guidance: 'Keep the entrance visible.',
-							configuration: 'workshop.json'
-						}
-					]
-				})
-			);
-			await writeFile(
-				path.join(directory, 'workshop.json'),
+				path.join(directory, 'presets', 'copy.json'),
 				JSON.stringify({
 					yolo: { model: 'safety.onnx', confidence: { helmet: 0.75 } },
 					exporters: { disk: { directory: 'safety' } }
@@ -193,9 +204,13 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			assert.equal(page.status, 200);
 			const html = await page.text();
 			assert.ok(html.includes('<title>Setup · AI Detector</title>'));
-			assert.ok(html.includes('Workshop safety'));
-			assert.ok(html.includes('Keep the entrance visible.'));
-			assert.ok(!html.includes('Calving signs'));
+			assert.ok(html.includes('Add your cameras'));
+			assert.ok(!html.includes('Calving Catcher'));
+			const detectorPage = await send(`${base}/detectors/add?setup=1`, { headers: { Host: host } });
+			assert.equal(detectorPage.status, 200);
+			const detectorHtml = await detectorPage.text();
+			assert.ok(detectorHtml.includes('Copy'));
+			assert.ok(!detectorHtml.includes('Calving Catcher'));
 			const headers = {
 				Host: host,
 				Origin: origin,
@@ -284,7 +299,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 }
 
 test(
-	'production camera onboarding verifies playable media and assigns each camera atomically',
+	'production setup saves cameras before detectors and resumes incomplete setup',
 	{ skip: process.platform === 'win32', timeout: 20000 },
 	async (t) => {
 		const { directory, base } = await startServer(t);
@@ -307,8 +322,7 @@ test(
 		const unverified = await command('saveCamera', {
 			label: 'Pen',
 			source,
-			mode: 'preset',
-			preset: 'general'
+			mode: 'view-only'
 		});
 		assert.equal(unverified.type, 'error');
 		assert.equal(unverified.status, 400);
@@ -340,12 +354,30 @@ test(
 		const saved = await command('saveCamera', {
 			label: 'Pen',
 			source: result.source,
-			mode: 'preset',
-			preset: 'general',
+			mode: 'view-only',
 			checkId: result.checkId
 		});
 		assert.equal(saved.type, 'result', JSON.stringify(saved));
 		const id = parse(saved.result).id;
+		assert.equal(parse(saved.result).monitored, false);
+		assert.deepEqual(
+			JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8')).detectors,
+			[]
+		);
+		assert.equal((await send(base + '/')).headers.get('location'), '/setup');
+		assert.equal((await command('finishSetup')).type, 'result');
+		assert.equal((await send(base + '/')).headers.get('location'), '/streams');
+		const detectorSaved = await command('saveDetector', {
+			meta: { label: 'Activity' },
+			detector: {
+				detection: { source: [result.source] },
+				yolo: { model: 'yolo11n.pt' },
+				exporters: { disk: [{}] }
+			}
+		});
+		assert.equal(detectorSaved.type, 'result', JSON.stringify(detectorSaved));
+		assert.equal((await send(base + '/')).headers.get('location'), '/detections');
+		await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
 		const renamed = await command('saveCamera', {
 			id,
 			label: 'Calving pen',
@@ -383,7 +415,7 @@ test(
 );
 
 test(
-	'production saved cameras remain editable when a referenced preset file becomes invalid',
+	'production saved cameras remain editable when a preset file becomes invalid',
 	{ skip: process.platform === 'win32', timeout: 20000 },
 	async (t) => {
 		const { directory, base } = await startServer(t);
@@ -397,7 +429,8 @@ test(
 		const detectorMeta = { label: 'Workshop rule', cameraId, preset: 'workshop' };
 		const configPath = path.join(directory, 'config.json');
 		const configText = JSON.stringify({ detectors: [detector] });
-		const templatePath = path.join(directory, 'workshop.json');
+		await mkdir(path.join(directory, 'presets'));
+		const templatePath = path.join(directory, 'presets', 'workshop.json');
 		await Promise.all([
 			writeFile(configPath, configText),
 			writeFile(
@@ -408,33 +441,15 @@ test(
 					telegrams: []
 				})
 			),
-			writeFile(
-				path.join(directory, 'presets.json'),
-				JSON.stringify({
-					defaultPreset: 'workshop',
-					presets: [
-						{
-							id: 'workshop',
-							name: 'Workshop safety',
-							description: 'Watch the work area.',
-							configuration: 'workshop.json'
-						}
-					]
-				})
-			),
 			writeFile(templatePath, JSON.stringify(detector))
 		]);
 		const before = await send(`${base}/streams`);
 		assert.equal(before.status, 200);
-		assert.ok((await before.text()).includes('Workshop safety'));
+		assert.ok((await before.text()).includes('Workshop'));
 		await writeFile(templatePath, '{"yolo":');
 		for (const [route, savedValue, expectedContent] of [
 			['/streams', 'Workshop camera', /Monitoring preset names are unavailable/],
-			[
-				`/streams/add?id=${cameraId}`,
-				'Workshop camera',
-				/Your saved connection is kept[\s\S]*Continue to monitoring/
-			],
+			[`/streams/add?id=${cameraId}`, 'Workshop camera', /Camera name[\s\S]*Save changes/],
 			[
 				'/detectors/add?label=Workshop%20rule',
 				'workshop-safety.onnx',

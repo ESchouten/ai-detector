@@ -1,119 +1,159 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
-	import * as NativeSelect from '$lib/components/ui/native-select';
-	import * as Field from '$lib/components/ui/field';
+	import { Badge } from '$lib/components/ui/badge';
+	import * as Empty from '$lib/components/ui/empty';
+	import { ArrowRight, Plus } from '@lucide/svelte';
 	import CameraPicture from '$lib/components/camera-picture.svelte';
-	import PlusIcon from '@lucide/svelte/icons/plus';
-	import VideoIcon from '@lucide/svelte/icons/video';
-	import BellIcon from '@lucide/svelte/icons/bell';
-	import SlidersHorizontalIcon from '@lucide/svelte/icons/sliders-horizontal';
-	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
-	import CameraEditor from '$lib/components/camera-editor.svelte';
-	import CameraSetupProgress from '$lib/components/camera-setup-progress.svelte';
+	import SetupReview from '$lib/components/setup-review.svelte';
 	import DetectorRuntime from '$lib/components/detector-runtime.svelte';
+	import SetupSteps from '$lib/components/setup-steps.svelte';
 	import { getCameras } from '$lib/remote/stream.remote';
-	const cameras = $derived(await getCameras());
-	const addingFirstCamera = untrack(() => cameras.length === 0);
-	const incomplete = $derived(cameras.filter((camera) => !camera.setupComplete));
-	const selected = $derived(
-		cameras.find((camera) => camera.id === page.url.searchParams.get('camera')) ??
-			incomplete[0] ??
-			cameras[0]
+	import { getDetectors } from '$lib/remote/detector.remote';
+	import { setupStep } from '$lib/setup';
+
+	const choices = $derived(await Promise.all([getCameras(), getDetectors()]));
+	const cameras = $derived(choices[0]);
+	const detectors = $derived(choices[1]);
+	const step = $derived(
+		setupStep(
+			page.url.searchParams.get('step') ?? (page.url.searchParams.has('camera') ? 'finish' : null),
+			cameras.length,
+			detectors.length
+		)
 	);
 </script>
 
-<svelte:head><title>{cameras.length ? 'Settings' : 'Setup'} · AI Detector</title></svelte:head>
-{#if addingFirstCamera || cameras.length === 0}<CameraEditor />{:else}
-	<section class="settings-page">
+<svelte:head><title>Setup · AI Detector</title></svelte:head>
+<section class="settings-page">
+	<SetupSteps current={step} hasCameras={cameras.length > 0} />
+	{#if step === 'cameras'}
 		<header class="flex flex-wrap items-start justify-between gap-4">
-			<div class="space-y-2">
-				<h1 class="settings-heading">Settings</h1>
-				<p class="settings-description">Keep your cameras, recordings, and alerts ready.</p>
+			<div class="flex flex-col gap-2">
+				<h1 class="settings-heading">Add your cameras</h1>
+				<p class="settings-description">
+					Connect your cameras. You’ll choose what to detect in the next step.
+				</p>
 			</div>
-			<Button href={resolve('/streams/add')} variant="outline"><PlusIcon />Add a camera</Button>
+			{#if cameras.length}<Button href={resolve('/streams/add?setup=1')} variant="outline"
+					><Plus data-icon="inline-start" />Add camera</Button
+				>{/if}
 		</header>
-		<div class="settings-layout">
-			<div class="flex min-w-0 flex-col gap-6">
-				<DetectorRuntime configured={cameras.some((camera) => camera.monitored)} />
-				<section aria-labelledby="camera-setup-heading" class="flex min-w-0 flex-col gap-4">
-					<div class="flex flex-wrap items-end justify-between gap-3">
-						<h2 id="camera-setup-heading" class="text-lg font-semibold">Camera setup</h2>
-						{#if cameras.length > 1}
-							<Field.Field class="w-full sm:w-auto sm:min-w-56">
-								<Field.Label for="setup-camera">Select a camera</Field.Label>
-								<NativeSelect.Root
-									id="setup-camera"
-									value={selected.id}
-									onchange={(event) => goto(resolve(`/setup?camera=${event.currentTarget.value}`))}
+		{#if cameras.length}
+			<div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+				{#each cameras as camera (camera.id)}
+					<CameraPicture id={camera.id} label={camera.label}>
+						{#snippet overlay()}
+							<div class="flex items-start justify-between gap-3">
+								<Badge variant="secondary" class="min-w-0 shrink text-left whitespace-normal"
+									>{camera.label}</Badge
 								>
-									{#each cameras as camera (camera.id)}
-										<NativeSelect.Option value={camera.id}
-											>{camera.label}{camera.setupComplete
-												? ''
-												: ' · Continue setup'}</NativeSelect.Option
-										>
-									{/each}
-								</NativeSelect.Root>
-							</Field.Field>
-						{/if}
-					</div>
-					{#key selected.id}<CameraSetupProgress id={selected.id} />{/key}
-				</section>
+								<Button
+									href={resolve(`/streams/add?setup=1&id=${camera.id}`)}
+									variant="secondary"
+									class="pointer-events-auto shrink-0"
+									size="sm"
+									aria-label={`Edit ${camera.label}`}>Edit</Button
+								>
+							</div>
+						{/snippet}
+					</CameraPicture>
+				{/each}
 			</div>
-			<aside class="settings-aside" aria-label="Camera preview and settings">
-				<section class="space-y-3">
-					<h2 class="text-base font-semibold">{selected.label}</h2>
-					<p class="settings-description">
-						{selected.monitored
-							? 'Check the live picture or see what the detector recognises.'
-							: 'Check the live picture from this camera.'}
-					</p>
-					{#key selected.id}<CameraPicture
-							id={selected.id}
-							label={selected.label}
-							monitored={selected.monitored}
-						/>{/key}
-				</section>
-				<nav aria-label="Manage settings" class="divide-y border-t">
-					<a
-						href={resolve('/streams')}
-						class="flex items-start gap-3 rounded-sm py-5 focus-visible:outline-2 focus-visible:outline-ring"
-					>
-						<VideoIcon class="mt-0.5 size-5 shrink-0" />
-						<div class="min-w-0 flex-1">
-							<h2 class="text-sm font-medium">Manage cameras</h2>
-							<p class="settings-description mt-1">Names, connections, and pictures.</p>
+			<div class="flex flex-col items-start gap-3">
+				<Button href={resolve('/setup?step=detectors')}
+					>Continue to detectors <ArrowRight data-icon="inline-end" /></Button
+				>
+				<p class="text-sm text-muted-foreground">
+					You can come back to add more cameras at any time.
+				</p>
+			</div>
+		{:else}
+			<Empty.Root class="rounded-lg border">
+				<Empty.Header
+					><Empty.Title>Connect your first camera</Empty.Title><Empty.Description
+						>Keep the camera powered on and connected to the same network as this computer. Have its
+						username and password ready.</Empty.Description
+					></Empty.Header
+				>
+				<Empty.Content
+					><Button href={resolve('/streams/add?setup=1')}
+						>Find and add cameras <ArrowRight data-icon="inline-end" /></Button
+					></Empty.Content
+				>
+			</Empty.Root>
+		{/if}
+	{:else if step === 'detectors'}
+		<header class="flex flex-wrap items-start justify-between gap-4">
+			<div class="flex flex-col gap-2">
+				<h1 class="settings-heading">Choose your detectors</h1>
+				<p class="settings-description">
+					Choose a preset, then select the cameras it should watch. You can use the same camera in
+					several detectors.
+				</p>
+			</div>
+			{#if detectors.length}<Button href={resolve('/detectors/add?setup=1')} variant="outline"
+					><Plus data-icon="inline-start" />Add detector</Button
+				>{/if}
+		</header>
+		{#if detectors.length}
+			<ul class="max-w-4xl divide-y">
+				{#each detectors as { detector, meta } (meta.label)}
+					<li class="flex items-start justify-between gap-4 py-4 first:pt-0">
+						<div class="flex min-w-0 flex-col gap-1">
+							<h2 class="font-medium">{meta.label}</h2>
+							<p class="text-sm text-muted-foreground">
+								{detector.detection.source
+									.map(
+										(source) =>
+											cameras.find((camera) => camera.source === source)?.label ?? 'Custom source'
+									)
+									.join(', ')}
+							</p>
 						</div>
-						<ChevronRightIcon class="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-					</a>
-					<a
-						href={resolve('/notifications')}
-						class="flex items-start gap-3 rounded-sm py-5 focus-visible:outline-2 focus-visible:outline-ring"
-					>
-						<BellIcon class="mt-0.5 size-5 shrink-0" />
-						<div class="min-w-0 flex-1">
-							<h2 class="text-sm font-medium">Phone alerts</h2>
-							<p class="settings-description mt-1">Choose who receives Telegram messages.</p>
-						</div>
-						<ChevronRightIcon class="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-					</a>
-					<a
-						href={resolve('/detectors')}
-						class="flex items-start gap-3 rounded-sm py-5 focus-visible:outline-2 focus-visible:outline-ring"
-					>
-						<SlidersHorizontalIcon class="mt-0.5 size-5 shrink-0" />
-						<div class="min-w-0 flex-1">
-							<h2 class="text-sm font-medium">Monitoring rules</h2>
-							<p class="settings-description mt-1">Adjust models and detection settings.</p>
-						</div>
-						<ChevronRightIcon class="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-					</a>
-				</nav>
-			</aside>
+						<Button
+							href={resolve(`/detectors/add?setup=1&label=${encodeURIComponent(meta.label)}`)}
+							variant="outline"
+							size="sm"
+							aria-label={`Edit ${meta.label}`}>Edit</Button
+						>
+					</li>
+				{/each}
+			</ul>
+		{:else}
+			<Empty.Root class="rounded-lg border">
+				<Empty.Header
+					><Empty.Title>What should your cameras watch for?</Empty.Title><Empty.Description
+						>Add a detector using a preset. Its camera choices include live previews, so you can
+						check the view before selecting it.</Empty.Description
+					></Empty.Header
+				>
+				<Empty.Content
+					><Button href={resolve('/detectors/add?setup=1')}
+						><Plus data-icon="inline-start" />Add detector</Button
+					></Empty.Content
+				>
+			</Empty.Root>
+		{/if}
+		<div class="flex flex-wrap gap-3">
+			<Button
+				href={resolve('/setup?step=finish')}
+				variant={detectors.length ? 'default' : 'outline'}
+				>{detectors.length ? 'Continue to finish setup' : 'Use cameras for viewing only'}
+				<ArrowRight data-icon="inline-end" /></Button
+			>
 		</div>
-	</section>
-{/if}
+	{:else}
+		<header class="flex flex-col gap-2">
+			<h1 class="settings-heading">Finish setup</h1>
+			<p class="settings-description">
+				Start monitoring, check recordings, and choose whether to connect phone alerts.
+			</p>
+		</header>
+		<div class="flex max-w-4xl flex-col gap-6">
+			<DetectorRuntime configured={detectors.length > 0} />
+			<SetupReview />
+		</div>
+	{/if}
+</section>

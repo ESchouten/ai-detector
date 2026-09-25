@@ -19,7 +19,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
 				]
 			: []
 	);
-	if (!rules.length) error(409, 'Choose a monitoring rule before opening live detections.');
+	if (!rules.length) error(409, 'Choose a detector before opening live detections.');
 	return new Response(
 		createLivePreviewStream(
 			path.join(DATA_DIRECTORY, 'live'),

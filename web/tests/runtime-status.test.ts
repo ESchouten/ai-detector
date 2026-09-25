@@ -73,7 +73,7 @@ test('camera readiness requires actual frames and processing; recordings remain 
 test('preparation failures remain actionable until a new run resets progress', () => {
 	const state = progress();
 	record(state, 'preparing', 'Downloading the detection model…');
-	assert.match(state.preparation!, /Rule 1: Downloading/);
+	assert.match(state.preparation!, /Detector 1: Downloading/);
 	record(state, 'preparation_failed', 'Check the internet connection and try again.');
 	assert.equal(state.snapshot(now).readiness, 'failed');
 	assert.match(state.preparationFailure!, /internet connection/);

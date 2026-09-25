@@ -23,3 +23,19 @@ test('a hidden or closed waiting viewer is removed from the queue', () => {
 	releaseFirst();
 	assert.deepEqual(starts, ['first', 'last']);
 });
+
+test('opening a paused preview keeps the connection limit and resumes the displaced preview afterward', () => {
+	const slots = new PreviewSlots(2);
+	const active = new Set<string>();
+	const notify = (name: string) => (running: boolean) => {
+		if (running) active.add(name);
+		else active.delete(name);
+	};
+	slots.request(notify('first'));
+	slots.request(notify('second'));
+	const release = slots.request(notify('requested'), true);
+	assert.deepEqual([...active].sort(), ['first', 'requested']);
+	release();
+	active.delete('requested');
+	assert.deepEqual([...active].sort(), ['first', 'second']);
+});

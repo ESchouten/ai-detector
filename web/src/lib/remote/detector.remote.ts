@@ -4,17 +4,17 @@ import { command, query } from '$app/server';
 import * as v from 'valibot';
 import { configuration } from '$lib/server/configuration';
 import { detectorInput, detectorMeta } from '$lib/configuration';
-import { readPresetCatalog } from '$lib/server/configuration/presets';
-import { readPresetChoices } from '$lib/server/configuration/preset-catalog';
+import { readPresets } from '$lib/server/configuration/presets';
+import { readPresetChoices } from '$lib/server/configuration/preset-files';
 import { getEditorSchema } from '$lib/server/configuration/editor-schema';
 
-export const getDetectorPresets = query(() => readPresetChoices(readPresetCatalog));
+export const getDetectorPresets = query(() => readPresetChoices(readPresets));
 
 export const getDetectorPreset = query(v.object({ id: v.string() }), ({ id }) =>
 	configurationAction(
 		(async () => {
-			const catalog = await readPresetCatalog();
-			const preset = catalog.presets.find((preset) => preset.id === id);
+			const presets = await readPresets();
+			const preset = presets.find((preset) => preset.id === id);
 			if (!preset) error(404, 'This preset is no longer available. Choose another preset.');
 			return structuredClone(preset.detector);
 		})()

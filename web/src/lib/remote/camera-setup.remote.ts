@@ -1,45 +1,39 @@
 import { command, query } from '$app/server';
-import * as v from 'valibot';
 import { configuration } from '$lib/server/configuration';
 import { configurationAction } from '$lib/server/configuration/request';
 import { cameraSetupStatus } from '$lib/server/configuration/camera-setup';
 import { detectorStatus } from '$lib/server/detector-service';
+import type { RuntimeStatus } from '$lib/runtime';
 
-export const getCameraSetup = query(v.string(), (id) =>
+function monitoringCameras(runtime: RuntimeStatus) {
+	return new Set(
+		runtime.phase === 'running'
+			? runtime.cameras
+					.filter(
+						(camera) => camera.state === 'monitoring' && !camera.error && !camera.recordingError
+					)
+					.map((camera) => camera.id)
+			: []
+	);
+}
+
+export const getSetupStatus = query(() =>
 	configurationAction(
 		(async () => {
-			const setup = cameraSetupStatus(await configuration.read(), id);
-			const runtime = await detectorStatus();
-			const camera = runtime.cameras.find((item) => item.id === id);
-			return {
-				...setup,
-				monitoring:
-					runtime.phase === 'running' &&
-					camera?.state === 'monitoring' &&
-					!camera.error &&
-					!camera.recordingError,
-				monitoringMessage:
-					camera?.error ?? camera?.recordingError ?? runtime.preparation ?? runtime.message
-			};
+			const [document, runtime] = await Promise.all([configuration.read(), detectorStatus()]);
+			const monitoring = monitoringCameras(runtime);
+			return document.app.streams.map((camera) => ({
+				...cameraSetupStatus(document, camera.id!),
+				monitoring: monitoring.has(camera.id!)
+			}));
 		})()
 	)
 );
 
-export const skipCameraAlerts = command(v.string(), (id) =>
-	configurationAction(configuration.skipCameraAlerts(id))
-);
+export const skipSetupAlerts = command(() => configurationAction(configuration.skipSetupAlerts()));
 
-export const finishCameraSetup = command(v.string(), (id) =>
+export const finishSetup = command(() =>
 	configurationAction(
-		configuration.finishCameraSetup(id, async () => {
-			const runtime = await detectorStatus();
-			const camera = runtime.cameras.find((item) => item.id === id);
-			return (
-				runtime.phase === 'running' &&
-				camera?.state === 'monitoring' &&
-				!camera.error &&
-				!camera.recordingError
-			);
-		})
+		configuration.finishSetup(async () => monitoringCameras(await detectorStatus()))
 	)
 );

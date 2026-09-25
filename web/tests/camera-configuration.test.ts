@@ -9,8 +9,8 @@ import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { alertsInput, cameraInput } from '../src/lib/configuration.ts';
 import { saveCamera as saveCameraDocument } from '../src/lib/server/configuration/cameras.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
-import { loadPresetCatalog } from '../src/lib/server/configuration/preset-catalog.ts';
-import type { PresetCatalog } from '../src/lib/schema.ts';
+import { loadPresets } from '../src/lib/server/configuration/preset-files.ts';
+import type { DetectorPreset } from '../src/lib/schema.ts';
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'camera-setup-'));
@@ -30,7 +30,7 @@ test('first and additional cameras are assigned actual monitoring rules; view-on
 		label: 'Calving pen',
 		source: first,
 		mode: 'preset',
-		preset: 'calving'
+		preset: 'calving-catcher'
 	});
 	const two = await store.saveCamera({
 		label: 'Yard',
@@ -63,7 +63,7 @@ test('copying requires an existing camera choice instead of a preset and only ap
 		true
 	);
 	assert.equal(
-		v.safeParse(cameraInput, { ...input, mode: 'preset', preset: 'calving' }).success,
+		v.safeParse(cameraInput, { ...input, mode: 'preset', preset: 'calving-catcher' }).success,
 		true
 	);
 	for (const selection of [
@@ -141,7 +141,7 @@ test('copied rules own their nested settings so later changes cannot mutate the 
 		label: 'First pen',
 		source: first,
 		mode: 'preset',
-		preset: 'calving'
+		preset: 'calving-catcher'
 	});
 	await store.saveAlerts({
 		label: 'Phone',
@@ -218,7 +218,7 @@ test('changing a watched event preserves alert options and another camera sharin
 		label: 'Calving pen',
 		source: first,
 		mode: 'preset',
-		preset: 'calving'
+		preset: 'calving-catcher'
 	});
 	const saved = await store.read();
 	assert.deepEqual(saved.config.detectors[0].detection.source, [second]);
@@ -466,7 +466,7 @@ test('unconfirmed new or changed alert credentials leave both files unchanged', 
 		label: 'Pen',
 		source: first,
 		mode: 'preset',
-		preset: 'calving'
+		preset: 'calving-catcher'
 	});
 	const channel = { label: 'Phone', token: 'token', chat: 'chat', cameraIds: [camera.id] };
 	await store.saveAlerts({ ...channel, received: true });
@@ -512,28 +512,16 @@ test('removing a camera removes its rules but preserves other cameras and archiv
 	assert.deepEqual(JSON.parse(await readFile(archiveMarker, 'utf8')), { existing: true });
 });
 
-test('a runtime catalogue saves non-agricultural presets and reloads edited templates without changing existing cameras', async (t) => {
+test('local preset files reload edited templates without changing existing cameras', async (t) => {
 	const { files } = await fixture(t);
-	const directory = path.dirname(files.app);
-	const catalogFile = path.join(directory, 'presets.json');
-	const templateFile = path.join(directory, 'workshop.json');
-	await writeJson(catalogFile, {
-		defaultPreset: 'keep',
-		presets: [
-			{
-				id: 'keep',
-				name: 'Workshop safety',
-				description: 'Watch for people near forklifts.',
-				configuration: 'workshop.json'
-			}
-		]
-	});
+	const directory = path.join(path.dirname(files.app), 'presets');
+	const templateFile = path.join(directory, 'keep.json');
 	await writeJson(templateFile, {
 		detection: { interval: 2 },
 		yolo: { model: 'workshop.onnx', confidence: { person: 0.75, forklift: 0.65 }, frames_min: 7 },
 		exporters: { disk: { directory: 'workshop-recordings' } }
 	});
-	const store = new ConfigurationStore(files, () => loadPresetCatalog(catalogFile));
+	const store = new ConfigurationStore(files, () => loadPresets(directory));
 	const one = await store.saveCamera({
 		label: 'Loading area',
 		source: first,
@@ -560,26 +548,23 @@ test('a runtime catalogue saves non-agricultural presets and reloads edited temp
 		saved.app.detectors.map((meta) => meta.preset),
 		['keep', 'keep']
 	);
-	assert.deepEqual((await loadPresetCatalog(catalogFile)).presets[0].detector.detection.source, []);
+	assert.deepEqual((await loadPresets(directory))[0].detector.detection.source, []);
 });
 
 test('arbitrary preset IDs do not collide with camera actions and templates are not mutated', async (t) => {
 	const { files } = await fixture(t);
-	const catalog: PresetCatalog = {
-		presets: ['keep', 'copy', 'view-only'].map((id) => ({
-			id,
-			name: id,
-			description: 'Custom security monitoring',
-			detector: {
-				detection: { source: [] },
-				yolo: { model: 'security.pt' },
-				exporters: { disk: [{}] }
-			}
-		}))
-	};
-	const before = structuredClone(catalog);
-	const store = new ConfigurationStore(files, async () => catalog);
-	for (const preset of catalog.presets) {
+	const presets: DetectorPreset[] = ['keep', 'copy', 'view-only'].map((id) => ({
+		id,
+		name: id,
+		detector: {
+			detection: { source: [] },
+			yolo: { model: 'security.pt' },
+			exporters: { disk: [{}] }
+		}
+	}));
+	const before = structuredClone(presets);
+	const store = new ConfigurationStore(files, async () => presets);
+	for (const preset of presets) {
 		const input = v.parse(cameraInput, {
 			mode: 'preset',
 			preset: preset.id,
@@ -588,7 +573,7 @@ test('arbitrary preset IDs do not collide with camera actions and templates are 
 		});
 		assert.equal((await store.saveCamera(input)).monitored, true);
 	}
-	assert.deepEqual(catalog, before);
+	assert.deepEqual(presets, before);
 	assert.equal((await store.read()).config.detectors.length, 3);
 });
 
@@ -631,20 +616,17 @@ test('changing to a custom preset preserves existing alert and recording destina
 		received: true
 	});
 	const previous = (await store.read()).config.detectors[0].exporters;
-	const custom = new ConfigurationStore(files, async () => ({
-		presets: [
-			{
-				id: 'intrusion',
-				name: 'Restricted area',
-				description: 'Watch for people in the restricted area.',
-				detector: {
-					detection: { source: [], interval: 1 },
-					yolo: { model: 'intrusion.onnx', confidence: { person: 0.8 } },
-					exporters: { disk: [{ directory: 'new-default' }] }
-				}
+	const custom = new ConfigurationStore(files, async () => [
+		{
+			id: 'intrusion',
+			name: 'Restricted area',
+			detector: {
+				detection: { source: [], interval: 1 },
+				yolo: { model: 'intrusion.onnx', confidence: { person: 0.8 } },
+				exporters: { disk: [{ directory: 'new-default' }] }
 			}
-		]
-	}));
+		}
+	]);
 	await custom.saveCamera({
 		id: camera.id,
 		label: 'Entrance',

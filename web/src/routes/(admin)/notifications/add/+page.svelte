@@ -6,6 +6,7 @@
 	import { getTelegram, getTelegrams } from '$lib/remote/exporter.remote';
 	const label = $derived(page.url.searchParams.get('label') ?? '');
 	const cameraId = $derived(page.url.searchParams.get('camera') ?? '');
+	const setupMode = $derived(page.url.searchParams.get('setup') === '1');
 	const createNew = $derived(page.url.searchParams.get('new') === '1');
 	const saved = $derived(label ? await getTelegram({ label }) : undefined);
 	const recipients = await getTelegrams();
@@ -19,9 +20,9 @@
 		<Alert.Description>Return to Alerts to select a saved recipient.</Alert.Description>
 	</Alert.Root>
 {:else if !label && !createNew && recipients.length}
-	<RecipientChoice {recipients} {cameraId} />
+	<RecipientChoice {recipients} {cameraId} {setupMode} />
 {:else}
 	{#key `${label}:${cameraId}`}
-		<NotificationEditor originalLabel={label} initial={saved} {cameraId} />
+		<NotificationEditor originalLabel={label} initial={saved} {cameraId} {setupMode} />
 	{/key}
 {/if}

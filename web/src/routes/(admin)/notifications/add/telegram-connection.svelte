@@ -134,15 +134,55 @@
 
 <div class="flex flex-col gap-4">
 	{#if !editing && initial}
+		<div class="flex flex-wrap items-center justify-between gap-2">
+			<p class="text-sm">Connected to <strong>{initial.label}</strong>.</p>
+			<Button type="button" variant="outline" size="sm" disabled={busy} onclick={changeConnection}
+				>Change connection</Button
+			>
+		</div>
+	{:else if received}
+		<div class="flex flex-wrap items-center justify-between gap-2">
+			<p role="status" class="text-sm">Phone connected and test alert received.</p>
+			<Button type="button" variant="outline" size="sm" disabled={busy} onclick={changeConnection}
+				>Change connection</Button
+			>
+		</div>
+	{:else if !manual && pairingState.state === 'waiting'}
 		<p class="text-sm">
-			Using the saved Telegram connection for <strong>{initial.label}</strong>. You can change its
-			name and cameras without another test.
+			Your bot is ready. Scan this code with your phone, or open Telegram, then choose <strong
+				>Start</strong
+			>.
 		</p>
-		<Button type="button" variant="outline" disabled={busy} onclick={changeConnection}
-			>Change Telegram connection</Button
+		<img
+			src={pairingState.session.qrDataUrl}
+			alt={`Scan to connect to ${pairingState.session.bot.name} in Telegram`}
+			class="size-48 rounded-md"
+		/>
+		<Button href={pairingState.session.url} target="_blank" rel="noreferrer" class="self-start"
+			>Open Telegram</Button
+		>
+		<p class="text-sm text-muted-foreground" role="status">
+			Waiting for your phone… Keep this page open. The code expires in five minutes.
+		</p>
+		<Button type="button" variant="outline" class="self-start" onclick={() => pairing.cancel()}
+			>Cancel connection</Button
+		>
+	{:else if !manual && pairingState.state === 'matched'}
+		<p class="text-sm">
+			Connected to <strong>{pairingState.chat.name}</strong>.
+			{testSent
+				? 'Test alert sent. Check your phone and confirm below.'
+				: 'Send a test to check that alerts reach your phone.'}
+		</p>
+		<Button
+			type="button"
+			variant="outline"
+			class="self-start"
+			disabled={busy}
+			onclick={changeConnection}>Use another phone</Button
 		>
 	{:else}
-		<TelegramBotHelp />
+		{#if !manual}<TelegramBotHelp initiallyOpen={!token.trim()} />{/if}
 		<Field.Field>
 			<Field.Label for="notification-token">Bot token from BotFather</Field.Label>
 			<Input
@@ -154,58 +194,21 @@
 				autocomplete="off"
 				required
 			/>
-			<Field.Description>Already have a bot? Use its existing token.</Field.Description>
-		</Field.Field>
-		{#if !manual}
-			<p class="text-sm text-muted-foreground">
-				Use a bot created for AI Detector. For a bot connected to another application, use manual
-				setup below.
-			</p>
-			<Button type="button" variant="outline" disabled={busy || !token.trim()} onclick={connect}
-				>{pairingState.state === 'starting' ? 'Checking your bot…' : 'Connect my bot'}</Button
+			<Field.Description
+				>Paste the token here. If you already have a bot, use its token.</Field.Description
 			>
-			{#if pairingState.state === 'waiting'}
-				<Alert.Root>
-					<Alert.Title>{pairingState.session.bot.name} is ready</Alert.Title>
-					<Alert.Description
-						>Open @{pairingState.session.bot.username} on your phone and choose Start. Keep this page
-						open; your phone will appear automatically.</Alert.Description
-					>
-				</Alert.Root>
-				<Button href={pairingState.session.url} target="_blank" rel="noreferrer"
-					>Open Telegram</Button
-				>
-				<img
-					src={pairingState.session.qrDataUrl}
-					alt={`Scan to connect to ${pairingState.session.bot.name} in Telegram`}
-					class="size-48 rounded-md"
-				/>
-				<p class="text-sm text-muted-foreground" role="status">
-					Waiting for you to choose Start in Telegram. This link expires in five minutes.
-				</p>
-				<Button type="button" variant="outline" onclick={() => pairing.cancel()}
-					>Cancel connection</Button
-				>
-			{:else if pairingState.state === 'matched'}
-				<Alert.Root
-					><Alert.Title>Phone connected: {pairingState.chat.name}</Alert.Title><Alert.Description
-						>Send a test below to check that alerts reach the intended phone.</Alert.Description
-					></Alert.Root
-				>
-			{:else if pairingState.state === 'failed'}
-				<Alert.Root variant="destructive"
-					><Alert.Title>Connection needs attention</Alert.Title><Alert.Description
-						>{pairingState.message}</Alert.Description
-					></Alert.Root
-				>
-			{/if}
-		{:else}
+		</Field.Field>
+		{#if manual}
 			<p class="text-sm text-muted-foreground">
-				For a group, add your bot and send a message mentioning it. Find the chat below, or enter a
-				known chat ID. Automatic phone matching is paused.
+				For a group, add your bot and send a message mentioning it. Find the chat below, or enter
+				its chat ID.
 			</p>
-			<Button type="button" variant="outline" disabled={busy || !token.trim()} onclick={findChats}
-				>{finding ? 'Finding chats…' : 'Find chats'}</Button
+			<Button
+				type="button"
+				variant="outline"
+				class="self-start"
+				disabled={busy || !token.trim()}
+				onclick={findChats}>{finding ? 'Finding chats…' : 'Find chats'}</Button
 			>
 			{#if message}<p class="text-sm text-muted-foreground" role="status">{message}</p>{/if}
 			{#if chats.length}<Field.Field>
@@ -230,23 +233,47 @@
 					disabled={busy}
 				/></Field.Field
 			>
+		{:else}
+			<Button type="button" class="self-start" disabled={busy || !token.trim()} onclick={connect}
+				>{pairingState.state === 'starting' ? 'Checking your bot…' : 'Connect my bot'}</Button
+			>
+			{#if pairingState.state === 'failed'}<Alert.Root variant="destructive"
+					><Alert.Title>Connection needs attention</Alert.Title><Alert.Description
+						>{pairingState.message}</Alert.Description
+					></Alert.Root
+				>{/if}
 		{/if}
-		<Button type="button" variant="ghost" disabled={busy} onclick={changeMethod}
+		<Button
+			type="button"
+			variant="outline"
+			class="h-auto min-h-9 max-w-full self-start text-left whitespace-normal"
+			disabled={busy}
+			onclick={changeMethod}
 			>{manual
 				? 'Use automatic phone connection'
-				: 'Advanced: connect a group or enter a chat ID'}</Button
+				: 'Connect a group or a bot used by another app'}</Button
 		>
 	{/if}
-	{#if chat && token}
-		<Button type="button" variant="outline" disabled={busy} onclick={sendTest}
-			>{testing ? 'Sending test…' : 'Send test alert'}</Button
+	{#if chat && token && !received && !testSent}
+		<Button
+			type="button"
+			variant={!editing && initial ? 'outline' : 'default'}
+			class="self-start"
+			disabled={busy}
+			onclick={sendTest}>{testing ? 'Sending test…' : 'Send test alert'}</Button
 		>
 	{/if}
-	{#if testSent}<Field.Field orientation="horizontal"
-			><Checkbox id="alert-received" bind:checked={received} disabled={busy} /><Field.Label
-				for="alert-received">I received the test on the intended phone or chat</Field.Label
-			></Field.Field
-		>{/if}
+	{#if testSent && !received}
+		{#if !editing && initial}<p role="status" class="text-sm">Test alert sent.</p>
+		{:else}<Field.Field orientation="horizontal"
+				><Checkbox id="alert-received" bind:checked={received} disabled={busy} /><Field.Label
+					for="alert-received">I received the test on the intended phone or chat</Field.Label
+				></Field.Field
+			>{/if}
+		<Button type="button" variant="outline" class="self-start" disabled={busy} onclick={sendTest}
+			>Send test again</Button
+		>
+	{/if}
 	{#if error}<Alert.Root variant="destructive"
 			><Alert.Title>Alerts need attention</Alert.Title><Alert.Description>{error}</Alert.Description
 			></Alert.Root

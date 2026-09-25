@@ -54,7 +54,7 @@
 		streams: 'Cameras',
 		notifications: 'Alerts',
 		setup: 'Settings',
-		detectors: 'Monitoring rules',
+		detectors: 'Detectors',
 		add: 'Settings'
 	};
 

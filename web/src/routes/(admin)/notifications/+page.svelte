@@ -17,15 +17,15 @@
 	<header class="flex flex-col gap-2">
 		<div class="flex flex-wrap items-center justify-between gap-3">
 			<h1 class="settings-heading">Alerts</h1>
-			<Button href={resolve('/notifications/add')}
-				><Plus data-icon="inline-start" /> Connect alerts</Button
-			>
+			{#if telegrams.length}<Button href={resolve('/notifications/add')}
+					><Plus data-icon="inline-start" /> Connect alerts</Button
+				>{/if}
 		</div>
 		<p class="settings-description">
 			Choose who receives Telegram alerts and which cameras send them.
 		</p>
 	</header>
-	<div class="settings-layout">
+	<div class="max-w-4xl">
 		<Card.Root class="min-w-0">
 			<Card.Header
 				><Card.Title>Recipients</Card.Title><Card.Description
@@ -84,21 +84,5 @@
 				{/if}
 			</Card.Content>
 		</Card.Root>
-		<aside class="settings-aside">
-			<div class="flex flex-col gap-2">
-				<h2 class="text-sm font-semibold">Connect once, reuse later</h2>
-				<p class="text-sm text-muted-foreground">
-					You do not need a new Telegram bot for each camera. Edit a recipient to add more cameras.
-				</p>
-			</div>
-			<div class="flex flex-col gap-2">
-				<h2 class="text-sm font-semibold">Alerts are optional</h2>
-				<p class="text-sm text-muted-foreground">
-					Removing a recipient stops its alerts. Camera monitoring and saved recordings stay in
-					place.
-				</p>
-			</div>
-			<Button href={resolve('/streams')} variant="outline" class="self-start">Open cameras</Button>
-		</aside>
 	</div>
 </section>

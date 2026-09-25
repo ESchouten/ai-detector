@@ -29,7 +29,7 @@ export function createRuntimeStatus(): RuntimeMonitor {
 			await query.refresh().catch(() => undefined);
 			if (active) timer = setTimeout(refresh, 2000);
 		}
-		timer = setTimeout(refresh, 2000);
+		void refresh();
 		return () => {
 			active = false;
 			clearTimeout(timer);

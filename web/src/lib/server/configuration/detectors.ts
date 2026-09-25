@@ -1,6 +1,11 @@
 import { isDeepStrictEqual } from 'node:util';
 import type * as v from 'valibot';
-import { ConfigurationError, detectorInput, normalizeConfig } from '../../configuration.ts';
+import {
+	ConfigurationError,
+	detectorInput,
+	detectorSettings,
+	normalizeConfig
+} from '../../configuration.ts';
 import type { Configuration } from '../../schema.ts';
 
 export function saveDetector(
@@ -22,10 +27,8 @@ export function saveDetector(
 	}
 	const meta = { ...app.detectors[index], ...input.meta };
 	if (
-		!isDeepStrictEqual(
-			{ ...config.detectors[index], exporters: undefined },
-			{ ...normalized, exporters: undefined }
-		)
+		!input.meta.preset &&
+		!isDeepStrictEqual(detectorSettings(config.detectors[index]), detectorSettings(normalized))
 	)
 		delete meta.preset;
 	config.detectors[index] = normalized;

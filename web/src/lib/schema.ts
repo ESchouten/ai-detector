@@ -88,17 +88,10 @@ export type CameraSetup = v.InferOutput<typeof cameraSetup>;
 export interface PresetInfo {
 	id: string;
 	name: string;
-	description: string;
-	guidance?: string;
 }
 
 export interface DetectorPreset extends PresetInfo {
 	detector: DetectorConfig;
-}
-
-export interface PresetCatalog {
-	defaultPreset?: string;
-	presets: DetectorPreset[];
 }
 
 export interface Configuration {

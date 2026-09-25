@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { resolve } from '$app/paths';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Badge } from '$lib/components/ui/badge';
-	import * as Card from '$lib/components/ui/card';
 	import * as Field from '$lib/components/ui/field';
 	import { getCameraConnection } from '$lib/remote/camera.remote';
 	import type { DiscoveredCamera } from '$lib/cameras';
@@ -50,7 +48,7 @@
 	const labels = {
 		waiting: 'Waiting',
 		connecting: 'Connecting',
-		ready: 'Ready to check',
+		ready: 'Ready to add',
 		failed: 'Needs attention',
 		saved: 'Saved',
 		skipped: 'Skipped — not saved'
@@ -81,15 +79,14 @@
 	}
 </script>
 
-<Card.Root>
-	<Card.Header>
-		<Card.Title>{queue.length ? 'Your camera queue' : 'Set up several cameras'}</Card.Title>
-		<Card.Description
-			>Select cameras that use the same login. Each camera still needs its own picture and recording
-			confirmation.</Card.Description
-		>
-	</Card.Header>
-	<Card.Content class="flex flex-col gap-5">
+<section class="flex max-w-4xl flex-col gap-5" aria-label="Set up several cameras">
+	<header class="flex flex-col gap-2">
+		<h2 class="font-medium">{queue.length ? 'Your camera queue' : 'Set up several cameras'}</h2>
+		<p class="text-sm text-muted-foreground">
+			Select cameras that use the same login, then preview and name each camera before saving.
+		</p>
+	</header>
+	<div class="flex flex-col gap-5">
 		{#if queue.length}<Button
 				type="button"
 				variant="outline"
@@ -171,19 +168,19 @@
 			>
 		{/if}
 		{#if connecting}<p role="status" class="text-sm text-muted-foreground">
-				Connecting the selected cameras. Each successful connection will be ready to check below.
+				Connecting the selected cameras. Each successful connection will be ready to add below.
 			</p>{/if}
 		{#if queue.length}
 			<p role="status" class="text-sm">
 				{queue.filter((camera) => camera.state === 'saved').length} saved · {queue.filter(
 					(camera) => camera.state === 'ready'
-				).length} ready to check · {failures} need attention · {queue.filter(
+				).length} ready to add · {failures} need attention · {queue.filter(
 					(camera) => camera.state === 'skipped'
 				).length} skipped
 			</p>
-			<ul class="grid gap-3 sm:grid-cols-2">
+			<ul class="divide-y">
 				{#each queue as camera (camera.address)}
-					<li class="flex min-w-0 flex-col items-start gap-3 rounded-md border p-4">
+					<li class="flex min-w-0 flex-wrap items-center justify-between gap-3 py-3">
 						<div class="flex flex-wrap items-center gap-2">
 							<span class="font-medium">{camera.name}</span><Badge
 								variant={camera.state === 'failed' ? 'destructive' : 'secondary'}
@@ -195,14 +192,7 @@
 						{#if camera.error}<p role="alert" class="text-sm text-destructive">
 								{camera.error}
 							</p>{/if}
-						{#if camera.savedId}<Button
-								href={resolve(`/setup?camera=${camera.savedId}`)}
-								target="_blank"
-								rel="noopener"
-								class="h-auto whitespace-normal"
-								variant="outline">Finish setup for {camera.name}</Button
-							>
-						{:else if camera.address === activeAddress && !activeSaved}<Button
+						{#if camera.address === activeAddress && !activeSaved}<Button
 								type="button"
 								variant="outline"
 								{disabled}
@@ -213,26 +203,25 @@
 								variant="outline"
 								disabled={locked}
 								class="h-auto whitespace-normal"
-								onclick={() => onchoose(camera)}>Check {camera.name}</Button
+								onclick={() => onchoose(camera)}>Preview {camera.name}</Button
 							>{/if}
 					</li>
 				{/each}
 			</ul>
 		{/if}
 		{#if queue.some((camera) => camera.state === 'saved')}<p class="text-sm text-muted-foreground">
-				Finish setup opens in a new tab so you can keep this queue. Check monitoring, recording
-				storage and alerts for each saved camera.
+				Save your cameras here. Choose their detectors together in the next step.
 			</p>{/if}
-	</Card.Content>
-	<Card.Footer class="flex flex-col items-start gap-2"
-		><p class="text-sm text-muted-foreground">
+	</div>
+	<div class="flex flex-col items-start gap-2">
+		<p class="text-sm text-muted-foreground">
 			Returning clears unsaved queue entries. Saved cameras remain available in Cameras.
 		</p>
 		<Button
 			type="button"
-			variant="ghost"
+			variant="outline"
 			disabled={disabled || connecting || finding}
 			onclick={onclose}>Return to single-camera setup</Button
-		></Card.Footer
-	>
-</Card.Root>
+		>
+	</div>
+</section>

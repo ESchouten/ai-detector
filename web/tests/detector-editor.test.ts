@@ -2,7 +2,6 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
 	applyDetectorPreset,
-	cameraMonitoringChoice,
 	cameraRuleNames,
 	createDetectorDraft,
 	parseDetectorDraft,
@@ -10,41 +9,18 @@ import {
 } from '../src/lib/detector-editor.ts';
 import type { DetectorConfig, TelegramConfig } from '../src/lib/schema.ts';
 
-test('camera rule descriptions use catalogue names and preserve removed or custom rule labels', () => {
+test('camera rule names use preset filenames and preserve removed or custom rule labels', () => {
 	const rules = [
 		{ label: 'Saved entrance rule', preset: 'entry' },
 		{ label: 'Legacy delivery rule', preset: 'removed' },
 		{ label: 'Custom rule' }
 	];
-	const presets = [{ id: 'entry', name: 'Entrance activity', description: 'Watch the entrance.' }];
-	assert.equal(
-		cameraRuleNames(rules, presets),
-		'Entrance activity, Legacy delivery rule, Custom rule'
-	);
+	const presets = [{ id: 'entry', name: 'Entry' }];
+	assert.equal(cameraRuleNames(rules, presets), 'Entry, Legacy delivery rule, Custom rule');
 	assert.equal(
 		cameraRuleNames(rules, []),
 		'Saved entrance rule, Legacy delivery rule, Custom rule'
 	);
-});
-
-test('catalogue preset IDs do not collide with camera actions', () => {
-	for (const id of ['keep', 'copy', 'view-only', 'warehouse-entrance', 'custom:delivery']) {
-		assert.deepEqual(cameraMonitoringChoice(`preset:${id}`), { mode: 'preset', preset: id });
-	}
-	for (const mode of ['keep', 'copy', 'view-only']) {
-		assert.deepEqual(cameraMonitoringChoice(mode), { mode });
-	}
-});
-
-test('monitoring requires an explicit selection and accepts saved arbitrary preset IDs', () => {
-	for (const selection of ['', 'preset:', 'unknown-action']) {
-		assert.equal(cameraMonitoringChoice(selection), undefined);
-	}
-	const restored = JSON.parse(JSON.stringify({ monitoringSelection: 'preset:custom-camera-rule' }));
-	assert.deepEqual(cameraMonitoringChoice(restored.monitoringSelection), {
-		mode: 'preset',
-		preset: 'custom-camera-rule'
-	});
 });
 
 for (const yolo of [undefined, null]) {
@@ -150,4 +126,19 @@ test('changing a preset preserves sources, notification recipients and custom de
 	assert.deepEqual(updated.exporters, saved.exporters);
 	assert.equal(updated.yolo?.model, 'new.pt');
 	assert.equal(updated.detection.interval, 1);
+});
+
+test('new preset detectors use preset recording defaults and keep the selected cameras', () => {
+	const draft = createDetectorDraft();
+	draft.detection.source = ['camera-one', 'camera-two'];
+	const preset: DetectorConfig = {
+		detection: { source: [], interval: 2 },
+		yolo: { model: 'example.pt' },
+		exporters: { disk: [{ directory: 'events', strategy: 'ALL' }] }
+	};
+	const result = applyDetectorPreset(draft, preset, { keepDelivery: false });
+	assert.deepEqual(result.detection.source, draft.detection.source);
+	assert.deepEqual(result.exporters, preset.exporters);
+	result.exporters.disk![0].directory = 'changed';
+	assert.equal(preset.exporters!.disk![0].directory, 'events');
 });

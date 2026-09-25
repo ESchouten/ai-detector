@@ -545,7 +545,7 @@ test('advanced detection changes invalidate an inherited preset without losing c
 				label: 'Barn',
 				source,
 				mode: 'preset',
-				preset: 'calving'
+				preset: 'calving-catcher'
 			});
 			const original = await store.read();
 			const changed = structuredClone(original.config.detectors[0]);
@@ -571,7 +571,7 @@ test('renaming or changing delivery settings keeps the monitoring preset and cam
 		label: 'Barn',
 		source,
 		mode: 'preset',
-		preset: 'calving'
+		preset: 'calving-catcher'
 	});
 	const original = (await store.read()).config.detectors[0];
 	await store.saveDetector({
@@ -579,7 +579,7 @@ test('renaming or changing delivery settings keeps the monitoring preset and cam
 		detector: original,
 		meta: { label: 'Calving pen' }
 	});
-	const meta = { label: 'Calving pen', cameraId: camera.id, preset: 'calving' };
+	const meta = { label: 'Calving pen', cameraId: camera.id, preset: 'calving-catcher' };
 	assert.deepEqual((await store.read()).app.detectors[0], meta);
 	const changed = structuredClone(original);
 	changed.exporters = {
@@ -608,6 +608,30 @@ test('metadata-only first save still creates the missing empty configuration', a
 		(await store.read()).app.streams.map(({ label, source }) => ({ label, source })),
 		[{ label: 'First camera', source }]
 	);
+});
+
+test('preset identity survives camera changes and follows an explicitly selected replacement', async (t) => {
+	const { store } = await fixture(t, { detectors: [] });
+	const presets = await readTestPresets();
+	const general = structuredClone(presets.find((item) => item.id === 'general')!.detector);
+	general.detection.source = [source];
+	await store.saveDetector({ detector: general, meta: { label: 'Entrance', preset: 'general' } });
+	const changed = (await store.read()).config.detectors[0];
+	changed.detection.source = [source, other];
+	await store.saveDetector({
+		original: 'Entrance',
+		detector: changed,
+		meta: { label: 'Entrances' }
+	});
+	assert.equal((await store.read()).app.detectors[0].preset, 'general');
+	const calving = structuredClone(presets.find((item) => item.id === 'calving-catcher')!.detector);
+	calving.detection.source = [source, other];
+	await store.saveDetector({
+		original: 'Entrances',
+		detector: calving,
+		meta: { label: 'Entrances', preset: 'calving-catcher' }
+	});
+	assert.equal((await store.read()).app.detectors[0].preset, 'calving-catcher');
 });
 
 test('deleting the last detector saves the empty setup and stops managed detection', async (t) => {

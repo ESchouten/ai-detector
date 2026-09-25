@@ -4,11 +4,12 @@ import {
 	DEFAULT_SCHEMA_URL,
 	type Config,
 	type Configuration,
-	type PresetCatalog
+	type DetectorPreset
 } from '../../schema.ts';
 import { readJson, writeJson } from '../json-file.ts';
 import {
 	alertsInput,
+	ConfigurationError,
 	cameraInput,
 	detectorInput,
 	normalizeConfig,
@@ -21,7 +22,12 @@ import { writeConfiguration } from './files.ts';
 import { saveDetector, deleteDetector } from './detectors.ts';
 import { saveStream, deleteStream, reorderStream } from './streams.ts';
 import { saveTelegram, deleteTelegram } from './telegrams.ts';
-import { recordArchiveCheck, skipCameraAlerts, finishCameraSetup } from './camera-setup.ts';
+import {
+	cameraSetupStatus,
+	recordArchiveCheck,
+	skipCameraAlerts,
+	finishCameraSetup
+} from './camera-setup.ts';
 
 interface Runtime {
 	validate(config: Config): Promise<void>;
@@ -33,12 +39,12 @@ interface Runtime {
 export class ConfigurationStore {
 	private pending: Promise<unknown> = Promise.resolve();
 	private files: { config: string; app: string };
-	private presets: () => Promise<PresetCatalog>;
+	private presets: () => Promise<DetectorPreset[]>;
 	private runtime: () => Runtime | null;
 
 	constructor(
 		files: { config: string; app: string },
-		presets: () => Promise<PresetCatalog>,
+		presets: () => Promise<DetectorPreset[]>,
 		runtime: () => Runtime | null = () => null
 	) {
 		this.files = files;
@@ -100,7 +106,7 @@ export class ConfigurationStore {
 		return this.update(async (document) => {
 			const preset =
 				input.mode === 'preset'
-					? (await this.presets()).presets.find((item) => item.id === input.preset)
+					? (await this.presets()).find((item) => item.id === input.preset)
 					: undefined;
 			return saveCamera(document, input, preset, pictureVerifiedAt);
 		});
@@ -118,12 +124,24 @@ export class ConfigurationStore {
 		return this.update((document) => recordArchiveCheck(document, id, signature, verifiedAt));
 	}
 
-	skipCameraAlerts(id: string): Promise<void> {
-		return this.update((document) => skipCameraAlerts(document, id));
+	skipSetupAlerts(): Promise<void> {
+		return this.update((document) => {
+			for (const camera of document.app.streams) {
+				const status = cameraSetupStatus(document, camera.id!);
+				if (status.monitored && !status.alerts.length) skipCameraAlerts(document, camera.id!);
+			}
+		});
 	}
 
-	finishCameraSetup(id: string, monitoring: () => Promise<boolean>): Promise<void> {
-		return this.update(async (document) => finishCameraSetup(document, id, await monitoring()));
+	finishSetup(monitoring: () => Promise<ReadonlySet<string>>): Promise<void> {
+		return this.update(async (document) => {
+			if (!document.app.streams.length)
+				throw new ConfigurationError('Add a camera before finishing setup.');
+			const monitored = await monitoring();
+			for (const camera of document.app.streams) {
+				finishCameraSetup(document, camera.id!, monitored.has(camera.id!));
+			}
+		});
 	}
 
 	replace(document: { config: unknown; app: unknown }): Promise<void> {

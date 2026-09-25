@@ -239,7 +239,7 @@
 	</div>
 
 	{#if entries.length === 0 && isLoading}
-		<h2 class="text-sm font-semibold text-muted-foreground">Loading detections...</h2>
+		<h2 class="text-sm font-semibold text-muted-foreground">Loading recordings…</h2>
 	{:else if detectionsByDay.length === 0 && !errorMessage}
 		<p class="text-sm text-muted-foreground">
 			{type || stage
@@ -278,7 +278,7 @@
 	{#if entries.length > 0}
 		<div use:infiniteTrigger class="flex min-h-16 items-center justify-center">
 			{#if isLoading}
-				<p class="text-sm font-semibold text-muted-foreground">Loading more detections...</p>
+				<p class="text-sm font-semibold text-muted-foreground">Loading more recordings…</p>
 			{:else if !hasMore}
 				<p class="text-sm font-semibold text-muted-foreground">You reached the end.</p>
 			{/if}

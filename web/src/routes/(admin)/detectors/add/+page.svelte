@@ -9,17 +9,22 @@
 	const setupMode = $derived(page.url.searchParams.get('setup') === '1');
 </script>
 
-<svelte:head><title>Monitoring rule · AI Detector</title></svelte:head>
+<svelte:head><title>Detector · AI Detector</title></svelte:head>
 
 {#if label && !saved}
 	<Alert.Root variant="destructive">
-		<Alert.Title>Monitoring rule not found</Alert.Title>
+		<Alert.Title>Detector not found</Alert.Title>
 		<Alert.Description
-			>This rule may have been removed. Return to Monitoring rules to select another.</Alert.Description
+			>This detector may have been removed. Return to Detectors to select another.</Alert.Description
 		>
 	</Alert.Root>
 {:else}
 	{#key label}
-		<DetectorEditor originalLabel={label} initial={saved?.detector} {setupMode} />
+		<DetectorEditor
+			originalLabel={label}
+			initial={saved?.detector}
+			initialPreset={saved?.meta.preset}
+			{setupMode}
+		/>
 	{/key}
 {/if}

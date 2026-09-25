@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { Badge } from '$lib/components/ui/badge';
 	import CardOverlay from '$lib/components/card-overlay.svelte';
 	import type { Detection } from '$lib/detections';
@@ -8,46 +9,21 @@
 		rejected: 'Rejected',
 		unvalidated: 'Unvalidated'
 	} as const;
-
-	const stageBadgeVariants = {
-		approved: 'default',
-		rejected: 'destructive',
-		unvalidated: 'secondary'
-	} as const;
-
-	const stageBadgeClasses = {
-		approved: 'bg-emerald-600 text-white',
-		rejected: '',
-		unvalidated: 'bg-amber-500 text-black'
-	} as const;
-
-	const overlayBadgeClass = 'bg-black/50 text-white';
-
-	type Props = {
-		entry: Detection;
-	};
-
-	let { entry }: Props = $props();
+	let { entry }: { entry: Detection } = $props();
 	let isPlaying = $state(false);
-
-	const stage = $derived(entry.stage);
-
-	function getResource(resource: string) {
-		return `/detections/${[entry.type, stage, entry.timestamp, resource]
-			.map((segment) => encodeURIComponent(segment))
-			.join('/')}`;
-	}
-
-	function capitalize(value: string) {
-		return value.charAt(0).toUpperCase() + value.slice(1);
-	}
+	const time = $derived(formatTime(entry.start));
 
 	function formatTime(value: string) {
 		const date = new Date(value);
-		if (Number.isNaN(date.getTime())) {
-			return value;
-		}
-		return new Intl.DateTimeFormat(undefined, { timeStyle: 'medium' }).format(date);
+		return Number.isNaN(date.getTime())
+			? value
+			: new Intl.DateTimeFormat(undefined, { timeStyle: 'short' }).format(date);
+	}
+
+	function getResource(resource: string) {
+		return resolve(
+			`/detections/${[entry.type, entry.stage, entry.timestamp, resource].map(encodeURIComponent).join('/')}`
+		);
 	}
 </script>
 
@@ -64,22 +40,17 @@
 		<source src={getResource('video.mp4')} type="video/mp4" />
 		Your browser cannot play this video.
 	</video>
-
 	{#snippet overlay()}
-		<div class="flex flex-wrap items-center gap-2 text-xs">
-			<Badge variant={stageBadgeVariants[stage]} class={stageBadgeClasses[stage]}>
-				{entry.validation_error ? 'Verification failed' : stageLabels[stage]}
-			</Badge>
-			<Badge variant="secondary" class={overlayBadgeClass}>
-				{capitalize(entry.type)}
-			</Badge>
-			<Badge variant="secondary" class={overlayBadgeClass}>Time: {formatTime(entry.start)}</Badge>
-			<Badge variant="secondary" class={overlayBadgeClass}
-				>Duration: {entry.duration.toFixed(2)}s</Badge
+		<div class="flex flex-wrap items-center gap-2">
+			<Badge variant="secondary">{entry.type.charAt(0).toUpperCase() + entry.type.slice(1)}</Badge>
+			<Badge
+				variant={entry.validation_error || entry.stage === 'rejected' ? 'destructive' : 'secondary'}
 			>
-			<Badge variant="secondary" class={overlayBadgeClass}>
-				Confidence: {(entry.confidence * 100).toFixed(1)}%
+				{entry.validation_error ? 'Verification failed' : stageLabels[entry.stage]}
 			</Badge>
+			<Badge variant="secondary"><time datetime={entry.start}>{time}</time></Badge>
+			<Badge variant="secondary">{entry.duration.toFixed(1)}s</Badge>
+			<Badge variant="secondary">Confidence: {(entry.confidence * 100).toFixed(1)}%</Badge>
 		</div>
 	{/snippet}
 </CardOverlay>

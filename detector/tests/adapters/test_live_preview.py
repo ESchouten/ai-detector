@@ -89,13 +89,10 @@ def test_multiple_rules_publish_matching_frame_and_boxes_and_overwrite(tmp_path)
     second = publisher.observer("detector-2", ("rtsp://user:secret@camera/live",))
     file = tmp_path / "frames" / f"{key}.detector-1.json"
     with publisher.open():
-
-        def initial():
-            first("rtsp://user:secret@camera/live", observation(20))
-            second("rtsp://user:secret@camera/live", observation(80))
-            return len(list((tmp_path / "frames").glob("*.json"))) == 2
-
-        wait_for(initial)
+        wait_for(lambda: read_record(tmp_path / "session.json"))
+        first("rtsp://user:secret@camera/live", observation(20))
+        second("rtsp://user:secret@camera/live", observation(80))
+        wait_for(lambda: len(list((tmp_path / "frames").glob("*.json"))) == 2)
         record = read_record(file)
         assert record["runId"] == publisher.run_id
         assert record["boxes"] == [
@@ -125,6 +122,11 @@ def test_multiple_rules_publish_matching_frame_and_boxes_and_overwrite(tmp_path)
             )
         )
         assert updated["image"]["jpeg"] != record["image"]["jpeg"]
+        replacement = cv2.imdecode(
+            np.frombuffer(base64.b64decode(updated["image"]["jpeg"]), np.uint8),
+            cv2.IMREAD_COLOR,
+        )
+        assert np.all(replacement == 120)
         assert len(list((tmp_path / "frames").iterdir())) == 2
 
 
@@ -174,13 +176,10 @@ def test_encoder_failure_does_not_starve_other_rules_and_disconnect_stops_public
     second = publisher.observer("detector-2", ("camera",))
     file = tmp_path / "frames" / f"{key}.detector-2.json"
     with publisher.open():
-
-        def publish():
-            first("camera", observation(1))
-            second("camera", observation(2))
-            return read_record(file)
-
-        record = wait_for(publish)
+        wait_for(lambda: read_record(tmp_path / "session.json"))
+        first("camera", observation(1))
+        second("camera", observation(2))
+        record = wait_for(lambda: read_record(file))
         assert "Invalid preview image" in caplog.text
         (tmp_path / "leases" / f"{key}.json").unlink()
         second("camera", observation(3))

@@ -86,8 +86,8 @@
 	}
 </script>
 
-<section class="settings-page">
-	<header class="flex flex-col items-start gap-3">
+<section class="settings-page max-w-3xl">
+	<header class="flex flex-col items-start gap-2">
 		<h1 class="settings-heading">
 			{saved ? 'Alerts are connected' : initial ? 'Manage alerts' : 'Connect alerts'}
 		</h1>
@@ -109,7 +109,7 @@
 		>
 		<Button href={back} class="self-start">{setupMode ? 'Back to setup' : 'Done'}</Button>
 	{:else}
-		<form class="flex max-w-3xl flex-col gap-6" onsubmit={save}>
+		<form class="flex flex-col gap-6" onsubmit={save}>
 			<div class="flex min-w-0 flex-col gap-6">
 				<Card.Root>
 					<Card.Header
@@ -189,7 +189,7 @@
 			</div>
 			{#if initial}<details>
 					<summary class="cursor-pointer text-sm text-muted-foreground">Remove recipient</summary>
-					<div class="flex flex-col items-start gap-3">
+					<div class="mt-3 flex flex-col items-start gap-3">
 						<p class="text-sm text-muted-foreground">
 							This stops its alerts for every camera. Monitoring and recordings continue.
 						</p>

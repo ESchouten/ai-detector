@@ -13,7 +13,7 @@
 
 <svelte:head><title>Alerts · AI Detector</title></svelte:head>
 
-<section class="settings-page">
+<section class="settings-page max-w-4xl">
 	<header class="flex flex-col gap-2">
 		<div class="flex flex-wrap items-center justify-between gap-3">
 			<h1 class="settings-heading">Alerts</h1>
@@ -25,7 +25,7 @@
 			Choose who receives Telegram alerts and which cameras send them.
 		</p>
 	</header>
-	<div class="max-w-4xl">
+	<div>
 		<Card.Root class="min-w-0">
 			<Card.Header
 				><Card.Title>Recipients</Card.Title><Card.Description

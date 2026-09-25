@@ -79,14 +79,14 @@
 	}
 </script>
 
-<section class="flex max-w-4xl flex-col gap-5" aria-label="Set up several cameras">
+<section class="flex min-w-0 flex-col gap-6" aria-label="Set up several cameras">
 	<header class="flex flex-col gap-2">
 		<h2 class="font-medium">{queue.length ? 'Your camera queue' : 'Set up several cameras'}</h2>
 		<p class="text-sm text-muted-foreground">
 			Select cameras that use the same login, then preview and name each camera before saving.
 		</p>
 	</header>
-	<div class="flex flex-col gap-5">
+	<div class="flex flex-col gap-6">
 		{#if queue.length}<Button
 				type="button"
 				variant="outline"
@@ -156,6 +156,7 @@
 			<Button
 				type="button"
 				variant="outline"
+				class="h-auto min-h-9 max-w-full self-start whitespace-normal"
 				disabled={locked ||
 					(!failures &&
 						!selected.some((address) => !queue.some((camera) => camera.address === address)))}

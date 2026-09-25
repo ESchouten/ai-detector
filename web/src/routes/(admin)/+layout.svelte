@@ -76,7 +76,7 @@
 	<AppSidebar title="AI Detector" subtitle={version} {menu} {secondaryMenu} />
 	<Sidebar.Inset>
 		<header class="flex h-16 shrink-0 items-center gap-2">
-			<div class="flex items-center gap-2 px-4">
+			<div class="flex items-center gap-2 px-4 md:px-6 lg:px-8">
 				<Sidebar.Trigger class="-ms-1" />
 				<Separator orientation="vertical" class="me-2 data-[orientation=vertical]:h-4" />
 				<Breadcrumb.Root>

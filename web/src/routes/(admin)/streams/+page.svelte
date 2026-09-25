@@ -22,9 +22,9 @@
 <svelte:head><title>Cameras · AI Detector</title></svelte:head>
 <section class="flex flex-col gap-6">
 	<header class="flex flex-wrap items-start justify-between gap-3">
-		<div class="flex flex-col gap-1">
-			<h1 class="text-2xl font-semibold tracking-tight">Cameras</h1>
-			<p class="text-sm text-muted-foreground">Live views from your cameras.</p>
+		<div class="flex flex-col gap-2">
+			<h1 class="settings-heading">Cameras</h1>
+			<p class="settings-description">Live views from your cameras.</p>
 		</div>
 		{#if cameras.length}<Button href={resolve('/streams/add')}>Add camera</Button>{/if}
 	</header>

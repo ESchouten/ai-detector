@@ -193,9 +193,9 @@
 <svelte:head><title>Recordings · AI Detector</title></svelte:head>
 
 <section class="flex flex-col gap-6">
-	<header class="space-y-1">
-		<h1 class="text-2xl font-semibold tracking-tight">Recordings</h1>
-		<p class="text-sm text-muted-foreground">
+	<header class="flex flex-col gap-2">
+		<h1 class="settings-heading">Recordings</h1>
+		<p class="settings-description">
 			Review recorded events and play each clip. New recordings appear automatically.
 		</p>
 	</header>
@@ -247,16 +247,16 @@
 				: 'No events recorded yet. Check the monitoring status above; recordings will appear here when an event is detected.'}
 		</p>
 	{:else}
-		<div class="space-y-8">
+		<div class="flex flex-col gap-8">
 			{#each detectionsByDay as dayGroup (dayGroup[0])}
-				<section class="space-y-3">
+				<section class="flex flex-col gap-3">
 					<div class="flex items-center gap-2">
 						<h2 class="text-sm font-semibold text-muted-foreground">
 							{dayFormatter.format(new Date(`${dayGroup[0]}T00:00:00`))}
 						</h2>
 						<Badge variant="outline">{dayGroup[1].length}</Badge>
 					</div>
-					<div class="grid gap-2 lg:grid-cols-2 2xl:grid-cols-3">
+					<div class="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
 						{#each dayGroup[1] as entry (detectionKey(entry))}
 							<DetectionCard {entry} />
 						{/each}

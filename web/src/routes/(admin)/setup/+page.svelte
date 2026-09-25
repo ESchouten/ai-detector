@@ -41,7 +41,7 @@
 				>{/if}
 		</header>
 		{#if cameras.length}
-			<div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+			<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
 				{#each cameras as camera (camera.id)}
 					<CameraPicture id={camera.id} label={camera.label}>
 						{#snippet overlay()}
@@ -98,7 +98,7 @@
 				>{/if}
 		</header>
 		{#if detectors.length}
-			<ul class="max-w-4xl divide-y">
+			<ul class="divide-y">
 				{#each detectors as { detector, meta } (meta.label)}
 					<li class="flex items-start justify-between gap-4 py-4 first:pt-0">
 						<div class="flex min-w-0 flex-col gap-1">
@@ -151,7 +151,7 @@
 				Start monitoring, check recordings, and choose whether to connect phone alerts.
 			</p>
 		</header>
-		<div class="flex max-w-4xl flex-col gap-6">
+		<div class="flex flex-col gap-6">
 			<DetectorRuntime configured={detectors.length > 0} />
 			<SetupReview />
 		</div>

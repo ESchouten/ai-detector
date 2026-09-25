@@ -25,7 +25,7 @@
 				<Button
 					href={resolve(`/setup?step=${step.id}`)}
 					variant={current === step.id ? 'secondary' : 'ghost'}
-					class="h-auto w-full flex-col items-start gap-1 px-3 py-3 text-left whitespace-normal sm:px-4"
+					class="h-full w-full flex-col items-start gap-1 px-3 py-3 text-left whitespace-normal sm:px-4"
 					aria-current={current === step.id ? 'step' : undefined}
 					disabled={disabled || (step.id !== 'cameras' && !hasCameras)}
 				>

@@ -15,6 +15,7 @@
 	import CameraPicture from './camera-picture.svelte';
 	import CardOverlay from './card-overlay.svelte';
 	import CameraBatch from './camera-batch.svelte';
+	import SetupSteps from './setup-steps.svelte';
 	import type { BatchCamera, BatchConnection } from '$lib/camera-batch';
 	import type { StreamMeta } from '$lib/schema';
 	import { discoverCameras, getCameraConnection } from '$lib/remote/camera.remote';
@@ -25,10 +26,12 @@
 
 	let {
 		initial,
-		setupMode = false
+		setupMode = false,
+		hasCameras = false
 	}: {
 		initial?: StreamMeta & { id: string; monitored: boolean };
 		setupMode?: boolean;
+		hasCameras?: boolean;
 	} = $props();
 	const returnTo = $derived(setupMode ? '/setup?step=cameras' : '/streams');
 	let label = $state(untrack(() => initial?.label ?? ''));
@@ -286,7 +289,8 @@
 	}
 </script>
 
-<section class="settings-page flex flex-col gap-7">
+<section class="settings-page">
+	{#if setupMode}<SetupSteps current="cameras" {hasCameras} />{/if}
 	<header class="flex flex-wrap items-start justify-between gap-4">
 		<div class="flex flex-col gap-2">
 			<h1 class="settings-heading">
@@ -354,7 +358,7 @@
 	{:else if !batchEnabled || batchAddress}
 		<form
 			onsubmit={submit}
-			class="grid max-w-5xl items-start gap-6 lg:grid-cols-2"
+			class="grid items-start gap-6 lg:grid-cols-2"
 			bind:this={cameraForm}
 			tabindex="-1"
 			aria-label="Connect camera"
@@ -362,22 +366,24 @@
 			<div class="flex min-w-0 flex-col gap-6">
 				{#if changingConnection}
 					{#if !batchAddress}
-						<Field.Set>
-							<Field.Legend class="mb-0 flex w-full flex-wrap items-center justify-between gap-2">
-								<span>Available cameras</span>
-								<Button
-									type="button"
-									variant="outline"
-									size="sm"
-									disabled={finding || checking || saving}
-									onclick={find}
-								>
-									<Search data-icon="inline-start" />{finding ? 'Searching…' : 'Search again'}
-								</Button>
-							</Field.Legend>
-							{#if discoveryMessage}<Field.Description role="status"
-									>{discoveryMessage}</Field.Description
-								>{/if}
+						<section aria-labelledby="camera-discovery-title" class="flex flex-col gap-4">
+							<div class="flex flex-col gap-2">
+								<div class="flex flex-wrap items-center justify-between gap-3">
+									<h2 id="camera-discovery-title" class="font-medium">Available cameras</h2>
+									<Button
+										type="button"
+										variant="outline"
+										size="sm"
+										disabled={finding || checking || saving}
+										onclick={find}
+									>
+										<Search data-icon="inline-start" />{finding ? 'Searching…' : 'Search again'}
+									</Button>
+								</div>
+								{#if discoveryMessage}<p role="status" class="text-sm text-muted-foreground">
+										{discoveryMessage}
+									</p>{/if}
+							</div>
 							{#if candidates.length}
 								<RadioGroup.Root
 									value={address}
@@ -418,7 +424,7 @@
 									connectionChangedInput();
 								}}>{manualAddress ? 'Hide manual entry' : 'Enter camera manually'}</Button
 							>
-						</Field.Set>
+						</section>
 					{/if}
 					{#if cameraDraftAddress(address) && !manualAddress && !candidates.some((camera) => camera.address === address)}
 						<p class="text-sm break-all text-muted-foreground">Camera selected: {address}</p>

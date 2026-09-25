@@ -12,14 +12,14 @@
 	);
 </script>
 
-<section class="settings-page">
+<section class="settings-page max-w-3xl">
 	<header class="flex flex-col gap-2">
 		<h1 class="settings-heading">Where should alerts go?</h1>
 		<p class="settings-description">
 			Use a connected phone or group. You do not need to create another bot for another camera.
 		</p>
 	</header>
-	<div class="flex max-w-3xl flex-col gap-6">
+	<div class="flex flex-col gap-6">
 		<div class="flex min-w-0 flex-col gap-6">
 			<Card.Root>
 				<Card.Header

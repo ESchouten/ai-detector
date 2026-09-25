@@ -282,9 +282,11 @@ def test_cli_writes_full_json_and_markdown_and_rejects_invalid_base(repo, tmp_pa
         [*command, "--base", "HEAD"], capture_output=True, text=True
     )
     assert success.returncode == 0, success.stderr
-    report = json.loads((tmp_path / "reports/quality.json").read_text())
+    report = json.loads((tmp_path / "reports/quality.json").read_text(encoding="utf-8"))
     assert report["baseline"]["revision"] == git(repo, "rev-parse", "HEAD")
-    assert (tmp_path / "reports/quality.md").read_text() == success.stdout
+    assert (tmp_path / "reports/quality.md").read_text(
+        encoding="utf-8"
+    ) == success.stdout
     invalid = subprocess.run(
         [*command, "--base", "missing-revision"], capture_output=True, text=True
     )

@@ -5,7 +5,7 @@ Use **Application download** for the complete application. The standalone workfl
 | Workflow | When it runs | Responsibility |
 | --- | --- | --- |
 | [Application download](workflows/application.yml) | `app/v*`, `app/test-*`, manual | Check all three OSes, build the matching NVIDIA image and native applications, smoke-test packages, then publish signed stable or preview updates. |
-| [Standalone detector releases](workflows/detector.yaml) | `detector/v*`, manual | amd64/arm64 and JetPack containers, Windows ML/CUDA and Mac detector executables. |
+| [Standalone detector releases](workflows/detector.yaml) | `detector/v*`, manual | One image matrix for amd64/arm64 and JetPack; one native matrix for Windows ML/CUDA and Mac detector executables. |
 | [Standalone web releases](workflows/web.yml) | `web/v*`, manual | Web container and standalone Windows/Mac executables, built with one native matrix. |
 | [Detector Tests](workflows/detector-tests.yml) | Relevant branch pushes/PRs, manual | Python/OS compatibility, branch coverage, architecture, schemas, complexity and domain mutation reports. Static checks run once. |
 | [Web and setup tests](workflows/web-tests.yml) | Relevant branch pushes/PRs, manual, application workflow | Source checks on Linux, Windows and Mac; production server and Compose checks on Linux. |

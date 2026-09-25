@@ -20,7 +20,7 @@ env:
 
 jobs:
   build:
-    name: Ultralytics Image
+    name: Detector image / ${{ matrix.variant }} / ${{ matrix.platform }}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
     strategy:
@@ -29,13 +29,21 @@ jobs:
         include:
           - platform: linux/amd64
             runner: ubuntu-latest
+            variant: default
+            arm64_base: latest-nvidia-arm64
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
+            variant: default
+            arm64_base: latest-nvidia-arm64
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            variant: jetpack6
+            arm64_base: latest-jetson-jetpack6
     steps:
       - name: Prepare
         run: |
           platform=${{ matrix.platform }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+          echo "PLATFORM_PAIR=${platform//\//-}" >> "$GITHUB_ENV"
 
       - uses: actions/checkout@v6
 
@@ -67,6 +75,7 @@ jobs:
           images: ghcr.io/eschouten/ai-detector
           flavor: |
             latest=false
+            suffix=${{ matrix.variant == 'jetpack6' && '-jetpack6' || '' }},onlatest=true
           tags: |
             type=semver,pattern={{version}},value=${{ github.ref_name }},match=^detector/v(.*)$
             type=ref,event=branch
@@ -81,9 +90,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             REF_NAME=${{ github.ref_name }}
+            ULTRALYTICS_TAG_ARM64=${{ matrix.arm64_base }}
           outputs: type=image,name=ghcr.io/eschouten/ai-detector,push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=${{ matrix.platform }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.platform }},ignore-error=true
+          cache-from: type=gha,scope=${{ matrix.variant }}-${{ matrix.platform }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.variant }}-${{ matrix.platform }},ignore-error=true
 
       - name: Export digest
         run: |
@@ -94,81 +104,30 @@ jobs:
       - name: Upload digest
         uses: actions/upload-artifact@v7
         with:
-          name: digests-${{ env.PLATFORM_PAIR }}
+          name: digests-${{ matrix.variant }}-${{ env.PLATFORM_PAIR }}
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
 
-  jetpack6-image:
-    name: Jetpack 6 Image
-    runs-on: ubuntu-24.04-arm
-    timeout-minutes: 90
-    permissions:
-      contents: write
-      packages: write
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: true
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: true
-          swap-storage: true
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/eschouten/ai-detector
-          flavor: |
-            latest=false
-            suffix=-jetpack6,onlatest=true
-          tags: |
-            type=semver,pattern={{version}},value=${{ github.ref_name }},match=^detector/v(.*)$
-            type=ref,event=branch
-            type=raw,value=latest,enable=${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/detector/v') && !contains(github.ref_name, '-') }}
-
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: detector
-          platforms: linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            REF_NAME=${{ github.ref_name }}
-            ULTRALYTICS_TAG_ARM64=latest-jetson-jetpack6
-          cache-from: type=gha,scope=jetson
-          cache-to: type=gha,mode=max,scope=jetson,ignore-error=true
-
   merge:
-    name: Publish multi-platform image
+    name: Publish detector image / ${{ matrix.variant }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs:
-      - build
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: default
+            suffix: ''
+          - variant: jetpack6
+            suffix: '-jetpack6'
     steps:
       - name: Download digests
         uses: actions/download-artifact@v7
         with:
           path: /tmp/digests
-          pattern: digests-*
+          pattern: digests-${{ matrix.variant }}-*
           merge-multiple: true
 
       - name: Set up Docker Buildx
@@ -188,6 +147,7 @@ jobs:
           images: ghcr.io/eschouten/ai-detector
           flavor: |
             latest=false
+            suffix=${{ matrix.suffix }},onlatest=true
           tags: |
             type=semver,pattern={{version}},value=${{ github.ref_name }},match=^detector/v(.*)$
             type=ref,event=branch
@@ -196,170 +156,121 @@ jobs:
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf 'ghcr.io/eschouten/ai-detector@sha256:%s ' *)
+          arguments=()
+          while IFS= read -r tag; do arguments+=(-t "$tag"); done < <(jq -r '.tags[]' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+          for digest in *; do arguments+=("ghcr.io/eschouten/ai-detector@sha256:$digest"); done
+          docker buildx imagetools create "${arguments[@]}"
 
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ghcr.io/eschouten/ai-detector:${{ steps.meta.outputs.version }}
 
-  windows-exe:
-    name: ${{ matrix.job_name }}
-    runs-on: windows-latest
+  native:
+    name: Standalone detector / ${{ matrix.label }}
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
         include:
-          - job_name: Windows WindowsML Executable
-            artifact_prefix: aidetector-winml
+          - label: Windows ML
+            platform: windows-x64
+            runner: windows-latest
             type: windowsml
-            needs_cuda_install: false
-            publish_release_asset: "true"
-          - job_name: Windows CUDA 13.0 Executable
-            artifact_prefix: aidetector-cuda130
+            prefix: aidetector-winml
+            suffix: .exe
+            upload_suffix: .exe
+            cuda_index: ''
+            release_asset: true
+          - label: Windows CUDA 13.0
+            platform: windows-x64
+            runner: windows-latest
             type: cuda
-            needs_cuda_install: true
-            cuda_index_url: https://download.pytorch.org/whl/cu130
-            publish_release_asset: "false"
-          - job_name: Windows CUDA 12.6 Executable
-            artifact_prefix: aidetector-cuda126
+            prefix: aidetector-cuda130
+            suffix: .exe
+            upload_suffix: .exe
+            cuda_index: https://download.pytorch.org/whl/cu130
+            release_asset: false
+          - label: Windows CUDA 12.6
+            platform: windows-x64
+            runner: windows-latest
             type: cuda
-            needs_cuda_install: true
-            cuda_index_url: https://download.pytorch.org/whl/cu126
-            publish_release_asset: "false"
+            prefix: aidetector-cuda126
+            suffix: .exe
+            upload_suffix: .exe
+            cuda_index: https://download.pytorch.org/whl/cu126
+            release_asset: false
+          - label: Mac
+            platform: macos-arm64
+            runner: macos-latest
+            type: default
+            prefix: aidetector-osx
+            suffix: .command
+            upload_suffix: .zip
+            cuda_index: ''
+            release_asset: true
     defaults:
       run:
         working-directory: detector
-        shell: pwsh
-    env:
-      PUBLISH_RELEASE_ASSET: ${{ matrix.publish_release_asset }}
+        shell: bash
     steps:
       - uses: actions/checkout@v6
-
-      - name: Version
-        id: version
-        run: |
-          $version = $env:GITHUB_REF_NAME
-          if ($version.StartsWith("detector/")) {
-            $version = $version.Substring("detector/".Length)
-          } else {
-            $version = $version -replace "/", "-"
-          }
-          $artifactName = "${{ matrix.artifact_prefix }}-$version"
-          "version=$version" >> $env:GITHUB_OUTPUT
-          "ARTIFACT_NAME=$artifactName" >> $env:GITHUB_ENV
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: detector/uv.lock
       - name: Set up Python
         run: uv python install
-
-      - name: Install Dependencies
-        if: ${{ matrix.needs_cuda_install }}
+      - name: Name download
+        id: version
+        env:
+          ARTIFACT_PREFIX: ${{ matrix.prefix }}
         run: |
-          uv venv --python ${{ env.UV_PYTHON }}
-          uv pip install --pre ".[nvidia]" torch torchvision pyinstaller --index-url ${{ matrix.cuda_index_url }} --extra-index-url https://pypi.org/simple --index-strategy unsafe-best-match
-
-      - name: Build Executable
+          version="${GITHUB_REF_NAME#detector/}"
+          version="${version//\//-}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "ARTIFACT_NAME=$ARTIFACT_PREFIX-$version" >> "$GITHUB_ENV"
+      - name: Install CUDA dependencies
+        if: matrix.cuda_index != ''
+        env:
+          CUDA_INDEX: ${{ matrix.cuda_index }}
         run: |
-          $arguments = @('detector', '--platform', 'windows-x64', '--onefile', '--name', $env:ARTIFACT_NAME, '--type', '${{ matrix.type }}')
-          if ('${{ matrix.needs_cuda_install }}' -eq 'true') { $arguments += '--skip-dependencies' }
-          python ../distribution/build.py @arguments
-
-      - name: Executable smoke test
+          uv venv --python "$UV_PYTHON"
+          uv pip install --pre ".[nvidia]" torch torchvision pyinstaller --index-url "$CUDA_INDEX" --extra-index-url https://pypi.org/simple --index-strategy unsafe-best-match
+      - name: Build executable
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          DETECTOR_TYPE: ${{ matrix.type }}
+          CUDA_INDEX: ${{ matrix.cuda_index }}
         run: |
-          uv run --no-sync python -m tests.support.smoke_package "dist/${env:ARTIFACT_NAME}.exe"
-          if ($LASTEXITCODE -ne 0) { throw "Executable smoke test failed" }
-          uv run --no-sync python -m tests.support.smoke_package "dist/${env:ARTIFACT_NAME}.exe" --model-format pt
-          if ($LASTEXITCODE -ne 0) { throw "Checkpoint smoke test failed" }
-
-      - name: Upload Executable
-        uses: actions/upload-artifact@v7
+          name="$ARTIFACT_NAME"
+          if [ "$PLATFORM" = macos-arm64 ]; then name+=.command; fi
+          arguments=(detector --platform "$PLATFORM" --onefile --name "$name" --type "$DETECTOR_TYPE")
+          if [ -n "$CUDA_INDEX" ]; then arguments+=(--skip-dependencies); fi
+          python ../distribution/build.py "${arguments[@]}"
+      - name: Smoke test executable
+        env:
+          EXECUTABLE_SUFFIX: ${{ matrix.suffix }}
+        run: |
+          uv run --no-sync python -m tests.support.smoke_package "dist/$ARTIFACT_NAME$EXECUTABLE_SUFFIX"
+          uv run --no-sync python -m tests.support.smoke_package "dist/$ARTIFACT_NAME$EXECUTABLE_SUFFIX" --model-format pt
+      - name: Package standalone download
+        if: matrix.release_asset
+        env:
+          EXECUTABLE_SUFFIX: ${{ matrix.suffix }}
+        run: python -m zipfile -c "dist/$ARTIFACT_NAME.zip" "dist/$ARTIFACT_NAME$EXECUTABLE_SUFFIX"
+      - uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.artifact_prefix }}-${{ steps.version.outputs.version }}-exe
-          path: detector/dist/${{ matrix.artifact_prefix }}-${{ steps.version.outputs.version }}.exe
+          name: ${{ matrix.prefix }}-${{ steps.version.outputs.version }}-exe
+          path: detector/dist/${{ env.ARTIFACT_NAME }}${{ matrix.upload_suffix }}
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
-
-      - name: Zip Release Asset
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/detector/v') && env.PUBLISH_RELEASE_ASSET == 'true'
-        run: |
-          Push-Location dist
-          7z a -tzip -mx=1 "${env:ARTIFACT_NAME}.zip" "${env:ARTIFACT_NAME}.exe"
-          if ($LASTEXITCODE -ne 0) {
-            throw "7z failed with exit code $LASTEXITCODE"
-          }
-          Pop-Location
-
-      - name: Release
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/detector/v') && env.PUBLISH_RELEASE_ASSET == 'true'
+      - name: Publish standalone download
+        if: startsWith(github.ref, 'refs/tags/detector/v') && matrix.release_asset
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: Detector ${{ steps.version.outputs.version }}
           make_latest: false
-          files: detector/dist/${{ matrix.artifact_prefix }}-${{ steps.version.outputs.version }}.zip
-
-  macos-default-exe:
-    name: MacOS Default Executable
-    runs-on: macos-latest
-    timeout-minutes: 60
-    defaults:
-      run:
-        working-directory: detector
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Version
-        id: version
-        run: |
-          version="${GITHUB_REF_NAME}"
-          if [[ "${version}" == detector/* ]]; then
-            version="${version#detector/}"
-          else
-            version="${version//\//-}"
-          fi
-          echo "version=${version}" >> "$GITHUB_OUTPUT"
-          echo "ARTIFACT_NAME=aidetector-osx-${version}" >> "$GITHUB_ENV"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Set up Python
-        run: uv python install
-
-      - name: Build Executable
-        run: |
-          python ../distribution/build.py detector --platform macos-arm64 --onefile --name "${ARTIFACT_NAME}.command"
-
-      - name: Executable smoke test
-        run: |
-          uv run --no-sync python -m tests.support.smoke_package "dist/${ARTIFACT_NAME}.command"
-          uv run --no-sync python -m tests.support.smoke_package "dist/${ARTIFACT_NAME}.command" --model-format pt
-
-      - name: Zip Executable
-        run: |
-          cd dist
-          chmod +x "${ARTIFACT_NAME}.command"
-          ditto -c -k "${ARTIFACT_NAME}.command" "${ARTIFACT_NAME}.zip"
-
-      - name: Upload zip
-        uses: actions/upload-artifact@v7
-        with:
-          name: aidetector-osx-${{ steps.version.outputs.version }}-exe
-          path: detector/dist/aidetector-osx-${{ steps.version.outputs.version }}.zip
-          if-no-files-found: error
-          compression-level: 0
-          retention-days: 14
-
-      - name: Release
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/detector/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Detector ${{ steps.version.outputs.version }}
-          make_latest: false
-          files: detector/dist/aidetector-osx-${{ steps.version.outputs.version }}.zip
+          files: detector/dist/${{ env.ARTIFACT_NAME }}.zip

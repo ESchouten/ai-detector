@@ -101,22 +101,14 @@ test('camera check waits for a keyframe even when the stream starts with undecod
 		'0',
 		'-bf',
 		'0',
-		'-f',
-		'segment',
-		'-segment_time',
-		'1',
-		'-break_non_keyframes',
-		'1',
-		'-segment_format',
-		'mpegts',
-		path.join(dir, '%d.ts')
+		// Drop only the first keyframe, keeping codec headers and timestamps.
+		'-bsf:v',
+		"noise=drop='eq(n,0)'",
+		path.join(dir, 'late-keyframe.mkv')
 	]);
-	// Join the stream one second after a keyframe; the next one arrives three seconds later.
-	const stream = Buffer.concat(
-		await Promise.all([1, 2, 3, 4, 5].map((index) => readFile(path.join(dir, `${index}.ts`))))
-	);
+	const stream = await readFile(path.join(dir, 'late-keyframe.mkv'));
 	const address = await server(t, (_request, response) => {
-		response.writeHead(200, { 'Content-Type': 'video/mp2t' });
+		response.writeHead(200, { 'Content-Type': 'video/x-matroska' });
 		response.end(stream);
 	});
 	const cache = new CameraChecks(path.join(dir, 'checks'));

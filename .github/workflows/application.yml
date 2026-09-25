@@ -86,11 +86,11 @@ jobs:
           cache-to: type=gha,mode=max,scope=application,ignore-error=true
 
   native:
-    name: ${{ matrix.platform }} application
-    needs: [configuration, image]
+    name: ${{ matrix.platform }} binaries
+    needs: [configuration, checks]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
-    strategy:
+    strategy: &native-platforms
       fail-fast: false
       matrix:
         include:
@@ -112,7 +112,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
+    env: &release-environment
       APP_VERSION: ${{ needs.configuration.outputs.version }}
       UPDATE_FEED: ${{ needs.configuration.outputs.feed_url }}
       RELEASE_URL: ${{ needs.configuration.outputs.release_url }}
@@ -168,41 +168,94 @@ jobs:
         env:
           DESKTOP_WEB_EXECUTABLE: ${{ github.workspace }}/web/dist/ai-detector-web${{ matrix.suffix }}
         run: python -m unittest discover -s distribution -p test_compiled_desktop.py
+      - name: Archive tested binaries for packaging
+        # Tar preserves executable permissions and macOS framework symlinks.
+        run: |
+          export COPYFILE_DISABLE=1
+          ffmpeg=$(cd web && node -p 'require("ffmpeg-static")')
+          cp "$ffmpeg" "ffmpeg${{ matrix.suffix }}"
+          tar -cf native-build.tar 'detector/dist/${{ matrix.detector }}' "web/dist/ai-detector-web${{ matrix.suffix }}" "ffmpeg${{ matrix.suffix }}"
+          if [ '${{ runner.os }}' = macOS ]; then
+            tar -rf native-build.tar -C "$RUNNER_TEMP" mac-launcher sparkle/bin sparkle/Sparkle.framework
+          fi
+          if [ '${{ runner.os }}' = Windows ]; then
+            tar -rf native-build.tar -C "$RUNNER_TEMP" windows-launcher
+          fi
+      - name: Upload tested binaries
+        uses: actions/upload-artifact@v7
+        with:
+          name: native-build-${{ matrix.platform }}
+          path: native-build.tar
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 1
+
+  installers:
+    name: ${{ matrix.platform }} installer
+    needs: [configuration, native, image]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy: *native-platforms
+    defaults:
+      run:
+        shell: bash
+    env: *release-environment
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-distribution
+        with:
+          dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+      - name: Install packaging tools
+        run: python -m pip install --requirement distribution/requirements.txt
+      - name: Restore Windows installer tool
+        if: runner.os == 'Windows'
+        run: dotnet tool restore
+      - name: Install Linux desktop tools
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
+      - name: Download tested binaries
+        uses: actions/download-artifact@v7
+        with:
+          name: native-build-${{ matrix.platform }}
+      - name: Restore tested binaries
+        run: |
+          mkdir native-build
+          tar -xf native-build.tar -C native-build
       - name: Assemble application
         run: |
-          ffmpeg=$(cd web && node -p 'require("ffmpeg-static")')
+          ffmpeg="native-build/ffmpeg${{ matrix.suffix }}"
           launcher=()
-          if [ '${{ runner.os }}' = macOS ]; then launcher=(--mac-launcher "$RUNNER_TEMP/mac-launcher" --sparkle "$RUNNER_TEMP/sparkle"); fi
-          if [ '${{ runner.os }}' = Windows ]; then launcher=(--windows-launcher "$RUNNER_TEMP/windows-launcher"); fi
+          if [ '${{ runner.os }}' = macOS ]; then launcher=(--mac-launcher "native-build/mac-launcher" --sparkle "native-build/sparkle"); fi
+          if [ '${{ runner.os }}' = Windows ]; then launcher=(--windows-launcher "native-build/windows-launcher"); fi
           if [ '${{ runner.os }}' != Linux ]; then
             launcher+=(--update-feed "$UPDATE_FEED")
             launcher+=(--sparkle-public-key "$SPARKLE_PUBLIC_KEY")
           fi
-          uv run --project detector --no-sync python distribution/package.py --detector 'detector/dist/${{ matrix.detector }}' --web "web/dist/ai-detector-web${{ matrix.suffix }}" --ffmpeg "$ffmpeg" --output application-dist --platform '${{ matrix.platform }}' --version "$APP_VERSION" "${launcher[@]}" --image 'ghcr.io/eschouten/ai-detector@${{ needs.image.outputs.digest }}'
+          python distribution/package.py --detector 'native-build/detector/dist/${{ matrix.detector }}' --web "native-build/web/dist/ai-detector-web${{ matrix.suffix }}" --ffmpeg "$ffmpeg" --output application-dist --platform '${{ matrix.platform }}' --version "$APP_VERSION" "${launcher[@]}" --image 'ghcr.io/eschouten/ai-detector@${{ needs.image.outputs.digest }}'
       - name: Ad-hoc sign macOS application
         if: runner.os == 'macOS'
-        run: uv run --project detector --no-sync python distribution/sign_macos.py 'application-dist/AI-Detector-macos-arm64/AI Detector.app'
+        run: python distribution/sign_macos.py 'application-dist/AI-Detector-macos-arm64/AI Detector.app'
       - name: Smoke test complete download
-        run: uv run --project detector --no-sync python distribution/smoke.py 'application-dist/AI-Detector-${{ matrix.platform }}'
+        run: python distribution/smoke.py 'application-dist/AI-Detector-${{ matrix.platform }}'
       - name: Retrieve previous release for delta generation
         if: runner.os != 'Linux'
-        run: uv run --project detector --no-sync python distribution/updates.py prepare --platform '${{ matrix.platform }}' --version "$APP_VERSION" --feed-url "$UPDATE_FEED"
+        run: python distribution/updates.py prepare --platform '${{ matrix.platform }}' --version "$APP_VERSION" --feed-url "$UPDATE_FEED"
       - name: Build native installer
-        run: uv run --project detector --no-sync python distribution/installers.py 'application-dist/AI-Detector-${{ matrix.platform }}' --platform '${{ matrix.platform }}' --version "$APP_VERSION"
+        run: python distribution/installers.py 'application-dist/AI-Detector-${{ matrix.platform }}' --platform '${{ matrix.platform }}' --version "$APP_VERSION"
       - name: Generate signed Sparkle feed and deltas
         if: runner.os == 'macOS'
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
-        run: uv run --project detector --no-sync python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --sparkle "$RUNNER_TEMP/sparkle" --release-url "$RELEASE_URL"
+        run: python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
       - name: Sign Velopack feed and package hashes
         if: runner.os == 'Windows'
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
-        run: uv run --project detector --no-sync python distribution/updates.py publish --platform windows-x64 --version "$APP_VERSION" --release-url "$RELEASE_URL"
+        run: python distribution/updates.py publish --platform windows-x64 --version "$APP_VERSION" --release-url "$RELEASE_URL"
       - name: Refresh archives and checksums
         run: |
           python distribution/build.py archive 'application-dist/AI-Detector-${{ matrix.platform }}'
-          uv run --project detector --no-sync python - <<'PYARCHIVE'
+          python - <<'PYARCHIVE'
           import sys
           from pathlib import Path
           sys.path.insert(0, 'distribution')
@@ -235,7 +288,7 @@ jobs:
           retention-days: 14
 
   release:
-    needs: [configuration, native]
+    needs: [configuration, installers]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:

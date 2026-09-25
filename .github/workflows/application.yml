@@ -176,7 +176,7 @@ jobs:
           cp "$ffmpeg" "ffmpeg${{ matrix.suffix }}"
           tar -cf native-build.tar 'detector/dist/${{ matrix.detector }}' "web/dist/ai-detector-web${{ matrix.suffix }}" "ffmpeg${{ matrix.suffix }}"
           if [ '${{ runner.os }}' = macOS ]; then
-            tar -rf native-build.tar -C "$RUNNER_TEMP" mac-launcher sparkle/bin sparkle/Sparkle.framework
+            tar -rf native-build.tar -C "$RUNNER_TEMP" mac-launcher sparkle/bin sparkle/Sparkle.framework sparkle/LICENSE
           fi
           if [ '${{ runner.os }}' = Windows ]; then
             tar -rf native-build.tar -C "$RUNNER_TEMP" windows-launcher

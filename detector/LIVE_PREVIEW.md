@@ -4,7 +4,7 @@
 
 `DetectionPipeline` calls its `PublishObservation` callback after successful inference, before event aggregation. The callback receives the latest analyzed observation, including its original image and bounding boxes. Snapshot rules publish their current image with empty boxes. It does not create an event, change event scores, or depend on whether an event meets recording or notification thresholds. Track IDs are optional, scoped to a tracking run, and have no identity meaning.
 
-The live adapter owns one thread. Its callback only replaces the latest pending observation for each configured source/rule pair when a viewer is active. Encoding and filesystem work happen on the thread, at most once per second per pair. A slow encoder cannot accumulate a frame history or block inference. Image pixels follow the existing borrowed read-only observation contract.
+The live adapter owns one thread. Its callback only replaces the latest pending observation for each configured source/rule pair when a viewer is active. Encoding and filesystem work happen on the thread, at most eight times per second per pair. A slow encoder cannot accumulate a frame history or block inference. Image pixels follow the existing borrowed read-only observation contract.
 
 ## Version 1 files
 

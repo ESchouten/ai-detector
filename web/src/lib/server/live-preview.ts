@@ -189,7 +189,7 @@ export function createLivePreviewStream(
 			let stopped = false;
 			let polling = false;
 			let runId: string | undefined;
-			const timer = setInterval(() => void poll(), 500);
+			const timer = setInterval(() => void poll(), 100);
 			const abort = () => void close();
 			close = async (cancelled = false) => {
 				if (stopped) return;

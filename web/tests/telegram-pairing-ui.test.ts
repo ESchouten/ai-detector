@@ -5,7 +5,7 @@ import type {
 	TelegramPairing as Session,
 	TelegramPairingState as PollResult
 } from '../src/lib/telegram.ts';
-import { recipientCameraIds } from '../src/lib/alert-recipients.ts';
+import { recipientDetectorLabels } from '../src/lib/alert-recipients.ts';
 
 const flush = () => new Promise<void>((resolve) => setImmediate(resolve));
 const session = (id: string): Session => ({
@@ -16,18 +16,28 @@ const session = (id: string): Session => ({
 	qrDataUrl: 'data:image/png;base64,fixture'
 });
 
-test('adding a camera to an existing recipient preserves previous monitored camera selections', () => {
-	const cameras = [
-		{ id: 'barn', alerts: ['Phone'], monitored: true },
-		{ id: 'yard', alerts: ['Phone', 'Family'], monitored: true },
-		{ id: 'gate', alerts: [], monitored: true },
-		{ id: 'view', alerts: [], monitored: false }
+test('recipient selections distinguish detectors that watch the same cameras', () => {
+	const recipient = { label: 'Phone', token: 'token', chat: 'chat' };
+	const detectors = [
+		{
+			meta: { label: 'Calving' },
+			detector: { detection: { source: ['barn', 'yard'] }, exporters: { telegram: [recipient] } }
+		},
+		{ meta: { label: 'Mounting' }, detector: { detection: { source: ['barn'] } } },
+		{
+			meta: { label: 'Gate' },
+			detector: { detection: { source: ['gate'] }, exporters: { telegram: [recipient] } }
+		}
 	];
-	const original = structuredClone(cameras);
-	assert.deepEqual(recipientCameraIds(cameras, 'Phone', 'gate'), ['barn', 'yard', 'gate']);
-	assert.deepEqual(recipientCameraIds(cameras, 'Phone', 'barn'), ['barn', 'yard']);
-	assert.deepEqual(recipientCameraIds(cameras, '', 'view'), []);
-	assert.deepEqual(cameras, original);
+	const original = structuredClone(detectors);
+	assert.deepEqual(recipientDetectorLabels(detectors, recipient), ['Calving', 'Gate']);
+	assert.deepEqual(recipientDetectorLabels(detectors, recipient, 'Mounting'), [
+		'Calving',
+		'Mounting',
+		'Gate'
+	]);
+	assert.deepEqual(recipientDetectorLabels(detectors, undefined, 'Mounting'), ['Mounting']);
+	assert.deepEqual(detectors, original);
 });
 
 test('abandoning a pending begin cancels its eventual server session without updating the screen', async (t) => {

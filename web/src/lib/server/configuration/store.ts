@@ -17,11 +17,11 @@ import {
 	streamInput,
 	telegramInput
 } from '../../configuration.ts';
-import { identifyCameras, saveCamera, removeCamera, saveAlerts } from './cameras.ts';
+import { identifyCameras, saveCamera, removeCamera } from './cameras.ts';
 import { writeConfiguration } from './files.ts';
 import { saveDetector, deleteDetector } from './detectors.ts';
 import { saveStream, deleteStream, reorderStream } from './streams.ts';
-import { saveTelegram, deleteTelegram } from './telegrams.ts';
+import { saveTelegram, deleteTelegram, saveAlerts } from './telegrams.ts';
 import {
 	cameraSetupStatus,
 	recordArchiveCheck,

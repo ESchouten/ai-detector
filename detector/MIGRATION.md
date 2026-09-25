@@ -11,6 +11,12 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
 
+## Live camera responsiveness and alert ownership — 2026-09-25
+
+Live network capture uses one FFmpeg decoder thread to avoid frame-thread buffering and allows ten seconds for opening or reading a stream, replacing the overly short three-second timeout. Camera sharing, per-detector sampling, event windows, thresholds and delivery policy are unchanged. Analyzed previews now publish up to eight times per second while viewed, using the same bounded latest-frame transport. Packaged applications keep Matplotlib's font cache under `cache/matplotlib` in their data directory, avoiding a complete font scan on each launch.
+
+The web alert editor again assigns recipients to detectors. It no longer splits multi-camera detector definitions to represent camera-level notification choices. Saving alert assignments changes only Telegram destinations; camera lists, models, event settings and other exporters remain intact. Existing configuration files are accepted without a schema migration or automatic merging of previously split detectors. Reading settings does not rewrite them.
+
 ## Linux desktop dependencies — 2026-09-25
 
 The `default` extra now selects CPU builds of Torch and Torchvision on Linux. Native desktop installers no longer bundle unused CUDA libraries that pushed downloads beyond GitHub's release asset limit. The `nvidia` extra keeps GPU dependencies, and macOS keeps MPS support. uv now enforces the existing rule that `default`, `nvidia`, and `windowsml` are alternative environments. Models, configuration and detection archives are unchanged.

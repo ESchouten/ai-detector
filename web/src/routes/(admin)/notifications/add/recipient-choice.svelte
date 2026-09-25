@@ -4,11 +4,12 @@
 	import * as Card from '$lib/components/ui/card';
 	let {
 		recipients,
-		cameraId,
+		detectorLabel,
 		setupMode
-	}: { recipients: { label: string }[]; cameraId: string; setupMode: boolean } = $props();
-	const cameraQuery = $derived(
-		(cameraId ? `&camera=${encodeURIComponent(cameraId)}` : '') + (setupMode ? '&setup=1' : '')
+	}: { recipients: { label: string }[]; detectorLabel: string; setupMode: boolean } = $props();
+	const contextQuery = $derived(
+		(detectorLabel ? `&detector=${encodeURIComponent(detectorLabel)}` : '') +
+			(setupMode ? '&setup=1' : '')
 	);
 </script>
 
@@ -16,7 +17,7 @@
 	<header class="flex flex-col gap-2">
 		<h1 class="settings-heading">Where should alerts go?</h1>
 		<p class="settings-description">
-			Use a connected phone or group. You do not need to create another bot for another camera.
+			Use a connected phone or group. You do not need to create another bot for another detector.
 		</p>
 	</header>
 	<div class="flex flex-col gap-6">
@@ -24,23 +25,25 @@
 			<Card.Root>
 				<Card.Header
 					><Card.Title>Use an existing recipient</Card.Title><Card.Description
-						>Existing camera assignments will stay selected.</Card.Description
+						>Existing detector assignments will stay selected.</Card.Description
 					></Card.Header
 				>
 				<Card.Content class="flex flex-col gap-3">
 					{#each recipients as recipient (recipient.label)}<Button
 							href={resolve(
-								`/notifications/add?label=${encodeURIComponent(recipient.label)}${cameraQuery}`
+								`/notifications/add?label=${encodeURIComponent(recipient.label)}${contextQuery}`
 							)}
 							variant="outline">Use {recipient.label}</Button
 						>{/each}
 				</Card.Content>
 			</Card.Root>
-			<Button href={resolve(`/notifications/add?new=1${cameraQuery}`)} variant="outline"
+			<Button href={resolve(`/notifications/add?new=1${contextQuery}`)} variant="outline"
 				>Connect a new recipient</Button
 			>
 			<Button
-				href={resolve(setupMode ? '/setup?step=finish' : cameraId ? '/streams' : '/notifications')}
+				href={resolve(
+					setupMode ? '/setup?step=finish' : detectorLabel ? '/detectors' : '/notifications'
+				)}
 				variant="outline">Cancel</Button
 			>
 		</div>

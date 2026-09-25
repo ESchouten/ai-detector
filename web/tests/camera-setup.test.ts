@@ -139,7 +139,7 @@ test('skipping phone alerts applies to cameras without a recipient and keeps con
 		label: 'My phone',
 		token: 'token',
 		chat: 'chat',
-		cameraIds: [first.id],
+		detectorLabels: ['Yard'],
 		received: true
 	});
 	await store.skipSetupAlerts();
@@ -307,7 +307,7 @@ test('removed presets do not block keeping or copying saved settings and complet
 		label: 'Security desk',
 		token: 'token',
 		chat: 'chat',
-		cameraIds: [camera.id],
+		detectorLabels: ['Entrance'],
 		received: true
 	});
 	await store.finishSetup(async () => new Set([camera.id]));

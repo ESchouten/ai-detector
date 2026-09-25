@@ -14,7 +14,7 @@ from aidetector.application.status import ReportStatus, StatusEvent, ignore_stat
 from aidetector.domain.models import Frame
 
 logger = logging.getLogger(__name__)
-_CAPTURE_TIMEOUT_MS = 3000
+_CAPTURE_TIMEOUT_MS = 10000
 
 
 class StreamSource:
@@ -150,6 +150,10 @@ class StreamPool:
                             _CAPTURE_TIMEOUT_MS,
                             cv2.CAP_PROP_READ_TIMEOUT_MSEC,
                             _CAPTURE_TIMEOUT_MS,
+                            # Frame-threaded decoding buffers frames before returning
+                            # them. Live cameras need low latency over batch throughput.
+                            cv2.CAP_PROP_N_THREADS,
+                            1,
                         ],
                     )
                 )

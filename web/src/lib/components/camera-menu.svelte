@@ -49,8 +49,7 @@
 			</DropdownMenu.Item>
 			{#if monitored}
 				<DropdownMenu.Item>
-					{#snippet child({ props })}<a {...props} href={resolve(`/notifications/add?camera=${id}`)}
-							>Phone alerts</a
+					{#snippet child({ props })}<a {...props} href={resolve('/notifications')}>Phone alerts</a
 						>{/snippet}
 				</DropdownMenu.Item>
 				<DropdownMenu.Item onSelect={() => (showDetections = true)}

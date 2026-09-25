@@ -10,8 +10,8 @@
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import * as Card from '$lib/components/ui/card';
 	import { deleteTelegram, saveAlerts, getTelegrams } from '$lib/remote/exporter.remote';
-	import { getCameras } from '$lib/remote/stream.remote';
-	import { recipientCameraIds } from '$lib/alert-recipients';
+	import { getDetectors } from '$lib/remote/detector.remote';
+	import { recipientDetectorLabels } from '$lib/alert-recipients';
 	import { errorMessage } from '$lib/remote-errors';
 	import type { TelegramMeta } from '$lib/schema';
 	import TelegramConnection from './telegram-connection.svelte';
@@ -19,31 +19,33 @@
 	let {
 		originalLabel,
 		initial,
-		cameraId = '',
+		detectorLabel = '',
 		setupMode = false
 	}: {
 		originalLabel: string;
 		initial?: TelegramMeta;
-		cameraId?: string;
+		detectorLabel?: string;
 		setupMode?: boolean;
 	} = $props();
-	const cameras = await getCameras();
+	const detectors = await getDetectors();
 	let label = $state(untrack(() => initial?.label ?? 'My phone'));
 	let token = $state(untrack(() => initial?.token ?? ''));
 	let chat = $state(untrack(() => initial?.chat ?? ''));
-	let cameraIds = $state(untrack(() => recipientCameraIds(cameras, originalLabel, cameraId)));
+	let detectorLabels = $state(
+		untrack(() => recipientDetectorLabels(detectors, initial, detectorLabel))
+	);
 	let pending = $state(false);
 	let connecting = $state(false);
 	let received = $state(false);
 	let error = $state('');
-	let saved = $state<{ label: string; cameras: string[] }>();
+	let saved = $state<{ label: string; detectors: string[] }>();
 	const connectionUnchanged = $derived(initial && token === initial.token && chat === initial.chat);
-	const readyForCameras = $derived(Boolean(connectionUnchanged || received));
+	const readyForDetectors = $derived(Boolean(connectionUnchanged || received));
 	const canSave = $derived(
-		label.trim() && cameraIds.length && token && chat && (connectionUnchanged || received)
+		label.trim() && detectorLabels.length && token && chat && (connectionUnchanged || received)
 	);
 	const back = $derived(
-		resolve(setupMode ? '/setup?step=finish' : cameraId ? '/streams' : '/notifications')
+		resolve(setupMode ? '/setup?step=finish' : detectorLabel ? '/detectors' : '/notifications')
 	);
 	async function save(event: SubmitEvent) {
 		event.preventDefault();
@@ -52,9 +54,7 @@
 		error = '';
 		const summary = {
 			label,
-			cameras: cameras
-				.filter((camera) => cameraIds.includes(camera.id))
-				.map((camera) => camera.label)
+			detectors: detectorLabels
 		};
 		try {
 			await saveAlerts({
@@ -62,9 +62,9 @@
 				label,
 				token,
 				chat,
-				cameraIds,
+				detectorLabels,
 				received
-			}).updates(getCameras(), getTelegrams());
+			}).updates(getDetectors(), getTelegrams());
 			saved = summary;
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not save alerts. Your choices are still here.');
@@ -76,7 +76,7 @@
 		pending = true;
 		error = '';
 		try {
-			await deleteTelegram({ label: originalLabel }).updates(getCameras(), getTelegrams());
+			await deleteTelegram({ label: originalLabel }).updates(getDetectors(), getTelegrams());
 			await goto(resolve('/notifications'));
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not remove this recipient.');
@@ -97,14 +97,14 @@
 					? 'Return to setup to finish checking your cameras.'
 					: 'Your choices are saved. Open alerts to manage your recipients.'
 				: initial
-					? 'Keep using your saved recipient and choose which cameras send alerts.'
-					: 'Connect your phone, confirm a test message, then choose your cameras.'}
+					? 'Keep using your saved recipient and choose which detectors send alerts.'
+					: 'Connect your phone, confirm a test message, then choose your detectors.'}
 		</p>
 	</header>
 	{#if saved}
 		<Alert.Root
 			><Alert.Title>{saved.label}</Alert.Title><Alert.Description
-				>Alerts are connected to {saved.cameras.join(', ')}.</Alert.Description
+				>Alerts are connected to {saved.detectors.join(', ')}.</Alert.Description
 			></Alert.Root
 		>
 		<Button href={back} class="self-start">{setupMode ? 'Back to setup' : 'Done'}</Button>
@@ -128,13 +128,13 @@
 						/>
 					</Card.Content>
 				</Card.Root>
-				{#if readyForCameras}
+				{#if readyForDetectors}
 					<Card.Root>
 						<Card.Header
-							><Card.Title>2. Choose your cameras</Card.Title><Card.Description
+							><Card.Title>2. Choose your detectors</Card.Title><Card.Description
 								>{initial
-									? 'Existing camera assignments are already selected. Add another camera below.'
-									: 'Choose which cameras will send alerts to this recipient.'}</Card.Description
+									? 'Existing detector assignments are already selected.'
+									: 'Choose which detectors send alerts. Each selection includes all of that detector’s cameras.'}</Card.Description
 							></Card.Header
 						>
 						<Card.Content class="flex flex-col gap-5">
@@ -148,24 +148,21 @@
 								/></Field.Field
 							>
 							<Field.Set
-								><Field.Legend>Cameras that send alerts</Field.Legend><Field.Group>
-									{#each cameras as camera (camera.id)}
+								><Field.Legend>Detectors that send alerts</Field.Legend><Field.Group>
+									{#each detectors as { meta }, index (meta.label)}
 										<Field.Field orientation="horizontal">
 											<Checkbox
-												id={`alerts-${camera.id}`}
-												checked={cameraIds.includes(camera.id)}
-												disabled={pending || !camera.monitored}
+												id={`alerts-${index}`}
+												checked={detectorLabels.includes(meta.label)}
+												disabled={pending}
 												onCheckedChange={(enabled) =>
-													(cameraIds = enabled
-														? [...cameraIds, camera.id]
-														: cameraIds.filter((id) => id !== camera.id))}
+													(detectorLabels = enabled
+														? [...detectorLabels, meta.label]
+														: detectorLabels.filter((id) => id !== meta.label))}
 											/>
-											<Field.Label for={`alerts-${camera.id}`}
-												>{camera.label}{!camera.monitored ? ' (view only)' : ''}</Field.Label
-											>
+											<Field.Label for={`alerts-${index}`}>{meta.label}</Field.Label>
 										</Field.Field>
-									{:else}<Field.Description>Add and monitor a camera first.</Field.Description
-										>{/each}
+									{:else}<Field.Description>Add a detector first.</Field.Description>{/each}
 								</Field.Group></Field.Set
 							>
 						</Card.Content>
@@ -177,12 +174,12 @@
 						></Alert.Root
 					>{/if}
 				<div class="flex flex-wrap gap-3">
-					{#if readyForCameras}<Button type="submit" disabled={pending || connecting || !canSave}
+					{#if readyForDetectors}<Button type="submit" disabled={pending || connecting || !canSave}
 							>{pending
 								? 'Saving alerts…'
 								: initial
 									? 'Save alert settings'
-									: 'Enable alerts for selected cameras'}</Button
+									: 'Enable alerts for selected detectors'}</Button
 						>{/if}
 					<Button href={back} variant="outline">Cancel</Button>
 				</div>
@@ -191,7 +188,7 @@
 					<summary class="cursor-pointer text-sm text-muted-foreground">Remove recipient</summary>
 					<div class="mt-3 flex flex-col items-start gap-3">
 						<p class="text-sm text-muted-foreground">
-							This stops its alerts for every camera. Monitoring and recordings continue.
+							This stops its alerts for every detector. Monitoring and recordings continue.
 						</p>
 						<AlertDialog.Root>
 							<AlertDialog.Trigger
@@ -203,7 +200,7 @@
 								<AlertDialog.Header
 									><AlertDialog.Title>Remove “{originalLabel}”?</AlertDialog.Title
 									><AlertDialog.Description
-										>Every camera will stop sending alerts to this recipient. Monitoring and saved
+										>Every detector will stop sending alerts to this recipient. Monitoring and saved
 										recordings are kept. You can reconnect the recipient later.</AlertDialog.Description
 									></AlertDialog.Header
 								>

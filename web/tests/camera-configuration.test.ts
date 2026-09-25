@@ -147,7 +147,7 @@ test('copied rules own their nested settings so later changes cannot mutate the 
 		label: 'Phone',
 		token: 'token',
 		chat: 'chat',
-		cameraIds: [firstCamera.id],
+		detectorLabels: ['First pen'],
 		received: true
 	});
 	const document = await store.read();
@@ -226,249 +226,133 @@ test('changing a watched event preserves alert options and another camera sharin
 	assert.deepEqual(saved.config.detectors[1].exporters?.telegram, [channel]);
 });
 
-test('alerts attach only to selected cameras even when existing rules share a source list', async (t) => {
+test('alerts belong to selected detectors without splitting cameras or changing other settings', async (t) => {
 	const { files, store } = await fixture(t);
-	await writeJson(files.config, {
-		detectors: [{ detection: { source: [first, second] }, exporters: { disk: {} } }]
-	});
-	const camera = (await store.read()).app.streams[0];
-	await store.saveAlerts({
-		label: 'Phone',
-		token: 'token',
-		chat: 'chat',
-		cameraIds: [camera.id!],
-		received: true
-	});
-	const saved = await store.read();
-	const monitoredFirst = saved.config.detectors.find((detector) =>
-		detector.detection.source.includes(first)
-	);
-	const monitoredSecond = saved.config.detectors.find((detector) =>
-		detector.detection.source.includes(second)
-	);
-	assert.deepEqual(monitoredFirst?.exporters?.telegram, [{ token: 'token', chat: 'chat' }]);
-	assert.deepEqual(monitoredSecond?.exporters?.telegram, []);
-	assert.ok(monitoredFirst?.exporters?.disk?.length);
-	assert.ok(monitoredSecond?.exporters?.disk?.length);
-});
-
-test('editing alert assignments removes old recipients from unselected cameras and updates credentials', async (t) => {
-	const { store } = await fixture(t);
-	const one = await store.saveCamera({
-		label: 'One',
-		source: first,
-		mode: 'preset',
-		preset: 'general'
-	});
-	const two = await store.saveCamera({
-		label: 'Two',
-		source: second,
-		mode: 'preset',
-		preset: 'general'
-	});
-	await store.saveAlerts({
-		label: 'Phone',
-		token: 'old',
-		chat: 'chat',
-		cameraIds: [one.id, two.id],
-		received: true
-	});
-	await store.saveAlerts({
-		original: 'Phone',
-		label: 'New phone',
-		token: 'new',
-		chat: 'new-chat',
-		cameraIds: [two.id],
-		received: true
-	});
-	const saved = await store.read();
-	assert.deepEqual(saved.config.detectors[0].exporters?.telegram, []);
-	assert.deepEqual(saved.config.detectors[1].exporters?.telegram, [
-		{ token: 'new', chat: 'new-chat' }
-	]);
-	assert.deepEqual(saved.app.telegrams, [{ label: 'New phone', token: 'new', chat: 'new-chat' }]);
-});
-
-test('editing a recipient preserves a camera’s individual rule assignments', async (t) => {
-	const { files, store } = await fixture(t);
-	const channel = { token: 'token', chat: 'chat', include_video: false };
 	await writeJson(files.config, {
 		detectors: [
 			{
-				detection: { source: first },
-				yolo: { model: 'calving.pt' },
-				exporters: { telegram: channel }
+				detection: { source: [first, second], interval: 2 },
+				yolo: { model: 'calving.pt', confidence: 0.8 },
+				exporters: { disk: {}, webhook: { url: 'https://example.test/events' } }
 			},
-			{ detection: { source: first }, yolo: { model: 'yolo11n.pt' }, exporters: { disk: {} } }
+			{ detection: { source: [first] }, yolo: { model: 'mounting.pt' }, exporters: { disk: {} } }
 		]
 	});
-	await writeJson(files.app, { telegrams: [{ label: 'Phone', ...channel }] });
-	const camera = (await store.read()).app.streams[0];
+	await writeJson(files.app, { detectors: [{ label: 'Calving' }, { label: 'Mounting' }] });
+	const before = await store.read();
 	await store.saveAlerts({
-		original: 'Phone',
-		label: 'Farmer’s phone',
+		label: 'Phone',
 		token: 'token',
 		chat: 'chat',
-		cameraIds: [camera.id!],
+		detectorLabels: ['Calving'],
 		received: true
 	});
 	const saved = await store.read();
-	assert.deepEqual(saved.config.detectors[0].exporters?.telegram, [channel]);
-	assert.deepEqual(saved.config.detectors[1].exporters?.telegram, []);
-	assert.ok(saved.config.detectors[1].exporters?.disk?.length);
+	assert.equal(saved.config.detectors.length, 2);
+	assert.deepEqual(saved.app.detectors, before.app.detectors);
+	assert.deepEqual(saved.app.streams, before.app.streams);
+	assert.deepEqual(saved.config.detectors[0], {
+		...before.config.detectors[0],
+		exporters: {
+			...before.config.detectors[0].exporters,
+			telegram: [{ token: 'token', chat: 'chat' }]
+		}
+	});
+	assert.deepEqual(saved.config.detectors[1], before.config.detectors[1]);
 });
 
-test('recipient edits preserve mixed rules while adding and removing cameras sharing those rules', async (t) => {
+test('recipient edits preserve per-detector delivery options and all camera assignments', async (t) => {
 	const { files, store } = await fixture(t);
-	const third = 'rtsp://third.example.test/live';
-	const oldChannel = { token: 'old', chat: 'old-chat', alert_every: 3, include_video: false };
-	const otherChannel = { token: 'other', chat: 'other-chat' };
+	const channel = { token: 'old', chat: 'old-chat', alert_every: 3, include_video: false };
+	const other = { token: 'other', chat: 'other-chat' };
 	await writeJson(files.config, {
 		detectors: [
 			{
 				detection: { source: [first, second] },
 				yolo: { model: 'calving.pt' },
-				exporters: { disk: {}, telegram: oldChannel }
+				exporters: { disk: {}, telegram: [channel, other] }
 			},
 			{
-				detection: { source: [first, third] },
-				yolo: { model: 'people.pt' },
-				exporters: { disk: {}, telegram: otherChannel }
+				detection: { source: [first] },
+				yolo: { model: 'mounting.pt' },
+				exporters: { disk: {}, telegram: channel }
 			},
-			{ detection: { source: third }, yolo: { model: 'vehicles.pt' }, exporters: { disk: {} } }
+			{ detection: { source: [second] }, exporters: { disk: {} } }
 		]
 	});
-	await writeJson(files.app, { telegrams: [{ label: 'Phone', ...oldChannel }] });
-	const original = await store.read();
-	const selected = original.app.streams
-		.filter((camera) => camera.source !== second)
-		.map((camera) => camera.id!);
+	await writeJson(files.app, {
+		detectors: [{ label: 'Calving' }, { label: 'Mounting' }, { label: 'Snapshots' }],
+		telegrams: [{ label: 'Phone', ...channel }]
+	});
+	const before = await store.read();
 	await store.saveAlerts({
 		original: 'Phone',
 		label: 'New phone',
 		token: 'new',
 		chat: 'new-chat',
-		cameraIds: selected,
+		detectorLabels: ['Calving', 'Snapshots'],
 		received: true
 	});
 	const saved = await store.read();
-	const rulesFor = (source: string) =>
-		saved.config.detectors.filter((detector) => detector.detection.source.includes(source));
+	assert.deepEqual(saved.app.detectors, before.app.detectors);
+	assert.deepEqual(saved.app.streams, before.app.streams);
 	assert.deepEqual(
-		rulesFor(first)
-			.map((rule) => rule.yolo?.model)
-			.sort(),
-		['calving.pt', 'people.pt']
+		saved.config.detectors.map(({ detection, yolo, vlm }) => ({ detection, yolo, vlm })),
+		before.config.detectors.map(({ detection, yolo, vlm }) => ({ detection, yolo, vlm }))
 	);
-	assert.deepEqual(
-		rulesFor(second).map((rule) => rule.yolo?.model),
-		['calving.pt']
-	);
-	assert.deepEqual(
-		rulesFor(third)
-			.map((rule) => rule.yolo?.model)
-			.sort(),
-		['people.pt', 'vehicles.pt']
-	);
-	assert.deepEqual(
-		rulesFor(first).find((rule) => rule.yolo?.model === 'calving.pt')?.exporters?.telegram,
-		[{ ...oldChannel, token: 'new', chat: 'new-chat' }]
-	);
-	assert.deepEqual(
-		rulesFor(first).find((rule) => rule.yolo?.model === 'people.pt')?.exporters?.telegram,
-		[otherChannel]
-	);
-	assert.deepEqual(rulesFor(second)[0].exporters?.telegram, []);
-	for (const rule of rulesFor(third))
-		assert.ok(
-			rule.exporters?.telegram?.some(
-				(channel) => channel.token === 'new' && channel.chat === 'new-chat'
-			)
-		);
-	assert.ok(saved.config.detectors.every((rule) => rule.exporters?.disk?.length));
-	assert.ok(
-		saved.config.detectors.every(
-			(rule) => !rule.exporters?.telegram?.some((channel) => channel.token === 'old')
-		)
-	);
-});
-
-test('unconfirmed alerts, unknown cameras and view-only assignments are rejected', async (t) => {
-	const unconfirmed = v.parse(alertsInput, {
-		label: 'Phone',
-		token: 'token',
-		chat: 'chat',
-		cameraIds: ['camera'],
-		received: false
+	assert.deepEqual(saved.config.detectors[0].exporters, {
+		...before.config.detectors[0].exporters,
+		telegram: [{ ...channel, token: 'new', chat: 'new-chat' }, other]
 	});
-	const { store } = await fixture(t);
-	await assert.rejects(store.saveAlerts(unconfirmed), /Confirm that you received/);
-	const camera = await store.saveCamera({ label: 'Gate', source: first, mode: 'view-only' });
-	await assert.rejects(
-		store.saveAlerts({
-			label: 'Phone',
-			token: 'token',
-			chat: 'chat',
-			cameraIds: [camera.id],
-			received: true
-		}),
-		/view only/
-	);
-	await assert.rejects(
-		store.saveAlerts({
-			label: 'Phone',
-			token: 'token',
-			chat: 'chat',
-			cameraIds: ['unknown'],
-			received: true
-		}),
-		/no longer exists/
-	);
-	assert.deepEqual((await store.read()).app.telegrams, []);
+	assert.deepEqual(saved.config.detectors[1].exporters, {
+		...before.config.detectors[1].exporters,
+		telegram: []
+	});
+	assert.deepEqual(saved.config.detectors[2].exporters, {
+		...before.config.detectors[2].exporters,
+		telegram: [{ token: 'new', chat: 'new-chat' }]
+	});
 });
 
-test('unchanged alert connections can be renamed and reused without another test', async (t) => {
+test('renaming an unchanged recipient leaves config.json byte-for-byte unchanged', async (t) => {
 	const { files, store } = await fixture(t);
-	const channel = { token: 'token', chat: 'chat', alert_every: 3 };
 	await writeJson(files.config, {
 		detectors: [
 			{
-				detection: { source: first },
-				yolo: { model: 'calving.pt' },
-				exporters: { telegram: channel }
+				detection: { source: [first, second] },
+				exporters: { telegram: { token: 'token', chat: 'chat', alert_every: 3 } }
 			},
-			{ detection: { source: first }, yolo: { model: 'yolo11n.pt' }, exporters: { disk: {} } },
-			{ detection: { source: second }, exporters: { disk: {} } }
+			{ detection: { source: first }, yolo: { model: 'other.pt' }, exporters: { disk: {} } }
 		]
 	});
-	await writeJson(files.app, { telegrams: [{ label: 'Phone', ...channel }] });
-	const cameras = (await store.read()).app.streams;
+	await writeJson(files.app, {
+		detectors: [{ label: 'Calving' }, { label: 'Mounting' }],
+		telegrams: [{ label: 'Phone', token: 'token', chat: 'chat' }]
+	});
+	const configBefore = await readFile(files.config, 'utf8');
 	await store.saveAlerts({
 		original: 'Phone',
 		label: 'Farm phone',
 		token: 'token',
 		chat: 'chat',
-		cameraIds: cameras.map((camera) => camera.id!),
+		detectorLabels: ['Calving'],
 		received: false
 	});
-	const saved = await store.read();
-	assert.equal(saved.app.telegrams[0].label, 'Farm phone');
-	assert.deepEqual(saved.config.detectors[0].exporters?.telegram, [channel]);
-	assert.deepEqual(saved.config.detectors[1].exporters?.telegram, []);
-	assert.deepEqual(saved.config.detectors[2].exporters?.telegram, [
-		{ token: 'token', chat: 'chat' }
-	]);
+	assert.equal(await readFile(files.config, 'utf8'), configBefore);
+	assert.equal((await store.read()).app.telegrams[0].label, 'Farm phone');
 });
 
-test('unconfirmed new or changed alert credentials leave both files unchanged', async (t) => {
+test('unconfirmed connections and missing detector selections cannot change settings', async (t) => {
 	const { files, store } = await fixture(t);
-	const camera = await store.saveCamera({
+	await store.saveCamera({
 		label: 'Pen',
 		source: first,
 		mode: 'preset',
 		preset: 'calving-catcher'
 	});
-	const channel = { label: 'Phone', token: 'token', chat: 'chat', cameraIds: [camera.id] };
+	const channel = { label: 'Phone', token: 'token', chat: 'chat', detectorLabels: ['Pen'] };
+	const unconfirmed = v.parse(alertsInput, { ...channel, received: false });
+	await assert.rejects(store.saveAlerts(unconfirmed), /Confirm that you received/);
 	await store.saveAlerts({ ...channel, received: true });
 	const before = await Promise.all([readFile(files.config, 'utf8'), readFile(files.app, 'utf8')]);
 	for (const edit of [
@@ -480,6 +364,19 @@ test('unconfirmed new or changed alert credentials leave both files unchanged', 
 			store.saveAlerts({ ...edit, received: false }),
 			/Confirm that you received/
 		);
+	await assert.rejects(
+		store.saveAlerts({ ...channel, original: 'Phone', detectorLabels: [], received: false }),
+		/Choose at least one detector/
+	);
+	await assert.rejects(
+		store.saveAlerts({
+			...channel,
+			original: 'Phone',
+			detectorLabels: ['missing'],
+			received: false
+		}),
+		/no longer exists/
+	);
 	assert.deepEqual(
 		await Promise.all([readFile(files.config, 'utf8'), readFile(files.app, 'utf8')]),
 		before
@@ -612,7 +509,7 @@ test('changing to a custom preset preserves existing alert and recording destina
 		label: 'Security desk',
 		token: 'token',
 		chat: 'chat',
-		cameraIds: [camera.id],
+		detectorLabels: ['Entrance'],
 		received: true
 	});
 	const previous = (await store.read()).config.detectors[0].exporters;

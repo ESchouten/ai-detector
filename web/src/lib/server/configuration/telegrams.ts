@@ -1,5 +1,10 @@
 import type * as v from 'valibot';
-import { ConfigurationError, sameTelegram, telegramInput } from '../../configuration.ts';
+import {
+	alertsInput,
+	ConfigurationError,
+	sameTelegram,
+	telegramInput
+} from '../../configuration.ts';
 import type { Configuration } from '../../schema.ts';
 
 export function saveTelegram(
@@ -40,5 +45,35 @@ export function deleteTelegram({ config, app }: Configuration, label: string): v
 			detector.exporters.telegram = detector.exporters.telegram.filter(
 				(item) => !sameTelegram(item, telegram)
 			);
+	}
+}
+
+/** Alert assignments change delivery only; detector definitions and sources stay intact. */
+export function saveAlerts(
+	document: Configuration,
+	input: v.InferOutput<typeof alertsInput>
+): void {
+	const previous = document.app.telegrams.find((item) => item.label === input.original);
+	if (!input.received && (!previous || !sameTelegram(previous, input)))
+		throw new ConfigurationError(
+			'Confirm that you received the test alert before enabling new or changed connection details.'
+		);
+	const selected = new Set(input.detectorLabels);
+	if (!selected.size)
+		throw new ConfigurationError('Choose at least one detector for these alerts.');
+	if ([...selected].some((label) => !document.app.detectors.some((meta) => meta.label === label)))
+		throw new ConfigurationError('A selected detector no longer exists.');
+	saveTelegram(document, input);
+	for (const [index, detector] of document.config.detectors.entries()) {
+		const channels = detector.exporters?.telegram ?? [];
+		const assigned = channels.some((channel) => sameTelegram(channel, input));
+		if (selected.has(document.app.detectors[index].label)) {
+			if (!assigned) {
+				detector.exporters ??= {};
+				detector.exporters.telegram = [...channels, { token: input.token, chat: input.chat }];
+			}
+		} else if (assigned) {
+			detector.exporters!.telegram = channels.filter((channel) => !sameTelegram(channel, input));
+		}
 	}
 }

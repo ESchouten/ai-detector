@@ -1,6 +1,7 @@
 import argparse
 import json
 import logging
+import os
 import signal
 import sys
 from pathlib import Path
@@ -92,22 +93,26 @@ def _arguments(argv: list[str] | None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def _init_config(config_path: Path) -> int:
+    try:
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        with config_path.open("x", encoding="utf-8") as output:
+            json.dump(initial_config(), output, indent=2)
+            output.write("\n")
+    except OSError as error:
+        print(f"Cannot create configuration: {error}", file=sys.stderr)
+        return 2
+    print(
+        f"Created {config_path}. Configure sources and detection rules before running."
+    )
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     args = _arguments(argv)
     config_path = args.config.expanduser().resolve()
     if args.init_config:
-        try:
-            config_path.parent.mkdir(parents=True, exist_ok=True)
-            with config_path.open("x", encoding="utf-8") as output:
-                json.dump(initial_config(), output, indent=2)
-                output.write("\n")
-        except OSError as error:
-            print(f"Cannot create configuration: {error}", file=sys.stderr)
-            return 2
-        print(
-            f"Created {config_path}. Configure sources and detection rules before running."
-        )
-        return 0
+        return _init_config(config_path)
     try:
         config = load_config(config_path)
     except ConfigurationError as error:
@@ -123,13 +128,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     previous_signal = signal.signal(signal.SIGTERM, _interrupt)
     try:
-        from aidetector.bootstrap import run_application
-
         directory = (
             args.data_dir.expanduser().resolve()
             if args.data_dir
             else config_path.parent
         )
+        if getattr(sys, "frozen", False):
+            # PyInstaller selects a fresh temporary font cache on every launch.
+            # Matplotlib stores bundled font paths relatively, so reuse is safe.
+            os.environ["MPLCONFIGDIR"] = str(directory / "cache" / "matplotlib")
+        from aidetector.bootstrap import run_application
+
         stop_requested = None
         if args.control_stdin:
             stop_requested = Event()

@@ -22,12 +22,12 @@ export function getRtspInputArgs(source: string): string[] {
 		'tcp',
 		'-timeout',
 		'10000000',
-		'-thread_queue_size',
-		'512',
+		'-threads',
+		'1',
 		'-analyzeduration',
-		'10000000',
+		'1000000',
 		'-probesize',
-		'10000000',
+		'1000000',
 		'-i',
 		source
 	];

@@ -36,7 +36,7 @@ def _atomic_json(path: Path, record: dict) -> None:
 class LivePreview:
     """Own one encoder thread; inference only replaces pending immutable observations."""
 
-    def __init__(self, directory: Path, interval: float = 1.0):
+    def __init__(self, directory: Path, interval: float = 0.125):
         self.directory = directory
         self.interval = interval
         self.run_id = uuid4().hex
@@ -87,7 +87,7 @@ class LivePreview:
                     self._poll()
                 except (OSError, MediaError) as error:
                     self._report_failure(error)
-                self._stop.wait(0.2)
+                self._stop.wait(self.interval)
         except Exception:
             logger.exception(
                 "Live detection preview stopped; event detection continues"

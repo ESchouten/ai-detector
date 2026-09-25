@@ -6,9 +6,9 @@
 	import * as Table from '$lib/components/ui/table';
 	import { getTelegrams } from '$lib/remote/exporter.remote';
 	import { Plus } from '@lucide/svelte';
-	import { getCameras } from '$lib/remote/stream.remote';
-	const cameras = $derived(await getCameras());
-	const telegrams = $derived(await getTelegrams());
+	import { getDetectors } from '$lib/remote/detector.remote';
+	import { recipientDetectorLabels } from '$lib/alert-recipients';
+	const [detectors, telegrams] = await Promise.all([getDetectors(), getTelegrams()]);
 </script>
 
 <svelte:head><title>Alerts · AI Detector</title></svelte:head>
@@ -22,14 +22,14 @@
 				>{/if}
 		</div>
 		<p class="settings-description">
-			Choose who receives Telegram alerts and which cameras send them.
+			Choose who receives Telegram alerts and which detectors send them.
 		</p>
 	</header>
 	<div>
 		<Card.Root class="min-w-0">
 			<Card.Header
 				><Card.Title>Recipients</Card.Title><Card.Description
-					>Use one saved recipient for as many monitored cameras as you need.</Card.Description
+					>Use one saved recipient for as many detectors as you need.</Card.Description
 				></Card.Header
 			>
 			<Card.Content>
@@ -37,22 +37,21 @@
 					<Table.Root>
 						<Table.Header
 							><Table.Row
-								><Table.Head>Recipient</Table.Head><Table.Head>Cameras sending alerts</Table.Head
+								><Table.Head>Recipient</Table.Head><Table.Head class="whitespace-normal"
+									>Detectors sending alerts</Table.Head
 								><Table.Head><span class="sr-only">Actions</span></Table.Head></Table.Row
 							></Table.Header
 						>
 						<Table.Body>
 							{#each telegrams as telegram (telegram.label)}
-								{@const assignedCameras = cameras.filter((camera) =>
-									camera.alerts.includes(telegram.label)
-								)}
+								{@const assignedDetectors = recipientDetectorLabels(detectors, telegram)}
 								<Table.Row>
 									<Table.Cell class="font-medium">{telegram.label}</Table.Cell>
-									<Table.Cell
-										>{#if assignedCameras.length}<ul class="flex flex-col gap-1">
-												{#each assignedCameras as camera (camera.id)}<li>{camera.label}</li>{/each}
+									<Table.Cell class="whitespace-normal"
+										>{#if assignedDetectors.length}<ul class="flex flex-col gap-1">
+												{#each assignedDetectors as label (label)}<li>{label}</li>{/each}
 											</ul>{:else}<span class="text-muted-foreground"
-												>Not enabled for any camera</span
+												>Not enabled for any detector</span
 											>{/if}</Table.Cell
 									>
 									<Table.Cell class="text-right"

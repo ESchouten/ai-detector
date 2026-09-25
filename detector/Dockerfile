@@ -8,7 +8,7 @@ FROM runtime-${TARGETARCH} AS runtime
 ARG TARGETARCH
 
 # Install uv for fast package installation
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.12.19 /uv /uvx /bin/
 
 WORKDIR /app
 

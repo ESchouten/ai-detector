@@ -54,6 +54,8 @@ Applying a preset copies its detector settings into the saved configuration. Edi
 
 Preset names remain attached when changing a detector's name, cameras or delivery settings. Changing its detection settings makes it a custom configuration. Previously saved preset IDs remain valid even if the file is renamed or removed; the interface falls back to the saved detector label. Applying an unknown preset to a new configuration is rejected before saving.
 
+Telegram recipients are assigned to detectors, and apply to every camera selected by that detector. Saving alert settings never splits detector definitions or changes their source lists, model settings, recording destinations or webhook settings. Multiple detectors watching the same camera can use different recipients.
+
 ## Verification
 
 Python schema tests validate every bundled detector fragment. Web tests cover directory discovery, filename labels, runtime file changes, validation, configuration preservation and source binding. Production HTTP checks exercise bundled and local presets, including a filename that matches an application action. Preset files use the same validation as detector settings; malformed JSON and invalid model options identify the file that needs correction.

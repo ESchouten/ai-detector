@@ -1,19 +1,13 @@
 import { createHash } from 'node:crypto';
 import { isDeepStrictEqual } from 'node:util';
 import type * as v from 'valibot';
-import {
-	ConfigurationError,
-	sameTelegram,
-	type alertsInput,
-	type cameraInput
-} from '../../configuration.ts';
+import { ConfigurationError, type cameraInput } from '../../configuration.ts';
 import type {
 	Configuration,
 	DetectorConfig,
 	DetectorMeta,
 	DetectorPreset,
-	StreamMeta,
-	TelegramMeta
+	StreamMeta
 } from '../../schema.ts';
 
 export function identifyCameras(document: Configuration): Configuration {
@@ -189,99 +183,4 @@ export function removeCamera(document: Configuration, id: string): void {
 	if (!camera) throw new ConfigurationError('This camera no longer exists.');
 	detachCamera(document, camera.source);
 	document.app.streams = document.app.streams.filter((stream) => stream !== camera);
-}
-
-function setChannel(
-	detector: DetectorConfig,
-	channel: TelegramMeta,
-	previous: TelegramMeta | undefined,
-	enabled: boolean
-): void {
-	const channels = detector.exporters?.telegram ?? [];
-	const existing = channels.find((item) => sameTelegram(item, previous ?? channel));
-	const others = channels.filter((item) => !sameTelegram(item, previous ?? channel));
-	detector.exporters ??= {};
-	detector.exporters.telegram = enabled
-		? [...others, { ...existing, token: channel.token, chat: channel.chat }]
-		: others;
-}
-
-function alertRecipientToUpdate(document: Configuration, input: v.InferOutput<typeof alertsInput>) {
-	const previous = input.original
-		? document.app.telegrams.find((item) => item.label === input.original)
-		: undefined;
-	if (input.original && !previous)
-		throw new ConfigurationError('This alert recipient no longer exists.');
-	if (!input.received && (!previous || !sameTelegram(previous, input)))
-		throw new ConfigurationError(
-			'Confirm that you received the test alert before enabling new or changed connection details.'
-		);
-	if (
-		document.app.telegrams.some(
-			(item) => item !== previous && (item.label === input.label || sameTelegram(item, input))
-		)
-	)
-		throw new ConfigurationError('This alert recipient or name already exists.');
-	return previous;
-}
-
-export function saveAlerts(
-	document: Configuration,
-	input: v.InferOutput<typeof alertsInput>
-): void {
-	const previous = alertRecipientToUpdate(document, input);
-	const selected = document.app.streams.filter((stream) => input.cameraIds.includes(stream.id!));
-	if (selected.length !== new Set(input.cameraIds).size)
-		throw new ConfigurationError('A selected camera no longer exists.');
-	if (!selected.length)
-		throw new ConfigurationError('Choose at least one monitored camera for these alerts.');
-	for (const camera of selected) {
-		if (
-			!document.config.detectors.some((detector) =>
-				detector.detection.source.includes(camera.source)
-			)
-		)
-			throw new ConfigurationError(
-				`${camera.label ?? 'This camera'} is view only. Enable monitoring before adding alerts.`
-			);
-	}
-	const channel = { label: input.label, token: input.token, chat: input.chat };
-	const selectedSources = new Set(selected.map((camera) => camera.source));
-	const previousRules = document.config.detectors.filter(
-		(detector) =>
-			previous && detector.exporters?.telegram?.some((item) => sameTelegram(item, previous))
-	);
-	const previouslySelectedSources = new Set(
-		previousRules.flatMap((detector) => detector.detection.source)
-	);
-	const additions: { detector: DetectorConfig; meta: DetectorMeta }[] = [];
-	for (const [index, detector] of document.config.detectors.entries()) {
-		const watched = detector.detection.source.filter(
-			(source) =>
-				selectedSources.has(source) &&
-				(!previouslySelectedSources.has(source) || previousRules.includes(detector))
-		);
-		if (watched.length && watched.length !== detector.detection.source.length) {
-			const split = structuredClone(detector);
-			split.detection.source = watched;
-			detector.detection.source = detector.detection.source.filter(
-				(source) => !watched.includes(source)
-			);
-			setChannel(split, channel, previous, true);
-			additions.push({
-				detector: split,
-				meta: {
-					...document.app.detectors[index],
-					label: availableLabel(document, `${document.app.detectors[index].label} — ${input.label}`)
-				}
-			});
-			setChannel(detector, channel, previous, false);
-		} else setChannel(detector, channel, previous, watched.length > 0);
-	}
-	for (const item of additions) {
-		document.config.detectors.push(item.detector);
-		document.app.detectors.push(item.meta);
-	}
-	if (previous) Object.assign(previous, channel);
-	else document.app.telegrams.push(channel);
 }

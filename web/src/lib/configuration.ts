@@ -74,7 +74,7 @@ export const cameraInput = v.variant('mode', [
 
 export const alertsInput = v.object({
 	...telegramInput.entries,
-	cameraIds: v.array(text),
+	detectorLabels: v.array(text),
 	received: v.boolean()
 });
 

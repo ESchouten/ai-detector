@@ -491,7 +491,9 @@
 								</Field.Group>
 							</Field.Set>
 							<Button
-								href={resolve(setupMode ? '/notifications/add?setup=1' : '/notifications/add')}
+								href={resolve(
+									`/notifications/add?detector=${encodeURIComponent(originalLabel)}${setupMode ? '&setup=1' : ''}`
+								)}
 								target="_blank"
 								rel="noopener"
 								variant="outline"

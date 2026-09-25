@@ -1,13 +1,17 @@
-/** Adding a camera must retain every camera that already uses this recipient. */
-export function recipientCameraIds(
-	cameras: { id: string; alerts: string[]; monitored: boolean }[],
-	label: string,
-	additionalCamera?: string | null
+import { sameTelegram } from './configuration.ts';
+import type { DetectorConfig, DetectorMeta, TelegramMeta } from './schema.ts';
+
+export function recipientDetectorLabels(
+	detectors: { detector: DetectorConfig; meta: DetectorMeta }[],
+	recipient?: TelegramMeta,
+	additionalDetector?: string
 ): string[] {
-	return cameras
+	return detectors
 		.filter(
-			(camera) =>
-				camera.monitored && (camera.alerts.includes(label) || camera.id === additionalCamera)
+			({ detector, meta }) =>
+				meta.label === additionalDetector ||
+				(recipient &&
+					detector.exporters?.telegram?.some((channel) => sameTelegram(channel, recipient)))
 		)
-		.map((camera) => camera.id);
+		.map(({ meta }) => meta.label);
 }

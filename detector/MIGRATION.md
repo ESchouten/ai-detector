@@ -11,6 +11,10 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
 
+## Linux desktop dependencies — 2026-09-25
+
+The `default` extra now selects CPU builds of Torch and Torchvision on Linux. Native desktop installers no longer bundle unused CUDA libraries that pushed downloads beyond GitHub's release asset limit. The `nvidia` extra keeps GPU dependencies, and macOS keeps MPS support. uv now enforces the existing rule that `default`, `nvidia`, and `windowsml` are alternative environments. Models, configuration and detection archives are unchanged.
+
 ## Intentional corrections
 
 These are behavior decisions, not accidental compatibility changes. Their tests are added with the corresponding implementation.

@@ -255,8 +255,10 @@ jobs:
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
           tag_name: ${{ needs.configuration.outputs.tag }}
-          target_commitish: ${{ github.sha }}
+          # Existing tags already identify the tested commit. Only branch runs create a tag.
+          target_commitish: ${{ github.event_name == 'workflow_dispatch' && github.sha || '' }}
           name: AI Detector ${{ needs.configuration.outputs.version }} (${{ needs.configuration.outputs.channel }})
           prerelease: ${{ needs.configuration.outputs.channel == 'preview' }}
           make_latest: ${{ needs.configuration.outputs.channel == 'stable' }}
@@ -272,7 +274,7 @@ jobs:
             Updates are authenticated using AI Detector’s own signing key. These downloads have no Windows publisher certificate or Apple notarization; OS warnings or execution restrictions can apply. Supported packaging targets: Windows 11 24H2+ x64, macOS 14+ Apple Silicon, Ubuntu 22.04/24.04 amd64. GPU and camera qualification remains specific to the tested hardware. Portable ZIPs remain available for technical users.
       - name: Publish application before promoting update feeds
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ needs.configuration.outputs.tag }}
           UPDATE_FEED_TAG: ${{ needs.configuration.outputs.feed_tag }}
@@ -280,6 +282,6 @@ jobs:
         run: |
           gh release edit "$RELEASE_TAG" --draft=false
           if ! gh release view "$UPDATE_FEED_TAG" >/dev/null 2>&1; then
-            gh release create "$UPDATE_FEED_TAG" --target "$GITHUB_SHA" --title "Application $UPDATE_CHANNEL update feeds" --notes "Signed $UPDATE_CHANNEL desktop updater metadata. Installers are attached to versioned application releases." --prerelease --latest=false
+            gh release create "$UPDATE_FEED_TAG" --title "Application $UPDATE_CHANNEL update feeds" --notes "Signed $UPDATE_CHANNEL desktop updater metadata. Installers are attached to versioned application releases." --prerelease --latest=false
           fi
           gh release upload "$UPDATE_FEED_TAG" downloads/appcast.xml downloads/releases.win.json --clobber

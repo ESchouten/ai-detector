@@ -18,12 +18,16 @@ dependencies = [
 
 [project.optional-dependencies]
 default = [
+    "torch",
+    "torchvision",
     "onnx>=1.20.1",
     "onnxslim>=0.1.87",
     "onnxruntime>=1.23.2,<1.24; python_version < '3.11'",
     "onnxruntime>=1.24.1; python_version >= '3.11'",
 ]
 nvidia = [
+    "torch",
+    "torchvision",
     "onnx>=1.20.1",
     "onnxslim>=0.1.87",
     "onnxruntime-gpu>=1.23.2,<1.24; python_version < '3.11'",
@@ -36,6 +40,30 @@ windowsml = [
     "wasdk-microsoft-windows-ai-machinelearning[all]>=1.8.260209005",
     "wasdk-microsoft-windows-applicationmodel-dynamicdependency-bootstrap>=1.8.260209005",
 ]
+
+[tool.uv]
+required-version = ">=0.12.19"
+conflicts = [[{ extra = "default" }, { extra = "nvidia" }, { extra = "windowsml" }]]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
+    { index = "pypi", extra = "nvidia" },
+]
+torchvision = [
+    { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
+    { index = "pypi", extra = "nvidia" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
 
 [build-system]
 requires = ["hatchling"]

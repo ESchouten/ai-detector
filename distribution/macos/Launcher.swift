@@ -17,8 +17,11 @@ final class Application: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        item.button?.title = "AI Detector"
+        item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        item.button?.image = NSImage(systemSymbolName: "video", accessibilityDescription: "AI Detector")
+        item.button?.image?.isTemplate = true
+        item.button?.toolTip = "AI Detector"
+        item.button?.setAccessibilityLabel("AI Detector")
         let menu = NSMenu()
         menu.addItem(withTitle: "Open dashboard", action: #selector(openDashboard), keyEquivalent: "o")
         loginItem = menu.addItem(withTitle: "Open at login", action: #selector(toggleLogin), keyEquivalent: "")

@@ -95,7 +95,7 @@ Select **one** runtime extra per environment:
 
 | Extra | Intended runtime |
 | --- | --- |
-| `default` | Native MPS for macOS `.pt` models; standard ONNX Runtime for exported models and other supported hosts |
+| `default` | Native MPS for macOS `.pt` models; CPU Torch on Linux and standard ONNX Runtime for exported models |
 | `nvidia` | ONNX Runtime GPU; requires compatible NVIDIA drivers/libraries |
 | `windowsml` | Windows ML runtime and Windows App SDK bindings |
 

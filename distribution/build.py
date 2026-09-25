@@ -66,12 +66,13 @@ def build_detector(args) -> Path:
     flags = ["--onefile" if args.onefile else "--onedir"]
     for module in COLLECT:
         flags += ["--collect-all", module]
-    # The ONNX reference evaluator is unused by our export/inference paths
-    # and crashes PyInstaller's Windows DLL scan when imported.
+    # Our exports use FP32/FP16. Exclude the unused reference evaluator and
+    # INT8 tools that import it during PyInstaller's Windows DLL scan.
     flags += [
         "--collect-data=onnx",
         "--copy-metadata=onnx",
         "--exclude-module=onnx.reference",
+        "--exclude-module=onnxruntime.quantization",
     ]
     if kind == "windowsml":
         flags += ["--collect-all", "winui3", "--collect-all", "winrt"]

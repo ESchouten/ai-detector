@@ -15,6 +15,8 @@ The three test workflows respond to branch pushes rather than release tags. Obso
 
 Tool versions live in [distribution/toolchain.json](../distribution/toolchain.json), [web/package.json](../web/package.json), and the Python/NuGet lockfiles. The shared setup action installs those tools and caches pnpm/uv dependencies. Release assets are already compressed, so artifact upload does not compress them again.
 
+Each `AI-Detector-PLATFORM` artifact contains only its installer: a Mac `.dmg`, Windows setup `.exe`, or Linux `.deb`. GitHub wraps this single file in a ZIP when downloaded from Actions. Portable archives, checksums and updater files live in separate `release-support-PLATFORM` artifacts. The publishing job collects both groups so in-app updates and individual release downloads remain available.
+
 ## Debugging a failure
 
 Open the first failing named step, rather than the later skipped jobs. Each platform remains visible when another fails. Use `gh run view RUN_ID --log-failed` to retrieve the failing logs.

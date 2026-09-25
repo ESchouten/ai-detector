@@ -98,14 +98,17 @@ jobs:
             runner: windows-latest
             suffix: .exe
             detector: aidetector
+            installer: '*-setup.exe'
           - platform: macos-arm64
             runner: macos-latest
             suffix: ''
             detector: aidetector.app
+            installer: '*.dmg'
           - platform: linux-x64
             runner: ubuntu-22.04
             suffix: ''
             detector: aidetector
+            installer: '*.deb'
     defaults:
       run:
         shell: bash
@@ -208,14 +211,20 @@ jobs:
               for artifact in Path('application-dist').glob(pattern):
                   checksum(artifact)
           PYARCHIVE
-      - uses: actions/upload-artifact@v7
+      - name: Upload installer download
+        uses: actions/upload-artifact@v7
         with:
           name: AI-Detector-${{ matrix.platform }}
+          path: application-dist/${{ matrix.installer }}
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+      - name: Upload supporting release files
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-support-${{ matrix.platform }}
           path: |
             application-dist/*.zip
-            application-dist/*.dmg
-            application-dist/*-setup.exe
-            application-dist/*.deb
             application-dist/*.sha256
             application-dist/*.nupkg
             application-dist/*.delta
@@ -232,9 +241,16 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v7
+      - name: Download installers
+        uses: actions/download-artifact@v7
         with:
           pattern: AI-Detector-*
+          path: downloads
+          merge-multiple: true
+      - name: Download supporting release files
+        uses: actions/download-artifact@v7
+        with:
+          pattern: release-support-*
           path: downloads
           merge-multiple: true
       - uses: softprops/action-gh-release@v2

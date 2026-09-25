@@ -129,7 +129,7 @@ git push origin app/test-2026-09-25-1
 
 Choose a new tag name for each build. The tagged commit must include this workflow's test-tag trigger. GitHub runs **Application download** from that commit, even when the workflow is not yet on `main`.
 
-After every platform passes, download the installer from the resulting GitHub **prerelease**. The run also retains `AI-Detector-macos-arm64`, `AI-Detector-windows-x64` and `AI-Detector-linux-x64` under **Artifacts** for debugging. Each download includes the web app, detector and FFmpeg.
+After every platform passes, download the installer from the resulting GitHub **prerelease**. The run also retains `AI-Detector-macos-arm64`, `AI-Detector-windows-x64` and `AI-Detector-linux-x64` under **Artifacts**. Each artifact ZIP contains just one installer: the Mac `.dmg`, Windows setup `.exe`, or Linux `.deb`. The installer includes the web app, detector and FFmpeg. Separate `release-support-*` artifacts hold portable archives, checksums and updater files used by the publishing job; they are not needed for installation.
 
 Preview installers use `0.0.N`, where `N` is the Application download workflow's increasing run number. This is a numeric version understood by both Sparkle and Velopack; GitHub marks the release as a prerelease. Preview feeds live in **app-preview-updates**, separately from the stable **app-updates** feed. Both channels require the configured signing key. Each preview also publishes its matching NVIDIA image under its commit-specific tag.
 

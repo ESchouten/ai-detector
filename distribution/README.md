@@ -129,15 +129,21 @@ git push origin app/test-2026-09-25-1
 
 Choose a new tag name for each build. The tagged commit must include this workflow's test-tag trigger. GitHub runs **Application download** from that commit, even when the workflow is not yet on `main`.
 
-Open the run in **Actions**, then download `AI-Detector-macos-arm64`, `AI-Detector-windows-x64` or `AI-Detector-linux-x64` under **Artifacts**. Extract the artifact ZIP to find the installer. Each download includes the web app, detector and FFmpeg. Preview installers use version `0.0.0`; the application records the tag so builds remain identifiable.
+After every platform passes, download the installer from the resulting GitHub **prerelease**. The run also retains `AI-Detector-macos-arm64`, `AI-Detector-windows-x64` and `AI-Detector-linux-x64` under **Artifacts** for debugging. Each download includes the web app, detector and FFmpeg.
 
-Preview builds also publish their matching NVIDIA image under its commit-specific tag. They do not create a GitHub release, publish update feeds or enable production updates. When the workflow is available on `main`, **Run workflow** with a development branch selected provides the same preview behavior.
+Preview installers use `0.0.N`, where `N` is the Application download workflow's increasing run number. This is a numeric version understood by both Sparkle and Velopack; GitHub marks the release as a prerelease. Preview feeds live in **app-preview-updates**, separately from the stable **app-updates** feed. Both channels require the configured signing key. Each preview also publishes its matching NVIDIA image under its commit-specific tag.
+
+Install the first updater-enabled preview manually. Older `0.0.0` previews have no updater. Subsequent installed Mac and Windows previews receive new previews through **Check for Updates** in the native menu. Stable installations continue to receive stable updates only. Downloads preserve configuration and recordings; switching channels requires installing the other channel's download. These are alternative installations of the same application, not two applications to run side by side. Windows portable ZIPs and Linux packages still require manual updates.
+
+When the workflow is available on `main`, **Run workflow** with a development branch selected publishes the same preview channel. The release receives an immutable `app/test-run-RUN_ID` tag at the tested commit. Retrying a failed run keeps its version and tag; after successful publication, start a new run or push a new test tag instead of rebuilding a published version.
 
 ## Release publishing
 
-Use increasing, stable `app/vX.Y.Z` tags. Prerelease/build-suffix versions are rejected by this stable channel. Use `app/test-*` tags or manual branch runs for previews with production updates disabled.
+Use increasing, stable `app/vX.Y.Z` tags. Prerelease/build-suffix versions are rejected by this stable channel. Use `app/test-*` tags or manual branch runs for the separate preview channel.
 
-The workflow downloads the previous update bases, verifies the signed Windows feed and base checksum, and invokes `generate_appcast` or `vpk pack`. It uploads complete installers, full update packages and deltas to the versioned application release. Once every platform succeeds, it publishes that release and promotes only `appcast.xml` and `releases.win.json` to the fixed **app-updates** GitHub release. Asset URLs point at immutable `app/vX.Y.Z` releases. The fixed feed avoids GitHub's ambiguous “latest release”, which may refer to a separate web or detector release. Builds are serialized, and a stable version cannot replace an equal or newer version in the feed. Keep historical versioned assets available; existing clients and retained deltas reference them. Do not edit a published application version in place.
+The workflow downloads the previous update bases from the selected channel, verifies the signed Windows feed and base checksum, and invokes `generate_appcast` or `vpk pack`. It uploads complete installers, full update packages and deltas to the versioned application release. Once every platform succeeds, it publishes that release and promotes only `appcast.xml` and `releases.win.json` to that channel's fixed feed release. Asset URLs point at immutable versioned releases. Fixed feeds avoid GitHub's ambiguous “latest release”, which may refer to a separate web or detector release. Builds are serialized within each channel, and a version cannot replace an equal or newer version in its feed. Keep historical versioned assets available; existing clients and retained deltas reference them. Do not edit a published application version in place.
+
+See [the workflow map](../.github/README.md) for triggers, checks and local debugging commands.
 
 Configure two entries in **Settings → Secrets and variables → Actions**:
 

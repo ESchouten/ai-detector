@@ -17,6 +17,12 @@ from installers import windows
 )
 class VelopackTest(unittest.TestCase):
     def test_delta_preserves_the_runtime_and_replaces_changed_files(self):
+        self.check_delta("1.0.0", "1.0.1")
+
+    def test_preview_delta_reconstructs_the_next_build(self):
+        self.check_delta("0.0.41", "0.0.42")
+
+    def check_delta(self, previous: str, current: str):
         with tempfile.TemporaryDirectory(prefix="ai-detector-velopack-") as temporary:
             root = Path(temporary)
             payload = root / "payload"
@@ -24,13 +30,13 @@ class VelopackTest(unittest.TestCase):
             (payload / "application.json").write_text("{}")
             (payload / "runtime.bin").write_bytes(os.urandom(2 * 1024 * 1024))
             (payload / "web.txt").write_text("old dashboard")
-            windows(payload, "1.0.0")
+            windows(payload, previous)
             (payload / "web.txt").write_text("new dashboard")
-            windows(payload, "1.0.1")
+            windows(payload, current)
             updates = root / "windows-updates"
-            base = next(updates.glob("*1.0.0*-full.nupkg"))
-            target = next(updates.glob("*1.0.1*-full.nupkg"))
-            delta = next(updates.glob("*1.0.1*-delta.nupkg"))
+            base = next(updates.glob(f"*{previous}*-full.nupkg"))
+            target = next(updates.glob(f"*{current}*-full.nupkg"))
+            delta = next(updates.glob(f"*{current}*-delta.nupkg"))
             self.assertLess(delta.stat().st_size, target.stat().st_size)
             reconstructed = root / "reconstructed.nupkg"
             subprocess.run(

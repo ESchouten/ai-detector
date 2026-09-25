@@ -9,16 +9,27 @@ permissions:
   contents: read
 
 concurrency:
-  group: application-releases
+  group: application-${{ startsWith(github.ref, 'refs/tags/app/v') && 'stable' || 'preview' }}
   cancel-in-progress: false
 
 jobs:
   configuration:
-    name: Release signing configuration
+    name: Release configuration
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+      channel: ${{ steps.release.outputs.channel }}
+      feed_tag: ${{ steps.release.outputs.feed_tag }}
+      feed_url: ${{ steps.release.outputs.feed_url }}
+      release_url: ${{ steps.release.outputs.release_url }}
     steps:
+      - uses: actions/checkout@v6
+      - name: Choose version and update channel
+        id: release
+        run: python distribution/release_config.py
       - name: Check required secrets and public key
-        if: startsWith(github.ref, 'refs/tags/app/v')
         # Only presence flags reach this job. Keys stay in the signing steps below.
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY != '' }}
@@ -38,10 +49,15 @@ jobs:
           sys.exit(bool(missing))
           PY
 
+  checks:
+    needs: configuration
+    uses: ./.github/workflows/web-tests.yml
+
   image:
     name: Matching NVIDIA image
-    needs: configuration
+    needs: [configuration, checks]
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     permissions:
       packages: write
     outputs:
@@ -71,7 +87,7 @@ jobs:
 
   native:
     name: ${{ matrix.platform }} application
-    needs: image
+    needs: [configuration, image]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
     strategy:
@@ -94,28 +110,15 @@ jobs:
       run:
         shell: bash
     env:
-      UPDATE_FEED: https://github.com/${{ github.repository }}/releases/download/app-updates
+      APP_VERSION: ${{ needs.configuration.outputs.version }}
+      UPDATE_FEED: ${{ needs.configuration.outputs.feed_url }}
+      RELEASE_URL: ${{ needs.configuration.outputs.release_url }}
       SPARKLE_PUBLIC_KEY: ${{ vars.SPARKLE_PUBLIC_KEY }}
       LITELLM_LOCAL_MODEL_COST_MAP: 'true'
       YOLO_AUTOINSTALL: 'false'
       ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS: '1'
     steps:
       - uses: actions/checkout@v6
-      - name: Release version
-        run: |
-          python - <<'PYVERSION'
-          import os
-          import sys
-          from urllib.parse import quote
-          sys.path.insert(0, 'distribution')
-          from updates import stable_version
-          version = os.environ['GITHUB_REF_NAME'].removeprefix('app/v') if os.environ['GITHUB_REF'].startswith('refs/tags/app/v') else '0.0.0'
-          stable_version(version)
-          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
-              output.write(f'APP_VERSION={version}\n')
-              tag = quote(os.environ['GITHUB_REF_NAME'], safe='')
-              output.write(f"RELEASE_URL=https://github.com/{os.environ['GITHUB_REPOSITORY']}/releases/download/{tag}\n")
-          PYVERSION
       - uses: ./.github/actions/setup-distribution
         with:
           dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
@@ -148,7 +151,6 @@ jobs:
           uv run --project detector --no-sync ruff check distribution
           uv run --project detector --no-sync ruff format --check distribution
           uv run --project detector --no-sync python -m unittest discover -s distribution -p 'test_*.py'
-          pnpm --dir web test:desktop
           bun test ./web/desktop/host.test.ts
       - name: Smoke test packaged detector
         working-directory: detector
@@ -157,8 +159,6 @@ jobs:
           if [ '${{ runner.os }}' = macOS ]; then executable="dist/${{ matrix.detector }}/Contents/MacOS/aidetector"; fi
           uv run --no-sync python -m tests.support.smoke_package "$executable"
           uv run --no-sync python -m tests.support.smoke_package "$executable" --model-format pt
-      - name: Check web application
-        run: pnpm --dir web quality
       - name: Build web executable
         run: python distribution/build.py web --platform '${{ matrix.platform }}' --version "$APP_VERSION" --skip-dependencies
       - name: Test compiled desktop failure paths
@@ -171,7 +171,7 @@ jobs:
           launcher=()
           if [ '${{ runner.os }}' = macOS ]; then launcher=(--mac-launcher "$RUNNER_TEMP/mac-launcher" --sparkle "$RUNNER_TEMP/sparkle"); fi
           if [ '${{ runner.os }}' = Windows ]; then launcher=(--windows-launcher "$RUNNER_TEMP/windows-launcher"); fi
-          if [[ "$GITHUB_REF" == refs/tags/app/v* ]] && [ '${{ runner.os }}' != Linux ]; then
+          if [ '${{ runner.os }}' != Linux ]; then
             launcher+=(--update-feed "$UPDATE_FEED")
             launcher+=(--sparkle-public-key "$SPARKLE_PUBLIC_KEY")
           fi
@@ -182,17 +182,17 @@ jobs:
       - name: Smoke test complete download
         run: uv run --project detector --no-sync python distribution/smoke.py 'application-dist/AI-Detector-${{ matrix.platform }}'
       - name: Retrieve previous release for delta generation
-        if: startsWith(github.ref, 'refs/tags/app/v') && runner.os != 'Linux'
+        if: runner.os != 'Linux'
         run: uv run --project detector --no-sync python distribution/updates.py prepare --platform '${{ matrix.platform }}' --version "$APP_VERSION" --feed-url "$UPDATE_FEED"
       - name: Build native installer
         run: uv run --project detector --no-sync python distribution/installers.py 'application-dist/AI-Detector-${{ matrix.platform }}' --platform '${{ matrix.platform }}' --version "$APP_VERSION"
       - name: Generate signed Sparkle feed and deltas
-        if: runner.os == 'macOS' && startsWith(github.ref, 'refs/tags/app/v')
+        if: runner.os == 'macOS'
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: uv run --project detector --no-sync python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --sparkle "$RUNNER_TEMP/sparkle" --release-url "$RELEASE_URL"
       - name: Sign Velopack feed and package hashes
-        if: runner.os == 'Windows' && startsWith(github.ref, 'refs/tags/app/v')
+        if: runner.os == 'Windows'
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: uv run --project detector --no-sync python distribution/updates.py publish --platform windows-x64 --version "$APP_VERSION" --release-url "$RELEASE_URL"
@@ -222,11 +222,13 @@ jobs:
             application-dist/appcast.xml
             application-dist/releases.win.json
           if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
 
   release:
-    if: startsWith(github.ref, 'refs/tags/app/v')
-    needs: native
+    needs: [configuration, native]
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: write
     steps:
@@ -237,10 +239,16 @@ jobs:
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
-          name: AI Detector ${{ github.ref_name }}
+          tag_name: ${{ needs.configuration.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: AI Detector ${{ needs.configuration.outputs.version }} (${{ needs.configuration.outputs.channel }})
+          prerelease: ${{ needs.configuration.outputs.channel == 'preview' }}
+          make_latest: ${{ needs.configuration.outputs.channel == 'stable' }}
           files: downloads/*
           draft: true
           body: |
+            Update channel: **${{ needs.configuration.outputs.channel }}**. Installed Mac and Windows applications receive updates only from this channel. Switching channels requires installing that channel's download. Existing previews without an updater need this installer once.
+
             Install the download for your computer: the Windows setup program, macOS disk image (drag AI Detector to Applications), or Ubuntu desktop package. Open **AI Detector** and follow the setup. Python, the web server and FFmpeg are included.
 
             Closing the browser leaves monitoring active. Pause explicitly when you want monitoring to stay paused. Desktop startup runs after you sign in; monitoring before login is not promised.
@@ -250,9 +258,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.configuration.outputs.tag }}
+          UPDATE_FEED_TAG: ${{ needs.configuration.outputs.feed_tag }}
+          UPDATE_CHANNEL: ${{ needs.configuration.outputs.channel }}
         run: |
-          gh release edit "$GITHUB_REF_NAME" --draft=false
-          if ! gh release view app-updates >/dev/null 2>&1; then
-            gh release create app-updates --title "Application update feeds" --notes "Stable desktop updater metadata. Installers are attached to app/v releases." --prerelease --latest=false
+          gh release edit "$RELEASE_TAG" --draft=false
+          if ! gh release view "$UPDATE_FEED_TAG" >/dev/null 2>&1; then
+            gh release create "$UPDATE_FEED_TAG" --target "$GITHUB_SHA" --title "Application $UPDATE_CHANNEL update feeds" --notes "Signed $UPDATE_CHANNEL desktop updater metadata. Installers are attached to versioned application releases." --prerelease --latest=false
           fi
-          gh release upload app-updates downloads/appcast.xml downloads/releases.win.json --clobber
+          gh release upload "$UPDATE_FEED_TAG" downloads/appcast.xml downloads/releases.win.json --clobber

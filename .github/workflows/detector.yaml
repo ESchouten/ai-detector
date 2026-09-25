@@ -1,4 +1,4 @@
-name: Detector
+name: Standalone detector releases
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
-  cancel-in-progress: true
+  group: detector-release-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -21,14 +21,16 @@ env:
 jobs:
   build:
     name: Ultralytics Image
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
     steps:
       - name: Prepare
         run: |
@@ -90,7 +92,7 @@ jobs:
           touch "/tmp/digests/${digest#sha256:}"
 
       - name: Upload digest
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: digests-${{ env.PLATFORM_PAIR }}
           path: /tmp/digests/*
@@ -99,7 +101,8 @@ jobs:
 
   jetpack6-image:
     name: Jetpack 6 Image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 90
     permissions:
       contents: write
       packages: write
@@ -155,7 +158,9 @@ jobs:
           cache-to: type=gha,mode=max,scope=jetson,ignore-error=true
 
   merge:
+    name: Publish multi-platform image
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs:
       - build
     steps:
@@ -235,7 +240,7 @@ jobs:
       - name: Version
         id: version
         run: |
-          $version = "${{ github.ref_name }}"
+          $version = $env:GITHUB_REF_NAME
           if ($version.StartsWith("detector/")) {
             $version = $version.Substring("detector/".Length)
           } else {
@@ -275,6 +280,9 @@ jobs:
         with:
           name: ${{ matrix.artifact_prefix }}-${{ steps.version.outputs.version }}-exe
           path: detector/dist/${{ matrix.artifact_prefix }}-${{ steps.version.outputs.version }}.exe
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
 
       - name: Zip Release Asset
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/detector/v') && env.PUBLISH_RELEASE_ASSET == 'true'
@@ -343,6 +351,9 @@ jobs:
         with:
           name: aidetector-osx-${{ steps.version.outputs.version }}-exe
           path: detector/dist/aidetector-osx-${{ steps.version.outputs.version }}.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
 
       - name: Release
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/detector/v')

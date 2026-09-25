@@ -10,8 +10,9 @@ from functools import partial
 from pathlib import Path
 
 from fixtures.keys import PRIVATE_KEY, PUBLIC_KEY
+from release_config import release_config
 from release_signatures import sign_feed, verify_feed
-from updates import mac_items, newer_than, prepare, stable_version, windows
+from updates import mac_items, newer_than, numeric_version, prepare, windows
 
 
 class UpdateFeedTest(unittest.TestCase):
@@ -34,11 +35,11 @@ class UpdateFeedTest(unittest.TestCase):
         self.addCleanup(server.shutdown)
         self.url = f"http://127.0.0.1:{server.server_port}"
 
-    def test_stable_versions_cannot_downgrade_or_promote_prereleases(self):
+    def test_numeric_versions_cannot_downgrade_or_promote_prereleases(self):
         newer_than("1.10.0", ["1.9.0"])
         for bad in ("1.0", "01.0.0", "1.0.0-rc.1", "1.0.0+test"):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
-                stable_version(bad)
+                numeric_version(bad)
         for version in ("1.0.0", "0.9.0"):
             with self.subTest(version=version), self.assertRaises(ValueError):
                 newer_than(version, ["1.0.0"])
@@ -125,6 +126,65 @@ class UpdateFeedTest(unittest.TestCase):
         feed.write_bytes(sign_feed(feed.read_bytes(), PRIVATE_KEY, PUBLIC_KEY))
         with self.assertRaisesRegex(ValueError, "checksum failed"):
             prepare(self.output, "windows-x64", "1.0.1", self.url, PUBLIC_KEY)
+
+    def test_preview_feed_advances_without_reading_or_changing_the_stable_feed(self):
+        stable = self.host / "app-updates"
+        preview = self.host / "app-preview-updates"
+        stable.mkdir()
+        preview.mkdir()
+        sentinel = b"Stable feed must not be read, replaced or used for delta inputs"
+        (stable / "releases.win.json").write_bytes(sentinel)
+        for number in (42, 43):
+            release = release_config(
+                f"refs/tags/app/test-{number}", "example/app", number, number
+            )
+            output = self.root / str(number)
+            output.mkdir()
+            prepare(
+                output,
+                "windows-x64",
+                release["version"],
+                self.url + "/" + release["feed_tag"],
+                PUBLIC_KEY,
+            )
+            folder = output / "windows-updates"
+            name = f"AIDetector-{release['version']}-full.nupkg"
+            content = f"preview {number}".encode()
+            (folder / name).write_bytes(content)
+            (folder / "releases.win.json").write_text(
+                json.dumps(
+                    {
+                        "Assets": [
+                            {
+                                "PackageId": "AIDetector",
+                                "Version": release["version"],
+                                "Type": "Full",
+                                "FileName": name,
+                                "SHA256": hashlib.sha256(content).hexdigest(),
+                                "Size": len(content),
+                            }
+                        ]
+                    }
+                )
+            )
+            windows(output, release["version"], self.url, PRIVATE_KEY, PUBLIC_KEY)
+            (self.host / name).write_bytes(content)
+            (preview / "releases.win.json").write_bytes(
+                (output / "releases.win.json").read_bytes()
+            )
+        feed = json.loads(
+            verify_feed((preview / "releases.win.json").read_bytes(), PUBLIC_KEY)
+        )
+        self.assertEqual(
+            [asset["Version"] for asset in feed["Assets"]], ["0.0.42", "0.0.43"]
+        )
+        self.assertEqual((stable / "releases.win.json").read_bytes(), sentinel)
+        self.assertEqual(
+            (
+                self.root / "43/windows-updates/AIDetector-0.0.42-full.nupkg"
+            ).read_bytes(),
+            b"preview 42",
+        )
 
     def test_sparkle_preserves_old_feed_urls_and_downloads_only_two_bases(self):
         items = []

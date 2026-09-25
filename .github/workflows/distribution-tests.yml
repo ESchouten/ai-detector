@@ -2,15 +2,29 @@ name: Desktop distribution tests
 
 on:
   pull_request:
-    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', '.config/**', '.github/actions/setup-distribution/**', '.github/workflows/distribution-tests.yml', '.github/workflows/application.yml']
+    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', '.config/**', '.github/**', '.gitattributes']
   push:
-    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', '.config/**', '.github/actions/setup-distribution/**', '.github/workflows/distribution-tests.yml', '.github/workflows/application.yml']
+    branches: ['**']
+    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', '.config/**', '.github/**', '.gitattributes']
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: distribution-tests-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  workflows:
+    name: Workflow syntax
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate workflows and embedded shell scripts
+        uses: docker://rhysd/actionlint:1.7.12
+
   test:
     strategy:
       fail-fast: false

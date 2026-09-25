@@ -16,16 +16,16 @@ from pathlib import Path
 SPARKLE = "http://www.andymatuschak.org/xml-namespaces/sparkle"
 
 
-def stable_version(value: str) -> tuple[int, ...]:
+def numeric_version(value: str) -> tuple[int, ...]:
     if not re.fullmatch(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)", value):
-        raise ValueError("Application update releases require a stable X.Y.Z version")
+        raise ValueError("Application updates require a numeric X.Y.Z version")
     return tuple(map(int, value.split(".")))
 
 
 def newer_than(version: str, previous: list[str]) -> None:
-    current = stable_version(version)
-    if any(current <= stable_version(old) for old in previous):
-        raise ValueError("An update must be newer than every published stable version")
+    current = numeric_version(version)
+    if any(current <= numeric_version(old) for old in previous):
+        raise ValueError("An update must be newer than every version in its channel")
 
 
 def fetch_feed(url: str) -> bytes | None:
@@ -61,13 +61,13 @@ def mac_items(feed: bytes) -> list[tuple[str, ET.Element]]:
         if enclosure is not None:
             version = version or enclosure.get(f"{{{SPARKLE}}}version")
             result.append((version, enclosure))
-    return sorted(result, key=lambda item: stable_version(item[0]), reverse=True)
+    return sorted(result, key=lambda item: numeric_version(item[0]), reverse=True)
 
 
 def prepare(
     output: Path, platform: str, version: str, feed_url: str, public_key: str = ""
 ) -> None:
-    stable_version(version)
+    numeric_version(version)
     name = "appcast.xml" if platform == "macos-arm64" else "releases.win.json"
     feed = fetch_feed(feed_url.rstrip("/") + "/" + name)
     folder = output / (
@@ -93,7 +93,7 @@ def prepare(
         (output / "previous-windows-feed.json").write_bytes(feed)
         full = [asset for asset in assets if asset["Type"] == "Full"]
         if full:
-            latest = max(full, key=lambda asset: stable_version(asset["Version"]))
+            latest = max(full, key=lambda asset: numeric_version(asset["Version"]))
             url = urllib.parse.urljoin(feed_url.rstrip("/") + "/", latest["FileName"])
             name = Path(urllib.parse.unquote(urllib.parse.urlparse(url).path)).name
             download(url, folder / name, latest["SHA256"])
@@ -160,7 +160,7 @@ def windows(
         asset["FileName"] = release_url.rstrip("/") + "/" + urllib.parse.quote(name)
     assets += current
     versions = sorted(
-        {asset["Version"] for asset in assets}, key=stable_version, reverse=True
+        {asset["Version"] for asset in assets}, key=numeric_version, reverse=True
     )[:3]
     feed = {"Assets": [asset for asset in assets if asset["Version"] in versions]}
     for asset in feed["Assets"]:

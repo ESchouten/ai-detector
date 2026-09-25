@@ -2,26 +2,45 @@ name: Web and setup tests
 
 on:
   pull_request:
-    paths: ['web/**', 'config/**', 'distribution/**', '.dockerignore', '.github/actions/setup-distribution/**', 'compose.yml', 'example/compose*.yml', 'detector/pyproject.toml', '.github/workflows/web.yml', '.github/workflows/web-tests.yml', '.github/workflows/application.yml']
+    paths: ['web/**', 'config/**', 'distribution/**', '.dockerignore', 'compose.yml', 'example/compose*.yml', 'detector/pyproject.toml', '.github/**', '.gitattributes']
   push:
-    paths: ['web/**', 'config/**', 'distribution/**', '.dockerignore', '.github/actions/setup-distribution/**', 'compose.yml', 'example/compose*.yml', 'detector/pyproject.toml', '.github/workflows/web.yml', '.github/workflows/web-tests.yml', '.github/workflows/application.yml']
+    branches: ['**']
+    paths: ['web/**', 'config/**', 'distribution/**', '.dockerignore', 'compose.yml', 'example/compose*.yml', 'detector/pyproject.toml', '.github/**', '.gitattributes']
   workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: web-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')) }}
 
 permissions:
   contents: read
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: Web / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-distribution
       - run: pnpm install --frozen-lockfile
         working-directory: web
-      - run: pnpm quality && pnpm build && pnpm test:production
+      - name: Check web application
+        run: pnpm quality
         working-directory: web
+      - name: Build production server
+        if: runner.os == 'Linux'
+        run: pnpm --dir web build
+      - name: Test production server
+        if: runner.os == 'Linux'
+        run: pnpm --dir web test:production
       - name: Validate Docker Compose deployments
+        if: runner.os == 'Linux'
         run: |
           docker compose -f compose.yml config --quiet
           docker compose -f example/compose.yml config --quiet

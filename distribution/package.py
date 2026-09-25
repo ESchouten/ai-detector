@@ -260,7 +260,7 @@ if __name__ == "__main__":
         "--sparkle", type=Path, help="Extracted, pinned Sparkle distribution"
     )
     parser.add_argument(
-        "--update-feed", help="HTTPS directory containing the stable update feeds"
+        "--update-feed", help="HTTPS directory containing this channel's update feeds"
     )
     parser.add_argument("--sparkle-public-key")
     parser.add_argument(

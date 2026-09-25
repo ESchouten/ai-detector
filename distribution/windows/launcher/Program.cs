@@ -41,9 +41,9 @@ internal static class Program
         var preference = new StartupPreference(key, Application.ExecutablePath);
         var metadata = JObject.Parse(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "application.json")));
         var feed = (string)metadata["updateFeed"];
-        var updateCache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AI Detector", "updates", "releases.win.json");
+        var updateCache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AI Detector", "updates");
         var updater = feed == null ? null : new VerifiedUpdateManager(
-            new SignedUpdateSource(feed, (string)metadata["updatePublicKey"], updateCache));
+            new SignedUpdateSource(feed, (string)metadata["updatePublicKey"], SignedUpdateSource.CachePath(updateCache, feed)));
         using var desktop = new TrayApplication(preference, web, args.Contains("--background"), updater);
         Application.Run(desktop);
         return desktop.ExitCode;

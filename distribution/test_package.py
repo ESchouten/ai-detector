@@ -10,6 +10,7 @@ from pathlib import Path
 from fixtures.keys import PUBLIC_KEY
 from package import PackageInputs, assemble_package
 from package import archive as archive_package
+from release_config import release_config
 
 
 class PackageTest(unittest.TestCase):
@@ -266,6 +267,43 @@ class PackageTest(unittest.TestCase):
                 )
             )
         self.assertFalse(output.exists())
+
+    def test_preview_downloads_embed_only_the_preview_feed(self):
+        release = release_config("refs/tags/app/test-first", "example/app", 42, 123)
+        for platform in ("macos-arm64", "windows-x64"):
+            if platform == "macos-arm64" and os.name == "nt":
+                continue
+            with self.subTest(platform=platform):
+                folder = assemble_package(
+                    PackageInputs(
+                        self.mac_detector
+                        if platform == "macos-arm64"
+                        else self.detector,
+                        self.web,
+                        self.ffmpeg,
+                        self.root / "preview",
+                        platform,
+                        version=release["version"],
+                        mac_launcher=self.launcher,
+                        windows_launcher=self.windows_launcher,
+                        sparkle=self.sparkle,
+                        update_feed=release["feed_url"],
+                        sparkle_public_key=PUBLIC_KEY,
+                    )
+                )
+                if platform == "macos-arm64":
+                    info = plistlib.loads(
+                        (folder / "AI Detector.app/Contents/Info.plist").read_bytes()
+                    )
+                    self.assertEqual(info["CFBundleVersion"], "0.0.42")
+                    self.assertEqual(
+                        info["SUFeedURL"], release["feed_url"] + "/appcast.xml"
+                    )
+                    self.assertTrue(info["SURequireSignedFeed"])
+                else:
+                    info = json.loads((folder / "application.json").read_text())
+                    self.assertEqual(info["updateFeed"], release["feed_url"])
+                    self.assertEqual(info["updatePublicKey"], PUBLIC_KEY)
 
     def test_macos_rejects_the_unbundled_python_runtime(self):
         output = self.root / "out"

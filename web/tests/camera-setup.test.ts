@@ -1,7 +1,8 @@
 import { readTestPresets } from './support/presets.ts';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { mkdtemp, readFile, realpath, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { promisify } from 'node:util';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
@@ -242,7 +243,8 @@ test('failed progress persistence does not claim completion and retry succeeds',
 	const { files, store } = await fixture(t);
 	const camera = await readyCamera(store);
 	const before = await readFile(files.app, 'utf8');
-	const destination = await realpath(files.app);
+	// Match the callback-based realpath used by write-file-atomic, including Windows casing.
+	const destination = await promisify(fs.realpath)(files.app);
 	const rename = fs.rename;
 	const failure = Object.assign(new Error('Settings are not writable'), { code: 'EACCES' });
 	const blocked = t.mock.method(fs, 'rename', (...args: Parameters<typeof fs.rename>) => {

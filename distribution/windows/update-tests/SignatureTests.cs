@@ -157,6 +157,25 @@ public sealed class SignatureTests
         Assert.That(await manager.CheckForUpdatesAsync(), Is.Null);
     }
 
+    [Test]
+    public async Task SwitchingChannelsCannotReuseThePreviousChannelsCachedFeed()
+    {
+        const string stableUrl = "https://example.invalid/app-updates";
+        const string previewUrl = "https://example.invalid/app-preview-updates";
+        var stableCache = SignedUpdateSource.CachePath(root, stableUrl);
+        var previewCache = SignedUpdateSource.CachePath(root, previewUrl);
+        Assert.That(stableCache, Is.EqualTo(SignedUpdateSource.CachePath(root, stableUrl + "/")));
+        Assert.That(previewCache, Is.Not.EqualTo(stableCache));
+        var stable = new SignedUpdateSource(stableUrl, publicKey, stableCache, downloader);
+        await stable.GetReleaseFeed(new NullVelopackLogger(), "AIDetector", "win");
+        var preview = new SignedUpdateSource(previewUrl, publicKey, previewCache, downloader);
+        Assert.Throws<DirectoryNotFoundException>(() => preview.ReadCachedFeed());
+        await preview.GetReleaseFeed(new NullVelopackLogger(), "AIDetector", "win");
+        Assert.That(downloader.LastFeedUrl, Is.EqualTo(previewUrl + "/releases.win.json"));
+        Assert.That(File.ReadAllText(stableCache), Is.EqualTo(envelope));
+        Assert.That(preview.ReadCachedFeed().Assets.Length, Is.EqualTo(2));
+    }
+
     private VelopackAsset Pending() => new()
     {
         PackageId = "AIDetector", Version = release.Version, Type = VelopackAssetType.Full,
@@ -171,8 +190,12 @@ public sealed class SignatureTests
         public string Envelope { get; set; } = envelope;
         public byte[] Package { get; set; } = package;
         public int Downloads { get; private set; }
-        public Task<string> DownloadString(string url, IDictionary<string, string> headers = null, double timeout = 30) =>
-            Task.FromResult(Envelope ?? throw new IOException("offline"));
+        public string LastFeedUrl { get; private set; }
+        public Task<string> DownloadString(string url, IDictionary<string, string> headers = null, double timeout = 30)
+        {
+            LastFeedUrl = url;
+            return Task.FromResult(Envelope ?? throw new IOException("offline"));
+        }
         public Task<byte[]> DownloadBytes(string url, IDictionary<string, string> headers = null, double timeout = 30) =>
             throw new NotSupportedException();
         public Task DownloadFile(string url, string path, Action<int> progress,

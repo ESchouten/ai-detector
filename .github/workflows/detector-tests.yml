@@ -22,6 +22,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: detector-tests-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
@@ -49,7 +53,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -74,15 +78,19 @@ jobs:
         run: uv sync --locked --extra default
 
       - name: Ruff
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         run: uv run --no-sync ruff check src/aidetector tests tools
 
       - name: Formatting
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         run: uv run --no-sync ruff format --check src/aidetector tests tools
 
       - name: Types
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         run: uv run --no-sync ty check src/aidetector tools
 
       - name: Architecture contracts
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         run: uv run --no-sync lint-imports --no-cache
 
       - name: Pytest with branch coverage
@@ -139,6 +147,7 @@ jobs:
 
   mutation:
     name: Domain mutation testing
+    if: github.event_name != 'push' || github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:

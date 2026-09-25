@@ -22,6 +22,12 @@ from updates import SPARKLE
 )
 class SparkleTest(unittest.TestCase):
     def test_signed_delta_reconstructs_the_complete_app(self):
+        self.check_delta("1.0.0", "1.0.1", "app-updates")
+
+    def test_preview_delta_preserves_its_channel(self):
+        self.check_delta("0.0.41", "0.0.42", "app-preview-updates")
+
+    def check_delta(self, previous: str, current: str, channel: str):
         sdk = Path(os.environ["SPARKLE_SDK"])
         with tempfile.TemporaryDirectory(prefix="ai-detector-sparkle-") as temporary:
             root = Path(temporary)
@@ -40,13 +46,13 @@ class SparkleTest(unittest.TestCase):
             shutil.copyfile("/usr/bin/true", launcher)
             launcher.chmod(0o755)
             library = os.urandom(1024 * 1024)
-            for version in ("1.0.0", "1.0.1"):
+            for version in (previous, current):
                 payload = macos_bundle(
                     root / version,
                     launcher,
                     version,
                     sdk,
-                    "https://example.test/updates",
+                    f"https://example.test/{channel}",
                     base64.b64encode(public).decode(),
                 )
                 (payload.parent / "Resources/library.bin").write_bytes(library)
@@ -88,7 +94,7 @@ class SparkleTest(unittest.TestCase):
                     "--ed-key-file",
                     str(key),
                     "--download-url-prefix",
-                    "https://example.test/updates/",
+                    f"https://example.test/{channel}/",
                     str(archives),
                 ],
                 check=True,
@@ -111,7 +117,7 @@ class SparkleTest(unittest.TestCase):
             self.assertIsNotNone(delta, "The unchanged runtime must produce a delta")
             artifact = next(archives.glob("*.delta"))
             self.assertLess(
-                artifact.stat().st_size, (archives / "1.0.1.zip").stat().st_size
+                artifact.stat().st_size, (archives / f"{current}.zip").stat().st_size
             )
             subprocess.run(
                 [
@@ -130,7 +136,7 @@ class SparkleTest(unittest.TestCase):
                 [
                     str(sdk / "bin/BinaryDelta"),
                     "apply",
-                    str(root / "1.0.0/AI Detector.app"),
+                    str(root / previous / "AI Detector.app"),
                     str(applied),
                     str(artifact),
                 ],
@@ -141,10 +147,13 @@ class SparkleTest(unittest.TestCase):
                 (applied / "Contents/Resources/library.bin").read_bytes(), library
             )
             self.assertEqual(
-                (applied / "Contents/Resources/web.txt").read_text(), "1.0.1"
+                (applied / "Contents/Resources/web.txt").read_text(), current
             )
             info = plistlib.loads((applied / "Contents/Info.plist").read_bytes())
-            self.assertEqual(info["CFBundleVersion"], "1.0.1")
+            self.assertEqual(info["CFBundleVersion"], current)
+            self.assertEqual(
+                info["SUFeedURL"], f"https://example.test/{channel}/appcast.xml"
+            )
             self.assertTrue(
                 (
                     applied / "Contents/Frameworks/Sparkle.framework/Versions/Current"

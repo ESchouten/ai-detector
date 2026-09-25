@@ -29,7 +29,7 @@ TARGETS = {
     "windows-x64": Target("windows-x64-baseline", "windowsml", ".exe"),
     "linux-x64": Target("linux-x64-baseline", "default"),
 }
-COLLECT = ("ultralytics", "litellm", "imageio_ffmpeg", "onnxruntime", "onnx")
+COLLECT = ("ultralytics", "litellm", "imageio_ffmpeg", "onnxruntime")
 
 
 def run(*arguments: str | Path, cwd: Path = ROOT, env: dict | None = None) -> None:
@@ -66,6 +66,13 @@ def build_detector(args) -> Path:
     flags = ["--onefile" if args.onefile else "--onedir"]
     for module in COLLECT:
         flags += ["--collect-all", module]
+    # The ONNX reference evaluator is unused by our export/inference paths
+    # and crashes PyInstaller's Windows DLL scan when imported.
+    flags += [
+        "--collect-data=onnx",
+        "--copy-metadata=onnx",
+        "--exclude-module=onnx.reference",
+    ]
     if kind == "windowsml":
         flags += ["--collect-all", "winui3", "--collect-all", "winrt"]
     if args.platform == "macos-arm64" and not args.onefile:

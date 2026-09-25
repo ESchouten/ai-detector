@@ -85,6 +85,8 @@ Application version parsing uses `semver`, pinned in `build-requirements.txt`. T
 
 Detector and distribution Python tooling uses the repository's `ruff.toml`; CI does not maintain separate distribution lint rules. The root `.dockerignore` owns the web Docker build context and excludes local settings, recordings, reports and staged native FFmpeg assets. The detector's Docker context is its own directory and uses `detector/.dockerignore`.
 
+PyInstaller discovers ONNX imports normally and includes its data and package metadata. The unused `onnx.reference` evaluator is excluded because importing it crashes the Windows DLL scan. ONNX Runtime remains the inference engine; packaged smoke tests cover both an ONNX model and conversion of a PyTorch checkpoint, including reuse of the converted model.
+
 `package.py` assembles the application folder without archiving it. After validation and installer creation, `python distribution/build.py archive APPLICATION_FOLDER` creates the final ZIP and checksum once. The complete local build follows the same ordering.
 
 Fast checks:

@@ -108,7 +108,7 @@ dotnet restore distribution/windows/update-tests/Update.Tests.csproj --locked-mo
 dotnet test distribution/windows/update-tests/Update.Tests.csproj --no-restore --configuration Release
 ```
 
-NuGet package versions live in `windows/Directory.Packages.props`. A configuration test checks that the separately pinned Velopack CLI matches the runtime package. Portable update/recovery tests run on every OS; WinForms tray tests execute only on Windows.
+NuGet package versions live in `windows/Directory.Packages.props`. A configuration test checks that the separately pinned Velopack CLI matches the runtime package. The launcher and WinForms tests explicitly target `win-x64`, matching the installer and keeping NuGet lockfiles consistent across build hosts. After changing their dependencies, regenerate both lockfiles with `dotnet restore distribution/windows/launcher-tests/Launcher.Tests.csproj --force-evaluate`; CI continues to use locked restore. Portable update/recovery tests run on every OS; WinForms tray tests execute only on Windows.
 
 Set `SPARKLE_SDK` to the extracted SDK on Mac for the real delta round-trip test. Set `WINDOWS_LAUNCHER` to the compiled launcher directory on Windows for the Velopack package/delta reconstruction test. Set `DESKTOP_WEB_EXECUTABLE` to the built web executable to exercise normal, failed and hung detector shutdowns and an occupied dashboard port. These tests compile a small detector fixture and allow the real 30-second shutdown deadline to expire. CI supplies the paths on each matching runner. Fixtures use temporary data and public test keys; they never install the app, enable login startup or contact cameras. Mac bundle tests need LaunchServices access, and disk-image creation needs `hdiutil`.
 
@@ -116,9 +116,24 @@ The payload smoke starts the web executable directly, verifies browser setup, na
 
 Mac artwork lives in `macos/`; regenerate it with `swift distribution/macos/render-artwork.swift`. Regenerate the Windows icon with `python distribution/windows/render-artwork.py` (Pillow required). Include the generated assets when changing the artwork.
 
+## GitHub Actions previews
+
+Push an `app/test-*` tag at the commit you want to test:
+
+```sh
+git tag app/test-2026-09-25-1
+git push origin app/test-2026-09-25-1
+```
+
+Choose a new tag name for each build. The tagged commit must include this workflow's test-tag trigger. GitHub runs **Application download** from that commit, even when the workflow is not yet on `main`.
+
+Open the run in **Actions**, then download `AI-Detector-macos-arm64`, `AI-Detector-windows-x64` or `AI-Detector-linux-x64` under **Artifacts**. Extract the artifact ZIP to find the installer. Each download includes the web app, detector and FFmpeg. Preview installers use version `0.0.0`; the application records the tag so builds remain identifiable.
+
+Preview builds also publish their matching NVIDIA image under its commit-specific tag. They do not create a GitHub release, publish update feeds or enable production updates. When the workflow is available on `main`, **Run workflow** with a development branch selected provides the same preview behavior.
+
 ## Release publishing
 
-Use increasing, stable `app/vX.Y.Z` tags. Prerelease/build-suffix versions are rejected by this stable channel. Manual workflow runs create previews with production updates disabled.
+Use increasing, stable `app/vX.Y.Z` tags. Prerelease/build-suffix versions are rejected by this stable channel. Use `app/test-*` tags or manual branch runs for previews with production updates disabled.
 
 The workflow downloads the previous update bases, verifies the signed Windows feed and base checksum, and invokes `generate_appcast` or `vpk pack`. It uploads complete installers, full update packages and deltas to the versioned application release. Once every platform succeeds, it publishes that release and promotes only `appcast.xml` and `releases.win.json` to the fixed **app-updates** GitHub release. Asset URLs point at immutable `app/vX.Y.Z` releases. The fixed feed avoids GitHub's ambiguous “latest release”, which may refer to a separate web or detector release. Builds are serialized, and a stable version cannot replace an equal or newer version in the feed. Keep historical versioned assets available; existing clients and retained deltas reference them. Do not edit a published application version in place.
 

@@ -2,7 +2,7 @@ name: Application download
 
 on:
   push:
-    tags: ['app/v*']
+    tags: ['app/v*', 'app/test-*']
   workflow_dispatch:
 
 permissions:

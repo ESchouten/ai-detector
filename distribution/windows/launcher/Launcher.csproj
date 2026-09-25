@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <LangVersion>12</LangVersion>
     <AssemblyName>AI Detector</AssemblyName>
     <RootNamespace>AIDetector.Desktop</RootNamespace>

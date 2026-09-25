@@ -114,6 +114,7 @@
           "Newtonsoft.Json": "13.0.4"
         }
       }
-    }
+    },
+    ".NETFramework,Version=v4.8/win-x64": {}
   }
 }

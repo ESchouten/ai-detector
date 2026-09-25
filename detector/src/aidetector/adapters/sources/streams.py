@@ -139,6 +139,11 @@ class StreamPool:
         while not self._stop.is_set():
             capture = None
             try:
+                logger.info(
+                    "Stream %d: opening camera connection for %d detector(s)",
+                    index + 1,
+                    len(self._subscribers[source]),
+                )
                 capture = (
                     cv2.VideoCapture(int(source))
                     if source.isdecimal()
@@ -169,6 +174,7 @@ class StreamPool:
                         "Stream %d could not be opened; reconnecting", index + 1
                     )
                 else:
+                    first_frame = True
                     while not self._stop.is_set():
                         available, image = capture.read()
                         if not available:
@@ -183,6 +189,14 @@ class StreamPool:
                                 "Stream %d disconnected; reconnecting", index + 1
                             )
                             break
+                        if first_frame:
+                            logger.info(
+                                "Stream %d connected: receiving %dx%d frames",
+                                index + 1,
+                                image.shape[1],
+                                image.shape[0],
+                            )
+                            first_frame = False
                         sampled_at = monotonic()
                         image.setflags(write=False)
                         frame = Frame(datetime.now(), image)
@@ -200,6 +214,7 @@ class StreamPool:
                 if capture is not None:
                     capture.release()
             self._stop.wait(1)
+        logger.info("Stream %d stopped", index + 1)
 
     def close(self) -> None:
         self._stop.set()

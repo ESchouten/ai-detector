@@ -11,6 +11,12 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
 
+## Restore operational logging — 2026-09-25
+
+The default `INFO` level again shows prediction/tracking timings and Ultralytics detection summaries, alongside startup, camera connection, event, validation, cooldown and export diagnostics. These messages were missing or debug-only after the rewrite. Camera success is reported only after decoding a frame; delivery success only after the exporter returns. Source URLs and configuration secrets stay out of the new diagnostics. `--log-level WARNING` suppresses routine activity. Model settings, event rules, configuration and the separate launcher status protocol are unchanged.
+
+GPU bounding boxes now move to CPU memory once through Ultralytics before mapping their scalar values. This removes repeated MPS/CUDA synchronization without changing model output, confidence thresholds, coordinates or tracking IDs. Live inference still scores only the newest retained frame per source; older retained frames provide event context. The ordinary web preview continuously drains FFmpeg and retains only the latest complete JPEG while its browser is slow, avoiding upstream playback backlog. Neither change increases the number of frames submitted to inference.
+
 ## Live camera responsiveness and alert ownership — 2026-09-25
 
 Live network capture uses one FFmpeg decoder thread to avoid frame-thread buffering and allows ten seconds for opening or reading a stream, replacing the overly short three-second timeout. Camera sharing, per-detector sampling, event windows, thresholds and delivery policy are unchanged. Analyzed previews now publish up to eight times per second while viewed, using the same bounded latest-frame transport. Packaged applications keep Matplotlib's font cache under `cache/matplotlib` in their data directory, avoiding a complete font scan on each launch.

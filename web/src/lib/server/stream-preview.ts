@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { Readable } from 'node:stream';
+import { MultipartParser, type MultipartPart } from '@remix-run/multipart-parser';
 import { getCameraInputArgs, sanitizeSourceForLogs, sanitizeTextForLogs } from './ffmpeg.ts';
 
 export const MJPEG_BOUNDARY = 'frame';
@@ -42,12 +42,14 @@ export function createPreviewStream(source: string, executable: string, signal: 
 		],
 		{ stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true }
 	);
-	// Bound queued preview data to 64 KiB independently of the runtime's stream defaults.
-	const reader = (
-		Readable.toWeb(child.stdout, {
-			strategy: { highWaterMark: 64 * 1024, size: (chunk: Uint8Array) => chunk.byteLength }
-		}) as ReadableStream<Uint8Array>
-	).getReader();
+	// Always drain FFmpeg. Browser backpressure must drop pictures, not delay camera capture.
+	const parser = new MultipartParser(MJPEG_BOUNDARY, {
+		maxFileSize: 8 * 1024 * 1024,
+		maxParts: Infinity,
+		maxTotalSize: Infinity
+	});
+	let latest: MultipartPart | undefined;
+	let waiting = false;
 	let controller: ReadableStreamDefaultController<Uint8Array>;
 	let responseClosed = false;
 	let stopping = false;
@@ -56,6 +58,28 @@ export function createPreviewStream(source: string, executable: string, signal: 
 	let readTimer: ReturnType<typeof setTimeout> | undefined;
 	let killTimer: ReturnType<typeof setTimeout> | undefined;
 
+	child.stdout.on('data', (chunk: Buffer) => {
+		if (responseClosed) return;
+		try {
+			for (const part of parser.write(chunk)) {
+				hadFrame = true;
+				latest = part;
+				armReadTimeout(NO_FRAME_TIMEOUT_MS);
+				sendLatest();
+			}
+		} catch {
+			finish(new Error('Invalid live picture received.'));
+			void stop();
+		}
+	});
+	child.stdout.once('end', () => {
+		finish(new Error(hadFrame ? 'Live stream ended.' : 'Live stream unavailable.'));
+		void stop();
+	});
+	child.stdout.once('error', () => {
+		finish(new Error('Live stream unavailable.'));
+		void stop();
+	});
 	child.stderr.on('data', (chunk: Buffer) => {
 		stderr = (stderr + chunk.toString()).slice(-4000);
 	});
@@ -94,6 +118,7 @@ export function createPreviewStream(source: string, executable: string, signal: 
 	function finish(error?: Error): void {
 		if (responseClosed) return;
 		responseClosed = true;
+		latest = undefined;
 		if (error) controller.error(error);
 		else controller.close();
 	}
@@ -103,43 +128,50 @@ export function createPreviewStream(source: string, executable: string, signal: 
 		void stop();
 	}
 
-	return new ReadableStream<Uint8Array>({
-		start(value) {
-			controller = value;
-			if (signal.aborted) onAbort();
-			else signal.addEventListener('abort', onAbort, { once: true });
-		},
-		async pull() {
-			readTimer = setTimeout(
-				() => {
-					finish(
-						new Error(
-							hadFrame ? 'Live stream stopped receiving frames.' : 'Live stream unavailable.'
-						)
-					);
-					void stop();
-				},
-				hadFrame ? NO_FRAME_TIMEOUT_MS : FIRST_FRAME_TIMEOUT_MS
+	function armReadTimeout(delay: number): void {
+		clearTimeout(readTimer);
+		readTimer = setTimeout(() => {
+			finish(
+				new Error(hadFrame ? 'Live stream stopped receiving frames.' : 'Live stream unavailable.')
 			);
-			try {
-				const next = await reader.read();
-				clearTimeout(readTimer);
-				if (responseClosed) return;
-				if (next.done) {
-					finish(new Error(hadFrame ? 'Live stream ended.' : 'Live stream unavailable.'));
-					await stop();
-				} else {
-					hadFrame = true;
-					controller.enqueue(next.value);
-				}
-			} catch {
-				finish(new Error('Live stream unavailable.'));
-				await stop();
+			void stop();
+		}, delay);
+	}
+
+	function sendLatest(): void {
+		if (!waiting || !latest || responseClosed) return;
+		const picture = latest.bytes;
+		latest = undefined;
+		waiting = false;
+		controller.enqueue(
+			Buffer.concat([
+				Buffer.from(
+					`--${MJPEG_BOUNDARY}\r\nContent-Type: image/jpeg\r\nContent-Length: ${picture.byteLength}\r\n\r\n`
+				),
+				picture,
+				Buffer.from('\r\n')
+			])
+		);
+	}
+
+	return new ReadableStream<Uint8Array>(
+		{
+			start(value) {
+				controller = value;
+				armReadTimeout(FIRST_FRAME_TIMEOUT_MS);
+				if (signal.aborted) onAbort();
+				else signal.addEventListener('abort', onAbort, { once: true });
+			},
+			pull() {
+				waiting = true;
+				sendLatest();
+			},
+			cancel() {
+				responseClosed = true;
+				latest = undefined;
+				return stop();
 			}
 		},
-		cancel() {
-			responseClosed = true;
-			return stop();
-		}
-	});
+		{ highWaterMark: 0 }
+	);
 }

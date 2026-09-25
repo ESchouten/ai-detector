@@ -1,3 +1,4 @@
+import logging
 import math
 from collections.abc import Generator
 from datetime import datetime, timedelta
@@ -11,6 +12,8 @@ from aidetector.application.ports import SourceBatch, SourceError
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import source_kind
 from aidetector.domain.models import Frame
+
+logger = logging.getLogger(__name__)
 
 
 class FileSource:
@@ -33,6 +36,7 @@ class FileSource:
         for index, source in enumerate(self.sources):
             if self._stop.is_set():
                 return
+            logger.info("Reading file source %d/%d", index + 1, len(self.sources))
             started_at = self.started_at or datetime.now()
             if source_kind(source) == "image":
                 image = cv2.imread(source)
@@ -44,6 +48,7 @@ class FileSource:
                 )
             else:
                 yield from self._video(source, index, started_at)
+            logger.info("Finished file source %d/%d", index + 1, len(self.sources))
             yield SourceBatch({}, finished_sources=(source,))
 
     def _video(

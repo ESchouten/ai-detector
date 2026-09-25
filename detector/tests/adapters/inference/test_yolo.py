@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 import numpy as np
 import pytest
+import torch
 from ultralytics.engine.results import Results
 
 from aidetector.adapters.inference.onnx import (
@@ -33,7 +34,19 @@ def frame(second=0, color=0):
     )
 
 
-def test_real_ultralytics_results_are_mapped_at_the_boundary():
+@pytest.mark.parametrize(
+    "device",
+    [
+        "cpu",
+        pytest.param(
+            "mps",
+            marks=pytest.mark.skipif(
+                not torch.backends.mps.is_available(), reason="Requires Apple MPS"
+            ),
+        ),
+    ],
+)
+def test_real_ultralytics_results_are_mapped_at_the_boundary(device):
     observations = map_observations(
         result(
             [
@@ -41,7 +54,7 @@ def test_real_ultralytics_results_are_mapped_at_the_boundary():
                 [35, 20, 50, 40, 0.6, 0],
                 [1, 2, 3, 4, 0.6, 1],
             ]
-        ),
+        ).to(device),
         (frame(0), frame(1)),
         {0: ("cow", 0.5), 1: ("horse", 0.7)},
     )
@@ -98,12 +111,22 @@ def test_detector_batches_active_sources_without_tracking(confidence, classes, m
         ("one", "two"),
         InferenceOptions(),
     )
-    observations = detector.detect({"one": (frame(0),), "two": (frame(1),)})
+    latest = frame(3)
+    observations = detector.detect(
+        {"one": (frame(0), frame(2), latest), "two": (frame(1),)}
+    )
     assert set(observations) == {"one", "two"}
     assert model.calls[0]["batch"] == 2
     assert model.calls[0]["classes"] == classes
     assert model.calls[0]["conf"] == minimum
     assert "persist" not in model.calls[0]
+    assert len(model.calls) == 1
+    assert model.calls[0]["source"][0] is latest.image
+    assert [item.date for item in observations["one"]] == [
+        frame(0).date,
+        frame(2).date,
+        latest.date,
+    ]
 
 
 def test_tracking_preserves_source_slots_when_camera_is_temporarily_absent():

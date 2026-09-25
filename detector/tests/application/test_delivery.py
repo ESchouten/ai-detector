@@ -46,7 +46,8 @@ class Validator:
         return ValidationResult(self.result)
 
 
-def test_optional_validation_exports_unvalidated_event():
+def test_optional_validation_exports_unvalidated_event(caplog):
+    caplog.set_level("INFO")
     exporter = RecordingExporter()
     delivery = EventDelivery(
         (Destination("disk", exporter, ExportPolicy()),), Cooldown()
@@ -55,6 +56,9 @@ def test_optional_validation_exports_unvalidated_event():
     assert report.delivered == ("disk",)
     assert report.failures == ()
     assert exporter.results[0].validation.status is ValidationStatus.UNVALIDATED
+    assert "Event collected: 1 frame(s) over 0.00s" in caplog.text
+    assert "Event validation: unvalidated" in caplog.text
+    assert "Event delivered to disk" in caplog.text
 
 
 @pytest.mark.parametrize(
@@ -81,13 +85,16 @@ def test_export_filters_combine_confidence_and_rejection_policy(
     assert len(exporter.results) == len(expected)
 
 
-def test_cooldown_prevents_repeated_validation_calls():
+def test_cooldown_prevents_repeated_validation_calls(caplog):
+    caplog.set_level("INFO")
     validator = Validator(ValidationStatus.APPROVED)
     delivery = EventDelivery((), Cooldown(10), validator)
     assert not delivery.deliver(event(0)).skipped
     assert delivery.deliver(event(9)).skipped
     assert not delivery.deliver(event(10)).skipped
     assert validator.calls == 2
+    assert caplog.messages.count("Event skipped: cooldown is still active") == 1
+    assert caplog.messages.count("Event validation: approved") == 2
 
 
 @pytest.mark.parametrize(
@@ -136,7 +143,8 @@ def test_failed_validation_is_archived_but_does_not_notify():
     )
 
 
-def test_failed_destination_does_not_prevent_independent_destination():
+def test_failed_destination_does_not_prevent_independent_destination(caplog):
+    caplog.set_level("INFO")
     broken = RecordingExporter(DeliveryError("HTTP status 503"))
     working = RecordingExporter()
     delivery = EventDelivery(
@@ -151,6 +159,9 @@ def test_failed_destination_does_not_prevent_independent_destination():
     assert [(failure.destination, failure.message) for failure in report.failures] == [
         ("webhook", "HTTP status 503")
     ]
+    assert "Delivery to webhook failed: HTTP status 503" in caplog.text
+    assert "Event delivered to webhook" not in caplog.text
+    assert "Event delivered to disk" in caplog.text
 
 
 def test_programming_error_surfaces_after_independent_destinations_are_attempted():

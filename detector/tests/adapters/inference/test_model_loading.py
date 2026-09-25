@@ -31,7 +31,11 @@ def model_sdk(monkeypatch):
             self.args = get_cfg(overrides=overrides)
 
         def setup_model(self, model, verbose):
-            self.model = model
+            self.model = SimpleNamespace(
+                format=pathlib.Path(model).suffix.lstrip("."),
+                device=self.args.device or "cpu",
+                fp16=self.args.quantize == 16,
+            )
 
     class Model:
         def __init__(self, path, task):
@@ -184,11 +188,15 @@ def test_real_mps_checkpoint_inference_without_export_or_download(tmp_path, trac
         ) as detector,
     ):
         assert options.native_mps is True
-        backend = detector.model.predictor.model
+        predictor = detector.model.predictor
+        backend = predictor.model
         assert backend.device.type == "mps"
         assert backend.fp16 is True
         frame = Frame(datetime(2026, 1, 1), np.zeros((64, 64, 3), dtype=np.uint8))
         [observation] = detector.detect({"0": (frame,)})["0"]
+        assert detector.model.predictor is predictor
+        assert detector.model.predictor.model.device.type == "mps"
+        assert detector.model.predictor.model.fp16 is True
         assert observation.date == frame.date
         assert observation.image is frame.image
         assert not cache.exists()

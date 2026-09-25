@@ -5,11 +5,22 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { setTimeout } from 'node:timers/promises';
+import { parseMultipart } from '@remix-run/multipart-parser';
 import { createPreviewStream } from '../src/lib/server/stream-preview.ts';
 import { sanitizeTextForLogs } from '../src/lib/server/runtime-logs.ts';
 
 const executable = fileURLToPath(new URL('./fixtures/preview.mjs', import.meta.url));
 const posixOnly = { skip: process.platform === 'win32' };
+
+function picture(chunk: Uint8Array | undefined): Uint8Array {
+	assert.ok(chunk);
+	const [part] = parseMultipart(Buffer.concat([chunk, Buffer.from('--frame--\r\n')]), {
+		boundary: 'frame'
+	});
+	assert.equal(part.headers['content-type'], 'image/jpeg');
+	assert.equal(Number(part.headers['content-length']), part.size);
+	return part.bytes;
+}
 
 async function fixture(
 	t: TestContext,
@@ -52,7 +63,7 @@ for (const cancel of ['response', 'request'] as const) {
 		const abort = new AbortController();
 		const reader = createPreviewStream(source, executable, abort.signal).getReader();
 		t.after(() => reader.cancel());
-		assert.equal(new TextDecoder().decode((await reader.read()).value), 'preview frame');
+		assert.equal(new TextDecoder().decode(picture((await reader.read()).value)), 'preview frame');
 		const pid = Number(await readStartedFile(path.join(directory, 'pid')));
 		if (cancel === 'response') await reader.cancel();
 		else {
@@ -73,7 +84,7 @@ test(
 		const abort = new AbortController();
 		t.after(() => abort.abort());
 		const reader = createPreviewStream(source, executable, abort.signal).getReader();
-		assert.equal(new TextDecoder().decode((await reader.read()).value), 'preview frame');
+		assert.equal(new TextDecoder().decode(picture((await reader.read()).value)), 'preview frame');
 		const pid = Number(await readStartedFile(path.join(directory, 'pid')));
 		await assert.rejects(reader.read(), /Live stream ended/);
 		await waitForExit(pid);
@@ -82,7 +93,7 @@ test(
 );
 
 test(
-	'preview backpressure bounds a producer while the browser is not reading',
+	'a slow browser receives the latest whole picture without blocking camera capture',
 	posixOnly,
 	async (t) => {
 		const { directory, source } = await fixture(t, { flood: true });
@@ -92,13 +103,14 @@ test(
 			new AbortController().signal
 		).getReader();
 		t.after(() => reader.cancel());
-		await readStartedFile(path.join(directory, 'chunks'));
-		await setTimeout(250);
-		const chunks = Number(await readFile(path.join(directory, 'chunks'), 'utf8'));
-		assert.ok(chunks < 128, `Unread preview accepted ${chunks * 64} KiB`);
+		// More than the parser's default 1,000-part / 41 MiB upload limits:
+		// an ongoing camera stream must not stop at an upload-oriented limit.
+		assert.equal(await readStartedFile(path.join(directory, 'frames')), '1500');
 		const { value, done } = await reader.read();
 		assert.equal(done, false);
-		assert.ok(value!.byteLength > 0);
+		const body = picture(value);
+		assert.equal(body.byteLength, 64 * 1024);
+		assert.ok(Number(new TextDecoder().decode(body.subarray(0, 4))) >= 1499);
 		await reader.cancel();
 	}
 );

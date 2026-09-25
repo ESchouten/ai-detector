@@ -199,7 +199,8 @@ def test_shared_capture_failure_reaches_every_subscriber(cameras):
     assert cameras["0"].opens == cameras["0"].releases == 1
 
 
-def test_reconnection_is_shared_by_subscribers(cameras):
+def test_reconnection_is_shared_by_subscribers(cameras, caplog):
+    caplog.set_level("INFO")
     streams = StreamPool()
     first, second = streams.subscribe(("0",)), streams.subscribe(("0",))
     left, right = first.batches(), second.batches()
@@ -214,6 +215,11 @@ def test_reconnection_is_shared_by_subscribers(cameras):
         assert pixels(next(left), "0") == pixels(next(right), "0") == [2]
         assert camera.opens == 2
     assert camera.releases == 2
+    assert (
+        caplog.messages.count("Stream 1: opening camera connection for 2 detector(s)")
+        == 2
+    )
+    assert caplog.messages.count("Stream 1 connected: receiving 64x64 frames") == 2
 
 
 @pytest.mark.parametrize("use_yolo", [False, True])

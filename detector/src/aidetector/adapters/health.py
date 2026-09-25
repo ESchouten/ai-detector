@@ -24,6 +24,7 @@ class Healthcheck:
             raise
 
     def _ping_until_stopped(self) -> None:
+        logger.info("Starting healthchecks every %.1fs", self.config.interval)
         while not self._stop.is_set():
             try:
                 send_request(

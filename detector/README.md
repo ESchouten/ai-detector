@@ -226,6 +226,8 @@ Ctrl+C or SIGTERM stops acquisition, flushes eligible events, and drains accepte
 
 Processing and delivery logs identify detectors by their one-based configuration order: `[detector-2-processing]` and `[detector-2-delivery]` refer to the second entry in `detectors`. Destination names such as `webhook-1` are local to that detector. Startup, shared capture and health logs retain their own thread identities; camera URLs are not used as detector labels.
 
+The default `INFO` level includes startup and model preparation, camera connections and reconnections, Ultralytics' detection summaries, prediction/tracking batch and average frame times, completed events, validation outcomes, cooldown/policy skips, and export attempts and results. `--log-level WARNING` hides routine activity; `--log-level DEBUG` adds library diagnostics. Human logs remain available when `--status-json` is enabled. Configuration contents, camera credentials and notification secrets are not printed.
+
 ## Development checks
 
 ```sh

@@ -133,6 +133,13 @@ def main(argv: list[str] | None = None) -> int:
             if args.data_dir
             else config_path.parent
         )
+        logger.info(
+            "Starting AI Detector %s (%s): %d detector(s)",
+            REF_NAME,
+            TYPE,
+            len(config.detectors),
+        )
+        logger.info("Configuration: %s; data directory: %s", config_path, directory)
         if getattr(sys, "frozen", False):
             # PyInstaller selects a fresh temporary font cache on every launch.
             # Matplotlib stores bundled font paths relatively, so reuse is safe.

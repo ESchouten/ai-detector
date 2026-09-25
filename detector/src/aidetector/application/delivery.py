@@ -56,10 +56,19 @@ class EventDelivery:
         self.validator = validator
 
     def deliver(self, event: DetectionEvent) -> DeliveryReport:
+        logger.info(
+            "Event collected: %d frame(s) over %.2fs; best confidence: %s",
+            len(event.observations),
+            event.duration,
+            dict(event.best.confidence),
+        )
         if not self.cooldown.allows(event):
+            logger.info("Event skipped: cooldown is still active")
             return DeliveryReport(None)
 
         try:
+            if self.validator is not None:
+                logger.info("Validating event")
             validation = (
                 self.validator.validate(event)
                 if self.validator is not None
@@ -70,16 +79,23 @@ class EventDelivery:
             logger.error("Event validation unavailable: %s", error)
 
         result = EventResult(event, validation)
+        logger.info("Event validation: %s", validation.status.value)
         self.cooldown.record(result)
         delivered: list[str] = []
         failures: list[DeliveryFailure] = []
         first_unexpected: Exception | None = None
         for destination in self.destinations:
             if not destination.policy.accepts(event, validation):
+                logger.info(
+                    "Export to %s skipped by confidence or validation policy",
+                    destination.name,
+                )
                 continue
             try:
+                logger.info("Exporting event to %s", destination.name)
                 destination.exporter.export(result)
                 delivered.append(destination.name)
+                logger.info("Event delivered to %s", destination.name)
             except DeliveryError as error:
                 failures.append(DeliveryFailure(destination.name, str(error)))
                 logger.error("Delivery to %s failed: %s", destination.name, error)

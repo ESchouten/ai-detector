@@ -19,6 +19,9 @@ importers:
       '@jesterkit/exe-sveltekit':
         specifier: ^0.1.7
         version: 0.1.7(patch_hash=xxukx3ssd7e63ytfuaq463csry)(typescript@5.9.3)
+      '@remix-run/multipart-parser':
+        specifier: 0.16.5
+        version: 0.16.5
       ajv:
         specifier: ^8.17.1
         version: 8.20.0
@@ -499,6 +502,12 @@ packages:
 
   '@poppinss/macroable@1.1.0':
     resolution: {integrity: sha512-y/YKzZDuG8XrpXpM7Z1RdQpiIc0MAKyva24Ux1PB4aI7RiSI/79K8JVDcdyubriTm7vJ1LhFs8CrZpmPnx/8Pw==}
+
+  '@remix-run/headers@0.21.2':
+    resolution: {integrity: sha512-M5KagifodhXZglUiYjf16TrqxYce8N7h3pKt7FUX47Vgy7mYG7PSrGN7HtJg7VX7HbOhY3bd2CuRwOojwnNDHg==}
+
+  '@remix-run/multipart-parser@0.16.5':
+    resolution: {integrity: sha512-Pt4JxLl10z8xSYw7Fo9VNCCajzNbNXoWNPeOb2JlWSsAcdWV8LoWiUmUu3sLvWsKHoDl7oqErVzp4DYcPElRQg==}
 
   '@rollup/plugin-commonjs@29.0.0':
     resolution: {integrity: sha512-U2YHaxR2cU/yAiwKJtJRhnyLk7cifnQw0zUpISsocBDoHDJn+HTV74ABqnwr5bEgWUwFZC9oFL6wLe21lHu5eQ==}
@@ -2741,6 +2750,12 @@ snapshots:
 
   '@poppinss/macroable@1.1.0':
     optional: true
+
+  '@remix-run/headers@0.21.2': {}
+
+  '@remix-run/multipart-parser@0.16.5':
+    dependencies:
+      '@remix-run/headers': 0.21.2
 
   '@rollup/plugin-commonjs@29.0.0(rollup@4.57.1)':
     dependencies:

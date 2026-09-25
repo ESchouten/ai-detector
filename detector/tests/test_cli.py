@@ -155,6 +155,14 @@ def test_cli_runs_no_model_detection_relative_to_config_with_separate_output(
     metadata = json.loads(records[0].read_text())
     assert metadata["validated"] is None
     assert metadata["detections"] == 1
+    assert "Starting AI Detector" in process.stderr
+    assert "Preparing detector-1: 1 source(s)" in process.stderr
+    assert (
+        "Detector-1 ready: validation disabled; destinations: disk-1" in process.stderr
+    )
+    assert "Reading file source 1/1" in process.stderr
+    assert "Event validation: unvalidated" in process.stderr
+    assert "Event delivered to disk-1" in process.stderr
     assert "Processing finished: 1 event(s)" in process.stderr
     assert not (tmp_path / "detections").exists()
     assert not (configured / "detections").exists()
@@ -197,7 +205,11 @@ def test_launcher_status_reports_real_capture_processing_and_archive_outcome(
     assert str(source) not in "\n".join(json.dumps(record) for record in records)
 
 
-def test_launcher_inference_status_follows_real_onnx_prediction(tmp_path):
+@pytest.mark.parametrize("tracking", [False, True])
+@pytest.mark.parametrize("level", ["INFO", "WARNING"])
+def test_launcher_inference_status_follows_real_onnx_prediction(
+    tmp_path, tracking, level
+):
     from tests.support.onnx_model import write_detection_model
 
     source = tmp_path / "input.png"
@@ -211,14 +223,19 @@ def test_launcher_inference_status_follows_real_onnx_prediction(tmp_path):
                 "detectors": [
                     {
                         "detection": {"source": str(source)},
-                        "yolo": {"model": str(model), "imgsz": 64, "frames_min": 1},
+                        "yolo": {
+                            "model": str(model),
+                            "imgsz": 64,
+                            "frames_min": 1,
+                            "tracking": tracking,
+                        },
                         "exporters": {"disk": {}},
                     }
                 ],
             }
         )
     )
-    process = run_cli(tmp_path, "--status-json")
+    process = run_cli(tmp_path, "--status-json", "--log-level", level)
     assert process.returncode == 0, process.stderr
     records = [
         json.loads(line.removeprefix("AIDETECTOR_STATUS "))
@@ -228,6 +245,18 @@ def test_launcher_inference_status_follows_real_onnx_prediction(tmp_path):
     events = [record["event"] for record in records]
     assert events.index("frame") < events.index("inference") < events.index("recording")
     assert "processed" not in events
+    logs = process.stdout + process.stderr
+    operation = "Track" if tracking else "Predict"
+    for diagnostic in (
+        "Starting AI Detector",
+        "Loading detection model: model.onnx",
+        f"{operation} time:",
+        "ms/frame (1 active source(s))",
+        "Speed:",  # Ultralytics' own per-frame summary remains available.
+        "Event collected:",
+        "Event delivered to disk-1",
+    ):
+        assert (diagnostic in logs) is (level == "INFO"), logs
 
 
 def test_launcher_keeps_shared_camera_rule_and_archive_failures_distinct(tmp_path):

@@ -1,3 +1,4 @@
+import logging
 from contextlib import ExitStack
 from dataclasses import replace
 from pathlib import Path
@@ -26,6 +27,8 @@ from aidetector.configuration import Config, ExportersConfig, SourceConfig, sour
 from aidetector.domain.policy import Cooldown, EventPolicy, ExportPolicy
 from aidetector.runtime import DetectorWorker, RunStats, run_detectors
 from aidetector.version import TYPE
+
+logger = logging.getLogger(__name__)
 
 
 def _rule_reporter(report_status: ReportStatus, rule_id: str) -> ReportStatus:
@@ -133,6 +136,13 @@ def run_application(
         preview = LivePreview(data_directory / "live") if live_preview else None
         workers: list[DetectorWorker] = []
         for index, settings in enumerate(config.detectors, start=1):
+            logger.info(
+                "Preparing detector-%d: %d source(s), %.2fs sampling interval, object detection %s",
+                index,
+                len(settings.detection.source),
+                settings.detection.interval,
+                "enabled" if settings.yolo is not None else "disabled",
+            )
             rule_status = _rule_reporter(report_status, f"detector-{index}")
             source = build_source(
                 settings.detection, config_directory, streams, report_status
@@ -197,6 +207,13 @@ def run_application(
                 ),
                 cooldown,
                 validator,
+            )
+            logger.info(
+                "Detector-%d ready: validation %s; destinations: %s",
+                index,
+                "enabled" if validator is not None else "disabled",
+                ", ".join(destination.name for destination in delivery.destinations)
+                or "none",
             )
             workers.append(
                 DetectorWorker(

@@ -65,6 +65,7 @@ class DetectorWorker:
         delivery_thread = Thread(target=self._deliver, name=f"{self.name}-delivery")
         try:
             processing_thread.name = f"{self.name}-processing"
+            logger.info("Monitoring started")
             delivery_thread.start()
             with ExitStack() as cleanup:
                 # Cleanup closes the batch generator, closes input, then flushes

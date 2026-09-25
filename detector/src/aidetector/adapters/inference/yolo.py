@@ -59,7 +59,8 @@ def map_observations(
     boxes: list[BoundingBox] = []
     confidences: dict[str, float] = {}
     if result.boxes is not None:
-        for box in result.boxes:
+        # Transfer once: reading individual GPU scalars repeatedly synchronizes MPS/CUDA.
+        for box in result.boxes.cpu():
             class_id = int(box.cls.item())
             configured = classes.get(class_id)
             if configured is None:
@@ -101,7 +102,7 @@ class YoloDetector:
             "classes": list(self.classes),
             "imgsz": config.imgsz,
             "rect": options.rectangular,
-            "verbose": False,
+            "verbose": logger.isEnabledFor(logging.INFO),
         }
         if config.iou is not None:
             self._arguments["iou"] = config.iou
@@ -142,10 +143,14 @@ class YoloDetector:
             for source, result in zip(sources, results, strict=True)
             if source in frames
         }
-        logger.debug(
-            "Inference completed for %d sources in %.3fs",
+        elapsed_ms = (perf_counter() - started) * 1000
+        logger.info(
+            "%s time: %.1fms for %d frame(s), %.1fms/frame (%d active source(s))",
+            "Track" if self.tracking else "Predict",
+            elapsed_ms,
+            len(images),
+            elapsed_ms / len(images),
             len(mapped),
-            perf_counter() - started,
         )
         return mapped
 
@@ -244,6 +249,7 @@ def _export_format(
 
 
 def _load_model(path: str, task: str, report_status: ReportStatus) -> YOLO:
+    logger.info("Loading detection model: %s (task: %s)", pathlib.Path(path).name, task)
     report_status(
         StatusEvent(
             "preparing", message="Loading the detection model on this computer…"
@@ -267,8 +273,16 @@ def _initialize_predictor(
     }
     if native_mps:
         overrides["device"] = "mps"
-        logger.info("Native PyTorch inference on MPS (FP16)")
     model.predictor = model._smart_load("predictor")(
         overrides=overrides, _callbacks=model.callbacks
     )
-    model.predictor.setup_model(model=model.model, verbose=False)
+    model.predictor.setup_model(
+        model=model.model, verbose=logger.isEnabledFor(logging.INFO)
+    )
+    backend = model.predictor.model
+    logger.info(
+        "Inference backend ready: %s on %s (%s)",
+        backend.format,
+        backend.device,
+        "FP16" if backend.fp16 else "FP32",
+    )

@@ -16,6 +16,48 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  recover-preview:
+    name: Recover already-tested preview 0.0.7
+    if: github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Recover signed preview release 0.0.7')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: AI-Detector-macos-arm64
+          path: downloads
+          run-id: 36129681990
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v7
+        with:
+          name: AI-Detector-windows-x64
+          path: downloads
+          run-id: 36129681990
+          github-token: ${{ github.token }}
+      - name: Verify and publish existing signed packages
+        working-directory: downloads
+        run: |
+          sha256sum --check ./*.sha256
+          cat > "$RUNNER_TEMP/release-notes.md" <<'NOTES'
+          Update channel: **preview**. Install the Mac disk image or Windows setup program once; later previews arrive through **Check for Updates**. Settings and recordings stay outside the application.
+
+          These are the original signed installers from [the successful platform builds](https://github.com/ESchouten/ai-detector/actions/runs/36129681990). No application files were rebuilt for this publication recovery.
+
+          The Linux package is available in that run's **AI-Detector-linux-x64** artifact. It exceeds GitHub's release asset limit; the next preview will reduce its bundled dependencies.
+
+          Downloads use our own update signing key and have no Apple notarization or Windows publisher certificate. Supported desktop targets: Apple Silicon macOS 14+ and Windows 11 24H2+ x64.
+          NOTES
+          gh release create app/test-2026-09-25-7 --verify-tag --draft --prerelease --latest=false --title 'AI Detector 0.0.7 (preview)' --notes-file "$RUNNER_TEMP/release-notes.md"
+          gh release upload app/test-2026-09-25-7 ./*
+          gh release edit app/test-2026-09-25-7 --draft=false
+          gh release create app-preview-updates appcast.xml releases.win.json --prerelease --latest=false --title 'Application preview update feeds' --notes 'Signed preview desktop updater metadata. Installers are attached to versioned application releases.'
+
   workflows:
     name: Workflow syntax
     runs-on: ubuntu-latest

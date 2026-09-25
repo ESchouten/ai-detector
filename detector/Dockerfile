@@ -7,8 +7,8 @@ FROM --platform=linux/arm64 ultralytics/ultralytics:${ULTRALYTICS_TAG_ARM64} AS 
 FROM runtime-${TARGETARCH} AS runtime
 ARG TARGETARCH
 
-# Install uv for fast package installation
-COPY --from=ghcr.io/astral-sh/uv:0.12.19 /uv /uvx /bin/
+# Replace the base image's uv, which takes precedence over /bin on PATH.
+COPY --from=ghcr.io/astral-sh/uv:0.12.19 /uv /uvx /usr/local/bin/
 
 WORKDIR /app
 

@@ -66,7 +66,7 @@ export function connectionFailure(cause: unknown): CameraConnectionError {
 			'The camera did not provide a supported video stream. Try another channel or ask your camera installer for its stream address.'
 		);
 	return new CameraConnectionError(
-		'Could not connect to this camera. Check that local camera access is enabled, or try its stream address under Advanced.'
+		'Could not connect to this camera. Check that local camera access is enabled, or enter its stream URL manually.'
 	);
 }
 

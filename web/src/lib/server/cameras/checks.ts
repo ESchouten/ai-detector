@@ -31,8 +31,9 @@ export async function recordCameraTest(
 				'-map',
 				'0:v:0',
 				'-an',
-				'-t',
-				'2',
+				// A live stream may start between keyframes. Count decoded frames, not input time.
+				'-frames:v',
+				'24',
 				'-vf',
 				'fps=12,scale=640:-2',
 				'-c:v',

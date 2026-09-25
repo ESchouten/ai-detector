@@ -72,6 +72,71 @@ test('camera addresses accept separate credentials and never disclose them in er
 	);
 });
 
+test('manual stream URLs preserve their embedded login without separate credentials', async () => {
+	const streamUri = 'rtsp://farm%40home:private%23%2F%3F@camera.local:554/live';
+	assert.deepEqual(
+		await resolveCameraStream({ address: '', username: '', password: '', streamUri }),
+		{ source: streamUri, profiles: [] }
+	);
+});
+
+test('camera check waits for a keyframe even when the stream starts with undecodable frames', async (t) => {
+	assert.ok(ffmpeg);
+	const dir = await directory(t);
+	await execute(ffmpeg, [
+		'-hide_banner',
+		'-loglevel',
+		'error',
+		'-f',
+		'lavfi',
+		'-i',
+		'testsrc2=size=160x90:rate=12:duration=6',
+		'-c:v',
+		'libx264',
+		'-preset',
+		'ultrafast',
+		'-g',
+		'48',
+		'-sc_threshold',
+		'0',
+		'-bf',
+		'0',
+		'-f',
+		'segment',
+		'-segment_time',
+		'1',
+		'-break_non_keyframes',
+		'1',
+		'-segment_format',
+		'mpegts',
+		path.join(dir, '%d.ts')
+	]);
+	// Join the stream one second after a keyframe; the next one arrives three seconds later.
+	const stream = Buffer.concat(
+		await Promise.all([1, 2, 3, 4, 5].map((index) => readFile(path.join(dir, `${index}.ts`))))
+	);
+	const address = await server(t, (_request, response) => {
+		response.writeHead(200, { 'Content-Type': 'video/mp2t' });
+		response.end(stream);
+	});
+	const cache = new CameraChecks(path.join(dir, 'checks'));
+	const result = await cache.check(address, ffmpeg, []);
+	const picture = await readFile(cache.file(result.checkId, 'picture.jpg')!);
+	assert.equal(picture.subarray(0, 2).toString('hex'), 'ffd8');
+	const { stdout } = await execute(ffmpeg, [
+		'-v',
+		'error',
+		'-i',
+		cache.file(result.checkId, 'recording.mp4')!,
+		'-map',
+		'0:v:0',
+		'-f',
+		'framemd5',
+		'-'
+	]);
+	assert.equal(stdout.split('\n').filter((line) => line && !line.startsWith('#')).length, 24);
+});
+
 test('discovery ignores malformed external replies, decodes names and deduplicates devices', () => {
 	const reply = (XAddrs: string, scopes = '') => ({
 		probeMatches: { probeMatch: { XAddrs, scopes } }

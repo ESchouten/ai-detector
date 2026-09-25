@@ -86,9 +86,9 @@ async function scanCameras(): Promise<CameraDiscovery> {
 		return {
 			cameras,
 			message: incomplete
-				? 'Camera search was incomplete. Check local network access, or enter a camera address.'
+				? 'Camera search was incomplete. Check local network access, or enter a stream URL manually.'
 				: cameras.length === 0
-					? 'No cameras found. Check that this computer and camera use the same network and allow local network access, or enter the camera address.'
+					? 'No cameras found. Check that this computer and camera use the same network and allow local network access, or enter its stream URL manually.'
 					: undefined
 		};
 	} finally {
@@ -142,7 +142,7 @@ export async function resolveCameraStream(
 		});
 		if (!profiles.length)
 			throw new CameraConnectionError(
-				'This device did not provide a video stream. Check that camera streaming is enabled or enter its stream address under Advanced.'
+				'This device did not provide a video stream. Check that camera streaming is enabled or enter its stream URL manually.'
 			);
 		const selected = input.profileToken ?? profiles[0].token;
 		if (!profiles.some((profile) => profile.token === selected))

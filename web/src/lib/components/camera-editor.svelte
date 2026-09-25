@@ -37,12 +37,11 @@
 	let address = $state(untrack(() => initial?.connection?.address ?? ''));
 	let username = $state(editing.username);
 	let password = $state('');
-	let streamUri = $state(editing.streamUri);
+	let streamUri = $state(untrack(() => initial?.source ?? ''));
 	let profiles = $state<{ token: string; name: string }[]>([]);
 	let profileToken = $state(untrack(() => initial?.connection?.profileToken ?? ''));
 	let verifiedConnection = $state<StreamMeta['connection']>(untrack(() => initial?.connection));
 	let manualAddress = $state(false);
-	let advancedAddress = $state(false);
 	let changingConnection = $state(untrack(() => !initial));
 	let candidates = $state<Awaited<ReturnType<typeof discoverCameras>>['cameras']>([]);
 	let discoveryMessage = $state('');
@@ -125,7 +124,6 @@
 		password = camera.login.password;
 		source = '';
 		streamUri = '';
-		advancedAddress = false;
 		manualAddress = false;
 		profiles = camera.connection.profiles;
 		profileToken =
@@ -174,7 +172,7 @@
 				result.message ??
 				(candidates.length
 					? 'Choose your camera below.'
-					: 'No cameras found. Enter its address below, or check that the camera and this computer use the same network.');
+					: 'No cameras found. Enter its stream URL manually, or check that the camera and this computer use the same network.');
 		} catch (cause) {
 			discoveryMessage = errorMessage(
 				cause,
@@ -195,13 +193,11 @@
 				initial && !changingConnection
 					? { source, profiles, connection: initial.connection }
 					: (preparedConnection ??
-						(await getCameraConnection({
-							address,
-							username,
-							password,
-							...(profileToken ? { profileToken } : {}),
-							...(advancedAddress ? { streamUri } : {})
-						})));
+						(await getCameraConnection(
+							manualAddress
+								? { streamUri }
+								: { address, username, password, ...(profileToken ? { profileToken } : {}) }
+						)));
 			controller.signal.throwIfAborted();
 			profiles = connection.profiles;
 			verifiedConnection = connection.connection;
@@ -214,10 +210,7 @@
 			source = check.source;
 		} catch (cause) {
 			if (controller.signal.aborted) return;
-			error = errorMessage(
-				cause,
-				'Could not connect to the camera. Check its address and password.'
-			);
+			error = errorMessage(cause, 'Could not connect to the camera. Check its connection details.');
 		} finally {
 			checkController = undefined;
 			checking = false;
@@ -281,7 +274,6 @@
 		username = '';
 		password = '';
 		streamUri = '';
-		advancedAddress = false;
 		manualAddress = false;
 		verifiedConnection = undefined;
 		profileToken = '';
@@ -305,7 +297,7 @@
 					? 'Add another camera, or continue to choose your detectors.'
 					: initial
 						? 'Update the camera name or connection.'
-						: 'Choose a camera and enter its login. Keep it on the same network as this computer.'}
+						: 'Choose a camera or enter its stream URL. Keep it on the same network as this computer.'}
 			</p>
 		</div>
 		{#if !initial && !batchEnabled && !saved}
@@ -397,7 +389,6 @@
 										)?.name;
 										address = value;
 										manualAddress = false;
-										advancedAddress = false;
 										if (!label || label === previousName)
 											label = candidates.find((camera) => camera.address === value)?.name ?? '';
 										connectionChangedInput();
@@ -424,10 +415,7 @@
 								disabled={checking || saving}
 								onclick={() => {
 									manualAddress = !manualAddress;
-									if (!manualAddress && advancedAddress) {
-										advancedAddress = false;
-										connectionChangedInput();
-									}
+									connectionChangedInput();
 								}}>{manualAddress ? 'Hide manual entry' : 'Enter camera manually'}</Button
 							>
 						</Field.Set>
@@ -435,77 +423,54 @@
 					{#if cameraDraftAddress(address) && !manualAddress && !candidates.some((camera) => camera.address === address)}
 						<p class="text-sm break-all text-muted-foreground">Camera selected: {address}</p>
 					{/if}
-					<Field.Group>
-						{#if manualAddress}
-							<Field.Field>
-								<Field.Label for="camera-address">Camera address</Field.Label>
-								<Input
-									id="camera-address"
-									bind:value={address}
-									oninput={connectionChangedInput}
-									disabled={checking || saving}
-									placeholder="e.g. 192.168.1.50"
-									autocomplete="off"
-								/>
-							</Field.Field>
-						{/if}
-						<Field.Group class="grid gap-4 sm:grid-cols-2">
-							<Field.Field>
-								<Field.Label for="camera-username">Camera username</Field.Label>
-								<Input
-									id="camera-username"
-									bind:value={username}
-									oninput={credentialsChangedInput}
-									disabled={checking || saving}
-									autocomplete="off"
-								/>
-							</Field.Field>
-							<Field.Field>
-								<Field.Label for="camera-password">Camera password</Field.Label>
-								<Input
-									id="camera-password"
-									type="password"
-									bind:value={password}
-									oninput={credentialsChangedInput}
-									disabled={checking || saving}
-									autocomplete="off"
-								/>
-							</Field.Field>
-						</Field.Group>
-						<Field.Description
-							>Use your camera’s own login, which may differ from its phone app.</Field.Description
-						>
-					</Field.Group>
 					{#if manualAddress}
-						<details
-							open={advancedAddress}
-							inert={checking || saving}
-							ontoggle={(event) => {
-								if (advancedAddress === event.currentTarget.open) return;
-								advancedAddress = event.currentTarget.open;
-								connectionChangedInput();
-							}}
-						>
-							<summary class="cursor-pointer text-sm">Use a stream address instead</summary>
-							<Field.Field class="mt-4">
-								<Field.Label for="camera-stream">RTSP or HTTP stream address</Field.Label>
-								<Input
-									id="camera-stream"
-									type="password"
-									bind:value={streamUri}
-									oninput={connectionChangedInput}
-									disabled={checking || saving}
-									placeholder="rtsp://192.168.1.50/stream"
-									autocomplete="off"
-								/>
-								<Field.Description
-									>Ask your camera installer for its stream address. A camera’s web page is not a
-									video stream.</Field.Description
-								>
-							</Field.Field>
-						</details>
+						<Field.Field>
+							<Field.Label for="camera-stream">RTSP URL</Field.Label>
+							<Input
+								id="camera-stream"
+								type="password"
+								bind:value={streamUri}
+								oninput={connectionChangedInput}
+								disabled={checking || saving}
+								placeholder="rtsp://192.168.1.50/stream"
+								autocomplete="off"
+								aria-describedby="camera-stream-help"
+							/>
+							<Field.Description id="camera-stream-help">
+								Paste the full stream URL, including the username and password if required.
+							</Field.Description>
+						</Field.Field>
+					{:else if address}
+						<Field.Group>
+							<Field.Group class="grid gap-4 sm:grid-cols-2">
+								<Field.Field>
+									<Field.Label for="camera-username">Camera username</Field.Label>
+									<Input
+										id="camera-username"
+										bind:value={username}
+										oninput={credentialsChangedInput}
+										disabled={checking || saving}
+										autocomplete="off"
+									/>
+								</Field.Field>
+								<Field.Field>
+									<Field.Label for="camera-password">Camera password</Field.Label>
+									<Input
+										id="camera-password"
+										type="password"
+										bind:value={password}
+										oninput={credentialsChangedInput}
+										disabled={checking || saving}
+										autocomplete="off"
+									/>
+								</Field.Field>
+							</Field.Group>
+							<Field.Description
+								>Use your camera’s own login, which may differ from its phone app.</Field.Description
+							>
+						</Field.Group>
 					{/if}
-					{#if profiles.length > 1}
+					{#if !manualAddress && profiles.length > 1}
 						<Field.Field>
 							<Field.Label for="camera-profile">Camera channel or stream</Field.Label>
 							<NativeSelect.Root
@@ -523,7 +488,7 @@
 									>{/each}
 							</NativeSelect.Root>
 						</Field.Field>
-					{:else if initial?.connection?.profileToken && profileToken}
+					{:else if !manualAddress && initial?.connection?.profileToken && profileToken}
 						<Button
 							type="button"
 							variant="outline"
@@ -552,11 +517,8 @@
 						onclick={() => {
 							changingConnection = true;
 							invalidateCheck();
-							if (!initial.connection) {
-								manualAddress = true;
-								advancedAddress = true;
-							}
-						}}>Change address or password</Button
+							manualAddress = !initial.connection;
+						}}>Change connection</Button
 					>
 				{/if}
 			</div>
@@ -601,7 +563,7 @@
 				{#if connectionChanged}
 					<Button
 						type="submit"
-						disabled={checking || saving || !(advancedAddress ? streamUri.trim() : address.trim())}
+						disabled={checking || saving || !(manualAddress ? streamUri.trim() : address.trim())}
 					>
 						{checking ? 'Connecting…' : 'Connect camera'}<ArrowRight data-icon="inline-end" />
 					</Button>

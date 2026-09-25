@@ -1,6 +1,5 @@
 """Exercise Sparkle's real signer and delta tools without installing an application."""
 
-import base64
 import os
 import plistlib
 import shutil
@@ -8,12 +7,15 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import urllib.parse
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from unittest.mock import patch
 
+from fixtures.keys import PRIVATE_KEY, PUBLIC_KEY
 from package import macos_bundle
 from sign_macos import sign_app
-from updates import SPARKLE
+from updates import SPARKLE, generate_macos_feed, mac_items
 
 
 @unittest.skipUnless(
@@ -33,15 +35,8 @@ class SparkleTest(unittest.TestCase):
             root = Path(temporary)
             archives = root / "updates"
             archives.mkdir()
-            # Public RFC 8032 test vector. Never touch the developer's signing keychain.
-            seed = bytes.fromhex(
-                "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60"
-            )
-            public = bytes.fromhex(
-                "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
-            )
             key = root / "test-key"
-            key.write_bytes(base64.b64encode(seed))
+            key.write_text(PRIVATE_KEY)
             launcher = root / "launcher"
             shutil.copyfile("/usr/bin/true", launcher)
             launcher.chmod(0o755)
@@ -53,7 +48,7 @@ class SparkleTest(unittest.TestCase):
                     version,
                     sdk,
                     f"https://example.test/{channel}",
-                    base64.b64encode(public).decode(),
+                    PUBLIC_KEY,
                 )
                 (payload.parent / "Resources/library.bin").write_bytes(library)
                 (payload.parent / "Resources/web.txt").write_text(version)
@@ -87,20 +82,23 @@ class SparkleTest(unittest.TestCase):
                     check=True,
                     capture_output=True,
                 )
-            env = {**os.environ, "CFFIXED_USER_HOME": str(root / "cache")}
-            subprocess.run(
-                [
-                    str(sdk / "bin/generate_appcast"),
-                    "--ed-key-file",
-                    str(key),
-                    "--download-url-prefix",
-                    f"https://example.test/{channel}/",
-                    str(archives),
-                ],
-                check=True,
-                env=env,
-            )
+                with patch.dict(
+                    os.environ,
+                    {
+                        "CFFIXED_USER_HOME": str(root / "cache"),
+                        "SPARKLE_PRIVATE_KEY": key.read_text(),
+                    },
+                ):
+                    generate_macos_feed(
+                        archives,
+                        version,
+                        f"https://example.test/releases/{version}",
+                        sdk,
+                    )
+                if version == previous:
+                    previous_feed = (archives / "appcast.xml").read_bytes()
             feed = archives / "appcast.xml"
+            self.check_release_urls(feed, previous_feed, previous, current)
             subprocess.run(
                 [
                     str(sdk / "bin/sign_update"),
@@ -116,6 +114,12 @@ class SparkleTest(unittest.TestCase):
             delta = item.find(f"./{{{SPARKLE}}}deltas/enclosure")
             self.assertIsNotNone(delta, "The unchanged runtime must produce a delta")
             artifact = next(archives.glob("*.delta"))
+            self.assertNotIn(" ", artifact.name)
+            self.assertEqual(
+                delta.get("url"),
+                f"https://example.test/releases/{current}/"
+                + urllib.parse.quote(artifact.name),
+            )
             self.assertLess(
                 artifact.stat().st_size, (archives / f"{current}.zip").stat().st_size
             )
@@ -177,3 +181,14 @@ class SparkleTest(unittest.TestCase):
                 capture_output=True,
             )
             self.assertNotEqual(rejected.returncode, 0)
+
+    def check_release_urls(self, feed, previous_feed, previous, current):
+        items = dict(mac_items(feed.read_bytes()))
+        self.assertEqual(
+            items[previous].attrib,
+            dict(mac_items(previous_feed))[previous].attrib,
+        )
+        self.assertEqual(
+            items[current].get("url"),
+            f"https://example.test/releases/{current}/{current}.zip",
+        )

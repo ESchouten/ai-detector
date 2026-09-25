@@ -99,10 +99,18 @@ def prepare(
             download(url, folder / name, latest["SHA256"])
 
 
-def macos(output: Path, version: str, release_url: str, sparkle: Path) -> None:
-    folder = output / "macos-updates"
-    folder.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(output / f"AI-Detector-{version}-macos-arm64.dmg", folder)
+def generate_macos_feed(
+    folder: Path, version: str, release_url: str, sparkle: Path
+) -> None:
+    feed = folder / "appcast.xml"
+    previous = (
+        {
+            item.findtext(f"{{{SPARKLE}}}version"): item
+            for item in ET.parse(feed).findall("./channel/item")
+        }
+        if feed.exists()
+        else {}
+    )
     subprocess.run(
         [
             str(sparkle / "bin/generate_appcast"),
@@ -122,7 +130,7 @@ def macos(output: Path, version: str, release_url: str, sparkle: Path) -> None:
         text=True,
         check=True,
     )
-    items = mac_items((folder / "appcast.xml").read_bytes())
+    items = mac_items(feed.read_bytes())
     if (
         not items
         or items[0][0] != version
@@ -131,6 +139,47 @@ def macos(output: Path, version: str, release_url: str, sparkle: Path) -> None:
         raise ValueError(
             "Sparkle did not produce a signed update for this version; check the public/private key pair"
         )
+
+    # GitHub renames spaces in uploaded assets. Choose stable names before upload.
+    delta_names = {}
+    for delta in folder.glob("*.delta"):
+        name = delta.name.replace(" ", "-")
+        delta_names[delta.name] = name
+        delta.rename(delta.with_name(name))
+
+    tree = ET.parse(feed)
+    channel = tree.find("channel")
+    for index, item in enumerate(channel):
+        if item.tag != "item":
+            continue
+        item_version = item.findtext(f"{{{SPARKLE}}}version")
+        if item_version != version:
+            # generate_appcast applies the new release URL to old archives too.
+            channel.remove(item)
+            channel.insert(index, previous[item_version])
+            continue
+        for enclosure in item.findall(f"./{{{SPARKLE}}}deltas/enclosure"):
+            url = enclosure.attrib["url"]
+            name = urllib.parse.unquote(url.rsplit("/", 1)[1])
+            enclosure.set(
+                "url",
+                url.rsplit("/", 1)[0] + "/" + urllib.parse.quote(delta_names[name]),
+            )
+    ET.register_namespace("sparkle", SPARKLE)
+    tree.write(feed, encoding="utf-8", xml_declaration=True)
+    subprocess.run(
+        [str(sparkle / "bin/sign_update"), "--ed-key-file", "-", str(feed)],
+        input=os.environ["SPARKLE_PRIVATE_KEY"],
+        text=True,
+        check=True,
+    )
+
+
+def macos(output: Path, version: str, release_url: str, sparkle: Path) -> None:
+    folder = output / "macos-updates"
+    folder.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(output / f"AI-Detector-{version}-macos-arm64.dmg", folder)
+    generate_macos_feed(folder, version, release_url, sparkle)
     shutil.copy2(folder / "appcast.xml", output)
     for delta in folder.glob("*.delta"):
         shutil.copy2(delta, output)

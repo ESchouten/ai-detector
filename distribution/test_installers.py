@@ -39,7 +39,12 @@ class InstallerTest(unittest.TestCase):
         )
         self.assertIn("Architecture: amd64", (root / "DEBIAN/control").read_text())
         self.assertIn("Version: 1.2.3", (root / "DEBIAN/control").read_text())
-        self.assertTrue((root / "DEBIAN/prerm").stat().st_mode & stat.S_IXUSR)
+        prerm = root / "DEBIAN/prerm"
+        self.assertEqual(
+            prerm.read_bytes(), (Path(__file__).parent / "linux/prerm").read_bytes()
+        )
+        if os.name != "nt":
+            self.assertTrue(prerm.stat().st_mode & stat.S_IXUSR)
         self.assertFalse((root / "home").exists())
         if shutil.which("desktop-file-validate"):
             subprocess.run(["desktop-file-validate", str(menu)], check=True)

@@ -36,6 +36,7 @@
 	const needsAttention = $derived(
 		stale || !runtime.managed || ['failed', 'degraded'].includes(runtime.readiness)
 	);
+	let troubleshootingOpen = $state(untrack(() => needsAttention));
 	const preparing = $derived(busy || ['preparing', 'connecting'].includes(runtime.readiness));
 	const monitoringCount = $derived(
 		runtime.cameras.filter(
@@ -181,7 +182,7 @@
 					Monitoring continues when you close this browser tab.
 				</p>
 
-				<details open={needsAttention}>
+				<details bind:open={troubleshootingOpen}>
 					<summary class="cursor-pointer text-sm text-muted-foreground"
 						>Advanced and troubleshooting</summary
 					>

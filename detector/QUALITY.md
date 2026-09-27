@@ -53,7 +53,7 @@ uv run --no-sync coverage xml
 uv run --no-sync radon cc --show-closures --json --output-file .reports/complexity.json src/aidetector
 ```
 
-Open `.reports/coverage/index.html` and inspect highlighted missing lines and branch destinations. Erasing first prevents stale local runs from inflating the result. Configuration enables [child-process measurement](https://coverage.readthedocs.io/en/latest/subprocess.html), so CLI tests count too. Each process writes its own data; `coverage combine` merges it before reporting. `.coverage*` and `.reports/` are ignored by Git.
+Open `.reports/coverage/index.html` and inspect highlighted missing lines and branch destinations. Erasing first prevents stale local runs from inflating the result. Coverage measures `src/aidetector` in the checkout, excluding same-named packages in temporary architecture/quality snapshots that are deleted during testing. Configuration enables [child-process measurement](https://coverage.readthedocs.io/en/latest/subprocess.html), so CLI tests count too, including when children run from another directory. Each process writes its own data; `coverage combine` merges it before reporting. `.coverage*` and `.reports/` are ignored by Git.
 
 The GitHub Actions matrix reports coverage on every test platform. The Ubuntu/Python 3.12 job publishes the `detector-quality` artifact with HTML, JSON, and XML coverage reports, Radon JSON, and the change report below. Reports from different platforms are not merged; hardware and platform differences can change the executed branches.
 

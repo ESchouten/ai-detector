@@ -112,7 +112,8 @@ on_dependency_change = "rerun"
 
 [tool.coverage.run]
 branch = true
-source = ["aidetector"]
+# Measure the checkout, not same-named packages in temporary analysis snapshots.
+source = ["src/aidetector"]
 # Include the CLI and import checks executed in child Python processes.
 parallel = true
 patch = ["subprocess"]

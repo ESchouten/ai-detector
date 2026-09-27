@@ -3,12 +3,54 @@ import { mkdir, readFile, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import * as v from 'valibot';
 import writeFileAtomic from 'write-file-atomic';
-import { frameSchema, type LivePreviewFrame, type LivePreviewStatus } from '../live-preview.ts';
+import {
+	frameSchema,
+	type CameraOverlayFrame,
+	type LivePreviewFrame,
+	type LivePreviewStatus
+} from '../live-preview.ts';
+import type { Config, AppConfig } from '../schema.ts';
 
 export interface LivePreviewRule {
 	id: string;
 	label: string;
+	preset?: string;
 	interval: number;
+}
+
+export function livePreviewRules(
+	source: string,
+	config: Config,
+	app: AppConfig
+): LivePreviewRule[] {
+	return config.detectors.flatMap((rule, index) =>
+		rule.detection.source.includes(source)
+			? [
+					{
+						id: `detector-${index + 1}`,
+						label: app.detectors[index].label,
+						preset: app.detectors[index].preset,
+						interval: rule.detection.interval ?? 1
+					}
+				]
+			: []
+	);
+}
+
+export interface LivePreviewCamera {
+	id: string;
+	sourceKey: string;
+	rules: LivePreviewRule[];
+}
+
+interface PreviewTarget {
+	cameraId: string;
+	sourceKey: string;
+	rule: LivePreviewRule;
+}
+
+function targetKey(target: PreviewTarget): string {
+	return `${target.cameraId}.${target.rule.id}`;
 }
 
 const sessionSchema = v.object({
@@ -108,7 +150,14 @@ function status(
 ): PreviewEvent {
 	return {
 		event: 'status',
-		data: { version: 1, state, message, ruleId: rule.id, ruleLabel: rule.label }
+		data: {
+			version: 1,
+			state,
+			message,
+			ruleId: rule.id,
+			ruleLabel: rule.label,
+			rulePreset: rule.preset
+		}
 	};
 }
 
@@ -122,15 +171,21 @@ async function readSession(directory: string) {
 }
 
 function changedEvents(
-	events: PreviewEvent[],
+	events: { target: PreviewTarget; event: PreviewEvent }[],
 	sent: Map<string, string>,
 	seen: Set<string>
 ): string {
 	let chunk = '';
-	for (const event of events) {
-		const key = event.data.ruleId!;
+	for (const { target, event } of events) {
+		const key = targetKey(target);
 		if (event.event === 'frame') seen.add(key);
-		const value = JSON.stringify(event.data);
+		let data: CameraOverlayFrame | LivePreviewStatus;
+		if (event.event === 'frame') {
+			// Do not send a second video stream just to draw boxes on the live camera.
+			const { width, height } = event.data.image;
+			data = { ...event.data, cameraId: target.cameraId, image: { width, height } };
+		} else data = { ...event.data, cameraId: target.cameraId };
+		const value = JSON.stringify(data);
 		if (sent.get(key) === value) continue;
 		sent.set(key, value);
 		chunk += `event: ${event.event}\ndata: ${value}\n\n`;
@@ -164,7 +219,7 @@ async function readPreview(
 				'unavailable',
 				'No recent analyzed picture. Check the camera and monitoring status.'
 			);
-		return { event: 'frame', data: { ...frame, ruleLabel: rule.label } };
+		return { event: 'frame', data: { ...frame, ruleLabel: rule.label, rulePreset: rule.preset } };
 	} catch (error) {
 		return missing(error)
 			? status(rule, 'waiting', 'Waiting for this rule to analyze a picture.')
@@ -172,18 +227,34 @@ async function readPreview(
 	}
 }
 
-/** Read only the latest records. Slow clients skip intermediate frames instead of accumulating them. */
-export function createLivePreviewStream(
+/** All visible camera cards share one connection, leaving room for video and navigation. */
+export function createCameraOverlayStream(
 	directory: string,
-	sourceKey: string,
-	rules: LivePreviewRule[],
+	cameras: LivePreviewCamera[],
+	signal: AbortSignal
+): ReadableStream<Uint8Array> {
+	return previewStream(
+		directory,
+		cameras.flatMap((camera) =>
+			camera.rules.map((rule) => ({ cameraId: camera.id, sourceKey: camera.sourceKey, rule }))
+		),
+		signal
+	);
+}
+
+/** Slow clients skip intermediate results instead of accumulating them. */
+function previewStream(
+	directory: string,
+	targets: PreviewTarget[],
 	signal: AbortSignal
 ): ReadableStream<Uint8Array> {
 	const encoder = new TextEncoder();
 	let close: (cancelled?: boolean) => Promise<void> = async () => {};
 	return new ReadableStream({
 		start(controller) {
-			const lease = acquireLease(path.join(directory, 'leases', `${sourceKey}.json`));
+			const leases = [...new Set(targets.map((target) => target.sourceKey))].map((key) =>
+				acquireLease(path.join(directory, 'leases', `${key}.json`))
+			);
 			const sent = new Map<string, string>();
 			const seen = new Set<string>();
 			let stopped = false;
@@ -198,7 +269,7 @@ export function createLivePreviewStream(
 				signal.removeEventListener('abort', abort);
 				if (!cancelled) controller.close();
 				try {
-					await lease.release();
+					await Promise.all(leases.map((lease) => lease.release()));
 				} catch (error) {
 					console.error('Could not remove live preview lease', error);
 				}
@@ -207,7 +278,7 @@ export function createLivePreviewStream(
 				if (stopped || polling || (controller.desiredSize ?? 0) <= 0) return;
 				polling = true;
 				try {
-					lease.check();
+					for (const lease of leases) lease.check();
 					const session = await readSession(directory);
 					if (session && runId && session.runId !== runId) {
 						// Reconnecting resolves current camera sources and rule labels after a restart.
@@ -216,11 +287,17 @@ export function createLivePreviewStream(
 					}
 					if (session) runId = session.runId;
 					const events = await Promise.all(
-						rules.map((rule) =>
-							!session && seen.has(rule.id)
-								? status(rule, 'unavailable', 'The detector is no longer publishing live pictures.')
-								: readPreview(directory, sourceKey, rule, session)
-						)
+						targets.map(async (target) => ({
+							target,
+							event:
+								!session && seen.has(targetKey(target))
+									? status(
+											target.rule,
+											'unavailable',
+											'The detector is no longer publishing live pictures.'
+										)
+									: await readPreview(directory, target.sourceKey, target.rule, session)
+						}))
 					);
 					if (stopped) return;
 					controller.enqueue(encoder.encode(changedEvents(events, sent, seen)));

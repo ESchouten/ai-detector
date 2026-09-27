@@ -29,10 +29,13 @@ def release_config(
     downloads = f"https://github.com/{repository}/releases/download/"
     return {
         "version": version,
+        # One sequence across both channels; display versions remain independent.
+        "build_version": f"{run_number}.0.0",
         "tag": tag,
         "channel": channel,
         "feed_tag": feed_tag,
         "feed_url": downloads + quote(feed_tag, safe=""),
+        "channels_url": downloads + "app-update-channels",
         "release_url": downloads + quote(tag, safe=""),
     }
 

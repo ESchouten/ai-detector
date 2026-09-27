@@ -175,18 +175,30 @@ def generate_macos_feed(
     )
 
 
-def macos(output: Path, version: str, release_url: str, sparkle: Path) -> None:
+def macos(
+    output: Path,
+    version: str,
+    release_url: str,
+    sparkle: Path,
+    build_version: str | None = None,
+) -> None:
     folder = output / "macos-updates"
     folder.mkdir(parents=True, exist_ok=True)
     shutil.copy2(output / f"AI-Detector-{version}-macos-arm64.dmg", folder)
-    generate_macos_feed(folder, version, release_url, sparkle)
+    generate_macos_feed(folder, build_version or version, release_url, sparkle)
     shutil.copy2(folder / "appcast.xml", output)
     for delta in folder.glob("*.delta"):
         shutil.copy2(delta, output)
 
 
 def windows(
-    output: Path, version: str, release_url: str, private_key: str, public_key: str
+    output: Path,
+    version: str,
+    release_url: str,
+    private_key: str,
+    public_key: str,
+    build_version: str | None = None,
+    channel: str = "stable",
 ) -> None:
     from release_signatures import sign_feed
 
@@ -195,6 +207,10 @@ def windows(
     previous = output / "previous-windows-feed.json"
     assets = json.loads(previous.read_text())["Assets"] if previous.exists() else []
     newer_than(version, [asset["Version"] for asset in assets])
+    if build_version:
+        newer_than(
+            build_version, [asset.get("BuildVersion", "0.0.0") for asset in assets]
+        )
     current = [
         asset
         for asset in generated["Assets"]
@@ -207,6 +223,8 @@ def windows(
         shutil.copy2(folder / name, output / name)
         # SimpleWebSource supports absolute package URLs; feed hosting stays independent.
         asset["FileName"] = release_url.rstrip("/") + "/" + urllib.parse.quote(name)
+        asset["BuildVersion"] = build_version or version
+        asset["ReleaseChannel"] = channel
     assets += current
     versions = sorted(
         {asset["Version"] for asset in assets}, key=numeric_version, reverse=True
@@ -234,6 +252,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("--output", type=Path, default=Path("application-dist"))
     parser.add_argument("--version", required=True)
+    parser.add_argument("--build-version")
+    parser.add_argument("--channel", choices=["stable", "preview"], default="stable")
     parser.add_argument("--feed-url")
     parser.add_argument("--release-url")
     parser.add_argument("--sparkle", type=Path)
@@ -242,12 +262,20 @@ if __name__ == "__main__":
         prepare(
             args.output,
             args.platform,
-            args.version,
+            (args.build_version or args.version)
+            if args.platform == "macos-arm64"
+            else args.version,
             args.feed_url,
             os.environ.get("SPARKLE_PUBLIC_KEY", ""),
         )
     elif args.platform == "macos-arm64":
-        macos(args.output, args.version, args.release_url, args.sparkle)
+        macos(
+            args.output,
+            args.version,
+            args.release_url,
+            args.sparkle,
+            args.build_version,
+        )
     else:
         windows(
             args.output,
@@ -255,4 +283,6 @@ if __name__ == "__main__":
             args.release_url,
             os.environ["SPARKLE_PRIVATE_KEY"],
             os.environ["SPARKLE_PUBLIC_KEY"],
+            args.build_version,
+            args.channel,
         )

@@ -4,14 +4,13 @@ import Ajv from 'ajv';
 import metadataSchema from '../../../../config/metadata.schema.json' with { type: 'json' };
 import { STAGES, type Metadata, type Stage } from '../schema.ts';
 import type { Detection, DetectionFilter, DetectionPage } from '../detections.ts';
+import { isArchiveSegment, type RecordingExportFilter } from '../detections.ts';
+
+export { isArchiveSegment } from '../detections.ts';
 
 export class ArchivePathError extends Error {}
 
 const validateMetadata = new Ajv().compile<Metadata>(metadataSchema);
-
-export function isArchiveSegment(value: string): boolean {
-	return value.length > 0 && value !== '.' && value !== '..' && !/[/\\\0]/.test(value);
-}
 
 export function isMissingFile(error: unknown): boolean {
 	return ['ENOENT', 'ENOTDIR'].includes((error as NodeJS.ErrnoException).code ?? '');
@@ -44,7 +43,7 @@ async function folders(directory: string): Promise<string[]> {
 	}
 }
 
-interface Location {
+export interface ArchiveLocation {
 	type: string;
 	stage: Stage;
 	timestamp: string;
@@ -62,24 +61,7 @@ export class DetectionArchive {
 	}
 
 	async page({ type, stage, offset, limit }: DetectionFilter): Promise<DetectionPage> {
-		if (type !== undefined && !isArchiveSegment(type))
-			throw new ArchivePathError('Invalid category.');
-		const types = type ? [type] : await this.types();
-		const locations: Location[] = [];
-		for (const category of types) {
-			for (const currentStage of stage ? [stage] : STAGES) {
-				const timestamps = await folders(path.join(this.directory, category, currentStage));
-				for (const timestamp of timestamps)
-					locations.push({ type: category, stage: currentStage, timestamp });
-			}
-		}
-		// The detector's fixed-width ISO directory names sort chronologically.
-		locations.sort(
-			(a, b) =>
-				b.timestamp.localeCompare(a.timestamp) ||
-				a.type.localeCompare(b.type) ||
-				a.stage.localeCompare(b.stage)
-		);
+		const locations = await this.locations({ type, stage });
 		const page = locations.slice(offset, offset + limit);
 		const items = await Promise.all(page.map((location) => this.read(location)));
 		return {
@@ -89,7 +71,33 @@ export class DetectionArchive {
 		};
 	}
 
-	private async read(location: Location): Promise<Detection> {
+	async locations({ type, stage, from, to }: RecordingExportFilter): Promise<ArchiveLocation[]> {
+		if (type !== undefined && !isArchiveSegment(type))
+			throw new ArchivePathError('Invalid category.');
+		const types = type ? [type] : await this.types();
+		const locations: ArchiveLocation[] = [];
+		for (const category of types) {
+			for (const currentStage of stage ? [stage] : STAGES) {
+				const timestamps = await folders(path.join(this.directory, category, currentStage));
+				for (const timestamp of timestamps) {
+					// Match the calendar dates shown in Recordings, without timezone conversion.
+					const day = timestamp.slice(0, 10);
+					if ((!from || day >= from) && (!to || day <= to))
+						locations.push({ type: category, stage: currentStage, timestamp });
+				}
+			}
+		}
+		// The detector's fixed-width ISO directory names sort chronologically.
+		locations.sort(
+			(a, b) =>
+				b.timestamp.localeCompare(a.timestamp) ||
+				a.type.localeCompare(b.type) ||
+				a.stage.localeCompare(b.stage)
+		);
+		return locations;
+	}
+
+	private async read(location: ArchiveLocation): Promise<Detection> {
 		const file = await archivePath(
 			this.directory,
 			location.type,

@@ -24,6 +24,7 @@
 			<CameraPicture
 				id={camera.id}
 				label={camera.label}
+				monitored={camera.monitored}
 				class={selected.includes(camera.source) ? 'ring-2 ring-primary' : ''}
 			>
 				{#snippet overlay()}

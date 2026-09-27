@@ -4,10 +4,14 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
-import { createLivePreviewStream, liveSourceKey } from '../src/lib/server/live-preview.ts';
+import {
+	createCameraOverlayStream,
+	liveSourceKey,
+	type LivePreviewCamera
+} from '../src/lib/server/live-preview.ts';
 
 const rules = [
-	{ id: 'detector-1', label: 'People', interval: 1 },
+	{ id: 'detector-1', label: 'People', preset: 'people', interval: 1 },
 	{ id: 'detector-2', label: 'Vehicles', interval: 1 }
 ];
 const sourceKey = liveSourceKey('rtsp://user:secret@camera/live', '/data');
@@ -26,13 +30,13 @@ async function fixture(t: TestContext) {
 			JSON.stringify({ version: 1, runId, updatedAt })
 		);
 	};
-	const frame = async (ruleId: string, changes = {}) => {
+	const frame = async (ruleId: string, changes = {}, key = sourceKey) => {
 		await writeFile(
-			path.join(directory, 'frames', `${sourceKey}.${ruleId}.json`),
+			path.join(directory, 'frames', `${key}.${ruleId}.json`),
 			JSON.stringify({
 				version: 1,
 				runId: 'run-1',
-				sourceKey,
+				sourceKey: key,
 				ruleId,
 				capturedAt: '2020-01-01T00:00:00',
 				publishedAt: new Date().toISOString(),
@@ -42,9 +46,10 @@ async function fixture(t: TestContext) {
 			})
 		);
 	};
-	const open = () => {
+	const open = (cameras: LivePreviewCamera[] = [{ id: 'shed', sourceKey, rules }]) => {
 		const abort = new AbortController();
-		const reader = createLivePreviewStream(directory, sourceKey, rules, abort.signal).getReader();
+		const stream = createCameraOverlayStream(directory, cameras, abort.signal);
+		const reader = stream.getReader();
 		readers.push(reader);
 		return { reader, abort };
 	};
@@ -86,7 +91,9 @@ test(
 			['People', 'Vehicles']
 		);
 		assert.equal(frames[0].boxes[0].trackId, 17);
+		assert.equal(frames[0].rulePreset, 'people');
 		assert.equal(frames[0].image.width, 24);
+		assert.equal(frames[0].image.jpeg, undefined);
 		assert.ok(!output.includes('secret'));
 		await until(
 			async () =>
@@ -198,9 +205,9 @@ test(
 		await frame('detector-1');
 		const { reader } = open();
 		await delay(700);
-		await frame('detector-1', { image: { width: 24, height: 16, jpeg: 'intermediate' } });
+		await frame('detector-1', { capturedAt: 'intermediate' });
 		await delay(700);
-		await frame('detector-1', { image: { width: 24, height: 16, jpeg: 'newest' } });
+		await frame('detector-1', { capturedAt: 'newest' });
 		assert.ok(!(await chunk(reader)).includes('intermediate'));
 		assert.match(await chunk(reader), /newest/);
 	}
@@ -228,3 +235,45 @@ test(
 		assert.ok(!output.includes('event: frame'));
 	}
 );
+
+test('camera overlays multiplex cameras and rules without sending a second image stream', async (t) => {
+	const { directory, session, frame, open } = await fixture(t);
+	const otherKey = liveSourceKey('rtsp://other-camera/live', '/data');
+	const cameras = [
+		{ id: 'shed', sourceKey, rules },
+		{ id: 'pen', sourceKey: otherKey, rules: [rules[0]] }
+	];
+	await session();
+	await frame('detector-1');
+	await frame('detector-2');
+	await frame('detector-1', { boxes: [] }, otherKey);
+	const { reader, abort } = open(cameras);
+	const output = await chunk(reader);
+	const frames = output
+		.split('\n')
+		.filter((line) => line.startsWith('data: '))
+		.map((line) => JSON.parse(line.slice(6)));
+	assert.deepEqual(
+		frames.map(({ cameraId, ruleId }) => [cameraId, ruleId]),
+		[
+			['shed', 'detector-1'],
+			['shed', 'detector-2'],
+			['pen', 'detector-1']
+		]
+	);
+	assert.deepEqual(frames[0].image, { width: 24, height: 16 });
+	assert.equal(frames[0].boxes[0].label, 'cow');
+	assert.equal(frames[0].rulePreset, 'people');
+	assert.deepEqual(frames[2].boxes, []);
+	assert.ok(!output.includes('jpeg'));
+	assert.ok(!output.includes('secret'));
+	await until(async () => (await readdir(path.join(directory, 'leases'))).length === 2);
+	await frame('detector-1', { publishedAt: new Date(Date.now() - 16000).toISOString() });
+	const stale = await chunk(reader);
+	assert.match(stale, /event: status/);
+	assert.match(stale, /"cameraId":"shed"/);
+	assert.ok(!stale.includes('"cameraId":"pen"'));
+	abort.abort();
+	assert.equal((await reader.read()).done, true);
+	await until(async () => (await readdir(path.join(directory, 'leases'))).length === 0);
+});

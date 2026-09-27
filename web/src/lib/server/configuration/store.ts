@@ -70,6 +70,30 @@ export class ConfigurationStore {
 		return this.enqueue(() => this.load());
 	}
 
+	/** Seed onboarding without starting monitoring or sending alerts. */
+	initialize(
+		document: Configuration,
+		publishFiles: () => Promise<void>,
+		resuming = false
+	): Promise<void> {
+		return this.enqueue(async () => {
+			const next = identifyCameras(normalizeConfiguration(document.config, document.app));
+			const current = await this.load();
+			if (resuming && isDeepStrictEqual(current, next)) return;
+			const recoveringApp = resuming && isDeepStrictEqual(await readJson(this.files.app), next.app);
+			if (
+				current.config.detectors.length ||
+				(!recoveringApp && (current.app.streams.length || current.app.telegrams.length))
+			)
+				throw new ConfigurationError(
+					'This application already has a setup. Import into a new installation to avoid replacing your settings.'
+				);
+			if (next.config.detectors.length) await this.runtime()?.validate(next.config);
+			await publishFiles();
+			await writeConfiguration(this.files, next);
+		});
+	}
+
 	private async persist(input: { config: unknown; app: unknown }): Promise<void> {
 		const { config, app } = identifyCameras(normalizeConfiguration(input.config, input.app));
 		const previous = await readJson<unknown>(this.files.config);

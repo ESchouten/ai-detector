@@ -12,15 +12,38 @@ internal sealed class UpdateMenuItem : ToolStripMenuItem
     private readonly Action<Action> shutdownThen;
     private readonly Action notify;
     private readonly CancellationTokenSource cancellation = new();
+    public ToolStripMenuItem PreviewItem { get; }
 
-    public UpdateMenuItem(VerifiedUpdateManager updater, Action<Action> shutdownThen, Action notify) : base("Check for Updates…")
+    public UpdateMenuItem(VerifiedUpdateManager updater, Action<Action> shutdownThen, Action notify, Action<bool> savePreviewPreference = null) : base("Check for Updates…")
     {
         this.updater = updater;
         this.shutdownThen = shutdownThen;
         this.notify = notify;
+        Image = MenuIcon.Create("\uE72C");
         Enabled = updater?.IsInstalled == true && !updater.IsPortable;
         if (!Enabled) Text = "Updates available in installed releases";
         else RefreshText();
+        if (Enabled && updater.ChannelPolicy != null)
+        {
+            PreviewItem = new ToolStripMenuItem("Include preview updates", MenuIcon.Create("\uF196"))
+            {
+                Checked = updater.ChannelPolicy.IncludePreviews
+            };
+            PreviewItem.Click += (_, _) =>
+            {
+                bool enabled = !PreviewItem.Checked;
+                try { savePreviewPreference(enabled); }
+                catch (Exception error)
+                {
+                    Console.Error.WriteLine(error);
+                    MessageBox.Show("Your update preference could not be saved. Please try again.", "AI Detector");
+                    return;
+                }
+                updater.ChannelPolicy.IncludePreviews = enabled;
+                PreviewItem.Checked = enabled;
+                RefreshText();
+            };
+        }
         Click += async (_, _) => await CheckAsync(interactive: true);
     }
 
@@ -31,6 +54,7 @@ internal sealed class UpdateMenuItem : ToolStripMenuItem
     {
         if (!Enabled) return;
         Enabled = false;
+        if (PreviewItem != null) PreviewItem.Enabled = false;
         try
         {
             if (updater.UpdatePendingRestart == null)
@@ -40,7 +64,9 @@ internal sealed class UpdateMenuItem : ToolStripMenuItem
                 if (cancellation.IsCancellationRequested) return;
                 if (update == null)
                 {
-                    if (interactive) MessageBox.Show("AI Detector is up to date.", "AI Detector");
+                    if (interactive) MessageBox.Show(updater.ChannelPolicy?.WaitingForOfficialRelease == true
+                        ? "No official release is available yet. Your installed preview will keep running."
+                        : "AI Detector is up to date.", "AI Detector");
                     return;
                 }
                 if (!interactive) { notify(); return; }
@@ -65,6 +91,7 @@ internal sealed class UpdateMenuItem : ToolStripMenuItem
         finally
         {
             Enabled = !cancellation.IsCancellationRequested;
+            if (PreviewItem != null) PreviewItem.Enabled = Enabled;
             RefreshText();
         }
     }

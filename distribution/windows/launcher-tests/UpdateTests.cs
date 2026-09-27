@@ -67,10 +67,29 @@ public sealed class UpdateTests
         Assert.That(item.Enabled, Is.False);
     }
 
+    [Test]
+    public async Task PreviewPreferenceIsSavedAndCannotChangeDuringAnUpdateCheck()
+    {
+        var policy = new UpdateChannelPolicy("40.0.0", "preview", true);
+        var manager = new TestUpdater(folder, policy);
+        bool? saved = null;
+        using var item = new UpdateMenuItem(manager, _ => Assert.Fail(), () => { }, value => saved = value);
+        using var preview = item.PreviewItem;
+        Assert.That(preview.Checked, Is.True);
+        var checking = item.CheckInBackgroundAsync();
+        Assert.That(preview.Enabled, Is.False);
+        manager.Check.SetResult(null);
+        await checking;
+        preview.PerformClick();
+        Assert.That(saved, Is.False);
+        Assert.That(policy.IncludePreviews, Is.False);
+        Assert.That(preview.Checked, Is.False);
+    }
+
     private static VelopackAsset Release() => new() { Version = SemanticVersion.Parse("1.0.1"), Type = VelopackAssetType.Full };
 
-    private sealed class TestUpdater(string folder) : VerifiedUpdateManager(
-        new SignedUpdateSource("https://example.invalid", "unused test key", Path.Combine(folder, "feed.json")),
+    private sealed class TestUpdater(string folder, UpdateChannelPolicy policy = null) : VerifiedUpdateManager(
+        new SignedUpdateSource("https://example.invalid", "unused test key", Path.Combine(folder, "feed.json"), policy: policy),
         new TestVelopackLocator("AIDetectorTest", "1.0.0", folder))
     {
         public TaskCompletionSource<UpdateInfo> Check { get; } = new();

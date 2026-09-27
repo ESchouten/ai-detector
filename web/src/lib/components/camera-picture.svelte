@@ -4,13 +4,21 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
 	import CardOverlay from './card-overlay.svelte';
+	import CameraDetections from './camera-detections.svelte';
 	import { cameraPreviewSlots } from '$lib/preview-slots';
 	let {
 		id,
 		label,
+		monitored = false,
 		overlay: overlayContent,
 		class: className
-	}: { id: string; label: string; overlay?: Snippet; class?: string } = $props();
+	}: {
+		id: string;
+		label: string;
+		monitored?: boolean;
+		overlay?: Snippet;
+		class?: string;
+	} = $props();
 	let failed = $state(false);
 	let version = $state(0);
 	let container: HTMLDivElement;
@@ -59,6 +67,7 @@
 					/>
 				{/key}
 			{/if}
+			{#if active && !failed && monitored}<CameraDetections {id} {label} />{/if}
 			{#if !active || failed}
 				<div
 					class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-muted px-4 pt-12 pb-4"

@@ -1,6 +1,9 @@
 name: Set up distribution toolchain
-description: Shared tools for desktop builds and tests; pnpm follows web/package.json.
+description: Shared tools for desktop builds and tests, with optional web compilation tools.
 inputs:
+  web:
+    description: Set up web compilation tools and install web dependencies
+    default: 'true'
   dotnet:
     description: Install the build/test SDK for the Windows launcher
     default: 'false'
@@ -31,17 +34,8 @@ runs:
         version-file: detector/pyproject.toml
         enable-cache: true
         cache-dependency-glob: detector/uv.lock
-    - uses: pnpm/action-setup@v6
-      with:
-        package_json_file: web/package.json
-    - uses: actions/setup-node@v7
-      with:
-        node-version: ${{ steps.versions.outputs.node }}
-        cache: pnpm
-        cache-dependency-path: web/pnpm-lock.yaml
-    - uses: oven-sh/setup-bun@v2
-      with:
-        bun-version: ${{ steps.versions.outputs.bun }}
+    - uses: ./.github/actions/setup-web
+      if: inputs.web == 'true'
     - uses: actions/setup-dotnet@v5
       if: inputs.dotnet == 'true'
       with:

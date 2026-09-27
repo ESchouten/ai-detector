@@ -1,4 +1,3 @@
-import hashlib
 import json
 import os
 import plistlib
@@ -60,7 +59,7 @@ class PackageTest(unittest.TestCase):
         self.ffmpeg.write_bytes(b"ffmpeg")
         self.ffmpeg.chmod(0o755)
 
-    def test_complete_download_and_checksum(self):
+    def test_complete_portable_archive(self):
         for platform, launcher, encoder in (
             ("windows-x64", "ai-detector-web.exe", "ffmpeg.exe"),
             ("macos-arm64", "ai-detector-web", "ffmpeg"),
@@ -188,12 +187,6 @@ class PackageTest(unittest.TestCase):
                             b"native launcher",
                         )
                     self.assertNotIn(prefix + "config.json", download.namelist())
-                with archive.open("rb") as stream:
-                    digest = hashlib.file_digest(stream, "sha256").hexdigest()
-                self.assertEqual(
-                    archive.with_suffix(".zip.sha256").read_text(encoding="utf-8"),
-                    f"{digest}  {archive.name}\n",
-                )
 
     def test_native_preview_omits_the_docker_image(self):
         folder = assemble_package(
@@ -268,7 +261,7 @@ class PackageTest(unittest.TestCase):
             )
         self.assertFalse(output.exists())
 
-    def test_preview_downloads_embed_only_the_preview_feed(self):
+    def test_preview_downloads_embed_both_channels_and_the_initial_preference(self):
         release = release_config("refs/tags/app/test-first", "example/app", 42, 123)
         for platform in ("macos-arm64", "windows-x64"):
             if platform == "macos-arm64" and os.name == "nt":
@@ -287,7 +280,9 @@ class PackageTest(unittest.TestCase):
                         mac_launcher=self.launcher,
                         windows_launcher=self.windows_launcher,
                         sparkle=self.sparkle,
-                        update_feed=release["feed_url"],
+                        update_feed=release["channels_url"],
+                        build_version=release["build_version"],
+                        update_channel=release["channel"],
                         sparkle_public_key=PUBLIC_KEY,
                     )
                 )
@@ -295,14 +290,18 @@ class PackageTest(unittest.TestCase):
                     info = plistlib.loads(
                         (folder / "AI Detector.app/Contents/Info.plist").read_bytes()
                     )
-                    self.assertEqual(info["CFBundleVersion"], "0.0.42")
+                    self.assertEqual(info["CFBundleVersion"], "42.0.0")
+                    self.assertEqual(info["CFBundleShortVersionString"], "0.0.42")
+                    self.assertEqual(info["AIUpdateChannel"], "preview")
                     self.assertEqual(
-                        info["SUFeedURL"], release["feed_url"] + "/appcast.xml"
+                        info["SUFeedURL"], release["channels_url"] + "/appcast.xml"
                     )
                     self.assertTrue(info["SURequireSignedFeed"])
                 else:
                     info = json.loads((folder / "application.json").read_text())
-                    self.assertEqual(info["updateFeed"], release["feed_url"])
+                    self.assertEqual(info["updateFeed"], release["channels_url"])
+                    self.assertEqual(info["updateChannel"], "preview")
+                    self.assertEqual(info["updateBuild"], "42.0.0")
                     self.assertEqual(info["updatePublicKey"], PUBLIC_KEY)
 
     def test_macos_rejects_the_unbundled_python_runtime(self):

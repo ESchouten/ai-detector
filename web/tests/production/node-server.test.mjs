@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { parse, stringify } from 'devalue';
 import ffmpeg from 'ffmpeg-static';
+import { unzipSync } from 'fflate';
 import { manifest } from '../../build/server/manifest.js';
 
 const entry = new URL('../../node-server.mjs', import.meta.url).href;
@@ -24,7 +25,9 @@ for (const [id, load] of Object.entries(manifest._.remotes)) {
 		'getCameraConnection',
 		'saveCamera',
 		'saveDetector',
-		'finishSetup'
+		'finishSetup',
+		'inspectInstallation',
+		'importInstallation'
 	]) {
 		if (name in remote) commands[name] = `/${manifest.appPath}/remote/${id}/${name}`;
 	}
@@ -46,6 +49,75 @@ function commandBody(input) {
 	});
 }
 const startBody = commandBody('native');
+
+test('production downloads export filtered recordings and a separate settings backup', async (t) => {
+	const { directory, base } = await startServer(t);
+	const source = 'rtsp://farmer:private-password@camera.example.test/live';
+	await writeFile(
+		path.join(directory, 'config.json'),
+		JSON.stringify({ detectors: [{ detection: { source } }] })
+	);
+	await writeFile(
+		path.join(directory, 'app.json'),
+		JSON.stringify({ streams: [{ label: 'Barn', source }] })
+	);
+	for (const day of ['2026-09-21', '2026-09-22']) {
+		const event = path.join(directory, 'detections', 'activity', 'approved', `${day}T12-00-00`);
+		await mkdir(event, { recursive: true });
+		await writeFile(
+			path.join(event, 'metadata.json'),
+			JSON.stringify({
+				timestamp: `${day}T12-00-00`,
+				validated: true,
+				confidence: 0.9,
+				confidences: { activity: 0.9 },
+				detections: 1,
+				start: `${day}T12:00:00`,
+				end: `${day}T12:00:02`,
+				duration: 2
+			})
+		);
+		await writeFile(path.join(event, 'clean.jpg'), `original ${day}`);
+	}
+	const response = await send(
+		`${base}/detections/export?from=2026-09-22&to=2026-09-22&type=activity&stage=approved`
+	);
+	assert.equal(response.status, 200);
+	assert.equal(response.headers.get('content-type'), 'application/zip');
+	assert.equal(response.headers.get('cache-control'), 'no-store');
+	assert.match(
+		response.headers.get('content-disposition'),
+		/^attachment; filename="AI-Detector-recordings-/
+	);
+	const files = unzipSync(new Uint8Array(await response.arrayBuffer()));
+	assert.deepEqual(Object.keys(files).sort(), [
+		'README.txt',
+		'detections/activity/approved/2026-09-22T12-00-00/clean.jpg',
+		'detections/activity/approved/2026-09-22T12-00-00/metadata.json'
+	]);
+	assert.equal(
+		Buffer.from(files['detections/activity/approved/2026-09-22T12-00-00/clean.jpg']).toString(),
+		'original 2026-09-22'
+	);
+	for (const query of [
+		'from=invalid',
+		'from=2026-09-23&to=2026-09-22',
+		'type=..%2Fprivate',
+		'stage=.pending'
+	])
+		assert.equal((await send(`${base}/detections/export?${query}`)).status, 400);
+	assert.equal((await send(`${base}/detections/export?to=2025-01-01`)).status, 404);
+	const backup = await send(`${base}/setup/backup`);
+	assert.equal(backup.status, 200);
+	assert.equal(backup.headers.get('cache-control'), 'no-store');
+	const settings = unzipSync(new Uint8Array(await backup.arrayBuffer()));
+	assert.deepEqual(Object.keys(settings).sort(), ['README.txt', 'app.json', 'config.json']);
+	assert.equal(
+		JSON.parse(Buffer.from(settings['config.json']).toString()).detectors[0].detection.source[0],
+		source
+	);
+	await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
+});
 
 // Unlike fetch, node:http permits the explicit LAN Host header used by this transport test.
 function send(url, { method = 'GET', headers, body } = {}) {
@@ -161,6 +233,84 @@ async function cameraSource(t, directory) {
 	});
 	return `http://127.0.0.1:${camera.address().port}/pen`;
 }
+
+test(
+	'production import seeds setup, preserves originals and stays stopped',
+	{ skip: process.platform === 'win32', timeout: 20000 },
+	async (t) => {
+		const { directory, base } = await startServer(t);
+		const previous = await mkdtemp(path.join(tmpdir(), 'previous-detector-'));
+		t.after(() => rm(previous, { recursive: true, force: true }));
+		const original = JSON.stringify({
+			detectors: [
+				{
+					detection: { source: 'rtsp://camera.example.test/live' },
+					yolo: { model: 'yolo11n.pt', strategy: 'LATEST' },
+					exporters: { disk: { directory: 'activity' } }
+				}
+			]
+		});
+		await writeFile(path.join(previous, 'config.json'), original);
+		await writeFile(
+			path.join(previous, 'app.json'),
+			JSON.stringify({
+				streams: [{ source: 'rtsp://camera.example.test/live', label: 'Imported barn' }],
+				detectors: [{ label: 'Existing detector' }]
+			})
+		);
+		const headers = {
+			Origin: base,
+			'Content-Type': 'application/json',
+			'x-sveltekit-pathname': '/setup',
+			'x-sveltekit-search': ''
+		};
+		async function command(name, input, extraHeaders = {}) {
+			return send(base + commands[name], {
+				method: 'POST',
+				headers: { ...headers, ...extraHeaders },
+				body: commandBody(input)
+			});
+		}
+		const blocked = await command('inspectInstallation', previous, {
+			Origin: 'https://other.example.test'
+		});
+		assert.equal(blocked.status, 403);
+		const remoteHost = await command('inspectInstallation', previous, {
+			Host: 'farm.example.test',
+			Origin: 'http://farm.example.test'
+		});
+		const remoteError = await remoteHost.json();
+		assert.equal(remoteError.type, 'error');
+		assert.equal(remoteError.status, 403);
+		const inspected = await command('inspectInstallation', previous);
+		assert.equal(inspected.status, 200, await inspected.clone().text());
+		const summary = parse((await inspected.json()).result);
+		assert.equal(summary.cameras, 1);
+		assert.equal(summary.detectors, 1);
+		const started = await command('importInstallation', {
+			id: summary.id,
+			keepRecordings: false,
+			previousAppClosed: true
+		});
+		assert.equal(started.status, 200, await started.clone().text());
+		for (let i = 0; i < 100; i++) {
+			try {
+				await readFile(path.join(directory, 'config.json'));
+				break;
+			} catch (error) {
+				if (error.code !== 'ENOENT') throw error;
+			}
+			await delay(20);
+		}
+		const saved = JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8'));
+		assert.deepEqual(saved.detectors[0].detection.source, ['rtsp://camera.example.test/live']);
+		assert.ok(!('strategy' in saved.detectors[0].yolo));
+		assert.match(await (await send(base + '/setup?step=cameras')).text(), /Imported barn/);
+		assert.match(await (await send(base + '/setup?step=detectors')).text(), /Existing detector/);
+		assert.equal(await readFile(path.join(previous, 'config.json'), 'utf8'), original);
+		await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
+	}
+);
 
 test(
 	'production detector setup discovers the bundled preset files',

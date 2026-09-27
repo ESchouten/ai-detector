@@ -238,7 +238,6 @@ def build_application(args) -> None:
         sign_app(folder / "AI Detector.app")
     smoke(folder)
     print(build_installer(folder, args.platform, args.version))
-    print(archive(folder))
 
 
 def native_platform() -> str:

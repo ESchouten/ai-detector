@@ -15,7 +15,7 @@ internal static class SignedFeed
     // Must match release_signatures.py; binds signatures to this app and update format.
     private static readonly byte[] Context = Encoding.UTF8.GetBytes("AI Detector Windows updates v1\n");
 
-    public static VelopackAssetFeed Verify(string envelope, string publicKey)
+    public static VelopackAssetFeed Verify(string envelope, string publicKey, UpdateChannelPolicy policy = null)
     {
         var signed = JObject.Parse(envelope);
         var payload = Convert.FromBase64String((string)signed["payload"]);
@@ -34,6 +34,7 @@ internal static class SignedFeed
                 !Regex.IsMatch(asset.SHA256 ?? "", @"\A[0-9a-fA-F]{64}\z"))
                 throw new InvalidDataException("Signed updates must include their identity, size and SHA256.");
         }
-        return feed;
+        return policy == null ? feed : VelopackAssetFeed.FromJson(
+            policy.Select(JObject.Parse(Encoding.UTF8.GetString(payload))).ToString());
     }
 }

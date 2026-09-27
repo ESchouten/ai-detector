@@ -27,11 +27,13 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v6
-      - uses: ./.github/actions/setup-distribution
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup-web
+      - name: Static checks
+        if: runner.os == 'Linux'
+        run: pnpm quality:static
         working-directory: web
-      - name: Check web application
-        run: pnpm quality
+      - name: Web and desktop behavior
+        run: pnpm test && pnpm test:desktop
         working-directory: web
       - name: Build production server
         if: runner.os == 'Linux'

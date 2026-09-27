@@ -5,7 +5,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from package import checksum, version_number
+from package import version_number
 
 ASSETS = Path(__file__).parent
 
@@ -42,7 +42,6 @@ def macos(folder: Path, version: str) -> Path:
             "show_sidebar": False,
         },
     )
-    checksum(image)
     return image
 
 
@@ -86,7 +85,6 @@ def windows(folder: Path, version: str) -> Path:
     subprocess.run(arguments, check=True)
     installer = folder.parent / f"AI-Detector-{version}-windows-x64-setup.exe"
     shutil.copy2(output / "AIDetector-win-Setup.exe", installer)
-    checksum(installer)
     return installer
 
 
@@ -106,7 +104,7 @@ def linux_tree(folder: Path, version: str) -> Path:
         f"Package: ai-detector\nVersion: {version}\nArchitecture: amd64\n"
         "Maintainer: AI Detector contributors\n"
         "Section: video\nPriority: optional\n"
-        "Depends: libc6 (>= 2.35), libstdc++6, libgl1, libglib2.0-0, libgomp1, xdg-utils, psmisc, gnome-startup-applications\n"
+        "Depends: libc6 (>= 2.35), libstdc++6, libgl1, libglib2.0-0, libgomp1, xdg-utils, psmisc, gnome-startup-applications, zenity\n"
         "Homepage: https://github.com/ESchouten/ai-detector\n"
         "Description: Local camera monitoring and recordings\n"
         " Bundled desktop application for Ubuntu 22.04 and 24.04 amd64.\n"
@@ -136,7 +134,6 @@ def linux(folder: Path, version: str) -> Path:
         ["dpkg-deb", "--root-owner-group", "--build", str(root), str(artifact)],
         check=True,
     )
-    checksum(artifact)
     return artifact
 
 

@@ -6,8 +6,7 @@ on:
       - "detector/**"
       - "config/**"
       - "ruff.toml"
-      - ".github/workflows/detector-tests.yml"
-      - ".github/workflows/detector.yaml"
+      - ".github/**"
   push:
     branches:
       - "**"
@@ -15,16 +14,16 @@ on:
       - "detector/**"
       - "config/**"
       - "ruff.toml"
-      - ".github/workflows/detector-tests.yml"
-      - ".github/workflows/detector.yaml"
+      - ".github/**"
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
 
 concurrency:
-  group: detector-tests-${{ github.ref }}
-  cancel-in-progress: true
+  group: detector-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')) }}
 
 jobs:
   test:
@@ -140,6 +139,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Schemas
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         run: uv run --no-sync generate-schema --check
 
       - name: Build wheel and source distribution

@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { Badge } from '$lib/components/ui/badge';
 	import CardOverlay from '$lib/components/card-overlay.svelte';
+	import CategoryBadge from '$lib/components/category-badge.svelte';
 	import type { Detection } from '$lib/detections';
 
 	const stageLabels = {
@@ -9,7 +10,7 @@
 		rejected: 'Rejected',
 		unvalidated: 'Unvalidated'
 	} as const;
-	let { entry }: { entry: Detection } = $props();
+	let { entry, colorSeed }: { entry: Detection; colorSeed?: string } = $props();
 	let isPlaying = $state(false);
 	const time = $derived(formatTime(entry.start));
 
@@ -42,9 +43,16 @@
 	</video>
 	{#snippet overlay()}
 		<div class="flex flex-wrap items-center gap-2">
-			<Badge variant="secondary">{entry.type.charAt(0).toUpperCase() + entry.type.slice(1)}</Badge>
+			<CategoryBadge
+				label={entry.type.charAt(0).toUpperCase() + entry.type.slice(1)}
+				seed={colorSeed ?? entry.type}
+			/>
 			<Badge
-				variant={entry.validation_error || entry.stage === 'rejected' ? 'destructive' : 'secondary'}
+				variant={entry.validation_error || entry.stage === 'rejected'
+					? 'destructive'
+					: entry.stage === 'approved'
+						? 'success'
+						: 'warning'}
 			>
 				{entry.validation_error ? 'Verification failed' : stageLabels[entry.stage]}
 			</Badge>

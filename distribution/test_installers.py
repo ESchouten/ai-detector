@@ -39,6 +39,7 @@ class InstallerTest(unittest.TestCase):
         )
         self.assertIn("Architecture: amd64", (root / "DEBIAN/control").read_text())
         self.assertIn("Version: 1.2.3", (root / "DEBIAN/control").read_text())
+        self.assertIn("zenity", (root / "DEBIAN/control").read_text())
         prerm = root / "DEBIAN/prerm"
         self.assertEqual(
             prerm.read_bytes(), (Path(__file__).parent / "linux/prerm").read_bytes()

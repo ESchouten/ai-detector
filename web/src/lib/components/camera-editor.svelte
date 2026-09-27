@@ -337,7 +337,7 @@
 
 	{#if saved && batchEnabled}
 		<div class="flex max-w-2xl flex-col gap-5">
-			<CameraPicture id={saved.id} {label} />
+			<CameraPicture id={saved.id} {label} monitored={saved.monitored} />
 			<div class="flex flex-wrap gap-3">
 				{#if nextBatchCamera}
 					<Button
@@ -541,12 +541,12 @@
 							<Badge variant="secondary" class="max-w-full text-left whitespace-normal"
 								>{label || 'Camera'}</Badge
 							>
-							<Badge variant="secondary" role="status">Connected</Badge>
+							<Badge variant="success" role="status">Connected</Badge>
 						</div>
 					{/snippet}
 				</CardOverlay>
 			{:else if initial && !changingConnection}
-				<CameraPicture id={initial.id} {label} />
+				<CameraPicture id={initial.id} {label} monitored={initial.monitored} />
 			{/if}
 
 			{#if error}<div tabindex="-1" bind:this={errorPanel} class="lg:col-span-2">

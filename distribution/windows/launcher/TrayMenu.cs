@@ -13,13 +13,13 @@ internal sealed class TrayMenu : ContextMenuStrip
     public TrayMenu(StartupPreference startup, Action<string> send)
     {
         this.startup = startup;
-        var open = new ToolStripMenuItem("Open dashboard", null, (_, _) => send("open"));
+        var open = new ToolStripMenuItem("Open dashboard", MenuIcon.Create("\uE80F"), (_, _) => send("open"));
         Items.Add(open);
         Items.Add(new ToolStripSeparator());
-        login = new ToolStripMenuItem("Start at login", null, (_, _) => ToggleStartup());
+        login = new ToolStripMenuItem("Open at login", MenuIcon.Create("\uE77B"), (_, _) => ToggleStartup());
         Items.Add(login);
         Items.Add(new ToolStripSeparator());
-        var quit = new ToolStripMenuItem("Quit AI Detector");
+        var quit = new ToolStripMenuItem("Quit AI Detector", MenuIcon.Create("\uE7E8"));
         quit.Click += (_, _) =>
         {
             quit.Text = "Stopping monitoring…";
@@ -28,8 +28,15 @@ internal sealed class TrayMenu : ContextMenuStrip
         };
         Items.Add(quit);
         Opening += (_, _) => UpdateStartup(() => login.Checked = startup.Enabled);
-        ShowImageMargin = false;
+        ShowImageMargin = true;
         ShowCheckMargin = true;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+            foreach (ToolStripItem item in Items) item.Image?.Dispose();
+        base.Dispose(disposing);
     }
 
     private void ToggleStartup() => UpdateStartup(() =>

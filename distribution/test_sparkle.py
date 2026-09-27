@@ -15,6 +15,7 @@ from unittest.mock import patch
 from fixtures.keys import PRIVATE_KEY, PUBLIC_KEY
 from package import macos_bundle
 from sign_macos import sign_app
+from update_channels import merge_macos, sparkle_signature
 from updates import SPARKLE, generate_macos_feed, mac_items
 
 
@@ -29,7 +30,11 @@ class SparkleTest(unittest.TestCase):
     def test_preview_delta_preserves_its_channel(self):
         self.check_delta("0.0.41", "0.0.42", "app-preview-updates")
 
-    def check_delta(self, previous: str, current: str, channel: str):
+    def test_a_newer_preview_can_follow_an_official_display_version(self):
+        self.check_delta("2.0.0", "0.0.43", "app-update-channels", ("42.0.0", "43.0.0"))
+
+    def check_delta(self, previous: str, current: str, channel: str, builds=None):
+        builds = builds or (previous, current)
         sdk = Path(os.environ["SPARKLE_SDK"])
         with tempfile.TemporaryDirectory(prefix="ai-detector-sparkle-") as temporary:
             root = Path(temporary)
@@ -41,7 +46,7 @@ class SparkleTest(unittest.TestCase):
             shutil.copyfile("/usr/bin/true", launcher)
             launcher.chmod(0o755)
             library = os.urandom(1024 * 1024)
-            for version in (previous, current):
+            for version, build in zip((previous, current), builds, strict=True):
                 payload = macos_bundle(
                     root / version,
                     launcher,
@@ -49,6 +54,7 @@ class SparkleTest(unittest.TestCase):
                     sdk,
                     f"https://example.test/{channel}",
                     PUBLIC_KEY,
+                    build_version=build,
                 )
                 (payload.parent / "Resources/library.bin").write_bytes(library)
                 (payload.parent / "Resources/web.txt").write_text(version)
@@ -91,14 +97,14 @@ class SparkleTest(unittest.TestCase):
                 ):
                     generate_macos_feed(
                         archives,
-                        version,
+                        build,
                         f"https://example.test/releases/{version}",
                         sdk,
                     )
                 if version == previous:
                     previous_feed = (archives / "appcast.xml").read_bytes()
             feed = archives / "appcast.xml"
-            self.check_release_urls(feed, previous_feed, previous, current)
+            self.check_release_urls(feed, previous_feed, builds[0], builds[1], current)
             subprocess.run(
                 [
                     str(sdk / "bin/sign_update"),
@@ -153,36 +159,60 @@ class SparkleTest(unittest.TestCase):
             self.assertEqual(
                 (applied / "Contents/Resources/web.txt").read_text(), current
             )
-            info = plistlib.loads((applied / "Contents/Info.plist").read_bytes())
-            self.assertEqual(info["CFBundleVersion"], current)
-            self.assertEqual(
-                info["SUFeedURL"], f"https://example.test/{channel}/appcast.xml"
+            self.check_bundle(applied, builds[1], current, channel)
+            self.check_rejected_delta(
+                sdk, key, artifact, delta.attrib[f"{{{SPARKLE}}}edSignature"]
             )
-            self.assertTrue(
-                (
-                    applied / "Contents/Frameworks/Sparkle.framework/Versions/Current"
-                ).is_symlink()
-            )
-            subprocess.run(
-                ["codesign", "--verify", "--deep", "--strict", str(applied)],
-                check=True,
-                capture_output=True,
-            )
-            artifact.write_bytes(artifact.read_bytes() + b"tampered")
-            rejected = subprocess.run(
-                [
-                    str(sdk / "bin/sign_update"),
-                    "--verify",
-                    "--ed-key-file",
-                    str(key),
-                    str(artifact),
-                    delta.attrib[f"{{{SPARKLE}}}edSignature"],
-                ],
-                capture_output=True,
-            )
-            self.assertNotEqual(rejected.returncode, 0)
 
-    def check_release_urls(self, feed, previous_feed, previous, current):
+            self.check_channel_signature(sdk, feed)
+
+    def check_bundle(self, applied, build, version, channel):
+        info = plistlib.loads((applied / "Contents/Info.plist").read_bytes())
+        self.assertEqual(info["CFBundleVersion"], build)
+        self.assertEqual(info["CFBundleShortVersionString"], version)
+        self.assertEqual(
+            info["SUFeedURL"], f"https://example.test/{channel}/appcast.xml"
+        )
+        self.assertTrue(
+            (
+                applied / "Contents/Frameworks/Sparkle.framework/Versions/Current"
+            ).is_symlink()
+        )
+        subprocess.run(
+            ["codesign", "--verify", "--deep", "--strict", str(applied)],
+            check=True,
+            capture_output=True,
+        )
+
+    def check_rejected_delta(self, sdk, key, artifact, signature):
+        artifact.write_bytes(artifact.read_bytes() + b"tampered")
+        rejected = subprocess.run(
+            [
+                str(sdk / "bin/sign_update"),
+                "--verify",
+                "--ed-key-file",
+                str(key),
+                str(artifact),
+                signature,
+            ],
+            capture_output=True,
+        )
+        self.assertNotEqual(rejected.returncode, 0)
+
+    def check_channel_signature(self, sdk, feed):
+        # Changing channel metadata must invalidate the combined feed signature.
+        combined = feed.with_name("channels.xml")
+        combined.write_bytes(merge_macos(feed.read_bytes(), None, "preview"))
+        with patch.dict(os.environ, {"SPARKLE_PRIVATE_KEY": PRIVATE_KEY}):
+            sparkle_signature(sdk, combined)
+            sparkle_signature(sdk, combined, verify=True)
+            combined.write_bytes(
+                combined.read_bytes().replace(b">preview<", b">stable<")
+            )
+            with self.assertRaises(subprocess.CalledProcessError):
+                sparkle_signature(sdk, combined, verify=True)
+
+    def check_release_urls(self, feed, previous_feed, previous, current, display):
         items = dict(mac_items(feed.read_bytes()))
         self.assertEqual(
             items[previous].attrib,
@@ -190,5 +220,5 @@ class SparkleTest(unittest.TestCase):
         )
         self.assertEqual(
             items[current].get("url"),
-            f"https://example.test/releases/{current}/{current}.zip",
+            f"https://example.test/releases/{display}/{display}.zip",
         )

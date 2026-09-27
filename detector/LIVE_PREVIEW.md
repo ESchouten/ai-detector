@@ -18,10 +18,10 @@ Each rule/source pair has one retained record. Starting a publisher removes prev
 
 ## Web stream
 
-`GET /cameras/<stable-camera-id>/live` resolves the camera and every configured rule on the server, then streams same-origin SSE. The shared TypeScript contracts are in `web/src/lib/live-preview.ts`.
+`GET /cameras/live?camera=<stable-camera-id>` resolves each requested camera and every configured rule on the server, then streams same-origin SSE. Repeat the `camera` parameter for multiple cameras. Visible camera cards share one connection, preserving browser connection slots for video and navigation. The shared TypeScript contracts are in `web/src/lib/live-preview.ts`.
 
-* `frame` contains the version 1 record plus the current rule label.
-* `status` contains a waiting or unavailable message, usually with the affected rule ID and label.
+* `frame` contains the version 1 record plus the camera ID, current rule label and optional preset. Its image contains only width and height; JPEG bytes stay on the server. Boxes scale to the independently playing camera video, with letterboxing preserved. They represent the latest analyzed result, so moving objects can move beyond their boxes between inferences.
+* `status` contains a waiting or unavailable message, usually with the affected camera ID, rule ID and label. It clears the corresponding boxes; an empty detection result also clears previous boxes for that rule.
 * `heartbeat` contains `{}` when neither pictures nor statuses changed. The browser can distinguish an unchanged picture from a stalled connection.
 
 The server accepts a frame only for the current session and matching source/rule. A session becomes unavailable after six seconds without a heartbeat. A frame becomes unavailable after the larger of fifteen seconds or three configured inference intervals plus five seconds. Freshness uses publication time; file footage may have historical capture timestamps. A changed run ID closes the stream so reconnecting resolves current configuration and labels. Slow consumers skip intermediate records instead of building an unbounded response queue.

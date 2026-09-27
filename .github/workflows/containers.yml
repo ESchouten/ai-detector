@@ -1,0 +1,159 @@
+name: Container releases
+
+on:
+  push:
+    tags: ['detector/v*', 'web/v*']
+  workflow_dispatch:
+    inputs:
+      component:
+        description: Images to publish from the selected branch
+        type: choice
+        options: [all, detector, web]
+        default: all
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  # Different version tags can update the same latest image.
+  group: container-releases
+  cancel-in-progress: false
+
+jobs:
+  detector:
+    name: Detector / ${{ matrix.variant }} / ${{ matrix.platform }}
+    if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/detector/v')) || (github.event_name == 'workflow_dispatch' && inputs.component != 'web')
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+            variant: default
+            arm64_base: latest-nvidia-arm64
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            variant: default
+            arm64_base: latest-nvidia-arm64
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            variant: jetpack6
+            arm64_base: latest-jetson-jetpack6
+    steps:
+      - uses: actions/checkout@v6
+      - uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+          docker-images: true
+      - uses: ./.github/actions/setup-container
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Image tags and labels
+        id: meta
+        uses: docker/metadata-action@v5
+        with: &detector-metadata
+          images: ghcr.io/eschouten/ai-detector
+          flavor: |
+            latest=${{ github.event_name == 'push' && 'auto' || 'false' }}
+            suffix=${{ matrix.variant == 'jetpack6' && '-jetpack6' || '' }},onlatest=true
+          tags: |
+            type=semver,pattern={{version}},match=^detector/v(.*)$
+            type=ref,event=branch
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: detector
+          platforms: ${{ matrix.platform }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            REF_NAME=${{ github.ref_name }}
+            ULTRALYTICS_TAG_ARM64=${{ matrix.arm64_base }}
+          outputs: type=image,name=ghcr.io/eschouten/ai-detector,push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ matrix.variant }}-${{ matrix.platform }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.variant }}-${{ matrix.platform }},ignore-error=true
+      - name: Export digest
+        id: digest
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/digests"
+          touch "$RUNNER_TEMP/digests/${DIGEST#sha256:}"
+          echo "platform=${PLATFORM//\//-}" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: digests-${{ matrix.variant }}-${{ steps.digest.outputs.platform }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  detector-manifest:
+    name: Publish detector / ${{ matrix.variant }}
+    needs: detector
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [default, jetpack6]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v7
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-${{ matrix.variant }}-*
+          merge-multiple: true
+      - uses: ./.github/actions/setup-container
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Image tags and labels
+        id: meta
+        uses: docker/metadata-action@v5
+        with: *detector-metadata
+      - name: Publish manifest
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          arguments=()
+          while IFS= read -r tag; do arguments+=(-t "$tag"); done < <(jq -r '.tags[]' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+          for digest in *; do arguments+=("ghcr.io/eschouten/ai-detector@sha256:$digest"); done
+          docker buildx imagetools create "${arguments[@]}"
+      - name: Inspect published image
+        env:
+          IMAGE_VERSION: ${{ steps.meta.outputs.version }}
+        run: docker buildx imagetools inspect "ghcr.io/eschouten/ai-detector:$IMAGE_VERSION"
+
+  web:
+    name: Web / amd64 and arm64
+    if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/web/v')) || (github.event_name == 'workflow_dispatch' && inputs.component != 'detector')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+      - uses: docker/setup-qemu-action@v3
+      - uses: ./.github/actions/setup-container
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Image tags and labels
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/eschouten/ai-detector-web
+          flavor: latest=${{ github.event_name == 'push' && 'auto' || 'false' }}
+          tags: |
+            type=semver,pattern={{version}},match=^web/v(.*)$
+            type=ref,event=branch
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: web/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web,ignore-error=true

@@ -44,6 +44,23 @@ class UpdateFeedTest(unittest.TestCase):
             with self.subTest(version=version), self.assertRaises(ValueError):
                 newer_than(version, ["1.0.0"])
 
+    def test_official_version_bump_cannot_reuse_an_older_build_number(self):
+        (self.output / "windows-updates").mkdir()
+        (self.output / "windows-updates/releases.win.json").write_text('{"Assets":[]}')
+        (self.output / "previous-windows-feed.json").write_text(
+            json.dumps({"Assets": [{"Version": "1.0.0", "BuildVersion": "43.0.0"}]})
+        )
+        with self.assertRaisesRegex(ValueError, "must be newer"):
+            windows(
+                self.output,
+                "2.0.0",
+                self.url,
+                PRIVATE_KEY,
+                PUBLIC_KEY,
+                "42.0.0",
+                "stable",
+            )
+
     def test_first_release_has_no_delta_base(self):
         prepare(self.output, "windows-x64", "1.0.0", self.url)
         self.assertEqual(list((self.output / "windows-updates").iterdir()), [])

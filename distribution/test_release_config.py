@@ -20,6 +20,16 @@ class ReleaseConfigTest(unittest.TestCase):
         self.assertEqual(release["version"], "1.2.3")
         self.assertEqual(release["channel"], "stable")
         self.assertEqual(release["feed_tag"], "app-updates")
+
+    def test_build_versions_order_stable_and_preview_releases_together(self):
+        stable = self.config("refs/tags/app/v2.0.0", run_number=42)
+        preview = self.config("refs/tags/app/test-next", run_number=43)
+        newer_than(preview["build_version"], [stable["build_version"]])
+        self.assertEqual(stable["channels_url"], preview["channels_url"])
+        self.assertEqual(preview["version"], "0.0.43")
+
+    def test_stable_asset_urls_are_immutable(self):
+        release = self.config("refs/tags/app/v1.2.3")
         self.assertEqual(
             release["release_url"],
             "https://github.com/example/detector/releases/download/app%2Fv1.2.3",

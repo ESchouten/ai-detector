@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
-	import { getDetectionPage, getTypes } from '$lib/remote/detections.remote';
+	import { getDetectionPage, getTypes, getRecordingPresets } from '$lib/remote/detections.remote';
 	import { STAGES } from '$lib/schema';
 	import { detectionKey, mergeDetections, type Detection } from '$lib/detections';
 	import { resolve } from '$app/paths';
 	import { onMount, untrack } from 'svelte';
 	import DetectorRuntime from '$lib/components/detector-runtime.svelte';
+	import ExportRecordings from '$lib/components/export-recordings.svelte';
 	import { getCameras } from '$lib/remote/stream.remote';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
@@ -19,7 +20,9 @@
 
 	const type = $derived(page.url.searchParams.get('type') || undefined);
 	const stage = $derived(STAGES.find((value) => value === page.url.searchParams.get('stage')));
-	const [types, cameras] = $derived(await Promise.all([getTypes(), getCameras()]));
+	const [types, cameras, recordingPresets] = $derived(
+		await Promise.all([getTypes(), getCameras(), getRecordingPresets()])
+	);
 
 	let entries = $state<Detection[]>([]);
 	let isLoading = $state(false);
@@ -193,11 +196,14 @@
 <svelte:head><title>Recordings · AI Detector</title></svelte:head>
 
 <section class="flex flex-col gap-6">
-	<header class="flex flex-col gap-2">
-		<h1 class="settings-heading">Recordings</h1>
-		<p class="settings-description">
-			Review recorded events and play each clip. New recordings appear automatically.
-		</p>
+	<header class="flex flex-wrap items-start justify-between gap-4">
+		<div class="flex flex-col gap-2">
+			<h1 class="settings-heading">Recordings</h1>
+			<p class="settings-description">
+				Review recorded events and play each clip. New recordings appear automatically.
+			</p>
+		</div>
+		<ExportRecordings {type} {stage} />
 	</header>
 	<DetectorRuntime configured={cameras.some((camera) => camera.monitored)} compact />
 	{#if hasNewRecordings}<Button variant="outline" onclick={() => loadNextPage(true)}
@@ -258,7 +264,7 @@
 					</div>
 					<div class="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
 						{#each dayGroup[1] as entry (detectionKey(entry))}
-							<DetectionCard {entry} />
+							<DetectionCard {entry} colorSeed={recordingPresets[entry.type]} />
 						{/each}
 					</div>
 				</section>

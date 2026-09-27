@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
@@ -9,11 +10,15 @@
 	import SetupReview from '$lib/components/setup-review.svelte';
 	import DetectorRuntime from '$lib/components/detector-runtime.svelte';
 	import SetupSteps from '$lib/components/setup-steps.svelte';
+	import ImportInstallation from '$lib/components/import-installation.svelte';
+	import SettingsBackup from '$lib/components/settings-backup.svelte';
+	import { Separator } from '$lib/components/ui/separator';
 	import { getCameras } from '$lib/remote/stream.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { setupStep } from '$lib/setup';
 
 	const choices = $derived(await Promise.all([getCameras(), getDetectors()]));
+	let importing = $state(false);
 	const cameras = $derived(choices[0]);
 	const detectors = $derived(choices[1]);
 	const step = $derived(
@@ -23,27 +28,41 @@
 			detectors.length
 		)
 	);
+
+	async function imported() {
+		importing = false;
+		await Promise.all([getCameras().refresh(), getDetectors().refresh()]);
+		await goto(resolve('/setup?step=cameras&imported=1'));
+	}
 </script>
 
 <svelte:head><title>Setup · AI Detector</title></svelte:head>
 <section class="settings-page">
-	<SetupSteps current={step} hasCameras={cameras.length > 0} />
+	<SetupSteps current={step} hasCameras={cameras.length > 0} disabled={importing} />
+	{#if page.url.searchParams.has('imported')}
+		<p role="status" class="text-sm text-muted-foreground">
+			Your existing setup is ready to review. Previous recordings are available in Recordings.
+			Monitoring is stopped until you start it.
+		</p>
+	{/if}
 	{#if step === 'cameras'}
-		<header class="flex flex-wrap items-start justify-between gap-4">
-			<div class="flex flex-col gap-2">
-				<h1 class="settings-heading">Add your cameras</h1>
-				<p class="settings-description">
-					Connect your cameras. You’ll choose what to detect in the next step.
-				</p>
-			</div>
-			{#if cameras.length}<Button href={resolve('/streams/add?setup=1')} variant="outline"
-					><Plus data-icon="inline-start" />Add camera</Button
-				>{/if}
-		</header>
+		{#if !importing}
+			<header class="flex flex-wrap items-start justify-between gap-4">
+				<div class="flex flex-col gap-2">
+					<h1 class="settings-heading">Add your cameras</h1>
+					<p class="settings-description">
+						Connect your cameras. You’ll choose what to detect in the next step.
+					</p>
+				</div>
+				{#if cameras.length}<Button href={resolve('/streams/add?setup=1')} variant="outline"
+						><Plus data-icon="inline-start" />Add camera</Button
+					>{/if}
+			</header>
+		{/if}
 		{#if cameras.length}
 			<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
 				{#each cameras as camera (camera.id)}
-					<CameraPicture id={camera.id} label={camera.label}>
+					<CameraPicture id={camera.id} label={camera.label} monitored={camera.monitored}>
 						{#snippet overlay()}
 							<div class="flex items-start justify-between gap-3">
 								<Badge variant="secondary" class="min-w-0 shrink text-left whitespace-normal"
@@ -70,19 +89,22 @@
 				</p>
 			</div>
 		{:else}
-			<Empty.Root class="rounded-lg border">
-				<Empty.Header
-					><Empty.Title>Connect your first camera</Empty.Title><Empty.Description
-						>Keep the camera powered on and connected to the same network as this computer. Have its
-						username and password ready.</Empty.Description
-					></Empty.Header
-				>
-				<Empty.Content
-					><Button href={resolve('/streams/add?setup=1')}
-						>Find and add cameras <ArrowRight data-icon="inline-end" /></Button
-					></Empty.Content
-				>
-			</Empty.Root>
+			{#if !importing}
+				<Empty.Root class="rounded-lg border">
+					<Empty.Header
+						><Empty.Title>Connect your first camera</Empty.Title><Empty.Description
+							>Keep the camera powered on and connected to the same network as this computer. Have
+							its username and password ready.</Empty.Description
+						></Empty.Header
+					>
+					<Empty.Content
+						><Button href={resolve('/streams/add?setup=1')}
+							>Find and add cameras <ArrowRight data-icon="inline-end" /></Button
+						></Empty.Content
+					>
+				</Empty.Root>
+			{/if}
+			<ImportInstallation bind:opened={importing} oncomplete={imported} />
 		{/if}
 	{:else if step === 'detectors'}
 		<header class="flex flex-wrap items-start justify-between gap-4">
@@ -155,5 +177,9 @@
 			<DetectorRuntime configured={detectors.length > 0} />
 			<SetupReview />
 		</div>
+	{/if}
+	{#if !importing && (cameras.length || detectors.length)}
+		<Separator />
+		<div><SettingsBackup /></div>
 	{/if}
 </section>

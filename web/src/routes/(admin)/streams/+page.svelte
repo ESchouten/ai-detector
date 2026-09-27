@@ -4,7 +4,8 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import * as Empty from '$lib/components/ui/empty';
 	import * as Alert from '$lib/components/ui/alert';
-	import { cameraRuleNames } from '$lib/detector-editor';
+	import CategoryBadge from '$lib/components/category-badge.svelte';
+	import { cameraStatusBadge } from '$lib/camera-status';
 	import { getCameras } from '$lib/remote/stream.remote';
 	import { getDetectorPresets } from '$lib/remote/detector.remote';
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
@@ -40,39 +41,24 @@
 	<div class="grid gap-4 lg:grid-cols-2">
 		{#each cameras as camera (camera.id)}
 			{@const status = runtime.cameras.find((item) => item.id === camera.id)}
+			{@const badge = cameraStatusBadge(status, runtime, stale)}
 			<div class="flex min-w-0 flex-col gap-3">
-				<CameraPicture id={camera.id} label={camera.label}>
+				<CameraPicture id={camera.id} label={camera.label} monitored={camera.monitored}>
 					{#snippet overlay()}
 						<div class="flex items-start justify-between gap-3">
 							<div class="flex min-w-0 flex-wrap items-center gap-2">
 								<Badge variant="secondary" class="max-w-full text-left whitespace-normal"
 									>{camera.label}</Badge
 								>
-								<Badge
-									variant={stale || status?.error || status?.recordingError
-										? 'destructive'
-										: 'secondary'}
-									>{!camera.monitored
-										? 'View only'
-										: stale || !runtime.managed
-											? 'Status unavailable'
-											: status?.error || status?.recordingError
-												? 'Needs attention'
-												: status?.state === 'monitoring'
-													? 'Monitoring'
-													: status?.state === 'paused' || runtime.readiness === 'idle'
-														? 'Paused'
-														: status?.state === 'offline' || status?.state === 'failed'
-															? 'Needs attention'
-															: runtime.managed
-																? 'Preparing'
-																: 'Status unavailable'}</Badge
+								<Badge variant={camera.monitored ? badge.variant : 'secondary'}
+									>{camera.monitored ? badge.label : 'View only'}</Badge
 								>
-								{#if camera.monitored}
-									<Badge variant="secondary" class="max-w-full text-left whitespace-normal"
-										>{cameraRuleNames(camera.rules, presets)}</Badge
-									>
-								{/if}
+								{#each camera.rules as rule (rule.label)}
+									<CategoryBadge
+										label={presets.find((preset) => preset.id === rule.preset)?.name ?? rule.label}
+										seed={rule.preset ?? rule.label}
+									/>
+								{/each}
 							</div>
 							<div class="pointer-events-auto shrink-0">
 								<CameraMenu

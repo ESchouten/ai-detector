@@ -13,6 +13,7 @@
 	import { startDetector, stopDetector } from '$lib/remote/runtime.remote';
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import type { RuntimeMode } from '$lib/runtime';
+	import { cameraStatusBadge } from '$lib/camera-status';
 	let { configured, compact = false }: { configured: boolean; compact?: boolean } = $props();
 	const monitor = useRuntimeStatus();
 	// Query.current is client-only; the awaited value also supports server rendering.
@@ -55,14 +56,6 @@
 					: labels[runtime.readiness]
 	);
 
-	const cameraLabels = {
-		monitoring: 'Monitoring',
-		paused: 'Paused',
-		receiving: 'Preparing detection',
-		connecting: 'Connecting',
-		offline: 'Needs attention',
-		failed: 'Needs attention'
-	};
 	async function control(action: 'start' | 'stop') {
 		requestError = '';
 		controlling = true;
@@ -179,7 +172,8 @@
 			{/if}
 			{#if !compact}
 				<p class="text-sm text-muted-foreground">
-					Monitoring continues when you close this browser tab.
+					Monitoring continues when you close this browser tab. With Open at login enabled, it
+					resumes automatically after you log in, unless you pause it here.
 				</p>
 
 				<details bind:open={troubleshootingOpen}>
@@ -190,6 +184,7 @@
 						{#if runtime.cameras.length && runtime.readiness !== 'idle'}
 							<div class="flex flex-col gap-3">
 								{#each runtime.cameras as camera, index (camera.id)}
+									{@const badge = cameraStatusBadge(camera, runtime, stale)}
 									{#if index > 0}<Separator />{/if}
 									<div class="flex min-w-0 items-start gap-3">
 										<Video
@@ -199,22 +194,7 @@
 										<div class="flex min-w-0 flex-1 flex-col gap-1.5">
 											<div class="flex flex-wrap items-center justify-between gap-2">
 												<p class="min-w-0 text-sm font-medium break-words">{camera.label}</p>
-												<Badge
-													variant={stale ||
-													camera.error ||
-													camera.recordingError ||
-													['offline', 'failed'].includes(camera.state)
-														? 'destructive'
-														: camera.state === 'monitoring'
-															? 'secondary'
-															: 'outline'}
-												>
-													{stale
-														? 'Status unavailable'
-														: camera.error || camera.recordingError
-															? 'Needs attention'
-															: cameraLabels[camera.state]}
-												</Badge>
+												<Badge variant={badge.variant}>{badge.label}</Badge>
 											</div>
 											{#if camera.state === 'receiving' && !stale && !camera.error}
 												<p class="text-sm text-muted-foreground">

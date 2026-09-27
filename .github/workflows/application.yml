@@ -9,7 +9,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: application-${{ startsWith(github.ref, 'refs/tags/app/v') && 'stable' || 'preview' }}
+  # Both channels publish one combined feed. Keep releases ordered across channels.
+  group: application-releases
   cancel-in-progress: false
 
 jobs:
@@ -19,10 +20,12 @@ jobs:
     timeout-minutes: 5
     outputs:
       version: ${{ steps.release.outputs.version }}
+      build_version: ${{ steps.release.outputs.build_version }}
       tag: ${{ steps.release.outputs.tag }}
       channel: ${{ steps.release.outputs.channel }}
       feed_tag: ${{ steps.release.outputs.feed_tag }}
       feed_url: ${{ steps.release.outputs.feed_url }}
+      channels_url: ${{ steps.release.outputs.channels_url }}
       release_url: ${{ steps.release.outputs.release_url }}
     steps:
       - uses: actions/checkout@v6
@@ -49,16 +52,21 @@ jobs:
           sys.exit(bool(missing))
           PY
 
-  checks:
+  web-checks:
     needs: configuration
     uses: ./.github/workflows/web-tests.yml
 
+  detector-checks:
+    needs: configuration
+    uses: ./.github/workflows/detector-tests.yml
+
   image:
     name: Matching NVIDIA image
-    needs: [configuration, checks]
+    needs: [configuration, web-checks, detector-checks]
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
+      contents: read
       packages: write
     outputs:
       digest: ${{ steps.build.outputs.digest }}
@@ -68,12 +76,9 @@ jobs:
         with:
           tool-cache: true
           docker-images: true
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
+      - uses: ./.github/actions/setup-container
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker/build-push-action@v6
         id: build
         with:
@@ -87,7 +92,7 @@ jobs:
 
   native:
     name: ${{ matrix.platform }} binaries
-    needs: [configuration, checks]
+    needs: [configuration, web-checks, detector-checks]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
     strategy: &native-platforms
@@ -114,6 +119,9 @@ jobs:
         shell: bash
     env: &release-environment
       APP_VERSION: ${{ needs.configuration.outputs.version }}
+      APP_BUILD_VERSION: ${{ needs.configuration.outputs.build_version }}
+      UPDATE_CHANNEL: ${{ needs.configuration.outputs.channel }}
+      CHANNELS_URL: ${{ needs.configuration.outputs.channels_url }}
       UPDATE_FEED: ${{ needs.configuration.outputs.feed_url }}
       RELEASE_URL: ${{ needs.configuration.outputs.release_url }}
       SPARKLE_PUBLIC_KEY: ${{ vars.SPARKLE_PUBLIC_KEY }}
@@ -125,14 +133,10 @@ jobs:
       - uses: ./.github/actions/setup-distribution
         with:
           dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
-      - name: Build and test Windows launcher
-        if: runner.os == 'Windows'
-        run: |
-          python distribution/build.py launcher --platform '${{ matrix.platform }}' --version "$APP_VERSION" --output "$RUNNER_TEMP"
-          dotnet restore distribution/windows/launcher-tests/Launcher.Tests.csproj --locked-mode
-          dotnet test distribution/windows/launcher-tests/Launcher.Tests.csproj --no-restore --configuration Release
-          dotnet restore distribution/windows/update-tests/Update.Tests.csproj --locked-mode
-          dotnet test distribution/windows/update-tests/Update.Tests.csproj --no-restore --configuration Release
+      - uses: ./.github/actions/build-launcher
+        with:
+          version: ${{ env.APP_VERSION }}
+          dotnet-tests: ${{ runner.os == 'Windows' && 'true' || 'false' }}
       - name: Build detector
         run: python distribution/build.py detector --platform '${{ matrix.platform }}' --version "$GITHUB_REF_NAME"
       - name: Install release signing tools
@@ -140,19 +144,16 @@ jobs:
       - name: Install desktop launcher test tools
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
-      - name: Install web dependencies
-        working-directory: web
-        run: pnpm install --frozen-lockfile
-      - name: Compile macOS menu bar launcher
-        if: runner.os == 'macOS'
-        run: python distribution/build.py launcher --platform '${{ matrix.platform }}' --version "$APP_VERSION" --output "$RUNNER_TEMP"
+      - name: Distribution lint and formatting
+        if: runner.os == 'Linux'
+        run: |
+          uv run --project detector --no-sync ruff check distribution
+          uv run --project detector --no-sync ruff format --check distribution
       - name: Check distribution scripts
         env:
           SPARKLE_SDK: ${{ runner.temp }}/sparkle
           WINDOWS_LAUNCHER: ${{ runner.temp }}/windows-launcher
         run: |
-          uv run --project detector --no-sync ruff check distribution
-          uv run --project detector --no-sync ruff format --check distribution
           uv run --project detector --no-sync python -m unittest discover -s distribution -p 'test_*.py'
           bun test ./web/desktop/host.test.ts
       - name: Smoke test packaged detector
@@ -206,6 +207,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-distribution
         with:
+          web: 'false'
           dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
       - name: Install packaging tools
         run: python -m pip install --requirement distribution/requirements.txt
@@ -230,7 +232,7 @@ jobs:
           if [ '${{ runner.os }}' = macOS ]; then launcher=(--mac-launcher "native-build/mac-launcher" --sparkle "native-build/sparkle"); fi
           if [ '${{ runner.os }}' = Windows ]; then launcher=(--windows-launcher "native-build/windows-launcher"); fi
           if [ '${{ runner.os }}' != Linux ]; then
-            launcher+=(--update-feed "$UPDATE_FEED")
+            launcher+=(--update-feed "$CHANNELS_URL" --update-channel "$UPDATE_CHANNEL" --build-version "$APP_BUILD_VERSION")
             launcher+=(--sparkle-public-key "$SPARKLE_PUBLIC_KEY")
           fi
           python distribution/package.py --detector 'native-build/detector/dist/${{ matrix.detector }}' --web "native-build/web/dist/ai-detector-web${{ matrix.suffix }}" --ffmpeg "$ffmpeg" --output application-dist --platform '${{ matrix.platform }}' --version "$APP_VERSION" "${launcher[@]}" --image 'ghcr.io/eschouten/ai-detector@${{ needs.image.outputs.digest }}'
@@ -241,31 +243,24 @@ jobs:
         run: python distribution/smoke.py 'application-dist/AI-Detector-${{ matrix.platform }}'
       - name: Retrieve previous release for delta generation
         if: runner.os != 'Linux'
-        run: python distribution/updates.py prepare --platform '${{ matrix.platform }}' --version "$APP_VERSION" --feed-url "$UPDATE_FEED"
+        run: python distribution/updates.py prepare --platform '${{ matrix.platform }}' --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --feed-url "$UPDATE_FEED"
       - name: Build native installer
         run: python distribution/installers.py 'application-dist/AI-Detector-${{ matrix.platform }}' --platform '${{ matrix.platform }}' --version "$APP_VERSION"
       - name: Generate signed Sparkle feed and deltas
         if: runner.os == 'macOS'
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
-        run: python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
+        run: python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
       - name: Sign Velopack feed and package hashes
         if: runner.os == 'Windows'
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
-        run: python distribution/updates.py publish --platform windows-x64 --version "$APP_VERSION" --release-url "$RELEASE_URL"
-      - name: Refresh archives and checksums
-        run: |
-          python distribution/build.py archive 'application-dist/AI-Detector-${{ matrix.platform }}'
-          python - <<'PYARCHIVE'
-          import sys
-          from pathlib import Path
-          sys.path.insert(0, 'distribution')
-          from package import checksum
-          for pattern in ('*.dmg', '*.exe', '*.deb', '*.nupkg', '*.delta'):
-              for artifact in Path('application-dist').glob(pattern):
-                  checksum(artifact)
-          PYARCHIVE
+        run: python distribution/updates.py publish --platform windows-x64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --release-url "$RELEASE_URL"
+      - name: Publish both update choices in one signed feed
+        if: runner.os != 'Linux'
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: python distribution/update_channels.py --platform '${{ matrix.platform }}' --channel "$UPDATE_CHANNEL" --feed-url "$UPDATE_FEED" --build-version "$APP_BUILD_VERSION" --sdk "native-build/sparkle"
       - name: Upload installer download
         uses: actions/upload-artifact@v7
         with:
@@ -274,17 +269,17 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
-      - name: Upload supporting release files
+      - name: Upload updater files
+        if: runner.os != 'Linux'
         uses: actions/upload-artifact@v7
         with:
-          name: release-support-${{ matrix.platform }}
+          name: update-files-${{ matrix.platform }}
           path: |
-            application-dist/*.zip
-            application-dist/*.sha256
             application-dist/*.nupkg
             application-dist/*.delta
             application-dist/appcast.xml
             application-dist/releases.win.json
+            application-dist/channel-updates/*
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
@@ -302,12 +297,24 @@ jobs:
           pattern: AI-Detector-*
           path: downloads
           merge-multiple: true
-      - name: Download supporting release files
+      - name: Download updater files
         uses: actions/download-artifact@v7
         with:
-          pattern: release-support-*
+          pattern: update-files-*
           path: downloads
           merge-multiple: true
+      - name: Keep updater feeds separate from versioned downloads
+        run: |
+          mkdir update-feeds
+          mv downloads/appcast.xml downloads/releases.win.json update-feeds/
+          mv downloads/channel-updates update-feeds/channels
+      - name: Zip the Windows installer for download
+        working-directory: downloads
+        run: |
+          for installer in *-windows-x64-setup.exe; do
+            python3 -m zipfile --create "${installer%.exe}.zip" "$installer"
+            rm "$installer"
+          done
       - uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.RELEASE_TOKEN || github.token }}
@@ -320,13 +327,15 @@ jobs:
           files: downloads/*
           draft: true
           body: |
-            Update channel: **${{ needs.configuration.outputs.channel }}**. Installed Mac and Windows applications receive updates only from this channel. Switching channels requires installing that channel's download. Existing previews without an updater need this installer once.
+            Update channel: **${{ needs.configuration.outputs.channel }}**. Use **Include preview updates** in the desktop menu to receive both previews and official releases. Turn it off for official releases only. Windows can return to an older official release; macOS waits for a newer official release. Existing previews without an updater need this installer once.
 
-            Install the download for your computer: the Windows setup program, macOS disk image (drag AI Detector to Applications), or Ubuntu desktop package. Open **AI Detector** and follow the setup. Python, the web server and FFmpeg are included.
+            Install the download for your computer: extract the Windows ZIP and run its setup program, open the macOS disk image and drag AI Detector to Applications, or install the Ubuntu desktop package. Open **AI Detector** and follow the setup. Python, the web server and FFmpeg are included.
 
             Closing the browser leaves monitoring active. Pause explicitly when you want monitoring to stay paused. Desktop startup runs after you sign in; monitoring before login is not promised.
 
-            Updates are authenticated using AI Detector’s own signing key. These downloads have no Windows publisher certificate or Apple notarization; OS warnings or execution restrictions can apply. Supported packaging targets: Windows 11 24H2+ x64, macOS 14+ Apple Silicon, Ubuntu 22.04/24.04 amd64. GPU and camera qualification remains specific to the tested hardware. Portable ZIPs remain available for technical users.
+            Updates are authenticated using AI Detector’s own signing key. These downloads have no Windows publisher certificate or Apple notarization; OS warnings or execution restrictions can apply. Supported packaging targets: Windows 11 24H2+ x64, macOS 14+ Apple Silicon, Ubuntu 22.04/24.04 amd64. GPU and camera qualification remains specific to the tested hardware.
+
+            Choose one download: `*-windows-x64-setup.zip`, `*-macos-arm64.dmg`, or `*-linux-amd64.deb`. The `.nupkg` and `.delta` assets are used by automatic updates; you do not need to download them yourself.
       - name: Publish application before promoting update feeds
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
@@ -339,4 +348,8 @@ jobs:
           if ! gh release view "$UPDATE_FEED_TAG" >/dev/null 2>&1; then
             gh release create "$UPDATE_FEED_TAG" --title "Application $UPDATE_CHANNEL update feeds" --notes "Signed $UPDATE_CHANNEL desktop updater metadata. Installers are attached to versioned application releases." --prerelease --latest=false
           fi
-          gh release upload "$UPDATE_FEED_TAG" downloads/appcast.xml downloads/releases.win.json --clobber
+          gh release upload "$UPDATE_FEED_TAG" update-feeds/appcast.xml update-feeds/releases.win.json --clobber
+          if ! gh release view app-update-channels >/dev/null 2>&1; then
+            gh release create app-update-channels --title "Application update channels" --notes "Signed desktop updater metadata for official and preview releases." --prerelease --latest=false
+          fi
+          gh release upload app-update-channels update-feeds/channels/appcast.xml update-feeds/channels/releases.win.json --clobber

@@ -28,7 +28,26 @@ export const frameSchema = v.object({
 });
 
 /** The web app adds the configured label to the detector's frame. */
-export type LivePreviewFrame = v.InferOutput<typeof frameSchema> & { ruleLabel: string };
+export type LivePreviewFrame = v.InferOutput<typeof frameSchema> & {
+	ruleLabel: string;
+	rulePreset?: string;
+};
+
+/** Geometry only: camera cards keep playing their independent live video. */
+export type CameraOverlayFrame = Omit<LivePreviewFrame, 'image'> & {
+	cameraId: string;
+	image: { width: number; height: number };
+};
+
+export function detectionBoxLabel(box: LivePreviewFrame['boxes'][number]): string {
+	return [
+		box.label,
+		box.confidence === null ? null : `${Math.round(box.confidence * 100)}%`,
+		box.trackId === null ? null : `#${box.trackId}`
+	]
+		.filter((part) => part !== null)
+		.join(' · ');
+}
 
 export interface LivePreviewStatus {
 	version: 1;
@@ -36,4 +55,6 @@ export interface LivePreviewStatus {
 	message: string;
 	ruleId?: string;
 	ruleLabel?: string;
+	rulePreset?: string;
+	cameraId?: string;
 }

@@ -254,7 +254,7 @@ Regenerate committed schemas with `uv run --no-sync generate-schema` when changi
 
 After building an executable, run `uv run --no-sync python -m tests.support.smoke_package /path/to/executable`. This checks a generated ONNX model downloaded from a local HTTP server through Ultralytics, two-source tracking, structured verification through a local fake API, JPEG/MP4 archives, HTTP delivery, and EOF shutdown. Repeat with `--model-format pt` to check a generated, untrained Torch checkpoint through download, loading and export. Both checks use temporary local assets; no external weights are downloaded. A `--version` check alone does not load the inference or provider libraries.
 
-Native executable release workflows use Python 3.11. Use that interpreter when reproducing executable builds; support for newer Python versions in source installations does not establish compatibility with every frozen build. The [standalone release workflow](../.github/workflows/detector.yaml) and [combined application workflow](../.github/workflows/application.yml) contain the packaging flags.
+Native application builds use Python 3.11. Use that interpreter when reproducing executable builds; support for newer Python versions in source installations does not establish compatibility with every frozen build. The [combined application workflow](../.github/workflows/application.yml) calls [distribution/build.py](../distribution/build.py) for packaging. Individual detector executables can still be built locally with its `detector` command. The [container workflow](../.github/workflows/containers.yml) publishes amd64/arm64 and JetPack 6 images; `detector/v*` tags no longer publish separate native downloads.
 
 ## License
 

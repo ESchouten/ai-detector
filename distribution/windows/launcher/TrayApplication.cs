@@ -17,7 +17,7 @@ internal sealed class TrayApplication : ApplicationContext
     private Action afterShutdown;
     public int ExitCode { get; private set; }
 
-    public TrayApplication(StartupPreference startup, string executable, bool background, VerifiedUpdateManager updater)
+    public TrayApplication(StartupPreference startup, string executable, bool background, VerifiedUpdateManager updater, Action<bool> savePreviewPreference)
     {
         web = new DesktopProcess(executable, background);
         using var artwork = Assembly.GetExecutingAssembly().GetManifestResourceStream("app.ico");
@@ -29,8 +29,9 @@ internal sealed class TrayApplication : ApplicationContext
         });
         tray = new NotifyIcon { Icon = icon, Text = "AI Detector — Open dashboard", ContextMenuStrip = menu };
         updates = new UpdateMenuItem(updater, apply => { afterShutdown = apply; Stop(); }, () =>
-            tray.ShowBalloonTip(5000, "AI Detector update available", "Choose Check for Updates in the AI Detector menu.", ToolTipIcon.Info));
+            tray.ShowBalloonTip(5000, "AI Detector update available", "Choose Check for Updates in the AI Detector menu.", ToolTipIcon.Info), savePreviewPreference);
         menu.Items.Insert(3, updates);
+        if (updates.PreviewItem != null) menu.Items.Insert(3, updates.PreviewItem);
         tray.DoubleClick += (_, _) => web.OpenDashboard();
         updateTimer.Tick += async (_, _) => await updates.CheckInBackgroundAsync();
         Application.Idle += Run;

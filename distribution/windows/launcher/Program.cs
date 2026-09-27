@@ -42,9 +42,16 @@ internal static class Program
         var metadata = JObject.Parse(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "application.json")));
         var feed = (string)metadata["updateFeed"];
         var updateCache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AI Detector", "updates");
+        using var updatePreferences = Registry.CurrentUser.CreateSubKey(@"Software\AI Detector");
+        var channel = (string)metadata["updateChannel"];
+        bool previews = Convert.ToInt32(updatePreferences.GetValue("IncludePreviewUpdates", channel == "preview" ? 1 : 0)) != 0;
+        // Persist the initial choice so installing a different channel cannot reset it.
+        updatePreferences.SetValue("IncludePreviewUpdates", previews ? 1 : 0);
+        var policy = feed == null ? null : new UpdateChannelPolicy((string)metadata["updateBuild"], channel, previews);
         var updater = feed == null ? null : new VerifiedUpdateManager(
-            new SignedUpdateSource(feed, (string)metadata["updatePublicKey"], SignedUpdateSource.CachePath(updateCache, feed)));
-        using var desktop = new TrayApplication(preference, web, args.Contains("--background"), updater);
+            new SignedUpdateSource(feed, (string)metadata["updatePublicKey"], SignedUpdateSource.CachePath(updateCache, feed), policy: policy));
+        using var desktop = new TrayApplication(preference, web, args.Contains("--background"), updater,
+            enabled => updatePreferences.SetValue("IncludePreviewUpdates", enabled ? 1 : 0));
         Application.Run(desktop);
         return desktop.ExitCode;
     }
@@ -62,7 +69,7 @@ internal static class Program
         // Retarget a previous installation's login entry to the stable 'current' path.
         if (startup.Enabled) { startup.Enabled = true; return; }
         if (MessageBox.Show(
-            "Open AI Detector when you sign in? Recommended for daily monitoring. Detection resumes when it is enabled in the dashboard.",
+            "Open AI Detector when you sign in? Once you start monitoring in setup, it resumes automatically whenever you sign in, unless you pause it in the dashboard.",
             "AI Detector", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             startup.Enabled = true;
     }

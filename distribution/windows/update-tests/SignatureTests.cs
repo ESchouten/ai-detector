@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AIDetector.Desktop;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto.Signers;
 using Velopack;
 using Velopack.Exceptions;
 using Velopack.Locators;
@@ -174,6 +176,96 @@ public sealed class SignatureTests
         Assert.That(downloader.LastFeedUrl, Is.EqualTo(previewUrl + "/releases.win.json"));
         Assert.That(File.ReadAllText(stableCache), Is.EqualTo(envelope));
         Assert.That(preview.ReadCachedFeed().Assets.Length, Is.EqualTo(2));
+    }
+
+    [TestCase("0.0.51", "51.0.0", "preview", "2.0.0", "50.0.0", "stable")]
+    [TestCase("2.0.0", "52.0.0", "stable", "0.0.51", "51.0.0", "preview")]
+    [TestCase("0.0.51", "52.0.0", "stable", "0.0.51", "51.0.0", "preview")]
+    public async Task PreviewOptInSelectsTheNewestBuildAcrossBothVersionSequences(
+        string targetVersion, string targetBuild, string targetChannel,
+        string installedVersion, string installedBuild, string installedChannel)
+    {
+        var policy = new UpdateChannelPolicy(installedBuild, installedChannel, true);
+        var manager = ChannelManager(policy, installedVersion,
+            ChannelAsset(installedVersion, installedBuild, installedChannel),
+            ChannelAsset(targetVersion, targetBuild, targetChannel));
+        var update = await manager.CheckForUpdatesAsync();
+        Assert.That(update.TargetFullRelease.Version.ToString(), Is.EqualTo(targetVersion));
+        Assert.That(update.DeltasToTarget, Is.Empty);
+    }
+
+    [Test]
+    public async Task OptingOutCanDownloadAndDeferAnOlderOfficialRelease()
+    {
+        var policy = new UpdateChannelPolicy("51.0.0", "preview", false);
+        var manager = ChannelManager(policy, "0.0.51",
+            ChannelAsset("0.0.20", "20.0.0", "stable"), ChannelAsset("0.0.51", "51.0.0", "preview"));
+        var update = await manager.CheckForUpdatesAsync();
+        Assert.That(update.TargetFullRelease.Version.ToString(), Is.EqualTo("0.0.20"));
+        await manager.DownloadUpdatesAsync(update);
+        // Recreate the manager offline, as happens after quitting before applying.
+        downloader.Envelope = null;
+        var restarted = new VerifiedUpdateManager(new SignedUpdateSource(
+            "https://example.invalid", publicKey, cache, downloader, policy), Locator(version: "0.0.51"));
+        Assert.That(restarted.UpdatePendingRestart.Version.ToString(), Is.EqualTo("0.0.20"));
+        var pending = await restarted.VerifyPendingUpdateAsync();
+        Assert.That(pending.Version.ToString(), Is.EqualTo("0.0.20"));
+        Assert.That(pending.FileName, Is.EqualTo("AIDetector-0.0.20-full.nupkg"));
+    }
+
+    [Test]
+    public async Task DisablingPreviewsIgnoresAnAlreadyDownloadedPreview()
+    {
+        var policy = new UpdateChannelPolicy("40.0.0", "stable", true);
+        var manager = ChannelManager(policy, "1.0.0",
+            ChannelAsset("1.0.0", "40.0.0", "stable"), ChannelAsset("0.0.51", "51.0.0", "preview"));
+        await manager.DownloadUpdatesAsync(await manager.CheckForUpdatesAsync());
+        Assert.That(manager.UpdatePendingRestart, Is.Not.Null);
+        policy.IncludePreviews = false;
+        Assert.That(manager.UpdatePendingRestart, Is.Null);
+        Assert.That(await manager.CheckForUpdatesAsync(), Is.Null);
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task ChannelSelectionCannotRollBackAnInstalledOfficialBuild(bool previews)
+    {
+        var manager = ChannelManager(new UpdateChannelPolicy("60.0.0", "stable", previews), "2.0.0",
+            ChannelAsset("2.0.0", "50.0.0", "stable"), ChannelAsset("0.0.51", "51.0.0", "preview"));
+        Assert.That(await manager.CheckForUpdatesAsync(), Is.Null);
+    }
+
+    [Test]
+    public async Task OptingOutBeforeTheFirstOfficialReleaseKeepsTheInstalledPreview()
+    {
+        var manager = ChannelManager(new UpdateChannelPolicy("40.0.0", "preview", false), "0.0.40",
+            ChannelAsset("0.0.51", "51.0.0", "preview"));
+        Assert.That(await manager.CheckForUpdatesAsync(), Is.Null);
+    }
+
+    private JObject ChannelAsset(string version, string build, string channel) => new()
+    {
+        ["PackageId"] = "AIDetector", ["Type"] = "Full", ["Version"] = version,
+        ["FileName"] = $"https://example.invalid/{channel}/AIDetector-{version}-full.nupkg",
+        ["SHA256"] = release.SHA256, ["Size"] = package.Length,
+        ["BuildVersion"] = build, ["ReleaseChannel"] = channel,
+    };
+
+    private VerifiedUpdateManager ChannelManager(UpdateChannelPolicy policy, string version, params JObject[] assets)
+    {
+        var payload = Encoding.UTF8.GetBytes(new JObject { ["Assets"] = new JArray(assets) }.ToString());
+        // Public RFC 8032 fixture seed, shared with distribution/fixtures/keys.py.
+        var seed = Convert.FromHexString("9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60");
+        var signer = new Ed25519Signer();
+        signer.Init(true, new Ed25519PrivateKeyParameters(seed, 0));
+        var context = Encoding.UTF8.GetBytes("AI Detector Windows updates v1\n");
+        signer.BlockUpdate(context, 0, context.Length);
+        signer.BlockUpdate(payload, 0, payload.Length);
+        downloader.Envelope = new JObject
+        {
+            ["payload"] = Convert.ToBase64String(payload), ["signature"] = Convert.ToBase64String(signer.GenerateSignature())
+        }.ToString();
+        return new VerifiedUpdateManager(new SignedUpdateSource("https://example.invalid", publicKey, cache, downloader, policy), Locator(version: version));
     }
 
     private VelopackAsset Pending() => new()

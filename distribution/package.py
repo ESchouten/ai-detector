@@ -2,7 +2,6 @@
 
 import argparse
 import base64
-import hashlib
 import json
 import os
 import plistlib
@@ -26,14 +25,6 @@ Automatic opening at desktop login is different from monitoring before login.
 """
 
 
-def checksum(artifact: Path) -> Path:
-    with artifact.open("rb") as stream:
-        digest = hashlib.file_digest(stream, "sha256").hexdigest()
-    destination = artifact.with_suffix(artifact.suffix + ".sha256")
-    destination.write_text(f"{digest}  {artifact.name}\n", encoding="utf-8")
-    return destination
-
-
 def archive(folder: Path) -> Path:
     if not folder.is_dir():
         raise FileNotFoundError(f"Application folder does not exist: {folder}")
@@ -50,7 +41,6 @@ def archive(folder: Path) -> Path:
                     output.writestr(info, os.readlink(file))
                 else:
                     output.write(file, relative)
-    checksum(result)
     return result
 
 
@@ -79,6 +69,8 @@ def macos_bundle(
     sparkle: Path | None = None,
     update_feed: str | None = None,
     sparkle_public_key: str | None = None,
+    build_version: str | None = None,
+    update_channel: str = "stable",
 ) -> Path:
     contents = folder / "AI Detector.app" / "Contents"
     binary = contents / "MacOS"
@@ -108,6 +100,7 @@ def macos_bundle(
             raise ValueError("Sparkle public key must contain 32 bytes")
         updates = {
             "SUFeedURL": update_feed.rstrip("/") + "/appcast.xml",
+            "AIUpdateChannel": update_channel,
             "SUPublicEDKey": sparkle_public_key,
             "SUEnableAutomaticChecks": True,
             "SUAllowsAutomaticUpdates": False,
@@ -126,7 +119,7 @@ def macos_bundle(
                 "CFBundleIconFile": "AI Detector.icns",
                 "CFBundlePackageType": "APPL",
                 "CFBundleShortVersionString": version_number(version),
-                "CFBundleVersion": version_number(version),
+                "CFBundleVersion": version_number(build_version or version),
                 "LSMinimumSystemVersion": "14.0",
                 "LSUIElement": True,
                 "NSHighResolutionCapable": True,
@@ -162,6 +155,8 @@ class PackageInputs:
     sparkle: Path | None = None
     update_feed: str | None = None
     sparkle_public_key: str | None = None
+    build_version: str | None = None
+    update_channel: str = "stable"
 
 
 def validate_inputs(inputs: PackageInputs) -> None:
@@ -170,6 +165,10 @@ def validate_inputs(inputs: PackageInputs) -> None:
     if inputs.platform == "windows-x64" and inputs.windows_launcher is None:
         raise ValueError("Windows packages require the compiled native launcher")
     version_number(inputs.version)
+    if inputs.build_version:
+        version_number(inputs.build_version)
+    if inputs.update_channel not in {"stable", "preview"}:
+        raise ValueError("Update channel must be stable or preview")
     if inputs.update_feed and not inputs.update_feed.startswith("https://"):
         raise ValueError("Release update feeds must use HTTPS")
     if inputs.update_feed and (
@@ -196,6 +195,8 @@ def assemble_macos(inputs: PackageInputs, folder: Path) -> None:
         inputs.sparkle,
         inputs.update_feed,
         inputs.sparkle_public_key,
+        inputs.build_version,
+        inputs.update_channel,
     )
     shutil.copytree(
         inputs.detector, payload.parent / "Helpers/Detector.app", symlinks=True
@@ -227,6 +228,8 @@ def copy_payload_files(
     if inputs.update_feed and inputs.platform == "windows-x64":
         metadata["updateFeed"] = inputs.update_feed
         metadata["updatePublicKey"] = inputs.sparkle_public_key
+        metadata["updateChannel"] = inputs.update_channel
+        metadata["updateBuild"] = version_number(inputs.build_version or inputs.version)
     (payload / "application.json").write_text(
         json.dumps(metadata) + "\n", encoding="utf-8"
     )
@@ -255,6 +258,10 @@ if __name__ == "__main__":
         "--platform", choices=["windows-x64", "macos-arm64", "linux-x64"], required=True
     )
     parser.add_argument("--version", default="0.0.0")
+    parser.add_argument("--build-version")
+    parser.add_argument(
+        "--update-channel", choices=["stable", "preview"], default="stable"
+    )
     parser.add_argument("--mac-launcher", type=Path)
     parser.add_argument(
         "--sparkle", type=Path, help="Extracted, pinned Sparkle distribution"

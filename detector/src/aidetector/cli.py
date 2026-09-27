@@ -141,6 +141,10 @@ def main(argv: list[str] | None = None) -> int:
         )
         logger.info("Configuration: %s; data directory: %s", config_path, directory)
         if getattr(sys, "frozen", False):
+            import certifi
+
+            # urllib must not depend on the build machine's OpenSSL CA path.
+            os.environ.setdefault("SSL_CERT_FILE", certifi.where())
             # PyInstaller selects a fresh temporary font cache on every launch.
             # Matplotlib stores bundled font paths relatively, so reuse is safe.
             os.environ["MPLCONFIGDIR"] = str(directory / "cache" / "matplotlib")

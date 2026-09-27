@@ -165,4 +165,6 @@ Live analyzed pictures are opt-in for standalone detector runs through `--live-p
 
 Model preparation now reports download/conversion/loading stages and an explicit `preparation_failed` observation for expected download failures. The launcher preserves that retry guidance after exit and resets it for a new run. These additions do not change model files, configuration, event rules or archive formats.
 
+Packaged executables now use their bundled certifi roots for verified HTTPS downloads instead of relying on certificate files from the build computer's Python installation. An explicit `SSL_CERT_FILE` remains supported. Model URL failures distinguish HTTP responses, certificate verification, DNS resolution and timeouts in both the dashboard and logs, without exposing URL credentials. Existing model caches and configuration remain valid; failed downloads can be retried after updating the app.
+
 The new complete application download owns detector startup from the browser; separately managed CLI and Compose installations keep their existing lifecycle. `--control-stdin` opts into graceful `stop`/EOF control from the parent application, including Windows. No stdin handling is added to ordinary runs. Data remains under the configured runtime directory. See the [application guide](../README.md) for download targets and data locations.

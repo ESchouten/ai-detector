@@ -32,6 +32,8 @@ cli -> bootstrap -> runtime + concrete adapters
 - `bootstrap`: translates validated configuration into domain policies and constructs integrations. No container or automatic registration.
 - `cli`: argument parsing, logging, config errors, signal handling, and exit status. Importing it is safe.
 
+At frozen-executable startup, the CLI selects the bundled certifi roots for Python's default TLS context, unless `SSL_CERT_FILE` is explicitly configured. HTTPS model downloads therefore do not depend on the build machine's OpenSSL certificate path. Ultralytics still owns transfers and completeness checks; the model-assets adapter reports safe HTTP, certificate, DNS and timeout diagnostics without printing credential-bearing transport exceptions.
+
 Within `adapters`, folders group integrations by responsibility:
 
 ```text
@@ -190,7 +192,7 @@ Capture startup is inside the pool's cleanup scope: if starting a later thread f
 4. A local reference flow that reads a generated video, runs deterministic inference/verification, writes real JPEG/MP4 files, and validates their metadata. A generated ONNX graph exercises real Ultralytics tracking and session lifecycle without downloading weights.
 5. Ruff, format, ty, import architecture checks, package build, CLI smoke checks, and distribution configuration review.
 6. Baseline and replacement measurements using the same local input; distinguish inference startup from steady-state processing. Hardware-specific providers require the corresponding platform and must not be described as locally verified on macOS.
-7. Built-executable smoke tests with a generated ONNX graph and an untrained Torch checkpoint, two sources, a local fake AI/HTTP server, real encoders, archives, health monitoring, and normal EOF shutdown. The ONNX variant checks tracking; the checkpoint variant checks the distribution's load/export path. Release builds run both before artifact publication.
+7. Built-executable smoke tests with a generated ONNX graph and an untrained Torch checkpoint, two sources, a local fake AI/HTTPS server, real encoders, archives, health monitoring, and normal EOF shutdown. A temporary test CA exercises verified HTTPS without external services. The ONNX variant checks tracking; the checkpoint variant checks the distribution's load/export path. Release builds run both before artifact publication.
 
 ## Third-party integration decisions
 

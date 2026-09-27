@@ -2,9 +2,12 @@
 
 import hashlib
 import logging
+import socket
+import ssl
 import tempfile
 from pathlib import Path, PurePosixPath
 from threading import get_ident
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
@@ -14,6 +17,27 @@ MODEL_DOWNLOAD_HELP = (
     "connection and try again. Your camera settings are saved. "
     "If it still fails, the model download may be unavailable."
 )
+
+
+def _download_failure(error: ConnectionError) -> str:
+    # Ultralytics chains its transport error, whose text can contain credentials.
+    cause = error.__cause__
+    if isinstance(cause, HTTPError):
+        return f"The model server returned HTTP {cause.code}. Try again later or check the model URL."
+    if isinstance(cause, URLError):
+        cause = cause.reason
+    if isinstance(cause, ssl.SSLCertVerificationError):
+        return (
+            "The model server's HTTPS certificate could not be verified. "
+            "Check this computer's date and time and update AI Detector."
+        )
+    if isinstance(cause, socket.gaierror):
+        return "The model server's address could not be resolved. Check the internet connection and model URL."
+    if isinstance(cause, TimeoutError):
+        return "The connection to the model server timed out. Check the internet connection and try again."
+    return (
+        "Check the model URL and this computer's internet connection, then try again."
+    )
 
 
 def _download(url: str, target: Path, report_status: ReportStatus) -> None:
@@ -34,11 +58,15 @@ def _download(url: str, target: Path, report_status: ReportStatus) -> None:
         safe_download(
             url, file=target, unzip=False, progress=False, retry=0, min_bytes=0
         )
-    except ConnectionError:
-        report_status(StatusEvent("preparation_failed", message=MODEL_DOWNLOAD_HELP))
-        raise RuntimeError(
-            "Model download failed; check its URL and connectivity"
-        ) from None
+    except ConnectionError as error:
+        reason = _download_failure(error)
+        report_status(
+            StatusEvent(
+                "preparation_failed",
+                message=f"Model download failed. {reason} Your camera settings are saved.",
+            )
+        )
+        raise RuntimeError(f"Model download failed: {reason}") from None
     finally:
         sdk_logger.removeFilter(other_threads)
 
@@ -78,7 +106,10 @@ def resolve_model_path(
         # The SDK may return without a file after rejecting an empty/partial body.
         if not pending.is_file():
             report_status(
-                StatusEvent("preparation_failed", message=MODEL_DOWNLOAD_HELP)
+                StatusEvent(
+                    "preparation_failed",
+                    message="The model download was incomplete. Your camera settings are saved; try again.",
+                )
             )
             raise RuntimeError("Model download did not produce a complete file")
         pending.replace(target)

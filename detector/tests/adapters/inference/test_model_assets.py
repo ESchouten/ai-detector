@@ -1,19 +1,30 @@
 import io
+import json
 import logging
+import os
 import socket
+import sys
 import traceback
+import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
+from urllib.error import URLError
 
+import certifi
+import cv2
+import numpy as np
 import pytest
 from ultralytics.utils import downloads
 
 from aidetector.adapters.inference.model_assets import resolve_model_path
 from aidetector.bootstrap import run_application
+from aidetector.cli import main
 from aidetector.configuration import Config
+from tests.support.https import enable_https
+from tests.support.onnx_model import write_detection_model
 
 _CONNECT = socket.socket.connect
 
@@ -25,10 +36,12 @@ class Asset:
     declared_size: int | None = None
 
 
-@pytest.fixture
-def asset_server(monkeypatch):
+@pytest.fixture(params=["http", "https"])
+def asset_server(monkeypatch, tmp_path, request):
     assets: dict[str, Asset] = {}
     requests: list[str] = []
+    # urllib caches its first TLS context; each test has an independent test CA.
+    monkeypatch.setattr(urllib.request, "_opener", None)
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
@@ -54,10 +67,14 @@ def asset_server(monkeypatch):
     # Do not let the SDK's error diagnostic probe Internet connectivity.
     monkeypatch.setattr(downloads, "is_online", lambda: True)
     with ThreadingHTTPServer(("127.0.0.1", 0), Handler) as server:
+        if request.param == "https":
+            certificate = tmp_path / "server-ca.pem"
+            enable_https(server, certificate)
+            monkeypatch.setenv("SSL_CERT_FILE", str(certificate))
         thread = Thread(target=server.serve_forever)
         thread.start()
         try:
-            yield f"http://127.0.0.1:{server.server_port}", assets, requests
+            yield f"{request.param}://127.0.0.1:{server.server_port}", assets, requests
         finally:
             server.shutdown()
             thread.join()
@@ -170,9 +187,101 @@ def test_startup_reports_actionable_download_failure_without_losing_its_cause(
     failure = observations[-1]
     assert failure.kind == "preparation_failed"
     assert failure.rule_id == "detector-1"
-    assert "internet" in failure.message
+    assert "HTTP 503" in failure.message
     assert "secret" not in repr(observations)
     assert all(event.kind != "ready" for event in observations)
+
+
+@pytest.mark.parametrize("asset_server", ["https"], indirect=True)
+@pytest.mark.parametrize("custom_ca", [False, True])
+def test_packaged_startup_downloads_over_https_with_bundled_or_custom_certificates(
+    tmp_path, monkeypatch, asset_server, custom_ca, capsys
+):
+    base, assets, requests = asset_server
+    # Substitute a test CA for the public bundle; use real TLS and SDK inference.
+    certificate = os.environ["SSL_CERT_FILE"]
+    if not custom_ca:
+        monkeypatch.delenv("SSL_CERT_FILE")
+        monkeypatch.setattr(certifi, "where", lambda: certificate)
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setenv("MPLCONFIGDIR", str(tmp_path / "matplotlib"))
+    model = tmp_path / "fixture.onnx"
+    write_detection_model(model)
+    assets["/model.onnx"] = Asset(model.read_bytes())
+    image = tmp_path / "input.png"
+    assert cv2.imwrite(str(image), np.zeros((64, 64, 3), dtype=np.uint8))
+    config = tmp_path / "config.json"
+    config.write_text(
+        json.dumps(
+            {
+                "onnx": {"provider": "CPUExecutionProvider"},
+                "detectors": [
+                    {
+                        "detection": {"source": str(image)},
+                        "yolo": {"model": base + "/model.onnx", "imgsz": 64},
+                    }
+                ],
+            }
+        )
+    )
+    assert main(["--config", str(config), "--status-json"]) == 0
+    assert requests == ["/model.onnx"]
+    records = [
+        json.loads(line.removeprefix("AIDETECTOR_STATUS "))
+        for line in capsys.readouterr().out.splitlines()
+        if line.startswith("AIDETECTOR_STATUS ")
+    ]
+    assert any(record["event"] == "inference" for record in records)
+
+
+@pytest.mark.parametrize("asset_server", ["https"], indirect=True)
+def test_untrusted_https_certificate_is_rejected_with_a_useful_diagnostic(
+    tmp_path, monkeypatch, asset_server
+):
+    base, _, requests = asset_server
+    monkeypatch.setenv("SSL_CERT_FILE", certifi.where())
+    observations = []
+    cache = tmp_path / "models"
+    with pytest.raises(RuntimeError, match="HTTPS certificate") as failure:
+        resolve_model_path(
+            base + "/model.onnx?token=secret", tmp_path, cache, observations.append
+        )
+    assert observations[-1].kind == "preparation_failed"
+    assert "HTTPS certificate" in observations[-1].message
+    assert "secret" not in "".join(
+        traceback.format_exception(failure.type, failure.value, failure.tb)
+    )
+    assert requests == []
+    assert not list(cache.rglob("*.onnx"))
+
+
+@pytest.mark.parametrize(
+    "cause, diagnostic",
+    [
+        (socket.gaierror(-2, "secret-host"), "address could not be resolved"),
+        (TimeoutError("secret-url"), "timed out"),
+    ],
+)
+def test_download_reports_transport_failures_without_exposing_credentials(
+    tmp_path, monkeypatch, cause, diagnostic
+):
+    def fail(*args, **kwargs):
+        raise ConnectionError("secret-url") from URLError(cause)
+
+    monkeypatch.setattr(downloads, "safe_download", fail)
+    observations = []
+    with pytest.raises(RuntimeError, match=diagnostic) as failure:
+        resolve_model_path(
+            "https://user:secret@host/model.onnx?token=secret",
+            tmp_path,
+            tmp_path / "models",
+            observations.append,
+        )
+    assert diagnostic in observations[-1].message
+    assert "secret" not in repr(observations)
+    assert "secret" not in "".join(
+        traceback.format_exception(failure.type, failure.value, failure.tb)
+    )
 
 
 def test_sdk_diagnostics_hide_credentials_without_muting_other_threads(

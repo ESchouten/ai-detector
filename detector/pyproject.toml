@@ -5,6 +5,7 @@ description = "Video event detection with optional AI verification and configura
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "certifi>=2026.6.17",
     "imageio-ffmpeg>=0.6.0",
     "litellm>=1.81.6",
     "numpy>=1.26",
@@ -80,6 +81,7 @@ dev = [
     "ty>=0.0.14",
     "pyinstaller>=6.18.0",
     "pytest>=9.1.1",
+    "trustme>=1.2.1",
     "opencv-stubs>=0.1.1",
     "jsonschema>=4.23",
     "radon>=6.0.1,<7",

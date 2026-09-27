@@ -17,6 +17,7 @@ from threading import Thread
 import cv2
 import numpy as np
 
+from tests.support.https import enable_https
 from tests.support.onnx_model import write_detection_model
 
 
@@ -30,6 +31,8 @@ def run_executable(
             **os.environ,
             "LITELLM_LOCAL_MODEL_COST_MAP": "true",
             "YOLO_CONFIG_DIR": str(root / "yolo"),
+            "SSL_CERT_FILE": str(root / "server-ca.pem"),
+            "REQUESTS_CA_BUNDLE": str(root / "server-ca.pem"),
         },
         capture_output=True,
         text=True,
@@ -165,9 +168,10 @@ def verify(
         for name in ("one.png", "two.png"):
             assert cv2.imwrite(str(root / name), np.zeros((64, 64, 3), dtype=np.uint8))
         server = ThreadingHTTPServer(("127.0.0.1", 0), LocalService)
+        enable_https(server, root / "server-ca.pem")
         thread = Thread(target=server.serve_forever, daemon=True)
         thread.start()
-        base_url = f"http://127.0.0.1:{server.server_port}"
+        base_url = f"https://127.0.0.1:{server.server_port}"
         config = {
             "onnx": {}
             if windows_ml
@@ -234,7 +238,7 @@ def verify(
         verify_archives(root, expected_events, process.stdout + process.stderr)
         verify_requests(requests, expected_events)
     print(
-        f"Executable passed ({model_format}): model loading, two-source inference, structured readiness, local VLM verification, JPEG/MP4 archives, HTTP delivery, health monitoring, and EOF shutdown."
+        f"Executable passed ({model_format}): HTTPS model download, model loading, two-source inference, structured readiness, local VLM verification, JPEG/MP4 archives, HTTPS delivery, health monitoring, and EOF shutdown."
     )
 
 

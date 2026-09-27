@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
+import writeFileAtomic from 'write-file-atomic';
 import {
 	createCameraOverlayStream,
 	liveSourceKey,
@@ -25,13 +26,13 @@ async function fixture(t: TestContext) {
 		await rm(directory, { recursive: true, force: true });
 	});
 	const session = async (runId = 'run-1', updatedAt = new Date().toISOString()) => {
-		await writeFile(
+		await writeFileAtomic(
 			path.join(directory, 'session.json'),
 			JSON.stringify({ version: 1, runId, updatedAt })
 		);
 	};
 	const frame = async (ruleId: string, changes = {}, key = sourceKey) => {
-		await writeFile(
+		await writeFileAtomic(
 			path.join(directory, 'frames', `${key}.${ruleId}.json`),
 			JSON.stringify({
 				version: 1,
@@ -61,6 +62,23 @@ async function chunk(reader: ReadableStreamDefaultReader<Uint8Array>): Promise<s
 	const result = await reader.read();
 	assert.equal(result.done, false, 'Preview closed unexpectedly');
 	return new TextDecoder().decode(result.value);
+}
+
+async function nextUpdate(reader: ReadableStreamDefaultReader<Uint8Array>): Promise<string> {
+	// A poll already in flight can queue a heartbeat before a fixture changes.
+	let output: string;
+	do {
+		output = await chunk(reader);
+	} while (output.startsWith('event: heartbeat\n'));
+	return output;
+}
+
+async function closed(reader: ReadableStreamDefaultReader<Uint8Array>): Promise<void> {
+	while (true) {
+		const result = await reader.read();
+		if (result.done) return;
+		assert.match(new TextDecoder().decode(result.value), /^event: heartbeat\n/);
+	}
 }
 
 async function until(read: () => Promise<boolean>): Promise<void> {
@@ -137,7 +155,7 @@ test(
 			async () =>
 				JSON.parse(await readFile(lease, 'utf8').catch(() => '{}')).expiresAt > Date.now() / 1000
 		);
-		assert.equal((await first.reader.read()).done, true);
+		await closed(first.reader);
 		await replacement.reader.cancel();
 		await assert.rejects(readFile(lease), { code: 'ENOENT' });
 	}
@@ -155,7 +173,7 @@ test(
 		assert.match(await chunk(reader), /event: frame/);
 		assert.match(await chunk(reader), /event: heartbeat/);
 		await frame('detector-1', { publishedAt: new Date(Date.now() - 16000).toISOString() });
-		const stale = await chunk(reader);
+		const stale = await nextUpdate(reader);
 		assert.match(stale, /No recent analyzed picture/);
 		assert.match(stale, /People/);
 		assert.ok(!stale.includes('Vehicles'));
@@ -172,9 +190,9 @@ test(
 		const { reader } = open();
 		assert.match(await chunk(reader), /event: frame/);
 		await rm(path.join(directory, 'session.json'));
-		assert.match(await chunk(reader), /no longer publishing/);
+		assert.match(await nextUpdate(reader), /no longer publishing/);
 		await session('run-2');
-		assert.equal((await reader.read()).done, true);
+		await closed(reader);
 	}
 );
 
@@ -209,7 +227,7 @@ test(
 		await delay(700);
 		await frame('detector-1', { capturedAt: 'newest' });
 		assert.ok(!(await chunk(reader)).includes('intermediate'));
-		assert.match(await chunk(reader), /newest/);
+		assert.match(await nextUpdate(reader), /newest/);
 	}
 );
 
@@ -236,44 +254,48 @@ test(
 	}
 );
 
-test('camera overlays multiplex cameras and rules without sending a second image stream', async (t) => {
-	const { directory, session, frame, open } = await fixture(t);
-	const otherKey = liveSourceKey('rtsp://other-camera/live', '/data');
-	const cameras = [
-		{ id: 'shed', sourceKey, rules },
-		{ id: 'pen', sourceKey: otherKey, rules: [rules[0]] }
-	];
-	await session();
-	await frame('detector-1');
-	await frame('detector-2');
-	await frame('detector-1', { boxes: [] }, otherKey);
-	const { reader, abort } = open(cameras);
-	const output = await chunk(reader);
-	const frames = output
-		.split('\n')
-		.filter((line) => line.startsWith('data: '))
-		.map((line) => JSON.parse(line.slice(6)));
-	assert.deepEqual(
-		frames.map(({ cameraId, ruleId }) => [cameraId, ruleId]),
-		[
-			['shed', 'detector-1'],
-			['shed', 'detector-2'],
-			['pen', 'detector-1']
-		]
-	);
-	assert.deepEqual(frames[0].image, { width: 24, height: 16 });
-	assert.equal(frames[0].boxes[0].label, 'cow');
-	assert.equal(frames[0].rulePreset, 'people');
-	assert.deepEqual(frames[2].boxes, []);
-	assert.ok(!output.includes('jpeg'));
-	assert.ok(!output.includes('secret'));
-	await until(async () => (await readdir(path.join(directory, 'leases'))).length === 2);
-	await frame('detector-1', { publishedAt: new Date(Date.now() - 16000).toISOString() });
-	const stale = await chunk(reader);
-	assert.match(stale, /event: status/);
-	assert.match(stale, /"cameraId":"shed"/);
-	assert.ok(!stale.includes('"cameraId":"pen"'));
-	abort.abort();
-	assert.equal((await reader.read()).done, true);
-	await until(async () => (await readdir(path.join(directory, 'leases'))).length === 0);
-});
+test(
+	'camera overlays multiplex cameras and rules without sending a second image stream',
+	{ timeout: 5000 },
+	async (t) => {
+		const { directory, session, frame, open } = await fixture(t);
+		const otherKey = liveSourceKey('rtsp://other-camera/live', '/data');
+		const cameras = [
+			{ id: 'shed', sourceKey, rules },
+			{ id: 'pen', sourceKey: otherKey, rules: [rules[0]] }
+		];
+		await session();
+		await frame('detector-1');
+		await frame('detector-2');
+		await frame('detector-1', { boxes: [] }, otherKey);
+		const { reader, abort } = open(cameras);
+		const output = await chunk(reader);
+		const frames = output
+			.split('\n')
+			.filter((line) => line.startsWith('data: '))
+			.map((line) => JSON.parse(line.slice(6)));
+		assert.deepEqual(
+			frames.map(({ cameraId, ruleId }) => [cameraId, ruleId]),
+			[
+				['shed', 'detector-1'],
+				['shed', 'detector-2'],
+				['pen', 'detector-1']
+			]
+		);
+		assert.deepEqual(frames[0].image, { width: 24, height: 16 });
+		assert.equal(frames[0].boxes[0].label, 'cow');
+		assert.equal(frames[0].rulePreset, 'people');
+		assert.deepEqual(frames[2].boxes, []);
+		assert.ok(!output.includes('jpeg'));
+		assert.ok(!output.includes('secret'));
+		await until(async () => (await readdir(path.join(directory, 'leases'))).length === 2);
+		await frame('detector-1', { publishedAt: new Date(Date.now() - 16000).toISOString() });
+		const stale = await nextUpdate(reader);
+		assert.match(stale, /event: status/);
+		assert.match(stale, /"cameraId":"shed"/);
+		assert.ok(!stale.includes('"cameraId":"pen"'));
+		abort.abort();
+		await closed(reader);
+		await until(async () => (await readdir(path.join(directory, 'leases'))).length === 0);
+	}
+);

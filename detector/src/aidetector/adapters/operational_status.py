@@ -12,6 +12,11 @@ from aidetector.application.status import StatusEvent
 STATUS_PREFIX = "AIDETECTOR_STATUS "
 
 
+def source_key(source: str) -> str:
+    """Stable identity for launcher records and human diagnostics."""
+    return hashlib.sha256(source.encode()).hexdigest()
+
+
 class JsonStatusReporter:
     def __init__(self, output: TextIO):
         self.output = output
@@ -35,7 +40,7 @@ class JsonStatusReporter:
                 "at": datetime.now(timezone.utc).isoformat(),
             }
             if event.source is not None:
-                record["sourceKey"] = hashlib.sha256(event.source.encode()).hexdigest()
+                record["sourceKey"] = source_key(event.source)
             if event.message is not None:
                 record["message"] = event.message
             if event.rule_id is not None:

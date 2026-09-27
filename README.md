@@ -43,6 +43,8 @@ The monitoring controls show the storage folder under **Advanced and troubleshoo
 - macOS: `~/Library/Application Support/AI Detector`
 - Linux: `$XDG_DATA_HOME/ai-detector`, or `~/.local/share/ai-detector`
 
+For troubleshooting, open `logs/detector.log` inside that folder. It keeps detector startup settings, model preparation, camera connections and errors across restarts; older logs rotate into `detector.log.1` through `.5`. These Python logs are more complete than the dashboard's short recent-log view. See [detector diagnostics](detector/README.md#runtime-and-health) for log levels and retained context.
+
 Existing portable installations with `config.json` beside the executable continue using that directory. `AIDETECTOR_DATA_DIR` explicitly selects another location. Back up the whole data folder. Updater-enabled Mac and Windows installations offer **Check for Updates** in the AI Detector menu. Download while monitoring continues, then restart to install. The first updater-enabled version still needs a manual installation; see the [migration and update guide](distribution/README.md#installation-and-data). To move from an older portable release, choose **Use existing setup** in the new installation and select the old folder. Linux upgrades use the new package. Uninstalling a normal desktop package preserves settings and recordings.
 
 The bundled web app listens on this computer only by default. Setting `HOST=0.0.0.0` deliberately enables LAN access; the web app does not provide authentication, so this is for a trusted network only.

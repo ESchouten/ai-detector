@@ -3,9 +3,11 @@
 import errno
 import hashlib
 import json
+import logging
 import shutil
 import tempfile
 from pathlib import Path
+from time import perf_counter
 
 import onnx
 import onnxslim
@@ -19,6 +21,8 @@ from aidetector.adapters.inference.model_assets import MODEL_DOWNLOAD_HELP
 from aidetector.adapters.inference.onnx import InferenceOptions
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig, YoloConfig
+
+logger = logging.getLogger(__name__)
 
 
 def _cache_key(source: Path, task: str, arguments: dict) -> str:
@@ -66,7 +70,10 @@ def prepare_onnx(
     destination = cache / _cache_key(source, config.task, arguments)
     model_path = destination / "model.onnx"
     if model_path.is_file():
+        logger.info("Prepared model cache hit: %s", model_path)
         return model_path
+    started = perf_counter()
+    logger.info("Preparing ONNX model: %s; export settings=%s", source.name, arguments)
     report_status(
         StatusEvent(
             "preparing",
@@ -90,4 +97,7 @@ def prepare_onnx(
             # Another application process may have finished the same export.
             if error.errno not in (errno.EEXIST, errno.ENOTEMPTY):
                 raise
+    logger.info(
+        "ONNX model prepared in %.2fs: %s", perf_counter() - started, model_path
+    )
     return model_path

@@ -7,11 +7,14 @@ import ssl
 import tempfile
 from pathlib import Path, PurePosixPath
 from threading import get_ident
+from time import perf_counter
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 
+from aidetector.adapters.diagnostics import resource_label
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 
+logger = logging.getLogger(__name__)
 MODEL_DOWNLOAD_HELP = (
     "The detection model could not be downloaded. Check this computer's internet "
     "connection and try again. Your camera settings are saved. "
@@ -93,6 +96,7 @@ def resolve_model_path(
     cache.mkdir(parents=True, exist_ok=True)
     target = cache / name
     if target.exists():
+        logger.info("Model cache hit: %s (%d bytes)", target, target.stat().st_size)
         return str(target)
     report_status(
         StatusEvent(
@@ -102,6 +106,10 @@ def resolve_model_path(
     )
     with tempfile.TemporaryDirectory(dir=cache, prefix="download-") as temporary:
         pending = Path(temporary) / name
+        started = perf_counter()
+        logger.info(
+            "Model download started: %s; cache=%s", resource_label(value), target
+        )
         _download(value, pending, report_status)
         # The SDK may return without a file after rejecting an empty/partial body.
         if not pending.is_file():
@@ -113,4 +121,10 @@ def resolve_model_path(
             )
             raise RuntimeError("Model download did not produce a complete file")
         pending.replace(target)
+        logger.info(
+            "Model download complete: %s; %d bytes in %.2fs",
+            target,
+            target.stat().st_size,
+            perf_counter() - started,
+        )
     return str(target)

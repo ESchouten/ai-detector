@@ -8,9 +8,15 @@ from time import monotonic
 
 import cv2
 
+from aidetector.adapters.diagnostics import resource_label
 from aidetector.adapters.media.images import shrink_image
+from aidetector.adapters.operational_status import source_key
 from aidetector.application.ports import SourceBatch, SourceError
-from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
+from aidetector.application.status import (
+    ReportStatus,
+    StatusEvent,
+    ignore_status,
+)
 from aidetector.domain.models import Frame
 
 logger = logging.getLogger(__name__)
@@ -136,13 +142,23 @@ class StreamPool:
                 subscriber.fail(error)
 
     def _capture(self, index: int, source: str) -> None:
+        identity = source_key(source)[:12]
+        attempt = 0
         while not self._stop.is_set():
             capture = None
+            started = monotonic()
+            attempt += 1
             try:
                 logger.info(
-                    "Stream %d: opening camera connection for %d detector(s)",
+                    "Stream %d [%s]: opening %s for %d detector(s); attempt=%d; open/read timeout=%s",
                     index + 1,
+                    identity,
+                    resource_label(source),
                     len(self._subscribers[source]),
+                    attempt,
+                    "backend default"
+                    if source.isdecimal()
+                    else f"{_CAPTURE_TIMEOUT_MS}ms",
                 )
                 capture = (
                     cv2.VideoCapture(int(source))
@@ -171,7 +187,10 @@ class StreamPool:
                         )
                     )
                     logger.warning(
-                        "Stream %d could not be opened; reconnecting", index + 1
+                        "Stream %d [%s] could not be opened after %.2fs; reconnecting",
+                        index + 1,
+                        identity,
+                        monotonic() - started,
                     )
                 else:
                     first_frame = True
@@ -186,15 +205,21 @@ class StreamPool:
                                 )
                             )
                             logger.warning(
-                                "Stream %d disconnected; reconnecting", index + 1
+                                "Stream %d [%s] disconnected after %.2fs; reconnecting",
+                                index + 1,
+                                identity,
+                                monotonic() - started,
                             )
                             break
                         if first_frame:
                             logger.info(
-                                "Stream %d connected: receiving %dx%d frames",
+                                "Stream %d [%s] connected in %.2fs: receiving %dx%d frames; dtype=%s",
                                 index + 1,
+                                identity,
+                                monotonic() - started,
                                 image.shape[1],
                                 image.shape[0],
+                                image.dtype,
                             )
                             first_frame = False
                         sampled_at = monotonic()
@@ -203,18 +228,25 @@ class StreamPool:
                         self.report_status(StatusEvent("frame", source))
                         for subscriber in self._subscribers[source]:
                             subscriber.publish(source, frame, sampled_at)
-            except cv2.error:
+            except cv2.error as error:
                 self.report_status(
                     StatusEvent(
                         "offline", source, "Camera could not be read. Reconnecting…"
                     )
                 )
-                logger.warning("Stream %d capture failed; reconnecting", index + 1)
+                logger.warning(
+                    "Stream %d [%s] capture failed: OpenCV code=%s, function=%s, reason=%s; reconnecting",
+                    index + 1,
+                    identity,
+                    error.code,
+                    error.func,
+                    error.err,
+                )
             finally:
                 if capture is not None:
                     capture.release()
             self._stop.wait(1)
-        logger.info("Stream %d stopped", index + 1)
+        logger.info("Stream %d [%s] stopped", index + 1, identity)
 
     def close(self) -> None:
         self._stop.set()

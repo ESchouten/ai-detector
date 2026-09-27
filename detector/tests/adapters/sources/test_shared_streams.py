@@ -9,6 +9,7 @@ import numpy as np
 import pytest
 
 from aidetector.adapters.exporters.disk import DiskExporter
+from aidetector.adapters.operational_status import source_key
 from aidetector.adapters.sources.streams import StreamPool, StreamSource
 from aidetector.bootstrap import run_application
 from aidetector.configuration import Config
@@ -215,11 +216,22 @@ def test_reconnection_is_shared_by_subscribers(cameras, caplog):
         assert pixels(next(left), "0") == pixels(next(right), "0") == [2]
         assert camera.opens == 2
     assert camera.releases == 2
+    openings = [
+        message
+        for message in caplog.messages
+        if "opening 0 for 2 detector(s)" in message
+    ]
+    assert len(openings) == 2
+    assert "attempt=1" in openings[0]
+    assert "attempt=2" in openings[1]
+    assert all(source_key("0")[:12] in message for message in openings)
     assert (
-        caplog.messages.count("Stream 1: opening camera connection for 2 detector(s)")
+        sum(
+            "receiving 64x64 frames; dtype=uint8" in message
+            for message in caplog.messages
+        )
         == 2
     )
-    assert caplog.messages.count("Stream 1 connected: receiving 64x64 frames") == 2
 
 
 @pytest.mark.parametrize("use_yolo", [False, True])

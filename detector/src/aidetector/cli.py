@@ -8,8 +8,9 @@ from pathlib import Path
 from threading import Event, Thread
 from typing import TextIO
 
+from aidetector.adapters.diagnostics import diagnostic_logging, log_environment
 from aidetector.application.status import ReportStatus, ignore_status
-from aidetector.configuration import ConfigurationError, load_config
+from aidetector.configuration import Config, ConfigurationError, load_config
 from aidetector.version import REF_NAME, TYPE
 
 logger = logging.getLogger(__name__)
@@ -122,17 +123,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Configuration valid: {len(config.detectors)} detector(s)")
         return 0
 
-    logging.basicConfig(
-        level=args.log_level,
-        format="%(asctime)s %(levelname)s [%(threadName)s] %(name)s: %(message)s",
+    directory = (
+        args.data_dir.expanduser().resolve() if args.data_dir else config_path.parent
     )
+    with diagnostic_logging(config, directory, args.log_level):
+        return _run(args, config, config_path, directory)
+
+
+def _run(
+    args: argparse.Namespace, config: Config, config_path: Path, directory: Path
+) -> int:
     previous_signal = signal.signal(signal.SIGTERM, _interrupt)
     try:
-        directory = (
-            args.data_dir.expanduser().resolve()
-            if args.data_dir
-            else config_path.parent
-        )
         logger.info(
             "Starting AI Detector %s (%s): %d detector(s)",
             REF_NAME,
@@ -148,6 +150,16 @@ def main(argv: list[str] | None = None) -> int:
             # PyInstaller selects a fresh temporary font cache on every launch.
             # Matplotlib stores bundled font paths relatively, so reuse is safe.
             os.environ["MPLCONFIGDIR"] = str(directory / "cache" / "matplotlib")
+        log_environment()
+        logger.info(
+            "Execution settings: provider=%s; windows_ml=%s; opset=%d; live_preview=%s; launcher_control=%s; health=%s",
+            config.onnx.provider or "automatic",
+            config.onnx.winml,
+            config.onnx.opset,
+            args.live_preview,
+            args.control_stdin,
+            config.health is not None,
+        )
         from aidetector.bootstrap import run_application
 
         stop_requested = None

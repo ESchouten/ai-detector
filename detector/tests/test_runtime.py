@@ -1,3 +1,4 @@
+import json
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from threading import Barrier, Event, current_thread
@@ -6,6 +7,7 @@ from weakref import ref
 import numpy as np
 import pytest
 
+from aidetector.adapters.operational_status import source_key
 from aidetector.adapters.sources.streams import StreamPool
 from aidetector.application.delivery import Destination, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
@@ -220,6 +222,60 @@ def test_concurrent_detector_failures_are_all_reported(caplog):
         for record in caplog.records
         if record.message == "Detector worker failed"
     } == {"detector-1-processing", "detector-2-processing"}
+
+
+def test_failed_inference_reports_source_and_frame_metadata_without_pixels_or_credentials(
+    caplog,
+):
+    address = "rtsp://user:secret@camera/private?token=private-token"
+
+    class Source(FiniteSource):
+        def batches(self):
+            yield SourceBatch(
+                {
+                    address: (
+                        Frame(
+                            datetime(2026, 1, 1),
+                            np.full((20, 30, 3), 137, dtype=np.uint8),
+                        ),
+                        Frame(
+                            datetime(2026, 1, 1, 0, 0, 1),
+                            np.full((20, 30, 3), 137, dtype=np.uint8),
+                        ),
+                    )
+                }
+            )
+
+    class BrokenDetector:
+        def detect(self, frames):
+            raise RuntimeError("Inference failed for this batch")
+
+    source = Source()
+    detector = DetectorWorker(
+        source,
+        DetectionPipeline(BrokenDetector()),
+        EventDelivery((), Cooldown()),
+        name="detector-2",
+    )
+    with pytest.raises(RuntimeError, match="Inference failed for this batch"):
+        detector.run()
+    [record] = [
+        record
+        for record in caplog.records
+        if record.message.startswith("Failed batch:")
+    ]
+    assert record.threadName == "detector-2-processing"
+    assert json.loads(record.message.removeprefix("Failed batch: ")) == [
+        {
+            "source": source_key(address)[:12],
+            "retained_frames": 2,
+            "latest_at": "2026-01-01T00:00:01",
+            "shape": [20, 30, 3],
+            "dtype": "uint8",
+        }
+    ]
+    assert "secret" not in caplog.text and "private-token" not in caplog.text
+    assert source.closed
 
 
 def test_stream_stop_wakes_waiter_even_without_frames(monkeypatch):

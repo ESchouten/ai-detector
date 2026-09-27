@@ -7,9 +7,15 @@ from urllib.parse import urlsplit
 
 import cv2
 
+from aidetector.adapters.diagnostics import resource_label
 from aidetector.adapters.media.images import shrink_image
+from aidetector.adapters.operational_status import source_key
 from aidetector.application.ports import SourceBatch, SourceError
-from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
+from aidetector.application.status import (
+    ReportStatus,
+    StatusEvent,
+    ignore_status,
+)
 from aidetector.configuration import source_kind
 from aidetector.domain.models import Frame
 
@@ -36,7 +42,13 @@ class FileSource:
         for index, source in enumerate(self.sources):
             if self._stop.is_set():
                 return
-            logger.info("Reading file source %d/%d", index + 1, len(self.sources))
+            logger.info(
+                "Reading file source %d/%d [%s]: %s",
+                index + 1,
+                len(self.sources),
+                source_key(source)[:12],
+                resource_label(source),
+            )
             started_at = self.started_at or datetime.now()
             if source_kind(source) == "image":
                 image = cv2.imread(source)

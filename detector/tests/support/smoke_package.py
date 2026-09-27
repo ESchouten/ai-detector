@@ -39,6 +39,15 @@ def run_executable(
         timeout=timeout,
     )
     assert process.returncode == 0, process.stdout + process.stderr
+    saved_logs = (root / "logs/detector.log").read_text(encoding="utf-8")
+    for diagnostic in (
+        "Runtime: Python",
+        "HTTPS trust:",
+        "Detector-1 configuration:",
+        "Inference backend ready:",
+    ):
+        assert diagnostic in saved_logs, saved_logs
+    assert "local-test-key" not in saved_logs
     records = [
         json.loads(line.removeprefix("AIDETECTOR_STATUS "))
         for line in process.stdout.splitlines()

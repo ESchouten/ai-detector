@@ -34,6 +34,8 @@ cli -> bootstrap -> runtime + concrete adapters
 
 At frozen-executable startup, the CLI selects the bundled certifi roots for Python's default TLS context, unless `SSL_CERT_FILE` is explicitly configured. HTTPS model downloads therefore do not depend on the build machine's OpenSSL certificate path. Ultralytics still owns transfers and completeness checks; the model-assets adapter reports safe HTTP, certificate, DNS and timeout diagnostics without printing credential-bearing transport exceptions.
 
+The diagnostics adapter owns console/file formatting, credential redaction, bounded file rotation and explicit configuration summaries. The CLI opens that logging scope only for a normal run and restores its handlers and logging level on exit. Bootstrap logs detector settings before provider initialization; no raw configuration dump is used. Camera identities use the launcher's existing SHA-256 source keys, abbreviated to 12 characters in logs. The runtime describes failed input batches by identity, shape, dtype and timestamp without writing pixels. Domain rules and frame-processing behavior do not depend on logging.
+
 Within `adapters`, folders group integrations by responsibility:
 
 ```text
@@ -49,6 +51,7 @@ adapters/
 ├── inference/             # Model assets, ONNX providers and YOLO
 ├── media/                 # Images, video and event attachments
 ├── health.py              # Periodic monitoring, supervised by runtime
+├── diagnostics.py         # Safe startup context and rotating Python logs
 ├── http.py                # Transport shared by exporters and health
 └── vlm.py                 # Event verification
 ```

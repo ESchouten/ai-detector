@@ -52,6 +52,44 @@ def test_invalid_and_missing_config_have_actionable_exit_status(tmp_path):
     assert path.read_text() == '{"detectors": []}'
 
 
+def test_startup_failure_persists_runtime_and_safe_configuration_before_hardware_setup(
+    tmp_path,
+):
+    config = tmp_path / "config.json"
+    document = json.dumps(
+        {
+            "onnx": {"provider": "UnavailableTestProvider"},
+            "detectors": [
+                {
+                    "detection": {
+                        "source": "rtsp://user:camera-secret@192.0.2.10/private?token=camera-token"
+                    },
+                    "yolo": {
+                        "model": "https://example.test/private-model.pt?token=model-token",
+                        "imgsz": 320,
+                    },
+                }
+            ],
+        }
+    )
+    config.write_text(document)
+    output = tmp_path / "runtime-data"
+    process = run_cli(tmp_path, "--config", config, "--data-dir", output)
+    assert process.returncode == 1
+    saved = (output / "logs/detector.log").read_text()
+    assert "Configured ONNX provider is unavailable: UnavailableTestProvider" in saved
+    assert saved.index("Detector-1 configuration:") < saved.index(
+        "Detector stopped after an application error"
+    )
+    assert "Runtime: Python" in saved and "HTTPS trust:" in saved
+    assert '"imgsz": 320' in saved
+    assert "Traceback (most recent call last)" in saved
+    for secret in ("camera-secret", "camera-token", "model-token", "private-model"):
+        assert secret not in saved and secret not in process.stderr
+    assert config.read_text() == document
+    assert not (tmp_path / "logs").exists()
+
+
 def test_packaged_startup_reuses_the_font_cache_in_the_data_directory(tmp_path):
     image = tmp_path / "input.png"
     assert cv2.imwrite(str(image), np.zeros((24, 32, 3), dtype=np.uint8))

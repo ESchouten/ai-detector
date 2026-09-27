@@ -5,6 +5,7 @@ from pathlib import Path
 from threading import Event
 from urllib.parse import urlsplit
 
+from aidetector.adapters.diagnostics import log_detector_configuration
 from aidetector.adapters.exporters.disk import DiskExporter
 from aidetector.adapters.exporters.telegram import TelegramExporter
 from aidetector.adapters.exporters.webhook import WebhookExporter
@@ -33,6 +34,13 @@ logger = logging.getLogger(__name__)
 
 def _rule_reporter(report_status: ReportStatus, rule_id: str) -> ReportStatus:
     def report(event: StatusEvent) -> None:
+        if event.kind in {"preparing", "preparation_failed", "notice"}:
+            logger.log(
+                logging.ERROR if event.kind == "preparation_failed" else logging.INFO,
+                "%s: %s",
+                rule_id,
+                event.message,
+            )
         report_status(replace(event, rule_id=rule_id))
 
     return report
@@ -45,14 +53,8 @@ def build_source(
     report_status: ReportStatus = ignore_status,
 ) -> FileSource | StreamSource:
     if source_kind(settings.source[0]) != "stream":
-        sources = tuple(
-            source
-            if urlsplit(source).scheme in {"http", "https"}
-            else str((directory / Path(source).expanduser()).resolve())
-            for source in settings.source
-        )
         return FileSource(
-            sources,
+            _resolved_sources(settings, directory),
             width=settings.frames_width,
             interval=settings.interval,
             report_status=report_status,
@@ -62,6 +64,17 @@ def build_source(
         width=settings.frames_width,
         retention=settings.frame_retention,
         interval=settings.interval,
+    )
+
+
+def _resolved_sources(settings: SourceConfig, directory: Path) -> tuple[str, ...]:
+    if source_kind(settings.source[0]) == "stream":
+        return settings.source
+    return tuple(
+        source
+        if urlsplit(source).scheme in {"http", "https"}
+        else str((directory / Path(source).expanduser()).resolve())
+        for source in settings.source
     )
 
 
@@ -118,6 +131,10 @@ def run_application(
     live_preview: bool = False,
 ) -> tuple[RunStats, ...]:
     """Construct workers and own their shared captures, models and providers."""
+    for index, settings in enumerate(config.detectors, start=1):
+        log_detector_configuration(
+            index, settings, _resolved_sources(settings.detection, config_directory)
+        )
     models = tuple(
         ModelRequirements(
             settings.yolo.model, settings.yolo.imgsz, len(settings.detection.source)

@@ -1,3 +1,5 @@
+import hashlib
+import json
 import logging
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from contextlib import ExitStack, closing
@@ -7,10 +9,25 @@ from threading import Event, Thread, current_thread
 
 from aidetector.application.delivery import DeliveryReport, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
-from aidetector.application.ports import FrameSource, HealthMonitor
+from aidetector.application.ports import FrameSource, HealthMonitor, SourceBatch
 from aidetector.domain.models import DetectionEvent, ValidationStatus
 
 logger = logging.getLogger(__name__)
+
+
+def _batch_summary(batch: SourceBatch) -> str:
+    return json.dumps(
+        [
+            {
+                "source": hashlib.sha256(source.encode()).hexdigest()[:12],
+                "retained_frames": len(frames),
+                "latest_at": frames[-1].date.isoformat(),
+                "shape": list(frames[-1].image.shape),
+                "dtype": str(frames[-1].image.dtype),
+            }
+            for source, frames in batch.frames.items()
+        ]
+    )
 
 
 @dataclass
@@ -63,6 +80,7 @@ class DetectorWorker:
         processing_thread = current_thread()
         previous_name = processing_thread.name
         delivery_thread = Thread(target=self._deliver, name=f"{self.name}-delivery")
+        batch = None
         try:
             processing_thread.name = f"{self.name}-processing"
             logger.info("Monitoring started")
@@ -76,13 +94,18 @@ class DetectorWorker:
                 for batch in batches:
                     if self._stop.is_set():
                         break
+                    if batch.frames and logger.isEnabledFor(logging.DEBUG):
+                        logger.debug("Processing batch: %s", _batch_summary(batch))
                     for event in self.pipeline.process(batch):
                         self._enqueue(event)
                         # The queue owns this event while the producer waits for input.
                         del event
+                    batch = None
         except Exception:
             # The supervisor propagates the first failure; concurrent failures
             # still need their own diagnostic before their futures are discarded.
+            if batch is not None:
+                logger.error("Failed batch: %s", _batch_summary(batch))
             logger.exception("Detector worker failed")
             raise
         finally:
@@ -120,6 +143,11 @@ class DetectorWorker:
     def _deliver(self) -> None:
         try:
             while (event := self._queue.get()) is not None:
+                logger.info(
+                    "Delivering event: source=%s; started=%s",
+                    hashlib.sha256(event.source.encode()).hexdigest()[:12],
+                    event.start.isoformat(),
+                )
                 self.stats.record(self.delivery.deliver(event))
                 # Do not retain a completed clip during the next blocking get().
                 del event

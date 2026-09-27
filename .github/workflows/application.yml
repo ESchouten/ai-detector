@@ -163,6 +163,9 @@ jobs:
           if [ '${{ runner.os }}' = macOS ]; then executable="dist/${{ matrix.detector }}/Contents/MacOS/aidetector"; fi
           uv run --no-sync python -m tests.support.smoke_package "$executable"
           uv run --no-sync python -m tests.support.smoke_package "$executable" --model-format pt
+          if [ '${{ runner.os }}' = Windows ]; then
+            uv run --no-sync python -m tests.support.smoke_package "$executable" --windows-ml
+          fi
       - name: Build web executable
         run: python distribution/build.py web --platform '${{ matrix.platform }}' --version "$APP_VERSION" --skip-dependencies
       - name: Test compiled desktop failure paths

@@ -21,7 +21,7 @@ from tests.support.onnx_model import write_detection_model
 
 
 def run_executable(
-    executable: Path, config: Path, root: Path
+    executable: Path, config: Path, root: Path, timeout: int = 120
 ) -> subprocess.CompletedProcess[str]:
     process = subprocess.run(
         [str(executable), "--config", str(config), "--status-json"],
@@ -33,7 +33,7 @@ def run_executable(
         },
         capture_output=True,
         text=True,
-        timeout=120,
+        timeout=timeout,
     )
     assert process.returncode == 0, process.stdout + process.stderr
     records = [
@@ -91,7 +91,22 @@ def verify_archives(root: Path, expected_events: int, diagnostics: str) -> None:
             capture.release()
 
 
-def verify(executable: Path, model_format: str = "onnx") -> None:
+def verify_requests(requests: list[tuple[str, dict]], expected_events: int) -> None:
+    ai_requests = [body for path, body in requests if path == "/v1/chat/completions"]
+    webhooks = [body for path, body in requests if path == "/events"]
+    assert len(ai_requests) == len(webhooks) == expected_events
+    assert any(path == "/health" for path, _ in requests)
+    for body in ai_requests:
+        assert_verification_schema(body)
+    assert all(
+        body["validated"] is True and body["image"] and body["video"]
+        for body in webhooks
+    )
+
+
+def verify(
+    executable: Path, model_format: str = "onnx", windows_ml: bool = False
+) -> None:
     requests: list[tuple[str, dict]] = []
 
     class LocalService(BaseHTTPRequestHandler):
@@ -154,7 +169,9 @@ def verify(executable: Path, model_format: str = "onnx") -> None:
         thread.start()
         base_url = f"http://127.0.0.1:{server.server_port}"
         config = {
-            "onnx": {"provider": "CPUExecutionProvider", "winml": False},
+            "onnx": {}
+            if windows_ml
+            else {"provider": "CPUExecutionProvider", "winml": False},
             "health": {
                 "url": base_url + "/health",
                 "method": "POST",
@@ -195,7 +212,15 @@ def verify(executable: Path, model_format: str = "onnx") -> None:
         config_path.write_text(json.dumps(config), encoding="utf-8")
         expected_events = 2
         try:
-            process = run_executable(executable, config_path, root)
+            process = run_executable(
+                executable, config_path, root, timeout=180 if windows_ml else 120
+            )
+            if windows_ml:
+                assert "Checking hardware acceleration" in process.stdout, (
+                    process.stdout + process.stderr
+                )
+                assert "ONNX execution providers:" in process.stderr, process.stderr
+                print(process.stderr)
             if model_format == "pt":
                 verify_prepared_cache(executable, config_path, root)
                 expected_events = 4
@@ -207,18 +232,7 @@ def verify(executable: Path, model_format: str = "onnx") -> None:
         [cached] = (root / "models").glob(f"*/{model.name}")
         assert cached.read_bytes() == model.read_bytes()
         verify_archives(root, expected_events, process.stdout + process.stderr)
-        ai_requests = [
-            body for path, body in requests if path == "/v1/chat/completions"
-        ]
-        webhooks = [body for path, body in requests if path == "/events"]
-        assert len(ai_requests) == len(webhooks) == expected_events
-        assert any(path == "/health" for path, _ in requests)
-        for body in ai_requests:
-            assert_verification_schema(body)
-        assert all(
-            body["validated"] is True and body["image"] and body["video"]
-            for body in webhooks
-        )
+        verify_requests(requests, expected_events)
     print(
         f"Executable passed ({model_format}): model loading, two-source inference, structured readiness, local VLM verification, JPEG/MP4 archives, HTTP delivery, health monitoring, and EOF shutdown."
     )
@@ -228,5 +242,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("executable", type=Path)
     parser.add_argument("--model-format", choices=("onnx", "pt"), default="onnx")
+    parser.add_argument(
+        "--windows-ml",
+        action="store_true",
+        help="Exercise automatic Windows ML startup, including its CPU fallback",
+    )
     arguments = parser.parse_args()
-    verify(arguments.executable.resolve(), arguments.model_format)
+    verify(arguments.executable.resolve(), arguments.model_format, arguments.windows_ml)

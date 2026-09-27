@@ -220,6 +220,8 @@ Generated payloads include `confidence`, `timestamp`, `duration`, and `validated
 
 `onnx.provider` optionally requests a specific installed execution provider. `onnx.winml` defaults to `true` for provider registration in Windows ML builds; it is ignored for other builds. `onnx.opset` defaults to `20` for model export. Provider setup and compatibility hooks are scoped to the application lifetime. Installed SDK files are never deleted or modified.
 
+Windows ML startup runs without installation dialogs. Logs and dashboard status identify hardware preparation; each provider has up to two minutes to become ready. In automatic mode, an unavailable provider is logged and skipped so other providers can still run. If none can be prepared, detection continues on the CPU with a notice. An explicitly selected provider remains a visible failure when unavailable. CI exercises the same startup path as installed applications.
+
 `health` accepts an HTTP `url`, `method` (`GET`), `interval` (`60` seconds), `timeout` (`5` seconds), optional `headers`, and optional raw `body`. Expected request failures are warnings. An unexpected health-worker error stops processing and reaches the caller. Health pings stop when finite inputs end.
 
 Ctrl+C or SIGTERM stops acquisition, flushes eligible events, and drains accepted delivery work. Shutdown can wait for in-flight requests and the bounded delivery queue. CLI exit codes: `0` for success/graceful shutdown, `1` for application or event-delivery/verification failure, and `2` for configuration errors. The application does not conceal failures with an endless restart loop; use a service manager if automatic process restart is desired.

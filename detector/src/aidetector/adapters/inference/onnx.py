@@ -17,6 +17,7 @@ from aidetector.application.status import ReportStatus, StatusEvent, ignore_stat
 from aidetector.configuration import OnnxConfig
 
 logger = logging.getLogger(__name__)
+WINDOWS_ML_PREPARATION_TIMEOUT = 120.0
 
 
 @dataclass(frozen=True)
@@ -109,27 +110,76 @@ def _cuda_libraries(resources: ExitStack) -> None:
         )
 
 
-def _register_windows_ml(resources: ExitStack, ort: Any) -> set[str]:
+def _register_windows_ml(
+    resources: ExitStack, ort: Any, requested: str | None, report_status: ReportStatus
+) -> set[str]:
     # Optional, Windows-only SDKs are imported only for this distribution. The
     # executable build explicitly collects these modules.
-    winml = import_module("winui3.microsoft.windows.ai.machinelearning")
+    registration_error = import_module(
+        "onnxruntime.capi.onnxruntime_pybind11_state"
+    ).Fail
+    logger.info("Initializing Windows ML runtime")
+    report_status(StatusEvent("preparing", message="Checking hardware acceleration…"))
     bootstrap = import_module(
         "winui3.microsoft.windows.applicationmodel.dynamicdependency.bootstrap"
     )
+    # The detector runs in the background. A modal installation prompt would
+    # block startup instead of letting automatic mode use its CPU fallback.
     resources.enter_context(
-        bootstrap.initialize(options=bootstrap.InitializeOptions.ON_NO_MATCH_SHOW_UI)
+        bootstrap.initialize(options=bootstrap.InitializeOptions.NONE)
     )
+    winml = import_module("winui3.microsoft.windows.ai.machinelearning")
+    foundation = import_module("winrt.windows.foundation")
+    logger.info("Discovering Windows ML execution providers")
     registered: set[str] = set()
+    failed = False
     for provider in winml.ExecutionProviderCatalog.get_default().find_all_providers():
-        provider.ensure_ready_async().get()
-        if provider.library_path:
+        if requested is not None and provider.name != requested:
+            continue
+        logger.info(
+            "Preparing Windows ML provider %s (up to %.0fs; first use may download components)",
+            provider.name,
+            WINDOWS_ML_PREPARATION_TIMEOUT,
+        )
+        report_status(
+            StatusEvent(
+                "preparing",
+                message="Preparing hardware acceleration… First use may download additional components.",
+            )
+        )
+        try:
+            _prepare_windows_ml_provider(provider, winml, foundation)
+            if not provider.library_path:
+                continue
             ort.register_execution_provider_library(
                 provider.name, provider.library_path
             )
-            resources.callback(ort.unregister_execution_provider_library, provider.name)
-            registered.add(provider.name)
+        except (OSError, RuntimeError, registration_error) as error:
+            if requested is not None:
+                raise
+            logger.warning(
+                "Windows ML provider %s unavailable: %s", provider.name, error
+            )
+            failed = True
+            continue
+        resources.callback(ort.unregister_execution_provider_library, provider.name)
+        registered.add(provider.name)
+    if failed and not registered:
+        raise RuntimeError("No Windows ML execution provider could be prepared")
     logger.info("Registered Windows ML providers: %s", sorted(registered))
     return registered
+
+
+def _prepare_windows_ml_provider(provider: Any, winml: Any, foundation: Any) -> None:
+    operation = provider.ensure_ready_async()
+    if operation.wait(WINDOWS_ML_PREPARATION_TIMEOUT) == foundation.AsyncStatus.STARTED:
+        operation.cancel()
+        raise TimeoutError(f"Windows ML preparation timed out for {provider.name}")
+    result = operation.get()
+    if result.status != winml.ExecutionProviderReadyResultState.SUCCESS:
+        raise RuntimeError(
+            f"Windows ML could not prepare {provider.name}: {result.diagnostic_text}"
+        )
 
 
 def select_devices(devices: list[Any]) -> list[Any]:
@@ -241,18 +291,15 @@ def _providers(
     report_status: ReportStatus = ignore_status,
 ) -> ProviderSelection:
     registered: set[str] = set()
-    in_ci = any(
-        os.environ.get(name, "").lower() in {"1", "true", "yes"}
-        for name in ("CI", "GITHUB_ACTIONS")
-    )
     if (
         build_type == "windowsml"
         and config.winml
-        and not in_ci
         and config.provider != "CPUExecutionProvider"
     ):
         try:
-            registered = _register_windows_ml(resources, ort)
+            registered = _register_windows_ml(
+                resources, ort, config.provider, report_status
+            )
         except (OSError, RuntimeError):
             # Windows-managed acceleration is optional in automatic mode. This
             # boundary runs before model loading, so model/configuration errors

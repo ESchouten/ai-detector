@@ -6,13 +6,22 @@ import json
 import tempfile
 import threading
 import unittest
+import urllib.error
 from functools import partial
 from pathlib import Path
 
 from fixtures.keys import PRIVATE_KEY, PUBLIC_KEY
 from release_config import release_config
 from release_signatures import sign_feed, verify_feed
-from updates import mac_items, newer_than, numeric_version, prepare, windows
+from updates import download, mac_items, newer_than, numeric_version, prepare, windows
+
+
+class ReleaseHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path.startswith("/error/"):
+            self.send_error(int(self.path.rsplit("/", 1)[1]))
+        else:
+            super().do_GET()
 
 
 class UpdateFeedTest(unittest.TestCase):
@@ -24,9 +33,7 @@ class UpdateFeedTest(unittest.TestCase):
         self.host.mkdir()
         self.output = self.root / "output"
         self.output.mkdir()
-        handler = partial(
-            http.server.SimpleHTTPRequestHandler, directory=str(self.host)
-        )
+        handler = partial(ReleaseHandler, directory=str(self.host))
         server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
         worker = threading.Thread(target=server.serve_forever, daemon=True)
         worker.start()
@@ -64,6 +71,33 @@ class UpdateFeedTest(unittest.TestCase):
     def test_first_release_has_no_delta_base(self):
         prepare(self.output, "windows-x64", "1.0.0", self.url)
         self.assertEqual(list((self.output / "windows-updates").iterdir()), [])
+
+    def test_download_failures_other_than_missing_archives_stop_the_build(self):
+        for code in (403, 429, 500, 503):
+            with (
+                self.subTest(code=code),
+                self.assertRaises(urllib.error.HTTPError) as error,
+            ):
+                download(f"{self.url}/error/{code}", self.output / "previous.dmg")
+            self.assertEqual(error.exception.code, code)
+            self.assertFalse((self.output / "previous.dmg").exists())
+
+    def test_deleted_windows_delta_base_is_omitted_from_the_next_feed(self):
+        asset = {
+            "Version": "1.0.0",
+            "Type": "Full",
+            "FileName": "removed.nupkg",
+            "SHA256": "0" * 64,
+        }
+        (self.host / "releases.win.json").write_bytes(
+            sign_feed(json.dumps({"Assets": [asset]}).encode(), PRIVATE_KEY, PUBLIC_KEY)
+        )
+        prepare(self.output, "windows-x64", "1.0.1", self.url, PUBLIC_KEY)
+        self.assertEqual(list((self.output / "windows-updates").iterdir()), [])
+        self.assertEqual(
+            json.loads((self.output / "previous-windows-feed.json").read_bytes()),
+            {"Assets": []},
+        )
 
     def test_windows_downloads_verified_base_and_keeps_immutable_urls(self):
         content = b"previous full package"
@@ -219,7 +253,13 @@ class UpdateFeedTest(unittest.TestCase):
         (self.host / "appcast.xml").write_text(feed)
         prepare(self.output, "macos-arm64", "1.3.0", self.url)
         folder = self.output / "macos-updates"
-        self.assertEqual((folder / "appcast.xml").read_text(), feed)
+        self.assertEqual(
+            [
+                enclosure.attrib
+                for _, enclosure in mac_items((folder / "appcast.xml").read_bytes())
+            ],
+            [enclosure.attrib for _, enclosure in mac_items(feed.encode())[:2]],
+        )
         self.assertEqual(
             {path.name for path in folder.glob("*.dmg")},
             {"AI-Detector-1.2.0.dmg", "AI-Detector-1.1.0.dmg"},
@@ -228,3 +268,38 @@ class UpdateFeedTest(unittest.TestCase):
             [version for version, _ in mac_items(feed.encode())],
             ["1.2.0", "1.1.0", "1.0.0"],
         )
+
+    def test_sparkle_skips_deleted_previews_and_stages_only_available_archives(self):
+        for available in (("1.2.0", "1.0.0"), ("1.2.0",), ()):
+            with self.subTest(available=available):
+                host = self.host / f"case-{len(available)}"
+                host.mkdir()
+                items = []
+                for version in ("1.2.0", "1.1.0", "1.0.0"):
+                    name = f"AI-Detector-{version}.dmg"
+                    if version in available:
+                        (host / name).write_bytes(version.encode())
+                    items.append(
+                        f'<item><sparkle:version>{version}</sparkle:version><enclosure url="{self.url}/{host.name}/{name}" /></item>'
+                    )
+                (host / "appcast.xml").write_text(
+                    '<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"><channel>'
+                    + "".join(items)
+                    + "</channel></rss>"
+                )
+                output = self.output / host.name
+                prepare(output, "macos-arm64", "1.3.0", f"{self.url}/{host.name}")
+                folder = output / "macos-updates"
+                self.assertEqual(
+                    {path.name for path in folder.glob("*.dmg")},
+                    {f"AI-Detector-{version}.dmg" for version in available},
+                )
+                self.assertEqual(
+                    tuple(
+                        version
+                        for version, _ in mac_items(
+                            (folder / "appcast.xml").read_bytes()
+                        )
+                    ),
+                    available,
+                )

@@ -40,17 +40,26 @@ def fetch_feed(url: str) -> bytes | None:
         return None
 
 
-def download(url: str, destination: Path, sha256: str | None = None) -> None:
-    with (
-        urllib.request.urlopen(url, timeout=60) as response,
-        destination.open("wb") as output,
-    ):
-        shutil.copyfileobj(response, output)
+def download(url: str, destination: Path, sha256: str | None = None) -> bool:
+    """Retrieve an optional delta base; deleted releases need a full update instead."""
+    try:
+        with (
+            urllib.request.urlopen(url, timeout=60) as response,
+            destination.open("wb") as output,
+        ):
+            shutil.copyfileobj(response, output)
+    except urllib.error.HTTPError as error:
+        if error.code != 404:
+            raise
+        error.close()
+        print(f"Previous archive was removed; skipping delta base: {url}")
+        return False
     if sha256:
         with destination.open("rb") as stream:
             actual = hashlib.file_digest(stream, "sha256").hexdigest()
         if actual.lower() != sha256.lower():
             raise ValueError(f"Previous package checksum failed: {destination.name}")
+    return True
 
 
 def mac_items(feed: bytes) -> list[tuple[str, ET.Element]]:
@@ -62,6 +71,30 @@ def mac_items(feed: bytes) -> list[tuple[str, ET.Element]]:
             version = version or enclosure.get(f"{{{SPARKLE}}}version")
             result.append((version, enclosure))
     return sorted(result, key=lambda item: numeric_version(item[0]), reverse=True)
+
+
+def prepare_macos(feed: bytes, folder: Path, version: str) -> None:
+    items = mac_items(feed)
+    newer_than(version, [old for old, _ in items])
+    available: set[str] = set()
+    for _, enclosure in items:
+        url = enclosure.attrib["url"]
+        name = Path(urllib.parse.unquote(urllib.parse.urlparse(url).path)).name
+        if download(url, folder / name):
+            available.add(url)
+        if len(available) == 2:
+            break
+
+    # This is a build input. Sparkle generates and signs the published feed later.
+    # Do not carry deleted or unstaged archives into that new feed.
+    tree = ET.fromstring(feed)
+    channel = tree.find("channel")
+    for item in channel.findall("item"):
+        enclosure = item.find("enclosure")
+        if enclosure is not None and enclosure.get("url") not in available:
+            channel.remove(item)
+    ET.register_namespace("sparkle", SPARKLE)
+    (folder / "appcast.xml").write_bytes(ET.tostring(tree, encoding="utf-8"))
 
 
 def prepare(
@@ -77,26 +110,29 @@ def prepare(
     if feed is None:
         return
     if platform == "macos-arm64":
-        items = mac_items(feed)
-        newer_than(version, [old for old, _ in items])
-        (folder / "appcast.xml").write_bytes(feed)
-        for _, enclosure in items[:2]:
-            url = enclosure.attrib["url"]
-            name = Path(urllib.parse.unquote(urllib.parse.urlparse(url).path)).name
-            download(url, folder / name)
+        prepare_macos(feed, folder, version)
     else:
         from release_signatures import verify_feed
 
         feed = verify_feed(feed, public_key)
         assets = json.loads(feed)["Assets"]
         newer_than(version, [asset["Version"] for asset in assets])
-        (output / "previous-windows-feed.json").write_bytes(feed)
         full = [asset for asset in assets if asset["Type"] == "Full"]
         if full:
             latest = max(full, key=lambda asset: numeric_version(asset["Version"]))
             url = urllib.parse.urljoin(feed_url.rstrip("/") + "/", latest["FileName"])
             name = Path(urllib.parse.unquote(urllib.parse.urlparse(url).path)).name
-            download(url, folder / name, latest["SHA256"])
+            if not download(url, folder / name, latest["SHA256"]):
+                feed = json.dumps(
+                    {
+                        "Assets": [
+                            asset
+                            for asset in assets
+                            if asset["Version"] != latest["Version"]
+                        ]
+                    }
+                ).encode()
+        (output / "previous-windows-feed.json").write_bytes(feed)
 
 
 def generate_macos_feed(

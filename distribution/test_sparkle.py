@@ -1,14 +1,17 @@
 """Exercise Sparkle's real signer and delta tools without installing an application."""
 
+import http.server
 import os
 import plistlib
 import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 import urllib.parse
 import xml.etree.ElementTree as ET
+from functools import partial
 from pathlib import Path
 from unittest.mock import patch
 
@@ -16,7 +19,7 @@ from fixtures.keys import PRIVATE_KEY, PUBLIC_KEY
 from package import macos_bundle
 from sign_macos import sign_app
 from update_channels import merge_macos, sparkle_signature
-from updates import SPARKLE, generate_macos_feed, mac_items
+from updates import SPARKLE, generate_macos_feed, mac_items, prepare_macos
 
 
 @unittest.skipUnless(
@@ -102,7 +105,7 @@ class SparkleTest(unittest.TestCase):
                         sdk,
                     )
                 if version == previous:
-                    previous_feed = (archives / "appcast.xml").read_bytes()
+                    previous_feed = self.stage_previous_feed(archives, builds[1], root)
             feed = archives / "appcast.xml"
             self.check_release_urls(feed, previous_feed, builds[0], builds[1], current)
             subprocess.run(
@@ -165,6 +168,35 @@ class SparkleTest(unittest.TestCase):
             )
 
             self.check_channel_signature(sdk, feed)
+
+    def stage_previous_feed(self, archives, next_version, root):
+        host = root / "host"
+        host.mkdir()
+        for archive in archives.glob("*.zip"):
+            shutil.copy2(archive, host)
+        server = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", 0),
+            partial(http.server.SimpleHTTPRequestHandler, directory=str(host)),
+        )
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            url = f"http://127.0.0.1:{server.server_port}"
+            tree = ET.parse(archives / "appcast.xml")
+            channel = tree.find("channel")
+            for enclosure in channel.findall("./item/enclosure"):
+                enclosure.set("url", f"{url}/{enclosure.get('url').rsplit('/', 1)[1]}")
+            removed = ET.SubElement(channel, "item")
+            ET.SubElement(removed, f"{{{SPARKLE}}}version").text = "0.0.0"
+            ET.SubElement(removed, "enclosure", url=f"{url}/removed.zip")
+            prepare_macos(ET.tostring(tree.getroot()), archives, next_version)
+            staged = (archives / "appcast.xml").read_bytes()
+            self.assertNotIn(b"removed.zip", staged)
+            return staged
+        finally:
+            server.shutdown()
+            server.server_close()
+            worker.join()
 
     def check_bundle(self, applied, build, version, channel):
         info = plistlib.loads((applied / "Contents/Info.plist").read_bytes())

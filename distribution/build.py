@@ -75,7 +75,12 @@ def build_detector(args) -> Path:
         "--exclude-module=onnxruntime.quantization",
     ]
     if kind == "windowsml":
-        flags += ["--collect-all", "winui3", "--collect-all", "winrt"]
+        flags += [
+            "--collect-all=winui3",
+            "--collect-all=winrt",
+            "--copy-metadata=wasdk-microsoft-windows-ai-machinelearning",
+            "--copy-metadata=winrt-runtime",
+        ]
     if args.platform == "macos-arm64" and not args.onefile:
         flags += [
             "--windowed",

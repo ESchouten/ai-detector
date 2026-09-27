@@ -111,10 +111,11 @@ def diagnostic_logging(config: Config, directory: Path, level: str) -> Iterator[
 
 def log_environment() -> None:
     logger.info(
-        "Runtime: Python %s; %s %s; architecture=%s; packaged=%s; pid=%d",
+        "Runtime: Python %s; %s %s; OS version=%s; architecture=%s; packaged=%s; pid=%d",
         platform.python_version(),
         platform.system(),
         platform.release(),
+        platform.version(),
         platform.machine(),
         bool(getattr(sys, "frozen", False)),
         os.getpid(),
@@ -136,6 +137,8 @@ def log_environment() -> None:
         "onnxruntime",
         "onnxruntime-gpu",
         "onnxruntime-windowsml",
+        "wasdk-microsoft-windows-ai-machinelearning",
+        "winrt-runtime",
         "certifi",
     ):
         try:

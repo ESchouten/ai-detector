@@ -1,5 +1,6 @@
 """Process-scoped inference setup and isolated third-party compatibility hooks."""
 
+import faulthandler
 import json
 import logging
 import os
@@ -10,6 +11,7 @@ from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, replace
 from importlib import import_module, util
 from pathlib import Path
+from time import perf_counter
 from typing import Any
 from urllib.parse import urlsplit
 
@@ -147,12 +149,26 @@ def _register_windows_ml(
                 message="Preparing hardware acceleration… First use may download additional components.",
             )
         )
+        # Native setup/registration can block outside the SDK's timed wait.
+        # Capture its Python call site if that happens, without stopping detection.
+        faulthandler.dump_traceback_later(WINDOWS_ML_PREPARATION_TIMEOUT + 30)
         try:
             _prepare_windows_ml_provider(provider, winml, foundation)
             if not provider.library_path:
-                continue
+                raise RuntimeError("Ready provider did not supply a library path")
+            logger.info(
+                "Registering Windows ML provider %s: %s",
+                provider.name,
+                provider.library_path,
+            )
+            started = perf_counter()
             ort.register_execution_provider_library(
                 provider.name, provider.library_path
+            )
+            logger.info(
+                "Windows ML provider %s registered in %.2fs",
+                provider.name,
+                perf_counter() - started,
             )
         except (OSError, RuntimeError, registration_error) as error:
             if requested is not None:
@@ -162,6 +178,8 @@ def _register_windows_ml(
             )
             failed = True
             continue
+        finally:
+            faulthandler.cancel_dump_traceback_later()
         resources.callback(ort.unregister_execution_provider_library, provider.name)
         registered.add(provider.name)
     if failed and not registered:
@@ -171,15 +189,33 @@ def _register_windows_ml(
 
 
 def _prepare_windows_ml_provider(provider: Any, winml: Any, foundation: Any) -> None:
+    state = provider.ready_state
+    logger.info("Windows ML provider %s readiness: %s", provider.name, state)
+    if state == winml.ExecutionProviderReadyState.READY:
+        return
+    started = perf_counter()
+    logger.info("Requesting Windows ML preparation: %s", provider.name)
     operation = provider.ensure_ready_async()
+    logger.info(
+        "Waiting for Windows ML provider %s (timeout %.0fs)",
+        provider.name,
+        WINDOWS_ML_PREPARATION_TIMEOUT,
+    )
     if operation.wait(WINDOWS_ML_PREPARATION_TIMEOUT) == foundation.AsyncStatus.STARTED:
+        logger.warning("Cancelling timed-out Windows ML preparation: %s", provider.name)
         operation.cancel()
         raise TimeoutError(f"Windows ML preparation timed out for {provider.name}")
-    result = operation.get()
+    logger.info("Reading Windows ML preparation result: %s", provider.name)
+    result = operation.get_results()
     if result.status != winml.ExecutionProviderReadyResultState.SUCCESS:
         raise RuntimeError(
             f"Windows ML could not prepare {provider.name}: {result.diagnostic_text}"
         )
+    logger.info(
+        "Windows ML provider %s prepared in %.2fs",
+        provider.name,
+        perf_counter() - started,
+    )
 
 
 def select_devices(devices: list[Any]) -> list[Any]:

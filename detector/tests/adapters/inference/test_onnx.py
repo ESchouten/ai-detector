@@ -1,4 +1,6 @@
+import json
 from contextlib import nullcontext
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -18,10 +20,21 @@ ONNX_MODELS = (ModelRequirements("model.onnx", image_size=640, batch_size=1),)
 
 @pytest.fixture
 def windows_ml(monkeypatch):
+    import faulthandler
     import sys
     from contextlib import contextmanager
 
-    state = SimpleNamespace(providers=[], lifecycle=[])
+    state = SimpleNamespace(providers=[], lifecycle=[], watchdog=[])
+    monkeypatch.setattr(
+        faulthandler,
+        "dump_traceback_later",
+        lambda seconds: state.watchdog.append(seconds),
+    )
+    monkeypatch.setattr(
+        faulthandler,
+        "cancel_dump_traceback_later",
+        lambda: state.watchdog.append("cancel"),
+    )
 
     @contextmanager
     def initialize(**kwargs):
@@ -44,6 +57,7 @@ def windows_ml(monkeypatch):
         sys.modules,
         "winui3.microsoft.windows.ai.machinelearning",
         SimpleNamespace(
+            ExecutionProviderReadyState=SimpleNamespace(READY="ready"),
             ExecutionProviderReadyResultState=SimpleNamespace(SUCCESS="success"),
             ExecutionProviderCatalog=SimpleNamespace(
                 get_default=lambda: SimpleNamespace(
@@ -182,22 +196,24 @@ def test_registered_devices_define_provider_order_and_inference_options():
 @pytest.mark.parametrize("inference_fails", [False, True])
 @pytest.mark.parametrize("missing_provider", [None, "first", "last"])
 @pytest.mark.parametrize("explicit", [False, True])
+@pytest.mark.parametrize("already_ready", [False, True])
 def test_windows_ml_session_uses_registered_device_and_releases_sdk_resources(
     monkeypatch,
     windows_ml,
     inference_fails,
     missing_provider,
     explicit,
+    already_ready,
     caplog,
 ):
-    import json
+    import logging
     import sys
-    from pathlib import Path
 
     from onnxruntime.capi.onnxruntime_pybind11_state import Fail
 
     lifecycle = windows_ml.lifecycle
     sessions, options = [], []
+    caplog.set_level(logging.INFO)
 
     class SessionOptions:
         def add_provider_for_devices(self, devices, settings):
@@ -207,17 +223,26 @@ def test_windows_ml_session_uses_registered_device_and_releases_sdk_resources(
         sessions.append(kwargs)
         return "session"
 
+    def prepare():
+        assert not already_ready, (
+            "An installed, ready provider must not be prepared again"
+        )
+        assert "Requesting Windows ML preparation:" in caplog.text
+        return SimpleNamespace(
+            wait=lambda timeout: "completed",
+            get_results=lambda: SimpleNamespace(status="success"),
+        )
+
     provider = SimpleNamespace(
         name="OpenVINOExecutionProvider",
         library_path="openvino.dll",
-        ensure_ready_async=lambda: SimpleNamespace(
-            wait=lambda timeout: "completed",
-            get=lambda: SimpleNamespace(status="success"),
-        ),
+        ready_state="ready" if already_ready else "not_ready",
+        ensure_ready_async=prepare,
     )
     webgpu = SimpleNamespace(
         name="WebGpuExecutionProvider",
         library_path="onnxruntime_providers_webgpu.dll",
+        ready_state=provider.ready_state,
         ensure_ready_async=provider.ensure_ready_async,
     )
     providers = [provider]
@@ -228,6 +253,7 @@ def test_windows_ml_session_uses_registered_device_and_releases_sdk_resources(
     windows_ml.providers = providers
 
     def register(name, path):
+        assert f"Registering Windows ML provider {name}: {path}" in caplog.text
         if name == webgpu.name:
             raise Fail(f'Error loading "{path}" which is missing. (Error 126)')
         lifecycle.append("register")
@@ -244,8 +270,6 @@ def test_windows_ml_session_uses_registered_device_and_releases_sdk_resources(
         ),
     )
     monkeypatch.setitem(sys.modules, "onnxruntime", ort)
-    monkeypatch.delenv("CI", raising=False)
-    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
     supplied = SessionOptions()
 
     outcome = (
@@ -290,10 +314,17 @@ def test_windows_ml_session_uses_registered_device_and_releases_sdk_resources(
         assert "unavailable" not in caplog.text
     assert ort.InferenceSession is session
     assert not settings_path.exists()
+    assert "Windows ML provider OpenVINOExecutionProvider registered in" in caplog.text
+    assert ("Waiting for Windows ML provider" in caplog.text) is not already_ready
+    assert windows_ml.watchdog == [WINDOWS_ML_PREPARATION_TIMEOUT + 30, "cancel"] * (
+        2 if missing_provider and not explicit else 1
+    )
 
 
 @pytest.mark.parametrize("explicit", [False, True])
-@pytest.mark.parametrize("failure", ["timeout", "failed", "error", "registration"])
+@pytest.mark.parametrize(
+    "failure", ["timeout", "failed", "error", "registration", "missing_library"]
+)
 def test_windows_ml_preparation_failures_are_bounded_and_observable(
     monkeypatch, windows_ml, caplog, tmp_path, failure, explicit
 ):
@@ -316,11 +347,12 @@ def test_windows_ml_preparation_failures_are_bounded_and_observable(
         lifecycle.append("wait")
         return "started" if failure == "timeout" else "completed"
 
-    def get():
-        assert failure != "timeout", "A timed-out operation must never block on get()"
+    def get_results():
+        assert failure != "timeout", "A timed-out operation has no result to retrieve"
+        assert "Reading Windows ML preparation result:" in caplog.text
         if failure == "error":
             raise OSError("Provider download failed")
-        if failure == "registration":
+        if failure in {"registration", "missing_library"}:
             return SimpleNamespace(status="success")
         return SimpleNamespace(
             status="failure", diagnostic_text="Provider download failed"
@@ -335,12 +367,16 @@ def test_windows_ml_preparation_failures_are_bounded_and_observable(
         )
 
     monkeypatch.setattr(ort, "register_execution_provider_library", register)
-    operation = SimpleNamespace(
-        wait=wait, get=get, cancel=lambda: lifecycle.append("cancel")
-    )
+
+    def cancel():
+        assert "Cancelling timed-out Windows ML preparation:" in caplog.text
+        lifecycle.append("cancel")
+
+    operation = SimpleNamespace(wait=wait, get_results=get_results, cancel=cancel)
     provider = SimpleNamespace(
         name="OpenVINOExecutionProvider",
-        library_path="must-not-register.dll",
+        ready_state="not_ready",
+        library_path="" if failure == "missing_library" else "must-not-register.dll",
         ensure_ready_async=lambda: operation,
     )
     windows_ml.providers = [provider]
@@ -352,6 +388,8 @@ def test_windows_ml_preparation_failures_are_bounded_and_observable(
         if failure == "timeout"
         else "Error 126"
         if failure == "registration"
+        else "did not supply a library path"
+        if failure == "missing_library"
         else "Provider download failed"
     )
     outcome = (
@@ -389,6 +427,7 @@ def test_windows_ml_preparation_failures_are_bounded_and_observable(
     if not explicit:
         assert "CPU" in reports[-1].message
         assert message in caplog.text
+    assert windows_ml.watchdog == [WINDOWS_ML_PREPARATION_TIMEOUT + 30, "cancel"]
 
 
 def test_tensorrt_profiles_use_all_detector_dimensions_and_source_counts():

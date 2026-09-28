@@ -9,6 +9,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import type { RuntimeMode, RuntimeStatus } from '../runtime.ts';
 import type { AppConfig, Config } from '../schema.ts';
 import { readJson, writeJson } from './json-file.ts';
+import { DetectorLog } from './detector-log.ts';
 import {
 	discoverNvidia,
 	needsNvidiaRuntime,
@@ -41,6 +42,7 @@ const RECOVERY_WINDOW_MS = 10 * 60 * 1000;
 
 /** One owner for the detector process. Commands are serialized; polling has no side effects. */
 export class ManagedDetector {
+	readonly log: DetectorLog;
 	private child: ChildProcessWithoutNullStreams | null = null;
 	private finished: Promise<number | null> = Promise.resolve(0);
 	private operation: Promise<unknown> = Promise.resolve();
@@ -55,6 +57,7 @@ export class ManagedDetector {
 
 	constructor(options: Options) {
 		this.options = options;
+		this.log = new DetectorLog(options.dataDirectory);
 		this.settingsPath = path.join(options.dataDirectory, 'runtime.json');
 		this.containerName =
 			'ai-detector-' +
@@ -65,7 +68,6 @@ export class ManagedDetector {
 			selected: null,
 			phase: 'stopped',
 			message: 'Ready to set up your camera.',
-			logs: '',
 			dataDirectory: options.dataDirectory,
 			readiness: 'idle',
 			cameras: []
@@ -98,7 +100,6 @@ export class ManagedDetector {
 			message,
 			readiness,
 			cameras,
-			logs: redact(this.state.logs),
 			preparation: readiness === 'preparing' ? this.progress.preparation : undefined,
 			notice: this.progress.notice
 		};
@@ -165,6 +166,7 @@ export class ManagedDetector {
 		recovering = false
 	): Promise<void> {
 		if (this.child || signal.aborted) return;
+		if (!recovering) this.log.begin();
 		this.progress = new RuntimeProgress();
 		this.state = {
 			...this.state,
@@ -172,8 +174,7 @@ export class ManagedDetector {
 			mode,
 			selected: null,
 			helpUrl: undefined,
-			message: 'Checking this computer…',
-			logs: recovering ? this.state.logs : ''
+			message: 'Checking this computer…'
 		};
 		try {
 			const config = await readJson<Config>(path.join(this.options.dataDirectory, 'config.json'));
@@ -187,6 +188,7 @@ export class ManagedDetector {
 			);
 			const selected = chooseRuntime(mode);
 			this.state.selected = selected;
+			this.log.append(`${new Date().toISOString()} Selected detection engine: ${selected}\n`);
 			signal.throwIfAborted();
 			const command = await this.prepare(selected, config, signal);
 			signal.throwIfAborted();
@@ -282,12 +284,13 @@ export class ManagedDetector {
 						run: (file, args, timeout, env) => this.runCheck(file, args, timeout, signal, env),
 						report: (message) => {
 							this.state.message = message;
+							this.log.append(`${new Date().toISOString()} ${message}\n`);
 						}
 					});
 				} catch (error) {
 					signal.throwIfAborted();
 					if (error instanceof SetupError && error.helpUrl) throw error;
-					this.append(Buffer.from(`\nNVIDIA preparation failed: ${String(error)}\n`));
+					this.log.append(`\nNVIDIA preparation failed: ${String(error)}\n`);
 					throw new SetupError(
 						'NVIDIA acceleration could not be prepared. Check your internet connection and graphics driver, then try again. Details are available below.'
 					);
@@ -295,10 +298,6 @@ export class ManagedDetector {
 			}
 		}
 		return { file: this.options.executable, args: [] };
-	}
-
-	private append(chunk: Buffer): void {
-		this.state.logs = (this.state.logs + chunk.toString()).slice(-16000);
 	}
 
 	private runCheck(
@@ -319,14 +318,12 @@ export class ManagedDetector {
 				stdio: ['ignore', 'pipe', 'pipe']
 			});
 			let output = '';
-			child.stdout.on('data', (chunk: Buffer) => {
-				this.append(chunk);
-				output = (output + chunk.toString()).slice(-4000);
-			});
-			child.stderr.on('data', (chunk: Buffer) => {
-				this.append(chunk);
-				output = (output + chunk.toString()).slice(-4000);
-			});
+			for (const input of [child.stdout, child.stderr]) {
+				createInterface({ input, crlfDelay: Infinity }).on('line', (line) => {
+					this.log.append(line + '\n');
+					output = (output + line + '\n').slice(-4000);
+				});
+			}
 			let startError: Error | undefined;
 			child.once('error', (error) => {
 				startError = error;
@@ -368,9 +365,11 @@ export class ManagedDetector {
 		const records = createInterface({ input: child.stdout, crlfDelay: Infinity });
 		records.on('line', (line) => {
 			if (line.startsWith(STATUS_PREFIX)) this.progress.accept(line);
-			else this.append(Buffer.from(line + '\n'));
+			else this.log.append(line + '\n');
 		});
-		child.stderr.on('data', (chunk: Buffer) => this.append(chunk));
+		createInterface({ input: child.stderr, crlfDelay: Infinity }).on('line', (line) =>
+			this.log.append(line + '\n')
+		);
 		child.on('spawn', () => {
 			if (this.state.phase !== 'starting') return;
 			this.state.phase = 'running';
@@ -379,8 +378,9 @@ export class ManagedDetector {
 		});
 		child.on('error', (error) => this.fail(error));
 		this.finished = new Promise((resolve) =>
-			child.on('close', (code) => {
+			child.on('close', (code, exitSignal) => {
 				records.close();
+				this.log.append(`${new Date().toISOString()} Detector exited: ${exitSignal ?? code}\n`);
 				this.child = null;
 				if (
 					code === MPS_FAILURE_EXIT_CODE &&
@@ -400,7 +400,7 @@ export class ManagedDetector {
 								'The detector stopped unexpectedly. Check the details below, then try again.'
 						)
 					);
-				resolve(code);
+				void this.log.flush().then(() => resolve(code));
 			})
 		);
 	}
@@ -419,7 +419,7 @@ export class ManagedDetector {
 		this.progress = new RuntimeProgress();
 		this.state.phase = 'starting';
 		this.state.message = 'Recovering from a graphics error. Restarting monitoring…';
-		this.append(Buffer.from('\nApple GPU error: restarting the detector in 2 seconds.\n'));
+		this.log.append('\nApple GPU error: restarting the detector in 2 seconds.\n');
 		void this.enqueue(async () => {
 			try {
 				await delay(2000, undefined, { signal });
@@ -442,6 +442,7 @@ export class ManagedDetector {
 			try {
 				await this.stopChild();
 			} finally {
+				await this.log.flush();
 				if (disable) await writeJson(this.settingsPath, this.settings);
 			}
 		});
@@ -492,5 +493,7 @@ export class ManagedDetector {
 		this.state.message =
 			error instanceof Error ? redact(error.message) : 'The detector could not start.';
 		this.state.helpUrl = error instanceof SetupError ? error.helpUrl : undefined;
+		this.log.append(`${new Date().toISOString()} ERROR ${this.state.message}\n`);
+		void this.log.flush();
 	}
 }

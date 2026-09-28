@@ -19,7 +19,7 @@ export function sanitizeSourceForLogs(source: string): string {
 }
 
 export function sanitizeTextForLogs(text: string): string {
-	return sanitizeParameters(text).replace(/[a-z][a-z0-9+.-]*:\/\/[^\s\r\n]+/gi, (source) =>
+	return sanitizeParameters(text).replace(/\b[a-z][a-z0-9+.-]*:\/\/[^\s\r\n]+/gi, (source) =>
 		sanitizeSourceForLogs(source)
 	);
 }

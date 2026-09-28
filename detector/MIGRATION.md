@@ -11,6 +11,10 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
 
+## FP16 model preparation — 2026-09-28
+
+FP16 ONNX exports now pass through ONNX Runtime's graph ordering before validation and cache publication. CPU-based FP16 conversion can append cast nodes after their consumers, causing an otherwise usable export to fail the ONNX checker. Precision, model metadata, external weights and configuration remain unchanged; invalid graphs still fail validation. Failed exports were never cached, so retrying after an application update rebuilds them automatically.
+
 ## Restore operational logging — 2026-09-25
 
 The default `INFO` level again shows prediction/tracking timings and Ultralytics detection summaries, alongside startup, camera connection, event, validation, cooldown and export diagnostics. These messages were missing or debug-only after the rewrite. Camera success is reported only after decoding a frame; delivery success only after the exporter returns. Source URLs and configuration secrets stay out of the new diagnostics. `--log-level WARNING` suppresses routine activity. Model settings, event rules, configuration and the separate launcher status protocol are unchanged.

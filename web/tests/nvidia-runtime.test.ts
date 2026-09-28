@@ -146,9 +146,9 @@ async function windowsFixture(t: TestContext) {
 	return { ...fixtureData, detector };
 }
 
-async function waitFor(predicate: () => boolean) {
+async function waitFor(predicate: () => boolean | Promise<boolean>) {
 	for (let i = 0; i < 200; i++) {
-		if (predicate()) return;
+		if (await predicate()) return;
 		await setTimeout(25);
 	}
 	assert.fail('Expected runtime state was not reached');
@@ -160,9 +160,9 @@ test(
 	async (t) => {
 		const { detector, data } = await windowsFixture(t);
 		await detector.start('auto');
-		await waitFor(() => detector.status().logs.includes('Using NVIDIA runtime'));
+		await waitFor(async () => (await detector.log.read()).includes('Using NVIDIA runtime'));
 		assert.equal(detector.status().phase, 'running');
-		assert.match(detector.status().logs, /GPU-00000000/);
+		assert.match(await detector.log.read(), /GPU-00000000/);
 		await detector.stop();
 		assert.equal(await readFile(path.join(data, 'flushed.txt'), 'utf8'), 'flushed');
 		assert.equal(detector.status().phase, 'stopped');
@@ -178,11 +178,11 @@ test(
 		await detector.start('auto');
 		assert.equal(detector.status().phase, 'failed');
 		assert.match(detector.status().message, /NVIDIA acceleration could not be prepared/);
-		assert.match(detector.status().logs, /hash mismatch/);
+		assert.match(await detector.log.read(), /hash mismatch/);
 		assert.equal(await readJson(path.join(data, 'runtime.json')), null);
 		await writeJson(path.join(bundle, 'fixture.json'), {});
 		await detector.start('auto');
-		await waitFor(() => detector.status().logs.includes('Using NVIDIA runtime'));
+		await waitFor(async () => (await detector.log.read()).includes('Using NVIDIA runtime'));
 		assert.equal(detector.status().phase, 'running');
 		await detector.stop();
 	}
@@ -195,7 +195,7 @@ test(
 		const { detector, bundle, data } = await windowsFixture(t);
 		await writeJson(path.join(bundle, 'fixture.json'), { holdInstall: true });
 		const starting = detector.start('auto');
-		await waitFor(() => detector.status().logs.includes('Downloading GPU packages'));
+		await waitFor(async () => (await detector.log.read()).includes('Downloading GPU packages'));
 		const pid = Number(await readFile(path.join(bundle, 'install-pid.txt'), 'utf8'));
 		await detector.stop();
 		await starting;

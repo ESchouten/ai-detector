@@ -12,6 +12,7 @@
 	import { page } from '$app/state';
 	import GithubIcon from '@lucide/svelte/icons/github';
 	import SettingsIcon from '@lucide/svelte/icons/settings';
+	import LogsIcon from '@lucide/svelte/icons/logs';
 	import { createRuntimeStatus, provideRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 
 	let { children } = $props();
@@ -54,6 +55,7 @@
 		streams: 'Cameras',
 		notifications: 'Alerts',
 		setup: 'Settings',
+		logs: 'Logs',
 		detectors: 'Detectors',
 		add: 'Settings'
 	};
@@ -62,6 +64,11 @@
 		{
 			title: 'Support',
 			items: [
+				{
+					title: 'Logs',
+					url: resolve('/logs'),
+					icon: LogsIcon
+				},
 				{
 					title: 'GitHub',
 					url: 'https://github.com/ESchouten/ai-detector',

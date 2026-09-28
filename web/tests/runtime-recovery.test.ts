@@ -64,15 +64,15 @@ test(
 		await waitFor(() => detector.status().message.includes('Recovering'));
 		assert.equal(detector.status().readiness, 'preparing');
 		assert.deepEqual(detector.status().cameras, []);
-		assert.match(detector.status().logs, /Injected inference failure/);
+		assert.match(await detector.log.read(), /Injected inference failure/);
 		assert.throws(() => process.kill(originalPid, 0), { code: 'ESRCH' });
 
 		await waitFor(() => detector.status().readiness === 'monitoring');
 		assert.notEqual(await pid(), originalPid);
 		assert.equal(await starts(), 2);
-		assert.match(detector.status().logs, /Injected inference failure/);
-		assert.match(detector.status().logs, /restarting the detector/);
-		assert.ok(!detector.status().logs.includes('secret'));
+		assert.match(await detector.log.read(), /Injected inference failure/);
+		assert.match(await detector.log.read(), /restarting the detector/);
+		assert.ok(!(await detector.log.read()).includes('secret'));
 		assert.deepEqual(await readJson(path.join(directory, 'config.json')), settings);
 		assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
 			mode: 'auto',
@@ -137,7 +137,7 @@ test('a recovery revalidates settings and keeps a failed check visible', posixOn
 	await writeJson(path.join(directory, 'config.json'), { detectors: [] });
 	await waitFor(() => detector.status().phase === 'failed');
 	assert.match(detector.status().message, /Add a detector/);
-	assert.match(detector.status().logs, /Injected inference failure/);
+	assert.match(await detector.log.read(), /Injected inference failure/);
 	assert.equal(await starts(), 1);
 });
 
@@ -149,7 +149,7 @@ test(
 		process.kill(await pid(), 'SIGUSR2');
 		await waitFor(() => detector.status().message.includes('Recovering'));
 		await writeJson(path.join(directory, 'config.json'), { ...config, holdCheck: true });
-		await waitFor(() => detector.status().logs.includes('Checking configuration'));
+		await waitFor(async () => (await detector.log.read()).includes('Checking configuration'));
 		const checkPid = Number(await readFile(path.join(directory, 'check-pid.txt'), 'utf8'));
 		await detector.stop();
 		assert.equal(detector.status().phase, 'stopped');
@@ -157,7 +157,7 @@ test(
 		assert.equal(await starts(), 1);
 		await writeJson(path.join(directory, 'config.json'), config);
 		await detector.start('auto');
-		await waitFor(() => detector.status().logs.includes('camera.local'));
+		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		assert.equal(await starts(), 2);
 	}
 );
@@ -167,7 +167,7 @@ for (const exitCode of [0, 1, 2]) {
 		const { detector, pid, starts } = await fixture(t, { failureExitCode: exitCode });
 		process.kill(await pid(), 'SIGUSR2');
 		await waitFor(() => detector.status().phase === (exitCode === 0 ? 'stopped' : 'failed'));
-		assert.doesNotMatch(detector.status().logs, /restarting the detector/);
+		assert.doesNotMatch(await detector.log.read(), /restarting the detector/);
 		assert.equal(await starts(), 1);
 	});
 }
@@ -180,7 +180,7 @@ for (const action of ['stop', 'apply'] as const) {
 			const { detector, starts } = await fixture(t, { stopExitCode: 75 });
 			await assert.rejects(detector[action](), /stopped unexpectedly/);
 			assert.equal(detector.status().phase, 'failed');
-			assert.doesNotMatch(detector.status().logs, /restarting the detector/);
+			assert.doesNotMatch(await detector.log.read(), /restarting the detector/);
 			assert.equal(await starts(), 1);
 		}
 	);

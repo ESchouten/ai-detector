@@ -50,6 +50,35 @@ function commandBody(input) {
 }
 const startBody = commandBody('native');
 
+test('saved logs are searchable in the page and downloadable with conditional refreshes', async (t) => {
+	const { directory, base } = await startServer(t);
+	await mkdir(path.join(directory, 'logs'), { recursive: true });
+	await writeFile(
+		path.join(directory, 'logs/application.log'),
+		'2026-09-28 20:00:00 INFO Preparing rtsp://farmer:secret@camera.local/live\n' +
+			'2026-09-28 20:01:00 ERROR Invalid model\nTraceback:\n  model.py:20\n'
+	);
+	const response = await fetch(`${base}/logs/output`);
+	assert.equal(response.status, 200);
+	const text = await response.text();
+	assert.match(text, /Preparing rtsp:/);
+	assert.match(text, /ERROR Invalid model\nTraceback:/);
+	assert.doesNotMatch(text, /secret|farmer/);
+	const unchanged = await fetch(`${base}/logs/output`, {
+		headers: { 'If-None-Match': response.headers.get('etag') }
+	});
+	assert.equal(unchanged.status, 304);
+	const download = await fetch(`${base}/logs/output?download`);
+	assert.match(
+		download.headers.get('content-disposition'),
+		/attachment; filename="ai-detector.log"/
+	);
+	assert.equal(await download.text(), text);
+	const page = await fetch(`${base}/logs`);
+	assert.equal(page.status, 200);
+	assert.match(await page.text(), /Search logs/);
+});
+
 test('production downloads export filtered recordings and a separate settings backup', async (t) => {
 	const { directory, base } = await startServer(t);
 	const source = 'rtsp://farmer:private-password@camera.example.test/live';

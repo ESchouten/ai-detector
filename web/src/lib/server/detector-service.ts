@@ -53,7 +53,6 @@ export async function detectorStatus(): Promise<RuntimeStatus> {
 			phase: 'stopped',
 			message:
 				'This web server uses a separately managed detector. Download the complete application to start and stop it here.',
-			logs: '',
 			dataDirectory: DATA_DIRECTORY,
 			readiness: 'idle',
 			cameras: []

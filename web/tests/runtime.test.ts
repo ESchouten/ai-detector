@@ -108,9 +108,9 @@ test(
 		await writeJson(path.join(directory, 'config.json'), config);
 		await detector.initialize();
 		await Promise.all([detector.start('native'), detector.start('native')]);
-		await waitFor(() => detector.status().logs.includes('camera.local'));
+		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		assert.equal(detector.status().phase, 'running');
-		assert.ok(!detector.status().logs.includes('secret'));
+		assert.ok(!(await detector.log.read()).includes('secret'));
 		assert.equal(await readFile(path.join(directory, 'starts.txt'), 'utf8'), 'started\n');
 		await detector.apply();
 		await waitFor(
@@ -158,7 +158,7 @@ test(
 		});
 		await writeJson(path.join(directory, 'config.json'), { ...config, stopExitCode: 17 });
 		await detector.start('native');
-		await waitFor(() => detector.status().logs.includes('camera.local'));
+		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		await assert.rejects(detector.stop(), /stopped unexpectedly/);
 		assert.equal(detector.status().phase, 'failed');
 		assert.equal(
@@ -262,7 +262,7 @@ test(
 		assert.equal(detector.status().selected, 'docker');
 		assert.equal(detector.status().phase, 'failed');
 		assert.match(detector.status().message, /GPU check/);
-		assert.match(detector.status().logs, /CUDA driver unavailable/);
+		assert.match(await detector.log.read(), /CUDA driver unavailable/);
 		assert.match(detector.status().helpUrl!, /^https:\/\/docs.nvidia.com/);
 		assert.equal(await readJson(path.join(directory, 'runtime.json')), null);
 	}
@@ -281,7 +281,7 @@ for (const action of ['start', 'resume', 'apply'] as const) {
 			await writeJson(path.join(directory, 'runtime.json'), { mode: 'native', enabled: true });
 		if (action === 'apply') {
 			await detector.start('native');
-			await waitFor(() => detector.status().logs.includes('camera.local'));
+			await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		}
 		const pending =
 			action === 'start'
@@ -323,7 +323,7 @@ test(
 			await cancelled;
 			await rm(directory, { recursive: true, force: true });
 		});
-		await waitFor(() => detector.status().logs.includes('Checking configuration'));
+		await waitFor(async () => (await detector.log.read()).includes('Checking configuration'));
 		const pid = Number(await readFile(path.join(directory, 'check-pid.txt'), 'utf8'));
 		abort.abort();
 		await cancelled;
@@ -383,7 +383,7 @@ test(
 		await waitFor(() => detector.status().readiness === 'monitoring');
 		assert.equal(detector.status().cameras[0].id, 'barn-camera');
 		assert.ok(detector.status().cameras[0].lastInferenceAt);
-		assert.ok(!detector.status().logs.includes('AIDETECTOR_STATUS'));
+		assert.ok(!(await detector.log.read()).includes('AIDETECTOR_STATUS'));
 		await writeJson(path.join(directory, 'app.json'), {
 			streams: [{ id: 'barn-camera', source, label: 'North barn' }]
 		});

@@ -28,7 +28,6 @@ export interface RuntimeStatus {
 	phase: RuntimePhase;
 	message: string;
 	helpUrl?: string;
-	logs: string;
 	dataDirectory: string;
 	readiness: RuntimeReadiness;
 	cameras: CameraRuntimeStatus[];

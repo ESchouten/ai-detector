@@ -246,9 +246,9 @@
 						<p class="text-xs break-all text-muted-foreground">
 							Settings and recordings: {runtime.dataDirectory}
 						</p>
-						<pre
-							class="max-h-64 overflow-auto rounded-md bg-muted p-3 text-xs break-all whitespace-pre-wrap">{runtime.logs ||
-								'No diagnostic output yet.'}</pre>
+						<Button href={resolve('/logs')} variant="outline" size="sm" class="self-start"
+							>View logs</Button
+						>
 					</div>
 				</details>
 			{/if}

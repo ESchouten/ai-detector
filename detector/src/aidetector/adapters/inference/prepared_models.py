@@ -13,6 +13,7 @@ import onnx
 import onnxslim
 import torch
 import ultralytics
+from onnxruntime.transformers.onnx_model import OnnxModel
 from ultralytics import YOLO
 from ultralytics.utils.downloads import attempt_download_asset
 
@@ -87,6 +88,13 @@ def prepare_onnx(
         shutil.copyfile(source, checkpoint)
         model = YOLO(str(checkpoint), task=config.task)
         exported = Path(model.export(**arguments))
+        if options.half:
+            # CPU FP16 conversion appends input casts after their consumers.
+            # Use ORT's sorter; preserve external tensors and SDK metadata.
+            logger.info("Ordering FP16 ONNX graph before validation")
+            graph = onnx.load(exported, load_external_data=False)
+            OnnxModel(graph).topological_sort()
+            onnx.save(graph, exported)
         # Validate before publication and keep external tensor files beside the
         # graph. A failed/interrupted export never becomes a reusable cache hit.
         onnx.checker.check_model(str(exported))

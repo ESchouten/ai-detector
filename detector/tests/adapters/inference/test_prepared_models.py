@@ -1,6 +1,8 @@
 from datetime import datetime
 
 import numpy as np
+import onnx
+import onnxruntime
 import pytest
 from ultralytics import YOLO
 
@@ -14,6 +16,32 @@ from aidetector.adapters.inference.yolo import open_detector
 from aidetector.configuration import OnnxConfig, YoloConfig
 from aidetector.domain.models import Frame
 from tests.support.onnx_model import write_detection_model
+
+
+def test_real_yolo26_fp16_cpu_export_is_valid_and_runs_dynamic_batches(tmp_path):
+    checkpoint = tmp_path / "fixture.pt"
+    YOLO("yolo26n.yaml").save(checkpoint)
+    config = YoloConfig(model=str(checkpoint), imgsz=64)
+    options = InferenceOptions(half=True)
+    cache = tmp_path / "cache"
+    exported = prepare_onnx(config, OnnxConfig(opset=20), 1, options, cache)
+    onnx.checker.check_model(str(exported))
+    graph = onnx.load(exported)
+    assert any(
+        tensor.data_type == onnx.TensorProto.FLOAT16
+        for tensor in graph.graph.initializer
+    )
+    assert graph.metadata_props
+    session = onnxruntime.InferenceSession(
+        str(exported), providers=["CPUExecutionProvider"]
+    )
+    for batch in (1, 2):
+        result = session.run(
+            None, {"images": np.zeros((batch, 3, 64, 64), dtype=np.float32)}
+        )
+        assert result[0].shape[0] == batch
+        assert np.isfinite(result[0]).all()
+    assert prepare_onnx(config, OnnxConfig(opset=20), 1, options, cache) == exported
 
 
 @pytest.fixture
@@ -147,6 +175,37 @@ def test_interrupted_export_is_not_published_and_can_be_retried(
     monkeypatch.setattr(prepared_models.YOLO, "export", export)
     assert prepare_onnx(config, OnnxConfig(), 1, InferenceOptions(), cache).is_file()
     assert len(calls) == 1
+
+
+@pytest.mark.parametrize("half", [False, True])
+def test_export_with_missing_input_is_rejected_without_publishing_cache(
+    tmp_path, prepared_checkpoint, monkeypatch, half
+):
+    from aidetector.adapters.inference import prepared_models
+
+    source, _ = prepared_checkpoint
+    export = prepared_models.YOLO.export
+
+    def broken_export(self, **arguments):
+        output = export(self, **arguments)
+        graph = onnx.load(output)
+        graph.graph.node.append(
+            onnx.helper.make_node("Identity", ["missing_input"], ["broken_output"])
+        )
+        onnx.save(graph, output)
+        return output
+
+    monkeypatch.setattr(prepared_models.YOLO, "export", broken_export)
+    cache = tmp_path / "cache"
+    with pytest.raises((onnx.checker.ValidationError, RuntimeError)):
+        prepare_onnx(
+            YoloConfig(model=str(source)),
+            OnnxConfig(),
+            1,
+            InferenceOptions(half=half),
+            cache,
+        )
+    assert list(cache.iterdir()) == []
 
 
 def test_real_torch_checkpoint_is_exported_once_and_cached_onnx_runs_on_reopen(

@@ -1,12 +1,12 @@
 # Workflows
 
-Use **Application download** for desktop installers and automatic updates. Use **Container releases** for independently managed Docker/Compose deployments, including Jetson.
+Use **Application download** for desktop installers and automatic updates. Use **Container releases** for independently managed Docker/Compose deployments, including existing Jetson deployments.
 
 | Workflow | When it runs | Responsibility |
 | --- | --- | --- |
 | [Application download](workflows/application.yml) | `app/v*`, `app/test-*`, manual | Check all three OSes, build the matching NVIDIA image and native applications, smoke-test packages, then publish signed stable or preview updates. |
-| [Container releases](workflows/containers.yml) | `detector/v*`, `web/v*`, manual | Publish detector and web images; retain amd64/arm64 and the separate JetPack 6 detector image. |
-| [Detector Tests](workflows/detector-tests.yml) | Relevant branch pushes/PRs, manual, application workflow | Python/OS compatibility, branch coverage, architecture, schemas, complexity and domain mutation reports. Static checks run once. |
+| [Container releases](workflows/containers.yml) | `detector/v*`, `web/v*`, manual | Publish detector and web images; combine amd64/arm64 detector images. JetPack 6 images are no longer built. |
+| [Detector Tests](workflows/detector-tests.yml) | Relevant branch pushes/PRs, manual, application workflow | Pinned Python 3.12 on all three OSes, branch coverage, architecture, schemas, complexity and domain mutation reports. Static checks run once. |
 | [Web and setup tests](workflows/web-tests.yml) | Relevant branch pushes/PRs, manual, application workflow | Behavioral tests on Linux, Windows and Mac; static, production server and Compose checks on Linux. |
 | [Desktop distribution tests](workflows/distribution-tests.yml) | Relevant branch pushes/PRs, manual | Workflow lint, native launchers, compiled web lifecycle, installers and framework update/delta tests. |
 
@@ -16,7 +16,7 @@ Application publishing is serialized across stable and preview releases because 
 
 Web schema, formatting, lint, type and dependency checks run once per invocation, on Linux. Web behavior and native packaging/lifecycle tests still run on all three OSes. Distribution lint also runs once per workflow, on Linux; distribution tests cover Bun and native binaries while the web workflow owns Node/TypeScript checks.
 
-Tool versions live in [distribution/toolchain.json](../distribution/toolchain.json), [web/package.json](../web/package.json), and the Python/NuGet lockfiles. Shared actions have narrow responsibilities:
+Python is pinned once in [`detector/.python-version`](../detector/.python-version), shared by development, CI, native builds and the Windows CUDA payload. Other tool versions live in [distribution/toolchain.json](../distribution/toolchain.json), [web/package.json](../web/package.json), and the Python/NuGet lockfiles. Shared actions have narrow responsibilities:
 
 - [setup-web](actions/setup-web/action.yml): Node, pnpm, Bun, dependency caching and locked web installation. Web tests do not install Python or .NET build tools.
 - [setup-distribution](actions/setup-distribution/action.yml): Python/uv, build dependencies, optional .NET and the shared web setup. Installer assembly skips web tools because it receives tested binaries.
@@ -27,7 +27,7 @@ Build commands remain in [distribution/build.py](../distribution/build.py), usab
 
 ## Container releases
 
-Pushing `detector/vX.Y.Z` publishes only the detector; `web/vX.Y.Z` publishes only the web image. Stable tags also update `latest`, while prerelease tags keep their versioned image without moving `latest`. The detector's native amd64 and arm64 jobs combine into one multi-architecture image; JetPack 6 retains its separate `-jetpack6` suffix, including `latest-jetpack6`.
+Pushing `detector/vX.Y.Z` publishes only the detector; `web/vX.Y.Z` publishes only the web image. Stable tags also update `latest`, while prerelease tags keep their versioned image without moving `latest`. The detector's native amd64 and arm64 jobs combine into one multi-architecture image; JetPack 6 builds and their variant matrix have been removed. Previously published `-jetpack6` images remain available for existing deployments but receive no new builds. The generic ARM64 image is not yet qualified for Orin / JetPack 7.2; see the [detector guide](../detector/README.md#jetson-installations).
 
 For development, select a branch in **Run workflow**, then choose `all`, `detector` or `web`. Branch runs publish branch-named images without changing `latest`. With `all`, the detector and web builds run independently. Container publication is serialized to avoid concurrent writes to shared tags.
 

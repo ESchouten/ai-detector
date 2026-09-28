@@ -11,7 +11,7 @@ The repository has three deployable responsibilities. The web app owns setup and
 
 ## Local setup
 
-Use Python 3.11 or 3.12 for development, uv, Node 24, pnpm 9.15.9 and Bun 1.3.9. Release builds use Python 3.11. The shared desktop toolchain is recorded in `distribution/toolchain.json`. From the repository root:
+Use uv, Node 24, pnpm 9.15.9 and Bun 1.3.9. Python 3.12 is the minimum supported version; uv selects the exact development and build version from [`detector/.python-version`](detector/.python-version). CI and the downloadable Windows CUDA runtime use the same pin. Other desktop tools are recorded in `distribution/toolchain.json`. From the repository root:
 
 ```sh
 uv sync --project detector --locked --extra default

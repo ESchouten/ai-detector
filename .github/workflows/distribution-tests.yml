@@ -2,10 +2,10 @@ name: Desktop distribution tests
 
 on:
   pull_request:
-    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', '.config/**', '.github/**', '.gitattributes']
+    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', 'detector/.python-version', '.config/**', '.github/**', '.gitattributes']
   push:
     branches: ['**']
-    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', '.config/**', '.github/**', '.gitattributes']
+    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', 'detector/.python-version', '.config/**', '.github/**', '.gitattributes']
   workflow_dispatch:
 
 permissions:
@@ -40,7 +40,7 @@ jobs:
       - uses: ./.github/actions/setup-distribution
         with:
           dotnet: 'true'
-      - run: python -m pip install -r distribution/requirements.txt
+      - run: uv pip install -r distribution/requirements.txt
       - name: Distribution lint and formatting
         if: runner.os == 'Linux'
         run: |

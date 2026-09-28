@@ -1,4 +1,6 @@
-# JetPack 6: the NVIDIA runtime and image must match the Jetson's JetPack version.
+# Legacy JetPack 6 installation: this detector image no longer receives updates.
+# Keep the existing image on JetPack 6; the generic ARM64 image is not qualified
+# for Orin / JetPack 7.2. See detector/MIGRATION.md before upgrading.
 services:
   aidetector:
     image: "ghcr.io/eschouten/ai-detector:latest-jetpack6"

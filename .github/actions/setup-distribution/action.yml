@@ -22,18 +22,18 @@ runs:
             for name, version in json.loads(Path('distribution/toolchain.json').read_text()).items():
                 output.write(f'{name}={version}\n')
         PY
-    - uses: actions/setup-python@v6
+    - uses: astral-sh/setup-uv@v7
       with:
-        python-version: ${{ steps.versions.outputs.python }}
+        working-directory: detector
+        version-file: pyproject.toml
+        activate-environment: true
+        venv-path: ${{ runner.temp }}/distribution-venv
+        enable-cache: true
+        cache-dependency-glob: uv.lock
     - name: Install build dependencies
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: python -m pip install --requirement distribution/build-requirements.txt
-    - uses: astral-sh/setup-uv@v7
-      with:
-        version-file: detector/pyproject.toml
-        enable-cache: true
-        cache-dependency-glob: detector/uv.lock
+      run: uv pip install --requirement distribution/build-requirements.txt
     - uses: ./.github/actions/setup-web
       if: inputs.web == 'true'
     - uses: actions/setup-dotnet@v5

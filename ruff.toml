@@ -1,5 +1,5 @@
 # Shared by detector source, tests, developer tools and distribution scripts.
-target-version = "py310"
+target-version = "py312"
 src = ["detector", "detector/src", "distribution"]
 
 [lint]

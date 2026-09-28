@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -89,7 +89,7 @@ class DetectionEvent:
         return (self.end - self.start).total_seconds()
 
 
-class ValidationStatus(str, Enum):
+class ValidationStatus(StrEnum):
     APPROVED = "approved"
     REJECTED = "rejected"
     UNVALIDATED = "unvalidated"

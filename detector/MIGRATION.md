@@ -47,7 +47,7 @@ These are behavior decisions, not accidental compatibility changes. Their tests 
 - Disk `directory` must be a single category name under `detections/`, such as `mounts`. Nested paths, absolute paths, blank names, and dot-only names are rejected because they break archive discovery. Move an old absolute output root to `--data-dir` and choose a single category name.
 - Put finite files and live streams in separate detector definitions. Each finite file now closes its event before the next file starts.
 - Provider calls and webhook/Telegram requests default to a finite timeout. VLM retry attempts and pending delivery events are configurable; shutdown drains accepted events and can wait for these requests.
-- Standalone executables use Python 3.11 in the release workflow. Python 3.10 source installations select ONNX Runtime 1.23.x, which still provides their binary wheels.
+- Current source installations require Python 3.12 or newer. Development, CI and native executables use the shared `.python-version` pin; see the Python migration section below.
 - Buffered frames are assigned to event windows in timestamp order, preserving eligible trailing footage before a timeout or maximum-duration boundary.
 - Signed ONNX URLs receive the same runtime setup and provider validation as local ONNX models in CUDA and TensorRT builds.
 - Missing FFmpeg is reported as a verification or delivery failure. Independent destinations continue to be attempted.
@@ -178,3 +178,13 @@ Packaged executables now use their bundled certifi roots for verified HTTPS down
 Normal detector runs now retain Python diagnostics in `<data directory>/logs/detector.log`, rotating at 2 MiB with five backups. Console output remains available; an unwritable log directory falls back to the console. Offline CLI actions do not create logs. Startup records runtime versions, HTTPS trust settings and an allowlisted configuration summary before hardware setup. Camera connections, events and failed batches use abbreviated IDs matching the existing launcher source keys. Input failures include frame metadata rather than pixels, and credential redaction applies to formatted messages and tracebacks. Configuration, archive formats, inference behavior and the launcher status protocol are unchanged.
 
 The new complete application download owns detector startup from the browser; separately managed CLI and Compose installations keep their existing lifecycle. `--control-stdin` opts into graceful `stop`/EOF control from the parent application, including Windows. No stdin handling is added to ordinary runs. Data remains under the configured runtime directory. See the [application guide](../README.md) for download targets and data locations.
+
+## Python 3.12 and JetPack 6 retirement — 2026-09-28
+
+Python 3.10 and 3.11 are no longer supported by new detector versions. The minimum is Python 3.12; [`.python-version`](.python-version) pins the exact version used by uv for development, CI and native packaging. Run `uv sync --locked --extra default` from `detector/` to recreate an older development environment. Configuration, model presets and the detection archive contract are unchanged.
+
+Desktop users receive the interpreter in the application update. The downloadable Windows CUDA payload now uses the same pin, generated into `runtime.json` at build time. Its environment identity already includes the Python version, so the first launch after this update creates a new environment. Existing cached environments remain available for rollback. Windows CUDA 12.8 dependency pins are retained; removing older Python support does not change the inference backend.
+
+The container workflow no longer builds the separate JetPack 6 variant. Previously published images are not deleted or retagged, and the legacy `example/compose.jetson.yml` remains available for existing installations. Keep the existing image on a JetPack 6 host; do not point it at the generic `latest` image.
+
+New Jetson work targets JetPack 7.2 and Python 3.12. A supported JetPack 7.2 detector image still needs validation on real Orin hardware. The current Ultralytics generic ARM64 image is not a verified replacement: its [Jetson guide](https://docs.ultralytics.com/guides/nvidia-jetson/) calls for separate Orin/JetPack 7.2 validation and documents that its bundled TensorRT does not support JetPack. Before migrating a farm installation, qualify model loading/export, GPU inference, multiple streams and restart on that hardware, and back up the mounted settings and recordings.

@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   detector:
-    name: Detector / ${{ matrix.variant }} / ${{ matrix.platform }}
+    name: Detector / ${{ matrix.platform }}
     if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/detector/v')) || (github.event_name == 'workflow_dispatch' && inputs.component != 'web')
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
@@ -32,16 +32,8 @@ jobs:
         include:
           - platform: linux/amd64
             runner: ubuntu-latest
-            variant: default
-            arm64_base: latest-nvidia-arm64
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
-            variant: default
-            arm64_base: latest-nvidia-arm64
-          - platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            variant: jetpack6
-            arm64_base: latest-jetson-jetpack6
     steps:
       - uses: actions/checkout@v6
       - uses: jlumbroso/free-disk-space@v1.3.1
@@ -56,9 +48,7 @@ jobs:
         uses: docker/metadata-action@v5
         with: &detector-metadata
           images: ghcr.io/eschouten/ai-detector
-          flavor: |
-            latest=${{ github.event_name == 'push' && 'auto' || 'false' }}
-            suffix=${{ matrix.variant == 'jetpack6' && '-jetpack6' || '' }},onlatest=true
+          flavor: latest=${{ github.event_name == 'push' && 'auto' || 'false' }}
           tags: |
             type=semver,pattern={{version}},match=^detector/v(.*)$
             type=ref,event=branch
@@ -69,12 +59,10 @@ jobs:
           context: detector
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            REF_NAME=${{ github.ref_name }}
-            ULTRALYTICS_TAG_ARM64=${{ matrix.arm64_base }}
+          build-args: REF_NAME=${{ github.ref_name }}
           outputs: type=image,name=ghcr.io/eschouten/ai-detector,push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=${{ matrix.variant }}-${{ matrix.platform }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.variant }}-${{ matrix.platform }},ignore-error=true
+          cache-from: type=gha,scope=default-${{ matrix.platform }}
+          cache-to: type=gha,mode=max,scope=default-${{ matrix.platform }},ignore-error=true
       - name: Export digest
         id: digest
         env:
@@ -86,26 +74,22 @@ jobs:
           echo "platform=${PLATFORM//\//-}" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         with:
-          name: digests-${{ matrix.variant }}-${{ steps.digest.outputs.platform }}
+          name: digests-${{ steps.digest.outputs.platform }}
           path: ${{ runner.temp }}/digests/*
           if-no-files-found: error
           retention-days: 1
 
   detector-manifest:
-    name: Publish detector / ${{ matrix.variant }}
+    name: Publish detector
     needs: detector
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        variant: [default, jetpack6]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/download-artifact@v7
         with:
           path: ${{ runner.temp }}/digests
-          pattern: digests-${{ matrix.variant }}-*
+          pattern: digests-*
           merge-multiple: true
       - uses: ./.github/actions/setup-container
         with:

@@ -174,15 +174,14 @@ class BuildTest(unittest.TestCase):
         version = self.root / "detector/src/aidetector/version.py"
         version.parent.mkdir(parents=True)
         version.write_text("original version\n")
-        toolchain = self.root / "distribution/toolchain.json"
-        toolchain.parent.mkdir()
-        toolchain.write_text('{"python": "3.11"}')
+        (self.root / "detector/.python-version").write_text("3.12.14\n")
         args = build.parse_arguments(
             ["detector", "--platform", "windows-x64", "--type", "default"]
         )
         with patch.object(build, "run") as run:
             result = build.build_detector(args)
         install, freeze = (call.args for call in run.call_args_list)
+        self.assertEqual(install[install.index("--python") + 1], "3.12.14")
         self.assertEqual(install[install.index("--extra") + 1], "default")
         self.assertEqual(
             freeze[freeze.index("--specpath") + 1], self.root / "detector/build"

@@ -8,7 +8,7 @@ The web application reads the event archive through its documented directory and
 
 ## Start contributing
 
-Use Python 3.10 or newer and [uv](https://docs.astral.sh/uv/). From the repository root:
+Use Python 3.12 or newer and [uv](https://docs.astral.sh/uv/). In this checkout, uv selects the version pinned in [`.python-version`](.python-version). From the repository root:
 
 ```sh
 cd detector
@@ -65,7 +65,7 @@ Set a breakpoint in `DetectionPipeline.process` or `EventDelivery.deliver`, choo
 
 ## Run from source
 
-Use Python 3.10 or newer and [uv](https://docs.astral.sh/uv/). From `detector/`:
+Use Python 3.12 or newer and [uv](https://docs.astral.sh/uv/). In this checkout, uv selects the version pinned in [`.python-version`](.python-version). From `detector/`:
 
 ```sh
 uv sync --locked --no-dev --extra default
@@ -105,15 +105,19 @@ Select **one** runtime extra per environment:
 
 These packages share the `onnxruntime` import namespace. Do not combine the extras or use `--all-extras`. Native CUDA/TensorRT dependencies must match the target machine; the published platform builds configure their build type explicitly.
 
-Python 3.10 uses ONNX Runtime 1.23.x because the 1.24.x CPU/GPU releases have no CPython 3.10 wheels. The lockfile selects the compatible runtime automatically.
-
 ## Executables and Docker
 
 [Releases](https://github.com/ESchouten/ai-detector/releases) contain the platform distributions. Run an executable from a terminal with the same flags shown above. Its default `config.json` location is beside the executable. `--version` reports the build reference and runtime type.
 
 Docker runs the same module from `/data`. Mount your configuration and event data there. The repository's `example/compose.yml` demonstrates the detector and web UI together; replace the example's model/provider/notification settings before starting it. For a local image build, use `detector/` as the build context. The context excludes local recordings, weights, environments, and research outputs.
 
-The release workflow builds Linux CUDA images, Windows ML/CUDA executables, and a macOS executable. Executable builds explicitly use Python 3.11 and run local ONNX and Torch-checkpoint smoke tests through inference, verification, and delivery. Local verification and hardware limitations are recorded in [AUDIT.md](../docs/history/detector/AUDIT.md). A successful package build does not establish that every GPU provider works on every target machine.
+The release workflow builds Linux CUDA images, Windows ML/CUDA executables, and a macOS executable. Executable builds use the Python 3.12 patch release in [`.python-version`](.python-version) and run local ONNX and Torch-checkpoint smoke tests through inference, verification, and delivery. Local verification and hardware limitations are recorded in [AUDIT.md](../docs/history/detector/AUDIT.md). A successful package build does not establish that every GPU provider works on every target machine.
+
+### Jetson installations
+
+New detector versions require Python 3.12 and no longer publish JetPack 6 images. Existing JetPack 6 deployments can keep their previously published image and Compose configuration; those images receive no further updates. See [migration guidance](MIGRATION.md#python-312-and-jetpack-6-retirement--2026-09-28).
+
+JetPack 7.2 provides a Python 3.12 environment, but the current generic NVIDIA ARM64 container is **not qualified for Orin / JetPack 7.2**. Ultralytics documents separate container validation and a TensorRT incompatibility in its current ARM64 image. Follow the [upstream Jetson guide](https://docs.ultralytics.com/guides/nvidia-jetson/) for platform requirements. A container build on an ARM64 CI runner does not establish Jetson GPU compatibility.
 
 ## Configuration
 
@@ -264,7 +268,7 @@ Regenerate committed schemas with `uv run --no-sync generate-schema` when changi
 
 After building an executable, run `uv run --no-sync python -m tests.support.smoke_package /path/to/executable`. This checks a generated ONNX model downloaded from a local HTTPS server through Ultralytics, two-source tracking, structured verification through a local fake API, JPEG/MP4 archives, HTTPS delivery, and EOF shutdown. Repeat with `--model-format pt` to check a generated, untrained Torch checkpoint through download, loading and export. Both checks use temporary local assets and a test CA passed only to the child process; no external weights are downloaded or system certificates installed. A `--version` check alone does not load the inference or provider libraries.
 
-Native application builds use Python 3.11. Use that interpreter when reproducing executable builds; support for newer Python versions in source installations does not establish compatibility with every frozen build. The [combined application workflow](../.github/workflows/application.yml) calls [distribution/build.py](../distribution/build.py) for packaging. Individual detector executables can still be built locally with its `detector` command. The [container workflow](../.github/workflows/containers.yml) publishes amd64/arm64 and JetPack 6 images; `detector/v*` tags no longer publish separate native downloads.
+Native application builds, development and CI use the Python version in [`.python-version`](.python-version). The Windows CUDA payload receives that same version during staging. Use this pin when reproducing executable builds; support for newer Python versions in source installations does not establish compatibility with every frozen build. The [combined application workflow](../.github/workflows/application.yml) calls [distribution/build.py](../distribution/build.py) for packaging. Individual detector executables can still be built locally with its `detector` command. The [container workflow](../.github/workflows/containers.yml) publishes amd64/arm64 images; `detector/v*` tags no longer publish separate native downloads.
 
 ## License
 

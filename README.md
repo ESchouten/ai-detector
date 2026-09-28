@@ -62,7 +62,7 @@ That deployment uses separately managed containers; the browser cannot start or 
 
 ### Start automatically on a Jetson or Linux desktop
 
-For an installed **JetPack 6** system with Docker Compose and the NVIDIA Container Runtime available, run this once from the repository folder, as the account used on the desktop:
+For an existing **JetPack 6** installation using its legacy detector image, with Docker Compose and the NVIDIA Container Runtime available, run this once from the repository folder, as the account used on the desktop:
 
 ```sh
 python3 distribution/linux_startup.py install --compose example/compose.jetson.yml
@@ -70,7 +70,7 @@ python3 distribution/linux_startup.py install --compose example/compose.jetson.y
 
 The command requests the administrator password, enables Docker at boot, starts the services, and installs browser autostart for that desktop account. It opens the web app after it responds. On later boots, detection runs even before login; at desktop login the browser opens **Detections**, or **Setup** if no cameras are configured. For power-on without a login prompt, enable **Automatic Login** in the Linux desktop's user settings. The installer leaves that account setting to you.
 
-Use the Compose file belonging to your existing installation so it keeps the same settings and recordings. On an ordinary NVIDIA Linux PC use `--compose example/compose.yml`. If you changed the published web port, also pass `--url http://localhost:YOUR_PORT/`. The Jetson example is specifically for JetPack 6; other JetPack versions need a matching detector image. This helper configures startup for an existing Docker installation; it does not install Docker or GPU drivers. Changes to detector settings still require `docker compose -f example/compose.jetson.yml restart aidetector`.
+Use the Compose file belonging to your existing installation so it keeps the same settings and recordings. On an ordinary NVIDIA Linux PC use `--compose example/compose.yml`. If you changed the published web port, also pass `--url http://localhost:YOUR_PORT/`. The Jetson example preserves legacy JetPack 6 installations; new releases no longer build that image. The generic ARM64 image is not yet qualified for Orin / JetPack 7.2. See [Jetson migration guidance](detector/MIGRATION.md#python-312-and-jetpack-6-retirement--2026-09-28) before changing the OS or detector image. This helper configures startup for an existing Docker installation; it does not install Docker or GPU drivers. Changes to detector settings still require `docker compose -f example/compose.jetson.yml restart aidetector`.
 
 Both services use `restart: unless-stopped`. A deliberate `docker compose stop` keeps them stopped across reboots; run `docker compose up -d` with the same Compose file to resume them. Closing the browser does not stop either service.
 

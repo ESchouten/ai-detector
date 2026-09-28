@@ -3,6 +3,7 @@ import logging
 import os
 import subprocess
 import sys
+from contextlib import suppress
 from importlib import import_module
 from pathlib import Path
 from types import SimpleNamespace
@@ -150,6 +151,8 @@ def test_blocked_helper_is_killed_and_reaped_with_its_diagnostics(
     assert last_event == "wait:" + PROVIDER
     assert helper_pid != os.getpid()
     # Windows virtualenvs launch the interpreter through a separate redirector.
-    # Its job object must terminate the real SDK process as well as the launcher.
+    # Its job closes on exit; Windows finishes terminating its child asynchronously.
+    with suppress(psutil.NoSuchProcess):
+        psutil.Process(helper_pid).wait(timeout=5)
     assert not psutil.pid_exists(helper_pid), "Windows ML helper survived its timeout"
     assert "Simulated native call blocked" in caplog.text

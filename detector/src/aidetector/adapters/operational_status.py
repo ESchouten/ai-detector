@@ -2,7 +2,7 @@
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from threading import Lock
 from time import monotonic
 from typing import TextIO
@@ -37,7 +37,7 @@ class JsonStatusReporter:
             record: dict[str, str | int] = {
                 "version": 1,
                 "event": event.kind,
-                "at": datetime.now(timezone.utc).isoformat(),
+                "at": datetime.now(UTC).isoformat(),
             }
             if event.source is not None:
                 record["sourceKey"] = source_key(event.source)

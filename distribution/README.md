@@ -69,12 +69,12 @@ The desktop source participates in normal web formatting, ESLint complexity limi
 
 ## Local builds and tests
 
-Install uv, Node, pnpm and Bun. Pinned CI versions live in `toolchain.json`; pnpm follows `web/package.json`. Windows launcher builds also need the listed .NET SDK. Linux installer builds need `desktop-file-validate` and `dpkg-deb`.
+Install uv, Node, pnpm and Bun. The Python version is pinned once in [`detector/.python-version`](../detector/.python-version); other CI tool versions live in `toolchain.json`, and pnpm follows `web/package.json`. uv supplies the pinned Python on every OS, including security releases without official Windows/macOS installers. Windows launcher builds also need the listed .NET SDK. Linux installer builds need `desktop-file-validate` and `dpkg-deb`.
 
 From the repository root, one command builds a complete native preview, checks setup/detection/graceful shutdown, and creates its installer:
 
 ```sh
-uv run --no-project --python 3.11 --with-requirements distribution/requirements.txt python distribution/build.py all
+uv run --project detector --extra default --with-requirements distribution/requirements.txt python distribution/build.py all
 ```
 
 The command checks the host OS and CPU architecture, required tools, an optional frozen detector and the output destination before compilation. It rejects unsupported or mismatched targets. Previews use version `0.0.0` with production updates disabled. The command installs locked component dependencies and uses an isolated environment for packaging tools. It never installs the resulting application or enables startup.
@@ -85,7 +85,7 @@ CI uses `python distribution/build.py detector --platform PLATFORM`, `web --plat
 
 On Linux, the `default` extra obtains Torch and Torchvision from PyTorch's CPU index. This avoids bundling several gigabytes of unused CUDA libraries into the native installer. The `nvidia` extra and NVIDIA container runtime keep their GPU dependencies; Mac builds retain MPS support. Install one inference extra at a time: `default`, `nvidia`, or `windowsml`. Use the pinned uv 0.12.19; CI reads that requirement from `detector/pyproject.toml`.
 
-Windows application builds also stage `detector/nvidia-runtime/`: the same detector source, a small entry script, uv and its licenses, a pinned Python version, and a `pylock.toml` exported from the canonical detector lockfile. GPU binaries are not included. On Windows builds below 26100, automatic inference on an NVIDIA device with compute capability 7.5 or newer selects this runtime. Driver branch 572 or newer is required. Explicit ONNX providers, snapshot-only configurations and Docker bypass it; Windows 11 24H2 and newer retain Windows ML. This bootstrap belongs to the complete application, not the standalone one-file detector.
+Windows application builds also stage `detector/nvidia-runtime/`: the same detector source, a small entry script, uv and its licenses, a `runtime.json` generated from the shared `detector/.python-version` pin, and a `pylock.toml` exported from the canonical detector lockfile. GPU binaries are not included. On Windows builds below 26100, automatic inference on an NVIDIA device with compute capability 7.5 or newer selects this runtime. Driver branch 572 or newer is required. Explicit ONNX providers, snapshot-only configurations and Docker bypass it; Windows 11 24H2 and newer retain Windows ML. This bootstrap belongs to the complete application, not the standalone one-file detector.
 
 The web process manager uses uv to install Python and binary dependencies in the application's data directory. Windows NVIDIA dependencies select PyTorch 2.11.0/Torchvision 0.26.0 from the official CUDA 12.8 index and ONNX Runtime GPU below 1.27 to retain CUDA 12.8 compatibility. The exported lock contains direct wheel URLs and SHA-256 hashes; installations require hashes and disallow source builds. uv 0.12.19's pylock installer is experimental, so its executable is pinned and the actual Windows download/install path is tested in the application workflow. No system Python, CUDA Toolkit or driver installer is invoked.
 
@@ -104,7 +104,7 @@ PyInstaller discovers ONNX imports normally and includes its data and package me
 Fast checks:
 
 ```sh
-uv run --no-project --python 3.11 --with-requirements distribution/requirements.txt python -m unittest discover -s distribution -p 'test_*.py'
+uv run --project detector --extra default --with-requirements distribution/requirements.txt python -m unittest discover -s distribution -p 'test_*.py'
 pnpm --dir web quality
 bun test ./web/desktop/host.test.ts
 ```

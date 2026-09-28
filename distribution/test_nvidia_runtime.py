@@ -5,10 +5,9 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import tomllib
 import unittest
 from pathlib import Path
-
-import tomllib
 
 from nvidia_runtime import stage_nvidia_runtime
 
@@ -25,6 +24,8 @@ class NvidiaRuntimeTest(unittest.TestCase):
         version = subprocess.check_output([uv, "--version"], text=True)
         if version.split()[1] != "0.12.19":
             self.skipTest("Requires uv 0.12.19, matching the shipped bootstrap")
+        python = (ROOT / "detector/.python-version").read_text().strip()
+        abi = "cp" + "".join(python.split(".")[:2])
         with tempfile.TemporaryDirectory(prefix="nvidia stage ") as temporary:
             folder = Path(temporary) / "payload"
             stage_nvidia_runtime(ROOT, folder, "test-nvidia")
@@ -32,7 +33,7 @@ class NvidiaRuntimeTest(unittest.TestCase):
             self.assertTrue((folder / "uv-LICENSE-MIT").is_file())
             self.assertTrue((folder / "uv-LICENSE-APACHE").is_file())
             self.assertEqual(
-                json.loads((folder / "runtime.json").read_text())["python"], "3.11.16"
+                json.loads((folder / "runtime.json").read_text())["python"], python
             )
             source = ROOT / "detector/src/aidetector"
             for file in source.rglob("*.py"):
@@ -49,7 +50,7 @@ class NvidiaRuntimeTest(unittest.TestCase):
             wheels = [
                 item
                 for item in torch["wheels"]
-                if "cp311-cp311-win_amd64" in item["url"]
+                if f"{abi}-{abi}-win_amd64" in item["url"]
             ]
             self.assertEqual(len(wheels), 1)
             self.assertEqual(len(wheels[0]["hashes"]["sha256"]), 64)
@@ -63,7 +64,7 @@ class NvidiaRuntimeTest(unittest.TestCase):
                     "sync",
                     "--dry-run",
                     "--python-version",
-                    "3.11",
+                    python,
                     "--python-platform",
                     "x86_64-pc-windows-msvc",
                     "--target",

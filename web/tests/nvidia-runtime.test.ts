@@ -94,7 +94,7 @@ async function fixture(t: TestContext) {
 		new URL('./fixtures/detector.mjs', import.meta.url),
 		path.join(bundle, 'detector-fixture.mjs')
 	);
-	await writeJson(path.join(bundle, 'runtime.json'), { python: '3.11.16' });
+	await writeJson(path.join(bundle, 'runtime.json'), { python: '3.12.14' });
 	await writeJson(path.join(bundle, 'fixture.json'), {});
 	await writeFile(path.join(bundle, 'pylock.toml'), 'locked GPU dependencies');
 	const messages: string[] = [];
@@ -241,7 +241,7 @@ test(
 		);
 		assert.deepEqual(
 			await readJson(path.join(path.dirname(path.dirname(first.file)), 'ready.json')),
-			{ python: '3.11.16' }
+			{ python: '3.12.14' }
 		);
 		await writeFile(path.join(bundle, 'pylock.toml'), 'new pinned dependencies');
 		const changed = await prepareNvidiaRuntime(options);

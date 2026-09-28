@@ -3,7 +3,7 @@ name = "aidetector"
 version = "0.1.0"
 description = "Video event detection with optional AI verification and configurable delivery"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "certifi>=2026.6.17",
     "imageio-ffmpeg>=0.6.0",
@@ -23,8 +23,7 @@ default = [
     "torchvision",
     "onnx>=1.20.1",
     "onnxslim>=0.1.87",
-    "onnxruntime>=1.23.2,<1.24; python_version < '3.11'",
-    "onnxruntime>=1.24.1; python_version >= '3.11'",
+    "onnxruntime>=1.24.1",
 ]
 nvidia = [
     # Keep Windows on CUDA 12.8. Newer Torch/ORT releases default to CUDA 13.
@@ -34,9 +33,8 @@ nvidia = [
     "torchvision==0.26.0; sys_platform == 'win32'",
     "onnx>=1.20.1",
     "onnxslim>=0.1.87",
-    "onnxruntime-gpu>=1.23.2,<1.24; python_version < '3.11'",
-    "onnxruntime-gpu>=1.24.1; python_version >= '3.11' and sys_platform != 'win32'",
-    "onnxruntime-gpu>=1.24.1,<1.27; python_version >= '3.11' and sys_platform == 'win32'",
+    "onnxruntime-gpu>=1.24.1; sys_platform != 'win32'",
+    "onnxruntime-gpu>=1.24.1,<1.27; sys_platform == 'win32'",
 ]
 windowsml = [
     "onnx>=1.20.1",

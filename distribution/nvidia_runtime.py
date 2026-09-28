@@ -11,6 +11,11 @@ def stage_nvidia_runtime(root: Path, destination: Path, reference: str) -> None:
     if uv is None:
         raise FileNotFoundError("uv is required to stage the NVIDIA runtime")
     shutil.copytree(root / "distribution/nvidia", destination)
+    (destination / "runtime.json").write_text(
+        json.dumps({"python": (root / "detector/.python-version").read_text().strip()})
+        + "\n",
+        encoding="utf-8",
+    )
     shutil.copy2(uv, destination / "uv.exe")
     subprocess.run(
         [

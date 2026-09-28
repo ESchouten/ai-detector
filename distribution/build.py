@@ -59,7 +59,7 @@ def build_detector(args) -> Path:
             "sync",
             "--locked",
             "--python",
-            json.loads((ROOT / "distribution/toolchain.json").read_text())["python"],
+            (ROOT / "detector/.python-version").read_text().strip(),
             "--extra",
             kind,
             cwd=ROOT / "detector",

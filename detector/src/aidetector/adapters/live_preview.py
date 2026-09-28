@@ -7,7 +7,7 @@ import logging
 import re
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from threading import Event, Lock, Thread
 from time import monotonic, time
@@ -137,7 +137,7 @@ class LivePreview:
                 {
                     "version": 1,
                     "runId": self.run_id,
-                    "updatedAt": datetime.now(timezone.utc).isoformat(),
+                    "updatedAt": datetime.now(UTC).isoformat(),
                 },
             )
             self._heartbeat = now
@@ -177,7 +177,7 @@ class LivePreview:
             "sourceKey": source_key,
             "ruleId": rule_id,
             "capturedAt": observation.date.isoformat(),
-            "publishedAt": datetime.now(timezone.utc).isoformat(),
+            "publishedAt": datetime.now(UTC).isoformat(),
             "image": {
                 "width": width,
                 "height": height,

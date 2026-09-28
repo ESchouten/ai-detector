@@ -114,7 +114,7 @@ export async function prepareNvidiaRuntime(options: Preparation): Promise<Detect
 		if (!existsSync(python)) {
 			await run(
 				uv,
-				['venv', '--no-config', '--managed-python', '--python', manifest.python, directory],
+				['venv', '--no-config', '--python', manifest.python, directory],
 				300000,
 				env
 			);

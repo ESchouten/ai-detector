@@ -139,6 +139,12 @@ jobs:
           dotnet-tests: ${{ runner.os == 'Windows' && 'true' || 'false' }}
       - name: Build detector
         run: python distribution/build.py detector --platform '${{ matrix.platform }}' --version "$GITHUB_REF_NAME"
+      - name: Test downloaded NVIDIA runtime
+        if: runner.os == 'Windows'
+        working-directory: web
+        env:
+          NVIDIA_RUNTIME_BUNDLE: ${{ github.workspace }}/detector/dist/aidetector/nvidia-runtime
+        run: node --test tests/nvidia-runtime-installed.test.ts
       - name: Install release signing tools
         run: uv pip install --python detector/.venv --requirement distribution/requirements.txt
       - name: Install desktop launcher test tools
@@ -336,7 +342,7 @@ jobs:
 
             Closing the browser leaves monitoring active. Pause explicitly when you want monitoring to stay paused. Desktop startup runs after you sign in; monitoring before login is not promised.
 
-            Updates are authenticated using AI Detector’s own signing key. These downloads have no Windows publisher certificate or Apple notarization; OS warnings or execution restrictions can apply. Supported packaging targets: Windows 11 24H2+ x64, macOS 14+ Apple Silicon, Ubuntu 22.04/24.04 amd64. GPU and camera qualification remains specific to the tested hardware.
+            Updates are authenticated using AI Detector’s own signing key. These downloads have no Windows publisher certificate or Apple notarization; OS warnings or execution restrictions can apply. Packaging targets: Windows 10 22H2+ / Windows 11 x64, macOS 14+ Apple Silicon, Ubuntu 22.04/24.04 amd64. Older Windows systems download CUDA dependencies on first use when a supported NVIDIA GPU is present. GPU and camera qualification remains specific to the tested hardware.
 
             Choose one download: `*-windows-x64-setup.zip`, `*-macos-arm64.dmg`, or `*-linux-amd64.deb`. The `.nupkg` and `.delta` assets are used by automatic updates; you do not need to download them yourself.
       - name: Publish application before promoting update feeds

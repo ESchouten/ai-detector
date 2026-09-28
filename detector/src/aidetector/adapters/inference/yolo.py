@@ -14,6 +14,7 @@ from ultralytics import YOLO
 from ultralytics.data.loaders import LoadStreams, SourceTypes
 from ultralytics.engine.results import Results
 
+from aidetector.adapters.inference import MpsInferenceError
 from aidetector.adapters.inference.export_settings import export_arguments
 from aidetector.adapters.inference.model_assets import MODEL_DOWNLOAD_HELP
 from aidetector.adapters.inference.onnx import InferenceOptions
@@ -33,8 +34,13 @@ def _mps_inference() -> Iterator[None]:
     import torch
 
     with _MPS_LOCK:
-        yield
-        torch.mps.synchronize()
+        try:
+            yield
+            torch.mps.synchronize()
+        except torch.AcceleratorError as error:
+            raise MpsInferenceError(
+                "Apple GPU inference failed; a fresh detector process is required."
+            ) from error
 
 
 class InMemoryStreamBatch(LoadStreams):

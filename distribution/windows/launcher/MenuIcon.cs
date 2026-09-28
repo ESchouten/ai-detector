@@ -5,12 +5,12 @@ namespace AIDetector.Desktop;
 
 internal static class MenuIcon
 {
-    // Use the icons supplied by Windows 11.
+    // This system icon font is available on both Windows 10 and Windows 11.
     public static Bitmap Create(string glyph)
     {
         var image = new Bitmap(32, 32);
         using var graphics = Graphics.FromImage(image);
-        using var font = new Font("Segoe Fluent Icons", 24, FontStyle.Regular, GraphicsUnit.Pixel);
+        using var font = new Font("Segoe MDL2 Assets", 24, FontStyle.Regular, GraphicsUnit.Pixel);
         using var brush = new SolidBrush(SystemColors.MenuText);
         using var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
         graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;

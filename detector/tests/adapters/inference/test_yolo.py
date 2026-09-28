@@ -8,6 +8,7 @@ import pytest
 import torch
 from ultralytics.engine.results import Results
 
+from aidetector.adapters.inference import MpsInferenceError
 from aidetector.adapters.inference.onnx import (
     InferenceOptions,
 )
@@ -189,6 +190,68 @@ def test_sdk_result_count_mismatch_never_discards_sources(monkeypatch, result_co
     )
     with pytest.raises(ValueError, match="zip"):
         detector.detect({"one": (frame(0),), "two": (frame(1),)})
+
+
+@pytest.mark.parametrize("tracking", [False, True])
+@pytest.mark.parametrize("stage", ["predict", "transfer", "synchronize"])
+def test_mps_accelerator_failure_requests_a_fresh_process(monkeypatch, tracking, stage):
+    error = torch.AcceleratorError("index -123 is out of bounds for dimension 1")
+
+    def fail_at(current):
+        if current == stage:
+            raise error
+
+    class FailingModel:
+        names = {0: "cow"}
+
+        def predict(self, **kwargs):
+            fail_at("predict")
+
+            def transfer():
+                fail_at("transfer")
+                return ()
+
+            yield SimpleNamespace(boxes=SimpleNamespace(cpu=transfer))
+
+        track = predict
+
+    monkeypatch.setattr(torch.mps, "synchronize", lambda: fail_at("synchronize"))
+    detector = YoloDetector(
+        FailingModel(),
+        YoloConfig(model="model.pt", tracking=tracking),
+        ("camera",),
+        InferenceOptions(native_mps=True),
+    )
+    with pytest.raises(MpsInferenceError, match="fresh detector process") as raised:
+        detector.detect({"camera": (frame(),)})
+    assert raised.value.__cause__ is error
+
+
+@pytest.mark.parametrize("native_mps", [False, True])
+@pytest.mark.parametrize("error_type", [RuntimeError, torch.AcceleratorError])
+def test_only_mps_accelerator_errors_request_recovery(
+    monkeypatch, native_mps, error_type
+):
+    error = error_type("inference failed")
+    model = Model()
+
+    def fail(**kwargs):
+        raise error
+
+    monkeypatch.setattr(model, "predict", fail)
+    detector = YoloDetector(
+        model,
+        YoloConfig(model="model.pt"),
+        ("camera",),
+        InferenceOptions(native_mps=native_mps),
+    )
+    if native_mps and error_type is torch.AcceleratorError:
+        with pytest.raises(MpsInferenceError):
+            detector.detect({"camera": (frame(),)})
+    else:
+        with pytest.raises(error_type) as raised:
+            detector.detect({"camera": (frame(),)})
+        assert raised.value is error
 
 
 @pytest.mark.parametrize("tracking", [False, True])

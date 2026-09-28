@@ -4,6 +4,7 @@ config.**.json
 yolo11**
 app.json
 runtime.json
+!/distribution/nvidia/runtime.json
 /application-dist/
 !example/config.json
 !web/src/routes/(admin)/detections

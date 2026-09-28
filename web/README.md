@@ -53,9 +53,11 @@ Settings are read without creating or rewriting files. The checked-in Python JSO
 
 Malformed JSON remains an error. Detector presets are discovered directly from `../config/detector/*.json` and embedded in the build, so setup does not fetch them from GitHub. Filenames supply the displayed names. An installed application can use a local `presets/` folder; see the [preset guide](../config/README.md). Camera connections and the first model download still need network access.
 
-`pnpm test` runs platform selection, process lifecycle, cancellation, restart, configuration failure, GPU check failure, credential redaction and data persistence tests. Process fixture tests run on POSIX; Windows shutdown is covered by the Python stdin-control tests and the complete bundle smoke in release CI. `pnpm check` fails on errors and warnings. See the [architecture and reading map](ARCHITECTURE.md) for the source boundaries, test map, complexity limits and generated dependency graph.
+`pnpm test` runs platform selection, process lifecycle, cancellation, restart, configuration failure, GPU check failure, credential redaction and data persistence tests. `runtime-recovery.test.ts` covers bounded MPS recovery with real child processes, preserved logs, fresh readiness and pause/quit cancellation. Process fixture tests run on POSIX; Windows shutdown is covered by the Python stdin-control tests and the complete bundle smoke in release CI. `pnpm check` fails on errors and warnings. See the [architecture and reading map](ARCHITECTURE.md) for the source boundaries, test map, complexity limits and generated dependency graph.
 
 ## Building executables
+
+On older Windows systems, `nvidia-runtime.ts` prepares the optional CUDA runtime through uv. `nvidia-runtime.test.ts` checks discovery, cache reuse, download failures, retry and cancellation; `nvidia-runtime-installed.test.ts` installs the real packages in Windows application CI. See the [distribution guide](../distribution/README.md) for supported GPUs and the dependency cache layout.
 
 Set `AI_DETECTOR_WEB_TARGET` to `windows-x64-baseline`, `darwin-arm64` or `linux-x64-baseline` when running `pnpm build`. The complete [application workflow](../.github/workflows/application.yml) builds and packages the web executable, the native detector and FFmpeg together, then tests the result. The [container workflow](../.github/workflows/containers.yml) publishes the separate web image for Docker/Compose deployments; standalone web executables can still be built locally with `distribution/build.py web --standalone-web`.
 

@@ -7,6 +7,7 @@ from importlib import import_module
 from pathlib import Path
 from types import SimpleNamespace
 
+import psutil
 import pytest
 
 from aidetector.adapters.inference.onnx import ModelRequirements, inference_runtime
@@ -145,5 +146,10 @@ def test_blocked_helper_is_killed_and_reaped_with_its_diagnostics(
     assert children[0].poll() is not None
     assert children[0].returncode != 0
     events = [json.loads(line) for line in trace.read_text().splitlines()]
-    assert events[-1] == [children[0].pid, "wait:" + PROVIDER]
+    helper_pid, last_event = events[-1]
+    assert last_event == "wait:" + PROVIDER
+    assert helper_pid != os.getpid()
+    # Windows virtualenvs launch the interpreter through a separate redirector.
+    # Its job object must terminate the real SDK process as well as the launcher.
+    assert not psutil.pid_exists(helper_pid), "Windows ML helper survived its timeout"
     assert "Simulated native call blocked" in caplog.text

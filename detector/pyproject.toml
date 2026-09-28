@@ -27,12 +27,16 @@ default = [
     "onnxruntime>=1.24.1; python_version >= '3.11'",
 ]
 nvidia = [
-    "torch",
-    "torchvision",
+    # Keep Windows on CUDA 12.8. Newer Torch/ORT releases default to CUDA 13.
+    "torch; sys_platform != 'win32'",
+    "torchvision; sys_platform != 'win32'",
+    "torch==2.11.0; sys_platform == 'win32'",
+    "torchvision==0.26.0; sys_platform == 'win32'",
     "onnx>=1.20.1",
     "onnxslim>=0.1.87",
     "onnxruntime-gpu>=1.23.2,<1.24; python_version < '3.11'",
-    "onnxruntime-gpu>=1.24.1; python_version >= '3.11'",
+    "onnxruntime-gpu>=1.24.1; python_version >= '3.11' and sys_platform != 'win32'",
+    "onnxruntime-gpu>=1.24.1,<1.27; python_version >= '3.11' and sys_platform == 'win32'",
 ]
 windowsml = [
     "onnx>=1.20.1",
@@ -43,18 +47,25 @@ windowsml = [
 ]
 
 [tool.uv]
-required-version = ">=0.12.19"
+required-version = "==0.12.19"
 conflicts = [[{ extra = "default" }, { extra = "nvidia" }, { extra = "windowsml" }]]
 
 [tool.uv.sources]
 torch = [
     { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
-    { index = "pypi", extra = "nvidia" },
+    { index = "pytorch-cu128", extra = "nvidia", marker = "sys_platform == 'win32'" },
+    { index = "pypi", extra = "nvidia", marker = "sys_platform != 'win32'" },
 ]
 torchvision = [
     { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
-    { index = "pypi", extra = "nvidia" },
+    { index = "pytorch-cu128", extra = "nvidia", marker = "sys_platform == 'win32'" },
+    { index = "pypi", extra = "nvidia", marker = "sys_platform != 'win32'" },
 ]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
 
 [[tool.uv.index]]
 name = "pytorch-cpu"
@@ -81,6 +92,7 @@ dev = [
     "ty>=0.0.14",
     "pyinstaller>=6.18.0",
     "pytest>=9.1.1",
+    "psutil>=7.2.2",
     "trustme>=1.2.1",
     "opencv-stubs>=0.1.1",
     "jsonschema>=4.23",

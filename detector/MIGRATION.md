@@ -29,6 +29,8 @@ The `default` extra now selects CPU builds of Torch and Torchvision on Linux. Na
 
 ## Intentional corrections
 
+Packaged Windows applications now prepare an optional NVIDIA environment on first use for Windows builds below 26100 and supported NVIDIA GPUs (compute capability 7.5+, driver branch 572+). Its pinned Python/CUDA dependencies are downloaded into the data directory and reused across app updates. It runs the same detector code through the native CUDA route, retaining configuration, presets, archives and lifecycle protocols. Explicit ONNX provider selections and recent Windows ML systems retain their existing routes. Interrupted preparation is retryable; installation or GPU-check failures remain visible. Standalone detector executables do not install this environment themselves. The desktop launcher now accepts Windows 10 22H2 and newer.
+
 These are behavior decisions, not accidental compatibility changes. Their tests are added with the corresponding implementation.
 
 - Invalid configuration fails before processing. Reading configuration does not repair or overwrite it.
@@ -120,6 +122,8 @@ The model-preparation cleanup separates conversion selection, SDK loading and pr
 On macOS, `.pt` checkpoints now use native PyTorch MPS with FP16 when the device is available and no `onnx.provider` is explicitly configured. This avoids exporting those checkpoints to ONNX. An explicit provider retains ONNX preparation, and an unavailable MPS device retains the existing automatic ONNX route. `.onnx`, `.engine`, CUDA and TensorRT behavior is unchanged. Model errors remain failures; they do not silently choose another backend. Existing prepared ONNX cache entries are left intact.
 
 Native MPS inference now takes turns across detectors, holding one shared lock through GPU result transfer and synchronization. This mitigates known PyTorch/Metal threading races while retaining FP16 GPU execution. Camera capture, event rules, confidence thresholds and other backends are unchanged; simultaneous MPS batches may spend time waiting for the GPU. The reported intermittent indexing crash still needs confirmation on the affected Mac; a passing stress test is not proof of long-running stability.
+
+If native MPS inference raises `torch.AcceleratorError`, the detector now exits with code 75 after normal cleanup, preserving the traceback. The managed application restarts the process after two seconds, using the same settings and GPU backend. It allows one automatic recovery per ten minutes; another error within that window stops monitoring visibly until the user retries. Pause and quit cancel recovery. Previous log output remains available, and readiness must be established again by the new process. Standalone CLI runs do not restart themselves. This changes no configuration fields or archive formats and does not guarantee recovery from a persistent GPU fault.
 
 The optional `yolo.iou` field accepts `0` through `1`; `yolo.tracker` accepts `botsort.yaml` or `bytetrack.yaml`. Omission (or null) keeps the SDK defaults, and the tracker option is used only when `tracking` is enabled. Configuration schemas include these additive fields; existing documents require no migration. Internal boxes now retain optional tracker IDs for live observations without changing archive metadata or event qualification. Tracker IDs are not persistent object identities.
 

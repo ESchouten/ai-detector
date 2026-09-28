@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from importlib.util import find_spec
 from pathlib import Path
 
+from nvidia_runtime import stage_nvidia_runtime
 from package import PackageInputs, archive, assemble_package, version_number
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -117,7 +118,10 @@ def build_detector(args) -> Path:
         if args.platform == "macos-arm64"
         else ""
     )
-    return ROOT / "detector/dist" / artifact
+    destination = ROOT / "detector/dist" / artifact
+    if args.platform == "windows-x64" and kind == "windowsml" and not args.onefile:
+        stage_nvidia_runtime(ROOT, destination / "nvidia-runtime", reference)
+    return destination
 
 
 @contextmanager

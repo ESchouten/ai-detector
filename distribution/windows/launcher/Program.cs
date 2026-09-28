@@ -21,9 +21,9 @@ internal static class Program
             .OnFirstRun(_ => firstRun = true).Run();
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
-        if (Environment.OSVersion.Version < new Version(10, 0, 26100))
+        if (Environment.OSVersion.Version < new Version(10, 0, 19045))
         {
-            MessageBox.Show("AI Detector requires Windows 11 version 24H2 or newer. Update Windows before opening AI Detector.", "AI Detector", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("AI Detector requires Windows 10 version 22H2 or newer. Update Windows before opening AI Detector.", "AI Detector", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return 1;
         }
         if (firstRun) ConfigureStartup();

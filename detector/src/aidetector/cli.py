@@ -9,6 +9,7 @@ from threading import Event, Thread
 from typing import TextIO
 
 from aidetector.adapters.diagnostics import diagnostic_logging, log_environment
+from aidetector.adapters.inference import MpsInferenceError
 from aidetector.application.status import ReportStatus, ignore_status
 from aidetector.configuration import Config, ConfigurationError, load_config
 from aidetector.version import REF_NAME, TYPE
@@ -205,6 +206,11 @@ def _run(
     except ConfigurationError as error:
         logger.error("%s", error)
         return 2
+    except MpsInferenceError:
+        logger.exception(
+            "Detector stopped after an Apple GPU error; exiting with code 75"
+        )
+        return 75  # The desktop process manager may restart with a fresh GPU context.
     except Exception:
         logger.exception("Detector stopped after an application error")
         return 1

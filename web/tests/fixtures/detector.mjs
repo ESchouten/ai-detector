@@ -16,6 +16,13 @@ if (process.argv.includes('--check-config')) {
 	process.exit(0);
 }
 appendFileSync('starts.txt', 'started\n');
+if (config.failureExitCode !== undefined) {
+	process.on('SIGUSR2', () => {
+		console.error('Injected inference failure');
+		process.exit(config.failureExitCode);
+	});
+}
+writeFileSync('pid.txt', String(process.pid));
 console.log('Camera rtsp://farmer:secret@camera.local/live?token=secret');
 if (config.crash) process.exit(1);
 for (const event of config.statusEvents ?? []) {

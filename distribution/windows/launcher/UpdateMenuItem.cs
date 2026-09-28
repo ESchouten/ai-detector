@@ -25,7 +25,7 @@ internal sealed class UpdateMenuItem : ToolStripMenuItem
         else RefreshText();
         if (Enabled && updater.ChannelPolicy != null)
         {
-            PreviewItem = new ToolStripMenuItem("Include preview updates", MenuIcon.Create("\uF196"))
+            PreviewItem = new ToolStripMenuItem("Include preview updates", MenuIcon.Create("\uE8FF"))
             {
                 Checked = updater.ChannelPolicy.IncludePreviews
             };

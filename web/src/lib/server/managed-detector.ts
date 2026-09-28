@@ -1,11 +1,20 @@
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
+import { existsSync } from 'node:fs';
 import { mkdir, rm } from 'node:fs/promises';
+import { release } from 'node:os';
 import path from 'node:path';
 import { createInterface } from 'node:readline';
+import { setTimeout as delay } from 'node:timers/promises';
 import type { RuntimeMode, RuntimeStatus } from '../runtime.ts';
 import type { AppConfig, Config } from '../schema.ts';
 import { readJson, writeJson } from './json-file.ts';
+import {
+	discoverNvidia,
+	needsNvidiaRuntime,
+	prepareNvidiaRuntime,
+	type DetectorCommand
+} from './nvidia-runtime.ts';
 import { sanitizeTextForLogs as redact } from './runtime-logs.ts';
 import { RuntimeProgress, STATUS_PREFIX } from './runtime-status.ts';
 import {
@@ -26,12 +35,17 @@ interface Options {
 	dockerImage?: string;
 }
 
+// Contract with aidetector.cli: only a native MPS inference failure exits with 75.
+const MPS_FAILURE_EXIT_CODE = 75;
+const RECOVERY_WINDOW_MS = 10 * 60 * 1000;
+
 /** One owner for the detector process. Commands are serialized; polling has no side effects. */
 export class ManagedDetector {
 	private child: ChildProcessWithoutNullStreams | null = null;
 	private finished: Promise<number | null> = Promise.resolve(0);
 	private operation: Promise<unknown> = Promise.resolve();
 	private startup = new AbortController();
+	private lastRecovery: number | null = null;
 	private settings: Settings = { mode: 'auto', enabled: false };
 	private state: RuntimeStatus;
 	private readonly settingsPath: string;
@@ -139,10 +153,17 @@ export class ManagedDetector {
 
 	start(mode: RuntimeMode): Promise<void> {
 		const signal = this.startup.signal;
-		return this.enqueue(() => this.startChild(mode, signal));
+		return this.enqueue(() => {
+			if (!this.child) this.lastRecovery = null;
+			return this.startChild(mode, signal);
+		});
 	}
 
-	private async startChild(mode: RuntimeMode, signal: AbortSignal): Promise<void> {
+	private async startChild(
+		mode: RuntimeMode,
+		signal: AbortSignal,
+		recovering = false
+	): Promise<void> {
 		if (this.child || signal.aborted) return;
 		this.progress = new RuntimeProgress();
 		this.state = {
@@ -152,7 +173,7 @@ export class ManagedDetector {
 			selected: null,
 			helpUrl: undefined,
 			message: 'Checking this computer…',
-			logs: ''
+			logs: recovering ? this.state.logs : ''
 		};
 		try {
 			const config = await readJson<Config>(path.join(this.options.dataDirectory, 'config.json'));
@@ -167,12 +188,12 @@ export class ManagedDetector {
 			const selected = chooseRuntime(mode);
 			this.state.selected = selected;
 			signal.throwIfAborted();
-			const command = await this.prepare(selected, signal);
+			const command = await this.prepare(selected, config, signal);
 			signal.throwIfAborted();
 			this.settings = { mode, enabled: true };
 			await writeJson(this.settingsPath, this.settings);
 			signal.throwIfAborted();
-			this.launch(command.file, command.args);
+			this.launch(command, signal);
 		} catch (error) {
 			if (signal.aborted) {
 				this.state.phase = 'stopped';
@@ -183,12 +204,15 @@ export class ManagedDetector {
 
 	private async prepare(
 		selected: 'native' | 'docker',
+		config: Config,
 		signal: AbortSignal
-	): Promise<{ file: string; args: string[] }> {
+	): Promise<DetectorCommand> {
 		if (selected === 'native') {
+			const command = await this.nativeCommand(config, signal);
 			return {
-				file: this.options.executable,
+				...command,
 				args: [
+					...command.args,
 					'--config',
 					path.join(this.options.dataDirectory, 'config.json'),
 					'--data-dir',
@@ -244,6 +268,35 @@ export class ManagedDetector {
 		};
 	}
 
+	private async nativeCommand(config: Config, signal: AbortSignal): Promise<DetectorCommand> {
+		const bundleDirectory = path.join(path.dirname(this.options.executable), 'nvidia-runtime');
+		if (needsNvidiaRuntime(config, process.platform, release()) && existsSync(bundleDirectory)) {
+			const device = await discoverNvidia(signal);
+			if (device) {
+				try {
+					return await prepareNvidiaRuntime({
+						bundleDirectory,
+						dataDirectory: this.options.dataDirectory,
+						device,
+						signal,
+						run: (file, args, timeout, env) => this.runCheck(file, args, timeout, signal, env),
+						report: (message) => {
+							this.state.message = message;
+						}
+					});
+				} catch (error) {
+					signal.throwIfAborted();
+					if (error instanceof SetupError && error.helpUrl) throw error;
+					this.append(Buffer.from(`\nNVIDIA preparation failed: ${String(error)}\n`));
+					throw new SetupError(
+						'NVIDIA acceleration could not be prepared. Check your internet connection and graphics driver, then try again. Details are available below.'
+					);
+				}
+			}
+		}
+		return { file: this.options.executable, args: [] };
+	}
+
 	private append(chunk: Buffer): void {
 		this.state.logs = (this.state.logs + chunk.toString()).slice(-16000);
 	}
@@ -252,14 +305,16 @@ export class ManagedDetector {
 		file: string,
 		args: string[],
 		timeout: number,
-		signal?: AbortSignal
-	): Promise<void> {
+		signal?: AbortSignal,
+		env?: NodeJS.ProcessEnv
+	): Promise<string> {
 		return new Promise((resolve, reject) => {
 			const child = spawn(file, args, {
 				cwd: this.options.dataDirectory,
 				windowsHide: true,
 				timeout,
 				signal,
+				env,
 				killSignal: 'SIGKILL',
 				stdio: ['ignore', 'pipe', 'pipe']
 			});
@@ -286,7 +341,7 @@ export class ManagedDetector {
 							'Could not open the detector. Extract the complete download and keep its files together.'
 						)
 					);
-				else if (code === 0) resolve();
+				else if (code === 0) resolve(output);
 				else
 					reject(
 						new SetupError(
@@ -297,14 +352,14 @@ export class ManagedDetector {
 		});
 	}
 
-	private launch(file: string, args: string[]): void {
+	private launch(command: DetectorCommand, signal: AbortSignal): void {
 		this.state.phase = 'starting';
 		this.state.message = 'Starting the detector…';
-		const child = spawn(file, args, {
+		const child = spawn(command.file, command.args, {
 			cwd: this.options.dataDirectory,
 			windowsHide: true,
 			stdio: 'pipe',
-			env: { ...process.env, PYTHONUNBUFFERED: '1' }
+			env: { ...process.env, ...command.env, PYTHONUNBUFFERED: '1' }
 		});
 		this.child = child;
 		child.stdin.on('error', (error: NodeJS.ErrnoException) => {
@@ -327,7 +382,15 @@ export class ManagedDetector {
 			child.on('close', (code) => {
 				records.close();
 				this.child = null;
-				if (code === 0 && this.state.phase !== 'failed') {
+				if (
+					code === MPS_FAILURE_EXIT_CODE &&
+					this.state.selected === 'native' &&
+					this.state.phase !== 'stopping' &&
+					this.state.phase !== 'failed' &&
+					!signal.aborted
+				) {
+					this.recoverMps(signal);
+				} else if (code === 0 && this.state.phase !== 'failed') {
 					this.state.phase = 'stopped';
 					this.state.message = 'Detector stopped.';
 				} else if (this.state.phase !== 'failed')
@@ -340,6 +403,34 @@ export class ManagedDetector {
 				resolve(code);
 			})
 		);
+	}
+
+	private recoverMps(signal: AbortSignal): void {
+		const now = Date.now();
+		if (this.lastRecovery !== null && now - this.lastRecovery < RECOVERY_WINDOW_MS) {
+			this.fail(
+				new SetupError(
+					'The graphics error returned after restarting. Monitoring has stopped. Check the details below, then try again.'
+				)
+			);
+			return;
+		}
+		this.lastRecovery = now;
+		this.progress = new RuntimeProgress();
+		this.state.phase = 'starting';
+		this.state.message = 'Recovering from a graphics error. Restarting monitoring…';
+		this.append(Buffer.from('\nApple GPU error: restarting the detector in 2 seconds.\n'));
+		void this.enqueue(async () => {
+			try {
+				await delay(2000, undefined, { signal });
+				await this.startChild(this.settings.mode, signal, true);
+			} catch (error) {
+				if (signal.aborted) {
+					this.state.phase = 'stopped';
+					this.state.message = 'Restart cancelled.';
+				} else this.fail(error);
+			}
+		});
 	}
 
 	stop(disable = true): Promise<void> {
@@ -372,11 +463,9 @@ export class ManagedDetector {
 				)
 			);
 			if (this.state.selected === 'docker') {
-				forcedStop = this.runCheck(
-					'docker',
-					['stop', '--time', '5', this.containerName],
-					10000
-				).catch((error) => this.fail(error));
+				forcedStop = this.runCheck('docker', ['stop', '--time', '5', this.containerName], 10000)
+					.then(() => undefined)
+					.catch((error) => this.fail(error));
 			}
 			child.kill('SIGKILL');
 		}, 30000);

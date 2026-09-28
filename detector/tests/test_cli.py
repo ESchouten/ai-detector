@@ -10,6 +10,9 @@ import cv2
 import numpy as np
 import pytest
 
+from aidetector.adapters.inference import MpsInferenceError
+from aidetector.cli import main
+
 SOURCE = Path(__file__).resolve().parents[1] / "src"
 
 
@@ -50,6 +53,28 @@ def test_invalid_and_missing_config_have_actionable_exit_status(tmp_path):
     assert failed.returncode == 2
     assert "Invalid configuration" in failed.stderr
     assert path.read_text() == '{"detectors": []}'
+
+
+@pytest.mark.parametrize(
+    "error_type, code", [(MpsInferenceError, 75), (RuntimeError, 1)]
+)
+def test_launcher_can_distinguish_mps_failure_without_parsing_logs(
+    tmp_path, monkeypatch, error_type, code
+):
+    config = tmp_path / "config.json"
+    document = json.dumps({"detectors": [{"detection": {"source": "video.mp4"}}]})
+    config.write_text(document)
+
+    def run_application(*args, **kwargs):
+        raise error_type("injected inference failure")
+
+    monkeypatch.setattr("aidetector.bootstrap.run_application", run_application)
+    assert main(["--config", str(config)]) == code
+    saved = (tmp_path / "logs/detector.log").read_text()
+    assert "injected inference failure" in saved
+    assert "Traceback (most recent call last)" in saved
+    assert ("exiting with code 75" in saved) is (code == 75)
+    assert config.read_text() == document
 
 
 def test_startup_failure_persists_runtime_and_safe_configuration_before_hardware_setup(

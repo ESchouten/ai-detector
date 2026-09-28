@@ -405,6 +405,7 @@ def test_core_and_cli_imports_have_no_observed_side_effects(tmp_path):
             "aidetector.cli",
             "aidetector.schema",
             "aidetector.adapters.inference.model_assets",
+            "aidetector.adapters.inference.windows_ml",
         ],
         cwd=tmp_path,
         env={**os.environ, "PYTHONPATH": pythonpath},

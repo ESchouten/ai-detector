@@ -15,11 +15,12 @@ from time import perf_counter
 from typing import Any
 from urllib.parse import urlsplit
 
+from aidetector.adapters.inference.windows_ml import prepare_windows_ml
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig
 
 logger = logging.getLogger(__name__)
-WINDOWS_ML_PREPARATION_TIMEOUT = 120.0
+REGISTRATION_TRACE_DELAY = 150.0
 
 
 @dataclass(frozen=True)
@@ -115,107 +116,51 @@ def _cuda_libraries(resources: ExitStack) -> None:
 def _register_windows_ml(
     resources: ExitStack, ort: Any, requested: str | None, report_status: ReportStatus
 ) -> set[str]:
-    # Optional, Windows-only SDKs are imported only for this distribution. The
-    # executable build explicitly collects these modules.
     registration_error = import_module(
         "onnxruntime.capi.onnxruntime_pybind11_state"
     ).Fail
     logger.info("Initializing Windows ML runtime")
-    report_status(StatusEvent("preparing", message="Checking hardware acceleration…"))
-    bootstrap = import_module(
-        "winui3.microsoft.windows.applicationmodel.dynamicdependency.bootstrap"
+    report_status(
+        StatusEvent(
+            "preparing",
+            message="Checking hardware acceleration… First use may download additional components.",
+        )
     )
-    # The detector runs in the background. A modal installation prompt would
-    # block startup instead of letting automatic mode use its CPU fallback.
-    resources.enter_context(
-        bootstrap.initialize(options=bootstrap.InitializeOptions.NONE)
-    )
-    winml = import_module("winui3.microsoft.windows.ai.machinelearning")
-    foundation = import_module("winrt.windows.foundation")
-    logger.info("Discovering Windows ML execution providers")
+    libraries = prepare_windows_ml(requested)
     registered: set[str] = set()
     failed = False
-    for provider in winml.ExecutionProviderCatalog.get_default().find_all_providers():
-        if requested is not None and provider.name != requested:
-            continue
-        logger.info(
-            "Preparing Windows ML provider %s (up to %.0fs; first use may download components)",
-            provider.name,
-            WINDOWS_ML_PREPARATION_TIMEOUT,
-        )
+    for name, library_path in libraries.items():
         report_status(
             StatusEvent(
                 "preparing",
-                message="Preparing hardware acceleration… First use may download additional components.",
+                message="Loading hardware acceleration…",
             )
         )
-        # Native setup/registration can block outside the SDK's timed wait.
-        # Capture its Python call site if that happens, without stopping detection.
-        faulthandler.dump_traceback_later(WINDOWS_ML_PREPARATION_TIMEOUT + 30)
+        # A native DLL load has no cancellation API. Preserve evidence if it stalls.
+        faulthandler.dump_traceback_later(REGISTRATION_TRACE_DELAY)
         try:
-            _prepare_windows_ml_provider(provider, winml, foundation)
-            if not provider.library_path:
-                raise RuntimeError("Ready provider did not supply a library path")
-            logger.info(
-                "Registering Windows ML provider %s: %s",
-                provider.name,
-                provider.library_path,
-            )
+            logger.info("Registering Windows ML provider %s: %s", name, library_path)
             started = perf_counter()
-            ort.register_execution_provider_library(
-                provider.name, provider.library_path
-            )
+            ort.register_execution_provider_library(name, library_path)
             logger.info(
                 "Windows ML provider %s registered in %.2fs",
-                provider.name,
+                name,
                 perf_counter() - started,
             )
         except (OSError, RuntimeError, registration_error) as error:
             if requested is not None:
                 raise
-            logger.warning(
-                "Windows ML provider %s unavailable: %s", provider.name, error
-            )
+            logger.warning("Windows ML provider %s unavailable: %s", name, error)
             failed = True
             continue
         finally:
             faulthandler.cancel_dump_traceback_later()
-        resources.callback(ort.unregister_execution_provider_library, provider.name)
-        registered.add(provider.name)
+        resources.callback(ort.unregister_execution_provider_library, name)
+        registered.add(name)
     if failed and not registered:
         raise RuntimeError("No Windows ML execution provider could be prepared")
     logger.info("Registered Windows ML providers: %s", sorted(registered))
     return registered
-
-
-def _prepare_windows_ml_provider(provider: Any, winml: Any, foundation: Any) -> None:
-    state = provider.ready_state
-    logger.info("Windows ML provider %s readiness: %s", provider.name, state)
-    if state == winml.ExecutionProviderReadyState.READY:
-        return
-    started = perf_counter()
-    logger.info("Requesting Windows ML preparation: %s", provider.name)
-    operation = provider.ensure_ready_async()
-    logger.info(
-        "Waiting for Windows ML provider %s (timeout %.0fs)",
-        provider.name,
-        WINDOWS_ML_PREPARATION_TIMEOUT,
-    )
-    if operation.wait(WINDOWS_ML_PREPARATION_TIMEOUT) == foundation.AsyncStatus.STARTED:
-        logger.warning("Cancelling timed-out Windows ML preparation: %s", provider.name)
-        operation.cancel()
-        raise TimeoutError(f"Windows ML preparation timed out for {provider.name}")
-    logger.info("Reading Windows ML preparation result: %s", provider.name)
-    result = operation.get_results()
-    if result.status != winml.ExecutionProviderReadyResultState.SUCCESS:
-        raise RuntimeError(
-            f"Windows ML could not prepare {provider.name}: {result.diagnostic_text}"
-        )
-    logger.info(
-        "Windows ML provider %s prepared in %.2fs",
-        provider.name,
-        perf_counter() - started,
-    )
 
 
 def select_devices(devices: list[Any]) -> list[Any]:

@@ -91,6 +91,9 @@ def _arguments(argv: list[str] | None) -> argparse.Namespace:
         action="store_true",
         help="Create an offline example configuration without overwriting a file",
     )
+    action.add_argument(
+        "--prepare-windows-ml", nargs="?", const="", help=argparse.SUPPRESS
+    )
     return parser.parse_args(argv)
 
 
@@ -111,6 +114,10 @@ def _init_config(config_path: Path) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     args = _arguments(argv)
+    if args.prepare_windows_ml is not None:
+        from aidetector.adapters.inference.windows_ml import run_helper
+
+        return run_helper(args.prepare_windows_ml or None)
     config_path = args.config.expanduser().resolve()
     if args.init_config:
         return _init_config(config_path)

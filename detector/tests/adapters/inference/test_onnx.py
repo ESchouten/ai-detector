@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from aidetector.adapters.inference.onnx import (
-    WINDOWS_ML_PREPARATION_TIMEOUT,
+    REGISTRATION_TRACE_DELAY,
     ModelRequirements,
     inference_runtime,
     select_devices,
@@ -21,10 +21,8 @@ ONNX_MODELS = (ModelRequirements("model.onnx", image_size=640, batch_size=1),)
 @pytest.fixture
 def windows_ml(monkeypatch):
     import faulthandler
-    import sys
-    from contextlib import contextmanager
 
-    state = SimpleNamespace(providers=[], lifecycle=[], watchdog=[])
+    state = SimpleNamespace(libraries={}, lifecycle=[], watchdog=[])
     monkeypatch.setattr(
         faulthandler,
         "dump_traceback_later",
@@ -36,67 +34,28 @@ def windows_ml(monkeypatch):
         lambda: state.watchdog.append("cancel"),
     )
 
-    @contextmanager
-    def initialize(**kwargs):
-        assert kwargs == {"options": 0}, "Background startup must not open a dialog"
-        state.lifecycle.append("initialize")
-        try:
-            yield
-        finally:
-            state.lifecycle.append("close")
+    def prepare(requested):
+        return {
+            name: path
+            for name, path in state.libraries.items()
+            if requested is None or name == requested
+        }
 
-    monkeypatch.setitem(
-        sys.modules,
-        "winui3.microsoft.windows.applicationmodel.dynamicdependency.bootstrap",
-        SimpleNamespace(
-            initialize=initialize,
-            InitializeOptions=SimpleNamespace(NONE=0, ON_NO_MATCH_SHOW_UI=1),
-        ),
-    )
-    monkeypatch.setitem(
-        sys.modules,
-        "winui3.microsoft.windows.ai.machinelearning",
-        SimpleNamespace(
-            ExecutionProviderReadyState=SimpleNamespace(READY="ready"),
-            ExecutionProviderReadyResultState=SimpleNamespace(SUCCESS="success"),
-            ExecutionProviderCatalog=SimpleNamespace(
-                get_default=lambda: SimpleNamespace(
-                    find_all_providers=lambda: state.providers
-                )
-            ),
-        ),
-    )
-    monkeypatch.setitem(
-        sys.modules,
-        "winrt.windows.foundation",
-        SimpleNamespace(AsyncStatus=SimpleNamespace(STARTED="started")),
+    monkeypatch.setattr(
+        "aidetector.adapters.inference.onnx.prepare_windows_ml", prepare
     )
     return state
 
 
 @pytest.fixture
 def unavailable_windows_ml(monkeypatch):
-    import sys
-    from contextlib import contextmanager
-
-    @contextmanager
-    def initialize(**kwargs):
-        assert kwargs == {"options": 0}, "Background startup must not open a dialog"
+    def prepare(requested):
         raise OSError("Windows acceleration package is unavailable offline")
-        yield
 
     monkeypatch.delenv("CI", raising=False)
     monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
-    monkeypatch.setitem(
-        sys.modules, "winui3.microsoft.windows.ai.machinelearning", SimpleNamespace()
-    )
-    monkeypatch.setitem(
-        sys.modules,
-        "winui3.microsoft.windows.applicationmodel.dynamicdependency.bootstrap",
-        SimpleNamespace(
-            initialize=initialize,
-            InitializeOptions=SimpleNamespace(NONE=0, ON_NO_MATCH_SHOW_UI=1),
-        ),
+    monkeypatch.setattr(
+        "aidetector.adapters.inference.onnx.prepare_windows_ml", prepare
     )
 
 
@@ -196,14 +155,12 @@ def test_registered_devices_define_provider_order_and_inference_options():
 @pytest.mark.parametrize("inference_fails", [False, True])
 @pytest.mark.parametrize("missing_provider", [None, "first", "last"])
 @pytest.mark.parametrize("explicit", [False, True])
-@pytest.mark.parametrize("already_ready", [False, True])
-def test_windows_ml_session_uses_registered_device_and_releases_sdk_resources(
+def test_windows_ml_session_uses_registered_device_and_releases_libraries(
     monkeypatch,
     windows_ml,
     inference_fails,
     missing_provider,
     explicit,
-    already_ready,
     caplog,
 ):
     import logging
@@ -223,34 +180,18 @@ def test_windows_ml_session_uses_registered_device_and_releases_sdk_resources(
         sessions.append(kwargs)
         return "session"
 
-    def prepare():
-        assert not already_ready, (
-            "An installed, ready provider must not be prepared again"
-        )
-        assert "Requesting Windows ML preparation:" in caplog.text
-        return SimpleNamespace(
-            wait=lambda timeout: "completed",
-            get_results=lambda: SimpleNamespace(status="success"),
-        )
-
     provider = SimpleNamespace(
-        name="OpenVINOExecutionProvider",
-        library_path="openvino.dll",
-        ready_state="ready" if already_ready else "not_ready",
-        ensure_ready_async=prepare,
+        name="OpenVINOExecutionProvider", library_path="openvino.dll"
     )
     webgpu = SimpleNamespace(
-        name="WebGpuExecutionProvider",
-        library_path="onnxruntime_providers_webgpu.dll",
-        ready_state=provider.ready_state,
-        ensure_ready_async=provider.ensure_ready_async,
+        name="WebGpuExecutionProvider", library_path="onnxruntime_providers_webgpu.dll"
     )
     providers = [provider]
     if missing_provider == "first":
         providers.insert(0, webgpu)
     elif missing_provider == "last":
         providers.append(webgpu)
-    windows_ml.providers = providers
+    windows_ml.libraries = {item.name: item.library_path for item in providers}
 
     def register(name, path):
         assert f"Registering Windows ML provider {name}: {path}" in caplog.text
@@ -302,10 +243,8 @@ def test_windows_ml_session_uses_registered_device_and_releases_sdk_resources(
             raise RuntimeError("inference failed")
 
     assert lifecycle == [
-        "initialize",
         "register",
         "unregister:OpenVINOExecutionProvider",
-        "close",
     ]
     if missing_provider and not explicit:
         assert "onnxruntime_providers_webgpu.dll" in caplog.text
@@ -315,18 +254,14 @@ def test_windows_ml_session_uses_registered_device_and_releases_sdk_resources(
     assert ort.InferenceSession is session
     assert not settings_path.exists()
     assert "Windows ML provider OpenVINOExecutionProvider registered in" in caplog.text
-    assert ("Waiting for Windows ML provider" in caplog.text) is not already_ready
-    assert windows_ml.watchdog == [WINDOWS_ML_PREPARATION_TIMEOUT + 30, "cancel"] * (
+    assert windows_ml.watchdog == [REGISTRATION_TRACE_DELAY, "cancel"] * (
         2 if missing_provider and not explicit else 1
     )
 
 
 @pytest.mark.parametrize("explicit", [False, True])
-@pytest.mark.parametrize(
-    "failure", ["timeout", "failed", "error", "registration", "missing_library"]
-)
-def test_windows_ml_preparation_failures_are_bounded_and_observable(
-    monkeypatch, windows_ml, caplog, tmp_path, failure, explicit
+def test_windows_ml_registration_failure_is_observable(
+    monkeypatch, windows_ml, caplog, tmp_path, explicit
 ):
     import logging
 
@@ -336,71 +271,22 @@ def test_windows_ml_preparation_failures_are_bounded_and_observable(
 
     from tests.support.onnx_model import write_detection_model
 
-    lifecycle = windows_ml.lifecycle
-    reports = []
-
-    def wait(timeout):
-        assert timeout == WINDOWS_ML_PREPARATION_TIMEOUT
-        assert reports[-1].kind == "preparing"
-        assert "Preparing hardware acceleration" in reports[-1].message
-        assert "Preparing Windows ML provider OpenVINOExecutionProvider" in caplog.text
-        lifecycle.append("wait")
-        return "started" if failure == "timeout" else "completed"
-
-    def get_results():
-        assert failure != "timeout", "A timed-out operation has no result to retrieve"
-        assert "Reading Windows ML preparation result:" in caplog.text
-        if failure == "error":
-            raise OSError("Provider download failed")
-        if failure in {"registration", "missing_library"}:
-            return SimpleNamespace(status="success")
-        return SimpleNamespace(
-            status="failure", diagnostic_text="Provider download failed"
-        )
-
     def register(name, path):
-        assert failure == "registration", (
-            "A failed preparation must not register the provider"
-        )
-        raise Fail(
-            'Error loading "onnxruntime_providers_webgpu.dll" which is missing. (Error 126)'
-        )
+        raise Fail(f'Error loading "{path}" which is missing. (Error 126)')
 
     monkeypatch.setattr(ort, "register_execution_provider_library", register)
-
-    def cancel():
-        assert "Cancelling timed-out Windows ML preparation:" in caplog.text
-        lifecycle.append("cancel")
-
-    operation = SimpleNamespace(wait=wait, get_results=get_results, cancel=cancel)
-    provider = SimpleNamespace(
-        name="OpenVINOExecutionProvider",
-        ready_state="not_ready",
-        library_path="" if failure == "missing_library" else "must-not-register.dll",
-        ensure_ready_async=lambda: operation,
-    )
-    windows_ml.providers = [provider]
+    windows_ml.libraries = {
+        "WebGpuExecutionProvider": "onnxruntime_providers_webgpu.dll"
+    }
     caplog.set_level(logging.INFO)
     path = tmp_path / "model.onnx"
     write_detection_model(path)
-    message = (
-        "timed out"
-        if failure == "timeout"
-        else "Error 126"
-        if failure == "registration"
-        else "did not supply a library path"
-        if failure == "missing_library"
-        else "Provider download failed"
-    )
-    outcome = (
-        pytest.raises((OSError, RuntimeError, Fail), match=message)
-        if explicit
-        else nullcontext()
-    )
+    reports = []
+    outcome = pytest.raises(Fail, match="Error 126") if explicit else nullcontext()
     with (
         outcome,
         inference_runtime(
-            OnnxConfig(provider=provider.name if explicit else None),
+            OnnxConfig(provider="WebGpuExecutionProvider" if explicit else None),
             ONNX_MODELS,
             "windowsml",
             reports.append,
@@ -413,12 +299,6 @@ def test_windows_ml_preparation_failures_are_bounded_and_observable(
         assert session.run(
             None, {"images": np.zeros((1, 3, 64, 64), dtype=np.float32)}
         )[0].shape == (1, 1, 6)
-    assert lifecycle == [
-        "initialize",
-        "wait",
-        *(["cancel"] if failure == "timeout" else []),
-        "close",
-    ]
     assert [event.kind for event in reports] == [
         "preparing",
         "preparing",
@@ -426,8 +306,8 @@ def test_windows_ml_preparation_failures_are_bounded_and_observable(
     ]
     if not explicit:
         assert "CPU" in reports[-1].message
-        assert message in caplog.text
-    assert windows_ml.watchdog == [WINDOWS_ML_PREPARATION_TIMEOUT + 30, "cancel"]
+        assert "Error 126" in caplog.text
+    assert windows_ml.watchdog == [REGISTRATION_TRACE_DELAY, "cancel"]
 
 
 def test_tensorrt_profiles_use_all_detector_dimensions_and_source_counts():

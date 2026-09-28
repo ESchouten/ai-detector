@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 import pathlib
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
+from threading import Lock
 from time import perf_counter
 from typing import Any, Literal, cast
 
@@ -22,6 +23,18 @@ from aidetector.configuration import OnnxConfig, YoloConfig
 from aidetector.domain.models import BoundingBox, Frame, Observation
 
 logger = logging.getLogger(__name__)
+_MPS_LOCK = Lock()
+
+
+@contextmanager
+def _mps_inference() -> Iterator[None]:
+    # PyTorch's MPS command encoders are shared across models and are not safe
+    # under concurrent dispatch: https://github.com/pytorch/pytorch/issues/197805
+    import torch
+
+    with _MPS_LOCK:
+        yield
+        torch.mps.synchronize()
 
 
 class InMemoryStreamBatch(LoadStreams):
@@ -94,6 +107,11 @@ class YoloDetector:
         options: InferenceOptions,
     ):
         self.model = model
+        self._inference_scope = (
+            _mps_inference
+            if options.native_mps and config.model.endswith(".pt")
+            else nullcontext
+        )
         self.tracking = config.tracking
         self.sources = sources
         self.classes = resolve_classes(model.names, config.confidence)
@@ -112,37 +130,42 @@ class YoloDetector:
 
     def detect(self, frames: Frames) -> dict[str, tuple[Observation, ...]]:
         started = perf_counter()
-        if self.tracking:
-            sources = self.sources
-            placeholder = np.zeros_like(next(iter(frames.values()))[-1].image)
-            for source, batch in frames.items():
-                self._last_frames[source] = batch[-1].image
-            images = [self._last_frames.get(source, placeholder) for source in sources]
-            source_batch = InMemoryStreamBatch(
-                [f"source-{index}" for index in range(len(sources))], images
-            )
-            results = list(
-                self.model.track(
-                    # The SDK annotation omits LoadStreams instances, which its
-                    # loader dispatch accepts. Keep the mismatch at this boundary.
-                    source=cast(Any, source_batch),
-                    persist=True,
-                    stream=True,
-                    batch=len(sources),
-                    **self._arguments,
+        with self._inference_scope():
+            if self.tracking:
+                sources = self.sources
+                placeholder = np.zeros_like(next(iter(frames.values()))[-1].image)
+                for source, batch in frames.items():
+                    self._last_frames[source] = batch[-1].image
+                images = [
+                    self._last_frames.get(source, placeholder) for source in sources
+                ]
+                source_batch = InMemoryStreamBatch(
+                    [f"source-{index}" for index in range(len(sources))], images
                 )
-            )
-        else:
-            sources = tuple(frames)
-            images = [frames[source][-1].image for source in sources]
-            results = list(
-                self.model.predict(source=images, batch=len(images), **self._arguments)
-            )
-        mapped = {
-            source: map_observations(result, frames[source], self.classes)
-            for source, result in zip(sources, results, strict=True)
-            if source in frames
-        }
+                results = list(
+                    self.model.track(
+                        # The SDK annotation omits LoadStreams instances, which its
+                        # loader dispatch accepts. Keep the mismatch at this boundary.
+                        source=cast(Any, source_batch),
+                        persist=True,
+                        stream=True,
+                        batch=len(sources),
+                        **self._arguments,
+                    )
+                )
+            else:
+                sources = tuple(frames)
+                images = [frames[source][-1].image for source in sources]
+                results = list(
+                    self.model.predict(
+                        source=images, batch=len(images), **self._arguments
+                    )
+                )
+            mapped = {
+                source: map_observations(result, frames[source], self.classes)
+                for source, result in zip(sources, results, strict=True)
+                if source in frames
+            }
         elapsed_ms = (perf_counter() - started) * 1000
         logger.info(
             "%s time: %.1fms for %d frame(s), %.1fms/frame (%d active source(s))",
@@ -273,6 +296,7 @@ def _initialize_predictor(
     }
     if native_mps:
         overrides["device"] = "mps"
+        logger.info("MPS inference shares one GPU dispatch lock across detectors")
     model.predictor = model._smart_load("predictor")(
         overrides=overrides, _callbacks=model.callbacks
     )

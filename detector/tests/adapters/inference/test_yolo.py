@@ -1,4 +1,7 @@
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
+from threading import Barrier, Event, get_ident
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -186,3 +189,103 @@ def test_sdk_result_count_mismatch_never_discards_sources(monkeypatch, result_co
     )
     with pytest.raises(ValueError, match="zip"):
         detector.detect({"one": (frame(0),), "two": (frame(1),)})
+
+
+@pytest.mark.parametrize("tracking", [False, True])
+@pytest.mark.parametrize("blocked_stage", ["predict", "transfer", "synchronize"])
+def test_mps_detectors_share_exclusive_gpu_access_through_result_transfer(
+    monkeypatch, tracking, blocked_stage
+):
+    blocked, release, second_started, second_entered = (Event() for _ in range(4))
+    calls, owners = [], {}
+
+    def observe(stage, name):
+        calls.append((stage, name))
+        if stage == "predict" and name == "second":
+            second_entered.set()
+        if name == "first" and stage == blocked_stage:
+            blocked.set()
+            assert release.wait(5), "Test did not release the first GPU operation"
+
+    class GpuModel:
+        names = {0: "cow"}
+
+        def __init__(self, name):
+            self.name = name
+
+        def predict(self, **kwargs):
+            owners[get_ident()] = self.name
+            observe("predict", self.name)
+
+            def transfer():
+                observe("transfer", self.name)
+                return ()
+
+            # Deferred SDK iteration and CPU transfers both belong inside the lock.
+            yield SimpleNamespace(boxes=SimpleNamespace(cpu=transfer))
+
+        track = predict
+
+    monkeypatch.setattr(
+        torch.mps, "synchronize", lambda: observe("synchronize", owners[get_ident()])
+    )
+    detectors = [
+        YoloDetector(
+            GpuModel(name),
+            YoloConfig(model="model.pt", tracking=tracking),
+            ("camera",),
+            InferenceOptions(native_mps=True),
+        )
+        for name in ("first", "second")
+    ]
+    batch = {"camera": (frame(),)}
+
+    def second():
+        second_started.set()
+        return detectors[1].detect(batch)
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        first_result = pool.submit(detectors[0].detect, batch)
+        try:
+            assert blocked.wait(5)
+            second_result = pool.submit(second)
+            assert second_started.wait(5)
+            assert not second_entered.wait(0.1), "MPS operations overlapped"
+        finally:
+            release.set()
+        assert first_result.result(timeout=5)["camera"][-1].date == frame().date
+        assert second_result.result(timeout=5)["camera"][-1].date == frame().date
+    assert calls == [
+        (stage, name)
+        for name in ("first", "second")
+        for stage in ("predict", "transfer", "synchronize")
+    ]
+
+
+@pytest.mark.parametrize(
+    "model_path, native_mps", [("model.pt", False), ("model.onnx", True)]
+)
+def test_other_backends_retain_independent_detector_execution(model_path, native_mps):
+    together = Barrier(2)
+
+    class ConcurrentModel(Model):
+        def predict(self, **kwargs):
+            together.wait(timeout=5)
+            return super().predict(**kwargs)
+
+    detectors = [
+        YoloDetector(
+            ConcurrentModel(),
+            YoloConfig(model=model_path),
+            ("camera",),
+            InferenceOptions(native_mps=native_mps),
+        )
+        for _ in range(2)
+    ]
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        results = list(
+            pool.map(
+                lambda detector: detector.detect({"camera": (frame(),)}), detectors
+            )
+        )
+    assert all(result["camera"][-1].date == frame().date for result in results)

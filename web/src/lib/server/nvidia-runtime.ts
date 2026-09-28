@@ -112,12 +112,7 @@ export async function prepareNvidiaRuntime(options: Preparation): Promise<Detect
 	if (!prepared) {
 		report('Preparing NVIDIA acceleration. The first download may take several minutes…');
 		if (!existsSync(python)) {
-			await run(
-				uv,
-				['venv', '--no-config', '--python', manifest.python, directory],
-				300000,
-				env
-			);
+			await run(uv, ['venv', '--no-config', '--python', manifest.python, directory], 300000, env);
 		}
 		report('Downloading and installing NVIDIA acceleration…');
 		await run(

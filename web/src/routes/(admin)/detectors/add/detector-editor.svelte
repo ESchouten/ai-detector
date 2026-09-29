@@ -128,8 +128,7 @@
 		}
 	}
 
-	async function save(event: SubmitEvent) {
-		event.preventDefault();
+	async function save(connectPhone = false) {
 		pending = true;
 		error = '';
 		try {
@@ -138,19 +137,26 @@
 			if (!advanced && detector.yolo && !detector.yolo.model.trim())
 				throw new Error('Choose a preset, or enter a model in the custom settings.');
 			const valid = parseDetectorDraft(advanced ? jsonDraft : JSON.stringify(detector));
+			const savedLabel = label.trim();
 			await saveDetector({
 				original: originalLabel || undefined,
 				detector: valid,
 				meta: {
-					label,
+					label: savedLabel,
 					preset:
 						preset && JSON.stringify(detectorSettings(valid)) === presetSettings
 							? preset
 							: undefined
 				}
 			}).updates(getDetectors(), getCameras());
-			toast.success(`Detector '${label}' saved.`);
-			await goto(resolve(returnTo));
+			toast.success(`Detector '${savedLabel}' saved.`);
+			await goto(
+				resolve(
+					connectPhone
+						? `/notifications/add?detector=${encodeURIComponent(savedLabel)}${setupMode ? '&setup=1' : ''}`
+						: returnTo
+				)
+			);
 		} catch (cause) {
 			showError(cause, 'The detector could not be saved.');
 		} finally {
@@ -184,18 +190,7 @@
 			testing = null;
 		}
 	}
-
-	async function refreshChoices() {
-		if (document.visibilityState !== 'visible') return;
-		try {
-			await Promise.all([getCameras().refresh(), getTelegrams().refresh()]);
-		} catch {
-			toast.error('Could not refresh cameras and alert recipients.');
-		}
-	}
 </script>
-
-<svelte:document onvisibilitychange={refreshChoices} />
 
 <section class="settings-page">
 	{#if setupMode}<SetupSteps
@@ -221,7 +216,13 @@
 			>
 		</Alert.Root>
 	{/if}
-	<form class="flex flex-col gap-6" onsubmit={save}>
+	<form
+		class="flex flex-col gap-6"
+		onsubmit={(event) => {
+			event.preventDefault();
+			void save();
+		}}
+	>
 		<div class="flex min-w-0 flex-col gap-6">
 			<div class="flex flex-col gap-6">
 				<Field.Group class={advanced ? '' : 'grid gap-6 sm:grid-cols-2'}>
@@ -491,13 +492,13 @@
 								</Field.Group>
 							</Field.Set>
 							<Button
-								href={resolve(
-									`/notifications/add?detector=${encodeURIComponent(originalLabel)}${setupMode ? '&setup=1' : ''}`
-								)}
-								target="_blank"
-								rel="noopener"
+								type="button"
+								onclick={(event) => {
+									if (event.currentTarget.closest('form')?.reportValidity()) void save(true);
+								}}
+								disabled={pending || !detector.detection.source.length}
 								variant="outline"
-								class="self-start"><Plus data-icon="inline-start" /> Connect alert recipient</Button
+								class="self-start"><Plus data-icon="inline-start" /> Save and connect phone</Button
 							>
 							<p class="text-sm text-muted-foreground">
 								Recording destinations, webhooks and other delivery options are available in

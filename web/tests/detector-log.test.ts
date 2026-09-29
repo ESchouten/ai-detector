@@ -56,5 +56,7 @@ test('missing logs are empty, existing Python logs are bounded, and read failure
 	const text = await readLogTail(file);
 	assert.ok(text.length <= 512 * 1024);
 	assert.ok(text.endsWith('Final error\n'));
-	await assert.rejects(readLogTail(path.join(file, 'not-a-directory')));
+	// A file used as a parent returns ENOENT on Windows, but ENOTDIR on Unix.
+	// Reading a directory exercises an actual read failure on all supported systems.
+	await assert.rejects(readLogTail(directory), { code: 'EISDIR' });
 });

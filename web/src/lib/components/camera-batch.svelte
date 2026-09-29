@@ -37,7 +37,7 @@
 		onclose: () => void;
 	} = $props();
 	let selected = $state<string[]>([]);
-	let username = $state('');
+	let username = $state('admin');
 	let password = $state('');
 	let choosing = $state(true);
 	let controller: AbortController | undefined;

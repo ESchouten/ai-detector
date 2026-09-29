@@ -7,8 +7,9 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Badge } from '$lib/components/ui/badge';
-	import { ArrowRight, Search } from '@lucide/svelte';
+	import { ArrowRight, Eye, EyeOff, Search } from '@lucide/svelte';
 	import * as Field from '$lib/components/ui/field';
+	import * as InputGroup from '$lib/components/ui/input-group';
 	import * as Alert from '$lib/components/ui/alert';
 	import * as NativeSelect from '$lib/components/ui/native-select';
 	import * as RadioGroup from '$lib/components/ui/radio-group';
@@ -38,9 +39,10 @@
 	let source = $state(untrack(() => initial?.source ?? ''));
 	const editing = untrack(() => cameraEditConnection(initial?.source ?? ''));
 	let address = $state(untrack(() => initial?.connection?.address ?? ''));
-	let username = $state(editing.username);
+	let username = $state(untrack(() => (initial ? editing.username : 'admin')));
 	let password = $state('');
 	let streamUri = $state(untrack(() => initial?.source ?? ''));
+	let showStreamUri = $state(false);
 	let profiles = $state<{ token: string; name: string }[]>([]);
 	let profileToken = $state(untrack(() => initial?.connection?.profileToken ?? ''));
 	let verifiedConnection = $state<StreamMeta['connection']>(untrack(() => initial?.connection));
@@ -127,6 +129,7 @@
 		password = camera.login.password;
 		source = '';
 		streamUri = '';
+		showStreamUri = false;
 		manualAddress = false;
 		profiles = camera.connection.profiles;
 		profileToken =
@@ -274,9 +277,10 @@
 		label = '';
 		source = '';
 		address = '';
-		username = '';
+		username = 'admin';
 		password = '';
 		streamUri = '';
+		showStreamUri = false;
 		manualAddress = false;
 		verifiedConnection = undefined;
 		profileToken = '';
@@ -421,6 +425,7 @@
 								disabled={checking || saving}
 								onclick={() => {
 									manualAddress = !manualAddress;
+									showStreamUri = false;
 									connectionChangedInput();
 								}}>{manualAddress ? 'Hide manual entry' : 'Enter camera manually'}</Button
 							>
@@ -432,16 +437,29 @@
 					{#if manualAddress}
 						<Field.Field>
 							<Field.Label for="camera-stream">RTSP URL</Field.Label>
-							<Input
-								id="camera-stream"
-								type="password"
-								bind:value={streamUri}
-								oninput={connectionChangedInput}
-								disabled={checking || saving}
-								placeholder="rtsp://192.168.1.50/stream"
-								autocomplete="off"
-								aria-describedby="camera-stream-help"
-							/>
+							<InputGroup.Root>
+								<InputGroup.Input
+									id="camera-stream"
+									type={showStreamUri ? 'text' : 'password'}
+									bind:value={streamUri}
+									oninput={connectionChangedInput}
+									disabled={checking || saving}
+									placeholder="rtsp://192.168.1.50/stream"
+									autocomplete="off"
+									spellcheck={false}
+									aria-describedby="camera-stream-help"
+								/>
+								<InputGroup.Addon align="inline-end">
+									<InputGroup.Button
+										size="icon-sm"
+										aria-label={showStreamUri ? 'Hide RTSP URL' : 'Show RTSP URL'}
+										title={showStreamUri ? 'Hide RTSP URL' : 'Show RTSP URL'}
+										onclick={() => (showStreamUri = !showStreamUri)}
+									>
+										{#if showStreamUri}<EyeOff />{:else}<Eye />{/if}
+									</InputGroup.Button>
+								</InputGroup.Addon>
+							</InputGroup.Root>
 							<Field.Description id="camera-stream-help">
 								Paste the full stream URL, including the username and password if required.
 							</Field.Description>

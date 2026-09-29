@@ -37,7 +37,7 @@ test('bundled preset files preserve their models, options and recording destinat
 	const presets = await loadPresets(directory);
 	assert.deepEqual(
 		presets.map(({ id }) => id),
-		['calving-catcher', 'cow-catcher', 'general']
+		['calving-catcher-tailup', 'calving-catcher', 'cow-catcher', 'general']
 	);
 	for (const preset of presets) {
 		const raw = JSON.parse(await readFile(path.join(directory, `${preset.id}.json`), 'utf8'));
@@ -45,6 +45,10 @@ test('bundled preset files preserve their models, options and recording destinat
 		assert.deepEqual(preset.detector.exporters?.disk, [raw.exporters.disk]);
 		assert.deepEqual(preset.detector.detection, { ...raw.detection, source: [] });
 	}
+	assert.equal(
+		presets.find(({ id }) => id === 'calving-catcher-tailup')!.detector.yolo?.model,
+		presets.find(({ id }) => id === 'calving-catcher')!.detector.yolo?.model
+	);
 });
 
 test('adding, editing and removing local files changes the choices on the next read', async (t) => {

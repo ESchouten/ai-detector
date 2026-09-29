@@ -1,0 +1,26 @@
+{
+    "detection": {
+        "interval": 10,
+        "frame_retention": 1,
+        "frames_width": 2560
+    },
+    "yolo": {
+        "model": "https://github.com/CowCatcherAI/CalvingCatcherAI/releases/download/CalvingcatcherV1/calvingcatcherV10.pt",
+        "confidence": {
+            "tail_up": 0.7
+        },
+        "cooldown": {
+            "tail_up": 600
+        },
+        "frames_min": 24,
+        "timeout": 60,
+        "imgsz": 640,
+        "time_max": 360
+    },
+    "exporters": {
+        "disk": {
+            "directory": "dry cows",
+            "strategy": "BEST"
+        }
+    }
+}

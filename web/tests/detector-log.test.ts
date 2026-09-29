@@ -47,7 +47,7 @@ test('search keeps multiline error details and is literal, case insensitive and 
 	assert.equal(searchLog(text, ' '), text);
 });
 
-test('missing logs are empty, existing Python logs are bounded, and read failures stay visible', async (t) => {
+test('missing logs are empty, existing Python logs are bounded, and invalid paths stay visible', async (t) => {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-log-read-'));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const file = path.join(directory, 'detector.log');
@@ -56,7 +56,6 @@ test('missing logs are empty, existing Python logs are bounded, and read failure
 	const text = await readLogTail(file);
 	assert.ok(text.length <= 512 * 1024);
 	assert.ok(text.endsWith('Final error\n'));
-	// A file used as a parent returns ENOENT on Windows, but ENOTDIR on Unix.
-	// Reading a directory exercises an actual read failure on all supported systems.
-	await assert.rejects(readLogTail(directory), { code: 'EISDIR' });
+	// Node rejects null bytes before accessing the OS; directory errors vary by platform.
+	await assert.rejects(readLogTail(`${file}\0`), { code: 'ERR_INVALID_ARG_VALUE' });
 });

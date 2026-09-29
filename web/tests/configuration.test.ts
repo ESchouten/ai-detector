@@ -444,12 +444,17 @@ test('failed managed stop settings remain visible without rejecting the saved em
 	// launching a child process or depending on platform-specific permission behavior.
 	await mkdir(path.join(directory, 'runtime.json'));
 	const store = new ConfigurationStore(files, readTestPresets, () => runtime);
-	await store.deleteDetector('Detector 1');
-	assert.deepEqual((await store.read()).config.detectors, []);
-	assert.deepEqual((await store.read()).app.detectors, []);
-	assert.equal(runtime.status().phase, 'failed');
-	assert.equal(runtime.status().readiness, 'failed');
-	assert.match(runtime.status().message, /runtime\.json/);
+	try {
+		await store.deleteDetector('Detector 1');
+		assert.deepEqual((await store.read()).config.detectors, []);
+		assert.deepEqual((await store.read()).app.detectors, []);
+		assert.equal(runtime.status().phase, 'failed');
+		assert.equal(runtime.status().readiness, 'failed');
+		assert.match(runtime.status().message, /runtime\.json/);
+	} finally {
+		// Drain logging without rewriting the deliberately blocked settings path.
+		await runtime.stop(false);
+	}
 });
 
 test('metadata-only edits persist without rewriting config or restarting detection', async (t) => {

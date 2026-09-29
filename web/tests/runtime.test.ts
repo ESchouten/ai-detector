@@ -200,9 +200,12 @@ test(
 	posixOnly,
 	async (t) => {
 		const directory = await mkdtemp(path.join(tmpdir(), 'detector-docker-'));
-		t.after(() => rm(directory, { recursive: true, force: true }));
-		await writeJson(path.join(directory, 'config.json'), config);
 		const detector = new ManagedDetector({ executable, dataDirectory: directory });
+		t.after(async () => {
+			await detector.stop();
+			await rm(directory, { recursive: true, force: true });
+		});
+		await writeJson(path.join(directory, 'config.json'), config);
 		await detector.start('docker');
 		assert.equal(detector.status().phase, 'failed');
 		assert.match(detector.status().message, /complete application release/);
@@ -238,9 +241,15 @@ test(
 	posixOnly,
 	async (t) => {
 		const directory = await mkdtemp(path.join(tmpdir(), 'detector-gpu-'));
+		const detector = new ManagedDetector({
+			executable,
+			dataDirectory: directory,
+			dockerImage: 'example.invalid/detector@sha256:123'
+		});
 		const oldPath = process.env.PATH;
 		t.after(async () => {
 			process.env.PATH = oldPath;
+			await detector.stop();
 			await rm(directory, { recursive: true, force: true });
 		});
 		await writeFile(path.join(directory, 'nvidia-smi'), '#!/bin/sh\necho NVIDIA\n', {
@@ -253,11 +262,6 @@ test(
 		);
 		process.env.PATH = directory + path.delimiter + oldPath;
 		await writeJson(path.join(directory, 'config.json'), config);
-		const detector = new ManagedDetector({
-			executable,
-			dataDirectory: directory,
-			dockerImage: 'example.invalid/detector@sha256:123'
-		});
 		await detector.start('docker');
 		assert.equal(detector.status().selected, 'docker');
 		assert.equal(detector.status().phase, 'failed');
@@ -321,6 +325,7 @@ test(
 		t.after(async () => {
 			abort.abort();
 			await cancelled;
+			await detector.stop();
 			await rm(directory, { recursive: true, force: true });
 		});
 		await waitFor(async () => (await detector.log.read()).includes('Checking configuration'));

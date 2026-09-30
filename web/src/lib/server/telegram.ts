@@ -1,8 +1,8 @@
 import { Api, GrammyError, HttpError } from 'grammy/web';
-import type { Update } from 'grammy/types';
+import type { ChatAdministratorRights, Update } from 'grammy/types';
 import * as v from 'valibot';
 import { ConfigurationError } from '../configuration.ts';
-import type { TelegramRecipient } from '../telegram.ts';
+import type { TelegramDestination, TelegramRecipient } from '../telegram.ts';
 
 const responseSchema = v.object({
 	ok: v.boolean(),
@@ -18,14 +18,27 @@ const chatSchema = v.object({
 	last_name: v.optional(v.string()),
 	username: v.optional(v.string())
 });
+const userSchema = v.object({ id: v.number(), is_bot: v.boolean() });
 const messageSchema = v.object({
+	message_id: v.optional(v.number()),
+	chat_shared: v.optional(
+		v.object({ request_id: v.number(), chat_id: v.number(), title: v.optional(v.string()) })
+	),
 	chat: chatSchema,
 	text: v.optional(v.string()),
-	from: v.optional(v.object({ id: v.number(), is_bot: v.boolean() }))
+	from: v.optional(userSchema)
 });
 const updatesSchema = v.array(
 	v.object({
 		update_id: v.pipe(v.number(), v.integer()),
+		callback_query: v.optional(
+			v.object({
+				id: v.string(),
+				from: userSchema,
+				data: v.optional(v.string()),
+				message: v.optional(messageSchema)
+			})
+		),
 		message: v.optional(messageSchema),
 		channel_post: v.optional(messageSchema),
 		my_chat_member: v.optional(v.object({ chat: chatSchema }))
@@ -160,5 +173,99 @@ export async function sendTelegramTest(token: string, chat: string): Promise<voi
 			chat,
 			'AI Detector setup test. If you received this message on the intended device, confirm receipt in AI Detector to enable alerts.'
 		)
+	);
+}
+
+// Only posting is needed in channels. Groups must already include the bot.
+const channelRights: ChatAdministratorRights = {
+	is_anonymous: false,
+	can_manage_chat: true,
+	can_delete_messages: false,
+	can_manage_video_chats: false,
+	can_restrict_members: false,
+	can_promote_members: false,
+	can_change_info: false,
+	can_invite_users: false,
+	can_post_stories: false,
+	can_edit_stories: false,
+	can_delete_stories: false,
+	can_post_messages: true,
+	can_send_welcome_messages: false
+};
+
+export async function requestTelegramChat(
+	token: string,
+	user: number,
+	destination: Exclude<TelegramDestination, 'private'>,
+	requestId: number,
+	signal: AbortSignal
+) {
+	await request(
+		api(token, signal).sendMessage(
+			user,
+			destination === 'group'
+				? 'Choose a group for AI Detector alerts. Add this bot to your group first if it is not listed.'
+				: 'Choose a channel for AI Detector alerts. Telegram will ask for permission to post there.',
+			{
+				reply_markup: {
+					resize_keyboard: true,
+					one_time_keyboard: true,
+					keyboard: [
+						[
+							{
+								text: destination === 'group' ? 'Choose group' : 'Choose channel',
+								request_chat: {
+									request_id: requestId,
+									chat_is_channel: destination === 'channel',
+									request_title: true,
+									...(destination === 'channel'
+										? {
+												user_administrator_rights: channelRights,
+												bot_administrator_rights: channelRights
+											}
+										: { bot_is_member: true })
+								}
+							}
+						]
+					]
+				}
+			}
+		),
+		signal
+	);
+}
+
+export async function sendTelegramConfirmation(
+	token: string,
+	chat: string,
+	code: string,
+	signal: AbortSignal
+): Promise<number> {
+	const sent = result(
+		v.object({ message_id: v.number() }),
+		await request(
+			api(token, signal).sendMessage(
+				chat,
+				'AI Detector test alert. Choose Confirm connection to receive detector alerts in this chat.',
+				{
+					reply_markup: { inline_keyboard: [[{ text: 'Confirm connection', callback_data: code }]] }
+				}
+			),
+			signal
+		)
+	);
+	return sent.message_id;
+}
+
+export async function acknowledgeTelegramConnection(
+	token: string,
+	callbackId: string,
+	signal: AbortSignal
+): Promise<void> {
+	await request(
+		api(token, signal).answerCallbackQuery(callbackId, {
+			text: 'Connected. Return to AI Detector to save your settings.'
+		}),
+		signal
 	);
 }

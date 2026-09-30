@@ -18,11 +18,7 @@
 
 	function isActive(item: NavItem): boolean {
 		const path = new URL(item.url, page.url).pathname;
-		return (
-			page.url.pathname === path ||
-			page.url.pathname.startsWith(`${path}/`) ||
-			(item.title === 'Settings' && page.route.id?.startsWith('/(admin)/detectors') === true)
-		);
+		return page.url.pathname === path || page.url.pathname.startsWith(`${path}/`);
 	}
 </script>
 

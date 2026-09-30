@@ -42,7 +42,11 @@
 			>
 			<Button
 				href={resolve(
-					setupMode ? '/setup?step=finish' : detectorLabel ? '/detectors' : '/notifications'
+					setupMode
+						? '/setup?step=finish'
+						: detectorLabel
+							? '/setup?step=detectors'
+							: '/notifications'
 				)}
 				variant="outline">Cancel</Button
 			>

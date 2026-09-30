@@ -205,10 +205,10 @@ def run_application(
                 )
             media = EventMedia()
             validator: EventValidator | None = None
-            if settings.vlm:
+            if settings.active_vlm:
                 from aidetector.adapters.vlm import VlmValidator
 
-                validator = VlmValidator(settings.vlm, media)
+                validator = VlmValidator(settings.active_vlm, media)
             cooldown = Cooldown(
                 settings.yolo.cooldown if settings.yolo is not None else 0
             )

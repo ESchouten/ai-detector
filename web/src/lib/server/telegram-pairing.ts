@@ -1,13 +1,21 @@
-import { randomBytes } from 'node:crypto';
+import { randomBytes, randomInt } from 'node:crypto';
 import QRCode from 'qrcode';
 import { ConfigurationError } from '../configuration.ts';
-import type { TelegramPairing, TelegramPairingState, TelegramRecipient } from '../telegram.ts';
+import type {
+	TelegramPairing,
+	TelegramPairingState,
+	TelegramRecipient,
+	TelegramDestination
+} from '../telegram.ts';
 import {
 	assertTelegramPollingAvailable,
 	findTelegramChats,
 	getTelegramBot,
 	getTelegramUpdates,
-	telegramRecipient
+	telegramRecipient,
+	requestTelegramChat,
+	sendTelegramConfirmation,
+	acknowledgeTelegramConnection
 } from './telegram.ts';
 
 const LIFETIME_MS = 5 * 60 * 1000;
@@ -25,7 +33,39 @@ interface Session {
 	starting: boolean;
 	offset?: number;
 	chat?: TelegramRecipient;
+	destination: TelegramDestination;
+	requestId: number;
+	user?: number;
+	messageId?: number;
+	confirmed: boolean;
 	polling?: Promise<TelegramPairingState>;
+}
+
+type TelegramUpdate = Awaited<ReturnType<typeof getTelegramUpdates>>[number];
+
+function privateMessage(update: TelegramUpdate) {
+	const message = update.message;
+	if (
+		message?.chat.type !== 'private' ||
+		!message.from ||
+		message.from.is_bot ||
+		message.from.id !== message.chat.id
+	)
+		return;
+	return { ...message, from: message.from };
+}
+
+function confirmation(session: Session, update: TelegramUpdate) {
+	const callback = update.callback_query;
+	if (
+		session.chat &&
+		callback?.data === session.code &&
+		callback.from.id === session.user &&
+		!callback.from.is_bot &&
+		String(callback.message?.chat.id) === session.chat.id &&
+		callback.message?.message_id === session.messageId
+	)
+		return callback;
 }
 
 /** Temporary local pairing; a bot has only one update consumer in this process. */
@@ -38,7 +78,10 @@ export class TelegramPairings {
 		this.now = now;
 	}
 
-	async begin(input: string): Promise<TelegramPairing> {
+	async begin(
+		input: string,
+		destination: TelegramDestination = 'private'
+	): Promise<TelegramPairing> {
 		const token = input.trim();
 		this.expire();
 		this.assertAvailable(token);
@@ -52,7 +95,10 @@ export class TelegramPairings {
 			code: randomBytes(24).toString('base64url'),
 			expiresAt: this.now() + LIFETIME_MS,
 			controller: new AbortController(),
-			starting: true
+			starting: true,
+			destination,
+			requestId: randomInt(1, 2147483647),
+			confirmed: false
 		};
 		// Reserve the token before the first network wait, including concurrent starts.
 		this.sessions.set(session.id, session);
@@ -78,7 +124,7 @@ export class TelegramPairings {
 		const session = this.sessions.get(id);
 		if (!session) throw new ConfigurationError(EXPIRED);
 		this.assertActive(session);
-		if (session.chat) return { state: 'matched', chat: session.chat };
+		if (session.confirmed) return this.state(session);
 		session.polling ??= this.receive(session).finally(() => {
 			session.polling = undefined;
 			if (session.controller.signal.aborted) this.sessions.delete(session.id);
@@ -110,29 +156,74 @@ export class TelegramPairings {
 			offset: session.offset,
 			signal: session.controller.signal,
 			// Pairing is for a dedicated bot. Keep the manual discovery path's filter unchanged.
-			allowedUpdates: ['message', 'channel_post', 'my_chat_member']
+			allowedUpdates: ['message', 'channel_post', 'my_chat_member', 'callback_query']
 		});
 		this.assertActive(session);
 		for (const update of updates) {
 			session.offset = Math.max(session.offset ?? 0, update.update_id + 1);
-			const message = update.message;
-			if (
-				message?.chat.type === 'private' &&
-				message.from?.is_bot === false &&
-				message.from.id === message.chat.id &&
-				message.text === `/start ${session.code}`
-			) {
-				session.chat = telegramRecipient(message.chat);
-				return { state: 'matched', chat: session.chat };
-			}
+			await this.receiveUpdate(session, update);
+			this.assertActive(session);
+			if (session.confirmed) break;
 		}
-		return { state: 'waiting' };
+		return this.state(session);
+	}
+
+	private async receiveUpdate(session: Session, update: TelegramUpdate): Promise<void> {
+		const callback = confirmation(session, update);
+		if (callback) {
+			await acknowledgeTelegramConnection(session.token, callback.id, session.controller.signal);
+			session.confirmed = true;
+			return;
+		}
+		const message = privateMessage(update);
+		if (!message) return;
+		if (!session.user && message.text === `/start ${session.code}`) {
+			session.user = message.from.id;
+			if (session.destination === 'private')
+				await this.confirm(session, telegramRecipient(message.chat));
+			else
+				await requestTelegramChat(
+					session.token,
+					session.user,
+					session.destination,
+					session.requestId,
+					session.controller.signal
+				);
+			return;
+		}
+		const shared = message.chat_shared;
+		if (
+			!session.chat &&
+			session.user === message.from.id &&
+			shared?.request_id === session.requestId
+		) {
+			await this.confirm(session, {
+				id: String(shared.chat_id),
+				name: shared.title ?? 'My Telegram ' + session.destination
+			});
+		}
+	}
+
+	private state(session: Session): TelegramPairingState {
+		if (session.chat)
+			return { state: session.confirmed ? 'matched' : 'confirming', chat: session.chat };
+		return { state: session.user ? 'choosing' : 'waiting' };
+	}
+
+	private async confirm(session: Session, chat: TelegramRecipient): Promise<void> {
+		session.messageId = await sendTelegramConfirmation(
+			session.token,
+			chat.id,
+			session.code,
+			session.controller.signal
+		);
+		session.chat = chat;
 	}
 
 	private assertAvailable(token: string): void {
 		if (
 			this.discoveries.has(token) ||
-			[...this.sessions.values()].some((session) => session.token === token && !session.chat)
+			[...this.sessions.values()].some((session) => session.token === token && !session.confirmed)
 		)
 			throw new ConfigurationError(
 				'This bot already has a connection in progress. Finish or cancel it before starting another.'

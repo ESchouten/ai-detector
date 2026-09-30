@@ -6,13 +6,8 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
-import {
-	normalizeConfiguration,
-	ConfigurationError,
-	configurationSchema
-} from '../src/lib/configuration.ts';
+import { normalizeConfiguration, ConfigurationError } from '../src/lib/configuration.ts';
 import { DEFAULT_SCHEMA_URL, type DetectorConfig, type StreamMeta } from '../src/lib/schema.ts';
-import { getEditorSchema } from '../src/lib/server/configuration/editor-schema.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
 import { configurationAction } from '../src/lib/server/configuration/request.ts';
 import { isHttpError } from '@sveltejs/kit';
@@ -74,6 +69,33 @@ test('canonical schema rejects unknown fields, invalid bounds, empty and duplica
 		assert.throws(() => normalizeConfiguration(input, {}), ConfigurationError);
 });
 
+test('invalid local configuration identifies the file and options without exposing values or rewriting it', async (t) => {
+	const { files, store } = await fixture(t, {
+		detectors: [
+			{
+				...detector,
+				identity: { key: 'private-identity-key' },
+				yolo: { model: 'model.pt', tracker: 'custom-private-tracker.yaml' },
+				exporters: { sse: [{ token: 'private-exporter-token' }] }
+			}
+		]
+	});
+	const before = await readFile(files.config, 'utf8');
+	await assert.rejects(store.read(), (error: unknown) => {
+		assert.ok(error instanceof ConfigurationError);
+		assert.ok(error.message.includes(files.config));
+		assert.match(error.message, /detectors\/0 has unsupported property "identity"/);
+		assert.match(error.message, /exporters has unsupported property "sse"/);
+		assert.match(error.message, /yolo\/tracker must be one of "botsort.yaml", "bytetrack.yaml"/);
+		assert.doesNotMatch(
+			error.message,
+			/private-identity-key|private-exporter-token|custom-private-tracker/
+		);
+		return true;
+	});
+	assert.equal(await readFile(files.config, 'utf8'), before);
+});
+
 test('source whitespace normalization preserves one camera identity and rejects normalized duplicates', () => {
 	const document = normalizeConfiguration(
 		{ detectors: [{ detection: { source: ` ${source} ` } }] },
@@ -100,33 +122,6 @@ test('loaded notification identities match their exporters without silently chan
 	);
 	assert.deepEqual(document.app.telegrams, [{ label: 'Farm alerts', ...telegram }]);
 	assert.deepEqual(document.config.detectors[0].exporters?.telegram, [telegram]);
-});
-
-test('default editor schema works offline and custom schemas preserve editor extensions', async (t) => {
-	const custom = { $defs: { DetectorConfig: { title: 'Custom editor' } }, 'x-editor': true };
-	const request = t.mock.method(globalThis, 'fetch', async () => Response.json(custom));
-	for (const schemaUrl of [undefined, null, DEFAULT_SCHEMA_URL])
-		assert.equal(await getEditorSchema(schemaUrl), configurationSchema);
-	assert.equal(request.mock.callCount(), 0);
-	assert.deepEqual(await getEditorSchema('https://schema.example/custom.json'), custom);
-	assert.equal(request.mock.callCount(), 1);
-	assert.ok(request.mock.calls[0].arguments[1]?.signal instanceof AbortSignal);
-});
-
-test('unavailable or invalid custom editor schemas fall back to the bundled schema', async (t) => {
-	const request = t.mock.method(
-		globalThis,
-		'fetch',
-		async () => new Response(null, { status: 404 })
-	);
-	const url = 'https://schema.example/custom.json';
-	assert.equal(await getEditorSchema(url), configurationSchema);
-	request.mock.mockImplementation(async () => Response.json({ $defs: {} }));
-	assert.equal(await getEditorSchema(url), configurationSchema);
-	request.mock.mockImplementation(async () => {
-		throw new Error('Offline');
-	});
-	assert.equal(await getEditorSchema(url), configurationSchema);
 });
 
 test('expected configuration failures reach the UI as actionable client errors', async () => {

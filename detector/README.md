@@ -49,7 +49,7 @@ Tests mirror the `domain`, `application`, and `adapters` packages; tests spannin
 | Downloaded Windows CUDA runtime | [distribution staging](../distribution/nvidia_runtime.py), [desktop preparation](../web/src/lib/server/nvidia-runtime.ts) | [payload and dependency checks](../distribution/test_nvidia_runtime.py), [process lifecycle](../web/tests/nvidia-runtime.test.ts), [Windows package installation](../web/tests/nvidia-runtime-installed.test.ts) |
 | Model conversion or prepared cache | [export settings](src/aidetector/adapters/inference/export_settings.py), [prepared models](src/aidetector/adapters/inference/prepared_models.py) | [conversion/cache contracts](tests/adapters/inference/test_prepared_models.py), [model loading](tests/adapters/inference/test_model_loading.py) |
 | Cropping, annotations, or encoded media | [media adapters](src/aidetector/adapters/media/) | [media encoding](tests/adapters/media/test_encoding.py), [event media](tests/adapters/media/test_event_media.py) |
-| VLM responses or fallback | [VLM adapter](src/aidetector/adapters/vlm.py) | [VLM validation](tests/adapters/test_vlm.py) |
+| VLM responses, fallback or connection check | [VLM adapter](src/aidetector/adapters/vlm.py), [connection check](src/aidetector/adapters/vlm_check.py) | [VLM validation](tests/adapters/test_vlm.py), [connection check](tests/adapters/test_vlm_check.py) |
 | Archive format or publication | [disk](src/aidetector/adapters/exporters/disk.py), [metadata](src/aidetector/adapters/exporters/archive_metadata.py) | [disk](tests/adapters/exporters/test_disk.py), [reference flow](tests/test_reference_flow.py), [schemas](tests/test_schemas.py) |
 | Telegram, webhooks, or health requests | [Telegram](src/aidetector/adapters/exporters/telegram.py), [webhook](src/aidetector/adapters/exporters/webhook.py), [health](src/aidetector/adapters/health.py) | [exporters](tests/adapters/exporters/test_exporters.py), [HTTP](tests/adapters/test_http.py), [health](tests/adapters/test_health.py) |
 
@@ -176,13 +176,17 @@ Omit `yolo` to process each sampled frame directly through the optional verifier
 
 ### Optional verification
 
-`vlm` accepts one configuration or an ordered list. Each configuration has:
+In the web app, add a named **AI connection** once, then select it in each detector. Connection credentials and model are shared; each detector keeps its own question and IMAGE/VIDEO choice. Presets provide optional starting questions and leave verification off until a connection is chosen. Existing manually configured verifiers keep working. For a standalone connection check, `ai-detector --test-vlm connection.json` uses generated media and the normal adapter, never camera footage.
+
+`vlm` accepts one configuration or an ordered list. Set the detector's `vlm_enabled` to `false` to pause all verification while preserving the list and individual enabled flags; it defaults to `true`. Each configuration has:
 
 | Field | Default | Meaning |
 | --- | --- | --- |
 | `prompt` | required | The detection question |
-| `model` | required | A LiteLLM model name or ordered list of names |
-| `key`, `url` | unset | Provider API key and optional endpoint |
+| `enabled` | `true` | Disabled configurations retain a preset question without running verification |
+| `model` | required when enabled | A LiteLLM model name or ordered list of names |
+| `key`, `url` | unset | Provider API key and optional endpoint; an explicit empty key disables environment-key lookup for a local service |
+| `headers` | `{}` | Additional request headers, including custom authentication |
 | `strategy` | `"VIDEO"` | `"IMAGE"` for the best cropped frame, or `"VIDEO"` for the event clip |
 | `crop_padding` | `0.1` | Extra crop margin relative to the detected region |
 | `timeout` | `30` | Provider request timeout in seconds |
@@ -241,6 +245,12 @@ The default `INFO` level includes the app, Python, OS and installed library vers
 Python logs are written both to the console and to `logs/detector.log` under the runtime data directory. The file persists across starts and rotates at 2 MiB with five backups (about 12 MiB total for ordinary log records). This preserves diagnostics after the web dashboard's short in-memory log tail has rolled over. If a log file cannot be opened, the console reports that failure and monitoring can still start. `--help`, `--version`, `--init-config` and `--check-config` do not create log files. Native library writes directly to stdout/stderr remain in the launcher/terminal output rather than the Python log file.
 
 `--log-level WARNING` hides routine activity; `--log-level DEBUG` also records batch source IDs, retained-frame counts, timestamps, shapes and dtypes. A failed processing batch records that metadata at `ERROR` even at the default log level, followed by the traceback. Images, raw configuration, verification prompts, request bodies and headers are not included in configuration summaries. Console and file formatters remove URL credentials, paths and query strings and mask configured API keys, bot tokens and authorization header values, including in tracebacks. Human logs remain independent of the `--status-json` protocol.
+
+## Comparing CPU and GPU load
+
+For a useful Windows ML versus CUDA comparison, use the same model, camera streams, `detection.interval`, `imgsz` and open live previews. Compare steady-state detector process CPU usage and processed frames per second after model preparation. Total system CPU and allocated GPU memory alone do not measure inference efficiency.
+
+ONNX startup logs report the actual session providers, the image tensor processing device and I/O binding. Windows ML can execute the model on NVIDIA while Ultralytics prepares tensors and processes results on the CPU. ONNX worker spinning is disabled so waiting workers can sleep. A listed CPU fallback provider does not by itself prove expensive model operations run on the CPU; use ONNX Runtime profiling to check their placement. Native CUDA keeps tensor operations on the GPU, while camera decoding/resizing still involves CPU work.
 
 ## Development checks
 

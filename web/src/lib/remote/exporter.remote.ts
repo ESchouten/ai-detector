@@ -1,6 +1,5 @@
 import { configurationAction } from '$lib/server/configuration/request';
-import { command, form, query } from '$app/server';
-import { redirect } from '@sveltejs/kit';
+import { command, query } from '$app/server';
 import * as v from 'valibot';
 import { configuration } from '$lib/server/configuration';
 import { alertsInput, telegramInput, telegramMeta } from '$lib/configuration';
@@ -11,8 +10,12 @@ const pairings = new TelegramPairings();
 const tokenInput = v.object({ token: v.pipe(v.string(), v.trim(), v.minLength(1)) });
 const pairingInput = v.object({ id: v.pipe(v.string(), v.minLength(1)) });
 
-export const beginTelegramPairing = command(tokenInput, ({ token }) =>
-	configurationAction(pairings.begin(token))
+export const beginTelegramPairing = command(
+	v.object({
+		...tokenInput.entries,
+		destination: v.optional(v.picklist(['private', 'group', 'channel']), 'private')
+	}),
+	({ token, destination }) => configurationAction(pairings.begin(token, destination))
 );
 export const pollTelegramPairing = command(pairingInput, ({ id }) =>
 	configurationAction(pairings.poll(id))
@@ -33,13 +36,10 @@ export const getTelegram = query(v.pick(telegramMeta, ['label']), async ({ label
 	(await configuration.read()).app.telegrams.find((telegram) => telegram.label === label)
 );
 
-export const saveTelegram = form(telegramInput, async (input) => {
-	await configurationAction(configuration.saveTelegram(input));
-	redirect(
-		302,
-		input.next?.startsWith('/') && !input.next.startsWith('//') ? input.next : '/notifications'
-	);
-});
+export const connectTelegram = command(
+	v.object({ ...telegramInput.entries, received: v.literal(true) }),
+	(input) => configurationAction(configuration.saveTelegram(input))
+);
 
 export const deleteTelegram = command(v.pick(telegramMeta, ['label']), ({ label }) =>
 	configurationAction(configuration.deleteTelegram(label))

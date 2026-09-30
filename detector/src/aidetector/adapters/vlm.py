@@ -27,6 +27,16 @@ class InvalidAnswer(ValueError):
     """A provider response that does not satisfy the structured answer contract."""
 
 
+class VlmUnavailable(ValidationUnavailable):
+    """Safe failure codes for diagnostics and connection-check guidance."""
+
+    def __init__(self, failures: list[str]):
+        self.failures = tuple(dict.fromkeys(failures))
+        super().__init__(
+            f"No configured verifier returned a valid answer ({', '.join(self.failures)})"
+        )
+
+
 def _request_answer(config: VLMConfig, model: str, content: list[dict]) -> _Answer:
     # LiteLLM's return union includes streaming responses;
     # this call explicitly selects the non-streaming API.
@@ -36,8 +46,12 @@ def _request_answer(config: VLMConfig, model: str, content: list[dict]) -> _Answ
             model=model,
             messages=[{"role": "user", "content": content}],
             response_format=_Answer,
-            api_key=config.key,
+            # An explicit empty key selects an unauthenticated local service.
+            # LiteLLM otherwise falls back to environment keys, and its OpenAI
+            # client requires a nonempty value even for a server without auth.
+            api_key="not-needed" if config.key == "" else config.key,
             base_url=config.url,
+            extra_headers=config.headers or None,
             timeout=config.timeout,
             num_retries=0,
             stream=False,
@@ -100,10 +114,7 @@ class VlmValidator:
                     except (ProviderError, InvalidAnswer) as error:
                         failures.append(type(error).__name__)
                         break
-        reason = ", ".join(dict.fromkeys(failures))
-        raise ValidationUnavailable(
-            f"No configured verifier returned a valid answer ({reason})"
-        )
+        raise VlmUnavailable(failures)
 
     def _content(self, event: DetectionEvent, config: VLMConfig) -> list[dict]:
         content: list[dict] = [{"type": "text", "text": config.prompt}]

@@ -50,6 +50,11 @@
           "exclusiveMinimum": 0,
           "title": "Pending Events",
           "type": "integer"
+        },
+        "vlm_enabled": {
+          "default": true,
+          "title": "Vlm Enabled",
+          "type": "boolean"
         }
       },
       "required": [
@@ -452,7 +457,41 @@
     },
     "VLMConfig": {
       "additionalProperties": false,
+      "else": {
+        "properties": {
+          "model": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "minItems": 1,
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
+      "if": {
+        "properties": {
+          "enabled": {
+            "const": false
+          }
+        },
+        "required": [
+          "enabled"
+        ]
+      },
       "properties": {
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
         "prompt": {
           "minLength": 1,
           "pattern": "\\S",
@@ -472,10 +511,10 @@
                 "pattern": "\\S",
                 "type": "string"
               },
-              "minItems": 1,
               "type": "array"
             }
           ],
+          "default": [],
           "title": "Model"
         },
         "key": {
@@ -501,6 +540,13 @@
           ],
           "default": null,
           "title": "Url"
+        },
+        "headers": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Headers",
+          "type": "object"
         },
         "strategy": {
           "default": "VIDEO",
@@ -531,8 +577,7 @@
         }
       },
       "required": [
-        "prompt",
-        "model"
+        "prompt"
       ],
       "title": "VLMConfig",
       "type": "object"

@@ -160,7 +160,7 @@ export class InstallationImport {
 
 	private async requireEmptySetup(): Promise<void> {
 		const { config, app } = await this.configuration.read();
-		if (config.detectors.length || app.streams.length || app.telegrams.length)
+		if (config.detectors.length || app.streams.length || app.telegrams.length || app.llms.length)
 			throw new ConfigurationError(
 				'This application already has a setup. Import is available before adding cameras or detectors.'
 			);

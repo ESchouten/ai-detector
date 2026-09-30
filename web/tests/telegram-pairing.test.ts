@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
 import { ConfigurationError } from '../src/lib/configuration.ts';
+import type { TelegramDestination } from '../src/lib/telegram.ts';
 import { TelegramPairings } from '../src/lib/server/telegram-pairing.ts';
 
 type Request = { method: string; body: Record<string, unknown>; signal: AbortSignal };
@@ -11,7 +12,9 @@ function fixture(t: TestContext) {
 	const replies: Record<string, Reply> = {
 		getMe: () => ({ is_bot: true, first_name: 'Farm alerts', username: 'FarmAlertsBot' }),
 		getWebhookInfo: () => ({ url: '' }),
-		getUpdates: () => []
+		getUpdates: () => [],
+		sendMessage: () => ({ message_id: 50 }),
+		answerCallbackQuery: () => true
 	};
 	t.mock.method(globalThis, 'fetch', async (input: string, init: RequestInit) => {
 		const method = new URL(input).pathname.split('/').at(-1)!;
@@ -37,8 +40,8 @@ function fixture(t: TestContext) {
 		advance(milliseconds: number) {
 			now += milliseconds;
 		},
-		async begin(token = 'fixture-token') {
-			const pairing = await pairings.begin(token);
+		async begin(token = 'fixture-token', destination: TelegramDestination = 'private') {
+			const pairing = await pairings.begin(token, destination);
 			ids.push(pairing.id);
 			return pairing;
 		}
@@ -52,6 +55,18 @@ function start(update: number, code: string, chat = 123) {
 			text: `/start ${code}`,
 			from: { id: chat, is_bot: false },
 			chat: { id: chat, type: 'private', first_name: 'Farmer', last_name: 'One' }
+		}
+	};
+}
+
+function confirmation(update: number, code: string, user = 123, chat = 123, message = 50) {
+	return {
+		update_id: update,
+		callback_query: {
+			id: 'callback-' + update,
+			data: code,
+			from: { id: user, is_bot: false },
+			message: { message_id: message, chat: { id: chat, type: chat > 0 ? 'private' : 'channel' } }
 		}
 	};
 }
@@ -128,24 +143,32 @@ test('only the exact private user start message matches, with bounded polling an
 		bot,
 		differentSender,
 		mention,
-		{ update_id: 7, callback_query: { data: code } }
+		confirmation(7, code)
 	];
 	assert.deepEqual(await f.pairings.poll(pairing.id), { state: 'waiting' });
 	f.replies.getUpdates = () => [start(8, code)];
-	const expected = { state: 'matched', chat: { id: '123', name: 'Farmer One' } };
+	let expected = { state: 'confirming', chat: { id: '123', name: 'Farmer One' } };
 	assert.deepEqual(await f.pairings.poll(pairing.id), expected);
 	assert.deepEqual(
 		f.calls.filter((call) => call.method === 'getUpdates').map((call) => call.body),
 		[
-			{ timeout: 3, limit: 100, allowed_updates: ['message', 'channel_post', 'my_chat_member'] },
+			{
+				timeout: 3,
+				limit: 100,
+				allowed_updates: ['message', 'channel_post', 'my_chat_member', 'callback_query']
+			},
 			{
 				timeout: 3,
 				limit: 100,
 				offset: 8,
-				allowed_updates: ['message', 'channel_post', 'my_chat_member']
+				allowed_updates: ['message', 'channel_post', 'my_chat_member', 'callback_query']
 			}
 		]
 	);
+	await assert.rejects(f.begin(), /connection in progress/);
+	f.replies.getUpdates = () => [confirmation(9, code)];
+	expected = { ...expected, state: 'matched' };
+	assert.deepEqual(await f.pairings.poll(pairing.id), expected);
 	const requests = f.calls.length;
 	f.replies.getUpdates = () => [start(9, code, 456)];
 	assert.deepEqual(await f.pairings.poll(pairing.id), expected);
@@ -158,6 +181,8 @@ test('old and replayed link codes cannot match a new pairing for the same bot', 
 	const old = await f.begin();
 	const oldCode = new URL(old.url).searchParams.get('start')!;
 	f.replies.getUpdates = () => [start(1, oldCode)];
+	assert.equal((await f.pairings.poll(old.id)).state, 'confirming');
+	f.replies.getUpdates = () => [confirmation(2, oldCode)];
 	assert.equal((await f.pairings.poll(old.id)).state, 'matched');
 	const current = await f.begin();
 	const currentCode = new URL(current.url).searchParams.get('start')!;
@@ -165,7 +190,7 @@ test('old and replayed link codes cannot match a new pairing for the same bot', 
 	assert.deepEqual(await f.pairings.poll(current.id), { state: 'waiting' });
 	f.replies.getUpdates = () => [start(2, currentCode, 456)];
 	assert.deepEqual(await f.pairings.poll(current.id), {
-		state: 'matched',
+		state: 'confirming',
 		chat: { id: '456', name: 'Farmer One' }
 	});
 	assert.deepEqual(await f.pairings.poll(old.id), {
@@ -323,4 +348,70 @@ test('malformed Telegram method results produce plain retry feedback, not schema
 		f.replies.getUpdates = () => invalid;
 		await assert.rejects(f.pairings.poll(pairing.id), /unexpected reply.*try again later/);
 	}
+});
+
+for (const destination of ['group', 'channel'] as const) {
+	test(`${destination} selection and delivery confirmation belong to the initiating user`, async (t) => {
+		const f = fixture(t);
+		const pairing = await f.begin('fixture-token', destination);
+		const code = new URL(pairing.url).searchParams.get('start')!;
+		f.replies.getUpdates = () => [start(1, code)];
+		assert.deepEqual(await f.pairings.poll(pairing.id), { state: 'choosing' });
+		const sent = f.calls.find((call) => call.method === 'sendMessage')!;
+		const markup = sent.body.reply_markup as {
+			keyboard: {
+				request_chat: {
+					request_id: number;
+					chat_is_channel: boolean;
+					bot_is_member?: boolean;
+					bot_administrator_rights?: { can_post_messages: boolean };
+				};
+			}[][];
+		};
+		const request = markup.keyboard[0][0].request_chat;
+		assert.equal(request.chat_is_channel, destination === 'channel');
+		if (destination === 'channel')
+			assert.equal(request.bot_administrator_rights?.can_post_messages, true);
+		else assert.equal(request.bot_is_member, true);
+		const shared = (update: number, user: number, requestId = request.request_id) => ({
+			update_id: update,
+			message: {
+				from: { id: user, is_bot: false },
+				chat: { id: user, type: 'private' },
+				chat_shared: { request_id: requestId, chat_id: -456, title: 'Barn team' }
+			}
+		});
+		f.replies.getUpdates = () => [shared(2, 999), shared(3, 123, request.request_id + 1)];
+		assert.deepEqual(await f.pairings.poll(pairing.id), { state: 'choosing' });
+		f.replies.getUpdates = () => [shared(4, 123)];
+		const confirming = { state: 'confirming', chat: { id: '-456', name: 'Barn team' } };
+		assert.deepEqual(await f.pairings.poll(pairing.id), confirming);
+		assert.equal(
+			f.calls.filter((call) => call.method === 'sendMessage').at(-1)!.body.chat_id,
+			'-456'
+		);
+		f.replies.getUpdates = () => [
+			confirmation(5, code, 999, -456),
+			confirmation(6, code, 123, -789),
+			confirmation(7, code, 123, -456, 51),
+			confirmation(8, 'old-code', 123, -456)
+		];
+		assert.deepEqual(await f.pairings.poll(pairing.id), confirming);
+		f.replies.getUpdates = () => [confirmation(9, code, 123, -456)];
+		assert.deepEqual(await f.pairings.poll(pairing.id), { ...confirming, state: 'matched' });
+		assert.equal(f.calls.at(-1)!.method, 'answerCallbackQuery');
+	});
+}
+
+test('a failed test delivery never becomes a confirmed recipient', async (t) => {
+	const f = fixture(t);
+	const pairing = await f.begin();
+	const code = new URL(pairing.url).searchParams.get('start')!;
+	f.replies.getUpdates = () => [start(1, code)];
+	f.replies.sendMessage = () =>
+		Response.json({ ok: false, error_code: 403, description: 'Bot was blocked' });
+	await assert.rejects(f.pairings.poll(pairing.id), /Bot was blocked/);
+	await assert.rejects(f.begin(), /connection in progress/);
+	await f.pairings.cancel(pairing.id);
+	await f.begin();
 });

@@ -20,6 +20,7 @@ test('recordings use their preset color without guessing when different presets 
 		app: {
 			streams: [],
 			telegrams: [],
+			llms: [],
 			detectors: [
 				{ label: 'Entrance', preset: 'people' },
 				{ label: 'Loading bay', preset: 'vehicles' }

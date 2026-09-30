@@ -1,4 +1,5 @@
 import gc
+import logging
 from datetime import datetime, timedelta
 from weakref import ref
 
@@ -18,8 +19,9 @@ from tests.support.onnx_model import write_detection_model
     "tracking, tracker", [(False, None), (True, None), (True, "bytetrack.yaml")]
 )
 def test_real_onnx_yolo_batching_tracking_and_session_lifetime(
-    tmp_path, monkeypatch, tracking, tracker
+    tmp_path, monkeypatch, tracking, tracker, caplog
 ):
+    caplog.set_level(logging.INFO, logger="aidetector.adapters.inference.yolo")
     path = tmp_path / "detector.onnx"
     write_detection_model(path)
     config = Config.model_validate(
@@ -67,6 +69,8 @@ def test_real_onnx_yolo_batching_tracking_and_session_lifetime(
             assert second["1"][0].boxes[0].x1 == 10
             assert (second["1"][0].boxes[0].track_id is not None) is tracking
             assert len(sessions) == 1
+            assert "ONNX model providers: ['CPUExecutionProvider']" in caplog.text
+            assert "image tensor processing: cpu; I/O binding: False" in caplog.text
             del frame, later, first, second
             gc.collect()
             assert image_ref() is not None

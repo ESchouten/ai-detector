@@ -33,6 +33,7 @@ def configuration():
                     "vlm": {
                         "model": "openai/test-model",
                         "key": "verifier-key",
+                        "headers": {"X-API-Key": "verifier-header-secret"},
                         "url": "https://example.test/private-api",
                         "prompt": "private-prompt",
                     },
@@ -85,7 +86,7 @@ def test_configuration_and_error_logs_are_useful_and_redacted_on_disk_and_consol
         try:
             raise RuntimeError(
                 "Request failed HTTPS://user:exception-password@example.test/private?token=exception-token "
-                "verifier-key telegram-token webhook-token Bearer header-secret health-secret header-secret"
+                "verifier-key verifier-header-secret telegram-token webhook-token Bearer header-secret health-secret header-secret"
             )
         except RuntimeError:
             logging.getLogger("aidetector.test").exception("Test transport failed")
@@ -109,6 +110,7 @@ def test_configuration_and_error_logs_are_useful_and_redacted_on_disk_and_consol
             "model-token",
             "private-model",
             "verifier-key",
+            "verifier-header-secret",
             "telegram-token",
             "webhook-token",
             "header-secret",

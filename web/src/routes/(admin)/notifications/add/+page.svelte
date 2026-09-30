@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import NotificationEditor from './notification-editor.svelte';
+	import NotificationEditor from '$lib/components/notification-editor.svelte';
 	import RecipientChoice from './recipient-choice.svelte';
 	import * as Alert from '$lib/components/ui/alert';
 	import { getTelegram, getTelegrams } from '$lib/remote/exporter.remote';

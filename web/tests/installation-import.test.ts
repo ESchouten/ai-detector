@@ -90,6 +90,20 @@ async function finish(importer: InstallationImport, id: string, keepRecordings =
 	return status;
 }
 
+test('import does not overwrite an AI connection saved before adding cameras', async (t) => {
+	const { source, store, importer } = await fixture(t);
+	await store.saveLlm({ label: 'My AI', model: 'openai/vision', key: 'test-only' });
+	await assert.rejects(importer.inspect(source), /already has a setup/);
+	await assert.rejects(
+		store.initialize(
+			{ config: { detectors: [] }, app: { streams: [], detectors: [], telegrams: [], llms: [] } },
+			async () => assert.fail('Existing settings must not be replaced')
+		),
+		/already has a setup/
+	);
+	assert.equal((await store.read()).app.llms[0].label, 'My AI');
+});
+
 test('imports legacy settings and original recordings into setup without starting monitoring', async (t) => {
 	const { source, destination, config, app, importer, store, calls } = await fixture(t);
 	const original = await readFile(path.join(source, 'config.json'));
@@ -173,7 +187,7 @@ test('relocates shared local camera files and ONNX tensors and preserves standal
 test('unknown configuration settings and missing explicit model paths block import without modifying data', async (t) => {
 	const { source, destination, config, importer } = await fixture(t);
 	await writeJson(path.join(source, 'config.json'), { ...config, unknown_setting: true });
-	await assert.rejects(importer.inspect(source), /additional properties/);
+	await assert.rejects(importer.inspect(source), /unsupported property "unknown_setting"/);
 	config.detectors[0].yolo.model = 'models/missing.pt';
 	await writeJson(path.join(source, 'config.json'), config);
 	await assert.rejects(importer.inspect(source), /model.*missing/);

@@ -36,12 +36,13 @@
 				</DropdownMenu.Item>
 			{/if}
 			<DropdownMenu.Item>
-				{#snippet child({ props })}<a {...props} href={resolve(`/streams/add?id=${id}`)}
+				{#snippet child({ props })}<a {...props} href={resolve(`/setup?step=cameras&camera=${id}`)}
 						>Camera settings</a
 					>{/snippet}
 			</DropdownMenu.Item>
 			<DropdownMenu.Item>
-				{#snippet child({ props })}<a {...props} href={resolve('/detectors')}>Detectors</a
+				{#snippet child({ props })}<a {...props} href={resolve('/setup?step=detectors')}
+						>Detectors</a
 					>{/snippet}
 			</DropdownMenu.Item>
 			{#if monitored}

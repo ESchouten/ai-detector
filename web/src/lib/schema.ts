@@ -2,7 +2,7 @@ import * as v from 'valibot';
 import type * as Input from './generated/config.js';
 
 export type { EventMetadata as Metadata } from './generated/metadata.js';
-export type { TelegramConfig } from './generated/config.js';
+export type { TelegramConfig, VLMConfig } from './generated/config.js';
 
 export const STAGES = ['approved', 'rejected', 'unvalidated'] as const;
 export type Stage = (typeof STAGES)[number];
@@ -19,9 +19,13 @@ export type ExportersConfig = {
 };
 
 /** Source lists may be empty while choosing a camera for a preset or draft. */
-export interface DetectorConfig extends Omit<Input.DetectorConfig, 'detection' | 'exporters'> {
+export interface DetectorConfig extends Omit<
+	Input.DetectorConfig,
+	'detection' | 'exporters' | 'vlm'
+> {
 	detection: Omit<Input.SourceConfig, 'source'> & { source: string[] };
 	exporters?: ExportersConfig;
+	vlm?: Input.VLMConfig[];
 }
 
 /** An empty setup is valid in the web app, before the detector can be started. */
@@ -33,7 +37,8 @@ const text = v.pipe(v.string(), v.trim(), v.minLength(1));
 export const detectorMeta = v.object({
 	label: text,
 	cameraId: v.optional(text),
-	preset: v.optional(text)
+	preset: v.optional(text),
+	llmConnection: v.optional(text)
 });
 export const cameraConnectionMeta = v.object({
 	address: v.pipe(
@@ -73,15 +78,52 @@ export const streamMeta = v.object({
 });
 const identity = v.pipe(v.string(), v.minLength(1));
 export const telegramMeta = v.object({ label: text, token: identity, chat: identity });
+const headerName = v.pipe(
+	text,
+	v.regex(/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/, 'Enter a valid header name.')
+);
+const headerValue = v.pipe(
+	v.string(),
+	v.check((value) => !/[\r\n]/.test(value), 'Use a single-line header value.')
+);
+export const llmConnection = v.object({
+	label: v.pipe(v.string(), v.trim(), v.minLength(1, 'Enter a connection name.')),
+	model: v.pipe(
+		v.string(),
+		v.trim(),
+		v.minLength(1, 'Enter a model name.'),
+		v.check(
+			(value) => !/\s/.test(value) && !value.endsWith('/'),
+			'Enter a model name, without spaces or a trailing slash.'
+		)
+	),
+	key: v.optional(v.nullable(v.string())),
+	url: v.optional(
+		v.nullable(v.pipe(text, v.url(), v.regex(/^https?:\/\//i, 'Use an HTTP or HTTPS API URL.')))
+	),
+	headers: v.optional(
+		v.pipe(
+			v.record(headerName, headerValue),
+			v.check(
+				(headers) =>
+					new Set(Object.keys(headers).map((name) => name.toLowerCase())).size ===
+					Object.keys(headers).length,
+				'Each header name must be unique.'
+			)
+		)
+	)
+});
 export const appSchema = v.object({
 	streams: v.optional(v.array(streamMeta), []),
 	telegrams: v.optional(v.array(telegramMeta), []),
+	llms: v.optional(v.array(llmConnection), []),
 	detectors: v.optional(v.array(detectorMeta), [])
 });
 
 export type AppConfig = v.InferOutput<typeof appSchema>;
 export type DetectorMeta = v.InferOutput<typeof detectorMeta>;
 export type TelegramMeta = v.InferOutput<typeof telegramMeta>;
+export type LlmConnection = v.InferOutput<typeof llmConnection>;
 export type StreamMeta = v.InferOutput<typeof streamMeta>;
 export type CameraSetup = v.InferOutput<typeof cameraSetup>;
 

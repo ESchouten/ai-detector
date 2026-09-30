@@ -260,7 +260,10 @@ def inference_runtime(
 
         providers = _providers(config, build_type, resources, ort, report_status)
         _install_sessions(tensorrt_profiles(onnx_models), resources, ort, providers)
-        logger.info("ONNX execution providers: %s", providers.names)
+        logger.info(
+            "ONNX execution providers: %s; CPU worker spinning disabled",
+            providers.names,
+        )
         yield replace(providers.inference_options, native_mps=native_mps)
 
 
@@ -313,6 +316,9 @@ def _install_sessions(
 
     def session(path_or_bytes, sess_options=None, providers=None, **kwargs):
         options = sess_options if sess_options is not None else ort.SessionOptions()
+        # Camera capture and other detectors need the CPU while this session waits.
+        options.add_session_config_entry("session.intra_op.allow_spinning", "0")
+        options.add_session_config_entry("session.inter_op.allow_spinning", "0")
         if selection.devices:
             for device in selection.devices:
                 options.add_provider_for_devices(

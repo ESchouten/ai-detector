@@ -95,6 +95,11 @@ def _arguments(argv: list[str] | None) -> argparse.Namespace:
     action.add_argument(
         "--prepare-windows-ml", nargs="?", const="", help=argparse.SUPPRESS
     )
+    action.add_argument(
+        "--test-vlm",
+        type=Path,
+        help="Test a VLM connection JSON file with synthetic media",
+    )
     return parser.parse_args(argv)
 
 
@@ -115,10 +120,19 @@ def _init_config(config_path: Path) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     args = _arguments(argv)
+    if getattr(sys, "frozen", False):
+        import certifi
+
+        # Connection checks and monitoring use the same bundled HTTPS roots.
+        os.environ.setdefault("SSL_CERT_FILE", certifi.where())
     if args.prepare_windows_ml is not None:
         from aidetector.adapters.inference.windows_ml import run_helper
 
         return run_helper(args.prepare_windows_ml or None)
+    if args.test_vlm is not None:
+        from aidetector.adapters.vlm_check import run_check
+
+        return run_check(args.test_vlm)
     config_path = args.config.expanduser().resolve()
     if args.init_config:
         return _init_config(config_path)
@@ -151,10 +165,6 @@ def _run(
         )
         logger.info("Configuration: %s; data directory: %s", config_path, directory)
         if getattr(sys, "frozen", False):
-            import certifi
-
-            # urllib must not depend on the build machine's OpenSSL CA path.
-            os.environ.setdefault("SSL_CERT_FILE", certifi.where())
             # PyInstaller selects a fresh temporary font cache on every launch.
             # Matplotlib stores bundled font paths relatively, so reuse is safe.
             os.environ["MPLCONFIGDIR"] = str(directory / "cache" / "matplotlib")

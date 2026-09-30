@@ -7,7 +7,7 @@ import path from 'node:path';
 import { createInterface } from 'node:readline';
 import { setTimeout as delay } from 'node:timers/promises';
 import type { RuntimeMode, RuntimeStatus } from '../runtime.ts';
-import type { AppConfig, Config } from '../schema.ts';
+import type { AppConfig, Config, LlmConnection } from '../schema.ts';
 import { readJson, writeJson } from './json-file.ts';
 import { DetectorLog } from './detector-log.ts';
 import {
@@ -152,11 +152,42 @@ export class ManagedDetector {
 		}
 	}
 
+	async testLlm(connection: LlmConnection, signal?: AbortSignal): Promise<void> {
+		const file = path.join(this.options.dataDirectory, `vlm-check-${randomUUID()}.json`);
+		const { model, key, url, headers } = connection;
+		try {
+			await writeJson(file, {
+				model,
+				key,
+				url,
+				headers,
+				prompt: 'Connection test',
+				strategy: 'IMAGE'
+			});
+			await this.runCheck(this.options.executable, ['--test-vlm', file], 45000, signal);
+		} finally {
+			await rm(file, { force: true });
+		}
+	}
+
 	start(mode: RuntimeMode): Promise<void> {
 		const signal = this.startup.signal;
 		return this.enqueue(() => {
 			if (!this.child) this.lastRecovery = null;
 			return this.startChild(mode, signal);
+		});
+	}
+
+	setMode(mode: RuntimeMode, previous: string): Promise<void> {
+		return this.enqueue(async () => {
+			if (this.state.mode !== previous)
+				throw new SetupError('The detection engine changed. Reload the saved settings.');
+			if (this.child || ['checking', 'starting', 'stopping'].includes(this.state.phase))
+				throw new SetupError('Pause monitoring before changing the detection engine.');
+			const settings = { ...this.settings, mode };
+			await writeJson(this.settingsPath, settings);
+			this.settings = settings;
+			this.state.mode = mode;
 		});
 	}
 
@@ -183,7 +214,7 @@ export class ManagedDetector {
 			const app = await readJson<AppConfig>(path.join(this.options.dataDirectory, 'app.json'));
 			this.progress.configure(
 				config,
-				app ?? { streams: [], telegrams: [], detectors: [] },
+				app ?? { streams: [], telegrams: [], llms: [], detectors: [] },
 				this.options.dataDirectory
 			);
 			const selected = chooseRuntime(mode);

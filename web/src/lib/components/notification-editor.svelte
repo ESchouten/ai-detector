@@ -8,8 +8,12 @@
 	import * as Field from '$lib/components/ui/field';
 	import * as Alert from '$lib/components/ui/alert';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
-	import * as Card from '$lib/components/ui/card';
-	import { deleteTelegram, saveAlerts, getTelegrams } from '$lib/remote/exporter.remote';
+	import {
+		deleteTelegram,
+		saveAlerts,
+		getTelegrams,
+		connectTelegram
+	} from '$lib/remote/exporter.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
 	import { errorMessage } from '$lib/remote-errors';
@@ -17,12 +21,18 @@
 	import TelegramConnection from './telegram-connection.svelte';
 
 	let {
-		originalLabel,
+		originalLabel = '',
 		initial,
 		detectorLabel = '',
-		setupMode = false
+		setupMode = false,
+		inline = false,
+		onSaved,
+		onCancel
 	}: {
-		originalLabel: string;
+		originalLabel?: string;
+		inline?: boolean;
+		onSaved?: (recipient: TelegramMeta) => void;
+		onCancel?: () => void;
 		initial?: TelegramMeta;
 		detectorLabel?: string;
 		setupMode?: boolean;
@@ -42,10 +52,16 @@
 	const connectionUnchanged = $derived(initial && token === initial.token && chat === initial.chat);
 	const readyForDetectors = $derived(Boolean(connectionUnchanged || received));
 	const canSave = $derived(
-		label.trim() && detectorLabels.length && token && chat && (connectionUnchanged || received)
+		label.trim() &&
+			(inline || detectorLabels.length) &&
+			token &&
+			chat &&
+			(connectionUnchanged || received)
 	);
 	const back = $derived(
-		resolve(setupMode ? '/setup?step=finish' : detectorLabel ? '/detectors' : '/notifications')
+		resolve(
+			setupMode ? '/setup?step=finish' : detectorLabel ? '/setup?step=detectors' : '/notifications'
+		)
 	);
 	async function save(event: SubmitEvent) {
 		event.preventDefault();
@@ -57,15 +73,20 @@
 			detectors: detectorLabels
 		};
 		try {
-			await saveAlerts({
-				original: originalLabel || undefined,
-				label,
-				token,
-				chat,
-				detectorLabels,
-				received
-			}).updates(getDetectors(), getTelegrams());
-			saved = summary;
+			await (
+				inline
+					? connectTelegram({ label, token, chat, received: true })
+					: saveAlerts({
+							original: originalLabel || undefined,
+							label,
+							token,
+							chat,
+							detectorLabels,
+							received
+						})
+			).updates(getDetectors(), getTelegrams());
+			if (inline) onSaved?.({ label, token, chat });
+			else saved = summary;
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not save alerts. Your choices are still here.');
 		} finally {
@@ -86,21 +107,23 @@
 	}
 </script>
 
-<section class="settings-page max-w-3xl">
-	<header class="flex flex-col items-start gap-2">
-		<h1 class="settings-heading">
-			{saved ? 'Alerts are connected' : initial ? 'Manage alerts' : 'Connect alerts'}
-		</h1>
-		<p class="settings-description">
-			{saved
-				? setupMode
-					? 'Return to setup to finish checking your cameras.'
-					: 'Your choices are saved. Open alerts to manage your recipients.'
-				: initial
-					? 'Keep using your saved recipient and choose which detectors send alerts.'
-					: 'Connect your phone, confirm a test message, then choose your detectors.'}
-		</p>
-	</header>
+<section class={inline ? 'flex flex-col gap-4' : 'settings-page max-w-3xl'}>
+	{#if !inline}
+		<header class="flex flex-col items-start gap-2">
+			<h1 class="settings-heading">
+				{saved ? 'Alerts are connected' : initial ? 'Manage alerts' : 'Connect alerts'}
+			</h1>
+			<p class="settings-description">
+				{saved
+					? setupMode
+						? 'Return to setup to finish checking your cameras.'
+						: 'Your choices are saved. Open alerts to manage your recipients.'
+					: initial
+						? 'Keep using your saved recipient and choose which detectors send alerts.'
+						: 'Connect your phone, confirm a test message, then choose your detectors.'}
+			</p>
+		</header>
+	{/if}
 	{#if saved}
 		<Alert.Root
 			><Alert.Title>{saved.label}</Alert.Title><Alert.Description
@@ -111,33 +134,38 @@
 	{:else}
 		<form class="flex flex-col gap-6" onsubmit={save}>
 			<div class="flex min-w-0 flex-col gap-6">
-				<Card.Root>
-					<Card.Header
-						><Card.Title>1. Connect your phone</Card.Title><Card.Description
-							>Connect Telegram and confirm that a test alert reaches your phone.</Card.Description
-						></Card.Header
-					>
-					<Card.Content class="flex flex-col gap-5">
+				<section class="flex flex-col gap-5">
+					{#if !inline}<header class="flex flex-col gap-2">
+							<h2 class="font-medium">Connect Telegram</h2>
+							<p class="text-sm text-muted-foreground">
+								Connect Telegram and confirm that a test alert reaches your phone.
+							</p>
+						</header>{/if}
+					<div class="flex flex-col gap-5">
 						<TelegramConnection
 							{initial}
 							bind:token
 							bind:chat
 							bind:received
+							onRecipient={(name) => {
+								if (!initial) label = name;
+							}}
 							bind:busy={connecting}
 							disabled={pending}
 						/>
-					</Card.Content>
-				</Card.Root>
+					</div>
+				</section>
 				{#if readyForDetectors}
-					<Card.Root>
-						<Card.Header
-							><Card.Title>2. Choose your detectors</Card.Title><Card.Description
-								>{initial
-									? 'Existing detector assignments are already selected.'
-									: 'Choose which detectors send alerts. Each selection includes all of that detector’s cameras.'}</Card.Description
-							></Card.Header
-						>
-						<Card.Content class="flex flex-col gap-5">
+					<section class="flex flex-col gap-5">
+						{#if !inline}<header class="flex flex-col gap-2">
+								<h2 class="font-medium">Alert settings</h2>
+								<p class="text-sm text-muted-foreground">
+									{initial
+										? 'Existing detector assignments are already selected.'
+										: 'Choose which detectors send alerts. Each selection includes all of that detector’s cameras.'}
+								</p>
+							</header>{/if}
+						<div class="flex flex-col gap-5">
 							<Field.Field
 								><Field.Label for="notification-label">Recipient name</Field.Label><Input
 									id="notification-label"
@@ -147,26 +175,26 @@
 									placeholder="e.g. My phone"
 								/></Field.Field
 							>
-							<Field.Set
-								><Field.Legend>Detectors that send alerts</Field.Legend><Field.Group>
-									{#each detectors as { meta }, index (meta.label)}
-										<Field.Field orientation="horizontal">
-											<Checkbox
-												id={`alerts-${index}`}
-												checked={detectorLabels.includes(meta.label)}
-												disabled={pending}
-												onCheckedChange={(enabled) =>
-													(detectorLabels = enabled
-														? [...detectorLabels, meta.label]
-														: detectorLabels.filter((id) => id !== meta.label))}
-											/>
-											<Field.Label for={`alerts-${index}`}>{meta.label}</Field.Label>
-										</Field.Field>
-									{:else}<Field.Description>Add a detector first.</Field.Description>{/each}
-								</Field.Group></Field.Set
-							>
-						</Card.Content>
-					</Card.Root>
+							{#if !inline}<Field.Set
+									><Field.Legend>Detectors that send alerts</Field.Legend><Field.Group>
+										{#each detectors as { meta }, index (meta.label)}
+											<Field.Field orientation="horizontal">
+												<Checkbox
+													id={`alerts-${index}`}
+													checked={detectorLabels.includes(meta.label)}
+													disabled={pending}
+													onCheckedChange={(enabled) =>
+														(detectorLabels = enabled
+															? [...detectorLabels, meta.label]
+															: detectorLabels.filter((id) => id !== meta.label))}
+												/>
+												<Field.Label for={`alerts-${index}`}>{meta.label}</Field.Label>
+											</Field.Field>
+										{:else}<Field.Description>Add a detector first.</Field.Description>{/each}
+									</Field.Group></Field.Set
+								>{/if}
+						</div>
+					</section>
 				{/if}
 				{#if error}<Alert.Root variant="destructive"
 						><Alert.Title>Alerts need attention</Alert.Title><Alert.Description
@@ -179,9 +207,12 @@
 								? 'Saving alerts…'
 								: initial
 									? 'Save alert settings'
-									: 'Enable alerts for selected detectors'}</Button
+									: inline
+										? 'Use this recipient'
+										: 'Enable alerts for selected detectors'}</Button
 						>{/if}
-					<Button href={back} variant="outline">Cancel</Button>
+					{#if inline}<Button type="button" onclick={onCancel} variant="outline">Cancel</Button
+						>{:else}<Button href={back} variant="outline">Cancel</Button>{/if}
 				</div>
 			</div>
 			{#if initial}<details>

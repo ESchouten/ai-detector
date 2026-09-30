@@ -27,7 +27,8 @@
 			<h1 class="settings-heading">Cameras</h1>
 			<p class="settings-description">Live views from your cameras.</p>
 		</div>
-		{#if cameras.length}<Button href={resolve('/streams/add')}>Add camera</Button>{/if}
+		{#if cameras.length}<Button href={resolve('/setup?step=cameras&add=camera')}>Add camera</Button
+			>{/if}
 	</header>
 	{#if presetWarning}
 		<Alert.Root variant="destructive">
@@ -84,7 +85,8 @@
 						>Add a camera to check its picture and start monitoring.</Empty.Description
 					></Empty.Header
 				><Empty.Content
-					><Button href={resolve('/streams/add')}>Add your first camera</Button></Empty.Content
+					><Button href={resolve('/setup?step=cameras&add=camera')}>Add your first camera</Button
+					></Empty.Content
 				></Empty.Root
 			>{/each}
 	</div>

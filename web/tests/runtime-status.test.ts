@@ -19,7 +19,12 @@ function progress() {
 				}
 			]
 		},
-		{ streams: [{ id: 'stable-camera', label: 'Barn', source }], telegrams: [], detectors: [] },
+		{
+			streams: [{ id: 'stable-camera', label: 'Barn', source }],
+			telegrams: [],
+			llms: [],
+			detectors: []
+		},
 		'/data'
 	);
 	return state;
@@ -77,7 +82,11 @@ test('preparation failures remain actionable until a new run resets progress', (
 	record(state, 'preparation_failed', 'Check the internet connection and try again.');
 	assert.equal(state.snapshot(now).readiness, 'failed');
 	assert.match(state.preparationFailure!, /internet connection/);
-	state.configure({ detectors: [] }, { streams: [], telegrams: [], detectors: [] }, '/data');
+	state.configure(
+		{ detectors: [] },
+		{ streams: [], telegrams: [], llms: [], detectors: [] },
+		'/data'
+	);
 	assert.equal(state.preparationFailure, undefined);
 	assert.equal(state.preparation, undefined);
 });
@@ -134,7 +143,7 @@ test('snapshot processing does not fabricate inference activity, and restart cle
 	assert.equal(state.snapshot(now).cameras[0].lastInferenceAt, null);
 	state.configure(
 		{ detectors: [{ detection: { source: [source] } }] },
-		{ streams: [], telegrams: [], detectors: [] },
+		{ streams: [], telegrams: [], llms: [], detectors: [] },
 		'/data'
 	);
 	assert.equal(state.snapshot(now).readiness, 'preparing');
@@ -150,7 +159,12 @@ test('every rule must process the camera, and a healthy rule cannot hide another
 				{ detection: { source: [source] }, yolo: { model: 'second.onnx' } }
 			]
 		},
-		{ streams: [], telegrams: [], detectors: [{ label: 'Calving' }, { label: 'Mounts' }] },
+		{
+			streams: [],
+			telegrams: [],
+			llms: [],
+			detectors: [{ label: 'Calving' }, { label: 'Mounts' }]
+		},
 		'/data'
 	);
 	record(state, 'frame');
@@ -173,7 +187,12 @@ test('recording failures remain attached to their rule and destination until tha
 				{ detection: { source: [source] }, exporters: { disk: [{}] } }
 			]
 		},
-		{ streams: [], telegrams: [], detectors: [{ label: 'Calving' }, { label: 'Mounts' }] },
+		{
+			streams: [],
+			telegrams: [],
+			llms: [],
+			detectors: [{ label: 'Calving' }, { label: 'Mounts' }]
+		},
 		'/data'
 	);
 	record(state, 'frame');

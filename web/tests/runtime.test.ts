@@ -15,6 +15,45 @@ const posixOnly = { skip: process.platform === 'win32' };
 const config = { detectors: [{ detection: { source: 'rtsp://camera.local/live' } }] };
 
 test(
+	'AI connection checks clean up credentials on success, failure and cancellation without starting monitoring',
+	posixOnly,
+	async (t) => {
+		const directory = await mkdtemp(path.join(tmpdir(), 'detector-ai-check-'));
+		const detector = new ManagedDetector({ executable, dataDirectory: directory });
+		t.after(async () => {
+			await detector.stop();
+			await rm(directory, { recursive: true, force: true });
+		});
+		const connection = {
+			label: 'Shared AI',
+			model: 'vision',
+			key: 'test-only',
+			headers: { 'X-Key': 'test-header' }
+		};
+		await detector.testLlm(connection);
+		assert.deepEqual(await readJson(path.join(directory, 'connection-check.json')), {
+			model: connection.model,
+			key: connection.key,
+			headers: connection.headers,
+			prompt: 'Connection test',
+			strategy: 'IMAGE'
+		});
+		await assert.rejects(detector.testLlm({ ...connection, model: 'denied' }), /Check the API key/);
+		const controller = new AbortController();
+		const pending = detector.testLlm({ ...connection, model: 'hold' }, controller.signal);
+		const cancelled = assert.rejects(pending, /cancelled/);
+		await waitFor(async () => (await readdir(directory)).includes('check-pid.txt'));
+		const pid = Number(await readFile(path.join(directory, 'check-pid.txt'), 'utf8'));
+		controller.abort(new Error('cancelled'));
+		await cancelled;
+		assert.throws(() => process.kill(pid, 0), /ESRCH/);
+		const files = await readdir(directory);
+		assert.ok(!files.some((file) => file.startsWith('vlm-check-')));
+		assert.ok(!files.includes('starts.txt'));
+	}
+);
+
+test(
 	'a model download failure survives process exit and retry clears the old failure',
 	posixOnly,
 	async (t) => {

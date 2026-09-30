@@ -55,24 +55,20 @@ test('batch connections are bounded, keep independent successes and retain chann
 	await work;
 	assert.equal(result.get('one')?.state, 'ready');
 	assert.deepEqual(result.get('one')?.connection?.profiles, connection.profiles);
-	assert.deepEqual(result.get('one')?.login, login);
 	assert.equal(result.get('two')?.state, 'failed');
 	assert.equal(result.get('two')?.error, 'Check the second camera login.');
 	assert.equal(result.get('three')?.state, 'ready');
 	assert.ok([...result.values()].every((camera) => camera.savedId === undefined));
 });
 
-test('retry only connects failures and keeps ready, saved and skipped cameras untouched', async () => {
+test('retry only connects failures and keeps ready and saved cameras untouched', async () => {
 	const ready: BatchCamera = {
 		...camera('ready'),
 		state: 'ready',
-		connection,
-		login,
-		profileToken: 'second'
+		connection
 	};
 	const saved: BatchCamera = { ...camera('saved'), state: 'saved', savedId: 'stable-camera-id' };
-	const skipped: BatchCamera = { ...ready, address: 'skipped', state: 'skipped' };
-	const queue: BatchCamera[] = [ready, saved, skipped, { ...camera('failed'), state: 'failed' }];
+	const queue: BatchCamera[] = [ready, saved, { ...camera('failed'), state: 'failed' }];
 	const before = structuredClone(queue);
 	const updates: BatchCamera[] = [];
 	const retryLogin = { ...login, password: 'corrected-password' };
@@ -93,7 +89,6 @@ test('retry only connects failures and keeps ready, saved and skipped cameras un
 			['failed', 'ready']
 		]
 	);
-	assert.deepEqual(updates[1].login, retryLogin);
 	assert.deepEqual(queue, before);
 });
 

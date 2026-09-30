@@ -9,9 +9,11 @@
 	import TVIcon from '@lucide/svelte/icons/tv';
 	import CameraIcon from '@lucide/svelte/icons/camera';
 	import BellIcon from '@lucide/svelte/icons/bell';
+	import SparklesIcon from '@lucide/svelte/icons/sparkles';
 	import { page } from '$app/state';
 	import GithubIcon from '@lucide/svelte/icons/github';
 	import SettingsIcon from '@lucide/svelte/icons/settings';
+	import CodeIcon from '@lucide/svelte/icons/code';
 	import LogsIcon from '@lucide/svelte/icons/logs';
 	import { createRuntimeStatus, provideRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 
@@ -46,7 +48,13 @@
 					title: 'Alerts',
 					url: resolve('/notifications'),
 					icon: BellIcon
-				}
+				},
+				{
+					title: 'Validator',
+					url: resolve('/validator'),
+					icon: SparklesIcon
+				},
+				{ title: 'Advanced', url: resolve('/advanced'), icon: CodeIcon }
 			]
 		}
 	];
@@ -54,6 +62,8 @@
 		detections: 'Recordings',
 		streams: 'Cameras',
 		notifications: 'Alerts',
+		validator: 'Validator',
+		advanced: 'Advanced',
 		setup: 'Settings',
 		logs: 'Logs',
 		detectors: 'Detectors',

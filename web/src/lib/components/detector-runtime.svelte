@@ -8,18 +8,18 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import { CircleCheck, LoaderCircle, Pause, Play, TriangleAlert, Video, X } from '@lucide/svelte';
 	import * as Card from '$lib/components/ui/card';
-	import * as Field from '$lib/components/ui/field';
-	import * as NativeSelect from '$lib/components/ui/native-select';
 	import { startDetector, stopDetector } from '$lib/remote/runtime.remote';
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
-	import type { RuntimeMode } from '$lib/runtime';
 	import { cameraStatusBadge } from '$lib/camera-status';
-	let { configured, compact = false }: { configured: boolean; compact?: boolean } = $props();
+	let {
+		configured,
+		compact = false,
+		showControls = true
+	}: { configured: boolean; compact?: boolean; showControls?: boolean } = $props();
 	const monitor = useRuntimeStatus();
 	// Query.current is client-only; the awaited value also supports server rendering.
 	const initial = monitor.query.current ?? (await monitor.query);
 	const runtime = $derived(monitor.query.current ?? initial);
-	let mode = $state<RuntimeMode>(untrack(() => runtime.mode));
 	let requestError = $state('');
 	const stale = $derived(monitor.stale);
 	let controlling = $state(false);
@@ -60,7 +60,9 @@
 		requestError = '';
 		controlling = true;
 		try {
-			await (action === 'start' ? startDetector(mode) : stopDetector()).updates(monitor.query);
+			await (action === 'start' ? startDetector(runtime.mode) : stopDetector()).updates(
+				monitor.query
+			);
 		} catch (cause) {
 			requestError = errorMessage(
 				cause,
@@ -147,7 +149,7 @@
 				{statusLabel}
 			</span>
 		</Card.Title>
-		{#if compact}<Card.Action>{@render controls()}</Card.Action>{/if}
+		{#if compact && showControls}<Card.Action>{@render controls()}</Card.Action>{/if}
 		{#if needsAttention || preparing || (!compact && runtime.readiness !== 'monitoring')}
 			<Card.Description aria-live="polite">
 				{stale
@@ -177,9 +179,7 @@
 				</p>
 
 				<details bind:open={troubleshootingOpen}>
-					<summary class="cursor-pointer text-sm text-muted-foreground"
-						>Advanced and troubleshooting</summary
-					>
+					<summary class="cursor-pointer text-sm text-muted-foreground">Troubleshooting</summary>
 					<div class="mt-4 flex flex-col gap-4">
 						{#if runtime.cameras.length && runtime.readiness !== 'idle'}
 							<div class="flex flex-col gap-3">
@@ -215,26 +215,7 @@
 								{/each}
 							</div>
 						{/if}
-						{#if runtime.managed}
-							<Field.Group>
-								<Field.Field>
-									<Field.Label for="runtime-mode">Detection engine</Field.Label>
-									<NativeSelect.Root
-										id="runtime-mode"
-										bind:value={mode}
-										disabled={busy || runtime.phase === 'running'}
-									>
-										<NativeSelect.Option value="auto"
-											>Automatically choose a working engine</NativeSelect.Option
-										>
-										<NativeSelect.Option value="native">Bundled application</NativeSelect.Option>
-										<NativeSelect.Option value="docker"
-											>Managed NVIDIA container</NativeSelect.Option
-										>
-									</NativeSelect.Root>
-								</Field.Field>
-							</Field.Group>
-						{/if}
+
 						{#if runtime.helpUrl}<Button
 								href={runtime.helpUrl}
 								target="_blank"
@@ -254,5 +235,5 @@
 			{/if}
 		</Card.Content>
 	{/if}
-	{#if !compact}<Card.Footer>{@render controls()}</Card.Footer>{/if}
+	{#if !compact && showControls}<Card.Footer>{@render controls()}</Card.Footer>{/if}
 </Card.Root>

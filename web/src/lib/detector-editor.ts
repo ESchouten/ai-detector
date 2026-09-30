@@ -1,5 +1,33 @@
-import { normalizeConfig, sameTelegram } from './configuration.ts';
-import type { DetectorConfig, PresetInfo, TelegramConfig, TelegramMeta } from './schema.ts';
+import { detectorSettings, normalizeConfig, sameTelegram } from './configuration.ts';
+import { connectionMatches } from './llm.ts';
+import type {
+	DetectorConfig,
+	DetectorMeta,
+	LlmConnection,
+	PresetInfo,
+	TelegramConfig,
+	TelegramMeta
+} from './schema.ts';
+
+export function detectorDraftMeta(
+	detector: DetectorConfig,
+	label: string,
+	preset: { id: string; settings: string },
+	connection?: LlmConnection
+): DetectorMeta {
+	const [verification] = detector.vlm ?? [];
+	return {
+		label,
+		preset:
+			preset.id && JSON.stringify(detectorSettings(detector)) === preset.settings
+				? preset.id
+				: undefined,
+		llmConnection:
+			connection && verification && connectionMatches(verification, connection)
+				? connection.label
+				: undefined
+	};
+}
 
 export function cameraRuleNames(
 	rules: { label: string; preset?: string }[],

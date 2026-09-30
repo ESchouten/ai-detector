@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { errorMessage } from '$lib/remote-errors';
-	import { onDestroy, onMount, tick, untrack } from 'svelte';
-	import { goto } from '$app/navigation';
+	import { onDestroy, onMount, untrack } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -16,8 +15,6 @@
 	import CameraPicture from './camera-picture.svelte';
 	import CardOverlay from './card-overlay.svelte';
 	import CameraBatch from './camera-batch.svelte';
-	import SetupSteps from './setup-steps.svelte';
-	import type { BatchCamera, BatchConnection } from '$lib/camera-batch';
 	import type { StreamMeta } from '$lib/schema';
 	import { discoverCameras, getCameraConnection } from '$lib/remote/camera.remote';
 	import { checkCameraRecording } from '$lib/camera-check';
@@ -27,14 +24,13 @@
 
 	let {
 		initial,
-		setupMode = false,
-		hasCameras = false
+		onDone,
+		onCancel
 	}: {
 		initial?: StreamMeta & { id: string; monitored: boolean };
-		setupMode?: boolean;
-		hasCameras?: boolean;
+		onDone: () => Promise<void>;
+		onCancel?: () => Promise<void>;
 	} = $props();
-	const returnTo = $derived(setupMode ? '/setup?step=cameras' : '/streams');
 	let label = $state(untrack(() => initial?.label ?? ''));
 	let source = $state(untrack(() => initial?.source ?? ''));
 	const editing = untrack(() => cameraEditConnection(initial?.source ?? ''));
@@ -51,26 +47,17 @@
 	let candidates = $state<Awaited<ReturnType<typeof discoverCameras>>['cameras']>([]);
 	let discoveryMessage = $state('');
 	let batchEnabled = $state(false);
-	let batchConnecting = $state(false);
-	let batchQueue = $state<BatchCamera[]>([]);
-	let batchAddress = $state('');
-	let preparedConnection = $state<BatchConnection>();
-	const nextBatchCamera = $derived(
-		batchQueue.find((camera) => camera.state === 'ready' && camera.address !== batchAddress)
-	);
 	let checking = $state(false);
 	let finding = $state(false);
 	let saving = $state(false);
 	let error = $state('');
 	let errorPanel = $state<HTMLDivElement>();
-	let cameraForm = $state<HTMLFormElement>();
 	$effect(() => {
 		if (error) errorPanel?.focus();
 	});
 	let check = $state<Awaited<ReturnType<typeof checkCameraRecording>>>();
 	let checkController: AbortController | undefined;
 	onDestroy(() => checkController?.abort());
-	let saved = $state<{ id: string; monitored: boolean }>();
 	let confirmingRemoval = $state(false);
 	let restoreDraft = $state(false);
 	const connectionChanged = $derived(changingConnection && !check);
@@ -95,7 +82,7 @@
 		void find();
 	});
 	$effect(() => {
-		if (restoreDraft && !saved)
+		if (restoreDraft)
 			sessionStorage.setItem(
 				'camera-setup',
 				JSON.stringify({
@@ -110,58 +97,12 @@
 		error = '';
 	}
 	function connectionChangedInput() {
-		preparedConnection = undefined;
 		profiles = [];
 		profileToken = '';
 		invalidateCheck();
 	}
 	function credentialsChangedInput() {
-		preparedConnection = undefined;
 		invalidateCheck();
-	}
-	async function openBatchCamera(camera: BatchCamera) {
-		if (!camera.connection || !camera.login) return;
-		saved = undefined;
-		batchAddress = camera.address;
-		label = camera.name;
-		address = camera.address;
-		username = camera.login.username;
-		password = camera.login.password;
-		source = '';
-		streamUri = '';
-		showStreamUri = false;
-		manualAddress = false;
-		profiles = camera.connection.profiles;
-		profileToken =
-			camera.profileToken ?? camera.connection.connection?.profileToken ?? profiles[0]?.token ?? '';
-		preparedConnection = camera.profileToken ? undefined : camera.connection;
-		verifiedConnection = camera.connection.connection;
-		batchQueue = batchQueue.map((item) =>
-			item.address === camera.address ? { ...item, state: 'ready' } : item
-		);
-		invalidateCheck();
-		await tick();
-		cameraForm?.focus();
-		await connect();
-	}
-	function skipBatchCamera() {
-		batchQueue = batchQueue.map((camera) =>
-			camera.address === batchAddress
-				? { ...camera, name: label, profileToken, login: { username, password }, state: 'skipped' }
-				: camera
-		);
-		batchAddress = '';
-		preparedConnection = undefined;
-		label = '';
-		address = '';
-		source = '';
-		invalidateCheck();
-	}
-	function leaveBatch() {
-		batchEnabled = false;
-		batchQueue = [];
-		batchAddress = '';
-		addAnother();
 	}
 	function chooseChannelAgain() {
 		source = '';
@@ -198,12 +139,11 @@
 			const connection =
 				initial && !changingConnection
 					? { source, profiles, connection: initial.connection }
-					: (preparedConnection ??
-						(await getCameraConnection(
+					: await getCameraConnection(
 							manualAddress
 								? { streamUri }
 								: { address, username, password, ...(profileToken ? { profileToken } : {}) }
-						)));
+						);
 			controller.signal.throwIfAborted();
 			profiles = connection.profiles;
 			verifiedConnection = connection.connection;
@@ -232,7 +172,7 @@
 		saving = true;
 		error = '';
 		try {
-			saved = await saveCamera({
+			await saveCamera({
 				label,
 				source,
 				id: initial?.id,
@@ -240,16 +180,9 @@
 				checkId: check?.checkId,
 				...(changingConnection ? { connection: verifiedConnection ?? null } : {})
 			}).updates(getCameras(), getDetectors());
-			if (batchAddress) {
-				const savedId = saved.id;
-				batchQueue = batchQueue.map((camera) =>
-					camera.address === batchAddress
-						? { address: camera.address, name: label, state: 'saved', savedId }
-						: camera
-				);
-			}
+			restoreDraft = false;
 			sessionStorage.removeItem('camera-setup');
-			if (!batchEnabled) await goto(resolve(returnTo));
+			await onDone();
 		} catch (cause) {
 			error = errorMessage(cause, 'The camera could not be saved. Your choices are still here.');
 		} finally {
@@ -261,61 +194,34 @@
 		saving = true;
 		try {
 			await removeCamera(initial.id).updates(getCameras(), getDetectors());
-			await goto(resolve(returnTo));
+			await onDone();
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not remove this camera.');
 		} finally {
 			saving = false;
 		}
 	}
-	function addAnother() {
-		if (initial) {
-			void goto(resolve(setupMode ? '/streams/add?setup=1' : '/streams/add'));
-			return;
-		}
-		saved = undefined;
-		label = '';
-		source = '';
-		address = '';
-		username = 'admin';
-		password = '';
-		streamUri = '';
-		showStreamUri = false;
-		manualAddress = false;
-		verifiedConnection = undefined;
-		profileToken = '';
-		profiles = [];
-		preparedConnection = undefined;
-		candidates = [];
-		discoveryMessage = '';
-		invalidateCheck();
-		void find();
-	}
 </script>
 
 <section class="settings-page">
-	{#if setupMode}<SetupSteps current="cameras" {hasCameras} />{/if}
 	<header class="flex flex-wrap items-start justify-between gap-4">
 		<div class="flex flex-col gap-2">
 			<h1 class="settings-heading">
-				{saved ? `${label} is saved` : initial ? 'Camera settings' : 'Add your camera'}
+				{initial ? 'Camera settings' : 'Add your camera'}
 			</h1>
 			<p class="settings-description">
-				{saved
-					? 'Add another camera, or continue to choose your detectors.'
-					: initial
-						? 'Update the camera name or connection.'
-						: 'Choose a camera or enter its stream URL. Keep it on the same network as this computer.'}
+				{initial
+					? 'Update the camera name or connection.'
+					: 'Choose a camera or enter its stream URL. Keep it on the same network as this computer.'}
 			</p>
 		</div>
-		{#if !initial && !batchEnabled && !saved}
+		{#if !initial && !batchEnabled}
 			<Button
 				type="button"
 				variant="outline"
 				disabled={checking || saving}
 				onclick={() => {
 					batchEnabled = true;
-					batchAddress = '';
 					invalidateCheck();
 				}}>Set up several cameras</Button
 			>
@@ -328,109 +234,78 @@
 			{finding}
 			{discoveryMessage}
 			onfind={find}
-			bind:queue={batchQueue}
-			bind:connecting={batchConnecting}
-			activeAddress={batchAddress}
-			activeSaved={Boolean(saved)}
-			disabled={checking || saving}
-			onchoose={openBatchCamera}
-			onskip={skipBatchCamera}
-			onclose={leaveBatch}
+			onclose={() => (batchEnabled = false)}
+			ondone={onDone}
 		/>
-	{/if}
-
-	{#if saved && batchEnabled}
-		<div class="flex max-w-2xl flex-col gap-5">
-			<CameraPicture id={saved.id} {label} monitored={saved.monitored} />
-			<div class="flex flex-wrap gap-3">
-				{#if nextBatchCamera}
-					<Button
-						type="button"
-						disabled={saving || checking || batchConnecting}
-						onclick={() => nextBatchCamera && openBatchCamera(nextBatchCamera)}
-						>Add next camera <ArrowRight data-icon="inline-end" /></Button
-					>
-				{/if}
-				<Button
-					href={resolve(setupMode ? '/setup?step=detectors' : '/streams')}
-					variant={nextBatchCamera ? 'outline' : 'default'}
-				>
-					{setupMode ? 'Continue to detectors' : 'Done'}
-				</Button>
-			</div>
-		</div>
-	{:else if !batchEnabled || batchAddress}
+	{:else}
 		<form
 			onsubmit={submit}
 			class="grid items-start gap-6 lg:grid-cols-2"
-			bind:this={cameraForm}
 			tabindex="-1"
 			aria-label="Connect camera"
 		>
 			<div class="flex min-w-0 flex-col gap-6">
 				{#if changingConnection}
-					{#if !batchAddress}
-						<section aria-labelledby="camera-discovery-title" class="flex flex-col gap-4">
-							<div class="flex flex-col gap-2">
-								<div class="flex flex-wrap items-center justify-between gap-3">
-									<h2 id="camera-discovery-title" class="font-medium">Available cameras</h2>
-									<Button
-										type="button"
-										variant="outline"
-										size="sm"
-										disabled={finding || checking || saving}
-										onclick={find}
-									>
-										<Search data-icon="inline-start" />{finding ? 'Searching…' : 'Search again'}
-									</Button>
-								</div>
-								{#if discoveryMessage}<p role="status" class="text-sm text-muted-foreground">
-										{discoveryMessage}
-									</p>{/if}
-							</div>
-							{#if candidates.length}
-								<RadioGroup.Root
-									value={address}
-									aria-label="Discovered cameras"
-									disabled={checking || saving}
-									onValueChange={(value) => {
-										const previousName = candidates.find(
-											(camera) => camera.address === address
-										)?.name;
-										address = value;
-										manualAddress = false;
-										if (!label || label === previousName)
-											label = candidates.find((camera) => camera.address === value)?.name ?? '';
-										connectionChangedInput();
-									}}
+					<section aria-labelledby="camera-discovery-title" class="flex flex-col gap-4">
+						<div class="flex flex-col gap-2">
+							<div class="flex flex-wrap items-center justify-between gap-3">
+								<h2 id="camera-discovery-title" class="font-medium">Available cameras</h2>
+								<Button
+									type="button"
+									variant="outline"
+									size="sm"
+									disabled={finding || checking || saving}
+									onclick={find}
 								>
-									{#each candidates as camera, index (camera.address)}
-										<Field.Field orientation="horizontal">
-											<RadioGroup.Item id={`camera-choice-${index}`} value={camera.address} />
-											<Field.Label for={`camera-choice-${index}`} class="min-w-0 cursor-pointer">
-												<Field.Content>
-													<Field.Title>{camera.name}</Field.Title>
-													<Field.Description class="break-all">{camera.address}</Field.Description>
-												</Field.Content>
-											</Field.Label>
-										</Field.Field>
-									{/each}
-								</RadioGroup.Root>
-							{/if}
-							<Button
-								type="button"
-								variant="outline"
-								class="self-start"
-								aria-expanded={manualAddress}
+									<Search data-icon="inline-start" />{finding ? 'Searching…' : 'Search again'}
+								</Button>
+							</div>
+							{#if discoveryMessage}<p role="status" class="text-sm text-muted-foreground">
+									{discoveryMessage}
+								</p>{/if}
+						</div>
+						{#if candidates.length}
+							<RadioGroup.Root
+								value={address}
+								aria-label="Discovered cameras"
 								disabled={checking || saving}
-								onclick={() => {
-									manualAddress = !manualAddress;
-									showStreamUri = false;
+								onValueChange={(value) => {
+									const previousName = candidates.find(
+										(camera) => camera.address === address
+									)?.name;
+									address = value;
+									manualAddress = false;
+									if (!label || label === previousName)
+										label = candidates.find((camera) => camera.address === value)?.name ?? '';
 									connectionChangedInput();
-								}}>{manualAddress ? 'Hide manual entry' : 'Enter camera manually'}</Button
+								}}
 							>
-						</section>
-					{/if}
+								{#each candidates as camera, index (camera.address)}
+									<Field.Field orientation="horizontal">
+										<RadioGroup.Item id={`camera-choice-${index}`} value={camera.address} />
+										<Field.Label for={`camera-choice-${index}`} class="min-w-0 cursor-pointer">
+											<Field.Content>
+												<Field.Title>{camera.name}</Field.Title>
+												<Field.Description class="break-all">{camera.address}</Field.Description>
+											</Field.Content>
+										</Field.Label>
+									</Field.Field>
+								{/each}
+							</RadioGroup.Root>
+						{/if}
+						<Button
+							type="button"
+							variant="outline"
+							class="self-start"
+							aria-expanded={manualAddress}
+							disabled={checking || saving}
+							onclick={() => {
+								manualAddress = !manualAddress;
+								showStreamUri = false;
+								connectionChangedInput();
+							}}>{manualAddress ? 'Hide manual entry' : 'Enter camera manually'}</Button
+						>
+					</section>
 					{#if cameraDraftAddress(address) && !manualAddress && !candidates.some((camera) => camera.address === address)}
 						<p class="text-sm break-all text-muted-foreground">Camera selected: {address}</p>
 					{/if}
@@ -602,7 +477,9 @@
 									: 'Save camera'}<ArrowRight data-icon="inline-end" />
 					</Button>
 				{/if}
-				<Button href={resolve(returnTo)} variant="outline">Cancel</Button>
+				{#if onCancel}<Button type="button" onclick={onCancel} disabled={saving} variant="outline"
+						>Cancel</Button
+					>{/if}
 			</div>
 			{#if initial}
 				<details class="lg:col-span-2">

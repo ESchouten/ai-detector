@@ -53,7 +53,8 @@ adapters/
 ├── health.py              # Periodic monitoring, supervised by runtime
 ├── diagnostics.py         # Safe startup context and rotating Python logs
 ├── http.py                # Transport shared by exporters and health
-└── vlm.py                 # Event verification
+├── vlm.py                 # Event verification
+└── vlm_check.py           # Synthetic connection check through the same adapter
 ```
 
 Exporters, sources and inference do not import one another, directly or indirectly. Bootstrap connects them through application ports. Media operations and HTTP transport are shared where needed; health monitoring has a separate lifecycle from event delivery. Archive metadata belongs beside the disk exporter because it defines the web application's public archive format.
@@ -74,7 +75,7 @@ Package initializers do not import their children or expose alternate import pat
 
 An architecture test compares every source module on disk with the import graph. A missing `__init__.py` cannot silently exclude a new directory from the dependency checks. A copied-source regression verifies that restoring the initializer exposes a previously hidden forbidden import.
 
-Provider setup receives `OnnxConfig` and immutable `ModelRequirements(path, image_size, batch_size)` inputs projected by bootstrap. ONNX code does not traverse application-wide detector, event or exporter configuration. Provider-specific TensorRT profiles remain inside the adapter.
+Provider setup receives `OnnxConfig` and immutable `ModelRequirements(path, image_size, batch_size)` inputs projected by bootstrap. ONNX code does not traverse application-wide detector, event or exporter configuration. Provider-specific TensorRT profiles remain inside the adapter. ONNX session construction also disables worker spinning, allowing idle CPU workers to sleep while capture, other detectors or GPU inference are active. It preserves caller session settings unrelated to spinning and uses the same policy for registered Windows ML devices and built-in providers. The YOLO adapter logs the loaded session's providers separately from its image tensor device and I/O-binding mode.
 
 The inference setup boundary also selects native MPS for `.pt` checkpoints when running on macOS with an available Torch MPS device and no explicit ONNX provider. It skips ONNX setup when every model takes this route; mixed checkpoint/ONNX configurations retain provider setup for the exported models. The YOLO adapter applies `device="mps"` and `quantize=16` only to native checkpoints. Unavailable MPS retains ONNX preparation; model errors do not cause a fallback. CUDA/TensorRT distributions and existing exported-model routes are unchanged.
 
@@ -140,6 +141,10 @@ Cooldown consumption, destination eligibility and successful delivery are separa
 ## Validation and delivery
 
 Validation has four explicit outcomes: approved, rejected, not configured, and failed. The disk adapter owns the projection onto the public `approved`, `rejected`, and `unvalidated` directories; the domain does not choose archive paths. Failed validation can be archived as `unvalidated` with an explicit error field. A configured verifier failing must not produce an ordinary unvalidated external notification.
+
+Shared AI connections belong to the web application's `app.json`. The web configuration store copies a selected connection's model, endpoint, key and headers into the detector's existing `vlm` configuration at save time. Its question and media settings stay with the detector. Python receives one self-contained `config.json`; it never loads web metadata or resolves connection references. Presets can retain an `enabled: false` question without credentials or a model. The detector-level `vlm_enabled` switch pauses verification without modifying entries or their individual enabled flags. Bootstrap creates verifiers only from active entries, preserving the distinction between optional and failed verification.
+
+The VLM adapter reports explicit, safe failure codes on `VlmUnavailable`; the connection check selects guidance from these codes instead of parsing exception prose. The CLI's `--test-vlm FILE` action builds synthetic media and invokes the same VLM adapter without loading an inference model, opening cameras or starting monitoring. It uses one bounded attempt and exposes safe error classifications; provider diagnostics cannot echo credentials into the browser. Explicit extra headers pass through LiteLLM. An explicitly empty key uses a non-secret placeholder required by its OpenAI client and prevents environment-key lookup; an omitted key retains existing provider/environment behavior.
 
 Provider fallback is finite and applies to documented provider errors or invalid provider output. Media preparation belongs to each verifier configuration: an encoding failure skips that configuration and allows the next strategy to run. Exhausting all configurations remains failed validation. A successful negative answer is a rejection, not a reason to ask the next model. Provider requests have a timeout. No real provider is contacted by the automated test suite.
 

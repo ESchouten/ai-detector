@@ -15,6 +15,7 @@ from pydantic import (
     UrlConstraints,
     ValidationError,
     field_validator,
+    model_validator,
 )
 
 Probability = Annotated[float, Field(ge=0, le=1)]
@@ -148,21 +149,51 @@ class SourceConfig(_ConfigModel):
 
 
 class VLMConfig(_ConfigModel):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "if": {
+                "properties": {"enabled": {"const": False}},
+                "required": ["enabled"],
+            },
+            "else": {
+                "required": ["model"],
+                "properties": {
+                    "model": {
+                        "anyOf": [
+                            {"type": "string", "minLength": 1},
+                            {"type": "array", "minItems": 1},
+                        ]
+                    }
+                },
+            },
+        }
+    )
+
+    enabled: bool = True
     prompt: NonEmptyString
-    model: Annotated[tuple[NonEmptyString, ...], Field(min_length=1)]
+    model: tuple[NonEmptyString, ...] = ()
     key: str | None = Field(default=None, repr=False)
     url: str | None = Field(default=None, repr=False)
+    headers: dict[str, str] = Field(default_factory=dict, repr=False)
     strategy: Literal["IMAGE", "VIDEO"] = "VIDEO"
     crop_padding: PaddingRatio = 0.1
     timeout: PositiveDuration = 30
     attempts: PositiveInt = 3
 
     @field_validator(
-        "model", mode="before", json_schema_input_type=NonEmptyString | StringList
+        "model",
+        mode="before",
+        json_schema_input_type=NonEmptyString | list[NonEmptyString],
     )
     @classmethod
     def normalize_models(cls, value: object) -> object:
         return _sequence(value)
+
+    @model_validator(mode="after")
+    def enabled_model(self) -> VLMConfig:
+        if self.enabled and not self.model:
+            raise ValueError("Enabled verification requires a model")
+        return self
 
 
 class ExporterConfig(_ConfigModel):
@@ -267,6 +298,13 @@ class DetectorConfig(_ConfigModel):
     vlm: tuple[VLMConfig, ...] = ()
     exporters: ExportersConfig = Field(default_factory=ExportersConfig)
     pending_events: PositiveInt = 8
+    vlm_enabled: bool = True
+
+    @property
+    def active_vlm(self) -> tuple[VLMConfig, ...]:
+        if not self.vlm_enabled:
+            return ()
+        return tuple(verifier for verifier in self.vlm if verifier.enabled)
 
     @field_validator(
         "vlm", mode="before", json_schema_input_type=VLMConfig | list[VLMConfig] | None

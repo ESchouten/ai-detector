@@ -25,5 +25,10 @@
         "disk": {
             "directory": "calvings"
         }
+    },
+    "vlm": {
+        "enabled": false,
+        "prompt": "Does the footage show visible signs of a cow giving birth: a water bag, calf legs, head or body emerging, or a newly born calf beside the cow? Set detected to true only when such a sign is visible.",
+        "strategy": "IMAGE"
     }
 }

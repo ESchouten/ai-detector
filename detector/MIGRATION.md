@@ -6,10 +6,17 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 
 - Existing top-level `detectors`, `onnx`, and `health` configuration remains supported.
 - Single values and lists remain accepted for sources, VLM configurations/models, and exporters.
+- Existing VLM configurations remain enabled by default. Presets may now retain a question with `enabled: false` and no model; only enabled entries run. The detector-level `vlm_enabled` switch defaults to `true`; setting it to `false` pauses the list without rewriting individual enabled flags. Optional `headers` are passed to the provider. A deliberately empty `key` selects a service without key authentication, while an omitted key preserves provider/environment lookup. The web app's shared AI connections are expanded into the existing per-detector `vlm` fields on save, so Python needs no web metadata. `--test-vlm FILE` checks a connection with synthetic media without starting detection.
 - YOLO detection/segmentation, stable per-source tracking, class thresholds, collection windows, cooldowns, optional validation, disk, Telegram, webhook, and health pings remain available.
 - Existing `detections/<category>/<stage>/<timestamp>/` archives remain readable. New archives keep best.jpg, clean.jpg, optional video.mp4, and metadata.json with the existing required fields.
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
+
+## ONNX CPU scheduling and diagnostics — 2026-09-30
+
+ONNX sessions explicitly disable intra-op and inter-op worker spinning. Idle workers sleep instead of spending CPU time polling for work; parallel computation and provider selection remain available. This applies to registered Windows ML devices and ordinary ONNX providers. Native PyTorch/CUDA/MPS execution, camera sampling, model precision and configuration are unchanged. The scheduling tradeoff can affect latency, so compare throughput on the target hardware.
+
+Startup logging now distinguishes the loaded ONNX session's provider list from the device Ultralytics uses for image tensor processing, and reports whether I/O binding is active. A CPU image tensor device does not prove the model runs entirely on the CPU; a GPU provider in the list does not prove every graph operation runs there either. Per-operation placement requires runtime profiling.
 
 ## FP16 model preparation — 2026-09-28
 

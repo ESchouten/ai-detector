@@ -7,6 +7,7 @@ import {
 	normalizeConfig
 } from '../../configuration.ts';
 import type { Configuration } from '../../schema.ts';
+import { assignConnection } from '../../llm.ts';
 
 export function saveDetector(
 	{ config, app }: Configuration,
@@ -19,13 +20,21 @@ export function saveDetector(
 	if (app.detectors.some((item, i) => i !== index && item.label === input.meta.label)) {
 		throw new ConfigurationError('A detector with this name already exists.');
 	}
-	const normalized = normalizeConfig({ detectors: [input.detector] }).detectors[0];
+	let normalized = normalizeConfig({ detectors: [input.detector] }).detectors[0];
+	if (input.meta.llmConnection) {
+		const connection = app.llms.find(({ label }) => label === input.meta.llmConnection);
+		if (!connection) throw new ConfigurationError('Choose an existing AI connection.');
+		const settings = normalized.vlm?.[0];
+		if (!settings) throw new ConfigurationError('Enter a question for AI verification.');
+		normalized = assignConnection(normalized, connection);
+	}
 	if (index < 0) {
 		config.detectors.push(normalized);
 		app.detectors.push(input.meta);
 		return;
 	}
 	const meta = { ...app.detectors[index], ...input.meta };
+	if (!input.meta.llmConnection) delete meta.llmConnection;
 	if (
 		!input.meta.preset &&
 		!isDeepStrictEqual(detectorSettings(config.detectors[index]), detectorSettings(normalized))

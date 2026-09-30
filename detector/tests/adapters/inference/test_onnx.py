@@ -101,6 +101,40 @@ def test_explicit_cpu_selection_skips_unavailable_windows_acceleration(
     assert notices == []
 
 
+@pytest.mark.parametrize("supplied_options", [False, True])
+def test_real_sessions_disable_idle_spinning_and_preserve_caller_options(
+    tmp_path, supplied_options
+):
+    import numpy as np
+    import onnxruntime as ort
+
+    from tests.support.onnx_model import write_detection_model
+
+    path = tmp_path / "model.onnx"
+    write_detection_model(path)
+    supplied = ort.SessionOptions() if supplied_options else None
+    if supplied is not None:
+        supplied.intra_op_num_threads = 2
+        supplied.logid = "caller-options"
+    with inference_runtime(
+        OnnxConfig(provider="CPUExecutionProvider"), ONNX_MODELS, "default"
+    ):
+        session = ort.InferenceSession(str(path), sess_options=supplied)
+        options = session.get_session_options()
+        assert (
+            options.get_session_config_entry("session.intra_op.allow_spinning") == "0"
+        )
+        assert (
+            options.get_session_config_entry("session.inter_op.allow_spinning") == "0"
+        )
+        if supplied_options:
+            assert options.intra_op_num_threads == 2
+            assert options.logid == "caller-options"
+        images = np.zeros((2, 3, 64, 64), dtype=np.float32)
+        output = session.run(None, {"images": images})[0]
+        np.testing.assert_allclose(output[:, 0, :], [[10, 10, 40, 50, 0.9, 0]] * 2)
+
+
 def test_explicit_accelerator_does_not_silently_fall_back(unavailable_windows_ml):
     with (
         pytest.raises(OSError, match="unavailable offline"),
@@ -166,13 +200,14 @@ def test_windows_ml_session_uses_registered_device_and_releases_libraries(
     import logging
     import sys
 
+    import onnxruntime as real_ort
     from onnxruntime.capi.onnxruntime_pybind11_state import Fail
 
     lifecycle = windows_ml.lifecycle
     sessions, options = [], []
     caplog.set_level(logging.INFO)
 
-    class SessionOptions:
+    class SessionOptions(real_ort.SessionOptions):
         def add_provider_for_devices(self, devices, settings):
             options.append((devices, settings))
 
@@ -234,6 +269,12 @@ def test_windows_ml_session_uses_registered_device_and_releases_libraries(
             == "session"
         )
         assert sessions == [{"sess_options": supplied}]
+        assert (
+            supplied.get_session_config_entry("session.intra_op.allow_spinning") == "0"
+        )
+        assert (
+            supplied.get_session_config_entry("session.inter_op.allow_spinning") == "0"
+        )
         assert options[0][0] == [device]
         settings_path = Path(options[0][1]["load_config"])
         assert json.loads(settings_path.read_text()) == {

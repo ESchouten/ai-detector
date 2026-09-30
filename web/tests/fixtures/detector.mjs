@@ -1,5 +1,20 @@
 #!/usr/bin/env node
 import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
+if (process.argv.includes('--test-vlm')) {
+	const file = process.argv[process.argv.indexOf('--test-vlm') + 1];
+	const connection = JSON.parse(readFileSync(file, 'utf8'));
+	writeFileSync('connection-check.json', JSON.stringify(connection));
+	if (connection.model === 'hold') {
+		writeFileSync('check-pid.txt', String(process.pid));
+		await new Promise((resolve) => setTimeout(resolve, 60000));
+	}
+	if (connection.model === 'denied') {
+		console.error('Check the API key.');
+		process.exit(1);
+	}
+	console.log('{"ok": true}');
+	process.exit(0);
+}
 const configPath = process.argv[process.argv.indexOf('--config') + 1];
 const config = JSON.parse(readFileSync(configPath, 'utf8'));
 if (process.argv.includes('--check-config')) {

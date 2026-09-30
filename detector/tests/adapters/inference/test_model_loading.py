@@ -35,6 +35,8 @@ def model_sdk(monkeypatch):
                 format=pathlib.Path(model).suffix.lstrip("."),
                 device=self.args.device or "cpu",
                 fp16=self.args.quantize == 16,
+                session=SimpleNamespace(get_providers=lambda: ["CPUExecutionProvider"]),
+                use_io_binding=False,
             )
 
     class Model:

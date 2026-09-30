@@ -2,16 +2,20 @@ import { errorMessage } from './remote-errors.ts';
 import type {
 	TelegramPairing as TelegramPairingSession,
 	TelegramRecipient,
+	TelegramDestination,
 	TelegramPairingState as PairingResult
 } from './telegram.ts';
 export type TelegramPairingState =
 	| { state: 'idle' | 'starting' }
-	| { state: 'waiting'; session: TelegramPairingSession }
+	| { state: 'waiting' | 'choosing' | 'confirming'; session: TelegramPairingSession }
 	| { state: 'matched'; chat: TelegramRecipient; bot: TelegramPairingSession['bot'] }
 	| { state: 'failed'; message: string };
 
 interface PairingApi {
-	begin(input: { token: string }): Promise<TelegramPairingSession>;
+	begin(input: {
+		token: string;
+		destination?: TelegramDestination;
+	}): Promise<TelegramPairingSession>;
 	poll(input: { id: string }): Promise<PairingResult>;
 	cancel(input: { id: string }): Promise<unknown>;
 }
@@ -30,14 +34,14 @@ export class TelegramPairing {
 		this.changed = changed;
 	}
 
-	async start(token: string): Promise<void> {
+	async start(token: string, destination: TelegramDestination = 'private'): Promise<void> {
 		this.cancel();
 		const generation = this.generation;
 		this.changed({ state: 'starting' });
 		try {
 			await this.cancelling;
 			if (generation !== this.generation) return;
-			const session = await this.api.begin({ token });
+			const session = await this.api.begin({ token, destination });
 			if (generation !== this.generation) {
 				await this.api.cancel({ id: session.id });
 				return;
@@ -84,7 +88,10 @@ export class TelegramPairing {
 			if (result.state === 'matched') {
 				this.release();
 				this.changed({ state: 'matched', chat: result.chat, bot: session.bot });
-			} else this.schedule(generation);
+			} else {
+				this.changed({ state: result.state, session });
+				this.schedule(generation);
+			}
 		} catch (cause) {
 			if (generation === this.generation) this.fail(cause);
 		}

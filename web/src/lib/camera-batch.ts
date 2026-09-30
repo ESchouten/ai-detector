@@ -1,4 +1,4 @@
-import type { CameraProfile, DiscoveredCamera } from './cameras.ts';
+import type { CameraProfile, DiscoveredCamera, CameraConnectionResult } from './cameras.ts';
 import type { StreamMeta } from './schema.ts';
 import { errorMessage } from './remote-errors.ts';
 
@@ -9,20 +9,20 @@ export interface CameraLogin {
 
 export interface BatchConnection {
 	source: string;
+	check?: CameraConnectionResult;
 	profiles: CameraProfile[];
 	connection?: StreamMeta['connection'];
 }
 
 export interface BatchCamera extends DiscoveredCamera {
-	state: 'waiting' | 'connecting' | 'ready' | 'failed' | 'saved' | 'skipped';
+	state: 'waiting' | 'connecting' | 'ready' | 'failed' | 'saved';
 	connection?: BatchConnection;
 	login?: CameraLogin;
-	profileToken?: string;
 	savedId?: string;
 	error?: string;
 }
 
-/** Resolve logins only. Every camera still needs its own recording check and explicit save. */
+/** Connect cameras with bounded concurrency, preserving successful results on retry. */
 export async function connectCameraBatch(
 	cameras: BatchCamera[],
 	login: CameraLogin,

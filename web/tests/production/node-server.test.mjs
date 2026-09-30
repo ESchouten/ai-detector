@@ -345,8 +345,12 @@ test(
 	'production detector setup discovers the bundled preset files',
 	{ timeout: 20000 },
 	async (t) => {
-		const { base } = await startServer(t);
-		const response = await send(`${base}/detectors/add?setup=1`);
+		const { directory, base } = await startServer(t);
+		await writeFile(
+			path.join(directory, 'app.json'),
+			JSON.stringify({ streams: [{ label: 'Barn', source: 'rtsp://camera.example.test/live' }] })
+		);
+		const response = await send(`${base}/setup?step=detectors&add=detector`);
 		assert.equal(response.status, 200);
 		const html = await response.text();
 		for (const name of ['Calving Catcher', 'Cow Catcher', 'General'])
@@ -379,17 +383,20 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			const cameraInput = { label: 'Workshop camera', source, mode: 'preset', preset: 'copy' };
 			const host = deployment === 'LAN HTTP' ? 'barn.local:8080' : new URL(base).host;
 			const origin = publicOrigin ?? `http://${host}`;
-			const page = await send(`${base}/setup`, { headers: { Host: host } });
+			const firstVisit = await send(`${base}/setup`, { headers: { Host: host } });
+			assert.equal(firstVisit.status, 302);
+			assert.equal(
+				new URL(firstVisit.headers.get('location'), base + '/setup').href,
+				base + '/setup?step=cameras&add=camera'
+			);
+			const page = await send(new URL(firstVisit.headers.get('location'), base + '/setup'), {
+				headers: { Host: host }
+			});
 			assert.equal(page.status, 200);
 			const html = await page.text();
-			assert.ok(html.includes('<title>Setup · AI Detector</title>'));
-			assert.ok(html.includes('Add your cameras'));
+			assert.ok(html.includes('<title>Settings · AI Detector</title>'));
+			assert.ok(html.includes('Add your camera'));
 			assert.ok(!html.includes('Calving Catcher'));
-			const detectorPage = await send(`${base}/detectors/add?setup=1`, { headers: { Host: host } });
-			assert.equal(detectorPage.status, 200);
-			const detectorHtml = await detectorPage.text();
-			assert.ok(detectorHtml.includes('Copy'));
-			assert.ok(!detectorHtml.includes('Calving Catcher'));
 			const headers = {
 				Host: host,
 				Origin: origin,
@@ -429,6 +436,13 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			});
 			assert.equal(saved.status, 200, await saved.clone().text());
 			assert.equal((await saved.json()).type, 'result');
+			const detectorPage = await send(`${base}/setup?step=detectors&add=detector`, {
+				headers: { Host: host }
+			});
+			assert.equal(detectorPage.status, 200);
+			const detectorHtml = await detectorPage.text();
+			assert.ok(detectorHtml.includes('Copy'));
+			assert.ok(!detectorHtml.includes('Calving Catcher'));
 			const config = JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8'));
 			assert.deepEqual(config.detectors[0].detection.source, [source]);
 			assert.deepEqual(config.detectors[0].yolo, {
@@ -544,6 +558,11 @@ test(
 			[]
 		);
 		assert.equal((await send(base + '/')).headers.get('location'), '/setup');
+		const detectorStep = await send(base + '/setup?step=detectors');
+		assert.equal(
+			new URL(detectorStep.headers.get('location'), base + '/setup').href,
+			base + '/setup?step=detectors&add=detector'
+		);
 		assert.equal((await command('finishSetup')).type, 'result');
 		assert.equal((await send(base + '/')).headers.get('location'), '/streams');
 		const detectorSaved = await command('saveDetector', {
@@ -628,9 +647,13 @@ test(
 		await writeFile(templatePath, '{"yolo":');
 		for (const [route, savedValue, expectedContent] of [
 			['/streams', 'Workshop camera', /Monitoring preset names are unavailable/],
-			[`/streams/add?id=${cameraId}`, 'Workshop camera', /Camera name[\s\S]*Save changes/],
 			[
-				'/detectors/add?label=Workshop%20rule',
+				`/setup?step=cameras&camera=${cameraId}`,
+				'Workshop camera',
+				/Camera name[\s\S]*Save changes/
+			],
+			[
+				'/setup?step=detectors&detector=Workshop%20rule',
 				'workshop-safety.onnx',
 				/Monitoring presets are unavailable/
 			]
@@ -641,13 +664,37 @@ test(
 			assert.match(html, expectedContent, route);
 			assert.ok(html.includes(savedValue), `${route} must retain ${savedValue}`);
 		}
+		for (const [oldPath, destination] of [
+			['/streams/add', '/setup?step=cameras&add=camera'],
+			[`/streams/add?id=${cameraId}`, `/setup?step=cameras&camera=${cameraId}`],
+			['/detectors', '/setup?step=detectors'],
+			['/detectors/add?setup=1', '/setup?step=detectors&add=detector'],
+			['/detectors/add?label=Workshop%20rule', '/setup?step=detectors&detector=Workshop%20rule'],
+			['/detectors/add?label=Pen%20%26%20yard', '/setup?step=detectors&detector=Pen%20%26%20yard']
+		]) {
+			const response = await send(base + oldPath);
+			assert.equal(response.status, 302, oldPath);
+			assert.equal(
+				new URL(response.headers.get('location'), base + oldPath).href,
+				base + destination
+			);
+		}
+		for (const [selection, message] of [
+			['camera=missing', 'Camera not found'],
+			['detector=missing', 'Detector not found']
+		]) {
+			const step = selection.startsWith('camera') ? 'cameras' : 'detectors';
+			const response = await send(`${base}/setup?step=${step}&${selection}`);
+			assert.equal(response.status, 200);
+			assert.ok((await response.text()).includes(message));
+		}
 		const renamed = await send(base + commands.saveCamera, {
 			method: 'POST',
 			headers: {
 				Origin: base,
 				'Content-Type': 'application/json',
-				'x-sveltekit-pathname': '/streams/add',
-				'x-sveltekit-search': `?id=${cameraId}`
+				'x-sveltekit-pathname': '/setup',
+				'x-sveltekit-search': `?step=cameras&camera=${cameraId}`
 			},
 			body: commandBody({ id: cameraId, label: 'Main workshop', source, mode: 'keep' })
 		});

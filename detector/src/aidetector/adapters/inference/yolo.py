@@ -310,8 +310,15 @@ def _initialize_predictor(
         model=model.model, verbose=logger.isEnabledFor(logging.INFO)
     )
     backend = model.predictor.model
+    if backend.format == "onnx":
+        logger.info(
+            "ONNX model providers: %s; image tensor processing: %s; I/O binding: %s",
+            backend.session.get_providers(),
+            backend.device,
+            backend.use_io_binding,
+        )
     logger.info(
-        "Inference backend ready: %s on %s (%s)",
+        "Inference backend ready: %s; image tensor device=%s; precision=%s",
         backend.format,
         backend.device,
         "FP16" if backend.fp16 else "FP32",

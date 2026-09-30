@@ -4,7 +4,8 @@ import {
 	DEFAULT_SCHEMA_URL,
 	type Config,
 	type Configuration,
-	type DetectorPreset
+	type DetectorPreset,
+	type LlmConnection
 } from '../../schema.ts';
 import { readJson, writeJson } from '../json-file.ts';
 import {
@@ -22,6 +23,8 @@ import { writeConfiguration } from './files.ts';
 import { saveDetector, deleteDetector } from './detectors.ts';
 import { saveStream, deleteStream, reorderStream } from './streams.ts';
 import { saveTelegram, deleteTelegram, saveAlerts } from './telegrams.ts';
+import { saveLlm, deleteLlm } from './llms.ts';
+import { replaceConnections, replaceDetectorConfig, settingsRevision } from './advanced.ts';
 import {
 	cameraSetupStatus,
 	recordArchiveCheck,
@@ -63,7 +66,13 @@ export class ConfigurationStore {
 			readJson<unknown>(this.files.config, { $schema: DEFAULT_SCHEMA_URL, detectors: [] }),
 			readJson<unknown>(this.files.app, {})
 		]);
-		return identifyCameras(normalizeConfiguration(config, app));
+		try {
+			return identifyCameras(normalizeConfiguration(config, app));
+		} catch (error) {
+			if (error instanceof ConfigurationError)
+				throw new ConfigurationError(`${this.files.config}: ${error.message}`, { cause: error });
+			throw error;
+		}
 	}
 
 	read(): Promise<Configuration> {
@@ -83,7 +92,8 @@ export class ConfigurationStore {
 			const recoveringApp = resuming && isDeepStrictEqual(await readJson(this.files.app), next.app);
 			if (
 				current.config.detectors.length ||
-				(!recoveringApp && (current.app.streams.length || current.app.telegrams.length))
+				(!recoveringApp &&
+					(current.app.streams.length || current.app.telegrams.length || current.app.llms.length))
 			)
 				throw new ConfigurationError(
 					'This application already has a setup. Import into a new installation to avoid replacing your settings.'
@@ -144,6 +154,14 @@ export class ConfigurationStore {
 		return this.update((document) => saveAlerts(document, input));
 	}
 
+	saveLlm(input: LlmConnection & { original?: string }): Promise<void> {
+		return this.update((document) => saveLlm(document, input));
+	}
+
+	deleteLlm(label: string): Promise<void> {
+		return this.update((document) => deleteLlm(document, label));
+	}
+
 	recordArchiveCheck(id: string, signature: string, verifiedAt: string): Promise<void> {
 		return this.update((document) => recordArchiveCheck(document, id, signature, verifiedAt));
 	}
@@ -170,6 +188,17 @@ export class ConfigurationStore {
 
 	replace(document: { config: unknown; app: unknown }): Promise<void> {
 		return this.enqueue(() => this.persist(document));
+	}
+
+	saveAdvanced(target: 'config' | 'connections', value: unknown, revision: string): Promise<void> {
+		return this.update((document) => {
+			if (settingsRevision(document) !== revision)
+				throw new ConfigurationError(
+					'Settings changed since you opened the editor. Reload the saved settings before applying your changes.'
+				);
+			if (target === 'config') replaceDetectorConfig(document, value);
+			else replaceConnections(document, value);
+		});
 	}
 
 	saveDetector(input: v.InferOutput<typeof detectorInput>): Promise<void> {

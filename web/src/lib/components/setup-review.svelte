@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import DetectorRuntime from './detector-runtime.svelte';
+	import { getRuntime, startDetector, stopDetector } from '$lib/remote/runtime.remote';
 	import { resolve } from '$app/paths';
 	import { CircleCheck, LoaderCircle } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -9,6 +12,11 @@
 	import { getCameras } from '$lib/remote/stream.remote';
 	import { getSetupStatus, skipSetupAlerts, finishSetup } from '$lib/remote/camera-setup.remote';
 
+	let { configured }: { configured: boolean } = $props();
+	const runtimeQuery = getRuntime();
+	const initialRuntime = await runtimeQuery;
+	const runtime = $derived(runtimeQuery.current ?? initialRuntime);
+	let finishing = $state(false);
 	let cameras = $state(await getSetupStatus());
 	let saving = $state(false);
 	let checkingId = $state('');
@@ -68,6 +76,14 @@
 		async function poll() {
 			try {
 				await refresh();
+				if (controller.signal.aborted) return;
+				if (finishing && !saving) {
+					if (runtime.phase === 'failed') {
+						finishing = false;
+						message = runtime.message;
+					} else if (ready) await save('finish');
+					else if (Object.keys(recordingErrors).length) finishing = false;
+				}
 				if (!busy)
 					void checkRecordings(
 						cameras
@@ -102,14 +118,43 @@
 				getCameras()
 			);
 			cameras = await getSetupStatus();
+			if (action === 'finish' && !controller.signal.aborted)
+				await goto(resolve(configured ? '/detections' : '/streams'));
 		} catch (cause) {
+			finishing = false;
 			message = errorMessage(cause, 'Your progress could not be saved. Try again.');
 		} finally {
 			saving = false;
 		}
 	}
+	async function start() {
+		message = '';
+		saving = true;
+		try {
+			if (
+				configured &&
+				runtime.managed &&
+				!['running', 'starting', 'checking'].includes(runtime.phase)
+			)
+				await startDetector(runtime.mode).updates(runtimeQuery);
+			finishing = true;
+		} catch (cause) {
+			message = errorMessage(cause, 'Could not start monitoring. Try again.');
+		} finally {
+			saving = false;
+		}
+	}
+	async function cancel() {
+		finishing = false;
+		try {
+			await stopDetector().updates(runtimeQuery);
+		} catch (cause) {
+			message = errorMessage(cause, 'Could not pause monitoring. Try again.');
+		}
+	}
 </script>
 
+<DetectorRuntime {configured} showControls={finished} />
 <Card.Root>
 	<Card.Header>
 		<Card.Title>{finished ? 'Setup complete' : 'Check your cameras'}</Card.Title>
@@ -140,7 +185,7 @@
 					</div>
 					{#if !camera.pictureVerifiedAt}
 						<Button
-							href={resolve(`/streams/add?setup=1&id=${camera.id}`)}
+							href={resolve(`/setup?step=cameras&camera=${camera.id}`)}
 							variant="outline"
 							size="sm"
 							class="self-start">Confirm camera picture</Button
@@ -194,9 +239,29 @@
 			>{/if}
 	</Card.Content>
 	<Card.Footer>
-		{#if finished}<Button href={resolve('/detections')}>Open recordings</Button>
-		{:else}<Button disabled={busy || stale || !ready} onclick={() => save('finish')}
-				>{saving ? 'Saving…' : 'Finish setup'}</Button
+		{#if finished}<Button href={resolve(configured ? '/detections' : '/streams')}
+				>{configured ? 'Open recordings' : 'Open cameras'}</Button
+			>
+		{:else}<Button
+				disabled={saving ||
+					stale ||
+					finishing ||
+					needsAlertChoice ||
+					cameras.some((camera) => !camera.pictureVerifiedAt)}
+				onclick={start}
+				>{saving || finishing
+					? 'Checking setup…'
+					: configured && runtime.managed && runtime.phase !== 'running'
+						? 'Start monitoring'
+						: configured
+							? 'Finish and open recordings'
+							: 'Finish and open cameras'}</Button
+			>{/if}
+		{#if !finished && runtime.managed && (finishing || ['running', 'checking'].includes(runtime.phase))}<Button
+				class="ml-3"
+				variant="outline"
+				onclick={cancel}
+				>{finishing || runtime.phase === 'checking' ? 'Cancel' : 'Pause monitoring'}</Button
 			>{/if}
 	</Card.Footer>
 </Card.Root>

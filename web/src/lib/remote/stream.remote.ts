@@ -39,19 +39,6 @@ export const getCameras = query(async () => {
 	});
 });
 
-export const getCamera = query(v.string(), async (id) => {
-	const { app, config } = await configuration.read();
-	const camera = app.streams.find((item) => item.id === id);
-	if (!camera) return undefined;
-	return {
-		...camera,
-		id: camera.id!,
-		monitored: config.detectors.some((detector) =>
-			detector.detection.source.includes(camera.source)
-		)
-	};
-});
-
 export const saveCamera = command(cameraInput, async (input) => {
 	return configurationAction(
 		(async () => {

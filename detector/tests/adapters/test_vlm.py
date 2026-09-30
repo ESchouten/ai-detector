@@ -208,6 +208,7 @@ def test_unavailable_provider_has_bounded_retries_and_safe_error(event, monkeypa
     assert calls == ["model"] * 3
     assert waits == [1, 2]
     assert "private-key" not in str(raised.value)
+    assert raised.value.failures == ("APIConnectionError",)
 
 
 def test_authentication_failure_uses_provider_fallback_without_retry(
@@ -228,3 +229,35 @@ def test_authentication_failure_uses_provider_fallback_without_retry(
     answer = VlmValidator((config,), EventMedia()).validate(event)
     assert answer.status is ValidationStatus.APPROVED
     assert calls == ["first", "second"]
+
+
+@pytest.mark.parametrize(
+    "preset_name", ["cow-catcher", "calving-catcher", "calving-catcher-tailup"]
+)
+def test_preset_question_reaches_provider(preset_name, event, monkeypatch):
+    import json
+    from pathlib import Path
+
+    preset_path = (
+        Path(__file__).resolve().parents[3]
+        / "config"
+        / "detector"
+        / f"{preset_name}.json"
+    )
+    question = json.loads(preset_path.read_text())["vlm"]["prompt"]
+    requests = []
+
+    def complete(**kwargs):
+        requests.append(kwargs)
+        return response(True)
+
+    monkeypatch.setattr(litellm, "completion", complete)
+    config = VLMConfig(model=("test-vision",), prompt=question, strategy="IMAGE")
+    assert (
+        VlmValidator((config,), EventMedia()).validate(event).status
+        is ValidationStatus.APPROVED
+    )
+    assert requests[0]["messages"][0]["content"][0] == {
+        "type": "text",
+        "text": question,
+    }

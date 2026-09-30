@@ -38,8 +38,9 @@ export type Imgsz = number;
 export type Iou = number | null;
 export type Tracker = ('botsort.yaml' | 'bytetrack.yaml') | null;
 export type Vlm = VLMConfig | VLMConfig[] | null;
+export type Enabled = boolean;
 export type Prompt = string;
-export type Model1 = string | [string, ...string[]];
+export type Model1 = string | string[];
 export type Key = string | null;
 export type Url = string | null;
 export type Strategy = 'IMAGE' | 'VIDEO';
@@ -91,7 +92,7 @@ export type Webhook = WebhookConfig | WebhookConfig[] | null;
 export type Url1 = string;
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD';
 export type Timeout3 = number;
-export type Headers = {
+export type Headers1 = {
 	[k: string]: string;
 } | null;
 export type Body = string | null;
@@ -117,13 +118,14 @@ export type Token1 = string | null;
 export type DataType = 'binary' | 'base64' | 'none';
 export type DataMax = number | null;
 export type PendingEvents = number;
+export type VlmEnabled = boolean;
 export type Provider = string | null;
 export type Winml = boolean;
 export type Opset = number;
 export type Url2 = string;
 export type Method1 = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD';
 export type Timeout4 = number;
-export type Headers1 = {
+export type Headers2 = {
 	[k: string]: string;
 } | null;
 export type Body1 = string | null;
@@ -141,6 +143,7 @@ export interface DetectorConfig {
 	vlm?: Vlm;
 	exporters?: ExportersConfig | null;
 	pending_events?: PendingEvents;
+	vlm_enabled?: VlmEnabled;
 }
 export interface SourceConfig {
 	source: Source;
@@ -163,14 +166,19 @@ export interface YoloConfig {
 	tracker?: Tracker;
 }
 export interface VLMConfig {
+	enabled?: Enabled;
 	prompt: Prompt;
-	model: Model1;
+	model?: Model1;
 	key?: Key;
 	url?: Url;
+	headers?: Headers;
 	strategy?: Strategy;
 	crop_padding?: CropPadding;
 	timeout?: Timeout1;
 	attempts?: Attempts;
+}
+export interface Headers {
+	[k: string]: string;
 }
 export interface ExportersConfig {
 	disk?: Disk;
@@ -203,7 +211,7 @@ export interface WebhookConfig {
 	url: Url1;
 	method?: Method;
 	timeout?: Timeout3;
-	headers?: Headers;
+	headers?: Headers1;
 	body?: Body;
 	confidence?: Confidence3;
 	crop_padding?: CropPadding3;
@@ -227,7 +235,7 @@ export interface HealthcheckConfig {
 	url: Url2;
 	method?: Method1;
 	timeout?: Timeout4;
-	headers?: Headers1;
+	headers?: Headers2;
 	body?: Body1;
 	interval?: Interval1;
 }

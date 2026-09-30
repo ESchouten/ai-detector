@@ -21,10 +21,13 @@ function matches(actual: string, expected: string): boolean {
 export class DesktopInstance {
 	private token = randomBytes(32).toString('hex');
 	private file: string;
+	private shutdownFile: string;
+	private connected?: SavedInstance;
 
 	constructor(directory: string) {
 		mkdirSync(directory, { recursive: true, mode: 0o700 });
 		this.file = path.join(directory, 'desktop-instance.json');
+		this.shutdownFile = path.join(directory, 'desktop-shutdown.json');
 	}
 
 	/** Publish only after successfully binding the server; the OS port is the instance lock. */
@@ -34,6 +37,35 @@ export class DesktopInstance {
 			mode: 0o600
 		});
 		renameSync(temporary, this.file);
+	}
+
+	/** A reattached menu must distinguish a completed Quit from a vanished/crashed owner. */
+	completeShutdown(success: boolean): void {
+		const temporary = `${this.shutdownFile}.${process.pid}.tmp`;
+		writeFileSync(temporary, JSON.stringify({ token: this.token, success }), { mode: 0o600 });
+		renameSync(temporary, this.shutdownFile);
+	}
+
+	shutdownResult(): boolean | undefined {
+		try {
+			const saved = JSON.parse(readFileSync(this.shutdownFile, 'utf8'));
+			if (saved.token === this.connected?.token && typeof saved.success === 'boolean')
+				return saved.success;
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+		}
+	}
+
+	/** Called only after authenticating the port owner; an HTTP stall is not a process crash. */
+	async waitForShutdown(signal: AbortSignal): Promise<boolean | undefined> {
+		await waitForExit(this.connected!.pid, Infinity, signal);
+		return this.shutdownResult();
+	}
+
+	private async awaitShutdown(saved: SavedInstance, acknowledged = false): Promise<boolean> {
+		if (!(await waitForExit(saved.pid, 45000))) return false;
+		const result = this.shutdownResult();
+		return acknowledged ? result === true : result !== false;
 	}
 
 	remove(): void {
@@ -71,12 +103,13 @@ export class DesktopInstance {
 			try {
 				saved = this.readRecord(port);
 				if (!saved) return false;
-				if (await probe(saved, quit, deadline)) return quit ? waitForExit(saved.pid, 45000) : true;
+				this.connected = saved;
+				if (await probe(saved, quit, deadline))
+					return quit ? this.awaitShutdown(saved, true) : true;
 			} catch (error) {
 				const failure = error as NodeJS.ErrnoException & { cause?: NodeJS.ErrnoException };
 				if (quit && failure.code === 'ENOENT') return true;
-				if (quit && saved && failure.cause?.code === 'ECONNREFUSED')
-					return waitForExit(saved.pid, 45000);
+				if (quit && saved && connectionRefused(failure)) return this.awaitShutdown(saved);
 				// A stale record or a server still starting cannot authorize a browser launch.
 			}
 			if (Date.now() >= deadline) return false;
@@ -111,7 +144,7 @@ async function probe(saved: SavedInstance, quit: boolean, deadline: number): Pro
 	);
 }
 
-async function waitForExit(pid: number, timeout: number): Promise<boolean> {
+async function waitForExit(pid: number, timeout: number, signal?: AbortSignal): Promise<boolean> {
 	if (!Number.isInteger(pid) || pid <= 0) return false;
 	const deadline = Date.now() + timeout;
 	do {
@@ -121,7 +154,14 @@ async function waitForExit(pid: number, timeout: number): Promise<boolean> {
 			if ((error as NodeJS.ErrnoException).code === 'ESRCH') return true;
 			throw error;
 		}
-		await delay(100);
+		await delay(100, undefined, { signal });
 	} while (Date.now() < deadline);
 	return false;
+}
+
+// Node wraps socket failures in cause; Bun supplies its own connection error code.
+function connectionRefused(
+	error: NodeJS.ErrnoException & { cause?: NodeJS.ErrnoException }
+): boolean {
+	return ['ECONNREFUSED', 'ConnectionRefused'].includes(error.cause?.code ?? error.code ?? '');
 }

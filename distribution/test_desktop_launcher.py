@@ -22,7 +22,7 @@ FIXTURE = (
     shutil.which("bun"), "Bun is required for executable launcher integration"
 )
 class LauncherTest(unittest.TestCase):
-    def test_native_shell_quit_and_lost_pipe_both_drain_monitoring(self):
+    def test_native_shell_quit_drains_but_lost_pipe_keeps_monitoring(self):
         for command in (b"quit\n", None):
             with (
                 self.subTest(command=command),
@@ -62,9 +62,37 @@ class LauncherTest(unittest.TestCase):
                         process.stdin.flush()
                     else:
                         process.stdin.close()
+                        wait_for(
+                            process,
+                            lambda folder=folder: (
+                                folder / "data/launcher-disconnected"
+                            ).exists(),
+                            log_path,
+                        )
+                        self.assertIsNone(process.poll())
+                        self.assertFalse((folder / "data/drained").exists())
+                        with urllib.request.urlopen(
+                            f"http://127.0.0.1:{port}/", timeout=2
+                        ) as response:
+                            self.assertEqual(response.read(), b"fixture dashboard")
+                        with subprocess.Popen(
+                            [shutil.which("bun"), str(FIXTURE), "--quit"],
+                            env=env,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                        ) as quitting:
+                            process.wait(timeout=10)
+                            _, errors = quitting.communicate(timeout=10)
+                            self.assertEqual(quitting.returncode, 0, errors.decode())
                     process.wait(timeout=10)
                     self.assertEqual(process.returncode, 0, log_path.read_text())
                     self.assertEqual((folder / "data/drained").read_text(), "200")
+                    self.assertEqual(
+                        (folder / "data/shutdown-reasons").read_text().strip(),
+                        "Native launcher sent an explicit quit command"
+                        if command
+                        else "Authenticated desktop quit request",
+                    )
                 finally:
                     cleanup_process(process)
                     log.close()

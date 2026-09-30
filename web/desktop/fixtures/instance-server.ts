@@ -22,4 +22,7 @@ server.listen(0, '127.0.0.1', () => {
 	instance.publish(port);
 	process.send!({ port });
 });
-process.once('exit', () => instance.remove());
+process.once('exit', () => {
+	instance.completeShutdown(process.env.FAIL_SHUTDOWN !== 'true');
+	instance.remove();
+});

@@ -121,19 +121,36 @@ test('a launch retries a stale identity while the new server publishes its recor
 	assert.equal(await instance.existing(port, false, 1000), true);
 });
 
-test('quit waits until the owner finishes draining and exits, and already stopped is harmless', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-drain-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const child = fork(new URL('./fixtures/instance-server.ts', import.meta.url), {
-		env: { ...process.env, TEST_DATA: directory },
-		silent: true
+for (const success of [true, false]) {
+	test(`quit waits for the owner and preserves its shutdown result (${success})`, async (t) => {
+		const directory = await mkdtemp(path.join(tmpdir(), 'ai-drain-'));
+		t.after(() => rm(directory, { recursive: true, force: true }));
+		const child = fork(new URL('./fixtures/instance-server.ts', import.meta.url), {
+			env: { ...process.env, TEST_DATA: directory, FAIL_SHUTDOWN: String(!success) },
+			silent: true
+		});
+		t.after(() => {
+			child.kill();
+		});
+		const [message] = await once(child, 'message');
+		const instance = new DesktopInstance(directory);
+		assert.equal(await instance.existing(message.port, true), success);
+		assert.notEqual(
+			child.exitCode,
+			null,
+			'Acknowledging quit is not the same as finishing shutdown'
+		);
+		assert.equal(await instance.existing(message.port, true), true);
 	});
-	t.after(() => {
-		child.kill();
-	});
-	const [message] = await once(child, 'message');
-	const instance = new DesktopInstance(directory);
-	assert.equal(await instance.existing(message.port, true), true);
-	assert.notEqual(child.exitCode, null, 'Acknowledging quit is not the same as finishing shutdown');
-	assert.equal(await instance.existing(message.port, true), true);
+}
+
+test('shutdown receipts apply only to the connected owner', async (t) => {
+	const { instance, directory, port } = await fixture(t);
+	const menu = new DesktopInstance(directory);
+	assert.equal(await menu.existing(port), true);
+	instance.completeShutdown(false);
+	assert.equal(menu.shutdownResult(), false);
+	const replacement = new DesktopInstance(directory);
+	replacement.completeShutdown(true);
+	assert.equal(menu.shutdownResult(), undefined);
 });

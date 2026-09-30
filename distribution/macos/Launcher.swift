@@ -94,7 +94,7 @@ final class Application: NSObject, NSApplicationDelegate, SPUUpdaterDelegate, NS
                         NSApp.reply(toApplicationShouldTerminate: status == 0)
                         self.quitting = false
                     } else if status == 0 {
-                        // A second invocation opened the existing owner's dashboard.
+                        // The background owner acknowledged an explicit application shutdown.
                         NSApp.terminate(nil)
                     }
                     if status != 0 {
@@ -165,6 +165,6 @@ struct Launcher {
         let delegate = Application()
         application.delegate = delegate
         application.setActivationPolicy(.accessory)
-        application.run()
+        withExtendedLifetime(delegate) { application.run() }
     }
 }

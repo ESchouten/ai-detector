@@ -21,6 +21,11 @@ export class DetectorLog {
 		this.file = path.join(directory, 'logs', 'application.log');
 	}
 
+	async resume(): Promise<void> {
+		if (!this.start) this.append(await readLogTail(this.file));
+		this.append(`${new Date().toISOString()} Resuming monitoring after application startup\n`);
+	}
+
 	begin(): void {
 		this.start = '';
 		this.recent = '';

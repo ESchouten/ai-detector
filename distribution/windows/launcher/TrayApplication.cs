@@ -27,7 +27,7 @@ internal sealed class TrayApplication : ApplicationContext
             if (command == "open") web.OpenDashboard();
             else Stop();
         });
-        tray = new NotifyIcon { Icon = icon, Text = "AI Detector — Open dashboard", ContextMenuStrip = menu };
+        tray = new NotifyIcon { Icon = icon, Text = "AI Detector — Starting…", ContextMenuStrip = menu, Visible = true };
         updates = new UpdateMenuItem(updater, apply => { afterShutdown = apply; Stop(); }, () =>
             tray.ShowBalloonTip(5000, "AI Detector update available", "Choose Check for Updates in the AI Detector menu.", ToolTipIcon.Info), savePreviewPreference);
         menu.Items.Insert(3, updates);
@@ -44,7 +44,7 @@ internal sealed class TrayApplication : ApplicationContext
         {
             ExitCode = await web.RunAsync(() =>
             {
-                tray.Visible = true;
+                tray.Text = "AI Detector — Open dashboard";
                 updateTimer.Start();
                 _ = updates.CheckInBackgroundAsync();
             });

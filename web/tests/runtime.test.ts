@@ -54,7 +54,7 @@ test(
 );
 
 test(
-	'a model download failure survives process exit and retry clears the old failure',
+	'a model download failure stays visible until the automatic retry succeeds',
 	posixOnly,
 	async (t) => {
 		const directory = await mkdtemp(path.join(tmpdir(), 'detector-download-failure-'));
@@ -73,18 +73,13 @@ test(
 			]
 		});
 		await detector.start('native');
-		await waitFor(() => detector.status().phase === 'failed');
-		assert.equal(detector.status().message, message);
-		assert.equal(detector.status().readiness, 'failed');
-		await writeJson(path.join(directory, 'config.json'), { detectors: [] });
-		await detector.start('native');
-		assert.equal(detector.status().phase, 'failed');
-		assert.match(detector.status().message, /Add a detector/);
-		assert.notEqual(detector.status().message, message);
+		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
+		assert.ok(detector.status().message.startsWith(message));
+		assert.equal(detector.status().readiness, 'preparing');
 		await writeJson(path.join(directory, 'config.json'), config);
-		await detector.start('native');
 		await waitFor(() => detector.status().phase === 'running');
-		assert.notEqual(detector.status().message, message);
+		assert.ok(!detector.status().message.includes(message));
+		assert.ok((await detector.log.read()).includes(message));
 		assert.equal(detector.status().readiness, 'preparing');
 	}
 );
@@ -156,7 +151,9 @@ test(
 			async () =>
 				(await readFile(path.join(directory, 'starts.txt'), 'utf8')).split('\n').length === 3
 		);
+		assert.match(await detector.log.read(), /Restart requested: detector settings changed/);
 		await detector.stop();
+		assert.match(await detector.log.read(), /Stop requested: Monitoring disabled/);
 		assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
 		assert.equal(detector.status().phase, 'stopped');
 		assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
@@ -181,6 +178,7 @@ test('closing and reopening the application resumes enabled detection', posixOnl
 	await writeJson(path.join(directory, 'config.json'), config);
 	await first.start('native');
 	await first.stop(false);
+	assert.match(await first.log.read(), /Stop requested: Application shutdown/);
 	await second.initialize();
 	await waitFor(() => second.status().phase === 'running');
 });
@@ -213,7 +211,7 @@ test(
 );
 
 test(
-	'invalid configuration and crashed processes remain visible failures',
+	'invalid initial configuration fails visibly and a process crash schedules recovery',
 	posixOnly,
 	async (t) => {
 		const directory = await mkdtemp(path.join(tmpdir(), 'detector-failure-'));
@@ -229,7 +227,7 @@ test(
 		assert.equal(await readJson(path.join(directory, 'runtime.json')), null);
 		await writeJson(path.join(directory, 'config.json'), { ...config, crash: true });
 		await detector.start('native');
-		await waitFor(() => detector.status().phase === 'failed');
+		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
 		assert.match(detector.status().message, /stopped unexpectedly/);
 	}
 );

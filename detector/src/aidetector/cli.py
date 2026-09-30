@@ -44,7 +44,10 @@ def _interrupt(signum: int, frame: object) -> None:
 def _read_stop_request(stream: TextIO, stopped: Event) -> None:
     for line in stream:
         if line.strip() == "stop":
+            logger.info("Launcher sent an explicit stop command")
             break
+    else:
+        logger.warning("Launcher control connection closed (EOF); stopping detector")
     stopped.set()
 
 

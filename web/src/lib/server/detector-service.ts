@@ -36,7 +36,13 @@ async function initialize(): Promise<void> {
 	} catch (error) {
 		detector.fail(error);
 	}
-	process.once('sveltekit:shutdown', () => detector?.stop(false));
+	process.once('sveltekit:shutdown', (reason?: string) => detector?.stop(false, reason));
+	process.once('aidetector:launcher-disconnected', () => {
+		detector?.log.append(
+			`${new Date().toISOString()} Native launcher disconnected; monitoring continues. Reopen AI Detector to restore the menu.\n`
+		);
+		void detector?.log.flush();
+	});
 }
 
 export function managedDetector(): ManagedDetector | null {

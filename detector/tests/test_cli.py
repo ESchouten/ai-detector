@@ -445,6 +445,12 @@ def test_launcher_shutdown_drains_events_and_preserves_delivery_failures(
         assert (tmp_path / "flushed").read_text() == "unvalidated"
         assert (tmp_path / "health-stopped").exists()
         assert "Shutdown requested" in stderr
+        if control == "stdin":
+            assert "Launcher sent an explicit stop command" in stderr
+            assert "Launcher control connection closed" not in stderr
+        elif control == "eof":
+            assert "Launcher control connection closed (EOF)" in stderr
+            assert "Launcher sent an explicit stop command" not in stderr
     finally:
         if process.poll() is None:
             process.kill()

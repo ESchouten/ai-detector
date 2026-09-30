@@ -487,6 +487,10 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			assert.equal(await readFile(path.join(directory, 'starts.txt'), 'utf8'), 'started\n');
 			assert.deepEqual(await stop(), [0, null], logs());
 			assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
+			assert.match(
+				await readFile(path.join(directory, 'logs/application.log'), 'utf8'),
+				/Stop requested: SIGTERM/
+			);
 		}
 	);
 }

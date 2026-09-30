@@ -35,18 +35,19 @@ interface Options {
 	dockerImage?: string;
 }
 
-// Contract with aidetector.cli: only a native MPS inference failure exits with 75.
-const MPS_FAILURE_EXIT_CODE = 75;
-const RECOVERY_WINDOW_MS = 10 * 60 * 1000;
+const INITIAL_RESTART_DELAY_MS = 2000;
+const MAX_RESTART_DELAY_MS = 30000;
+const STABLE_RUN_MS = 10 * 60 * 1000;
 
 /** One owner for the detector process. Commands are serialized; polling has no side effects. */
 export class ManagedDetector {
 	readonly log: DetectorLog;
 	private child: ChildProcessWithoutNullStreams | null = null;
+	private stoppingChild = false;
 	private finished: Promise<number | null> = Promise.resolve(0);
 	private operation: Promise<unknown> = Promise.resolve();
 	private startup = new AbortController();
-	private lastRecovery: number | null = null;
+	private restartDelay = INITIAL_RESTART_DELAY_MS;
 	private settings: Settings = { mode: 'auto', enabled: false };
 	private state: RuntimeStatus;
 	private readonly settingsPath: string;
@@ -131,7 +132,10 @@ export class ManagedDetector {
 				this.settings = saved;
 				this.state.mode = saved.mode;
 			}
-			if (this.settings.enabled) await this.startChild(this.settings.mode, signal);
+			if (this.settings.enabled) {
+				await this.log.resume();
+				await this.startChild(this.settings.mode, signal, true);
+			}
 		});
 	}
 
@@ -172,7 +176,7 @@ export class ManagedDetector {
 	start(mode: RuntimeMode): Promise<void> {
 		const signal = this.startup.signal;
 		return this.enqueue(() => {
-			if (!this.child) this.lastRecovery = null;
+			if (!this.child) this.restartDelay = INITIAL_RESTART_DELAY_MS;
 			return this.startChild(mode, signal);
 		});
 	}
@@ -193,10 +197,10 @@ export class ManagedDetector {
 	private async startChild(
 		mode: RuntimeMode,
 		signal: AbortSignal,
-		recovering = false
+		preserveLog = false
 	): Promise<void> {
 		if (this.child || signal.aborted) return;
-		if (!recovering) this.log.begin();
+		if (!preserveLog) this.log.begin();
 		this.progress = new RuntimeProgress();
 		this.state = {
 			...this.state,
@@ -230,7 +234,10 @@ export class ManagedDetector {
 			if (signal.aborted) {
 				this.state.phase = 'stopped';
 				this.state.message = 'Start cancelled.';
-			} else this.fail(error);
+			} else {
+				this.fail(error);
+				if (this.settings.enabled) this.scheduleRestart(signal);
+			}
 		}
 	}
 
@@ -381,6 +388,7 @@ export class ManagedDetector {
 	}
 
 	private launch(command: DetectorCommand, signal: AbortSignal): void {
+		const startedAt = Date.now();
 		this.state.phase = 'starting';
 		this.state.message = 'Starting the detector…';
 		const child = spawn(command.file, command.args, {
@@ -390,6 +398,7 @@ export class ManagedDetector {
 			env: { ...process.env, ...command.env, PYTHONUNBUFFERED: '1' }
 		});
 		this.child = child;
+		this.stoppingChild = false;
 		child.stdin.on('error', (error: NodeJS.ErrnoException) => {
 			if (error.code !== 'EPIPE') this.fail(error);
 		});
@@ -413,14 +422,16 @@ export class ManagedDetector {
 				records.close();
 				this.log.append(`${new Date().toISOString()} Detector exited: ${exitSignal ?? code}\n`);
 				this.child = null;
-				if (
-					code === MPS_FAILURE_EXIT_CODE &&
-					this.state.selected === 'native' &&
-					this.state.phase !== 'stopping' &&
-					this.state.phase !== 'failed' &&
-					!signal.aborted
-				) {
-					this.recoverMps(signal);
+				if (this.settings.enabled && !this.stoppingChild && !signal.aborted) {
+					if (Date.now() - startedAt >= STABLE_RUN_MS) this.restartDelay = INITIAL_RESTART_DELAY_MS;
+					if (this.state.phase !== 'failed')
+						this.fail(
+							new SetupError(
+								this.progress.preparationFailure ??
+									`The detector stopped unexpectedly (${exitSignal ?? code}).`
+							)
+						);
+					this.scheduleRestart(signal);
 				} else if (code === 0 && this.state.phase !== 'failed') {
 					this.state.phase = 'stopped';
 					this.state.message = 'Detector stopped.';
@@ -436,24 +447,18 @@ export class ManagedDetector {
 		);
 	}
 
-	private recoverMps(signal: AbortSignal): void {
-		const now = Date.now();
-		if (this.lastRecovery !== null && now - this.lastRecovery < RECOVERY_WINDOW_MS) {
-			this.fail(
-				new SetupError(
-					'The graphics error returned after restarting. Monitoring has stopped. Check the details below, then try again.'
-				)
-			);
-			return;
-		}
-		this.lastRecovery = now;
+	private scheduleRestart(signal: AbortSignal): void {
+		const wait = this.restartDelay;
+		this.restartDelay = Math.min(wait * 2, MAX_RESTART_DELAY_MS);
 		this.progress = new RuntimeProgress();
 		this.state.phase = 'starting';
-		this.state.message = 'Recovering from a graphics error. Restarting monitoring…';
-		this.log.append('\nApple GPU error: restarting the detector in 2 seconds.\n');
+		this.state.message += ` Restarting monitoring in ${wait / 1000} seconds…`;
+		this.log.append(
+			`${new Date().toISOString()} Restarting the detector in ${wait / 1000} seconds.\n`
+		);
 		void this.enqueue(async () => {
 			try {
-				await delay(2000, undefined, { signal });
+				await delay(wait, undefined, { signal });
 				await this.startChild(this.settings.mode, signal, true);
 			} catch (error) {
 				if (signal.aborted) {
@@ -464,17 +469,24 @@ export class ManagedDetector {
 		});
 	}
 
-	stop(disable = true): Promise<void> {
+	stop(
+		disable = true,
+		reason = disable ? 'Monitoring disabled' : 'Application shutdown'
+	): Promise<void> {
 		// A stop cancels both the active check and starts already waiting in the queue.
 		this.startup.abort();
 		this.startup = new AbortController();
 		return this.enqueue(async () => {
+			this.log.append(`${new Date().toISOString()} Stop requested: ${reason}\n`);
 			if (disable) this.settings.enabled = false;
 			try {
-				await this.stopChild();
-			} finally {
-				await this.log.flush();
 				if (disable) await writeJson(this.settingsPath, this.settings);
+			} finally {
+				try {
+					await this.stopChild();
+				} finally {
+					await this.log.flush();
+				}
 			}
 		});
 	}
@@ -482,6 +494,7 @@ export class ManagedDetector {
 	private async stopChild(): Promise<void> {
 		const child = this.child;
 		if (!child) return;
+		this.stoppingChild = true;
 		this.state.phase = 'stopping';
 		this.state.message = 'Finishing detections and stopping…';
 		child.stdin.end('stop\n');
@@ -514,8 +527,13 @@ export class ManagedDetector {
 		const signal = this.startup.signal;
 		return this.enqueue(async () => {
 			if (!this.settings.enabled || signal.aborted) return;
-			await this.stopChild();
-			await this.startChild(this.settings.mode, signal);
+			this.log.append(`${new Date().toISOString()} Restart requested: detector settings changed\n`);
+			try {
+				await this.stopChild();
+			} catch (error) {
+				this.fail(error);
+			}
+			await this.startChild(this.settings.mode, signal, true);
 		});
 	}
 

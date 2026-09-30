@@ -131,3 +131,42 @@ class CompiledDesktopTest(unittest.TestCase):
         ]
         self.assertEqual(len(messages), 1)
         self.assertIn(f"port {self.port}", messages[0])
+
+    def test_losing_native_menu_keeps_the_real_monitoring_service_running(self):
+        process = self.launch()
+        wait_for(
+            process,
+            lambda: (
+                (self.data / "starts.txt").exists()
+                and "AI_DETECTOR_READY" in self.log.read_text()
+            ),
+            self.log,
+        )
+        process.stdin.close()
+        wait_for(
+            process,
+            lambda: (
+                (self.data / "logs/application.log").exists()
+                and "Native launcher disconnected; monitoring continues"
+                in (self.data / "logs/application.log").read_text()
+            ),
+            self.log,
+        )
+        self.assertIsNone(process.poll())
+        self.assertFalse((self.data / "flushed.txt").exists())
+        self.assertEqual((self.data / "starts.txt").read_text().count("started"), 1)
+        with subprocess.Popen(
+            [str(self.web), "--quit"],
+            env={
+                **os.environ,
+                "AIDETECTOR_DATA_DIR": str(self.data),
+                "PORT": str(self.port),
+                "OPEN_BROWSER": "false",
+            },
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        ) as quitting:
+            self.assertEqual(process.wait(timeout=15), 0)
+            _, errors = quitting.communicate(timeout=15)
+            self.assertEqual(quitting.returncode, 0, errors.decode())
+        self.assertEqual((self.data / "flushed.txt").read_text(), "flushed")

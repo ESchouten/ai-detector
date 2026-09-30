@@ -5,17 +5,18 @@ import type { Readable, Writable } from 'node:stream';
 export function connectDesktopHost(
 	input: Readable,
 	output: Writable,
-	quit: () => void
+	quit: (reason: string) => void,
+	disconnected: () => void
 ): () => void {
 	const commands = createInterface({ input });
 	commands.on('line', (line) => {
-		if (line === 'quit') quit();
+		if (line === 'quit') quit('Native launcher sent an explicit quit command');
 	});
-	// A crashed shell must not leave monitoring running without its controls.
-	commands.once('close', quit);
+	// Losing the menu is not a request to stop monitoring; the dashboard remains available.
+	commands.once('close', disconnected);
 	output.write('AI_DETECTOR_READY\n');
 	return () => {
-		commands.removeListener('close', quit);
+		commands.removeListener('close', disconnected);
 		commands.close();
 		input.pause();
 	};

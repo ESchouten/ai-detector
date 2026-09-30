@@ -19,29 +19,41 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 	let closeDiscovery: (() => void) | undefined;
 	let shutdown: Promise<void> | undefined;
 	let server: Bun.Server<undefined>;
+	const terminate = () => quit('SIGTERM');
+	const interrupt = () => quit('SIGINT');
 
-	async function drain(): Promise<void> {
+	async function drain(reason: string): Promise<void> {
 		try {
 			await Promise.all(
-				process
-					.rawListeners('sveltekit:shutdown')
-					.map((listener) => listener.call(process, 'SIGTERM'))
+				process.rawListeners('sveltekit:shutdown').map((listener) => listener.call(process, reason))
 			);
 		} finally {
 			closeDiscovery?.();
 			await server.stop(true);
 			closeHost?.();
-			process.removeListener('SIGTERM', quit);
-			process.removeListener('SIGINT', quit);
+			process.removeListener('SIGTERM', terminate);
+			process.removeListener('SIGINT', interrupt);
 		}
 	}
 
-	function quit(): void {
-		shutdown ??= drain().catch(async (error: Error) => {
-			await reportFailure(`AI Detector could not finish shutting down. ${error.message}`);
-			console.error('Application shutdown failed:', error);
-			process.exitCode = 1;
-		});
+	function quit(reason = 'Application shutdown'): void {
+		const intentional = reason !== 'SIGTERM' && reason !== 'SIGINT';
+		if (intentional && !shutdown) console.error('AI_DETECTOR_STOPPING');
+		shutdown ??= (async () => {
+			let success = false;
+			try {
+				await drain(reason);
+				success = true;
+			} catch (error) {
+				await reportFailure(
+					`AI Detector could not finish shutting down. ${(error as Error).message}`
+				);
+				console.error('Application shutdown failed:', error);
+				process.exitCode = 1;
+			} finally {
+				if (intentional) instance.completeShutdown(success);
+			}
+		})();
 	}
 
 	try {
@@ -51,7 +63,10 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 			idleTimeout: Number(process.env.BUN_IDLE_TIMEOUT ?? 255),
 			fetch(request, owner) {
 				if (!handler) return new Response('Starting AI Detector…', { status: 503 });
-				return instance.respond(request, quit) ?? handler(request, owner);
+				return (
+					instance.respond(request, () => quit('Authenticated desktop quit request')) ??
+					handler(request, owner)
+				);
 			},
 			error(error) {
 				console.error(error);
@@ -61,6 +76,7 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === 'EADDRINUSE' && (await instance.existing(port))) {
 			openDashboard(browserUrl);
+			if (process.env.AIDETECTOR_DESKTOP_HOST === '1') await attachDesktopHost(instance, port);
 			return;
 		}
 		await reportFailure(
@@ -74,14 +90,58 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 		handler = await initialize();
 	} catch (error) {
 		await reportFailure(`AI Detector could not start. ${(error as Error).message}`);
-		await drain();
+		await drain('Application startup failed');
 		throw error;
 	}
-	process.on('SIGTERM', quit);
-	process.on('SIGINT', quit);
+	process.on('SIGTERM', terminate);
+	process.on('SIGINT', interrupt);
 	if (process.env.AIDETECTOR_DESKTOP_HOST === '1')
-		closeHost = connectDesktopHost(process.stdin, process.stdout, quit);
+		closeHost = connectDesktopHost(process.stdin, process.stdout, quit, () => {
+			for (const listener of process.rawListeners('aidetector:launcher-disconnected'))
+				listener.call(process);
+		});
 	if (process.env.HOST === '0.0.0.0') closeDiscovery = advertiseDashboard(server.port!);
 	console.info(`AI Detector is ready at ${browserUrl}`);
 	openDashboard(browserUrl);
+}
+
+/** A reopened native menu controls the existing server through its authenticated endpoint. */
+async function attachDesktopHost(instance: DesktopInstance, port: number): Promise<void> {
+	const finished = new AbortController();
+	let shutdown: Promise<void> | undefined;
+	const close = connectDesktopHost(
+		process.stdin,
+		process.stdout,
+		() => {
+			console.error('AI_DETECTOR_STOPPING');
+			shutdown ??= (async () => {
+				if (!(await instance.existing(port, true))) {
+					await reportFailure('AI Detector could not finish shutting down. Please try again.');
+					process.exitCode = 1;
+				}
+			})();
+			finished.abort();
+		},
+		() => finished.abort()
+	);
+	try {
+		const result = await instance.waitForShutdown(finished.signal);
+		if (result !== undefined) console.error('AI_DETECTOR_STOPPING');
+		if (result !== true) {
+			await reportFailure(
+				result === false
+					? 'AI Detector could not finish shutting down.'
+					: 'The AI Detector background process stopped unexpectedly.'
+			);
+			process.exitCode = 1;
+		}
+	} catch (error) {
+		if (!finished.signal.aborted) throw error;
+	} finally {
+		try {
+			await shutdown;
+		} finally {
+			close();
+		}
+	}
 }

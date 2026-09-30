@@ -12,6 +12,10 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
 
+## Native CUDA on Windows NVIDIA systems — 2026-09-30
+
+The application's automatic NVIDIA runtime selection now also applies to Windows 11 24H2 and newer. Supported NVIDIA GPUs use the existing downloaded PyTorch/CUDA environment on every supported Windows version; `.pt` models run directly without ONNX conversion. The log identifies the selected GPU and native CUDA route. Hardware requirements, dependency caching, explicit ONNX provider choices and failure handling are unchanged. Camera sampling, presets and archives are unchanged. This changes the packaged application's process selection, not standalone detector behavior.
+
 ## ONNX CPU scheduling and diagnostics — 2026-09-30
 
 ONNX sessions explicitly disable intra-op and inter-op worker spinning. Idle workers sleep instead of spending CPU time polling for work; parallel computation and provider selection remain available. This applies to registered Windows ML devices and ordinary ONNX providers. Native PyTorch/CUDA/MPS execution, camera sampling, model precision and configuration are unchanged. The scheduling tradeoff can affect latency, so compare throughput on the target hardware.
@@ -40,7 +44,7 @@ The `default` extra now selects CPU builds of Torch and Torchvision on Linux. Na
 
 ## Intentional corrections
 
-Packaged Windows applications now prepare an optional NVIDIA environment on first use for Windows builds below 26100 and supported NVIDIA GPUs (compute capability 7.5+, driver branch 572+). Its pinned Python/CUDA dependencies are downloaded into the data directory and reused across app updates. It runs the same detector code through the native CUDA route, retaining configuration, presets, archives and lifecycle protocols. Explicit ONNX provider selections and recent Windows ML systems retain their existing routes. Interrupted preparation is retryable; installation or GPU-check failures remain visible. Standalone detector executables do not install this environment themselves. The desktop launcher now accepts Windows 10 22H2 and newer.
+Packaged Windows applications prepare an NVIDIA environment on first use for supported NVIDIA GPUs (compute capability 7.5+, driver branch 572+) on Windows 10 and Windows 11. Its pinned Python/CUDA dependencies are downloaded into the data directory and reused across app updates. It runs the same detector code through the native CUDA route, retaining configuration, presets, archives and lifecycle protocols. Explicit ONNX provider selections and systems without a supported NVIDIA GPU retain their existing routes. Interrupted preparation is retryable; installation or GPU-check failures remain visible. Standalone detector executables do not install this environment themselves. The desktop launcher accepts Windows 10 22H2 and newer.
 
 These are behavior decisions, not accidental compatibility changes. Their tests are added with the corresponding implementation.
 

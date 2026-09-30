@@ -33,11 +33,10 @@ interface Preparation {
 	report: (message: string) => void;
 }
 
-/** Newer Windows uses the existing Windows ML route; explicit provider choices win. */
-export function needsNvidiaRuntime(config: Config, platform: string, release: string): boolean {
+/** Automatic Windows inference prefers native CUDA; explicit provider choices win. */
+export function needsNvidiaRuntime(config: Config, platform: string): boolean {
 	return (
 		platform === 'win32' &&
-		Number(release.split('.')[2]) < 26100 &&
 		!config.onnx?.provider &&
 		config.detectors.some((detector) => detector.yolo != null)
 	);

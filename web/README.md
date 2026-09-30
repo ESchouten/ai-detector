@@ -81,7 +81,7 @@ Malformed JSON remains an error. Detector presets are discovered directly from `
 
 ## Building executables
 
-On older Windows systems, `nvidia-runtime.ts` prepares the optional CUDA runtime through uv. `nvidia-runtime.test.ts` checks discovery, cache reuse, download failures, retry and cancellation; `nvidia-runtime-installed.test.ts` installs the real packages in Windows application CI. See the [distribution guide](../distribution/README.md) for supported GPUs and the dependency cache layout.
+On Windows 10 and Windows 11, `nvidia-runtime.ts` prepares the CUDA runtime through uv when automatic inference detects a supported NVIDIA GPU. Other hardware and explicit ONNX provider choices retain the bundled detector. `nvidia-runtime.test.ts` checks discovery, cache reuse, download failures, retry and cancellation; `nvidia-runtime-installed.test.ts` installs the real packages in Windows application CI. See the [distribution guide](../distribution/README.md) for supported GPUs and the dependency cache layout.
 
 Set `AI_DETECTOR_WEB_TARGET` to `windows-x64-baseline`, `darwin-arm64` or `linux-x64-baseline` when running `pnpm build`. The complete [application workflow](../.github/workflows/application.yml) builds and packages the web executable, the native detector and FFmpeg together, then tests the result. The [container workflow](../.github/workflows/containers.yml) publishes the separate web image for Docker/Compose deployments; standalone web executables can still be built locally with `distribution/build.py web --standalone-web`.
 

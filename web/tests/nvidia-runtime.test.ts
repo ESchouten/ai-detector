@@ -37,26 +37,15 @@ const device = {
 };
 const posixOnly = { skip: process.platform === 'win32' };
 
-test('only older Windows with automatic model inference prepares a CUDA runtime', () => {
-	assert.ok(needsNvidiaRuntime(config, 'win32', '10.0.19045'));
-	assert.ok(needsNvidiaRuntime(config, 'win32', '10.0.22631'));
-	assert.ok(!needsNvidiaRuntime(config, 'win32', '10.0.26100'));
-	assert.ok(!needsNvidiaRuntime(config, 'win32', '10.0.26200'));
-	assert.ok(!needsNvidiaRuntime(config, 'darwin', '24.0.0'));
-	assert.ok(!needsNvidiaRuntime(config, 'linux', '6.0.0'));
+test('Windows automatic model inference prepares a CUDA runtime', () => {
+	assert.ok(needsNvidiaRuntime(config, 'win32'));
+	assert.ok(!needsNvidiaRuntime(config, 'darwin'));
+	assert.ok(!needsNvidiaRuntime(config, 'linux'));
 	assert.ok(
-		!needsNvidiaRuntime(
-			{ ...config, onnx: { provider: 'CPUExecutionProvider' } },
-			'win32',
-			'10.0.19045'
-		)
+		!needsNvidiaRuntime({ ...config, onnx: { provider: 'CPUExecutionProvider' } }, 'win32')
 	);
 	assert.ok(
-		!needsNvidiaRuntime(
-			{ detectors: [{ detection: { source: ['video.mp4'] } }] },
-			'win32',
-			'10.0.19045'
-		)
+		!needsNvidiaRuntime({ detectors: [{ detection: { source: ['video.mp4'] } }] }, 'win32')
 	);
 });
 
@@ -117,7 +106,7 @@ async function fixture(t: TestContext) {
 	return { root, bundle, data, abort, messages, options, cleanup };
 }
 
-async function windowsFixture(t: TestContext) {
+async function windowsFixture(t: TestContext, release = '10.0.26200') {
 	const fixtureData = await fixture(t);
 	const { root, bundle, data } = fixtureData;
 	const descriptor = Object.getOwnPropertyDescriptor(process, 'platform')!;
@@ -129,7 +118,7 @@ async function windowsFixture(t: TestContext) {
 		syncBuiltinESMExports();
 	});
 	Object.defineProperty(process, 'platform', { value: 'win32' });
-	t.mock.method(os, 'release', () => '10.0.19045');
+	t.mock.method(os, 'release', () => release);
 	syncBuiltinESMExports();
 	await writeFile(
 		path.join(root, 'nvidia-smi'),
@@ -154,20 +143,46 @@ async function waitFor(predicate: () => boolean | Promise<boolean>) {
 	assert.fail('Expected runtime state was not reached');
 }
 
-test(
-	'the process manager starts the cached Python environment and stops it through stdin',
-	posixOnly,
-	async (t) => {
-		const { detector, data } = await windowsFixture(t);
-		await detector.start('auto');
-		await waitFor(async () => (await detector.log.read()).includes('Using NVIDIA runtime'));
-		assert.equal(detector.status().phase, 'running');
-		assert.match(await detector.log.read(), /GPU-00000000/);
-		await detector.stop();
-		assert.equal(await readFile(path.join(data, 'flushed.txt'), 'utf8'), 'flushed');
-		assert.equal(detector.status().phase, 'stopped');
-	}
-);
+for (const release of ['10.0.19045', '10.0.26200']) {
+	test(
+		`Windows ${release} starts the cached CUDA environment and stops it through stdin`,
+		posixOnly,
+		async (t) => {
+			const { detector, data } = await windowsFixture(t, release);
+			await detector.start('auto');
+			await waitFor(async () => (await detector.log.read()).includes('Using NVIDIA runtime'));
+			assert.equal(detector.status().phase, 'running');
+			assert.match(await detector.log.read(), /GPU-00000000/);
+			assert.match(await detector.log.read(), /native PyTorch\/CUDA on NVIDIA RTX 5060/);
+			await detector.stop();
+			assert.equal(await readFile(path.join(data, 'flushed.txt'), 'utf8'), 'flushed');
+			assert.equal(detector.status().phase, 'stopped');
+		}
+	);
+}
+
+for (const provider of [undefined, 'CPUExecutionProvider', 'NvTensorRTRTXExecutionProvider']) {
+	test(
+		provider
+			? `an explicit ${provider} choice keeps the bundled detector on NVIDIA`
+			: 'a Windows computer without a supported NVIDIA GPU keeps the bundled detector',
+		posixOnly,
+		async (t) => {
+			const { detector, data, root, bundle } = await windowsFixture(t);
+			if (provider) {
+				await writeJson(path.join(data, 'config.json'), { ...config, onnx: { provider } });
+			} else {
+				await writeFile(path.join(root, 'nvidia-smi'), '#!/bin/sh\nexit 1\n');
+			}
+			await detector.start('auto');
+			await waitFor(async () => (await detector.log.read()).includes('Camera rtsp://'));
+			assert.equal(detector.status().phase, 'running');
+			assert.doesNotMatch(await detector.log.read(), /Using NVIDIA runtime/);
+			await assert.rejects(readFile(path.join(bundle, 'commands.jsonl')), { code: 'ENOENT' });
+			await detector.stop();
+		}
+	);
+}
 
 test(
 	'an installation failure keeps diagnostic details and offers a clean retry',

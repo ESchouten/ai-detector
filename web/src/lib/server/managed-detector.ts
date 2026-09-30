@@ -2,7 +2,6 @@ import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { mkdir, rm } from 'node:fs/promises';
-import { release } from 'node:os';
 import path from 'node:path';
 import { createInterface } from 'node:readline';
 import { setTimeout as delay } from 'node:timers/promises';
@@ -303,9 +302,10 @@ export class ManagedDetector {
 
 	private async nativeCommand(config: Config, signal: AbortSignal): Promise<DetectorCommand> {
 		const bundleDirectory = path.join(path.dirname(this.options.executable), 'nvidia-runtime');
-		if (needsNvidiaRuntime(config, process.platform, release()) && existsSync(bundleDirectory)) {
+		if (needsNvidiaRuntime(config, process.platform) && existsSync(bundleDirectory)) {
 			const device = await discoverNvidia(signal);
 			if (device) {
+				this.log.append(`Selected NVIDIA acceleration: native PyTorch/CUDA on ${device.name}\n`);
 				try {
 					return await prepareNvidiaRuntime({
 						bundleDirectory,

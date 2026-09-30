@@ -65,6 +65,7 @@ def run(
     stop_requested=None,
     report_status=None,
     live_preview=False,
+    prefer_tensorrt=False,
 ):
     worker = DetectorWorker(
         HoldingSource(),

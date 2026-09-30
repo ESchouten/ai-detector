@@ -9,8 +9,9 @@ import numpy as np
 import pytest
 
 from aidetector.adapters.exporters.disk import DiskExporter
+from aidetector.adapters.media.images import shrink_image
 from aidetector.adapters.operational_status import source_key
-from aidetector.adapters.sources.streams import StreamPool, StreamSource
+from aidetector.adapters.sources.streams import CapturedFrame, StreamPool, StreamSource
 from aidetector.bootstrap import run_application
 from aidetector.configuration import Config
 from aidetector.domain.models import Frame
@@ -157,8 +158,11 @@ def test_each_subscription_keeps_its_own_sampling_resolution_and_retention():
     slow = StreamSource(("0",), width=16, retention=2, interval=1)
     started = datetime(2026, 1, 1)
     for instant in (0, 0.5, 1, 1.5, 2):
-        frame = Frame(
-            started + timedelta(seconds=instant), np.zeros((64, 64, 3), dtype=np.uint8)
+        frame = CapturedFrame(
+            Frame(
+                started + timedelta(seconds=instant),
+                np.zeros((64, 64, 3), dtype=np.uint8),
+            )
         )
         fast.publish("0", frame, instant)
         slow.publish("0", frame, instant)
@@ -179,13 +183,65 @@ def test_each_subscription_keeps_its_own_sampling_resolution_and_retention():
 
 def test_sampling_one_camera_does_not_suppress_another_camera():
     source = StreamSource(("0", "1"), interval=2)
-    frame = Frame(datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8))
+    frame = CapturedFrame(
+        Frame(datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8))
+    )
     source.publish("0", frame, 0)
     source.publish("0", frame, 1)
     source.publish("1", frame, 1)
     batch = next(source.batches())
     assert set(batch.frames) == {"0", "1"}
     assert len(batch.frames["0"]) == len(batch.frames["1"]) == 1
+
+
+def test_resized_frames_are_shared_by_width_without_changing_pixels(cameras):
+    streams = StreamPool()
+    subscribers = [streams.subscribe(("0",), width=width) for width in (32, 33, 16)]
+    batches = [source.batches() for source in subscribers]
+    image = np.random.default_rng(42).integers(0, 256, (64, 96, 3), dtype=np.uint8)
+    with running(streams, cameras):
+        cameras["0"].inputs.put(image)
+        cameras["0"].flush()
+        frames = [next(batch).frames["0"][0] for batch in batches]
+        assert frames[0] is frames[1]
+        for frame, width in zip(frames, (32, 33, 16), strict=True):
+            np.testing.assert_array_equal(frame.image, shrink_image(image, width))
+            assert not frame.image.flags.writeable
+        cameras["0"].send(123)
+        cameras["0"].flush()
+        updated = next(batches[0]).frames["0"][0]
+        assert updated is not frames[0]
+        assert np.all(updated.image == 123)
+        np.testing.assert_array_equal(frames[0].image, shrink_image(image, 32))
+
+
+def test_skipped_samples_do_not_resize_and_same_width_resizes_only_once(monkeypatch):
+    import cv2
+
+    resize = cv2.resize
+    sizes = []
+
+    def record_resize(image, size, **kwargs):
+        sizes.append(size)
+        return resize(image, size, **kwargs)
+
+    monkeypatch.setattr(cv2, "resize", record_resize)
+    subscribers = [StreamSource(("0",), width=32, interval=1) for _ in range(2)]
+    for instant in (0, 0.5, 1):
+        frame = CapturedFrame(
+            Frame(datetime.now(), np.zeros((64, 64, 3), dtype=np.uint8))
+        )
+        for source in subscribers:
+            source.publish("0", frame, instant)
+    assert sizes == [(32, 32), (32, 32)]
+    for source in subscribers:
+        source.close()
+        source.publish(
+            "0",
+            CapturedFrame(Frame(datetime.now(), np.zeros((64, 64, 3), dtype=np.uint8))),
+            2,
+        )
+    assert len(sizes) == 2
 
 
 def test_shared_capture_failure_reaches_every_subscriber(cameras):

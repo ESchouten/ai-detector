@@ -17,25 +17,27 @@ def stage_nvidia_runtime(root: Path, destination: Path, reference: str) -> None:
         encoding="utf-8",
     )
     shutil.copy2(uv, destination / "uv.exe")
-    subprocess.run(
-        [
-            uv,
-            "export",
-            "--locked",
-            "--extra",
-            "nvidia",
-            "--no-dev",
-            "--no-emit-project",
-            "--no-header",
-            "--format",
-            "pylock.toml",
-            "--output-file",
-            str(destination / "pylock.toml"),
-        ],
-        cwd=root / "detector",
-        check=True,
-        stdout=subprocess.DEVNULL,
-    )
+    for filename, selection in (
+        ("pylock.toml", ["--extra", "nvidia", "--no-dev"]),
+        ("pylock.tensorrt.toml", ["--only-group", "tensorrt"]),
+    ):
+        subprocess.run(
+            [
+                uv,
+                "export",
+                "--locked",
+                *selection,
+                "--no-emit-project",
+                "--no-header",
+                "--format",
+                "pylock.toml",
+                "--output-file",
+                str(destination / filename),
+            ],
+            cwd=root / "detector",
+            check=True,
+            stdout=subprocess.DEVNULL,
+        )
     app = destination / "app/aidetector"
     shutil.copytree(
         root / "detector/src/aidetector",

@@ -33,7 +33,8 @@ const device = {
 	uuid: 'GPU-00000000-0000-0000-0000-000000000001',
 	name: 'NVIDIA RTX 5060',
 	capability: 12,
-	driver: 580
+	driver: 580,
+	driverVersion: '580.88'
 };
 const posixOnly = { skip: process.platform === 'win32' };
 
@@ -86,6 +87,7 @@ async function fixture(t: TestContext) {
 	await writeJson(path.join(bundle, 'runtime.json'), { python: '3.12.14' });
 	await writeJson(path.join(bundle, 'fixture.json'), {});
 	await writeFile(path.join(bundle, 'pylock.toml'), 'locked GPU dependencies');
+	await writeFile(path.join(bundle, 'pylock.tensorrt.toml'), 'locked TensorRT dependencies');
 	const messages: string[] = [];
 	const options = {
 		bundleDirectory: bundle,
@@ -153,7 +155,7 @@ for (const release of ['10.0.19045', '10.0.26200']) {
 			await waitFor(async () => (await detector.log.read()).includes('Using NVIDIA runtime'));
 			assert.equal(detector.status().phase, 'running');
 			assert.match(await detector.log.read(), /GPU-00000000/);
-			assert.match(await detector.log.read(), /native PyTorch\/CUDA on NVIDIA RTX 5060/);
+			assert.match(await detector.log.read(), /NVIDIA acceleration on NVIDIA RTX 5060/);
 			await detector.stop();
 			assert.equal(await readFile(path.join(data, 'flushed.txt'), 'utf8'), 'flushed');
 			assert.equal(detector.status().phase, 'stopped');
@@ -231,13 +233,13 @@ test(
 		const { bundle, data, messages, options } = await fixture(t);
 		const first = await prepareNvidiaRuntime(options);
 		assert.ok(first.file.startsWith(data));
-		assert.deepEqual(first.args, ['-I', '-u', path.join(bundle, 'run.py')]);
+		assert.deepEqual(first.args, ['-I', '-u', path.join(bundle, 'run.py'), '--prefer-tensorrt']);
 		assert.equal(first.env?.CUDA_VISIBLE_DEVICES, device.uuid);
 		const commands = (await readFile(path.join(bundle, 'commands.jsonl'), 'utf8'))
 			.trim()
 			.split('\n')
 			.map((line) => JSON.parse(line));
-		assert.equal(commands.length, 2);
+		assert.equal(commands.length, 3);
 		assert.equal(commands[0].args[0], 'venv');
 		assert.ok(commands[1].args.includes('--require-hashes'));
 		assert.ok(commands[1].args.includes('--only-binary'));
@@ -248,7 +250,7 @@ test(
 		assert.equal(second.file, first.file);
 		assert.equal(
 			(await readFile(path.join(bundle, 'commands.jsonl'), 'utf8')).trim().split('\n').length,
-			2
+			3
 		);
 		assert.equal(
 			(await readFile(path.join(bundle, 'gpu-checks.txt'), 'utf8')).trim().split('\n').length,
@@ -282,7 +284,7 @@ for (const failure of ['installFailure', 'gpuFailure']) {
 				.split('\n')
 				.map((line) => JSON.parse(line));
 			assert.equal(commands.filter((command) => command.args[0] === 'venv').length, 1);
-			assert.equal(commands.filter((command) => command.args[0] === 'pip').length, 2);
+			assert.equal(commands.filter((command) => command.args[0] === 'pip').length, 3);
 		}
 	);
 }
@@ -322,5 +324,98 @@ test(
 			/Update the NVIDIA graphics driver/
 		);
 		assert.deepEqual(await readdir(data), []);
+	}
+);
+
+for (const failure of ['tensorRtInstallFailure', 'tensorRtCheckFailure']) {
+	test(`${failure} preserves CUDA and defers the optional optimization`, posixOnly, async (t) => {
+		const { bundle, options, messages } = await fixture(t);
+		await writeJson(path.join(bundle, 'fixture.json'), { [failure]: true });
+		const first = await prepareNvidiaRuntime(options);
+		assert.ok(!first.args.includes('--prefer-tensorrt'));
+		const commands = await readFile(path.join(bundle, 'commands.jsonl'), 'utf8');
+		await writeJson(path.join(bundle, 'fixture.json'), {});
+		const second = await prepareNvidiaRuntime(options);
+		assert.equal(second.file, first.file);
+		assert.ok(!second.args.includes('--prefer-tensorrt'));
+		assert.equal(await readFile(path.join(bundle, 'commands.jsonl'), 'utf8'), commands);
+		assert.match(messages.join('\n'), /Using PyTorch\/CUDA/);
+		assert.match(messages.join('\n'), /deferred/);
+		const runtime = path.dirname(path.dirname(first.file));
+		assert.ok(await readJson(path.join(runtime, 'ready.json')));
+		assert.equal(
+			(await readJson<{ ready: boolean }>(path.join(runtime, 'tensorrt.json')))?.ready,
+			false
+		);
+	});
+}
+
+for (const change of ['retry time', 'dependencies', 'driver']) {
+	test(`a TensorRT failure is retried after a change in ${change}`, posixOnly, async (t) => {
+		const { bundle, options } = await fixture(t);
+		await writeJson(path.join(bundle, 'fixture.json'), { tensorRtInstallFailure: true });
+		const first = await prepareNvidiaRuntime(options);
+		const marker = path.join(path.dirname(path.dirname(first.file)), 'tensorrt.json');
+		await writeJson(path.join(bundle, 'fixture.json'), {});
+		if (change === 'retry time') {
+			await writeJson(marker, {
+				...(await readJson<Record<string, unknown>>(marker)),
+				retryAfter: 0
+			});
+		} else if (change === 'dependencies') {
+			await writeFile(path.join(bundle, 'pylock.tensorrt.toml'), 'updated optional dependencies');
+		} else {
+			options.device = { ...device, driverVersion: '581.04' };
+		}
+		const second = await prepareNvidiaRuntime(options);
+		assert.equal(second.file, first.file, 'CUDA must not be installed again');
+		assert.ok(second.args.includes('--prefer-tensorrt'));
+		assert.equal((await readJson<{ ready: boolean }>(marker))?.ready, true);
+		assert.equal(
+			(await readFile(path.join(bundle, 'commands.jsonl'), 'utf8')).trim().split('\n').length,
+			4
+		);
+	});
+}
+
+test('older CUDA GPUs do not download TensorRT', posixOnly, async (t) => {
+	const { bundle, options } = await fixture(t);
+	const command = await prepareNvidiaRuntime({
+		...options,
+		device: { ...device, name: 'RTX 2060', capability: 7.5 }
+	});
+	assert.ok(!command.args.includes('--prefer-tensorrt'));
+	const commands = await readFile(path.join(bundle, 'commands.jsonl'), 'utf8');
+	assert.doesNotMatch(commands, /pylock.tensorrt.toml/);
+});
+
+test('missing optional payload does not disable working CUDA', posixOnly, async (t) => {
+	const { bundle, options, messages } = await fixture(t);
+	await rm(path.join(bundle, 'pylock.tensorrt.toml'));
+	const command = await prepareNvidiaRuntime(options);
+	assert.ok(!command.args.includes('--prefer-tensorrt'));
+	assert.match(messages.join('\n'), /TensorRT could not be prepared/);
+});
+
+test(
+	'pausing during optional TensorRT installation kills the installer and does not start monitoring',
+	posixOnly,
+	async (t) => {
+		const { detector, bundle, data } = await windowsFixture(t);
+		await writeJson(path.join(bundle, 'fixture.json'), { holdTensorRtInstall: true });
+		const starting = detector.start('auto');
+		await waitFor(async () => (await detector.log.read()).includes('Downloading TensorRT'));
+		await waitFor(async () => (await readJson(path.join(bundle, 'install-pid.txt'))) !== null);
+		const pid = Number(await readFile(path.join(bundle, 'install-pid.txt'), 'utf8'));
+		await detector.stop();
+		await starting;
+		assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
+		assert.equal(detector.status().phase, 'stopped');
+		await assert.rejects(readFile(path.join(data, 'starts.txt')), { code: 'ENOENT' });
+		const [runtime] = await readdir(path.join(data, 'runtimes/nvidia'));
+		assert.equal(
+			await readJson(path.join(data, 'runtimes/nvidia', runtime, 'tensorrt.json')),
+			null
+		);
 	}
 );

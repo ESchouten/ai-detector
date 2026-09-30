@@ -312,7 +312,9 @@ export class ManagedDetector {
 		if (needsNvidiaRuntime(config, process.platform) && existsSync(bundleDirectory)) {
 			const device = await discoverNvidia(signal);
 			if (device) {
-				this.log.append(`Selected NVIDIA acceleration: native PyTorch/CUDA on ${device.name}\n`);
+				this.log.append(
+					`Selected NVIDIA acceleration on ${device.name}; CUDA with optional direct TensorRT\n`
+				);
 				try {
 					return await prepareNvidiaRuntime({
 						bundleDirectory,

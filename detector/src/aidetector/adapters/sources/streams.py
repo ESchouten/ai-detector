@@ -9,7 +9,7 @@ from time import monotonic
 import cv2
 
 from aidetector.adapters.diagnostics import resource_label
-from aidetector.adapters.media.images import shrink_image
+from aidetector.adapters.media.images import even_width, shrink_image
 from aidetector.adapters.operational_status import source_key
 from aidetector.application.ports import SourceBatch, SourceError
 from aidetector.application.status import (
@@ -21,6 +21,29 @@ from aidetector.domain.models import Frame
 
 logger = logging.getLogger(__name__)
 _CAPTURE_TIMEOUT_MS = 10000
+
+
+class CapturedFrame:
+    """Lazily resize one decoded frame for its subscribers, once per width.
+
+    Only the camera's capture thread accesses this cache. Subscribers retain
+    immutable frames, not the cache, so variants live only as long as needed.
+    """
+
+    def __init__(self, frame: Frame):
+        frame.image.setflags(write=False)
+        self.original = frame
+        self._sizes: dict[int, Frame] = {}
+
+    def at_width(self, width: int) -> Frame:
+        width = even_width(width)
+        if self.original.image.shape[1] <= width:
+            return self.original
+        if width not in self._sizes:
+            image = shrink_image(self.original.image, width)
+            image.setflags(write=False)
+            self._sizes[width] = Frame(self.original.date, image)
+        return self._sizes[width]
 
 
 class StreamSource:
@@ -43,15 +66,13 @@ class StreamSource:
         self._closed = False
         self._error: Exception | None = None
 
-    def publish(self, source: str, frame: Frame, sampled_at: float) -> None:
+    def publish(self, source: str, frame: CapturedFrame, sampled_at: float) -> None:
         with self._condition:
             if self._closed or sampled_at < self._next_sample[source]:
                 return
             self._next_sample[source] = sampled_at + self.interval
-            image = shrink_image(frame.image, self.width)
-            image.setflags(write=False)
             self._frames.setdefault(source, deque(maxlen=self.retention)).append(
-                Frame(frame.date, image)
+                frame.at_width(self.width)
             )
             self._condition.notify()
 
@@ -194,8 +215,13 @@ class StreamPool:
                     )
                 else:
                     first_frame = True
+                    measured_at = monotonic()
+                    reads = 0
+                    read_seconds = publish_seconds = 0.0
                     while not self._stop.is_set():
+                        read_started = monotonic()
                         available, image = capture.read()
+                        sampled_at = monotonic()
                         if not available:
                             self.report_status(
                                 StatusEvent(
@@ -222,12 +248,28 @@ class StreamPool:
                                 image.dtype,
                             )
                             first_frame = False
-                        sampled_at = monotonic()
-                        image.setflags(write=False)
-                        frame = Frame(datetime.now(), image)
+                        frame = CapturedFrame(Frame(datetime.now(), image))
                         self.report_status(StatusEvent("frame", source))
                         for subscriber in self._subscribers[source]:
                             subscriber.publish(source, frame, sampled_at)
+                        published_at = monotonic()
+                        reads += 1
+                        read_seconds += sampled_at - read_started
+                        publish_seconds += published_at - sampled_at
+                        if published_at - measured_at >= 30:
+                            logger.info(
+                                "Stream %d [%s]: %.1f decoded frames/s; "
+                                "read (including camera wait)=%.1fms/frame; "
+                                "resize/publish=%.1fms/frame",
+                                index + 1,
+                                identity,
+                                reads / (published_at - measured_at),
+                                read_seconds * 1000 / reads,
+                                publish_seconds * 1000 / reads,
+                            )
+                            measured_at = published_at
+                            reads = 0
+                            read_seconds = publish_seconds = 0.0
             except cv2.error as error:
                 self.report_status(
                     StatusEvent(

@@ -2,6 +2,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AIDetector.Desktop;
 using Microsoft.CSharp;
@@ -78,7 +79,9 @@ public sealed class DesktopProcessTests
         using var compiler = new CSharpCodeProvider();
         var result = compiler.CompileAssemblyFromSource(new CompilerParameters
         {
-            GenerateExecutable = true, OutputAssembly = executable
+            GenerateExecutable = true,
+            OutputAssembly = executable,
+            ReferencedAssemblies = { "System.dll" }
         }, @"using System;
             using System.Diagnostics;
             using System.IO;
@@ -101,7 +104,8 @@ public sealed class DesktopProcessTests
                     if (Console.ReadLine() != ""quit"") Environment.Exit(2);
                 }
             }".Replace("EXIT_CODE", code.ToString()).Replace("INTENTIONAL", intentional ? "true" : "false"));
-        Assert.That(result.Errors.HasErrors, Is.False);
+        Assert.That(result.Errors.HasErrors, Is.False,
+            string.Join(Environment.NewLine, result.Errors.Cast<CompilerError>()));
         return executable;
     }
 }

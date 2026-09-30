@@ -12,9 +12,19 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
 
+## Optional direct TensorRT on Windows NVIDIA systems — 2026-09-30
+
+Automatic Windows NVIDIA startup now downloads TensorRT for compute capability 8.0+ after preparing working CUDA. Ultralytics exports a checkpoint copy on the local GPU and tests the resulting engine before caching it under `models/prepared/tensorrt/`. Inference then loads that engine directly; ONNX remains only an export intermediate. Older supported GPUs keep native PyTorch/CUDA. Explicit ONNX providers and supplied `.onnx`/`.engine` models are unchanged. The desktop passes an internal flag; no JSON field, preset change or new onboarding step is introduced.
+
+The optional packages are separate from the base CUDA lock. Engine cache identities additionally include GPU/driver/runtime versions. Failed optimization attempts retain diagnostics and use PyTorch/CUDA; subsequent starts defer the same failed attempt for 24 hours. Pause/quit terminates preparation, and builds have a ten-minute deadline. Inference failures still reach the existing process supervisor. This does not promise bit-identical predictions or measured speed gains: FP16 conversion needs representative accuracy and performance checks on the target GPU. Resolution, thresholds, sampling, event rules and archives stay unchanged.
+
 ## Native CUDA on Windows NVIDIA systems — 2026-09-30
 
 The application's automatic NVIDIA runtime selection now also applies to Windows 11 24H2 and newer. Supported NVIDIA GPUs use the existing downloaded PyTorch/CUDA environment on every supported Windows version; `.pt` models run directly without ONNX conversion. The log identifies the selected GPU and native CUDA route. Hardware requirements, dependency caching, explicit ONNX provider choices and failure handling are unchanged. Camera sampling, presets and archives are unchanged. This changes the packaged application's process selection, not standalone detector behavior.
+
+## Shared frame resizing and performance diagnostics — 2026-09-30
+
+Live detectors requesting the same frame width now share one resize operation per decoded frame. Pixel values, sampling, retention, model precision, inference resolution, event rules and configuration are unchanged. Skipped samples do not trigger resizing. Logs break down inference stages and periodically report capture/publication costs. The new developer benchmark compares local PyTorch and TensorRT models and experimental shape grouping without changing the running application's batching. GPU performance and accuracy require measurement on the target system with representative data; automatic TensorRT selection is described separately above.
 
 ## Continuous managed detector recovery — 2026-09-30
 

@@ -4,7 +4,7 @@ import logging
 import pathlib
 from collections.abc import Iterator
 from contextlib import contextmanager, nullcontext
-from threading import Lock
+from threading import Event, Lock
 from time import perf_counter
 from typing import Any, Literal, cast
 
@@ -137,6 +137,7 @@ class YoloDetector:
     def detect(self, frames: Frames) -> dict[str, tuple[Observation, ...]]:
         started = perf_counter()
         with self._inference_scope():
+            acquired = perf_counter()
             if self.tracking:
                 sources = self.sources
                 placeholder = np.zeros_like(next(iter(frames.values()))[-1].image)
@@ -167,19 +168,30 @@ class YoloDetector:
                         source=images, batch=len(images), **self._arguments
                     )
                 )
+            predicted = perf_counter()
             mapped = {
                 source: map_observations(result, frames[source], self.classes)
                 for source, result in zip(sources, results, strict=True)
                 if source in frames
             }
+            mapping_ms = (perf_counter() - predicted) * 1000
         elapsed_ms = (perf_counter() - started) * 1000
         logger.info(
-            "%s time: %.1fms for %d frame(s), %.1fms/frame (%d active source(s))",
+            "%s time: %.1fms for %d frame(s), %.1fms/frame (%d active source(s)); "
+            "GPU lock wait=%.1fms; SDK ms/frame=%s; result mapping=%.1fms; input shapes=%s",
             "Track" if self.tracking else "Predict",
             elapsed_ms,
             len(images),
             elapsed_ms / len(images),
             len(mapped),
+            (acquired - started) * 1000,
+            {
+                stage: round(duration, 1)
+                for stage, duration in results[0].speed.items()
+                if duration is not None
+            },
+            mapping_ms,
+            sorted({image.shape[:2] for image in images}),
         )
         return mapped
 
@@ -221,6 +233,8 @@ def open_detector(
     options: InferenceOptions,
     cache_directory: pathlib.Path | None = None,
     report_status: ReportStatus = ignore_status,
+    prefer_tensorrt: bool = False,
+    stop_requested: Event | None = None,
 ) -> Iterator[YoloDetector]:
     """Prepare inference and own its model and tracking frames until shutdown."""
     loaded: YOLO | None = None
@@ -229,6 +243,29 @@ def open_detector(
         with _restore_path_classes():
             model_path = config.model
             native_mps = options.native_mps and model_path.endswith(".pt")
+            if (
+                prefer_tensorrt
+                and build_type == "cuda"
+                and model_path.endswith(".pt")
+                and cache_directory is not None
+            ):
+                from aidetector.adapters.inference.prepared_engines import (
+                    prepare_engine,
+                )
+
+                engine = prepare_engine(
+                    config,
+                    onnx,
+                    len(sources),
+                    options,
+                    cache_directory,
+                    report_status,
+                    stop_requested,
+                )
+                if engine is not None:
+                    loaded = _load_prepared_engine(
+                        engine, config.task, options, report_status
+                    )
             conversion = _export_format(model_path, build_type, native_mps)
             if (
                 conversion == "onnx"
@@ -248,7 +285,8 @@ def open_detector(
                     )
                 )
                 conversion = None
-            loaded = _load_model(model_path, config.task, report_status)
+            if loaded is None:
+                loaded = _load_model(model_path, config.task, report_status)
             if conversion:
                 report_status(
                     StatusEvent(
@@ -259,7 +297,8 @@ def open_detector(
                     **export_arguments(config, onnx, len(sources), options, conversion)
                 )
                 loaded = YOLO(str(exported), task=config.task)
-            _initialize_predictor(loaded, options, native_mps)
+            if loaded.predictor is None:
+                initialize_predictor(loaded, options, native_mps)
         detector = YoloDetector(loaded, config, sources, options)
         yield detector
     finally:
@@ -267,6 +306,31 @@ def open_detector(
             detector._last_frames.clear()
         if loaded is not None:
             loaded.predictor = None
+
+
+def _load_prepared_engine(
+    path: pathlib.Path,
+    task: str,
+    options: InferenceOptions,
+    report_status: ReportStatus,
+) -> YOLO | None:
+    from aidetector.adapters.inference.prepared_engines import reject_engine
+
+    model = _load_model(str(path), task, report_status)
+    try:
+        initialize_predictor(model, options, False)
+        return model
+    except (RuntimeError, ImportError, OSError) as error:
+        model.predictor = None
+        logger.warning(
+            "Prepared TensorRT engine could not be loaded; using PyTorch/CUDA: %s",
+            error,
+        )
+        try:
+            reject_engine(path, str(error))
+        except OSError:
+            logger.exception("Could not record the rejected TensorRT engine")
+        return None
 
 
 def _export_format(
@@ -291,9 +355,10 @@ def _load_model(path: str, task: str, report_status: ReportStatus) -> YOLO:
         raise
 
 
-def _initialize_predictor(
+def initialize_predictor(
     model: YOLO, options: InferenceOptions, native_mps: bool
 ) -> None:
+    """Initialize the SDK backend once, for runtime inference or its benchmark."""
     # Ultralytics' .names property otherwise creates a temporary second backend.
     # Keep SDK-specific predictor setup here; open_detector owns its cleanup.
     overrides = {

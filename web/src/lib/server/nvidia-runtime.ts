@@ -15,6 +15,7 @@ interface NvidiaDevice {
 	uuid: string;
 	name: string;
 	driver: number;
+	driverVersion: string;
 	capability: number;
 }
 
@@ -48,7 +49,13 @@ export function selectNvidiaDevice(output: string): NvidiaDevice | undefined {
 		.split('\n')
 		.map((line) => {
 			const [uuid, name, capability, driver] = line.split(',').map((part) => part.trim());
-			return { uuid, name, capability: Number(capability), driver: Number(driver?.split('.')[0]) };
+			return {
+				uuid,
+				name,
+				capability: Number(capability),
+				driver: Number(driver?.split('.')[0]),
+				driverVersion: driver
+			};
 		})
 		.find(
 			(device) =>
@@ -101,6 +108,7 @@ export async function prepareNvidiaRuntime(options: Preparation): Promise<Detect
 	const env = {
 		...process.env,
 		CUDA_VISIBLE_DEVICES: device.uuid,
+		AI_DETECTOR_NVIDIA_DRIVER: device.driverVersion,
 		UV_PYTHON_INSTALL_DIR: path.join(dataDirectory, 'runtimes', 'python'),
 		UV_CACHE_DIR: path.join(dataDirectory, 'cache', 'uv'),
 		UV_PYTHON_PREFERENCE: 'only-managed',
@@ -137,5 +145,75 @@ export async function prepareNvidiaRuntime(options: Preparation): Promise<Detect
 	await run(command.file, [...command.args, '--check-cuda'], 60000, env);
 	signal.throwIfAborted();
 	if (!prepared) await writeJson(ready, { python: manifest.python });
+	if (device.capability >= 8 && (await prepareTensorRt(options, command, uv, directory, env))) {
+		command.args.push('--prefer-tensorrt');
+	}
 	return command;
+}
+
+/** Optional optimization: an unavailable TensorRT installation never disables working CUDA. */
+async function prepareTensorRt(
+	{ bundleDirectory, device, signal, run, report }: Preparation,
+	command: DetectorCommand,
+	uv: string,
+	directory: string,
+	env: NodeJS.ProcessEnv
+): Promise<boolean> {
+	const lock = path.join(bundleDirectory, 'pylock.tensorrt.toml');
+	const marker = path.join(directory, 'tensorrt.json');
+	let identity: string | undefined;
+	try {
+		identity = createHash('sha256')
+			.update(device.driverVersion)
+			.update(device.uuid)
+			.update(await readFile(lock))
+			.digest('hex');
+		const previous = await readJson<{ identity: string; ready: boolean; retryAfter?: number }>(
+			marker
+		);
+		if (
+			previous?.identity === identity &&
+			!previous.ready &&
+			Date.now() < (previous.retryAfter ?? 0)
+		) {
+			report('TensorRT preparation is deferred after an earlier failure. Using PyTorch/CUDA.');
+			return false;
+		}
+		if (previous?.identity !== identity || !previous.ready) {
+			report('Preparing faster NVIDIA detection. Downloading TensorRT once for this computer…');
+			await run(
+				uv,
+				[
+					'pip',
+					'install',
+					'--no-config',
+					'--python',
+					command.file,
+					'--require-hashes',
+					'--only-binary',
+					':all:',
+					'--no-binary',
+					'tensorrt-cu12',
+					'-r',
+					lock
+				],
+				600000,
+				{ ...env, NVIDIA_TENSORRT_DISABLE_INTERNAL_PIP: '1' }
+			);
+		}
+		signal.throwIfAborted();
+		await run(command.file, [...command.args, '--check-tensorrt'], 60000, env);
+		signal.throwIfAborted();
+		await writeJson(marker, { identity, ready: true });
+		return true;
+	} catch (error) {
+		signal.throwIfAborted();
+		report(`TensorRT could not be prepared. Using PyTorch/CUDA. ${String(error)}`);
+		if (identity) {
+			await writeJson(marker, { identity, ready: false, retryAfter: Date.now() + 86400000 }).catch(
+				(error) => report(`Could not save the TensorRT retry time: ${String(error)}`)
+			);
+		}
+		return false;
+	}
 }

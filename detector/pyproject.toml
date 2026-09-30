@@ -26,6 +26,7 @@ default = [
     "onnxruntime>=1.24.1",
 ]
 nvidia = [
+    "filelock>=3.29.4",
     # Keep Windows on CUDA 12.8. Newer Torch/ORT releases default to CUDA 13.
     "torch; sys_platform != 'win32'",
     "torchvision; sys_platform != 'win32'",
@@ -49,6 +50,7 @@ required-version = "==0.12.19"
 conflicts = [[{ extra = "default" }, { extra = "nvidia" }, { extra = "windowsml" }]]
 
 [tool.uv.sources]
+tensorrt-cu12-libs = { index = "nvidia" }
 torch = [
     { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
     { index = "pytorch-cu128", extra = "nvidia", marker = "sys_platform == 'win32'" },
@@ -71,6 +73,11 @@ url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
 [[tool.uv.index]]
+name = "nvidia"
+url = "https://pypi.nvidia.com"
+explicit = true
+
+[[tool.uv.index]]
 name = "pypi"
 url = "https://pypi.org/simple"
 default = true
@@ -85,6 +92,11 @@ aidetector = "aidetector.cli:main"
 generate-schema = "aidetector.schema:main"
 
 [dependency-groups]
+# Optional Windows optimization, installed after the working CUDA environment.
+tensorrt = [
+    "tensorrt-cu12==10.16.1.11; sys_platform == 'win32'",
+    "tensorrt-cu12-libs==10.16.1.11; sys_platform == 'win32'",
+]
 dev = [
     "ruff>=0.14.14",
     "ty>=0.0.14",
@@ -150,5 +162,5 @@ packages = ["src/aidetector"]
 [tool.hatch.build.targets.sdist]
 only-include = [
     "src/aidetector", "pyproject.toml", "uv.lock", "README.md", "LICENSE",
-    "ARCHITECTURE.md", "MIGRATION.md", "QUALITY.md", "LIVE_PREVIEW.md", ".importlinter",
+    "ARCHITECTURE.md", "MIGRATION.md", "QUALITY.md", "PERFORMANCE.md", "LIVE_PREVIEW.md", ".importlinter",
 ]

@@ -27,6 +27,15 @@ def main() -> int:
     if sys.argv[1:] == ["--check-cuda"]:
         check_cuda()
         return 0
+    if sys.argv[1:] == ["--check-tensorrt"]:
+        # Load Torch's CUDA libraries before the TensorRT bindings.
+        check_cuda()
+        import tensorrt
+
+        logger = tensorrt.Logger(tensorrt.Logger.WARNING)
+        with tensorrt.Builder(logger):
+            print(f"Direct TensorRT ready: {tensorrt.__version__}")
+        return 0
     sys.path.insert(0, str(Path(__file__).resolve().parent / "app"))
     from aidetector.cli import main as detector_main
 

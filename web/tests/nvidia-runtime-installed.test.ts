@@ -12,10 +12,10 @@ const bundle = process.env.NVIDIA_RUNTIME_BUNDLE;
 const execute = promisify(execFile);
 
 test(
-	'the packaged Windows bootstrap installs real CUDA dependencies and refuses a missing GPU',
+	'the packaged Windows bootstrap installs CUDA and TensorRT dependencies and refuses a missing GPU',
 	{
 		skip: !bundle || process.platform !== 'win32',
-		timeout: 25 * 60 * 1000
+		timeout: 35 * 60 * 1000
 	},
 	async (t) => {
 		const data = await mkdtemp(path.join(tmpdir(), 'nvidia-bootstrap-'));
@@ -42,7 +42,8 @@ test(
 					uuid: 'GPU-00000000-0000-0000-0000-000000000000',
 					name: 'CI',
 					capability: 12,
-					driver: 580
+					driver: 580,
+					driverVersion: '580.88'
 				},
 				run,
 				report: (message) => console.info(message)
@@ -72,5 +73,34 @@ test(
 			process.env
 		);
 		assert.match(output, /Configuration valid: 1 detector/);
+		await run(
+			path.join(directory, 'uv.exe'),
+			[
+				'pip',
+				'install',
+				'--no-config',
+				'--python',
+				python,
+				'--require-hashes',
+				'--only-binary',
+				':all:',
+				'--no-binary',
+				'tensorrt-cu12',
+				'-r',
+				path.join(directory, 'pylock.tensorrt.toml')
+			],
+			600000,
+			{ ...process.env, NVIDIA_TENSORRT_DISABLE_INTERNAL_PIP: '1' }
+		);
+		await run(
+			python,
+			[
+				'-I',
+				'-c',
+				'import torch, tensorrt; assert torch.version.cuda == "12.8"; assert tensorrt.__version__ == "10.16.1.11"'
+			],
+			60000,
+			process.env
+		);
 	}
 );

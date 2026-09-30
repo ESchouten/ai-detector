@@ -3,30 +3,30 @@ revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version >= '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform == 'linux' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform == 'linux' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'linux' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version >= '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform == 'linux' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'linux' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
 ]
 conflicts = [[
@@ -63,6 +63,7 @@ default = [
     { name = "torchvision", version = "0.27.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-10-aidetector-default') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
 ]
 nvidia = [
+    { name = "filelock" },
     { name = "onnx" },
     { name = "onnxruntime-gpu", version = "1.26.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform == 'win32' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml')" },
     { name = "onnxruntime-gpu", version = "1.30.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'win32' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
@@ -96,10 +97,15 @@ dev = [
     { name = "trustme" },
     { name = "ty" },
 ]
+tensorrt = [
+    { name = "tensorrt-cu12", marker = "sys_platform == 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "tensorrt-cu12-libs", marker = "sys_platform == 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+]
 
 [package.metadata]
 requires-dist = [
     { name = "certifi", specifier = ">=2026.6.17" },
+    { name = "filelock", marker = "extra == 'nvidia'", specifier = ">=3.29.4" },
     { name = "imageio-ffmpeg", specifier = ">=0.6.0" },
     { name = "lap", specifier = ">=0.5.12" },
     { name = "litellm", specifier = ">=1.81.6" },
@@ -147,6 +153,10 @@ dev = [
     { name = "ruff", specifier = ">=0.14.14" },
     { name = "trustme", specifier = ">=1.2.1" },
     { name = "ty", specifier = ">=0.0.14" },
+]
+tensorrt = [
+    { name = "tensorrt-cu12", marker = "sys_platform == 'win32'", specifier = "==10.16.1.11" },
+    { name = "tensorrt-cu12-libs", marker = "sys_platform == 'win32'", specifier = "==10.16.1.11", index = "https://pypi.nvidia.com/" },
 ]
 
 [[package]]
@@ -1474,8 +1484,8 @@ name = "libcst"
 version = "1.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pyyaml", marker = "(python_full_version != '3.13.*' and sys_platform != 'win32') or (python_full_version != '3.13.*' and extra == 'extra-10-aidetector-default') or (python_full_version != '3.13.*' and extra != 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "pyyaml-ft", marker = "(python_full_version == '3.13.*' and sys_platform != 'win32') or (python_full_version == '3.13.*' and extra == 'extra-10-aidetector-default') or (python_full_version == '3.13.*' and extra != 'extra-10-aidetector-nvidia') or (python_full_version != '3.13.*' and extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (python_full_version != '3.13.*' and extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (python_full_version != '3.13.*' and extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml') or (extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "pyyaml", marker = "(python_full_version != '3.13.*' and sys_platform != 'win32') or (python_full_version == '3.13.*' and extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (python_full_version == '3.13.*' and extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (python_full_version == '3.13.*' and extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml') or (sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (sys_platform == 'win32' and extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "pyyaml-ft", marker = "(python_full_version == '3.13.*' and sys_platform != 'win32') or (python_full_version != '3.13.*' and extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (python_full_version != '3.13.*' and extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (python_full_version != '3.13.*' and extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml') or (sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (sys_platform == 'win32' and extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/02/c0/098e5c91ff1537f00c85a6438b6cb1863d17144680cc91f47c87f104a200/libcst-1.9.0.tar.gz", hash = "sha256:087b58a9afe076bb08e2d726478e1f16cb928d67ffa9092817e033c335de522a", size = 914739, upload-time = "2026-07-29T21:28:43.153Z" }
 wheels = [
@@ -1593,7 +1603,7 @@ wheels = [
 
 [package.optional-dependencies]
 linkify = [
-    { name = "linkify-it-py", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "linkify-it-py", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
 ]
 
 [[package]]
@@ -1718,7 +1728,7 @@ name = "mdit-py-plugins"
 version = "0.6.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "markdown-it-py", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "markdown-it-py", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/59/fc/f8d0863f8862f25602c0404d75568e89fb6b4109804645e5cdfb1be5cf56/mdit_py_plugins-0.6.1.tar.gz", hash = "sha256:a2bca0f039f39dbd35fb74ae1b5f998608c437463371f0ff7f49a19a17a114d0", size = 56114, upload-time = "2026-05-13T09:03:38.91Z" }
 wheels = [
@@ -1883,12 +1893,12 @@ name = "mutmut"
 version = "3.8.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "click", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "coverage", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "libcst", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "pytest", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "setproctitle", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "textual", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "click", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "coverage", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "libcst", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "pytest", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "setproctitle", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "textual", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/78/30/b334a22184026d92a7549c8a76ad1d397ea65a6f8534ef486556ab861c70/mutmut-3.8.0.tar.gz", hash = "sha256:bc670276518f893ab356f1d28826c49b7e606e7cf89c300e3888c0b52fc1d2ed", size = 83631, upload-time = "2026-09-12T16:53:58.138Z" }
 wheels = [
@@ -3250,16 +3260,46 @@ wheels = [
 ]
 
 [[package]]
+name = "tensorrt-cu12"
+version = "10.16.1.11"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "tensorrt-cu12-bindings", marker = "sys_platform == 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "tensorrt-cu12-libs", marker = "sys_platform == 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d5/a1/4841ac6b5e6d1d4a7f289013d359ed8479ec186a946e84446822cd4f5cc5/tensorrt_cu12-10.16.1.11.tar.gz", hash = "sha256:a044fe4a2e2e51fc205d806534102529c6f744402350b7730d221c99ffa6d269", size = 17921, upload-time = "2026-04-07T19:42:03.606Z" }
+
+[[package]]
+name = "tensorrt-cu12-bindings"
+version = "10.16.1.11"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/81/93/8364c6e89d9a0ad596ddbefe1545e334c55bf1e85491d8cd3af6f5853572/tensorrt_cu12_bindings-10.16.1.11-cp312-none-manylinux_2_28_x86_64.whl", hash = "sha256:8e339335e7255b3fb3954eca61b4acbbdfcf7b28505bd711914519647ba310c8", size = 1341247, upload-time = "2026-04-07T19:49:05.057Z" },
+    { url = "https://files.pythonhosted.org/packages/82/50/2153496271c772e9fb6e46de7f00c7d5bd08fea33bdf7a38d60521f5a396/tensorrt_cu12_bindings-10.16.1.11-cp312-none-win_amd64.whl", hash = "sha256:e4d7105b9700987b4fd9362adacc0dfa7bee3025c8ad147a86a4316b6362a85b", size = 964884, upload-time = "2026-04-07T19:47:17.234Z" },
+    { url = "https://files.pythonhosted.org/packages/9f/d4/ad07d2448df6ae02f980d9092a067b685604121bc471b7e81f0ede345239/tensorrt_cu12_bindings-10.16.1.11-cp313-none-manylinux_2_28_x86_64.whl", hash = "sha256:f2a08cedfa48e300720e5bed070a45e390ea67dbcf475ffce725d10e0a2b3ba7", size = 1341148, upload-time = "2026-04-07T19:47:39.718Z" },
+    { url = "https://files.pythonhosted.org/packages/44/8a/a4763ff95242b97dcd750c6d4a0a61e08431849304c4aa2b30c09fb5c0cb/tensorrt_cu12_bindings-10.16.1.11-cp313-none-win_amd64.whl", hash = "sha256:9794032093940924429957c89ebf27f893a7823b3daf48fd9427bfa23a9a52de", size = 964908, upload-time = "2026-04-07T19:45:42.506Z" },
+]
+
+[[package]]
+name = "tensorrt-cu12-libs"
+version = "10.16.1.11"
+source = { registry = "https://pypi.nvidia.com/" }
+wheels = [
+    { url = "https://pypi.nvidia.com/tensorrt-cu12-libs/tensorrt_cu12_libs-10.16.1.11-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:8e45036efeb964d323231544442a73619201136ccc84392560254cc8f0d516e4" },
+    { url = "https://pypi.nvidia.com/tensorrt-cu12-libs/tensorrt_cu12_libs-10.16.1.11-py3-none-win_amd64.whl", hash = "sha256:ed0d4536f1322aa2f76da54feb3f9bd2d14d89e4325cef02165a98f3a2c1a493" },
+]
+
+[[package]]
 name = "textual"
 version = "8.2.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "markdown-it-py", extra = ["linkify"], marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "mdit-py-plugins", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "platformdirs", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "pygments", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "rich", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
-    { name = "typing-extensions", marker = "sys_platform != 'win32' or extra == 'extra-10-aidetector-default' or extra != 'extra-10-aidetector-nvidia' or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "markdown-it-py", extra = ["linkify"], marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "mdit-py-plugins", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "platformdirs", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "pygments", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "rich", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "typing-extensions", marker = "sys_platform != 'win32' or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/00/21/39a76b01bd5eea82a04baaca7580e105d8c59450df03998345bb2cfb307b/textual-8.2.8.tar.gz", hash = "sha256:3f106a9fbc73e39dd266c9712432087de78a6d644084c7c241d6a25c3169115b", size = 1860502, upload-time = "2026-06-30T06:51:24.495Z" }
 wheels = [
@@ -3381,25 +3421,25 @@ version = "2.12.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
 ]
 dependencies = [
@@ -3512,25 +3552,25 @@ version = "0.27.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
-    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version >= '3.14' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version == '3.13.*' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version == '3.13.*' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
+    "python_full_version < '3.13' and sys_platform == 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
     "python_full_version < '3.13' and sys_platform != 'win32' and extra != 'extra-10-aidetector-default' and extra != 'extra-10-aidetector-nvidia' and extra != 'extra-10-aidetector-windowsml'",
 ]
 dependencies = [

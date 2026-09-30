@@ -81,6 +81,43 @@ class NvidiaRuntimeTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("torch==2.11.0+cu128", result.stderr)
             self.assertIn("onnxruntime-gpu==1.26.", result.stderr)
+            tensor_rt_lock = folder / "pylock.tensorrt.toml"
+            tensor_rt_packages = tomllib.loads(tensor_rt_lock.read_text())["packages"]
+            self.assertEqual(
+                {package["name"] for package in tensor_rt_packages},
+                {"tensorrt-cu12", "tensorrt-cu12-bindings", "tensorrt-cu12-libs"},
+            )
+            self.assertTrue(
+                all(
+                    package["version"] == "10.16.1.11" for package in tensor_rt_packages
+                )
+            )
+            result = subprocess.run(
+                [
+                    uv,
+                    "pip",
+                    "install",
+                    "--dry-run",
+                    "--python-version",
+                    python,
+                    "--python-platform",
+                    "x86_64-pc-windows-msvc",
+                    "--target",
+                    str(Path(temporary) / "environment"),
+                    "--only-binary",
+                    ":all:",
+                    "--no-binary",
+                    "tensorrt-cu12",
+                    "--require-hashes",
+                    "-r",
+                    str(tensor_rt_lock),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=60,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("tensorrt-cu12-libs==10.16.1.11", result.stderr)
             subprocess.run(
                 [
                     sys.executable,

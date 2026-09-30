@@ -10,6 +10,12 @@ if (process.argv.includes('--check-cuda')) {
 		process.exit(1);
 	}
 	console.log('NVIDIA acceleration ready');
+} else if (process.argv.includes('--check-tensorrt')) {
+	if (settings.tensorRtCheckFailure) {
+		console.error('TensorRT library could not be loaded');
+		process.exit(1);
+	}
+	console.log('Direct TensorRT ready');
 } else {
 	console.log('Using NVIDIA runtime: ' + process.env.CUDA_VISIBLE_DEVICES);
 	import(process.getBuiltinModule('url').pathToFileURL(path.join(bundle, 'detector-fixture.mjs')));

@@ -15,7 +15,11 @@ if (args[0] === 'venv') {
 	copyFileSync(path.join(bundle, 'python-fixture.cjs'), path.join(scripts, 'python.exe'));
 } else {
 	console.log('Downloading GPU packages');
-	if (settings.holdInstall) {
+	if (args.includes('install') && settings.tensorRtInstallFailure) {
+		console.error('TensorRT package download failed');
+		process.exit(1);
+	}
+	if (settings.holdInstall || (args.includes('install') && settings.holdTensorRtInstall)) {
 		writeFileSync(path.join(bundle, 'install-pid.txt'), String(process.pid));
 		setInterval(() => {}, 1000);
 	}

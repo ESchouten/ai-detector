@@ -129,6 +129,7 @@ def run_application(
     stop_requested: Event | None = None,
     report_status: ReportStatus = ignore_status,
     live_preview: bool = False,
+    prefer_tensorrt: bool = False,
 ) -> tuple[RunStats, ...]:
     """Construct workers and own their shared captures, models and providers."""
     for index, settings in enumerate(config.detectors, start=1):
@@ -195,6 +196,8 @@ def run_application(
                         options,
                         cache_directory=data_directory / "models" / "prepared",
                         report_status=rule_status,
+                        prefer_tensorrt=prefer_tensorrt,
+                        stop_requested=stop_requested,
                     )
                 )
                 event_policy = EventPolicy(

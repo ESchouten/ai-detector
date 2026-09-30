@@ -211,7 +211,7 @@ def test_mps_accelerator_failure_requests_a_fresh_process(monkeypatch, tracking,
                 fail_at("transfer")
                 return ()
 
-            yield SimpleNamespace(boxes=SimpleNamespace(cpu=transfer))
+            yield SimpleNamespace(boxes=SimpleNamespace(cpu=transfer), speed={})
 
         track = predict
 
@@ -285,7 +285,7 @@ def test_mps_detectors_share_exclusive_gpu_access_through_result_transfer(
                 return ()
 
             # Deferred SDK iteration and CPU transfers both belong inside the lock.
-            yield SimpleNamespace(boxes=SimpleNamespace(cpu=transfer))
+            yield SimpleNamespace(boxes=SimpleNamespace(cpu=transfer), speed={})
 
         track = predict
 

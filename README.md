@@ -23,7 +23,7 @@ Closing the browser leaves monitoring active. Open **AI Detector** again to retu
 
 | Packaging target         | Normal installer                            | Automatic runtime                                                                   |
 | ------------------------ | ------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Windows 10 22H2+ / Windows 11 x64 | `AI-Detector-VERSION-windows-x64-setup.zip` | Automatic PyTorch/CUDA download for supported NVIDIA GPUs; Windows ML for other hardware |
+| Windows 10 22H2+ / Windows 11 x64 | `AI-Detector-VERSION-windows-x64-setup.zip` | Automatic CUDA download, plus direct TensorRT on RTX 3000+ when preparation succeeds; Windows ML for other hardware |
 | macOS 14+ Apple Silicon  | `AI-Detector-VERSION-macos-arm64.dmg`       | Native PyTorch MPS for `.pt` models; ONNX/Core ML and CPU fallback when unavailable |
 | Ubuntu 22.04/24.04 amd64 | `AI-Detector-VERSION-linux-amd64.deb`       | Bundled native CPU baseline                                                         |
 

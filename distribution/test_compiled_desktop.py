@@ -7,6 +7,8 @@ import socket
 import subprocess
 import tempfile
 import unittest
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 from build import ROOT, TARGETS, native_platform
@@ -49,7 +51,7 @@ class CompiledDesktopTest(unittest.TestCase):
             listener.bind(("127.0.0.1", 0))
             self.port = listener.getsockname()[1]
 
-    def launch(self, open_browser=False, **fixture_options):
+    def launch(self, open_browser=False, host="127.0.0.1", **fixture_options):
         (self.data / "config.json").write_text(
             json.dumps({"detectors": [{"detection": {"source": "input.bmp"}}]})
         )
@@ -59,23 +61,70 @@ class CompiledDesktopTest(unittest.TestCase):
         )
         log = self.log.open("w")
         self.addCleanup(log.close)
+        env = {
+            **os.environ,
+            "AIDETECTOR_DATA_DIR": str(self.data),
+            "AIDETECTOR_EXECUTABLE": str(self.detector),
+            "AIDETECTOR_DESKTOP_HOST": "1",
+            "OPEN_BROWSER": str(open_browser).lower(),
+            "PORT": str(self.port),
+        }
+        if host is None:
+            env.pop("HOST", None)
+        else:
+            env["HOST"] = host
         process = subprocess.Popen(
             [str(self.web)],
-            env={
-                **os.environ,
-                "AIDETECTOR_DATA_DIR": str(self.data),
-                "AIDETECTOR_EXECUTABLE": str(self.detector),
-                "AIDETECTOR_DESKTOP_HOST": "1",
-                "OPEN_BROWSER": str(open_browser).lower(),
-                "HOST": "127.0.0.1",
-                "PORT": str(self.port),
-            },
+            env=env,
             stdin=subprocess.PIPE,
             stdout=log,
             stderr=log,
         )
         self.addCleanup(cleanup_process, process)
         return process
+
+    def test_default_dashboard_accepts_lan_requests_and_loopback_override_is_respected(
+        self,
+    ):
+        # UDP connect selects the local interface without sending a packet.
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as route:
+            try:
+                route.connect(("192.0.2.1", 9))
+            except OSError:
+                self.skipTest("Requires a non-loopback IPv4 network route")
+            address = route.getsockname()[0]
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        for host in (None, "127.0.0.1"):
+            with self.subTest(host=host):
+                process = self.launch(host=host)
+                try:
+                    wait_for(
+                        process,
+                        lambda: "AI Detector is ready at" in self.log.read_text(),
+                        self.log,
+                    )
+                    with opener.open(
+                        f"http://127.0.0.1:{self.port}/", timeout=5
+                    ) as response:
+                        self.assertEqual(response.status, 200)
+                    url = f"http://{address}:{self.port}/"
+                    if host is None:
+                        with opener.open(url, timeout=5) as response:
+                            self.assertEqual(response.status, 200)
+                            self.assertIn(b"<!doctype html>", response.read().lower())
+                        self.assertIn(
+                            f"LAN URL: http://{address}:{self.port}",
+                            self.log.read_text(),
+                        )
+                    else:
+                        with self.assertRaises(urllib.error.URLError):
+                            opener.open(url, timeout=5)
+                        self.assertNotIn("LAN URL:", self.log.read_text())
+                    process.stdin.write(b"quit\n")
+                    process.stdin.flush()
+                    self.assertEqual(process.wait(timeout=15), 0, self.log.read_text())
+                finally:
+                    cleanup_process(process)
 
     def check_shutdown(self, expected, **fixture_options):
         process = self.launch(**fixture_options)

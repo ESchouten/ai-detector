@@ -12,6 +12,7 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 	process.env.AIDETECTOR_DATA_DIR = dataDirectory(true);
 	const instance = new DesktopInstance(process.env.AIDETECTOR_DATA_DIR);
 	const port = Number(process.env.PORT ?? 8765);
+	const host = process.env.HOST || '0.0.0.0';
 	const browserUrl = `http://127.0.0.1:${port}/`;
 	if (process.argv.includes('--quit')) process.exit((await instance.existing(port, true)) ? 0 : 1);
 	let handler: Handler | undefined;
@@ -59,7 +60,7 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 	try {
 		server = Bun.serve({
 			port,
-			hostname: process.env.HOST || '127.0.0.1',
+			hostname: host,
 			idleTimeout: Number(process.env.BUN_IDLE_TIMEOUT ?? 255),
 			fetch(request, owner) {
 				if (!handler) return new Response('Starting AI Detector…', { status: 503 });
@@ -100,7 +101,7 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 			for (const listener of process.rawListeners('aidetector:launcher-disconnected'))
 				listener.call(process);
 		});
-	if (process.env.HOST === '0.0.0.0') closeDiscovery = advertiseDashboard(server.port!);
+	if (host === '0.0.0.0') closeDiscovery = advertiseDashboard(server.port!);
 	console.info(`AI Detector is ready at ${browserUrl}`);
 	openDashboard(browserUrl);
 }

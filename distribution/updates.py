@@ -1,7 +1,6 @@
 """Prepare delta inputs and publish framework-generated feeds to immutable release assets."""
 
 import argparse
-import hashlib
 import json
 import os
 import re
@@ -40,7 +39,7 @@ def fetch_feed(url: str) -> bytes | None:
         return None
 
 
-def download(url: str, destination: Path, sha256: str | None = None) -> bool:
+def download(url: str, destination: Path) -> bool:
     """Retrieve an optional delta base; deleted releases need a full update instead."""
     try:
         with (
@@ -54,11 +53,6 @@ def download(url: str, destination: Path, sha256: str | None = None) -> bool:
         error.close()
         print(f"Previous archive was removed; skipping delta base: {url}")
         return False
-    if sha256:
-        with destination.open("rb") as stream:
-            actual = hashlib.file_digest(stream, "sha256").hexdigest()
-        if actual.lower() != sha256.lower():
-            raise ValueError(f"Previous package checksum failed: {destination.name}")
     return True
 
 
@@ -117,21 +111,8 @@ def prepare(
         feed = verify_feed(feed, public_key)
         assets = json.loads(feed)["Assets"]
         newer_than(version, [asset["Version"] for asset in assets])
-        full = [asset for asset in assets if asset["Type"] == "Full"]
-        if full:
-            latest = max(full, key=lambda asset: numeric_version(asset["Version"]))
-            url = urllib.parse.urljoin(feed_url.rstrip("/") + "/", latest["FileName"])
-            name = Path(urllib.parse.unquote(urllib.parse.urlparse(url).path)).name
-            if not download(url, folder / name, latest["SHA256"]):
-                feed = json.dumps(
-                    {
-                        "Assets": [
-                            asset
-                            for asset in assets
-                            if asset["Version"] != latest["Version"]
-                        ]
-                    }
-                ).encode()
+        # Windows downloads the signed full archive, so only release history is
+        # needed here. Downloading an old multi-GB package cannot improve this build.
         (output / "previous-windows-feed.json").write_bytes(feed)
 
 
@@ -252,7 +233,7 @@ def windows(
     current = [
         asset
         for asset in generated["Assets"]
-        if asset["Version"] == version and asset["Type"] in {"Full", "Delta"}
+        if asset["Version"] == version and asset["Type"] == "Full"
     ]
     if not any(asset["Type"] == "Full" for asset in current):
         raise ValueError("Velopack did not produce a full package for this version")
@@ -267,7 +248,15 @@ def windows(
     versions = sorted(
         {asset["Version"] for asset in assets}, key=numeric_version, reverse=True
     )[:3]
-    feed = {"Assets": [asset for asset in assets if asset["Version"] in versions]}
+    # Omit historical deltas too: already-installed launchers must use the same
+    # full-archive path to obtain this fix without a failed reconstruction first.
+    feed = {
+        "Assets": [
+            asset
+            for asset in assets
+            if asset["Version"] in versions and asset["Type"] == "Full"
+        ]
+    }
     for asset in feed["Assets"]:
         if (
             asset["PackageId"] != "AIDetector"

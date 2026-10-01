@@ -82,7 +82,9 @@ class UpdateFeedTest(unittest.TestCase):
             self.assertEqual(error.exception.code, code)
             self.assertFalse((self.output / "previous.dmg").exists())
 
-    def test_deleted_windows_delta_base_is_omitted_from_the_next_feed(self):
+    def test_windows_release_history_does_not_require_old_packages_to_be_available(
+        self,
+    ):
         asset = {
             "Version": "1.0.0",
             "Type": "Full",
@@ -96,10 +98,12 @@ class UpdateFeedTest(unittest.TestCase):
         self.assertEqual(list((self.output / "windows-updates").iterdir()), [])
         self.assertEqual(
             json.loads((self.output / "previous-windows-feed.json").read_bytes()),
-            {"Assets": []},
+            {"Assets": [asset]},
         )
 
-    def test_windows_downloads_verified_base_and_keeps_immutable_urls(self):
+    def test_windows_keeps_immutable_full_packages_without_downloading_delta_bases(
+        self,
+    ):
         content = b"previous full package"
         (self.host / "old.nupkg").write_bytes(content)
         previous = {
@@ -112,12 +116,16 @@ class UpdateFeedTest(unittest.TestCase):
         }
         (self.host / "releases.win.json").write_bytes(
             sign_feed(
-                json.dumps({"Assets": [previous]}).encode(), PRIVATE_KEY, PUBLIC_KEY
+                json.dumps(
+                    {"Assets": [previous, {**previous, "Type": "Delta"}]}
+                ).encode(),
+                PRIVATE_KEY,
+                PUBLIC_KEY,
             )
         )
         prepare(self.output, "windows-x64", "1.0.1", self.url, PUBLIC_KEY)
         folder = self.output / "windows-updates"
-        self.assertEqual((folder / "old.nupkg").read_bytes(), content)
+        self.assertEqual(list(folder.iterdir()), [])
         current = []
         for kind in ("Full", "Delta"):
             name = f"1.0.1-{kind}.nupkg"
@@ -155,28 +163,9 @@ class UpdateFeedTest(unittest.TestCase):
             )
         )
         self.assertFalse((self.output / "old.nupkg").exists())
-        self.assertEqual((self.output / "1.0.1-Delta.nupkg").read_bytes(), b"Delta")
-
-    def test_corrupt_previous_package_stops_the_release(self):
-        (self.host / "old.nupkg").write_bytes(b"wrong bytes")
-        (self.host / "releases.win.json").write_text(
-            json.dumps(
-                {
-                    "Assets": [
-                        {
-                            "Version": "1.0.0",
-                            "Type": "Full",
-                            "FileName": "old.nupkg",
-                            "SHA256": "0" * 64,
-                        }
-                    ]
-                }
-            )
-        )
-        feed = self.host / "releases.win.json"
-        feed.write_bytes(sign_feed(feed.read_bytes(), PRIVATE_KEY, PUBLIC_KEY))
-        with self.assertRaisesRegex(ValueError, "checksum failed"):
-            prepare(self.output, "windows-x64", "1.0.1", self.url, PUBLIC_KEY)
+        self.assertEqual([asset["Type"] for asset in result], ["Full", "Full"])
+        self.assertEqual((self.output / "1.0.1-Full.nupkg").read_bytes(), b"Full")
+        self.assertFalse((self.output / "1.0.1-Delta.nupkg").exists())
 
     def test_preview_feed_advances_without_reading_or_changing_the_stable_feed(self):
         stable = self.host / "app-updates"
@@ -230,11 +219,8 @@ class UpdateFeedTest(unittest.TestCase):
             [asset["Version"] for asset in feed["Assets"]], ["0.0.42", "0.0.43"]
         )
         self.assertEqual((stable / "releases.win.json").read_bytes(), sentinel)
-        self.assertEqual(
-            (
-                self.root / "43/windows-updates/AIDetector-0.0.42-full.nupkg"
-            ).read_bytes(),
-            b"preview 42",
+        self.assertFalse(
+            (self.root / "43/windows-updates/AIDetector-0.0.42-full.nupkg").exists()
         )
 
     def test_sparkle_preserves_old_feed_urls_and_downloads_only_two_bases(self):

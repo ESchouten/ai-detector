@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Velopack;
 using Velopack.Exceptions;
 using Velopack.Locators;
+using Velopack.Logging;
 
 namespace AIDetector.Desktop;
 
@@ -17,9 +18,14 @@ internal class VerifiedUpdateManager(SignedUpdateSource source, IVelopackLocator
         // The signed policy chooses an eligible build before Velopack compares versions.
         ExplicitChannel = source.Policy == null ? "win" : "selected",
         AllowVersionDowngrade = source.Policy != null,
+        // Delta reconstruction re-compresses the ZIP, so its bytes need not match
+        // the signed full-package hash. Download that exact archive for verification.
+        MaximumDeltasBeforeFallback = 0,
     }, locator: locator)
 {
     public UpdateChannelPolicy ChannelPolicy => source.Policy;
+
+    public void LogFailure(string operation, Exception error) => Log.Error(error, operation);
 
     public override VelopackAsset UpdatePendingRestart
     {
@@ -46,10 +52,28 @@ internal class VerifiedUpdateManager(SignedUpdateSource source, IVelopackLocator
     }
     public override async Task DownloadUpdatesAsync(UpdateInfo update, Action<int> progress = null, CancellationToken cancelToken = default)
     {
+        cancelToken.ThrowIfCancellationRequested();
+        var file = PackagePath(update.TargetFullRelease);
+        if (File.Exists(file))
+        {
+            try
+            {
+                // Velopack trusts complete cached files without checking them again.
+                await VerifyPackageChecksumAsync(update.TargetFullRelease).ConfigureAwait(false);
+                cancelToken.ThrowIfCancellationRequested();
+                progress?.Invoke(100);
+                return;
+            }
+            catch (ChecksumFailedException error)
+            {
+                Log.Warn(error, "Cached update failed verification; downloading a fresh full package.");
+                File.Delete(file);
+            }
+        }
         try
         {
+            cancelToken.ThrowIfCancellationRequested();
             await base.DownloadUpdatesAsync(update, progress, cancelToken).ConfigureAwait(false);
-            // Velopack skips its checksum check when a complete package is already cached.
             await VerifyPackageChecksumAsync(update.TargetFullRelease).ConfigureAwait(false);
         }
         catch (ChecksumFailedException error)

@@ -9,7 +9,7 @@ using Velopack.Sources;
 
 namespace AIDetector.Desktop;
 
-// Velopack still downloads and reconstructs packages. Only authenticated metadata
+// Velopack downloads packages. Only authenticated metadata
 // reaches its version selection and checksum verification.
 internal sealed class SignedUpdateSource(string url, string publicKey, string cacheFile, IFileDownloader downloader = null, UpdateChannelPolicy policy = null)
     : SimpleWebSource(url, downloader)

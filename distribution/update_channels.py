@@ -55,6 +55,7 @@ def merge_windows(current: bytes, other: bytes | None, channel: str) -> bytes:
             asset["ReleaseChannel"] = "preview" if channel == "stable" else "stable"
             asset.setdefault("BuildVersion", "0.0.0")
             feed["Assets"].append(asset)
+    feed["Assets"] = [asset for asset in feed["Assets"] if asset["Type"] == "Full"]
     return json.dumps(feed).encode()
 
 

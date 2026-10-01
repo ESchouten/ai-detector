@@ -57,7 +57,7 @@ runs:
     - name: Smoke test complete download
       shell: bash
       run: python distribution/smoke.py 'application-dist/AI-Detector-${{ env.PLATFORM }}' 2>&1 | tee .reports/application-smoke.log
-    - name: Retrieve previous release for delta generation
+    - name: Read release history and retrieve macOS delta bases
       if: runner.os != 'Linux'
       shell: bash
       run: python distribution/updates.py prepare --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --feed-url "$UPDATE_FEED"

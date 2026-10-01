@@ -80,7 +80,7 @@ def windows(folder: Path, version: str) -> Path:
         r"START HERE\.txt",
         "--noPortable",
         "--delta",
-        "BestSpeed",
+        "None",
     ]
     subprocess.run(arguments, check=True)
     installer = folder.parent / f"AI-Detector-{version}-windows-x64-setup.exe"

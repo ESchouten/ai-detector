@@ -42,13 +42,23 @@ class ChannelFeedTest(unittest.TestCase):
     def test_windows_combines_signed_channels_and_keeps_legacy_official_releases(self):
         stable = {
             "Assets": [
-                {"Version": "2.0.0", "FileName": "https://example.test/stable.nupkg"}
+                {
+                    "Version": "2.0.0",
+                    "Type": "Full",
+                    "FileName": "https://example.test/stable.nupkg",
+                },
+                {
+                    "Version": "2.0.0",
+                    "Type": "Delta",
+                    "FileName": "https://example.test/stable-delta.nupkg",
+                },
             ]
         }
         preview = {
             "Assets": [
                 {
                     "Version": "0.0.43",
+                    "Type": "Full",
                     "BuildVersion": "43.0.0",
                     "FileName": "https://example.test/preview.nupkg",
                 }

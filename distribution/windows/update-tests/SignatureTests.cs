@@ -85,18 +85,53 @@ public sealed class SignatureTests
     }
 
     [Test]
-    public async Task ExistingCachedPackageStillRequiresTheSignedHash()
+    public async Task CorruptCachedPackageIsReplacedInTheSameDownloadAttempt()
     {
         var locator = Locator();
         var manager = new VerifiedUpdateManager(source, locator);
         var update = await manager.CheckForUpdatesAsync();
         File.WriteAllBytes(Path.Combine(root, Pending().FileName), new byte[package.Length]);
-        Assert.ThrowsAsync<ChecksumFailedException>(() => manager.DownloadUpdatesAsync(update));
-        Assert.That(downloader.Downloads, Is.Zero);
-        Assert.That(File.Exists(Path.Combine(root, Pending().FileName)), Is.False);
         await manager.DownloadUpdatesAsync(update);
         Assert.That(downloader.Downloads, Is.EqualTo(1));
         Assert.That(File.ReadAllBytes(Path.Combine(root, Pending().FileName)), Is.EqualTo(package));
+    }
+
+    [Test]
+    public async Task ValidCachedPackageIsVerifiedWithoutDownloadingAgain()
+    {
+        var manager = new VerifiedUpdateManager(source, Locator());
+        var update = await manager.CheckForUpdatesAsync();
+        File.WriteAllBytes(Path.Combine(root, Pending().FileName), package);
+        await manager.DownloadUpdatesAsync(update);
+        Assert.That(downloader.Downloads, Is.Zero);
+    }
+
+    [Test]
+    public async Task SignedFullArchiveIsDownloadedEvenWhenADeltaIsAvailable()
+    {
+        var previous = Pending() with { Version = SemanticVersion.Parse("1.0.0"), FileName = "AIDetector-1.0.0-full.nupkg" };
+        File.WriteAllBytes(Path.Combine(root, previous.FileName), package);
+        var manager = new DeltaRejectingManager(source, Locator(previous));
+        var update = await manager.CheckForUpdatesAsync();
+        Assert.That(update.DeltasToTarget, Is.Not.Empty, "Fixture must offer a delta from the installed package");
+        Assert.That(update.DeltasToTarget.Sum(asset => asset.Size), Is.LessThanOrEqualTo(release.Size));
+        await manager.DownloadUpdatesAsync(update);
+        Assert.That(downloader.Downloads, Is.EqualTo(1));
+        Assert.That(downloader.LastPackageUrl, Is.EqualTo(release.FileName));
+        Assert.That(File.ReadAllBytes(Path.Combine(root, Pending().FileName)), Is.EqualTo(package));
+    }
+
+    [Test]
+    public async Task CancellationDoesNotStartACacheRepairOrDownload()
+    {
+        var manager = new VerifiedUpdateManager(source, Locator());
+        var update = await manager.CheckForUpdatesAsync();
+        var file = Path.Combine(root, Pending().FileName);
+        File.WriteAllBytes(file, new byte[package.Length]);
+        Assert.ThrowsAsync<OperationCanceledException>(() => manager.DownloadUpdatesAsync(update,
+            cancelToken: new CancellationToken(canceled: true)));
+        Assert.That(downloader.Downloads, Is.Zero);
+        Assert.That(File.Exists(file), Is.True);
     }
 
     [Test]
@@ -277,12 +312,21 @@ public sealed class SignatureTests
     private TestVelopackLocator Locator(VelopackAsset pending = null, string version = "1.0.0") =>
         new("AIDetector", version, root, root, root, Path.Combine(root, "Update.exe"), "win", localPackage: pending);
 
+    private sealed class DeltaRejectingManager(SignedUpdateSource source, TestVelopackLocator locator)
+        : VerifiedUpdateManager(source, locator)
+    {
+        protected override Task DownloadAndApplyDeltaUpdates(UpdateInfo update, string targetFile,
+            Action<int> progress, CancellationToken cancelToken) =>
+            throw new AssertionException("Reconstructed ZIP bytes cannot be authenticated by the signed full-archive hash");
+    }
+
     private sealed class FakeDownloader(string envelope, byte[] package) : IFileDownloader
     {
         public string Envelope { get; set; } = envelope;
         public byte[] Package { get; set; } = package;
         public int Downloads { get; private set; }
         public string LastFeedUrl { get; private set; }
+        public string LastPackageUrl { get; private set; }
         public Task<string> DownloadString(string url, IDictionary<string, string> headers = null, double timeout = 30)
         {
             LastFeedUrl = url;
@@ -293,7 +337,9 @@ public sealed class SignatureTests
         public Task DownloadFile(string url, string path, Action<int> progress,
             IDictionary<string, string> headers = null, double timeout = 30, CancellationToken cancelToken = default)
         {
+            cancelToken.ThrowIfCancellationRequested();
             Downloads++;
+            LastPackageUrl = url;
             File.WriteAllBytes(path, Package);
             progress(100);
             return Task.CompletedTask;

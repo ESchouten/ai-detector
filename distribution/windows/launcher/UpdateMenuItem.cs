@@ -35,7 +35,7 @@ internal sealed class UpdateMenuItem : ToolStripMenuItem
                 try { savePreviewPreference(enabled); }
                 catch (Exception error)
                 {
-                    Console.Error.WriteLine(error);
+                    updater.LogFailure("Saving update channel preference failed", error);
                     MessageBox.Show("Your update preference could not be saved. Please try again.", "AI Detector");
                     return;
                 }
@@ -55,6 +55,7 @@ internal sealed class UpdateMenuItem : ToolStripMenuItem
         if (!Enabled) return;
         Enabled = false;
         if (PreviewItem != null) PreviewItem.Enabled = false;
+        string operation = "Checking for updates";
         try
         {
             if (updater.UpdatePendingRestart == null)
@@ -71,11 +72,15 @@ internal sealed class UpdateMenuItem : ToolStripMenuItem
                 }
                 if (!interactive) { notify(); return; }
                 if (!Confirm($"Download AI Detector {update.TargetFullRelease.Version}? Monitoring will keep running during the download.")) return;
-                var progress = new Progress<int>(value => Text = $"Downloading update… {value}%");
+                operation = $"Downloading AI Detector {update.TargetFullRelease.Version}";
+                var progress = new Progress<int>(value => Text = value < 100
+                    ? $"Downloading update… {value}%" : "Verifying update…");
                 await updater.DownloadUpdatesAsync(update, value => ((IProgress<int>)progress).Report(value), cancellation.Token);
             }
             if (interactive && !cancellation.IsCancellationRequested && Confirm("The update is ready. Restart AI Detector now? Monitoring will pause briefly and resume if enabled."))
             {
+                operation = "Verifying the downloaded update before restart";
+                Text = "Verifying update…";
                 var verified = await updater.VerifyPendingUpdateAsync();
                 if (!cancellation.IsCancellationRequested)
                     shutdownThen(() => updater.WaitExitThenApplyUpdates(verified, silent: false, restart: true));
@@ -84,7 +89,7 @@ internal sealed class UpdateMenuItem : ToolStripMenuItem
         catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
         catch (Exception error)
         {
-            Console.Error.WriteLine(error);
+            updater.LogFailure($"{operation} failed", error);
             if (interactive && !cancellation.IsCancellationRequested)
                 MessageBox.Show("The update could not be downloaded or verified. Nothing was installed and monitoring is still running. Try Check for Updates again.", "AI Detector", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

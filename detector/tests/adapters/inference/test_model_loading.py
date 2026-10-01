@@ -1,4 +1,3 @@
-import gc
 import os
 import pathlib
 import sys
@@ -18,7 +17,7 @@ from aidetector.adapters.inference.onnx import (
     inference_runtime,
 )
 from aidetector.adapters.inference.yolo import open_detector
-from aidetector.configuration import Config, OnnxConfig, YoloConfig
+from aidetector.configuration import OnnxConfig, YoloConfig
 from aidetector.domain.models import Frame
 
 
@@ -222,48 +221,6 @@ def test_real_native_model_uses_the_requested_precision_without_downloading_weig
         model = detector.model
         assert model.predictor.model.fp16 is half
         assert next(model.model.parameters()).dtype is dtype
-    assert model.predictor is None
-
-
-def test_real_checkpoint_export_releases_weights_and_runs_the_onnx_model(
-    tmp_path, monkeypatch
-):
-    checkpoint = tmp_path / "fixture.pt"
-    YOLO("yolo11n.yaml").save(checkpoint)
-    created = []
-
-    def record_model(*args, **kwargs):
-        model = YOLO(*args, **kwargs)
-        created.append(ref(model))
-        return model
-
-    monkeypatch.setattr("aidetector.adapters.inference.yolo.YOLO", record_model)
-    config = Config.model_validate(
-        {
-            "onnx": {"provider": "CPUExecutionProvider"},
-            "detectors": [
-                {
-                    "detection": {"source": "0"},
-                    "yolo": {"model": str(checkpoint), "imgsz": 64},
-                }
-            ],
-        }
-    )
-    settings = config.detectors[0].yolo
-    models = (ModelRequirements(str(checkpoint), image_size=64, batch_size=1),)
-    with (
-        inference_runtime(config.onnx, models, "default") as options,
-        open_detector(settings, config.onnx, ("0",), "default", options) as detector,
-    ):
-        model = detector.model
-        gc.collect()
-        assert len(created) == 2
-        assert created[0]() is None
-        assert created[1]() is model
-        frame = Frame(datetime(2026, 1, 1), np.zeros((64, 64, 3), dtype=np.uint8))
-        [observation] = detector.detect({"0": (frame,)})["0"]
-        assert observation.date == frame.date
-        assert observation.image is frame.image
     assert model.predictor is None
 
 

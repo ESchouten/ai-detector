@@ -4,7 +4,6 @@ import {
 	DEFAULT_SCHEMA_URL,
 	type Config,
 	type Configuration,
-	type DetectorPreset,
 	type LlmConnection
 } from '../../schema.ts';
 import { readJson, writeJson } from '../json-file.ts';
@@ -38,16 +37,10 @@ interface Runtime {
 export class ConfigurationStore {
 	private pending: Promise<unknown> = Promise.resolve();
 	private files: { config: string; app: string };
-	private presets: () => Promise<DetectorPreset[]>;
 	private runtime: () => Runtime | null;
 
-	constructor(
-		files: { config: string; app: string },
-		presets: () => Promise<DetectorPreset[]>,
-		runtime: () => Runtime | null = () => null
-	) {
+	constructor(files: { config: string; app: string }, runtime: () => Runtime | null = () => null) {
 		this.files = files;
-		this.presets = presets;
 		this.runtime = runtime;
 	}
 
@@ -136,13 +129,7 @@ export class ConfigurationStore {
 	}
 
 	saveCamera(input: v.InferOutput<typeof cameraInput>, pictureVerifiedAt?: string) {
-		return this.update(async (document) => {
-			const preset =
-				input.mode === 'preset'
-					? (await this.presets()).find((item) => item.id === input.preset)
-					: undefined;
-			return saveCamera(document, input, preset, pictureVerifiedAt);
-		});
+		return this.update((document) => saveCamera(document, input, pictureVerifiedAt));
 	}
 
 	removeCamera(id: string): Promise<void> {

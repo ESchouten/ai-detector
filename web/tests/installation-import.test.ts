@@ -62,7 +62,6 @@ async function fixture(t: TestContext) {
 	const calls: string[] = [];
 	const store = new ConfigurationStore(
 		{ config: path.join(destination, 'config.json'), app: path.join(destination, 'app.json') },
-		async () => [],
 		() => ({
 			validate: async () => {
 				calls.push('validate');

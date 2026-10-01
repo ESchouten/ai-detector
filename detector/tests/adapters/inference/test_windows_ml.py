@@ -6,6 +6,8 @@ import sys
 from contextlib import suppress
 from importlib import import_module
 from pathlib import Path
+from threading import Event
+from time import monotonic
 from types import SimpleNamespace
 
 import psutil
@@ -137,6 +139,21 @@ def test_blocked_helper_is_killed_and_reaped_with_its_diagnostics(
     def record_child(*args, **kwargs):
         process = start(*args, **kwargs)
         children.append(process)
+        communicate = process.communicate
+
+        def after_sdk_ready(input=None, timeout=None):
+            if timeout is not None:
+                assert timeout == 5
+                deadline = monotonic() + 10
+                while not (trace.exists() and "wait:" + PROVIDER in trace.read_text()):
+                    assert monotonic() < deadline, "Windows ML fixture did not start"
+                    Event().wait(0.01)
+                timeout = 0.1
+            return communicate(input=input, timeout=timeout)
+
+        # Wait for the real helper to reach the blocked SDK call, then exercise
+        # subprocess.run's real timeout/kill/reap path without a five-second sleep.
+        monkeypatch.setattr(process, "communicate", after_sdk_ready)
         return process
 
     monkeypatch.setattr(subprocess, "Popen", record_child)

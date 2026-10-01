@@ -406,8 +406,17 @@ export class ManagedDetector {
 		});
 		const records = createInterface({ input: child.stdout, crlfDelay: Infinity });
 		records.on('line', (line) => {
-			if (line.startsWith(STATUS_PREFIX)) this.progress.accept(line);
-			else this.log.append(line + '\n');
+			if (!line.startsWith(STATUS_PREFIX)) {
+				this.log.append(line + '\n');
+				return;
+			}
+			const event = this.progress.accept(line);
+			if (event?.event === 'models_ready')
+				void this.enqueue(async () => {
+					// Ignore duplicate/stale requests from a process already being replaced.
+					if (this.child !== child || this.stoppingChild) return;
+					await this.restartChild(signal, 'TensorRT models are ready');
+				}).catch((error) => this.fail(error));
 		});
 		createInterface({ input: child.stderr, crlfDelay: Infinity }).on('line', (line) =>
 			this.log.append(line + '\n')
@@ -527,16 +536,18 @@ export class ManagedDetector {
 
 	apply(): Promise<void> {
 		const signal = this.startup.signal;
-		return this.enqueue(async () => {
-			if (!this.settings.enabled || signal.aborted) return;
-			this.log.append(`${new Date().toISOString()} Restart requested: detector settings changed\n`);
-			try {
-				await this.stopChild();
-			} catch (error) {
-				this.fail(error);
-			}
-			await this.startChild(this.settings.mode, signal, true);
-		});
+		return this.enqueue(() => this.restartChild(signal, 'detector settings changed'));
+	}
+
+	private async restartChild(signal: AbortSignal, reason: string): Promise<void> {
+		if (!this.settings.enabled || signal.aborted) return;
+		this.log.append(`${new Date().toISOString()} Restart requested: ${reason}\n`);
+		try {
+			await this.stopChild();
+		} catch (error) {
+			this.fail(error);
+		}
+		await this.startChild(this.settings.mode, signal, true);
 	}
 
 	fail(error: unknown): void {

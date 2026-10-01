@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, readdir, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
@@ -33,4 +33,12 @@ test('a failed replacement preserves the destination, cleans staging files and r
 	await rm(file, { recursive: true });
 	await writeJson(file, { enabled: false });
 	assert.deepEqual(await readJson(file), { enabled: false });
+});
+
+test('malformed JSON fails without overwriting the original settings', async (t) => {
+	const directory = await fixture(t);
+	const file = path.join(directory, 'config.json');
+	await writeFile(file, '{invalid');
+	await assert.rejects(readJson(file), SyntaxError);
+	assert.equal(await readFile(file, 'utf8'), '{invalid');
 });

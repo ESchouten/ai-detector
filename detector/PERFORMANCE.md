@@ -1,6 +1,8 @@
 # Measuring inference without trading away detection quality
 
-Native NVIDIA inference uses PyTorch/CUDA FP16, Ultralytics preprocessing and fused model layers. The Windows application now attempts direct TensorRT FP16 on compute capability 8.0+ after preparing CUDA, retaining CUDA when the optimization cannot be prepared. This automatic route has functional checks, but has not yet been benchmarked or qualified for detection quality on the target GPU. Live capture reads continuously; each inference batch scores only the latest retained frame from each active camera. Older frames provide event context. Increasing `detection.interval`, lowering `imgsz`, selecting a smaller model or changing `frames_min` can change event sensitivity. Keep those settings fixed when comparing implementation changes.
+Native NVIDIA inference uses PyTorch/CUDA FP16, Ultralytics preprocessing and fused model layers. The Windows application uses cached direct TensorRT FP16 engines on compute capability 8.0+ after preparing CUDA. Missing engines are built serially in the background while CUDA monitors. After all attempts finish, the desktop drains and restarts monitoring once to load any newly available engines. This automatic route has functional checks, but has not yet been benchmarked or qualified for detection quality on the target GPU. Live capture reads continuously; each inference batch scores only the latest retained frame from each active camera. Older frames provide event context. Increasing `detection.interval`, lowering `imgsz`, selecting a smaller model or changing `frames_min` can change event sensitivity. Keep those settings fixed when comparing implementation changes.
+
+Background compilation shares the GPU with monitoring and can affect inference latency and builder timing measurements. Its 2 GiB workspace limit excludes weights and other allocations. Measure startup, peak memory and detection throughput both during compilation and after it finishes. Compare cached TensorRT inference after restarting monitoring. The subprocess tests cover ongoing monitoring, serial builds, failure isolation and cancellation; they do not establish GPU performance or sufficient memory on the target hardware.
 
 ## Read the running application's timings
 
@@ -35,7 +37,7 @@ Each model runs the current arrival-order batches and experimental batches group
 For a direct TensorRT comparison, install a compatible TensorRT runtime in the isolated benchmark environment, following [Ultralytics' integration guide](https://docs.ultralytics.com/integrations/tensorrt). Export a **copy** of the checkpoint on the target GPU with the SDK, using the same `imgsz` as the preset and a batch limit covering the test:
 
 ```sh
-yolo export model=/benchmark-models/detector.pt format=engine device=0 quantize=16 dynamic=True batch=3 imgsz=640 simplify=True opset=20
+yolo export model=/benchmark-models/detector.pt format=engine device=0 quantize=16 dynamic=True batch=3 imgsz=640 simplify=True opset=20 workspace=2
 python -m tools.benchmark_inference --models /benchmark-models/detector.pt /benchmark-models/detector.engine --images /samples/camera-1.jpg /samples/camera-2.jpg /samples/camera-3.jpg --preset ../config/detector/cow-catcher.json --device 0 --batch 3 --data /validation/data.yaml --output .reports/cuda-tensorrt
 ```
 

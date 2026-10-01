@@ -2,10 +2,42 @@ name: Desktop distribution tests
 
 on:
   pull_request:
-    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', 'detector/.python-version', 'detector/pyproject.toml', 'detector/uv.lock', '.config/**', '.github/**', '.gitattributes']
+    # UI-only changes still build/test the web server; native packaging is also
+    # checked on every preview/release build by application.yml.
+    paths:
+      - 'distribution/**'
+      - 'web/**'
+      - '!web/src/**/*.svelte'
+      - '!web/src/**/*.css'
+      - '!web/tests/**'
+      - '!web/*.md'
+      - 'config/**'
+      - 'ruff.toml'
+      - 'detector/.python-version'
+      - 'detector/pyproject.toml'
+      - 'detector/uv.lock'
+      - '.config/**'
+      - '.github/**'
+      - '.gitattributes'
   push:
     branches: ['main']
-    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', 'detector/.python-version', 'detector/pyproject.toml', 'detector/uv.lock', '.config/**', '.github/**', '.gitattributes']
+    # UI-only changes still build/test the web server; native packaging is also
+    # checked on every preview/release build by application.yml.
+    paths:
+      - 'distribution/**'
+      - 'web/**'
+      - '!web/src/**/*.svelte'
+      - '!web/src/**/*.css'
+      - '!web/tests/**'
+      - '!web/*.md'
+      - 'config/**'
+      - 'ruff.toml'
+      - 'detector/.python-version'
+      - 'detector/pyproject.toml'
+      - 'detector/uv.lock'
+      - '.config/**'
+      - '.github/**'
+      - '.gitattributes'
   workflow_dispatch:
 
 permissions:

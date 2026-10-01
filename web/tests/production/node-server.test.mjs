@@ -380,7 +380,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 					exporters: { disk: { directory: 'safety' } }
 				})
 			);
-			const cameraInput = { label: 'Workshop camera', source, mode: 'preset', preset: 'copy' };
+			const cameraInput = { label: 'Workshop camera', source, mode: 'view-only' };
 			const host = deployment === 'LAN HTTP' ? 'barn.local:8080' : new URL(base).host;
 			const origin = publicOrigin ?? `http://${host}`;
 			const firstVisit = await send(`${base}/setup`, { headers: { Host: host } });
@@ -443,6 +443,21 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			const detectorHtml = await detectorPage.text();
 			assert.ok(detectorHtml.includes('Copy'));
 			assert.ok(!detectorHtml.includes('Calving Catcher'));
+			const detectorSaved = await send(base + commands.saveDetector, {
+				method: 'POST',
+				headers,
+				body: commandBody({
+					meta: { label: 'Safety', preset: 'copy' },
+					detector: {
+						detection: { source: [source] },
+						yolo: { model: 'safety.onnx', confidence: { helmet: 0.75 } },
+						exporters: { disk: [{ directory: 'safety' }] }
+					}
+				})
+			});
+			assert.equal(detectorSaved.status, 200, await detectorSaved.clone().text());
+			assert.equal((await detectorSaved.json()).type, 'result');
+
 			const config = JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8'));
 			assert.deepEqual(config.detectors[0].detection.source, [source]);
 			assert.deepEqual(config.detectors[0].yolo, {
@@ -593,13 +608,22 @@ test(
 				await command('saveCamera', {
 					label: 'Yard',
 					source: other.source,
-					mode: 'preset',
-					preset: 'general',
+					mode: 'view-only',
 					checkId: other.checkId
 				})
 			).type,
 			'result'
 		);
+
+		const yardDetector = await command('saveDetector', {
+			meta: { label: 'Yard monitoring', preset: 'general' },
+			detector: {
+				detection: { source: [other.source] },
+				yolo: { model: 'yolo11n.pt' },
+				exporters: { disk: [{}] }
+			}
+		});
+		assert.equal(yardDetector.type, 'result', JSON.stringify(yardDetector));
 		const config = JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8'));
 		const app = JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8'));
 		assert.equal(app.streams.length, 2);

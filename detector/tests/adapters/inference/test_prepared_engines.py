@@ -2,23 +2,34 @@ import importlib.util
 import os
 import subprocess
 import sys
+from contextlib import nullcontext
 from dataclasses import replace
 from pathlib import Path
 from threading import Event
+from time import monotonic
 from types import SimpleNamespace
 
+import cv2
 import numpy as np
 import pytest
 import torch
 from filelock import FileLock
 from ultralytics import YOLO
 
+from aidetector import bootstrap
 from aidetector.adapters.inference import prepared_engines
+from aidetector.adapters.inference.export_settings import export_arguments
 from aidetector.adapters.inference.onnx import InferenceOptions
-from aidetector.adapters.inference.prepared_engines import prepare_engine, reject_engine
+from aidetector.adapters.inference.prepared_engines import (
+    EnginePreparation,
+    engine_identity,
+    prepare_engine,
+    reject_engine,
+    run_preparation,
+)
 from aidetector.adapters.inference.tensorrt_worker import build_and_test
 from aidetector.adapters.inference.yolo import open_detector
-from aidetector.configuration import OnnxConfig, YoloConfig
+from aidetector.configuration import Config, OnnxConfig, YoloConfig
 
 
 @pytest.fixture
@@ -29,21 +40,195 @@ def gpu_builder(tmp_path, monkeypatch):
     monkeypatch.setattr(torch.cuda, "get_device_properties", lambda _index: gpu)
     monkeypatch.setattr(prepared_engines, "version", lambda _name: "1.0")
     monkeypatch.setenv("AI_DETECTOR_NVIDIA_DRIVER", "580.88")
-    processes, commands = [], []
+    processes, commands, outcomes = [], [], []
+    started = Event()
     popen = subprocess.Popen
     fixture = Path(__file__).parents[2] / "support/tensorrt_process.py"
 
     def start(command, **kwargs):
+        assert all(process.poll() is not None for process in processes)
         commands.append(command)
-        assert command[-2] == "--prepare-tensorrt"
+        if outcomes:
+            kwargs["env"] = {**os.environ, "TENSORRT_TEST_MODE": outcomes.pop(0)}
         process = popen([sys.executable, "-u", str(fixture), command[-1]], **kwargs)
         processes.append(process)
+        started.set()
         return process
 
     monkeypatch.setattr(subprocess, "Popen", start)
     return SimpleNamespace(
-        source=source, gpu=gpu, commands=commands, processes=processes
+        source=source,
+        gpu=gpu,
+        commands=commands,
+        processes=processes,
+        started=started,
+        outcomes=outcomes,
     )
+
+
+def test_background_builds_wait_for_start_and_publish_reusable_engines_serially(
+    tmp_path, gpu_builder
+):
+    cache = tmp_path / "cache"
+    completed = Event()
+    notices = []
+
+    def report(event):
+        notices.append(
+            (event.kind, [process.poll() for process in gpu_builder.processes])
+        )
+        completed.set()
+
+    engines = EnginePreparation(cache, report_status=report)
+    configs = [
+        YoloConfig(model=str(gpu_builder.source), imgsz=size) for size in (64, 96)
+    ]
+    for config in configs:
+        assert engines.prepare(config, OnnxConfig(), 2, InferenceOptions()) is None
+    assert gpu_builder.processes == []
+    assert not list(cache.rglob("failure.txt"))
+    with engines.running():
+        assert completed.wait(10)
+        assert len(list(cache.glob("tensorrt/*/model.engine"))) == 2
+    assert notices == [("models_ready", [0, 0])]
+    assert len(gpu_builder.processes) == 2
+    assert all(process.poll() == 0 for process in gpu_builder.processes)
+    assert not list(cache.rglob("failure.txt"))
+    again = EnginePreparation(cache, report_status=report)
+    for config in configs:
+        assert again.prepare(config, OnnxConfig(), 2, InferenceOptions()).is_file()
+    with again.running():
+        pass
+    assert len(gpu_builder.processes) == 2
+    assert notices == [("models_ready", [0, 0])]
+
+
+@pytest.mark.parametrize("successful_first", [True, False])
+def test_background_completion_requires_a_new_engine_and_waits_for_failed_builds(
+    tmp_path, gpu_builder, successful_first, caplog
+):
+    gpu_builder.outcomes.extend(["ready" if successful_first else "failed", "failed"])
+    cache = tmp_path / "cache"
+    completed = Event()
+    notices = []
+
+    def report(event):
+        notices.append(
+            (event.kind, [process.poll() for process in gpu_builder.processes])
+        )
+        completed.set()
+
+    engines = EnginePreparation(cache, report_status=report)
+    for size in (64, 96):
+        engines.prepare(
+            YoloConfig(model=str(gpu_builder.source), imgsz=size),
+            OnnxConfig(),
+            1,
+            InferenceOptions(),
+        )
+    with engines.running():
+        if successful_first:
+            assert completed.wait(10)
+            assert notices == [("models_ready", [0, 2])]
+        else:
+            deadline = monotonic() + 10
+            while (
+                caplog.text.count("TensorRT preparation unavailable") != 2
+            ) and monotonic() < deadline:
+                Event().wait(0.01)
+            assert caplog.text.count("TensorRT preparation unavailable") == 2
+            assert not completed.wait(0.1)
+    assert len(gpu_builder.processes) == 2
+    assert len(list(cache.glob("tensorrt/*/model.engine"))) == int(successful_first)
+    assert len(list(cache.rglob("failure.txt"))) == (1 if successful_first else 2)
+    if not successful_first:
+        assert notices == []
+
+
+@pytest.mark.parametrize("explicit_stop", [False, True])
+def test_background_shutdown_reaps_the_builder_without_publishing_or_deferring(
+    tmp_path, gpu_builder, monkeypatch, explicit_stop
+):
+    monkeypatch.setenv("TENSORRT_TEST_MODE", "blocked")
+    cache = tmp_path / "cache"
+    stop = Event()
+    completions = []
+    engines = EnginePreparation(cache, stop, completions.append)
+    engines.prepare(
+        YoloConfig(model=str(gpu_builder.source)), OnnxConfig(), 1, InferenceOptions()
+    )
+    with engines.running():
+        assert gpu_builder.started.wait(5)
+        assert gpu_builder.processes[0].poll() is None
+        if explicit_stop:
+            stop.set()
+            gpu_builder.processes[0].wait(timeout=5)
+    assert gpu_builder.processes[0].poll() is not None
+    assert not list(cache.rglob("model.engine"))
+    assert not list(cache.rglob("failure.txt"))
+    assert not list(cache.rglob("preparing-*"))
+    assert completions == []
+
+
+@pytest.mark.parametrize("mode", ["blocked", "ready"])
+def test_monitoring_opens_both_detectors_before_starting_background_preparation(
+    tmp_path, gpu_builder, monkeypatch, mode
+):
+    monkeypatch.setenv("TENSORRT_TEST_MODE", mode)
+    monkeypatch.setattr(bootstrap, "TYPE", "cuda")
+    monkeypatch.setattr(
+        bootstrap,
+        "inference_runtime",
+        lambda *args: nullcontext(InferenceOptions()),
+    )
+    YOLO("yolo26n.yaml").save(gpu_builder.source)
+    assert cv2.imwrite(str(tmp_path / "input.png"), np.zeros((64, 64, 3), np.uint8))
+    config = Config.model_validate(
+        {
+            "detectors": [
+                {
+                    "detection": {"source": "input.png"},
+                    "yolo": {"model": str(gpu_builder.source), "imgsz": size},
+                }
+                for size in (64, 96)
+            ]
+        }
+    )
+    statuses = []
+    completed = Event()
+
+    def report(event):
+        if event.kind == "ready":
+            assert gpu_builder.processes == []
+        if event.kind == "models_ready":
+            completed.set()
+        if event.kind in {"frame", "inference"}:
+            assert gpu_builder.started.wait(5)
+            if mode == "blocked":
+                assert gpu_builder.processes[0].poll() is None
+            else:
+                assert completed.wait(10)
+        statuses.append(event)
+
+    results = bootstrap.run_application(
+        config, tmp_path, tmp_path, report_status=report, prefer_tensorrt=True
+    )
+    assert len(results) == 2
+    assert {event.rule_id for event in statuses if event.kind == "inference"} == {
+        "detector-1",
+        "detector-2",
+    }
+    ready = next(index for index, event in enumerate(statuses) if event.kind == "ready")
+    assert all(event.kind != "preparing" for event in statuses[ready + 1 :])
+    assert len(gpu_builder.processes) == (1 if mode == "blocked" else 2)
+    assert gpu_builder.processes[0].poll() is not None
+    assert len(list((tmp_path / "models").rglob("model.engine"))) == (
+        0 if mode == "blocked" else 2
+    )
+    assert [event.kind for event in statuses].count("models_ready") == (
+        0 if mode == "blocked" else 1
+    )
+    assert not list((tmp_path / "models").rglob("failure.txt"))
 
 
 def test_successful_engine_is_published_once_without_modifying_checkpoint(
@@ -66,19 +251,27 @@ def test_successful_engine_is_published_once_without_modifying_checkpoint(
     assert not list(cache.rglob("preparing-*"))
     assert not list(cache.rglob("failure.txt"))
     assert all(event.kind == "preparing" for event in progress)
+    assert all("limit" in event.message for event in progress)
     assert "GPU builder fixture: ready" in (first.parent / "build.log").read_text()
+    gpu_builder.source.write_bytes(b"new checkpoint")
+    second = prepare_engine(config, OnnxConfig(), 3, options, cache, progress.append)
+    assert second is not None and second != first
+    assert first.is_file() and second.is_file()
+    assert second.read_bytes() == b"engine-from-new checkpoint"
+    assert len(gpu_builder.commands) == 2
 
 
 @pytest.mark.parametrize(
     "change", ["weights", "size", "batch", "precision", "gpu", "driver", "runtime"]
 )
-def test_engine_cache_is_specific_to_weights_settings_gpu_and_runtime(
-    tmp_path, gpu_builder, monkeypatch, change
+def test_engine_identity_is_specific_to_weights_settings_gpu_and_runtime(
+    gpu_builder, monkeypatch, change
 ):
     config = YoloConfig(model=str(gpu_builder.source), imgsz=64)
     options = InferenceOptions(half=True)
-    cache = tmp_path / "cache"
-    first = prepare_engine(config, OnnxConfig(), 1, options, cache, lambda _: None)
+    arguments = export_arguments(config, OnnxConfig(), 1, options, "engine")
+    first = engine_identity(gpu_builder.source, config.task, arguments)
+    assert engine_identity(gpu_builder.source, config.task, arguments) == first
     batch = 1
     if change == "weights":
         gpu_builder.source.write_bytes(b"new checkpoint")
@@ -94,10 +287,9 @@ def test_engine_cache_is_specific_to_weights_settings_gpu_and_runtime(
         monkeypatch.setenv("AI_DETECTOR_NVIDIA_DRIVER", "581.00")
     else:
         monkeypatch.setattr(prepared_engines, "version", lambda _name: "2.0")
-    second = prepare_engine(config, OnnxConfig(), batch, options, cache, lambda _: None)
-    assert first is not None and second is not None and first != second
-    assert first.is_file() and second.is_file()
-    assert len(gpu_builder.commands) == 2
+    arguments = export_arguments(config, OnnxConfig(), batch, options, "engine")
+    assert engine_identity(gpu_builder.source, config.task, arguments) != first
+    assert gpu_builder.processes == []
 
 
 @pytest.mark.parametrize("mode", ["failed", "crashed", "blocked"])
@@ -124,6 +316,7 @@ def test_failed_or_stalled_builder_is_reaped_and_deferred_across_restarts(
     assert "deferred" in caplog.text
     if mode == "blocked":
         assert "exceeded" in caplog.text
+        assert "exceeded" in next(cache.rglob("failure.txt")).read_text()
 
 
 def test_cancelled_builder_is_reaped_and_next_start_can_retry(
@@ -225,6 +418,57 @@ def test_builder_parent_pipe_closes_without_leaving_an_orphan():
                 process.kill()
 
 
+def test_helper_startup_failure_is_saved_and_forwarded_to_detector_logs(
+    tmp_path, caplog
+):
+    request = tmp_path / "request.json"
+    request.write_text("invalid JSON", encoding="utf-8")
+    log = tmp_path / "build.log"
+    with caplog.at_level("INFO"), pytest.raises(RuntimeError, match="status 1"):
+        run_preparation(request, log, lambda _: None)
+    diagnostic = log.read_text()
+    assert "Starting TensorRT helper:" in diagnostic
+    assert "TensorRT helper started; pid=" in diagnostic
+    assert "JSONDecodeError" in diagnostic
+    assert "JSONDecodeError" in caplog.text
+
+
+def test_helper_dumps_repeated_stacks_during_a_blocked_inference_import(tmp_path):
+    fixture = Path(__file__).parents[2] / "support/tensorrt_stalled_import.py"
+    request = tmp_path / "request.json"
+    request.write_text("{}", encoding="utf-8")
+    log = tmp_path / "build.log"
+    with (
+        log.open("w", encoding="utf-8") as output,
+        subprocess.Popen(
+            [sys.executable, "-u", str(fixture), str(request)],
+            stdin=subprocess.PIPE,
+            stdout=output,
+            stderr=subprocess.STDOUT,
+        ) as process,
+    ):
+        try:
+            deadline = monotonic() + 10
+            diagnostic = ""
+            while monotonic() < deadline:
+                diagnostic = log.read_text(encoding="utf-8")
+                if diagnostic.count("Timeout (") >= 2:
+                    break
+                assert process.poll() is None, diagnostic
+                Event().wait(0.01)
+            assert diagnostic.count("Timeout (") >= 2, diagnostic
+            assert "TensorRT preparation: importing inference libraries" in diagnostic
+            assert "tensorrt_stalled_import.py" in diagnostic
+            assert "in find_spec" in diagnostic
+            assert "in build_and_test" in diagnostic
+            assert process.poll() is None  # Diagnostics do not abort a slow build.
+            process.stdin.close()
+            assert process.wait(timeout=10) == 1
+        finally:
+            if process.poll() is None:
+                process.kill()
+
+
 @pytest.mark.parametrize("failure", ["builder", "engine load"])
 def test_automatic_engine_failure_keeps_the_original_torch_model(
     tmp_path, gpu_builder, monkeypatch, failure
@@ -243,15 +487,18 @@ def test_automatic_engine_failure_keeps_the_original_torch_model(
             return setup_model(self, model, verbose)
 
         monkeypatch.setattr(BasePredictor, "setup_model", setup)
+    config = YoloConfig(model=str(gpu_builder.source), imgsz=64)
+    cache = tmp_path / "cache"
+    prepare_engine(config, OnnxConfig(), 1, InferenceOptions(), cache, lambda _: None)
     for _ in range(2):
         with open_detector(
-            YoloConfig(model=str(gpu_builder.source), imgsz=64),
+            config,
             OnnxConfig(),
             ("camera",),
             "cuda",
             InferenceOptions(),
-            tmp_path / "cache",
-            prefer_tensorrt=True,
+            cache,
+            engines=EnginePreparation(cache),
         ) as detector:
             assert detector.model.predictor.model.format == "pt"
             assert detector.model.ckpt_path == str(gpu_builder.source)

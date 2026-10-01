@@ -36,14 +36,10 @@ test('pasted credentials, tokens and invalid addresses are omitted from serializ
 	]) {
 		const draft = {
 			label: 'Barn',
-			address: cameraDraftAddress(address),
-			preset: 'copy',
-			copyFromCameraId: 'existing-camera'
+			address: cameraDraftAddress(address)
 		};
 		assert.deepEqual(JSON.parse(JSON.stringify(draft)), {
-			label: 'Barn',
-			preset: 'copy',
-			copyFromCameraId: 'existing-camera'
+			label: 'Barn'
 		});
 	}
 });

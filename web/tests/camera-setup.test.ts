@@ -1,4 +1,4 @@
-import { readTestPresets } from './support/presets.ts';
+import { addMonitoredCamera } from './support/configuration.ts';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
@@ -25,12 +25,14 @@ async function fixture(t: TestContext) {
 		config: path.join(directory, 'config.json'),
 		app: path.join(directory, 'app.json')
 	};
-	return { files, store: new ConfigurationStore(files, readTestPresets) };
+	return { files, store: new ConfigurationStore(files) };
 }
 
 async function readyCamera(store: ConfigurationStore) {
-	const camera = await store.saveCamera(
-		{ label: 'Yard', source, mode: 'preset', preset: 'general', connection },
+	const camera = await addMonitoredCamera(
+		store,
+		{ label: 'Yard', source, connection },
+		'general',
 		verifiedAt
 	);
 	const { signature } = cameraArchiveSelection(await store.read(), camera.id);
@@ -43,7 +45,7 @@ test('camera progress and non-secret ONVIF details survive reopening and renamin
 	const camera = await readyCamera(store);
 	await store.finishSetup(async () => new Set([camera.id]));
 	await store.saveCamera({ id: camera.id, label: 'Main yard', source, mode: 'keep' });
-	const reopened = await new ConfigurationStore(files, readTestPresets).read();
+	const reopened = await new ConfigurationStore(files).read();
 	assert.equal(reopened.app.streams[0].id, camera.id);
 	assert.deepEqual(reopened.app.streams[0].connection, connection);
 	const progress = cameraSetupStatus(reopened, camera.id);
@@ -55,10 +57,7 @@ test('camera progress and non-secret ONVIF details survive reopening and renamin
 
 test('setup can finish without phone alerts but still requires real current monitoring', async (t) => {
 	const { files, store } = await fixture(t);
-	const camera = await store.saveCamera(
-		{ label: 'Yard', source, mode: 'preset', preset: 'general' },
-		verifiedAt
-	);
+	const camera = await addMonitoredCamera(store, { label: 'Yard', source }, 'general', verifiedAt);
 	const { signature } = cameraArchiveSelection(await store.read(), camera.id);
 	await store.recordArchiveCheck(camera.id, signature, verifiedAt);
 	await assert.rejects(
@@ -67,10 +66,7 @@ test('setup can finish without phone alerts but still requires real current moni
 	);
 	assert.equal(cameraSetupStatus(await store.read(), camera.id).completedAt, undefined);
 	await store.finishSetup(async () => new Set([camera.id]));
-	assert.ok(
-		cameraSetupStatus(await new ConfigurationStore(files, readTestPresets).read(), camera.id)
-			.completedAt
-	);
+	assert.ok(cameraSetupStatus(await new ConfigurationStore(files).read(), camera.id).completedAt);
 });
 
 test('view-only setup can finish after picture confirmation without monitoring, alerts or an archive test', async (t) => {
@@ -112,19 +108,18 @@ test('finishing all cameras is atomic and still requires every camera check and 
 		/Monitoring has not been verified/
 	);
 	await store.finishSetup(async () => new Set([first.id]));
-	const saved = await new ConfigurationStore(files, readTestPresets).read();
+	const saved = await new ConfigurationStore(files).read();
 	assert.ok(cameraSetupStatus(saved, first.id).completedAt);
 	assert.ok(cameraSetupStatus(saved, second.id).completedAt);
 });
 
 test('setup lists only the recipients actually assigned to each camera', async (t) => {
 	const { store } = await fixture(t);
-	const first = await store.saveCamera(
-		{ label: 'Yard', source, mode: 'preset', preset: 'general' },
-		verifiedAt
-	);
-	const second = await store.saveCamera(
-		{ label: 'Entrance', source: 'rtsp://camera.test/entrance', mode: 'preset', preset: 'general' },
+	const first = await addMonitoredCamera(store, { label: 'Yard', source }, 'general', verifiedAt);
+	const second = await addMonitoredCamera(
+		store,
+		{ label: 'Entrance', source: 'rtsp://camera.test/entrance' },
+		'general',
 		verifiedAt
 	);
 	await store.saveAlerts({
@@ -203,7 +198,7 @@ test('Finish checks runtime after a queued rule change has restarted monitoring'
 	const camera = await readyCamera(store);
 	let monitoring = true;
 	let callbackCalled = false;
-	const queued = new ConfigurationStore(files, readTestPresets, () => ({
+	const queued = new ConfigurationStore(files, () => ({
 		validate: async () => {},
 		apply: async () => {
 			monitoring = false;
@@ -252,7 +247,7 @@ test('failed progress persistence does not claim completion and retry succeeds',
 });
 
 test('client camera input cannot forge progress and rejects secrets in reusable connection metadata', () => {
-	const input = { label: 'Yard', source, mode: 'preset', preset: 'general', connection };
+	const input = { label: 'Yard', source, mode: 'view-only', connection };
 	assert.equal(v.safeParse(cameraInput, input).success, true);
 	for (const address of [
 		'http://farmer:secret@camera.test/onvif',
@@ -276,51 +271,17 @@ test('client camera input cannot forge progress and rejects secrets in reusable 
 	assert.equal('connection' in stream, false);
 });
 
-test('removed presets do not block keeping or copying saved settings and completion', async (t) => {
-	const { files } = await fixture(t);
-	const template = (await readTestPresets()).find((preset) => preset.id === 'general')!;
-	let presetReads = 0;
-	let removed = false;
-	const store = new ConfigurationStore(files, async () => {
-		presetReads++;
-		if (removed) throw new Error('The preset folder is no longer installed');
-		return [{ ...template, id: 'warehouse', name: 'Warehouse security' }];
-	});
-	const camera = await store.saveCamera(
-		{ label: 'Entrance', source, mode: 'preset', preset: 'warehouse' },
-		verifiedAt
-	);
-	const { signature } = cameraArchiveSelection(await store.read(), camera.id);
-	await store.recordArchiveCheck(camera.id, signature, verifiedAt);
-	await store.saveAlerts({
-		label: 'Security desk',
-		token: 'token',
-		chat: 'chat',
-		detectorLabels: ['Entrance'],
-		received: true
-	});
+test('camera edits and completion do not depend on preset files', async (t) => {
+	const { files, store } = await fixture(t);
+	const camera = await readyCamera(store);
 	await store.finishSetup(async () => new Set([camera.id]));
 	const original = await store.read();
-	const completedAt = cameraSetupStatus(original, camera.id).completedAt;
-	removed = true;
-	await store.saveCamera({ id: camera.id, label: 'Main entrance', source, mode: 'keep' });
-	const copy = await store.saveCamera({
-		label: 'Side entrance',
-		source: 'rtsp://side.test/live',
-		mode: 'copy',
-		copyFromCameraId: camera.id
-	});
-	const saved = await store.read();
-	assert.equal(presetReads, 1);
-	assert.equal(saved.app.detectors[0].preset, 'warehouse');
-	assert.equal(saved.app.detectors[1].preset, 'warehouse');
-	assert.deepEqual(saved.config.detectors[0], original.config.detectors[0]);
-	assert.deepEqual(saved.config.detectors[1], {
-		...original.config.detectors[0],
-		detection: { ...original.config.detectors[0].detection, source: ['rtsp://side.test/live'] }
-	});
-	assert.ok(completedAt);
-	assert.equal(cameraSetupStatus(saved, camera.id).completedAt, completedAt);
-	assert.equal(cameraSetupStatus(saved, copy.id).completedAt, undefined);
-	assert.deepEqual(cameraSetupStatus(saved, copy.id).alerts, ['Security desk']);
+	const reopened = new ConfigurationStore(files);
+	await reopened.saveCamera({ id: camera.id, label: 'Main entrance', source, mode: 'keep' });
+	const saved = await reopened.read();
+	assert.deepEqual(saved.config.detectors, original.config.detectors);
+	assert.equal(
+		cameraSetupStatus(saved, camera.id).completedAt,
+		cameraSetupStatus(original, camera.id).completedAt
+	);
 });

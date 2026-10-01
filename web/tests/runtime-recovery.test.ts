@@ -2,11 +2,10 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { syncBuiltinESMExports } from 'node:module';
 import path from 'node:path';
-import timers, { setTimeout } from 'node:timers/promises';
 import { test, type TestContext } from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { mockTimeouts, realDelay } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 
@@ -18,7 +17,7 @@ const config = { detectors: [{ detection: { source } }] };
 async function waitFor(predicate: () => boolean | Promise<boolean>) {
 	for (let i = 0; i < 200; i++) {
 		if (await predicate()) return;
-		await setTimeout(25);
+		await realDelay(25);
 	}
 	assert.fail('Expected recovery state was not reached');
 }
@@ -30,6 +29,7 @@ async function fixture(t: TestContext, extra = {}) {
 		await detector.stop();
 		await rm(directory, { recursive: true, force: true });
 	});
+	mockTimeouts(t);
 	const settings = {
 		...config,
 		failureExitCode: 75,
@@ -56,6 +56,69 @@ async function fixture(t: TestContext, extra = {}) {
 }
 
 test(
+	'completed model builds trigger one drained restart and preserve monitoring settings',
+	posixOnly,
+	async (t) => {
+		const modelsReady = { version: 1, event: 'models_ready', at: new Date().toISOString() };
+		const { detector, directory, settings, pid, starts } = await fixture(t, {
+			modelsReadyEvents: [modelsReady, modelsReady]
+		});
+		const originalPid = await pid();
+		process.kill(originalPid, 'SIGUSR1');
+		await waitFor(
+			async () => (await starts()) === 2 && detector.status().readiness === 'monitoring'
+		);
+		assert.notEqual(await pid(), originalPid);
+		assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
+		assert.throws(() => process.kill(originalPid, 0), { code: 'ESRCH' });
+		assert.deepEqual(await readJson(path.join(directory, 'config.json')), settings);
+		assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
+			mode: 'auto',
+			enabled: true
+		});
+		const log = await detector.log.read();
+		assert.equal(log.match(/Restart requested: TensorRT models are ready/g)?.length, 1);
+		assert.doesNotMatch(log, /ERROR|stopped unexpectedly|Restarting the detector in/);
+		await detector.stop();
+		assert.equal(await starts(), 2);
+	}
+);
+
+for (const disable of [true, false]) {
+	test(
+		`${disable ? 'pause' : 'quit'} during a model restart prevents relaunch`,
+		posixOnly,
+		async (t) => {
+			const { detector, directory, pid, starts } = await fixture(t, { stopDelayMs: 500 });
+			process.kill(await pid(), 'SIGUSR1');
+			await waitFor(() => detector.status().phase === 'stopping');
+			await detector.stop(disable);
+			assert.equal(await starts(), 1);
+			assert.equal(detector.status().phase, 'stopped');
+			assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
+			assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
+				mode: 'auto',
+				enabled: !disable
+			});
+		}
+	);
+}
+
+test('invalid model completion records cannot request a restart', posixOnly, async (t) => {
+	const { detector, pid, starts } = await fixture(t, {
+		modelsReadyEvents: [
+			{ version: 2, event: 'models_ready', at: new Date().toISOString() },
+			{ version: 1, event: 'models_ready', at: 'invalid' }
+		]
+	});
+	process.kill(await pid(), 'SIGUSR1');
+	await realDelay(100);
+	assert.equal(await starts(), 1);
+	assert.equal(detector.status().readiness, 'monitoring');
+	assert.doesNotMatch(await detector.log.read(), /Restart requested/);
+});
+
+test(
 	'an MPS failure starts a fresh process and retains diagnostics without stale readiness',
 	posixOnly,
 	async (t) => {
@@ -68,6 +131,7 @@ test(
 		assert.match(await detector.log.read(), /Injected inference failure/);
 		assert.throws(() => process.kill(originalPid, 0), { code: 'ESRCH' });
 
+		t.mock.timers.tick(2000);
 		await waitFor(() => detector.status().readiness === 'monitoring');
 		assert.notEqual(await pid(), originalPid);
 		assert.equal(await starts(), 2);
@@ -89,23 +153,18 @@ test(
 		let now = Date.now();
 		t.mock.method(Date, 'now', () => now);
 		const { detector, directory, settings, pid, starts } = await fixture(t);
-		const waits: number[] = [];
-		const realTimeout = timers.setTimeout;
-		t.mock.method(
-			timers,
-			'setTimeout',
-			(ms: number, value?: unknown, options?: Parameters<typeof setTimeout>[2]) => {
-				if (ms >= 2000) waits.push(ms);
-				return realTimeout(Math.min(ms, 50), value, options);
-			}
-		);
-		syncBuiltinESMExports();
-		t.after(() => {
-			t.mock.restoreAll();
-			syncBuiltinESMExports();
-		});
+		const waits = [2000, 4000, 8000, 16000, 30000, 30000, 30000];
 		for (let attempt = 1; attempt <= 7; attempt++) {
 			process.kill(await pid(), 'SIGUSR2');
+			await waitFor(() =>
+				detector
+					.status()
+					.message.includes(`Restarting monitoring in ${waits[attempt - 1] / 1000} seconds`)
+			);
+			t.mock.timers.tick(waits[attempt - 1] - 1);
+			await realDelay(0);
+			assert.equal(await starts(), attempt);
+			t.mock.timers.tick(1);
 			await waitFor(
 				async () => (await starts()) === attempt + 1 && detector.status().readiness === 'monitoring'
 			);
@@ -119,10 +178,11 @@ test(
 			}))
 		});
 		process.kill(await pid(), 'SIGUSR2');
+		await waitFor(() => detector.status().message.includes('Restarting monitoring in 2 seconds'));
+		t.mock.timers.tick(2000);
 		await waitFor(
 			async () => (await starts()) === 9 && detector.status().readiness === 'monitoring'
 		);
-		assert.deepEqual(waits, [2000, 4000, 8000, 16000, 30000, 30000, 30000, 2000]);
 	}
 );
 
@@ -138,7 +198,8 @@ for (const disable of [true, false]) {
 			mode: 'auto',
 			enabled: !disable
 		});
-		await setTimeout(2100);
+		t.mock.timers.tick(2100);
+		await realDelay(0);
 		assert.equal(await starts(), 1);
 	});
 }
@@ -151,6 +212,7 @@ test(
 		process.kill(await pid(), 'SIGUSR2');
 		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
 		await writeJson(path.join(directory, 'config.json'), { detectors: [] });
+		t.mock.timers.tick(2000);
 		await waitFor(() => detector.status().message.includes('Add a detector'));
 		assert.match(detector.status().message, /Add a detector/);
 		assert.match(detector.status().message, /Restarting monitoring in 4 seconds/);
@@ -158,7 +220,7 @@ test(
 		assert.match(await detector.log.read(), /Injected inference failure/);
 		assert.equal(await starts(), 1);
 		await writeJson(path.join(directory, 'config.json'), settings);
-		// The second attempt waits four seconds; allow for startup after that delay.
+		t.mock.timers.tick(4000);
 		await waitFor(() => detector.status().readiness === 'monitoring');
 		assert.equal(await starts(), 2);
 	}
@@ -172,6 +234,7 @@ test(
 		process.kill(await pid(), 'SIGUSR2');
 		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
 		await writeJson(path.join(directory, 'config.json'), { ...config, holdCheck: true });
+		t.mock.timers.tick(2000);
 		await waitFor(async () => (await detector.log.read()).includes('Checking configuration'));
 		const checkPid = Number(await readFile(path.join(directory, 'check-pid.txt'), 'utf8'));
 		await detector.stop();
@@ -190,6 +253,8 @@ for (const exitCode of [0, 1, 2, 139]) {
 		const { detector, pid, starts } = await fixture(t, { failureExitCode: exitCode });
 		const originalPid = await pid();
 		process.kill(originalPid, 'SIGUSR2');
+		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
+		t.mock.timers.tick(2000);
 		await waitFor(
 			async () => (await starts()) === 2 && detector.status().readiness === 'monitoring'
 		);
@@ -202,6 +267,8 @@ test('a hard process termination restarts monitoring', posixOnly, async (t) => {
 	const { detector, pid, starts } = await fixture(t);
 	const originalPid = await pid();
 	process.kill(originalPid, 'SIGKILL');
+	await waitFor(() => detector.status().message.includes('Restarting monitoring'));
+	t.mock.timers.tick(2000);
 	await waitFor(async () => (await starts()) === 2 && detector.status().readiness === 'monitoring');
 	assert.notEqual(await pid(), originalPid);
 	assert.match(await detector.log.read(), /Detector exited: SIGKILL/);
@@ -221,6 +288,7 @@ test(
 			assert.match(await reopened.log.read(), /Diagnostic from the previous application process/);
 			assert.match(reopened.status().message, /Add a detector.*Restarting monitoring/);
 			await writeJson(path.join(directory, 'config.json'), settings);
+			t.mock.timers.tick(2000);
 			await waitFor(() => reopened.status().readiness === 'monitoring');
 			assert.equal(await starts(), 2);
 		} finally {

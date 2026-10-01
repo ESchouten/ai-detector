@@ -87,6 +87,22 @@
       "problemMatcher": []
     },
     {
+      "label": "Detector: core tests (fast)",
+      "type": "process",
+      "command": "uv",
+      "args": [
+        "run",
+        "--no-sync",
+        "pytest",
+        "-q",
+        "tests/domain",
+        "tests/application",
+        "tests/test_configuration.py",
+        "tests/test_schemas.py"
+      ],
+      "problemMatcher": []
+    },
+    {
       "label": "Detector: tests",
       "type": "process",
       "command": "uv",

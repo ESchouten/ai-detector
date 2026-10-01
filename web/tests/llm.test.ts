@@ -58,7 +58,7 @@ for (const editing of [false, true]) {
 			config: path.join(directory, 'config.json'),
 			app: path.join(directory, 'app.json')
 		};
-		const store = new ConfigurationStore(files, readTestPresets);
+		const store = new ConfigurationStore(files);
 		if (editing) await store.saveLlm(connection);
 		const presets = (await readTestPresets()).filter(({ detector }) => detector.vlm?.length);
 		assert.equal(presets.length, 3);
@@ -97,10 +97,10 @@ for (const editing of [false, true]) {
 test('a new connection preserves paused, standalone and already assigned validators', async (t) => {
 	const directory = await mkdtemp(path.join(tmpdir(), 'ai-preset-preservation-'));
 	t.after(() => rm(directory, { recursive: true, force: true }));
-	const store = new ConfigurationStore(
-		{ config: path.join(directory, 'config.json'), app: path.join(directory, 'app.json') },
-		readTestPresets
-	);
+	const store = new ConfigurationStore({
+		config: path.join(directory, 'config.json'),
+		app: path.join(directory, 'app.json')
+	});
 	await store.saveLlm(connection);
 	const waiting = { key: null, prompt: 'Check the event?', strategy: 'VIDEO' as const };
 	for (const [label, settings] of Object.entries({
@@ -133,7 +133,7 @@ test('the default Gemini connection saves one verifier with an ordered model lis
 		config: path.join(directory, 'config.json'),
 		app: path.join(directory, 'app.json')
 	};
-	const store = new ConfigurationStore(files, async () => []);
+	const store = new ConfigurationStore(files);
 	await store.saveDetector({
 		meta: { label: 'Detector' },
 		detector: {
@@ -166,10 +166,10 @@ test('the default Gemini connection saves one verifier with an ordered model lis
 test('connections without a key leave preset questions waiting until a key is saved', async (t) => {
 	const directory = await mkdtemp(path.join(tmpdir(), 'ai-key-required-'));
 	t.after(() => rm(directory, { recursive: true, force: true }));
-	const store = new ConfigurationStore(
-		{ config: path.join(directory, 'config.json'), app: path.join(directory, 'app.json') },
-		async () => []
-	);
+	const store = new ConfigurationStore({
+		config: path.join(directory, 'config.json'),
+		app: path.join(directory, 'app.json')
+	});
 	await store.saveDetector({
 		meta: { label: 'Waiting' },
 		detector: { detection: { source: ['video.mp4'] }, vlm: [{ prompt: 'Check?', key: null }] }
@@ -219,7 +219,7 @@ test('loading old preview settings removes flags and keeps disabled validators d
 			]
 		})
 	);
-	const store = new ConfigurationStore(files, async () => []);
+	const store = new ConfigurationStore(files);
 	const saved = await store.read();
 	assert.deepEqual(saved.config.detectors[0].vlm, clearVerificationKeys(connected).vlm);
 	assert.deepEqual(saved.config.detectors[1].vlm, [
@@ -253,10 +253,7 @@ test('invalid legacy settings are reported without rewriting either file', async
 	});
 	await writeFile(files.config, config);
 	await writeFile(files.app, '{}');
-	await assert.rejects(
-		new ConfigurationStore(files, async () => []).read(),
-		/unsupported property/
-	);
+	await assert.rejects(new ConfigurationStore(files).read(), /unsupported property/);
 	assert.equal(await readFile(files.config, 'utf8'), config);
 	assert.equal(await readFile(files.app, 'utf8'), '{}');
 });
@@ -268,7 +265,7 @@ test('one connection updates multiple detectors without changing their questions
 		config: path.join(directory, 'config.json'),
 		app: path.join(directory, 'app.json')
 	};
-	const store = new ConfigurationStore(files, async () => []);
+	const store = new ConfigurationStore(files);
 	await store.saveLlm(connection);
 	const fallback = {
 		prompt: 'Fallback question',
@@ -336,10 +333,10 @@ test('editing verification JSON detaches a stale shared connection without chang
 test('clearing keys disables all verification and connection edits do not reactivate it', async (t) => {
 	const directory = await mkdtemp(path.join(tmpdir(), 'ai-verification-pause-'));
 	t.after(() => rm(directory, { recursive: true, force: true }));
-	const store = new ConfigurationStore(
-		{ config: path.join(directory, 'config.json'), app: path.join(directory, 'app.json') },
-		async () => []
-	);
+	const store = new ConfigurationStore({
+		config: path.join(directory, 'config.json'),
+		app: path.join(directory, 'app.json')
+	});
 	await store.saveLlm(connection);
 	const original = assignConnection(
 		{

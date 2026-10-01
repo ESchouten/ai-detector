@@ -1,3 +1,4 @@
+import { addMonitoredCamera } from './support/configuration.ts';
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
@@ -7,7 +8,6 @@ import { parseSettings } from '../src/lib/advanced-settings.ts';
 import { settingsRevision } from '../src/lib/server/configuration/advanced.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
-import { readTestPresets } from './support/presets.ts';
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'advanced-settings-'));
@@ -16,7 +16,7 @@ async function fixture(t: TestContext) {
 		config: path.join(directory, 'config.json'),
 		app: path.join(directory, 'app.json')
 	};
-	const store = new ConfigurationStore(files, readTestPresets);
+	const store = new ConfigurationStore(files);
 	return { directory, files, store };
 }
 
@@ -50,12 +50,11 @@ test('editor validation accepts an empty setup and checks syntax, unknown proper
 
 test('advanced edits preserve names, camera identities and delivery; tuning clears preset identity', async (t) => {
 	const { store } = await fixture(t);
-	const camera = await store.saveCamera({
-		label: 'Barn',
-		source: 'rtsp://camera.test/live',
-		mode: 'preset',
-		preset: 'calving-catcher'
-	});
+	const camera = await addMonitoredCamera(
+		store,
+		{ label: 'Barn', source: 'rtsp://camera.test/live' },
+		'calving-catcher'
+	);
 	let saved = await store.read();
 	const draft = structuredClone(saved.config);
 	draft.detectors[0].exporters = { disk: [{ strategy: 'ALL' }] };
@@ -67,7 +66,6 @@ test('advanced edits preserve names, camera identities and delivery; tuning clea
 	saved = await store.read();
 	assert.equal(saved.app.detectors[0].preset, undefined);
 	assert.equal(saved.app.detectors[0].label, 'Barn');
-	assert.equal(saved.app.detectors[0].cameraId, camera.id);
 	assert.equal(saved.app.streams[0].id, camera.id);
 	assert.equal(saved.config.detectors[0].detection.interval, 17);
 	assert.deepEqual(saved.config.detectors[0].exporters, { disk: [{ strategy: 'ALL' }] });

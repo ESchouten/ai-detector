@@ -71,7 +71,7 @@ def asset_server(monkeypatch, tmp_path, request):
             certificate = tmp_path / "server-ca.pem"
             enable_https(server, certificate)
             monkeypatch.setenv("SSL_CERT_FILE", str(certificate))
-        thread = Thread(target=server.serve_forever)
+        thread = Thread(target=server.serve_forever, kwargs={"poll_interval": 0.01})
         thread.start()
         try:
             yield f"{request.param}://127.0.0.1:{server.server_port}", assets, requests

@@ -278,7 +278,7 @@ test('settings backup preserves cameras, detector options and alerts, and import
 		config: path.join(directory, 'config.json'),
 		app: path.join(directory, 'app.json')
 	};
-	const store = new ConfigurationStore(files, async () => []);
+	const store = new ConfigurationStore(files);
 	await store.replace({
 		config: {
 			detectors: [
@@ -312,10 +312,10 @@ test('settings backup preserves cameras, detector options and alerts, and import
 	await mkdir(destination);
 	for (const [name, data] of Object.entries(zipped))
 		await writeFile(path.join(extracted, name), data);
-	const restored = new ConfigurationStore(
-		{ config: path.join(destination, 'config.json'), app: path.join(destination, 'app.json') },
-		async () => []
-	);
+	const restored = new ConfigurationStore({
+		config: path.join(destination, 'config.json'),
+		app: path.join(destination, 'app.json')
+	});
 	const importer = new InstallationImport(destination, restored);
 	const summary = await importer.inspect(extracted);
 	await importer.start(summary.id, false);

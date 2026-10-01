@@ -150,6 +150,13 @@ def run_application(
         options = resources.enter_context(
             inference_runtime(config.onnx, models, TYPE, report_status)
         )
+        engines = None
+        if prefer_tensorrt and TYPE == "cuda":
+            from aidetector.adapters.inference.prepared_engines import EnginePreparation
+
+            engines = EnginePreparation(
+                data_directory / "models" / "prepared", stop_requested, report_status
+            )
         streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None
         workers: list[DetectorWorker] = []
@@ -196,8 +203,7 @@ def run_application(
                         options,
                         cache_directory=data_directory / "models" / "prepared",
                         report_status=rule_status,
-                        prefer_tensorrt=prefer_tensorrt,
-                        stop_requested=stop_requested,
+                        engines=engines,
                     )
                 )
                 event_policy = EventPolicy(
@@ -249,4 +255,6 @@ def run_application(
             resources.enter_context(preview.open())
         resources.enter_context(streams.open())
         report_status(StatusEvent("ready"))
+        if engines is not None:
+            resources.enter_context(engines.running())
         return run_detectors(tuple(workers), health, stop_requested)

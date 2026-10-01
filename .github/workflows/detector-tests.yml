@@ -85,9 +85,15 @@ jobs:
         run: uv run --no-sync lint-imports --no-cache
 
       - name: Pytest with branch coverage
+        if: runner.os == 'Linux'
         run: uv run --no-sync coverage run -m pytest --junitxml=.reports/tests.xml
 
+      - name: Pytest platform behavior
+        if: runner.os != 'Linux'
+        run: uv run --no-sync pytest --junitxml=.reports/tests.xml
+
       - name: Coverage report
+        if: runner.os == 'Linux'
         run: |
           uv run --no-sync coverage combine
           uv run --no-sync coverage report

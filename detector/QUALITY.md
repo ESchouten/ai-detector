@@ -29,6 +29,14 @@ Ruff also enforces the existing absolute-import convention through `TID252`; imp
 
 Parameter count and return count are not gates. Several keyword options and clear early returns are reasonable here. Turning them into configuration objects or deeply nested conditionals just to silence a rule would hurt readability.
 
+## Test maintenance
+
+Use the [fast core selection and focused adapter tests](README.md#test-feedback-while-editing) during development. `tests/integration/` contains the expensive real SDK exports and cold packaged-startup cache check. It is included by default in `pytest` and in every detector CI run. These integration cases cover different contracts: direct export releases Torch weights, cached export reopens without rebuilding, and YOLO26 FP16 export has a valid graph and supports dynamic batches. Similar setup alone does not make those assertions duplicates.
+
+Cache identity variants do not need a subprocess per input. A real build/reuse/invalidation test verifies the boundary, while direct identity tests cover weight, settings, GPU, driver and runtime changes. Test HTTP servers poll frequently during teardown. The blocked Windows ML test waits for its real helper to reach the SDK before triggering a short real subprocess timeout; it still checks termination and diagnostics. Do not replace real resource cleanup with mock-only assertions.
+
+Linux collects full branch coverage. Windows and macOS run the same behavior suite without coverage instrumentation. Native distribution CI remains responsible for platform launchers, update packages and compiled process lifecycles.
+
 ## Reproduce the reports
 
 The normal checks are listed in [README.md](README.md#development-checks). For complexity:

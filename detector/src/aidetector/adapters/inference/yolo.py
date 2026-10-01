@@ -4,9 +4,9 @@ import logging
 import pathlib
 from collections.abc import Iterator
 from contextlib import contextmanager, nullcontext
-from threading import Event, Lock
+from threading import Lock
 from time import perf_counter
-from typing import Any, Literal, cast
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 import numpy as np
 from numpy.typing import NDArray
@@ -25,6 +25,9 @@ from aidetector.domain.models import BoundingBox, Frame, Observation
 
 logger = logging.getLogger(__name__)
 _MPS_LOCK = Lock()
+
+if TYPE_CHECKING:
+    from aidetector.adapters.inference.prepared_engines import EnginePreparation
 
 
 @contextmanager
@@ -233,8 +236,7 @@ def open_detector(
     options: InferenceOptions,
     cache_directory: pathlib.Path | None = None,
     report_status: ReportStatus = ignore_status,
-    prefer_tensorrt: bool = False,
-    stop_requested: Event | None = None,
+    engines: EnginePreparation | None = None,
 ) -> Iterator[YoloDetector]:
     """Prepare inference and own its model and tracking frames until shutdown."""
     loaded: YOLO | None = None
@@ -244,23 +246,16 @@ def open_detector(
             model_path = config.model
             native_mps = options.native_mps and model_path.endswith(".pt")
             if (
-                prefer_tensorrt
+                engines is not None
                 and build_type == "cuda"
                 and model_path.endswith(".pt")
                 and cache_directory is not None
             ):
-                from aidetector.adapters.inference.prepared_engines import (
-                    prepare_engine,
-                )
-
-                engine = prepare_engine(
+                engine = engines.prepare(
                     config,
                     onnx,
                     len(sources),
                     options,
-                    cache_directory,
-                    report_status,
-                    stop_requested,
                 )
                 if engine is not None:
                     loaded = _load_prepared_engine(

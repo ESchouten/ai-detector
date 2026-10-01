@@ -11,6 +11,7 @@ const eventSchema = v.object({
 		'preparing',
 		'preparation_failed',
 		'ready',
+		'models_ready',
 		'frame',
 		'inference',
 		'processed',
@@ -114,7 +115,7 @@ export class RuntimeProgress {
 		}
 	}
 
-	accept(line: string): void {
+	accept(line: string): ProgressEvent | undefined {
 		let value: unknown;
 		try {
 			value = JSON.parse(line.slice(STATUS_PREFIX.length));
@@ -127,26 +128,27 @@ export class RuntimeProgress {
 		if (event.event === 'ready') {
 			this.prepared = true;
 			this.preparation = undefined;
-			return;
+			return event;
 		}
 		if (event.event === 'preparing') {
 			const rule = Array.from(this.cameras.values(), (camera) =>
 				camera.rules.get(event.ruleId ?? '')
 			).find(Boolean);
 			this.preparation = rule && event.message ? `${rule.label}: ${event.message}` : event.message;
-			return;
+			return event;
 		}
 		if (event.event === 'preparation_failed') {
 			this.preparationFailure =
 				event.message ?? 'Model preparation failed. Check the details and try again.';
-			return;
+			return event;
 		}
 		if (event.event === 'notice') {
 			this.notice = event.message;
-			return;
+			return event;
 		}
 		const camera = event.sourceKey ? this.cameras.get(event.sourceKey) : undefined;
 		if (camera) this.observe(camera, event);
+		return event;
 	}
 
 	private observe(camera: CameraProgress, event: ProgressEvent): void {

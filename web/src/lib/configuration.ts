@@ -49,29 +49,11 @@ const cameraDetails = {
 	checkId: v.optional(text),
 	connection: v.optional(v.nullable(cameraConnectionMeta))
 };
-export const cameraInput = v.variant('mode', [
-	v.object({
-		...cameraDetails,
-		id: v.optional(text),
-		mode: v.literal('preset'),
-		preset: text,
-		copyFromCameraId: v.optional(v.never('Choose either a watched event or an existing camera.'))
-	}),
-	v.object({
-		...cameraDetails,
-		id: v.optional(text),
-		mode: v.picklist(['view-only', 'keep']),
-		preset: v.optional(v.never('Choose a preset only when changing monitoring settings.')),
-		copyFromCameraId: v.optional(v.never('Choose an existing camera only when copying settings.'))
-	}),
-	v.object({
-		...cameraDetails,
-		id: v.optional(v.never('Copy monitoring settings when adding a new camera.')),
-		mode: v.literal('copy'),
-		preset: v.optional(v.never('Choose either a preset or an existing camera.')),
-		copyFromCameraId: text
-	})
-]);
+export const cameraInput = v.object({
+	...cameraDetails,
+	id: v.optional(text),
+	mode: v.picklist(['view-only', 'keep'])
+});
 
 export const alertsInput = v.object({
 	...telegramInput.entries,

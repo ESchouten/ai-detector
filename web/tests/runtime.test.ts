@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
-import { setTimeout } from 'node:timers/promises';
+import { mockTimeouts, realDelay } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { chooseRuntime, dockerArguments } from '../src/lib/server/runtime-platform.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
@@ -63,6 +63,7 @@ test(
 			await detector.stop();
 			await rm(directory, { recursive: true, force: true });
 		});
+		mockTimeouts(t);
 		const message =
 			'The detection model could not be downloaded. Check the internet connection and try again.';
 		await writeJson(path.join(directory, 'config.json'), {
@@ -77,6 +78,7 @@ test(
 		assert.ok(detector.status().message.startsWith(message));
 		assert.equal(detector.status().readiness, 'preparing');
 		await writeJson(path.join(directory, 'config.json'), config);
+		t.mock.timers.tick(2000);
 		await waitFor(() => detector.status().phase === 'running');
 		assert.ok(!detector.status().message.includes(message));
 		assert.ok((await detector.log.read()).includes(message));
@@ -87,7 +89,7 @@ test(
 async function waitFor(predicate: () => boolean | Promise<boolean>) {
 	for (let i = 0; i < 200; i++) {
 		if (await predicate()) return;
-		await setTimeout(25);
+		await realDelay(25);
 	}
 	assert.fail('Expected process state was not reached');
 }
@@ -115,18 +117,6 @@ test('Docker mounts the same data, requests a GPU and runs as the Linux user wit
 	assert.ok(args.includes('--status-json'));
 	assert.ok(args.includes('--live-preview'));
 	assert.ok(!dockerArguments('image', 'C:\\Farm data', 'farm', 'win32').includes('--user'));
-});
-
-test('missing and malformed JSON remain different and failed reads never overwrite settings', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-json-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const file = path.join(directory, 'config.json');
-	assert.equal(await readJson(file), null);
-	await writeFile(file, '{invalid');
-	await assert.rejects(readJson(file), SyntaxError);
-	assert.equal(await readFile(file, 'utf8'), '{invalid');
-	await writeJson(file, config);
-	assert.deepEqual(await readJson(file), config);
 });
 
 test(

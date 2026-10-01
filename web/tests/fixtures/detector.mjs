@@ -37,6 +37,12 @@ if (config.failureExitCode !== undefined) {
 		process.exit(config.failureExitCode);
 	});
 }
+process.on('SIGUSR1', () => {
+	for (const event of config.modelsReadyEvents ?? [
+		{ version: 1, event: 'models_ready', at: new Date().toISOString() }
+	])
+		console.log('AIDETECTOR_STATUS ' + JSON.stringify(event));
+});
 writeFileSync('pid.txt', String(process.pid));
 console.log('Camera rtsp://farmer:secret@camera.local/live?token=secret');
 if (config.crash) process.exit(1);
@@ -48,13 +54,16 @@ for (const event of config.statusEvents ?? []) {
 }
 if (config.crashAfterStatus) process.exit(1);
 
-process.stdin.on('data', () => {
-	if (config.ignoreStop) return;
-	writeFileSync('flushed.txt', 'flushed');
-	process.exit(config.stopExitCode ?? 0);
-});
-process.stdin.on('end', () => {
-	if (!config.ignoreStop) process.exit(config.stopExitCode ?? 0);
-});
+let stopping = false;
+function stop() {
+	if (config.ignoreStop || stopping) return;
+	stopping = true;
+	setTimeout(() => {
+		writeFileSync('flushed.txt', 'flushed');
+		process.exit(config.stopExitCode ?? 0);
+	}, config.stopDelayMs ?? 0);
+}
+process.stdin.on('data', stop);
+process.stdin.on('end', stop);
 if (config.ignoreStop) setInterval(() => {}, 1000);
 process.stdin.resume();

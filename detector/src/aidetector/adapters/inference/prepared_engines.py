@@ -9,9 +9,12 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
+from functools import partial
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-from threading import Event
+from threading import Event, Thread
 from time import monotonic, time
 
 import torch
@@ -20,12 +23,82 @@ from ultralytics.utils.downloads import attempt_download_asset
 
 from aidetector.adapters.inference.export_settings import export_arguments
 from aidetector.adapters.inference.onnx import InferenceOptions
-from aidetector.application.status import ReportStatus, StatusEvent
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig, YoloConfig
 
 logger = logging.getLogger(__name__)
-BUILD_TIMEOUT = 600.0
+BUILD_TIMEOUT = 1800.0
 RETRY_DELAY = 86400.0
+
+
+class EnginePreparation:
+    """Use cached engines now; build missing ones serially after monitoring opens."""
+
+    def __init__(
+        self,
+        cache: Path,
+        stop_requested: Event | None = None,
+        report_status: ReportStatus = ignore_status,
+    ):
+        self.cache = cache
+        self._stop = stop_requested if stop_requested is not None else Event()
+        self._pending: list[Callable[[], Path | None]] = []
+        self._report_status = report_status
+
+    def prepare(
+        self,
+        config: YoloConfig,
+        onnx: OnnxConfig,
+        batch: int,
+        options: InferenceOptions,
+    ) -> Path | None:
+        return prepare_engine(
+            config,
+            onnx,
+            batch,
+            options,
+            self.cache,
+            self._report,
+            self._stop,
+            schedule=self._pending.append,
+        )
+
+    @contextmanager
+    def running(self) -> Iterator[None]:
+        if not self._pending:
+            yield
+            return
+        thread = Thread(target=self._run, name="tensorrt-preparation")
+        thread.start()
+        try:
+            yield
+        finally:
+            self._stop.set()
+            thread.join()
+
+    def _run(self) -> None:
+        prepared = False
+        try:
+            for prepare in self._pending:
+                if self._stop.is_set():
+                    return
+                if prepare() is not None:
+                    prepared = True
+            if prepared and not self._stop.is_set():
+                logger.info(
+                    "TensorRT background preparation complete; new engines are ready for the next monitoring start"
+                )
+                self._report_status(StatusEvent("models_ready"))
+        except KeyboardInterrupt:
+            return
+        except Exception:
+            # An optional background worker must not stop active monitoring.
+            logger.exception("Background TensorRT preparation failed")
+
+    @staticmethod
+    def _report(event: StatusEvent) -> None:
+        # Preparation must not replace the running detectors' readiness/status.
+        logger.info("Background TensorRT: %s", event.message)
 
 
 def engine_identity(source: Path, task: str, arguments: dict) -> str:
@@ -68,12 +141,17 @@ def prepare_engine(
     cache: Path,
     report_status: ReportStatus,
     stop_requested: Event | None = None,
+    *,
+    schedule: Callable[[Callable[[], Path | None]], None] | None = None,
 ) -> Path | None:
     # Resolve stock weights through the SDK. Download/model failures are not
     # optimization failures and must remain visible to the caller.
     source = Path(attempt_download_asset(config.model))
     arguments = export_arguments(config, onnx, batch, options, "engine")
     arguments["device"] = 0
+    # The builder shares this GPU with monitoring. Limit its scratch workspace;
+    # model weights and other allocations are additional to this SDK limit.
+    arguments["workspace"] = 2
     try:
         identity = engine_identity(source, config.task, arguments)
     except PackageNotFoundError as error:
@@ -96,10 +174,37 @@ def prepare_engine(
             if engine.is_file():
                 logger.info("TensorRT engine cache hit: %s", engine)
                 return engine
+            if schedule is not None:
+                schedule(
+                    partial(
+                        prepare_engine,
+                        config,
+                        onnx,
+                        batch,
+                        options,
+                        cache,
+                        report_status,
+                        stop_requested,
+                    )
+                )
+                logger.info(
+                    "TensorRT optimization queued for %s; starting with PyTorch/CUDA",
+                    source.name,
+                )
+                return None
             reject_engine(engine, "An earlier TensorRT preparation did not complete")
-            _build_engine(
-                source, config.task, arguments, engine, report_status, stop_requested
-            )
+            try:
+                _build_engine(
+                    source,
+                    config.task,
+                    arguments,
+                    engine,
+                    report_status,
+                    stop_requested,
+                )
+            except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+                reject_engine(engine, str(error))
+                raise
             failure.unlink(missing_ok=True)
             return engine
     except KeyboardInterrupt:
@@ -107,7 +212,9 @@ def prepare_engine(
         raise
     except (OSError, RuntimeError, subprocess.SubprocessError) as error:
         logger.warning(
-            "TensorRT preparation unavailable; using PyTorch/CUDA: %s", error
+            "TensorRT preparation unavailable; using PyTorch/CUDA: %s; build log: %s",
+            error,
+            destination / "build.log",
         )
         return None
 
@@ -119,6 +226,7 @@ def _build_engine(source, task, arguments, engine, report_status, stop_requested
         arguments,
         BUILD_TIMEOUT,
     )
+    logger.info("TensorRT build log: %s", engine.parent / "build.log")
     with tempfile.TemporaryDirectory(
         dir=engine.parent, prefix="preparing-"
     ) as directory:
@@ -146,24 +254,32 @@ def run_preparation(
     stop_requested: Event | None = None,
 ) -> None:
     command = [sys.executable]
-    if not getattr(sys, "frozen", False):
+    if getattr(sys, "frozen", False):
+        command.extend(["--prepare-tensorrt", str(request)])
+    else:
         # Source installs and the downloaded runtime both use this package root;
         # the latter intentionally does not install the app into site-packages.
+        # Enter the standard-library-only worker directly so its diagnostics
+        # are active before any application or inference dependencies load.
         command.extend(
             [
                 "-I",
                 "-u",
+                "-X",
+                "faulthandler",
                 "-c",
-                "import sys; sys.path.insert(0, sys.argv.pop(1)); from aidetector.cli import main; raise SystemExit(main())",
+                "import sys; sys.path.insert(0, sys.argv.pop(1)); from pathlib import Path; from aidetector.adapters.inference.tensorrt_worker import run_helper; raise SystemExit(run_helper(Path(sys.argv[1])))",
                 str(Path(__file__).resolve().parents[3]),
+                str(request),
             ]
         )
-    command.extend(["--prepare-tensorrt", str(request)])
     stopped = stop_requested if stop_requested is not None else Event()
     with (
         log_path.open("w", encoding="utf-8") as output,
         log_path.open(encoding="utf-8", errors="replace") as tail,
     ):
+        output.write(f"Starting TensorRT helper: {sys.executable}\n")
+        output.flush()
         with subprocess.Popen(
             command,
             stdin=subprocess.PIPE,
@@ -171,6 +287,7 @@ def run_preparation(
             stderr=subprocess.STDOUT,
             creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0,
         ) as process:
+            logger.info("TensorRT helper process started; pid=%d", process.pid)
             try:
                 _wait_for_preparation(process, tail, report_status, stopped)
                 if stopped.is_set():
@@ -200,7 +317,7 @@ def _wait_for_preparation(process, tail, report_status, stopped):
             report_status(
                 StatusEvent(
                     "preparing",
-                    message=f"Optimizing NVIDIA detection ({elapsed:.0f}s). This is saved for next time…",
+                    message=f"Preparing the TensorRT model ({elapsed:.0f}s elapsed, limit {BUILD_TIMEOUT:.0f}s). A completed model is saved for later starts.",
                 )
             )
             reported = elapsed

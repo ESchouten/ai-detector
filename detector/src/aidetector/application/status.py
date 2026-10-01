@@ -11,6 +11,7 @@ class StatusEvent:
         "preparing",
         "preparation_failed",
         "ready",
+        "models_ready",
         "frame",
         "inference",
         "processed",

@@ -1,4 +1,5 @@
-FROM node:24-bookworm-slim AS base
+# Multi-platform Node 24 base; update deliberately alongside container smoke checks.
+FROM node:24-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 AS base
 
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH

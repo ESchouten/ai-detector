@@ -158,6 +158,8 @@ def generate_macos_feed(
             "3",
             "--maximum-deltas",
             "2",
+            "--delta-compression",
+            "lzfse",
             "--download-url-prefix",
             release_url.rstrip("/") + "/",
             str(folder),

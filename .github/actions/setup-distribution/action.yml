@@ -29,7 +29,9 @@ runs:
         activate-environment: true
         venv-path: ${{ runner.temp }}/distribution-venv
         enable-cache: true
-        cache-dependency-glob: uv.lock
+        cache-dependency-glob: |
+          uv.lock
+          ../distribution/*requirements.txt
     - name: Install build dependencies
       shell: bash
       working-directory: ${{ github.workspace }}
@@ -40,3 +42,15 @@ runs:
       if: inputs.dotnet == 'true'
       with:
         dotnet-version: ${{ steps.versions.outputs.dotnet }}
+        cache: true
+        cache-dependency-path: distribution/windows/**/packages.lock.json
+    - name: Select native build target
+      shell: bash
+      env:
+        PLATFORM: ${{ runner.os == 'Windows' && 'windows-x64' || runner.os == 'macOS' && 'macos-arm64' || 'linux-x64' }}
+        EXE_SUFFIX: ${{ runner.os == 'Windows' && '.exe' || '' }}
+        DETECTOR_FOLDER: ${{ runner.os == 'macOS' && 'aidetector.app' || 'aidetector' }}
+      run: |
+        echo "PLATFORM=$PLATFORM" >> "$GITHUB_ENV"
+        echo "EXE_SUFFIX=$EXE_SUFFIX" >> "$GITHUB_ENV"
+        echo "DETECTOR_FOLDER=$DETECTOR_FOLDER" >> "$GITHUB_ENV"

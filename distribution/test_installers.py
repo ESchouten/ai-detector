@@ -9,7 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from installers import linux_tree, macos
+from installers import linux, linux_tree, macos
 from package import archive, macos_bundle, version_number
 
 
@@ -49,18 +49,28 @@ class InstallerTest(unittest.TestCase):
         self.assertFalse((root / "home").exists())
         if shutil.which("desktop-file-validate"):
             subprocess.run(["desktop-file-validate", str(menu)], check=True)
-        if shutil.which("dpkg-deb"):
-            artifact = self.root / "test.deb"
-            subprocess.run(
-                ["dpkg-deb", "--root-owner-group", "--build", str(root), str(artifact)],
-                check=True,
-                capture_output=True,
-            )
-            listing = subprocess.check_output(
-                ["dpkg-deb", "--contents", str(artifact)], text=True
-            )
-            self.assertIn("./opt/ai-detector/AI Detector", listing)
-            self.assertIn("root/root", listing)
+
+    @unittest.skipUnless(
+        shutil.which("dpkg-deb") and shutil.which("desktop-file-validate"),
+        "Requires Debian packaging tools",
+    )
+    def test_linux_installer_preserves_contents_and_executable_permissions(self):
+        (self.payload / "current").symlink_to("AI Detector")
+        artifact = linux(self.payload, "1.2.3")
+        listing = subprocess.check_output(
+            ["dpkg-deb", "--contents", str(artifact)], text=True
+        )
+        self.assertIn("./opt/ai-detector/AI Detector", listing)
+        self.assertIn("root/root", listing)
+        extracted = self.root / "extracted"
+        subprocess.run(
+            ["dpkg-deb", "--raw-extract", str(artifact), str(extracted)], check=True
+        )
+        installed = extracted / "opt/ai-detector"
+        self.assertEqual((installed / "AI Detector").read_bytes(), b"application")
+        self.assertEqual(os.readlink(installed / "current"), "AI Detector")
+        self.assertTrue((installed / "AI Detector").stat().st_mode & stat.S_IXUSR)
+        self.assertTrue((extracted / "DEBIAN/prerm").stat().st_mode & stat.S_IXUSR)
 
     @unittest.skipIf(os.name == "nt", "Linux package lifecycle uses a POSIX shell")
     def test_linux_removal_signals_the_installed_process_and_waits_for_exit(self):

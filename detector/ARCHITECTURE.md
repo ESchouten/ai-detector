@@ -255,3 +255,5 @@ Automatic discovery logs and skips individual preparation and ONNX registration 
 ## Manual review integration
 
 The delivery use case assigns each `EventResult` a UUID once, shared by all destinations. Domain records only carry that identity. Disk includes it in optional `event_id` metadata; Telegram embeds it in inline review buttons (or a silent reply for albums). Incoming reviews belong to the web archive service, not the inference/event pipeline. The web stores a separate review sidecar without changing original validator output or media. See `MIGRATION.md` for the archive and callback contract.
+
+Native packaging uses PyInstaller's upstream hooks for ONNX Runtime provider libraries and ImageIO FFmpeg assets. Explicit full collection remains for dynamic Ultralytics and LiteLLM loading. Package smoke tests exercise inference, media, HTTPS and validation against local fixtures on each target OS. Container dependencies are installed before the application layer, with the upstream GPU runtime pinned by digest.

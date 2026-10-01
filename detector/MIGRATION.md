@@ -12,6 +12,12 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
 
+## Release build and container caching — 2026-10-01
+
+Native build and installer jobs now progress independently per OS, with publication gated on all checks. The NVIDIA bootstrap installation test runs in parallel using the same staging function as the Windows payload. PyInstaller delegates ImageIO FFmpeg and ONNX Runtime library collection to their upstream hooks; model and provider support is unchanged. Linux installers use Zstandard level 9, Windows deltas use Velopack's BestSpeed strategy, and Sparkle deltas use LZFSE compression.
+
+Container base images are pinned by digest. Dependency installation precedes source copying and version stamping, so code-only releases reuse those layers. Runtime dependencies still respect the upstream image's Torch constraints. Standalone image release tags require native builds and startup checks for both architectures, the component test suite and workflow lint. macOS installers no longer wait for or include the NVIDIA Docker image reference. These changes do not migrate configuration or recordings.
+
 ## Manual recording review — 2026-09-30
 
 Each delivered event now has a UUID assigned by the delivery use case. Independent exporters receive the same ID; disk stores it as optional `event_id` metadata and Telegram uses it in language-independent 👍/👎 callback buttons. Existing metadata without IDs remains readable and reviewable in the web app. Telegram albums receive a silent button message replying to the first album item. The web server receives callbacks and writes manual review sidecars; Python does not consume Telegram updates or alter completed archives.

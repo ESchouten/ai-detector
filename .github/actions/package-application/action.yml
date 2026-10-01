@@ -1,0 +1,121 @@
+name: Package tested application
+description: Assemble tested native binaries, check the payload, and build installers and update feeds.
+inputs:
+  image-digest:
+    description: Matching NVIDIA image digest for Windows and Linux Docker mode
+    default: ''
+  signing-key:
+    description: Desktop update signing key (macOS and Windows only)
+    default: ''
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup-distribution
+      with:
+        web: 'false'
+        dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+    - name: Install packaging tools
+      shell: bash
+      run: uv pip install --requirement distribution/requirements.txt
+    - name: Restore Windows installer tool
+      if: runner.os == 'Windows'
+      shell: bash
+      run: dotnet tool restore
+    - name: Install Linux desktop tools
+      if: runner.os == 'Linux'
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
+    - name: Download tested binaries
+      uses: actions/download-artifact@v7
+      with:
+        name: native-build-${{ env.PLATFORM }}
+    - name: Restore tested binaries
+      shell: bash
+      run: |
+        mkdir native-build
+        tar -xf native-build.tar -C native-build
+    - name: Assemble application
+      shell: bash
+      run: |
+        mkdir -p .reports
+        ffmpeg="native-build/ffmpeg${{ env.EXE_SUFFIX }}"
+        launcher=()
+        if [ '${{ runner.os }}' = macOS ]; then launcher=(--mac-launcher "native-build/mac-launcher" --sparkle "native-build/sparkle"); fi
+        if [ '${{ runner.os }}' = Windows ]; then launcher=(--windows-launcher "native-build/windows-launcher"); fi
+        if [ '${{ runner.os }}' != Linux ]; then
+          launcher+=(--update-feed "$CHANNELS_URL" --update-channel "$UPDATE_CHANNEL" --build-version "$APP_BUILD_VERSION")
+          launcher+=(--sparkle-public-key "$SPARKLE_PUBLIC_KEY")
+        fi
+        if [ '${{ runner.os }}' != macOS ]; then
+          launcher+=(--image 'ghcr.io/eschouten/ai-detector@${{ inputs.image-digest }}')
+        fi
+        python distribution/package.py --detector 'native-build/detector/dist/${{ env.DETECTOR_FOLDER }}' --web "native-build/web/dist/ai-detector-web${{ env.EXE_SUFFIX }}" --ffmpeg "$ffmpeg" --output application-dist --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" "${launcher[@]}" 2>&1 | tee .reports/assemble.log
+    - name: Ad-hoc sign macOS application
+      if: runner.os == 'macOS'
+      shell: bash
+      run: python distribution/sign_macos.py 'application-dist/AI-Detector-macos-arm64/AI Detector.app'
+    - name: Smoke test complete download
+      shell: bash
+      run: python distribution/smoke.py 'application-dist/AI-Detector-${{ env.PLATFORM }}' 2>&1 | tee .reports/application-smoke.log
+    - name: Retrieve previous release for delta generation
+      if: runner.os != 'Linux'
+      shell: bash
+      run: python distribution/updates.py prepare --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --feed-url "$UPDATE_FEED"
+    - name: Build native installer
+      shell: bash
+      run: |
+        mkdir -p .reports
+        python distribution/installers.py 'application-dist/AI-Detector-${{ env.PLATFORM }}' --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" 2>&1 | tee .reports/installer.log
+    - name: Generate signed Sparkle feed and deltas
+      if: runner.os == 'macOS'
+      env:
+        SPARKLE_PRIVATE_KEY: ${{ inputs.signing-key }}
+      shell: bash
+      run: python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
+    - name: Sign Velopack feed and package hashes
+      if: runner.os == 'Windows'
+      env:
+        SPARKLE_PRIVATE_KEY: ${{ inputs.signing-key }}
+      shell: bash
+      run: python distribution/updates.py publish --platform windows-x64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --release-url "$RELEASE_URL"
+    - name: Publish both update choices in one signed feed
+      if: runner.os != 'Linux'
+      env:
+        SPARKLE_PRIVATE_KEY: ${{ inputs.signing-key }}
+      shell: bash
+      run: python distribution/update_channels.py --platform '${{ env.PLATFORM }}' --channel "$UPDATE_CHANNEL" --feed-url "$UPDATE_FEED" --build-version "$APP_BUILD_VERSION" --sdk "native-build/sparkle"
+    - name: Upload installer download
+      uses: actions/upload-artifact@v7
+      with:
+        name: AI-Detector-${{ env.PLATFORM }}
+        path: |
+          application-dist/*-setup.exe
+          application-dist/*.dmg
+          application-dist/*.deb
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 14
+    - name: Upload updater files
+      if: runner.os != 'Linux'
+      uses: actions/upload-artifact@v7
+      with:
+        name: update-files-${{ env.PLATFORM }}
+        path: |
+          application-dist/*.nupkg
+          application-dist/*.delta
+          application-dist/appcast.xml
+          application-dist/releases.win.json
+          application-dist/channel-updates/*
+        if-no-files-found: error
+        compression-level: 0
+        retention-days: 14
+
+    - name: Upload packaging diagnostics
+      if: failure()
+      uses: actions/upload-artifact@v7
+      with:
+        name: packaging-diagnostics-${{ env.PLATFORM }}
+        path: .reports/
+        include-hidden-files: true
+        retention-days: 7
+        if-no-files-found: warn

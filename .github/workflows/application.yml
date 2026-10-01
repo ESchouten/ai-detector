@@ -62,7 +62,7 @@ jobs:
 
   image:
     name: Matching NVIDIA image
-    needs: [configuration, web-checks, detector-checks]
+    needs: configuration
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -72,13 +72,10 @@ jobs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
       - uses: actions/checkout@v6
-      - uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: true
-          docker-images: true
       - uses: ./.github/actions/setup-container
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          minimum-free-gb: '35'
       - uses: docker/build-push-action@v6
         id: build
         with:
@@ -87,33 +84,14 @@ jobs:
           push: true
           tags: ghcr.io/eschouten/ai-detector:app-${{ github.sha }}
           build-args: REF_NAME=${{ github.ref_name }}
-          cache-from: type=gha,scope=application
-          cache-to: type=gha,mode=max,scope=application,ignore-error=true
+          cache-from: type=registry,ref=ghcr.io/eschouten/ai-detector:cache-application-amd64
+          cache-to: type=registry,ref=ghcr.io/eschouten/ai-detector:cache-application-amd64,mode=max
 
-  native:
-    name: ${{ matrix.platform }} binaries
-    needs: [configuration, web-checks, detector-checks]
-    runs-on: ${{ matrix.runner }}
+  native-windows:
+    name: Windows binaries
+    needs: configuration
+    runs-on: windows-latest
     timeout-minutes: 120
-    strategy: &native-platforms
-      fail-fast: false
-      matrix:
-        include:
-          - platform: windows-x64
-            runner: windows-latest
-            suffix: .exe
-            detector: aidetector
-            installer: '*-setup.exe'
-          - platform: macos-arm64
-            runner: macos-latest
-            suffix: ''
-            detector: aidetector.app
-            installer: '*.dmg'
-          - platform: linux-x64
-            runner: ubuntu-22.04
-            suffix: ''
-            detector: aidetector
-            installer: '*.deb'
     defaults:
       run:
         shell: bash
@@ -128,7 +106,7 @@ jobs:
       LITELLM_LOCAL_MODEL_COST_MAP: 'true'
       YOLO_AUTOINSTALL: 'false'
       ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS: '1'
-    steps:
+    steps: &native-steps
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-distribution
         with:
@@ -138,46 +116,24 @@ jobs:
           version: ${{ env.APP_VERSION }}
           dotnet-tests: ${{ runner.os == 'Windows' && 'true' || 'false' }}
       - name: Build detector
-        run: python distribution/build.py detector --platform '${{ matrix.platform }}' --version "$GITHUB_REF_NAME"
-      - name: Test downloaded NVIDIA runtime
-        if: runner.os == 'Windows'
-        working-directory: web
-        env:
-          NVIDIA_RUNTIME_BUNDLE: ${{ github.workspace }}/detector/dist/aidetector/nvidia-runtime
-        run: node --test tests/nvidia-runtime-installed.test.ts
-      - name: Install release signing tools
-        run: uv pip install --python detector/.venv --requirement distribution/requirements.txt
-      - name: Install desktop launcher test tools
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
-      - name: Distribution lint and formatting
-        if: runner.os == 'Linux'
         run: |
-          uv run --project detector --no-sync ruff check distribution
-          uv run --project detector --no-sync ruff format --check distribution
-      - name: Check distribution scripts
-        env:
-          SPARKLE_SDK: ${{ runner.temp }}/sparkle
-          WINDOWS_LAUNCHER: ${{ runner.temp }}/windows-launcher
-        run: |
-          uv run --project detector --no-sync python -m unittest discover -s distribution -p 'test_*.py'
-          bun test ./web/desktop/host.test.ts
+          mkdir -p .reports
+          python distribution/build.py detector --platform '${{ env.PLATFORM }}' --version "$GITHUB_REF_NAME" 2>&1 | tee .reports/detector-build.log
       - name: Smoke test packaged detector
         working-directory: detector
         run: |
-          executable="dist/${{ matrix.detector }}/aidetector${{ matrix.suffix }}"
-          if [ '${{ runner.os }}' = macOS ]; then executable="dist/${{ matrix.detector }}/Contents/MacOS/aidetector"; fi
-          uv run --no-sync python -m tests.support.smoke_package "$executable"
-          uv run --no-sync python -m tests.support.smoke_package "$executable" --model-format pt
+          executable="dist/${{ env.DETECTOR_FOLDER }}/aidetector${{ env.EXE_SUFFIX }}"
+          if [ '${{ runner.os }}' = macOS ]; then executable="dist/${{ env.DETECTOR_FOLDER }}/Contents/MacOS/aidetector"; fi
+          uv run --no-sync python -m tests.support.smoke_package "$executable" 2>&1 | tee ../.reports/detector-smoke-onnx.log
+          uv run --no-sync python -m tests.support.smoke_package "$executable" --model-format pt 2>&1 | tee ../.reports/detector-smoke-pt.log
           if [ '${{ runner.os }}' = Windows ]; then
-            uv run --no-sync python -m tests.support.smoke_package "$executable" --windows-ml
+            uv run --no-sync python -m tests.support.smoke_package "$executable" --windows-ml 2>&1 | tee ../.reports/detector-smoke-windowsml.log
           fi
       - name: Build web executable
-        run: python distribution/build.py web --platform '${{ matrix.platform }}' --version "$APP_VERSION" --skip-dependencies
-      - name: Test compiled desktop failure paths
-        env:
-          DESKTOP_WEB_EXECUTABLE: ${{ github.workspace }}/web/dist/ai-detector-web${{ matrix.suffix }}
-        run: python -m unittest discover -s distribution -p test_compiled_desktop.py
+        run: python distribution/build.py web --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --skip-dependencies 2>&1 | tee .reports/web-build.log
+      - uses: ./.github/actions/test-distribution
+        with:
+          web-executable: ${{ github.workspace }}/web/dist/ai-detector-web${{ env.EXE_SUFFIX }}
       - name: Archive tested binaries for packaging
         # Tar preserves executable permissions and macOS framework symlinks.
         run: |
@@ -185,8 +141,8 @@ jobs:
           # Git Bash tar needs a POSIX path, not RUNNER_TEMP's Windows drive path.
           runner_temp=$(cd "$RUNNER_TEMP" && pwd)
           ffmpeg=$(cd web && node -p 'require("ffmpeg-static")')
-          cp "$ffmpeg" "ffmpeg${{ matrix.suffix }}"
-          tar -cf native-build.tar 'detector/dist/${{ matrix.detector }}' "web/dist/ai-detector-web${{ matrix.suffix }}" "ffmpeg${{ matrix.suffix }}"
+          cp "$ffmpeg" "ffmpeg${{ env.EXE_SUFFIX }}"
+          tar -cf native-build.tar 'detector/dist/${{ env.DETECTOR_FOLDER }}' "web/dist/ai-detector-web${{ env.EXE_SUFFIX }}" "ffmpeg${{ env.EXE_SUFFIX }}"
           if [ '${{ runner.os }}' = macOS ]; then
             tar -rf native-build.tar -C "$runner_temp" mac-launcher sparkle/bin sparkle/Sparkle.framework sparkle/LICENSE
           fi
@@ -196,105 +152,122 @@ jobs:
       - name: Upload tested binaries
         uses: actions/upload-artifact@v7
         with:
-          name: native-build-${{ matrix.platform }}
+          name: native-build-${{ env.PLATFORM }}
           path: native-build.tar
           if-no-files-found: error
           compression-level: 1
-          retention-days: 1
+          retention-days: 7
 
-  installers:
-    name: ${{ matrix.platform }} installer
-    needs: [configuration, native, image]
-    runs-on: ${{ matrix.runner }}
+      - name: Upload build diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-diagnostics-${{ env.PLATFORM }}
+          path: |
+            .reports/
+            detector/build/aidetector/warn-*.txt
+            detector/build/aidetector/xref-*.html
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
+
+  native-macos:
+    name: macOS binaries
+    needs: configuration
+    runs-on: macos-latest
+    timeout-minutes: 120
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps: *native-steps
+
+  native-linux:
+    name: Linux binaries
+    needs: configuration
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps: *native-steps
+
+  installer-windows:
+    name: Windows installer
+    needs: [configuration, native-windows, image]
+    runs-on: windows-latest
     timeout-minutes: 60
-    strategy: *native-platforms
     defaults:
       run:
         shell: bash
     env: *release-environment
     steps:
       - uses: actions/checkout@v6
+      - uses: ./.github/actions/package-application
+        with:
+          image-digest: ${{ needs.image.outputs.digest }}
+          signing-key: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+
+  installer-macos:
+    name: macOS installer
+    needs: [configuration, native-macos]
+    runs-on: macos-latest
+    timeout-minutes: 60
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/package-application
+        with:
+          signing-key: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+
+  installer-linux:
+    name: Linux installer
+    needs: [configuration, native-linux, image]
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/package-application
+        with:
+          image-digest: ${{ needs.image.outputs.digest }}
+
+  nvidia-checks:
+    name: NVIDIA runtime installation
+    needs: configuration
+    runs-on: windows-latest
+    timeout-minutes: 40
+    defaults: {run: {shell: bash}}
+    steps:
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-distribution
         with:
           web: 'false'
-          dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
-      - name: Install packaging tools
-        run: uv pip install --requirement distribution/requirements.txt
-      - name: Restore Windows installer tool
-        if: runner.os == 'Windows'
-        run: dotnet tool restore
-      - name: Install Linux desktop tools
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
-      - name: Download tested binaries
-        uses: actions/download-artifact@v7
+      - uses: ./.github/actions/setup-web
         with:
-          name: native-build-${{ matrix.platform }}
-      - name: Restore tested binaries
+          runtime-only: 'true'
+      - name: Stage the shipped NVIDIA bootstrap
+        run: python distribution/nvidia_runtime.py "$RUNNER_TEMP/nvidia-runtime" --version "$GITHUB_REF_NAME"
+      - name: Test a fresh CUDA and TensorRT installation
+        working-directory: web
+        env:
+          NVIDIA_RUNTIME_BUNDLE: ${{ runner.temp }}/nvidia-runtime
         run: |
-          mkdir native-build
-          tar -xf native-build.tar -C native-build
-      - name: Assemble application
-        run: |
-          ffmpeg="native-build/ffmpeg${{ matrix.suffix }}"
-          launcher=()
-          if [ '${{ runner.os }}' = macOS ]; then launcher=(--mac-launcher "native-build/mac-launcher" --sparkle "native-build/sparkle"); fi
-          if [ '${{ runner.os }}' = Windows ]; then launcher=(--windows-launcher "native-build/windows-launcher"); fi
-          if [ '${{ runner.os }}' != Linux ]; then
-            launcher+=(--update-feed "$CHANNELS_URL" --update-channel "$UPDATE_CHANNEL" --build-version "$APP_BUILD_VERSION")
-            launcher+=(--sparkle-public-key "$SPARKLE_PUBLIC_KEY")
-          fi
-          python distribution/package.py --detector 'native-build/detector/dist/${{ matrix.detector }}' --web "native-build/web/dist/ai-detector-web${{ matrix.suffix }}" --ffmpeg "$ffmpeg" --output application-dist --platform '${{ matrix.platform }}' --version "$APP_VERSION" "${launcher[@]}" --image 'ghcr.io/eschouten/ai-detector@${{ needs.image.outputs.digest }}'
-      - name: Ad-hoc sign macOS application
-        if: runner.os == 'macOS'
-        run: python distribution/sign_macos.py 'application-dist/AI-Detector-macos-arm64/AI Detector.app'
-      - name: Smoke test complete download
-        run: python distribution/smoke.py 'application-dist/AI-Detector-${{ matrix.platform }}'
-      - name: Retrieve previous release for delta generation
-        if: runner.os != 'Linux'
-        run: python distribution/updates.py prepare --platform '${{ matrix.platform }}' --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --feed-url "$UPDATE_FEED"
-      - name: Build native installer
-        run: python distribution/installers.py 'application-dist/AI-Detector-${{ matrix.platform }}' --platform '${{ matrix.platform }}' --version "$APP_VERSION"
-      - name: Generate signed Sparkle feed and deltas
-        if: runner.os == 'macOS'
-        env:
-          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
-        run: python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
-      - name: Sign Velopack feed and package hashes
-        if: runner.os == 'Windows'
-        env:
-          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
-        run: python distribution/updates.py publish --platform windows-x64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --release-url "$RELEASE_URL"
-      - name: Publish both update choices in one signed feed
-        if: runner.os != 'Linux'
-        env:
-          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
-        run: python distribution/update_channels.py --platform '${{ matrix.platform }}' --channel "$UPDATE_CHANNEL" --feed-url "$UPDATE_FEED" --build-version "$APP_BUILD_VERSION" --sdk "native-build/sparkle"
-      - name: Upload installer download
+          mkdir -p .reports
+          node --test tests/nvidia-runtime-installed.test.ts 2>&1 | tee .reports/nvidia-runtime.log
+      - name: Upload NVIDIA diagnostics
+        if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: AI-Detector-${{ matrix.platform }}
-          path: application-dist/${{ matrix.installer }}
-          if-no-files-found: error
-          compression-level: 0
-          retention-days: 14
-      - name: Upload updater files
-        if: runner.os != 'Linux'
-        uses: actions/upload-artifact@v7
-        with:
-          name: update-files-${{ matrix.platform }}
-          path: |
-            application-dist/*.nupkg
-            application-dist/*.delta
-            application-dist/appcast.xml
-            application-dist/releases.win.json
-            application-dist/channel-updates/*
-          if-no-files-found: error
-          compression-level: 0
-          retention-days: 14
+          name: nvidia-runtime-diagnostics
+          path: web/.reports/
+          include-hidden-files: true
+          retention-days: 7
+
+  workflow-checks:
+    uses: ./.github/workflows/workflow-tests.yml
 
   release:
-    needs: [configuration, installers]
+    needs: [configuration, workflow-checks, web-checks, detector-checks, nvidia-checks, installer-windows, installer-macos, installer-linux]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -362,3 +335,25 @@ jobs:
             gh release create app-update-channels --title "Application update channels" --notes "Signed desktop updater metadata for official and preview releases." --prerelease --latest=false
           fi
           gh release upload app-update-channels update-feeds/channels/appcast.xml update-feeds/channels/releases.win.json --clobber
+
+  summary:
+    name: Build summary
+    if: always()
+    needs: [configuration, workflow-checks, web-checks, detector-checks, nvidia-checks, installer-windows, installer-macos, installer-linux, release]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v6
+      - name: Summarize results, durations and downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+          APP_VERSION: ${{ needs.configuration.outputs.version }}
+          APP_BUILD_VERSION: ${{ needs.configuration.outputs.build_version }}
+          UPDATE_CHANNEL: ${{ needs.configuration.outputs.channel }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs?filter=latest&per_page=100" > "$RUNNER_TEMP/jobs.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/artifacts.json"
+          python distribution/build_report.py "$RUNNER_TEMP/jobs.json" "$RUNNER_TEMP/artifacts.json" >> "$GITHUB_STEP_SUMMARY"

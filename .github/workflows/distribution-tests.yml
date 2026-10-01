@@ -2,10 +2,10 @@ name: Desktop distribution tests
 
 on:
   pull_request:
-    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', 'detector/.python-version', '.config/**', '.github/**', '.gitattributes']
+    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', 'detector/.python-version', 'detector/pyproject.toml', 'detector/uv.lock', '.config/**', '.github/**', '.gitattributes']
   push:
-    branches: ['**']
-    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', 'detector/.python-version', '.config/**', '.github/**', '.gitattributes']
+    branches: ['main']
+    paths: ['distribution/**', 'web/**', 'config/**', 'ruff.toml', 'detector/.python-version', 'detector/pyproject.toml', 'detector/uv.lock', '.config/**', '.github/**', '.gitattributes']
   workflow_dispatch:
 
 permissions:
@@ -17,13 +17,7 @@ concurrency:
 
 jobs:
   workflows:
-    name: Workflow syntax
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v6
-      - name: Validate workflows and embedded shell scripts
-        uses: docker://rhysd/actionlint:1.7.12
+    uses: ./.github/workflows/workflow-tests.yml
 
   test:
     strategy:
@@ -40,25 +34,19 @@ jobs:
       - uses: ./.github/actions/setup-distribution
         with:
           dotnet: 'true'
-      - run: uv pip install -r distribution/requirements.txt
-      - name: Distribution lint and formatting
-        if: runner.os == 'Linux'
-        run: |
-          uvx --from ruff==0.15.20 ruff check distribution
-          uvx --from ruff==0.15.20 ruff format --check distribution
-      - name: Bun desktop host tests
-        run: bun test ./web/desktop/host.test.ts
       - name: Compile desktop web executable
         run: python distribution/build.py web --skip-dependencies
-      - name: Linux desktop tools
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
       - uses: ./.github/actions/build-launcher
         with:
           dotnet-tests: 'true'
-      - name: Packaging and process lifecycle tests
-        env:
-          SPARKLE_SDK: ${{ runner.temp }}/sparkle
-          WINDOWS_LAUNCHER: ${{ runner.temp }}/windows-launcher
-          DESKTOP_WEB_EXECUTABLE: ${{ github.workspace }}/web/dist/ai-detector-web${{ runner.os == 'Windows' && '.exe' || '' }}
-        run: python -m unittest discover -s distribution -p 'test_*.py'
+      - uses: ./.github/actions/test-distribution
+        with:
+          web-executable: ${{ github.workspace }}/web/dist/ai-detector-web${{ runner.os == 'Windows' && '.exe' || '' }}
+      - name: Upload distribution diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: distribution-diagnostics-${{ runner.os }}
+          path: .reports/
+          include-hidden-files: true
+          retention-days: 7

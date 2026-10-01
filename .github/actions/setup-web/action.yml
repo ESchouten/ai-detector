@@ -1,5 +1,9 @@
 name: Set up web toolchain
-description: Install the pinned Node, pnpm and Bun versions and locked web dependencies.
+description: Install pinned web tools and locked dependencies for builds or runtime tests.
+inputs:
+  runtime-only:
+    description: Install production dependencies without lifecycle scripts or the Bun compiler
+    default: 'false'
 runs:
   using: composite
   steps:
@@ -20,9 +24,17 @@ runs:
         cache: pnpm
         cache-dependency-path: web/pnpm-lock.yaml
     - uses: oven-sh/setup-bun@v2
+      if: inputs.runtime-only != 'true'
       with:
         bun-version: ${{ steps.versions.outputs.bun }}
     - name: Install web dependencies
       shell: bash
       working-directory: web
-      run: pnpm install --frozen-lockfile
+      env:
+        RUNTIME_ONLY: ${{ inputs.runtime-only }}
+      run: |
+        if [ "$RUNTIME_ONLY" = true ]; then
+          pnpm install --frozen-lockfile --prod --ignore-scripts
+        else
+          pnpm install --frozen-lockfile
+        fi

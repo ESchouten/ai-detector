@@ -4,7 +4,7 @@ on:
   pull_request:
     paths: ['web/**', 'config/**', 'distribution/**', '.dockerignore', 'compose.yml', 'example/compose*.yml', 'detector/pyproject.toml', '.github/**', '.gitattributes']
   push:
-    branches: ['**']
+    branches: ['main']
     paths: ['web/**', 'config/**', 'distribution/**', '.dockerignore', 'compose.yml', 'example/compose*.yml', 'detector/pyproject.toml', '.github/**', '.gitattributes']
   workflow_dispatch:
   workflow_call:
@@ -33,7 +33,11 @@ jobs:
         run: pnpm quality:static
         working-directory: web
       - name: Web and desktop behavior
-        run: pnpm test && pnpm test:desktop
+        shell: bash
+        run: |
+          mkdir -p .reports
+          pnpm test 2>&1 | tee .reports/web-tests.log
+          pnpm test:desktop 2>&1 | tee .reports/desktop-tests.log
         working-directory: web
       - name: Build production server
         if: runner.os == 'Linux'
@@ -47,3 +51,12 @@ jobs:
           docker compose -f compose.yml config --quiet
           docker compose -f example/compose.yml config --quiet
           docker compose -f example/compose.jetson.yml config --quiet
+      - name: Upload test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: web-test-diagnostics-${{ runner.os }}
+          path: web/.reports/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn

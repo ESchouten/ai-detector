@@ -1,0 +1,16 @@
+name: Workflow syntax
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate workflows and embedded shell scripts
+        uses: docker://rhysd/actionlint:1.7.12

@@ -30,7 +30,9 @@ TARGETS = {
     "windows-x64": Target("windows-x64-baseline", "windowsml", ".exe"),
     "linux-x64": Target("linux-x64-baseline", "default"),
 }
-COLLECT = ("ultralytics", "litellm", "imageio_ffmpeg", "onnxruntime")
+# Dynamic model/provider loading requires full collection. ImageIO's FFmpeg
+# binary and ONNX Runtime's provider DLLs are handled by upstream hooks.
+COLLECT = ("ultralytics", "litellm")
 
 
 def run(*arguments: str | Path, cwd: Path = ROOT, env: dict | None = None) -> None:

@@ -80,7 +80,7 @@ def windows(folder: Path, version: str) -> Path:
         r"START HERE\.txt",
         "--noPortable",
         "--delta",
-        "BestSize",
+        "BestSpeed",
     ]
     subprocess.run(arguments, check=True)
     installer = folder.parent / f"AI-Detector-{version}-windows-x64-setup.exe"
@@ -131,7 +131,15 @@ def linux(folder: Path, version: str) -> Path:
     )
     artifact = folder.parent / f"AI-Detector-{version}-linux-amd64.deb"
     subprocess.run(
-        ["dpkg-deb", "--root-owner-group", "--build", str(root), str(artifact)],
+        [
+            "dpkg-deb",
+            "--root-owner-group",
+            "-Zzstd",
+            "-z9",
+            "--build",
+            str(root),
+            str(artifact),
+        ],
         check=True,
     )
     return artifact

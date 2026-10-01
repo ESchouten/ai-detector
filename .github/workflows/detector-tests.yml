@@ -9,7 +9,7 @@ on:
       - ".github/**"
   push:
     branches:
-      - "**"
+      - "main"
     paths:
       - "detector/**"
       - "config/**"
@@ -85,7 +85,7 @@ jobs:
         run: uv run --no-sync lint-imports --no-cache
 
       - name: Pytest with branch coverage
-        run: uv run --no-sync coverage run -m pytest
+        run: uv run --no-sync coverage run -m pytest --junitxml=.reports/tests.xml
 
       - name: Coverage report
         run: |
@@ -136,6 +136,16 @@ jobs:
       - name: Build wheel and source distribution
         if: matrix.os == 'ubuntu-latest'
         run: uv build
+
+      - name: Upload test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: detector-test-diagnostics-${{ runner.os }}
+          path: detector/.reports/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
 
   mutation:
     name: Domain mutation testing

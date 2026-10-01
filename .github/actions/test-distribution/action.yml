@@ -1,0 +1,34 @@
+name: Test desktop distribution
+description: Shared packaging and process lifecycle checks against the compiled web application.
+inputs:
+  web-executable:
+    description: Compiled web executable to exercise
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Install distribution test tools
+      shell: bash
+      run: uv pip install --requirement distribution/requirements.txt
+    - name: Install Linux desktop tools
+      if: runner.os == 'Linux'
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin desktop-file-utils
+    - name: Distribution lint and formatting
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        uvx --from ruff==0.15.20 ruff check distribution
+        uvx --from ruff==0.15.20 ruff format --check distribution
+    - name: Bun desktop host tests
+      shell: bash
+      run: bun test ./web/desktop/host.test.ts
+    - name: Packaging and process lifecycle tests
+      shell: bash
+      env:
+        SPARKLE_SDK: ${{ runner.temp }}/sparkle
+        WINDOWS_LAUNCHER: ${{ runner.temp }}/windows-launcher
+        DESKTOP_WEB_EXECUTABLE: ${{ inputs.web-executable }}
+      run: |
+        mkdir -p .reports
+        python -m unittest discover -s distribution -p 'test_*.py' -v 2>&1 | tee .reports/distribution-tests.log

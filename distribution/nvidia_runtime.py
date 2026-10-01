@@ -1,5 +1,6 @@
 """Stage the small NVIDIA bootstrap payload; GPU wheels are downloaded on first use."""
 
+import argparse
 import json
 import shutil
 import subprocess
@@ -46,4 +47,14 @@ def stage_nvidia_runtime(root: Path, destination: Path, reference: str) -> None:
     )
     (app / "version.py").write_text(
         f"TYPE = 'cuda'\nREF_NAME = {json.dumps(reference)}\n", encoding="utf-8"
+    )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("output", type=Path)
+    parser.add_argument("--version", required=True)
+    args = parser.parse_args()
+    stage_nvidia_runtime(
+        Path(__file__).resolve().parent.parent, args.output, args.version
     )

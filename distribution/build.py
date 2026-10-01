@@ -78,7 +78,10 @@ def build_detector(args) -> Path:
         "--exclude-module=onnxruntime.quantization",
     ]
     if kind == "windowsml":
+        # Windows ML's ORT helpers modify sys.path and import sibling .py files.
+        # The upstream DLL hook alone cannot collect those dynamic imports.
         flags += [
+            "--collect-all=onnxruntime",
             "--collect-all=winui3",
             "--collect-all=winrt",
             "--copy-metadata=wasdk-microsoft-windows-ai-machinelearning",

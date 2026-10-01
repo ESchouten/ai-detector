@@ -66,8 +66,8 @@ test(
 		mockTimeouts(t);
 		const message =
 			'The detection model could not be downloaded. Check the internet connection and try again.';
-		await writeJson(path.join(directory, 'config.json'), {
-			...config,
+		await writeJson(path.join(directory, 'config.json'), config);
+		await writeJson(path.join(directory, 'fixture-options.json'), {
 			crashAfterStatus: true,
 			statusEvents: [
 				{ version: 1, event: 'preparation_failed', at: new Date().toISOString(), message }
@@ -77,7 +77,7 @@ test(
 		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
 		assert.ok(detector.status().message.startsWith(message));
 		assert.equal(detector.status().readiness, 'preparing');
-		await writeJson(path.join(directory, 'config.json'), config);
+		await writeJson(path.join(directory, 'fixture-options.json'), {});
 		t.mock.timers.tick(2000);
 		await waitFor(() => detector.status().phase === 'running');
 		assert.ok(!detector.status().message.includes(message));
@@ -183,7 +183,8 @@ test(
 			await detector.stop();
 			await rm(directory, { recursive: true, force: true });
 		});
-		await writeJson(path.join(directory, 'config.json'), { ...config, stopExitCode: 17 });
+		await writeJson(path.join(directory, 'config.json'), config);
+		await writeJson(path.join(directory, 'fixture-options.json'), { stopExitCode: 17 });
 		await detector.start('native');
 		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		await assert.rejects(detector.stop(), /stopped unexpectedly/);
@@ -192,7 +193,7 @@ test(
 			(await readJson<{ enabled: boolean }>(path.join(directory, 'runtime.json')))?.enabled,
 			false
 		);
-		await writeJson(path.join(directory, 'config.json'), config);
+		await writeJson(path.join(directory, 'fixture-options.json'), {});
 		await detector.start('native');
 		await waitFor(() => detector.status().phase === 'running');
 		await detector.stop();
@@ -215,7 +216,8 @@ test(
 		assert.equal(detector.status().phase, 'failed');
 		assert.match(detector.status().message, /Add a detector/);
 		assert.equal(await readJson(path.join(directory, 'runtime.json')), null);
-		await writeJson(path.join(directory, 'config.json'), { ...config, crash: true });
+		await writeJson(path.join(directory, 'config.json'), config);
+		await writeJson(path.join(directory, 'fixture-options.json'), { crash: true });
 		await detector.start('native');
 		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
 		assert.match(detector.status().message, /stopped unexpectedly/);
@@ -249,7 +251,8 @@ test(
 			await detector.stop();
 			await rm(directory, { recursive: true, force: true });
 		});
-		await writeJson(path.join(directory, 'config.json'), { ...config, holdCheck: true });
+		await writeJson(path.join(directory, 'config.json'), config);
+		await writeJson(path.join(directory, 'fixture-options.json'), { holdCheck: true });
 		const starting = detector.start('native');
 		await waitFor(() => detector.status().phase === 'checking');
 		await detector.stop();
@@ -346,7 +349,8 @@ test(
 		const directory = await mkdtemp(path.join(tmpdir(), 'detector-validation-'));
 		const detector = new ManagedDetector({ executable, dataDirectory: directory });
 		const abort = new AbortController();
-		const validation = detector.validate({ ...config, holdCheck: true }, abort.signal);
+		await writeJson(path.join(directory, 'fixture-options.json'), { holdCheck: true });
+		const validation = detector.validate(config, abort.signal);
 		// Observe rejection immediately so cancellation never creates an unhandled promise.
 		const cancelled = assert.rejects(validation, { name: 'AbortError' });
 		t.after(async () => {
@@ -360,7 +364,10 @@ test(
 		abort.abort();
 		await cancelled;
 		assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
-		assert.equal((await readdir(directory)).filter((name) => name.endsWith('.json')).length, 0);
+		assert.deepEqual(
+			(await readdir(directory)).filter((name) => name.endsWith('.json')),
+			['fixture-options.json']
+		);
 	}
 );
 
@@ -401,8 +408,8 @@ test(
 		await writeJson(path.join(directory, 'app.json'), {
 			streams: [{ id: 'barn-camera', source, label: 'Barn' }]
 		});
-		await writeJson(path.join(directory, 'config.json'), {
-			...config,
+		await writeJson(path.join(directory, 'config.json'), config);
+		await writeJson(path.join(directory, 'fixture-options.json'), {
 			statusEvents: ['ready', 'frame', 'inference'].map((event) => ({
 				version: 1,
 				event,
@@ -426,7 +433,7 @@ test(
 		await detector.stop();
 		assert.equal(detector.status().readiness, 'idle');
 		assert.equal(detector.status().cameras[0].state, 'paused');
-		await writeJson(path.join(directory, 'config.json'), { ...config, holdCheck: true });
+		await writeJson(path.join(directory, 'fixture-options.json'), { holdCheck: true });
 		const restarting = detector.start('auto');
 		await waitFor(() => detector.status().phase === 'checking');
 		assert.equal(detector.status().readiness, 'preparing');

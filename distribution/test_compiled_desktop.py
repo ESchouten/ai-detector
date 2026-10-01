@@ -51,13 +51,9 @@ class CompiledDesktopTest(unittest.TestCase):
 
     def launch(self, open_browser=False, **fixture_options):
         (self.data / "config.json").write_text(
-            json.dumps(
-                {
-                    "detectors": [{"detection": {"source": "input.bmp"}}],
-                    **fixture_options,
-                }
-            )
+            json.dumps({"detectors": [{"detection": {"source": "input.bmp"}}]})
         )
+        (self.data / "fixture-options.json").write_text(json.dumps(fixture_options))
         (self.data / "runtime.json").write_text(
             json.dumps({"enabled": True, "mode": "native"})
         )

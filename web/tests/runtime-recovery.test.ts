@@ -30,8 +30,8 @@ async function fixture(t: TestContext, extra = {}) {
 		await rm(directory, { recursive: true, force: true });
 	});
 	mockTimeouts(t);
-	const settings = {
-		...config,
+	const settings = config;
+	const options = {
 		failureExitCode: 75,
 		statusEvents: ['ready', 'frame', 'inference'].map((event) => ({
 			version: 1,
@@ -43,12 +43,14 @@ async function fixture(t: TestContext, extra = {}) {
 		...extra
 	};
 	await writeJson(path.join(directory, 'config.json'), settings);
+	await writeJson(path.join(directory, 'fixture-options.json'), options);
 	await detector.start('auto');
 	await waitFor(() => detector.status().readiness === 'monitoring');
 	return {
 		detector,
 		directory,
 		settings,
+		options,
 		pid: async () => Number(await readFile(path.join(directory, 'pid.txt'), 'utf8')),
 		starts: async () =>
 			(await readFile(path.join(directory, 'starts.txt'), 'utf8')).trim().split('\n').length
@@ -152,7 +154,7 @@ test(
 	async (t) => {
 		let now = Date.now();
 		t.mock.method(Date, 'now', () => now);
-		const { detector, directory, settings, pid, starts } = await fixture(t);
+		const { detector, directory, options, pid, starts } = await fixture(t);
 		const waits = [2000, 4000, 8000, 16000, 30000, 30000, 30000];
 		for (let attempt = 1; attempt <= 7; attempt++) {
 			process.kill(await pid(), 'SIGUSR2');
@@ -170,9 +172,9 @@ test(
 			);
 		}
 		now += 10 * 60 * 1000;
-		await writeJson(path.join(directory, 'config.json'), {
-			...settings,
-			statusEvents: settings.statusEvents.map((event) => ({
+		await writeJson(path.join(directory, 'fixture-options.json'), {
+			...options,
+			statusEvents: options.statusEvents.map((event) => ({
 				...event,
 				at: new Date(now).toISOString()
 			}))
@@ -233,7 +235,7 @@ test(
 		const { detector, directory, pid, starts } = await fixture(t);
 		process.kill(await pid(), 'SIGUSR2');
 		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
-		await writeJson(path.join(directory, 'config.json'), { ...config, holdCheck: true });
+		await writeJson(path.join(directory, 'fixture-options.json'), { holdCheck: true });
 		t.mock.timers.tick(2000);
 		await waitFor(async () => (await detector.log.read()).includes('Checking configuration'));
 		const checkPid = Number(await readFile(path.join(directory, 'check-pid.txt'), 'utf8'));
@@ -241,7 +243,7 @@ test(
 		assert.equal(detector.status().phase, 'stopped');
 		assert.throws(() => process.kill(checkPid, 0), { code: 'ESRCH' });
 		assert.equal(await starts(), 1);
-		await writeJson(path.join(directory, 'config.json'), config);
+		await writeJson(path.join(directory, 'fixture-options.json'), {});
 		await detector.start('auto');
 		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		assert.equal(await starts(), 2);
@@ -309,8 +311,8 @@ test(
 	'a failed drain while applying settings still resumes enabled monitoring',
 	posixOnly,
 	async (t) => {
-		const { detector, directory, settings, starts } = await fixture(t, { stopExitCode: 75 });
-		await writeJson(path.join(directory, 'config.json'), { ...settings, stopExitCode: 0 });
+		const { detector, directory, options, starts } = await fixture(t, { stopExitCode: 75 });
+		await writeJson(path.join(directory, 'fixture-options.json'), { ...options, stopExitCode: 0 });
 		await detector.apply();
 		await waitFor(
 			async () => (await starts()) === 2 && detector.status().readiness === 'monitoring'

@@ -143,6 +143,7 @@ def assert_core_dependencies(import_graph):
             "typing",
             "collections",
             "logging",
+            "uuid",  # Delivery assigns an identity shared by independent exporters.
             "aidetector.domain",
             "aidetector.application",
         },

@@ -4,9 +4,8 @@ import * as v from 'valibot';
 import { configuration } from '$lib/server/configuration';
 import { alertsInput, telegramInput, telegramMeta } from '$lib/configuration';
 import { sendTelegramTest } from '$lib/server/telegram';
-import { TelegramPairings } from '$lib/server/telegram-pairing';
+import { telegramPairings as pairings } from '$lib/server/telegram-service';
 
-const pairings = new TelegramPairings();
 const tokenInput = v.object({ token: v.pipe(v.string(), v.trim(), v.minLength(1)) });
 const pairingInput = v.object({ id: v.pipe(v.string(), v.minLength(1)) });
 

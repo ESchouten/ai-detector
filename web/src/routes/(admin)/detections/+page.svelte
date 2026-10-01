@@ -1,9 +1,20 @@
 <script lang="ts">
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
-	import { getDetectionPage, getTypes, getRecordingPresets } from '$lib/remote/detections.remote';
+	import {
+		getDetectionPage,
+		getTypes,
+		getRecordingPresets,
+		getDetectionReviews
+	} from '$lib/remote/detections.remote';
 	import { STAGES } from '$lib/schema';
-	import { detectionKey, mergeDetections, type Detection } from '$lib/detections';
+	import {
+		detectionKey,
+		mergeDetections,
+		reviewedStage,
+		STAGE_LABELS,
+		type Detection
+	} from '$lib/detections';
 	import { resolve } from '$app/paths';
 	import { onMount, untrack } from 'svelte';
 	import DetectorRuntime from '$lib/components/detector-runtime.svelte';
@@ -25,11 +36,12 @@
 	);
 
 	let entries = $state<Detection[]>([]);
-	let isLoading = $state(false);
+	let isLoading = $state(true);
 	let hasMore = $state(true);
 	let nextOffset = $state(0);
 	let errorMessage = $state<string | null>(null);
 	let requestVersion = 0;
+	let reviewVersion = 0;
 	let hasNewRecordings = $state(false);
 	let refreshError = $state(false);
 
@@ -47,6 +59,26 @@
 
 	function capitalize(value: string) {
 		return value.charAt(0).toUpperCase() + value.slice(1);
+	}
+
+	function reviewed(updated: Detection) {
+		reviewVersion += 1;
+		const before = entries.length;
+		entries = entries
+			.map((entry) => {
+				if (
+					detectionKey(entry) !== detectionKey(updated) &&
+					(!updated.event_id || entry.event_id !== updated.event_id)
+				)
+					return entry;
+				return {
+					...entry,
+					review: updated.review,
+					stage: reviewedStage(entry.archiveStage, updated.review)
+				};
+			})
+			.filter((entry) => !stage || entry.stage === stage);
+		nextOffset -= before - entries.length;
 	}
 
 	async function loadNextPage(reset = false, filters = { type, stage }) {
@@ -68,17 +100,22 @@
 		errorMessage = null;
 
 		try {
-			const result = await getDetectionPage({
+			const query = getDetectionPage({
 				...filters,
 				offset: reset ? 0 : nextOffset,
 				limit: PAGE_SIZE
 			});
+			await query.refresh();
+			const result = await query;
 
 			if (version !== requestVersion) {
 				return;
 			}
 
-			entries = reset ? result.items : mergeDetections(entries, result.items);
+			const current = new Set(entries.map(detectionKey));
+			entries = reset
+				? result.items
+				: [...entries, ...result.items.filter((entry) => !current.has(detectionKey(entry)))];
 			nextOffset = result.nextOffset;
 			hasMore = result.hasMore;
 		} catch (error) {
@@ -95,11 +132,36 @@
 	async function refreshRecordings() {
 		if (isLoading || document.visibilityState !== 'visible') return;
 		const version = requestVersion;
+		const reviewsVersion = reviewVersion;
 		try {
+			// Refresh loaded recordings too, including those below the first page, without replacing media.
+			const reviews = [];
+			for (let offset = 0; offset < entries.length; offset += 100) {
+				const addresses = entries
+					.slice(offset, offset + 100)
+					.map(({ type, archiveStage, timestamp }) => ({ type, archiveStage, timestamp }));
+				const query = getDetectionReviews(addresses);
+				await query.refresh();
+				reviews.push(...(await query));
+			}
 			const query = getDetectionPage({ type, stage, offset: 0, limit: PAGE_SIZE });
 			await query.refresh();
 			const result = await query;
-			if (version !== requestVersion) return;
+			if (version !== requestVersion || reviewsVersion !== reviewVersion) return;
+			const byAddress = new Map(reviews.map((entry) => [detectionKey(entry), entry.review]));
+			const before = entries.length;
+			entries = entries
+				.map((entry) => {
+					if (!byAddress.has(detectionKey(entry))) return entry;
+					const review = byAddress.get(detectionKey(entry)) ?? null;
+					return {
+						...entry,
+						review,
+						stage: reviewedStage(entry.archiveStage, review)
+					};
+				})
+				.filter((entry) => !stage || entry.stage === stage);
+			nextOffset -= before - entries.length;
 			const current = new Set(entries.map(detectionKey));
 			const added = result.items.filter((item) => !current.has(detectionKey(item)));
 			refreshError = false;
@@ -238,7 +300,7 @@
 					aria-pressed={s === stage}
 					onclick={() => updateSearchParams(type || undefined, s)}
 				>
-					{s ? capitalize(s) : 'All stages'}
+					{s ? STAGE_LABELS[s] : 'All stages'}
 				</Button>
 			{/each}
 		</div>
@@ -264,7 +326,7 @@
 					</div>
 					<div class="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
 						{#each dayGroup[1] as entry (detectionKey(entry))}
-							<DetectionCard {entry} colorSeed={recordingPresets[entry.type]} />
+							<DetectionCard {entry} colorSeed={recordingPresets[entry.type]} onreview={reviewed} />
 						{/each}
 					</div>
 				</section>

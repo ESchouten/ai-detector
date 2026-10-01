@@ -9,14 +9,14 @@ import type {
 } from '../telegram.ts';
 import {
 	assertTelegramPollingAvailable,
-	findTelegramChats,
 	getTelegramBot,
-	getTelegramUpdates,
+	type TelegramUpdate,
 	telegramRecipient,
 	requestTelegramChat,
 	sendTelegramConfirmation,
 	acknowledgeTelegramConnection
 } from './telegram.ts';
+import { TelegramInbox } from './telegram-inbox.ts';
 
 const LIFETIME_MS = 5 * 60 * 1000;
 const MAX_SESSIONS = 16;
@@ -31,7 +31,6 @@ interface Session {
 	controller: AbortController;
 	timer?: ReturnType<typeof setTimeout>;
 	starting: boolean;
-	offset?: number;
 	chat?: TelegramRecipient;
 	destination: TelegramDestination;
 	requestId: number;
@@ -40,8 +39,6 @@ interface Session {
 	confirmed: boolean;
 	polling?: Promise<TelegramPairingState>;
 }
-
-type TelegramUpdate = Awaited<ReturnType<typeof getTelegramUpdates>>[number];
 
 function privateMessage(update: TelegramUpdate) {
 	const message = update.message;
@@ -72,10 +69,13 @@ function confirmation(session: Session, update: TelegramUpdate) {
 export class TelegramPairings {
 	private readonly sessions = new Map<string, Session>();
 	private readonly discoveries = new Set<string>();
+	private readonly background = new Map<string, Promise<void>>();
 	private readonly now: () => number;
+	private readonly inbox: TelegramInbox;
 
-	constructor(now: () => number = Date.now) {
+	constructor(now: () => number = Date.now, inbox = new TelegramInbox()) {
 		this.now = now;
+		this.inbox = inbox;
 	}
 
 	async begin(
@@ -105,6 +105,9 @@ export class TelegramPairings {
 		session.timer = setTimeout(() => this.end(session, EXPIRED), LIFETIME_MS);
 		session.timer.unref();
 		try {
+			const background = this.background.get(token);
+			if (background) await background.catch(() => undefined);
+			this.assertActive(session);
 			const bot = await getTelegramBot(token, session.controller.signal);
 			await assertTelegramPollingAvailable(token, session.controller.signal);
 			const url = `https://t.me/${bot.username}?start=${session.code}`;
@@ -145,27 +148,35 @@ export class TelegramPairings {
 		this.assertAvailable(token);
 		this.discoveries.add(token);
 		try {
-			return await findTelegramChats(token);
+			const background = this.background.get(token);
+			if (background) await background.catch(() => undefined);
+			await this.inbox.receive(token);
+			return this.inbox.chats(token);
 		} finally {
 			this.discoveries.delete(token);
 		}
 	}
 
 	private async receive(session: Session): Promise<TelegramPairingState> {
-		const updates = await getTelegramUpdates(session.token, {
-			offset: session.offset,
-			signal: session.controller.signal,
-			// Pairing is for a dedicated bot. Keep the manual discovery path's filter unchanged.
-			allowedUpdates: ['message', 'channel_post', 'my_chat_member', 'callback_query']
-		});
-		this.assertActive(session);
-		for (const update of updates) {
-			session.offset = Math.max(session.offset ?? 0, update.update_id + 1);
-			await this.receiveUpdate(session, update);
+		await this.inbox.receive(session.token, session.controller.signal, async (update) => {
 			this.assertActive(session);
-			if (session.confirmed) break;
-		}
+			if (!session.confirmed) await this.receiveUpdate(session, update);
+			this.assertActive(session);
+		});
 		return this.state(session);
+	}
+
+	/** Setup reserves the bot and waits for any current background request to finish. */
+	async receiveReviews(token: string, signal: AbortSignal): Promise<void> {
+		this.expire();
+		if (this.busy(token) || this.background.has(token)) return;
+		const pending = this.inbox.receive(token, signal);
+		this.background.set(token, pending);
+		try {
+			await pending;
+		} finally {
+			this.background.delete(token);
+		}
 	}
 
 	private async receiveUpdate(session: Session, update: TelegramUpdate): Promise<void> {
@@ -221,13 +232,20 @@ export class TelegramPairings {
 	}
 
 	private assertAvailable(token: string): void {
-		if (
-			this.discoveries.has(token) ||
-			[...this.sessions.values()].some((session) => session.token === token && !session.confirmed)
-		)
+		if (this.busy(token))
 			throw new ConfigurationError(
 				'This bot already has a connection in progress. Finish or cancel it before starting another.'
 			);
+	}
+
+	private busy(token: string): boolean {
+		return (
+			this.discoveries.has(token) ||
+			[...this.sessions.values()].some(
+				(session) =>
+					session.token === token && (!session.confirmed || session.starting || session.polling)
+			)
+		);
 	}
 
 	private assertActive(session: Session): void {

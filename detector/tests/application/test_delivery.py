@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from uuid import UUID
 
 import numpy as np
 import pytest
@@ -44,6 +45,22 @@ class Validator:
         if isinstance(self.result, Exception):
             raise self.result
         return ValidationResult(self.result)
+
+
+def test_event_identity_is_shared_across_destinations_and_unique_per_delivery():
+    disk, telegram = RecordingExporter(), RecordingExporter()
+    delivery = EventDelivery(
+        (
+            Destination("disk", disk, ExportPolicy()),
+            Destination("telegram", telegram, ExportPolicy()),
+        ),
+        Cooldown(),
+    )
+    delivery.deliver(event())
+    delivery.deliver(event(1))
+    assert disk.results[0].id == telegram.results[0].id
+    assert disk.results[0].id != disk.results[1].id
+    assert UUID(disk.results[0].id).version == 4
 
 
 def test_optional_validation_exports_unvalidated_event(caplog):

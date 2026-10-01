@@ -3,6 +3,7 @@ import {
 	mkdtemp,
 	mkdir,
 	open,
+	readFile,
 	rm,
 	symlink,
 	truncate,
@@ -29,6 +30,63 @@ const metadata = {
 	end: '2026-09-22T10:00:02',
 	duration: 2
 };
+
+test('manual review overrides filtering, survives restart and can restore the original validator result', async (t) => {
+	const { root, event, archive } = await fixture(t);
+	const address = { type: 'cow', archiveStage: 'approved' as const, timestamp };
+	const original = await readFile(path.join(event, 'metadata.json'), 'utf8');
+	const before = (await archive.page({ offset: 0, limit: 24 })).items[0];
+	const rejected = await archive.review(address, false, 'web');
+	assert.equal(rejected.stage, 'rejected');
+	assert.equal(rejected.validated, true, 'The original AI verdict is preserved');
+	assert.equal(rejected.review?.source, 'web');
+	assert.equal(detectionKey(rejected), detectionKey(before));
+	assert.equal((await archive.locations({ stage: 'approved' })).length, 0);
+	assert.equal((await archive.locations({ stage: 'rejected' })).length, 1);
+	const restarted = new DetectionArchive(root);
+	assert.equal((await restarted.page({ offset: 0, limit: 24 })).items[0].stage, 'rejected');
+	const restored = await restarted.review(address, null, 'web');
+	assert.equal(restored.stage, 'approved');
+	assert.equal(restored.review, null);
+	assert.equal(await readFile(path.join(event, 'metadata.json'), 'utf8'), original);
+	assert.equal(await readFile(path.join(event, 'video.mp4'), 'utf8'), '0123456789');
+});
+
+test('all destinations of one event share a manual review; concurrent edits finish consistently', async (t) => {
+	const { root, event, archive } = await fixture(t);
+	const event_id = 'a'.repeat(32);
+	await writeFile(path.join(event, 'metadata.json'), JSON.stringify({ ...metadata, event_id }));
+	const copy = path.join(root, 'second category', 'unvalidated', timestamp);
+	await mkdir(copy, { recursive: true });
+	await writeFile(path.join(copy, 'metadata.json'), JSON.stringify({ ...metadata, event_id }));
+	assert.equal(await archive.reviewEvent('b'.repeat(32), true, 'telegram'), false);
+	await Promise.all([
+		archive.reviewEvent(event_id, true, 'telegram'),
+		archive.review({ type: 'cow', archiveStage: 'approved', timestamp }, false, 'web')
+	]);
+	const { items } = await archive.page({ offset: 0, limit: 24 });
+	assert.equal(items.length, 2);
+	assert.ok(items.every((item) => item.stage === 'rejected' && item.review?.source === 'web'));
+});
+
+test('reviewing refuses traversal and missing recordings without creating archive folders', async (t) => {
+	const { archive } = await fixture(t);
+	await assert.rejects(
+		archive.review({ type: '..', archiveStage: 'approved', timestamp }, true, 'web'),
+		ArchivePathError
+	);
+	await assert.rejects(
+		archive.review({ type: 'missing', archiveStage: 'approved', timestamp }, true, 'web'),
+		{ code: 'ENOENT' }
+	);
+	assert.deepEqual(await archive.types(), ['cow']);
+});
+
+test('invalid review sidecars are visible errors instead of silently losing manual decisions', async (t) => {
+	const { archive, event } = await fixture(t);
+	await writeFile(path.join(event, 'review.json'), JSON.stringify({ validated: 'false' }));
+	await assert.rejects(archive.locations({}));
+});
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'ai-archive-'));

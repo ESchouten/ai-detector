@@ -1,12 +1,22 @@
-import { query } from '$app/server';
+import { command, query } from '$app/server';
 import * as v from 'valibot';
 import { STAGES } from '$lib/schema';
-import { DETECTIONS_DIR } from '$lib/server/application-paths';
-import { DetectionArchive, isArchiveSegment } from '$lib/server/archive';
+import { isArchiveSegment } from '$lib/server/archive';
+import { recordings as archive } from '$lib/server/recordings';
 import { configuration } from '$lib/server/configuration';
-import { recordingPresets, recordingExportInput } from '$lib/detections';
+import { recordingPresets, recordingExportInput, reviewDetectionInput } from '$lib/detections';
 
-const archive = new DetectionArchive(DETECTIONS_DIR);
+export const reviewDetection = command(reviewDetectionInput, ({ validated, ...address }) =>
+	archive.review(address, validated, 'web')
+);
+
+export const getDetectionReviews = query(
+	v.pipe(v.array(v.omit(reviewDetectionInput, ['validated'])), v.maxLength(100)),
+	(addresses) =>
+		Promise.all(
+			addresses.map(async (address) => ({ ...address, review: await archive.readReview(address) }))
+		)
+);
 
 export const getTypes = query(() => archive.types());
 export const getRecordingPresets = query(async () => recordingPresets(await configuration.read()));

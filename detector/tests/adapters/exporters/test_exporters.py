@@ -31,6 +31,7 @@ def result():
     return EventResult(
         DetectionEvent("camera", (observation,)),
         ValidationResult(ValidationStatus.UNVALIDATED),
+        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     )
 
 
@@ -42,7 +43,9 @@ def requests_sent(monkeypatch):
         calls.append((method, url, kwargs))
         response = requests.Response()
         response.status_code = 200
-        response._content = b'{"ok": true}'
+        response._content = json.dumps(
+            {"ok": True, "result": [{"message_id": 42}]}
+        ).encode()
         return response
 
     monkeypatch.setattr(requests, "request", request)
@@ -144,6 +147,20 @@ def test_telegram_selects_message_single_media_or_album(
         assert len(media) == 2
         assert media[0]["caption"].startswith("90%")
         assert {item["media"] for item in media} == {"attach://image", "attach://video"}
+        assert "reply_markup" not in request["data"]
+        _, review_url, review_request = requests_sent[1]
+        assert review_url.endswith("/sendMessage")
+        assert json.loads(review_request["data"]["reply_parameters"]) == {
+            "message_id": 42
+        }
+        assert review_request["data"]["disable_notification"] == "true"
+        request = review_request
+    buttons = json.loads(request["data"]["reply_markup"])["inline_keyboard"][0]
+    assert [button["callback_data"] for button in buttons] == [
+        f"review:{result.id}:approved",
+        f"review:{result.id}:rejected",
+    ]
+    assert all(len(button["callback_data"].encode()) <= 64 for button in buttons)
 
 
 def test_telegram_video_is_rendered_once_and_notification_cadence_is_preserved(
@@ -261,6 +278,7 @@ def test_telegram_compresses_large_photos_to_the_photo_limit(requests_sent, albu
     result = EventResult(
         DetectionEvent("camera", (observation,)),
         ValidationResult(ValidationStatus.UNVALIDATED),
+        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     )
     exporter = TelegramExporter(
         TelegramConfig(

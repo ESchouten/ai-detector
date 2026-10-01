@@ -11,10 +11,26 @@ from aidetector.domain.models import EventResult
 def _caption(result: EventResult) -> str:
     validated = result.validation.validated
     status = " ✅" if validated is True else " ❌" if validated is False else ""
-    caption = f"{result.event.best.score:.0%}{status}\n{round(result.event.duration)} second(s)"
-    if validated is None:
-        caption += "\n👍 / 👎"
-    return caption
+    return f"{result.event.best.score:.0%}{status}\n{round(result.event.duration)} second(s)"
+
+
+def _review_buttons(result: EventResult) -> str:
+    return json.dumps(
+        {
+            "inline_keyboard": [
+                [
+                    {
+                        "text": "👍",
+                        "callback_data": f"review:{result.id}:approved",
+                    },
+                    {
+                        "text": "👎",
+                        "callback_data": f"review:{result.id}:rejected",
+                    },
+                ]
+            ]
+        }
+    )
 
 
 class TelegramExporter:
@@ -67,9 +83,30 @@ class TelegramExporter:
                 item.name: (item.filename, item.content, item.content_type)
                 for item in attachments
             }
-        self._send(method, fields, files)
+        if method != "sendMediaGroup":
+            fields["reply_markup"] = _review_buttons(result)
+        sent = self._send(method, fields, files)
+        if method == "sendMediaGroup":
+            # Telegram albums cannot carry buttons; reply to the album instead.
+            try:
+                message_id = sent[0]["message_id"]
+            except (KeyError, IndexError, TypeError) as error:
+                raise DeliveryError(
+                    "Telegram returned an invalid album response"
+                ) from error
+            self._send(
+                "sendMessage",
+                {
+                    "chat_id": self.config.chat,
+                    "text": "Is this detection correct?",
+                    "disable_notification": "true",
+                    "reply_parameters": json.dumps({"message_id": message_id}),
+                    "reply_markup": _review_buttons(result),
+                },
+                {},
+            )
 
-    def _send(self, method: str, fields: dict[str, object], files: Files) -> None:
+    def _send(self, method: str, fields: dict[str, object], files: Files):
         response = send_request(
             "POST",
             f"https://api.telegram.org/bot{self.config.token}/{method}",
@@ -78,8 +115,10 @@ class TelegramExporter:
             files=files,
         )
         try:
-            accepted = response.json()["ok"]
+            body = response.json()
+            accepted = body["ok"]
         except (ValueError, KeyError, TypeError) as error:
             raise DeliveryError("Telegram returned an invalid response") from error
         if accepted is not True:
             raise DeliveryError("Telegram did not accept the message")
+        return body.get("result")

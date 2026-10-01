@@ -28,6 +28,7 @@ def test_failed_archive_does_not_publish_partial_files(tmp_path, monkeypatch):
     result = EventResult(
         DetectionEvent("camera", (observation,)),
         ValidationResult(ValidationStatus.UNVALIDATED),
+        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     )
     media = EventMedia()
 
@@ -52,6 +53,7 @@ def test_archive_publication_retries_a_concurrent_timestamp_collision(
     result = EventResult(
         DetectionEvent("camera", (observation,)),
         ValidationResult(ValidationStatus.UNVALIDATED),
+        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     )
     rename = Path.rename
     competing_archive = None
@@ -72,6 +74,7 @@ def test_archive_publication_retries_a_concurrent_timestamp_collision(
     [metadata_path] = list(tmp_path.glob("cow/unvalidated/*/metadata.json"))
     metadata = EventMetadata.model_validate_json(metadata_path.read_text())
     assert metadata.timestamp == metadata_path.parent.name
+    assert metadata.event_id == result.id
     assert metadata.timestamp == "2026-01-01T00-00-00.000001"
     assert len(list((tmp_path / "cow/unvalidated").iterdir())) == 2
     assert list((tmp_path / "cow/.pending").iterdir()) == []
@@ -86,6 +89,7 @@ def test_archive_publication_failure_cleans_staging_and_reports_delivery_error(
     result = EventResult(
         DetectionEvent("camera", (observation,)),
         ValidationResult(ValidationStatus.UNVALIDATED),
+        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     )
 
     def cannot_publish(path, target):
@@ -114,7 +118,9 @@ def test_archive_preserves_public_stages_and_validation_metadata(
         datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8), {"cow": 0.9}
     )
     result = EventResult(
-        DetectionEvent("camera", (observation,)), ValidationResult(status, error)
+        DetectionEvent("camera", (observation,)),
+        ValidationResult(status, error),
+        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     )
     DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(result)
     [metadata_path] = list(tmp_path.glob("cow/*/*/metadata.json"))
@@ -141,6 +147,7 @@ def test_all_strategy_archives_every_frame_and_the_standard_event_files(tmp_path
     result = EventResult(
         DetectionEvent("camera", observations),
         ValidationResult(ValidationStatus.APPROVED),
+        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     )
 
     DiskExporter(DiskConfig(strategy="ALL"), tmp_path, EventMedia()).export(result)

@@ -1,6 +1,7 @@
 /** Generated from config/metadata.schema.json. Run pnpm schema:generate; do not edit. */
 
 export type Timestamp = string;
+export type EventId = string | null;
 export type Validated = boolean | null;
 export type Confidence = number;
 export type Detections = number;
@@ -15,6 +16,7 @@ export type ValidationError = string | null;
 
 export interface EventMetadata {
 	timestamp: Timestamp;
+	event_id?: EventId;
 	validated: Validated;
 	confidence: Confidence;
 	confidences: Confidences;

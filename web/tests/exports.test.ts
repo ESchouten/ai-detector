@@ -49,6 +49,43 @@ async function unzip(response: Response) {
 	return unzipSync(new Uint8Array(await response.arrayBuffer()));
 }
 
+test('downloads group manually reviewed events by their effective verdict and retain provenance', async (t) => {
+	const { root, archive } = await fixture(t);
+	const timestamp = '2026-09-22T12-00-00';
+	await event(root, 'activity', 'approved', timestamp);
+	await archive.review({ type: 'activity', archiveStage: 'approved', timestamp }, false, 'web');
+	const files = await unzip(
+		await exportRecordings(
+			archive,
+			{ stage: 'rejected', from: '2026-09-22' },
+			new Request('http://localhost/export')
+		)
+	);
+	const base = `detections/activity/rejected/${timestamp}/`;
+	assert.equal(JSON.parse(Buffer.from(files[base + 'review.json']).toString()).validated, false);
+	assert.equal(JSON.parse(Buffer.from(files[base + 'metadata.json']).toString()).validated, true);
+	assert.ok(files[base + 'video.mp4']);
+	assert.equal(
+		(await exportRecordings(archive, { stage: 'approved' }, new Request('http://localhost/export')))
+			.status,
+		404
+	);
+});
+
+test('reviewed recordings with matching timestamps never overwrite each other in the ZIP', async (t) => {
+	const { root, archive } = await fixture(t);
+	const timestamp = '2026-09-22T12-00-00';
+	await event(root, 'activity', 'approved', timestamp);
+	await event(root, 'activity', 'rejected', timestamp);
+	await archive.review({ type: 'activity', archiveStage: 'rejected', timestamp }, true, 'web');
+	const files = await unzip(
+		await exportRecordings(archive, {}, new Request('http://localhost/export'))
+	);
+	assert.equal(Object.keys(files).filter((name) => name.endsWith('/metadata.json')).length, 2);
+	assert.ok(files[`detections/activity/approved/${timestamp}-approved/video.mp4`]);
+	assert.ok(files[`detections/activity/approved/${timestamp}-rejected/video.mp4`]);
+});
+
 test('export dates are optional, inclusive calendar dates with strict request validation', () => {
 	for (const valid of [
 		{},
@@ -135,7 +172,10 @@ test('ZIP includes original media and metadata across all pages, but no configur
 		Buffer.concat(Object.values(files)).toString(),
 		/private-password|private-token/
 	);
-	assert.match(Buffer.from(files['README.txt']).toString(), /not reviewed training labels/);
+	assert.match(
+		Buffer.from(files['README.txt']).toString(),
+		/not a verified bounding-box annotation/
+	);
 });
 
 test(

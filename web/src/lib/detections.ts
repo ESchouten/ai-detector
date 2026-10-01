@@ -2,6 +2,12 @@ import type { Configuration, Metadata, Stage } from './schema.ts';
 import { STAGES } from './schema.ts';
 import * as v from 'valibot';
 
+export const STAGE_LABELS: Record<Stage, string> = {
+	approved: 'Accepted',
+	rejected: 'Rejected',
+	unvalidated: 'Unvalidated'
+};
+
 export function isArchiveSegment(value: string): boolean {
 	return value.length > 0 && value !== '.' && value !== '..' && !/[/\\\0]/.test(value);
 }
@@ -27,6 +33,24 @@ export const recordingExportInput = v.pipe(
 
 export type RecordingExportFilter = v.InferOutput<typeof recordingExportInput>;
 
+export const manualReviewSchema = v.object({
+	validated: v.boolean(),
+	source: v.picklist(['web', 'telegram']),
+	reviewed_at: v.pipe(v.string(), v.isoTimestamp())
+});
+export type ManualReview = v.InferOutput<typeof manualReviewSchema>;
+
+export function reviewedStage(archiveStage: Stage, review: ManualReview | null): Stage {
+	return review ? (review.validated ? 'approved' : 'rejected') : archiveStage;
+}
+
+export const reviewDetectionInput = v.object({
+	type: v.pipe(v.string(), v.check(isArchiveSegment)),
+	archiveStage: v.picklist(STAGES),
+	timestamp: v.pipe(v.string(), v.check(isArchiveSegment)),
+	validated: v.nullable(v.boolean())
+});
+
 /** Color archived categories from their configured preset without storing extra metadata. */
 export function recordingPresets({ config, app }: Configuration): Record<string, string> {
 	const categories = new Map<string, Set<string>>();
@@ -46,10 +70,12 @@ export function recordingPresets({ config, app }: Configuration): Record<string,
 	);
 }
 
-/** The archive location is authoritative, even for older metadata documents. */
+/** Manual review overrides classification; media keeps its original archive location. */
 export interface Detection extends Metadata {
 	type: string;
 	stage: Stage;
+	archiveStage: Stage;
+	review: ManualReview | null;
 }
 
 export interface DetectionPage {
@@ -65,8 +91,10 @@ export interface DetectionFilter {
 	limit: number;
 }
 
-export function detectionKey(detection: Detection): string {
-	return JSON.stringify([detection.type, detection.stage, detection.timestamp]);
+export function detectionKey(
+	detection: Pick<Detection, 'type' | 'archiveStage' | 'timestamp'>
+): string {
+	return JSON.stringify([detection.type, detection.archiveStage, detection.timestamp]);
 }
 
 /** New recordings can shift offset pages; keep each archive entry once. */

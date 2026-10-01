@@ -7,7 +7,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Field from '$lib/components/ui/field';
-	import { recordingExportInput } from '$lib/detections';
+	import { recordingExportInput, STAGE_LABELS } from '$lib/detections';
 	import { getExportCount } from '$lib/remote/detections.remote';
 	import type { Stage } from '$lib/schema';
 
@@ -39,7 +39,9 @@
 				Download images, videos and detection details in one ZIP to share for model improvement.
 			</Dialog.Description>
 		</Dialog.Header>
-		<p class="text-sm">{type ?? 'All categories'} · {stage ?? 'All stages'}</p>
+		<p class="text-sm">
+			{type ?? 'All categories'} · {stage ? STAGE_LABELS[stage] : 'All stages'}
+		</p>
 		<Field.Group>
 			<Field.Group class="sm:flex-row">
 				<Field.Field data-invalid={!selection.success || undefined}>

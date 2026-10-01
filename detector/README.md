@@ -215,7 +215,7 @@ Disk settings:
 
 An archive contains `best.jpg`, `clean.jpg`, `video.mp4`, and `metadata.json` under `detections/<category>/<approved|rejected|unvalidated>/<timestamp>/`. Metadata describes the complete event, including context. New folders use microseconds and collision handling; existing events are never overwritten. Files are prepared in the category's `.pending/` directory and published together. Existing archives remain readable; no data migration is needed.
 
-Telegram requires `token` and `chat`. `alert_every` defaults to `1` and controls the notification sound every Nth attempted alert. `timeout` defaults to `30` seconds. The adapter sends text when no media is selected, the appropriate single-media method for one attachment, and an album for multiple attachments. The detector's encoder limits photos to 10 MB and videos to 12 MB.
+Telegram requires `token` and `chat`. `alert_every` defaults to `1` and controls the notification sound every Nth attempted alert. `timeout` defaults to `30` seconds. The adapter sends text when no media is selected, the appropriate single-media method for one attachment, and an album for multiple attachments. The detector's encoder limits photos to 10 MB and videos to 12 MB. Alerts include 👍/👎 buttons linked by the same `event_id` saved on disk. Albums get a silent reply containing the buttons. The web application receives and saves reviews; standalone Python only sends alerts. See [recording review](../web/README.md) and the exporter tests for this contract.
 
 Telegram and webhook media settings:
 

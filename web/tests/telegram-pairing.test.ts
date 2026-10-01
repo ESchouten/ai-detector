@@ -188,7 +188,7 @@ test('old and replayed link codes cannot match a new pairing for the same bot', 
 	const currentCode = new URL(current.url).searchParams.get('start')!;
 	assert.notEqual(currentCode, oldCode);
 	assert.deepEqual(await f.pairings.poll(current.id), { state: 'waiting' });
-	f.replies.getUpdates = () => [start(2, currentCode, 456)];
+	f.replies.getUpdates = () => [start(3, currentCode, 456)];
 	assert.deepEqual(await f.pairings.poll(current.id), {
 		state: 'confirming',
 		chat: { id: '456', name: 'Farmer One' }
@@ -318,7 +318,7 @@ test('external polling conflict gives manual setup guidance and never changes th
 	await f.begin();
 });
 
-test('manual discovery owns its update request and leaves the existing update filter unchanged', async (t) => {
+test('manual discovery owns its update request and keeps review callbacks enabled', async (t) => {
 	const f = fixture(t);
 	let release!: () => void;
 	const gate = new Promise<void>((resolve) => {
@@ -333,7 +333,11 @@ test('manual discovery owns its update request and leaves the existing update fi
 	await assert.rejects(f.pairings.discoverChats('fixture-token'), /connection in progress/);
 	release();
 	assert.deepEqual(await discovery, [{ id: '123', name: 'Farmer One' }]);
-	assert.deepEqual(f.calls[0].body, { timeout: 3, limit: 100 });
+	assert.deepEqual(f.calls[0].body, {
+		timeout: 3,
+		limit: 100,
+		allowed_updates: ['message', 'channel_post', 'my_chat_member', 'callback_query']
+	});
 	await f.begin();
 });
 

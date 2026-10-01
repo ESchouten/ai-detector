@@ -157,14 +157,28 @@ export function telegramRecipient(chat: v.InferOutput<typeof chatSchema>): Teleg
 	};
 }
 
-export async function findTelegramChats(token: string) {
-	const updates = await getTelegramUpdates(token);
+export type TelegramUpdate = Awaited<ReturnType<typeof getTelegramUpdates>>[number];
+
+export function telegramChats(updates: TelegramUpdate[]) {
 	const chats = new Map<string, TelegramRecipient>();
 	for (const update of updates) {
 		const message = update.message ?? update.channel_post ?? update.my_chat_member;
 		if (message) chats.set(String(message.chat.id), telegramRecipient(message.chat));
 	}
 	return [...chats.values()];
+}
+
+export async function findTelegramChats(token: string) {
+	return telegramChats(await getTelegramUpdates(token));
+}
+
+export async function answerTelegramReview(
+	token: string,
+	callbackId: string,
+	text: string,
+	signal?: AbortSignal
+): Promise<void> {
+	await request(api(token, signal).answerCallbackQuery(callbackId, { text }), signal);
 }
 
 export async function sendTelegramTest(token: string, chat: string): Promise<void> {

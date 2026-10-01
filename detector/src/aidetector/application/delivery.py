@@ -1,5 +1,6 @@
 import logging
 from dataclasses import dataclass
+from uuid import uuid4
 
 from aidetector.application.ports import (
     DeliveryError,
@@ -78,7 +79,7 @@ class EventDelivery:
             validation = ValidationResult(ValidationStatus.FAILED, str(error))
             logger.error("Event validation unavailable: %s", error)
 
-        result = EventResult(event, validation)
+        result = EventResult(event, validation, uuid4().hex)
         logger.info("Event validation: %s", validation.status.value)
         self.cooldown.record(result)
         delivered: list[str] = []

@@ -34,9 +34,13 @@ Imports refuse to replace an existing setup or data folder. Completed copies are
 
 ## Export recordings and back up settings
 
+Use **Accept** or **Reject** beneath a recording to review it yourself, including older recordings. **Undo review** restores the original validator result. The latest manual decision takes precedence and is saved across restarts.
+
+New Telegram alerts have **👍** (accept) and **👎** (reject) buttons, without text labels. Clicking one saves the same review and confirms it in Telegram; the web app updates automatically. Albums have a silent review reply beneath them. Anyone who can use the buttons in a connected chat can review that event. The AI Detector application must be running, but monitoring may be paused and the browser closed. Use a bot dedicated to this installation: another polling app or webhook prevents incoming reviews. Previously sent messages cannot acquire these buttons; review their recordings in the web app. Reviews are available for events saved on disk.
+
 Choose **Export recordings** on Recordings to download a ZIP of the selected category and stage across all pages. Optional **From date** and **To date** fields include both complete days, using the recording dates shown on screen. Leave either field empty for an open-ended range, or both for all dates. The dialog shows the number of matching events before downloading.
 
-The ZIP preserves the `detections/<category>/<stage>/<timestamp>/` structure, original images (`clean.jpg` when available), annotated images, saved frames, videos and `metadata.json`. It does not include settings. These are model predictions, not reviewed training labels; review and annotate original images or video frames before training. Exports download locally and are not uploaded anywhere by the app.
+The ZIP preserves the `detections/<category>/<stage>/<timestamp>/` structure, original images (`clean.jpg` when available), annotated images, saved frames, videos and `metadata.json`. It does not include settings. Manual reviews take precedence when choosing the exported stage. A `review.json` file records that decision; `metadata.json` preserves the original validator result. Accepting an event does not verify its bounding boxes: review and annotate original images or video frames before training. Exports download locally and are not uploaded anywhere by the app.
 
 On Settings, **Back up settings** downloads `config.json` and `app.json` together. This includes saved camera passwords and alert tokens, so keep the backup private. Recordings, model/video files, custom preset files and computer startup preferences are not included. To restore into a new installation, extract the ZIP and use **Use existing setup** to select that folder. Keep referenced local model/video files available at their configured paths, or update the paths before importing on another computer. Import never overwrites an existing setup.
 

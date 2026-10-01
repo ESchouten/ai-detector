@@ -14,6 +14,7 @@ class EventMetadata(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     timestamp: str
+    event_id: str | None = Field(default=None, pattern=r"^[a-f0-9]{32}$")
     validated: bool | None
     confidence: float = Field(ge=0, le=1)
     confidences: dict[str, float]
@@ -31,6 +32,7 @@ class EventMetadata(BaseModel):
         box = best.enclosing_box
         return cls(
             timestamp=timestamp,
+            event_id=result.id,
             validated=result.validation.validated,
             confidence=best.score,
             confidences=dict(best.confidence),

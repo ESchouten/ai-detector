@@ -116,3 +116,4 @@ class EventResult:
 
     event: DetectionEvent
     validation: ValidationResult
+    id: str

@@ -1,10 +1,18 @@
-import { readdir, readFile, realpath } from 'node:fs/promises';
+import { readdir, readFile, realpath, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import Ajv from 'ajv';
+import * as v from 'valibot';
 import metadataSchema from '../../../../config/metadata.schema.json' with { type: 'json' };
 import { STAGES, type Metadata, type Stage } from '../schema.ts';
 import type { Detection, DetectionFilter, DetectionPage } from '../detections.ts';
-import { isArchiveSegment, type RecordingExportFilter } from '../detections.ts';
+import {
+	isArchiveSegment,
+	manualReviewSchema,
+	reviewedStage,
+	type ManualReview,
+	type RecordingExportFilter
+} from '../detections.ts';
+import { writeJson } from './json-file.ts';
 
 export { isArchiveSegment } from '../detections.ts';
 
@@ -46,11 +54,16 @@ async function folders(directory: string): Promise<string[]> {
 export interface ArchiveLocation {
 	type: string;
 	stage: Stage;
+	archiveStage: Stage;
 	timestamp: string;
+	review: ManualReview | null;
 }
+
+export type RecordingAddress = Pick<ArchiveLocation, 'type' | 'archiveStage' | 'timestamp'>;
 
 export class DetectionArchive {
 	readonly directory: string;
+	private pendingReview: Promise<unknown> = Promise.resolve();
 
 	constructor(directory: string) {
 		this.directory = directory;
@@ -77,13 +90,17 @@ export class DetectionArchive {
 		const types = type ? [type] : await this.types();
 		const locations: ArchiveLocation[] = [];
 		for (const category of types) {
-			for (const currentStage of stage ? [stage] : STAGES) {
+			for (const currentStage of STAGES) {
 				const timestamps = await folders(path.join(this.directory, category, currentStage));
 				for (const timestamp of timestamps) {
 					// Match the calendar dates shown in Recordings, without timezone conversion.
 					const day = timestamp.slice(0, 10);
-					if ((!from || day >= from) && (!to || day <= to))
-						locations.push({ type: category, stage: currentStage, timestamp });
+					if ((from && day < from) || (to && day > to)) continue;
+					const address = { type: category, archiveStage: currentStage, timestamp };
+					const review = await this.readReview(address);
+					const effectiveStage = reviewedStage(currentStage, review);
+					if (!stage || stage === effectiveStage)
+						locations.push({ ...address, stage: effectiveStage, review });
 				}
 			}
 		}
@@ -92,7 +109,7 @@ export class DetectionArchive {
 			(a, b) =>
 				b.timestamp.localeCompare(a.timestamp) ||
 				a.type.localeCompare(b.type) ||
-				a.stage.localeCompare(b.stage)
+				a.archiveStage.localeCompare(b.archiveStage)
 		);
 		return locations;
 	}
@@ -101,7 +118,7 @@ export class DetectionArchive {
 		const file = await archivePath(
 			this.directory,
 			location.type,
-			location.stage,
+			location.archiveStage,
 			location.timestamp,
 			'metadata.json'
 		);
@@ -111,5 +128,92 @@ export class DetectionArchive {
 				`Invalid archive metadata: ${location.type}/${location.stage}/${location.timestamp}`
 			);
 		return { ...metadata, ...location };
+	}
+
+	async readReview(address: RecordingAddress): Promise<ManualReview | null> {
+		try {
+			const file = await archivePath(
+				this.directory,
+				address.type,
+				address.archiveStage,
+				address.timestamp,
+				'review.json'
+			);
+			return v.parse(manualReviewSchema, JSON.parse(await readFile(file, 'utf8')));
+		} catch (error) {
+			if (isMissingFile(error)) return null;
+			throw error;
+		}
+	}
+
+	review(
+		address: RecordingAddress,
+		validated: boolean | null,
+		source: ManualReview['source']
+	): Promise<Detection> {
+		return this.enqueueReview(async () => {
+			const current = await this.read({
+				...address,
+				stage: address.archiveStage,
+				review: await this.readReview(address)
+			});
+			// All disk destinations for a new event share its ID. Legacy recordings remain reviewable by location.
+			const locations = current.event_id ? await this.findEvent(current.event_id) : [current];
+			await this.writeReviews(locations, validated, source);
+			const review = await this.readReview(address);
+			return {
+				...current,
+				review,
+				stage: reviewedStage(address.archiveStage, review)
+			};
+		});
+	}
+
+	reviewEvent(id: string, validated: boolean, source: ManualReview['source']): Promise<boolean> {
+		return this.enqueueReview(async () => {
+			const locations = await this.findEvent(id);
+			await this.writeReviews(locations, validated, source);
+			return locations.length > 0;
+		});
+	}
+
+	private enqueueReview<T>(operation: () => Promise<T>): Promise<T> {
+		const result = this.pendingReview.then(operation);
+		this.pendingReview = result.catch(() => undefined);
+		return result;
+	}
+
+	private async findEvent(id: string): Promise<Detection[]> {
+		const matches: Detection[] = [];
+		for (const location of await this.locations({})) {
+			const recording = await this.read(location);
+			if (recording.event_id === id) matches.push(recording);
+		}
+		return matches;
+	}
+
+	private async writeReviews(
+		locations: ArchiveLocation[],
+		validated: boolean | null,
+		source: ManualReview['source']
+	): Promise<void> {
+		const review: ManualReview | null =
+			validated === null ? null : { validated, source, reviewed_at: new Date().toISOString() };
+		for (const address of locations) {
+			const folder = await archivePath(
+				this.directory,
+				address.type,
+				address.archiveStage,
+				address.timestamp
+			);
+			// Validate any existing sidecar, including symlinks, before replacing it.
+			await this.readReview(address);
+			const file = path.join(folder, 'review.json');
+			if (review) await writeJson(file, review);
+			else
+				await unlink(file).catch((error: unknown) => {
+					if (!isMissingFile(error)) throw error;
+				});
+		}
 	}
 }

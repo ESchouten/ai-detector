@@ -35,6 +35,19 @@
       "title": "Timestamp",
       "type": "string"
     },
+    "event_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{32}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Event Id"
+    },
     "validated": {
       "anyOf": [
         {

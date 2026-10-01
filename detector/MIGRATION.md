@@ -12,6 +12,12 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
 
+## Manual recording review — 2026-09-30
+
+Each delivered event now has a UUID assigned by the delivery use case. Independent exporters receive the same ID; disk stores it as optional `event_id` metadata and Telegram uses it in language-independent 👍/👎 callback buttons. Existing metadata without IDs remains readable and reviewable in the web app. Telegram albums receive a silent button message replying to the first album item. The web server receives callbacks and writes manual review sidecars; Python does not consume Telegram updates or alter completed archives.
+
+Manual reviews change display/filter/export classification, never inference, validation, cooldowns or alert policy. Original metadata and media remain unchanged. The existing configuration schema needs no migration. Internal `EventResult` constructors now require an ID; pure domain rules do not generate identities.
+
 ## Optional direct TensorRT on Windows NVIDIA systems — 2026-09-30
 
 Automatic Windows NVIDIA startup now downloads TensorRT for compute capability 8.0+ after preparing working CUDA. Ultralytics exports a checkpoint copy on the local GPU and tests the resulting engine before caching it under `models/prepared/tensorrt/`. Inference then loads that engine directly; ONNX remains only an export intermediate. Older supported GPUs keep native PyTorch/CUDA. Explicit ONNX providers and supplied `.onnx`/`.engine` models are unchanged. The desktop passes an internal flag; no JSON field, preset change or new onboarding step is introduced.

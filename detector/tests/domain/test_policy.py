@@ -23,7 +23,13 @@ def observation(second: float, **scores: float) -> Observation:
 def test_default_cooldown_allows_an_immediate_repeat():
     cooldown = Cooldown()
     event = DetectionEvent("camera", (observation(0, cow=0.9),))
-    cooldown.record(EventResult(event, ValidationResult(ValidationStatus.APPROVED)))
+    cooldown.record(
+        EventResult(
+            event,
+            ValidationResult(ValidationStatus.APPROVED),
+            id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        )
+    )
 
     assert cooldown.allows(event)
 
@@ -32,7 +38,13 @@ def test_default_cooldown_allows_an_immediate_repeat():
 def test_unscored_events_have_no_class_cooldown(seconds):
     cooldown = Cooldown(seconds)
     event = DetectionEvent("camera", (observation(0),))
-    cooldown.record(EventResult(event, ValidationResult(ValidationStatus.UNVALIDATED)))
+    cooldown.record(
+        EventResult(
+            event,
+            ValidationResult(ValidationStatus.UNVALIDATED),
+            id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        )
+    )
 
     assert cooldown.allows(event)
 
@@ -41,7 +53,13 @@ def test_cooldown_uses_source_and_class_with_inclusive_boundary():
     cooldown = Cooldown({"cow": 10, "horse": 2})
     first = DetectionEvent("one", (observation(0, cow=0.8),))
     assert cooldown.allows(first)
-    cooldown.record(EventResult(first, ValidationResult(ValidationStatus.APPROVED)))
+    cooldown.record(
+        EventResult(
+            first,
+            ValidationResult(ValidationStatus.APPROVED),
+            id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        )
+    )
     assert not cooldown.allows(DetectionEvent("one", (observation(9, cow=0.8),)))
     assert cooldown.allows(DetectionEvent("one", (observation(10, cow=0.8),)))
     assert cooldown.allows(DetectionEvent("two", (observation(1, cow=0.8),)))
@@ -51,7 +69,13 @@ def test_cooldown_uses_source_and_class_with_inclusive_boundary():
 def test_unspecified_cooldown_class_is_unrestricted():
     cooldown = Cooldown({"cow": 10})
     event = DetectionEvent("one", (observation(0, horse=0.8),))
-    cooldown.record(EventResult(event, ValidationResult(ValidationStatus.APPROVED)))
+    cooldown.record(
+        EventResult(
+            event,
+            ValidationResult(ValidationStatus.APPROVED),
+            id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        )
+    )
     assert cooldown.allows(event)
 
 
@@ -68,7 +92,11 @@ def test_cooldown_uses_validation_outcome(status, consumes_cooldown):
     cooldown = Cooldown(10)
     first = DetectionEvent("camera", (observation(0, cow=0.9),))
 
-    cooldown.record(EventResult(first, ValidationResult(status)))
+    cooldown.record(
+        EventResult(
+            first, ValidationResult(status), id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        )
+    )
 
     repeated = DetectionEvent("camera", (observation(1, cow=0.9),))
     assert cooldown.allows(repeated) is not consumes_cooldown
@@ -81,8 +109,20 @@ def test_unsuccessful_validation_preserves_the_previous_cooldown(status):
     accepted = DetectionEvent("camera", (observation(0, cow=0.9),))
     unsuccessful = DetectionEvent("camera", (observation(5, cow=0.9),))
 
-    cooldown.record(EventResult(accepted, ValidationResult(ValidationStatus.APPROVED)))
-    cooldown.record(EventResult(unsuccessful, ValidationResult(status)))
+    cooldown.record(
+        EventResult(
+            accepted,
+            ValidationResult(ValidationStatus.APPROVED),
+            id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        )
+    )
+    cooldown.record(
+        EventResult(
+            unsuccessful,
+            ValidationResult(status),
+            id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        )
+    )
 
     assert not cooldown.allows(DetectionEvent("camera", (observation(9, cow=0.9),)))
     assert cooldown.allows(DetectionEvent("camera", (observation(10, cow=0.9),)))

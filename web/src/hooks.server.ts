@@ -1,9 +1,13 @@
 import type { Handle, ServerInit } from '@sveltejs/kit';
 import { building } from '$app/environment';
 import { initializeDetector } from '$lib/server/detector-service';
+import { startTelegramReviews } from '$lib/server/telegram-service';
 
 export const init: ServerInit = async () => {
-	if (!building) await initializeDetector();
+	if (!building) {
+		await initializeDetector();
+		startTelegramReviews();
+	}
 };
 
 export const handle: Handle = ({ event, resolve }) => {

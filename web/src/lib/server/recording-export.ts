@@ -29,16 +29,34 @@ ${locations.length} recorded events.
 Files are grouped by category, stage and recording timestamp under detections/.
 clean.jpg is the original image when available; best.jpg includes annotations.
 Other saved images, video clips and metadata.json are included unchanged.
+Manual reviews override the original stage. review.json records the manual
+decision and its origin; metadata.json preserves the original validator result.
 Dates follow the recording dates shown in AI Detector.
 
-These are model predictions, not reviewed training labels. Review and annotate
+An accepted event is not a verified bounding-box annotation. Review and annotate
 the original images or video frames before using them to train a model.
 
 This export does not include application settings or camera login details.
 `
 	};
+	const names = new Map<string, number>();
 	for (const { type, stage, timestamp } of locations) {
-		const folder = await archivePath(directory, type, stage, timestamp);
+		const name = path.posix.join(type, stage, timestamp);
+		names.set(name, (names.get(name) ?? 0) + 1);
+	}
+	for (const { type, stage, archiveStage, timestamp, review } of locations) {
+		const folder = await archivePath(directory, type, archiveStage, timestamp);
+		// Older archives can have the same timestamp in different stages. Reviewing must not overwrite either in the ZIP.
+		const uniqueTimestamp =
+			names.get(path.posix.join(type, stage, timestamp))! > 1
+				? `${timestamp}-${archiveStage}`
+				: timestamp;
+		const target = path.posix.join('detections', type, stage, uniqueTimestamp);
+		if (review)
+			yield {
+				name: path.posix.join(target, 'review.json'),
+				content: JSON.stringify(review, null, 2) + '\n'
+			};
 		const entries = await readdir(folder, { withFileTypes: true });
 		for (const entry of entries) {
 			if (!entry.isFile()) continue;
@@ -48,8 +66,8 @@ This export does not include application settings or camera login details.
 			)
 				continue;
 			yield {
-				name: path.posix.join('detections', type, stage, timestamp, entry.name),
-				file: await archivePath(directory, type, stage, timestamp, entry.name)
+				name: path.posix.join(target, entry.name),
+				file: await archivePath(directory, type, archiveStage, timestamp, entry.name)
 			};
 		}
 	}

@@ -6,7 +6,7 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 
 - Existing top-level `detectors`, `onnx`, and `health` configuration remains supported.
 - Single values and lists remain accepted for sources, VLM configurations/models, and exporters.
-- Existing VLM configurations remain enabled by default. Presets may now retain a question with `enabled: false` and no model; only enabled entries run. The detector-level `vlm_enabled` switch defaults to `true`; setting it to `false` pauses the list without rewriting individual enabled flags. Optional `headers` are passed to the provider. A deliberately empty `key` selects a service without key authentication, while an omitted key preserves provider/environment lookup. The web app's shared AI connections are expanded into the existing per-detector `vlm` fields on save, so Python needs no web metadata. `--test-vlm FILE` checks a connection with synthetic media without starting detection.
+- VLM verification is controlled by `key`: null or omitted means disabled, while a string requires a provider model. An explicit empty string supports unauthenticated local services without environment-key lookup. The web app expands shared connections into `config.json`; Python never reads `app.json`. The web app upgrades former preview enable flags on loading saved settings, before managed monitoring starts. Standalone configurations must remove `enabled` / `vlm_enabled` and clear keys on disabled entries. `--test-vlm FILE` checks a connected model with synthetic media without starting detection.
 - YOLO detection/segmentation, stable per-source tracking, class thresholds, collection windows, cooldowns, optional validation, disk, Telegram, webhook, and health pings remain available.
 - Existing `detections/<category>/<stage>/<timestamp>/` archives remain readable. New archives keep best.jpg, clean.jpg, optional video.mp4, and metadata.json with the existing required fields.
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
@@ -205,6 +205,12 @@ For an executable, replace `uv run --no-sync aidetector` with the executable pat
 Use a copied configuration for the recorded-input trial: point it to a local recording and a local model, and select a disk exporter. Live VLMs and notification destinations should only be present when their actual requests are intended. Stop the trial with Ctrl+C or SIGTERM if needed.
 
 Review `unvalidated/*/metadata.json` for `validation_error` when checking provider availability. A finite run returns exit status 1 after any event validation/delivery failure; configuration errors use 2. A graceful stop observes failures during draining as well.
+
+## Preset verification keys and video — 2026-10-01
+
+Cow Catcher, Calving Catcher and Tailup preset verifiers default to `VIDEO`, with their question prefilled and `key: null`. Saving an AI connection with a key fills waiting preset verifiers in the same configuration save. Already configured models and other connection assignments are retained. Turning verification off clears all keys, including fallbacks; reconnecting restores the selected primary connection, and advanced fallback keys must be re-entered deliberately. The shared credential remains available in the web connection library.
+
+The canonical schema no longer accepts `vlm.enabled` or detector-level `vlm_enabled`. A narrow saved-file upgrade removes those former preview flags and clears keys wherever either flag disabled verification. It persists only after validating the whole configuration. New JSON editor submissions and Python use the current schema directly. An omitted key no longer opts into provider/environment credentials: configure the intended key explicitly, or `""` for an unauthenticated service. Saved questions and strategies are retained; reapply a preset or edit JSON to switch an existing image verifier to video.
 
 ## Verification limits
 

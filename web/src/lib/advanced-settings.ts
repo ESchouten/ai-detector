@@ -20,7 +20,10 @@ export const settingsSchemas: Record<SettingsDocument, Record<string, unknown>> 
 					description:
 						'Unique connection name. Unassign a connection before removing or renaming it here.'
 				},
-				model: { ...model.anyOf[0], title: model.title },
+				model: {
+					title: model.title,
+					anyOf: [model.anyOf[0], { ...model.anyOf[1], minItems: 1 }]
+				},
 				key,
 				url,
 				headers

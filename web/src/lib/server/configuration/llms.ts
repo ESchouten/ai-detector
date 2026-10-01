@@ -1,5 +1,5 @@
 import { ConfigurationError } from '../../configuration.ts';
-import { assignConnection } from '../../llm.ts';
+import { assignConnection, awaitsConnection } from '../../llm.ts';
 import type { Configuration, LlmConnection } from '../../schema.ts';
 
 export function saveLlm(
@@ -15,10 +15,12 @@ export function saveLlm(
 	const { original, ...connection } = input;
 	if (index < 0) app.llms.push(connection);
 	else app.llms[index] = connection;
-	if (!original) return;
 	for (const [i, meta] of app.detectors.entries()) {
-		if (meta.llmConnection !== original) continue;
 		const detector = config.detectors[i];
+		const assigned = original && meta.llmConnection === original;
+		const awaitingConnection =
+			!meta.llmConnection && connection.key != null && awaitsConnection(detector);
+		if (!assigned && !awaitingConnection) continue;
 		config.detectors[i] = assignConnection(detector, connection);
 		meta.llmConnection = connection.label;
 	}

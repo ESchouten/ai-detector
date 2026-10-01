@@ -187,13 +187,20 @@ def test_config_check_rejects_unsupported_sources_without_side_effects(
 
 
 @pytest.mark.parametrize("live_preview", [False, True])
+@pytest.mark.parametrize(
+    "verification",
+    [{}, {"vlm": {"prompt": "Check?", "model": "openai/vision", "key": None}}],
+)
 def test_cli_runs_no_model_detection_relative_to_config_with_separate_output(
-    tmp_path, live_preview
+    tmp_path, live_preview, verification, monkeypatch
 ):
     configured = tmp_path / "configured"
     configured.mkdir()
     image = configured / "input.png"
     assert cv2.imwrite(str(image), np.zeros((24, 32, 3), dtype=np.uint8))
+    # Neither web metadata nor environment credentials may activate this detector.
+    (configured / "app.json").write_text("This is not valid JSON")
+    monkeypatch.setenv("OPENAI_API_KEY", "unused-test-key")
     config = configured / "config.json"
     config.write_text(
         json.dumps(
@@ -202,6 +209,7 @@ def test_cli_runs_no_model_detection_relative_to_config_with_separate_output(
                     {
                         "detection": {"source": "input.png"},
                         "exporters": {"disk": {}},
+                        **verification,
                     }
                 ]
             }

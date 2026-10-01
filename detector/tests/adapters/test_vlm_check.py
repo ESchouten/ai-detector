@@ -9,13 +9,13 @@ from aidetector.adapters.vlm_check import run_check
 from aidetector.configuration import Config, VLMConfig
 
 
-def test_disabled_prompt_is_valid_but_enabling_without_model_is_not():
+def test_prompt_without_key_is_valid_but_connecting_requires_a_model():
     config = Config.model_validate(
         {
             "detectors": [
                 {
                     "detection": {"source": "video.mp4"},
-                    "vlm": {"enabled": False, "prompt": "Is the event visible?"},
+                    "vlm": {"key": None, "prompt": "Is the event visible?"},
                 }
             ]
         }
@@ -24,13 +24,13 @@ def test_disabled_prompt_is_valid_but_enabling_without_model_is_not():
     assert config.detectors[0].vlm[0].prompt == "Is the event visible?"
     assert Config.model_validate_json(config.model_dump_json()) == config
     with pytest.raises(ValidationError, match="requires a model"):
-        VLMConfig(prompt="Check?")
+        VLMConfig(prompt="Check?", key="test-key")
     with pytest.raises(ValidationError, match="requires a model"):
-        VLMConfig(prompt="Check?", model=())
+        VLMConfig(prompt="Check?", model=(), key="")
 
 
 @pytest.mark.parametrize("detected", [True, False])
-@pytest.mark.parametrize("key", ["secret-token", "", None])
+@pytest.mark.parametrize("key", ["secret-token", ""])
 def test_check_uses_real_validation_contract_and_synthetic_media(
     tmp_path, monkeypatch, capsys, detected, key
 ):
@@ -96,24 +96,71 @@ def test_check_reports_auth_failure_without_echoing_credentials(
     assert "secret-token" not in output.out + output.err
 
 
-def test_pause_preserves_verifier_settings_and_enabled_fallbacks():
+def test_only_verifiers_with_explicit_keys_are_active():
     config = Config.model_validate(
         {
             "detectors": [
                 {
                     "detection": {"source": "video.mp4"},
-                    "vlm_enabled": False,
                     "vlm": [
-                        {"model": "first", "prompt": "First?"},
-                        {"model": "backup", "prompt": "Backup?"},
-                        {"model": "disabled", "prompt": "Disabled?", "enabled": False},
+                        {"model": "first", "prompt": "First?", "key": "first-key"},
+                        {"model": "local", "prompt": "Local?", "key": ""},
+                        {"model": "disabled", "prompt": "Disabled?", "key": None},
+                        {"model": "missing", "prompt": "Missing?"},
                     ],
                 }
             ]
         }
     )
     detector = config.detectors[0]
-    assert detector.active_vlm == ()
-    resumed = detector.model_copy(update={"vlm_enabled": True})
-    assert [v.model for v in resumed.active_vlm] == [("first",), ("backup",)]
-    assert resumed.vlm == detector.vlm
+    assert [v.model for v in detector.active_vlm] == [("first",), ("local",)]
+    assert [v.key for v in detector.active_vlm] == ["first-key", ""]
+
+
+@pytest.mark.parametrize("settings", [{}, {"key": None}])
+def test_check_without_key_does_not_call_provider(
+    tmp_path, monkeypatch, capsys, settings
+):
+    def unexpected(**kwargs):
+        pytest.fail("A disconnected verifier must not contact the provider")
+
+    monkeypatch.setattr(litellm, "completion", unexpected)
+    monkeypatch.setenv("OPENAI_API_KEY", "environment-key-must-not-enable-validation")
+    file = tmp_path / "check.json"
+    file.write_text(
+        json.dumps({"model": "openai/vision", "prompt": "Check?", **settings})
+    )
+    assert run_check(file) == 2
+    assert "connection" in capsys.readouterr().out
+
+
+def test_connection_check_uses_the_next_model_when_quota_is_exhausted(
+    tmp_path, monkeypatch, capsys
+):
+    requests = []
+
+    def complete(**kwargs):
+        requests.append(kwargs)
+        if kwargs["model"] == "first":
+            raise litellm.RateLimitError(
+                message="Quota exhausted", llm_provider="test", model="first"
+            )
+        return ModelResponse(choices=[{"message": {"content": '{"detected": true}'}}])
+
+    monkeypatch.setattr(litellm, "completion", complete)
+    file = tmp_path / "check.json"
+    file.write_text(
+        json.dumps(
+            {
+                "prompt": "Check?",
+                "model": ["first", "backup"],
+                "key": "test-key",
+                "strategy": "IMAGE",
+            }
+        )
+    )
+    assert run_check(file) == 0
+    assert [request["model"] for request in requests] == ["first", "backup"]
+    assert all(request["api_key"] == "test-key" for request in requests)
+    assert all(request["timeout"] == 10 for request in requests)
+    assert capsys.readouterr().out.strip() == "AI connection check passed."

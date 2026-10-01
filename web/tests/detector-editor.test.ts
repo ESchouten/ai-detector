@@ -142,3 +142,23 @@ test('new preset detectors use preset recording defaults and keep the selected c
 	result.exporters.disk![0].directory = 'changed';
 	assert.equal(preset.exporters!.disk![0].directory, 'events');
 });
+
+test('changing presets keeps an explicitly paused validator paused when connections are edited later', () => {
+	const current = {
+		detection: { source: ['video.mp4'] },
+		vlm: [{ prompt: 'Old question', model: ['gemini/first', 'gemini/backup'], key: null }]
+	};
+	const preset = {
+		detection: { source: [] },
+		vlm: [{ prompt: 'New question', strategy: 'VIDEO' as const, key: null }]
+	};
+	const result = applyDetectorPreset(current, preset);
+	assert.deepEqual(result.vlm?.[0], {
+		prompt: 'New question',
+		strategy: 'VIDEO',
+		key: null,
+		model: current.vlm[0].model
+	});
+	assert.notStrictEqual(result.vlm?.[0].model, current.vlm[0].model);
+	assert.equal('model' in preset.vlm[0], false);
+});

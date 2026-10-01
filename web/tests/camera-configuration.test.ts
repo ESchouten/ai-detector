@@ -342,7 +342,7 @@ test('renaming an unchanged recipient leaves config.json byte-for-byte unchanged
 	assert.equal((await store.read()).app.telegrams[0].label, 'Farm phone');
 });
 
-test('unconfirmed connections and missing detector selections cannot change settings', async (t) => {
+test('unconfirmed connections and missing detectors cannot change settings', async (t) => {
 	const { files, store } = await fixture(t);
 	await store.saveCamera({
 		label: 'Pen',
@@ -364,10 +364,6 @@ test('unconfirmed connections and missing detector selections cannot change sett
 			store.saveAlerts({ ...edit, received: false }),
 			/Confirm that you received/
 		);
-	await assert.rejects(
-		store.saveAlerts({ ...channel, original: 'Phone', detectorLabels: [], received: false }),
-		/Choose at least one detector/
-	);
 	await assert.rejects(
 		store.saveAlerts({
 			...channel,
@@ -535,4 +531,33 @@ test('changing to a custom preset preserves existing alert and recording destina
 	assert.equal(saved.config.detectors[0].yolo?.model, 'intrusion.onnx');
 	assert.deepEqual(saved.config.detectors[0].exporters, previous);
 	assert.equal(saved.app.detectors[0].preset, 'intrusion');
+});
+
+test('a recipient can be connected before detectors exist and later disconnected from alerts without deleting it', async (t) => {
+	const { store } = await fixture(t);
+	const recipient = { label: 'My phone', token: 'token', chat: 'chat' };
+	await store.saveAlerts({ ...recipient, detectorLabels: [], received: true });
+	assert.deepEqual((await store.read()).app.telegrams, [recipient]);
+	await store.saveCamera({
+		label: 'Pen',
+		source: first,
+		mode: 'preset',
+		preset: 'calving-catcher'
+	});
+	await store.saveAlerts({
+		...recipient,
+		original: recipient.label,
+		detectorLabels: ['Pen'],
+		received: false
+	});
+	assert.equal((await store.read()).config.detectors[0].exporters?.telegram?.length, 1);
+	await store.saveAlerts({
+		...recipient,
+		original: recipient.label,
+		detectorLabels: [],
+		received: false
+	});
+	const saved = await store.read();
+	assert.deepEqual(saved.app.telegrams, [recipient]);
+	assert.deepEqual(saved.config.detectors[0].exporters?.telegram, []);
 });

@@ -64,11 +64,18 @@ export function applyDetectorPreset(
 	preset: DetectorConfig,
 	{ keepDelivery = true }: { keepDelivery?: boolean } = {}
 ): DetectorDraft {
-	return createDetectorDraft({
+	const next = createDetectorDraft({
 		...structuredClone(preset),
 		detection: { ...preset.detection, source: [...current.detection.source] },
 		exporters: structuredClone(keepDelivery ? current.exporters : preset.exporters)
 	});
+	const previous = current.vlm?.[0];
+	// Retain a paused connection's model choices so it does not become a waiting preset again.
+	if (next.vlm?.[0] && previous?.key == null && previous?.model?.length) {
+		next.vlm[0].model = structuredClone(previous.model);
+		next.vlm[0].key = null;
+	}
+	return next;
 }
 
 export function selectTelegram(

@@ -17,8 +17,8 @@
 	<header class="flex flex-col gap-2">
 		<div class="flex flex-wrap items-center justify-between gap-3">
 			<h1 class="settings-heading">Alerts</h1>
-			{#if telegrams.length}<Button href={resolve('/notifications/add')}
-					><Plus data-icon="inline-start" /> Connect alerts</Button
+			{#if telegrams.length}<Button href={resolve('/notifications/add?new=1')}
+					><Plus data-icon="inline-start" /> Add recipient</Button
 				>{/if}
 		</div>
 		<p class="settings-description">
@@ -76,7 +76,7 @@
 								also work without alerts.</Empty.Description
 							></Empty.Header
 						><Empty.Content
-							><Button href={resolve('/notifications/add')}>Connect your phone</Button
+							><Button href={resolve('/notifications/add?new=1')}>Connect your phone</Button
 							></Empty.Content
 						></Empty.Root
 					>

@@ -38,7 +38,6 @@ export type Imgsz = number;
 export type Iou = number | null;
 export type Tracker = ('botsort.yaml' | 'bytetrack.yaml') | null;
 export type Vlm = VLMConfig | VLMConfig[] | null;
-export type Enabled = boolean;
 export type Prompt = string;
 export type Model1 = string | string[];
 export type Key = string | null;
@@ -118,7 +117,6 @@ export type Token1 = string | null;
 export type DataType = 'binary' | 'base64' | 'none';
 export type DataMax = number | null;
 export type PendingEvents = number;
-export type VlmEnabled = boolean;
 export type Provider = string | null;
 export type Winml = boolean;
 export type Opset = number;
@@ -143,7 +141,6 @@ export interface DetectorConfig {
 	vlm?: Vlm;
 	exporters?: ExportersConfig | null;
 	pending_events?: PendingEvents;
-	vlm_enabled?: VlmEnabled;
 }
 export interface SourceConfig {
 	source: Source;
@@ -166,7 +163,6 @@ export interface YoloConfig {
 	tracker?: Tracker;
 }
 export interface VLMConfig {
-	enabled?: Enabled;
 	prompt: Prompt;
 	model?: Model1;
 	key?: Key;

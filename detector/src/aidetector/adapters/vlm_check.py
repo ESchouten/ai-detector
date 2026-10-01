@@ -31,11 +31,12 @@ def run_check(path: Path) -> int:
     except (OSError, ValidationError):
         print("Check the AI model, endpoint and connection settings.")
         return 2
-    if not config.enabled or len(config.model) != 1:
-        print("Choose one enabled model to test the connection.")
+    if config.key is None:
+        print("Configure a key to test the connection.")
         return 2
     # Never read cameras or saved recordings. The check uses the same media,
-    # request and response validation as monitoring, with one bounded attempt.
+    # request and response validation as monitoring, with one attempt per model.
+    # Share the request timeout budget so fallback checks remain quick.
     sample = np.zeros((64, 64, 3), dtype=np.uint8)
     sample[16:48, 16:48] = 255
     event = DetectionEvent(
@@ -45,7 +46,7 @@ def run_check(path: Path) -> int:
         update={
             "prompt": "Is there a white square? Return the detected boolean.",
             "attempts": 1,
-            "timeout": min(config.timeout, 20),
+            "timeout": min(config.timeout, 20 / len(config.model)),
         }
     )
     try:

@@ -184,14 +184,14 @@ Omit `yolo` to process each sampled frame directly through the optional verifier
 
 In the web app, add a named **AI connection** once, then select it in each detector. Connection credentials and model are shared; each detector keeps its own question and IMAGE/VIDEO choice. Presets provide optional starting questions and leave verification off until a connection is chosen. Existing manually configured verifiers keep working. For a standalone connection check, `ai-detector --test-vlm connection.json` uses generated media and the normal adapter, never camera footage.
 
-`vlm` accepts one configuration or an ordered list. Set the detector's `vlm_enabled` to `false` to pause all verification while preserving the list and individual enabled flags; it defaults to `true`. Each configuration has:
+`vlm` accepts one configuration or an ordered list. Only entries with a non-null `key` run. Clear keys to disable verification while retaining prompts, models and media settings. Python reads these values only from `config.json`, never `app.json`. Each configuration has:
 
 | Field | Default | Meaning |
 | --- | --- | --- |
 | `prompt` | required | The detection question |
-| `enabled` | `true` | Disabled configurations retain a preset question without running verification |
-| `model` | required when enabled | A LiteLLM model name or ordered list of names |
-| `key`, `url` | unset | Provider API key and optional endpoint; an explicit empty key disables environment-key lookup for a local service |
+| `model` | required when a key is set | A LiteLLM model name or ordered list of names |
+| `key` | `null` | Provider API key; null or omitted disables verification. Use `""` explicitly for an unauthenticated local service, without environment-key lookup |
+| `url` | unset | Optional provider endpoint |
 | `headers` | `{}` | Additional request headers, including custom authentication |
 | `strategy` | `"VIDEO"` | `"IMAGE"` for the best cropped frame, or `"VIDEO"` for the event clip |
 | `crop_padding` | `0.1` | Extra crop margin relative to the detected region |

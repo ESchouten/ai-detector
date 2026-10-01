@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { ExternalLink } from '@lucide/svelte';
+	import { ExternalLink, Eye, EyeOff } from '@lucide/svelte';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import * as Field from '$lib/components/ui/field';
+	import * as InputGroup from '$lib/components/ui/input-group';
 	import { resolve } from '$app/paths';
 	import * as Alert from '$lib/components/ui/alert';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
-	import { AI_STUDIO_KEYS, GEMINI_MODEL } from '$lib/llm';
+	import { AI_STUDIO_KEYS, GEMINI_MODELS } from '$lib/llm';
 	import type { LlmConnection } from '$lib/schema';
 	import { errorMessage } from '$lib/remote-errors';
 	import {
@@ -17,6 +18,7 @@
 		getLlmConnections
 	} from '$lib/remote/llm.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
+	import { uniqueLabel } from '$lib/configuration';
 	let {
 		initial,
 		canTest,
@@ -28,11 +30,21 @@
 		onSaved: (connection: LlmConnection) => void | Promise<void>;
 		onCancel: () => void;
 	} = $props();
-	let label = $state(untrack(() => initial?.label ?? 'Google Gemini'));
+	const connections = await getLlmConnections();
+	let label = $state(
+		untrack(
+			() =>
+				initial?.label ??
+				uniqueLabel('Google Gemini', new Set(connections.map(({ label }) => label)))
+		)
+	);
 	let key = $state(untrack(() => initial?.key ?? ''));
+	let showKey = $state(false);
 	const isGemini = $derived(
 		!initial ||
-			(initial.model.startsWith('gemini/') && !initial.url && Boolean(initial.key?.trim()))
+			([initial.model].flat().every((model) => model.startsWith('gemini/')) &&
+				!initial.url &&
+				Boolean(initial.key?.trim()))
 	);
 	let busy = $state(false);
 	let message = $state('');
@@ -45,7 +57,7 @@
 		try {
 			if (isGemini && !key.trim()) throw new Error('Enter your Google AI Studio API key.');
 			const saved = {
-				...(initial ?? { model: GEMINI_MODEL }),
+				...(initial ?? { model: [...GEMINI_MODELS] }),
 				label: label.trim(),
 				...(isGemini ? { key: key.trim() } : {})
 			};
@@ -103,16 +115,27 @@
 			>
 			<Field.Field>
 				<Field.Label for="ai-key">API key</Field.Label>
-				<Input
-					id="ai-key"
-					type="password"
-					bind:value={key}
-					required
-					autocomplete="off"
-					disabled={busy}
-				/>
+				<InputGroup.Root
+					><InputGroup.Input
+						id="ai-key"
+						type={showKey ? 'text' : 'password'}
+						bind:value={key}
+						required
+						autocomplete="off"
+						disabled={busy}
+						spellcheck={false}
+					/>
+					<InputGroup.Addon align="inline-end"
+						><InputGroup.Button
+							size="icon-sm"
+							aria-label={showKey ? 'Hide API key' : 'Show API key'}
+							onclick={() => (showKey = !showKey)}
+							>{#if showKey}<EyeOff />{:else}<Eye />{/if}</InputGroup.Button
+						></InputGroup.Addon
+					>
+				</InputGroup.Root>
 				<Field.Description
-					>Stored on this computer and used by detectors assigned to this connection.</Field.Description
+					>Kept on this computer. Selected event clips are sent to Google for validation.</Field.Description
 				>
 			</Field.Field>
 			<p class="text-sm text-muted-foreground">
@@ -133,8 +156,10 @@
 	</Field.Group>
 	<p class="text-sm text-muted-foreground">
 		{canTest
-			? 'Connecting checks a generated test image, then saves. Your provider’s usage limits apply.'
+			? 'We’ll check the key with a test image before saving.'
 			: 'Connection testing is available in the desktop application. Save settings here for your separate detector.'}
+		Detectors waiting for a validator will use this connection automatically. You can turn it off for
+		each detector.
 	</p>
 	{#if message}<Alert.Root variant="destructive"
 			><Alert.Title>Connection needs attention</Alert.Title><Alert.Description
@@ -142,7 +167,7 @@
 			></Alert.Root
 		>{/if}
 	<div class="flex flex-wrap gap-3">
-		<Button type="submit" disabled={busy}
+		<Button type="submit" disabled={busy || (isGemini && !key.trim())}
 			>{busy ? 'Connecting…' : canTest ? 'Connect' : 'Save connection'}</Button
 		><Button type="button" onclick={onCancel} variant="outline" disabled={busy}>Cancel</Button>
 	</div>

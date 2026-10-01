@@ -36,10 +36,11 @@ test('editor validation accepts an empty setup and checks syntax, unknown proper
 		/\/detectors\/0\/detection\/interval/
 	);
 	assert.throws(() => parseSettings('connections', '[{"label":"AI"}]'), /model/);
-	assert.throws(
-		() => parseSettings('connections', '[{"label":"AI","model":["gemini/model"]}]'),
-		/must be string/
+	assert.deepEqual(
+		parseSettings('connections', '[{"label":"AI","model":["gemini/first","gemini/backup"]}]'),
+		[{ label: 'AI', model: ['gemini/first', 'gemini/backup'] }]
 	);
+	assert.throws(() => parseSettings('connections', '[{"label":"AI","model":[]}]'), /fewer than 1/);
 	assert.throws(() => parseSettings('runtime', '{"mode":"cpu"}'), /allowed values/);
 	assert.throws(
 		() => parseSettings('runtime', '{"mode":"auto","enabled":true}'),
@@ -121,19 +122,18 @@ test('shared connection JSON propagates credentials without changing questions o
 	const { store } = await fixture(t);
 	const connection = {
 		label: 'AI',
-		model: 'openai/vision',
+		model: ['openai/vision', 'openai/backup'],
 		key: 'old',
 		url: 'https://example.test/v1'
 	};
 	await store.saveLlm(connection);
-	const fallback = { model: 'openai/backup', prompt: 'Backup question', enabled: false };
+	const fallback = { model: 'openai/backup', prompt: 'Backup question', key: null };
 	for (const label of ['First', 'Second'])
 		await store.saveDetector({
 			meta: { label, llmConnection: 'AI' },
 			detector: {
 				detection: { source: ['video.mp4'] },
-				vlm_enabled: false,
-				vlm: [{ prompt: label, enabled: false }, fallback]
+				vlm: [{ prompt: label, key: null }, fallback]
 			}
 		});
 	let saved = await store.read();
@@ -147,7 +147,6 @@ test('shared connection JSON propagates credentials without changing questions o
 		assert.equal(detector.vlm![0].key, 'new');
 		assert.equal(detector.vlm![0].prompt, saved.app.detectors[i].label);
 		assert.deepEqual(detector.vlm![1], fallback);
-		assert.equal(detector.vlm_enabled, false);
 		assert.equal(saved.app.detectors[i].llmConnection, 'AI');
 	}
 	await assert.rejects(store.saveAdvanced('connections', [], settingsRevision(saved)), /in use/);
@@ -163,7 +162,7 @@ test('editing detector credentials detaches only that shared connection', async 
 	await store.saveLlm({ label: 'AI', model: 'gemini/test', key: 'shared' });
 	await store.saveDetector({
 		meta: { label: 'Detector', llmConnection: 'AI' },
-		detector: { detection: { source: ['video.mp4'] }, vlm: [{ prompt: 'Check?', enabled: false }] }
+		detector: { detection: { source: ['video.mp4'] }, vlm: [{ prompt: 'Check?', key: null }] }
 	});
 	const saved = await store.read();
 	const config = structuredClone(saved.config);

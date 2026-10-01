@@ -24,8 +24,8 @@
         }
     },
     "vlm": {
-        "enabled": false,
+        "key": null,
         "prompt": "Does the footage show a cow with its tail clearly raised away from its body? Ignore a hanging tail or a brief sideways tail swing. Set detected to true only when the raised-tail posture is visible.",
-        "strategy": "IMAGE"
+        "strategy": "VIDEO"
     }
 }

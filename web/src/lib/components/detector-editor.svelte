@@ -8,7 +8,7 @@
 	import NotificationEditor from '$lib/components/notification-editor.svelte';
 	import LlmConnectionEditor from '$lib/components/llm-connection-editor.svelte';
 	import DetectorVerification from '$lib/components/detector-verification.svelte';
-	import { assignConnection } from '$lib/llm';
+	import { assignConnection, suggestedConnection } from '$lib/llm';
 	import { getLlmConnections, canTestLlm } from '$lib/remote/llm.remote';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -24,7 +24,7 @@
 		parseDetectorDraft,
 		selectTelegram
 	} from '$lib/detector-editor';
-	import { detectorSettings, sameTelegram } from '$lib/configuration';
+	import { detectorSettings, sameTelegram, uniqueLabel } from '$lib/configuration';
 	import { errorMessage } from '$lib/remote-errors';
 	import type { DetectorConfig, LlmConnection } from '$lib/schema';
 	import {
@@ -56,6 +56,7 @@
 	} = $props();
 	// Settings keys this editor by identity; each visit starts a separate draft.
 	let label = $state(untrack(() => originalLabel));
+	let suggestedLabel = $state('');
 	let detector = $state(untrack(() => createDetectorDraft(initial)));
 	let llmLabel = $state(untrack(() => initialConnection ?? ''));
 	let addingRecipient = $state(false);
@@ -66,7 +67,8 @@
 			getTelegrams(),
 			getDetectorPresets(),
 			getLlmConnections(),
-			canTestLlm()
+			canTestLlm(),
+			getDetectors()
 		])
 	);
 	const cameras = $derived(choices[0]);
@@ -75,6 +77,15 @@
 	const presetWarning = $derived(choices[2].warning);
 	const llms = $derived(choices[3]);
 	const canTest = $derived(choices[4]);
+	const existingDetectors = $derived(choices[5]);
+	let suggestValidator = $state(untrack(() => !initial));
+	let selectedInitialCamera = $state(false);
+	$effect(() => {
+		if (!selectedInitialCamera) {
+			selectedInitialCamera = true;
+			if (!initial && cameras.length === 1) detector.detection.source = [cameras[0].source];
+		}
+	});
 	let keepDelivery = $state(untrack(() => Boolean(initial)));
 	let error = $state('');
 	let preset = $state(untrack(() => initialPreset ?? ''));
@@ -91,6 +102,14 @@
 		error = errorMessage(cause, fallback);
 	}
 
+	function connectionForPreset(next: DetectorConfig) {
+		if (!next.vlm?.[0]?.prompt.trim()) return undefined;
+		return (
+			llms.find(({ label }) => label === llmLabel) ??
+			(suggestValidator ? suggestedConnection(next, llms) : undefined)
+		);
+	}
+
 	async function loadPreset(id: string) {
 		if (!id) return;
 		const previousName = selectedPreset?.name;
@@ -100,14 +119,21 @@
 			const next = applyDetectorPreset($state.snapshot(detector), await getDetectorPreset({ id }), {
 				keepDelivery
 			});
-			const connection = llms.find(({ label }) => label === llmLabel);
-			detector = {
-				...(connection ? assignConnection(next, connection) : next),
-				vlm_enabled: detector.vlm_enabled
-			};
+			const connection = connectionForPreset(next);
+			detector = connection ? assignConnection(next, connection) : next;
+			llmLabel = connection?.label ?? '';
 			presetSettings = JSON.stringify(detectorSettings(next));
-			if (!label || label === previousName)
-				label = presets.find((item) => item.id === id)?.name ?? label;
+			if (!label || label === previousName || label === suggestedLabel) {
+				label = uniqueLabel(
+					presets.find((item) => item.id === id)?.name ?? label,
+					new Set(
+						existingDetectors
+							.filter(({ meta }) => meta.label !== originalLabel)
+							.map(({ meta }) => meta.label)
+					)
+				);
+				suggestedLabel = label;
+			}
 			preset = id;
 		} catch (cause) {
 			showError(cause, 'The preset could not be loaded.');
@@ -125,7 +151,7 @@
 					? await getDetectorPreset({ id: selectedPreset.id })
 					: undefined;
 			const assigned = assignConnection(detector, connection, template);
-			detector = { ...assigned, vlm_enabled: true };
+			detector = assigned;
 			llmLabel = connection.label;
 			if (!assigned.vlm[0].prompt.trim()) {
 				error = 'Choose a preset to use its AI verification question.';
@@ -142,10 +168,7 @@
 			throw new Error('Choose at least one camera for this detector.');
 		if (detector.yolo && !detector.yolo.model.trim())
 			throw new Error('Choose a preset for this detector.');
-		if (
-			detector.vlm_enabled !== false &&
-			detector.vlm?.some((step) => step.enabled !== false && !step.prompt.trim())
-		) {
+		if (detector.vlm?.some((step) => step.key != null && !step.prompt.trim())) {
 			throw new Error('Choose a preset that supplies an AI verification question.');
 		}
 	}
@@ -221,17 +244,7 @@
 			<div class="flex flex-col gap-6">
 				<Field.Group class="grid gap-6 sm:grid-cols-2">
 					<Field.Field>
-						<Field.Label for="detector-label">Detector name</Field.Label>
-						<Input
-							id="detector-label"
-							bind:value={label}
-							required
-							disabled={pending}
-							placeholder="e.g. Entrance activity"
-						/>
-					</Field.Field>
-					<Field.Field>
-						<Field.Label for="detector-preset">Preset</Field.Label>
+						<Field.Label for="detector-preset">What do you want to detect?</Field.Label>
 						<Select.Root
 							type="single"
 							value={matchesPreset ? preset : ''}
@@ -251,6 +264,16 @@
 								</Select.Group></Select.Content
 							>
 						</Select.Root>
+					</Field.Field>
+					<Field.Field>
+						<Field.Label for="detector-label">Detector name</Field.Label>
+						<Input
+							id="detector-label"
+							bind:value={label}
+							required
+							disabled={pending}
+							placeholder="e.g. Entrance activity"
+						/>
 					</Field.Field>
 				</Field.Group>
 			</div>
@@ -275,6 +298,7 @@
 				disabled={pending}
 				addConnection={() => (addingConnection = true)}
 				{selectConnection}
+				onChoose={() => (suggestValidator = false)}
 			/>
 			<Field.Set>
 				<Field.Legend
@@ -359,7 +383,7 @@
 <Dialog.Root bind:open={addingConnection}>
 	<Dialog.Content class="max-h-[90dvh] overflow-y-auto sm:max-w-xl">
 		<Dialog.Header>
-			<Dialog.Title>Add AI connection</Dialog.Title>
+			<Dialog.Title>Connect validator</Dialog.Title>
 			<Dialog.Description
 				>Your detector changes stay here until you save the detector.</Dialog.Description
 			>

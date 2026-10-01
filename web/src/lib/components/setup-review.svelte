@@ -10,7 +10,7 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import { errorMessage } from '$lib/remote-errors';
 	import { getCameras } from '$lib/remote/stream.remote';
-	import { getSetupStatus, skipSetupAlerts, finishSetup } from '$lib/remote/camera-setup.remote';
+	import { getSetupStatus, finishSetup } from '$lib/remote/camera-setup.remote';
 
 	let { configured }: { configured: boolean } = $props();
 	const runtimeQuery = getRuntime();
@@ -34,7 +34,7 @@
 			cameras.every((camera) => camera.readyToFinish && (!camera.monitored || camera.monitoring))
 	);
 	const needsAlertChoice = $derived(
-		cameras.some((camera) => camera.monitored && !camera.alerts.length && !camera.alertsSkipped)
+		cameras.some((camera) => camera.monitored && !camera.alerts.length)
 	);
 
 	async function refresh() {
@@ -81,7 +81,7 @@
 					if (runtime.phase === 'failed') {
 						finishing = false;
 						message = runtime.message;
-					} else if (ready) await save('finish');
+					} else if (ready) await save();
 					else if (Object.keys(recordingErrors).length) finishing = false;
 				}
 				if (!busy)
@@ -109,17 +109,13 @@
 		};
 	});
 
-	async function save(action: 'skip-alerts' | 'finish') {
+	async function save() {
 		saving = true;
 		message = '';
 		try {
-			await (action === 'finish' ? finishSetup() : skipSetupAlerts()).updates(
-				getSetupStatus(),
-				getCameras()
-			);
+			await finishSetup().updates(getSetupStatus(), getCameras());
 			cameras = await getSetupStatus();
-			if (action === 'finish' && !controller.signal.aborted)
-				await goto(resolve(configured ? '/detections' : '/streams'));
+			if (!controller.signal.aborted) await goto(resolve(configured ? '/detections' : '/streams'));
 		} catch (cause) {
 			finishing = false;
 			message = errorMessage(cause, 'Your progress could not be saved. Try again.');
@@ -218,16 +214,12 @@
 		</ul>
 		{#if needsAlertChoice}
 			<div class="flex flex-col gap-3 border-t pt-5">
-				<p class="text-sm">Would you like alerts on your phone?</p>
+				<p class="text-sm text-muted-foreground">
+					Phone alerts are optional. You can connect them now or later from Alerts.
+				</p>
 				<div class="flex flex-wrap gap-2">
 					<Button href={resolve('/notifications/add?setup=1')} variant="outline"
 						>Connect phone alerts</Button
-					>
-					<Button
-						type="button"
-						variant="outline"
-						disabled={saving}
-						onclick={() => save('skip-alerts')}>Skip for now</Button
 					>
 				</div>
 			</div>
@@ -246,11 +238,12 @@
 				disabled={saving ||
 					stale ||
 					finishing ||
-					needsAlertChoice ||
 					cameras.some((camera) => !camera.pictureVerifiedAt)}
 				onclick={start}
 				>{saving || finishing
-					? 'Checking setup…'
+					? runtime.phase === 'starting' || runtime.phase === 'checking'
+						? 'Starting monitoring…'
+						: 'Checking setup…'
 					: configured && runtime.managed && runtime.phase !== 'running'
 						? 'Start monitoring'
 						: configured

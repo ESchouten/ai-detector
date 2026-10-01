@@ -56,6 +56,20 @@ Preset names remain attached when changing a detector's name, cameras or deliver
 
 Telegram recipients are assigned to detectors, and apply to every camera selected by that detector. Saving alert settings never splits detector definitions or changes their source lists, model settings, recording destinations or webhook settings. Multiple detectors watching the same camera can use different recipients.
 
+A preset can prefill verification without choosing an AI provider:
+
+```json
+{
+  "vlm": {
+    "key": null,
+    "prompt": "Does the video show a person entering the building?",
+    "strategy": "VIDEO"
+  }
+}
+```
+
+Adding or editing an AI connection enables these saved validators and supplies their model and credentials. Their preset question and media strategy stay with the detector. Detectors already configured with a model or shared connection are not automatically reassigned. Setting `key` to `null` or omitting it disables that verifier. Selecting **Off** clears every key in the detector’s verification list while retaining its models and questions. Cow Catcher, Calving Catcher and Tailup use video by default. Existing saved settings keep their strategy; reapply the preset or edit Advanced JSON to change it.
+
 ## Verification
 
 Python schema tests validate every bundled detector fragment. Web tests cover directory discovery, filename labels, runtime file changes, validation, configuration preservation and source binding. Production HTTP checks exercise bundled and local presets, including a filename that matches an application action. Preset files use the same validation as detector settings; malformed JSON and invalid model options identify the file that needs correction.

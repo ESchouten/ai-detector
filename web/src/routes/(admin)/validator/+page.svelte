@@ -19,7 +19,7 @@
 				>{/if}
 		</div>
 		<p class="settings-description">
-			Connect an AI service once. Each detector chooses its own question.
+			Check detections with AI before sending alerts. Your presets supply the questions.
 		</p>
 	</header>
 	{#if connections.length}
@@ -39,8 +39,7 @@
 					<Table.Row>
 						<Table.Cell class="whitespace-normal"
 							><p class="font-medium">{connection.label}</p>
-							<p class="text-sm break-all text-muted-foreground">{connection.model}</p></Table.Cell
-						>
+						</Table.Cell>
 						<Table.Cell class="whitespace-normal"
 							>{assigned.map(({ meta }) => meta.label).join(', ') || 'Not assigned yet'}</Table.Cell
 						>

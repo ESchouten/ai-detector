@@ -59,8 +59,6 @@ export function saveAlerts(
 			'Confirm that you received the test alert before enabling new or changed connection details.'
 		);
 	const selected = new Set(input.detectorLabels);
-	if (!selected.size)
-		throw new ConfigurationError('Choose at least one detector for these alerts.');
 	if ([...selected].some((label) => !document.app.detectors.some((meta) => meta.label === label)))
 		throw new ConfigurationError('A selected detector no longer exists.');
 	saveTelegram(document, input);

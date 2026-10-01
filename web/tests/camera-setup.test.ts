@@ -35,7 +35,6 @@ async function readyCamera(store: ConfigurationStore) {
 	);
 	const { signature } = cameraArchiveSelection(await store.read(), camera.id);
 	await store.recordArchiveCheck(camera.id, signature, verifiedAt);
-	await store.skipSetupAlerts();
 	return camera;
 }
 
@@ -50,12 +49,11 @@ test('camera progress and non-secret ONVIF details survive reopening and renamin
 	const progress = cameraSetupStatus(reopened, camera.id);
 	assert.equal(progress.pictureVerifiedAt, verifiedAt);
 	assert.equal(progress.archiveVerifiedAt, verifiedAt);
-	assert.equal(progress.alertsSkipped, true);
 	assert.ok(progress.completedAt);
 	assert.equal(JSON.stringify(reopened.app.streams[0].connection).includes('secret'), false);
 });
 
-test('setup completion requires an explicit alert choice and real current monitoring', async (t) => {
+test('setup can finish without phone alerts but still requires real current monitoring', async (t) => {
 	const { files, store } = await fixture(t);
 	const camera = await store.saveCamera(
 		{ label: 'Yard', source, mode: 'preset', preset: 'general' },
@@ -63,11 +61,6 @@ test('setup completion requires an explicit alert choice and real current monito
 	);
 	const { signature } = cameraArchiveSelection(await store.read(), camera.id);
 	await store.recordArchiveCheck(camera.id, signature, verifiedAt);
-	await assert.rejects(
-		store.finishSetup(async () => new Set([camera.id])),
-		/choose whether to connect alerts/
-	);
-	await store.skipSetupAlerts();
 	await assert.rejects(
 		store.finishSetup(async () => new Set()),
 		/Monitoring has not been verified/
@@ -92,7 +85,6 @@ test('view-only setup can finish after picture confirmation without monitoring, 
 	const progress = cameraSetupStatus(await store.read(), camera.id);
 	assert.equal(progress.monitored, false);
 	assert.equal(progress.archiveDestinations, 0);
-	assert.equal(progress.alertsSkipped, false);
 	assert.ok(progress.completedAt);
 });
 
@@ -125,7 +117,7 @@ test('finishing all cameras is atomic and still requires every camera check and 
 	assert.ok(cameraSetupStatus(saved, second.id).completedAt);
 });
 
-test('skipping phone alerts applies to cameras without a recipient and keeps connected alerts', async (t) => {
+test('setup lists only the recipients actually assigned to each camera', async (t) => {
 	const { store } = await fixture(t);
 	const first = await store.saveCamera(
 		{ label: 'Yard', source, mode: 'preset', preset: 'general' },
@@ -142,11 +134,9 @@ test('skipping phone alerts applies to cameras without a recipient and keeps con
 		detectorLabels: ['Yard'],
 		received: true
 	});
-	await store.skipSetupAlerts();
 	const saved = await store.read();
 	assert.deepEqual(cameraSetupStatus(saved, first.id).alerts, ['My phone']);
-	assert.equal(cameraSetupStatus(saved, first.id).alertsSkipped, false);
-	assert.equal(cameraSetupStatus(saved, second.id).alertsSkipped, true);
+	assert.deepEqual(cameraSetupStatus(saved, second.id).alerts, []);
 });
 
 test('password or source changes preserve camera identity but invalidate earlier proofs', async (t) => {
@@ -166,7 +156,6 @@ test('password or source changes preserve camera identity but invalidate earlier
 	assert.equal(progress.pictureVerifiedAt, nextCheck);
 	assert.equal(progress.archiveVerifiedAt, undefined);
 	assert.equal(progress.completedAt, undefined);
-	assert.equal(progress.alertsSkipped, true);
 	await store.saveStream({ original: updatedSource, label: 'Yard', source });
 	const legacyEdit = await store.read();
 	assert.equal(legacyEdit.app.streams[0].connection, undefined);

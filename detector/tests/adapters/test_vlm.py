@@ -9,7 +9,7 @@ from litellm.types.utils import ModelResponse
 from aidetector.adapters.media.event_media import EventMedia
 from aidetector.adapters.vlm import VlmValidator
 from aidetector.application.ports import ValidationUnavailable
-from aidetector.configuration import VLMConfig
+from aidetector.configuration import DetectorConfig, VLMConfig
 from aidetector.domain.models import DetectionEvent, Observation, ValidationStatus
 
 
@@ -27,7 +27,11 @@ def test_ffmpeg_discovery_failure_is_unavailable_validation(event, monkeypatch):
 
     monkeypatch.setattr("aidetector.adapters.media.video.get_ffmpeg_exe", unavailable)
     validator = VlmValidator(
-        (VLMConfig(model="test/model", prompt="Detect?", strategy="VIDEO"),),
+        (
+            VLMConfig(
+                key="test-key", model="test/model", prompt="Detect?", strategy="VIDEO"
+            ),
+        ),
         EventMedia(),
     )
     with pytest.raises(ValidationUnavailable, match="media encoding failed"):
@@ -63,7 +67,9 @@ def test_verifier_requests_and_accepts_only_the_boolean_decision(
         )
 
     monkeypatch.setattr(litellm, "completion", complete)
-    config = VLMConfig(model="model", prompt="Detect?", strategy="IMAGE")
+    config = VLMConfig(
+        key="test-key", model="model", prompt="Detect?", strategy="IMAGE"
+    )
     assert VlmValidator((config,), EventMedia()).validate(event).status is status
     [request] = calls
     response_format = request["response_format"]
@@ -89,9 +95,14 @@ def test_media_failure_uses_the_next_verifier_configuration(event, monkeypatch):
     validator = VlmValidator(
         (
             VLMConfig(
-                model=("video-one", "video-two"), prompt="Detect?", strategy="VIDEO"
+                key="test-key",
+                model=("video-one", "video-two"),
+                prompt="Detect?",
+                strategy="VIDEO",
             ),
-            VLMConfig(model="image", prompt="Detect?", strategy="IMAGE"),
+            VLMConfig(
+                key="test-key", model="image", prompt="Detect?", strategy="IMAGE"
+            ),
         ),
         EventMedia(),
     )
@@ -109,7 +120,11 @@ def test_negative_validation_is_final_and_does_not_trigger_fallback(event, monke
 
     monkeypatch.setattr(litellm, "completion", complete)
     config = VLMConfig(
-        model=("first", "second"), prompt="Detect?", strategy="IMAGE", timeout=7
+        key="test-key",
+        model=("first", "second"),
+        prompt="Detect?",
+        strategy="IMAGE",
+        timeout=7,
     )
     answer = VlmValidator((config,), EventMedia()).validate(event)
     assert answer.status is ValidationStatus.REJECTED
@@ -131,7 +146,9 @@ def test_non_boolean_provider_answer_uses_next_model(event, monkeypatch, detecte
         return next(answers)
 
     monkeypatch.setattr(litellm, "completion", complete)
-    config = VLMConfig(model=("first", "second"), prompt="Detect?", strategy="IMAGE")
+    config = VLMConfig(
+        key="test-key", model=("first", "second"), prompt="Detect?", strategy="IMAGE"
+    )
     answer = VlmValidator((config,), EventMedia()).validate(event)
     assert answer.status is ValidationStatus.APPROVED
     assert calls == ["first", "second"]
@@ -151,7 +168,9 @@ def test_invalid_answer_shape_uses_next_model(event, monkeypatch, content):
         return next(answers)
 
     monkeypatch.setattr(litellm, "completion", complete)
-    config = VLMConfig(model=("first", "second"), prompt="Detect?", strategy="IMAGE")
+    config = VLMConfig(
+        key="test-key", model=("first", "second"), prompt="Detect?", strategy="IMAGE"
+    )
     answer = VlmValidator((config,), EventMedia()).validate(event)
     assert answer.status is ValidationStatus.APPROVED
     assert calls == ["first", "second"]
@@ -168,7 +187,9 @@ def test_verifier_programming_errors_do_not_trigger_provider_fallback(
         raise error_type("Unexpected SDK failure")
 
     monkeypatch.setattr(litellm, "completion", complete)
-    config = VLMConfig(model=("first", "second"), prompt="Detect?", strategy="IMAGE")
+    config = VLMConfig(
+        key="test-key", model=("first", "second"), prompt="Detect?", strategy="IMAGE"
+    )
     with pytest.raises(error_type, match="Unexpected SDK failure"):
         VlmValidator((config,), EventMedia()).validate(event)
     assert calls == ["first"]
@@ -185,7 +206,9 @@ def test_missing_provider_answer_uses_next_model(event, monkeypatch, choices):
         return next(answers)
 
     monkeypatch.setattr(litellm, "completion", complete)
-    config = VLMConfig(model=("first", "second"), prompt="Detect?", strategy="IMAGE")
+    config = VLMConfig(
+        key="test-key", model=("first", "second"), prompt="Detect?", strategy="IMAGE"
+    )
     answer = VlmValidator((config,), EventMedia()).validate(event)
     assert answer.status is ValidationStatus.APPROVED
     assert calls == ["first", "second"]
@@ -202,7 +225,9 @@ def test_unavailable_provider_has_bounded_retries_and_safe_error(event, monkeypa
 
     monkeypatch.setattr(litellm, "completion", complete)
     monkeypatch.setattr("aidetector.adapters.vlm.sleep", waits.append)
-    config = VLMConfig(model=("model",), prompt="Detect?", strategy="IMAGE", attempts=3)
+    config = VLMConfig(
+        key="test-key", model=("model",), prompt="Detect?", strategy="IMAGE", attempts=3
+    )
     with pytest.raises(ValidationUnavailable) as raised:
         VlmValidator((config,), EventMedia()).validate(event)
     assert calls == ["model"] * 3
@@ -225,16 +250,64 @@ def test_authentication_failure_uses_provider_fallback_without_retry(
         return response(True)
 
     monkeypatch.setattr(litellm, "completion", complete)
-    config = VLMConfig(model=("first", "second"), prompt="Detect?", strategy="IMAGE")
+    config = VLMConfig(
+        key="test-key", model=("first", "second"), prompt="Detect?", strategy="IMAGE"
+    )
     answer = VlmValidator((config,), EventMedia()).validate(event)
     assert answer.status is ValidationStatus.APPROVED
     assert calls == ["first", "second"]
 
 
 @pytest.mark.parametrize(
+    "failure", [litellm.RateLimitError, litellm.ServiceUnavailableError]
+)
+def test_connected_model_lists_fall_back_to_another_key(event, monkeypatch, failure):
+    requests = []
+
+    def complete(**kwargs):
+        requests.append((kwargs["model"], kwargs["api_key"]))
+        if kwargs["api_key"] == "primary-key":
+            raise failure(
+                message="Unavailable", llm_provider="test", model=kwargs["model"]
+            )
+        return response(True)
+
+    monkeypatch.setattr(litellm, "completion", complete)
+    detector = DetectorConfig.model_validate(
+        {
+            "detection": {"source": "video.mp4"},
+            "vlm": [
+                {"prompt": "Check?", "model": "disabled", "key": None},
+                {
+                    "prompt": "Check?",
+                    "model": ["first", "second"],
+                    "key": "primary-key",
+                    "strategy": "IMAGE",
+                    "attempts": 1,
+                },
+                {
+                    "prompt": "Check?",
+                    "model": ["backup"],
+                    "key": "backup-key",
+                    "strategy": "IMAGE",
+                    "attempts": 1,
+                },
+            ],
+        }
+    )
+    answer = VlmValidator(detector.active_vlm, EventMedia()).validate(event)
+    assert answer.status is ValidationStatus.APPROVED
+    assert requests == [
+        ("first", "primary-key"),
+        ("second", "primary-key"),
+        ("backup", "backup-key"),
+    ]
+
+
+@pytest.mark.parametrize(
     "preset_name", ["cow-catcher", "calving-catcher", "calving-catcher-tailup"]
 )
-def test_preset_question_reaches_provider(preset_name, event, monkeypatch):
+def test_preset_question_and_video_reach_provider(preset_name, event, monkeypatch):
     import json
     from pathlib import Path
 
@@ -244,7 +317,9 @@ def test_preset_question_reaches_provider(preset_name, event, monkeypatch):
         / "detector"
         / f"{preset_name}.json"
     )
-    question = json.loads(preset_path.read_text())["vlm"]["prompt"]
+    settings = json.loads(preset_path.read_text())["vlm"]
+    assert settings["key"] is None
+    assert settings["strategy"] == "VIDEO"
     requests = []
 
     def complete(**kwargs):
@@ -252,12 +327,17 @@ def test_preset_question_reaches_provider(preset_name, event, monkeypatch):
         return response(True)
 
     monkeypatch.setattr(litellm, "completion", complete)
-    config = VLMConfig(model=("test-vision",), prompt=question, strategy="IMAGE")
+    config = VLMConfig.model_validate(
+        {**settings, "key": "test-key", "model": "test-vision"}
+    )
     assert (
         VlmValidator((config,), EventMedia()).validate(event).status
         is ValidationStatus.APPROVED
     )
     assert requests[0]["messages"][0]["content"][0] == {
         "type": "text",
-        "text": question,
+        "text": settings["prompt"],
     }
+    media = requests[0]["messages"][0]["content"][1]
+    assert media["type"] == "file"
+    assert media["file"]["file_data"].startswith("data:video/mp4;base64,")

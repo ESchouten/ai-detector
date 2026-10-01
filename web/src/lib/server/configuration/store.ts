@@ -20,17 +20,13 @@ import {
 } from '../../configuration.ts';
 import { identifyCameras, saveCamera, removeCamera } from './cameras.ts';
 import { writeConfiguration } from './files.ts';
+import { upgradeVerificationKeys } from './upgrade.ts';
 import { saveDetector, deleteDetector } from './detectors.ts';
 import { saveStream, deleteStream, reorderStream } from './streams.ts';
 import { saveTelegram, deleteTelegram, saveAlerts } from './telegrams.ts';
 import { saveLlm, deleteLlm } from './llms.ts';
 import { replaceConnections, replaceDetectorConfig, settingsRevision } from './advanced.ts';
-import {
-	cameraSetupStatus,
-	recordArchiveCheck,
-	skipCameraAlerts,
-	finishCameraSetup
-} from './camera-setup.ts';
+import { recordArchiveCheck, finishCameraSetup } from './camera-setup.ts';
 
 interface Runtime {
 	validate(config: Config): Promise<void>;
@@ -67,7 +63,10 @@ export class ConfigurationStore {
 			readJson<unknown>(this.files.app, {})
 		]);
 		try {
-			return identifyCameras(normalizeConfiguration(config, app));
+			const upgraded = upgradeVerificationKeys(config);
+			const document = identifyCameras(normalizeConfiguration(upgraded, app));
+			if (upgraded !== config) await writeConfiguration(this.files, document);
+			return document;
 		} catch (error) {
 			if (error instanceof ConfigurationError)
 				throw new ConfigurationError(`${this.files.config}: ${error.message}`, { cause: error });
@@ -164,15 +163,6 @@ export class ConfigurationStore {
 
 	recordArchiveCheck(id: string, signature: string, verifiedAt: string): Promise<void> {
 		return this.update((document) => recordArchiveCheck(document, id, signature, verifiedAt));
-	}
-
-	skipSetupAlerts(): Promise<void> {
-		return this.update((document) => {
-			for (const camera of document.app.streams) {
-				const status = cameraSetupStatus(document, camera.id!);
-				if (status.monitored && !status.alerts.length) skipCameraAlerts(document, camera.id!);
-			}
-		});
 	}
 
 	finishSetup(monitoring: () => Promise<ReadonlySet<string>>): Promise<void> {

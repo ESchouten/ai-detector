@@ -183,6 +183,6 @@ test('expired pairing links stop locally and offer a fresh connection', async (t
 	await flush();
 	const last = states.at(-1);
 	assert.ok(last?.state === 'failed');
-	assert.match(last.message, /expired.*Connect my bot/);
+	assert.match(last.message, /expired.*Connect Telegram/);
 	assert.deepEqual(cancelled, ['expired']);
 });

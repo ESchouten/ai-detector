@@ -8,11 +8,11 @@ import type { RuntimeStatus } from '../runtime';
 let detector: ManagedDetector | null = null;
 let initialization: Promise<void> | undefined;
 
-export function initializeDetector(): Promise<void> {
-	return (initialization ??= initialize());
+export function initializeDetector(prepareConfiguration: () => Promise<unknown>): Promise<void> {
+	return (initialization ??= initialize(prepareConfiguration));
 }
 
-async function initialize(): Promise<void> {
+async function initialize(prepareConfiguration: () => Promise<unknown>): Promise<void> {
 	const executable =
 		process.env.AIDETECTOR_EXECUTABLE ??
 		path.join(
@@ -23,6 +23,7 @@ async function initialize(): Promise<void> {
 	if (!process.env.AIDETECTOR_EXECUTABLE && (!PACKAGED || !existsSync(executable))) return;
 	detector = new ManagedDetector({ executable, dataDirectory: DATA_DIRECTORY });
 	try {
+		await prepareConfiguration();
 		const bundle = await readJson<{ dockerImage?: string }>(
 			path.join(EXECUTABLE_DIRECTORY, 'application.json')
 		);

@@ -152,10 +152,10 @@ class VLMConfig(_ConfigModel):
     model_config = ConfigDict(
         json_schema_extra={
             "if": {
-                "properties": {"enabled": {"const": False}},
-                "required": ["enabled"],
+                "properties": {"key": {"type": "string"}},
+                "required": ["key"],
             },
-            "else": {
+            "then": {
                 "required": ["model"],
                 "properties": {
                     "model": {
@@ -169,7 +169,6 @@ class VLMConfig(_ConfigModel):
         }
     )
 
-    enabled: bool = True
     prompt: NonEmptyString
     model: tuple[NonEmptyString, ...] = ()
     key: str | None = Field(default=None, repr=False)
@@ -190,9 +189,9 @@ class VLMConfig(_ConfigModel):
         return _sequence(value)
 
     @model_validator(mode="after")
-    def enabled_model(self) -> VLMConfig:
-        if self.enabled and not self.model:
-            raise ValueError("Enabled verification requires a model")
+    def connected_model(self) -> VLMConfig:
+        if self.key is not None and not self.model:
+            raise ValueError("Connected verification requires a model")
         return self
 
 
@@ -298,13 +297,10 @@ class DetectorConfig(_ConfigModel):
     vlm: tuple[VLMConfig, ...] = ()
     exporters: ExportersConfig = Field(default_factory=ExportersConfig)
     pending_events: PositiveInt = 8
-    vlm_enabled: bool = True
 
     @property
     def active_vlm(self) -> tuple[VLMConfig, ...]:
-        if not self.vlm_enabled:
-            return ()
-        return tuple(verifier for verifier in self.vlm if verifier.enabled)
+        return tuple(verifier for verifier in self.vlm if verifier.key is not None)
 
     @field_validator(
         "vlm", mode="before", json_schema_input_type=VLMConfig | list[VLMConfig] | None

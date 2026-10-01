@@ -132,7 +132,7 @@ export function normalizeConfig(input: unknown): Config {
 	};
 }
 
-function uniqueLabel(label: string, used: Set<string>): string {
+export function uniqueLabel(label: string, used: Set<string>): string {
 	let candidate = label;
 	for (let suffix = 2; used.has(candidate); suffix++) candidate = `${label} (${suffix})`;
 	used.add(candidate);
@@ -148,7 +148,6 @@ export function detectorSettings(detector: DetectorConfig) {
 	return {
 		...detector,
 		vlm: undefined,
-		vlm_enabled: undefined,
 		exporters: undefined,
 		detection: { ...detector.detection, source: undefined }
 	};

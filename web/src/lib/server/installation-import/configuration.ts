@@ -5,6 +5,7 @@ import { homedir } from 'node:os';
 import * as v from 'valibot';
 import { ConfigurationError, normalizeConfiguration } from '../../configuration.ts';
 import type { Configuration } from '../../schema.ts';
+import { upgradeVerificationKeys } from '../configuration/upgrade.ts';
 
 const legacySchema = v.looseObject({
 	detectors: v.array(
@@ -55,7 +56,7 @@ export async function readLegacyConfiguration(source: string): Promise<{
 		}
 	}
 	const document = normalizeConfiguration(
-		input,
+		upgradeVerificationKeys(input),
 		await readDocument(path.join(source, 'app.json'), true)
 	);
 	const files = new Map<string, ReferencedFile>();

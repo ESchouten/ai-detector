@@ -11,8 +11,8 @@
         }
     },
     "vlm": {
-        "enabled": false,
+        "key": null,
         "prompt": "Is one cow mounting another cow in this image or video? Look for a cow raising its front half and placing its front legs over the back or hindquarters of a second cow, with its chest or body above the other cow. Distinguish actual mounting from cows standing close together, walking behind one another, resting a head on another cow, or merely overlapping from the camera angle. Judge only what is visible; do not infer mounting from proximity alone. Set detected to true when the posture clearly shows one cow mounting another, and false when it does not or the view is too unclear to tell.",
-        "strategy": "IMAGE"
+        "strategy": "VIDEO"
     }
 }

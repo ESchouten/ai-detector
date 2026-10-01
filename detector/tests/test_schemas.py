@@ -24,6 +24,51 @@ def test_schema_validates_example_and_offline_template():
 
 
 @pytest.mark.parametrize(
+    "settings, active",
+    [
+        ({}, False),
+        ({"key": None}, False),
+        ({"key": None, "model": "openai/vision"}, False),
+        ({"key": "test-key", "model": "openai/vision"}, True),
+        ({"key": "", "model": "openai/local"}, True),
+    ],
+)
+def test_schema_and_runtime_agree_on_verification_keys(settings, active):
+    document = {
+        "detectors": [
+            {
+                "detection": {"source": "video.mp4"},
+                "vlm": {"prompt": "Check?", **settings},
+            }
+        ]
+    }
+    Draft202012Validator(schemas()["config.schema.json"]).validate(document)
+    assert bool(Config.model_validate(document).detectors[0].active_vlm) is active
+
+
+@pytest.mark.parametrize(
+    "settings",
+    [
+        {"key": "test-key"},
+        {"key": "", "model": []},
+        {"enabled": False},
+    ],
+)
+def test_schema_rejects_connected_verifier_without_model_and_removed_flags(settings):
+    with pytest.raises(ValidationError):
+        Draft202012Validator(schemas()["config.schema.json"]).validate(
+            {
+                "detectors": [
+                    {
+                        "detection": {"source": "video.mp4"},
+                        "vlm": {"prompt": "Check?", **settings},
+                    }
+                ]
+            }
+        )
+
+
+@pytest.mark.parametrize(
     "path",
     sorted((ROOT / "config" / "detector").glob("*.json")),
     ids=lambda path: path.stem,

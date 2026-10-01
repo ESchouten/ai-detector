@@ -21,7 +21,7 @@
 			Open BotFather below, send <code>/newbot</code> and follow its instructions for a name and username.
 		</li>
 		<li>Copy the bot token from BotFather into AI Detector. Keep this token private.</li>
-		<li>Choose Connect my bot below. We will give you a link to connect your phone.</li>
+		<li>Choose Connect Telegram below. Open the link or scan the code with your phone.</li>
 	</ol>
 	<div class="mt-3 flex flex-wrap gap-2">
 		<Button

@@ -35,12 +35,9 @@ export function cameraSetupStatus(document: Configuration, id: string) {
 	const archiveVerifiedAt =
 		camera.setup?.archiveSignature === signature ? camera.setup.archiveVerifiedAt : undefined;
 	const pictureVerifiedAt = camera.setup?.pictureVerifiedAt;
-	const alertsSkipped = camera.setup?.alerts === 'skipped';
 	const monitored = rules.length > 0;
 	const readyToFinish =
-		!!pictureVerifiedAt &&
-		(!monitored ||
-			((!categories.length || !!archiveVerifiedAt) && (alerts.length > 0 || alertsSkipped)));
+		!!pictureVerifiedAt && (!monitored || !categories.length || !!archiveVerifiedAt);
 	return {
 		id,
 		label: camera.label ?? 'Camera',
@@ -49,7 +46,6 @@ export function cameraSetupStatus(document: Configuration, id: string) {
 		archiveVerifiedAt,
 		archiveDestinations: categories.length,
 		alerts,
-		alertsSkipped,
 		completedAt:
 			readyToFinish &&
 			camera.setup?.completionSignature === completionSignature(camera.source, rules)
@@ -77,16 +73,11 @@ export function recordArchiveCheck(
 	};
 }
 
-export function skipCameraAlerts(document: Configuration, id: string): void {
-	const { camera } = cameraArchiveSelection(document, id);
-	camera.setup = { ...camera.setup, alerts: 'skipped' };
-}
-
 export function finishCameraSetup(document: Configuration, id: string, monitoring: boolean): void {
 	const status = cameraSetupStatus(document, id);
 	if (!status.readyToFinish)
 		throw new ConfigurationError(
-			'Confirm the picture, check the recording location and choose whether to connect alerts before finishing.'
+			'Confirm the picture and check the recording location before finishing.'
 		);
 	if (status.monitored && !monitoring)
 		throw new ConfigurationError(

@@ -188,16 +188,15 @@ def log_detector_configuration(
             "model": resource_label(settings.yolo.model),
             "model_id": source_key(settings.yolo.model)[:16],
         },
-        "verification_enabled": settings.vlm_enabled,
+        "verification_enabled": bool(settings.active_vlm),
         "verification": [
             {
+                "enabled": verifier.key is not None,
                 "models": [
                     resource_label(model) if "://" in model else model
                     for model in verifier.model
                 ],
-                **verifier.model_dump(
-                    include={"enabled", "strategy", "timeout", "attempts"}
-                ),
+                **verifier.model_dump(include={"strategy", "timeout", "attempts"}),
             }
             for verifier in settings.vlm
         ],

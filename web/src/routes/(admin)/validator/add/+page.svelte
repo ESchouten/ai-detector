@@ -20,9 +20,11 @@
 {:else}
 	<section class="settings-page max-w-2xl">
 		<header class="flex flex-col gap-2">
-			<h1 class="settings-heading">{initial ? 'Edit AI connection' : 'Add AI connection'}</h1>
+			<h1 class="settings-heading">
+				{initial ? 'Edit validator connection' : 'Connect validator'}
+			</h1>
 			<p class="settings-description">
-				Connect once, then choose this connection in your detectors.
+				Connect Google Gemini to check detections before alerts are sent.
 			</p>
 		</header>
 		{#key label}<LlmConnectionEditor

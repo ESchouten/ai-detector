@@ -30,8 +30,6 @@ export const getSetupStatus = query(() =>
 	)
 );
 
-export const skipSetupAlerts = command(() => configurationAction(configuration.skipSetupAlerts()));
-
 export const finishSetup = command(() =>
 	configurationAction(
 		configuration.finishSetup(async () => monitoringCameras(await detectorStatus()))

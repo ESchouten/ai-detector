@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Badge } from '$lib/components/ui/badge';
+	import { Button } from '$lib/components/ui/button';
 	import * as Field from '$lib/components/ui/field';
 	import CameraPicture from './camera-picture.svelte';
 	let {
@@ -19,6 +20,20 @@
 	<Field.Description>
 		Select one or more cameras for this detector. The same camera can be used by several detectors.
 	</Field.Description>
+	{#if cameras.length > 1}<Button
+			type="button"
+			variant="outline"
+			size="sm"
+			class="self-start"
+			{disabled}
+			onclick={() =>
+				(selected = cameras.every((camera) => selected.includes(camera.source))
+					? []
+					: cameras.map((camera) => camera.source))}
+			>{cameras.every((camera) => selected.includes(camera.source))
+				? 'Clear selection'
+				: 'Select all cameras'}</Button
+		>{/if}
 	<Field.Group class="grid gap-4 sm:grid-cols-2">
 		{#each cameras as camera (camera.id)}
 			<CameraPicture

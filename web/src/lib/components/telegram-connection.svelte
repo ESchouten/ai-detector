@@ -312,13 +312,15 @@
 					></Alert.Root
 				>{/if}
 		{/if}
-		<Button
-			type="button"
-			variant="outline"
-			class="h-auto min-h-9 max-w-full self-start text-left whitespace-normal"
-			disabled={busy}
-			onclick={changeMethod}>{manual ? 'Choose in Telegram' : 'Enter chat ID manually'}</Button
-		>
+		{#if token.trim()}
+			<Button
+				type="button"
+				variant="outline"
+				class="h-auto min-h-9 max-w-full self-start text-left whitespace-normal"
+				disabled={busy}
+				onclick={changeMethod}>{manual ? 'Choose in Telegram' : 'Enter chat ID manually'}</Button
+			>
+		{/if}
 	{/if}
 	{#if (manual || !editing) && chat && token && !received && !testSent}
 		<Button

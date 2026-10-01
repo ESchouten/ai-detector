@@ -79,7 +79,7 @@ export class TelegramPairing {
 		const session = this.session;
 		if (!session || generation !== this.generation) return;
 		if (Date.now() >= session.expiresAt) {
-			this.fail(new Error('This connection link expired. Choose Connect my bot to try again.'));
+			this.fail(new Error('This connection link expired. Choose Connect Telegram to try again.'));
 			return;
 		}
 		try {

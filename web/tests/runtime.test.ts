@@ -26,7 +26,7 @@ test(
 		});
 		const connection = {
 			label: 'Shared AI',
-			model: 'vision',
+			model: ['vision', 'backup'],
 			key: 'test-only',
 			headers: { 'X-Key': 'test-header' }
 		};

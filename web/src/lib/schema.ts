@@ -86,17 +86,21 @@ const headerValue = v.pipe(
 	v.string(),
 	v.check((value) => !/[\r\n]/.test(value), 'Use a single-line header value.')
 );
+const modelName = v.pipe(
+	v.string(),
+	v.trim(),
+	v.minLength(1, 'Enter a model name.'),
+	v.check(
+		(value) => !/\s/.test(value) && !value.endsWith('/'),
+		'Enter a model name, without spaces or a trailing slash.'
+	)
+);
 export const llmConnection = v.object({
 	label: v.pipe(v.string(), v.trim(), v.minLength(1, 'Enter a connection name.')),
-	model: v.pipe(
-		v.string(),
-		v.trim(),
-		v.minLength(1, 'Enter a model name.'),
-		v.check(
-			(value) => !/\s/.test(value) && !value.endsWith('/'),
-			'Enter a model name, without spaces or a trailing slash.'
-		)
-	),
+	model: v.union([
+		modelName,
+		v.pipe(v.array(modelName), v.minLength(1, 'Enter at least one model.'))
+	]),
 	key: v.optional(v.nullable(v.string())),
 	url: v.optional(
 		v.nullable(v.pipe(text, v.url(), v.regex(/^https?:\/\//i, 'Use an HTTP or HTTPS API URL.')))

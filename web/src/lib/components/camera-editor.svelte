@@ -21,6 +21,7 @@
 	import { cameraDraftAddress, cameraEditConnection } from '$lib/cameras';
 	import { getCameras, removeCamera, saveCamera } from '$lib/remote/stream.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
+	import { uniqueLabel } from '$lib/configuration';
 
 	let {
 		initial,
@@ -31,7 +32,9 @@
 		onDone: () => Promise<void>;
 		onCancel?: () => Promise<void>;
 	} = $props();
-	let label = $state(untrack(() => initial?.label ?? ''));
+	const cameras = await getCameras();
+	const defaultLabel = uniqueLabel('Camera', new Set(cameras.map((camera) => camera.label)));
+	let label = $state(untrack(() => initial?.label ?? defaultLabel));
 	let source = $state(untrack(() => initial?.source ?? ''));
 	const editing = untrack(() => cameraEditConnection(initial?.source ?? ''));
 	let address = $state(untrack(() => initial?.connection?.address ?? ''));
@@ -72,7 +75,7 @@
 		if (draft) {
 			try {
 				const parsed = JSON.parse(draft);
-				if (typeof parsed.label === 'string') label = parsed.label;
+				if (typeof parsed.label === 'string' && parsed.label.trim()) label = parsed.label;
 				if (typeof parsed.address === 'string') address = cameraDraftAddress(parsed.address) ?? '';
 			} catch {
 				sessionStorage.removeItem('camera-setup');
@@ -115,12 +118,20 @@
 		try {
 			const result = await discoverCameras();
 			candidates = result.cameras;
+			if (!address && !streamUri.trim()) {
+				if (!candidates.length) manualAddress = true;
+				else if (candidates.length === 1 && !manualAddress) {
+					address = candidates[0].address;
+					if (label === defaultLabel) label = candidates[0].name;
+				}
+			}
 			discoveryMessage =
 				result.message ??
 				(candidates.length
 					? 'Choose your camera below.'
 					: 'No cameras found. Enter its stream URL manually, or check that the camera and this computer use the same network.');
 		} catch (cause) {
+			if (!address) manualAddress = true;
 			discoveryMessage = errorMessage(
 				cause,
 				'Camera search failed. Check the network and try again.'
@@ -215,7 +226,7 @@
 					: 'Choose a camera or enter its stream URL. Keep it on the same network as this computer.'}
 			</p>
 		</div>
-		{#if !initial && !batchEnabled}
+		{#if !initial && !batchEnabled && candidates.length > 1}
 			<Button
 				type="button"
 				variant="outline"
@@ -275,7 +286,7 @@
 									)?.name;
 									address = value;
 									manualAddress = false;
-									if (!label || label === previousName)
+									if (!label || label === defaultLabel || label === previousName)
 										label = candidates.find((camera) => camera.address === value)?.name ?? '';
 									connectionChangedInput();
 								}}
@@ -293,18 +304,18 @@
 								{/each}
 							</RadioGroup.Root>
 						{/if}
-						<Button
-							type="button"
-							variant="outline"
-							class="self-start"
-							aria-expanded={manualAddress}
-							disabled={checking || saving}
-							onclick={() => {
-								manualAddress = !manualAddress;
-								showStreamUri = false;
-								connectionChangedInput();
-							}}>{manualAddress ? 'Hide manual entry' : 'Enter camera manually'}</Button
-						>
+						{#if candidates.length || !manualAddress}<Button
+								type="button"
+								variant="outline"
+								class="self-start"
+								aria-expanded={manualAddress}
+								disabled={checking || saving}
+								onclick={() => {
+									manualAddress = !manualAddress;
+									showStreamUri = false;
+									connectionChangedInput();
+								}}>{manualAddress ? 'Hide manual entry' : 'Enter camera manually'}</Button
+							>{/if}
 					</section>
 					{#if cameraDraftAddress(address) && !manualAddress && !candidates.some((camera) => camera.address === address)}
 						<p class="text-sm break-all text-muted-foreground">Camera selected: {address}</p>
@@ -397,16 +408,17 @@
 						>
 					{/if}
 				{/if}
-				<Field.Field>
-					<Field.Label for="camera-name">Camera name</Field.Label>
-					<Input
-						id="camera-name"
-						bind:value={label}
-						disabled={saving}
-						required
-						placeholder="e.g. Front entrance"
-					/>
-				</Field.Field>
+				{#if check || initial}<Field.Field>
+						<Field.Label for="camera-name">Camera name</Field.Label>
+						<Input
+							id="camera-name"
+							bind:value={label}
+							disabled={saving}
+							required
+							placeholder="e.g. Front entrance"
+						/>
+						<Field.Description>Give this view a name you’ll recognize.</Field.Description>
+					</Field.Field>{/if}
 				{#if initial && !changingConnection}
 					<Button
 						type="button"

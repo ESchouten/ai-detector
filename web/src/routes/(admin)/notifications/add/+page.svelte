@@ -3,13 +3,13 @@
 	import NotificationEditor from '$lib/components/notification-editor.svelte';
 	import RecipientChoice from './recipient-choice.svelte';
 	import * as Alert from '$lib/components/ui/alert';
-	import { getTelegram, getTelegrams } from '$lib/remote/exporter.remote';
+	import { getTelegrams } from '$lib/remote/exporter.remote';
 	const label = $derived(page.url.searchParams.get('label') ?? '');
 	const detectorLabel = $derived(page.url.searchParams.get('detector') ?? '');
 	const setupMode = $derived(page.url.searchParams.get('setup') === '1');
 	const createNew = $derived(page.url.searchParams.get('new') === '1');
-	const saved = $derived(label ? await getTelegram({ label }) : undefined);
-	const recipients = await getTelegrams();
+	const recipients = $derived(await getTelegrams());
+	const saved = $derived(recipients.find((recipient) => recipient.label === label));
 </script>
 
 <svelte:head><title>Alert settings · AI Detector</title></svelte:head>

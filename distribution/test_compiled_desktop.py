@@ -1,13 +1,16 @@
 """Exercise the shipped web executable against a small compiled detector fixture."""
 
+import http.cookiejar
 import json
 import os
+import re
 import shutil
 import socket
 import subprocess
 import tempfile
 import unittest
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -83,7 +86,7 @@ class CompiledDesktopTest(unittest.TestCase):
         self.addCleanup(cleanup_process, process)
         return process
 
-    def test_default_dashboard_accepts_lan_requests_and_loopback_override_is_respected(
+    def test_default_dashboard_pairs_lan_browsers_and_respects_loopback_override(
         self,
     ):
         # UDP connect selects the local interface without sending a packet.
@@ -109,16 +112,48 @@ class CompiledDesktopTest(unittest.TestCase):
                         self.assertEqual(response.status, 200)
                     url = f"http://{address}:{self.port}/"
                     if host is None:
-                        with opener.open(url, timeout=5) as response:
+                        with self.assertRaises(urllib.error.HTTPError) as denied:
+                            opener.open(url + "logs/output", timeout=5)
+                        self.assertEqual(denied.exception.code, 401)
+                        browser = urllib.request.build_opener(
+                            urllib.request.ProxyHandler({}),
+                            urllib.request.HTTPCookieProcessor(
+                                http.cookiejar.CookieJar()
+                            ),
+                        )
+                        request = urllib.request.Request(
+                            url, headers={"Accept": "text/html"}
+                        )
+                        with browser.open(request, timeout=5) as response:
                             self.assertEqual(response.status, 200)
+                            self.assertEqual(response.url, url + "pair")
+                        pairing = re.search(
+                            r"initial pairing code: (\d{6})", self.log.read_text()
+                        )
+                        self.assertIsNotNone(pairing, self.log.read_text())
+                        request = urllib.request.Request(
+                            url + "pair",
+                            data=urllib.parse.urlencode(
+                                {"code": pairing[1], "name": "CI browser"}
+                            ).encode(),
+                            headers={"Origin": url.rstrip("/"), "Accept": "text/html"},
+                        )
+                        with browser.open(request, timeout=5) as response:
+                            self.assertEqual(response.status, 200)
+                            self.assertNotEqual(response.url, url + "pair")
                             self.assertIn(b"<!doctype html>", response.read().lower())
+                        with browser.open(url + "devices", timeout=5) as response:
+                            self.assertIn(b"CI browser", response.read())
                         self.assertIn(
                             f"LAN URL: http://{address}:{self.port}",
                             self.log.read_text(),
                         )
                     else:
-                        with self.assertRaises(urllib.error.URLError):
+                        with self.assertRaises(urllib.error.URLError) as unreachable:
                             opener.open(url, timeout=5)
+                        self.assertNotIsInstance(
+                            unreachable.exception, urllib.error.HTTPError
+                        )
                         self.assertNotIn("LAN URL:", self.log.read_text())
                     process.stdin.write(b"quit\n")
                     process.stdin.flush()

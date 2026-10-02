@@ -1,4 +1,4 @@
-import { readdir, readFile, realpath, unlink } from 'node:fs/promises';
+import { readdir, readFile, realpath, stat, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import Ajv from 'ajv';
 import * as v from 'valibot';
@@ -13,10 +13,12 @@ import {
 	type RecordingExportFilter
 } from '../detections.ts';
 import { writeJson } from './json-file.ts';
+import { webLog } from './web-log.ts';
 
 export { isArchiveSegment } from '../detections.ts';
 
 export class ArchivePathError extends Error {}
+class ArchiveDataError extends Error {}
 
 const validateMetadata = new Ajv().compile<Metadata>(metadataSchema);
 
@@ -64,43 +66,95 @@ export type RecordingAddress = Pick<ArchiveLocation, 'type' | 'archiveStage' | '
 export class DetectionArchive {
 	readonly directory: string;
 	private pendingReview: Promise<unknown> = Promise.resolve();
+	private directories = new Map<string, { modified: number; names: string[] }>();
+	private reviews = new Map<string, { checked: number; review: ManualReview | null }>();
+	private eventIds = new Map<string, string | undefined>();
+	private warnings = new Map<string, string>();
 
 	constructor(directory: string) {
 		this.directory = directory;
 	}
 
 	types(): Promise<string[]> {
-		return folders(this.directory);
+		return this.folders(this.directory);
+	}
+
+	private async folders(directory: string): Promise<string[]> {
+		try {
+			const { mtimeMs } = await stat(directory);
+			const cached = this.directories.get(directory);
+			if (cached?.modified === mtimeMs) return cached.names;
+			const names = await folders(directory);
+			this.directories.set(directory, { modified: mtimeMs, names });
+			return names;
+		} catch (error) {
+			if (isMissingFile(error)) {
+				this.directories.delete(directory);
+				return [];
+			}
+			throw error;
+		}
+	}
+
+	invalidate(): void {
+		this.directories.clear();
+		this.reviews.clear();
+		this.eventIds.clear();
+		this.warnings.clear();
+	}
+
+	private unavailable(address: RecordingAddress, error: unknown, kind = 'metadata'): void {
+		if (
+			!(
+				error instanceof SyntaxError ||
+				error instanceof ArchiveDataError ||
+				error instanceof v.ValiError ||
+				isMissingFile(error)
+			)
+		)
+			throw error;
+		const key = `${kind}:${this.addressKey(address)}`;
+		const message = `Could not read recording ${address.type}/${address.archiveStage}/${address.timestamp}. Other recordings remain available.`;
+		if (!this.warnings.has(key)) webLog.warn(message, error);
+		this.warnings.set(key, message);
 	}
 
 	async page({ type, stage, offset, limit }: DetectionFilter): Promise<DetectionPage> {
 		const locations = await this.locations({ type, stage });
-		const page = locations.slice(offset, offset + limit);
-		const items = await Promise.all(page.map((location) => this.read(location)));
+		const items: Detection[] = [];
+		let nextOffset = offset;
+		while (items.length < limit && nextOffset < locations.length) {
+			const location = locations[nextOffset++];
+			try {
+				items.push(await this.read(location));
+			} catch (error) {
+				this.unavailable(location, error);
+			}
+		}
 		return {
 			items,
-			nextOffset: offset + items.length,
-			hasMore: offset + items.length < locations.length
+			nextOffset,
+			hasMore: nextOffset < locations.length,
+			warnings: Array.from(this.warnings.values())
 		};
 	}
 
-	async locations({ type, stage, from, to }: RecordingExportFilter): Promise<ArchiveLocation[]> {
+	/** Completed archive folders, independent of optional review or metadata files. */
+	async addresses({ type, from, to }: Omit<RecordingExportFilter, 'stage'> = {}): Promise<
+		RecordingAddress[]
+	> {
 		if (type !== undefined && !isArchiveSegment(type))
 			throw new ArchivePathError('Invalid category.');
 		const types = type ? [type] : await this.types();
-		const locations: ArchiveLocation[] = [];
+		const locations: RecordingAddress[] = [];
 		for (const category of types) {
 			for (const currentStage of STAGES) {
-				const timestamps = await folders(path.join(this.directory, category, currentStage));
+				const timestamps = await this.folders(path.join(this.directory, category, currentStage));
 				for (const timestamp of timestamps) {
 					// Match the calendar dates shown in Recordings, without timezone conversion.
 					const day = timestamp.slice(0, 10);
 					if ((from && day < from) || (to && day > to)) continue;
-					const address = { type: category, archiveStage: currentStage, timestamp };
-					const review = await this.readReview(address);
-					const effectiveStage = reviewedStage(currentStage, review);
-					if (!stage || stage === effectiveStage)
-						locations.push({ ...address, stage: effectiveStage, review });
+					locations.push({ type: category, archiveStage: currentStage, timestamp });
 				}
 			}
 		}
@@ -114,6 +168,23 @@ export class DetectionArchive {
 		return locations;
 	}
 
+	async locations({ stage, ...filter }: RecordingExportFilter): Promise<ArchiveLocation[]> {
+		const locations: ArchiveLocation[] = [];
+		for (const address of await this.addresses(filter)) {
+			let review: ManualReview | null;
+			try {
+				review = await this.cachedReview(address);
+			} catch (error) {
+				this.unavailable(address, error, 'review');
+				continue;
+			}
+			const effectiveStage = reviewedStage(address.archiveStage, review);
+			if (!stage || stage === effectiveStage)
+				locations.push({ ...address, stage: effectiveStage, review });
+		}
+		return locations;
+	}
+
 	private async read(location: ArchiveLocation): Promise<Detection> {
 		const file = await archivePath(
 			this.directory,
@@ -124,13 +195,27 @@ export class DetectionArchive {
 		);
 		const metadata: unknown = JSON.parse(await readFile(file, 'utf8'));
 		if (!validateMetadata(metadata))
-			throw new Error(
+			throw new ArchiveDataError(
 				`Invalid archive metadata: ${location.type}/${location.stage}/${location.timestamp}`
 			);
+		this.eventIds.set(this.addressKey(location), metadata.event_id ?? undefined);
+		this.warnings.delete(`metadata:${this.addressKey(location)}`);
 		return { ...metadata, ...location };
 	}
 
+	private addressKey(address: RecordingAddress): string {
+		return JSON.stringify([address.type, address.archiveStage, address.timestamp]);
+	}
+
+	private cachedReview(address: RecordingAddress): Promise<ManualReview | null> {
+		const cached = this.reviews.get(this.addressKey(address));
+		return cached && Date.now() - cached.checked < 30000
+			? Promise.resolve(cached.review)
+			: this.readReview(address);
+	}
+
 	async readReview(address: RecordingAddress): Promise<ManualReview | null> {
+		let review: ManualReview | null;
 		try {
 			const file = await archivePath(
 				this.directory,
@@ -139,11 +224,14 @@ export class DetectionArchive {
 				address.timestamp,
 				'review.json'
 			);
-			return v.parse(manualReviewSchema, JSON.parse(await readFile(file, 'utf8')));
+			review = v.parse(manualReviewSchema, JSON.parse(await readFile(file, 'utf8')));
 		} catch (error) {
-			if (isMissingFile(error)) return null;
-			throw error;
+			if (!isMissingFile(error)) throw error;
+			review = null;
 		}
+		this.reviews.set(this.addressKey(address), { checked: Date.now(), review });
+		this.warnings.delete(`review:${this.addressKey(address)}`);
+		return review;
 	}
 
 	review(
@@ -186,8 +274,14 @@ export class DetectionArchive {
 	private async findEvent(id: string): Promise<Detection[]> {
 		const matches: Detection[] = [];
 		for (const location of await this.locations({})) {
-			const recording = await this.read(location);
-			if (recording.event_id === id) matches.push(recording);
+			const key = this.addressKey(location);
+			if (this.eventIds.has(key) && this.eventIds.get(key) !== id) continue;
+			try {
+				const recording = await this.read(location);
+				if (recording.event_id === id) matches.push(recording);
+			} catch (error) {
+				this.unavailable(location, error);
+			}
 		}
 		return matches;
 	}
@@ -214,6 +308,7 @@ export class DetectionArchive {
 				await unlink(file).catch((error: unknown) => {
 					if (!isMissingFile(error)) throw error;
 				});
+			this.reviews.set(this.addressKey(address), { checked: Date.now(), review });
 		}
 	}
 }

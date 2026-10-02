@@ -44,6 +44,7 @@
 	let reviewVersion = 0;
 	let hasNewRecordings = $state(false);
 	let refreshError = $state(false);
+	let archiveWarnings = $state<string[]>([]);
 
 	const detectionsByDay = $derived.by(() => {
 		const dayDetections = new SvelteMap<string, Detection[]>();
@@ -107,6 +108,7 @@
 			});
 			await query.refresh();
 			const result = await query;
+			archiveWarnings = result.warnings ?? [];
 
 			if (version !== requestVersion) {
 				return;
@@ -268,6 +270,14 @@
 		<ExportRecordings {type} {stage} />
 	</header>
 	<DetectorRuntime configured={cameras.some((camera) => camera.monitored)} compact />
+	{#if archiveWarnings.length}<p role="status" class="text-sm text-destructive">
+			{archiveWarnings.length} recording(s) could not be read. Other recordings are available. <Button
+				href={resolve('/logs/diagnostics')}
+				variant="outline"
+				size="sm"
+				download>Download diagnostics</Button
+			>
+		</p>{/if}
 	{#if hasNewRecordings}<Button variant="outline" onclick={() => loadNextPage(true)}
 			>New recordings are available — show latest</Button
 		>{/if}

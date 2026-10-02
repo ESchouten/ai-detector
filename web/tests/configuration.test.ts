@@ -17,6 +17,21 @@ const source = 'rtsp://camera.local/first';
 const other = 'rtsp://camera.local/second';
 const detector = { detection: { source: [source] } };
 
+test('invalid settings can be recovered from the last valid pair without deleting the damaged input', async (t) => {
+	const { files, store } = await fixture(t);
+	const original = await store.read();
+	await writeFile(files.config, '{broken');
+	await assert.rejects(store.read(), SyntaxError);
+	assert.equal(await store.recoveryAvailable(), true);
+	await store.restore();
+	assert.deepEqual(await store.read(), original);
+	const saved = (await readdir(path.dirname(files.config))).find(
+		(name) => name.startsWith('config.json.') && name.endsWith('.invalid')
+	);
+	assert.ok(saved);
+	assert.equal(await readFile(path.join(path.dirname(files.config), saved), 'utf8'), '{broken');
+});
+
 async function fixture(
 	t: TestContext,
 	config: unknown = { detectors: [detector] },
@@ -32,6 +47,34 @@ async function fixture(
 	await writeJson(files.app, app);
 	return { files, store: new ConfigurationStore(files) };
 }
+
+test('missing saved settings preserve recovery across restarts, including camera metadata', async (t) => {
+	for (const missing of ['config', 'app'] as const) {
+		const { files, store } = await fixture(t);
+		await store.saveCamera({ label: 'Barn', source: other, mode: 'view-only' });
+		const original = await store.read();
+		const snapshot = await readFile(`${files.config}.last-valid`, 'utf8');
+		await rm(files[missing]);
+		const reopened = new ConfigurationStore(files);
+		await assert.rejects(reopened.read(), /settings file is missing/);
+		assert.equal(await readFile(`${files.config}.last-valid`, 'utf8'), snapshot);
+		assert.equal(await reopened.recoveryAvailable(), true);
+		await reopened.restore();
+		assert.deepEqual(await reopened.read(), original);
+	}
+});
+
+test('legacy config without app metadata stays readable and recoverable', async (t) => {
+	const { files, store } = await fixture(t);
+	await rm(files.app);
+	const original = await store.read();
+	const reopened = new ConfigurationStore(files);
+	assert.deepEqual(await reopened.read(), original);
+	await rm(files.config);
+	await assert.rejects(reopened.read(), /settings file is missing/);
+	await reopened.restore();
+	assert.deepEqual(await reopened.read(), original);
+});
 
 test('scalar/list input normalizes without dropping detector or exporter options', () => {
 	const { config } = normalizeConfiguration(
@@ -282,7 +325,11 @@ test('a configuration staging failure leaves both settings files unchanged', asy
 		(error) => error === failure
 	);
 	assert.deepEqual(await Promise.all([readFile(files.app), readFile(files.config)]), before);
-	assert.deepEqual((await readdir(path.dirname(files.app))).sort(), ['app.json', 'config.json']);
+	assert.deepEqual((await readdir(path.dirname(files.app))).sort(), [
+		'app.json',
+		'config.json',
+		'config.json.last-valid'
+	]);
 });
 
 for (const existingApp of [true, false]) {
@@ -325,7 +372,9 @@ for (const existingApp of [true, false]) {
 		else await assert.rejects(readFile(files.app), { code: 'ENOENT' });
 		assert.deepEqual(
 			(await readdir(path.dirname(files.app))).sort(),
-			existingApp ? ['app.json', 'config.json'] : ['config.json']
+			existingApp
+				? ['app.json', 'config.json', 'config.json.last-valid']
+				: ['config.json', 'config.json.last-valid']
 		);
 		replacement.mock.restore();
 		await addPresetDetector(store, { source, label: 'Barn' }, 'general');

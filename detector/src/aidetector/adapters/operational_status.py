@@ -29,7 +29,13 @@ class JsonStatusReporter:
         with self._lock:
             now = monotonic()
             key = (event.kind, event.source, event.rule_id)
-            if event.kind in {"frame", "inference", "processed", "offline"}:
+            if event.kind in {
+                "frame",
+                "inference",
+                "processed",
+                "offline",
+                "waiting_delivery",
+            }:
                 previous = self._last_sent.get(key)
                 if previous is not None and now - previous < 1:
                     return

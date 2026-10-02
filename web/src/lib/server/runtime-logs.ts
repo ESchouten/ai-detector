@@ -19,7 +19,8 @@ export function sanitizeSourceForLogs(source: string): string {
 }
 
 export function sanitizeTextForLogs(text: string): string {
-	return sanitizeParameters(text).replace(/\b[a-z][a-z0-9+.-]*:\/\/[^\s\r\n]+/gi, (source) =>
-		sanitizeSourceForLogs(source)
-	);
+	return sanitizeParameters(text)
+		.replace(/(pairing code:\s*)\d{6}/gi, '$1***')
+		.replace(/\bbot\d+:[A-Za-z0-9_-]+/g, 'bot***')
+		.replace(/\b[a-z][a-z0-9+.-]*:\/\/[^\s\r\n]+/gi, (source) => sanitizeSourceForLogs(source));
 }

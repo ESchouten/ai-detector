@@ -10,6 +10,7 @@ from threading import Event, Thread, current_thread
 from aidetector.application.delivery import DeliveryReport, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import FrameSource, HealthMonitor, SourceBatch
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.domain.models import DetectionEvent, ValidationStatus
 
 logger = logging.getLogger(__name__)
@@ -66,8 +67,10 @@ class DetectorWorker:
         pending_events: int = 8,
         *,
         name: str = "detector",
+        report_status: ReportStatus = ignore_status,
     ):
         self.name = name
+        self.report_status = report_status
         self.source = source
         self.pipeline = pipeline
         self.delivery = delivery
@@ -131,14 +134,18 @@ class DetectorWorker:
             raise self._delivery_error
 
     def _enqueue(self, event: DetectionEvent | None) -> None:
+        waiting = False
         while True:
             if self._delivery_error is not None:
                 raise self._delivery_error
             try:
                 self._queue.put(event, timeout=0.1)
+                if waiting:
+                    self.report_status(StatusEvent("processing_resumed"))
                 return
             except Full:
-                continue
+                waiting = True
+                self.report_status(StatusEvent("waiting_delivery"))
 
     def _deliver(self) -> None:
         try:

@@ -112,7 +112,7 @@ diff --git a/dist/server/index.ts b/dist/server/index.ts
 +        const staticResponse = await staticServer.respond(req);
 +        if (staticResponse) return staticResponse;
 +        return svelteKitServer.respond(req, {
-+            getClientAddress() { return bunServer.requestIP(req)?.address || "127.0.0.1"; }
++            getClientAddress() { return bunServer.requestIP(req)?.address || ""; }
 +        });
 +    };
  });

@@ -169,8 +169,24 @@ function send(url, { method = 'GET', headers, body } = {}) {
 	});
 }
 
-async function startServer(t, origin) {
+async function connectBrowser(base, origin, code) {
+	const response = await send(base + '/pair', {
+		method: 'POST',
+		headers: {
+			Host: new URL(origin).host,
+			Origin: origin,
+			Accept: 'text/html',
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: new URLSearchParams({ code, name: 'Farm tablet' }).toString()
+	});
+	assert.equal(response.status, 303, await response.clone().text());
+	return response.headers.get('set-cookie').split(';')[0];
+}
+
+async function startServer(t, origin, prepare) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-node-production-'));
+	await prepare?.(directory);
 	const env = {
 		...process.env,
 		HOST: '127.0.0.1',
@@ -267,7 +283,7 @@ test(
 	'production import seeds setup, preserves originals and stays stopped',
 	{ skip: process.platform === 'win32', timeout: 20000 },
 	async (t) => {
-		const { directory, base } = await startServer(t);
+		const { directory, base, logs } = await startServer(t);
 		const previous = await mkdtemp(path.join(tmpdir(), 'previous-detector-'));
 		t.after(() => rm(previous, { recursive: true, force: true }));
 		const original = JSON.stringify({
@@ -306,7 +322,12 @@ test(
 		assert.equal(blocked.status, 403);
 		const remoteHost = await command('inspectInstallation', previous, {
 			Host: 'farm.example.test',
-			Origin: 'http://farm.example.test'
+			Origin: 'http://farm.example.test',
+			Cookie: await connectBrowser(
+				base,
+				'http://farm.example.test',
+				logs().match(/initial pairing code: (\d{6})/)[1]
+			)
 		});
 		const remoteError = await remoteHost.json();
 		assert.equal(remoteError.type, 'error');
@@ -383,22 +404,35 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			const cameraInput = { label: 'Workshop camera', source, mode: 'view-only' };
 			const host = deployment === 'LAN HTTP' ? 'barn.local:8080' : new URL(base).host;
 			const origin = publicOrigin ?? `http://${host}`;
-			const firstVisit = await send(`${base}/setup`, { headers: { Host: host } });
+			const browserHeaders = { Host: host };
+			if (deployment !== 'local HTTP') {
+				const anonymous = await send(base + '/logs/output', { headers: browserHeaders });
+				assert.equal(anonymous.status, 401);
+				const code = logs().match(/initial pairing code: (\d{6})/)?.[1];
+				assert.ok(code, logs());
+				browserHeaders.Cookie = await connectBrowser(base, origin, code);
+			}
+			const firstVisit = await send(`${base}/setup`, { headers: browserHeaders });
 			assert.equal(firstVisit.status, 302);
 			assert.equal(
 				new URL(firstVisit.headers.get('location'), base + '/setup').href,
 				base + '/setup?step=cameras&add=camera'
 			);
 			const page = await send(new URL(firstVisit.headers.get('location'), base + '/setup'), {
-				headers: { Host: host }
+				headers: browserHeaders
 			});
 			assert.equal(page.status, 200);
 			const html = await page.text();
+			if (deployment === 'local HTTP') {
+				assert.equal(firstVisit.headers.get('set-cookie'), null);
+				assert.equal(page.headers.get('set-cookie'), null);
+				await assert.rejects(readFile(path.join(directory, 'app.json')), { code: 'ENOENT' });
+			}
 			assert.ok(html.includes('<title>Settings · AI Detector</title>'));
 			assert.ok(html.includes('Add your camera'));
 			assert.ok(!html.includes('Calving Catcher'));
 			const headers = {
-				Host: host,
+				...browserHeaders,
 				Origin: origin,
 				'Content-Type': 'application/json',
 				'x-sveltekit-pathname': '/setup',
@@ -437,7 +471,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			assert.equal(saved.status, 200, await saved.clone().text());
 			assert.equal((await saved.json()).type, 'result');
 			const detectorPage = await send(`${base}/setup?step=detectors&add=detector`, {
-				headers: { Host: host }
+				headers: browserHeaders
 			});
 			assert.equal(detectorPage.status, 200);
 			const detectorHtml = await detectorPage.text();
@@ -737,3 +771,105 @@ test(
 		await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
 	}
 );
+
+test('broken settings retain an accessible diagnostics download and explicit recovery flow', async (t) => {
+	const { directory, base, logs } = await startServer(t);
+	await writeFile(
+		path.join(directory, 'config.json'),
+		JSON.stringify({ detectors: [{ detection: { source: ['rtsp://camera.example.test/live'] } }] })
+	);
+	await writeFile(
+		path.join(directory, 'app.json'),
+		JSON.stringify({
+			streams: [{ id: 'barn', label: 'Saved barn', source: 'rtsp://camera.example.test/live' }]
+		})
+	);
+	const origin = 'http://barn.local';
+	const headers = {
+		Host: 'barn.local',
+		Cookie: await connectBrowser(base, origin, logs().match(/initial pairing code: (\d{6})/)[1])
+	};
+	assert.equal((await send(base + '/setup?step=detectors')).status, 200);
+	await writeFile(path.join(directory, 'config.json'), '{invalid settings');
+	const broken = await send(base + '/setup?step=cameras', { headers });
+	assert.equal(broken.status, 500);
+	assert.match(await broken.text(), /Recover settings/);
+	const download = await send(base + '/logs/diagnostics', { headers });
+	assert.equal(download.status, 200);
+	const files = unzipSync(new Uint8Array(await download.arrayBuffer()));
+	assert.ok(files['system.json']);
+	assert.match(Buffer.from(files['settings/config.json']).toString(), /unreadable/);
+	assert.ok(
+		!Object.keys(files).some((name) => name.includes('last-valid') || name.includes('devices'))
+	);
+	assert.equal(JSON.parse(Buffer.from(files['settings/app.json']).toString()).devices, undefined);
+	assert.match(
+		await (await send(base + '/recovery', { headers })).text(),
+		/Restore saved settings/
+	);
+	const restored = await send(base + '/recovery', {
+		method: 'POST',
+		headers: {
+			...headers,
+			Origin: origin,
+			Accept: 'text/html',
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: ''
+	});
+	assert.equal(restored.status, 303, await restored.clone().text());
+	assert.match(await (await send(base + '/setup?step=cameras', { headers })).text(), /Saved barn/);
+	assert.equal(
+		JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8')).detectors.length,
+		1
+	);
+	await writeFile(path.join(directory, 'config.json.last-valid'), '{"key":"private-key",broken');
+	const failedRecovery = await send(base + '/recovery', {
+		method: 'POST',
+		headers: {
+			...headers,
+			Origin: origin,
+			Accept: 'text/html',
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: ''
+	});
+	assert.equal(failedRecovery.status, 400);
+	const support = unzipSync(
+		new Uint8Array(await (await send(base + '/logs/diagnostics', { headers })).arrayBuffer())
+	);
+	const webLog = Buffer.from(support['logs/web.log']).toString();
+	assert.match(webLog, /Could not restore the saved settings\nSyntaxError/);
+	assert.ok(!webLog.includes('private-key'));
+	assert.match(
+		await (await send(base + '/logs/output', { headers })).text(),
+		/Could not restore the saved settings/
+	);
+});
+
+test('damaged app settings do not prevent server startup or local recovery', async (t) => {
+	const saved = {
+		config: { detectors: [] },
+		app: { streams: [], detectors: [], telegrams: [], llms: [] }
+	};
+	const { base, logs } = await startServer(t, undefined, async (directory) => {
+		await writeFile(path.join(directory, 'app.json'), '{broken');
+		await writeFile(path.join(directory, 'config.json.last-valid'), JSON.stringify(saved));
+	});
+	assert.match(logs(), /Could not load connected devices from app.json/);
+	assert.equal((await send(base + '/logs/diagnostics')).status, 200);
+	const recovery = await send(base + '/recovery');
+	assert.equal(recovery.status, 200);
+	assert.match(await recovery.text(), /Restore saved settings/);
+	const restored = await send(base + '/recovery', {
+		method: 'POST',
+		headers: {
+			Origin: base,
+			Accept: 'text/html',
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: ''
+	});
+	assert.equal(restored.status, 303, await restored.clone().text());
+	assert.equal((await send(base + '/devices')).status, 200);
+});

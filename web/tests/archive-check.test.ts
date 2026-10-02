@@ -54,7 +54,8 @@ test('archive check saves and decodes in every destination without creating dete
 	assert.deepEqual(await archive.page({ offset: 0, limit: 10 }), {
 		items: [],
 		nextOffset: 0,
-		hasMore: false
+		hasMore: false,
+		warnings: []
 	});
 });
 

@@ -225,7 +225,11 @@ def test_launcher_status_reports_real_capture_processing_and_archive_outcome(
     assert events[:2] == ["preparing", "ready"]
     assert events[2:4] == ["frame", "processed"]
     assert "inference" not in events
-    assert events[-1] == ("recording_failed" if blocked_archive else "recording")
+    assert events[-2:] == (
+        ["recording_failed", "delivery_failed"]
+        if blocked_archive
+        else ["recording", "delivery"]
+    )
     assert records[3]["ruleId"] == "detector-1"
     assert records[-1]["ruleId"] == "detector-1"
     assert records[-1]["destinationId"] == "disk-1"

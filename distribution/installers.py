@@ -104,7 +104,7 @@ def linux_tree(folder: Path, version: str) -> Path:
         f"Package: ai-detector\nVersion: {version}\nArchitecture: amd64\n"
         "Maintainer: AI Detector contributors\n"
         "Section: video\nPriority: optional\n"
-        "Depends: libc6 (>= 2.35), libstdc++6, libgl1, libglib2.0-0, libgomp1, xdg-utils, psmisc, gnome-startup-applications, zenity\n"
+        "Depends: libc6 (>= 2.35), libstdc++6, libgl1, libglib2.0-0, libgomp1, libcap2-bin, xdg-utils, psmisc, gnome-startup-applications, zenity\n"
         "Homepage: https://github.com/ESchouten/ai-detector\n"
         "Description: Local camera monitoring and recordings\n"
         " Bundled desktop application for Ubuntu 22.04 and 24.04 amd64.\n"
@@ -112,8 +112,9 @@ def linux_tree(folder: Path, version: str) -> Path:
         " Settings and recordings remain in the user's data directory on removal.\n",
         encoding="utf-8",
     )
-    shutil.copy2(ASSETS / "linux" / "prerm", control / "prerm")
-    (control / "prerm").chmod(0o755)
+    for script in ("prerm", "postinst"):
+        shutil.copy2(ASSETS / "linux" / script, control / script)
+        (control / script).chmod(0o755)
     (control / "conffiles").write_text(
         "/etc/xdg/autostart/ai-detector.desktop\n", encoding="utf-8"
     )

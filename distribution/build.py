@@ -11,6 +11,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from importlib.util import find_spec
 from pathlib import Path
+from time import perf_counter
 
 from nvidia_runtime import stage_nvidia_runtime
 from package import PackageInputs, archive, assemble_package, version_number
@@ -39,7 +40,14 @@ def run(*arguments: str | Path, cwd: Path = ROOT, env: dict | None = None) -> No
     command = [str(argument) for argument in arguments]
     # Windows package managers are .cmd entrypoints; resolve them before Popen.
     command[0] = shutil.which(command[0]) or command[0]
-    subprocess.run(command, cwd=cwd, env=env, check=True)
+    started = perf_counter()
+    try:
+        subprocess.run(command, cwd=cwd, env=env, check=True)
+    finally:
+        print(
+            f"Build command {Path(command[0]).name} finished in {perf_counter() - started:.1f}s",
+            flush=True,
+        )
 
 
 @contextmanager
@@ -112,7 +120,7 @@ def build_detector(args) -> Path:
             "src",
             "--specpath",
             ROOT / "detector/build",
-            "--clean",
+            *(["--clean"] if args.clean else []),
             "--noconfirm",
             cwd=ROOT / "detector",
         )
@@ -372,6 +380,11 @@ def parse_arguments(argv: list[str] | None = None):
         "--skip-dependencies",
         action="store_true",
         help="Dependencies are already installed",
+    )
+    dependencies.add_argument(
+        "--clean",
+        action="store_true",
+        help="Discard PyInstaller's analysis and binary caches",
     )
     parser = argparse.ArgumentParser(description=__doc__)
     stages = parser.add_subparsers(dest="stage", required=True)

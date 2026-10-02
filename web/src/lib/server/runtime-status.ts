@@ -18,7 +18,14 @@ const eventSchema = v.object({
 		'recording',
 		'offline',
 		'recording_failed',
-		'notice'
+		'notice',
+		'backend',
+		'validation',
+		'validation_failed',
+		'delivery',
+		'delivery_failed',
+		'waiting_delivery',
+		'processing_resumed'
 	]),
 	at: v.pipe(
 		v.string(),
@@ -27,7 +34,7 @@ const eventSchema = v.object({
 	sourceKey: v.optional(v.pipe(v.string(), v.regex(/^[a-f0-9]{64}$/))),
 	message: v.optional(v.string()),
 	ruleId: v.optional(v.pipe(v.string(), v.regex(/^detector-[1-9]\d*$/))),
-	destinationId: v.optional(v.pipe(v.string(), v.regex(/^disk-[1-9]\d*$/)))
+	destinationId: v.optional(v.pipe(v.string(), v.regex(/^(?:disk|telegram|webhook)-[1-9]\d*$/)))
 });
 
 type ProgressEvent = v.InferOutput<typeof eventSchema>;
@@ -36,6 +43,8 @@ interface RuleProgress {
 	label: string;
 	timeout: number;
 	lastProcessedAt: string | null;
+	workerActivityAt: string | null;
+	waitingDelivery: boolean;
 	recordings: Map<string, string | undefined>;
 }
 interface CameraProgress {
@@ -53,6 +62,8 @@ function ruleProgress(detector: DetectorConfig, index: number, app: AppConfig): 
 		label: app.detectors?.[index]?.label || `Detector ${index + 1}`,
 		timeout: Math.max(15000, (detector.detection.interval ?? 0) * 3000 + 5000),
 		lastProcessedAt: null,
+		workerActivityAt: null,
+		waitingDelivery: false,
 		recordings: new Map(recordings.map((_, index) => [`disk-${index + 1}`, undefined]))
 	};
 }
@@ -61,6 +72,8 @@ function ruleProgress(detector: DetectorConfig, index: number, app: AppConfig): 
 export class RuntimeProgress {
 	private prepared = false;
 	private cameras = new Map<string, CameraProgress>();
+	private failures = new Map<string, string>();
+	private engines = new Map<string, string>();
 	preparation: string | undefined;
 	preparationFailure: string | undefined;
 	notice: string | undefined;
@@ -68,6 +81,8 @@ export class RuntimeProgress {
 	configure(config: Config, app: AppConfig, directory: string): void {
 		this.prepared = false;
 		this.cameras.clear();
+		this.failures.clear();
+		this.engines.clear();
 		this.preparation = undefined;
 		this.preparationFailure = undefined;
 		this.notice = undefined;
@@ -125,6 +140,18 @@ export class RuntimeProgress {
 		const parsed = v.safeParse(eventSchema, value);
 		if (!parsed.success) return;
 		const event = parsed.output;
+		if (event.event === 'waiting_delivery' || event.event === 'processing_resumed') {
+			this.observeWorker(event);
+			return event;
+		}
+		if (
+			['backend', 'validation', 'validation_failed', 'delivery', 'delivery_failed'].includes(
+				event.event
+			)
+		) {
+			this.observeConnection(event);
+			return event;
+		}
 		if (event.event === 'ready') {
 			this.prepared = true;
 			this.preparation = undefined;
@@ -149,6 +176,30 @@ export class RuntimeProgress {
 		const camera = event.sourceKey ? this.cameras.get(event.sourceKey) : undefined;
 		if (camera) this.observe(camera, event);
 		return event;
+	}
+
+	private observeWorker(event: ProgressEvent): void {
+		for (const camera of this.cameras.values()) {
+			const rule = camera.rules.get(event.ruleId ?? '');
+			if (rule) {
+				rule.workerActivityAt = event.at;
+				rule.waitingDelivery = event.event === 'waiting_delivery';
+			}
+		}
+	}
+
+	private observeConnection(event: ProgressEvent): void {
+		if (!event.ruleId) return;
+		if (event.event === 'backend') {
+			if (event.message) this.engines.set(event.ruleId, event.message);
+			return;
+		}
+		const destination = event.event.startsWith('validation') ? 'Validator' : event.destinationId;
+		if (!destination || destination.startsWith('disk-')) return;
+		const key = `${event.ruleId}/${destination}`;
+		if (event.event.endsWith('_failed'))
+			this.failures.set(key, event.message ?? 'Connection failed.');
+		else this.failures.delete(key);
 	}
 
 	private observe(camera: CameraProgress, event: ProgressEvent): void {
@@ -207,17 +258,57 @@ export class RuntimeProgress {
 			);
 			if (stale) {
 				status.state = 'receiving';
-				status.error = `${stale.label}: processing has not completed recently.`;
+				status.error =
+					stale.waitingDelivery && now - Date.parse(stale.workerActivityAt!) < 15000
+						? `${stale.label}: waiting for AI validation or delivery to finish.`
+						: `${stale.label}: processing has not completed recently.`;
 			} else
 				status.state = rules.every((rule) => rule.lastProcessedAt) ? 'monitoring' : 'receiving';
 		}
 		return status;
 	}
 
+	private ruleLabel(id: string): string {
+		for (const camera of this.cameras.values()) {
+			const rule = camera.rules.get(id);
+			if (rule) return rule.label;
+		}
+		return id;
+	}
+
+	get issues(): string[] {
+		return Array.from(this.failures, ([key, message]) => {
+			const [rule, destination] = key.split('/');
+			return `${this.ruleLabel(rule)} · ${destination}: ${message}`;
+		});
+	}
+
+	get backends(): { label: string; engine: string }[] {
+		return Array.from(this.engines, ([rule, engine]) => ({ label: this.ruleLabel(rule), engine }));
+	}
+
+	/** Fresh capture with no completed work is a processing stall, not an offline camera. */
+	stalledDetector(now = Date.now()): string | undefined {
+		if (!this.prepared) return;
+		for (const camera of this.cameras.values()) {
+			if (camera.status.state === 'offline' || !camera.status.lastFrameAt || !camera.connectedAt)
+				continue;
+			if (now - Date.parse(camera.status.lastFrameAt) > 15000) continue;
+			for (const rule of camera.rules.values()) {
+				const last = Math.max(
+					Date.parse(rule.lastProcessedAt ?? camera.connectedAt),
+					rule.workerActivityAt ? Date.parse(rule.workerActivityAt) : 0
+				);
+				if (now - last > Math.max(120000, rule.timeout * 3)) return rule.label;
+			}
+		}
+	}
+
 	snapshot(now = Date.now()): { cameras: CameraRuntimeStatus[]; readiness: RuntimeReadiness } {
 		const cameras = Array.from(this.cameras.values(), (camera) => this.cameraStatus(camera, now));
 		if (this.preparationFailure) return { cameras, readiness: 'failed' };
 		if (
+			this.failures.size ||
 			cameras.some((camera) => camera.state === 'offline' || camera.recordingError || camera.error)
 		)
 			return { cameras, readiness: 'degraded' };

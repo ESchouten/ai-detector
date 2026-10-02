@@ -82,10 +82,13 @@ test('reviewing refuses traversal and missing recordings without creating archiv
 	assert.deepEqual(await archive.types(), ['cow']);
 });
 
-test('invalid review sidecars are visible errors instead of silently losing manual decisions', async (t) => {
+test('invalid review sidecars exclude that recording with a warning instead of losing the decision', async (t) => {
 	const { archive, event } = await fixture(t);
 	await writeFile(path.join(event, 'review.json'), JSON.stringify({ validated: 'false' }));
-	await assert.rejects(archive.locations({}));
+	const page = await archive.page({ offset: 0, limit: 24 });
+	assert.equal(page.items.length, 0);
+	assert.equal(page.warnings?.length, 1);
+	await assert.rejects(archive.readReview({ type: 'cow', archiveStage: 'approved', timestamp }));
 });
 
 async function fixture(t: TestContext) {
@@ -139,16 +142,26 @@ test('archive filters, stable pagination and identity include category and stage
 	);
 });
 
-test('only a missing archive is empty; malformed metadata remains an error', async (t) => {
+test('a damaged recording leaves other recordings readable and reports a warning; repairs are picked up', async (t) => {
 	const { root, event, archive } = await fixture(t);
 	assert.deepEqual(await new DetectionArchive(path.join(root, 'missing')).types(), []);
 	await writeFile(path.join(event, 'metadata.json'), '{broken');
-	await assert.rejects(archive.page({ offset: 0, limit: 24 }), SyntaxError);
+	const other = path.join(root, 'cow', 'approved', '2026-09-21T10-00-00.000000');
+	await mkdir(other, { recursive: true });
+	await writeFile(path.join(other, 'metadata.json'), JSON.stringify(metadata));
+	const first = await archive.page({ offset: 0, limit: 24 });
+	assert.equal(first.items.length, 1);
+	assert.equal(first.warnings?.length, 1);
+	assert.equal(first.nextOffset, 2);
 	await writeFile(
 		path.join(event, 'metadata.json'),
 		JSON.stringify({ ...metadata, duration: 'invalid' })
 	);
-	await assert.rejects(archive.page({ offset: 0, limit: 24 }), /Invalid archive metadata/);
+	assert.equal((await archive.page({ offset: 0, limit: 24 })).warnings?.length, 1);
+	await writeFile(path.join(event, 'metadata.json'), JSON.stringify(metadata));
+	const repaired = await archive.page({ offset: 0, limit: 24 });
+	assert.equal(repaired.items.length, 2);
+	assert.deepEqual(repaired.warnings, []);
 });
 
 test('publishing a new recording between offset pages does not duplicate displayed detections', async (t) => {

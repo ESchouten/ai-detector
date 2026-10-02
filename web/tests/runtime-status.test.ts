@@ -117,6 +117,69 @@ test('processing that has stopped completing is visible even while fresh camera 
 	assert.match(stale.cameras[0].error!, /processing has not completed/);
 });
 
+test('stall recovery waits for readiness and fresh frames, and does not restart an offline camera', () => {
+	const state = progress();
+	record(state, 'frame');
+	record(state, 'frame', undefined, now + 121000);
+	assert.equal(state.stalledDetector(now + 121000), undefined, 'Model preparation may be slow');
+	record(state, 'ready');
+	assert.equal(state.stalledDetector(now + 121000), 'Detector 1');
+	record(state, 'inference', undefined, now + 121000);
+	assert.equal(state.stalledDetector(now + 121000), undefined);
+	assert.equal(
+		state.stalledDetector(now + 300000),
+		undefined,
+		'No recent frames means camera recovery'
+	);
+	record(state, 'frame', undefined, now + 300000);
+	record(state, 'offline');
+	assert.equal(state.stalledDetector(now + 300000), undefined);
+});
+
+test('validator and delivery failures remain visible until that connection succeeds', () => {
+	const state = progress();
+	record(state, 'frame');
+	record(state, 'inference');
+	record(state, 'backend', 'ENGINE on cuda:0');
+	record(state, 'validation_failed', 'Validator unavailable');
+	record(state, 'delivery_failed', 'Delivery unavailable', now, { destinationId: 'telegram-1' });
+	assert.equal(state.snapshot(now).readiness, 'degraded');
+	assert.equal(state.issues.length, 2);
+	assert.deepEqual(state.backends, [{ label: 'Detector 1', engine: 'ENGINE on cuda:0' }]);
+	record(state, 'validation');
+	assert.equal(state.issues.length, 1);
+	record(state, 'delivery', undefined, now, { destinationId: 'telegram-1' });
+	assert.equal(state.snapshot(now).readiness, 'monitoring');
+});
+
+test('delivery backpressure keeps the worker alive without pretending inference completed', () => {
+	const state = progress();
+	record(state, 'ready');
+	record(state, 'frame');
+	record(state, 'inference');
+	record(state, 'waiting_delivery', undefined, now + 180000);
+	record(state, 'frame', undefined, now + 180000);
+	assert.equal(state.stalledDetector(now + 180000), undefined);
+	const status = state.snapshot(now + 180000).cameras[0];
+	assert.match(status.error!, /waiting for AI validation or delivery/);
+	assert.equal(Date.parse(status.lastProcessedAt!), now);
+	record(state, 'processing_resumed', undefined, now + 181000);
+	assert.equal(state.stalledDetector(now + 182000), undefined);
+	assert.match(state.snapshot(now + 182000).cameras[0].error!, /processing has not completed/);
+	record(state, 'frame', undefined, now + 303000);
+	assert.equal(state.stalledDetector(now + 303000), 'Detector 1');
+});
+
+test('a lost queue-wait signal cannot suppress stall recovery indefinitely', () => {
+	const state = progress();
+	record(state, 'ready');
+	record(state, 'frame');
+	record(state, 'waiting_delivery');
+	record(state, 'waiting_delivery', undefined, now + 180000, { ruleId: 'detector-99' });
+	record(state, 'frame', undefined, now + 180000);
+	assert.equal(state.stalledDetector(now + 180000), 'Detector 1');
+});
+
 test('unsupported, invalid and unknown-camera status records cannot create monitoring success', () => {
 	const state = progress();
 	for (const value of [

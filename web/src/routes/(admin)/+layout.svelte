@@ -66,6 +66,8 @@
 		advanced: 'Advanced',
 		setup: 'Settings',
 		logs: 'Logs',
+		devices: 'Connected devices',
+		storage: 'Storage',
 		detectors: 'Detectors',
 		add: 'Settings'
 	};

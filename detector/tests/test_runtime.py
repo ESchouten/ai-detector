@@ -17,6 +17,7 @@ from aidetector.application.ports import (
     SourceError,
     ValidationUnavailable,
 )
+from aidetector.application.status import ignore_status
 from aidetector.domain.models import Frame
 from aidetector.domain.policy import Cooldown, ExportPolicy
 from aidetector.runtime import DetectorWorker, run_detectors
@@ -73,13 +74,14 @@ class Exporter:
         self.events.append(result.event)
 
 
-def worker(source, exporter, pending=1, name="detector"):
+def worker(source, exporter, pending=1, name="detector", report_status=ignore_status):
     return DetectorWorker(
         source,
         DetectionPipeline(),
         EventDelivery((Destination("test", exporter, ExportPolicy()),), Cooldown()),
         pending_events=pending,
         name=name,
+        report_status=report_status,
     )
 
 
@@ -122,20 +124,30 @@ def test_supervisor_stops_and_joins_health_monitor_after_finite_inputs_end():
 
 def test_delivery_queue_applies_backpressure_and_stop_drains_accepted_work():
     release = Event()
+    waiting = Event()
+    observations = []
+
+    def report(status):
+        observations.append(status.kind)
+        if status.kind == "waiting_delivery":
+            waiting.set()
+
     source, exporter = FiniteSource(100), Exporter(wait=release)
-    detector = worker(source, exporter, pending=1)
+    detector = worker(source, exporter, pending=1, report_status=report)
     with ThreadPoolExecutor(max_workers=1) as pool:
         task = pool.submit(detector.run)
         try:
             assert exporter.entered.wait(2)
-            assert source.third_frame.wait(2)
-            assert not source.fourth_frame.wait(0.05)
+            assert waiting.wait(2)
+            assert source.read == 3
             detector.stop()
         finally:
             release.set()
         stats = task.result(timeout=5)
     assert stats.events == 3
     assert len(exporter.events) == 3
+    assert observations[0] == "waiting_delivery"
+    assert observations[-1] == "processing_resumed"
 
 
 def test_expected_delivery_failures_are_counted_and_other_events_continue():

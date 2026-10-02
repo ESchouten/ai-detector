@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { once } from 'node:events';
 import path from 'node:path';
 const file = process.argv[process.argv.indexOf('-i') + 1];
@@ -10,6 +10,7 @@ process.on('SIGTERM', () => {
 	if (!settings.ignoreTerm) process.exit(0);
 });
 writeFileSync(path.join(directory, 'pid'), String(process.pid));
+appendFileSync(path.join(directory, 'starts'), `${process.pid}\n`);
 setInterval(() => {}, 1000);
 const count = settings.flood ? 1500 : 1;
 for (let number = 1; number <= count; number++) {

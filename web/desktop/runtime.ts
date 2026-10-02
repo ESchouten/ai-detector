@@ -11,9 +11,9 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 	if (process.argv.includes('--background')) process.env.OPEN_BROWSER = 'false';
 	process.env.AIDETECTOR_DATA_DIR = dataDirectory(true);
 	const instance = new DesktopInstance(process.env.AIDETECTOR_DATA_DIR);
-	const port = Number(process.env.PORT ?? 8765);
+	const port = Number(process.env.PORT ?? 80);
 	const host = process.env.HOST || '0.0.0.0';
-	const browserUrl = `http://127.0.0.1:${port}/`;
+	const browserUrl = new URL(`http://127.0.0.1:${port}/`).href;
 	if (process.argv.includes('--quit')) process.exit((await instance.existing(port, true)) ? 0 : 1);
 	let handler: Handler | undefined;
 	let closeHost: (() => void) | undefined;

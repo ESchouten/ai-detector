@@ -105,6 +105,18 @@ test('import does not overwrite an AI connection saved before adding cameras', a
 
 test('imports legacy settings and original recordings into setup without starting monitoring', async (t) => {
 	const { source, destination, config, app, importer, store, calls } = await fixture(t);
+	const localDevice = {
+		id: 'current',
+		name: 'Tablet',
+		hash: 'current-hash',
+		created: 1,
+		expires: 9999999999999
+	};
+	await store.updateDevices(() => [localDevice]);
+	await writeJson(path.join(source, 'app.json'), {
+		...app,
+		devices: [{ ...localDevice, id: 'previous', hash: 'old-hash' }]
+	});
 	const original = await readFile(path.join(source, 'config.json'));
 	const summary = await importer.inspect(source);
 	assert.deepEqual([summary.cameras, summary.detectors, summary.recordings], [1, 1, 1]);
@@ -114,6 +126,7 @@ test('imports legacy settings and original recordings into setup without startin
 	assert.deepEqual(calls, []);
 	await finish(importer, summary.id);
 	const saved = await store.read();
+	assert.deepEqual(saved.app.devices, [localDevice]);
 	assert.equal(saved.app.streams[0].label, 'Barn');
 	assert.ok(saved.app.streams[0].id);
 	assert.deepEqual(saved.app.detectors, app.detectors);

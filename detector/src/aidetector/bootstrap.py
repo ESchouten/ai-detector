@@ -233,6 +233,7 @@ def run_application(
                 ),
                 cooldown,
                 validator,
+                rule_status,
             )
             logger.info(
                 "Detector-%d ready: validation %s; destinations: %s",
@@ -248,6 +249,7 @@ def run_application(
                     delivery,
                     pending_events=settings.pending_events,
                     name=f"detector-{index}",
+                    report_status=rule_status,
                 )
             )
         health = Healthcheck(config.health) if config.health is not None else None

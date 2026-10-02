@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
+	import {
+		readDetectorChoices,
+		writeDetectorChoices,
+		type DetectorChoices
+	} from '$lib/detector-draft-storage';
 	import { toast } from 'svelte-sonner';
 	import { Plus } from '@lucide/svelte';
 	import CameraSelection from '$lib/components/camera-selection.svelte';
@@ -97,6 +102,68 @@
 		matchesPreset ? presets.find((item) => item.id === preset) : undefined
 	);
 	const selectedChannels = $derived(detector.exporters.telegram ?? []);
+	const draftKey = untrack(() => `detector-draft:${originalLabel || 'new'}`);
+	let draftLoaded = $state(false);
+	let restoredDraft = $state(false);
+	let initialChoices = '';
+	function draftChoices(): DetectorChoices {
+		// Keep choices only; camera passwords and connection keys stay in server settings.
+		return {
+			label,
+			preset,
+			cameras: cameras
+				.filter((camera) => detector.detection.source.includes(camera.source))
+				.map((camera) => camera.id!),
+			telegrams: telegrams
+				.filter((channel) => selectedChannels.some((item) => sameTelegram(item, channel)))
+				.map((channel) => channel.label),
+			connection: llmLabel,
+			validatorEnabled: !!detector.vlm?.some((verifier) => verifier.key)
+		};
+	}
+
+	onMount(() => {
+		initialChoices = JSON.stringify(draftChoices());
+		async function restore() {
+			const draft = readDetectorChoices(draftKey);
+			try {
+				if (draft) {
+					suggestValidator = false;
+					if (draft.preset && draft.preset !== initialPreset) await loadPreset(draft.preset);
+					label = draft.label;
+					detector.detection.source = cameras
+						.filter((camera) => draft.cameras.includes(camera.id!))
+						.map((camera) => camera.source);
+					for (const channel of telegrams)
+						detector.exporters.telegram = selectTelegram(
+							detector.exporters.telegram ?? [],
+							channel,
+							draft.telegrams.includes(channel.label)
+						);
+					keepDelivery = true;
+					const connection = llms.find((item) => item.label === draft.connection);
+					if (connection) await selectConnection(connection);
+					if (!draft.validatorEnabled)
+						for (const verifier of detector.vlm ?? []) verifier.key = null;
+					restoredDraft = true;
+				}
+			} catch {
+				writeDetectorChoices(draftKey, null);
+			} finally {
+				draftLoaded = true;
+			}
+		}
+		void restore();
+	});
+	$effect(() => {
+		if (!draftLoaded) return;
+		const choices = draftChoices();
+		writeDetectorChoices(draftKey, JSON.stringify(choices) === initialChoices ? null : choices);
+	});
+	function forgetDraft() {
+		draftLoaded = false;
+		writeDetectorChoices(draftKey, null);
+	}
 
 	function showError(cause: unknown, fallback: string) {
 		error = errorMessage(cause, fallback);
@@ -192,6 +259,7 @@
 				)
 			}).updates(getDetectors(), getCameras());
 			toast.success(`Detector '${savedLabel}' saved.`);
+			forgetDraft();
 			await onDone();
 		} catch (cause) {
 			showError(cause, 'The detector could not be saved.');
@@ -205,6 +273,7 @@
 		error = '';
 		try {
 			await deleteDetector({ label: originalLabel }).updates(getDetectors(), getCameras());
+			forgetDraft();
 			await onDone();
 		} catch (cause) {
 			showError(cause, 'The detector could not be deleted.');
@@ -225,6 +294,9 @@
 			</p>
 		</div>
 	</header>
+	{#if restoredDraft}<p role="status" class="text-sm text-muted-foreground">
+			Your unsaved detector choices were restored. Review them before saving.
+		</p>{/if}
 	{#if presetWarning}
 		<Alert.Root variant="destructive">
 			<Alert.Title>Monitoring presets are unavailable</Alert.Title>
@@ -339,8 +411,14 @@
 				<Button type="submit" disabled={pending || !detector.detection.source.length}
 					>{pending ? 'Saving detector…' : 'Save detector'}</Button
 				>
-				{#if onCancel}<Button type="button" onclick={onCancel} disabled={pending} variant="outline"
-						>Cancel</Button
+				{#if onCancel}<Button
+						type="button"
+						onclick={async () => {
+							forgetDraft();
+							await onCancel?.();
+						}}
+						disabled={pending}
+						variant="outline">Cancel</Button
 					>{/if}
 			</div>
 		</div>

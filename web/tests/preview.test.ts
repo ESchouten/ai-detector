@@ -5,12 +5,81 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { setTimeout } from 'node:timers/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import ffmpeg from 'ffmpeg-static';
 import { parseMultipart } from '@remix-run/multipart-parser';
 import { createPreviewStream } from '../src/lib/server/stream-preview.ts';
+import { PreviewPool } from '../src/lib/server/preview-pool.ts';
 import { sanitizeTextForLogs } from '../src/lib/server/runtime-logs.ts';
 
 const executable = fileURLToPath(new URL('./fixtures/preview.mjs', import.meta.url));
 const posixOnly = { skip: process.platform === 'win32' };
+
+test(
+	'two viewers share one preview process; it closes only after the last viewer leaves',
+	posixOnly,
+	async (t) => {
+		const { directory, source } = await fixture(t);
+		const pool = new PreviewPool();
+		t.after(() => pool.close());
+		const first = pool.open(source, executable, new AbortController().signal).getReader();
+		const second = pool.open(source, executable, new AbortController().signal).getReader();
+		assert.deepEqual((await first.read()).value, (await second.read()).value);
+		const pid = Number(await readStartedFile(path.join(directory, 'pid')));
+		assert.equal(await readFile(path.join(directory, 'starts'), 'utf8'), `${pid}\n`);
+		await first.cancel();
+		assert.doesNotThrow(() => process.kill(pid, 0));
+		await second.cancel();
+		await waitForExit(pid);
+	}
+);
+
+test('real camera previews sample frames without filling timestamp gaps with duplicates', async (t) => {
+	const ffmpegPath = ffmpeg;
+	assert.ok(ffmpegPath);
+	const directory = await mkdtemp(path.join(tmpdir(), 'detector-preview-timestamps-'));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	for (const gap of [0, 60]) {
+		await t.test(`${gap}-second gap`, async (t) => {
+			const source = path.join(directory, `camera-${gap}.nut`);
+			await promisify(execFile)(ffmpegPath, [
+				'-hide_banner',
+				'-loglevel',
+				'error',
+				'-f',
+				'lavfi',
+				'-i',
+				'testsrc2=size=160x120:rate=16',
+				'-vf',
+				`setpts='PTS+gte(N,16)*${gap}/TB'`,
+				'-frames:v',
+				'32',
+				'-fps_mode',
+				'passthrough',
+				'-c:v',
+				'ffv1',
+				source
+			]);
+			const abort = new AbortController();
+			t.after(() => abort.abort());
+			const reader = createPreviewStream(source, ffmpegPath, abort.signal).getReader();
+			let pictures = 0;
+			await assert.rejects(async () => {
+				while (true) {
+					const { value, done } = await reader.read();
+					if (done) break;
+					const jpeg = picture(value);
+					assert.deepEqual([...jpeg.subarray(0, 2)], [0xff, 0xd8]);
+					pictures++;
+				}
+			}, /Live stream ended/);
+			assert.ok(pictures > 0, 'The live preview must produce pictures');
+			// The latest-picture stream may drop frames, but must never synthesize extras.
+			assert.ok(pictures <= 16, `Expected at most 16 sampled pictures, received ${pictures}`);
+		});
+	}
+});
 
 function picture(chunk: Uint8Array | undefined): Uint8Array {
 	assert.ok(chunk);

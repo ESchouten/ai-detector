@@ -7,6 +7,7 @@ export async function backupSettings(
 ): Promise<Response> {
 	// Read both documents through the settings queue, so a save cannot split the snapshot.
 	const { config, app } = await configuration.read();
+	delete app.devices;
 	return zipDownload(
 		`AI-Detector-settings-${new Date().toISOString().slice(0, 10)}.zip`,
 		[
@@ -24,7 +25,7 @@ Use existing setup and select the extracted folder. Review the imported setup
 before starting monitoring. Existing setups are never overwritten by import.
 
 Recordings, downloaded models, local video sources, custom preset files and
-computer startup preferences are not included. Keep any local model or video
+computer startup preferences and connected-device access are not included. Keep any local model or video
 files referenced by config.json alongside this backup, at their original
 relative paths, or update those paths before importing on another computer.
 `

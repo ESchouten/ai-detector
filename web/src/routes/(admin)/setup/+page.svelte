@@ -196,8 +196,13 @@
 		</header>
 		<SetupReview configured={detectors.length > 0} />
 	{/if}
-	{#if !importing && !editing && (cameras.length || detectors.length)}
+	{#if !importing && !editing}
 		<Separator />
-		<div><SettingsBackup /></div>
+		<div class="flex flex-wrap gap-3">
+			{#if cameras.length || detectors.length}<SettingsBackup />{/if}<Button
+				href={resolve('/devices')}
+				variant="outline">Connected devices</Button
+			><Button href={resolve('/storage')} variant="outline">Storage</Button>
+		</div>
 	{/if}
 </section>

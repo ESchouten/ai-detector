@@ -40,6 +40,33 @@ class InstallerTest(unittest.TestCase):
         self.assertIn("Architecture: amd64", (root / "DEBIAN/control").read_text())
         self.assertIn("Version: 1.2.3", (root / "DEBIAN/control").read_text())
         self.assertIn("zenity", (root / "DEBIAN/control").read_text())
+        self.assertIn("libcap2-bin", (root / "DEBIAN/control").read_text())
+        postinst = root / "DEBIAN/postinst"
+        self.assertIn("cap_net_bind_service=+ep", postinst.read_text())
+        self.assertIn("'/opt/ai-detector/AI Detector'", postinst.read_text())
+        if os.name != "nt":
+            self.assertTrue(postinst.stat().st_mode & stat.S_IXUSR)
+            commands = self.root / "commands"
+            commands.mkdir()
+            calls = self.root / "capability.json"
+            setter = commands / "setcap"
+            setter.write_text(
+                f"#!{sys.executable}\nimport json, sys\n"
+                f"from pathlib import Path\nPath({str(calls)!r}).write_text(json.dumps(sys.argv[1:]))\n"
+            )
+            setter.chmod(0o755)
+            subprocess.run(
+                [str(postinst), "configure"],
+                env={
+                    **os.environ,
+                    "PATH": str(commands) + os.pathsep + os.environ["PATH"],
+                },
+                check=True,
+            )
+            self.assertEqual(
+                json.loads(calls.read_text()),
+                ["cap_net_bind_service=+ep", "/opt/ai-detector/AI Detector"],
+            )
         prerm = root / "DEBIAN/prerm"
         self.assertEqual(
             prerm.read_bytes(), (Path(__file__).parent / "linux/prerm").read_bytes()

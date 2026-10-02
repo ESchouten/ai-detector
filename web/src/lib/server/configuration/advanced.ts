@@ -6,7 +6,9 @@ import { llmConnection, type Configuration } from '../../schema.ts';
 import { saveLlm, deleteLlm } from './llms.ts';
 
 export function settingsRevision(document: Configuration): string {
-	return createHash('sha256').update(JSON.stringify(document)).digest('hex');
+	return createHash('sha256')
+		.update(JSON.stringify({ ...document, app: { ...document.app, devices: undefined } }))
+		.digest('hex');
 }
 
 export function replaceDetectorConfig(document: Configuration, input: unknown): void {

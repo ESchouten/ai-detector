@@ -4,9 +4,14 @@ import { DATA_DIRECTORY, EXECUTABLE_DIRECTORY, PACKAGED } from './application-pa
 import { readJson } from './json-file';
 import { ManagedDetector } from './managed-detector';
 import type { RuntimeStatus } from '../runtime';
+import { diskSpace } from './storage';
+import { recordings } from './recordings';
+import { webLog } from './web-log';
 
 let detector: ManagedDetector | null = null;
 let initialization: Promise<void> | undefined;
+let storageCheckedAt = 0;
+let storageWarning: string | undefined;
 
 export function initializeDetector(prepareConfiguration: () => Promise<unknown>): Promise<void> {
 	return (initialization ??= initialize(prepareConfiguration));
@@ -52,17 +57,27 @@ export function managedDetector(): ManagedDetector | null {
 
 export async function detectorStatus(): Promise<RuntimeStatus> {
 	await detector?.refreshMetadata();
-	return (
-		detector?.status() ?? {
-			managed: false,
-			mode: 'auto',
-			selected: null,
-			phase: 'stopped',
-			message:
-				'This web server uses a separately managed detector. Download the complete application to start and stop it here.',
-			dataDirectory: DATA_DIRECTORY,
-			readiness: 'idle',
-			cameras: []
+	if (Date.now() - storageCheckedAt > 30000) {
+		storageCheckedAt = Date.now();
+		try {
+			const space = await diskSpace(recordings.directory);
+			storageWarning = space.low
+				? `Storage is almost full (${(space.available / 1024 ** 3).toFixed(1)} GB free). Free space in Settings → Storage so recordings can continue.`
+				: undefined;
+		} catch (error) {
+			webLog.warn('Could not check recording storage', error);
 		}
-	);
+	}
+	const status: RuntimeStatus = detector?.status() ?? {
+		managed: false,
+		mode: 'auto',
+		selected: null,
+		phase: 'stopped',
+		message:
+			'This web server uses a separately managed detector. Download the complete application to start and stop it here.',
+		dataDirectory: DATA_DIRECTORY,
+		readiness: 'idle',
+		cameras: []
+	};
+	return { ...status, storageWarning };
 }

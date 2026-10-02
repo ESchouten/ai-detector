@@ -245,3 +245,9 @@ Desktop users receive the interpreter in the application update. The downloadabl
 The container workflow no longer builds the separate JetPack 6 variant. Previously published images are not deleted or retagged, and the legacy `example/compose.jetson.yml` remains available for existing installations. Keep the existing image on a JetPack 6 host; do not point it at the generic `latest` image.
 
 New Jetson work targets JetPack 7.2 and Python 3.12. A supported JetPack 7.2 detector image still needs validation on real Orin hardware. The current Ultralytics generic ARM64 image is not a verified replacement: its [Jetson guide](https://docs.ultralytics.com/guides/nvidia-jetson/) calls for separate Orin/JetPack 7.2 validation and documents that its bundled TensorRT does not support JetPack. Before migrating a farm installation, qualify model loading/export, GPU inference, multiple streams and restart on that hardware, and back up the mounted settings and recordings.
+
+## Operational status additions
+
+Launcher status records now include `backend`, `validation`, `validation_failed`, `delivery` and `delivery_failed`. Delivery records carry the same detector/destination IDs as recording outcomes; disk delivery can emit both recording and delivery records. Consumers should dispatch by event kind, not positional order. Configuration, presets, archive metadata and inference decisions remain unchanged. The desktop supervisor can restart a stalled processing worker while respecting explicit pause and application shutdown.
+
+`waiting_delivery` and `processing_resumed` identify intentional queue backpressure. Queue waits keep emitting a throttled, rule-scoped observation, so healthy slow validation/export does not trigger inference-stall recovery. The launcher retains separate frame/inference timestamps and reports the wait; absent observations still expire. Configuration, event acceptance and queue/drain behavior are unchanged.

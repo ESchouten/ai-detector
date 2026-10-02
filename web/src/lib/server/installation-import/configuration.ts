@@ -59,6 +59,7 @@ export async function readLegacyConfiguration(source: string): Promise<{
 		upgradeVerificationKeys(input),
 		await readDocument(path.join(source, 'app.json'), true)
 	);
+	delete document.app.devices;
 	const files = new Map<string, ReferencedFile>();
 	const references = new Map<string, string>();
 	async function relocate(value: string, model = false): Promise<string> {

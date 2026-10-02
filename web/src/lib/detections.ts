@@ -82,6 +82,7 @@ export interface DetectionPage {
 	items: Detection[];
 	hasMore: boolean;
 	nextOffset: number;
+	warnings?: string[];
 }
 
 export interface DetectionFilter {

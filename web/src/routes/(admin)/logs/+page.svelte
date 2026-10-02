@@ -67,12 +67,11 @@
 			</p>
 		</div>
 		<Button
-			href={resolve('/logs/output?download')}
-			download="ai-detector.log"
+			href={resolve('/logs/diagnostics')}
+			download="AI-Detector-diagnostics.zip"
 			variant="outline"
-			disabled={!text}
 		>
-			<Download data-icon="inline-start" aria-hidden="true" />Download log
+			<Download data-icon="inline-start" aria-hidden="true" />Download diagnostics
 		</Button>
 	</div>
 	<Field.Group>

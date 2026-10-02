@@ -117,14 +117,23 @@ export const llmConnection = v.object({
 		)
 	)
 });
+const pairedDevice = v.object({
+	id: v.string(),
+	name: v.string(),
+	hash: v.string(),
+	created: v.number(),
+	expires: v.number()
+});
 export const appSchema = v.object({
 	streams: v.optional(v.array(streamMeta), []),
 	telegrams: v.optional(v.array(telegramMeta), []),
 	llms: v.optional(v.array(llmConnection), []),
-	detectors: v.optional(v.array(detectorMeta), [])
+	detectors: v.optional(v.array(detectorMeta), []),
+	devices: v.optional(v.array(pairedDevice))
 });
 
 export type AppConfig = v.InferOutput<typeof appSchema>;
+export type PairedDevice = v.InferOutput<typeof pairedDevice>;
 export type DetectorMeta = v.InferOutput<typeof detectorMeta>;
 export type TelegramMeta = v.InferOutput<typeof telegramMeta>;
 export type LlmConnection = v.InferOutput<typeof llmConnection>;

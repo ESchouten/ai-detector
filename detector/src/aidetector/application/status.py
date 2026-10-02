@@ -19,6 +19,13 @@ class StatusEvent:
         "offline",
         "recording_failed",
         "notice",
+        "backend",
+        "validation",
+        "validation_failed",
+        "delivery",
+        "delivery_failed",
+        "waiting_delivery",
+        "processing_resumed",
     ]
     source: str | None = None
     message: str | None = None

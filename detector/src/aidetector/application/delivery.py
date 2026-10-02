@@ -8,6 +8,7 @@ from aidetector.application.ports import (
     EventValidator,
     ValidationUnavailable,
 )
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.domain.models import (
     DetectionEvent,
     EventResult,
@@ -51,10 +52,12 @@ class EventDelivery:
         destinations: tuple[Destination, ...],
         cooldown: Cooldown,
         validator: EventValidator | None = None,
+        report_status: ReportStatus = ignore_status,
     ):
         self.destinations = destinations
         self.cooldown = cooldown
         self.validator = validator
+        self.report_status = report_status
 
     def deliver(self, event: DetectionEvent) -> DeliveryReport:
         logger.info(
@@ -67,20 +70,9 @@ class EventDelivery:
             logger.info("Event skipped: cooldown is still active")
             return DeliveryReport(None)
 
-        try:
-            if self.validator is not None:
-                logger.info("Validating event")
-            validation = (
-                self.validator.validate(event)
-                if self.validator is not None
-                else ValidationResult(ValidationStatus.UNVALIDATED)
-            )
-        except ValidationUnavailable as error:
-            validation = ValidationResult(ValidationStatus.FAILED, str(error))
-            logger.error("Event validation unavailable: %s", error)
-
-        result = EventResult(event, validation, uuid4().hex)
+        validation = self._validate(event)
         logger.info("Event validation: %s", validation.status.value)
+        result = EventResult(event, validation, uuid4().hex)
         self.cooldown.record(result)
         delivered: list[str] = []
         failures: list[DeliveryFailure] = []
@@ -96,10 +88,23 @@ class EventDelivery:
                 logger.info("Exporting event to %s", destination.name)
                 destination.exporter.export(result)
                 delivered.append(destination.name)
+                self.report_status(
+                    StatusEvent(
+                        "delivery", event.source, destination_id=destination.name
+                    )
+                )
                 logger.info("Event delivered to %s", destination.name)
             except DeliveryError as error:
                 failures.append(DeliveryFailure(destination.name, str(error)))
                 logger.error("Delivery to %s failed: %s", destination.name, error)
+                self.report_status(
+                    StatusEvent(
+                        "delivery_failed",
+                        event.source,
+                        message="Delivery failed. Check the connection and see Logs for details.",
+                        destination_id=destination.name,
+                    )
+                )
             except Exception as error:
                 # Try independent destinations before the supervisor stops this worker.
                 logger.exception("Unexpected delivery failure at %s", destination.name)
@@ -108,3 +113,24 @@ class EventDelivery:
         if first_unexpected is not None:
             raise first_unexpected
         return DeliveryReport(result, tuple(delivered), tuple(failures))
+
+    def _validate(self, event: DetectionEvent) -> ValidationResult:
+        if self.validator is None:
+            return ValidationResult(ValidationStatus.UNVALIDATED)
+        logger.info("Validating event")
+        try:
+            validation = self.validator.validate(event)
+        except ValidationUnavailable as error:
+            validation = ValidationResult(ValidationStatus.FAILED, str(error))
+            logger.error("Event validation unavailable: %s", error)
+        failed = validation.status == ValidationStatus.FAILED
+        self.report_status(
+            StatusEvent(
+                "validation_failed" if failed else "validation",
+                event.source,
+                message="Validator unavailable. Check the connection in Validator and see Logs for details."
+                if failed
+                else None,
+            )
+        )
+        return validation

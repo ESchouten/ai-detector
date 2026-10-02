@@ -300,10 +300,14 @@ test('settings backup preserves cameras, detector options and alerts, and import
 	});
 	const before = await readFile(files.config);
 	const expected = await store.read();
+	await store.updateDevices(() => [
+		{ id: 'local-device', name: 'Phone', hash: 'device-hash', created: 1, expires: 9999999999999 }
+	]);
 	const zipped = await unzip(await backupSettings(store, new Request('http://localhost/backup')));
 	assert.deepEqual(Object.keys(zipped).sort(), ['README.txt', 'app.json', 'config.json']);
 	assert.deepEqual(JSON.parse(Buffer.from(zipped['config.json']).toString()), expected.config);
 	assert.deepEqual(JSON.parse(Buffer.from(zipped['app.json']).toString()), expected.app);
+	assert.equal((await store.readDevices()).length, 1);
 	assert.match(Buffer.from(zipped['README.txt']).toString(), /Keep this ZIP private/);
 	assert.deepEqual(await readFile(files.config), before);
 	const extracted = path.join(directory, 'extracted');

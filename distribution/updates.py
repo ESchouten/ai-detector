@@ -10,6 +10,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 SPARKLE = "http://www.andymatuschak.org/xml-namespaces/sparkle"
@@ -71,13 +72,21 @@ def prepare_macos(feed: bytes, folder: Path, version: str) -> None:
     items = mac_items(feed)
     newer_than(version, [old for old, _ in items])
     available: set[str] = set()
-    for _, enclosure in items:
-        url = enclosure.attrib["url"]
-        name = Path(urllib.parse.unquote(urllib.parse.urlparse(url).path)).name
-        if download(url, folder / name):
-            available.add(url)
-        if len(available) == 2:
-            break
+    urls = list(dict.fromkeys(enclosure.attrib["url"] for _, enclosure in items))
+    # Independent release archives can download together; keep at most two delta bases.
+    with ThreadPoolExecutor(max_workers=2) as downloads:
+        while urls and len(available) < 2:
+            batch, urls = urls[: 2 - len(available)], urls[2 - len(available) :]
+            pending = {
+                url: downloads.submit(
+                    download,
+                    url,
+                    folder
+                    / Path(urllib.parse.unquote(urllib.parse.urlparse(url).path)).name,
+                )
+                for url in batch
+            }
+            available.update(url for url, future in pending.items() if future.result())
 
     # This is a build input. Sparkle generates and signs the published feed later.
     # Do not carry deleted or unstaged archives into that new feed.

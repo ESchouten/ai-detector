@@ -63,6 +63,33 @@ def test_event_identity_is_shared_across_destinations_and_unique_per_delivery():
     assert UUID(disk.results[0].id).version == 4
 
 
+def test_connection_failures_and_recovery_report_status_without_exposing_credentials():
+    exporter = RecordingExporter(DeliveryError("secret connection error"))
+    validator = Validator(ValidationUnavailable("secret validation error"))
+    statuses = []
+    delivery = EventDelivery(
+        (
+            Destination(
+                "telegram-1", exporter, ExportPolicy(archive_failed_validation=True)
+            ),
+        ),
+        Cooldown(),
+        validator,
+        statuses.append,
+    )
+    delivery.deliver(event())
+    assert [status.kind for status in statuses] == [
+        "validation_failed",
+        "delivery_failed",
+    ]
+    assert all("secret" not in (status.message or "") for status in statuses)
+    statuses.clear()
+    validator.result = ValidationStatus.APPROVED
+    exporter.error = None
+    delivery.deliver(event(1))
+    assert [status.kind for status in statuses] == ["validation", "delivery"]
+
+
 def test_optional_validation_exports_unvalidated_event(caplog):
     caplog.set_level("INFO")
     exporter = RecordingExporter()

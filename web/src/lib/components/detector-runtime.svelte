@@ -158,9 +158,15 @@
 			</Card.Description>
 		{/if}
 	</Card.Header>
-	{#if !compact || runtime.notice || requestError || needsAttention}
+	{#if !compact || runtime.notice || runtime.storageWarning || requestError || needsAttention}
 		<Card.Content class={compact ? 'flex flex-col gap-3 px-0' : 'flex flex-col gap-4'}>
 			{#if runtime.notice}<p class="text-sm text-muted-foreground">{runtime.notice}</p>{/if}
+			{#if runtime.storageWarning}<p role="status" class="text-sm text-destructive">
+					{runtime.storageWarning}
+				</p>{/if}
+			{#each runtime.issues ?? [] as issue, index (index)}
+				<p role="status" class="text-sm text-destructive">{issue}</p>
+			{/each}
 			{#if requestError}
 				<Alert.Root variant="destructive">
 					<Alert.Title>Monitoring request failed</Alert.Title>
@@ -181,6 +187,9 @@
 				<details bind:open={troubleshootingOpen}>
 					<summary class="cursor-pointer text-sm text-muted-foreground">Troubleshooting</summary>
 					<div class="mt-4 flex flex-col gap-4">
+						{#each runtime.backends ?? [] as backend, index (index)}
+							<p class="text-sm text-muted-foreground">{backend.label}: {backend.engine}</p>
+						{/each}
 						{#if runtime.cameras.length && runtime.readiness !== 'idle'}
 							<div class="flex flex-col gap-3">
 								{#each runtime.cameras as camera, index (camera.id)}

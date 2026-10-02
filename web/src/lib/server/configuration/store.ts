@@ -1,12 +1,16 @@
-import type * as v from 'valibot';
+import * as v from 'valibot';
 import { isDeepStrictEqual } from 'node:util';
+import { chmod, copyFile } from 'node:fs/promises';
 import {
 	DEFAULT_SCHEMA_URL,
+	appSchema,
 	type Config,
 	type Configuration,
-	type LlmConnection
+	type LlmConnection,
+	type PairedDevice
 } from '../../schema.ts';
 import { readJson, writeJson } from '../json-file.ts';
+import { webLog } from '../web-log.ts';
 import {
 	alertsInput,
 	ConfigurationError,
@@ -34,10 +38,14 @@ interface Runtime {
 	fail(error: unknown): void;
 }
 
+const missingFile = Symbol('missing settings file');
+type RecoverySettings = { config: Config; app?: Configuration['app'] };
+
 export class ConfigurationStore {
 	private pending: Promise<unknown> = Promise.resolve();
 	private files: { config: string; app: string };
 	private runtime: () => Runtime | null;
+	private recoveryRevision = '';
 
 	constructor(files: { config: string; app: string }, runtime: () => Runtime | null = () => null) {
 		this.files = files;
@@ -52,13 +60,26 @@ export class ConfigurationStore {
 
 	private async load(): Promise<Configuration> {
 		const [config, app] = await Promise.all([
-			readJson<unknown>(this.files.config, { $schema: DEFAULT_SCHEMA_URL, detectors: [] }),
-			readJson<unknown>(this.files.app, {})
+			readJson<unknown>(this.files.config, missingFile),
+			readJson<unknown>(this.files.app, missingFile)
 		]);
+		if (config === missingFile || app === missingFile) {
+			const saved = await readJson<RecoverySettings>(`${this.files.config}.last-valid`);
+			if (saved && (config === missingFile || saved.app !== undefined))
+				throw new ConfigurationError(
+					'A settings file is missing. Restore the last valid settings to continue.'
+				);
+		}
 		try {
-			const upgraded = upgradeVerificationKeys(config);
-			const document = identifyCameras(normalizeConfiguration(upgraded, app));
-			if (upgraded !== config) await writeConfiguration(this.files, document);
+			const input =
+				config === missingFile ? { $schema: DEFAULT_SCHEMA_URL, detectors: [] } : config;
+			const upgraded = upgradeVerificationKeys(input);
+			const document = identifyCameras(
+				normalizeConfiguration(upgraded, app === missingFile ? {} : app)
+			);
+			if (upgraded !== input) await writeConfiguration(this.files, document);
+			if (config !== missingFile)
+				await this.remember(document, app !== missingFile || upgraded !== input);
 			return document;
 		} catch (error) {
 			if (error instanceof ConfigurationError)
@@ -67,8 +88,82 @@ export class ConfigurationStore {
 		}
 	}
 
+	private async remember(document: Configuration, appPresent = true): Promise<void> {
+		const revision = `${appPresent}:${settingsRevision(document)}`;
+		if (revision === this.recoveryRevision) return;
+		try {
+			await writeJson(`${this.files.config}.last-valid`, {
+				...document,
+				app: appPresent ? { ...document.app, devices: undefined } : undefined
+			});
+			this.recoveryRevision = revision;
+		} catch (error) {
+			// Read-only or full storage must not make valid settings unreadable.
+			webLog.error('Could not save the settings recovery snapshot', error);
+		}
+	}
+
+	async recoveryAvailable(): Promise<boolean> {
+		const saved = await readJson<RecoverySettings>(`${this.files.config}.last-valid`);
+		if (!saved) return false;
+		normalizeConfiguration(saved.config, saved.app === undefined ? {} : saved.app);
+		return true;
+	}
+
+	restore(): Promise<void> {
+		return this.enqueue(async () => {
+			const saved = await readJson<RecoverySettings>(`${this.files.config}.last-valid`);
+			if (!saved) throw new ConfigurationError('No previous valid settings are available.');
+			const document = identifyCameras(
+				normalizeConfiguration(saved.config, saved.app === undefined ? {} : saved.app)
+			);
+			// Recover settings without restoring access for a previously revoked browser.
+			try {
+				document.app.devices = (await this.loadDeviceSettings()).devices;
+			} catch (error) {
+				if (!(error instanceof SyntaxError || error instanceof v.ValiError)) throw error;
+				delete document.app.devices;
+				webLog.warn('Connected devices could not be recovered; pair remote browsers again.', error);
+			}
+			if (document.config.detectors.length) await this.runtime()?.validate(document.config);
+			const stamp = new Date().toISOString().replaceAll(':', '-');
+			for (const file of [this.files.config, this.files.app]) {
+				try {
+					const backup = `${file}.${stamp}.invalid`;
+					await copyFile(file, backup);
+					await chmod(backup, 0o600);
+				} catch (error) {
+					if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+				}
+			}
+			await writeConfiguration(this.files, document);
+			await this.applySaved(document.config);
+		});
+	}
+
 	read(): Promise<Configuration> {
 		return this.enqueue(() => this.load());
+	}
+
+	private async loadDeviceSettings() {
+		// Access to diagnostics and recovery must not depend on valid detector settings.
+		return v.parse(
+			v.looseObject({ devices: appSchema.entries.devices }),
+			await readJson(this.files.app, {})
+		);
+	}
+
+	async readDevices(): Promise<PairedDevice[]> {
+		// Atomic file writes make committed access readable during slow runtime changes.
+		return (await this.loadDeviceSettings()).devices ?? [];
+	}
+
+	updateDevices(change: (devices: PairedDevice[]) => PairedDevice[]): Promise<void> {
+		return this.enqueue(async () => {
+			const app = await this.loadDeviceSettings();
+			app.devices = change(app.devices ?? []);
+			await writeJson(this.files.app, app);
+		});
 	}
 
 	/** Seed onboarding without starting monitoring or sending alerts. */
@@ -80,6 +175,8 @@ export class ConfigurationStore {
 		return this.enqueue(async () => {
 			const next = identifyCameras(normalizeConfiguration(document.config, document.app));
 			const current = await this.load();
+			if (current.app.devices) next.app.devices = current.app.devices;
+			else delete next.app.devices;
 			if (resuming && isDeepStrictEqual(current, next)) return;
 			const recoveringApp = resuming && isDeepStrictEqual(await readJson(this.files.app), next.app);
 			if (
@@ -93,11 +190,13 @@ export class ConfigurationStore {
 			if (next.config.detectors.length) await this.runtime()?.validate(next.config);
 			await publishFiles();
 			await writeConfiguration(this.files, next);
+			await this.remember(next);
 		});
 	}
 
 	private async persist(input: { config: unknown; app: unknown }): Promise<void> {
 		const { config, app } = identifyCameras(normalizeConfiguration(input.config, input.app));
+		app.devices = (await this.loadDeviceSettings()).devices;
 		const previous = await readJson<unknown>(this.files.config);
 		const configChanged =
 			previous === null || !isDeepStrictEqual(normalizeConfig(previous), config);
@@ -105,9 +204,16 @@ export class ConfigurationStore {
 		if (configChanged && config.detectors.length) await runtime?.validate(config);
 		if (!configChanged) {
 			await writeJson(this.files.app, app);
+			await this.remember({ config, app });
 			return;
 		}
 		await writeConfiguration(this.files, { config, app });
+		await this.remember({ config, app });
+		await this.applySaved(config);
+	}
+
+	private async applySaved(config: Config): Promise<void> {
+		const runtime = this.runtime();
 		if (!runtime) return;
 		try {
 			if (config.detectors.length) await runtime.apply();

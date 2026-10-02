@@ -207,3 +207,7 @@ Before publishing the first real pair of versions, qualify a signed update on Ma
 `linux_startup.py` remains a separate Python 3.10+ helper for an existing systemd Docker Engine installation. Run it as the desktop user; it requests sudo for Docker configuration and daemon startup. See the [installation command](../README.md#start-automatically-on-a-jetson-or-linux-desktop). Docker supervises the existing Compose project.
 
 The helper copies its launcher to `$XDG_DATA_HOME/ai-detector/startup.py` and writes `$XDG_CONFIG_HOME/autostart/ai-detector.desktop`. At login it waits for the dashboard before opening the browser. It does not change automatic-login settings. Uninstalling the helper removes only those startup files. Jetson image/runtime qualification and independently managed Compose updates remain separate from native desktop updates.
+
+The Linux DEB depends on `libcap2-bin` and applies `cap_net_bind_service` only to `/opt/ai-detector/AI Detector` in `postinst configure`, including upgrades. This allows the default port 80 without running the dashboard as root. Portable/source Linux deployments must choose an unprivileged port or arrange the equivalent permission themselves.
+
+The common builder logs command durations. Local PyInstaller builds reuse processed libraries; `--clean` opts into clearing them. Tagged CI builds do not save this cache because GitHub restricts reuse across different tags. Mac update preparation downloads its two delta bases concurrently; packaging and feed publication still use their established ordering.

@@ -293,7 +293,7 @@ def open_detector(
                 )
                 loaded = YOLO(str(exported), task=config.task)
             if loaded.predictor is None:
-                initialize_predictor(loaded, options, native_mps)
+                initialize_predictor(loaded, options, native_mps, report_status)
         detector = YoloDetector(loaded, config, sources, options)
         yield detector
     finally:
@@ -313,7 +313,7 @@ def _load_prepared_engine(
 
     model = _load_model(str(path), task, report_status)
     try:
-        initialize_predictor(model, options, False)
+        initialize_predictor(model, options, False, report_status)
         return model
     except (RuntimeError, ImportError, OSError) as error:
         model.predictor = None
@@ -351,7 +351,10 @@ def _load_model(path: str, task: str, report_status: ReportStatus) -> YOLO:
 
 
 def initialize_predictor(
-    model: YOLO, options: InferenceOptions, native_mps: bool
+    model: YOLO,
+    options: InferenceOptions,
+    native_mps: bool,
+    report_status: ReportStatus = ignore_status,
 ) -> None:
     """Initialize the SDK backend once, for runtime inference or its benchmark."""
     # Ultralytics' .names property otherwise creates a temporary second backend.
@@ -383,3 +386,10 @@ def initialize_predictor(
         backend.device,
         "FP16" if backend.fp16 else "FP32",
     )
+
+    engine = (
+        ", ".join(backend.session.get_providers())
+        if backend.format == "onnx"
+        else f"{backend.format.upper()} on {backend.device}"
+    )
+    report_status(StatusEvent("backend", message=engine))

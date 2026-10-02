@@ -65,3 +65,21 @@ def test_shared_camera_does_not_throttle_one_rules_inference_behind_another():
         "detector-1",
     ]
     assert records[-1]["destinationId"] == "disk-2"
+
+
+def test_queue_wait_is_throttled_per_rule_without_delaying_resume():
+    output = StringIO()
+    report = JsonStatusReporter(output)
+    for _ in range(30):
+        report(StatusEvent("waiting_delivery", rule_id="detector-1"))
+        report(StatusEvent("waiting_delivery", rule_id="detector-2"))
+    report(StatusEvent("processing_resumed", rule_id="detector-1"))
+    records = [
+        json.loads(line.removeprefix(STATUS_PREFIX))
+        for line in output.getvalue().splitlines()
+    ]
+    assert [(item["event"], item["ruleId"]) for item in records] == [
+        ("waiting_delivery", "detector-1"),
+        ("waiting_delivery", "detector-2"),
+        ("processing_resumed", "detector-1"),
+    ]

@@ -33,4 +33,7 @@ export interface RuntimeStatus {
 	cameras: CameraRuntimeStatus[];
 	preparation?: string;
 	notice?: string;
+	issues?: string[];
+	backends?: { label: string; engine: string }[];
+	storageWarning?: string;
 }

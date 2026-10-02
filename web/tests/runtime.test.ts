@@ -134,6 +134,10 @@ test(
 		await Promise.all([detector.start('native'), detector.start('native')]);
 		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		assert.equal(detector.status().phase, 'running');
+		await assert.rejects(
+			detector.whileStopped(() => assert.fail('Cannot clear a running model cache')),
+			/Pause monitoring/
+		);
 		assert.ok(!(await detector.log.read()).includes('secret'));
 		assert.equal(await readFile(path.join(directory, 'starts.txt'), 'utf8'), 'started\n');
 		await detector.apply();
@@ -146,6 +150,7 @@ test(
 		assert.match(await detector.log.read(), /Stop requested: Monitoring disabled/);
 		assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
 		assert.equal(detector.status().phase, 'stopped');
+		assert.equal(await detector.whileStopped(async () => 'cache cleared'), 'cache cleared');
 		assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
 			mode: 'native',
 			enabled: false
@@ -440,5 +445,50 @@ test(
 		assert.deepEqual(detector.status().cameras, []);
 		await detector.stop();
 		await restarting;
+	}
+);
+
+test(
+	'a live detector that stops processing fresh frames is drained and restarted; pause cancels supervision',
+	posixOnly,
+	async (t) => {
+		const directory = await mkdtemp(path.join(tmpdir(), 'detector-stall-'));
+		const detector = new ManagedDetector({ executable, dataDirectory: directory });
+		t.after(async () => {
+			await detector.stop();
+			await rm(directory, { recursive: true, force: true });
+		});
+		const now = Date.now();
+		t.mock.timers.enable({ apis: ['setInterval', 'Date'], now });
+		const sourceKey = createHash('sha256')
+			.update(config.detectors[0].detection.source)
+			.digest('hex');
+		await writeJson(path.join(directory, 'config.json'), config);
+		await writeJson(path.join(directory, 'fixture-options.json'), {
+			statusEvents: [
+				{ version: 1, event: 'ready', at: new Date(now).toISOString() },
+				{ version: 1, event: 'frame', sourceKey, at: new Date(now - 180000).toISOString() },
+				{ version: 1, event: 'frame', sourceKey, at: new Date(now).toISOString() }
+			]
+		});
+		await detector.start('native');
+		await waitFor(
+			() => detector.status().cameras?.[0]?.lastFrameAt === new Date(now).toISOString()
+		);
+		await writeJson(path.join(directory, 'fixture-options.json'), {});
+		t.mock.timers.tick(5000);
+		await waitFor(
+			async () =>
+				(await readFile(path.join(directory, 'starts.txt'), 'utf8')) === 'started\nstarted\n'
+		);
+		assert.match(
+			await detector.log.read(),
+			/Restart requested: Detector 1 stopped processing fresh camera frames/
+		);
+		assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
+		await detector.stop();
+		t.mock.timers.tick(600000);
+		assert.equal(detector.status().phase, 'stopped');
+		assert.equal(await readFile(path.join(directory, 'starts.txt'), 'utf8'), 'started\nstarted\n');
 	}
 );

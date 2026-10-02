@@ -7,7 +7,7 @@ User settings live in the application's data directory, outside the installed bi
 | File or folder | Purpose | Code owner |
 | --- | --- | --- |
 | `config.json` | Sources, models, event rules, verification and delivery | Python [configuration models](../detector/src/aidetector/configuration.py); the web app validates with their generated schema |
-| `app.json` | Camera identities, labels, setup progress and notification metadata | Web [configuration validation](../web/src/lib/configuration.ts) and [configuration store](../web/src/lib/server/configuration/store.ts) |
+| `app.json` | Camera identities, labels, setup progress, connection metadata and paired devices | Web [configuration validation](../web/src/lib/configuration.ts) and [configuration store](../web/src/lib/server/configuration/store.ts) |
 | `runtime.json` | Monitoring resume preference and native/Docker selection | Web [managed detector](../web/src/lib/server/managed-detector.ts) |
 | `presets/` | Optional installation-specific detector presets | Web [preset files](../web/src/lib/server/configuration/preset-files.ts) |
 

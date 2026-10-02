@@ -11,9 +11,9 @@ test('recording cleanup requires an unchanged preview and preserves recent and u
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-cleanup-'));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const archive = new DetectionArchive(directory);
-	const old = 'activity/approved/2026-01-01T12:00:00';
-	const recent = 'activity/rejected/2026-02-01T12:00:00';
-	const pending = 'activity/.pending/2026-01-01T13:00:00';
+	const old = 'activity/approved/2026-01-01T12-00-00';
+	const recent = 'activity/rejected/2026-02-01T12-00-00';
+	const pending = 'activity/.pending/2026-01-01T13-00-00';
 	for (const item of [old, recent, pending]) {
 		await mkdir(path.join(directory, item), { recursive: true });
 		await writeFile(path.join(directory, item, 'image.jpg'), 'recording');
@@ -22,7 +22,7 @@ test('recording cleanup requires an unchanged preview and preserves recent and u
 	await writeFile(path.join(directory, old, 'review.json'), '{broken');
 	const preview = await recordingCleanup(archive, '2026-02-01');
 	assert.equal(preview.count, 1);
-	const another = 'activity/rejected/2026-01-02T12:00:00';
+	const another = 'activity/rejected/2026-01-02T12-00-00';
 	await mkdir(path.join(directory, another), { recursive: true });
 	await assert.rejects(
 		removeRecordings(archive, '2026-02-01', preview.revision),

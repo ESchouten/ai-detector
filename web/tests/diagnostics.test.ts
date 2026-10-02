@@ -65,7 +65,7 @@ test('archive warnings and web failure details survive restart and reach the sup
 	});
 	await webLog.initialize(directory);
 	const archive = new DetectionArchive(path.join(directory, 'detections'));
-	const damaged = path.join(archive.directory, 'activity', 'approved', '2026-01-01T12:00:00');
+	const damaged = path.join(archive.directory, 'activity', 'approved', '2026-01-01T12-00-00');
 	await mkdir(damaged, { recursive: true });
 	await writeFile(path.join(damaged, 'review.json'), '{"key":"private-validation-key",broken');
 	assert.equal((await archive.page({ offset: 0, limit: 10 })).items.length, 0);

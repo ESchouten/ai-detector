@@ -17,7 +17,7 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 	if (process.argv.includes('--quit')) process.exit((await instance.existing(port, true)) ? 0 : 1);
 	let handler: Handler | undefined;
 	let closeHost: (() => void) | undefined;
-	let closeDiscovery: (() => void) | undefined;
+	let closeDiscovery: (() => Promise<void>) | undefined;
 	let shutdown: Promise<void> | undefined;
 	let server: Bun.Server<undefined>;
 	const terminate = () => quit('SIGTERM');
@@ -29,7 +29,7 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 				process.rawListeners('sveltekit:shutdown').map((listener) => listener.call(process, reason))
 			);
 		} finally {
-			closeDiscovery?.();
+			await closeDiscovery?.();
 			await server.stop(true);
 			closeHost?.();
 			process.removeListener('SIGTERM', terminate);

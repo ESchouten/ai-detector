@@ -58,7 +58,7 @@ The Mac payload embeds PyInstaller's `aidetector.app` under `Contents/Helpers/De
 | --- | --- |
 | Port ownership, parent pipe, browser launch and graceful shutdown | `web/desktop/runtime.ts`, `host.ts`, `instance.ts`, `browser.ts` |
 | Installed and development data-directory rules | `web/desktop/paths.ts`, also imported by the server stores |
-| Optional LAN discovery | `web/desktop/network.ts`, using `bonjour-service` |
+| Optional LAN discovery | `web/desktop/network.ts`, using `@homebridge/ciao` for `ai-detector.local` and automatic name conflict resolution |
 | Native menus and process ownership | `macos/Launcher.swift`, `macos/DesktopProcess.swift`, `windows/launcher/` |
 | Common build stages | `build.py`; release automation invokes these same commands |
 | Platform payload layouts and archives | `package.py`, with one assembly function per platform |

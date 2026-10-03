@@ -1,0 +1,17 @@
+{
+  "guard_sha256": "68856a1f3f62bbe5c27722d1afd9845f3399f3fa49e787a2f489f5d1f4b3f47a",
+  "limits": {
+    "driver_bytes": 8589934592,
+    "rss_bytes": 8589934592,
+    "seconds": 180
+  },
+  "mode": "trocr",
+  "output_sha256": "2dfec2430a368760fdc4eed40e55a6690fe1927d5da17835d9ec67b1ee302a12",
+  "peaks": {
+    "mps_driver_bytes": 1234632704,
+    "rss_bytes": 509476864
+  },
+  "protocol_sha256": "f4fc942165844abbf6339c8d778186760d4fcdc5c2ab4e670242f019150b4487",
+  "seconds": 5.6396119999699295,
+  "status": "COMPLETE_FIXED_INFERENCE"
+}

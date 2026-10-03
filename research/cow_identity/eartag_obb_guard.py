@@ -1,0 +1,88 @@
+"""Resource watchdog around the unchanged frozen OBB evaluation stages."""
+
+import argparse
+import os
+import resource
+import threading
+import time
+from pathlib import Path
+
+from benchmark import digest, write_json
+from eartag_obb_evaluation import detect, read_rapid, read_trocr
+
+PROTOCOL = Path(__file__).with_name("eartag_obb_evaluation_protocol.json")
+EXPECTED = "f4fc942165844abbf6339c8d778186760d4fcdc5c2ab4e670242f019150b4487"
+LIMIT = 8 * 1024**3
+
+
+def driver_reader(mode):
+    if mode == "rapid":
+        return lambda: 0
+    import torch
+
+    return torch.mps.driver_allocated_memory
+
+
+def main(args):
+    if digest(PROTOCOL) != EXPECTED or args.output.exists() or args.report.exists():
+        raise ValueError("Preserve frozen inputs and prior outputs")
+    started = time.monotonic()
+    stop = threading.Event()
+    peaks = {"rss_bytes": 0, "mps_driver_bytes": 0}
+    driver_bytes = driver_reader(args.mode)
+
+    def report(status, **extra):
+        write_json(
+            args.report,
+            {
+                "protocol_sha256": EXPECTED,
+                "guard_sha256": digest(Path(__file__)),
+                "mode": args.mode,
+                "status": status,
+                "limits": {"seconds": 180, "rss_bytes": LIMIT, "driver_bytes": LIMIT},
+                "seconds": time.monotonic() - started,
+                "peaks": dict(peaks),
+                **extra,
+            },
+        )
+
+    def sample():
+        # This experiment runs on macOS, whose ru_maxrss is expressed in bytes.
+        peaks["rss_bytes"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        peaks["mps_driver_bytes"] = max(peaks["mps_driver_bytes"], driver_bytes())
+
+    def watch():
+        while not stop.wait(0.05):
+            try:
+                sample()
+                if max(peaks.values()) > LIMIT or time.monotonic() - started >= 180:
+                    report("STOPPED_RESOURCE_OR_TIME_LIMIT")
+                    os._exit(77)
+            except Exception as error:
+                report("FAILED_RESOURCE_MONITOR", error=repr(error))
+                os._exit(78)
+
+    args.protocol = PROTOCOL
+    report("STARTED_BEFORE_INFERENCE")
+    thread = threading.Thread(target=watch, daemon=True)
+    thread.start()
+    try:
+        {"detect": detect, "rapid": read_rapid, "trocr": read_trocr}[args.mode](args)
+        sample()
+    except BaseException as error:
+        stop.set()
+        thread.join()
+        report("FAILED_FROZEN_INFERENCE", error=repr(error))
+        raise
+    stop.set()
+    thread.join()
+    report("COMPLETE_FIXED_INFERENCE", output_sha256=digest(args.output))
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("mode", choices=("detect", "rapid", "trocr"))
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--raw", type=Path)
+    main(parser.parse_args())

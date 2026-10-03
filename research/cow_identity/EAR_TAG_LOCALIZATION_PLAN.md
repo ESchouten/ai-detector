@@ -1,14 +1,14 @@
-# Head and ear-tag localization: preparation and bounded training
+# Head and ear-tag localization: bounded pilot and failed generalization
 
 2026-10-03: source inventory, a fixed oracle-geometry check, reviewed training
-annotations, and one completed two-class head/tag training pilot. The original
+annotations, and one completed two-class head/tag training and evaluation pilot. The original
 three-class whole-frame proposal was not run because most whole-body annotations
 were incomplete. The executed pilot used 13 reviewed foreground ROIs; its
 validation reused those same training images and proves no generalization.
-No low-resolution development or outdoor model inference has run at this point.
+The subsequent fixed full-frame test found no matched development tags and
+12 of 33 outdoor tags. This model is not ready for automatic ownership.
 
-The next measurement is the frozen head/tag detector on whole frames, with
-existing cow detection/tracking supplying body candidates later. Ownership
+Existing cow detection/tracking could supply body candidates later. Ownership
 remains an explicit, abstaining relation that must be tested separately.
 Reading a correct number in a crop is insufficient if it is assigned to the
 neighboring cow. This experiment tests that boundary; it does not change the
@@ -241,4 +241,59 @@ precision goal, a fixed0.25 operating-point result, ownership accuracy, or
 evidence on new animals/scenes. The complete result is
 `results/2026-10-03/ear-tags/localization-training.json` (SHA256
 `a88272aba67d68ac58582d5183ca32c6a373a9d6c39a307db8676c264bdecb10`).
-Development/outdoor evaluation requires its own frozen protocol before inference.
+Development/outdoor evaluation subsequently used the separate frozen protocol
+below, with all earlier training and annotation records left unchanged.
+
+## Fixed full-frame evaluation: not suitable for deployment
+
+`eartag_localization_evaluate_protocol.json` bound 361 input/source files before
+the first inference on the three low-resolution development frames and eight
+outdoor frames. The selected final checkpoint was unchanged. Inference used
+FP32 MPS, 1280 input, batch 1, confidence 0.25, NMS IoU 0.7 and no augmentation.
+All raw outputs were saved before loading annotation data for scoring.
+
+| Fixed panel | Annotated objects | Matched at IoU ≥ 0.5 | Missed | Unmatched predictions |
+| --- | ---: | ---: | ---: | ---: |
+| Development tags | 11 | 0 | 11 | 1 |
+| Outdoor tags | 33 | 12 | 21 | 1 |
+| Development heads | 12 | 1 | 11 | 0 |
+
+Outdoor tag recall is **36.36%**, with **92.31%** of the 13 tag predictions
+matching publisher annotations. All 12 matches have a native tag minimum side
+of at least 64 pixels, reduced to the 32–64-pixel bin at actual model input.
+None of the 21 tags below 32 pixels at model input matched. Upscaling the
+640×368 development images does not recover detail absent in the source.
+Head accuracy on the outdoor frames was not scored because complete outdoor
+head annotations do not exist. Unmatched predictions remain conservative
+extras, not independently verified false physical tags: publisher completeness
+is imperfect, and this result does not retroactively change that truth.
+
+The inference loop took 1.42 seconds; the guarded operation including model
+setup and provenance checks took 2.39 seconds. The separate 180-second/8-GiB
+guard recorded peak Metal driver allocation of 1.164 GB and RSS of 0.831 GB.
+These short-run timings do not establish streaming or combined OCR throughput.
+
+The small, tightly cropped training set fitted well but did not supply the
+scale/scene diversity needed by full-frame low-resolution views. This is a
+plausible explanation, not a causal ablation. There is no basis to promote this
+model to automatic ownership or relax its thresholds. The fixed result retains
+all 44 tag and 12 head denominators; no extra threshold/model trial was run.
+Any next data/training change needs a new protocol and independent test material,
+since these 11 images are now exposed development evidence.
+
+Artifacts under `results/2026-10-03/ear-tags/`:
+
+- `localization-raw.json`: SHA256
+  `c2f3ac1136b7009a245f990f0a115f518248385a8d434851dd7faae13acb4b1d`.
+- `localization-score.json`: SHA256
+  `2d0f9871ef5bd116b7f6fc7c79388b52930cff2bd86bad1e556c78c66ef3ea3a`.
+- `localization-execution.json`: unchanged settings and resource evidence.
+- `localization-independent-audit.json`: independently rebuilt every tag from
+  the original publisher text labels and used a separate bipartite matcher;
+  all 361 source bindings, 11 raw rows, complete panel counts and size bins
+  reproduced exactly. SHA256
+  `679bd0912750a8fc5ede0b474de6b39347fa2b91df3fda19cf0a8e8bc4d5ee02`.
+
+The separate [public-model availability check](EAR_TAG_PUBLIC_MODELS.md) found
+usable general OCR components, but did not verify a downloadable author-trained
+cattle ear-tag localization/ownership model that removes this gap.

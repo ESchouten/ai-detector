@@ -1,0 +1,507 @@
+{
+  "protocol_sha256": "5fbf1ba423e128d035d96b72a12c3f4d87bf544a60ccac1b2b4e891afc72deac",
+  "rows": [
+    {
+      "boxes": [
+        {
+          "class": 0,
+          "confidence": 0.8824155926704407,
+          "xyxy": [
+            856.789794921875,
+            2715.96533203125,
+            1527.024658203125,
+            3492.787353515625
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.4064474105834961,
+          "xyxy": [
+            165.7255859375,
+            2419.540771484375,
+            288.17486572265625,
+            2531.24658203125
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.35746315121650696,
+          "xyxy": [
+            915.0219116210938,
+            2860.52978515625,
+            1024.62353515625,
+            2997.67431640625
+          ]
+        }
+      ],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow1207",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1207.jpg",
+      "image_sha256": "698e2e925626c555761501b5eb42aa88e44b4c1fba214826d68f9b7938be8ee9",
+      "input_shape": [
+        1,
+        3,
+        1280,
+        576
+      ],
+      "panel": "evaluation",
+      "pixels_sha256": "1815f86eb35cfa23a78766d8f403ad86a8f5dbdf78902bbe4cc411f48ebc25a8",
+      "seconds": 0.41113104205578566,
+      "shape": [
+        4000,
+        1800,
+        3
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "class": 1,
+          "confidence": 0.25734463334083557,
+          "xyxy": [
+            209.3059844970703,
+            288.25701904296875,
+            226.52146911621094,
+            309.76483154296875
+          ]
+        }
+      ],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow1897",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1897.jpg",
+      "image_sha256": "818e400cfdee0ef72fd29f820c294e4485a4b81e7ce131419f0767ba07c91a5a",
+      "input_shape": [
+        1,
+        3,
+        736,
+        1280
+      ],
+      "panel": "development",
+      "pixels_sha256": "89ebecbef4cd3c516b27b5c2858b620d04e16f9c2c97a6f860b9ad514142bd2a",
+      "seconds": 0.14438120881095529,
+      "shape": [
+        368,
+        640,
+        3
+      ]
+    },
+    {
+      "boxes": [],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow1983",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1983.jpg",
+      "image_sha256": "790670acb0f3e3899f58372f9439b6e992fcfa5990f5c3958d9ac3378e5b1bb0",
+      "input_shape": [
+        1,
+        3,
+        736,
+        1280
+      ],
+      "panel": "development",
+      "pixels_sha256": "95bcf82eae4767600982e1d72f697bf5e51b4d3fc20428cae9349e7c7f25a243",
+      "seconds": 0.032698458060622215,
+      "shape": [
+        368,
+        640,
+        3
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "class": 0,
+          "confidence": 0.8223252892494202,
+          "xyxy": [
+            556.2203369140625,
+            298.7056884765625,
+            639.5428466796875,
+            368.0
+          ]
+        }
+      ],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow2070",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2070.jpg",
+      "image_sha256": "c63a8d4d7630c5d86f8fa2cdbd476c7679d08f771d1ae2945e91f7010e7d0f7e",
+      "input_shape": [
+        1,
+        3,
+        736,
+        1280
+      ],
+      "panel": "development",
+      "pixels_sha256": "c9abe7dda354ef31528196db5408be589e0c8d1732c07c57ca59d9b2653159ab",
+      "seconds": 0.034594000317156315,
+      "shape": [
+        368,
+        640,
+        3
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "class": 0,
+          "confidence": 0.8768509030342102,
+          "xyxy": [
+            1424.4320068359375,
+            723.43310546875,
+            2458.902099609375,
+            1582.846923828125
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.600584864616394,
+          "xyxy": [
+            1532.211669921875,
+            948.5914306640625,
+            1716.1854248046875,
+            1120.1768798828125
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.4369536340236664,
+          "xyxy": [
+            2218.298095703125,
+            873.969482421875,
+            2413.11328125,
+            1080.1920166015625
+          ]
+        }
+      ],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow2156",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2156.jpg",
+      "image_sha256": "06a259a927c4d4b486683a994fc23ae017db0db02431659f7291ea1fdbcadee8",
+      "input_shape": [
+        1,
+        3,
+        576,
+        1280
+      ],
+      "panel": "evaluation",
+      "pixels_sha256": "bb11a182d9a51ceb2719d29746d2d7b987ea6a0c9d643db7dee0fdf80194e1ec",
+      "seconds": 0.12405254179611802,
+      "shape": [
+        1800,
+        4000,
+        3
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "class": 0,
+          "confidence": 0.9117363691329956,
+          "xyxy": [
+            1510.8560791015625,
+            492.53485107421875,
+            2339.82861328125,
+            1325.6817626953125
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.7006068229675293,
+          "xyxy": [
+            2146.916259765625,
+            673.39208984375,
+            2279.05419921875,
+            840.5418701171875
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.6439787149429321,
+          "xyxy": [
+            60.149497985839844,
+            226.77381896972656,
+            160.8286590576172,
+            335.1818542480469
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.6412137150764465,
+          "xyxy": [
+            1560.3946533203125,
+            689.6253051757812,
+            1717.124267578125,
+            864.3966674804688
+          ]
+        }
+      ],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow2242",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2242.jpg",
+      "image_sha256": "841b7a5b53d53b59aedaa07707876efb850c0b13fa738c918abdd7dd5867712b",
+      "input_shape": [
+        1,
+        3,
+        576,
+        1280
+      ],
+      "panel": "evaluation",
+      "pixels_sha256": "2da80e5db280a3b8c11f385d803082111a20e90bd9fca0a4fc6feb1c66d44bce",
+      "seconds": 0.0393974999897182,
+      "shape": [
+        1800,
+        4000,
+        3
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "class": 0,
+          "confidence": 0.8669666647911072,
+          "xyxy": [
+            1681.3475341796875,
+            570.3323364257812,
+            2288.9638671875,
+            1213.5582275390625
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.7621107697486877,
+          "xyxy": [
+            2144.800048828125,
+            704.9302978515625,
+            2241.059326171875,
+            839.363525390625
+          ]
+        }
+      ],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow2328",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2328.jpg",
+      "image_sha256": "a591c15039ac2b1255759314860f730b2cd44f4b07cf5100300b69a2e06e97a2",
+      "input_shape": [
+        1,
+        3,
+        576,
+        1280
+      ],
+      "panel": "evaluation",
+      "pixels_sha256": "47485e1e5007cc58c92aa3245be5c170ac1d6a3b8a7f31e62555f912f05525e7",
+      "seconds": 0.04040912492200732,
+      "shape": [
+        1800,
+        4000,
+        3
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "class": 0,
+          "confidence": 0.6643181443214417,
+          "xyxy": [
+            1425.92626953125,
+            574.4735717773438,
+            2137.225341796875,
+            1182.107177734375
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.5929805636405945,
+          "xyxy": [
+            1986.5335693359375,
+            702.72412109375,
+            2061.44580078125,
+            835.955810546875
+          ]
+        },
+        {
+          "class": 0,
+          "confidence": 0.4032326638698578,
+          "xyxy": [
+            2426.961669921875,
+            699.9113159179688,
+            2903.50244140625,
+            1139.7198486328125
+          ]
+        },
+        {
+          "class": 0,
+          "confidence": 0.33265137672424316,
+          "xyxy": [
+            16.054439544677734,
+            668.9957275390625,
+            943.38818359375,
+            1418.3636474609375
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.3095870614051819,
+          "xyxy": [
+            1585.7869873046875,
+            753.5040283203125,
+            1674.9307861328125,
+            891.4276123046875
+          ]
+        }
+      ],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow2415",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2415.jpg",
+      "image_sha256": "f1de682b06e005fd8e8f7de8f86ac3bd345691c78115f1196d317c2afc421989",
+      "input_shape": [
+        1,
+        3,
+        576,
+        1280
+      ],
+      "panel": "evaluation",
+      "pixels_sha256": "fc38bb9197914669319b187de0b9ffad483ede2e9217a9860092f6ee81dfcb32",
+      "seconds": 0.03030170826241374,
+      "shape": [
+        1800,
+        4000,
+        3
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "class": 0,
+          "confidence": 0.8652448654174805,
+          "xyxy": [
+            1195.4710693359375,
+            949.2077026367188,
+            1920.780029296875,
+            1597.6015625
+          ]
+        },
+        {
+          "class": 0,
+          "confidence": 0.7571362257003784,
+          "xyxy": [
+            2390.14892578125,
+            790.606689453125,
+            2905.623779296875,
+            1383.71533203125
+          ]
+        },
+        {
+          "class": 0,
+          "confidence": 0.7050458788871765,
+          "xyxy": [
+            2740.6953125,
+            771.6504516601562,
+            3385.30078125,
+            1195.57275390625
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.5748425722122192,
+          "xyxy": [
+            2724.073974609375,
+            926.9271850585938,
+            2835.78662109375,
+            1059.5301513671875
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.46970635652542114,
+          "xyxy": [
+            1748.6812744140625,
+            1067.072265625,
+            1863.580322265625,
+            1190.6702880859375
+          ]
+        },
+        {
+          "class": 1,
+          "confidence": 0.43981701135635376,
+          "xyxy": [
+            3210.8837890625,
+            905.05419921875,
+            3317.385498046875,
+            1028.7535400390625
+          ]
+        }
+      ],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow2501",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2501.jpg",
+      "image_sha256": "86227c47b282a7a8e4302f8963bfa4571a60d2b2157ea1c5e18e838ed44fe56c",
+      "input_shape": [
+        1,
+        3,
+        576,
+        1280
+      ],
+      "panel": "evaluation",
+      "pixels_sha256": "e0aca23c0e4982de84af92fa9145a50edf4808224f40ada54ea3cc0418c18bc1",
+      "seconds": 0.038469250313937664,
+      "shape": [
+        1800,
+        4000,
+        3
+      ]
+    },
+    {
+      "boxes": [],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow2587",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2587.jpg",
+      "image_sha256": "b421fbe03281cf97f89cb016640793ffab92356a51b688524daf97042f6a4745",
+      "input_shape": [
+        1,
+        3,
+        1280,
+        736
+      ],
+      "panel": "evaluation",
+      "pixels_sha256": "111807f2bd4b2af070951620e4820175b319053e1356a192c5465deb6348fda8",
+      "seconds": 0.11292862519621849,
+      "shape": [
+        1920,
+        1080,
+        3
+      ]
+    },
+    {
+      "boxes": [],
+      "device": "mps",
+      "fp16": false,
+      "id": "cow2674",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2674.jpg",
+      "image_sha256": "79f87a3be287a027fb2d2d4b11cf8ca09467a2a889d12c369bf44671f7e85155",
+      "input_shape": [
+        1,
+        3,
+        1280,
+        736
+      ],
+      "panel": "evaluation",
+      "pixels_sha256": "c03fd08c91685f0d1e532a05edb00d00a6ae4dddb104185063b7c18c1c58cf7e",
+      "seconds": 0.02753633400425315,
+      "shape": [
+        1920,
+        1080,
+        3
+      ]
+    }
+  ],
+  "seconds": 1.4194605420343578,
+  "status": "COMPLETE_RAW_BEFORE_SCORE"
+}

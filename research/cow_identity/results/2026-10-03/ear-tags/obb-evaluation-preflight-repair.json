@@ -1,0 +1,14 @@
+{
+  "cause": "Before any inference, source review found that invalid/subpixel crops were marked rejected only in the prepared manifest; the empty RapidOCR row inherited issue=None. This would fail strict crop-byte validation rather than preserve the explicit unread prediction. Fixed both flags and regression; no source images, models, settings, geometry or scores changed.",
+  "changed_bound_files": [
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_obb_evaluation.py",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_eartag_obb_evaluation.py"
+  ],
+  "corrected_protocol_sha256": "f4fc942165844abbf6339c8d778186760d4fcdc5c2ab4e670242f019150b4487",
+  "model_calls_before_repair": 0,
+  "preserved_protocol": "obb-evaluation-preflight-v1-eartag_obb_evaluation_protocol.json",
+  "preserved_source": "obb-evaluation-preflight-v1-eartag_obb_evaluation.py",
+  "preserved_tests": "obb-evaluation-preflight-v1-test_eartag_obb_evaluation.py",
+  "prior_protocol_sha256": "38c99502bfaab1cdf0dec39e504f2acfc98ac00074ed207fb60a14187c2964c0",
+  "tests": "4 focused tests pass; Ruff clean."
+}

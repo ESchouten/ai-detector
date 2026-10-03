@@ -1,0 +1,217 @@
+{
+  "status": "PASS_INDEPENDENT_RECOUNT",
+  "protocol_sha256": "5fbf1ba423e128d035d96b72a12c3f4d87bf544a60ccac1b2b4e891afc72deac",
+  "raw_sha256": "c2f3ac1136b7009a245f990f0a115f518248385a8d434851dd7faae13acb4b1d",
+  "score_sha256": "2d0f9871ef5bd116b7f6fc7c79388b52930cff2bd86bad1e556c78c66ef3ea3a",
+  "audit_source_sha256": "79b4862ef6f2f17bb07d89f8e5470a01e25b7bf2840487a85243720d90249ae8",
+  "verified_bindings": 361,
+  "source_images": 11,
+  "publisher_tag_labels": {
+    "datasets/cow-eartag-detection/subset-v1/cow1207.txt": "1ed95f2bb4ebc3ddb5a11676387458cea6ce5d40f006e65138e9c0c39dee1dbc",
+    "datasets/cow-eartag-detection/subset-v1/cow1897.txt": "a8cd413e39f23e7eca466b39b31f021539cd671f638292f2959001db4fe1a93a",
+    "datasets/cow-eartag-detection/subset-v1/cow1983.txt": "7bad5f855c9ef70cbf2887c249e0bc33950dd812da63f2c11b3bab8a5c3c0e6e",
+    "datasets/cow-eartag-detection/subset-v1/cow2070.txt": "d20896014499449c29b8e32e4deeb46341ac4e97cc850cce380e2681847c01e7",
+    "datasets/cow-eartag-detection/subset-v1/cow2156.txt": "9fa4e9e6e1889114d83dfea490984e92d420d21fa0b0985944993c61cfff3564",
+    "datasets/cow-eartag-detection/subset-v1/cow2242.txt": "aa9311b6871ea1a22a78a9f92687248498232a661e75cb9c772029e6f650fffb",
+    "datasets/cow-eartag-detection/subset-v1/cow2328.txt": "a659b0630c104a51b7f5761223050fc48388a334a99d41631b393183efa49576",
+    "datasets/cow-eartag-detection/subset-v1/cow2415.txt": "08aa8928ea6e2a02b37fe5056363bc4e5e754fe1059960203f1897075589f3ae",
+    "datasets/cow-eartag-detection/subset-v1/cow2501.txt": "f0aa7bc61664321d735c8ca888b94b2ca83ef69e1a3341d50c1aceb4cbc71933",
+    "datasets/cow-eartag-detection/subset-v1/cow2587.txt": "1cb9b63824a914cfc015c049b86cf11a5650d03ad500d53e44edc993396dd586",
+    "datasets/cow-eartag-detection/subset-v1/cow2674.txt": "e2ac37455cfbcd594b63b2177ff3eda6910b276f48cb7564076acd237cbe9243"
+  },
+  "panels": {
+    "evaluation": {
+      "truth": 33,
+      "predicted": 13,
+      "matched": 12,
+      "missed": 21,
+      "unmatched_predictions": 1
+    },
+    "development": {
+      "truth": 11,
+      "predicted": 1,
+      "matched": 0,
+      "missed": 11,
+      "unmatched_predictions": 1
+    }
+  },
+  "development_heads": {
+    "truth": 12,
+    "predicted": 1,
+    "matched": 1,
+    "missed": 11,
+    "unmatched_predictions": 0
+  },
+  "tag_size_bins": {
+    "evaluation/native/>=64": {
+      "truth": 25,
+      "matched": 12
+    },
+    "evaluation/input/32\u201364": {
+      "truth": 22,
+      "matched": 12
+    },
+    "evaluation/native/32\u201364": {
+      "truth": 8,
+      "matched": 0
+    },
+    "evaluation/input/16\u201332": {
+      "truth": 9,
+      "matched": 0
+    },
+    "evaluation/input/<16": {
+      "truth": 2,
+      "matched": 0
+    },
+    "development/native/<16": {
+      "truth": 10,
+      "matched": 0
+    },
+    "development/input/16\u201332": {
+      "truth": 10,
+      "matched": 0
+    },
+    "development/native/16\u201332": {
+      "truth": 1,
+      "matched": 0
+    },
+    "development/input/32\u201364": {
+      "truth": 1,
+      "matched": 0
+    }
+  },
+  "details": [
+    {
+      "id": "cow1207",
+      "tag": {
+        "truth": 11,
+        "predicted": 2,
+        "matched": 2,
+        "missed": 9,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow1897",
+      "tag": {
+        "truth": 3,
+        "predicted": 1,
+        "matched": 0,
+        "missed": 3,
+        "unmatched_predictions": 1
+      },
+      "head": {
+        "truth": 4,
+        "predicted": 0,
+        "matched": 0,
+        "missed": 4,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow1983",
+      "tag": {
+        "truth": 6,
+        "predicted": 0,
+        "matched": 0,
+        "missed": 6,
+        "unmatched_predictions": 0
+      },
+      "head": {
+        "truth": 6,
+        "predicted": 0,
+        "matched": 0,
+        "missed": 6,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2070",
+      "tag": {
+        "truth": 2,
+        "predicted": 0,
+        "matched": 0,
+        "missed": 2,
+        "unmatched_predictions": 0
+      },
+      "head": {
+        "truth": 2,
+        "predicted": 1,
+        "matched": 1,
+        "missed": 1,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2156",
+      "tag": {
+        "truth": 2,
+        "predicted": 2,
+        "matched": 2,
+        "missed": 0,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2242",
+      "tag": {
+        "truth": 5,
+        "predicted": 3,
+        "matched": 2,
+        "missed": 3,
+        "unmatched_predictions": 1
+      }
+    },
+    {
+      "id": "cow2328",
+      "tag": {
+        "truth": 2,
+        "predicted": 1,
+        "matched": 1,
+        "missed": 1,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2415",
+      "tag": {
+        "truth": 3,
+        "predicted": 2,
+        "matched": 2,
+        "missed": 1,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2501",
+      "tag": {
+        "truth": 5,
+        "predicted": 3,
+        "matched": 3,
+        "missed": 2,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2587",
+      "tag": {
+        "truth": 1,
+        "predicted": 0,
+        "matched": 0,
+        "missed": 1,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2674",
+      "tag": {
+        "truth": 4,
+        "predicted": 0,
+        "matched": 0,
+        "missed": 4,
+        "unmatched_predictions": 0
+      }
+    }
+  ],
+  "scope": "No model/scorer helper calls; direct original normalized publisher rectangles, all uncertain/clipped reviewed heads retained, independent maximum-cardinality IoU>=0.5 matching. Count verification does not certify labels or scene independence."
+}

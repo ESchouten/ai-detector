@@ -1,0 +1,257 @@
+{
+  "details": [
+    {
+      "id": "cow1207",
+      "input_gain": 0.32,
+      "panel": "evaluation",
+      "tag": {
+        "matched": 2,
+        "missed": 9,
+        "pairs": {
+          "0": 2,
+          "1": 1
+        },
+        "predicted": 2,
+        "truth": 11,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "head": {
+        "matched": 0,
+        "missed": 4,
+        "pairs": {},
+        "predicted": 0,
+        "truth": 4,
+        "unmatched_predictions": 0
+      },
+      "id": "cow1897",
+      "input_gain": 2.0,
+      "panel": "development",
+      "tag": {
+        "matched": 0,
+        "missed": 3,
+        "pairs": {},
+        "predicted": 1,
+        "truth": 3,
+        "unmatched_predictions": 1
+      }
+    },
+    {
+      "head": {
+        "matched": 0,
+        "missed": 6,
+        "pairs": {},
+        "predicted": 0,
+        "truth": 6,
+        "unmatched_predictions": 0
+      },
+      "id": "cow1983",
+      "input_gain": 2.0,
+      "panel": "development",
+      "tag": {
+        "matched": 0,
+        "missed": 6,
+        "pairs": {},
+        "predicted": 0,
+        "truth": 6,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "head": {
+        "matched": 1,
+        "missed": 1,
+        "pairs": {
+          "0": 1
+        },
+        "predicted": 1,
+        "truth": 2,
+        "unmatched_predictions": 0
+      },
+      "id": "cow2070",
+      "input_gain": 2.0,
+      "panel": "development",
+      "tag": {
+        "matched": 0,
+        "missed": 2,
+        "pairs": {},
+        "predicted": 0,
+        "truth": 2,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2156",
+      "input_gain": 0.32,
+      "panel": "evaluation",
+      "tag": {
+        "matched": 2,
+        "missed": 0,
+        "pairs": {
+          "0": 1,
+          "1": 0
+        },
+        "predicted": 2,
+        "truth": 2,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2242",
+      "input_gain": 0.32,
+      "panel": "evaluation",
+      "tag": {
+        "matched": 2,
+        "missed": 3,
+        "pairs": {
+          "0": 0,
+          "2": 1
+        },
+        "predicted": 3,
+        "truth": 5,
+        "unmatched_predictions": 1
+      }
+    },
+    {
+      "id": "cow2328",
+      "input_gain": 0.32,
+      "panel": "evaluation",
+      "tag": {
+        "matched": 1,
+        "missed": 1,
+        "pairs": {
+          "0": 1
+        },
+        "predicted": 1,
+        "truth": 2,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2415",
+      "input_gain": 0.32,
+      "panel": "evaluation",
+      "tag": {
+        "matched": 2,
+        "missed": 1,
+        "pairs": {
+          "0": 0,
+          "1": 1
+        },
+        "predicted": 2,
+        "truth": 3,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2501",
+      "input_gain": 0.32,
+      "panel": "evaluation",
+      "tag": {
+        "matched": 3,
+        "missed": 2,
+        "pairs": {
+          "0": 1,
+          "1": 0,
+          "2": 3
+        },
+        "predicted": 3,
+        "truth": 5,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2587",
+      "input_gain": 0.6666666666666666,
+      "panel": "evaluation",
+      "tag": {
+        "matched": 0,
+        "missed": 1,
+        "pairs": {},
+        "predicted": 0,
+        "truth": 1,
+        "unmatched_predictions": 0
+      }
+    },
+    {
+      "id": "cow2674",
+      "input_gain": 0.6666666666666666,
+      "panel": "evaluation",
+      "tag": {
+        "matched": 0,
+        "missed": 4,
+        "pairs": {},
+        "predicted": 0,
+        "truth": 4,
+        "unmatched_predictions": 0
+      }
+    }
+  ],
+  "development_heads": {
+    "matched": 1,
+    "missed": 11,
+    "predicted": 1,
+    "truth": 12,
+    "unmatched_predictions": 0
+  },
+  "limitations": "Scene groups are not certified animal/farm/date independent. Publisher tag annotation completeness may be imperfect; unmatched means unmatched-to-publisher, not verified physical false alarm. Raw predictions are immutable before truth scoring. No outdoor head/body labels are invented.",
+  "panels": {
+    "development": {
+      "matched": 0,
+      "missed": 11,
+      "predicted": 1,
+      "truth": 11,
+      "unmatched_predictions": 1
+    },
+    "evaluation": {
+      "matched": 12,
+      "missed": 21,
+      "predicted": 13,
+      "truth": 33,
+      "unmatched_predictions": 1
+    }
+  },
+  "protocol_sha256": "5fbf1ba423e128d035d96b72a12c3f4d87bf544a60ccac1b2b4e891afc72deac",
+  "raw_sha256": "c2f3ac1136b7009a245f990f0a115f518248385a8d434851dd7faae13acb4b1d",
+  "scoring": "All44publisher tags:11development+33outdoor, one-to-one max-cardinality IoU>=.5. All12 reviewed development heads, including uncertain/clipped heads; no outdoor head precision without labels. Every unmatched prediction retained as conservative extra. Fixed tag min-side bins<16/16\u201331.99/32\u201363.99/>=64 in native and actual1280-letterbox input pixels. No threshold/model selection, no OCR/ownership/biological names.",
+  "status": "COMPLETE_FIXED_WHOLEFRAME_LOCALIZATION",
+  "tag_size_bins": {
+    "development/input/16\u201332": {
+      "matched": 0,
+      "truth": 10
+    },
+    "development/input/32\u201364": {
+      "matched": 0,
+      "truth": 1
+    },
+    "development/native/16\u201332": {
+      "matched": 0,
+      "truth": 1
+    },
+    "development/native/<16": {
+      "matched": 0,
+      "truth": 10
+    },
+    "evaluation/input/16\u201332": {
+      "matched": 0,
+      "truth": 9
+    },
+    "evaluation/input/32\u201364": {
+      "matched": 12,
+      "truth": 22
+    },
+    "evaluation/input/<16": {
+      "matched": 0,
+      "truth": 2
+    },
+    "evaluation/native/32\u201364": {
+      "matched": 0,
+      "truth": 8
+    },
+    "evaluation/native/>=64": {
+      "matched": 12,
+      "truth": 25
+    }
+  }
+}

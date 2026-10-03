@@ -1,0 +1,138 @@
+{
+  "all_first_twenty_exact": true,
+  "checkpoint_sha256": "8585135e02d98c873e1c3c936ef29099b9ac3382ab579864cdda8650777dea7c",
+  "complete": true,
+  "elapsed_seconds": 397.1380917499773,
+  "epochs": 20,
+  "final_ema_check": "Native trainer completion verified saved last.pt state exactly equals live final EMA converted to FP16, all parameters finite. No checkpoint reselection.",
+  "finite_losses": true,
+  "first_twenty": [
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 1
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 2
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 3
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 4
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 5
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 6
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 7
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 8
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 9
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 10
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 11
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 12
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 13
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 14
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 15
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 16
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 17
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 18
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 19
+    },
+    {
+      "maximum_absolute_loss_difference": 0.0,
+      "same_epoch": true,
+      "same_loss": true,
+      "step": 20
+    }
+  ],
+  "peak_driver_bytes": 1347338240,
+  "peak_rss_bytes": 3221405696,
+  "preflight_sha256": "656b107d1f585bf5c6bc50c77a7589469010e728afc2e1bf0bb030fabb83bc4d",
+  "scope": "Training-only audit. All validation sources equal training sources; pilot outputs still unopened.",
+  "steps": 1700,
+  "training_protocol_sha256": "38968260e8e155a918f32aa157c98dcae5209d57212265944cc9bf270e3335a7",
+  "training_report_sha256": "11be8b7dec2254b522ddaa13253137a07c58d86f92177dae1d6e70acacfcece6"
+}

@@ -1,0 +1,9 @@
+{
+  "authorization": "Independent review only; parent controls execution.",
+  "conclusion": "No blocker: only final20epoch native last.pt, no truth enters detector or either reader, same polygon/crop bytes for both readers, literal zeros retained, all157 original lines and missed/extra predictions scored.",
+  "model_calls": 0,
+  "protocol_sha256": "f4fc942165844abbf6339c8d778186760d4fcdc5c2ab4e670242f019150b4487",
+  "reviewer": "identity_evaluation",
+  "source_edits": 0,
+  "verification": "Independently verified all7995 bound files, exact64 source rows and four focused tests. Read complete evaluator and invalid-crop regression."
+}

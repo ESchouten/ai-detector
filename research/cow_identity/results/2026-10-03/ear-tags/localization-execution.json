@@ -1,0 +1,17 @@
+{
+  "guard_sha256": "021bf80ba8b4380f5564548224cb9dacd844896abf4cd3e1c97bf508723e2b4d",
+  "limits": {
+    "mps_driver_bytes": 8589934592,
+    "rss_bytes": 8589934592,
+    "seconds": 180
+  },
+  "peaks": {
+    "mps_driver_bytes": 1163624448,
+    "rss_bytes": 830717952
+  },
+  "protocol_sha256": "5fbf1ba423e128d035d96b72a12c3f4d87bf544a60ccac1b2b4e891afc72deac",
+  "raw_sha256": "c2f3ac1136b7009a245f990f0a115f518248385a8d434851dd7faae13acb4b1d",
+  "scope": "Execution watchdog only; original evaluator/model/settings unchanged.",
+  "seconds": 2.385977915953845,
+  "status": "COMPLETE_FIXED_INFERENCE"
+}

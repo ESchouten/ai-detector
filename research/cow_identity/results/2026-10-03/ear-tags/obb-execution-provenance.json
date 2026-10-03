@@ -1,0 +1,8 @@
+{
+  "change": "After all three inference stages and scoring completed, moved optional MPS allocator callback construction into a small helper to satisfy the complexity check. Limits, sampler, error handling, inputs and evaluator unchanged. Exact executed source retained here; all historical execution reports bind its SHA. No inference repeated.",
+  "executed_guard": "research/cow_identity/results/2026-10-03/ear-tags/obb-evaluation-executed-guard.py.txt",
+  "executed_guard_sha256": "68856a1f3f62bbe5c27722d1afd9845f3399f3fa49e787a2f489f5d1f4b3f47a",
+  "raw_protocol": "f4fc942165844abbf6339c8d778186760d4fcdc5c2ab4e670242f019150b4487",
+  "readability_refactor": "research/cow_identity/eartag_obb_guard.py",
+  "refactored_guard_sha256": "fb884b1b6c85f8e11572f0f5e934be4c12adbabc4c9e4701541b1f0d4d3093a0"
+}

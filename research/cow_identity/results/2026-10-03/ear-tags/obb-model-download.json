@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n-obb.pt",
+  "release": "v8.3.0",
+  "asset_id": 196201272,
+  "expected_size": 5795654,
+  "bytes": 5795654,
+  "sha256": "b62898ebf38940ca4df323863e45ee9d84a1a46d5d11ebdde529fb33aa9f3a32",
+  "path": ".cache/cow-ear-tags/yolo11n-obb.pt",
+  "use": "Official Ultralytics checkpoint; trusted pinned upstream .pt weights, not arbitrary uploaded pickle."
+}

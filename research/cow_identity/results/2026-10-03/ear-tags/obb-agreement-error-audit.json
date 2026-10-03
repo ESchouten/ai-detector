@@ -1,0 +1,128 @@
+{
+  "rows": [
+    {
+      "failures": [
+        {
+          "iou": 0.6156475251150483,
+          "kind": "wrong matched literal",
+          "prediction": {
+            "polygon": [
+              [
+                132.88719177246094,
+                110.91336059570312
+              ],
+              [
+                136.7534637451172,
+                86.00717163085938
+              ],
+              [
+                71.39881896972656,
+                75.86195373535156
+              ],
+              [
+                67.53254699707031,
+                100.76814270019531
+              ]
+            ],
+            "score": 0.987,
+            "text": "7-2"
+          },
+          "truth": {
+            "polygon": [
+              74.0,
+              78.0,
+              164.0,
+              86.0,
+              162.0,
+              112.0,
+              72.0,
+              104.0
+            ],
+            "text": "7-21"
+          }
+        }
+      ],
+      "id": "eartags1727",
+      "image": ".cache/cow-ear-tags/obb-error-audit/eartags1727.jpg",
+      "image_sha256": "ca6970421112bbb1123317fca9ba9da5f6fc055f0738e2b079c38594a5b15945",
+      "source": "datasets/cow-eartag-recognition/images-v1/eartags1727.jpg",
+      "source_sha256": "481afd368ee04e81d61c9ef3ac46ce411061d98564e0d3200f6dbab8340fff23"
+    },
+    {
+      "failures": [
+        {
+          "iou": 0.8220393171878468,
+          "kind": "wrong matched literal",
+          "prediction": {
+            "polygon": [
+              [
+                107.45530700683594,
+                62.87165069580078
+              ],
+              [
+                107.60823059082031,
+                41.0418701171875
+              ],
+              [
+                68.42955017089844,
+                40.767425537109375
+              ],
+              [
+                68.27662658691406,
+                62.597206115722656
+              ]
+            ],
+            "score": 0.99774,
+            "text": "20"
+          },
+          "truth": {
+            "polygon": [
+              72.0,
+              39.0,
+              108.0,
+              39.0,
+              108.0,
+              63.0,
+              72.0,
+              63.0
+            ],
+            "text": ".20"
+          }
+        },
+        {
+          "kind": "unmatched prediction",
+          "prediction": {
+            "polygon": [
+              [
+                104.71597290039062,
+                61.23078536987305
+              ],
+              [
+                105.27139282226562,
+                42.3039436340332
+              ],
+              [
+                82.07289123535156,
+                41.623172760009766
+              ],
+              [
+                81.51747131347656,
+                60.55001449584961
+              ]
+            ],
+            "score": 0.99136,
+            "text": "20"
+          },
+          "truth": null
+        }
+      ],
+      "id": "eartags3155",
+      "image": ".cache/cow-ear-tags/obb-error-audit/eartags3155.jpg",
+      "image_sha256": "bf8edfdd0b9b638d90347fb4bece91a2ee521d75da99bdc86333669afc481514",
+      "source": "datasets/cow-eartag-recognition/images-v1/eartags3155.jpg",
+      "source_sha256": "f477833779d041bedf725a6dbea460397000d9f183540cd62f393176924d4324"
+    }
+  ],
+  "scope": "All errors in the frozen literal agreement arm, rendered after the immutable score. No truth relabeling/exclusions or parameter change.",
+  "score_sha256": "e4d200a44edf9b559eb0255660f817c7fa4a60548fcb08076046d45f44811d6f"
+}

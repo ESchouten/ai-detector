@@ -1,0 +1,129 @@
+{
+  "annotation_policy": "Independent prediction-blind annotations frozen before inference; all105 sampled1fps frames. Main score includes46known(6uncertain),10principalunknown(1uncertain),20nuisanceunknown(alluncertain); definite-only sensitivity reported separately. All7 intended-known denominator includes2238 with no references.",
+  "annotations": "research/cow_identity/results/2026-10-03/purdue-passage-annotations.json",
+  "approved_at_utc": "2026-10-03T08:00:49.079469+00:00",
+  "confirmed_references": 18,
+  "files": {
+    ".cache/cow-passage-enrollment-5fps/proposals.json": "6538e65f62c131b42f97bc92970c4a6b746c2ed218e573f87342510c242738c5",
+    ".cache/cow-passage-gallery-preset-5fps/catalog.json": "fe485b3fc559a8bebcb3f3cd801a0661fbf9db1dff401369eda11d66479ee9d6",
+    ".cache/cow-passage-gallery-preset-5fps/confirmed-gallery.jpg": "08e8761b1497b8d1e977301ae97c8151bba2f13207a0307fd9ac31036c9ca627",
+    ".cache/cow-passage-gallery-preset-5fps/images/0386ddb56230475e93cf4c18aaad0f56.jpg": "694cc131d66a967572d2f59486e212481052d5b028041e8ecb1af210ce1c5c5e",
+    ".cache/cow-passage-gallery-preset-5fps/images/092927f83c234ea9854cb5c1aed0c380.jpg": "1a5a99fc979531805972f459d6f3cde35ed8fb2d5a61f1f6ef820cc5b909f979",
+    ".cache/cow-passage-gallery-preset-5fps/images/1dc3d53beda94148a85c9040eefb92a7.jpg": "7072b28aad16596f8f921d896d90f0785207e64dbb01588ccabb482c5bac17d8",
+    ".cache/cow-passage-gallery-preset-5fps/images/26550f5679ed474dad9621aa0f76f2aa.jpg": "14686066f4436cb2b8eef732c99ce85ac318f64832fc76512b97b556a7cc401c",
+    ".cache/cow-passage-gallery-preset-5fps/images/3d6574811a974734b57efa0d54f5422d.jpg": "d3bd21075c8d74b3189ef0c5bee2c8118c95d184950e60be4a5fbe4fa961e8ba",
+    ".cache/cow-passage-gallery-preset-5fps/images/454449a4bdbd472ca4544ce6b9640f1f.jpg": "5f8642c2a1f9cf980a5cab4c730a14e8071a04a54c8257a785e7ccb3b70121ab",
+    ".cache/cow-passage-gallery-preset-5fps/images/7350c36510a0406c84f2499fbb93e581.jpg": "4d7a8eccc6be4ad121019a1e32f3e2a0dfba261d7541a9e5bcb45dca14c01bf8",
+    ".cache/cow-passage-gallery-preset-5fps/images/7754e46f9a494fc3a6a5fa06d5fde135.jpg": "9c75a4b0ce1c4cc979ac2d673a8b97b8d374c16ed8d40220300bb9149688643f",
+    ".cache/cow-passage-gallery-preset-5fps/images/880e75d90e5440b996e887adcf6472de.jpg": "0f95f9328a5138f3cd049086ab405ecd87c05b17eabe53c4798ea679d6b0a575",
+    ".cache/cow-passage-gallery-preset-5fps/images/8e55b3a4a6a04194b428ba39199253b3.jpg": "303840e978d7d4bb68e57aa28193c2a5869e9297868340138378a0f6ab075ae1",
+    ".cache/cow-passage-gallery-preset-5fps/images/9abb52c396424b5e833a07c0082f33ba.jpg": "04142538fb8c93f1a3aca9fcfb79e0602b6aca2029eb0496a906dd6bc916d0d5",
+    ".cache/cow-passage-gallery-preset-5fps/images/a25a6e067ca04ac5ad8f3e71dec27aa9.jpg": "e0d65918c6da2929381e57afc6106d9a1f64e4cbab4640d32a18675175ca53f8",
+    ".cache/cow-passage-gallery-preset-5fps/images/a3159a1becb94a9eb4e6e9cf5d5c3145.jpg": "0776b849bf0e4e2a3b92d94bc6d16a62e1910fce491d3bffece0cecac00460b5",
+    ".cache/cow-passage-gallery-preset-5fps/images/b48d5fcae18543988a3a7e7f213acb0f.jpg": "4e039153f79c4945b7de24d365cf25386fdd4103fb8e7d52b54e84341e67dae7",
+    ".cache/cow-passage-gallery-preset-5fps/images/b9043144f57f451ab17edb851c46721a.jpg": "1978cc307857bc092f9bc7d32f6d25cf68f78f46c92a196bacda7eb6334bb13e",
+    ".cache/cow-passage-gallery-preset-5fps/images/c8b19a8770b34d508112f0c13e444175.jpg": "26fff480b91b9a55f83d18d552a3195ce79477e1740e375f0fd803d128445926",
+    ".cache/cow-passage-gallery-preset-5fps/images/d3c317c80e81491b838f7fc1f5c488bd.jpg": "0cb30f48f723c26e7c769eb327ee5b64763a027e5dea4a26a850c557538b1e9a",
+    ".cache/cow-passage-gallery-preset-5fps/images/f640f5b6fa4144dfbe4493fa886e629a.jpg": "76cda648423fb4816c5bc21c4c3b82ef2be88172a479e05a52d2819a9a4d7865",
+    ".cache/cow-passage-gallery-preset-5fps/provenance.json": "d7dade01d0746891d4e670de0471dae50827f193f374ca8cd691b04af97665d8",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/0386ddb56230475e93cf4c18aaad0f56.json": "cb1764948d09905ca1f16869587be4c4f4d780799424ac45ae2b47939055cdb4",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/092927f83c234ea9854cb5c1aed0c380.json": "1f4f665b815bf77168b1f1aa01450b149fa0c5371fd842b9138e227a98dedab3",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/1dc3d53beda94148a85c9040eefb92a7.json": "a9be3b82aebb2ca5106d7e7f103af0ea32eadccefdf2c9ef12234c0939e3f608",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/26550f5679ed474dad9621aa0f76f2aa.json": "c4f9f545f0b0c6b30009d90fab3495b6df2870bffde7d7ebae3b6faa5b0c5477",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/3d6574811a974734b57efa0d54f5422d.json": "c4b13d10e75110c59f190006650a586cbcd99a1cd2671b889bbe54ab7b29f4f7",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/454449a4bdbd472ca4544ce6b9640f1f.json": "2c7d2d1acb837b17933e1985aec077a13fc46d84b5b3d661273d45282eb85e0f",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/7350c36510a0406c84f2499fbb93e581.json": "59346809bbba5ba83bd459390caa3ab94a07338956c229f7bdb48e94f26d20c3",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/7754e46f9a494fc3a6a5fa06d5fde135.json": "ee058f034a2fff50c601bbe1bdff912b9264acd107b8e9b8fbbdb635371a819f",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/880e75d90e5440b996e887adcf6472de.json": "504cbf6c4ae0ded3446b3c9da1a1a5ffd9253de33b347a7358da6f48e476ae10",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/8e55b3a4a6a04194b428ba39199253b3.json": "bd5db5252ef5c6b8ef91ce6c2004b5ee2f0ab56fd68f219738c92072b1456022",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/9abb52c396424b5e833a07c0082f33ba.json": "b314a79d1dc096ba67bbe3c05ac7b9ba8964af5dddb7e562ec1373045671aede",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/a25a6e067ca04ac5ad8f3e71dec27aa9.json": "cb010f5215cb5862e3c25b88b65e0bfde712b8786f2e7005c06079199d2cc631",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/a3159a1becb94a9eb4e6e9cf5d5c3145.json": "83d1090622de6916c3858ad96ee2274f56d0be0c6fa45da3a1be683f07d5d825",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/b48d5fcae18543988a3a7e7f213acb0f.json": "e952cef5830980c8676b1ff46d0fccb03debe87fc1ea02567505562a31801535",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/b9043144f57f451ab17edb851c46721a.json": "c1c6e0bafac717cee5745a44de072637861f54a63ffe3ca58c50478c0f9629a7",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/c8b19a8770b34d508112f0c13e444175.json": "05048cec50744fabaff01178ce441ced8054f62db5407f969f0238dd3d04613e",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/d3c317c80e81491b838f7fc1f5c488bd.json": "7fbfdfcff5bdf8fc5b2a2f964b95f81a5c8eb355dfee145036abcbf329142b00",
+    ".cache/cow-passage-gallery-preset-5fps/sightings/f640f5b6fa4144dfbe4493fa886e629a.json": "ac89d52b1b1594f3e806212e551f59feec636b47db5de9fcdf0eee855578e919",
+    "detector/src/aidetector/adapters/identity_catalog.py": "9a5ab675862540311e3e6d41b84e12d210713106db25779b8b82dbec34b5f079",
+    "detector/src/aidetector/adapters/inference/device.py": "695e9326aec56640512f672b5836a3294283677005b9b0c10349e70ff4b4d5f7",
+    "detector/src/aidetector/adapters/inference/identity.py": "953f80f29d15a7b4c9bb41f58b0388faaffb0643445605166bd20b6ccc386bef",
+    "detector/src/aidetector/adapters/inference/identity_gallery.py": "e6de362d378f93b51fb77dd272da6191d55f0539fe153872e73c1a0b8eff6c45",
+    "detector/src/aidetector/adapters/inference/identity_observations.py": "937b275e369e414bb0fff7c2630ff3e81e902cde17996a916c5b53aaa6a0d615",
+    "detector/src/aidetector/adapters/inference/miewid.py": "1dbbb9259b64a95aff9f6da872c3ee81966d0afaa04db1ea7cad3eb8f080a134",
+    "detector/src/aidetector/adapters/inference/yolo.py": "91d7dc726ceef45d93dd6d59e94e0c5ed99f694ee4b3bb38db13ced79734e3e5",
+    "detector/src/aidetector/adapters/media/images.py": "2d73e9970e0df6126a565f1bf0bc60224f3e2f42ef987247df4a2ad88c899595",
+    "detector/src/aidetector/configuration.py": "93badd58fb63f8bb8bd6f5d2f2f0026b472a9f7a34901f582529dcbd0a0dcbd3",
+    "detector/src/aidetector/domain/identity.py": "0c07035535816d507b85631fe7913e36b4c50302503590b7490f0c9f00e686cd",
+    "detector/src/aidetector/domain/models.py": "8121c45555913af9962a94d20129816d299b36821242a8a5f17830bf778f5896",
+    "detector/yolo26m-seg.pt": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+    "research/cow_identity/passage_cadence_protocol.json": "2aaa5885d92cee62c1763acc943285e3abe4b0dd615d3bac85e2225e6c536250",
+    "research/cow_identity/passage_metrics.py": "c2581b5e3f7db8aeb04b1c093766bea9f083ca7177367d4f39b361c545e66843",
+    "research/cow_identity/passage_query.py": "570456457aa3554011f5e0cc14e37185851a5dc65c25f6d00052f2da2b6dacbe",
+    "research/cow_identity/passage_runtime.py": "5c9efa9ef94aba1ceffc9feb2fd3896d09e950d91aa0184bf455cf93979f57b1",
+    "research/cow_identity/results/2026-10-03/purdue-enrollment-5fps-review.json": "114897bfa79231b16a4dc4de9dad45b7e92fa968e2646aa49935594904320375",
+    "research/cow_identity/results/2026-10-03/purdue-passage-annotations.json": "a3da09f93b8f5182d23b9643aa54634508c7521f374ea526ca54c51db76b94cf",
+    "research/cow_identity/results/2026-10-03/purdue-passage-labels.json": "c095e21b36022b05294fd443a4bfd859b48daeea4c8513848d3c8c1b1cfe96d3",
+    "research/cow_identity/results/2026-10-03/purdue-passage-manifest.json": "0200e21caad98df815eb0bab9fec5a3bdb91e82802c52b4d399e858426d716d0"
+  },
+  "frozen_at_utc": "2026-10-03T07:58:43.531434+00:00",
+  "gallery": ".cache/cow-passage-gallery-preset-5fps",
+  "independent_final_review": {
+    "execution_condition": "Wait for parent shared GPU release; no query-based policy changes.",
+    "limitation": "References are adjacent views within one June8 passage per enrolled animal. AI-assisted manual review, not a farmer study.",
+    "result": "Passed all60 source hashes, proposal/protocol/vector consistency, exact18 reference selection/catalog/JPEG/sighting binding, known7 with2238empty, unknowns excluded, query output absent; final contact sheet no obvious neighbor contamination;5 focused tests passed.",
+    "reviewer": "identity_integration_audit agent"
+  },
+  "intended_known_cows": [
+    2234,
+    2238,
+    5676,
+    5953,
+    6079,
+    6102,
+    6110
+  ],
+  "known_without_references": [
+    2238
+  ],
+  "mixed_detector_provenance_correction": "Earlier alternate protocol incorrectly described adult training as ETHZ. Actual mixed localization training used Cows2021 adult plus early8calves. Alternate is NOT selected. Preserve prior text as historical error.",
+  "output": ".cache/cow-passage-query-preset-5fps",
+  "protocol": "research/cow_identity/passage_cadence_protocol.json",
+  "reference_selection": {
+    "2234": [
+      47,
+      48
+    ],
+    "2238": [],
+    "5676": [
+      26,
+      28,
+      27,
+      25
+    ],
+    "5953": [
+      38
+    ],
+    "6079": [
+      14
+    ],
+    "6102": [
+      5,
+      2,
+      7,
+      4,
+      6,
+      3
+    ],
+    "6110": [
+      58,
+      56,
+      57,
+      59
+    ]
+  },
+  "requirement": "No query inference until parent-approved final independent contract check and shared GPU release. Freeze must be approved and unchanged when runner executes.",
+  "review_provenance": "AI-assisted manual visual review by identity_evaluation agent, not an independent human farmer. Each photo principal identity linked to publisher CSV and continuous visible passage; unknown photos not enrolled. Root reviews final18photo sheet before query.",
+  "selected_arm": "Generic preset YOLO26m-seg FP16/MPS at5fps,640image,1280framewidth; actualGalleryIdentifier MIEW FP32, sample_interval.2,3observations,.65similarity,.1margin,.2maxoverlap. No query tuning.",
+  "selection_source": "Only June8 enrollment: preset1fps confirmed3/7; preset5fps confirmed6/7. Mixed alternate rejected because widespread empty-gate/reflection proposals. Query pixels/model outputs not used.",
+  "status": "Approved frozen query run; independent exhaustive annotations complete"
+}

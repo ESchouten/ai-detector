@@ -1,0 +1,131 @@
+{
+  "adaptation": {
+    "crop_policy": {
+      "association": "Each torso must have >=90% of its area within exactly one whole-animal prediction, and that whole prediction must have exactly one such torso. Otherwise abstain. Assign whole-animal trackID to torso evidence. Never associate via identity label or query truth.",
+      "geometry": "Apply existing min64px, no-border, overlap<=.2 eligibility to torso rectangles; whole box may touch image boundary. Track/display/IoU metric retain original whole-visible-animal rectangle.",
+      "min_margin": 0.1,
+      "min_observations": 3,
+      "min_similarity": 0.65,
+      "minimum_containment": 0.9,
+      "model": "Unadapted official MIEWid FP32, existing input transform; no new embedding training",
+      "sample_interval": 0.2
+    },
+    "prepared_data_sha256": "91a7cb252848a7be938d96d8746122fb410c44c7a60db85af260bcc11e246bdf",
+    "source": "June8-only two-class whole-visible-animal and visible-coat-torso boxes",
+    "training_protocol": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/passage_training_protocol.json",
+    "training_protocol_sha256": "25304cac2d6b44196cb69374b523cba350cede6953fa57dd1897564611df1dd8",
+    "training_provenance_sha256": "eed1335d459f03abfbf6f63b997742722f97459f998f1a0d5b56e7fac12519c0"
+  },
+  "amendment": "June8-only engineering cadence control after baseline found only3/7 clean enrollment references. Same detector/640/.25/1280 and same3 agreement/.65 similarity/.1margin/.2overlap. No query pixels or model outputs used for choice.",
+  "detector": {
+    "class_ids": [
+      0,
+      1
+    ],
+    "classes": [
+      "whole_visible_cow",
+      "coat_torso"
+    ],
+    "confidence": 0.25,
+    "frames_width": 1280,
+    "imgsz": 640,
+    "model": ".cache/cow-passage-adaptation/training/weights/best.pt",
+    "precision": "FP32 on MPS",
+    "processing_fps": 5,
+    "quantize": 32,
+    "sha256": "b62eee7455e5b771045392fec2a8aa9cb165a46b0148c8b417e65824b7354567",
+    "tracker": "bytetrack.yaml",
+    "tracking_classes": [
+      0
+    ]
+  },
+  "encoder": {
+    "adaptation": false,
+    "image_size": 440,
+    "model": "Official MIEWid msv3",
+    "precision": "FP32",
+    "weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348"
+  },
+  "enrollment": {
+    "frames": "All June8 known clips at5fps; max10 confirmed clean predicted crops per cow",
+    "maximum_references_per_cow": 10,
+    "selection": "First-day predicted crops only. Human-confirm principal-cow identity and clean visibility without query images. Medoid then farthest-point diversity using official rawMIEW cosine, deterministic frame-index ties; keep fewer if fewer eligible confirmed crops. Count all proposed/rejected/corrected crops. No unknown photos enrolled."
+  },
+  "frozen_at_utc": "2026-10-03T07:47:33.961142+00:00",
+  "gates": {
+    "known_coverage": 0.6,
+    "limitations": "Only7known and2unknown return passages; even zero observed errors cannot certify these rates",
+    "named_precision": 0.99,
+    "unknown_false_acceptance_rate": 0.01
+  },
+  "identity_policy": {
+    "implementation": "Actual GalleryIdentifier, not research temporal_names",
+    "max_overlap": 0.2,
+    "min_crop_size": 64,
+    "min_margin": 0.1,
+    "min_observations": 3,
+    "min_similarity": 0.65,
+    "query_cache": "Content and encoder fingerprints; no expected IDs in keys",
+    "sample_interval": 0.2,
+    "state": "Fresh tracker and temporal identity state per clip; same immutable confirmed gallery; finish async preparation before scored frames and report startup cost separately"
+  },
+  "known_cows": [
+    2234,
+    2238,
+    5676,
+    5953,
+    6079,
+    6102,
+    6110
+  ],
+  "manifest_sha256": "0200e21caad98df815eb0bab9fec5a3bdb91e82802c52b4d399e858426d716d0",
+  "metrics": {
+    "offline_three_crop_aggregate": "Optional separately labeled diagnostic only; cannot substitute production-policy result",
+    "primary": "Full-clip1fps one-to-oneIoU>=.5 conservative named precision; correct names / all visible enrolled-cow annotations including missed/rejected crops; unknown false names / all visible unenrolled cows; unmatched named boxes are errors",
+    "secondary": [
+      "One decision per physical passage; retain all earlier wrong-name durations",
+      "Latency to correct name, naming gaps, track/identity switches",
+      "Enrollment effort, startup latency, pipeline time and memory"
+    ]
+  },
+  "original_protocol_sha256": "d39b3814ea05e4265c8162582c7bbdced3ca382a0135ed724ce286673709b97f",
+  "predeclared_alternate_if_enrollment_incomplete": {
+    "model": ".cache/cow-detectors/training/mixed-full-backbone/weights/best.pt",
+    "rule": "Only if preset5fps still cannot enroll every known cow, repeat all June8 known clips with this already-trained cow detector at exactly the same confidence/imgsz/cadence. No new training or query inference.",
+    "sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d"
+  },
+  "preserved_holdouts": [
+    "8-calves1800\u20132099",
+    "8-calves2700\u20132999"
+  ],
+  "principal_labels_sha256": "c095e21b36022b05294fd443a4bfd859b48daeea4c8513848d3c8c1b1cfe96d3",
+  "processing_fps": 5,
+  "purpose": "Small controlled-view later-day feasibility complement; does not replace crowded-scene goal or establish farm reliability",
+  "query_pixels_opened_at_freeze": true,
+  "query_truth_requirement": "Existing independent105-frame annotations are unchanged and must be bound in the final query freeze.",
+  "sampling_counts": {
+    "enrollment": 78,
+    "excluded_unknown": 0,
+    "query": 105
+  },
+  "sampling_fps": 1,
+  "selection": "Fixed first-day-only adaptation. June9 is exposed regression; no claim of new blind testing or post-query tuning.",
+  "source_days": {
+    "enrollment": "2022-06-08",
+    "query": "2022-06-09"
+  },
+  "source_hashes": {
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/passage_torso.py": "43a3a0d9ab8db0607ad08d6862e3778f2aeb6f50d3da8a3589805c7b1943bae1",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/passage_torso_detection.py": "86b5852db45b308a89ff990723d75c8a0c04781e8a22f0de4458d67fde85d0d5",
+    "detector/src/aidetector/adapters/inference/identity_observations.py": "937b275e369e414bb0fff7c2630ff3e81e902cde17996a916c5b53aaa6a0d615",
+    "detector/src/aidetector/adapters/inference/miewid.py": "1dbbb9259b64a95aff9f6da872c3ee81966d0afaa04db1ea7cad3eb8f080a134",
+    "detector/src/aidetector/domain/identity.py": "0c07035535816d507b85631fe7913e36b4c50302503590b7490f0c9f00e686cd"
+  },
+  "source_sampling": "Sequential decode source clips; process0,6,12,... at5fps. Query accuracy scored only on independently annotated frozen1fps frames, with all preceding5fps observations updating actual state.",
+  "unknown_cows": [
+    6109,
+    6113
+  ],
+  "unknown_selection": "First2 SHA256(purdue-passage-candidate-v1:<cow-id>) among9publisherIDs, before pixels",
+  "version": 2
+}

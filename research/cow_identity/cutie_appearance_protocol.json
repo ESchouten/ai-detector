@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "frozen_at": "2026-10-03T08:05:48.390821+00:00",
+  "purpose": "Appearance corroboration of first-frame-seeded Cutie continuity; no identity reassignment or future labels",
+  "propagation_sha256": "5089d986a636ee1b633faa4e3ded27bacc1a1696f617a001336d01a28551de71",
+  "sampled_manifest_sha256": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d",
+  "encoder_weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
+  "encoder": "Original MIEWid FP32 MPS, RGB stretch440; no adapted checkpoint",
+  "gallery_manifest_sha256": "271bbfdd31a24f2e3b8243e6dca19ba1e2a928dd3340a6a577e0c22744ccd4f6",
+  "gallery_vectors_sha256": "0b192c8ba69ea81688d16e51d91d025e9fbcf6fb73e4664c81b0784ee46f0840",
+  "gallery": "Same60 previously chosen confirmed early masked photos,10/cow; no unknown examples",
+  "feature_windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ],
+    [
+      1230,
+      1529
+    ]
+  ],
+  "selection_window": [
+    1230,
+    1529
+  ],
+  "development_replay_windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ]
+  ],
+  "reserved_unopened": [
+    [
+      1800,
+      2099
+    ],
+    [
+      2700,
+      2999
+    ]
+  ],
+  "grid": {
+    "minimum_p10_probability": [
+      0.5,
+      0.7
+    ],
+    "minimum_own_similarity": [
+      0,
+      0.3,
+      0.4,
+      0.5
+    ],
+    "minimum_own_minus_other": [
+      -0.2,
+      -0.1,
+      0,
+      0.05,
+      0.1
+    ],
+    "consecutive_passes": [
+      1,
+      3
+    ]
+  },
+  "decision": "Original seeded known name only if p10, maximum gallery cosine for that name, and its difference from the best different known name pass inclusive thresholds. No newly guessed names. Anonymous slots remain anonymous. A failed frame resets the consecutive-pass counter; missing frame or slot resets it. No smoothing or future observations.",
+  "selection": "Highest correct-known coverage subject to strict named precision>=.99 and unknown false naming<=.01 on selection window only; ties higher precision, fewer consecutive passes, lower p10, lower own similarity, lower own-minus-other threshold.",
+  "denominators": "All visible known animals including misses; unmatched named boxes are errors; same frozen IoU>=.5 maximum-cardinality matching.",
+  "limits": "Manual first-frame seeds remain an oracle initialization; neither new-arrival/reentry nor full application success established. Cached exposed development features may be encoded but only replayed after selection. Final windows unopened.",
+  "runner_sha256": "7f1bb165da9cc60bf8a85a25ed645e47c7d1976ee1db91dcc6f14aac1f84acad"
+}

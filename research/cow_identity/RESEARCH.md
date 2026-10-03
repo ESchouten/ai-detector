@@ -17,11 +17,16 @@ queries at 69.84% known-cow coverage. MegaDescriptor correctly accepted 11 known
 queries; DINOv2-small at 224 pixels accepted 17 queries, only 10 correctly. These are dataset
 results, not a farm accuracy guarantee. The production-style three-sample
 agreement check was much more conservative: 12 accepted known-cow groups, all
-correct, but only 9.5% coverage. Actual camera-video testing is still required.
+correct, but only 9.5% coverage. The subsequent [video assessment](VIDEO_ASSESSMENT.md)
+failed: the ordinary detector missed or merged many calves, and even oracle
+boxes produced only 1.17% correct naming coverage with the original enrollment.
+The [active iteration protocol](ITERATION_PROTOCOL.md) separates detection,
+enrollment, recognition and tracking experiments, with reserved later windows.
 
 Keep the application model-independent: image encoding, matching, storage and
-farmer review have separate responsibilities. Identity remains optional and must
-not delay or interrupt the existing behaviour detectors.
+farmer review have separate responsibilities. Identity remains optional. Avoiding
+delays and isolating failures from behaviour detectors is a requirement, not a
+property already achieved by the shared-process prototype.
 
 The general-purpose baseline is the official
 [facebook/dinov2-small](https://huggingface.co/facebook/dinov2-small), loaded with
@@ -190,9 +195,10 @@ a small, heavily rejected sample must be accompanied by coverage and counts.
 
 **Reliability and simplicity**
 
-- Identity is optional. Isolating its failures from existing detections is a
-  deployment requirement still to implement; the trial currently shares the
-  detector process and its recovery policy.
+- Identity is optional. Expected gallery, cache and download failures suspend
+  matching while detection continues; background preparation clears stale names.
+  Unexpected accelerator failures still share process recovery. Separate process
+  isolation remains a deployment consideration.
 - Sample a few useful crops per track instead of embedding every frame.
 - Retain multiple appearances per cow; avoid treating left and right coat
   patterns as interchangeable without evidence.
@@ -215,3 +221,115 @@ PyTorch's [MPS backend](https://developer.apple.com/metal/pytorch/) provides App
 GPU acceleration. Actual model throughput and stability must be measured on the
 available Mac; no cattle-specific MPS speed guarantee follows from backend
 support alone.
+
+## Streaming object-memory control
+
+[Cutie](https://arxiv.org/abs/2310.12982) combines pixel memory with a compact
+object representation. Its official implementation supports streaming inference
+and bounded long-term memory, making it a useful alternative when SAM video
+propagation exceeds this Mac's memory budget. The frozen control uses one initial
+mask per animal and measures original seed names; it does not remap tracks to
+truth after inference. This measures continuity after manual initialization,
+not recognition of an animal returning on another day. Results and resource
+limits belong in the detection study before considering any application change.
+
+### Possible application boundary, still gated
+
+The next required control initializes tracking from **actual predicted masks**
+and accepted MIEW matches or explicitly confirmed current photographs. It must
+include arrivals, occlusions, exits and reconnections. High coverage after eight
+correct manual seeds does not establish automatic identity acquisition or the
+required naming precision. No Cutie integration is implemented or promoted on
+that evidence alone.
+
+If that control succeeds, keep the change at existing boundaries:
+
+- A small `adapters/inference/cutie.py` implementation of `ObjectDetector`
+  consumes the shared latest frames and owns separate mask memory per source.
+  Reuse YOLO segmentation results; `yolo.py` currently discards their masks when
+  mapping observations. No second capture, retained-frame replay or research
+  annotation dependency belongs in runtime. Masks and SDK tensors stay inside
+  the adapter. `ObservationIdentifier` must continue preserving box geometry.
+- `GalleryIdentifier` establishes a name using existing gallery acceptance and
+  agreement. A small domain policy may carry that accepted name through verified
+  continuous tracking, but clears it on contradictory evidence, ambiguity or
+  loss. New arrivals start unknown. Propagated identity is not a fresh cosine
+  measurement; synthetic research confidence `1.0` must not qualify events.
+- Add a source-generation signal in `sources/streams.py`: reconnect status alone
+  does not reach inference, and a short reconnect can evade timestamp-gap
+  checks. Each live object also needs an opaque track token, independent of
+  reused integer tracker IDs. Reset on reconnect, restart, changed geometry,
+  backward time and excessive gaps; lost objects require fresh identity evidence.
+- Existing Herd confirmation can remain the only enrollment UI. Add an optional
+  track token to immutable sightings in the Python/web catalog contract. A
+  confirmed photo may anchor only its exact still-continuous live track. Older
+  photos remain gallery references and cannot relabel whichever animal later
+  occupies the same numeric slot. Catalog corrections invalidate affected names.
+- Bootstrap owns model loading, bounded per-source memory and cleanup. Share the
+  existing MPS synchronization scope and model weights where the SDK permits.
+  Keep stateless MIEW embedding caching; current-frame pixel hashes alone cannot
+  cache a stateful tracker whose output depends on its history.
+
+Focused contracts must prove that restart/reconnect and reused IDs cannot inherit
+a name, stale photo confirmations cannot seed a new object, new arrivals remain
+unknown, duplicate timestamps/context frames do not advance state, conflicting
+names clear rather than guess, and gallery corrections take effect. Also verify
+bounded memory, cancellation and unchanged event qualification. These are actual
+identity and lifecycle boundaries; they do not require a new plugin framework,
+capture service or parallel configuration system. Keep all labels configurable
+and do not infer the identity of a mounting/calving region from proximity alone.
+
+### Longer tracking: distinguish live inference from offline repair
+
+The 2026 [group-housed pig tracking study](https://arxiv.org/html/2604.03426v1)
+reports no identity switches on 132 annotated frames across 132 minutes. Its
+method also uses larger SAM2 weights, clean-frame reinitialization, backward
+propagation, error-segment exclusion and post-processing. Some short-term errors
+were located by human review. This is useful evidence for testing model capacity
+and mask initialization, but not proof that an unattended causal camera pipeline
+will maintain the same accuracy. Our live evaluation must count failed intervals
+and cannot repair an earlier prediction using a later frame.
+
+Meta's [SAM 3.1 release](https://github.com/facebookresearch/sam3/blob/main/RELEASE_SAM3p1.md)
+introduces joint object processing and improves several video benchmarks. Its
+reported large-object-count speedup is measured on an H100. Before adding a new
+control, check the actual MPS implementation, streaming memory and latency here;
+do not extrapolate those GPU results to a farmer's Mac. Both directions remain
+research candidates, with no dependency added to the application.
+
+The source audit pins SAM3.1 to
+[`2345a4a`](https://github.com/facebookresearch/sam3/tree/2345a4ad109ac29c569da749c91d84f10dc08c40).
+Its public multiplex builder calls `.cuda()`, the imported base inspects a CUDA
+device unconditionally, and the predictor uses CUDA BF16 autocast. Some utilities
+have CPU fallbacks, but these do not provide an MPS execution path. The official
+[3.26 GiB checkpoint](https://huggingface.co/facebook/sam3.1) requires manual
+access approval; it was not downloaded. Default 15-frame confirmation buffering
+and 16-frame batching can make earlier outputs depend on later frames. The
+finite-video implementation retains per-frame state and disables old-memory
+trimming by default, so bounded attention memory does not establish bounded
+continuous-camera memory. Joint 16-object memory is relevant to crowded scenes,
+but an MPS port and a causal, bounded adapter would be separate work.
+
+A smaller next control changes only SAM2.1 model capacity in the existing runner:
+large instead of tiny, at the same 512-pixel FP32 input, first-frame prompts,
+2 fps timeline and strict scoring. The official
+[SAM2 model comparison](https://github.com/facebookresearch/sam2) reports 224.4M
+versus 38.9M parameters and lower large-model throughput on A100; no Mac speed
+is inferred from that. The public Ultralytics `v8.4.0/sam2.1_l.pt` asset is
+449,239,354 bytes, pinned by SHA-256
+`ab7e1ac9cb9f6eb3bcf197ece044f06a707ec49129361a2b47e93e1db6989efd`.
+[The hardware probe](detection_sam_large_probe_protocol.json) processes exactly
+51 inputs (seconds 0–25), with the unchanged 8 GiB post-reclamation budget and
+one-second sustained frame-time limit. Only if it passes may
+[the full control](detection_sam_large_protocol.json) process seconds 0–629 and
+score 330–629. No future correction, new threshold search or reserved footage
+is introduced. Protocols and source preparation alone are not measured results.
+
+The [51-input hardware probe](results/2026-10-03/detection/sam2-large-512-probe-summary.json)
+subsequently passed on the M2 Max in 15.94 seconds, with FP32 parameters on MPS.
+Mean measured frame time after ten warmup inputs was 0.241 seconds. Observed
+driver allocation peaked at 7.81 GiB after reclamation, close to the frozen
+8 GiB limit; the largest pre-reclamation sample was 8.82 GiB. These distinguish
+the actual budget check from transient cached allocation. The first 25 seconds
+do not establish long-term tracking quality. The full control has not run and
+remains subject to review and an explicit GPU slot.

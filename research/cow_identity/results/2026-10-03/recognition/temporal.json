@@ -1,0 +1,1518 @@
+{
+  "conditions": {
+    "ema0.2-geometry0.2-ttl0": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 2363,
+          "accepted_precision": 1.0,
+          "correct_accepts": 34,
+          "known": 1799,
+          "known_coverage": 0.018899388549193995,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 2255,
+          "accepted_precision": 1.0,
+          "correct_accepts": 145,
+          "known": 1800,
+          "known_coverage": 0.08055555555555556,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 2314,
+          "accepted_precision": 1.0,
+          "correct_accepts": 79,
+          "known": 1795,
+          "known_coverage": 0.04401114206128134,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.6
+    },
+    "ema0.2-geometry0.2-ttl10": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 2298,
+          "accepted_precision": 1.0,
+          "correct_accepts": 99,
+          "known": 1799,
+          "known_coverage": 0.055030572540300166,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 2172,
+          "accepted_precision": 1.0,
+          "correct_accepts": 228,
+          "known": 1800,
+          "known_coverage": 0.12666666666666668,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 2233,
+          "accepted_precision": 1.0,
+          "correct_accepts": 160,
+          "known": 1795,
+          "known_coverage": 0.08913649025069638,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.6
+    },
+    "ema0.2-geometry0.2-ttl30": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1990,
+          "accepted_precision": 1.0,
+          "correct_accepts": 407,
+          "known": 1799,
+          "known_coverage": 0.22623679822123402,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1868,
+          "accepted_precision": 1.0,
+          "correct_accepts": 532,
+          "known": 1800,
+          "known_coverage": 0.29555555555555557,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1987,
+          "accepted_precision": 1.0,
+          "correct_accepts": 406,
+          "known": 1795,
+          "known_coverage": 0.22618384401114205,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.2-geometry0.2-ttl60": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1814,
+          "accepted_precision": 1.0,
+          "correct_accepts": 583,
+          "known": 1799,
+          "known_coverage": 0.32406892718176766,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1716,
+          "accepted_precision": 1.0,
+          "correct_accepts": 684,
+          "known": 1800,
+          "known_coverage": 0.38,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1821,
+          "accepted_precision": 1.0,
+          "correct_accepts": 572,
+          "known": 1795,
+          "known_coverage": 0.31866295264623956,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.2-geometry0.5-ttl0": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1992,
+          "accepted_precision": 1.0,
+          "correct_accepts": 405,
+          "known": 1799,
+          "known_coverage": 0.22512506948304614,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1927,
+          "accepted_precision": 1.0,
+          "correct_accepts": 473,
+          "known": 1800,
+          "known_coverage": 0.2627777777777778,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1866,
+          "accepted_precision": 1.0,
+          "correct_accepts": 527,
+          "known": 1795,
+          "known_coverage": 0.2935933147632312,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema0.2-geometry0.5-ttl10": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1740,
+          "accepted_precision": 1.0,
+          "correct_accepts": 657,
+          "known": 1799,
+          "known_coverage": 0.36520289049471927,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1778,
+          "accepted_precision": 1.0,
+          "correct_accepts": 622,
+          "known": 1800,
+          "known_coverage": 0.34555555555555556,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1610,
+          "accepted_precision": 1.0,
+          "correct_accepts": 783,
+          "known": 1795,
+          "known_coverage": 0.4362116991643454,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema0.2-geometry0.5-ttl30": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1480,
+          "accepted_precision": 1.0,
+          "correct_accepts": 917,
+          "known": 1799,
+          "known_coverage": 0.5097276264591439,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1645,
+          "accepted_precision": 1.0,
+          "correct_accepts": 755,
+          "known": 1800,
+          "known_coverage": 0.41944444444444445,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1593,
+          "accepted_precision": 1.0,
+          "correct_accepts": 800,
+          "known": 1795,
+          "known_coverage": 0.4456824512534819,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.2-geometry0.5-ttl60": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1266,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1131,
+          "known": 1799,
+          "known_coverage": 0.6286826014452473,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1473,
+          "accepted_precision": 1.0,
+          "correct_accepts": 927,
+          "known": 1800,
+          "known_coverage": 0.515,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1470,
+          "accepted_precision": 1.0,
+          "correct_accepts": 923,
+          "known": 1795,
+          "known_coverage": 0.5142061281337047,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.2-geometrynone-ttl0": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1831,
+          "accepted_precision": 1.0,
+          "correct_accepts": 566,
+          "known": 1799,
+          "known_coverage": 0.31461923290717064,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1865,
+          "accepted_precision": 1.0,
+          "correct_accepts": 535,
+          "known": 1800,
+          "known_coverage": 0.2972222222222222,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1773,
+          "accepted_precision": 1.0,
+          "correct_accepts": 620,
+          "known": 1795,
+          "known_coverage": 0.34540389972144847,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema0.2-geometrynone-ttl10": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1644,
+          "accepted_precision": 1.0,
+          "correct_accepts": 753,
+          "known": 1799,
+          "known_coverage": 0.41856586992773764,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1734,
+          "accepted_precision": 1.0,
+          "correct_accepts": 666,
+          "known": 1800,
+          "known_coverage": 0.37,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1573,
+          "accepted_precision": 1.0,
+          "correct_accepts": 820,
+          "known": 1795,
+          "known_coverage": 0.4568245125348189,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema0.2-geometrynone-ttl30": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1462,
+          "accepted_precision": 1.0,
+          "correct_accepts": 935,
+          "known": 1799,
+          "known_coverage": 0.519733185102835,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1567,
+          "accepted_precision": 1.0,
+          "correct_accepts": 833,
+          "known": 1800,
+          "known_coverage": 0.4627777777777778,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1402,
+          "accepted_precision": 1.0,
+          "correct_accepts": 991,
+          "known": 1795,
+          "known_coverage": 0.5520891364902507,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema0.2-geometrynone-ttl60": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1363,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1034,
+          "known": 1799,
+          "known_coverage": 0.574763757643135,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1469,
+          "accepted_precision": 1.0,
+          "correct_accepts": 931,
+          "known": 1800,
+          "known_coverage": 0.5172222222222222,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1340,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1053,
+          "known": 1795,
+          "known_coverage": 0.5866295264623955,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema0.5-geometry0.2-ttl0": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 2317,
+          "accepted_precision": 1.0,
+          "correct_accepts": 80,
+          "known": 1799,
+          "known_coverage": 0.04446914952751529,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 2167,
+          "accepted_precision": 1.0,
+          "correct_accepts": 233,
+          "known": 1800,
+          "known_coverage": 0.12944444444444445,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 2283,
+          "accepted_precision": 1.0,
+          "correct_accepts": 110,
+          "known": 1795,
+          "known_coverage": 0.06128133704735376,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometry0.2-ttl10": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 2171,
+          "accepted_precision": 1.0,
+          "correct_accepts": 226,
+          "known": 1799,
+          "known_coverage": 0.12562534741523068,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 2024,
+          "accepted_precision": 1.0,
+          "correct_accepts": 376,
+          "known": 1800,
+          "known_coverage": 0.2088888888888889,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 2124,
+          "accepted_precision": 1.0,
+          "correct_accepts": 269,
+          "known": 1795,
+          "known_coverage": 0.14986072423398328,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometry0.2-ttl30": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1974,
+          "accepted_precision": 1.0,
+          "correct_accepts": 423,
+          "known": 1799,
+          "known_coverage": 0.23513062812673707,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1878,
+          "accepted_precision": 1.0,
+          "correct_accepts": 522,
+          "known": 1800,
+          "known_coverage": 0.29,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1946,
+          "accepted_precision": 1.0,
+          "correct_accepts": 447,
+          "known": 1795,
+          "known_coverage": 0.249025069637883,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometry0.2-ttl60": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1809,
+          "accepted_precision": 1.0,
+          "correct_accepts": 588,
+          "known": 1799,
+          "known_coverage": 0.32684824902723736,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1719,
+          "accepted_precision": 1.0,
+          "correct_accepts": 681,
+          "known": 1800,
+          "known_coverage": 0.37833333333333335,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1750,
+          "accepted_precision": 1.0,
+          "correct_accepts": 643,
+          "known": 1795,
+          "known_coverage": 0.35821727019498606,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometry0.5-ttl0": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 2008,
+          "accepted_precision": 1.0,
+          "correct_accepts": 389,
+          "known": 1799,
+          "known_coverage": 0.2162312395775431,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1954,
+          "accepted_precision": 1.0,
+          "correct_accepts": 446,
+          "known": 1800,
+          "known_coverage": 0.2477777777777778,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1884,
+          "accepted_precision": 0.9980353634577603,
+          "correct_accepts": 508,
+          "known": 1795,
+          "known_coverage": 0.283008356545961,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0016722408026755853,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema0.5-geometry0.5-ttl10": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1724,
+          "accepted_precision": 1.0,
+          "correct_accepts": 673,
+          "known": 1799,
+          "known_coverage": 0.37409672040022235,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1822,
+          "accepted_precision": 1.0,
+          "correct_accepts": 578,
+          "known": 1800,
+          "known_coverage": 0.3211111111111111,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1722,
+          "accepted_precision": 0.9806259314456036,
+          "correct_accepts": 658,
+          "known": 1795,
+          "known_coverage": 0.3665738161559889,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.021739130434782608,
+          "unknown_false_accepts": 13,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometry0.5-ttl30": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1439,
+          "accepted_precision": 1.0,
+          "correct_accepts": 958,
+          "known": 1799,
+          "known_coverage": 0.5325180655919955,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1635,
+          "accepted_precision": 1.0,
+          "correct_accepts": 765,
+          "known": 1800,
+          "known_coverage": 0.425,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1541,
+          "accepted_precision": 0.9847417840375586,
+          "correct_accepts": 839,
+          "known": 1795,
+          "known_coverage": 0.46740947075208916,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.021739130434782608,
+          "unknown_false_accepts": 13,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometry0.5-ttl60": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1284,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1113,
+          "known": 1799,
+          "known_coverage": 0.6186770428015564,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1461,
+          "accepted_precision": 1.0,
+          "correct_accepts": 939,
+          "known": 1800,
+          "known_coverage": 0.5216666666666666,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1375,
+          "accepted_precision": 0.9872298624754421,
+          "correct_accepts": 1005,
+          "known": 1795,
+          "known_coverage": 0.5598885793871866,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.021739130434782608,
+          "unknown_false_accepts": 13,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometrynone-ttl0": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1856,
+          "accepted_precision": 1.0,
+          "correct_accepts": 541,
+          "known": 1799,
+          "known_coverage": 0.3007226236798221,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1899,
+          "accepted_precision": 0.998003992015968,
+          "correct_accepts": 500,
+          "known": 1800,
+          "known_coverage": 0.2777777777777778,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 1
+        },
+        "development_later": {
+          "abstentions": 1814,
+          "accepted_precision": 1.0,
+          "correct_accepts": 579,
+          "known": 1795,
+          "known_coverage": 0.3225626740947075,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema0.5-geometrynone-ttl10": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1584,
+          "accepted_precision": 1.0,
+          "correct_accepts": 813,
+          "known": 1799,
+          "known_coverage": 0.4519177320733741,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1724,
+          "accepted_precision": 0.9837278106508875,
+          "correct_accepts": 665,
+          "known": 1800,
+          "known_coverage": 0.36944444444444446,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 11
+        },
+        "development_later": {
+          "abstentions": 1534,
+          "accepted_precision": 1.0,
+          "correct_accepts": 859,
+          "known": 1795,
+          "known_coverage": 0.4785515320334262,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema0.5-geometrynone-ttl30": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1385,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1012,
+          "known": 1799,
+          "known_coverage": 0.5625347415230684,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1560,
+          "accepted_precision": 0.9630952380952381,
+          "correct_accepts": 809,
+          "known": 1800,
+          "known_coverage": 0.4494444444444444,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 31
+        },
+        "development_later": {
+          "abstentions": 1352,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1041,
+          "known": 1795,
+          "known_coverage": 0.5799442896935934,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema0.5-geometrynone-ttl60": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1231,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1166,
+          "known": 1799,
+          "known_coverage": 0.6481378543635353,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1517,
+          "accepted_precision": 1.0,
+          "correct_accepts": 883,
+          "known": 1800,
+          "known_coverage": 0.4905555555555556,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1264,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1129,
+          "known": 1795,
+          "known_coverage": 0.6289693593314764,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.5
+    },
+    "ema1.0-geometry0.2-ttl0": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 2313,
+          "accepted_precision": 1.0,
+          "correct_accepts": 84,
+          "known": 1799,
+          "known_coverage": 0.04669260700389105,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 2182,
+          "accepted_precision": 1.0,
+          "correct_accepts": 218,
+          "known": 1800,
+          "known_coverage": 0.12111111111111111,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 2285,
+          "accepted_precision": 0.9814814814814815,
+          "correct_accepts": 106,
+          "known": 1795,
+          "known_coverage": 0.05905292479108635,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0016722408026755853,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 1
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometry0.2-ttl10": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 2155,
+          "accepted_precision": 1.0,
+          "correct_accepts": 242,
+          "known": 1799,
+          "known_coverage": 0.13451917732073373,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 2007,
+          "accepted_precision": 1.0,
+          "correct_accepts": 393,
+          "known": 1800,
+          "known_coverage": 0.21833333333333332,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 2107,
+          "accepted_precision": 0.9475524475524476,
+          "correct_accepts": 271,
+          "known": 1795,
+          "known_coverage": 0.15097493036211698,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.01839464882943144,
+          "unknown_false_accepts": 11,
+          "wrong_known_accepts": 4
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometry0.2-ttl30": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1965,
+          "accepted_precision": 1.0,
+          "correct_accepts": 432,
+          "known": 1799,
+          "known_coverage": 0.24013340744858255,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1824,
+          "accepted_precision": 1.0,
+          "correct_accepts": 576,
+          "known": 1800,
+          "known_coverage": 0.32,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1904,
+          "accepted_precision": 0.9366053169734151,
+          "correct_accepts": 458,
+          "known": 1795,
+          "known_coverage": 0.2551532033426184,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.051839464882943144,
+          "unknown_false_accepts": 31,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometry0.2-ttl60": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1809,
+          "accepted_precision": 1.0,
+          "correct_accepts": 588,
+          "known": 1799,
+          "known_coverage": 0.32684824902723736,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1605,
+          "accepted_precision": 1.0,
+          "correct_accepts": 795,
+          "known": 1800,
+          "known_coverage": 0.44166666666666665,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1688,
+          "accepted_precision": 0.9276595744680851,
+          "correct_accepts": 654,
+          "known": 1795,
+          "known_coverage": 0.3643454038997215,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.08528428093645485,
+          "unknown_false_accepts": 51,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometry0.5-ttl0": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 2022,
+          "accepted_precision": 1.0,
+          "correct_accepts": 375,
+          "known": 1799,
+          "known_coverage": 0.2084491384102279,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 2003,
+          "accepted_precision": 1.0,
+          "correct_accepts": 397,
+          "known": 1800,
+          "known_coverage": 0.22055555555555556,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1964,
+          "accepted_precision": 0.9883449883449883,
+          "correct_accepts": 424,
+          "known": 1795,
+          "known_coverage": 0.2362116991643454,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.008361204013377926,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometry0.5-ttl10": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1660,
+          "accepted_precision": 1.0,
+          "correct_accepts": 737,
+          "known": 1799,
+          "known_coverage": 0.40967204002223456,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1756,
+          "accepted_precision": 1.0,
+          "correct_accepts": 644,
+          "known": 1800,
+          "known_coverage": 0.35777777777777775,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1630,
+          "accepted_precision": 0.9764089121887287,
+          "correct_accepts": 745,
+          "known": 1795,
+          "known_coverage": 0.415041782729805,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.030100334448160536,
+          "unknown_false_accepts": 18,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometry0.5-ttl30": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1418,
+          "accepted_precision": 1.0,
+          "correct_accepts": 979,
+          "known": 1799,
+          "known_coverage": 0.5441912173429683,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1549,
+          "accepted_precision": 1.0,
+          "correct_accepts": 851,
+          "known": 1800,
+          "known_coverage": 0.4727777777777778,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1500,
+          "accepted_precision": 0.9776035834266518,
+          "correct_accepts": 873,
+          "known": 1795,
+          "known_coverage": 0.4863509749303621,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.033444816053511704,
+          "unknown_false_accepts": 20,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometry0.5-ttl60": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1301,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1096,
+          "known": 1799,
+          "known_coverage": 0.6092273485269594,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1373,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1027,
+          "known": 1800,
+          "known_coverage": 0.5705555555555556,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1383,
+          "accepted_precision": 0.9801980198019802,
+          "correct_accepts": 990,
+          "known": 1795,
+          "known_coverage": 0.5515320334261838,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.033444816053511704,
+          "unknown_false_accepts": 20,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometrynone-ttl0": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1886,
+          "accepted_precision": 1.0,
+          "correct_accepts": 511,
+          "known": 1799,
+          "known_coverage": 0.2840466926070039,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1926,
+          "accepted_precision": 0.989451476793249,
+          "correct_accepts": 469,
+          "known": 1800,
+          "known_coverage": 0.26055555555555554,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0016666666666666668,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 4
+        },
+        "development_later": {
+          "abstentions": 1872,
+          "accepted_precision": 0.9980806142034548,
+          "correct_accepts": 520,
+          "known": 1795,
+          "known_coverage": 0.28969359331476324,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0016722408026755853,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema1.0-geometrynone-ttl10": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "abstentions": 1544,
+          "accepted_precision": 1.0,
+          "correct_accepts": 853,
+          "known": 1799,
+          "known_coverage": 0.4741523068371317,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1682,
+          "accepted_precision": 0.9651810584958217,
+          "correct_accepts": 693,
+          "known": 1800,
+          "known_coverage": 0.385,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 25
+        },
+        "development_later": {
+          "abstentions": 1528,
+          "accepted_precision": 1.0,
+          "correct_accepts": 865,
+          "known": 1795,
+          "known_coverage": 0.4818941504178273,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.4
+    },
+    "ema1.0-geometrynone-ttl30": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1344,
+          "accepted_precision": 0.9924026590693258,
+          "correct_accepts": 1045,
+          "known": 1799,
+          "known_coverage": 0.5808782657031685,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 8
+        },
+        "development": {
+          "abstentions": 1494,
+          "accepted_precision": 1.0,
+          "correct_accepts": 906,
+          "known": 1800,
+          "known_coverage": 0.5033333333333333,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1442,
+          "accepted_precision": 0.9936908517350158,
+          "correct_accepts": 945,
+          "known": 1795,
+          "known_coverage": 0.5264623955431755,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.010033444816053512,
+          "unknown_false_accepts": 6,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometrynone-ttl60": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "abstentions": 1265,
+          "accepted_precision": 0.9929328621908127,
+          "correct_accepts": 1124,
+          "known": 1799,
+          "known_coverage": 0.6247915508615898,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 8
+        },
+        "development": {
+          "abstentions": 1354,
+          "accepted_precision": 1.0,
+          "correct_accepts": 1046,
+          "known": 1800,
+          "known_coverage": 0.5811111111111111,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1355,
+          "accepted_precision": 0.9942196531791907,
+          "correct_accepts": 1032,
+          "known": 1795,
+          "known_coverage": 0.5749303621169917,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.010033444816053512,
+          "unknown_false_accepts": 6,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.55
+    }
+  },
+  "limitation": "Oracle publisher tracks; cannot establish actual tracker safety or application accuracy",
+  "manifest_sha256": "16fa9783c41b08cc88800d052ec3a45967f4d18bc3bf778fa581787aa7bbcd50"
+}

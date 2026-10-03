@@ -1,0 +1,136 @@
+{
+  "version": 4,
+  "frozen_at": "2026-10-03T08:47:53.529186+00:00",
+  "purpose": "Realistic reviewed detector-proposal initialization plus stateless detector corroboration; frozen development candidate before reserved evaluation",
+  "video_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825",
+  "source_annotations_sha256": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+  "model_sha256": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+  "model": "Official Cutie base mega",
+  "seed_second": 0,
+  "last_processed_second": 1529,
+  "processing_fps": 2,
+  "score_seconds": [
+    1230,
+    1529
+  ],
+  "scoring_fps": 1,
+  "seeded_cows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "named_cows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "anonymous_cows": [
+    7,
+    8
+  ],
+  "precision": "FP32",
+  "sampling": "Decode exact original frame indices at two frames per second; FFV1 lossless clip verified by every decoded frame hash; SDK vid_stride=1",
+  "object_identity": "Cutie object IDs1\u20138 converted to original zero-based slots only when serializing; never reassigned",
+  "initialization": "Only first-frame actual mixedYOLO/conf.4 proposals reviewed as simulated farmer confirmations, unchanged coordinates, SAM2.1tiny1024CPUFP32 masks. Fixed proposal indices[4,7,2,3,1,0,5,10] map to originalslots1\u20138;1\u20136 named,7/8anonymous. No GT box substitutes and no later prompts.",
+  "metrics": [
+    "one-to-one box IoU >=0.5",
+    "correct names over all visible known animals",
+    "wrong known names",
+    "unknown cows named",
+    "unmatched named boxes",
+    "anonymous track switches",
+    "global track-ID F1",
+    "elapsed time",
+    "observed MPS allocation",
+    "resident memory",
+    "retained memory-frame counts"
+  ],
+  "limits": [
+    "Allthree scorepanels are exposedmethoddevelopment; reserved1800\u20132099 and2700\u20132999 stayclosed.",
+    "Frame0 was included in localizationtraining; first-frame proposal quality isoptimistic. Names arepublishernumbers used as simulatedhumanconfirmation, not ear-tagOCR or verifiedfarmerwork.",
+    "A newstatelessdetector pass replaces the diagnosticwindow-resetByteTrackoutputs, so gains/losses cannot be attributed solelytoactualseeds. Bothchanges arefrozenbeforeinference.",
+    "No newarrivals, lost-cowreacquisition, automaticenrollment, queryprompts or manualcorrections are implemented.",
+    "Allmisses, unknownanimals andunmatchednamedboxes stayindenominators. No thresholdtuning after thisfreeze.",
+    "Resource limits and same480FP32CutieSDK/memoryconfiguration remainunchanged; combinedconcurrentthroughput needsseparatetest."
+  ],
+  "resource_limits": {
+    "max_mps_driver_bytes": 8589934592,
+    "max_mean_seconds_per_frame": 1.0,
+    "warmup_frames": 10,
+    "timing_window_frames": 30,
+    "max_peak_rss_bytes": 8589934592
+  },
+  "source_commit": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
+  "seed_masks_sha256": "0301626c21e92d54e2edb17ce397492a72aaa0b0d07ec32ea603c7f51f82151a",
+  "seed_manifest_sha256": "9dc7367648d8f19d6beeec1e252be571d1fb59a0a41df0c5e1d9d7018fefbd4a",
+  "sampled_clip_sha256": "11bff035d63f5e6399ada2ee82ebac05b242071b299b3c3ea023b4399972a8cf",
+  "sampled_manifest_sha256": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d",
+  "max_internal_size": 480,
+  "mem_every": 5,
+  "use_long_term": true,
+  "configuration": "Upstream generic eval_config, shortest edge480 (640x480 for this source), long-term enabled,mem_every5,all otherSDKdefaults.",
+  "cache_masks": true,
+  "cache_reclaim_bytes": 6442450944,
+  "quality_control": {
+    "box_variants": [
+      "largest_8_connected_component"
+    ],
+    "thresholds": [
+      0.7
+    ],
+    "decision": "Retain originalslot name only if originalCutiep10>=.7, fixedquarantinev2 allows its slot, and same-frame rawYOLObox hasIoU>=.5. No boxes replaced or IDsreassigned. Unknownslotsremainunknown.",
+    "selection": "No newcondition/thresholdselection. Score allthree exposed panels with this exactcandidate.",
+    "minimum_useful_coverage": 0.6,
+    "minimum_precision": 0.99,
+    "maximum_unknown_false_naming_rate": 0.01
+  },
+  "resource_policy": "After each completed inference, synchronize and release unused Metal cache if driver allocation exceeds6GiB; stop if remaining driver or peak process RSS exceeds8GiB. Cleanup and PNG/statistic caching count in frame time.",
+  "comparison_windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ],
+    [
+      1230,
+      1529
+    ]
+  ],
+  "quarantine_protocol_sha256": "294b16744d0efe7705024edbb465f158f91a4fcad4c1881853e53683ea354165",
+  "quarantine_application": "Recompute exact frozenv2 rules over new original masks at1Hz from0\u20131529. Do not reuse oldconflict decisions; only rules are reused.",
+  "development_selection": "The separate calibration-only corroboration selector preferred no veto and that failure remains recorded. Allthree panels are exposed methoddevelopment: explicitly choose the predefinedIoU.5candidate that met99%precision/60%coverage/1%unknown on allthree panels, thenfreeze before changing initialization and evaluating reserved footage. This control has TWO changes from that diagnostic: actual reviewed seeds and raw stateless corroborating detections rather than window-resetByteTrackoutputs.",
+  "diagnostic_corroboration_report_sha256": "82c3a2baa72ca015ff33ca64c7ea507da82c4beb01e4e7cc00a4ea2e00164b32",
+  "corroborator": {
+    "model_sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    "runner_sha256": "37670c587178e3d42f17e3cf9e107812a0de4bb2d89257002d4093c0dea49e83",
+    "settings": {
+      "imgsz": 640,
+      "conf": 0.4,
+      "iou": 0.7,
+      "classes": [
+        0
+      ],
+      "device": "mps",
+      "quantize": 16
+    },
+    "seconds": {
+      "start": 0,
+      "stop": 1529,
+      "step": 1
+    },
+    "minimum_iou": 0.5,
+    "mode": "YOLO.predict independentlyperframe, no tracker, no temporalstate or windowresets. Cacheall1530frames beforelabels/scoring; integertruncatebounds likeapp. Geometryveto only; no identityfeatures or annotationinput.",
+    "preprocessing": "Ultralytics8.4.80 YOLO.predict receives sourceBGRuint8 arrays; its standard letterbox/normalization and resolvedimgsz/rect/batch/quantize/conf/iou/max_det are recorded. FP16MPS matches priorcorroboration cache; CPUFP32appliesonlyinitialSAM."
+  }
+}

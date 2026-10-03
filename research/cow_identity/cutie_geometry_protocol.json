@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "frozen_at": "2026-10-03T08:16:35.597441+00:00",
+  "purpose": "Mask-to-box extent correction: test modest uniform margins for missing extremities, never change labels, masks, matching or annotation truth",
+  "runner_sha256": "fce544748c54190f0a7bec411aef742209032cd92cd7fbc97afc27e8b350baad",
+  "appearance_protocol_sha256": "5e1f4730c8b1020edcd11a890a5c911b35f9ceac1094c5a856a30c941956a7d2",
+  "quarantine_sha256": "7ce2afb558c61f895d84c21be834e20163cd7b9e0a302ca7756e7b1a015d78e1",
+  "box_scales": [
+    1.0,
+    1.1,
+    1.2
+  ],
+  "minimum_p10_probability": 0.7,
+  "selection_window": [
+    1230,
+    1529
+  ],
+  "development_windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ]
+  ],
+  "policy": "LCC boxes, p10>=.7, existing frozen collision-quarantinev2; noMIEWappearanceveto because its selected condition addednothing. Uniform margins0/5/10percentperedge apply to ALL output boxes, including anonymous and rejectednames; clampframebounds.",
+  "selection": "Highest correct known coverage under strictnamedprecision>=.99 andunknownfalsenaming<=.01; tieshigherprecisionthenlesspadding. Afterselection,replayexposeddevelopmentwithoutretuning.",
+  "scope": "Three fixed geometric candidates on exposedcalibration; one-farm manuallyinitializedtracking, no autonomousreidentification orindependenttestclaim. Allunknown/missed/unmatchedcountsretained; finalwindowsstayclosed."
+}

@@ -1,0 +1,1082 @@
+{
+  "baseline": {
+    "abstentions": 169,
+    "accepted_precision": 0.9961240310077519,
+    "correct_accepts": 257,
+    "datasets": {
+      "cows2021": {
+        "abstentions": 115,
+        "accepted_precision": 1.0,
+        "correct_accepts": 178,
+        "datasets": {},
+        "known": 206,
+        "known_coverage": 0.8640776699029126,
+        "known_rank1": 0.9757281553398058,
+        "margin": 0.09,
+        "observations": 293,
+        "threshold": 0.5700000000000003,
+        "unknown": 87,
+        "unknown_false_acceptance_rate": 0.0,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      },
+      "sideview2026": {
+        "abstentions": 61,
+        "accepted_precision": 1.0,
+        "correct_accepts": 73,
+        "datasets": {},
+        "known": 104,
+        "known_coverage": 0.7019230769230769,
+        "known_rank1": 0.9519230769230769,
+        "margin": 0.11,
+        "observations": 134,
+        "threshold": 0.5700000000000003,
+        "unknown": 30,
+        "unknown_false_acceptance_rate": 0.0,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      }
+    },
+    "known": 310,
+    "known_coverage": 0.8290322580645161,
+    "known_rank1": 0.967741935483871,
+    "margin": 0.09,
+    "observations": 427,
+    "threshold": 0.5700000000000003,
+    "unknown": 117,
+    "unknown_false_acceptance_rate": 0.008547008547008548,
+    "unknown_false_accepts": 1,
+    "wrong_known_accepts": 0
+  },
+  "checkpoints": [
+    {
+      "epoch": 10,
+      "head_weight": 0.25,
+      "validation": {
+        "abstentions": 165,
+        "accepted_precision": 0.9961832061068703,
+        "correct_accepts": 261,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 109,
+            "accepted_precision": 1.0,
+            "correct_accepts": 184,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.8932038834951457,
+            "known_rank1": 0.9805825242718447,
+            "margin": 0.12,
+            "observations": 293,
+            "threshold": 0.47000000000000025,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 56,
+            "accepted_precision": 1.0,
+            "correct_accepts": 78,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.75,
+            "known_rank1": 0.9519230769230769,
+            "margin": 0.08,
+            "observations": 134,
+            "threshold": 0.6200000000000003,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.8419354838709677,
+        "known_rank1": 0.9709677419354839,
+        "margin": 0.08,
+        "observations": 427,
+        "threshold": 0.5800000000000003,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "59488ebb8c014d8e2801bf12ab2c63df728b218c4deffeb825cf584e4d6ba898"
+    },
+    {
+      "epoch": 10,
+      "head_weight": 0.5,
+      "validation": {
+        "abstentions": 185,
+        "accepted_precision": 0.9958677685950413,
+        "correct_accepts": 241,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 125,
+            "accepted_precision": 1.0,
+            "correct_accepts": 168,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.8155339805825242,
+            "known_rank1": 0.9854368932038835,
+            "margin": 0.17,
+            "observations": 293,
+            "threshold": 0.5000000000000002,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 56,
+            "accepted_precision": 1.0,
+            "correct_accepts": 78,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.75,
+            "known_rank1": 0.9615384615384616,
+            "margin": 0.06,
+            "observations": 134,
+            "threshold": 0.6400000000000003,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.7774193548387097,
+        "known_rank1": 0.9774193548387097,
+        "margin": 0.13,
+        "observations": 427,
+        "threshold": 0.6100000000000003,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "59488ebb8c014d8e2801bf12ab2c63df728b218c4deffeb825cf584e4d6ba898"
+    },
+    {
+      "epoch": 10,
+      "head_weight": 1.0,
+      "validation": {
+        "abstentions": 248,
+        "accepted_precision": 0.994413407821229,
+        "correct_accepts": 178,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 179,
+            "accepted_precision": 1.0,
+            "correct_accepts": 114,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.5533980582524272,
+            "known_rank1": 0.9805825242718447,
+            "margin": 0.15,
+            "observations": 293,
+            "threshold": 0.7100000000000004,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 81,
+            "accepted_precision": 1.0,
+            "correct_accepts": 53,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.5096153846153846,
+            "known_rank1": 0.9230769230769231,
+            "margin": 0.21,
+            "observations": 134,
+            "threshold": 0.6700000000000004,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.5741935483870968,
+        "known_rank1": 0.9612903225806452,
+        "margin": 0.21,
+        "observations": 427,
+        "threshold": 0.6700000000000004,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "59488ebb8c014d8e2801bf12ab2c63df728b218c4deffeb825cf584e4d6ba898"
+    },
+    {
+      "epoch": 25,
+      "head_weight": 0.25,
+      "validation": {
+        "abstentions": 168,
+        "accepted_precision": 0.9961389961389961,
+        "correct_accepts": 258,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 107,
+            "accepted_precision": 1.0,
+            "correct_accepts": 186,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.9029126213592233,
+            "known_rank1": 0.9854368932038835,
+            "margin": 0.12,
+            "observations": 293,
+            "threshold": 0.47000000000000025,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 57,
+            "accepted_precision": 1.0,
+            "correct_accepts": 77,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.7403846153846154,
+            "known_rank1": 0.9519230769230769,
+            "margin": 0.04,
+            "observations": 134,
+            "threshold": 0.6200000000000003,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.832258064516129,
+        "known_rank1": 0.9741935483870968,
+        "margin": 0.1,
+        "observations": 427,
+        "threshold": 0.5600000000000003,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "960e92490140cf3a5e799db3600b5ee4831ed22eb8a6e8d63a6abb8cb3e45029"
+    },
+    {
+      "epoch": 25,
+      "head_weight": 0.5,
+      "validation": {
+        "abstentions": 171,
+        "accepted_precision": 0.99609375,
+        "correct_accepts": 255,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 122,
+            "accepted_precision": 1.0,
+            "correct_accepts": 171,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.8300970873786407,
+            "known_rank1": 0.9854368932038835,
+            "margin": 0.13,
+            "observations": 293,
+            "threshold": 0.5800000000000003,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 46,
+            "accepted_precision": 1.0,
+            "correct_accepts": 88,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.8461538461538461,
+            "known_rank1": 0.9615384615384616,
+            "margin": 0.02,
+            "observations": 134,
+            "threshold": 0.5900000000000003,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.8225806451612904,
+        "known_rank1": 0.9774193548387097,
+        "margin": 0.02,
+        "observations": 427,
+        "threshold": 0.5900000000000003,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "960e92490140cf3a5e799db3600b5ee4831ed22eb8a6e8d63a6abb8cb3e45029"
+    },
+    {
+      "epoch": 25,
+      "head_weight": 1.0,
+      "validation": {
+        "abstentions": 223,
+        "accepted_precision": 0.9950980392156863,
+        "correct_accepts": 203,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 162,
+            "accepted_precision": 1.0,
+            "correct_accepts": 131,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.6359223300970874,
+            "known_rank1": 0.9757281553398058,
+            "margin": 0.18,
+            "observations": 293,
+            "threshold": 0.6600000000000004,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 69,
+            "accepted_precision": 1.0,
+            "correct_accepts": 65,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.625,
+            "known_rank1": 0.9615384615384616,
+            "margin": 0.07,
+            "observations": 134,
+            "threshold": 0.6700000000000004,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.6548387096774193,
+        "known_rank1": 0.9709677419354839,
+        "margin": 0.19,
+        "observations": 427,
+        "threshold": 0.6000000000000003,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "960e92490140cf3a5e799db3600b5ee4831ed22eb8a6e8d63a6abb8cb3e45029"
+    },
+    {
+      "epoch": 50,
+      "head_weight": 0.25,
+      "validation": {
+        "abstentions": 166,
+        "accepted_precision": 0.9961685823754789,
+        "correct_accepts": 260,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 109,
+            "accepted_precision": 1.0,
+            "correct_accepts": 184,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.8932038834951457,
+            "known_rank1": 0.9805825242718447,
+            "margin": 0.12,
+            "observations": 293,
+            "threshold": 0.46000000000000024,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 56,
+            "accepted_precision": 1.0,
+            "correct_accepts": 78,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.75,
+            "known_rank1": 0.9615384615384616,
+            "margin": 0.05,
+            "observations": 134,
+            "threshold": 0.6200000000000003,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.8387096774193549,
+        "known_rank1": 0.9741935483870968,
+        "margin": 0.1,
+        "observations": 427,
+        "threshold": 0.5600000000000003,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "41b4510fc76199b39cd2988158001abed2bf0fc77857c0c194eae44fe68c6d56"
+    },
+    {
+      "epoch": 50,
+      "head_weight": 0.5,
+      "validation": {
+        "abstentions": 170,
+        "accepted_precision": 0.9961089494163424,
+        "correct_accepts": 256,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 121,
+            "accepted_precision": 1.0,
+            "correct_accepts": 172,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.8349514563106796,
+            "known_rank1": 0.9854368932038835,
+            "margin": 0.15,
+            "observations": 293,
+            "threshold": 0.5400000000000003,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 49,
+            "accepted_precision": 1.0,
+            "correct_accepts": 85,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.8173076923076923,
+            "known_rank1": 0.9615384615384616,
+            "margin": 0.05,
+            "observations": 134,
+            "threshold": 0.6000000000000003,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.8258064516129032,
+        "known_rank1": 0.9774193548387097,
+        "margin": 0.03,
+        "observations": 427,
+        "threshold": 0.5900000000000003,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "41b4510fc76199b39cd2988158001abed2bf0fc77857c0c194eae44fe68c6d56"
+    },
+    {
+      "epoch": 50,
+      "head_weight": 1.0,
+      "validation": {
+        "abstentions": 204,
+        "accepted_precision": 0.9955156950672646,
+        "correct_accepts": 222,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 145,
+            "accepted_precision": 1.0,
+            "correct_accepts": 148,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.7184466019417476,
+            "known_rank1": 0.9805825242718447,
+            "margin": 0.08,
+            "observations": 293,
+            "threshold": 0.6400000000000003,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 66,
+            "accepted_precision": 1.0,
+            "correct_accepts": 68,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.6538461538461539,
+            "known_rank1": 0.9519230769230769,
+            "margin": 0.09,
+            "observations": 134,
+            "threshold": 0.6700000000000004,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.7161290322580646,
+        "known_rank1": 0.9709677419354839,
+        "margin": 0.01,
+        "observations": 427,
+        "threshold": 0.6400000000000003,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "41b4510fc76199b39cd2988158001abed2bf0fc77857c0c194eae44fe68c6d56"
+    }
+  ],
+  "decision": "Do not promote: small external validation gain does not transfer to the development videos.",
+  "limitations": [
+    "Checkpoint and threshold selection use the same external validation panel; those scores are selection evidence, not a final generalization estimate.",
+    "All calf recognition results assume publisher tracklet IDs retain biological identity. A bounded continuity audit supports the reviewed segments but cannot certify the full video.",
+    "Transfer uses publisher boxes and tracks unless explicitly marked actual detector/tracker. Final calf windows remain unopened."
+  ],
+  "protocol": {
+    "architecture": "2152\u2192512 LayerNorm/GELU/dropout0.1\u2192256 L2",
+    "augmentation": "Training feature dropout0.1 and Gaussian0.001; no query augmentation",
+    "baseline_eligible_for_selection": true,
+    "batch": "24 identities \u00d7 4 samples from different days",
+    "checkpoint_epochs": [
+      10,
+      25,
+      50
+    ],
+    "encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+    "epochs": 50,
+    "features_manifest_sha256": "1d7f410f01efdb6f1727b0314b485655efa048392a99c5c57ae8e7fee795aee4",
+    "learned_feature_weights": [
+      0.25,
+      0.5,
+      1.0
+    ],
+    "loss": "SupervisedContrastive0.1 +0.25cosine-margin classifier(margin0.2, temperature0.1)",
+    "seed": 42,
+    "selection": "External validation correct accepts under99%precision/1%unknownFA, then known rank1; no transfer-panel epoch selection",
+    "sources": {
+      "augmentations": "None; original prepared crops",
+      "cohort": {
+        "cows2021_archive_sha256": "57c477705163b6fddf887a95297c5db0ff994d13f18138c42439a3c330cd25ba",
+        "evaluation_excluded": [
+          "8-calves (all frames and identities)",
+          "ETHZ (all crops, videos and identities)"
+        ],
+        "pretraining_overlap": "MIEWid foundation-training membership is not fully audited; no claim of foundation-unseen cows",
+        "purpose": "Prepared public-cattle metric learning experiment; no training performed",
+        "seed": "public-cattle-v1",
+        "selection": "At least 5 observed days; at most 16 evenly spaced days/cow, one stable-hash-selected image/day; per-dataset 20% identity-disjoint validation, 20% of validation identities unenrolled",
+        "sideview_hashes_sha256": "2ca027261dc134963455f05ea7922f96b8b44d3f7e23e5705f40ccc2ea1ea612",
+        "sideview_manifest_sha256": "ea80cc8d93680116d8c813c65c245e4999fed61bca32b8189cd047953c88b81e",
+        "sources": {
+          "cows2021": {
+            "license": "Non-Commercial Government Licence",
+            "publisher_split": "Identification/Test, deliberately repurposed; never a Cows2021 benchmark claim",
+            "source": "https://doi.org/10.5523/bris.4vnrca7qw1642qlwxjadp87h7"
+          },
+          "sideview2026": {
+            "license": "CC-BY-4.0, as stated in publisher README",
+            "publisher_split": "parlor; no official train/test split",
+            "source": "https://doi.org/10.5281/zenodo.21605650"
+          }
+        },
+        "version": 1
+      },
+      "cohort_manifest_sha256": "29c72477157fad3d50b0a53951dd4652177f38906088f6b717ea7b8eb5668d71",
+      "encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a"
+    }
+  },
+  "selected": {
+    "epoch": 10,
+    "head_weight": 0.25,
+    "validation": {
+      "abstentions": 165,
+      "accepted_precision": 0.9961832061068703,
+      "correct_accepts": 261,
+      "datasets": {
+        "cows2021": {
+          "abstentions": 109,
+          "accepted_precision": 1.0,
+          "correct_accepts": 184,
+          "datasets": {},
+          "known": 206,
+          "known_coverage": 0.8932038834951457,
+          "known_rank1": 0.9805825242718447,
+          "margin": 0.12,
+          "observations": 293,
+          "threshold": 0.47000000000000025,
+          "unknown": 87,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "sideview2026": {
+          "abstentions": 56,
+          "accepted_precision": 1.0,
+          "correct_accepts": 78,
+          "datasets": {},
+          "known": 104,
+          "known_coverage": 0.75,
+          "known_rank1": 0.9519230769230769,
+          "margin": 0.08,
+          "observations": 134,
+          "threshold": 0.6200000000000003,
+          "unknown": 30,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "known": 310,
+      "known_coverage": 0.8419354838709677,
+      "known_rank1": 0.9709677419354839,
+      "margin": 0.08,
+      "observations": 427,
+      "threshold": 0.5800000000000003,
+      "unknown": 117,
+      "unknown_false_acceptance_rate": 0.008547008547008548,
+      "unknown_false_accepts": 1,
+      "wrong_known_accepts": 0
+    },
+    "weights_sha256": "59488ebb8c014d8e2801bf12ab2c63df728b218c4deffeb825cf584e4d6ba898"
+  },
+  "transfer": {
+    "calf_fixed_gallery": {
+      "pool1": {
+        "margin": 0.12,
+        "panels": {
+          "calibration": {
+            "abstentions": 1994,
+            "accepted_precision": 0.9900744416873449,
+            "correct_accepts": 399,
+            "known": 1799,
+            "known_coverage": 0.22178988326848248,
+            "known_rank1": 0.7276264591439688,
+            "observations": 2397,
+            "unknown": 598,
+            "unknown_false_acceptance_rate": 0.006688963210702341,
+            "unknown_false_accepts": 4,
+            "wrong_known_accepts": 0
+          },
+          "development": {
+            "abstentions": 2071,
+            "accepted_precision": 0.9817629179331308,
+            "correct_accepts": 323,
+            "known": 1800,
+            "known_coverage": 0.17944444444444443,
+            "known_rank1": 0.6877777777777778,
+            "observations": 2400,
+            "unknown": 600,
+            "unknown_false_acceptance_rate": 0.01,
+            "unknown_false_accepts": 6,
+            "wrong_known_accepts": 0
+          },
+          "development_later": {
+            "abstentions": 1942,
+            "accepted_precision": 0.9667405764966741,
+            "correct_accepts": 436,
+            "known": 1795,
+            "known_coverage": 0.24289693593314762,
+            "known_rank1": 0.7649025069637883,
+            "observations": 2393,
+            "unknown": 598,
+            "unknown_false_acceptance_rate": 0.01839464882943144,
+            "unknown_false_accepts": 11,
+            "wrong_known_accepts": 4
+          }
+        },
+        "threshold": 0.5600000000000003
+      },
+      "pool5": {
+        "margin": 0.13,
+        "panels": {
+          "calibration": {
+            "abstentions": 1814,
+            "accepted_precision": 0.9914236706689536,
+            "correct_accepts": 578,
+            "known": 1799,
+            "known_coverage": 0.32128960533629797,
+            "known_rank1": 0.7581989994441356,
+            "observations": 2397,
+            "unknown": 598,
+            "unknown_false_acceptance_rate": 0.008361204013377926,
+            "unknown_false_accepts": 5,
+            "wrong_known_accepts": 0
+          },
+          "development": {
+            "abstentions": 1922,
+            "accepted_precision": 0.9769874476987448,
+            "correct_accepts": 467,
+            "known": 1800,
+            "known_coverage": 0.2594444444444444,
+            "known_rank1": 0.7311111111111112,
+            "observations": 2400,
+            "unknown": 600,
+            "unknown_false_acceptance_rate": 0.01,
+            "unknown_false_accepts": 6,
+            "wrong_known_accepts": 5
+          },
+          "development_later": {
+            "abstentions": 1738,
+            "accepted_precision": 0.9923664122137404,
+            "correct_accepts": 650,
+            "known": 1795,
+            "known_coverage": 0.362116991643454,
+            "known_rank1": 0.7927576601671309,
+            "observations": 2393,
+            "unknown": 598,
+            "unknown_false_acceptance_rate": 0.008361204013377926,
+            "unknown_false_accepts": 5,
+            "wrong_known_accepts": 0
+          }
+        },
+        "threshold": 0.5100000000000002
+      }
+    },
+    "ethz": {
+      "external_head": {
+        "encoder_fingerprint": "aff4ff23d7742ad59251f7d598099778e96c2ece18464c1313656fc218d8bfa0",
+        "margin": 0.1,
+        "threshold": 0.65,
+        "videos": {
+          "video3": {
+            "day": "2023-08-25",
+            "panel": "calibration",
+            "per_cow_observations": {
+              "0": 30,
+              "1": 30,
+              "10": 10,
+              "12": 30,
+              "3": 20,
+              "5": 30,
+              "6": 30,
+              "8": 30
+            },
+            "per_frame_oracle": {
+              "abstentions": 179,
+              "accepted_precision": 1.0,
+              "correct_accepts": 31,
+              "known": 160,
+              "known_coverage": 0.19375,
+              "known_rank1": 0.9375,
+              "observations": 210,
+              "unknown": 50,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "production_geometry_and_oracle_agreement": {
+              "abstentions": 194,
+              "accepted_precision": 1.0,
+              "correct_accepts": 16,
+              "known": 160,
+              "known_coverage": 0.1,
+              "known_rank1": 0.9375,
+              "observations": 210,
+              "unknown": 50,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            }
+          },
+          "video4": {
+            "day": "2023-08-24",
+            "panel": "calibration",
+            "per_cow_observations": {
+              "0": 33,
+              "10": 22,
+              "11": 23,
+              "9": 33
+            },
+            "per_frame_oracle": {
+              "abstentions": 88,
+              "accepted_precision": 0.9565217391304348,
+              "correct_accepts": 22,
+              "known": 111,
+              "known_coverage": 0.1981981981981982,
+              "known_rank1": 0.5495495495495496,
+              "observations": 111,
+              "unknown": 0,
+              "unknown_false_acceptance_rate": null,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 1
+            },
+            "production_geometry_and_oracle_agreement": {
+              "abstentions": 93,
+              "accepted_precision": 1.0,
+              "correct_accepts": 18,
+              "known": 111,
+              "known_coverage": 0.16216216216216217,
+              "known_rank1": 0.5495495495495496,
+              "observations": 111,
+              "unknown": 0,
+              "unknown_false_acceptance_rate": null,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            }
+          },
+          "video5": {
+            "day": "2023-09-17",
+            "panel": "test",
+            "per_cow_observations": {
+              "0": 20,
+              "10": 30,
+              "11": 30,
+              "4": 30,
+              "5": 30,
+              "6": 30,
+              "8": 30,
+              "9": 30
+            },
+            "per_frame_oracle": {
+              "abstentions": 230,
+              "accepted_precision": null,
+              "correct_accepts": 0,
+              "known": 200,
+              "known_coverage": 0.0,
+              "known_rank1": 0.31,
+              "observations": 230,
+              "unknown": 30,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "production_geometry_and_oracle_agreement": {
+              "abstentions": 230,
+              "accepted_precision": null,
+              "correct_accepts": 0,
+              "known": 200,
+              "known_coverage": 0.0,
+              "known_rank1": 0.31,
+              "observations": 230,
+              "unknown": 30,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            }
+          },
+          "video6": {
+            "day": "2023-08-28",
+            "panel": "test",
+            "per_cow_observations": {
+              "0": 33,
+              "1": 33,
+              "10": 22,
+              "12": 33,
+              "13": 33,
+              "3": 33,
+              "4": 33,
+              "5": 33,
+              "6": 33,
+              "7": 33,
+              "8": 33,
+              "9": 33
+            },
+            "per_frame_oracle": {
+              "abstentions": 385,
+              "accepted_precision": null,
+              "correct_accepts": 0,
+              "known": 286,
+              "known_coverage": 0.0,
+              "known_rank1": 0.4090909090909091,
+              "observations": 385,
+              "unknown": 99,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "production_geometry_and_oracle_agreement": {
+              "abstentions": 385,
+              "accepted_precision": null,
+              "correct_accepts": 0,
+              "known": 286,
+              "known_coverage": 0.0,
+              "known_rank1": 0.4090909090909091,
+              "observations": 385,
+              "unknown": 99,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            }
+          }
+        }
+      },
+      "raw": {
+        "encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+        "margin": 0.1,
+        "threshold": 0.65,
+        "videos": {
+          "video3": {
+            "day": "2023-08-25",
+            "panel": "calibration",
+            "per_cow_observations": {
+              "0": 30,
+              "1": 30,
+              "10": 10,
+              "12": 30,
+              "3": 20,
+              "5": 30,
+              "6": 30,
+              "8": 30
+            },
+            "per_frame_oracle": {
+              "abstentions": 180,
+              "accepted_precision": 1.0,
+              "correct_accepts": 30,
+              "known": 160,
+              "known_coverage": 0.1875,
+              "known_rank1": 0.9125,
+              "observations": 210,
+              "unknown": 50,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "production_geometry_and_oracle_agreement": {
+              "abstentions": 194,
+              "accepted_precision": 1.0,
+              "correct_accepts": 16,
+              "known": 160,
+              "known_coverage": 0.1,
+              "known_rank1": 0.9125,
+              "observations": 210,
+              "unknown": 50,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            }
+          },
+          "video4": {
+            "day": "2023-08-24",
+            "panel": "calibration",
+            "per_cow_observations": {
+              "0": 33,
+              "10": 22,
+              "11": 23,
+              "9": 33
+            },
+            "per_frame_oracle": {
+              "abstentions": 89,
+              "accepted_precision": 1.0,
+              "correct_accepts": 22,
+              "known": 111,
+              "known_coverage": 0.1981981981981982,
+              "known_rank1": 0.5225225225225225,
+              "observations": 111,
+              "unknown": 0,
+              "unknown_false_acceptance_rate": null,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "production_geometry_and_oracle_agreement": {
+              "abstentions": 93,
+              "accepted_precision": 1.0,
+              "correct_accepts": 18,
+              "known": 111,
+              "known_coverage": 0.16216216216216217,
+              "known_rank1": 0.5225225225225225,
+              "observations": 111,
+              "unknown": 0,
+              "unknown_false_acceptance_rate": null,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            }
+          },
+          "video5": {
+            "day": "2023-09-17",
+            "panel": "test",
+            "per_cow_observations": {
+              "0": 20,
+              "10": 30,
+              "11": 30,
+              "4": 30,
+              "5": 30,
+              "6": 30,
+              "8": 30,
+              "9": 30
+            },
+            "per_frame_oracle": {
+              "abstentions": 230,
+              "accepted_precision": null,
+              "correct_accepts": 0,
+              "known": 200,
+              "known_coverage": 0.0,
+              "known_rank1": 0.32,
+              "observations": 230,
+              "unknown": 30,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "production_geometry_and_oracle_agreement": {
+              "abstentions": 230,
+              "accepted_precision": null,
+              "correct_accepts": 0,
+              "known": 200,
+              "known_coverage": 0.0,
+              "known_rank1": 0.32,
+              "observations": 230,
+              "unknown": 30,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            }
+          },
+          "video6": {
+            "day": "2023-08-28",
+            "panel": "test",
+            "per_cow_observations": {
+              "0": 33,
+              "1": 33,
+              "10": 22,
+              "12": 33,
+              "13": 33,
+              "3": 33,
+              "4": 33,
+              "5": 33,
+              "6": 33,
+              "7": 33,
+              "8": 33,
+              "9": 33
+            },
+            "per_frame_oracle": {
+              "abstentions": 385,
+              "accepted_precision": null,
+              "correct_accepts": 0,
+              "known": 286,
+              "known_coverage": 0.0,
+              "known_rank1": 0.43356643356643354,
+              "observations": 385,
+              "unknown": 99,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "production_geometry_and_oracle_agreement": {
+              "abstentions": 385,
+              "accepted_precision": null,
+              "correct_accepts": 0,
+              "known": 286,
+              "known_coverage": 0.0,
+              "known_rank1": 0.43356643356643354,
+              "observations": 385,
+              "unknown": 99,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}

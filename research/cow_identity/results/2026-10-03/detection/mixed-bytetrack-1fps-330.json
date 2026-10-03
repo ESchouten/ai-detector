@@ -1,0 +1,63 @@
+{
+  "cache_reused": false,
+  "device": "mps",
+  "elapsed_seconds": 6.556753666838631,
+  "fp16": true,
+  "inferred_frames": 300,
+  "metrics": {
+    "counts": {
+      "correct_name": 0,
+      "cow_name_switches": 0,
+      "cow_track_switches": 107,
+      "detector_boxes": 2436,
+      "eligible_boxes": 2436,
+      "eligible_matched": 1976,
+      "frames": 300,
+      "known_unnamed": 1474,
+      "matched_boxes": 1976,
+      "missed_annotations": 424,
+      "track_cow_switches": 11,
+      "unknown_named": 0,
+      "unknown_rejected": 502,
+      "unmatched_boxes": 460,
+      "unmatched_named": 0,
+      "unmatched_unnamed": 460,
+      "visible_annotations": 2400,
+      "visible_known": 1800,
+      "visible_unknown": 600,
+      "wrong_name": 0
+    },
+    "global_identity_f1": 0.4441687344913151,
+    "global_identity_true_positives": 1074,
+    "note": "Global one-to-one track/cow assignment at IoU .5 on 1 fps scoring timestamps; not permanent cow recognition.",
+    "precision": 0.8111658456486043,
+    "recall": 0.8233333333333334
+  },
+  "provenance": {
+    "annotations": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "confidence": 0.4,
+    "device": "mps",
+    "imgsz": 640,
+    "inference_fps": 1,
+    "library_versions": {
+      "lap": "0.5.13",
+      "numpy": "2.5.0",
+      "opencv": "4.13.0",
+      "scipy": null,
+      "torch": "2.12.1",
+      "torchvision": "0.27.1",
+      "ultralytics": "8.4.80"
+    },
+    "model": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    "protocol_sha256": "8a67c77c4e2d9974d74e2d6cc612c3a18ba2da8f260680589c54639fa6bdb222",
+    "scoring_fps": 1,
+    "sdk_tracker_frame_rate": 30,
+    "seconds": 300,
+    "start": 330,
+    "tracker": "bytetrack.yaml",
+    "tracker_sha256": "395701d947a749179dee3e327b1181b730c4ca98e7cac5a2ab05280aae573b8b",
+    "version": 1,
+    "video": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825"
+  },
+  "timeline_cache": ".cache/cow-detectors/mixed-bytetrack-1fps-330.json"
+}

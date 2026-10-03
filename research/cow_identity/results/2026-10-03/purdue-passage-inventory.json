@@ -1,0 +1,176 @@
+{
+  "1": {
+    "archive": "datasets/AutoCattlogger/sampleVideos1.tar",
+    "sha256": "0fcf0c7ee97d92d24dffdf2366c07adfc5e300befa68a73d84e890e7709507d4",
+    "files": [
+      {
+        "member": "sampleVideos1/cam24_2022-06-08_08-29-23_2234_53550_53991.avi",
+        "cow": 2234,
+        "recording_date": "2022-06-08",
+        "source_start_frame": 53550,
+        "source_end_frame": 53991,
+        "bytes": 32346316,
+        "sha256": "ad8ccd95ca116f6a9dcc99605a3dfec4e5c54a76eea05f03aa3de94f03044cb4"
+      },
+      {
+        "member": "sampleVideos1/cam24_2022-06-08_08-29-23_2238_54996_55279.avi",
+        "cow": 2238,
+        "recording_date": "2022-06-08",
+        "source_start_frame": 54996,
+        "source_end_frame": 55279,
+        "bytes": 20670696,
+        "sha256": "67f63bbad66f2a91166c90a89a8bf72e0d352691309147163ae7930adcb396ca"
+      },
+      {
+        "member": "sampleVideos1/cam24_2022-06-08_08-29-23_5676_79542_80049.avi",
+        "cow": 5676,
+        "recording_date": "2022-06-08",
+        "source_start_frame": 79542,
+        "source_end_frame": 80049,
+        "bytes": 37214026,
+        "sha256": "723ec0dcb96e7c789f47bd088a6283b829e630216dd490fd507d3d5674b5629e"
+      },
+      {
+        "member": "sampleVideos1/cam24_2022-06-08_08-29-23_5953_80052_80292.avi",
+        "cow": 5953,
+        "recording_date": "2022-06-08",
+        "source_start_frame": 80052,
+        "source_end_frame": 80292,
+        "bytes": 18593434,
+        "sha256": "a31dfef670eff62f2394d4b70964ef05d9f100b553066552d1b2a5782094ae4b"
+      },
+      {
+        "member": "sampleVideos1/cam24_2022-06-08_08-29-23_6079_48005_48197.avi",
+        "cow": 6079,
+        "recording_date": "2022-06-08",
+        "source_start_frame": 48005,
+        "source_end_frame": 48197,
+        "bytes": 15833508,
+        "sha256": "1df4210923c440ffafb5173092616036e6359f53e12d992c55abdb9f79332b4e"
+      },
+      {
+        "member": "sampleVideos1/cam24_2022-06-08_08-29-23_6102_9335_9630.avi",
+        "cow": 6102,
+        "recording_date": "2022-06-08",
+        "source_start_frame": 9335,
+        "source_end_frame": 9630,
+        "bytes": 21242908,
+        "sha256": "11d806a4f287c70eb4f2d8c5b1cd43645b96040e220cdb1af2156e55888811a3"
+      },
+      {
+        "member": "sampleVideos1/cam24_2022-06-08_08-29-23_6109_46868_47147.avi",
+        "cow": 6109,
+        "recording_date": "2022-06-08",
+        "source_start_frame": 46868,
+        "source_end_frame": 47147,
+        "bytes": 20739240,
+        "sha256": "406621f8b67a894ee0723a0f2c818d3fe720d121519fd452c8228c9db5158715"
+      },
+      {
+        "member": "sampleVideos1/cam24_2022-06-08_08-29-23_6110_7173_7481.avi",
+        "cow": 6110,
+        "recording_date": "2022-06-08",
+        "source_start_frame": 7173,
+        "source_end_frame": 7481,
+        "bytes": 21542546,
+        "sha256": "c8dee0ff0a1601b5f8c28579003faa15a1af4f394d139359c8cf2c67a86f7b3d"
+      },
+      {
+        "member": "sampleVideos1/cam24_2022-06-08_08-29-23_6113_10102_10357.avi",
+        "cow": 6113,
+        "recording_date": "2022-06-08",
+        "source_start_frame": 10102,
+        "source_end_frame": 10357,
+        "bytes": 19488868,
+        "sha256": "f4ae52cd59b9adb90517c7d95c74b12eee39622de7fbeda0f0441ded1b81a381"
+      }
+    ]
+  },
+  "2": {
+    "archive": "datasets/AutoCattlogger/sampleVideos2.tar",
+    "sha256": "f6779d4d387378c737aa3c0269f8aa554359659d850dbf310abd93e022f0dec0",
+    "files": [
+      {
+        "member": "sampleVideos2/cam24_2022-06-09_08-29-52_6079_75231_75573.avi",
+        "cow": 6079,
+        "recording_date": "2022-06-09",
+        "source_start_frame": 75231,
+        "source_end_frame": 75573,
+        "bytes": 27376386,
+        "sha256": "c67a675ca284da385c2bbb19300a2072ae20169ab1b78f7bd928437e65810b6e"
+      },
+      {
+        "member": "sampleVideos2/cam24_2022-06-09_08-29-52_6102_90769_91101.avi",
+        "cow": 6102,
+        "recording_date": "2022-06-09",
+        "source_start_frame": 90769,
+        "source_end_frame": 91101,
+        "bytes": 25808234,
+        "sha256": "5f019d003878b7d30db6282e2929919c784155f4fd45e0e019176d5ea522a66b"
+      },
+      {
+        "member": "sampleVideos2/cam24_2022-06-09_08-29-52_6113_82735_82962.avi",
+        "cow": 6113,
+        "recording_date": "2022-06-09",
+        "source_start_frame": 82735,
+        "source_end_frame": 82962,
+        "bytes": 18573800,
+        "sha256": "bf67d1e5dd0579cea880c76788d42e41fa6828a173cd2dec2ab33b0fcdf6e2c3"
+      },
+      {
+        "member": "sampleVideos2/cam24_2022-06-09_09-29-53_2234_65299_65648.avi",
+        "cow": 2234,
+        "recording_date": "2022-06-09",
+        "source_start_frame": 65299,
+        "source_end_frame": 65648,
+        "bytes": 26011488,
+        "sha256": "d0af881960f7aa1dfce48c96cdb774a5b26eeb4a7bf9c77a92be4e321dca58aa"
+      },
+      {
+        "member": "sampleVideos2/cam24_2022-06-09_09-29-53_2238_65889_66202.avi",
+        "cow": 2238,
+        "recording_date": "2022-06-09",
+        "source_start_frame": 65889,
+        "source_end_frame": 66202,
+        "bytes": 24115174,
+        "sha256": "fc5e78e24a8ca747801d44a4cc73a744908167c6e7cb0042d6dfd7860f54bfc9"
+      },
+      {
+        "member": "sampleVideos2/cam24_2022-06-09_09-29-53_5676_70996_71513.avi",
+        "cow": 5676,
+        "recording_date": "2022-06-09",
+        "source_start_frame": 70996,
+        "source_end_frame": 71513,
+        "bytes": 37671728,
+        "sha256": "0196f5e66f776dab65ff6560a50b5ed9135cf1ef0316ca63236320cd5bddfbe5"
+      },
+      {
+        "member": "sampleVideos2/cam24_2022-06-09_09-29-53_5953_71589_71977.avi",
+        "cow": 5953,
+        "recording_date": "2022-06-09",
+        "source_start_frame": 71589,
+        "source_end_frame": 71977,
+        "bytes": 29927204,
+        "sha256": "599003c30cfa3db02f9f1610e6c1ddc4a160c9a5af274c8c59690d9941babe2d"
+      },
+      {
+        "member": "sampleVideos2/cam24_2022-06-09_09-29-53_6109_20383_20677.avi",
+        "cow": 6109,
+        "recording_date": "2022-06-09",
+        "source_start_frame": 20383,
+        "source_end_frame": 20677,
+        "bytes": 25166136,
+        "sha256": "a504eef23f8ccef9e2a32dcd05ed0a61e3345bd09f3b59f11ed82d57641d7e21"
+      },
+      {
+        "member": "sampleVideos2/cam24_2022-06-09_09-29-53_6110_27350_27613.avi",
+        "cow": 6110,
+        "recording_date": "2022-06-09",
+        "source_start_frame": 27350,
+        "source_end_frame": 27613,
+        "bytes": 19797326,
+        "sha256": "9aae6a2524836934c2d01c8d65102222b050e6ccb4da5cb7052ae3392823f4fa"
+      }
+    ]
+  }
+}

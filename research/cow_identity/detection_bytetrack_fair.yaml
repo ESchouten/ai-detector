@@ -1,0 +1,9 @@
+# Stock Ultralytics ByteTrack settings, with matching high/new confidence.
+# https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/trackers/bytetrack.yaml
+tracker_type: bytetrack
+track_high_thresh: 0.4
+track_low_thresh: 0.1
+new_track_thresh: 0.4
+track_buffer: 30
+match_thresh: 0.8
+fuse_score: true

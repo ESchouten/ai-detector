@@ -1,0 +1,10 @@
+{
+  "appearance_protocol_sha256": "5e1f4730c8b1020edcd11a890a5c911b35f9ceac1094c5a856a30c941956a7d2",
+  "baseline": "Preserve original appearance and quarantinev1/v2 outputs. Final windows remain unopened.",
+  "decision": "Logical AND of each existing80appearance condition and existing frozen quarantinev2. Quarantine only suppresses displayed names and never changes appearance streaks, masks, boxes or IDs. No new parameter or per-cow exception. Original anonymous slots remain unknown.",
+  "frozen_at": "2026-10-03T08:15:29.520471+00:00",
+  "quarantine_report_sha256": "7ce2afb558c61f895d84c21be834e20163cd7b9e0a302ca7756e7b1a015d78e1",
+  "scope": "New exploratory conjunction after separate appearance and quarantine failures; exposed calibration/development, not confirmation or final evaluation",
+  "selection": "Same original80conditions, selection1230\u20131529 only, same precision>=.99/unknown<=.01, same ties, >=.60correctknowncoverage usefulness. Exactchosen conjunction replay330\u2013629 and930\u20131229 onlyafterselection.",
+  "version": 1
+}

@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "frozen_at": "2026-10-03T06:03:29Z",
+  "purpose": "Improve class-only cow localization without training on held-out identity query frames",
+  "video": "pmfeed_4_3_16.mp4",
+  "video_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825",
+  "source_annotations_sha256": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+  "splits": {
+    "train": {"start": 0, "stop": 300, "step": 2},
+    "calibration": {"start": 630, "stop": 900, "step": 3},
+    "development": {"start": 330, "stop": 630, "step": 1},
+    "development_later": {"start": 930, "stop": 1230, "step": 1},
+    "final": {"start": 1800, "stop": 2100, "step": 1},
+    "reserve": {"start": 2700, "stop": 3000, "step": 1}
+  },
+  "identity_labels": "All eight calf IDs map to one cow class for localization only. No ID classifier is trained here.",
+  "selection": {
+    "minimum_iou": 0.5,
+    "thresholds": [0.1, 0.25, 0.4, 0.6],
+    "criterion": "Calibration F1; deterministic ties favor higher precision, then higher threshold",
+    "target_recall": 0.85,
+    "target_precision": 0.9,
+    "target_frame_latency_seconds": 1.0
+  },
+  "candidates": [
+    {
+      "name": "ethz-yolov8s",
+      "source": "https://github.com/meiqing-wang/Cow-TrackingbyClassification",
+      "download": "https://drive.usercontent.google.com/download?id=1nbPkl5so49d-oBNRpFd3c4Yk7SGfCPK9&export=download&authuser=0&confirm=t",
+      "sha256": "d08212315c4a7e17bd5ca54010393869fe2e542bd1785c9eec60c7402289296d"
+    },
+    {
+      "name": "arvin-yolo11s",
+      "source": "https://huggingface.co/Arvin26/Cattle-detection-model",
+      "download": "https://huggingface.co/Arvin26/Cattle-detection-model/resolve/main/cattledetect_single/best.pt",
+      "sha256": "2359d3d6c902c57a940995d2cd1529fc5f1e6d71f150a48afc38baa72cb62938"
+    }
+  ],
+  "training_if_needed": {
+    "initial_model": "Best cattle-specific checkpoint on calibration",
+    "epochs": 30,
+    "imgsz": 640,
+    "batch": 8,
+    "device": "mps",
+    "seed": 20261003,
+    "workers": 0,
+    "optimizer": "AdamW",
+    "lr0": 0.001,
+    "patience": 10,
+    "freeze": 10,
+    "mosaic": 0.5,
+    "close_mosaic": 5,
+    "degrees": 10,
+    "fliplr": 0.5,
+    "flipud": 0.0
+  },
+  "limits": [
+    "Previously inspected segments are development data, never final test data.",
+    "Final and reserve windows stay unopened until model, threshold and recognition policies are frozen.",
+    "Same-video localization adaptation is not evidence of generalization to another farm.",
+    "Use a separate adult-cow scene as a disclosed additional regression; no test labels used for fitting."
+  ]
+}

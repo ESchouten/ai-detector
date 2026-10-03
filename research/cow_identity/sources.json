@@ -35,6 +35,26 @@
       "license": "CC BY-NC 4.0 model card; local noncommercial experiment",
       "preprocessing": "Pinned timm config: bicubic short-side resize, center crop 224 with crop_pct0.9, ImageNet normalization, FP32 normalized Swin embedding",
       "overlap": "Trained on WildlifeDatasets collection including cattle datasets; exact identity overlap unknown"
+    },
+    {
+      "name": "MegaDescriptor-B-224",
+      "source": "https://huggingface.co/BVRA/MegaDescriptor-B-224",
+      "revision": "94bad65ce10660d59581d99378e5b6f16524c02a",
+      "weights_sha256": "655791158167f07773a890368f7db2fced85d569b9bccbbe7e5194e5051e2459",
+      "license": "CC BY-NC 4.0 model card; local noncommercial experiment",
+      "preprocessing": "Two separate controls: pinned timm config bicubic short-side resize/center crop224(.9), and publisher inference notebook bilinear full-image stretch224. Both ImageNet-normalized; distinct cache fingerprints.",
+      "overlap": "Trained on WildlifeDatasets collection including cattle datasets; exact identity overlap unknown",
+      "preprocessing_source": "https://github.com/WildlifeDatasets/wildlife-tools/blob/main/baselines/inference/MegaDescriptor-B-224.ipynb"
+    },
+    {
+      "name": "Cutie base mega",
+      "source": "https://github.com/hkchengrex/Cutie",
+      "paper": "https://arxiv.org/abs/2310.12982",
+      "revision": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
+      "weights_source": "https://github.com/hkchengrex/Cutie/releases/download/v1.0/cutie-base-mega.pth",
+      "weights_sha256": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+      "preprocessing": "Official generic eval config, RGB0\u20131, FP32, shortestedge480, long-term memory enabled, mem_every5; reviewed research runner loads complete official checkpoint strictly.",
+      "scope": "Separate noncommercial research-only manually initialized video tracking control; no application dependency or accuracy claim from initial smoke."
     }
   ],
   "video_smoke": {

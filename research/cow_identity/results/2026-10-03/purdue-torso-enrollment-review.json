@@ -1,0 +1,712 @@
+{
+  "proposals_sha256": "62c2f5627522e5f020ed351962f76c440d1e1be1a1c9efbb4086936309f0298d",
+  "review": "Merged two-agent AI-assisted manual review of all36eligible June8 torso crops with clean source context;81automatic geometry rejects retained explicitly. Not external human-certified labels. Known2238 onlyeligible row37 rejected for severe blur; remain intended-known with no samples. No query material used.",
+  "review_sources": {
+    "research/cow_identity/results/2026-10-03/purdue-torso-enrollment-review-evaluation.json": "5be55f9e95cae81022f81edfad394a421e0236b5022ed90800f127281bc5f174",
+    "research/cow_identity/results/2026-10-03/purdue-torso-enrollment-review-cattle.json": "9cad5907af4b9754d0a462db3a1b8e4000b77a1ca9f348dd1b1b642f68e501c2"
+  },
+  "rows": [
+    {
+      "row": 0,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 1,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 2,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 3,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 4,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 5,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 6,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 7,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 8,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 9,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 10,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 11,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 12,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 13,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 14,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 15,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 16,
+      "accepted": false,
+      "cow": null,
+      "reason": "AI visual rejection: predominantly exiting rump/tail fragment, insufficient intact torso despite passing rectangle geometry"
+    },
+    {
+      "row": 17,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 18,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 19,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 20,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 21,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 22,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 23,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 24,
+      "accepted": true,
+      "cow": 6079,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 25,
+      "accepted": true,
+      "cow": 6079,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 26,
+      "accepted": true,
+      "cow": 6079,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 27,
+      "accepted": true,
+      "cow": 6079,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 28,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 29,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 30,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 31,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 32,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 33,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 34,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 35,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 36,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 37,
+      "accepted": false,
+      "cow": null,
+      "reason": "Principal2238 is clear from passage context, but this only eligible torso has severe motion blur and smeared dark coat detail; reject as an unreliable enrollment example."
+    },
+    {
+      "row": 38,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 39,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 40,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 41,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 42,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 43,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 44,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 45,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 46,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 47,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 48,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 49,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 50,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 51,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 52,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 53,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 54,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 55,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 56,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 57,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 58,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 59,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 60,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 61,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 62,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 63,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 64,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 65,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 66,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 67,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 68,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 69,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 70,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 71,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 72,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 73,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 74,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 75,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 76,
+      "accepted": true,
+      "cow": 5953,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 77,
+      "accepted": true,
+      "cow": 5953,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 78,
+      "accepted": true,
+      "cow": 5953,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 79,
+      "accepted": true,
+      "cow": 5953,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 80,
+      "accepted": true,
+      "cow": 5953,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 81,
+      "accepted": true,
+      "cow": 5953,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 82,
+      "accepted": true,
+      "cow": 5953,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 83,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 84,
+      "accepted": false,
+      "cow": null,
+      "reason": "AI visual rejection: predominantly exiting rump/tail fragment, insufficient intact torso despite passing rectangle geometry"
+    },
+    {
+      "row": 85,
+      "accepted": false,
+      "cow": null,
+      "reason": "AI visual rejection: predominantly exiting rump/tail fragment, insufficient intact torso despite passing rectangle geometry"
+    },
+    {
+      "row": 86,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 87,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 88,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 89,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 90,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 91,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 92,
+      "accepted": true,
+      "cow": 2234,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 93,
+      "accepted": true,
+      "cow": 2234,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 94,
+      "accepted": true,
+      "cow": 2234,
+      "reason": "AI visual review of crop plus clean first-day passage context: principal animal, substantial visible coat-bearing torso, no neighboring cow contamination"
+    },
+    {
+      "row": 95,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 96,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 97,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 98,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 99,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 100,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 101,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic rejection: frozen torso geometry eligibility failed"
+    },
+    {
+      "row": 102,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 103,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 104,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 105,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 106,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 107,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 108,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 109,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 110,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 111,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 112,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 113,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 114,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 115,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 116,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    }
+  ]
+}

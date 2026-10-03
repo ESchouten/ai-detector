@@ -1,0 +1,1086 @@
+{
+  "conditions": {
+    "diverse10-dihedral8-pool1": {
+      "margin": 0.08,
+      "panels": {
+        "calibration": {
+          "abstentions": 1821,
+          "accepted_precision": 0.9913194444444444,
+          "correct_accepts": 571,
+          "known": 1799,
+          "known_coverage": 0.31739855475264034,
+          "known_rank1": 0.7565314063368538,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0033444816053511705,
+          "unknown_false_accepts": 2,
+          "wrong_known_accepts": 3
+        },
+        "development": {
+          "abstentions": 1975,
+          "accepted_precision": 0.9858823529411764,
+          "correct_accepts": 419,
+          "known": 1800,
+          "known_coverage": 0.23277777777777778,
+          "known_rank1": 0.7077777777777777,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.008333333333333333,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 1
+        },
+        "development_later": {
+          "abstentions": 1822,
+          "accepted_precision": 0.9439579684763573,
+          "correct_accepts": 539,
+          "known": 1795,
+          "known_coverage": 0.3002785515320334,
+          "known_rank1": 0.762116991643454,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.05016722408026756,
+          "unknown_false_accepts": 30,
+          "wrong_known_accepts": 2
+        }
+      },
+      "threshold": 0.5600000000000003
+    },
+    "diverse10-dihedral8-pool5": {
+      "margin": 0.09,
+      "panels": {
+        "calibration": {
+          "abstentions": 1609,
+          "accepted_precision": 0.9923857868020305,
+          "correct_accepts": 782,
+          "known": 1799,
+          "known_coverage": 0.43468593663146193,
+          "known_rank1": 0.7732073374096721,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0033444816053511705,
+          "unknown_false_accepts": 2,
+          "wrong_known_accepts": 4
+        },
+        "development": {
+          "abstentions": 1846,
+          "accepted_precision": 0.9981949458483754,
+          "correct_accepts": 553,
+          "known": 1800,
+          "known_coverage": 0.30722222222222223,
+          "known_rank1": 0.7455555555555555,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 1
+        },
+        "development_later": {
+          "abstentions": 1635,
+          "accepted_precision": 0.9656992084432717,
+          "correct_accepts": 732,
+          "known": 1795,
+          "known_coverage": 0.4077994428969359,
+          "known_rank1": 0.8016713091922005,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.043478260869565216,
+          "unknown_false_accepts": 26,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.5600000000000003
+    },
+    "diverse10-ridge0.01-pool1": {
+      "margin": 0.36,
+      "panels": {
+        "calibration": {
+          "abstentions": 1893,
+          "accepted_precision": 0.9900793650793651,
+          "correct_accepts": 499,
+          "known": 1799,
+          "known_coverage": 0.2773763201778766,
+          "known_rank1": 0.7287381878821567,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0016722408026755853,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 4
+        },
+        "development": {
+          "abstentions": 1903,
+          "accepted_precision": 0.9839034205231388,
+          "correct_accepts": 489,
+          "known": 1800,
+          "known_coverage": 0.27166666666666667,
+          "known_rank1": 0.7205555555555555,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.005,
+          "unknown_false_accepts": 3,
+          "wrong_known_accepts": 5
+        },
+        "development_later": {
+          "abstentions": 1913,
+          "accepted_precision": 0.975,
+          "correct_accepts": 468,
+          "known": 1795,
+          "known_coverage": 0.2607242339832869,
+          "known_rank1": 0.7364902506963789,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.011705685618729096,
+          "unknown_false_accepts": 7,
+          "wrong_known_accepts": 5
+        }
+      },
+      "threshold": 0.5100000000000002
+    },
+    "diverse10-ridge0.01-pool5": {
+      "margin": 0.41000000000000003,
+      "panels": {
+        "calibration": {
+          "abstentions": 1813,
+          "accepted_precision": 0.9931506849315068,
+          "correct_accepts": 580,
+          "known": 1799,
+          "known_coverage": 0.32240133407448585,
+          "known_rank1": 0.7626459143968871,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0033444816053511705,
+          "unknown_false_accepts": 2,
+          "wrong_known_accepts": 2
+        },
+        "development": {
+          "abstentions": 1844,
+          "accepted_precision": 0.9784172661870504,
+          "correct_accepts": 544,
+          "known": 1800,
+          "known_coverage": 0.3022222222222222,
+          "known_rank1": 0.7722222222222223,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.006666666666666667,
+          "unknown_false_accepts": 4,
+          "wrong_known_accepts": 8
+        },
+        "development_later": {
+          "abstentions": 1906,
+          "accepted_precision": 0.9794661190965093,
+          "correct_accepts": 477,
+          "known": 1795,
+          "known_coverage": 0.26573816155988855,
+          "known_rank1": 0.7749303621169916,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.013377926421404682,
+          "unknown_false_accepts": 8,
+          "wrong_known_accepts": 2
+        }
+      },
+      "threshold": 0.47000000000000025
+    },
+    "diverse10-ridge0.1-pool1": {
+      "margin": 0.39,
+      "panels": {
+        "calibration": {
+          "abstentions": 1948,
+          "accepted_precision": 0.9910913140311804,
+          "correct_accepts": 445,
+          "known": 1799,
+          "known_coverage": 0.2473596442468038,
+          "known_rank1": 0.7254030016675931,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0016722408026755853,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 3
+        },
+        "development": {
+          "abstentions": 1997,
+          "accepted_precision": 0.9925558312655087,
+          "correct_accepts": 400,
+          "known": 1800,
+          "known_coverage": 0.2222222222222222,
+          "known_rank1": 0.7238888888888889,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0016666666666666668,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 2
+        },
+        "development_later": {
+          "abstentions": 1992,
+          "accepted_precision": 0.9775561097256857,
+          "correct_accepts": 392,
+          "known": 1795,
+          "known_coverage": 0.21838440111420612,
+          "known_rank1": 0.7337047353760445,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.008361204013377926,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 4
+        }
+      },
+      "threshold": 0.5000000000000002
+    },
+    "diverse10-ridge0.1-pool5": {
+      "margin": 0.4,
+      "panels": {
+        "calibration": {
+          "abstentions": 1834,
+          "accepted_precision": 0.9928952042628775,
+          "correct_accepts": 559,
+          "known": 1799,
+          "known_coverage": 0.31072818232351307,
+          "known_rank1": 0.7620900500277932,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0033444816053511705,
+          "unknown_false_accepts": 2,
+          "wrong_known_accepts": 2
+        },
+        "development": {
+          "abstentions": 1875,
+          "accepted_precision": 0.9771428571428571,
+          "correct_accepts": 513,
+          "known": 1800,
+          "known_coverage": 0.285,
+          "known_rank1": 0.7738888888888888,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.006666666666666667,
+          "unknown_false_accepts": 4,
+          "wrong_known_accepts": 8
+        },
+        "development_later": {
+          "abstentions": 1925,
+          "accepted_precision": 0.9764957264957265,
+          "correct_accepts": 457,
+          "known": 1795,
+          "known_coverage": 0.2545961002785515,
+          "known_rank1": 0.7732590529247911,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.013377926421404682,
+          "unknown_false_accepts": 8,
+          "wrong_known_accepts": 3
+        }
+      },
+      "threshold": 0.47000000000000025
+    },
+    "diverse10-ridge1.0-pool1": {
+      "margin": 0.22,
+      "panels": {
+        "calibration": {
+          "abstentions": 1987,
+          "accepted_precision": 0.9902439024390244,
+          "correct_accepts": 406,
+          "known": 1799,
+          "known_coverage": 0.22568093385214008,
+          "known_rank1": 0.6914952751528627,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0016722408026755853,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 3
+        },
+        "development": {
+          "abstentions": 2041,
+          "accepted_precision": 0.9860724233983287,
+          "correct_accepts": 354,
+          "known": 1800,
+          "known_coverage": 0.19666666666666666,
+          "known_rank1": 0.7111111111111111,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.008333333333333333,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 2033,
+          "accepted_precision": 0.9722222222222222,
+          "correct_accepts": 350,
+          "known": 1795,
+          "known_coverage": 0.19498607242339833,
+          "known_rank1": 0.7052924791086351,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.008361204013377926,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 5
+        }
+      },
+      "threshold": 0.5500000000000003
+    },
+    "diverse10-ridge1.0-pool5": {
+      "margin": 0.0,
+      "panels": {
+        "calibration": {
+          "abstentions": 1872,
+          "accepted_precision": 0.9904761904761905,
+          "correct_accepts": 520,
+          "known": 1799,
+          "known_coverage": 0.28904947192884933,
+          "known_rank1": 0.7398554752640356,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 5
+        },
+        "development": {
+          "abstentions": 1899,
+          "accepted_precision": 0.9860279441117764,
+          "correct_accepts": 494,
+          "known": 1800,
+          "known_coverage": 0.27444444444444444,
+          "known_rank1": 0.77,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.01,
+          "unknown_false_accepts": 6,
+          "wrong_known_accepts": 1
+        },
+        "development_later": {
+          "abstentions": 1860,
+          "accepted_precision": 0.9812382739212008,
+          "correct_accepts": 523,
+          "known": 1795,
+          "known_coverage": 0.2913649025069638,
+          "known_rank1": 0.7398328690807799,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.005016722408026756,
+          "unknown_false_accepts": 3,
+          "wrong_known_accepts": 7
+        }
+      },
+      "threshold": 0.6100000000000003
+    },
+    "diverse10-ridge10.0-pool1": {
+      "margin": 0.07,
+      "panels": {
+        "calibration": {
+          "abstentions": 2047,
+          "accepted_precision": 0.9914285714285714,
+          "correct_accepts": 347,
+          "known": 1799,
+          "known_coverage": 0.19288493607559756,
+          "known_rank1": 0.6264591439688716,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0016722408026755853,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 2
+        },
+        "development": {
+          "abstentions": 2220,
+          "accepted_precision": 0.9944444444444445,
+          "correct_accepts": 179,
+          "known": 1800,
+          "known_coverage": 0.09944444444444445,
+          "known_rank1": 0.655,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0016666666666666668,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 2138,
+          "accepted_precision": 0.984313725490196,
+          "correct_accepts": 251,
+          "known": 1795,
+          "known_coverage": 0.13983286908077994,
+          "known_rank1": 0.6395543175487465,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0016722408026755853,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 3
+        }
+      },
+      "threshold": 0.5600000000000003
+    },
+    "diverse10-ridge10.0-pool5": {
+      "margin": 0.07,
+      "panels": {
+        "calibration": {
+          "abstentions": 1956,
+          "accepted_precision": 0.9909297052154195,
+          "correct_accepts": 437,
+          "known": 1799,
+          "known_coverage": 0.24291272929405225,
+          "known_rank1": 0.6364647026125625,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0033444816053511705,
+          "unknown_false_accepts": 2,
+          "wrong_known_accepts": 2
+        },
+        "development": {
+          "abstentions": 2147,
+          "accepted_precision": 1.0,
+          "correct_accepts": 253,
+          "known": 1800,
+          "known_coverage": 0.14055555555555554,
+          "known_rank1": 0.6955555555555556,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 2047,
+          "accepted_precision": 1.0,
+          "correct_accepts": 346,
+          "known": 1795,
+          "known_coverage": 0.19275766016713092,
+          "known_rank1": 0.6629526462395543,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.6000000000000003
+    },
+    "diverse10-rotate4-pool1": {
+      "margin": 0.08,
+      "panels": {
+        "calibration": {
+          "abstentions": 1780,
+          "accepted_precision": 0.9918962722852512,
+          "correct_accepts": 612,
+          "known": 1799,
+          "known_coverage": 0.34018899388549195,
+          "known_rank1": 0.7342968315730961,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.006688963210702341,
+          "unknown_false_accepts": 4,
+          "wrong_known_accepts": 1
+        },
+        "development": {
+          "abstentions": 1933,
+          "accepted_precision": 0.9914346895074947,
+          "correct_accepts": 463,
+          "known": 1800,
+          "known_coverage": 0.25722222222222224,
+          "known_rank1": 0.7294444444444445,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0016666666666666668,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 3
+        },
+        "development_later": {
+          "abstentions": 1796,
+          "accepted_precision": 0.9463986599664992,
+          "correct_accepts": 565,
+          "known": 1795,
+          "known_coverage": 0.3147632311977716,
+          "known_rank1": 0.7682451253481895,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.046822742474916385,
+          "unknown_false_accepts": 28,
+          "wrong_known_accepts": 4
+        }
+      },
+      "threshold": 0.5400000000000003
+    },
+    "diverse10-rotate4-pool5": {
+      "margin": 0.09,
+      "panels": {
+        "calibration": {
+          "abstentions": 1690,
+          "accepted_precision": 0.9929278642149929,
+          "correct_accepts": 702,
+          "known": 1799,
+          "known_coverage": 0.39021678710394664,
+          "known_rank1": 0.7515286270150083,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.008361204013377926,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1879,
+          "accepted_precision": 1.0,
+          "correct_accepts": 521,
+          "known": 1800,
+          "known_coverage": 0.28944444444444445,
+          "known_rank1": 0.7583333333333333,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1693,
+          "accepted_precision": 0.9742857142857143,
+          "correct_accepts": 682,
+          "known": 1795,
+          "known_coverage": 0.37994428969359334,
+          "known_rank1": 0.8100278551532033,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.030100334448160536,
+          "unknown_false_accepts": 18,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.5700000000000003
+    },
+    "uniform10-dihedral8-pool1": {
+      "margin": 0.09,
+      "panels": {
+        "calibration": {
+          "abstentions": 1773,
+          "accepted_precision": 0.9903846153846154,
+          "correct_accepts": 618,
+          "known": 1799,
+          "known_coverage": 0.3435241801000556,
+          "known_rank1": 0.7537520844913841,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.008361204013377926,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 1
+        },
+        "development": {
+          "abstentions": 1916,
+          "accepted_precision": 0.9628099173553719,
+          "correct_accepts": 466,
+          "known": 1800,
+          "known_coverage": 0.2588888888888889,
+          "known_rank1": 0.715,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.02666666666666667,
+          "unknown_false_accepts": 16,
+          "wrong_known_accepts": 2
+        },
+        "development_later": {
+          "abstentions": 1798,
+          "accepted_precision": 0.9445378151260504,
+          "correct_accepts": 562,
+          "known": 1795,
+          "known_coverage": 0.313091922005571,
+          "known_rank1": 0.7247910863509749,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.05016722408026756,
+          "unknown_false_accepts": 30,
+          "wrong_known_accepts": 3
+        }
+      },
+      "threshold": 0.47000000000000025
+    },
+    "uniform10-dihedral8-pool5": {
+      "margin": 0.09,
+      "panels": {
+        "calibration": {
+          "abstentions": 1684,
+          "accepted_precision": 0.9985974754558204,
+          "correct_accepts": 712,
+          "known": 1799,
+          "known_coverage": 0.39577543079488603,
+          "known_rank1": 0.7909949972206781,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0016722408026755853,
+          "unknown_false_accepts": 1,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1898,
+          "accepted_precision": 0.9860557768924303,
+          "correct_accepts": 495,
+          "known": 1800,
+          "known_coverage": 0.275,
+          "known_rank1": 0.7583333333333333,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.011666666666666667,
+          "unknown_false_accepts": 7,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1702,
+          "accepted_precision": 0.9667149059334298,
+          "correct_accepts": 668,
+          "known": 1795,
+          "known_coverage": 0.3721448467966574,
+          "known_rank1": 0.7370473537604457,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.038461538461538464,
+          "unknown_false_accepts": 23,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.5600000000000003
+    },
+    "uniform10-ridge0.01-pool1": {
+      "margin": 0.32,
+      "panels": {
+        "calibration": {
+          "abstentions": 1849,
+          "accepted_precision": 0.9908759124087592,
+          "correct_accepts": 543,
+          "known": 1799,
+          "known_coverage": 0.30183435241801,
+          "known_rank1": 0.7270705947748749,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.006688963210702341,
+          "unknown_false_accepts": 4,
+          "wrong_known_accepts": 1
+        },
+        "development": {
+          "abstentions": 1965,
+          "accepted_precision": 0.9839080459770115,
+          "correct_accepts": 428,
+          "known": 1800,
+          "known_coverage": 0.23777777777777778,
+          "known_rank1": 0.6911111111111111,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.006666666666666667,
+          "unknown_false_accepts": 4,
+          "wrong_known_accepts": 3
+        },
+        "development_later": {
+          "abstentions": 1786,
+          "accepted_precision": 0.8962108731466227,
+          "correct_accepts": 544,
+          "known": 1795,
+          "known_coverage": 0.3030640668523677,
+          "known_rank1": 0.7275766016713092,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.09866220735785954,
+          "unknown_false_accepts": 59,
+          "wrong_known_accepts": 4
+        }
+      },
+      "threshold": 0.5400000000000003
+    },
+    "uniform10-ridge0.01-pool5": {
+      "margin": 0.43,
+      "panels": {
+        "calibration": {
+          "abstentions": 1825,
+          "accepted_precision": 0.9912587412587412,
+          "correct_accepts": 567,
+          "known": 1799,
+          "known_coverage": 0.3151750972762646,
+          "known_rank1": 0.735964424680378,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.008361204013377926,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 2035,
+          "accepted_precision": 0.9917808219178083,
+          "correct_accepts": 362,
+          "known": 1800,
+          "known_coverage": 0.2011111111111111,
+          "known_rank1": 0.7222222222222222,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 3
+        },
+        "development_later": {
+          "abstentions": 1811,
+          "accepted_precision": 0.9175257731958762,
+          "correct_accepts": 534,
+          "known": 1795,
+          "known_coverage": 0.29749303621169915,
+          "known_rank1": 0.7582172701949861,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0802675585284281,
+          "unknown_false_accepts": 48,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.5800000000000003
+    },
+    "uniform10-ridge0.1-pool1": {
+      "margin": 0.3,
+      "panels": {
+        "calibration": {
+          "abstentions": 1840,
+          "accepted_precision": 0.9910233393177738,
+          "correct_accepts": 552,
+          "known": 1799,
+          "known_coverage": 0.3068371317398555,
+          "known_rank1": 0.7287381878821567,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.006688963210702341,
+          "unknown_false_accepts": 4,
+          "wrong_known_accepts": 1
+        },
+        "development": {
+          "abstentions": 1953,
+          "accepted_precision": 0.9865771812080537,
+          "correct_accepts": 441,
+          "known": 1800,
+          "known_coverage": 0.245,
+          "known_rank1": 0.6994444444444444,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.006666666666666667,
+          "unknown_false_accepts": 4,
+          "wrong_known_accepts": 2
+        },
+        "development_later": {
+          "abstentions": 1762,
+          "accepted_precision": 0.901743264659271,
+          "correct_accepts": 569,
+          "known": 1795,
+          "known_coverage": 0.316991643454039,
+          "known_rank1": 0.7364902506963789,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.09698996655518395,
+          "unknown_false_accepts": 58,
+          "wrong_known_accepts": 4
+        }
+      },
+      "threshold": 0.5400000000000003
+    },
+    "uniform10-ridge0.1-pool5": {
+      "margin": 0.39,
+      "panels": {
+        "calibration": {
+          "abstentions": 1797,
+          "accepted_precision": 0.9916666666666667,
+          "correct_accepts": 595,
+          "known": 1799,
+          "known_coverage": 0.33073929961089493,
+          "known_rank1": 0.7392996108949417,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.008361204013377926,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1992,
+          "accepted_precision": 0.9975490196078431,
+          "correct_accepts": 407,
+          "known": 1800,
+          "known_coverage": 0.22611111111111112,
+          "known_rank1": 0.7266666666666667,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 1
+        },
+        "development_later": {
+          "abstentions": 1766,
+          "accepted_precision": 0.9202551834130781,
+          "correct_accepts": 577,
+          "known": 1795,
+          "known_coverage": 0.32144846796657384,
+          "known_rank1": 0.7643454038997215,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.08361204013377926,
+          "unknown_false_accepts": 50,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.5800000000000003
+    },
+    "uniform10-ridge1.0-pool1": {
+      "margin": 0.16,
+      "panels": {
+        "calibration": {
+          "abstentions": 1855,
+          "accepted_precision": 0.9907749077490775,
+          "correct_accepts": 537,
+          "known": 1799,
+          "known_coverage": 0.29849916620344635,
+          "known_rank1": 0.7242912729294052,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.006688963210702341,
+          "unknown_false_accepts": 4,
+          "wrong_known_accepts": 1
+        },
+        "development": {
+          "abstentions": 1965,
+          "accepted_precision": 0.9862068965517241,
+          "correct_accepts": 429,
+          "known": 1800,
+          "known_coverage": 0.23833333333333334,
+          "known_rank1": 0.7094444444444444,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.006666666666666667,
+          "unknown_false_accepts": 4,
+          "wrong_known_accepts": 2
+        },
+        "development_later": {
+          "abstentions": 1796,
+          "accepted_precision": 0.914572864321608,
+          "correct_accepts": 546,
+          "known": 1795,
+          "known_coverage": 0.3041782729805014,
+          "known_rank1": 0.7442896935933148,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.07692307692307693,
+          "unknown_false_accepts": 46,
+          "wrong_known_accepts": 5
+        }
+      },
+      "threshold": 0.5500000000000003
+    },
+    "uniform10-ridge1.0-pool5": {
+      "margin": 0.26,
+      "panels": {
+        "calibration": {
+          "abstentions": 1771,
+          "accepted_precision": 0.9920127795527156,
+          "correct_accepts": 621,
+          "known": 1799,
+          "known_coverage": 0.3451917732073374,
+          "known_rank1": 0.7448582545858811,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.008361204013377926,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 0
+        },
+        "development": {
+          "abstentions": 1937,
+          "accepted_precision": 1.0,
+          "correct_accepts": 463,
+          "known": 1800,
+          "known_coverage": 0.25722222222222224,
+          "known_rank1": 0.7527777777777778,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1690,
+          "accepted_precision": 0.9160739687055477,
+          "correct_accepts": 644,
+          "known": 1795,
+          "known_coverage": 0.3587743732590529,
+          "known_rank1": 0.7688022284122563,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.09866220735785954,
+          "unknown_false_accepts": 59,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.5700000000000003
+    },
+    "uniform10-ridge10.0-pool1": {
+      "margin": 0.03,
+      "panels": {
+        "calibration": {
+          "abstentions": 1894,
+          "accepted_precision": 0.9900596421471173,
+          "correct_accepts": 498,
+          "known": 1799,
+          "known_coverage": 0.2768204558087827,
+          "known_rank1": 0.7187326292384658,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0033444816053511705,
+          "unknown_false_accepts": 2,
+          "wrong_known_accepts": 3
+        },
+        "development": {
+          "abstentions": 1997,
+          "accepted_precision": 0.9900744416873449,
+          "correct_accepts": 399,
+          "known": 1800,
+          "known_coverage": 0.22166666666666668,
+          "known_rank1": 0.69,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.0033333333333333335,
+          "unknown_false_accepts": 2,
+          "wrong_known_accepts": 2
+        },
+        "development_later": {
+          "abstentions": 1866,
+          "accepted_precision": 0.9335863377609108,
+          "correct_accepts": 492,
+          "known": 1795,
+          "known_coverage": 0.2740947075208914,
+          "known_rank1": 0.7298050139275766,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.05016722408026756,
+          "unknown_false_accepts": 30,
+          "wrong_known_accepts": 5
+        }
+      },
+      "threshold": 0.5600000000000003
+    },
+    "uniform10-ridge10.0-pool5": {
+      "margin": 0.08,
+      "panels": {
+        "calibration": {
+          "abstentions": 1786,
+          "accepted_precision": 0.9950900163666121,
+          "correct_accepts": 608,
+          "known": 1799,
+          "known_coverage": 0.3379655364091162,
+          "known_rank1": 0.7387437465258477,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 3
+        },
+        "development": {
+          "abstentions": 1871,
+          "accepted_precision": 0.9792060491493384,
+          "correct_accepts": 518,
+          "known": 1800,
+          "known_coverage": 0.2877777777777778,
+          "known_rank1": 0.735,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.016666666666666666,
+          "unknown_false_accepts": 10,
+          "wrong_known_accepts": 1
+        },
+        "development_later": {
+          "abstentions": 1760,
+          "accepted_precision": 0.985781990521327,
+          "correct_accepts": 624,
+          "known": 1795,
+          "known_coverage": 0.3476323119777159,
+          "known_rank1": 0.7576601671309192,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.013377926421404682,
+          "unknown_false_accepts": 8,
+          "wrong_known_accepts": 1
+        }
+      },
+      "threshold": 0.4300000000000002
+    },
+    "uniform10-rotate4-pool1": {
+      "margin": 0.09,
+      "panels": {
+        "calibration": {
+          "abstentions": 1774,
+          "accepted_precision": 0.9935794542536116,
+          "correct_accepts": 619,
+          "known": 1799,
+          "known_coverage": 0.3440800444691495,
+          "known_rank1": 0.7448582545858811,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.005016722408026756,
+          "unknown_false_accepts": 3,
+          "wrong_known_accepts": 1
+        },
+        "development": {
+          "abstentions": 1895,
+          "accepted_precision": 0.9544554455445544,
+          "correct_accepts": 482,
+          "known": 1800,
+          "known_coverage": 0.2677777777777778,
+          "known_rank1": 0.7527777777777778,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.03666666666666667,
+          "unknown_false_accepts": 22,
+          "wrong_known_accepts": 1
+        },
+        "development_later": {
+          "abstentions": 1787,
+          "accepted_precision": 0.9405940594059405,
+          "correct_accepts": 570,
+          "known": 1795,
+          "known_coverage": 0.31754874651810583,
+          "known_rank1": 0.7108635097493036,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.05518394648829431,
+          "unknown_false_accepts": 33,
+          "wrong_known_accepts": 3
+        }
+      },
+      "threshold": 0.5000000000000002
+    },
+    "uniform10-rotate4-pool5": {
+      "margin": 0.09,
+      "panels": {
+        "calibration": {
+          "abstentions": 1684,
+          "accepted_precision": 0.9915848527349228,
+          "correct_accepts": 707,
+          "known": 1799,
+          "known_coverage": 0.39299610894941633,
+          "known_rank1": 0.7843246247915509,
+          "observations": 2397,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.008361204013377926,
+          "unknown_false_accepts": 5,
+          "wrong_known_accepts": 1
+        },
+        "development": {
+          "abstentions": 1896,
+          "accepted_precision": 0.9722222222222222,
+          "correct_accepts": 490,
+          "known": 1800,
+          "known_coverage": 0.2722222222222222,
+          "known_rank1": 0.8,
+          "observations": 2400,
+          "unknown": 600,
+          "unknown_false_acceptance_rate": 0.023333333333333334,
+          "unknown_false_accepts": 14,
+          "wrong_known_accepts": 0
+        },
+        "development_later": {
+          "abstentions": 1706,
+          "accepted_precision": 0.9359534206695779,
+          "correct_accepts": 643,
+          "known": 1795,
+          "known_coverage": 0.35821727019498606,
+          "known_rank1": 0.7225626740947075,
+          "observations": 2393,
+          "unknown": 598,
+          "unknown_false_acceptance_rate": 0.07357859531772576,
+          "unknown_false_accepts": 44,
+          "wrong_known_accepts": 0
+        }
+      },
+      "threshold": 0.5700000000000003
+    }
+  },
+  "manifest_sha256": "16fa9783c41b08cc88800d052ec3a45967f4d18bc3bf778fa581787aa7bbcd50",
+  "status": "Exploratory gallery-only fitting; no final windows"
+}

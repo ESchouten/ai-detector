@@ -1,0 +1,123 @@
+{
+  "detector": {
+    "classes": [
+      "cow"
+    ],
+    "confidence": 0.25,
+    "frames_width": 1280,
+    "imgsz": 640,
+    "model": ".cache/cow-detectors/training/mixed-full-backbone/weights/best.pt",
+    "precision": "FP32",
+    "preset_sha256": null,
+    "sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    "tracker": "bytetrack.yaml",
+    "provenance": "Mixed model already trained on disjoint public ETHZ adult +early8calves localization, no Purdue training; original preset baseline separately retained.",
+    "quantize": 32,
+    "class_ids": [
+      0
+    ],
+    "label_mapping": "Checkpoint names={0:item}; index0 is cow in the frozen mixed localization training data. Explicit map0->cow, same as existing localization benchmark. Empty class selections rejected."
+  },
+  "encoder": {
+    "adaptation": false,
+    "image_size": 440,
+    "model": "Official MIEWid msv3",
+    "precision": "FP32",
+    "weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348"
+  },
+  "enrollment": {
+    "maximum_references_per_cow": 10,
+    "selection": "First-day predicted crops only. Human-confirm principal-cow identity and clean visibility without query images. Medoid then farthest-point diversity using official rawMIEW cosine, deterministic frame-index ties; keep fewer if fewer eligible confirmed crops. Count all proposed/rejected/corrected crops. No unknown photos enrolled.",
+    "frames": "All June8 known clips at5fps; max10 confirmed clean predicted crops per cow"
+  },
+  "frozen_at_utc": "2026-10-03T07:53:22.828527+00:00",
+  "gates": {
+    "known_coverage": 0.6,
+    "limitations": "Only7known and2unknown return passages; even zero observed errors cannot certify these rates",
+    "named_precision": 0.99,
+    "unknown_false_acceptance_rate": 0.01
+  },
+  "identity_policy": {
+    "implementation": "Actual GalleryIdentifier, not research temporal_names",
+    "max_overlap": 0.2,
+    "min_crop_size": 64,
+    "min_margin": 0.1,
+    "min_observations": 3,
+    "min_similarity": 0.65,
+    "query_cache": "Content and encoder fingerprints; no expected IDs in keys",
+    "sample_interval": 0.2,
+    "state": "Fresh tracker and temporal identity state per clip; same immutable confirmed gallery; finish async preparation before scored frames and report startup cost separately"
+  },
+  "known_cows": [
+    2234,
+    2238,
+    5676,
+    5953,
+    6079,
+    6102,
+    6110
+  ],
+  "manifest_sha256": "0200e21caad98df815eb0bab9fec5a3bdb91e82802c52b4d399e858426d716d0",
+  "metrics": {
+    "offline_three_crop_aggregate": "Optional separately labeled diagnostic only; cannot substitute production-policy result",
+    "primary": "Full-clip1fps one-to-oneIoU>=.5 conservative named precision; correct names / all visible enrolled-cow annotations including missed/rejected crops; unknown false names / all visible unenrolled cows; unmatched named boxes are errors",
+    "secondary": [
+      "One decision per physical passage; retain all earlier wrong-name durations",
+      "Latency to correct name, naming gaps, track/identity switches",
+      "Enrollment effort, startup latency, pipeline time and memory"
+    ]
+  },
+  "preserved_holdouts": [
+    "8-calves1800\u20132099",
+    "8-calves2700\u20132999"
+  ],
+  "principal_labels_sha256": "c095e21b36022b05294fd443a4bfd859b48daeea4c8513848d3c8c1b1cfe96d3",
+  "purpose": "Small controlled-view later-day feasibility complement; does not replace crowded-scene goal or establish farm reliability",
+  "query_pixels_opened_at_freeze": false,
+  "query_truth_requirement": "Before model predictions: independently annotate every visible cow box in every sampled query frame, including edge/partial animals; use biological ID where independently verifiable, otherwise explicit unenrolled unknown. Publish uncertain annotation count separately; do not assign filename ID to every box. This is a required gate, not yet satisfied.",
+  "sampling_counts": {
+    "enrollment": 78,
+    "excluded_unknown": 0,
+    "query": 105
+  },
+  "sampling_fps": 1,
+  "selection": "No query model or threshold selection; complete human enrollment review and freeze runner/annotations before any June9 inference.",
+  "source_days": {
+    "enrollment": "2022-06-08",
+    "query": "2022-06-09"
+  },
+  "source_hashes": {
+    "detector/src/aidetector/adapters/inference/identity_observations.py": "937b275e369e414bb0fff7c2630ff3e81e902cde17996a916c5b53aaa6a0d615",
+    "detector/src/aidetector/adapters/inference/miewid.py": "1dbbb9259b64a95aff9f6da872c3ee81966d0afaa04db1ea7cad3eb8f080a134",
+    "detector/src/aidetector/domain/identity.py": "0c07035535816d507b85631fe7913e36b4c50302503590b7490f0c9f00e686cd"
+  },
+  "source_sampling": "Sequential decode source clips; process0,6,12,... at5fps. Query accuracy scored only on independently annotated frozen1fps frames, with all preceding5fps observations updating actual state.",
+  "unknown_cows": [
+    6109,
+    6113
+  ],
+  "unknown_selection": "First2 SHA256(purdue-passage-candidate-v1:<cow-id>) among9publisherIDs, before pixels",
+  "version": 2,
+  "original_protocol_sha256": "d39b3814ea05e4265c8162582c7bbdced3ca382a0135ed724ce286673709b97f",
+  "processing_fps": 5,
+  "amendment": "Predeclared June8-only existing mixed-cow detector alternate activated: five-fps preset still produced no eligible reference for2238. No query pixels or predictions used.",
+  "predeclared_alternate_if_enrollment_incomplete": {
+    "model": ".cache/cow-detectors/training/mixed-full-backbone/weights/best.pt",
+    "sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    "rule": "Only if preset5fps still cannot enroll every known cow, repeat all June8 known clips with this already-trained cow detector at exactly the same confidence/imgsz/cadence. No new training or query inference."
+  },
+  "cadence_protocol_sha256": "2aaa5885d92cee62c1763acc943285e3abe4b0dd615d3bac85e2225e6c536250",
+  "fp16_protocol_sha256": "bb72e7d1a0a408d4709354788dfa00b92f31776f20a1fd2f769109f10cebae12",
+  "numerical_stability_amendment": "June8 FP16/MPS mixed YOLO11 run aborted in native torchvision NMS with invalid large index. Fresh-process FP32 retry, model/cadence/thresholds/identity unchanged. CPU2threads preliminary may prepare enrollment while GPU is occupied, but later MPS FP32 detection parity required before query.",
+  "fp16_failure": {
+    "type": "torch.AcceleratorError -> MpsInferenceError",
+    "operator": "torchvision.ops.nms",
+    "index": "6943249105899773989",
+    "status": "Incomplete, no proposals manifest; no in-process recovery, no query inference"
+  },
+  "uncorrected_class_filter_protocol_sha256": "a6fd8f2b691066771812d4d80c6e9791e4c4e416136fb419435e7e37c8422a91",
+  "invalid_preliminary_run": {
+    "path": ".cache/cow-passage-enrollment-mixed-cpu",
+    "reason": "Runner selected text cow against checkpoint text item; empty class filter invalidated zero-proposal outcome; not a model performance result."
+  }
+}

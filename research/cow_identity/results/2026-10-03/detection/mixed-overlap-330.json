@@ -1,0 +1,85 @@
+{
+  "accepted": {
+    "own-0.2": {
+      "all_spans_multiple": 55,
+      "matched_known": 453,
+      "matched_unknown": 75,
+      "unmatched": 44,
+      "unmatched_partial_or_loose": 41,
+      "unmatched_spans_multiple": 3,
+      "unmatched_spans_multiple_cows": 3
+    },
+    "own-0.3": {
+      "all_spans_multiple": 72,
+      "matched_known": 679,
+      "matched_unknown": 157,
+      "unmatched": 107,
+      "unmatched_partial_or_loose": 103,
+      "unmatched_spans_multiple": 4,
+      "unmatched_spans_multiple_cows": 4
+    },
+    "own-0.5": {
+      "all_spans_multiple": 118,
+      "matched_known": 1041,
+      "matched_unknown": 364,
+      "unmatched": 239,
+      "unmatched_duplicate_like": 2,
+      "unmatched_partial_or_loose": 217,
+      "unmatched_spans_multiple": 21,
+      "unmatched_spans_multiple_cows": 20
+    },
+    "symmetric-0.2": {
+      "all_spans_multiple": 28,
+      "matched_known": 368,
+      "matched_unknown": 48,
+      "unmatched": 33,
+      "unmatched_partial_or_loose": 33
+    },
+    "symmetric-0.3": {
+      "all_spans_multiple": 48,
+      "matched_known": 590,
+      "matched_unknown": 110,
+      "unmatched": 96,
+      "unmatched_partial_or_loose": 93,
+      "unmatched_spans_multiple": 3,
+      "unmatched_spans_multiple_cows": 3
+    },
+    "symmetric-0.5": {
+      "all_spans_multiple": 68,
+      "matched_known": 913,
+      "matched_unknown": 342,
+      "unmatched": 212,
+      "unmatched_partial_or_loose": 205,
+      "unmatched_spans_multiple": 7,
+      "unmatched_spans_multiple_cows": 7
+    }
+  },
+  "after_size_and_border_gate": {
+    "all_spans_multiple": 272,
+    "matched_known": 1380,
+    "matched_unknown": 502,
+    "unmatched": 456,
+    "unmatched_duplicate_like": 90,
+    "unmatched_little_annotation_overlap": 1,
+    "unmatched_partial_or_loose": 321,
+    "unmatched_spans_multiple": 62,
+    "unmatched_spans_multiple_cows": 44
+  },
+  "height": 600,
+  "merged_hint": "Covers at least 60% of two publisher boxes; not verified mask evidence",
+  "min_crop_size": 64,
+  "scope": "Cached crop-eligibility diagnostic; no recognition or runtime change",
+  "totals": {
+    "all_spans_multiple": 272,
+    "matched_known": 1474,
+    "matched_unknown": 502,
+    "unmatched": 460,
+    "unmatched_duplicate_like": 90,
+    "unmatched_little_annotation_overlap": 1,
+    "unmatched_partial_or_loose": 325,
+    "unmatched_spans_multiple": 62,
+    "unmatched_spans_multiple_cows": 44
+  },
+  "tracking_sha256": "48d070e4f6bc812ab862ff8013c50e125d60aaca1bd90c48748b610bf68748db",
+  "width": 800
+}

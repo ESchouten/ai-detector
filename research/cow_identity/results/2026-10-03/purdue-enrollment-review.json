@@ -1,0 +1,110 @@
+{
+  "status": "June8 enrollment-only visual review, before any June9 model inference",
+  "proposals_sha256": "c0cb513921e5994a41a1d11a17e0df8ab1eccd93996b88f0b3ae8e0b242630df",
+  "reviewed_frames": 78,
+  "reviewed_proposals": 15,
+  "reviewer": "identity_evaluation agent; all7 full-frame contact sheets inspected",
+  "policy": "Only principal cow confirmed by publisher CSV and visible continuous passage; require production usable_crop and visually clean torso reference; never label other animals by clip filename",
+  "rows": [
+    {
+      "row": 0,
+      "cow": 6102,
+      "accepted": true,
+      "reason": "Clean principal-cow torso in June8 passage"
+    },
+    {
+      "row": 1,
+      "cow": null,
+      "accepted": false,
+      "reason": "Truncated at frame edge; production usable_crop rejected"
+    },
+    {
+      "row": 2,
+      "cow": null,
+      "accepted": false,
+      "reason": "Truncated at frame edge; production usable_crop rejected"
+    },
+    {
+      "row": 3,
+      "cow": null,
+      "accepted": false,
+      "reason": "Truncated at frame edge; production usable_crop rejected"
+    },
+    {
+      "row": 4,
+      "cow": null,
+      "accepted": false,
+      "reason": "Truncated at frame edge; production usable_crop rejected"
+    },
+    {
+      "row": 5,
+      "cow": null,
+      "accepted": false,
+      "reason": "Truncated at frame edge; production usable_crop rejected"
+    },
+    {
+      "row": 6,
+      "cow": 5676,
+      "accepted": true,
+      "reason": "Clean principal-cow torso in June8 passage"
+    },
+    {
+      "row": 7,
+      "cow": null,
+      "accepted": false,
+      "reason": "Truncated at frame edge; production usable_crop rejected"
+    },
+    {
+      "row": 8,
+      "cow": null,
+      "accepted": false,
+      "reason": "Truncated at frame edge; production usable_crop rejected"
+    },
+    {
+      "row": 9,
+      "cow": null,
+      "accepted": false,
+      "reason": "Non-principal preceding cow; do not assign clip label"
+    },
+    {
+      "row": 10,
+      "cow": null,
+      "accepted": false,
+      "reason": "Only rear-body fragment retained; poor complete-coat reference"
+    },
+    {
+      "row": 11,
+      "cow": null,
+      "accepted": false,
+      "reason": "Truncated at frame edge; production usable_crop rejected"
+    },
+    {
+      "row": 12,
+      "cow": null,
+      "accepted": false,
+      "reason": "Truncated at frame edge; production usable_crop rejected"
+    },
+    {
+      "row": 13,
+      "cow": 6110,
+      "accepted": true,
+      "reason": "Clean principal-cow torso in June8 passage"
+    },
+    {
+      "row": 14,
+      "cow": null,
+      "accepted": false,
+      "reason": "Rear-body fragment after leaving frame; not a clean reference"
+    }
+  ],
+  "accepted": 3,
+  "rejected": 12,
+  "non_principal_proposals": 1,
+  "known_without_clean_reference": [
+    2234,
+    2238,
+    5953,
+    6079
+  ],
+  "denominator": "All7 intended-known cows stay in query known coverage including missing enrollment; never silently reclassify these4 as unknown"
+}

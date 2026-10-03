@@ -1,0 +1,14 @@
+# Ultralytics8.4.80 BoT-SORT defaults, changing only with_reid.
+# Auto reuses the evaluated YOLO11s Detect-head features; no extra model.
+tracker_type: botsort
+track_high_thresh: 0.25
+track_low_thresh: 0.1
+new_track_thresh: 0.25
+track_buffer: 30
+match_thresh: 0.8
+fuse_score: true
+gmc_method: sparseOptFlow
+proximity_thresh: 0.5
+appearance_thresh: 0.8
+with_reid: true
+model: auto

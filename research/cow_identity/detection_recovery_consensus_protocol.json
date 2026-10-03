@@ -1,0 +1,46 @@
+{
+  "frozen_at_utc": "2026-10-03T09:18:31.204659+00:00",
+  "scope": "Fixed actual-seed continuous2fps tracking with1Hz rawYOLO and recovered-quarantine/reciprocal naming. Exposed single-recording development, not fresh-window reID or independent farm validation. No prompts after frame0.",
+  "minimum_iou": 0.5,
+  "policy": "Keep actual initializedCutie originalslotnames/LCCgeometry,originalp10>=.7,exact CorroboratedRecovery state at1Hz. Nameonlyif current LCC box and rawYOLO proposal are mutual highest-IoU partners withIoU>=.5 and slot notconflicted. Each proposal supports atmostone slot. No averaging geometry or threshold search.",
+  "comparison": "Original recovered-quarantine maximum-IoU result must reproduceexactly; then evaluate onlythisfixedreciprocal conjunction. No newselector.",
+  "windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ],
+    [
+      1230,
+      1529
+    ]
+  ],
+  "files": {
+    "research/cow_identity/detection_quarantine_recovery.py": "aca8e85b9f658ec9c183938dc0438614f5362525aca0ca4ee9fae1d050479e81",
+    "research/cow_identity/test_detection_quarantine_recovery.py": "527d23ba7d61a72ecbf1f5944cd5e4ccf8f10330b9474e33c9f6048c5c08adb5",
+    "research/cow_identity/detection_cutie_quarantine.py": "7bbd7e52a16b344a82a8848788e4f78f85bdb60ab43fd1ad08ae04977a213707",
+    "research/cow_identity/detection_cutie_variants.py": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+    "research/cow_identity/detection_actual_audit.py": "d034183b89be07c9420d579658e7a5f2d590e375c4eb1f48260a8ed2313aa2e4",
+    "research/cow_identity/detection_actual_score.py": "48692aed8c4355b1699f7786917c5fa98a89c1981b12c28c7673ae304659b009",
+    "research/cow_identity/detection_box_consensus.py": "d81721ec2268225715903a45c2b3c79e7588c6088b09cfc482d291e8430df3cf",
+    "research/cow_identity/detection_corroboration.py": "c381591a6609ff422c4ac784da2c36efb54637440bef49f926b5d3c9942e84b4",
+    "research/cow_identity/detection_sam_tracking.py": "920c722775042efc3c71e3b7ae3b52473dde2d21facdd4b33bfb5fa297361128",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6",
+    "research/cow_identity/detection_actual_seed_protocol.json": "aaac7595cebc8beacace4260380d6c00b2b1c5eccf39def8cc4d0e6a7b7595d6",
+    "research/cow_identity/detection_cutie_quarantine_v2_protocol.json": "294b16744d0efe7705024edbb465f158f91a4fcad4c1881853e53683ea354165",
+    "research/cow_identity/results/2026-10-03/detection/cutie-actual-seed-pipeline.json": "26a7006ec9d6a71c9835b15914fd6416e5e5b781b63aa9c0c1193f81d5a62428",
+    ".cache/cow-cutie/actual-seed-2fps/propagation.json": "98721b3a84a525d63b70bb720d7b8d0b7a7811de06b71d92c7b12818629a2e26",
+    ".cache/cow-cutie/actual-seed-corroborator.json": "179da21b10e713902e0245e6a8f0e5a6f3b13e276a7c221deb618f2c42ca1707",
+    ".cache/cow-cutie/calibration-clip/sampled.json": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d",
+    ".cache/cow-cutie/actual-seed-masks/manifest.json": "9dc7367648d8f19d6beeec1e252be571d1fb59a0a41df0c5e1d9d7018fefbd4a",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "research/cow_identity/detection_recovery_consensus.py": "183f81b1ad2639c96a7774a54253306d68175c71ebb963e795a693db60caeeae",
+    "research/cow_identity/detection_quarantine_recovery_protocol.json": "4f6768a4d165a964c956741ce6ecbbd434a5559f5b35b4a59c5ef1aa6c658d97",
+    "research/cow_identity/results/2026-10-03/detection/cutie-quarantine-recovery.json": "732094eb7f21d1aed13138835db72b145591d95fe357858dcc6fc6abe9310c73",
+    "research/cow_identity/results/2026-10-03/detection/cutie-box-consensus.json": "bdae4f98a34f11fcac9012326eff54b5ea7fc94a9553c07f3d9f9e0f557edefd"
+  }
+}

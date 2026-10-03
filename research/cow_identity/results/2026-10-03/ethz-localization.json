@@ -1,0 +1,97 @@
+{
+  "model": ".cache/cow-detectors/ethz-yolov8s.pt",
+  "provenance": {
+    "confidence": 0.1,
+    "device": "mps",
+    "imgsz": 640,
+    "iou": 0.7,
+    "libraries": {
+      "lap": "0.5.13",
+      "numpy": "2.5.0",
+      "opencv": "4.13.0",
+      "scipy": null,
+      "torch": "2.12.1",
+      "torchvision": "0.27.1",
+      "ultralytics": "8.4.80"
+    },
+    "manifest_sha256": "f33ca72c2a0086ee2e21eabe139e112e94fa47fb1afbfd4002186e0f66d24764",
+    "model_sha256": "d08212315c4a7e17bd5ca54010393869fe2e542bd1785c9eec60c7402289296d",
+    "protocol_sha256": "1574a8e20661cd38694732d43ad57ea5dd331fe8828e9475e18d736bb515d901",
+    "quantize": 16
+  },
+  "purpose": "Author detector external-scene regression; publisher annotations are not exhaustive, so unmatched predictions are not labelled false positives",
+  "videos": {
+    "video3": {
+      "0.1": {
+        "annotated_recall": 0.9428571428571428,
+        "annotated_targets": 210,
+        "frames": 30,
+        "matched_targets": 198,
+        "missed_targets": 12,
+        "unmatched_predictions": 4
+      },
+      "0.25": {
+        "annotated_recall": 0.9428571428571428,
+        "annotated_targets": 210,
+        "frames": 30,
+        "matched_targets": 198,
+        "missed_targets": 12,
+        "unmatched_predictions": 3
+      }
+    },
+    "video4": {
+      "0.1": {
+        "annotated_recall": 0.918918918918919,
+        "annotated_targets": 111,
+        "frames": 33,
+        "matched_targets": 102,
+        "missed_targets": 9,
+        "unmatched_predictions": 42
+      },
+      "0.25": {
+        "annotated_recall": 0.9099099099099099,
+        "annotated_targets": 111,
+        "frames": 33,
+        "matched_targets": 101,
+        "missed_targets": 10,
+        "unmatched_predictions": 23
+      }
+    },
+    "video5": {
+      "0.1": {
+        "annotated_recall": 0.9869565217391304,
+        "annotated_targets": 230,
+        "frames": 30,
+        "matched_targets": 227,
+        "missed_targets": 3,
+        "unmatched_predictions": 2
+      },
+      "0.25": {
+        "annotated_recall": 0.9652173913043478,
+        "annotated_targets": 230,
+        "frames": 30,
+        "matched_targets": 222,
+        "missed_targets": 8,
+        "unmatched_predictions": 2
+      }
+    },
+    "video6": {
+      "0.1": {
+        "annotated_recall": 0.9948051948051948,
+        "annotated_targets": 385,
+        "frames": 33,
+        "matched_targets": 383,
+        "missed_targets": 2,
+        "unmatched_predictions": 19
+      },
+      "0.25": {
+        "annotated_recall": 0.9948051948051948,
+        "annotated_targets": 385,
+        "frames": 33,
+        "matched_targets": 383,
+        "missed_targets": 2,
+        "unmatched_predictions": 17
+      }
+    }
+  }
+}

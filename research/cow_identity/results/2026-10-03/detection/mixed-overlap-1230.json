@@ -1,0 +1,78 @@
+{
+  "accepted": {
+    "own-0.2": {
+      "all_spans_multiple": 7,
+      "matched_known": 170,
+      "matched_unknown": 50,
+      "unmatched": 6,
+      "unmatched_partial_or_loose": 6
+    },
+    "own-0.3": {
+      "all_spans_multiple": 21,
+      "matched_known": 311,
+      "matched_unknown": 86,
+      "unmatched": 17,
+      "unmatched_partial_or_loose": 17
+    },
+    "own-0.5": {
+      "all_spans_multiple": 176,
+      "matched_known": 990,
+      "matched_unknown": 235,
+      "unmatched": 53,
+      "unmatched_duplicate_like": 1,
+      "unmatched_partial_or_loose": 34,
+      "unmatched_spans_multiple": 18,
+      "unmatched_spans_multiple_cows": 18
+    },
+    "symmetric-0.2": {
+      "all_spans_multiple": 3,
+      "matched_known": 150,
+      "matched_unknown": 48,
+      "unmatched": 6,
+      "unmatched_partial_or_loose": 6
+    },
+    "symmetric-0.3": {
+      "all_spans_multiple": 8,
+      "matched_known": 254,
+      "matched_unknown": 69,
+      "unmatched": 9,
+      "unmatched_partial_or_loose": 9
+    },
+    "symmetric-0.5": {
+      "all_spans_multiple": 37,
+      "matched_known": 775,
+      "matched_unknown": 211,
+      "unmatched": 32,
+      "unmatched_duplicate_like": 1,
+      "unmatched_partial_or_loose": 30,
+      "unmatched_spans_multiple": 1,
+      "unmatched_spans_multiple_cows": 1
+    }
+  },
+  "after_size_and_border_gate": {
+    "all_spans_multiple": 720,
+    "matched_known": 1673,
+    "matched_unknown": 547,
+    "unmatched": 304,
+    "unmatched_duplicate_like": 166,
+    "unmatched_partial_or_loose": 74,
+    "unmatched_spans_multiple": 142,
+    "unmatched_spans_multiple_cows": 64
+  },
+  "height": 600,
+  "merged_hint": "Covers at least 60% of two publisher boxes; not verified mask evidence",
+  "min_crop_size": 64,
+  "scope": "Cached crop-eligibility diagnostic; no recognition or runtime change",
+  "totals": {
+    "all_spans_multiple": 720,
+    "matched_known": 1673,
+    "matched_unknown": 547,
+    "unmatched": 306,
+    "unmatched_duplicate_like": 166,
+    "unmatched_partial_or_loose": 76,
+    "unmatched_spans_multiple": 142,
+    "unmatched_spans_multiple_cows": 64
+  },
+  "tracking_sha256": "356fa72b03c39d07bee568ff95d96db8eedff44ddab79c2d34676c21a5dcf264",
+  "width": 800
+}

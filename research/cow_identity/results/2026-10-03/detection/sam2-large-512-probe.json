@@ -1,0 +1,594 @@
+{
+  "actual_device": "mps:0",
+  "cache_reclamations": [
+    {
+      "after": {
+        "mps_allocated_bytes": 1040022528,
+        "mps_driver_bytes": 6709280768,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 6,
+        "tracked_frame_indices": 7
+      },
+      "before": {
+        "mps_allocated_bytes": 1040022528,
+        "mps_driver_bytes": 7791411200,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 6,
+        "tracked_frame_indices": 7
+      },
+      "second": 3.0,
+      "seconds": 0.01128245797008276
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1057605888,
+        "mps_driver_bytes": 8378646528,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 7,
+        "tracked_frame_indices": 8
+      },
+      "before": {
+        "mps_allocated_bytes": 1057605888,
+        "mps_driver_bytes": 9460776960,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 7,
+        "tracked_frame_indices": 8
+      },
+      "second": 3.5,
+      "seconds": 0.012229957850649953
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1059207936,
+        "mps_driver_bytes": 8368177152,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 9
+      },
+      "before": {
+        "mps_allocated_bytes": 1059207936,
+        "mps_driver_bytes": 9450307584,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 9
+      },
+      "second": 4.0,
+      "seconds": 0.012064708163961768
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1066979072,
+        "mps_driver_bytes": 8387067904,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 10
+      },
+      "before": {
+        "mps_allocated_bytes": 1066979072,
+        "mps_driver_bytes": 9469198336,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 10
+      },
+      "second": 4.5,
+      "seconds": 0.011772625148296356
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1058193664,
+        "mps_driver_bytes": 8387067904,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 11
+      },
+      "before": {
+        "mps_allocated_bytes": 1058193664,
+        "mps_driver_bytes": 9469198336,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 11
+      },
+      "second": 5.0,
+      "seconds": 0.016174999997019768
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1066030336,
+        "mps_driver_bytes": 7101513728,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 12
+      },
+      "before": {
+        "mps_allocated_bytes": 1066030336,
+        "mps_driver_bytes": 8183644160,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 12
+      },
+      "second": 5.5,
+      "seconds": 0.014992957934737206
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1056851200,
+        "mps_driver_bytes": 7101513728,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 13
+      },
+      "before": {
+        "mps_allocated_bytes": 1056851200,
+        "mps_driver_bytes": 8183644160,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 13
+      },
+      "second": 6.0,
+      "seconds": 0.011793415993452072
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1064458496,
+        "mps_driver_bytes": 7101513728,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 14
+      },
+      "before": {
+        "mps_allocated_bytes": 1064458496,
+        "mps_driver_bytes": 8183644160,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 14
+      },
+      "second": 6.5,
+      "seconds": 0.012491915840655565
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1056033024,
+        "mps_driver_bytes": 7111999488,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 15
+      },
+      "before": {
+        "mps_allocated_bytes": 1056033024,
+        "mps_driver_bytes": 8194129920,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 15
+      },
+      "second": 7.0,
+      "seconds": 0.012108416063711047
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1064442624,
+        "mps_driver_bytes": 7111999488,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 16
+      },
+      "before": {
+        "mps_allocated_bytes": 1064442624,
+        "mps_driver_bytes": 8194129920,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 16
+      },
+      "second": 7.5,
+      "seconds": 0.01212995802052319
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1056049408,
+        "mps_driver_bytes": 7111999488,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 17
+      },
+      "before": {
+        "mps_allocated_bytes": 1056049408,
+        "mps_driver_bytes": 8194129920,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 17
+      },
+      "second": 8.0,
+      "seconds": 0.013924750033766031
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1064442624,
+        "mps_driver_bytes": 7111999488,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 18
+      },
+      "before": {
+        "mps_allocated_bytes": 1064442624,
+        "mps_driver_bytes": 8194129920,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 18
+      },
+      "second": 8.5,
+      "seconds": 0.012295916909351945
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1056049408,
+        "mps_driver_bytes": 7103610880,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 19
+      },
+      "before": {
+        "mps_allocated_bytes": 1056049408,
+        "mps_driver_bytes": 8194129920,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 19
+      },
+      "second": 9.0,
+      "seconds": 0.012333542108535767
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1064442624,
+        "mps_driver_bytes": 7103610880,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 20
+      },
+      "before": {
+        "mps_allocated_bytes": 1064442624,
+        "mps_driver_bytes": 8185741312,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 20
+      },
+      "second": 9.5,
+      "seconds": 0.012205332983285189
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1056049408,
+        "mps_driver_bytes": 7103610880,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 21
+      },
+      "before": {
+        "mps_allocated_bytes": 1056049408,
+        "mps_driver_bytes": 8185741312,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 21
+      },
+      "second": 10.0,
+      "seconds": 0.012267458019778132
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1064442624,
+        "mps_driver_bytes": 6138920960,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 22
+      },
+      "before": {
+        "mps_allocated_bytes": 1064442624,
+        "mps_driver_bytes": 7221051392,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 22
+      },
+      "second": 10.5,
+      "seconds": 0.012257000198587775
+    },
+    {
+      "after": {
+        "mps_allocated_bytes": 1056049408,
+        "mps_driver_bytes": 6149406720,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 23
+      },
+      "before": {
+        "mps_allocated_bytes": 1056049408,
+        "mps_driver_bytes": 7231537152,
+        "process_peak_rss_bytes": 1751138304,
+        "retained_condition_frames": 1,
+        "retained_noncondition_frames": 8,
+        "tracked_frame_indices": 23
+      },
+      "second": 11.0,
+      "seconds": 0.01216383301652968
+    }
+  ],
+  "complete": true,
+  "elapsed_seconds": 15.944431290961802,
+  "frame_seconds": [
+    3.0261335000395775,
+    0.21761512500233948,
+    0.1802047078963369,
+    0.19688550010323524,
+    0.20745970797725022,
+    0.5006491250824183,
+    0.4794649160467088,
+    0.40130866691470146,
+    0.2590799159370363,
+    0.25570591585710645,
+    0.25678737508133054,
+    0.2642712921369821,
+    0.25121166720055044,
+    0.24920925009064376,
+    0.2501870000269264,
+    0.2490615830756724,
+    0.2549967498052865,
+    0.24807695904746652,
+    0.2496189170051366,
+    0.25127904093824327,
+    0.2535407920368016,
+    0.24874129192903638,
+    0.255781790940091,
+    0.2377380421385169,
+    0.2122667501680553,
+    0.2239085000474006,
+    0.21262020897120237,
+    0.21155666606500745,
+    0.21218329202383757,
+    0.2122759590856731,
+    0.22145349998027086,
+    0.2178089169319719,
+    0.22534016706049442,
+    0.2362697080243379,
+    0.24566995911300182,
+    0.24911883287131786,
+    0.24507404095493257,
+    0.2390246670693159,
+    0.24633695790544152,
+    0.2500679998192936,
+    0.24711620807647705,
+    0.24202766711823642,
+    0.24514883384108543,
+    0.24259191611781716,
+    0.24807604192756116,
+    0.24742520810104907,
+    0.24455049983225763,
+    0.24611349985934794,
+    0.2477817500475794,
+    0.24530545808374882,
+    0.2449230831116438
+  ],
+  "memory_samples": [
+    {
+      "mps_allocated_bytes": 963509248,
+      "mps_driver_bytes": 1885569024,
+      "process_peak_rss_bytes": 1751138304,
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 0,
+      "second": 0.0,
+      "tracked_frame_indices": 1
+    },
+    {
+      "mps_allocated_bytes": 1056377088,
+      "mps_driver_bytes": 4618485760,
+      "process_peak_rss_bytes": 1751138304,
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 25.0,
+      "tracked_frame_indices": 51
+    }
+  ],
+  "metrics": {
+    "conservative_precision": 0.9935897435897436,
+    "known_coverage": 0.9935897435897436,
+    "name_confusion": {
+      "1->1": 26,
+      "2->2": 26,
+      "3->3": 25,
+      "4->4": 26,
+      "5->5": 26,
+      "6->6": 26,
+      "7->unknown": 25,
+      "8->unknown": 26,
+      "unmatched->3": 1,
+      "unmatched->unknown": 1
+    },
+    "naming_counts": {
+      "correct_name": 155,
+      "cow_name_switches": 0,
+      "cow_track_switches": 0,
+      "detector_boxes": 208,
+      "eligible_boxes": 208,
+      "eligible_matched": 206,
+      "frames": 26,
+      "matched_boxes": 206,
+      "missed_annotations": 2,
+      "track_cow_switches": 0,
+      "unknown_named": 0,
+      "unknown_rejected": 51,
+      "unmatched_boxes": 2,
+      "unmatched_named": 1,
+      "unmatched_unnamed": 1,
+      "visible_annotations": 208,
+      "visible_known": 156,
+      "visible_unknown": 52,
+      "wrong_name": 0
+    },
+    "tracking": {
+      "counts": {
+        "correct_name": 0,
+        "cow_name_switches": 0,
+        "cow_track_switches": 0,
+        "detector_boxes": 208,
+        "eligible_boxes": 208,
+        "eligible_matched": 206,
+        "frames": 26,
+        "known_unnamed": 155,
+        "matched_boxes": 206,
+        "missed_annotations": 2,
+        "track_cow_switches": 0,
+        "unknown_named": 0,
+        "unknown_rejected": 51,
+        "unmatched_boxes": 2,
+        "unmatched_named": 0,
+        "unmatched_unnamed": 2,
+        "visible_annotations": 208,
+        "visible_known": 156,
+        "visible_unknown": 52,
+        "wrong_name": 0
+      },
+      "global_identity_f1": 0.9903846153846154,
+      "global_identity_true_positives": 206,
+      "note": "Global one-to-one track/cow assignment at IoU .5 on 1 fps scoring timestamps; not permanent cow recognition.",
+      "precision": 0.9903846153846154,
+      "recall": 0.9903846153846154
+    }
+  },
+  "parameter_dtype": "torch.float32",
+  "peak_observed_mps_driver_bytes": 8387067904,
+  "previews": [
+    {
+      "file": "preview-0.jpg",
+      "sha256": "c599698bcb14e6b7d06a728c446330e80c60b4defce66cfd3e45114c61833347"
+    }
+  ],
+  "provenance": {
+    "annotations_sha256": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "clip_sha256": "80844b32e9b250b390dde7b1c28f06aa552612b6d9adf350899d3bd1ece62e34",
+    "device": "mps",
+    "libraries": {
+      "lap": "0.5.13",
+      "numpy": "2.5.0",
+      "opencv": "4.13.0",
+      "scipy": null,
+      "torch": "2.12.1",
+      "torchvision": "0.27.1",
+      "ultralytics": "8.4.80"
+    },
+    "model_sha256": "ab7e1ac9cb9f6eb3bcf197ece044f06a707ec49129361a2b47e93e1db6989efd",
+    "protocol_sha256": "e444535900fe10c0e2e508ea72d5760b60aa3d6e6755ad75cd41ad1b639a04b5",
+    "resource_limits": {
+      "max_mean_seconds_per_frame": 1.0,
+      "max_mps_driver_bytes": 8589934592,
+      "timing_window_frames": 30,
+      "warmup_frames": 10
+    },
+    "runner_sha256": "920c722775042efc3c71e3b7ae3b52473dde2d21facdd4b33bfb5fa297361128",
+    "sampled_manifest_sha256": "af7426a63429addb5e6ee9f775c813f232d466b300e60eef9db63cfdd931fd9f",
+    "seed_prompts": [
+      {
+        "box": [
+          173,
+          350,
+          369,
+          525
+        ],
+        "cow": 1
+      },
+      {
+        "box": [
+          201,
+          19,
+          341,
+          164
+        ],
+        "cow": 2
+      },
+      {
+        "box": [
+          242,
+          152,
+          430,
+          279
+        ],
+        "cow": 3
+      },
+      {
+        "box": [
+          574,
+          309,
+          679,
+          437
+        ],
+        "cow": 4
+      },
+      {
+        "box": [
+          523,
+          91,
+          608,
+          197
+        ],
+        "cow": 5
+      },
+      {
+        "box": [
+          145,
+          341,
+          304,
+          531
+        ],
+        "cow": 6
+      },
+      {
+        "box": [
+          511,
+          424,
+          780,
+          569
+        ],
+        "cow": 7
+      },
+      {
+        "box": [
+          382,
+          4,
+          506,
+          97
+        ],
+        "cow": 8
+      }
+    ]
+  },
+  "scope": "Hardware gate only:51 inputs at512 pixels FP32, not a tracking-quality selection",
+  "stop_reason": null
+}

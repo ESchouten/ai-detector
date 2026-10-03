@@ -1,0 +1,77 @@
+{
+  "by_dataset": {
+    "cows2021": 2529,
+    "sideview2026": 1249
+  },
+  "by_split": {
+    "train": 3033,
+    "validation_gallery": 318,
+    "validation_query": 427
+  },
+  "contract": {
+    "cows2021_archive_sha256": "57c477705163b6fddf887a95297c5db0ff994d13f18138c42439a3c330cd25ba",
+    "evaluation_excluded": [
+      "8-calves (all frames and identities)",
+      "ETHZ (all crops, videos and identities)"
+    ],
+    "pretraining_overlap": "MIEWid foundation-training membership is not fully audited; no claim of foundation-unseen cows",
+    "purpose": "Prepared public-cattle metric learning experiment; no training performed",
+    "seed": "public-cattle-v1",
+    "selection": "At least 5 observed days; at most 16 evenly spaced days/cow, one stable-hash-selected image/day; per-dataset 20% identity-disjoint validation, 20% of validation identities unenrolled",
+    "sideview_hashes_sha256": "2ca027261dc134963455f05ea7922f96b8b44d3f7e23e5705f40ccc2ea1ea612",
+    "sideview_manifest_sha256": "ea80cc8d93680116d8c813c65c245e4999fed61bca32b8189cd047953c88b81e",
+    "sources": {
+      "cows2021": {
+        "license": "Non-Commercial Government Licence",
+        "publisher_split": "Identification/Test, deliberately repurposed; never a Cows2021 benchmark claim",
+        "source": "https://doi.org/10.5523/bris.4vnrca7qw1642qlwxjadp87h7"
+      },
+      "sideview2026": {
+        "license": "CC-BY-4.0, as stated in publisher README",
+        "publisher_split": "parlor; no official train/test split",
+        "source": "https://doi.org/10.5281/zenodo.21605650"
+      }
+    },
+    "version": 1
+  },
+  "excluded_insufficient_days": [
+    "cows2021:015",
+    "cows2021:070",
+    "cows2021:155",
+    "cows2021:168",
+    "cows2021:182",
+    "cows2021:183",
+    "cows2021:184",
+    "cows2021:185",
+    "sideview2026:345",
+    "sideview2026:375",
+    "sideview2026:399",
+    "sideview2026:455",
+    "sideview2026:492",
+    "sideview2026:792"
+  ],
+  "identities": 272,
+  "images": 3778,
+  "inventory": {
+    "cows2021": {
+      "anonymous_tracklet_images_excluded": 23350,
+      "identity_images": 8670
+    },
+    "opencows2020_excluded": {
+      "test": 496,
+      "train": 4240
+    },
+    "sideview2026": {
+      "local_identity_images": 10683,
+      "publisher_subset_images": {
+        "barn": 25260,
+        "parlor": 54393,
+        "snapshots": 607
+      }
+    }
+  },
+  "manifest_sha256": "29c72477157fad3d50b0a53951dd4652177f38906088f6b717ea7b8eb5668d71",
+  "training_identities": 219,
+  "unknown_validation_identities": 9,
+  "validation_identities": 53
+}

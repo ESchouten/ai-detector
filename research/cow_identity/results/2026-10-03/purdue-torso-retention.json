@@ -1,0 +1,73 @@
+{
+  "completed_query_sha256": "db93e09dbf34b063ea06048cecfb52e16c4efe8d4dfca4c461ae3d98efbb5177",
+  "detector_cadence_fps": 5,
+  "panels": {
+    "actual_first_then_30s": {
+      "by_cow": {
+        "2234": 2,
+        "2238": 0,
+        "5676": 1,
+        "5953": 1,
+        "6079": 1,
+        "6102": 3,
+        "6110": 1
+      },
+      "limitation": "Replays real empty-gallery collector on research torso proposals, with unknown names. Does not alter the already frozen reference gallery or test recognition accuracy.",
+      "offered_count": 10,
+      "offered_rows": [
+        7,
+        8,
+        9,
+        24,
+        37,
+        54,
+        76,
+        92,
+        94,
+        107
+      ],
+      "review_accepted_count": 9
+    },
+    "first_three_then_30s": {
+      "by_cow": {
+        "2234": 3,
+        "2238": 0,
+        "5676": 3,
+        "5953": 3,
+        "6079": 3,
+        "6102": 4,
+        "6110": 3
+      },
+      "limitation": "Replays real empty-gallery collector on research torso proposals, with unknown names. Does not alter the already frozen reference gallery or test recognition accuracy.",
+      "offered_count": 20,
+      "offered_rows": [
+        7,
+        8,
+        9,
+        10,
+        24,
+        25,
+        26,
+        37,
+        54,
+        55,
+        56,
+        76,
+        77,
+        78,
+        92,
+        93,
+        94,
+        107,
+        108,
+        109
+      ],
+      "review_accepted_count": 19
+    }
+  },
+  "proposals_sha256": "62c2f5627522e5f020ed351962f76c440d1e1be1a1c9efbb4086936309f0298d",
+  "review_sha256": "b84c32adce2214b17d7c4b57df7878efdbd7e892d60a0dde9ee3593bf880c678",
+  "sampling_interval_seconds": 0.2,
+  "scope": "Actual collection algorithm at the frozen fast-passage cadence. The current application preset's1fps detection/sample cadence is a separate baseline and is not reproduced here.",
+  "source_sha256": "a8f262d4bd65cd982189cc6417c681a0ed22ebc39efd6a531317eca77137b9fb"
+}

@@ -1,0 +1,105 @@
+{
+  "version": 2,
+  "frozen_at": "2026-10-03T07:50:08.527670+00:00",
+  "purpose": "Cutie calibration of component cleanup and one global quality gate; continuous first-frame-seeded inference, no query masks/identities supplied",
+  "video_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825",
+  "source_annotations_sha256": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+  "model_sha256": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+  "model": "Official Cutie base mega",
+  "seed_second": 0,
+  "last_processed_second": 1529,
+  "processing_fps": 2,
+  "score_seconds": [
+    1230,
+    1529
+  ],
+  "scoring_fps": 1,
+  "seeded_cows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "named_cows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "anonymous_cows": [
+    7,
+    8
+  ],
+  "precision": "FP32",
+  "sampling": "Decode exact original frame indices at two frames per second; FFV1 lossless clip verified by every decoded frame hash; SDK vid_stride=1",
+  "object_identity": "Cutie object IDs1\u20138 converted to original zero-based slots only when serializing; never reassigned",
+  "initialization": "First source frame only: existing CPU SAM2.1 tiny1024 masks from publisher boxes emulate precise farmer prompts. Overlapping pixels go to the first original mask. Names1\u20136;7/8remain anonymous. No future masks, boxes or labels supplied to inference.",
+  "metrics": [
+    "one-to-one box IoU >=0.5",
+    "correct names over all visible known animals",
+    "wrong known names",
+    "unknown cows named",
+    "unmatched named boxes",
+    "anonymous track switches",
+    "global track-ID F1",
+    "elapsed time",
+    "observed MPS allocation",
+    "resident memory",
+    "retained memory-frame counts"
+  ],
+  "limits": [
+    "Already exposed development footage only; final windows remain closed.",
+    "Oracle first-frame boxes plus SAM masks are manual initialization, not automatic enrollment.",
+    "Bounding-box annotations do not measure segmentation IoU.",
+    "No detector introduces newly arriving cows and no appearance encoder reacquires lost identities.",
+    "No intermediate manual corrections or condition selection from query labels.",
+    "Stop and preserve an incomplete diagnostic if driver allocation or process peak RSS exceeds8GiB, or sustained post-startup processing exceeds1second/frame.",
+    "Cutie receives explicit first-frame SAM masks; SAM video used box prompts. This is not a pure architecture A/B.",
+    "Calibration labels may choose the fixed operating point only after inference; reserved1800\u20132099 and2700\u20132999 remain unopened. Indexed original masks are cached at every integer second for inference-free audits."
+  ],
+  "resource_limits": {
+    "max_mps_driver_bytes": 8589934592,
+    "max_mean_seconds_per_frame": 1.0,
+    "warmup_frames": 10,
+    "timing_window_frames": 30,
+    "max_peak_rss_bytes": 8589934592
+  },
+  "source_commit": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
+  "seed_masks_sha256": "5d385ca2492d64a3f25c249368bab90df3a651f0b322d65d2f484a0e51fc765d",
+  "seed_manifest_sha256": "ad2fa563a3775f3db8fdd6f53185172d7c71efbfbcccc2c7115009b4eb6f4aba",
+  "sampled_clip_sha256": "11bff035d63f5e6399ada2ee82ebac05b242071b299b3c3ea023b4399972a8cf",
+  "sampled_manifest_sha256": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d",
+  "max_internal_size": 480,
+  "mem_every": 5,
+  "use_long_term": true,
+  "configuration": "Upstream generic eval_config, shortest edge480 (640x480 for this source), long-term enabled,mem_every5,all otherSDKdefaults.",
+  "cache_masks": true,
+  "cache_reclaim_bytes": 6442450944,
+  "quality_control": {
+    "box_variants": [
+      "raw",
+      "largest_8_connected_component"
+    ],
+    "component_tie": "Largest pixel area; ties choose smallest component label from OpenCV row-major labeling. No score/truth enters transformation.",
+    "quality": "10th percentile of assigned-object probability over original SDK mask, before component cleanup",
+    "thresholds": [
+      0,
+      0.5,
+      0.7,
+      0.8,
+      0.9,
+      0.95
+    ],
+    "decision": "Inclusive quality >= threshold permits original seeded name; otherwise retain the predicted box with unknown name. Anonymous seed slots never gain names.",
+    "selection": "Maximize correct known coverage subject to conservative named precision>=.99 and unknown false naming<=.01 on1230\u20131529 only; tie higher precision then raw boxes then lower threshold. If no condition qualifies, no promotion.",
+    "minimum_useful_coverage": 0.6,
+    "denominator": "Every visible enrolled animal including missed/rejected frames; all named unmatched boxes remain errors."
+  },
+  "resource_policy": "After each completed inference, synchronize and release unused Metal cache if driver allocation exceeds6GiB; stop if remaining driver or peak process RSS exceeds8GiB. Cleanup and PNG/statistic caching count in frame time."
+}

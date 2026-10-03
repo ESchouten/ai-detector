@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "purpose": "Bounded local coat-pattern diagnostic after global descriptors and keypoint controls failed; development only",
+  "source": "Original MIEWid development archive and verified SAM foreground crops",
+  "gallery": "Original raw-MIEW diverse10 selection, exactly 60 early references",
+  "query_seconds": {"development": [330, 600, 30], "development_later": [930, 1200, 30], "calibration": [1230, 1500, 30]},
+  "encoder": "Pinned original MIEWid, final backbone feature map before GeM and BN, FP32",
+  "foreground": "At least 75% non-background pixels in each grid cell; gray127 exact background excluded",
+  "centering": "One channel mean estimated from selected gallery foreground patches only",
+  "matching": "Reciprocal nearest patch cosine; at least4 pairs spanning at least2 image quadrants in both images; mean best8 reciprocal similarities, otherwise0",
+  "global_blends": [0, 0.25, 0.5, 1],
+  "selection": "Calibrate similarity/margin on1230-1529 only; report all fixed blends and counts on both development windows",
+  "limits": ["Oracle crops and sparse queries, no tracking claim", "No training or query-based adaptation", "No reserved final windows", "Local features have broad receptive fields and may still confuse repeated coat patterns"]
+}

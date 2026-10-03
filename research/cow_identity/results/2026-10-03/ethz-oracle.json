@@ -1,0 +1,185 @@
+{
+  "device": "mps",
+  "encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+  "gallery_per_cow": {
+    "0": 10,
+    "1": 10,
+    "10": 10,
+    "11": 7,
+    "13": 10,
+    "5": 10,
+    "6": 10,
+    "7": 10,
+    "8": 10,
+    "9": 10
+  },
+  "inference_seconds": 24.458455457817763,
+  "manifest_sha256": "f33ca72c2a0086ee2e21eabe139e112e94fa47fb1afbfd4002186e0f66d24764",
+  "margin": 0.1,
+  "new_encoded_images": 1033,
+  "protocol_sha256": "1574a8e20661cd38694732d43ad57ea5dd331fe8828e9475e18d736bb515d901",
+  "purpose": "Adult-cow external-scene oracle regression, no blind-test or end-to-end claim",
+  "threshold": 0.65,
+  "videos": {
+    "video3": {
+      "day": "2023-08-25",
+      "panel": "calibration",
+      "per_cow_observations": {
+        "0": 30,
+        "1": 30,
+        "10": 10,
+        "12": 30,
+        "3": 20,
+        "5": 30,
+        "6": 30,
+        "8": 30
+      },
+      "per_frame_oracle": {
+        "abstentions": 180,
+        "accepted_precision": 1.0,
+        "correct_accepts": 30,
+        "known": 160,
+        "known_coverage": 0.1875,
+        "known_rank1": 0.9125,
+        "observations": 210,
+        "unknown": 50,
+        "unknown_false_acceptance_rate": 0.0,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      },
+      "production_geometry_and_oracle_agreement": {
+        "abstentions": 194,
+        "accepted_precision": 1.0,
+        "correct_accepts": 16,
+        "known": 160,
+        "known_coverage": 0.1,
+        "known_rank1": 0.9125,
+        "observations": 210,
+        "unknown": 50,
+        "unknown_false_acceptance_rate": 0.0,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      }
+    },
+    "video4": {
+      "day": "2023-08-24",
+      "panel": "calibration",
+      "per_cow_observations": {
+        "0": 33,
+        "10": 22,
+        "11": 23,
+        "9": 33
+      },
+      "per_frame_oracle": {
+        "abstentions": 89,
+        "accepted_precision": 1.0,
+        "correct_accepts": 22,
+        "known": 111,
+        "known_coverage": 0.1981981981981982,
+        "known_rank1": 0.5225225225225225,
+        "observations": 111,
+        "unknown": 0,
+        "unknown_false_acceptance_rate": null,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      },
+      "production_geometry_and_oracle_agreement": {
+        "abstentions": 93,
+        "accepted_precision": 1.0,
+        "correct_accepts": 18,
+        "known": 111,
+        "known_coverage": 0.16216216216216217,
+        "known_rank1": 0.5225225225225225,
+        "observations": 111,
+        "unknown": 0,
+        "unknown_false_acceptance_rate": null,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      }
+    },
+    "video5": {
+      "day": "2023-09-17",
+      "panel": "test",
+      "per_cow_observations": {
+        "0": 20,
+        "10": 30,
+        "11": 30,
+        "4": 30,
+        "5": 30,
+        "6": 30,
+        "8": 30,
+        "9": 30
+      },
+      "per_frame_oracle": {
+        "abstentions": 230,
+        "accepted_precision": null,
+        "correct_accepts": 0,
+        "known": 200,
+        "known_coverage": 0.0,
+        "known_rank1": 0.32,
+        "observations": 230,
+        "unknown": 30,
+        "unknown_false_acceptance_rate": 0.0,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      },
+      "production_geometry_and_oracle_agreement": {
+        "abstentions": 230,
+        "accepted_precision": null,
+        "correct_accepts": 0,
+        "known": 200,
+        "known_coverage": 0.0,
+        "known_rank1": 0.32,
+        "observations": 230,
+        "unknown": 30,
+        "unknown_false_acceptance_rate": 0.0,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      }
+    },
+    "video6": {
+      "day": "2023-08-28",
+      "panel": "test",
+      "per_cow_observations": {
+        "0": 33,
+        "1": 33,
+        "10": 22,
+        "12": 33,
+        "13": 33,
+        "3": 33,
+        "4": 33,
+        "5": 33,
+        "6": 33,
+        "7": 33,
+        "8": 33,
+        "9": 33
+      },
+      "per_frame_oracle": {
+        "abstentions": 385,
+        "accepted_precision": null,
+        "correct_accepts": 0,
+        "known": 286,
+        "known_coverage": 0.0,
+        "known_rank1": 0.43356643356643354,
+        "observations": 385,
+        "unknown": 99,
+        "unknown_false_acceptance_rate": 0.0,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      },
+      "production_geometry_and_oracle_agreement": {
+        "abstentions": 385,
+        "accepted_precision": null,
+        "correct_accepts": 0,
+        "known": 286,
+        "known_coverage": 0.0,
+        "known_rank1": 0.43356643356643354,
+        "observations": 385,
+        "unknown": 99,
+        "unknown_false_acceptance_rate": 0.0,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      }
+    }
+  }
+}

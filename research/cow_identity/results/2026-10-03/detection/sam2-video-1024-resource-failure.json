@@ -1,0 +1,30 @@
+{
+  "status": "Incomplete resource diagnostic; deliberately stopped, no accuracy result",
+  "protocol_sha256": "0c8f55ebd987ddc408001bd56534cfcf9978215aff1336e1af2f2ea3ebaec7d6",
+  "runner_sha256": "832405584a36e474e9e18cd0703230a8272cf8cf7863fceef77f6b37cb9c7554",
+  "model_sha256": "3c1e81ca9b037dd39d70a014ddb9a813d6c4c4e12555420db7eaff31689bd4e3",
+  "sampled_manifest_sha256": "83c3fecc6b558986eb2b3c20d4421a99fb6c7bca8aa1420d0aa3145e095e7b50",
+  "clip_sha256": "01ab47dc71b11ee6791358a1eb219dcc6b0d9d6403175c52e8bbf5fb1ac3fc07",
+  "device": "Apple M2 Max / MPS",
+  "precision": "FP32",
+  "imgsz": 1024,
+  "seed_objects": 8,
+  "first_frame_seconds": 6.673765500076115,
+  "process_launch_local": "2026-10-03T09:10:36.003+02:00",
+  "resource_sample_local": "2026-10-03T09:14:01.219+02:00",
+  "elapsed_to_resource_sample_seconds": 205.216,
+  "last_reported_processed_frames": 1,
+  "completed_frames_upper_bound": 100,
+  "physical_footprint_at_sample_gb_as_reported": 31.3,
+  "peak_physical_footprint_gb_as_reported": 37.2,
+  "observed_stack": "Main thread waiting for Metal command-buffer completion during MPS copy/synchronization",
+  "cause": "Unproven; the sample does not establish the source of memory growth or identify a deadlock",
+  "termination": "Sent TERM only to benchmark process96636; subsequent narrow process query confirmed exit",
+  "sample_sha256": "4a7983bab7f1b16bc9972e140b9bc018b8abdd416f6db3fb68bdb3e4b5a6023f",
+  "seed_preview_sha256": "1e0f75be1f9fca98b00e5a391b8f3ff8299b82192f9c3a373fff6e5e02935b59",
+  "limits": [
+    "No full propagation cache or score exists.",
+    "Exact completed frame count was not captured; progress was emitted every100frames.",
+    "This does not reject every SAM2 size, precision or backend."
+  ]
+}

@@ -12,6 +12,8 @@ import json
 import sys
 import time
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import nullcontext
 from dataclasses import asdict
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -30,6 +32,7 @@ from aidetector.adapters.identity_catalog import (
     EnrolledIdentity,
     IdentityCatalog,
 )
+from aidetector.adapters.inference.device import mps_inference
 from aidetector.adapters.inference.identity import EmbeddingCache
 from aidetector.adapters.inference.identity_observations import (
     GalleryIdentifier,
@@ -364,15 +367,21 @@ class VideoDetector:
                 "precision": "not applicable",
             }
         else:
-            result = self.model.track(
-                image,
-                persist=True,
-                device=self.provenance["device"],
-                classes=list(self.classes),
-                verbose=False,
-                **self.options,
-            )[0]
-            observation = map_observations(result, (Frame(at, image),), self.classes)[0]
+            scope = (
+                mps_inference() if self.provenance["device"] == "mps" else nullcontext()
+            )
+            with scope:
+                result = self.model.track(
+                    image,
+                    persist=True,
+                    device=self.provenance["device"],
+                    classes=list(self.classes),
+                    verbose=False,
+                    **self.options,
+                )[0]
+                observation = map_observations(
+                    result, (Frame(at, image),), self.classes
+                )[0]
             backend = self.model.predictor.model
             self.backend = {
                 "device": str(backend.device),
@@ -527,8 +536,11 @@ def run(args):
     )
     gallery_cache = EmbeddingCache(args.cache / "gallery.sqlite")
     query_cache = EmbeddingCache(args.cache / "queries.sqlite")
+    executor = ThreadPoolExecutor(
+        max_workers=1, thread_name_prefix="identity-assessment"
+    )
     identifier = GalleryIdentifier(
-        settings, catalog, CachedEncoder(raw, query_cache), gallery_cache
+        settings, catalog, CachedEncoder(raw, query_cache), gallery_cache, executor
     )
     hashes = {
         "video": digest(args.video),
@@ -538,7 +550,8 @@ def run(args):
     }
     detector = VideoDetector(args, hashes["video"])
     manifest = {
-        "version": 2,
+        "version": 3,
+        "gallery_preparation": "Background executor; incomplete gallery emits no names",
         "source_hashes": hashes,
         "annotation_source": metadata,
         "enrolled_ids": ENROLLED,
@@ -559,6 +572,7 @@ def run(args):
             raise AssertionError("Predictions changed confirmed enrollment")
     finally:
         capture.release()
+        executor.shutdown(wait=True, cancel_futures=True)
         gallery_cache.close()
         query_cache.close()
     detector.save()

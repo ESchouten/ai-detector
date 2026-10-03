@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "frozen_at": "2026-10-03T08:12:32.006439+00:00",
+  "scope": "Exploratory causal control: remove the hard anchor-probability cutoff only; not held-out validation or deployment approval",
+  "propagation_sha256": "5089d986a636ee1b633faa4e3ded27bacc1a1696f617a001336d01a28551de71",
+  "source_protocol_sha256": "b568784583b562ca2a7ebe8c3216a65f0a46dfdeb96e4a21ba51f156a0cafc30",
+  "processed_seconds": [
+    0,
+    1529
+  ],
+  "score_windows": {
+    "development_330": [
+      330,
+      629
+    ],
+    "development_930": [
+      930,
+      1229
+    ],
+    "calibration_1230": [
+      1230,
+      1529
+    ]
+  },
+  "base": {
+    "box_variant": "largest_8_connected_component",
+    "minimum_p10_probability": 0.7
+  },
+  "history_frames": 30,
+  "warmup": "Require30preceding integer-second frames; reference area is median of all30raw areas including zero when absent",
+  "collapse_ratio": 0.25,
+  "anchor_minimum_probability": 0,
+  "anchor_minimum_area_ratio": 0.5,
+  "anchor_selection": "Among preceding30frames where donor was not quarantined and raw area>=.5current reference median, choose highestp10; ties choose newest. No hard probability cutoff. Freeze this raw boolean mask at the trigger.",
+  "receiver_anchor_fraction": 0.5,
+  "trigger": "For each collapsed donor, every other original object owning>=.5of its frozen anchor region becomes a directed donor/receiver conflict. No identity labels or ground truth used.",
+  "recovery_donor_area_ratio": 0.5,
+  "recovery_donor_anchor_fraction": 0.5,
+  "recovery_receiver_anchor_fraction": 0.1,
+  "recovery_frames": 3,
+  "recovery": "Three consecutive frames require donor area>=.5saved reference, donor owns>=.5anchor region and receiver owns<=.1anchor region. Otherwise reset recovery count. The third restored frame releases the pair before naming.",
+  "ordering": "Assess active conflicts for recovery; discover new pairs from history; suppress all IDs in any active pair; append current areas/mask/probabilities to history with conflict membership.",
+  "output": "Retain original LCC boxes. Permit a named seed only when basep10>=.7 and original objectID is not in any active pair. Anonymous seeds never become named; no relabeling or auto-enrollment.",
+  "comparisons": [
+    "base_lcc_p10_0.7",
+    "base_with_relational_quarantine"
+  ],
+  "limitations": [
+    "Anchors are historical positions, not identity proofs. Real movement can delay recovery indefinitely; appearance corroboration is not implemented.",
+    "No parameter sweep or cow/time-specific rule. Inspecting prior failure episodes informed this method; results are exploratory, not independent validation.",
+    "No new inference and no reserved1800\u20132099or2700\u20132999frames. All original error and coverage denominators retained."
+  ],
+  "parent_protocol_sha256": "09c2432a3703a292770ec0f0088126a8b8441285e63f679b45a307f7dbc5d7ab"
+}

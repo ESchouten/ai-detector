@@ -1,0 +1,99 @@
+{
+  "augmentation": "Resize440,crop90-100%,restrained color/grayscale10%;quarter turns for Cows2021 and calf photos, no mirror",
+  "base_encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+  "calibration": {
+    "gallery": "Exact same60 early confirmed reference photographs, SAM-masked, encoded separately by each checkpoint",
+    "query": "All2526 actual mixed-detector ByteTrack crops at1fps, SAM-masked; no truth used by temporal naming",
+    "seconds": [
+      1230,
+      1529
+    ],
+    "source_crops_sha256": "f66a421ac8da2d874667c26a838bc07fdd6556605bbfe7bb68cbf4175033a779",
+    "source_manifest_sha256": "70af9a6423dfbac4aa531819ebd8b4721794da785ebee273050a071e9a6bd238",
+    "target": {
+      "conservative_named_precision": 0.99,
+      "unknown_false_acceptance_maximum": 0.01
+    },
+    "temporal_grid": {
+      "ema": [
+        1.0,
+        0.5,
+        0.2
+      ],
+      "geometry": [
+        "none",
+        "0.2",
+        "0.5"
+      ],
+      "margin": [
+        0.05,
+        0.1,
+        0.15,
+        0.2
+      ],
+      "similarity": [
+        0.4,
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7
+      ],
+      "ttl": [
+        0,
+        10,
+        30,
+        60
+      ]
+    }
+  },
+  "checkpoints": [
+    0,
+    100,
+    200
+  ],
+  "development_only_after_selection": [
+    930,
+    1229
+  ],
+  "enrollment_manifest_sha256": "e8134849dcc2d9a3dc22fd53aa3dec0dfa3f12a02df2f351221a2e00d8b63ef3",
+  "excluded_from_training": [
+    "unknowncalves7/8",
+    "allcalfphotosafter299s",
+    "ETHZ",
+    "all external validation identities"
+  ],
+  "external_regression_guard": {
+    "baseline_known_coverage": 0.8290322580645161,
+    "maximum_unknown_false_acceptance": 0.01,
+    "minimum_known_coverage": 0.7875806451612902,
+    "minimum_known_coverage_relative_to_baseline": 0.95,
+    "minimum_precision": 0.99,
+    "scope": "Same identity/date-disjoint external selection panel; model-specific thresholds from that panel, no development-video selection"
+  },
+  "frozen_at_utc": "2026-10-03T07:22:11.102594+00:00",
+  "initial_weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
+  "initialization": "Original official MIEW, never previous adapted checkpoint; classifier means use only public training images and60 masked confirmed images, no validation vectors",
+  "limitations": "Training cannot invent an unseen opposite coat view. Single-video calf study, imperfect boxes and correlated frames; no general farm success claim.",
+  "optimizer": "AdamW backbone1e-5/classifier1e-3,weight_decay1e-4;SupConT0.1 +0.25cosine classifier CE T0.1;gradient norm cap5 rejects nonfinite",
+  "public_cohort_manifest_sha256": "29c72477157fad3d50b0a53951dd4652177f38906088f6b717ea7b8eb5668d71",
+  "purpose": "Bounded farm-specific adaptation from the same60 confirmed early masked references plus external replay; no training started at freeze",
+  "scripts": {
+    "research/cow_identity/recognition_farm_data.py": "6d440124fcad96c9ed6de8852e3fbde3fe891c99c994c1d6896d45275920b8b5",
+    "research/cow_identity/recognition_public_finetune.py": "f98a98a856c0833dc8d50f07dfaff3ef491f8765a7b774c59f7fc9bc77e16f5e",
+    "research/cow_identity/recognition_temporal.py": "e74e1a775cbba35f576a0e5d6d1123ff7c880d3489cf38132258c6a9c7613066",
+    "research/cow_identity/tracked_experiment.py": "96ead3aeb38f245afdde7789a61c4c0e93e53ceac3be7c881a2c36643d4e8420"
+  },
+  "selection": "Among checkpoints satisfying external guard, maximize calibration correct names under precision/unknown targets; ties prefer fewer wrong names then baseline/lower step. Retain all checkpoint results even if rejected.",
+  "training": "Full backbone/GeM/BN affine; BN running stats frozen; gradient checkpointing;200steps;seed42;batch8:2calfIDs\u00d72distinct early photos and2publicIDs\u00d72distinct-day photos",
+  "unopened_final_windows": [
+    [
+      1800,
+      2099
+    ],
+    [
+      2700,
+      2999
+    ]
+  ]
+}

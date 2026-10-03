@@ -1,0 +1,75 @@
+{
+  "recorded_at": "2026-10-03T06:05:33.662371+00:00",
+  "purpose": "Recognition/enrollment development; publisher boxes and track IDs are oracle inputs",
+  "dataset": "tonyFang04/8-calves pmfeed_4_3_16.mp4",
+  "video_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825",
+  "source_pickle_sha256": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+  "known_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "unknown_ids": [
+    7,
+    8
+  ],
+  "enrollment": {
+    "seconds": [
+      0,
+      299
+    ],
+    "sample_every_seconds": 5,
+    "max_manual_examples_per_cow": 10,
+    "selection": [
+      "legacy first0/10/20",
+      "uniform10",
+      "gallery-only farthest-point diverse5",
+      "gallery-only farthest-point diverse10"
+    ]
+  },
+  "development_windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ]
+  ],
+  "calibration_window": [
+    1230,
+    1529
+  ],
+  "reserved_final_windows": [
+    [
+      1800,
+      2099
+    ],
+    [
+      2700,
+      2999
+    ]
+  ],
+  "query_fps": 1,
+  "representation": [
+    "MIEWid raw",
+    "MIEWid within-class gallery-only covariance 50%shrinkage"
+  ],
+  "causal_pool_frames": [
+    1,
+    3,
+    5
+  ],
+  "threshold_rule": "Grid similarity0.2..1.0 and margin0..0.5 steps0.01; maximize correct calibration coverage subject to >=99%named precision and <=1%unknown false-name rate; ties stricter threshold then margin",
+  "limitations": [
+    "Previously seen querywindows are development; not independent finalresults",
+    "Unknown identities never enter enrollment or transform fitting",
+    "Oracle tracker pooling not production tracker validation",
+    "Same public calf pen; cannot establish unseen farm adult accuracy",
+    "Finalwindows must remain unopened until a policy is frozen separately"
+  ]
+}

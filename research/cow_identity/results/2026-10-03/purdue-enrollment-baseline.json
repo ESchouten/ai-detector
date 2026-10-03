@@ -1,0 +1,29 @@
+{
+  "status": "Enrollment-only engineering assessment; June9 query inference has not run",
+  "baseline": {
+    "source_sha256": "c0cb513921e5994a41a1d11a17e0df8ab1eccd93996b88f0b3ae8e0b242630df",
+    "frames": 78,
+    "proposals": 15,
+    "production_eligible": 5,
+    "human_confirmed_clean_references": 3,
+    "known_cows_with_reference": 3,
+    "intended_known_cows": 7,
+    "missing_known": [
+      2234,
+      2238,
+      5953,
+      6079
+    ],
+    "seconds": 11.199983041966334,
+    "query_status": "Not run; enrollment failed for4/7 intended known cows, so no completed query result claimed"
+  },
+  "five_fps_preset": {
+    "source_sha256": "6538e65f62c131b42f97bc92970c4a6b746c2ed218e573f87342510c242738c5",
+    "frames": 381,
+    "proposals": 64,
+    "production_eligible": 42,
+    "seconds": 31.065960957901552,
+    "limitation": "Cow2238 still has no eligible predicted reference. Geometry eligibility is not human confirmation; all42 were not accepted automatically."
+  },
+  "amendment": "Existing mixed-cow model FP32 alternate predeclared for June8only after preset failed coverage; native FP16 abort and empty-class-filter CPU setup error retained separately; no query tuning."
+}

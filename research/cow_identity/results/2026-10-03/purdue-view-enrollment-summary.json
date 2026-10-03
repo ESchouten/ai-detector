@@ -1,0 +1,92 @@
+{
+  "candidate_count": 70,
+  "candidate_manifest_sha256": "71bda723e9c7af4254ecc155142e50706854c713a1b09afa6eaa806456a28ff3",
+  "known_counts": {
+    "2234": 9,
+    "2238": 4,
+    "5676": 9,
+    "5953": 9,
+    "6079": 8,
+    "6102": 8,
+    "6110": 8
+  },
+  "protocol_sha256": "80eb478f8ee0ac18fde3ecdd7ad7b727f396eb6db858a1464e70744ce84b3bcb",
+  "reference_count": 55,
+  "review": "Independent AI-assisted source-context review, not external human-certified labels. No query feedback or backfilling.",
+  "review_sha256": {
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/purdue-view-enrollment-review-audit.json": "f6bbdbf2a16d0eaf0eafc720241f3f3ee9641697d13d0bf566544866a805bab8",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/purdue-view-enrollment-review-cattle.json": "b21fb22340a04a372256fbe10b910fa10ceb03744c1c092704e51a163dd4223d"
+  },
+  "selected_source_rows": {
+    "2234": [
+      87,
+      89,
+      90,
+      92,
+      93,
+      95,
+      96,
+      98,
+      99
+    ],
+    "2238": [
+      33,
+      34,
+      35,
+      36
+    ],
+    "5676": [
+      44,
+      47,
+      49,
+      52,
+      54,
+      57,
+      59,
+      62,
+      64
+    ],
+    "5953": [
+      68,
+      70,
+      72,
+      74,
+      76,
+      78,
+      80,
+      82,
+      84
+    ],
+    "6079": [
+      19,
+      20,
+      22,
+      23,
+      25,
+      26,
+      28,
+      29
+    ],
+    "6102": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14
+    ],
+    "6110": [
+      102,
+      104,
+      105,
+      107,
+      108,
+      110,
+      111,
+      113
+    ]
+  },
+  "source_sha256": "f56da055eb4debc5e5cb6146b450f8e38d930ef86e1c5b21dee6c4215bff9cdd"
+}

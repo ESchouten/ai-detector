@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "frozen_at": "2026-10-03T08:14:18.551246+00:00",
+  "purpose": "Test causal multi-frame appearance corroboration on already-cached Cutie tracks, before running this comparison",
+  "appearance_protocol_sha256": "5e1f4730c8b1020edcd11a890a5c911b35f9ceac1094c5a856a30c941956a7d2",
+  "features_manifest_sha256": "1a721ae71a6d23d993a2a8e2c924883df58408d0225ffa6f4c456abbad1bb1d5",
+  "runner_sha256": "8f12a1d918e88a5e7b64db5a70aead9c21619d92c1a2e40c6303093c7c312dd6",
+  "ema_alphas": [
+    1.0,
+    0.5,
+    0.2
+  ],
+  "pooling": "L2-normalize alpha*current +(1-alpha)*previous pooled vector per original mask slot; initialize from first vector, reset on missing frame/slot; current mask quality remains an independent naming gate. No future observations or predicted-name gallery updates.",
+  "selection": "Same80appearanceconditions peralpha,cal1230-1529only, same99%precision/60%coverage/1%unknown. Originalappearance tie rules, remainingexactties preferhigheralpha (lesshistory).",
+  "boundaries": "No reset solely at a scoring boundary; causal evidence1229->1230continues. Gap629->930resets. Names never reassigned.",
+  "scope": "Exploratory calibration and exposeddevelopment, not independentlyheldout. Reserved1800-2099and2700-2999stayclosed."
+}

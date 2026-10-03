@@ -1,0 +1,240 @@
+{
+  "protocol": {
+    "augmentation": "Quarter turns, horizontal flip, random crop scale0.85\u20131.0 ratio0.85\u20131.15, brightness/contrast0.15/saturation0.1",
+    "base_manifest_sha256": "16fa9783c41b08cc88800d052ec3a45967f4d18bc3bf778fa581787aa7bbcd50",
+    "batch": "6 identities \u00d7 2 independent reference augmentations",
+    "checkpoints": [
+      5,
+      15
+    ],
+    "epochs": 15,
+    "evaluation": "Every5seconds development/calibration only; final windows absent",
+    "loss": "supervised contrastive temperature0.1 + 0.25cosine classifier crossentropy",
+    "optimizer": "AdamW lr1e-5, classifier1e-3, weight_decay1e-4",
+    "seed": 42,
+    "steps_per_epoch": 10,
+    "train_rows": [
+      270,
+      120,
+      312,
+      294,
+      138,
+      156,
+      252,
+      324,
+      240,
+      282,
+      157,
+      343,
+      301,
+      265,
+      205,
+      277,
+      241,
+      211,
+      139,
+      127,
+      302,
+      20,
+      98,
+      2,
+      110,
+      80,
+      206,
+      176,
+      116,
+      134,
+      165,
+      3,
+      267,
+      81,
+      309,
+      225,
+      111,
+      63,
+      129,
+      39,
+      130,
+      358,
+      346,
+      244,
+      250,
+      28,
+      286,
+      22,
+      340,
+      268,
+      275,
+      131,
+      311,
+      305,
+      197,
+      149,
+      113,
+      263,
+      143,
+      299
+    ],
+    "trainable": "Last EfficientNet block and conv head only; all BN running statistics frozen",
+    "training_examples": 60,
+    "unknown_ids_excluded": [
+      7,
+      8
+    ]
+  },
+  "baseline": {
+    "threshold": 0.5500000000000003,
+    "margin": 0.09,
+    "panels": {
+      "development": {
+        "observations": 480,
+        "known": 360,
+        "unknown": 120,
+        "correct_accepts": 79,
+        "wrong_known_accepts": 0,
+        "unknown_false_accepts": 1,
+        "accepted_precision": 0.9875,
+        "known_coverage": 0.21944444444444444,
+        "unknown_false_acceptance_rate": 0.008333333333333333,
+        "known_rank1": 0.7,
+        "abstentions": 400
+      },
+      "development_later": {
+        "observations": 478,
+        "known": 359,
+        "unknown": 119,
+        "correct_accepts": 95,
+        "wrong_known_accepts": 0,
+        "unknown_false_accepts": 3,
+        "accepted_precision": 0.9693877551020408,
+        "known_coverage": 0.2646239554317549,
+        "unknown_false_acceptance_rate": 0.025210084033613446,
+        "known_rank1": 0.7632311977715878,
+        "abstentions": 380
+      },
+      "calibration": {
+        "observations": 480,
+        "known": 360,
+        "unknown": 120,
+        "correct_accepts": 100,
+        "wrong_known_accepts": 0,
+        "unknown_false_accepts": 1,
+        "accepted_precision": 0.9900990099009901,
+        "known_coverage": 0.2777777777777778,
+        "unknown_false_acceptance_rate": 0.008333333333333333,
+        "known_rank1": 0.7027777777777777,
+        "abstentions": 379
+      }
+    }
+  },
+  "timing": {
+    "seconds": 115.96811366616748
+  },
+  "checkpoints": [
+    {
+      "epoch": 5,
+      "weights_sha256": "f1b24c3be0fbef68017a7df8831afbefda0434b55753bbf1e5f0e98784f5ea6d",
+      "vectors_sha256": "41ba515ccc24225067ac60dff15b68a4a9a2a8a1f9bb34c0a831cc301c67b16f",
+      "results": {
+        "single_frame": {
+          "margin": 0.09,
+          "panels": {
+            "calibration": {
+              "abstentions": 371,
+              "accepted_precision": 0.9908256880733946,
+              "correct_accepts": 108,
+              "known": 360,
+              "known_coverage": 0.3,
+              "known_rank1": 0.7,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.008333333333333333,
+              "unknown_false_accepts": 1,
+              "wrong_known_accepts": 0
+            },
+            "development": {
+              "abstentions": 388,
+              "accepted_precision": 0.967391304347826,
+              "correct_accepts": 89,
+              "known": 360,
+              "known_coverage": 0.24722222222222223,
+              "known_rank1": 0.7027777777777777,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.008333333333333333,
+              "unknown_false_accepts": 1,
+              "wrong_known_accepts": 2
+            },
+            "development_later": {
+              "abstentions": 370,
+              "accepted_precision": 0.9629629629629629,
+              "correct_accepts": 104,
+              "known": 359,
+              "known_coverage": 0.28969359331476324,
+              "known_rank1": 0.7632311977715878,
+              "observations": 478,
+              "unknown": 119,
+              "unknown_false_acceptance_rate": 0.025210084033613446,
+              "unknown_false_accepts": 3,
+              "wrong_known_accepts": 1
+            }
+          },
+          "threshold": 0.5300000000000002
+        }
+      }
+    },
+    {
+      "epoch": 15,
+      "weights_sha256": "16f70133ef4ec3af659cb2093aded26b4b64997a4c80c745cfe834be51738d69",
+      "vectors_sha256": "e48a86a2cfcaf273ec7cc75237a3d1ef890ec34289f845564ae375c6447f05a1",
+      "results": {
+        "single_frame": {
+          "margin": 0.13,
+          "panels": {
+            "calibration": {
+              "abstentions": 440,
+              "accepted_precision": 1.0,
+              "correct_accepts": 40,
+              "known": 360,
+              "known_coverage": 0.1111111111111111,
+              "known_rank1": 0.7027777777777777,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "development": {
+              "abstentions": 448,
+              "accepted_precision": 1.0,
+              "correct_accepts": 32,
+              "known": 360,
+              "known_coverage": 0.08888888888888889,
+              "known_rank1": 0.7027777777777777,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "development_later": {
+              "abstentions": 429,
+              "accepted_precision": 1.0,
+              "correct_accepts": 49,
+              "known": 359,
+              "known_coverage": 0.13649025069637882,
+              "known_rank1": 0.7799442896935933,
+              "observations": 478,
+              "unknown": 119,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            }
+          },
+          "threshold": 0.5800000000000003
+        }
+      }
+    }
+  ],
+  "conclusion": "Not promoted: no useful accuracy gain at required precision; original encoder remains the baseline."
+}

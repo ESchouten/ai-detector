@@ -1,0 +1,58 @@
+{
+  "conditions": [
+    "actual_no_quarantine",
+    "actual_quarantine",
+    "original_quarantine_raw"
+  ],
+  "files": {
+    "actual": {
+      "path": ".cache/cow-cutie/actual-seed-2fps/propagation.json",
+      "sha256": "98721b3a84a525d63b70bb720d7b8d0b7a7811de06b71d92c7b12818629a2e26"
+    },
+    "actual_report": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-actual-seed-pipeline.json",
+      "sha256": "26a7006ec9d6a71c9835b15914fd6416e5e5b781b63aa9c0c1193f81d5a62428"
+    },
+    "clip": {
+      "path": ".cache/cow-cutie/calibration-clip/sampled.json",
+      "sha256": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d"
+    },
+    "original": {
+      "path": ".cache/cow-cutie/calibration-2fps/propagation.json",
+      "sha256": "5089d986a636ee1b633faa4e3ded27bacc1a1696f617a001336d01a28551de71"
+    },
+    "original_quarantine": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-quarantine-v2.json",
+      "sha256": "7ce2afb558c61f895d84c21be834e20163cd7b9e0a302ca7756e7b1a015d78e1"
+    },
+    "raw": {
+      "path": ".cache/cow-cutie/actual-seed-corroborator.json",
+      "sha256": "179da21b10e713902e0245e6a8f0e5a6f3b13e276a7c221deb618f2c42ca1707"
+    },
+    "source_protocol": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_actual_seed_protocol.json",
+      "sha256": "aaac7595cebc8beacace4260380d6c00b2b1c5eccf39def8cc4d0e6a7b7595d6"
+    },
+    "tracked_report": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-detector-corroboration.json",
+      "sha256": "82c3a2baa72ca015ff33ca64c7ea507da82c4beb01e4e7cc00a4ea2e00164b32"
+    }
+  },
+  "policy": "Original LCC geometry, p10>=.7, raw same-frame YOLO IoU>=.5. Only listed quarantine/init differences; original decisions retained as controls. Names and strict truth matching unchanged.",
+  "runner_sha256": "d034183b89be07c9420d579658e7a5f2d590e375c4eb1f48260a8ed2313aa2e4",
+  "scope": "Fixed causal controls on exposed development; no new threshold selection",
+  "windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ],
+    [
+      1230,
+      1529
+    ]
+  ]
+}

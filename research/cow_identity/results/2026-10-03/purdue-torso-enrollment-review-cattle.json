@@ -1,0 +1,306 @@
+{
+  "proposals_sha256": "62c2f5627522e5f020ed351962f76c440d1e1be1a1c9efbb4086936309f0298d",
+  "review": "Independent AI review of June8 eligible crop contact sheets plus native source context for these three clips. Every assigned row included; automatic geometry failures rejected. No June9 query pixels, labels, model output or scores were used. This is a research simulation of farmer confirmation, not expert identity certification.",
+  "rows": [
+    {
+      "row": 33,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 34,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 35,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 36,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 37,
+      "accepted": false,
+      "cow": null,
+      "reason": "Principal2238 is clear from passage context, but this only eligible torso has severe motion blur and smeared dark coat detail; reject as an unreliable enrollment example."
+    },
+    {
+      "row": 38,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 39,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 40,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 41,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 42,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 43,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 44,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 45,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 46,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 47,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 48,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 49,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 50,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 51,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 52,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 53,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 54,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 55,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 56,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 57,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 58,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 59,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 60,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 61,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 62,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 63,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 64,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 65,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 66,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 67,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 102,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 103,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 104,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 105,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 106,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 107,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 108,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 109,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 110,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 111,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Single principal passage cow confirmed from clip context; usable visible torso with distinct coat pattern. Some motion blur remains, but no other animal enters this crop."
+    },
+    {
+      "row": 112,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 113,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 114,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 115,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    },
+    {
+      "row": 116,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatic geometry rejection; not proposed for enrollment."
+    }
+  ]
+}

@@ -1,0 +1,400 @@
+{
+  "status": "June8only human review of all42 geometry-eligible proposal crops and principal passage continuity; before any query inference",
+  "proposals_sha256": "6538e65f62c131b42f97bc92970c4a6b746c2ed218e573f87342510c242738c5",
+  "reviewed_proposals": 42,
+  "automatically_rejected_ineligible_proposals": 22,
+  "total_proposals": 64,
+  "reviewer": "identity_evaluation agent",
+  "policy": "Confirm principal biological ID from publisher source plus visible passage continuity. Keep readable torso pattern, reject isolated rear/head fragments and preceding non-principal animals. No query images used. All intended known7 remain evaluation denominator.",
+  "rows": [
+    {
+      "row": 0,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 1,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 2,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 3,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 4,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 5,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 6,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 7,
+      "accepted": true,
+      "cow": 6102,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 8,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 9,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 10,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 11,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 12,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 13,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 14,
+      "accepted": true,
+      "cow": 6079,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 15,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 16,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 17,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 18,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 19,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 20,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 21,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 22,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 23,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 24,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 25,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 26,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 27,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 28,
+      "accepted": true,
+      "cow": 5676,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 29,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 30,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 31,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 32,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 33,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 34,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 35,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 36,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 37,
+      "accepted": false,
+      "cow": null,
+      "reason": "Preceding non-principal animal, do not use clip label"
+    },
+    {
+      "row": 38,
+      "accepted": true,
+      "cow": 5953,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 39,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 40,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 41,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 42,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 43,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 44,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 45,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 46,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 47,
+      "accepted": true,
+      "cow": 2234,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 48,
+      "accepted": true,
+      "cow": 2234,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 49,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 50,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 51,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 52,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 53,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 54,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 55,
+      "accepted": false,
+      "cow": null,
+      "reason": "Automatically rejected by frozen production crop eligibility"
+    },
+    {
+      "row": 56,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 57,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 58,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 59,
+      "accepted": true,
+      "cow": 6110,
+      "reason": "Clear principal torso pattern"
+    },
+    {
+      "row": 60,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 61,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 62,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    },
+    {
+      "row": 63,
+      "accepted": false,
+      "cow": null,
+      "reason": "Truncated or fragmentary torso after entry/exit; no clean reference"
+    }
+  ],
+  "accepted": 18,
+  "rejected": 46,
+  "known_without_clean_reference": [
+    2238
+  ]
+}

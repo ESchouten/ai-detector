@@ -1,0 +1,106 @@
+{
+  "annotation_effort": {
+    "annotation_review": "Two agents reviewed clean native images and overlays; not external human-certified truth",
+    "full_visible_boxes": 53,
+    "sampled_native_images": 78,
+    "torso_boxes": 30
+  },
+  "enrollment_effort": {
+    "accepted": 32,
+    "associated_crop_proposals": 117,
+    "automatically_rejected": 81,
+    "known_cows_with_references": 6,
+    "matches_application_retention_cadence": false,
+    "missing_known_cows": [
+      2238
+    ],
+    "rejected_after_visual_review": 4,
+    "visually_reviewed": 36
+  },
+  "firstday_pipeline_seconds": 31.471892250003293,
+  "limitations": [
+    "Per-principal passage counts include any nuisance predictions; do not interpret whole_predictions as correct detections without box matching.",
+    "Adjacent-frame references are not independent animal appearances.",
+    "Geometry eligibility is not sufficient for enrollment; severely blurred2238candidate rejected.",
+    "The frozen query subsequently completed; see purdue-torso-production.json and purdue-torso-diagnostics.json.",
+    "Research keeps every5fps associated crop; actual app saves firsteligible crop then waits default30s review interval. Gallery uses richer research enrollment and does not certify a real one-pass farmer workflow."
+  ],
+  "per_principal_passage": {
+    "2234": {
+      "ambiguous_or_unassociated_torsos": 4,
+      "associated_proposals": 15,
+      "confirmed_photos": 3,
+      "geometry_eligible": 3,
+      "processed_frames": 74,
+      "selected_references": 3,
+      "torso_predictions": 19,
+      "whole_predictions": 35
+    },
+    "2238": {
+      "ambiguous_or_unassociated_torsos": 8,
+      "associated_proposals": 11,
+      "confirmed_photos": 0,
+      "geometry_eligible": 1,
+      "processed_frames": 48,
+      "selected_references": 0,
+      "torso_predictions": 19,
+      "whole_predictions": 24
+    },
+    "5676": {
+      "ambiguous_or_unassociated_torsos": 2,
+      "associated_proposals": 24,
+      "confirmed_photos": 6,
+      "geometry_eligible": 6,
+      "processed_frames": 85,
+      "selected_references": 6,
+      "torso_predictions": 26,
+      "whole_predictions": 49
+    },
+    "5953": {
+      "ambiguous_or_unassociated_torsos": 3,
+      "associated_proposals": 19,
+      "confirmed_photos": 7,
+      "geometry_eligible": 9,
+      "processed_frames": 40,
+      "selected_references": 7,
+      "torso_predictions": 22,
+      "whole_predictions": 36
+    },
+    "6079": {
+      "ambiguous_or_unassociated_torsos": 0,
+      "associated_proposals": 14,
+      "confirmed_photos": 4,
+      "geometry_eligible": 4,
+      "processed_frames": 32,
+      "selected_references": 4,
+      "torso_predictions": 14,
+      "whole_predictions": 54
+    },
+    "6102": {
+      "ambiguous_or_unassociated_torsos": 0,
+      "associated_proposals": 19,
+      "confirmed_photos": 7,
+      "geometry_eligible": 8,
+      "processed_frames": 50,
+      "selected_references": 7,
+      "torso_predictions": 19,
+      "whole_predictions": 31
+    },
+    "6110": {
+      "ambiguous_or_unassociated_torsos": 1,
+      "associated_proposals": 15,
+      "confirmed_photos": 5,
+      "geometry_eligible": 5,
+      "processed_frames": 52,
+      "selected_references": 5,
+      "torso_predictions": 16,
+      "whole_predictions": 30
+    }
+  },
+  "proposal_sha256": "62c2f5627522e5f020ed351962f76c440d1e1be1a1c9efbb4086936309f0298d",
+  "protocol_sha256": "25304cac2d6b44196cb69374b523cba350cede6953fa57dd1897564611df1dd8",
+  "review_sha256": "b84c32adce2214b17d7c4b57df7878efdbd7e892d60a0dde9ee3593bf880c678",
+  "selected_epoch": 25,
+  "source_manifest_sha256": "544481950dd814b39b53acfa6bdc7710a3e247cba9e0eb534bfd225980e558c5",
+  "training_seconds": 118.712
+}

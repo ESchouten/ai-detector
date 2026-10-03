@@ -1,0 +1,7 @@
+# Optional isolated video-memory experiment; not an application dependency.
+-r requirements.txt
+antlr4-python3-runtime==4.9.3
+einops==0.8.2
+hydra-core==1.3.2
+omegaconf==2.3.1
+opencv-python==5.0.0.93

@@ -1,0 +1,258 @@
+{
+  "annotations_sha256": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+  "cache_reused": false,
+  "inference": {
+    "actual_device": "cpu",
+    "actual_fp16": false,
+    "boxes": [
+      [
+        124.35855865478516,
+        346.3227844238281,
+        300.2774353027344,
+        531.0787353515625
+      ],
+      [
+        518.0762939453125,
+        87.2020492553711,
+        612.0076904296875,
+        206.85313415527344
+      ],
+      [
+        248.4268798828125,
+        144.3514862060547,
+        428.3359375,
+        299.2070617675781
+      ],
+      [
+        563.657470703125,
+        304.2561950683594,
+        687.2448120117188,
+        441.0980224609375
+      ],
+      [
+        205.9642333984375,
+        347.7969970703125,
+        374.84649658203125,
+        526.3373413085938
+      ],
+      [
+        520.2232055664062,
+        412.458984375,
+        749.978759765625,
+        562.9124755859375
+      ],
+      [
+        234.8258514404297,
+        8.057045936584473,
+        345.7809143066406,
+        151.99720764160156
+      ],
+      [
+        196.76585388183594,
+        7.1869707107543945,
+        329.18768310546875,
+        164.6800537109375
+      ],
+      [
+        197.93991088867188,
+        34.5274543762207,
+        309.518310546875,
+        166.38763427734375
+      ],
+      [
+        197.98599243164062,
+        73.6664810180664,
+        306.5262451171875,
+        165.26902770996094
+      ],
+      [
+        386.2817687988281,
+        2.991962432861328,
+        482.60906982421875,
+        108.92845153808594
+      ],
+      [
+        510.4127502441406,
+        409.6028137207031,
+        677.2537231445312,
+        547.63818359375
+      ]
+    ],
+    "confidence": [
+      0.8629918694496155,
+      0.8205862641334534,
+      0.8020943999290466,
+      0.79694002866745,
+      0.7742568254470825,
+      0.6890454888343811,
+      0.62446528673172,
+      0.6042669415473938,
+      0.5811831951141357,
+      0.5115479826927185,
+      0.4886190593242645,
+      0.42750081419944763
+    ],
+    "elapsed_seconds": 0.1254439582116902,
+    "provenance": {
+      "libraries": {
+        "lap": "0.5.13",
+        "numpy": "2.5.0",
+        "opencv": "4.13.0",
+        "scipy": null,
+        "torch": "2.12.1",
+        "torchvision": "0.27.1",
+        "ultralytics": "8.4.80"
+      },
+      "model_sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+      "pixels_sha256": "52909f3311a8860533070433b10a46f74a3f2138b04da04774d91412f25a5a10",
+      "settings": {
+        "classes": [
+          0
+        ],
+        "conf": 0.4,
+        "device": "cpu",
+        "imgsz": 640,
+        "iou": 0.7,
+        "quantize": 32
+      }
+    }
+  },
+  "metrics": {
+    "correctly_seedable_known_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "false_proposals": 4,
+    "matched_proposal_to_cow": {
+      "0": 6,
+      "1": 5,
+      "10": 8,
+      "2": 3,
+      "3": 4,
+      "4": 1,
+      "5": 7,
+      "7": 2
+    },
+    "matched_proposals": 8,
+    "missed_visible_cows": 0,
+    "missing_known_ids": [],
+    "proposal_count": 12,
+    "seed_precision": 0.6666666666666666,
+    "seed_recall": 1.0,
+    "visible_known_coverage_ceiling": 1.0
+  },
+  "preview_sha256": "23e29ab561e95efbbf7803f9ff8f5c6addcd290bad0407b2ccdb1a504576b3e9",
+  "protocol": {
+    "limitations": [
+      "Frame0 is included in this model's early-frame training data: the result is optimistic initialization feasibility, not independent generalization.",
+      "Coverage ceiling assumes an ideal farmer correctly labels every matched proposal and rejects every false proposal.",
+      "Matching does not prove a predicted box contains a clean single-animal segmentation seed. No SAM masks or continuous tracking are run.",
+      "Only frame0 is decoded. Reserved footage remains unopened. No confidence tuning is allowed."
+    ],
+    "matching": "Generate and cache every actual detector proposal before loading annotations. Score maximum-cardinality one-to-one IoU>=0.5; never replace proposal bounds with annotation bounds.",
+    "model_sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    "named_cows": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "scope": "First-frame actual-proposal initialization diagnostic only; not held-out detection accuracy or continuous identity performance",
+    "second": 0,
+    "settings": {
+      "classes": [
+        0
+      ],
+      "conf": 0.4,
+      "device": "cpu",
+      "imgsz": 640,
+      "iou": 0.7,
+      "quantize": 32
+    },
+    "source_annotations_sha256": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "version": 1,
+    "video_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825"
+  },
+  "protocol_sha256": "b1fd59ad8da21ea2de88a6de5ef2cb06c2482beb15af26e779f632405950b6a5",
+  "runner_sha256": "b3f29d4602e64842c5eac3dc433bb44e20a1eb29324e598f26d9a72071f482b7",
+  "truth": [
+    {
+      "box": [
+        173,
+        350,
+        369,
+        525
+      ],
+      "cow": 1
+    },
+    {
+      "box": [
+        201,
+        19,
+        341,
+        164
+      ],
+      "cow": 2
+    },
+    {
+      "box": [
+        242,
+        152,
+        430,
+        279
+      ],
+      "cow": 3
+    },
+    {
+      "box": [
+        574,
+        309,
+        679,
+        437
+      ],
+      "cow": 4
+    },
+    {
+      "box": [
+        523,
+        91,
+        608,
+        197
+      ],
+      "cow": 5
+    },
+    {
+      "box": [
+        145,
+        341,
+        304,
+        531
+      ],
+      "cow": 6
+    },
+    {
+      "box": [
+        511,
+        424,
+        780,
+        569
+      ],
+      "cow": 7
+    },
+    {
+      "box": [
+        382,
+        4,
+        506,
+        97
+      ],
+      "cow": 8
+    }
+  ]
+}

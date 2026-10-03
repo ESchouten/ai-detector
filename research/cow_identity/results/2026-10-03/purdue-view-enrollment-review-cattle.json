@@ -1,0 +1,187 @@
+{
+  "protocol_sha256": "80eb478f8ee0ac18fde3ecdd7ad7b727f396eb6db858a1464e70744ce84b3bcb",
+  "candidates_sha256": "71bda723e9c7af4254ecc155142e50706854c713a1b09afa6eaa806456a28ff3",
+  "reviewer": "cattle_research independent AI visual review of June8 context sheets and native crops; no June9 images or outcomes used",
+  "rows": [
+    {
+      "candidate": 20,
+      "accepted": true,
+      "cow": 2238,
+      "note": "Same principal dark cow in native context; broad visible torso, no mixed animal. Moderate softness retained; border alone is not exclusion. This is a weakly patterned dark-coat reference, not proof of distinctive appearance."
+    },
+    {
+      "candidate": 21,
+      "accepted": true,
+      "cow": 2238,
+      "note": "Same principal dark cow in native context; broad visible torso, no mixed animal. Moderate softness retained; border alone is not exclusion. This is a weakly patterned dark-coat reference, not proof of distinctive appearance."
+    },
+    {
+      "candidate": 22,
+      "accepted": true,
+      "cow": 2238,
+      "note": "Same principal dark cow in native context; broad visible torso, no mixed animal. Moderate softness retained; border alone is not exclusion. This is a weakly patterned dark-coat reference, not proof of distinctive appearance."
+    },
+    {
+      "candidate": 23,
+      "accepted": true,
+      "cow": 2238,
+      "note": "Same principal dark cow in native context; broad visible torso, no mixed animal. Moderate softness retained; border alone is not exclusion. This is a weakly patterned dark-coat reference, not proof of distinctive appearance."
+    },
+    {
+      "candidate": 24,
+      "accepted": false,
+      "cow": null,
+      "note": "Principal cow, but severe motion smear or a late rump fragment leaves too little reliable coat detail. No forced enrollment; original source row37 remains rejected."
+    },
+    {
+      "candidate": 25,
+      "accepted": false,
+      "cow": null,
+      "note": "Principal cow, but severe motion smear or a late rump fragment leaves too little reliable coat detail. No forced enrollment; original source row37 remains rejected."
+    },
+    {
+      "candidate": 26,
+      "accepted": false,
+      "cow": null,
+      "note": "Principal cow, but severe motion smear or a late rump fragment leaves too little reliable coat detail. No forced enrollment; original source row37 remains rejected."
+    },
+    {
+      "candidate": 27,
+      "accepted": false,
+      "cow": null,
+      "note": "Principal cow, but severe motion smear or a late rump fragment leaves too little reliable coat detail. No forced enrollment; original source row37 remains rejected."
+    },
+    {
+      "candidate": 28,
+      "accepted": false,
+      "cow": null,
+      "note": "Principal cow, but severe motion smear or a late rump fragment leaves too little reliable coat detail. No forced enrollment; original source row37 remains rejected."
+    },
+    {
+      "candidate": 29,
+      "accepted": false,
+      "cow": null,
+      "note": "Principal cow, but severe motion smear or a late rump fragment leaves too little reliable coat detail. No forced enrollment; original source row37 remains rejected."
+    },
+    {
+      "candidate": 30,
+      "accepted": true,
+      "cow": 5676,
+      "note": "Principal cow confirmed by native context; visible single-animal black/white torso pattern remains usable, including entry/exit boundary view."
+    },
+    {
+      "candidate": 31,
+      "accepted": true,
+      "cow": 5676,
+      "note": "Principal cow confirmed by native context; visible single-animal black/white torso pattern remains usable, including entry/exit boundary view."
+    },
+    {
+      "candidate": 32,
+      "accepted": true,
+      "cow": 5676,
+      "note": "Principal cow confirmed by native context; visible single-animal black/white torso pattern remains usable, including entry/exit boundary view."
+    },
+    {
+      "candidate": 33,
+      "accepted": true,
+      "cow": 5676,
+      "note": "Principal cow confirmed by native context; visible single-animal black/white torso pattern remains usable, including entry/exit boundary view."
+    },
+    {
+      "candidate": 34,
+      "accepted": true,
+      "cow": 5676,
+      "note": "Principal cow confirmed by native context; visible single-animal black/white torso pattern remains usable, including entry/exit boundary view."
+    },
+    {
+      "candidate": 35,
+      "accepted": true,
+      "cow": 5676,
+      "note": "Principal cow confirmed by native context; visible single-animal black/white torso pattern remains usable, including entry/exit boundary view."
+    },
+    {
+      "candidate": 36,
+      "accepted": true,
+      "cow": 5676,
+      "note": "Principal cow confirmed by native context; visible single-animal black/white torso pattern remains usable, including entry/exit boundary view."
+    },
+    {
+      "candidate": 37,
+      "accepted": true,
+      "cow": 5676,
+      "note": "Principal cow confirmed by native context; visible single-animal black/white torso pattern remains usable, including entry/exit boundary view."
+    },
+    {
+      "candidate": 38,
+      "accepted": true,
+      "cow": 5676,
+      "note": "Principal cow confirmed by native context; visible single-animal black/white torso pattern remains usable, including entry/exit boundary view."
+    },
+    {
+      "candidate": 39,
+      "accepted": false,
+      "cow": null,
+      "note": "This crop belongs to the following animal at lower left; principal5676 is already leaving at upper right. Identity of following animal is not assigned."
+    },
+    {
+      "candidate": 60,
+      "accepted": true,
+      "cow": 6110,
+      "note": "Principal cow confirmed by native context; broad coat region and black/white arrangement visible. Boundary clipping and moderate softness alone do not exclude this view."
+    },
+    {
+      "candidate": 61,
+      "accepted": true,
+      "cow": 6110,
+      "note": "Principal cow confirmed by native context; broad coat region and black/white arrangement visible. Boundary clipping and moderate softness alone do not exclude this view."
+    },
+    {
+      "candidate": 62,
+      "accepted": true,
+      "cow": 6110,
+      "note": "Principal cow confirmed by native context; broad coat region and black/white arrangement visible. Boundary clipping and moderate softness alone do not exclude this view."
+    },
+    {
+      "candidate": 63,
+      "accepted": true,
+      "cow": 6110,
+      "note": "Principal cow confirmed by native context; broad coat region and black/white arrangement visible. Boundary clipping and moderate softness alone do not exclude this view."
+    },
+    {
+      "candidate": 64,
+      "accepted": true,
+      "cow": 6110,
+      "note": "Principal cow confirmed by native context; broad coat region and black/white arrangement visible. Boundary clipping and moderate softness alone do not exclude this view."
+    },
+    {
+      "candidate": 65,
+      "accepted": true,
+      "cow": 6110,
+      "note": "Principal cow confirmed by native context; broad coat region and black/white arrangement visible. Boundary clipping and moderate softness alone do not exclude this view."
+    },
+    {
+      "candidate": 66,
+      "accepted": true,
+      "cow": 6110,
+      "note": "Principal cow confirmed by native context; broad coat region and black/white arrangement visible. Boundary clipping and moderate softness alone do not exclude this view."
+    },
+    {
+      "candidate": 67,
+      "accepted": true,
+      "cow": 6110,
+      "note": "Principal cow confirmed by native context; broad coat region and black/white arrangement visible. Boundary clipping and moderate softness alone do not exclude this view."
+    },
+    {
+      "candidate": 68,
+      "accepted": false,
+      "cow": null,
+      "note": "Late exit crop has strong motion smear/overexposed white rump and insufficient stable torso pattern; reject without backfill."
+    },
+    {
+      "candidate": 69,
+      "accepted": false,
+      "cow": null,
+      "note": "Late exit crop has strong motion smear/overexposed white rump and insufficient stable torso pattern; reject without backfill."
+    }
+  ]
+}

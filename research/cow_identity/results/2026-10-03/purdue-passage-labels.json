@@ -1,0 +1,115 @@
+{
+  "clips": {
+    "clip-0196f5e66f776dab": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 5676,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-11d806a4f287c70e": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 6102,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-1df4210923c440ff": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 6079,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-406621f8b67a894e": {
+      "enrolled": false,
+      "frame_annotations": null,
+      "principal_cow": 6109,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-599003c30cfa3db0": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 5953,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-5f019d003878b7d3": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 6102,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-67f63bbad66f2a91": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 2238,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-723ec0dcb96e7c78": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 5676,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-9aae6a2524836934": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 6110,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-a31dfef670eff62f": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 5953,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-a504eef23f8ccef9": {
+      "enrolled": false,
+      "frame_annotations": null,
+      "principal_cow": 6109,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-ad8ccd95ca116f6a": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 2234,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-bf67d1e5dd0579ce": {
+      "enrolled": false,
+      "frame_annotations": null,
+      "principal_cow": 6113,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-c67a675ca284da38": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 6079,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-c8dee0ff0a1601b5": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 6110,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-d0af881960f7aa1d": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 2234,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-f4ae52cd59b9adb9": {
+      "enrolled": false,
+      "frame_annotations": null,
+      "principal_cow": 6113,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    },
+    "clip-fc5e78e24a8ca747": {
+      "enrolled": true,
+      "frame_annotations": null,
+      "principal_cow": 2238,
+      "truth_source": "Publisher CSV and matching filename; not exhaustive frame-level identity labels"
+    }
+  },
+  "manifest_sha256": "0200e21caad98df815eb0bab9fec5a3bdb91e82802c52b4d399e858426d716d0",
+  "status": "Principal passage labels only; full all-visible1fps frame truth must be independently annotated before scoring",
+  "version": 1
+}

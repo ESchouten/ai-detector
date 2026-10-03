@@ -1,0 +1,84 @@
+{
+  "calibration_met_all_gates": false,
+  "calibration_report_sha256": "97ee30f24bbd54a7cdaa8169210bae5523e489824449fc0eb28037337e88f925",
+  "metrics": {
+    "conservative_precision": 1.0,
+    "known_coverage": 0.0005555555555555556,
+    "name_confusion": {
+      "1->unknown": 290,
+      "2->2": 1,
+      "2->unknown": 266,
+      "3->unknown": 291,
+      "4->unknown": 298,
+      "5->unknown": 296,
+      "6->unknown": 295,
+      "7->unknown": 287,
+      "8->unknown": 292,
+      "unmatched->unknown": 84
+    },
+    "naming_counts": {
+      "correct_name": 1,
+      "cow_name_switches": 0,
+      "cow_track_switches": 2,
+      "detector_boxes": 2400,
+      "eligible_boxes": 2400,
+      "eligible_matched": 2316,
+      "frames": 300,
+      "known_unnamed": 1736,
+      "matched_boxes": 2316,
+      "missed_annotations": 84,
+      "track_cow_switches": 2,
+      "unknown_named": 0,
+      "unknown_rejected": 579,
+      "unmatched_boxes": 84,
+      "unmatched_named": 0,
+      "unmatched_unnamed": 84,
+      "visible_annotations": 2400,
+      "visible_known": 1800,
+      "visible_unknown": 600,
+      "wrong_name": 0
+    },
+    "tracking": {
+      "counts": {
+        "correct_name": 0,
+        "cow_name_switches": 0,
+        "cow_track_switches": 2,
+        "detector_boxes": 2400,
+        "eligible_boxes": 2400,
+        "eligible_matched": 2316,
+        "frames": 300,
+        "known_unnamed": 1737,
+        "matched_boxes": 2316,
+        "missed_annotations": 84,
+        "track_cow_switches": 2,
+        "unknown_named": 0,
+        "unknown_rejected": 579,
+        "unmatched_boxes": 84,
+        "unmatched_named": 0,
+        "unmatched_unnamed": 84,
+        "visible_annotations": 2400,
+        "visible_known": 1800,
+        "visible_unknown": 600,
+        "wrong_name": 0
+      },
+      "global_identity_f1": 0.9645833333333333,
+      "global_identity_true_positives": 2315,
+      "note": "Global one-to-one track/cow assignment at IoU .5 on 1 fps scoring timestamps; not permanent cow recognition.",
+      "precision": 0.965,
+      "recall": 0.965
+    }
+  },
+  "propagation_sha256": "5089d986a636ee1b633faa4e3ded27bacc1a1696f617a001336d01a28551de71",
+  "protocol_sha256": "b568784583b562ca2a7ebe8c3216a65f0a46dfdeb96e4a21ba51f156a0cafc30",
+  "runner_sha256": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+  "scope": "Exposed development replay of the calibration choice, without retuning; no reserved-test or deployment claim",
+  "score_seconds": [
+    330,
+    629
+  ],
+  "scorer_sha256": "920c722775042efc3c71e3b7ae3b52473dde2d21facdd4b33bfb5fa297361128",
+  "selected": {
+    "box_variant": "raw",
+    "minimum_p10_probability": 0.95
+  }
+}

@@ -1,0 +1,1453 @@
+{
+  "baseline": {
+    "step": 0,
+    "validation": {
+      "abstentions": 169,
+      "accepted_precision": 0.9961240310077519,
+      "correct_accepts": 257,
+      "datasets": {
+        "cows2021": {
+          "abstentions": 115,
+          "accepted_precision": 1.0,
+          "correct_accepts": 178,
+          "datasets": {},
+          "known": 206,
+          "known_coverage": 0.8640776699029126,
+          "known_rank1": 0.9757281553398058,
+          "margin": 0.09,
+          "observations": 293,
+          "threshold": 0.5700000000000003,
+          "unknown": 87,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "sideview2026": {
+          "abstentions": 61,
+          "accepted_precision": 1.0,
+          "correct_accepts": 73,
+          "datasets": {},
+          "known": 104,
+          "known_coverage": 0.7019230769230769,
+          "known_rank1": 0.9519230769230769,
+          "margin": 0.11,
+          "observations": 134,
+          "threshold": 0.5700000000000003,
+          "unknown": 30,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "known": 310,
+      "known_coverage": 0.8290322580645161,
+      "known_rank1": 0.967741935483871,
+      "margin": 0.09,
+      "observations": 427,
+      "threshold": 0.5700000000000003,
+      "unknown": 117,
+      "unknown_false_acceptance_rate": 0.008547008547008548,
+      "unknown_false_accepts": 1,
+      "wrong_known_accepts": 0
+    }
+  },
+  "checkpoints": [
+    {
+      "encoder_fingerprint": "591413d20342c3dbe447fbf978e2b6fe069c139619a40d458323cb9065f1eaaf",
+      "step": 100,
+      "validation": {
+        "abstentions": 155,
+        "accepted_precision": 0.9963235294117647,
+        "correct_accepts": 271,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 110,
+            "accepted_precision": 1.0,
+            "correct_accepts": 183,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.8883495145631068,
+            "known_rank1": 0.9805825242718447,
+            "margin": 0.09,
+            "observations": 293,
+            "threshold": 0.5300000000000002,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 47,
+            "accepted_precision": 1.0,
+            "correct_accepts": 87,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.8365384615384616,
+            "known_rank1": 0.9807692307692307,
+            "margin": 0.08,
+            "observations": 134,
+            "threshold": 0.5600000000000003,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.8741935483870967,
+        "known_rank1": 0.9806451612903225,
+        "margin": 0.11,
+        "observations": 427,
+        "threshold": 0.48000000000000026,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "8e071b62bc80394cf6fb8e4a3668742a3abdf31df9aff429a8486adf7f84acab"
+    },
+    {
+      "encoder_fingerprint": "c195a946035ff107c5d1b685ccce784be74c0acc1a2c29d56abfb4c49561a957",
+      "step": 200,
+      "validation": {
+        "abstentions": 146,
+        "accepted_precision": 0.99644128113879,
+        "correct_accepts": 280,
+        "datasets": {
+          "cows2021": {
+            "abstentions": 101,
+            "accepted_precision": 1.0,
+            "correct_accepts": 192,
+            "datasets": {},
+            "known": 206,
+            "known_coverage": 0.9320388349514563,
+            "known_rank1": 0.9805825242718447,
+            "margin": 0.12,
+            "observations": 293,
+            "threshold": 0.45000000000000023,
+            "unknown": 87,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "sideview2026": {
+            "abstentions": 46,
+            "accepted_precision": 1.0,
+            "correct_accepts": 88,
+            "datasets": {},
+            "known": 104,
+            "known_coverage": 0.8461538461538461,
+            "known_rank1": 0.9903846153846154,
+            "margin": 0.07,
+            "observations": 134,
+            "threshold": 0.5800000000000003,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "known": 310,
+        "known_coverage": 0.9032258064516129,
+        "known_rank1": 0.9838709677419355,
+        "margin": 0.12,
+        "observations": 427,
+        "threshold": 0.45000000000000023,
+        "unknown": 117,
+        "unknown_false_acceptance_rate": 0.008547008547008548,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "weights_sha256": "91ec32bee396c7f36e18cfb3058c23f833c1f2e3f8315db9e3da34e8e06a0692"
+    }
+  ],
+  "completed_steps": 200,
+  "decision": "Not promoted: external validation improves, but later calf unknown false acceptance reaches 13/119 and adult cross-day coverage remains inadequate. Reserved final calf windows were not inspected.",
+  "elapsed_seconds": 255.28904891596176,
+  "protocol": {
+    "augmentation": "Resize440, crop retains90\u2013100%, color0.15/0.15/0.1, grayscale0.1; quarter turns on top-down Cows2021 only; no flank mirroring",
+    "base_encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+    "base_features_manifest_sha256": "1d7f410f01efdb6f1727b0314b485655efa048392a99c5c57ae8e7fee795aee4",
+    "batch": "2 identities per dataset, 2 distinct-day images per identity",
+    "checkpoint_steps": [
+      100,
+      200
+    ],
+    "cohort_manifest_sha256": "29c72477157fad3d50b0a53951dd4652177f38906088f6b717ea7b8eb5668d71",
+    "continuation": "A 600-step run stops at 200 unless external validation beats the unchanged baseline",
+    "excluded": [
+      "8-calves",
+      "ETHZ",
+      "reserved final videos"
+    ],
+    "gradient_checkpointing": true,
+    "loss": "SupervisedContrastive(temperature0.1) +0.25cosine classifier crossentropy(temperature0.1)",
+    "maximum_steps": 200,
+    "optimizer": "AdamW backbone1e-5, classifier1e-3, weight_decay1e-4; gradient norm cap5",
+    "scope": "Research only; no production weights or defaults change",
+    "script_sha256": "50f08a875c76511577b8e5bdc4ab58fde4bd08fbb3e22b230e4756eb54eef857",
+    "seed": 42,
+    "selection": "External validation correct accepts under99%precision/1%unknownFA, then rank1; unchanged baseline eligible",
+    "trainable": "Full EfficientNetV2 backbone, GeM and embedding BN affine; BN running statistics frozen",
+    "training_identities": 219,
+    "training_images": 3033
+  },
+  "selected": {
+    "encoder_fingerprint": "c195a946035ff107c5d1b685ccce784be74c0acc1a2c29d56abfb4c49561a957",
+    "step": 200,
+    "validation": {
+      "abstentions": 146,
+      "accepted_precision": 0.99644128113879,
+      "correct_accepts": 280,
+      "datasets": {
+        "cows2021": {
+          "abstentions": 101,
+          "accepted_precision": 1.0,
+          "correct_accepts": 192,
+          "datasets": {},
+          "known": 206,
+          "known_coverage": 0.9320388349514563,
+          "known_rank1": 0.9805825242718447,
+          "margin": 0.12,
+          "observations": 293,
+          "threshold": 0.45000000000000023,
+          "unknown": 87,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        },
+        "sideview2026": {
+          "abstentions": 46,
+          "accepted_precision": 1.0,
+          "correct_accepts": 88,
+          "datasets": {},
+          "known": 104,
+          "known_coverage": 0.8461538461538461,
+          "known_rank1": 0.9903846153846154,
+          "margin": 0.07,
+          "observations": 134,
+          "threshold": 0.5800000000000003,
+          "unknown": 30,
+          "unknown_false_acceptance_rate": 0.0,
+          "unknown_false_accepts": 0,
+          "wrong_known_accepts": 0
+        }
+      },
+      "known": 310,
+      "known_coverage": 0.9032258064516129,
+      "known_rank1": 0.9838709677419355,
+      "margin": 0.12,
+      "observations": 427,
+      "threshold": 0.45000000000000023,
+      "unknown": 117,
+      "unknown_false_acceptance_rate": 0.008547008547008548,
+      "unknown_false_accepts": 1,
+      "wrong_known_accepts": 0
+    },
+    "weights_sha256": "91ec32bee396c7f36e18cfb3058c23f833c1f2e3f8315db9e3da34e8e06a0692"
+  },
+  "transfer": {
+    "calf": {
+      "models": {
+        "baseline": {
+          "conditions": {
+            "diverse10": {
+              "margin": 0.09,
+              "panels": {
+                "calibration": {
+                  "abstentions": 379,
+                  "accepted_precision": 0.9900990099009901,
+                  "correct_accepts": 100,
+                  "known": 360,
+                  "known_coverage": 0.2777777777777778,
+                  "known_rank1": 0.7027777777777777,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.008333333333333333,
+                  "unknown_false_accepts": 1,
+                  "wrong_known_accepts": 0
+                },
+                "development": {
+                  "abstentions": 400,
+                  "accepted_precision": 0.9875,
+                  "correct_accepts": 79,
+                  "known": 360,
+                  "known_coverage": 0.21944444444444444,
+                  "known_rank1": 0.7,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.008333333333333333,
+                  "unknown_false_accepts": 1,
+                  "wrong_known_accepts": 0
+                },
+                "development_later": {
+                  "abstentions": 380,
+                  "accepted_precision": 0.9693877551020408,
+                  "correct_accepts": 95,
+                  "known": 359,
+                  "known_coverage": 0.2646239554317549,
+                  "known_rank1": 0.7632311977715878,
+                  "observations": 478,
+                  "unknown": 119,
+                  "unknown_false_acceptance_rate": 0.025210084033613446,
+                  "unknown_false_accepts": 3,
+                  "wrong_known_accepts": 0
+                }
+              },
+              "threshold": 0.5500000000000003
+            },
+            "own_diverse10": {
+              "margin": 0.09,
+              "panels": {
+                "calibration": {
+                  "abstentions": 379,
+                  "accepted_precision": 0.9900990099009901,
+                  "correct_accepts": 100,
+                  "known": 360,
+                  "known_coverage": 0.2777777777777778,
+                  "known_rank1": 0.7027777777777777,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.008333333333333333,
+                  "unknown_false_accepts": 1,
+                  "wrong_known_accepts": 0
+                },
+                "development": {
+                  "abstentions": 400,
+                  "accepted_precision": 0.9875,
+                  "correct_accepts": 79,
+                  "known": 360,
+                  "known_coverage": 0.21944444444444444,
+                  "known_rank1": 0.7,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.008333333333333333,
+                  "unknown_false_accepts": 1,
+                  "wrong_known_accepts": 0
+                },
+                "development_later": {
+                  "abstentions": 380,
+                  "accepted_precision": 0.9693877551020408,
+                  "correct_accepts": 95,
+                  "known": 359,
+                  "known_coverage": 0.2646239554317549,
+                  "known_rank1": 0.7632311977715878,
+                  "observations": 478,
+                  "unknown": 119,
+                  "unknown_false_acceptance_rate": 0.025210084033613446,
+                  "unknown_false_accepts": 3,
+                  "wrong_known_accepts": 0
+                }
+              },
+              "threshold": 0.5500000000000003
+            },
+            "uniform10": {
+              "margin": 0.06,
+              "panels": {
+                "calibration": {
+                  "abstentions": 345,
+                  "accepted_precision": 0.9925925925925926,
+                  "correct_accepts": 134,
+                  "known": 360,
+                  "known_coverage": 0.37222222222222223,
+                  "known_rank1": 0.7444444444444445,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.0,
+                  "unknown_false_accepts": 0,
+                  "wrong_known_accepts": 1
+                },
+                "development": {
+                  "abstentions": 367,
+                  "accepted_precision": 0.9734513274336283,
+                  "correct_accepts": 110,
+                  "known": 360,
+                  "known_coverage": 0.3055555555555556,
+                  "known_rank1": 0.6972222222222222,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.016666666666666666,
+                  "unknown_false_accepts": 2,
+                  "wrong_known_accepts": 1
+                },
+                "development_later": {
+                  "abstentions": 325,
+                  "accepted_precision": 0.8954248366013072,
+                  "correct_accepts": 137,
+                  "known": 359,
+                  "known_coverage": 0.3816155988857939,
+                  "known_rank1": 0.7214484679665738,
+                  "observations": 478,
+                  "unknown": 119,
+                  "unknown_false_acceptance_rate": 0.1092436974789916,
+                  "unknown_false_accepts": 13,
+                  "wrong_known_accepts": 3
+                }
+              },
+              "threshold": 0.5400000000000003
+            }
+          },
+          "encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+          "manifest_sha256": "16fa9783c41b08cc88800d052ec3a45967f4d18bc3bf778fa581787aa7bbcd50"
+        },
+        "candidate": {
+          "conditions": {
+            "diverse10": {
+              "margin": 0.07,
+              "panels": {
+                "calibration": {
+                  "abstentions": 358,
+                  "accepted_precision": 0.9918032786885246,
+                  "correct_accepts": 121,
+                  "known": 360,
+                  "known_coverage": 0.33611111111111114,
+                  "known_rank1": 0.7388888888888889,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.008333333333333333,
+                  "unknown_false_accepts": 1,
+                  "wrong_known_accepts": 0
+                },
+                "development": {
+                  "abstentions": 361,
+                  "accepted_precision": 0.9831932773109243,
+                  "correct_accepts": 117,
+                  "known": 360,
+                  "known_coverage": 0.325,
+                  "known_rank1": 0.7055555555555556,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.016666666666666666,
+                  "unknown_false_accepts": 2,
+                  "wrong_known_accepts": 0
+                },
+                "development_later": {
+                  "abstentions": 325,
+                  "accepted_precision": 0.8888888888888888,
+                  "correct_accepts": 136,
+                  "known": 359,
+                  "known_coverage": 0.3788300835654596,
+                  "known_rank1": 0.7715877437325905,
+                  "observations": 478,
+                  "unknown": 119,
+                  "unknown_false_acceptance_rate": 0.1092436974789916,
+                  "unknown_false_accepts": 13,
+                  "wrong_known_accepts": 4
+                }
+              },
+              "threshold": 0.48000000000000026
+            },
+            "own_diverse10": {
+              "margin": 0.03,
+              "panels": {
+                "calibration": {
+                  "abstentions": 352,
+                  "accepted_precision": 0.9921875,
+                  "correct_accepts": 127,
+                  "known": 360,
+                  "known_coverage": 0.3527777777777778,
+                  "known_rank1": 0.7416666666666667,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.008333333333333333,
+                  "unknown_false_accepts": 1,
+                  "wrong_known_accepts": 0
+                },
+                "development": {
+                  "abstentions": 358,
+                  "accepted_precision": 0.9754098360655737,
+                  "correct_accepts": 119,
+                  "known": 360,
+                  "known_coverage": 0.33055555555555555,
+                  "known_rank1": 0.7166666666666667,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.025,
+                  "unknown_false_accepts": 3,
+                  "wrong_known_accepts": 0
+                },
+                "development_later": {
+                  "abstentions": 341,
+                  "accepted_precision": 0.8905109489051095,
+                  "correct_accepts": 122,
+                  "known": 359,
+                  "known_coverage": 0.3398328690807799,
+                  "known_rank1": 0.7493036211699164,
+                  "observations": 478,
+                  "unknown": 119,
+                  "unknown_false_acceptance_rate": 0.1092436974789916,
+                  "unknown_false_accepts": 13,
+                  "wrong_known_accepts": 2
+                }
+              },
+              "threshold": 0.49000000000000027
+            },
+            "uniform10": {
+              "margin": 0.02,
+              "panels": {
+                "calibration": {
+                  "abstentions": 333,
+                  "accepted_precision": 0.9931972789115646,
+                  "correct_accepts": 146,
+                  "known": 360,
+                  "known_coverage": 0.40555555555555556,
+                  "known_rank1": 0.8083333333333333,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.008333333333333333,
+                  "unknown_false_accepts": 1,
+                  "wrong_known_accepts": 0
+                },
+                "development": {
+                  "abstentions": 346,
+                  "accepted_precision": 0.9104477611940298,
+                  "correct_accepts": 122,
+                  "known": 360,
+                  "known_coverage": 0.3388888888888889,
+                  "known_rank1": 0.7388888888888889,
+                  "observations": 480,
+                  "unknown": 120,
+                  "unknown_false_acceptance_rate": 0.06666666666666667,
+                  "unknown_false_accepts": 8,
+                  "wrong_known_accepts": 4
+                },
+                "development_later": {
+                  "abstentions": 323,
+                  "accepted_precision": 0.8774193548387097,
+                  "correct_accepts": 136,
+                  "known": 359,
+                  "known_coverage": 0.3788300835654596,
+                  "known_rank1": 0.7520891364902507,
+                  "observations": 478,
+                  "unknown": 119,
+                  "unknown_false_acceptance_rate": 0.11764705882352941,
+                  "unknown_false_accepts": 14,
+                  "wrong_known_accepts": 5
+                }
+              },
+              "threshold": 0.48000000000000026
+            }
+          },
+          "encoder_fingerprint": "c195a946035ff107c5d1b685ccce784be74c0acc1a2c29d56abfb4c49561a957",
+          "manifest_sha256": "adc3271766ce0380579f9e8e25ffa8fcb01c15a263abaad0f82be0370304a8e9"
+        }
+      },
+      "reference_photos": {
+        "diverse10": [
+          [
+            "enrollment",
+            1,
+            225
+          ],
+          [
+            "enrollment",
+            1,
+            100
+          ],
+          [
+            "enrollment",
+            1,
+            260
+          ],
+          [
+            "enrollment",
+            1,
+            245
+          ],
+          [
+            "enrollment",
+            1,
+            115
+          ],
+          [
+            "enrollment",
+            1,
+            130
+          ],
+          [
+            "enrollment",
+            1,
+            210
+          ],
+          [
+            "enrollment",
+            1,
+            270
+          ],
+          [
+            "enrollment",
+            1,
+            200
+          ],
+          [
+            "enrollment",
+            1,
+            235
+          ],
+          [
+            "enrollment",
+            2,
+            130
+          ],
+          [
+            "enrollment",
+            2,
+            285
+          ],
+          [
+            "enrollment",
+            2,
+            250
+          ],
+          [
+            "enrollment",
+            2,
+            220
+          ],
+          [
+            "enrollment",
+            2,
+            170
+          ],
+          [
+            "enrollment",
+            2,
+            230
+          ],
+          [
+            "enrollment",
+            2,
+            200
+          ],
+          [
+            "enrollment",
+            2,
+            175
+          ],
+          [
+            "enrollment",
+            2,
+            115
+          ],
+          [
+            "enrollment",
+            2,
+            105
+          ],
+          [
+            "enrollment",
+            3,
+            250
+          ],
+          [
+            "enrollment",
+            3,
+            15
+          ],
+          [
+            "enrollment",
+            3,
+            80
+          ],
+          [
+            "enrollment",
+            3,
+            0
+          ],
+          [
+            "enrollment",
+            3,
+            90
+          ],
+          [
+            "enrollment",
+            3,
+            65
+          ],
+          [
+            "enrollment",
+            3,
+            170
+          ],
+          [
+            "enrollment",
+            3,
+            145
+          ],
+          [
+            "enrollment",
+            3,
+            95
+          ],
+          [
+            "enrollment",
+            3,
+            110
+          ],
+          [
+            "enrollment",
+            4,
+            135
+          ],
+          [
+            "enrollment",
+            4,
+            0
+          ],
+          [
+            "enrollment",
+            4,
+            220
+          ],
+          [
+            "enrollment",
+            4,
+            65
+          ],
+          [
+            "enrollment",
+            4,
+            255
+          ],
+          [
+            "enrollment",
+            4,
+            185
+          ],
+          [
+            "enrollment",
+            4,
+            90
+          ],
+          [
+            "enrollment",
+            4,
+            50
+          ],
+          [
+            "enrollment",
+            4,
+            105
+          ],
+          [
+            "enrollment",
+            4,
+            30
+          ],
+          [
+            "enrollment",
+            5,
+            105
+          ],
+          [
+            "enrollment",
+            5,
+            295
+          ],
+          [
+            "enrollment",
+            5,
+            285
+          ],
+          [
+            "enrollment",
+            5,
+            200
+          ],
+          [
+            "enrollment",
+            5,
+            205
+          ],
+          [
+            "enrollment",
+            5,
+            20
+          ],
+          [
+            "enrollment",
+            5,
+            235
+          ],
+          [
+            "enrollment",
+            5,
+            15
+          ],
+          [
+            "enrollment",
+            5,
+            280
+          ],
+          [
+            "enrollment",
+            5,
+            220
+          ],
+          [
+            "enrollment",
+            6,
+            225
+          ],
+          [
+            "enrollment",
+            6,
+            105
+          ],
+          [
+            "enrollment",
+            6,
+            255
+          ],
+          [
+            "enrollment",
+            6,
+            250
+          ],
+          [
+            "enrollment",
+            6,
+            160
+          ],
+          [
+            "enrollment",
+            6,
+            120
+          ],
+          [
+            "enrollment",
+            6,
+            90
+          ],
+          [
+            "enrollment",
+            6,
+            215
+          ],
+          [
+            "enrollment",
+            6,
+            115
+          ],
+          [
+            "enrollment",
+            6,
+            245
+          ]
+        ],
+        "uniform10": [
+          [
+            "enrollment",
+            1,
+            0
+          ],
+          [
+            "enrollment",
+            1,
+            30
+          ],
+          [
+            "enrollment",
+            1,
+            65
+          ],
+          [
+            "enrollment",
+            1,
+            95
+          ],
+          [
+            "enrollment",
+            1,
+            130
+          ],
+          [
+            "enrollment",
+            1,
+            160
+          ],
+          [
+            "enrollment",
+            1,
+            195
+          ],
+          [
+            "enrollment",
+            1,
+            225
+          ],
+          [
+            "enrollment",
+            1,
+            260
+          ],
+          [
+            "enrollment",
+            1,
+            295
+          ],
+          [
+            "enrollment",
+            2,
+            0
+          ],
+          [
+            "enrollment",
+            2,
+            30
+          ],
+          [
+            "enrollment",
+            2,
+            65
+          ],
+          [
+            "enrollment",
+            2,
+            95
+          ],
+          [
+            "enrollment",
+            2,
+            130
+          ],
+          [
+            "enrollment",
+            2,
+            160
+          ],
+          [
+            "enrollment",
+            2,
+            195
+          ],
+          [
+            "enrollment",
+            2,
+            225
+          ],
+          [
+            "enrollment",
+            2,
+            260
+          ],
+          [
+            "enrollment",
+            2,
+            295
+          ],
+          [
+            "enrollment",
+            3,
+            0
+          ],
+          [
+            "enrollment",
+            3,
+            30
+          ],
+          [
+            "enrollment",
+            3,
+            65
+          ],
+          [
+            "enrollment",
+            3,
+            95
+          ],
+          [
+            "enrollment",
+            3,
+            130
+          ],
+          [
+            "enrollment",
+            3,
+            160
+          ],
+          [
+            "enrollment",
+            3,
+            195
+          ],
+          [
+            "enrollment",
+            3,
+            225
+          ],
+          [
+            "enrollment",
+            3,
+            260
+          ],
+          [
+            "enrollment",
+            3,
+            295
+          ],
+          [
+            "enrollment",
+            4,
+            0
+          ],
+          [
+            "enrollment",
+            4,
+            30
+          ],
+          [
+            "enrollment",
+            4,
+            65
+          ],
+          [
+            "enrollment",
+            4,
+            95
+          ],
+          [
+            "enrollment",
+            4,
+            130
+          ],
+          [
+            "enrollment",
+            4,
+            160
+          ],
+          [
+            "enrollment",
+            4,
+            195
+          ],
+          [
+            "enrollment",
+            4,
+            225
+          ],
+          [
+            "enrollment",
+            4,
+            260
+          ],
+          [
+            "enrollment",
+            4,
+            295
+          ],
+          [
+            "enrollment",
+            5,
+            0
+          ],
+          [
+            "enrollment",
+            5,
+            30
+          ],
+          [
+            "enrollment",
+            5,
+            65
+          ],
+          [
+            "enrollment",
+            5,
+            95
+          ],
+          [
+            "enrollment",
+            5,
+            130
+          ],
+          [
+            "enrollment",
+            5,
+            160
+          ],
+          [
+            "enrollment",
+            5,
+            195
+          ],
+          [
+            "enrollment",
+            5,
+            225
+          ],
+          [
+            "enrollment",
+            5,
+            260
+          ],
+          [
+            "enrollment",
+            5,
+            295
+          ],
+          [
+            "enrollment",
+            6,
+            0
+          ],
+          [
+            "enrollment",
+            6,
+            30
+          ],
+          [
+            "enrollment",
+            6,
+            65
+          ],
+          [
+            "enrollment",
+            6,
+            95
+          ],
+          [
+            "enrollment",
+            6,
+            130
+          ],
+          [
+            "enrollment",
+            6,
+            160
+          ],
+          [
+            "enrollment",
+            6,
+            195
+          ],
+          [
+            "enrollment",
+            6,
+            225
+          ],
+          [
+            "enrollment",
+            6,
+            260
+          ],
+          [
+            "enrollment",
+            6,
+            295
+          ]
+        ]
+      },
+      "scope": "Single-image oracle comparison on common rows; no temporal-policy or final-test claim",
+      "shared_rows": 1798,
+      "threshold_selection": "Each condition uses calibration only, target99%precision/1%unknownFA"
+    },
+    "ethz_external_policy": {
+      "models": {
+        "adapted": {
+          "margin": 0.12,
+          "threshold": 0.45000000000000023,
+          "videos": {
+            "video3": {
+              "abstentions": 124,
+              "accepted_precision": 1.0,
+              "correct_accepts": 86,
+              "known": 160,
+              "known_coverage": 0.5375,
+              "known_rank1": 0.58125,
+              "observations": 210,
+              "unknown": 50,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "video4": {
+              "abstentions": 89,
+              "accepted_precision": 1.0,
+              "correct_accepts": 22,
+              "known": 111,
+              "known_coverage": 0.1981981981981982,
+              "known_rank1": 0.4774774774774775,
+              "observations": 111,
+              "unknown": 0,
+              "unknown_false_acceptance_rate": null,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "video5": {
+              "abstentions": 212,
+              "accepted_precision": 1.0,
+              "correct_accepts": 18,
+              "known": 200,
+              "known_coverage": 0.09,
+              "known_rank1": 0.355,
+              "observations": 230,
+              "unknown": 30,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "video6": {
+              "abstentions": 379,
+              "accepted_precision": 0.6666666666666666,
+              "correct_accepts": 4,
+              "known": 286,
+              "known_coverage": 0.013986013986013986,
+              "known_rank1": 0.479020979020979,
+              "observations": 385,
+              "unknown": 99,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 2
+            }
+          }
+        },
+        "baseline": {
+          "margin": 0.09,
+          "threshold": 0.5700000000000003,
+          "videos": {
+            "video3": {
+              "abstentions": 159,
+              "accepted_precision": 1.0,
+              "correct_accepts": 51,
+              "known": 160,
+              "known_coverage": 0.31875,
+              "known_rank1": 0.9125,
+              "observations": 210,
+              "unknown": 50,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "video4": {
+              "abstentions": 89,
+              "accepted_precision": 1.0,
+              "correct_accepts": 22,
+              "known": 111,
+              "known_coverage": 0.1981981981981982,
+              "known_rank1": 0.5225225225225225,
+              "observations": 111,
+              "unknown": 0,
+              "unknown_false_acceptance_rate": null,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "video5": {
+              "abstentions": 218,
+              "accepted_precision": 1.0,
+              "correct_accepts": 12,
+              "known": 200,
+              "known_coverage": 0.06,
+              "known_rank1": 0.32,
+              "observations": 230,
+              "unknown": 30,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 0
+            },
+            "video6": {
+              "abstentions": 381,
+              "accepted_precision": 0.75,
+              "correct_accepts": 3,
+              "known": 286,
+              "known_coverage": 0.01048951048951049,
+              "known_rank1": 0.43356643356643354,
+              "observations": 385,
+              "unknown": 99,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 1
+            }
+          }
+        }
+      },
+      "policy_source_sha256": "ab8fe7d865b13c7c0d1da30c2fb23f280b08dc3a6401fa955f05a73715747fa0",
+      "scope": "Frozen external validation policy applied without ETHZ threshold fitting"
+    },
+    "ethz_fixed_policy": {
+      "device": "mps",
+      "encoder_fingerprint": "c195a946035ff107c5d1b685ccce784be74c0acc1a2c29d56abfb4c49561a957",
+      "gallery_per_cow": {
+        "0": 10,
+        "1": 10,
+        "10": 10,
+        "11": 7,
+        "13": 10,
+        "5": 10,
+        "6": 10,
+        "7": 10,
+        "8": 10,
+        "9": 10
+      },
+      "inference_seconds": 31.90211583301425,
+      "manifest_sha256": "c3db2072a1c7207507e31b3c32bcae52bbd54350ac3e8a12ff4d8f54e252a519",
+      "margin": 0.1,
+      "new_encoded_images": 1033,
+      "protocol_sha256": "1574a8e20661cd38694732d43ad57ea5dd331fe8828e9475e18d736bb515d901",
+      "purpose": "Adult-cow external-scene oracle regression, no blind-test or end-to-end claim",
+      "threshold": 0.65,
+      "videos": {
+        "video3": {
+          "day": "2023-08-25",
+          "panel": "calibration",
+          "per_cow_observations": {
+            "0": 30,
+            "1": 30,
+            "10": 10,
+            "12": 30,
+            "3": 20,
+            "5": 30,
+            "6": 30,
+            "8": 30
+          },
+          "per_frame_oracle": {
+            "abstentions": 180,
+            "accepted_precision": 1.0,
+            "correct_accepts": 30,
+            "known": 160,
+            "known_coverage": 0.1875,
+            "known_rank1": 0.58125,
+            "observations": 210,
+            "unknown": 50,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "production_geometry_and_oracle_agreement": {
+            "abstentions": 194,
+            "accepted_precision": 1.0,
+            "correct_accepts": 16,
+            "known": 160,
+            "known_coverage": 0.1,
+            "known_rank1": 0.58125,
+            "observations": 210,
+            "unknown": 50,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "video4": {
+          "day": "2023-08-24",
+          "panel": "calibration",
+          "per_cow_observations": {
+            "0": 33,
+            "10": 22,
+            "11": 23,
+            "9": 33
+          },
+          "per_frame_oracle": {
+            "abstentions": 111,
+            "accepted_precision": null,
+            "correct_accepts": 0,
+            "known": 111,
+            "known_coverage": 0.0,
+            "known_rank1": 0.4774774774774775,
+            "observations": 111,
+            "unknown": 0,
+            "unknown_false_acceptance_rate": null,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "production_geometry_and_oracle_agreement": {
+            "abstentions": 111,
+            "accepted_precision": null,
+            "correct_accepts": 0,
+            "known": 111,
+            "known_coverage": 0.0,
+            "known_rank1": 0.4774774774774775,
+            "observations": 111,
+            "unknown": 0,
+            "unknown_false_acceptance_rate": null,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "video5": {
+          "day": "2023-09-17",
+          "panel": "test",
+          "per_cow_observations": {
+            "0": 20,
+            "10": 30,
+            "11": 30,
+            "4": 30,
+            "5": 30,
+            "6": 30,
+            "8": 30,
+            "9": 30
+          },
+          "per_frame_oracle": {
+            "abstentions": 230,
+            "accepted_precision": null,
+            "correct_accepts": 0,
+            "known": 200,
+            "known_coverage": 0.0,
+            "known_rank1": 0.355,
+            "observations": 230,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "production_geometry_and_oracle_agreement": {
+            "abstentions": 230,
+            "accepted_precision": null,
+            "correct_accepts": 0,
+            "known": 200,
+            "known_coverage": 0.0,
+            "known_rank1": 0.355,
+            "observations": 230,
+            "unknown": 30,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "video6": {
+          "day": "2023-08-28",
+          "panel": "test",
+          "per_cow_observations": {
+            "0": 33,
+            "1": 33,
+            "10": 22,
+            "12": 33,
+            "13": 33,
+            "3": 33,
+            "4": 33,
+            "5": 33,
+            "6": 33,
+            "7": 33,
+            "8": 33,
+            "9": 33
+          },
+          "per_frame_oracle": {
+            "abstentions": 385,
+            "accepted_precision": null,
+            "correct_accepts": 0,
+            "known": 286,
+            "known_coverage": 0.0,
+            "known_rank1": 0.479020979020979,
+            "observations": 385,
+            "unknown": 99,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "production_geometry_and_oracle_agreement": {
+            "abstentions": 385,
+            "accepted_precision": null,
+            "correct_accepts": 0,
+            "known": 286,
+            "known_coverage": 0.0,
+            "known_rank1": 0.479020979020979,
+            "observations": 385,
+            "unknown": 99,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        }
+      }
+    }
+  }
+}

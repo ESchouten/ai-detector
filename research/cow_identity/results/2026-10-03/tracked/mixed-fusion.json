@@ -1,0 +1,5211 @@
+{
+  "conditions": {
+    "ema0.2-geometry0.2-ttl0": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 28,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.01556420233463035,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 28,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 1.0,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 112,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 11,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.06222222222222222,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 78,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 32,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 2,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9105691056910569,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.2-geometry0.2-ttl10": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 46,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.02556976097832129,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 46,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 1.0,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 208,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 27,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.11555555555555555,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 144,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 49,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 15,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.8851063829787233,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.2-geometry0.2-ttl30": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.2-geometry0.2-ttl60": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.2-geometry0.5-ttl0": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 112,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 1,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0622568093385214,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 112,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9911504424778761,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 147,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 17,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.08166666666666667,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 93,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 31,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 23,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.8963414634146342,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.2-geometry0.5-ttl10": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 150,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 1,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.08337965536409116,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 150,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 1
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9933774834437086,
+          "precision_on_matched": 0.9933774834437086,
+          "unknown_false_acceptance_rate": 0.0016722408026755853
+        },
+        "development": {
+          "counts": {
+            "correct_names": 188,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 28,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.10444444444444445,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 127,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 31,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 30,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.8703703703703703,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.6
+    },
+    "ema0.2-geometry0.5-ttl30": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.2-geometry0.5-ttl60": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.2-geometrynone-ttl0": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 140,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 1,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.07782101167315175,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 140,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9929078014184397,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 138,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 17,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.07666666666666666,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 95,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 21,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 22,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.8903225806451613,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.6
+    },
+    "ema0.2-geometrynone-ttl10": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 151,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 1,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0839355197331851,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 151,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.993421052631579,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 124,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 5,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.06888888888888889,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 98,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 2,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 24,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9612403100775194,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.65
+    },
+    "ema0.2-geometrynone-ttl30": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.2-geometrynone-ttl60": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.5-geometry0.2-ttl0": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 21,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.011673151750972763,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 21,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 1.0,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 105,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 10,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.058333333333333334,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 77,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 26,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 2,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9130434782608695,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometry0.2-ttl10": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 45,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.02501389660922735,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 45,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 1.0,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 207,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 27,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.115,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 144,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 48,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 15,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.8846153846153846,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometry0.2-ttl30": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.5-geometry0.2-ttl60": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.5-geometry0.5-ttl0": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 110,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.061145080600333516,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 110,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 1.0,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 137,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 7,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.07611111111111112,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 91,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 27,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 19,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9513888888888888,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometry0.5-ttl10": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 161,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 1,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.08949416342412451,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 161,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 1
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9938271604938271,
+          "precision_on_matched": 0.9938271604938271,
+          "unknown_false_acceptance_rate": 0.0016722408026755853
+        },
+        "development": {
+          "counts": {
+            "correct_names": 196,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 28,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.10888888888888888,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 129,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 39,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 28,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.875,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometry0.5-ttl30": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.5-geometry0.5-ttl60": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.5-geometrynone-ttl0": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 147,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.08171206225680934,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 147,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 1.0,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 138,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 7,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.07666666666666666,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 92,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 27,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 19,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9517241379310345,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema0.5-geometrynone-ttl10": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 152,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 1,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.08449138410227905,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 152,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9934640522875817,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 189,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 28,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.105,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 130,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 31,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 28,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.8709677419354839,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.6
+    },
+    "ema0.5-geometrynone-ttl30": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema0.5-geometrynone-ttl60": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema1.0-geometry0.2-ttl0": {
+      "margin": 0.05,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 19,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.010561423012784881,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 19,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 1.0,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 106,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 9,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.058888888888888886,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 74,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 29,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 2,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 1,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9217391304347826,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometry0.2-ttl10": {
+      "margin": 0.1,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 43,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.023902167871039465,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 43,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 1.0,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 200,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 27,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.1111111111111111,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 139,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 46,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 15,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.8810572687224669,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.55
+    },
+    "ema1.0-geometry0.2-ttl30": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema1.0-geometry0.2-ttl60": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema1.0-geometry0.5-ttl0": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 107,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.05947748749305169,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 107,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 1.0,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 112,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 9,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.06222222222222222,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 72,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 26,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 14,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9256198347107438,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.5
+    },
+    "ema1.0-geometry0.5-ttl10": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 160,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 1,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.08893829905503058,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 160,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 1
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9937888198757764,
+          "precision_on_matched": 0.9937888198757764,
+          "unknown_false_acceptance_rate": 0.0016722408026755853
+        },
+        "development": {
+          "counts": {
+            "correct_names": 194,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 26,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.10777777777777778,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 119,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 48,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 27,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.8818181818181818,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.5
+    },
+    "ema1.0-geometry0.5-ttl30": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema1.0-geometry0.5-ttl60": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema1.0-geometrynone-ttl0": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 143,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.07948860478043357,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 143,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 1.0,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 117,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 10,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.065,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 73,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 30,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 14,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9212598425196851,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.5
+    },
+    "ema1.0-geometrynone-ttl10": {
+      "margin": 0.2,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 152,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 1,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.08449138410227905,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 152,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.9934640522875817,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 214,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 30,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.11888888888888889,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 127,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 60,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 27,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": 0.8770491803278688,
+          "precision_on_matched": 1.0,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 0.6
+    },
+    "ema1.0-geometrynone-ttl30": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    },
+    "ema1.0-geometrynone-ttl60": {
+      "margin": 1.01,
+      "panels": {
+        "calibration": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 2220,
+            "missed_annotations": 177,
+            "predicted_boxes": 2526,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 288,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 286,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 268,
+              "visible": 299,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 275,
+              "visible": 298,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 272,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        },
+        "development": {
+          "counts": {
+            "correct_names": 0,
+            "matched_boxes": 1976,
+            "missed_annotations": 424,
+            "predicted_boxes": 2436,
+            "unknown_named": 0,
+            "unmatched_named": 0,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_known_names": 0
+          },
+          "known_coverage": 0.0,
+          "per_cow": {
+            "1": {
+              "correct_names": 0,
+              "matched": 280,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "2": {
+              "correct_names": 0,
+              "matched": 234,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "3": {
+              "correct_names": 0,
+              "matched": 217,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "4": {
+              "correct_names": 0,
+              "matched": 180,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "5": {
+              "correct_names": 0,
+              "matched": 278,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "6": {
+              "correct_names": 0,
+              "matched": 285,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "7": {
+              "correct_names": 0,
+              "matched": 213,
+              "visible": 300,
+              "wrong_names": 0
+            },
+            "8": {
+              "correct_names": 0,
+              "matched": 289,
+              "visible": 300,
+              "wrong_names": 0
+            }
+          },
+          "precision_lower_bound": null,
+          "precision_on_matched": null,
+          "unknown_false_acceptance_rate": 0.0
+        }
+      },
+      "threshold": 1.01
+    }
+  },
+  "decision": "Not promoted: best calibration variant has 8.95% coverage; development 10.89% coverage and 87.5% conservative precision including unmatched detections.",
+  "encoder_fingerprint": "369c6e37c2dd719e9834520bdbc2824b9826644efc19b64aac474e7a0f52faef",
+  "gallery_manifest_sha256": "808765650cf547b6e749ec8282a399368aee423719b35087e6c137e2747f6b2e",
+  "gallery_rows": [
+    270,
+    114,
+    312,
+    144,
+    138,
+    294,
+    324,
+    108,
+    120,
+    258,
+    157,
+    331,
+    265,
+    211,
+    301,
+    277,
+    205,
+    229,
+    37,
+    253,
+    296,
+    20,
+    128,
+    2,
+    98,
+    206,
+    92,
+    176,
+    116,
+    134,
+    165,
+    3,
+    267,
+    81,
+    309,
+    225,
+    111,
+    57,
+    129,
+    39,
+    130,
+    358,
+    346,
+    28,
+    244,
+    256,
+    22,
+    286,
+    340,
+    76,
+    275,
+    311,
+    305,
+    131,
+    143,
+    197,
+    113,
+    263,
+    299,
+    149
+  ],
+  "gallery_selection": "Diverse10 selected from early reference crops using fused descriptors; no added confirmations; not a fixed-original-reference comparison",
+  "inputs": {
+    "calibration": {
+      "adapted_weights_sha256": null,
+      "coordinates": "Truncate XYXY to integers like production; clamp to source dimensions",
+      "encoder_fingerprint": "369c6e37c2dd719e9834520bdbc2824b9826644efc19b64aac474e7a0f52faef",
+      "fusion_sources": {
+        "left_manifest_sha256": "6e2ddc0012060ade513047317930efebdd21b0337e7a3b99cf98d001bba54279",
+        "right_manifest_sha256": "70af9a6423dfbac4aa531819ebd8b4721794da785ebee273050a071e9a6bd238"
+      },
+      "representation": {
+        "left_representation": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+        "method": "Equal-weight cosine via normalized concatenation of two unit descriptors",
+        "numpy": "2.5.0",
+        "right_representation": "225c4f42643bb69729beb97a89838beedc33b104dc99e5e736c0a9603c82a1bd",
+        "version": 2
+      },
+      "representation_fingerprint": "369c6e37c2dd719e9834520bdbc2824b9826644efc19b64aac474e7a0f52faef",
+      "sample": "Every predicted box at fixed1fps scoring timestamps; actual SDK tracking IDs",
+      "tracking_provenance": {
+        "annotations": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+        "confidence": 0.4,
+        "device": "mps",
+        "imgsz": 640,
+        "inference_fps": 1,
+        "library_versions": {
+          "lap": "0.5.13",
+          "numpy": "2.5.0",
+          "opencv": "4.13.0",
+          "scipy": null,
+          "torch": "2.12.1",
+          "torchvision": "0.27.1",
+          "ultralytics": "8.4.80"
+        },
+        "model": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+        "protocol_sha256": "8a67c77c4e2d9974d74e2d6cc612c3a18ba2da8f260680589c54639fa6bdb222",
+        "scoring_fps": 1,
+        "sdk_tracker_frame_rate": 30,
+        "seconds": 300,
+        "start": 1230,
+        "tracker": "bytetrack.yaml",
+        "tracker_sha256": "395701d947a749179dee3e327b1181b730c4ca98e7cac5a2ab05280aae573b8b",
+        "version": 1,
+        "video": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825"
+      },
+      "tracking_sha256": "356fa72b03c39d07bee568ff95d96db8eedff44ddab79c2d34676c21a5dcf264",
+      "version": 1,
+      "weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348"
+    },
+    "development": {
+      "adapted_weights_sha256": null,
+      "coordinates": "Truncate XYXY to integers like production; clamp to source dimensions",
+      "encoder_fingerprint": "369c6e37c2dd719e9834520bdbc2824b9826644efc19b64aac474e7a0f52faef",
+      "fusion_sources": {
+        "left_manifest_sha256": "02500ead7977a99f0706f69e2d0568f76ea7662a21938c09cc93eeb26ef26ba3",
+        "right_manifest_sha256": "97a81b01dc839c49c7e93afad1c3a2771487095cfde861a95f4f502b4375ab02"
+      },
+      "representation": {
+        "left_representation": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+        "method": "Equal-weight cosine via normalized concatenation of two unit descriptors",
+        "numpy": "2.5.0",
+        "right_representation": "225c4f42643bb69729beb97a89838beedc33b104dc99e5e736c0a9603c82a1bd",
+        "version": 2
+      },
+      "representation_fingerprint": "369c6e37c2dd719e9834520bdbc2824b9826644efc19b64aac474e7a0f52faef",
+      "sample": "Every predicted box at fixed1fps scoring timestamps; actual SDK tracking IDs",
+      "tracking_provenance": {
+        "annotations": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+        "confidence": 0.4,
+        "device": "mps",
+        "imgsz": 640,
+        "inference_fps": 1,
+        "library_versions": {
+          "lap": "0.5.13",
+          "numpy": "2.5.0",
+          "opencv": "4.13.0",
+          "scipy": null,
+          "torch": "2.12.1",
+          "torchvision": "0.27.1",
+          "ultralytics": "8.4.80"
+        },
+        "model": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+        "protocol_sha256": "8a67c77c4e2d9974d74e2d6cc612c3a18ba2da8f260680589c54639fa6bdb222",
+        "scoring_fps": 1,
+        "sdk_tracker_frame_rate": 30,
+        "seconds": 300,
+        "start": 330,
+        "tracker": "bytetrack.yaml",
+        "tracker_sha256": "395701d947a749179dee3e327b1181b730c4ca98e7cac5a2ab05280aae573b8b",
+        "version": 1,
+        "video": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825"
+      },
+      "tracking_sha256": "48d070e4f6bc812ab862ff8013c50e125d60aaca1bd90c48748b610bf68748db",
+      "version": 1,
+      "weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348"
+    }
+  },
+  "precision_policy": "Calibration treats every named unmatched detection as incorrect; matched precision also reported separately",
+  "protocol_sha256": "043347d8705bc555649ff9e323434a2987724d0dfc46b72331fb98246bc75678",
+  "representation_fingerprint": "369c6e37c2dd719e9834520bdbc2824b9826644efc19b64aac474e7a0f52faef",
+  "status": "Development only; real detector boxes/tracks, no final evaluation",
+  "temporal_policy": "Research EMA/TTL variant, not production GalleryIdentifier: three accepted observations within five-second evidence gaps; unknown evidence may retain a confirmed name until TTL expires; collisions reject confirmed names. Production instead clears ambiguous evidence and rejects raw-candidate collisions."
+}

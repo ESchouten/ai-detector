@@ -1,0 +1,2362 @@
+{
+  "contract": {
+    "adapter_sha256": "5fcaa061a4ffaba45924c856cd3efa90c7ca44ac91a95a5c823d8b69e8d94230",
+    "annotations_sha256": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "clip_sha256": "01ab47dc71b11ee6791358a1eb219dcc6b0d9d6403175c52e8bbf5fb1ac3fc07",
+    "device": "mps",
+    "frames": 20,
+    "frozen_at": "2026-10-03T07:32:50.662531+00:00",
+    "imgsz": 512,
+    "library_versions": {
+      "lap": "0.5.13",
+      "numpy": "2.5.0",
+      "opencv": "4.13.0",
+      "scipy": null,
+      "torch": "2.12.1",
+      "torchvision": "0.27.1",
+      "ultralytics": "8.4.80"
+    },
+    "model_sha256": "3c1e81ca9b037dd39d70a014ddb9a813d6c4c4e12555420db7eaff31689bd4e3",
+    "objects": 8,
+    "precision": "FP32",
+    "processing_fps": 2,
+    "reclaim_after_bytes": 6442450944,
+    "runner_sha256": "2db0e6742badba924001cf58a295c4c698efca432f56be5da77a5a586550b089",
+    "scope": "Initial-frame resource diagnostic, not an accuracy evaluation",
+    "source_protocol_sha256": "0c8f55ebd987ddc408001bd56534cfcf9978215aff1336e1af2f2ea3ebaec7d6"
+  },
+  "frames": [
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 161,
+          "x2": 361,
+          "y1": 355,
+          "y2": 526
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 208,
+          "x2": 334,
+          "y1": 16,
+          "y2": 166
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 260,
+          "x2": 423,
+          "y1": 164,
+          "y2": 281
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 579,
+          "x2": 672,
+          "y1": 315,
+          "y2": 427
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 526,
+          "x2": 601,
+          "y1": 100,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 159,
+          "x2": 298,
+          "y1": 354,
+          "y2": 524
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 520,
+          "x2": 767,
+          "y1": 421,
+          "y2": 573
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 395,
+          "x2": 497,
+          "y1": 0,
+          "y2": 96
+        }
+      ],
+      "elapsed_seconds": 0.8040378750301898,
+      "frame": 0,
+      "mps_allocated_bytes": 235067904,
+      "mps_driver_bytes": 1413742592,
+      "process_peak_rss_bytes": 790560768,
+      "reclamation": null,
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 0,
+      "second": 0.0,
+      "tracked_frame_indices": 1,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 161,
+          "x2": 362,
+          "y1": 353,
+          "y2": 528
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 208,
+          "x2": 334,
+          "y1": 17,
+          "y2": 169
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 305,
+          "x2": 456,
+          "y1": 140,
+          "y2": 258
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 580,
+          "x2": 672,
+          "y1": 315,
+          "y2": 429
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 527,
+          "x2": 600,
+          "y1": 101,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 160,
+          "x2": 303,
+          "y1": 353,
+          "y2": 517
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 520,
+          "x2": 762,
+          "y1": 421,
+          "y2": 575
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 401,
+          "x2": 511,
+          "y1": 0,
+          "y2": 96
+        }
+      ],
+      "elapsed_seconds": 0.12857537507079542,
+      "frame": 1,
+      "mps_allocated_bytes": 255019264,
+      "mps_driver_bytes": 1518698496,
+      "process_peak_rss_bytes": 804782080,
+      "reclamation": null,
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 1,
+      "second": 0.5,
+      "tracked_frame_indices": 2,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 162,
+          "x2": 362,
+          "y1": 353,
+          "y2": 525
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 210,
+          "x2": 334,
+          "y1": 17,
+          "y2": 166
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 348,
+          "x2": 487,
+          "y1": 138,
+          "y2": 255
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 580,
+          "x2": 672,
+          "y1": 315,
+          "y2": 430
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 529,
+          "x2": 601,
+          "y1": 101,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 161,
+          "x2": 302,
+          "y1": 353,
+          "y2": 506
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 520,
+          "x2": 761,
+          "y1": 421,
+          "y2": 575
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 416,
+          "x2": 523,
+          "y1": 0,
+          "y2": 89
+        }
+      ],
+      "elapsed_seconds": 0.11031795805320144,
+      "frame": 2,
+      "mps_allocated_bytes": 264526336,
+      "mps_driver_bytes": 2003173376,
+      "process_peak_rss_bytes": 808271872,
+      "reclamation": null,
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 2,
+      "second": 1.0,
+      "tracked_frame_indices": 3,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 164,
+          "x2": 362,
+          "y1": 353,
+          "y2": 523
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 213,
+          "x2": 335,
+          "y1": 14,
+          "y2": 166
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 369,
+          "x2": 515,
+          "y1": 125,
+          "y2": 235
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 580,
+          "x2": 671,
+          "y1": 315,
+          "y2": 429
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 529,
+          "x2": 600,
+          "y1": 101,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 163,
+          "x2": 304,
+          "y1": 352,
+          "y2": 501
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 519,
+          "x2": 764,
+          "y1": 422,
+          "y2": 574
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 439,
+          "x2": 562,
+          "y1": 0,
+          "y2": 93
+        }
+      ],
+      "elapsed_seconds": 0.11284991702996194,
+      "frame": 3,
+      "mps_allocated_bytes": 276121856,
+      "mps_driver_bytes": 2722512896,
+      "process_peak_rss_bytes": 811220992,
+      "reclamation": null,
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 3,
+      "second": 1.5,
+      "tracked_frame_indices": 4,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 161,
+          "x2": 363,
+          "y1": 353,
+          "y2": 525
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 221,
+          "x2": 336,
+          "y1": 11,
+          "y2": 166
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 388,
+          "x2": 541,
+          "y1": 121,
+          "y2": 218
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 580,
+          "x2": 672,
+          "y1": 315,
+          "y2": 430
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 534,
+          "x2": 601,
+          "y1": 102,
+          "y2": 198
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 158,
+          "x2": 302,
+          "y1": 353,
+          "y2": 516
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 519,
+          "x2": 761,
+          "y1": 421,
+          "y2": 574
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 459,
+          "x2": 583,
+          "y1": 0,
+          "y2": 99
+        }
+      ],
+      "elapsed_seconds": 0.12219654093496501,
+      "frame": 4,
+      "mps_allocated_bytes": 285858304,
+      "mps_driver_bytes": 3676749824,
+      "process_peak_rss_bytes": 814448640,
+      "reclamation": null,
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 4,
+      "second": 2.0,
+      "tracked_frame_indices": 5,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 146,
+          "x2": 363,
+          "y1": 353,
+          "y2": 525
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 214,
+          "x2": 335,
+          "y1": 10,
+          "y2": 165
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 402,
+          "x2": 572,
+          "y1": 138,
+          "y2": 206
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 579,
+          "x2": 672,
+          "y1": 315,
+          "y2": 429
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 544,
+          "x2": 601,
+          "y1": 102,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 147,
+          "x2": 305,
+          "y1": 353,
+          "y2": 513
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 519,
+          "x2": 761,
+          "y1": 421,
+          "y2": 574
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 480,
+          "x2": 540,
+          "y1": 0,
+          "y2": 118
+        }
+      ],
+      "elapsed_seconds": 0.13218883308582008,
+      "frame": 5,
+      "mps_allocated_bytes": 298174720,
+      "mps_driver_bytes": 4865867776,
+      "process_peak_rss_bytes": 817233920,
+      "reclamation": null,
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 5,
+      "second": 2.5,
+      "tracked_frame_indices": 6,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 150,
+          "x2": 361,
+          "y1": 353,
+          "y2": 527
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 211,
+          "x2": 335,
+          "y1": 9,
+          "y2": 163
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 424,
+          "x2": 571,
+          "y1": 173,
+          "y2": 302
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 580,
+          "x2": 672,
+          "y1": 315,
+          "y2": 430
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 533,
+          "x2": 600,
+          "y1": 102,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 150,
+          "x2": 301,
+          "y1": 353,
+          "y2": 510
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 520,
+          "x2": 760,
+          "y1": 424,
+          "y2": 574
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 404,
+          "x2": 527,
+          "y1": 0,
+          "y2": 107
+        }
+      ],
+      "elapsed_seconds": 0.185967291938141,
+      "frame": 6,
+      "mps_allocated_bytes": 307190272,
+      "mps_driver_bytes": 6281478144,
+      "process_peak_rss_bytes": 819920896,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 307190272,
+          "mps_driver_bytes": 6281478144,
+          "process_peak_rss_bytes": 819920896,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 6,
+          "tracked_frame_indices": 7
+        },
+        "before": {
+          "mps_allocated_bytes": 307190272,
+          "mps_driver_bytes": 7363608576,
+          "process_peak_rss_bytes": 819920896,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 6,
+          "tracked_frame_indices": 7
+        },
+        "seconds": 0.010218458017334342
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 6,
+      "second": 3.0,
+      "tracked_frame_indices": 7,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 156,
+          "x2": 362,
+          "y1": 352,
+          "y2": 526
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 210,
+          "x2": 334,
+          "y1": 10,
+          "y2": 162
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 383,
+          "x2": 561,
+          "y1": 237,
+          "y2": 348
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 579,
+          "x2": 672,
+          "y1": 315,
+          "y2": 430
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 534,
+          "x2": 601,
+          "y1": 104,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 156,
+          "x2": 307,
+          "y1": 352,
+          "y2": 501
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 519,
+          "x2": 760,
+          "y1": 421,
+          "y2": 574
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 320,
+          "x2": 446,
+          "y1": 58,
+          "y2": 156
+        }
+      ],
+      "elapsed_seconds": 0.15401891712099314,
+      "frame": 7,
+      "mps_allocated_bytes": 317184768,
+      "mps_driver_bytes": 7940358144,
+      "process_peak_rss_bytes": 823148544,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 317184768,
+          "mps_driver_bytes": 7940358144,
+          "process_peak_rss_bytes": 823148544,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 7,
+          "tracked_frame_indices": 8
+        },
+        "before": {
+          "mps_allocated_bytes": 317184768,
+          "mps_driver_bytes": 7948746752,
+          "process_peak_rss_bytes": 823148544,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 7,
+          "tracked_frame_indices": 8
+        },
+        "seconds": 0.000152957858517766
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 7,
+      "second": 3.5,
+      "tracked_frame_indices": 8,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 153,
+          "x2": 362,
+          "y1": 351,
+          "y2": 528
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 212,
+          "x2": 335,
+          "y1": 8,
+          "y2": 143
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 447,
+          "x2": 544,
+          "y1": 233,
+          "y2": 389
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 580,
+          "x2": 671,
+          "y1": 315,
+          "y2": 429
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 534,
+          "x2": 600,
+          "y1": 106,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 152,
+          "x2": 305,
+          "y1": 350,
+          "y2": 500
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 518,
+          "x2": 762,
+          "y1": 421,
+          "y2": 573
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 255,
+          "x2": 339,
+          "y1": 103,
+          "y2": 263
+        }
+      ],
+      "elapsed_seconds": 0.14550091698765755,
+      "frame": 8,
+      "mps_allocated_bytes": 327179264,
+      "mps_driver_bytes": 7940374528,
+      "process_peak_rss_bytes": 824770560,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 327179264,
+          "mps_driver_bytes": 7940374528,
+          "process_peak_rss_bytes": 824770560,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 9
+        },
+        "before": {
+          "mps_allocated_bytes": 327179264,
+          "mps_driver_bytes": 7948763136,
+          "process_peak_rss_bytes": 824770560,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 9
+        },
+        "seconds": 0.0001368329394608736
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 4.0,
+      "tracked_frame_indices": 9,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 145,
+          "x2": 362,
+          "y1": 353,
+          "y2": 525
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 240,
+          "x2": 344,
+          "y1": 8,
+          "y2": 165
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 432,
+          "x2": 591,
+          "y1": 231,
+          "y2": 354
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 579,
+          "x2": 671,
+          "y1": 315,
+          "y2": 430
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 533,
+          "x2": 600,
+          "y1": 105,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 144,
+          "x2": 302,
+          "y1": 352,
+          "y2": 504
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 516,
+          "x2": 749,
+          "y1": 415,
+          "y2": 550
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 205,
+          "x2": 315,
+          "y1": 178,
+          "y2": 322
+        }
+      ],
+      "elapsed_seconds": 0.1410699998959899,
+      "frame": 9,
+      "mps_allocated_bytes": 326394112,
+      "mps_driver_bytes": 7948779520,
+      "process_peak_rss_bytes": 826540032,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 326394112,
+          "mps_driver_bytes": 7948779520,
+          "process_peak_rss_bytes": 826540032,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 10
+        },
+        "before": {
+          "mps_allocated_bytes": 326394112,
+          "mps_driver_bytes": 7957168128,
+          "process_peak_rss_bytes": 826540032,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 10
+        },
+        "seconds": 0.000153333880007267
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 4.5,
+      "tracked_frame_indices": 10,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 142,
+          "x2": 363,
+          "y1": 356,
+          "y2": 525
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 239,
+          "x2": 346,
+          "y1": 7,
+          "y2": 164
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 424,
+          "x2": 622,
+          "y1": 221,
+          "y2": 289
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 581,
+          "x2": 715,
+          "y1": 314,
+          "y2": 465
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 534,
+          "x2": 601,
+          "y1": 106,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 141,
+          "x2": 297,
+          "y1": 356,
+          "y2": 503
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 503,
+          "x2": 672,
+          "y1": 424,
+          "y2": 505
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 193,
+          "x2": 341,
+          "y1": 209,
+          "y2": 313
+        }
+      ],
+      "elapsed_seconds": 0.13703112490475178,
+      "frame": 10,
+      "mps_allocated_bytes": 325837312,
+      "mps_driver_bytes": 7948779520,
+      "process_peak_rss_bytes": 826802176,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 325837312,
+          "mps_driver_bytes": 7948779520,
+          "process_peak_rss_bytes": 826802176,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 11
+        },
+        "before": {
+          "mps_allocated_bytes": 325837312,
+          "mps_driver_bytes": 7957168128,
+          "process_peak_rss_bytes": 826802176,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 11
+        },
+        "seconds": 0.00013216608203947544
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 5.0,
+      "tracked_frame_indices": 11,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 140,
+          "x2": 363,
+          "y1": 358,
+          "y2": 526
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 236,
+          "x2": 347,
+          "y1": 6,
+          "y2": 165
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 424,
+          "x2": 613,
+          "y1": 205,
+          "y2": 277
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 580,
+          "x2": 674,
+          "y1": 315,
+          "y2": 430
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 533,
+          "x2": 601,
+          "y1": 106,
+          "y2": 197
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 140,
+          "x2": 283,
+          "y1": 358,
+          "y2": 504
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 499,
+          "x2": 637,
+          "y1": 405,
+          "y2": 509
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 205,
+          "x2": 366,
+          "y1": 206,
+          "y2": 310
+        }
+      ],
+      "elapsed_seconds": 0.1357773751951754,
+      "frame": 11,
+      "mps_allocated_bytes": 325280512,
+      "mps_driver_bytes": 7948779520,
+      "process_peak_rss_bytes": 826884096,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 325280512,
+          "mps_driver_bytes": 7948779520,
+          "process_peak_rss_bytes": 826884096,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 12
+        },
+        "before": {
+          "mps_allocated_bytes": 325280512,
+          "mps_driver_bytes": 7957168128,
+          "process_peak_rss_bytes": 826884096,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 12
+        },
+        "seconds": 0.00013762502931058407
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 5.5,
+      "tracked_frame_indices": 12,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 139,
+          "x2": 362,
+          "y1": 357,
+          "y2": 526
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 236,
+          "x2": 347,
+          "y1": 7,
+          "y2": 163
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 427,
+          "x2": 610,
+          "y1": 194,
+          "y2": 269
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 551,
+          "x2": 673,
+          "y1": 315,
+          "y2": 446
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 534,
+          "x2": 600,
+          "y1": 108,
+          "y2": 192
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 138,
+          "x2": 284,
+          "y1": 357,
+          "y2": 502
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 494,
+          "x2": 619,
+          "y1": 385,
+          "y2": 500
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 204,
+          "x2": 369,
+          "y1": 202,
+          "y2": 294
+        }
+      ],
+      "elapsed_seconds": 0.13592229085043073,
+      "frame": 12,
+      "mps_allocated_bytes": 324494336,
+      "mps_driver_bytes": 7948779520,
+      "process_peak_rss_bytes": 826900480,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 324494336,
+          "mps_driver_bytes": 7948779520,
+          "process_peak_rss_bytes": 826900480,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 13
+        },
+        "before": {
+          "mps_allocated_bytes": 324494336,
+          "mps_driver_bytes": 7957168128,
+          "process_peak_rss_bytes": 826900480,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 13
+        },
+        "seconds": 0.00015133293345570564
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 6.0,
+      "tracked_frame_indices": 13,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 138,
+          "x2": 362,
+          "y1": 357,
+          "y2": 524
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 240,
+          "x2": 346,
+          "y1": 9,
+          "y2": 164
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 427,
+          "x2": 611,
+          "y1": 193,
+          "y2": 269
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 586,
+          "x2": 673,
+          "y1": 315,
+          "y2": 442
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 534,
+          "x2": 600,
+          "y1": 109,
+          "y2": 191
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 133,
+          "x2": 291,
+          "y1": 358,
+          "y2": 503
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 491,
+          "x2": 607,
+          "y1": 368,
+          "y2": 497
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 201,
+          "x2": 371,
+          "y1": 203,
+          "y2": 300
+        }
+      ],
+      "elapsed_seconds": 0.13524812483228743,
+      "frame": 13,
+      "mps_allocated_bytes": 323478784,
+      "mps_driver_bytes": 7948779520,
+      "process_peak_rss_bytes": 826916864,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 323478784,
+          "mps_driver_bytes": 7948779520,
+          "process_peak_rss_bytes": 826916864,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 14
+        },
+        "before": {
+          "mps_allocated_bytes": 323478784,
+          "mps_driver_bytes": 7957168128,
+          "process_peak_rss_bytes": 826916864,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 14
+        },
+        "seconds": 0.0001299581490457058
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 6.5,
+      "tracked_frame_indices": 14,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 138,
+          "x2": 362,
+          "y1": 362,
+          "y2": 526
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 239,
+          "x2": 345,
+          "y1": 9,
+          "y2": 165
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 435,
+          "x2": 611,
+          "y1": 193,
+          "y2": 269
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 580,
+          "x2": 672,
+          "y1": 315,
+          "y2": 438
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 535,
+          "x2": 600,
+          "y1": 113,
+          "y2": 192
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 134,
+          "x2": 270,
+          "y1": 362,
+          "y2": 503
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 493,
+          "x2": 599,
+          "y1": 314,
+          "y2": 496
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 199,
+          "x2": 372,
+          "y1": 204,
+          "y2": 315
+        }
+      ],
+      "elapsed_seconds": 0.14546824991703033,
+      "frame": 14,
+      "mps_allocated_bytes": 323413504,
+      "mps_driver_bytes": 7948779520,
+      "process_peak_rss_bytes": 826916864,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 323413504,
+          "mps_driver_bytes": 7948779520,
+          "process_peak_rss_bytes": 826916864,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 15
+        },
+        "before": {
+          "mps_allocated_bytes": 323413504,
+          "mps_driver_bytes": 7957168128,
+          "process_peak_rss_bytes": 826916864,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 15
+        },
+        "seconds": 0.00014320900663733482
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 7.0,
+      "tracked_frame_indices": 15,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 131,
+          "x2": 363,
+          "y1": 365,
+          "y2": 526
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 239,
+          "x2": 346,
+          "y1": 10,
+          "y2": 163
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 442,
+          "x2": 612,
+          "y1": 193,
+          "y2": 270
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 579,
+          "x2": 672,
+          "y1": 315,
+          "y2": 442
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 535,
+          "x2": 601,
+          "y1": 114,
+          "y2": 192
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 128,
+          "x2": 266,
+          "y1": 366,
+          "y2": 506
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 491,
+          "x2": 596,
+          "y1": 308,
+          "y2": 492
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 201,
+          "x2": 372,
+          "y1": 202,
+          "y2": 293
+        }
+      ],
+      "elapsed_seconds": 0.13619433296844363,
+      "frame": 15,
+      "mps_allocated_bytes": 323411712,
+      "mps_driver_bytes": 7948779520,
+      "process_peak_rss_bytes": 826916864,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 323411712,
+          "mps_driver_bytes": 7948779520,
+          "process_peak_rss_bytes": 826916864,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 16
+        },
+        "before": {
+          "mps_allocated_bytes": 323411712,
+          "mps_driver_bytes": 7957168128,
+          "process_peak_rss_bytes": 826916864,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 16
+        },
+        "seconds": 0.0001676669344305992
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 7.5,
+      "tracked_frame_indices": 16,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 128,
+          "x2": 362,
+          "y1": 366,
+          "y2": 526
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 239,
+          "x2": 346,
+          "y1": 10,
+          "y2": 166
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 451,
+          "x2": 612,
+          "y1": 192,
+          "y2": 275
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 578,
+          "x2": 672,
+          "y1": 315,
+          "y2": 452
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 535,
+          "x2": 601,
+          "y1": 115,
+          "y2": 192
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 127,
+          "x2": 264,
+          "y1": 369,
+          "y2": 509
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 491,
+          "x2": 597,
+          "y1": 307,
+          "y2": 492
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 201,
+          "x2": 373,
+          "y1": 203,
+          "y2": 312
+        }
+      ],
+      "elapsed_seconds": 0.13695362489670515,
+      "frame": 16,
+      "mps_allocated_bytes": 323411712,
+      "mps_driver_bytes": 7948779520,
+      "process_peak_rss_bytes": 826933248,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 323411712,
+          "mps_driver_bytes": 7948779520,
+          "process_peak_rss_bytes": 826933248,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 17
+        },
+        "before": {
+          "mps_allocated_bytes": 323411712,
+          "mps_driver_bytes": 7957168128,
+          "process_peak_rss_bytes": 826933248,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 17
+        },
+        "seconds": 0.00014525000005960464
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 8.0,
+      "tracked_frame_indices": 17,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 126,
+          "x2": 362,
+          "y1": 367,
+          "y2": 528
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 241,
+          "x2": 346,
+          "y1": 10,
+          "y2": 164
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 458,
+          "x2": 612,
+          "y1": 193,
+          "y2": 275
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 534,
+          "x2": 671,
+          "y1": 316,
+          "y2": 459
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 535,
+          "x2": 600,
+          "y1": 113,
+          "y2": 192
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 125,
+          "x2": 263,
+          "y1": 369,
+          "y2": 506
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 491,
+          "x2": 593,
+          "y1": 309,
+          "y2": 491
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 200,
+          "x2": 371,
+          "y1": 205,
+          "y2": 314
+        }
+      ],
+      "elapsed_seconds": 0.1360174580477178,
+      "frame": 17,
+      "mps_allocated_bytes": 323411712,
+      "mps_driver_bytes": 7948779520,
+      "process_peak_rss_bytes": 826949632,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 323411712,
+          "mps_driver_bytes": 7948779520,
+          "process_peak_rss_bytes": 826949632,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 18
+        },
+        "before": {
+          "mps_allocated_bytes": 323411712,
+          "mps_driver_bytes": 7957168128,
+          "process_peak_rss_bytes": 826949632,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 18
+        },
+        "seconds": 0.00012458302080631256
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 8.5,
+      "tracked_frame_indices": 18,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 125,
+          "x2": 362,
+          "y1": 367,
+          "y2": 525
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 240,
+          "x2": 347,
+          "y1": 10,
+          "y2": 165
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 460,
+          "x2": 612,
+          "y1": 194,
+          "y2": 270
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 578,
+          "x2": 672,
+          "y1": 316,
+          "y2": 462
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 534,
+          "x2": 602,
+          "y1": 114,
+          "y2": 193
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 124,
+          "x2": 259,
+          "y1": 369,
+          "y2": 505
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 490,
+          "x2": 588,
+          "y1": 306,
+          "y2": 494
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 200,
+          "x2": 371,
+          "y1": 205,
+          "y2": 314
+        }
+      ],
+      "elapsed_seconds": 0.13587483298033476,
+      "frame": 18,
+      "mps_allocated_bytes": 323411712,
+      "mps_driver_bytes": 7940390912,
+      "process_peak_rss_bytes": 827064320,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 323411712,
+          "mps_driver_bytes": 7940390912,
+          "process_peak_rss_bytes": 827064320,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 19
+        },
+        "before": {
+          "mps_allocated_bytes": 323411712,
+          "mps_driver_bytes": 7957168128,
+          "process_peak_rss_bytes": 827064320,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 19
+        },
+        "seconds": 0.0002448749728500843
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 9.0,
+      "tracked_frame_indices": 19,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "boxes": [
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 0,
+          "x1": 124,
+          "x2": 363,
+          "y1": 368,
+          "y2": 527
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 240,
+          "x2": 347,
+          "y1": 9,
+          "y2": 166
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 459,
+          "x2": 611,
+          "y1": 195,
+          "y2": 268
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 3,
+          "x1": 580,
+          "x2": 672,
+          "y1": 316,
+          "y2": 465
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 534,
+          "x2": 601,
+          "y1": 114,
+          "y2": 193
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 124,
+          "x2": 259,
+          "y1": 373,
+          "y2": 510
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 6,
+          "x1": 492,
+          "x2": 593,
+          "y1": 301,
+          "y2": 495
+        },
+        {
+          "confidence": 1.0,
+          "identity": null,
+          "label": "cow",
+          "track_id": 7,
+          "x1": 200,
+          "x2": 365,
+          "y1": 206,
+          "y2": 303
+        }
+      ],
+      "elapsed_seconds": 0.13568687485530972,
+      "frame": 19,
+      "mps_allocated_bytes": 323411712,
+      "mps_driver_bytes": 7940390912,
+      "process_peak_rss_bytes": 827097088,
+      "reclamation": {
+        "after": {
+          "mps_allocated_bytes": 323411712,
+          "mps_driver_bytes": 7940390912,
+          "process_peak_rss_bytes": 827097088,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 20
+        },
+        "before": {
+          "mps_allocated_bytes": 323411712,
+          "mps_driver_bytes": 7948779520,
+          "process_peak_rss_bytes": 827097088,
+          "retained_condition_frames": 1,
+          "retained_noncondition_frames": 8,
+          "tracked_frame_indices": 20
+        },
+        "seconds": 0.00015570898540318012
+      },
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 8,
+      "second": 9.5,
+      "tracked_frame_indices": 20,
+      "visible_object_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ]
+}

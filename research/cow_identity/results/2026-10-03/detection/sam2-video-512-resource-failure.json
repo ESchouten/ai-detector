@@ -1,0 +1,144 @@
+{
+  "actual_device": "mps:0",
+  "complete": false,
+  "elapsed_seconds": 2.201198457973078,
+  "frame_seconds": [
+    0.8184080410283059,
+    0.12868495797738433,
+    0.10106858285143971,
+    0.11191058298572898,
+    0.12234174995683134,
+    0.1345902499742806,
+    0.27100641606375575,
+    0.4392662909813225
+  ],
+  "memory_samples": [
+    {
+      "mps_allocated_bytes": 235067904,
+      "mps_driver_bytes": 1413742592,
+      "process_peak_rss_bytes": 805240832,
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 0,
+      "second": 0.0,
+      "tracked_frame_indices": 1
+    },
+    {
+      "mps_allocated_bytes": 324852480,
+      "mps_driver_bytes": 9022488576,
+      "process_peak_rss_bytes": 838238208,
+      "retained_condition_frames": 1,
+      "retained_noncondition_frames": 7,
+      "second": 3.5,
+      "tracked_frame_indices": 8
+    }
+  ],
+  "metrics": null,
+  "parameter_dtype": "torch.float32",
+  "peak_observed_mps_driver_bytes": 9022488576,
+  "previews": [
+    {
+      "file": "preview-0.jpg",
+      "sha256": "19c941abc424c9e0c35e823f7edbff75d3dc40da4cc8e564dd4285182dae6586"
+    }
+  ],
+  "provenance": {
+    "annotations_sha256": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "clip_sha256": "01ab47dc71b11ee6791358a1eb219dcc6b0d9d6403175c52e8bbf5fb1ac3fc07",
+    "device": "mps",
+    "libraries": {
+      "lap": "0.5.13",
+      "numpy": "2.5.0",
+      "opencv": "4.13.0",
+      "scipy": null,
+      "torch": "2.12.1",
+      "torchvision": "0.27.1",
+      "ultralytics": "8.4.80"
+    },
+    "model_sha256": "3c1e81ca9b037dd39d70a014ddb9a813d6c4c4e12555420db7eaff31689bd4e3",
+    "protocol_sha256": "9e98a214cebad5d8b2a1bcfe212e064c905f1d0b4f569416ebd9625610eebb50",
+    "resource_limits": {
+      "max_mean_seconds_per_frame": 1.0,
+      "max_mps_driver_bytes": 8589934592,
+      "timing_window_frames": 30,
+      "warmup_frames": 10
+    },
+    "runner_sha256": "074621724e265b4b6517eb513ef5275d226a376edec27d5880405218cd39ee46",
+    "sampled_manifest_sha256": "2647615068da7c0bb37d785ef022cccabc2b727d65185491475b2a2bc0708df0",
+    "seed_prompts": [
+      {
+        "box": [
+          173,
+          350,
+          369,
+          525
+        ],
+        "cow": 1
+      },
+      {
+        "box": [
+          201,
+          19,
+          341,
+          164
+        ],
+        "cow": 2
+      },
+      {
+        "box": [
+          242,
+          152,
+          430,
+          279
+        ],
+        "cow": 3
+      },
+      {
+        "box": [
+          574,
+          309,
+          679,
+          437
+        ],
+        "cow": 4
+      },
+      {
+        "box": [
+          523,
+          91,
+          608,
+          197
+        ],
+        "cow": 5
+      },
+      {
+        "box": [
+          145,
+          341,
+          304,
+          531
+        ],
+        "cow": 6
+      },
+      {
+        "box": [
+          511,
+          424,
+          780,
+          569
+        ],
+        "cow": 7
+      },
+      {
+        "box": [
+          382,
+          4,
+          506,
+          97
+        ],
+        "cow": 8
+      }
+    ]
+  },
+  "scope": "Development-only512-pixel video propagation after the1024-pixel resource failure; same one-time oracle initialization, no accuracy-based tuning",
+  "stop_reason": "MPS driver allocation exceeded the frozen memory budget"
+}

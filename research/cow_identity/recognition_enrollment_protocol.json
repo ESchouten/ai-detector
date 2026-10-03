@@ -1,0 +1,54 @@
+{
+  "frozen_at_utc": "2026-10-03T06:54:34.815104+00:00",
+  "purpose": "Separate simulated active-enrollment arm; no additional confirmations have been evaluated at protocol freeze",
+  "initial_enrollment_seconds": [
+    0,
+    299
+  ],
+  "extra_enrollment_seconds": [
+    330,
+    629
+  ],
+  "development_seconds": [
+    930,
+    1229
+  ],
+  "calibration_seconds": [
+    1230,
+    1529
+  ],
+  "reserved_final_seconds": [
+    [
+      1800,
+      2099
+    ],
+    [
+      2700,
+      2999
+    ]
+  ],
+  "initial_galleries": [
+    "fixed original-MIEW diverse10",
+    "fixed original-MIEW uniform10 sensitivity control"
+  ],
+  "candidate_cadence_seconds": 15,
+  "query_cadence_seconds": 5,
+  "candidate_quality": {
+    "minimum_side": 64,
+    "maximum_overlap": 0.3,
+    "clipped": false
+  },
+  "candidate_uncertainty": "Maximum enrolled-identity cosine below0.65 OR distinct-identity margin below0.10",
+  "candidate_priority": "Lowest maximum enrolled-identity similarity, then lowest distinct-identity margin, then original row order",
+  "prompt_duplicate_similarity": 0.85,
+  "question_budget": 18,
+  "maximum_new_references_per_cow": 2,
+  "human_response": "Publisher truth is revealed only after a candidate is selected. Count every request, including unknown cows and already-at-cap known cows. Unknowns remain unenrolled.",
+  "replacement_rule": "Retain all newly confirmed references and remove the original reference having highest cosine similarity to another same-cow reference. Gallery stays <=10/cow.",
+  "threshold_selection": "Calibrate only after enrollment on1230\u20131529, target99%namedprecision/1%unknownFA; no use of development labels for candidate priority",
+  "controls": [
+    "Original crops",
+    "SAM-masked crops"
+  ],
+  "scope": "Oracle boxes and perfect human responses; no deployed tracking or automatic pseudo-label claim. Existing330\u2013629 development data is explicitly repurposed for enrollment in this separate arm."
+}

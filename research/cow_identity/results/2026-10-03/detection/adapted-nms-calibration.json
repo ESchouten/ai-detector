@@ -1,0 +1,169 @@
+{
+  "baseline_iou": 0.7,
+  "caveat": "Cached boxes are image-clipped. Stricter original SDK NMS may differ at borders; any promotion needs fresh SDK inference. Baseline predictions are reused unchanged.",
+  "choice": {
+    "confidence": 0.4,
+    "f1": 0.6477675407512402,
+    "false_negative": 260,
+    "false_positive": 237,
+    "newly_matched_annotations": 0,
+    "newly_missed_annotations": 26,
+    "nms_iou": 0.6,
+    "precision": 0.6585014409221902,
+    "recall": 0.6373779637377964,
+    "true_positive": 457
+  },
+  "iou_candidates": [
+    0.45,
+    0.6,
+    0.7
+  ],
+  "metrics": [
+    {
+      "confidence": 0.1,
+      "f1": 0.562760261748959,
+      "false_negative": 244,
+      "false_positive": 491,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 106,
+      "nms_iou": 0.45,
+      "precision": 0.49066390041493774,
+      "recall": 0.6596931659693166,
+      "true_positive": 473
+    },
+    {
+      "confidence": 0.25,
+      "f1": 0.6126855600539811,
+      "false_negative": 263,
+      "false_positive": 311,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 84,
+      "nms_iou": 0.45,
+      "precision": 0.5934640522875817,
+      "recall": 0.6331938633193863,
+      "true_positive": 454
+    },
+    {
+      "confidence": 0.4,
+      "f1": 0.6338958180484225,
+      "false_negative": 285,
+      "false_positive": 214,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 51,
+      "nms_iou": 0.45,
+      "precision": 0.6687306501547987,
+      "recall": 0.602510460251046,
+      "true_positive": 432
+    },
+    {
+      "confidence": 0.6,
+      "f1": 0.6057529610829103,
+      "false_negative": 359,
+      "false_positive": 107,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 11,
+      "nms_iou": 0.45,
+      "precision": 0.7698924731182796,
+      "recall": 0.499302649930265,
+      "true_positive": 358
+    },
+    {
+      "confidence": 0.1,
+      "f1": 0.5570152390961639,
+      "false_negative": 187,
+      "false_positive": 656,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 49,
+      "nms_iou": 0.6,
+      "precision": 0.4468802698145025,
+      "recall": 0.7391910739191074,
+      "true_positive": 530
+    },
+    {
+      "confidence": 0.25,
+      "f1": 0.6246851385390428,
+      "false_negative": 221,
+      "false_positive": 375,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 42,
+      "nms_iou": 0.6,
+      "precision": 0.5694603903559128,
+      "recall": 0.691771269177127,
+      "true_positive": 496
+    },
+    {
+      "confidence": 0.4,
+      "f1": 0.6477675407512402,
+      "false_negative": 260,
+      "false_positive": 237,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 26,
+      "nms_iou": 0.6,
+      "precision": 0.6585014409221902,
+      "recall": 0.6373779637377964,
+      "true_positive": 457
+    },
+    {
+      "confidence": 0.6,
+      "f1": 0.6129303106633082,
+      "false_negative": 352,
+      "false_positive": 109,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 4,
+      "nms_iou": 0.6,
+      "precision": 0.770042194092827,
+      "recall": 0.5090655509065551,
+      "true_positive": 365
+    },
+    {
+      "confidence": 0.1,
+      "f1": 0.5043554006968641,
+      "false_negative": 138,
+      "false_positive": 1000,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 0,
+      "nms_iou": 0.7,
+      "precision": 0.36668777707409755,
+      "recall": 0.8075313807531381,
+      "true_positive": 579
+    },
+    {
+      "confidence": 0.25,
+      "f1": 0.5921849201981287,
+      "false_negative": 179,
+      "false_positive": 562,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 0,
+      "nms_iou": 0.7,
+      "precision": 0.4890909090909091,
+      "recall": 0.7503486750348675,
+      "true_positive": 538
+    },
+    {
+      "confidence": 0.4,
+      "f1": 0.6326129666011788,
+      "false_negative": 234,
+      "false_positive": 327,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 0,
+      "nms_iou": 0.7,
+      "precision": 0.5962962962962963,
+      "recall": 0.6736401673640168,
+      "true_positive": 483
+    },
+    {
+      "confidence": 0.6,
+      "f1": 0.6139767054908486,
+      "false_negative": 348,
+      "false_positive": 116,
+      "newly_matched_annotations": 0,
+      "newly_missed_annotations": 0,
+      "nms_iou": 0.7,
+      "precision": 0.7608247422680412,
+      "recall": 0.5146443514644351,
+      "true_positive": 369
+    }
+  ],
+  "scope": "Exploratory calibration-only NMS control; no final-window inference",
+  "source_report_sha256": "55820ee93c5334baafac91329d2f3fc946faa8dab7cf3dd3b0ae785f7e1b0c0d"
+}

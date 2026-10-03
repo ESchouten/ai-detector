@@ -1,0 +1,618 @@
+{
+  "review": "Independent AI visual annotation of clean June8 native pixels/contact sheets without model predictions. Whole-visible cow extents in1920x1080, x2/y2 exclusive. Optional visible coat-torso extents exclude neck/head/limbs/tail where discernible; no hidden body inferred. Principal ID comes only from publisher clip label and continuous passage; second entering animal stays unknown. These are AI-reviewed research annotations, not expert-certified ground truth. Empty frames retained.",
+  "source_manifest_sha256": "544481950dd814b39b53acfa6bdc7710a3e247cba9e0eb534bfd225980e558c5",
+  "frames": [
+    {
+      "clip": "clip-67f63bbad66f2a91",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 2238,
+      "pixels_sha256": "d29da76f3cded671dc221cac913a5533ce259fafd3454470ccca9992b7d81575",
+      "boxes": []
+    },
+    {
+      "clip": "clip-67f63bbad66f2a91",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 2238,
+      "pixels_sha256": "71a61826824694512307aec8d4246c42240bfe972fc7b8fb40f2bed9f13b7c2f",
+      "boxes": []
+    },
+    {
+      "clip": "clip-67f63bbad66f2a91",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 2238,
+      "pixels_sha256": "5213c8b75778eb537d2573e218215fffe8016cc3f491664a27bc7499df3ce355",
+      "boxes": []
+    },
+    {
+      "clip": "clip-67f63bbad66f2a91",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 2238,
+      "pixels_sha256": "0e76fa645c96b4697689f1977d833ec8c2bf155e08e7c42282afae536fb9e74b",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            0,
+            885,
+            510,
+            1080
+          ],
+          "torso_box": null,
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision. Coat torso absent or insufficiently clear; no inferred trunk box."
+        }
+      ]
+    },
+    {
+      "clip": "clip-67f63bbad66f2a91",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 2238,
+      "pixels_sha256": "38b6c4ffa73b50676e6cfadf275bee9bdb12dcf7786212a593d6f0097912668d",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            0,
+            510,
+            1065,
+            1080
+          ],
+          "torso_box": [
+            0,
+            680,
+            700,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-67f63bbad66f2a91",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 2238,
+      "pixels_sha256": "55003f3c606d3041fd9f2cf8bbf105f9d2c67236bd1c2bab12e16d47223b9b89",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            205,
+            320,
+            1735,
+            1070
+          ],
+          "torso_box": [
+            215,
+            410,
+            1310,
+            1060
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-67f63bbad66f2a91",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 2238,
+      "pixels_sha256": "cbebc38169e5b11040a1a7e612a2521c9113713f8062e7582b6bcb3d79e47ac5",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            865,
+            350,
+            1920,
+            825
+          ],
+          "torso_box": [
+            900,
+            355,
+            1920,
+            815
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-67f63bbad66f2a91",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 2238,
+      "pixels_sha256": "eca3fbb929dcf3138dbbfd84b5e12d7773dc615e3a89d24512413d497e1ee214",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            1285,
+            400,
+            1920,
+            690
+          ],
+          "torso_box": [
+            1660,
+            405,
+            1920,
+            670
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-67f63bbad66f2a91",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 2238,
+      "pixels_sha256": "6914ca288d74f0654e46ae411d5e7f9223bbf008d1c0a71c3403c6148f21ddf4",
+      "boxes": []
+    },
+    {
+      "clip": "clip-67f63bbad66f2a91",
+      "frame": 270,
+      "second": 9.0,
+      "principal_cow": 2238,
+      "pixels_sha256": "15ae4164229365a497874614c23568de5128852fdf66a11ac0089894b973b88b",
+      "boxes": []
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "42bdc3abba566ae6deb4557847a0b7cefa3233141147e695e576c8a817344672",
+      "boxes": []
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "8eba926f00960830fdf1619222054c04af8cb1ad8267b0da88e4a10e2cc4dba1",
+      "boxes": []
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "8a8ff44c0f1970070ce25c9f764b9d0d27e9a30ce79e48f40b1ecfe4be4a40d1",
+      "boxes": []
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "b7693f168a345231eea1d84aa9c4f203360e582b4c86c48fd2ac48a4dd4da328",
+      "boxes": []
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "4b910f636f9b84344311d0bf56829949cde0112ab4dbfd6739a073ad502781f7",
+      "boxes": []
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "dbac1a78a31e1443818cfa92395798a601168f0f1627332fc69125823b8041d0",
+      "boxes": []
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "809a489cd409f23a7125f5db8778cb9088a6f1d65d592c067b1b6a06fbcb3a45",
+      "boxes": []
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "6ed318000cf7260e2f5041847718c488b11ec628e493f5d9b201cb36bc071459",
+      "boxes": []
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "ddd03b640b7a31863de886387f989dd6225b09c7bff8f95bb93d432bbb4b6670",
+      "boxes": [],
+      "review_note": "Small white object behind lower-right gate appears to be human footwear, not a cow; not annotated as an animal."
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 270,
+      "second": 9.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "a03ad448e447a304df7d03a298d369b602e8f89eb67f607a260ffb55d5d2fe0f",
+      "boxes": []
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 300,
+      "second": 10.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "bde2c9d0607d7a8a7e7c57015f62eb24e6bd5f550fa99ee9f7f8629ae853dae5",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            0,
+            910,
+            233,
+            1080
+          ],
+          "torso_box": null,
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision. Coat torso absent or insufficiently clear; no inferred trunk box."
+        }
+      ],
+      "review_note": "Small white object behind lower-right gate appears to be human footwear, not a cow; not annotated as an animal."
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 330,
+      "second": 11.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "c853d7c98087494a9cb717224e84e362f3162f8c07c6e41450211a78dc771076",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            0,
+            810,
+            570,
+            1080
+          ],
+          "torso_box": null,
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision. Coat torso absent or insufficiently clear; no inferred trunk box."
+        }
+      ]
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 360,
+      "second": 12.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "743cf1fb08ec91e7530ae9614f8cfd8dd39aca776a14ff1ab58d7fd82c36994e",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            0,
+            545,
+            790,
+            1080
+          ],
+          "torso_box": [
+            0,
+            815,
+            360,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 390,
+      "second": 13.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "4436679757b4b1eaaf69f043fea71567d0b716103c0803687d98f39415a856bb",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            0,
+            340,
+            1210,
+            1080
+          ],
+          "torso_box": [
+            0,
+            615,
+            860,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 420,
+      "second": 14.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "bb6050f76149559d36ac15a3662a36db7b36dc61483420912bd3b1916eb2147f",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            105,
+            215,
+            1725,
+            1055
+          ],
+          "torso_box": [
+            165,
+            330,
+            1270,
+            1045
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 450,
+      "second": 15.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "a23a5fabbf451125b50fb6b76597fe5fcf3487b1b19efdff6c3eddd207b07d33",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            310,
+            330,
+            1920,
+            935
+          ],
+          "torso_box": [
+            490,
+            335,
+            1650,
+            895
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "frame": 480,
+      "second": 16.0,
+      "principal_cow": 5676,
+      "pixels_sha256": "ce21321744f4672df30e7dcf9e1eb4715cd35d865dff9236519c34167fa046ec",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            905,
+            220,
+            1920,
+            890
+          ],
+          "torso_box": [
+            950,
+            225,
+            1920,
+            750
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        },
+        {
+          "cow": null,
+          "box": [
+            0,
+            785,
+            615,
+            1080
+          ],
+          "torso_box": null,
+          "uncertain": false,
+          "note": "Second animal entering at lower-left border; biological identity not established. Coat torso absent or insufficiently clear; no inferred trunk box."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "c1877586252224f7356f168c61eca91a7cb71f079d169b07689cfdcbdba18cb2",
+      "boxes": []
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "9fc620af86dcfcad03c857cfba89d5504aa701f3252e88bcf5df63543be85226",
+      "boxes": []
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "9105e65d3c2a9707d79ebcf8f2bc2c7532d86c79a2b4f6c2e2ff0e0e08874329",
+      "boxes": []
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "d2be5b3d6cc77ff1fe254b87680ec789cf80db8bacf7094b63ade20bd366464a",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            0,
+            920,
+            160,
+            1080
+          ],
+          "torso_box": null,
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision. Coat torso absent or insufficiently clear; no inferred trunk box."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "55bb41dffd68e46cba26dfcd39bc271d5045368da1e473c145a2345689d12c29",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            0,
+            700,
+            675,
+            1080
+          ],
+          "torso_box": null,
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision. Coat torso absent or insufficiently clear; no inferred trunk box."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "b174eb5de71c69fe711e945259f46eff3d22d197b8b182fb3651fdf017ff48e5",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            0,
+            410,
+            1175,
+            1080
+          ],
+          "torso_box": [
+            0,
+            550,
+            840,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "931d00153046f98d304d48e28cc0e2a323d963e96e0bbaab2caadb3ef0262bc1",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            325,
+            275,
+            1845,
+            960
+          ],
+          "torso_box": [
+            335,
+            355,
+            1460,
+            950
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "b149a852f8eb82ef80d47f6c9b3efc205cf4ff4b9adc342acc1180e5cd30a523",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            950,
+            300,
+            1920,
+            740
+          ],
+          "torso_box": [
+            1120,
+            305,
+            1920,
+            720
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "f7492b552821387651e4fa1cdf3977ba24ebd628eab0611bc52eb2b73e49a19f",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            1610,
+            425,
+            1920,
+            635
+          ],
+          "torso_box": null,
+          "uncertain": false,
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision. Coat torso absent or insufficiently clear; no inferred trunk box."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 270,
+      "second": 9.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "6480cd5c0511032114adad8a3ecd5b85c82dc270091631e12e8adb88969e0517",
+      "boxes": []
+    },
+    {
+      "clip": "clip-c8dee0ff0a1601b5",
+      "frame": 300,
+      "second": 10.0,
+      "principal_cow": 6110,
+      "pixels_sha256": "2d91d2cf7d4b45f255e9522914568a6ac3c9e940f465d9e7ab0fa362f10be055",
+      "boxes": []
+    }
+  ]
+}

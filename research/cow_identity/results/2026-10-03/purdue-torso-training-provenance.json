@@ -1,0 +1,7 @@
+{
+  "best_model_sha256": "b62eee7455e5b771045392fec2a8aa9cb165a46b0148c8b417e65824b7354567",
+  "note": "June8-only two-class localization; no biological identity training",
+  "prepared_sha256": "91a7cb252848a7be938d96d8746122fb410c44c7a60db85af260bcc11e246bdf",
+  "protocol_sha256": "25304cac2d6b44196cb69374b523cba350cede6953fa57dd1897564611df1dd8",
+  "training_source_sha256": "0b413ca04a699a6d84982fad9a2399291a733af6e1af24a4743a797a708fa51b"
+}

@@ -1,0 +1,273 @@
+{
+  "application_environment_modified": false,
+  "config": {
+    "amp": false,
+    "chunk_size": -1,
+    "dataset": "d17-val",
+    "datasets": {
+      "burst-test": {
+        "image_directory": "../BURST/frames/test",
+        "json_directory": "../BURST/test/first_frame_annotations.json",
+        "mem_every": 10,
+        "save_all": false,
+        "size": 600,
+        "skip_frames": -1,
+        "use_long_term": true
+      },
+      "burst-val": {
+        "image_directory": "../BURST/frames/val",
+        "json_directory": "../BURST/val/first_frame_annotations.json",
+        "mem_every": 10,
+        "save_all": false,
+        "size": 600,
+        "skip_frames": -1,
+        "use_long_term": true
+      },
+      "d16-val": {
+        "image_directory": "../DAVIS/2016/JPEGImages/480p",
+        "mask_directory": "../DAVIS/2016/Annotations/480p",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "subset": "../DAVIS/2017/trainval/ImageSets/2016/val.txt",
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "d17-test-dev": {
+        "image_directory": "../DAVIS/2017/test-dev/JPEGImages/480p",
+        "mask_directory": "../DAVIS/2017/test-dev/Annotations/480p",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "subset": "../DAVIS/2017/test-dev/ImageSets/2017/test-dev.txt",
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "d17-val": {
+        "image_directory": "../DAVIS/2017/trainval/JPEGImages/480p",
+        "mask_directory": "../DAVIS/2017/trainval/Annotations/480p",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "subset": "../DAVIS/2017/trainval/ImageSets/2017/val.txt",
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "generic": {
+        "image_directory": null,
+        "mask_directory": null,
+        "mem_every": 5,
+        "save_all": true,
+        "size": -1,
+        "use_all_masks": false,
+        "use_long_term": true
+      },
+      "lvos-test": {
+        "image_directory": "../LVOS/test/JPEGImages",
+        "mask_directory": "../LVOS/test/Annotations",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": true
+      },
+      "lvos-val": {
+        "image_directory": "../LVOS/valid/JPEGImages",
+        "mask_directory": "../LVOS/valid/Annotations_first_only",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": true
+      },
+      "mose-val": {
+        "image_directory": "../MOSE/valid/JPEGImages",
+        "mask_directory": "../MOSE/valid/Annotations",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "y18-val": {
+        "image_directory": "../YouTube2018/all_frames/valid_all_frames/JPEGImages",
+        "json_directory": "../YouTube2018/valid/meta.json",
+        "mask_directory": "../YouTube2018/valid/Annotations",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": false
+      },
+      "y19-val": {
+        "image_directory": "../YouTube/all_frames/valid_all_frames/JPEGImages",
+        "json_directory": "../YouTube/valid/meta.json",
+        "mask_directory": "../YouTube/valid/Annotations",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": false
+      }
+    },
+    "exp_id": "default",
+    "flip_aug": false,
+    "image_directory": null,
+    "json_directory": null,
+    "long_term": {
+      "buffer_tokens": 2000,
+      "count_usage": true,
+      "max_mem_frames": 10,
+      "max_num_tokens": 10000,
+      "min_mem_frames": 5,
+      "num_prototypes": 128
+    },
+    "mask_directory": null,
+    "max_internal_size": 480,
+    "max_mem_frames": 5,
+    "mem_every": 5,
+    "model": {
+      "aux_loss": {
+        "query": {
+          "enabled": true,
+          "weight": 0.01
+        },
+        "sensory": {
+          "enabled": true,
+          "weight": 0.01
+        }
+      },
+      "embed_dim": 256,
+      "key_dim": 64,
+      "mask_decoder": {
+        "up_dims": [
+          256,
+          128,
+          128
+        ]
+      },
+      "mask_encoder": {
+        "final_dim": 256,
+        "type": "resnet18"
+      },
+      "object_summarizer": {
+        "add_pe": true,
+        "embed_dim": 256,
+        "num_summaries": 16
+      },
+      "object_transformer": {
+        "embed_dim": 256,
+        "ff_dim": 2048,
+        "num_blocks": 3,
+        "num_heads": 8,
+        "num_queries": 16,
+        "pixel_self_attention": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "query_self_attention": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "read_from_memory": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "read_from_past": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "read_from_pixel": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ],
+          "input_add_pe": false,
+          "input_norm": false
+        },
+        "read_from_query": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ],
+          "output_norm": false
+        }
+      },
+      "pixel_dim": 256,
+      "pixel_encoder": {
+        "ms_dims": [
+          1024,
+          512,
+          256
+        ],
+        "type": "resnet50"
+      },
+      "pixel_mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "pixel_pe_scale": 32,
+      "pixel_pe_temperature": 128,
+      "pixel_std": [
+        0.229,
+        0.224,
+        0.225
+      ],
+      "sensory_dim": 256,
+      "value_dim": 256
+    },
+    "output_dir": null,
+    "save_all": null,
+    "save_aux": false,
+    "save_scores": false,
+    "size": null,
+    "stagger_updates": 5,
+    "top_k": 30,
+    "use_all_masks": null,
+    "use_long_term": true,
+    "visualize": false,
+    "weights": "output/cutie-base-mega.pth"
+  },
+  "dependency_target": "/tmp/cow-cutie-app-deps",
+  "elapsed_seconds": 0.8826780000235885,
+  "interpreter": "/Users/erik/Projects/ESchouten/ai-detector/detector/.venv/bin/python",
+  "limits": "Import and strict load success does not prove MPS numerical parity, sustained memory, latency or tracking quality. Winning candidate still requires a same-version GPU replay before any held-out evaluation.",
+  "loader_sha256": "85c163664cdef3d7cef4268ac0970b569f8c7d62f95cc77add9ae6e46f51c9a7",
+  "model_sha256": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+  "parameter_count": 35024186,
+  "parameter_device": "cpu",
+  "parameter_dtype": "torch.float32",
+  "protocol_sha256": "aaac7595cebc8beacace4260380d6c00b2b1c5eccf39def8cc4d0e6a7b7595d6",
+  "python": "3.12.14",
+  "scope": "CPU-only strict Cutie checkpoint construction/load through unchanged research loader using application PyTorch plus four isolated pure-Python dependency packages; no forward pass or GPU allocation",
+  "source_commit": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
+  "success": true,
+  "torch_module": "/Users/erik/Projects/ESchouten/ai-detector/detector/.venv/lib/python3.12/site-packages/torch/__init__.py",
+  "versions": {
+    "PyYAML": "6.0.3",
+    "antlr4-python3-runtime": "4.9.3",
+    "einops": "0.8.2",
+    "hydra-core": "1.3.2",
+    "numpy": "2.5.0",
+    "omegaconf": "2.3.1",
+    "opencv-python": "4.13.0.92",
+    "packaging": "26.2",
+    "torch": "2.12.1",
+    "torchvision": "0.27.1"
+  }
+}

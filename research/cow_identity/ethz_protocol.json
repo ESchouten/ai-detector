@@ -1,0 +1,813 @@
+{
+  "version": 1,
+  "purpose": "External-scene adult-cow regression on previously studied public data; bounded oracle recognition, not a blind test or detector result",
+  "frozen_before_new_inference": true,
+  "gallery_selection": "At most 10 uniformly spaced references per cow from 109 hash-pinned 2023-Aug-23 publisher classification crops, sorted by camera/path; no query-informed selection",
+  "gallery": [
+    {
+      "cow": 0,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_0/id_0_te31-57-195-20230823-101809-1692778689001-7_0230.png",
+      "sha256": "b07f1ab5fc4ac965827bcda565f9b8215755fc4dc5dfe17ab4512034836112c0"
+    },
+    {
+      "cow": 0,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_0/id_0_te31-57-195-20230823-101809-1692778689001-7_1730.png",
+      "sha256": "c2b3539bcf06d7d44e20d54482ad5d96146eb5d9ee6e1be7770608acbf51d154"
+    },
+    {
+      "cow": 0,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_0/id_0_te31-57-195-20230823-101809_frame1.png",
+      "sha256": "cc2ff48ac9d225268ec7e17c33352ff0153e71a9ae1d691eab3a58fac276d3cc"
+    },
+    {
+      "cow": 0,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_0/id_0_te31-57-195-20230823-131812-1692789492139-7_0230.png",
+      "sha256": "683e3b728dab612864b411882d6e385e75833b290b34535d5cc25b63276584c5"
+    },
+    {
+      "cow": 0,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_0/id_0_te31-57-195-20230823-131812-1692789492139-7_1730.png",
+      "sha256": "793800d4aa7ae0320bd29bbd0532e7ccc7706045f282ad4aceca4bd834310c8a"
+    },
+    {
+      "cow": 0,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_0/id_0_te31-57-197-20230823-041802-1692757082543-7_0230.png",
+      "sha256": "cf04fb372708c4258b7d726f3f72c8b504735ffad8bc68528b334d83711cd5c8"
+    },
+    {
+      "cow": 0,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_0/id_0_te31-57-197-20230823-041802-1692757082543-7_1730.png",
+      "sha256": "0a192e4aefe0649f8707a8097c5a2c53f375cfe87c30314ceb1f801c7051aa07"
+    },
+    {
+      "cow": 0,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_0/id_0_te31-57-197-20230823-224816-1692823696952-7_0230.png",
+      "sha256": "f2c98cce635255b3abd1c556cf946a068c5e79a8e410f2cab6255d97dc6e2a08"
+    },
+    {
+      "cow": 0,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_0/id_0_te31-57-197-20230823-224816-1692823696952-7_1730.png",
+      "sha256": "0439f931e56d259023521f9201c41545e40b9611bdb509ef4222f8b7291f5f3d"
+    },
+    {
+      "cow": 0,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_0/id_0_te31-57-197-20230823-224816_frame1.png",
+      "sha256": "a49443db1e334b7b86cda34f40048dc28ddc5d474fdabbe38f3d52110930e823"
+    },
+    {
+      "cow": 1,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_1/id_1_te31-57-195-20230823-121811-1692785891038-7_0230.png",
+      "sha256": "a7c345e3bec2e7f5ce73b025d0f7061a3f609a84b1f43925bd64a80a84351d93"
+    },
+    {
+      "cow": 1,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_1/id_1_te31-57-195-20230823-121811-1692785891038-7_1730.png",
+      "sha256": "2ac4b1491fd5c2e57fae59c05f25a7be32707aa25ae11d279b9812b4cd6f6a0c"
+    },
+    {
+      "cow": 1,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_1/id_1_te31-57-195-20230823-121811_frame1.png",
+      "sha256": "2c4846286c46c0cdf60747381998c7275d027e63cf0d1fd04e8e80b4d6a8e525"
+    },
+    {
+      "cow": 1,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_1/id_1_te31-57-195-20230823-151814-1692796694427-7_0230.png",
+      "sha256": "91a4d3ba6da1bda4a6109f462be37e81d4e1e05d666a420529eed0c65f3eb9a6"
+    },
+    {
+      "cow": 1,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_1/id_1_te31-57-195-20230823-151814-1692796694427-7_1730.png",
+      "sha256": "37979548e433261ff8b1dc8d75c7a454eeb37554af76d88e843581cac1294914"
+    },
+    {
+      "cow": 1,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_1/id_1_te31-57-195-20230823-151814_frame1.png",
+      "sha256": "3d72fc767f736e205d8aaf2850b9011a8d427730bfb225b6f7ec7903e4ce5569"
+    },
+    {
+      "cow": 1,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_1/id_1_te31-57-197-20230823-021800-1692749880162-7_0230.png",
+      "sha256": "661b277d719e142756ce53c8520276dbc13e0fd71a5c3dae78d455dda9f3a810"
+    },
+    {
+      "cow": 1,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_1/id_1_te31-57-197-20230823-021800-1692749880162-7_1730.png",
+      "sha256": "eab2e0c854d40b6d1604fa9015ef9f79f349a6ff6c6a28fe54fd9588160cd2f9"
+    },
+    {
+      "cow": 1,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_1/id_1_te31-57-197-20230823-234817-1692827297925-7_0230.png",
+      "sha256": "0ebf8fa55e4866b1485517596956db83256abe8aa6362f0fa7d881daddcaa8d8"
+    },
+    {
+      "cow": 1,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_1/id_1_te31-57-197-20230823-234817-1692827297925-7_1730.png",
+      "sha256": "73f6bda6d6d6e8ecb47c1aba507b409775dd7b7ac6e5d583beb1ecc0c1100a0a"
+    },
+    {
+      "cow": 5,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_5/id_5_te31-57-195-20230823-101809-1692778689001-7_0230.png",
+      "sha256": "2d98da2e650d4fb0afe5014a651c43c8a9011f74a6f103dcddf3a8f869fdc0d0"
+    },
+    {
+      "cow": 5,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_5/id_5_te31-57-195-20230823-101809-1692778689001-7_1730.png",
+      "sha256": "5ee23001801d30659e83baf4a96d50750a919931b871273a3ea1cfa4bcb1818c"
+    },
+    {
+      "cow": 5,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_5/id_5_te31-57-195-20230823-101809_frame1.png",
+      "sha256": "e754abd09b49843d5132564632171083a5b249889738cc055e8c1d3ce53adcb8"
+    },
+    {
+      "cow": 5,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_5/id_5_te31-57-195-20230823-151814-1692796694427-7_0230.png",
+      "sha256": "5a0d53ab90c7073cb24ea6e28ec95d729091e73f724e6890593a4414acbe9c50"
+    },
+    {
+      "cow": 5,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_5/id_5_te31-57-195-20230823-151814-1692796694427-7_1730.png",
+      "sha256": "2a59dba93407953eb0728c01fc35033450e8c6fd8c733c19732188614b864e84"
+    },
+    {
+      "cow": 5,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_5/id_5_te31-57-197-20230823-041802-1692757082543-7_0230.png",
+      "sha256": "95bd53191f83cefa5b688cebd96b201c507a41e39efaa081085411090911ada2"
+    },
+    {
+      "cow": 5,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_5/id_5_te31-57-197-20230823-041802-1692757082543-7_1730.png",
+      "sha256": "b3170d0ba8dc954452e142a36364fcb1967015ebd7278c9762f8798d231e3abc"
+    },
+    {
+      "cow": 5,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_5/id_5_te31-57-197-20230823-224816-1692823696952-7_0230.png",
+      "sha256": "24b9c06e4bb1d3142c6a69e013e69477c2a90f5cc08f996e93f94f025ae68199"
+    },
+    {
+      "cow": 5,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_5/id_5_te31-57-197-20230823-224816-1692823696952-7_1730.png",
+      "sha256": "8002d3e3140dbc1946c599944d90f02e72d127cf1dc6d80c7e41aeb76b60cca2"
+    },
+    {
+      "cow": 5,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_5/id_5_te31-57-197-20230823-224816_frame1.png",
+      "sha256": "623b139400ef37f561f93ad2db642b5ccfb46d8b4a98c9c63b8890b78c5492d9"
+    },
+    {
+      "cow": 6,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_6/id_6_te31-57-195-20230823-101809-1692778689001-7_0230.png",
+      "sha256": "b8e55b7d3a3da98eee15831b8c590afbbd9878860e59c882173fff3b26f74b1e"
+    },
+    {
+      "cow": 6,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_6/id_6_te31-57-195-20230823-101809-1692778689001-7_1730.png",
+      "sha256": "dd7dd18e57b3fb97e38c36d2f52affe68b62635a51328753806f22fa5af6851d"
+    },
+    {
+      "cow": 6,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_6/id_6_te31-57-195-20230823-101809_frame1.png",
+      "sha256": "f8e41289e20b56eb3db2fc4176e68abafaa95ecdb0c9bc7d3f58053bbb53b80a"
+    },
+    {
+      "cow": 6,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_6/id_6_te31-57-195-20230823-144814-1692794894655-7_0230.png",
+      "sha256": "0d3e35ad3f2925575745c9c4e08f7c85a1bdd719cbd8df002cdd4ddda1c66592"
+    },
+    {
+      "cow": 6,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_6/id_6_te31-57-195-20230823-144814-1692794894655-7_1730.png",
+      "sha256": "7ae7a6fa85d7bbd4277efec7dedff26e45eda84ccab17c5331fa48528b54533f"
+    },
+    {
+      "cow": 6,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_6/id_6_te31-57-197-20230823-211815-1692818295308-7_0230.png",
+      "sha256": "6e65c797017bb810f58847a3c21916eddacdd39935c44a7c3e7717f02c2ec755"
+    },
+    {
+      "cow": 6,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_6/id_6_te31-57-197-20230823-211815-1692818295308-7_1730.png",
+      "sha256": "6d9383634d2b0257ceff2c0e607bc6ba3a71921ad3173ed9b5c8f5c8296fc320"
+    },
+    {
+      "cow": 6,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_6/id_6_te31-57-197-20230823-224816-1692823696952-7_0230.png",
+      "sha256": "3d077be3563476fe17052095503d83f3bfd2548bbadb8db6d52088d7e1bd72a9"
+    },
+    {
+      "cow": 6,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_6/id_6_te31-57-197-20230823-224816-1692823696952-7_1730.png",
+      "sha256": "4d824cb028213094f221c4cba88e2a20c889666fc79b23dc0b54905f47bc2279"
+    },
+    {
+      "cow": 6,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_6/id_6_te31-57-197-20230823-224816_frame1.png",
+      "sha256": "61effeefd8cc12390904f28c5bbbfb7ae250ef43c0bc6489f1d725743a86d2b3"
+    },
+    {
+      "cow": 7,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_7/id_7_te31-57-195-20230823-104810-1692780490426-7_0230.png",
+      "sha256": "8d3ce1b96ff9e13fc7db27d124451ef768e72bf4aabb55064a5ca3b817987f15"
+    },
+    {
+      "cow": 7,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_7/id_7_te31-57-195-20230823-104810-1692780490426-7_1730.png",
+      "sha256": "95647f76ae0757cfe5e786644130c7d6697339603aa73465da977962c5056a1c"
+    },
+    {
+      "cow": 7,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_7/id_7_te31-57-195-20230823-104810_frame1.png",
+      "sha256": "1ded5b923ca3497af1151bf2f58cd2f8771406ebe1a0126aaf7765438d58355e"
+    },
+    {
+      "cow": 7,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_7/id_7_te31-57-195-20230823-134813-1692791293744-7_0230.png",
+      "sha256": "6280a5707318e7bcc67e6ed5a0114c91b7546c94499b7e824357fce4aa30436c"
+    },
+    {
+      "cow": 7,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_7/id_7_te31-57-195-20230823-134813-1692791293744-7_1730.png",
+      "sha256": "ba33183d56984ef955551b5a54685b0e9ff46491a259a4205e07813f7e5ebf6b"
+    },
+    {
+      "cow": 7,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_7/id_7_te31-57-195-20230823-134813_frame1.png",
+      "sha256": "85c8adceeddcd0a2522d73971169bd7aa365d21132d0884fe2f30852fd1e15de"
+    },
+    {
+      "cow": 7,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_7/id_7_te31-57-197-20230823-044802-1692758882882-7_0230.png",
+      "sha256": "dcede6b821a9fe45e839358f59a78b6469ed05867bd1e05e2782912484761801"
+    },
+    {
+      "cow": 7,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_7/id_7_te31-57-197-20230823-044802-1692758882882-7_1730.png",
+      "sha256": "b788141a213266b857d77b0d706d9190b398d07f662704975c49a8db15e22466"
+    },
+    {
+      "cow": 7,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_7/id_7_te31-57-197-20230823-231817-1692825497585-7_0230.png",
+      "sha256": "1cd94a72f7bcdbbef04920c66730f61292158ffb14d93cc893b75c6bd7a5f2b0"
+    },
+    {
+      "cow": 7,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_7/id_7_te31-57-197-20230823-231817_frame1.png",
+      "sha256": "088d90b907a6460f37e4faa7890c443007ddf7d9582fd45da974c204a4850f55"
+    },
+    {
+      "cow": 8,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_8/id_8_te31-57-195-20230823-101809-1692778689001-7_0230.png",
+      "sha256": "961d4fdce8abb8724fea287d0f884e4e5d885dfebb9e4a8f1835c3fa19c24f2b"
+    },
+    {
+      "cow": 8,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_8/id_8_te31-57-195-20230823-101809-1692778689001-7_1730.png",
+      "sha256": "6d71dbcd5e9caaff2b72e844fe9e0ed44aff574daac39bb78e8116036126db47"
+    },
+    {
+      "cow": 8,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_8/id_8_te31-57-195-20230823-101809_frame1.png",
+      "sha256": "c510db61568cb115cdfba86c4c1e53a34cb821cae83ce5f266e51b1fe55ad574"
+    },
+    {
+      "cow": 8,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_8/id_8_te31-57-195-20230823-144814-1692794894655-7_0230.png",
+      "sha256": "ecc517cc2198943d5633b52bd4208b89b56bad1fd174553391525c6a886f8217"
+    },
+    {
+      "cow": 8,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_8/id_8_te31-57-195-20230823-144814-1692794894655-7_1730.png",
+      "sha256": "128a2d112e7d4c46cb7cfe5fb6182c4c2bfed3ead72ad736128b40cedd5a714d"
+    },
+    {
+      "cow": 8,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_8/id_8_te31-57-195-20230823-144814_frame1.png",
+      "sha256": "a2ab3306b362fd69ae9453fdba0bcb0d66b7f31e9c5427d0e1b93131afec633c"
+    },
+    {
+      "cow": 8,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_8/id_8_te31-57-197-20230823-001758-1692742678206-7_0230.png",
+      "sha256": "79bc3063582488a72bc295829eb21047fc0fff311cf8d9094248de0875cca200"
+    },
+    {
+      "cow": 8,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_8/id_8_te31-57-197-20230823-001758-1692742678206-7_1730.png",
+      "sha256": "ab77bcbc6105a18b76934e40b9ce7bd8bcb1d79f859e16a7e6cbe4fc6b35e833"
+    },
+    {
+      "cow": 8,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_8/id_8_te31-57-197-20230823-221816-1692821896498-7_0230.png",
+      "sha256": "d2f4c9522d466619c5d1a8d5b90b4d8b3c5c40a0e604dd968dc192ff167f4d03"
+    },
+    {
+      "cow": 8,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_8/id_8_te31-57-197-20230823-221816_frame1.png",
+      "sha256": "f67502900629fc808e17f9ee90e81823d6ba7b78191f4adeb1f0c4400c6fb436"
+    },
+    {
+      "cow": 9,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_9/id_9_te31-57-195-20230823-101809-1692778689001-7_0230.png",
+      "sha256": "d8d0a1eafcc6e59cb0c724918b1c63e98e18e355ab562a5b4f15d7aa2a1f2543"
+    },
+    {
+      "cow": 9,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_9/id_9_te31-57-195-20230823-101809-1692778689001-7_1730.png",
+      "sha256": "8e1236e971b2a47c7759250cc8aa480cf9e33c750b0181c259754d743f37f638"
+    },
+    {
+      "cow": 9,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_9/id_9_te31-57-195-20230823-101809_frame1.png",
+      "sha256": "a7b15b49dfa8bd90d229b27d2b26d1de982ed1d3724150333bed705cf40d4071"
+    },
+    {
+      "cow": 9,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_9/id_9_te31-57-195-20230823-144814-1692794894655-7_0230.png",
+      "sha256": "b1b5c1273291960eb79b54363678cbcc33e141d7bc1373e20573f5decafce7e0"
+    },
+    {
+      "cow": 9,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_9/id_9_te31-57-195-20230823-144814-1692794894655-7_1730.png",
+      "sha256": "4a2b805cc8beadd87b4bc5ee2093dd7b038a015f42f3f4d105f41c3e6d27f28d"
+    },
+    {
+      "cow": 9,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_9/id_9_te31-57-197-20230823-041802-1692757082543-7_0230.png",
+      "sha256": "81dbd9cc997049f00332e41c4889d279cc31ad865bfb63750defcf2d53a85d3b"
+    },
+    {
+      "cow": 9,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_9/id_9_te31-57-197-20230823-041802-1692757082543-7_1730.png",
+      "sha256": "e76df98d298993ed4dcbbc87f7409f735d1e65db0fe82bc46b41b4c19b5bde5e"
+    },
+    {
+      "cow": 9,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_9/id_9_te31-57-197-20230823-211815-1692818295308-7_0230.png",
+      "sha256": "13d2f08439a86f4ce8832b61e44963928187288630dd7a6f143742756acae95c"
+    },
+    {
+      "cow": 9,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_9/id_9_te31-57-197-20230823-211815-1692818295308-7_1730.png",
+      "sha256": "d43db3da250dd305a8c9ef0f23deedaa60ea8528a8eec3773d5a7a65baad3041"
+    },
+    {
+      "cow": 9,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_9/id_9_te31-57-197-20230823-211815_frame1.png",
+      "sha256": "db8a820ed4d13258b7350087f6add57b93b4bf1eb8a3edcf3c6362fcafa2fe9a"
+    },
+    {
+      "cow": 10,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_10/id_10_te31-57-195-20230823-114811-1692784091440-7_0230.png",
+      "sha256": "48480c3734b6cc00499f19bd1fe587ea65a3573cc815c841ad41032bfd48be18"
+    },
+    {
+      "cow": 10,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_10/id_10_te31-57-195-20230823-114811-1692784091440-7_1730.png",
+      "sha256": "718d6545b8d8f1080cb00af11aaee5c9290f8e0f7f02b6cde49a19dbd594c038"
+    },
+    {
+      "cow": 10,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_10/id_10_te31-57-195-20230823-114811_frame1.png",
+      "sha256": "609958c564c0a5e18f896a3dfcbac549d34cdd534c16fb350b9fb64f3b196ee9"
+    },
+    {
+      "cow": 10,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_10/id_10_te31-57-195-20230823-121811-1692785891038-7_0230.png",
+      "sha256": "3c58b17ea8a858a171414c17d04384da3f6e25f755ab33f5af6d248ba15af24a"
+    },
+    {
+      "cow": 10,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_10/id_10_te31-57-195-20230823-121811_frame1.png",
+      "sha256": "d2c6d5c07c251e80626cdacd7ef30c9740b18022c365578e8e2113026783e722"
+    },
+    {
+      "cow": 10,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_10/id_10_te31-57-197-20230823-221816-1692821896498-7_0230.png",
+      "sha256": "5048417ba81bdd82a9ee5c263d5da4b1c41eccae275701f9cffb1980f0a531a9"
+    },
+    {
+      "cow": 10,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_10/id_10_te31-57-197-20230823-221816-1692821896498-7_1730.png",
+      "sha256": "94bfbb6996d0765e011d4099d720c8239291186a3e105e19c33a47ec64bc4062"
+    },
+    {
+      "cow": 10,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_10/id_10_te31-57-197-20230823-231817-1692825497585-7_0230.png",
+      "sha256": "9b0ce9e62879de6e816134725f611f518c9cc6b4c801b46073e6aeea73018e74"
+    },
+    {
+      "cow": 10,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_10/id_10_te31-57-197-20230823-231817-1692825497585-7_1730.png",
+      "sha256": "64face877aed8ce951f13a37dae7e3d35adf9840f41c4e5de24dd2531fee2ab2"
+    },
+    {
+      "cow": 10,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_10/id_10_te31-57-197-20230823-231817_frame1.png",
+      "sha256": "1435a269d731985a0d917e56b7a7720d75f2601b59f4e3bf197f9f9d24911bf7"
+    },
+    {
+      "cow": 11,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_11/id_11_te31-57-195-20230823-111810-1692782290052-7_0230.png",
+      "sha256": "e6e371c0363908bba0e9f4af519b7f68d9f24743c277485960fe0fdea7b06b4d"
+    },
+    {
+      "cow": 11,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_11/id_11_te31-57-197-20230823-211815-1692818295308-7_0230.png",
+      "sha256": "a8721206ac34535dfa6645c760c08b6269ccbff16d43773f9076403d072e48bf"
+    },
+    {
+      "cow": 11,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_11/id_11_te31-57-197-20230823-211815-1692818295308-7_1730.png",
+      "sha256": "e53c11440d0d461cf4b96a2eaa3c50480b80effe7271972925a56a9503412339"
+    },
+    {
+      "cow": 11,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_11/id_11_te31-57-197-20230823-231817-1692825497585-7_0230.png",
+      "sha256": "2edec8256c5bdd1dfe58cedbad3c000aa04949ff59a6b700f9721b64f970b166"
+    },
+    {
+      "cow": 11,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_11/id_11_te31-57-197-20230823-231817-1692825497585-7_1730.png",
+      "sha256": "190cfb32f39808942f91b072eb3ce74784b2b7bb92fc64f738769ac28da10083"
+    },
+    {
+      "cow": 11,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_11/id_11_te31-57-197-20230823-211815_frame1.png",
+      "sha256": "bcc0e05e595f3ad58fceed6705420c07a4efe7fbe9623af287819b345917aab4"
+    },
+    {
+      "cow": 11,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_11/id_11_te31-57-197-20230823-231817_frame1.png",
+      "sha256": "fd49fcd7018c2ce668fe8eea44e673f961ddafd0b97b0911bb1154004e2650e6"
+    },
+    {
+      "cow": 13,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_13/id_13_te31-57-195-20230823-104810-1692780490426-7_0230.png",
+      "sha256": "76f3deb2f6abc105a1b908b8ce040cc490eef6e6104a5152a00df10b3fc8aefd"
+    },
+    {
+      "cow": 13,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_13/id_13_te31-57-195-20230823-104810-1692780490426-7_1730.png",
+      "sha256": "d749b9640d269cd5b5945c070ed490d2ae2e918d3d4bb544d2a8ed26e9ed1800"
+    },
+    {
+      "cow": 13,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_13/id_13_te31-57-195-20230823-134813-1692791293744-7_0230.png",
+      "sha256": "e33d1019f8ce8e7e7d999a7e59b616a1b50397d47146f98e5ca1cddcaf735233"
+    },
+    {
+      "cow": 13,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_13/id_13_te31-57-195-20230823-134813-1692791293744-7_1730.png",
+      "sha256": "43766cf0e62f3859d39770e88fca9ab2a9911948f9491373f8ee8b371f2d124c"
+    },
+    {
+      "cow": 13,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_13/id_13_te31-57-195-20230823-104810_frame1.png",
+      "sha256": "42a8c66b5400159ada2ce4044bba6f5064c59ee2d68370c0843f65543aacbd9e"
+    },
+    {
+      "cow": 13,
+      "camera": "te31-57-195-day",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_13/id_13_te31-57-195-20230823-134813_frame1.png",
+      "sha256": "3570fb114b00fd083a4433b64e51e1b42839047390cffd51d52a1626e55e9be3"
+    },
+    {
+      "cow": 13,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_13/id_13_te31-57-197-20230823-041802-1692757082543-7_0230.png",
+      "sha256": "f3398f9503340eb169dc5c69abb4da482a6bb5be8a1804aa5a0c9f3c80783b20"
+    },
+    {
+      "cow": 13,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_13/id_13_te31-57-197-20230823-041802-1692757082543-7_1730.png",
+      "sha256": "446ae180cd87af3761f4916c7a05daff77c30c045efc7fe653b7aff6492d9414"
+    },
+    {
+      "cow": 13,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/train/cow_13/id_13_te31-57-197-20230823-234817-1692827297925-7_0230.png",
+      "sha256": "79ca593d4d94a5e655c4640974d3325e8a5674cecb984a5d32d99c037da978c0"
+    },
+    {
+      "cow": 13,
+      "camera": "te31-57-197-infrared",
+      "day": "2023-08-23",
+      "path": "detector/passage-runs/open-data-2026-09-08/ethz/images/published/classification/val/cow_13/id_13_te31-57-197-20230823-041802_frame1.png",
+      "sha256": "c3dbd1bfd5ecce5dcf0997b7dd0506d30b9cb36c51d847376dca722ab1d8dbd3"
+    }
+  ],
+  "videos": [
+    {
+      "video": "video3",
+      "day": "2023-08-25",
+      "camera": "te31-57-195-day",
+      "role": "calibration",
+      "sha256": "e4aa40a2016c1b4b3fdb50f9c2ec7b434ba6838c4f52fab09fb26c13ee87324e",
+      "stream_frames": 27030,
+      "width": 2560,
+      "height": 1440,
+      "path": "datasets/ETHZHolsteinTrackingByClassification/tracking_new/video3/video3.mp4",
+      "labels": "datasets/ETHZHolsteinTrackingByClassification/tracking_new/video3/labels",
+      "source_index_windows": [
+        [
+          0,
+          150
+        ],
+        [
+          450,
+          600
+        ],
+        [
+          900,
+          1050
+        ]
+      ],
+      "sample_every_source_frames": 15
+    },
+    {
+      "video": "video4",
+      "day": "2023-08-24",
+      "camera": "te31-57-197-infrared",
+      "role": "calibration",
+      "sha256": "8ae959f82c2877fcf7bafa86ef70ebdfa06ada9f3739a2634c95ad500f5f8249",
+      "stream_frames": 22512,
+      "width": 2560,
+      "height": 1440,
+      "path": "datasets/ETHZHolsteinTrackingByClassification/tracking_new/video4/video4.mp4",
+      "labels": "datasets/ETHZHolsteinTrackingByClassification/tracking_new/video4/labels",
+      "source_index_windows": [
+        [
+          0,
+          125
+        ],
+        [
+          375,
+          500
+        ],
+        [
+          750,
+          875
+        ]
+      ],
+      "sample_every_source_frames": 12
+    },
+    {
+      "video": "video5",
+      "day": "2023-09-17",
+      "camera": "te31-57-195-day",
+      "role": "test",
+      "sha256": "8f5aa9138e0ea10d56bb2c861b2a66ac70f0fb8d0c68d380b1a369e41e5fc48b",
+      "stream_frames": 54036,
+      "width": 2560,
+      "height": 1440,
+      "path": "datasets/ETHZHolsteinTrackingByClassification/tracking_new/video5/video5.mp4",
+      "labels": "datasets/ETHZHolsteinTrackingByClassification/tracking_new/video5/labels",
+      "source_index_windows": [
+        [
+          0,
+          150
+        ],
+        [
+          450,
+          600
+        ],
+        [
+          900,
+          1050
+        ]
+      ],
+      "sample_every_source_frames": 15
+    },
+    {
+      "video": "video6",
+      "day": "2023-08-28",
+      "camera": "te31-57-197-infrared",
+      "role": "test",
+      "sha256": "4425fc1ec1db3b536cb2f2c2c321ff8eb6ece53e46e670fe40baff742439ec49",
+      "stream_frames": 45025,
+      "width": 2560,
+      "height": 1440,
+      "path": "datasets/ETHZHolsteinTrackingByClassification/tracking_new/video6/video6.mp4",
+      "labels": "datasets/ETHZHolsteinTrackingByClassification/tracking_new/video6/labels",
+      "source_index_windows": [
+        [
+          0,
+          125
+        ],
+        [
+          375,
+          500
+        ],
+        [
+          750,
+          875
+        ]
+      ],
+      "sample_every_source_frames": 12
+    }
+  ],
+  "unknown_ids": [
+    3,
+    4,
+    12
+  ],
+  "matching": "Production MIEWid FP32; maximum cosine over distinct identity references; fixed similarity 0.65 and margin 0.10; separately report oracle causal three-sample agreement; no threshold tuning",
+  "windows": "Three approximately 10-second windows per video within first 70 seconds; exact source frame index selection, sequential decode; per-window temporal reset",
+  "excluded": {
+    "video1": "4518 container frames vs 4501 labels",
+    "video2": "4154 container frames vs 4146 labels"
+  },
+  "limitations": [
+    "Publisher supplies no exhaustive ignore/ROI policy; only annotated crops scored",
+    "Previous project exposure; cross-day regression evidence, not blind farm validation",
+    "Ground truth boxes and continuity explicitly oracle; no localization or tracking performance claimed"
+  ]
+}

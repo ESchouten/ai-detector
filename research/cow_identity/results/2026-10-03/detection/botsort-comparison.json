@@ -1,0 +1,22 @@
+{
+  "scope": "Frozen paired tracker comparison, no permanent identity claim",
+  "protocol_sha256": "7f467cd29e89143e2adde6cdd69bb71f15592097adfadc216b17c520db1b9d16",
+  "reports": [
+    {
+      "file": "mixed-botsort-stock-1fps-1230.json",
+      "sha256": "e2d81ac013f44f52170d8a19701fce79d0a22dc6599293e4c13bf8fd8fb7db25"
+    },
+    {
+      "file": "mixed-botsort-stock-1fps-330.json",
+      "sha256": "c4f61eb26cd1f15b286688e5900ae94a7143e5ebf0110ba96342f3c9a645e9e1"
+    },
+    {
+      "file": "mixed-botsort-native-1fps-1230.json",
+      "sha256": "c4579730e45a4b6b87571f71b992a662b59eaf46c6081ecbd2d264d8de2bcf63"
+    },
+    {
+      "file": "mixed-botsort-native-1fps-330.json",
+      "sha256": "f3bba8f56d14d7e5eecae273c8c85b4c9aa76c78161795063de704fe100cc0d0"
+    }
+  ]
+}

@@ -1,0 +1,1054 @@
+{
+  "counts": {
+    "duplicate_like": 90,
+    "little_annotation_overlap": 1,
+    "matched": 1976,
+    "partial_or_loose": 325,
+    "predictions": 2436,
+    "spans_multiple_cows": 44
+  },
+  "review_samples": {
+    "duplicate_like": [
+      {
+        "box": {
+          "confidence": 0.66015625,
+          "identity": null,
+          "label": "cow",
+          "track_id": 19,
+          "x1": 196,
+          "x2": 291,
+          "y1": 182,
+          "y2": 275
+        },
+        "box_index": 6,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.0,
+            "relative_area": 0.3587962962962963,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 0.34297360248447206,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.0,
+            "relative_area": 0.42909179213210297,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 4,
+            "iou": 0.0,
+            "relative_area": 0.5250802329727802,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 0.5657296535826343,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.5024046379866921,
+            "relative_area": 0.6324266284896206,
+            "truth_covered": 0.5458840372226199
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 0.41848237968927626,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.0,
+            "relative_area": 0.416391742859836,
+            "truth_covered": 0.0
+          }
+        ],
+        "second": 372
+      },
+      {
+        "box": {
+          "confidence": 0.54833984375,
+          "identity": null,
+          "label": "cow",
+          "track_id": 43,
+          "x1": 236,
+          "x2": 388,
+          "y1": 146,
+          "y2": 259
+        },
+        "box_index": 7,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.0,
+            "relative_area": 1.2048260381593714,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 0.8121040189125296,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.010439903631658785,
+            "relative_area": 1.0226244343891402,
+            "truth_covered": 0.02089783281733746
+          },
+          {
+            "cow": 4,
+            "iou": 0.1275661717236927,
+            "relative_area": 0.9673349853570624,
+            "truth_covered": 0.22257265149808517
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 1.1560880393080704,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.6189405103544559,
+            "relative_area": 0.6990638990638991,
+            "truth_covered": 0.6495726495726496
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 0.6169540229885058,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.0,
+            "relative_area": 1.262198706643151,
+            "truth_covered": 0.0
+          }
+        ],
+        "second": 400
+      },
+      {
+        "box": {
+          "confidence": 0.47119140625,
+          "identity": null,
+          "label": "cow",
+          "track_id": 53,
+          "x1": 289,
+          "x2": 372,
+          "y1": 319,
+          "y2": 537
+        },
+        "box_index": 7,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.22758863658200684,
+            "relative_area": 0.8941932295527552,
+            "truth_covered": 0.3511737089201878
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 1.1910215903106898,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.0,
+            "relative_area": 0.9447577276524645,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 4,
+            "iou": 0.0,
+            "relative_area": 0.8781789943700252,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 1.1486066146130895,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.0,
+            "relative_area": 0.7048694974678613,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 0.6543468826847968,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.7767883070370729,
+            "relative_area": 0.9718551938983779,
+            "truth_covered": 0.8620689655172413
+          }
+        ],
+        "second": 422
+      },
+      {
+        "box": {
+          "confidence": 0.6201171875,
+          "identity": null,
+          "label": "cow",
+          "track_id": 28,
+          "x1": 267,
+          "x2": 370,
+          "y1": 313,
+          "y2": 550
+        },
+        "box_index": 7,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.42666296540476767,
+            "relative_area": 1.4613864942528736,
+            "truth_covered": 0.7361111111111112
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 1.082191780821918,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.026632591297330015,
+            "relative_area": 1.1415544332210998,
+            "truth_covered": 0.05555555555555555
+          },
+          {
+            "cow": 4,
+            "iou": 0.0,
+            "relative_area": 1.286685641998735,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 2.2998869417750143,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.0,
+            "relative_area": 0.9039771885646571,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 0.6708899027098335,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.6505520504731861,
+            "relative_area": 1.3991517166275005,
+            "truth_covered": 0.9456066945606695
+          }
+        ],
+        "second": 443
+      },
+      {
+        "box": {
+          "confidence": 0.7021484375,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 132,
+          "x2": 246,
+          "y1": 341,
+          "y2": 554
+        },
+        "box_index": 7,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.0,
+            "relative_area": 1.679950186799502,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 1.0652336038604957,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.26906736799514464,
+            "relative_area": 1.8180592991913747,
+            "truth_covered": 0.5974842767295597
+          },
+          {
+            "cow": 4,
+            "iou": 0.0,
+            "relative_area": 1.5078241430700448,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 1.8852484472049689,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.0,
+            "relative_area": 1.0792,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 7,
+            "iou": 0.5581965204606714,
+            "relative_area": 1.7504325259515572,
+            "truth_covered": 0.9852941176470589
+          },
+          {
+            "cow": 8,
+            "iou": 0.0,
+            "relative_area": 1.9198292220113853,
+            "truth_covered": 0.0
+          }
+        ],
+        "second": 463
+      }
+    ],
+    "little_annotation_overlap": [
+      {
+        "box": {
+          "confidence": 0.45849609375,
+          "identity": null,
+          "label": "cow",
+          "track_id": 166,
+          "x1": 115,
+          "x2": 196,
+          "y1": 425,
+          "y2": 523
+        },
+        "box_index": 9,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.06405583826158713,
+            "relative_area": 0.34499543656829934,
+            "truth_covered": 0.08096831674562129
+          },
+          {
+            "cow": 2,
+            "iou": 0.04667234687115403,
+            "relative_area": 0.3146254458977408,
+            "truth_covered": 0.05862068965517241
+          },
+          {
+            "cow": 3,
+            "iou": 0.0,
+            "relative_area": 0.3708999158957107,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 4,
+            "iou": 0.0,
+            "relative_area": 0.31791421362489486,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 0.3064273306311523,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.0,
+            "relative_area": 0.3044295302013423,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 0.5301542776998598,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.0,
+            "relative_area": 0.45235924321860044,
+            "truth_covered": 0.0
+          }
+        ],
+        "second": 570
+      }
+    ],
+    "partial_or_loose": [
+      {
+        "box": {
+          "confidence": 0.4833984375,
+          "identity": null,
+          "label": "cow",
+          "track_id": 8,
+          "x1": 308,
+          "x2": 375,
+          "y1": 176,
+          "y2": 249
+        },
+        "box_index": 7,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.0,
+            "relative_area": 0.18326588729016788,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 0.3032614087301587,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.0,
+            "relative_area": 0.27888014596875355,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 4,
+            "iou": 0.0024433283561829783,
+            "relative_area": 0.28330630213160335,
+            "truth_covered": 0.003127896200185357
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 0.38421052631578945,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.24751128760267638,
+            "relative_area": 0.27108967963640396,
+            "truth_covered": 0.2521893359937923
+          },
+          {
+            "cow": 7,
+            "iou": 0.04554918206925855,
+            "relative_area": 0.2480726313653885,
+            "truth_covered": 0.05437208358693447
+          },
+          {
+            "cow": 8,
+            "iou": 0.0,
+            "relative_area": 0.2531573498964803,
+            "truth_covered": 0.0
+          }
+        ],
+        "second": 330
+      },
+      {
+        "box": {
+          "confidence": 0.443115234375,
+          "identity": null,
+          "label": "cow",
+          "track_id": 15,
+          "x1": 279,
+          "x2": 361,
+          "y1": 105,
+          "y2": 204
+        },
+        "box_index": 8,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.0,
+            "relative_area": 0.3071974570498751,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 0.40851449275362317,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.044370373576901434,
+            "relative_area": 0.5071214392803598,
+            "truth_covered": 0.06403048475762119
+          },
+          {
+            "cow": 4,
+            "iou": 0.41055355535553556,
+            "relative_area": 0.47876857749469215,
+            "truth_covered": 0.4304081151214909
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 0.5852919971160778,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.05272496831432193,
+            "relative_area": 0.4832142857142857,
+            "truth_covered": 0.07428571428571429
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 0.3325958702064897,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.0,
+            "relative_area": 0.25926990514515663,
+            "truth_covered": 0.0
+          }
+        ],
+        "second": 351
+      },
+      {
+        "box": {
+          "confidence": 0.5419921875,
+          "identity": null,
+          "label": "cow",
+          "track_id": 1,
+          "x1": 222,
+          "x2": 322,
+          "y1": 226,
+          "y2": 374
+        },
+        "box_index": 0,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.031586021505376344,
+            "relative_area": 0.6715063520871143,
+            "truth_covered": 0.05117967332123412
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 0.5347786811201445,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.0,
+            "relative_area": 0.7552561747295367,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 4,
+            "iou": 0.0,
+            "relative_area": 0.9361163820366857,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 0.9097614949594296,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.22704568159113614,
+            "relative_area": 1.2109311078383242,
+            "truth_covered": 0.40909834724267713
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 0.6404708326120824,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.4207329022143837,
+            "relative_area": 0.6899766899766899,
+            "truth_covered": 0.5004662004662005
+          }
+        ],
+        "second": 371
+      },
+      {
+        "box": {
+          "confidence": 0.55322265625,
+          "identity": null,
+          "label": "cow",
+          "track_id": 24,
+          "x1": 284,
+          "x2": 377,
+          "y1": 77,
+          "y2": 171
+        },
+        "box_index": 6,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.0,
+            "relative_area": 0.4183776022972003,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 0.36231763925729443,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.01999841909730456,
+            "relative_area": 0.2916916916916917,
+            "truth_covered": 0.025325325325325325
+          },
+          {
+            "cow": 4,
+            "iou": 0.43986166912475205,
+            "relative_area": 0.4467041389882473,
+            "truth_covered": 0.44195196729688296
+          },
+          {
+            "cow": 5,
+            "iou": 0.03553084008999448,
+            "relative_area": 0.5585228724763609,
+            "truth_covered": 0.053475594173268595
+          },
+          {
+            "cow": 6,
+            "iou": 0.0,
+            "relative_area": 0.46253968253968253,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 0.37525755494505497,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.0,
+            "relative_area": 0.6724615384615384,
+            "truth_covered": 0.0
+          }
+        ],
+        "second": 391
+      },
+      {
+        "box": {
+          "confidence": 0.6171875,
+          "identity": null,
+          "label": "cow",
+          "track_id": 24,
+          "x1": 288,
+          "x2": 396,
+          "y1": 82,
+          "y2": 180
+        },
+        "box_index": 7,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.0,
+            "relative_area": 0.7644637053087757,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 0.7107171635777598,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.0,
+            "relative_area": 0.6782876185593437,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 4,
+            "iou": 0.4409152086137281,
+            "relative_area": 0.49150181108943997,
+            "truth_covered": 0.4563945388687657
+          },
+          {
+            "cow": 5,
+            "iou": 0.02567573468407493,
+            "relative_area": 0.8201472297559086,
+            "truth_covered": 0.04556373498643936
+          },
+          {
+            "cow": 6,
+            "iou": 0.13846928499496475,
+            "relative_area": 0.3799949736114602,
+            "truth_covered": 0.1678454744551754
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 0.5142857142857142,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.0,
+            "relative_area": 0.6443835616438356,
+            "truth_covered": 0.0
+          }
+        ],
+        "second": 413
+      }
+    ],
+    "spans_multiple_cows": [
+      {
+        "box": {
+          "confidence": 0.73876953125,
+          "identity": null,
+          "label": "cow",
+          "track_id": 2,
+          "x1": 27,
+          "x2": 326,
+          "y1": 283,
+          "y2": 499
+        },
+        "box_index": 1,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.29596873416805386,
+            "relative_area": 2.588744588744589,
+            "truth_covered": 0.8195847362514029
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 3.2372932330827067,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.0,
+            "relative_area": 4.020168067226891,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 4,
+            "iou": 0.0,
+            "relative_area": 2.9665150888797025,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 3.666836995401124,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.0,
+            "relative_area": 3.4378792717981477,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 7,
+            "iou": 0.3174160782856435,
+            "relative_area": 3.150439024390244,
+            "truth_covered": 1.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.28060543107285946,
+            "relative_area": 2.974028366181617,
+            "truth_covered": 0.8707865168539326
+          }
+        ],
+        "second": 333
+      },
+      {
+        "box": {
+          "confidence": 0.65380859375,
+          "identity": null,
+          "label": "cow",
+          "track_id": 4,
+          "x1": 203,
+          "x2": 348,
+          "y1": 319,
+          "y2": 519
+        },
+        "box_index": 2,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.47420689655172416,
+            "relative_area": 2.108784176847004,
+            "truth_covered": 1.0
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 1.2071262071262072,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.1912266876805884,
+            "relative_area": 1.7737003058103975,
+            "truth_covered": 0.4452599388379205
+          },
+          {
+            "cow": 4,
+            "iou": 0.0,
+            "relative_area": 1.287001287001287,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 1.8661518661518661,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.0,
+            "relative_area": 1.29695885509839,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 7,
+            "iou": 0.13148316651501366,
+            "relative_area": 1.3982642237222758,
+            "truth_covered": 0.2786885245901639
+          },
+          {
+            "cow": 8,
+            "iou": 0.334417485201327,
+            "relative_area": 2.4110409045560357,
+            "truth_covered": 0.8548387096774194
+          }
+        ],
+        "second": 394
+      },
+      {
+        "box": {
+          "confidence": 0.44873046875,
+          "identity": null,
+          "label": "cow",
+          "track_id": 68,
+          "x1": 205,
+          "x2": 396,
+          "y1": 23,
+          "y2": 178
+        },
+        "box_index": 6,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.0,
+            "relative_area": 1.9863794954374665,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 2,
+            "iou": 0.0,
+            "relative_area": 1.2014041068095123,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 3,
+            "iou": 0.0,
+            "relative_area": 1.6507750641240102,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 4,
+            "iou": 0.35176490457692955,
+            "relative_area": 2.8428077587862495,
+            "truth_covered": 1.0
+          },
+          {
+            "cow": 5,
+            "iou": 0.2874582766720237,
+            "relative_area": 2.4564387653501494,
+            "truth_covered": 0.7717391304347826
+          },
+          {
+            "cow": 6,
+            "iou": 0.24932520679146714,
+            "relative_area": 1.0653495987621,
+            "truth_covered": 0.41217748029795964
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 0.7975484913793104,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.0,
+            "relative_area": 1.9600768008474576,
+            "truth_covered": 0.0
+          }
+        ],
+        "second": 444
+      },
+      {
+        "box": {
+          "confidence": 0.673828125,
+          "identity": null,
+          "label": "cow",
+          "track_id": 5,
+          "x1": 233,
+          "x2": 423,
+          "y1": 196,
+          "y2": 361
+        },
+        "box_index": 6,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.055840104748334424,
+            "relative_area": 1.3349514563106797,
+            "truth_covered": 0.12348833248168967
+          },
+          {
+            "cow": 2,
+            "iou": 0.05409374617549872,
+            "relative_area": 2.676056338028169,
+            "truth_covered": 0.18864703371745625
+          },
+          {
+            "cow": 3,
+            "iou": 0.010330988993523265,
+            "relative_area": 1.6073625922887613,
+            "truth_covered": 0.026661197703035273
+          },
+          {
+            "cow": 4,
+            "iou": 0.3418459565039939,
+            "relative_area": 2.1358495707862106,
+            "truth_covered": 0.7988826815642458
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 1.4513888888888888,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.07944598084702763,
+            "relative_area": 1.9743056867560929,
+            "truth_covered": 0.21890547263681592
+          },
+          {
+            "cow": 7,
+            "iou": 0.0,
+            "relative_area": 1.8037974683544304,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 8,
+            "iou": 0.43726583203874625,
+            "relative_area": 1.979916635089049,
+            "truth_covered": 0.9065934065934066
+          }
+        ],
+        "second": 522
+      },
+      {
+        "box": {
+          "confidence": 0.67724609375,
+          "identity": null,
+          "label": "cow",
+          "track_id": 132,
+          "x1": 114,
+          "x2": 300,
+          "y1": 288,
+          "y2": 424
+        },
+        "box_index": 4,
+        "overlaps": [
+          {
+            "cow": 1,
+            "iou": 0.35173824130879344,
+            "relative_area": 1.6126482213438735,
+            "truth_covered": 0.6798418972332015
+          },
+          {
+            "cow": 2,
+            "iou": 0.21984809663250365,
+            "relative_area": 0.9025904517233997,
+            "truth_covered": 0.342895882394919
+          },
+          {
+            "cow": 3,
+            "iou": 0.39981326988525134,
+            "relative_area": 1.1942215088282504,
+            "truth_covered": 0.6267113587007836
+          },
+          {
+            "cow": 4,
+            "iou": 0.1365633535209595,
+            "relative_area": 0.7873015873015873,
+            "truth_covered": 0.21475256769374415
+          },
+          {
+            "cow": 5,
+            "iou": 0.0,
+            "relative_area": 1.6332644628099173,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 6,
+            "iou": 0.0,
+            "relative_area": 0.9154272066008033,
+            "truth_covered": 0.0
+          },
+          {
+            "cow": 7,
+            "iou": 0.10493512075867072,
+            "relative_area": 1.5976757405419062,
+            "truth_covered": 0.24669993052485314
+          },
+          {
+            "cow": 8,
+            "iou": 0.0,
+            "relative_area": 1.4775700934579439,
+            "truth_covered": 0.0
+          }
+        ],
+        "second": 577
+      }
+    ]
+  },
+  "rules": "Unmatched boxes: duplicate IoU>=.5 first; then >=60% coverage of at least two annotations; then IoU>=.1 partial/loose; otherwise little overlap",
+  "scope": "Geometric error audit; no mask ground truth or recognition claims",
+  "tracking_sha256": "48d070e4f6bc812ab862ff8013c50e125d60aaca1bd90c48748b610bf68748db",
+  "unmatched": 460,
+  "unmatched_fractions": {
+    "duplicate_like": 0.1956521739130435,
+    "little_annotation_overlap": 0.002173913043478261,
+    "partial_or_loose": 0.7065217391304348,
+    "spans_multiple_cows": 0.09565217391304348
+  }
+}

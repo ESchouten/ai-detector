@@ -1,0 +1,1939 @@
+{
+  "review": "AI-reviewed annotations created from source pixels and publisher principal-clip IDs before query inference; independent second-agent spot-check. These are not externally validated human ground truth.",
+  "frames": [
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000000.png",
+      "pixels_sha256": "13902b4c86bd602b5f6e0966d66463cff6cb65cbac6f0e8b02500ee72255dc14",
+      "boxes": []
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000030.png",
+      "pixels_sha256": "9298f1b4c17a7b3bb901d8dcd31e24849cde642cb245ba2c4c2411d6d58088aa",
+      "boxes": []
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000060.png",
+      "pixels_sha256": "b51d630d12a81517c672aedf1f2cd511805cc71d2caf857527e9e3d363c10362",
+      "boxes": []
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000090.png",
+      "pixels_sha256": "133b526c93ea5446600125dbf338990d3c0486303453e7135e9310218da4e474",
+      "boxes": []
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000120.png",
+      "pixels_sha256": "e9023ccaecd4dff5ccb196fa9dba2677469b8b29c69a01d980b1a391df2cd94c",
+      "boxes": []
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000150.png",
+      "pixels_sha256": "51c9a61c6ae72e5572cd73e0fda66b201cdbf9511bb61447a6f6b0a46d98e637",
+      "boxes": []
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000180.png",
+      "pixels_sha256": "9542ed50a3c2dfebdd9f23215d72aaf62815ceca5f9ab050f51561eaca55fe1f",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            0,
+            993,
+            222,
+            1080
+          ],
+          "uncertain": true,
+          "note": "Tiny entering/exiting fragment; extent approximate under motion blur."
+        }
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000210.png",
+      "pixels_sha256": "9ed4eaec06b6ea8f94d4edf87a47d3ab4cc12a9df1aaf94c1f7894e7d21d8098",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            0,
+            705,
+            357,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000240.png",
+      "pixels_sha256": "5d0c7a8bb30839e36367c8168bdf5f073ed8cbd3087fc9cf2279231f8bf24879",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            0,
+            471,
+            684,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 270,
+      "second": 9.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000270.png",
+      "pixels_sha256": "0f95b9a8eec1a8a5d761bd6d569cac014792fdd441f93e42c0dd35deafe11275",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            0,
+            438,
+            1281,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 300,
+      "second": 10.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000300.png",
+      "pixels_sha256": "35b55ab0bf968a549970c81296bf5dd6b67104461709f27331b9bbe433cf1b07",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            90,
+            171,
+            1725,
+            1038
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 330,
+      "second": 11.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000330.png",
+      "pixels_sha256": "e48340c0e5e09949e28d352632a3f66524bb962a226338837de98b5afd3f873d",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            435,
+            282,
+            1920,
+            912
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 360,
+      "second": 12.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000360.png",
+      "pixels_sha256": "fa3177e9332517d105ac12c34e4d20bb3d251f41629f3269185babb7bb56931d",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            918,
+            207,
+            1920,
+            747
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 390,
+      "second": 13.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000390.png",
+      "pixels_sha256": "f4b5ccede5b9002adff9535c93421ff777b1476032e7231618d8586b9ef4ecfd",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            1185,
+            300,
+            1920,
+            795
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 420,
+      "second": 14.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000420.png",
+      "pixels_sha256": "8315373c7d620d1ee308a1fdd5025465116d12c7fce9d8a6bf06a17ebdedbd26",
+      "boxes": [
+        {
+          "cow": 5676,
+          "box": [
+            1518,
+            426,
+            1920,
+            657
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 450,
+      "second": 15.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000450.png",
+      "pixels_sha256": "83b2e0c133eee66d7bf42746dc2c00b2ff99f12c5074780b0202a67eef9c9d66",
+      "boxes": []
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 480,
+      "second": 16.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000480.png",
+      "pixels_sha256": "9ae915bc1f91dbf403b7b14bc5220e921ab1b5ecc5da41de0709c50980966137",
+      "boxes": []
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 510,
+      "second": 17.0,
+      "principal_cow": 5676,
+      "image": ".cache/cow-passage-annotation/clip-0196f5e66f776dab/frame-000510.png",
+      "pixels_sha256": "de9226abe482f418a36675dc7b5cbea5ace6ede7617f4e2176b3e0d54903c744",
+      "boxes": []
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000000.png",
+      "pixels_sha256": "acecbe835045f7ab6c0e66d61dcdbe248e3401e8491da5eff2a1c5f1aa510d1d",
+      "boxes": []
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000030.png",
+      "pixels_sha256": "db33363ca30d85623a261827ddd1a11140a666725399eb5bed787487b7ddc61b",
+      "boxes": []
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000060.png",
+      "pixels_sha256": "cb35ceea8773b3625d457275ef193086a0a33955be254c95ce766740d993bb80",
+      "boxes": []
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000090.png",
+      "pixels_sha256": "93765c1bf658d78ec4448f2f2894f98ae9be8a39fb342ae882c5fd240caa15b2",
+      "boxes": []
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000120.png",
+      "pixels_sha256": "e71dc0c209e7a176450d5b2bfcfe53905fe6c392c824d3b31041ebb8d1b69b14",
+      "boxes": [
+        {
+          "cow": 5953,
+          "box": [
+            0,
+            792,
+            555,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000150.png",
+      "pixels_sha256": "2f3bf88b19c04958657d9aadce425830c8f0cf8fca25f9501468a8fdc32aed42",
+      "boxes": [
+        {
+          "cow": 5953,
+          "box": [
+            0,
+            516,
+            1029,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000180.png",
+      "pixels_sha256": "51727f96c05847f0bf4b9e68e23494d3365aeb0a6e43f385eb1ec0994d680f8f",
+      "boxes": [
+        {
+          "cow": 5953,
+          "box": [
+            0,
+            270,
+            1461,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000210.png",
+      "pixels_sha256": "ee8b24b7ce282cc6b2fd86ee889144fecdf40c91f422b416ec4ae32f22c20c79",
+      "boxes": [
+        {
+          "cow": 5953,
+          "box": [
+            441,
+            327,
+            1920,
+            987
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000240.png",
+      "pixels_sha256": "8d3fa7706c7cb96c5bb53af1559dddfa184360feefc0885f325a3c887624700b",
+      "boxes": [
+        {
+          "cow": 5953,
+          "box": [
+            915,
+            282,
+            1920,
+            774
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 270,
+      "second": 9.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000270.png",
+      "pixels_sha256": "0cd4786e68c99afe222a8450b8f911137e83ac0d2fc2aa3fb0941b2b56e49d02",
+      "boxes": [
+        {
+          "cow": 5953,
+          "box": [
+            1248,
+            360,
+            1920,
+            885
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 300,
+      "second": 10.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000300.png",
+      "pixels_sha256": "0c8b0c24d5c75cc35071b87748802d008f7cdaa558fa3dd894ddde9faa41e099",
+      "boxes": [
+        {
+          "cow": 5953,
+          "box": [
+            1740,
+            591,
+            1920,
+            822
+          ],
+          "uncertain": true,
+          "note": "Tiny entering/exiting fragment; extent approximate under motion blur."
+        }
+      ]
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 330,
+      "second": 11.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000330.png",
+      "pixels_sha256": "7056751d1d3e4a6cd9d32f3036ef3df8ce83ebd58becfef8c5a1dfe25ac5ca76",
+      "boxes": []
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 360,
+      "second": 12.0,
+      "principal_cow": 5953,
+      "image": ".cache/cow-passage-annotation/clip-599003c30cfa3db0/frame-000360.png",
+      "pixels_sha256": "acf70a8cd658fe3104407334503cb536f93d1b1af9e7d68f2b303fb6648d01ba",
+      "boxes": []
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000000.png",
+      "pixels_sha256": "3d4182b8e9b920a1a7c89ccb7910d81169b50052c140b9fe4cb5f0a0ae315ed6",
+      "boxes": []
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000030.png",
+      "pixels_sha256": "a75eb21d3ff04a7d0f7a2acfb358743210c7a2c5bf238d467630f97288b0d98c",
+      "boxes": []
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000060.png",
+      "pixels_sha256": "0bd1acbaa647fec6772626c6de634f5e412f5d1dea515571461ada316d6c0810",
+      "boxes": []
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000090.png",
+      "pixels_sha256": "bdbbde6ae26891e9b1e0e83d4fe5058a407949115f43c19afbb3b3e84a5dec8d",
+      "boxes": [
+        {
+          "cow": 6102,
+          "box": [
+            0,
+            717,
+            642,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000120.png",
+      "pixels_sha256": "8a7920a9fb081cb80ff736062e81e7d07b94cf725629ddd3d9ee03a5a333aeda",
+      "boxes": [
+        {
+          "cow": 6102,
+          "box": [
+            0,
+            357,
+            1047,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000150.png",
+      "pixels_sha256": "ec47a83ba14b35bfc91086e9610af574712cc346924ccd971ac4aeb511c85937",
+      "boxes": [
+        {
+          "cow": 6102,
+          "box": [
+            93,
+            231,
+            1674,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000180.png",
+      "pixels_sha256": "d634a56867be49b06d90bad658751a51c255fdedbe5adfc6875a2af54f56ba75",
+      "boxes": [
+        {
+          "cow": 6102,
+          "box": [
+            690,
+            303,
+            1920,
+            795
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000210.png",
+      "pixels_sha256": "b6740261c418fcf72d085ae26139b45bdc6f7d3a61fd3121ace5830fbc380c4a",
+      "boxes": [
+        {
+          "cow": 6102,
+          "box": [
+            1266,
+            318,
+            1920,
+            735
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000240.png",
+      "pixels_sha256": "7463a29369a06def9ec08e3e8209cc507c353e1e77ce8c0de66a2533edaffef5",
+      "boxes": [
+        {
+          "cow": 6102,
+          "box": [
+            1701,
+            474,
+            1920,
+            561
+          ],
+          "uncertain": true,
+          "note": "Tiny entering/exiting fragment; extent approximate under motion blur."
+        }
+      ]
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 270,
+      "second": 9.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000270.png",
+      "pixels_sha256": "51b9d98d6ccdb87a0db3f4e67a9bbe73a9ab65b79fe991f39b491b7ac627cb94",
+      "boxes": []
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 300,
+      "second": 10.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000300.png",
+      "pixels_sha256": "c7d209a3fe40da721d149cda9a6305ae51026c6dccd372c5ba26d4aa700aba49",
+      "boxes": []
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 330,
+      "second": 11.0,
+      "principal_cow": 6102,
+      "image": ".cache/cow-passage-annotation/clip-5f019d003878b7d3/frame-000330.png",
+      "pixels_sha256": "8092df38e3242618bff3756e01cf5dd251786bfdad895f8d95642ff5237a9878",
+      "boxes": []
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 6110,
+      "image": ".cache/cow-passage-annotation/clip-9aae6a2524836934/frame-000000.png",
+      "pixels_sha256": "65d93c5f4031f94453347437704e9f3c20ddb39eaca84ff8f28b87e295b478f5",
+      "boxes": [
+        {
+          "cow": null,
+          "box": [
+            0,
+            0,
+            123,
+            39
+          ],
+          "uncertain": true,
+          "note": "Ambiguous upper-left black/white fragment, possibly a hoof or static object; animal presence and biological identity uncertain."
+        }
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 6110,
+      "image": ".cache/cow-passage-annotation/clip-9aae6a2524836934/frame-000030.png",
+      "pixels_sha256": "1ab09bfbc3bac72fd90be85d0cef36361ba8de65ce76ec38864468ede2751910",
+      "boxes": [
+        {
+          "cow": null,
+          "box": [
+            0,
+            0,
+            123,
+            39
+          ],
+          "uncertain": true,
+          "note": "Ambiguous upper-left black/white fragment, possibly a hoof or static object; animal presence and biological identity uncertain."
+        }
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 6110,
+      "image": ".cache/cow-passage-annotation/clip-9aae6a2524836934/frame-000060.png",
+      "pixels_sha256": "7bb862ce1b421a2409a76a98a54bef2b787c4a55d968f0f55299844a7644c5d1",
+      "boxes": [
+        {
+          "cow": null,
+          "box": [
+            0,
+            0,
+            123,
+            39
+          ],
+          "uncertain": true,
+          "note": "Ambiguous upper-left black/white fragment, possibly a hoof or static object; animal presence and biological identity uncertain."
+        }
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 6110,
+      "image": ".cache/cow-passage-annotation/clip-9aae6a2524836934/frame-000090.png",
+      "pixels_sha256": "e64391dbefbeaf88358047984e3319bd699d0b74dc11f820476d6b0f49121345",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            0,
+            882,
+            375,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            0,
+            0,
+            123,
+            39
+          ],
+          "uncertain": true,
+          "note": "Ambiguous upper-left black/white fragment, possibly a hoof or static object; animal presence and biological identity uncertain."
+        }
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 6110,
+      "image": ".cache/cow-passage-annotation/clip-9aae6a2524836934/frame-000120.png",
+      "pixels_sha256": "972e1d415e844ed269e94650fd25e56c672bb6be24a4e5709a8edd0b67c3eaee",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            0,
+            489,
+            933,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            0,
+            0,
+            123,
+            39
+          ],
+          "uncertain": true,
+          "note": "Ambiguous upper-left black/white fragment, possibly a hoof or static object; animal presence and biological identity uncertain."
+        }
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 6110,
+      "image": ".cache/cow-passage-annotation/clip-9aae6a2524836934/frame-000150.png",
+      "pixels_sha256": "ce2c98312bda3dbb4b8a33ac7471cfe9a75d5fd8989c22e28dc4e0b2dffccef5",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            120,
+            264,
+            1686,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            0,
+            0,
+            123,
+            39
+          ],
+          "uncertain": true,
+          "note": "Ambiguous upper-left black/white fragment, possibly a hoof or static object; animal presence and biological identity uncertain."
+        }
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 6110,
+      "image": ".cache/cow-passage-annotation/clip-9aae6a2524836934/frame-000180.png",
+      "pixels_sha256": "31c7aa0f213b844227b67ca193933f9c59ed9520e9a39ce15f6ed3bd861401c3",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            867,
+            315,
+            1920,
+            738
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            0,
+            0,
+            123,
+            39
+          ],
+          "uncertain": true,
+          "note": "Ambiguous upper-left black/white fragment, possibly a hoof or static object; animal presence and biological identity uncertain."
+        }
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 6110,
+      "image": ".cache/cow-passage-annotation/clip-9aae6a2524836934/frame-000210.png",
+      "pixels_sha256": "8e1f405a993d45148bc22738935bdd4c32da9c581528688bfd61c4a66ada7114",
+      "boxes": [
+        {
+          "cow": 6110,
+          "box": [
+            1626,
+            324,
+            1920,
+            675
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            0,
+            0,
+            123,
+            39
+          ],
+          "uncertain": true,
+          "note": "Ambiguous upper-left black/white fragment, possibly a hoof or static object; animal presence and biological identity uncertain."
+        }
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 6110,
+      "image": ".cache/cow-passage-annotation/clip-9aae6a2524836934/frame-000240.png",
+      "pixels_sha256": "9c98a3dde14a6cecc7bcac7c703a4c322312cdc0f2ceec8ff495643fbb644cbb",
+      "boxes": [
+        {
+          "cow": null,
+          "box": [
+            0,
+            0,
+            123,
+            39
+          ],
+          "uncertain": true,
+          "note": "Ambiguous upper-left black/white fragment, possibly a hoof or static object; animal presence and biological identity uncertain."
+        }
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 6109,
+      "image": ".cache/cow-passage-annotation/clip-a504eef23f8ccef9/frame-000000.png",
+      "pixels_sha256": "b3876ad3c3381c181873917211d7e4e19896413cfb8ff633d811966dc5b38b7c",
+      "boxes": [
+        {
+          "cow": null,
+          "box": [
+            1887,
+            0,
+            1920,
+            105
+          ],
+          "uncertain": true,
+          "note": "Unidentified animal behind upper gate; only occluded or border fragments visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 6109,
+      "image": ".cache/cow-passage-annotation/clip-a504eef23f8ccef9/frame-000030.png",
+      "pixels_sha256": "c2864535e9d9612fa9df5a578c632623c2b052708c7ff26e5ac1dc0e7672979e",
+      "boxes": [
+        {
+          "cow": null,
+          "box": [
+            1452,
+            0,
+            1920,
+            189
+          ],
+          "uncertain": true,
+          "note": "Unidentified animal behind upper gate; only occluded or border fragments visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 6109,
+      "image": ".cache/cow-passage-annotation/clip-a504eef23f8ccef9/frame-000060.png",
+      "pixels_sha256": "b204a3e5af3d151ac0d0ba1e8b6a59c45a07dc9f400523f95b1a23c795d19a1c",
+      "boxes": [
+        {
+          "cow": null,
+          "box": [
+            1011,
+            0,
+            1920,
+            201
+          ],
+          "uncertain": true,
+          "note": "Unidentified animal behind upper gate; only occluded or border fragments visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 6109,
+      "image": ".cache/cow-passage-annotation/clip-a504eef23f8ccef9/frame-000090.png",
+      "pixels_sha256": "731b9201d991d7c9d62709084aa2b186b80bacff203c40b8979fa7d64f8b0a43",
+      "boxes": [
+        {
+          "cow": null,
+          "box": [
+            939,
+            0,
+            1920,
+            294
+          ],
+          "uncertain": true,
+          "note": "Unidentified animal behind upper gate; only occluded or border fragments visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 6109,
+      "image": ".cache/cow-passage-annotation/clip-a504eef23f8ccef9/frame-000120.png",
+      "pixels_sha256": "2fee94ac78bf71282ad7dee73228d4008b937b2db43568a3c5055a64d61dacba",
+      "boxes": [
+        {
+          "cow": 6109,
+          "box": [
+            0,
+            855,
+            552,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            966,
+            0,
+            1854,
+            282
+          ],
+          "uncertain": true,
+          "note": "Unidentified animal behind upper gate; only occluded or border fragments visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 6109,
+      "image": ".cache/cow-passage-annotation/clip-a504eef23f8ccef9/frame-000150.png",
+      "pixels_sha256": "574907258413f1dc056781c34dbb8cf5d276322a27c0c155617be38a55d4b36b",
+      "boxes": [
+        {
+          "cow": 6109,
+          "box": [
+            0,
+            456,
+            1182,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            33,
+            0,
+            1428,
+            240
+          ],
+          "uncertain": true,
+          "note": "Unidentified animal behind upper gate; only occluded or border fragments visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 6109,
+      "image": ".cache/cow-passage-annotation/clip-a504eef23f8ccef9/frame-000180.png",
+      "pixels_sha256": "992159bf284197cf27ace343de7075b214c7b7c02d0da18debd76ac4f125622d",
+      "boxes": [
+        {
+          "cow": 6109,
+          "box": [
+            285,
+            288,
+            1920,
+            1011
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            30,
+            0,
+            1116,
+            231
+          ],
+          "uncertain": true,
+          "note": "Unidentified animal behind upper gate; only occluded or border fragments visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 6109,
+      "image": ".cache/cow-passage-annotation/clip-a504eef23f8ccef9/frame-000210.png",
+      "pixels_sha256": "e0be857747a40428dd761d60dfa2509db7f248f5c7a0a12b692191474b85f326",
+      "boxes": [
+        {
+          "cow": 6109,
+          "box": [
+            960,
+            252,
+            1920,
+            747
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            30,
+            0,
+            360,
+            117
+          ],
+          "uncertain": true,
+          "note": "Unidentified animal behind upper gate; only occluded or border fragments visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 6109,
+      "image": ".cache/cow-passage-annotation/clip-a504eef23f8ccef9/frame-000240.png",
+      "pixels_sha256": "932aa870b35bc46744cfbfd9d8397e00cddc56a44e6abf2ffc34e9b4e61f0abe",
+      "boxes": [
+        {
+          "cow": 6109,
+          "box": [
+            1446,
+            345,
+            1920,
+            687
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            144,
+            0,
+            1122,
+            210
+          ],
+          "uncertain": true,
+          "note": "Unidentified animal behind upper gate; only occluded or border fragments visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 270,
+      "second": 9.0,
+      "principal_cow": 6109,
+      "image": ".cache/cow-passage-annotation/clip-a504eef23f8ccef9/frame-000270.png",
+      "pixels_sha256": "8f43eb89c2b585c667aab21775e089d36801171aa2a60e82ab914187c078520f",
+      "boxes": [
+        {
+          "cow": null,
+          "box": [
+            1050,
+            0,
+            1185,
+            72
+          ],
+          "uncertain": true,
+          "note": "Unidentified animal behind upper gate; only occluded or border fragments visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 6113,
+      "image": ".cache/cow-passage-annotation/clip-bf67d1e5dd0579ce/frame-000000.png",
+      "pixels_sha256": "98a24375eaf1745f1f26565cea019a56f5cd41042f5354e6895fc30c9ed0000f",
+      "boxes": [
+        {
+          "cow": 6113,
+          "box": [
+            0,
+            444,
+            1143,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        },
+        {
+          "cow": null,
+          "box": [
+            1161,
+            330,
+            1920,
+            717
+          ],
+          "uncertain": true,
+          "note": "Unidentified preceding animal exiting at right; only rear/tail visible."
+        }
+      ]
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 6113,
+      "image": ".cache/cow-passage-annotation/clip-bf67d1e5dd0579ce/frame-000030.png",
+      "pixels_sha256": "15425c5e54bbbe8e90ab9d7ab65d769b2383f074c6825bb5af81170e1af88a9f",
+      "boxes": [
+        {
+          "cow": 6113,
+          "box": [
+            315,
+            309,
+            1875,
+            921
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 6113,
+      "image": ".cache/cow-passage-annotation/clip-bf67d1e5dd0579ce/frame-000060.png",
+      "pixels_sha256": "e0a048fe0bd4eec27726c374bf6e60f091b2bfd3213002ca40ca367a67f4fb4e",
+      "boxes": [
+        {
+          "cow": 6113,
+          "box": [
+            915,
+            246,
+            1920,
+            747
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 6113,
+      "image": ".cache/cow-passage-annotation/clip-bf67d1e5dd0579ce/frame-000090.png",
+      "pixels_sha256": "3de4a3e78643efff90a457afbf672145565a94861022d0560ef7dd31dbe007b4",
+      "boxes": [
+        {
+          "cow": 6113,
+          "box": [
+            1479,
+            354,
+            1920,
+            675
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 6113,
+      "image": ".cache/cow-passage-annotation/clip-bf67d1e5dd0579ce/frame-000120.png",
+      "pixels_sha256": "d093678f6d40c0751b4d516e5218570fbd9dbc33efb098d1833d41dc157abb5f",
+      "boxes": [
+        {
+          "cow": 6113,
+          "box": [
+            1761,
+            483,
+            1920,
+            570
+          ],
+          "uncertain": true,
+          "note": "Tiny entering/exiting fragment; extent approximate under motion blur."
+        }
+      ]
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 6113,
+      "image": ".cache/cow-passage-annotation/clip-bf67d1e5dd0579ce/frame-000150.png",
+      "pixels_sha256": "5073f4aa3d46ba93f97f69e40834d521fd722dd64902410a87b8057c2ea20018",
+      "boxes": []
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 6113,
+      "image": ".cache/cow-passage-annotation/clip-bf67d1e5dd0579ce/frame-000180.png",
+      "pixels_sha256": "59be71542b1ad8a314cdbda4e918139280ff0e1789e7db227411b0339793c4f1",
+      "boxes": []
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 6113,
+      "image": ".cache/cow-passage-annotation/clip-bf67d1e5dd0579ce/frame-000210.png",
+      "pixels_sha256": "76e68631396f2d17da357e4fe36bbf30f8f5b4065b5e7a6d40590112bf844f2f",
+      "boxes": []
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000000.png",
+      "pixels_sha256": "b6a33035a2164012f41252e56d143707fbb4270beed303f08cdf2d3b95404910",
+      "boxes": []
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000030.png",
+      "pixels_sha256": "5716f7648374a5b24c6090f8d7acc9bf851229c679648ec9b70c91b076f43b21",
+      "boxes": []
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000060.png",
+      "pixels_sha256": "b58eaa775a0db0fcb870feb183a9979c369777a8b5425da36ab769e8a90e8347",
+      "boxes": []
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000090.png",
+      "pixels_sha256": "fcd10af319a3b0660cc91930325707aebb394bccbe9df1b12fe8212a0ab6ac05",
+      "boxes": [
+        {
+          "cow": 6079,
+          "box": [
+            0,
+            870,
+            348,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000120.png",
+      "pixels_sha256": "faf687572af5c55a4e33717e0778e1c1d103b28acb71eac5ce023f84d05e33b0",
+      "boxes": [
+        {
+          "cow": 6079,
+          "box": [
+            0,
+            549,
+            924,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000150.png",
+      "pixels_sha256": "9c7196c68e311916b9a4bad39e043a0c5b28dd8f562bae25a111b567bb8c439d",
+      "boxes": [
+        {
+          "cow": 6079,
+          "box": [
+            66,
+            279,
+            1545,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000180.png",
+      "pixels_sha256": "50d1d627d99ba0d1d55e4aa14b96f24c1eddc3d5dd8401186e88274c084efce7",
+      "boxes": [
+        {
+          "cow": 6079,
+          "box": [
+            624,
+            267,
+            1920,
+            792
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000210.png",
+      "pixels_sha256": "b08b0887a13573c552ba55812eddf43570c9ef3948df37ded54cc4c9ab74aaca",
+      "boxes": [
+        {
+          "cow": 6079,
+          "box": [
+            1251,
+            321,
+            1920,
+            747
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000240.png",
+      "pixels_sha256": "d74201d01b4dcaac68c1ee8576f6588517968c14dbca90bc16153cee02d489eb",
+      "boxes": [
+        {
+          "cow": 6079,
+          "box": [
+            1764,
+            543,
+            1920,
+            717
+          ],
+          "uncertain": true,
+          "note": "Tiny entering/exiting fragment; extent approximate under motion blur."
+        }
+      ]
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 270,
+      "second": 9.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000270.png",
+      "pixels_sha256": "35e83e6f00a3d8666a9d8629cf891f68ead83aca21e1a60db7b5bf974eac0f16",
+      "boxes": []
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 300,
+      "second": 10.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000300.png",
+      "pixels_sha256": "a9062536d3e86684a348845c135ea3b577e7572ab299b75d31e07380d008f14d",
+      "boxes": []
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "frame": 330,
+      "second": 11.0,
+      "principal_cow": 6079,
+      "image": ".cache/cow-passage-annotation/clip-c67a675ca284da38/frame-000330.png",
+      "pixels_sha256": "a772ffd76eb1ca8fc3ab0375eb63acfc75ba6f53a691941528a838ae83a24b8e",
+      "boxes": []
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000000.png",
+      "pixels_sha256": "423cd19d7e3973986ce7b1d60a3822c1b0bcef5ee87204c143959eb4f79c898a",
+      "boxes": []
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000030.png",
+      "pixels_sha256": "b00d93d32cf5dbe54f4ae54d6132fb40f953b337f074731fa25db45c9e8668e2",
+      "boxes": []
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000060.png",
+      "pixels_sha256": "141bcda6ba909b823a15bd862a281e130440514355ff3702ea1c83cb62f5edaf",
+      "boxes": []
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000090.png",
+      "pixels_sha256": "22ce7fb5ea6765061ffb031385987ddebb0a9f4a4512a887e5f3d82d4e5db399",
+      "boxes": []
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000120.png",
+      "pixels_sha256": "7ba852d8ad43adf04604d1776d6a95e9da199590db62fe0e9722250f277791c6",
+      "boxes": [
+        {
+          "cow": 2234,
+          "box": [
+            0,
+            936,
+            447,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000150.png",
+      "pixels_sha256": "4f7a7c125f3d302b0db17b12d7a2a4a86a04f2f77e4ae1b84031f78f317596a8",
+      "boxes": [
+        {
+          "cow": 2234,
+          "box": [
+            9,
+            624,
+            741,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000180.png",
+      "pixels_sha256": "253a6d5afeb99b887f820f281fbc41f85e5bc1ebefe8f48f1bc9e2ff0d8bdd94",
+      "boxes": [
+        {
+          "cow": 2234,
+          "box": [
+            0,
+            393,
+            1167,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000210.png",
+      "pixels_sha256": "6ef8f7180aaf10b2aefd28489c391f37bbf19f72f7987dfc56966acdfa50a8db",
+      "boxes": [
+        {
+          "cow": 2234,
+          "box": [
+            156,
+            336,
+            1683,
+            1035
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000240.png",
+      "pixels_sha256": "da5ccd4c980de1bd537aa83cf9879bab6dc88672ef3b19563f9b58209063a1eb",
+      "boxes": [
+        {
+          "cow": 2234,
+          "box": [
+            660,
+            327,
+            1920,
+            780
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 270,
+      "second": 9.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000270.png",
+      "pixels_sha256": "594f297a3de6e9d10feac85e5476e3aa6575c328129c3974e49c732b2ddaaf44",
+      "boxes": [
+        {
+          "cow": 2234,
+          "box": [
+            1170,
+            312,
+            1920,
+            810
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 300,
+      "second": 10.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000300.png",
+      "pixels_sha256": "300110db3250c11706902932d8929aa9a0c9715a6c407b65d4cc14ba0cda7aeb",
+      "boxes": [
+        {
+          "cow": 2234,
+          "box": [
+            1743,
+            516,
+            1920,
+            663
+          ],
+          "uncertain": true,
+          "note": "Tiny entering/exiting fragment; extent approximate under motion blur."
+        }
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 330,
+      "second": 11.0,
+      "principal_cow": 2234,
+      "image": ".cache/cow-passage-annotation/clip-d0af881960f7aa1d/frame-000330.png",
+      "pixels_sha256": "00264363fcb180807e583ec412cf6bfefd6463334b28317582b9ec61c4bdcc5d",
+      "boxes": []
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 0,
+      "second": 0.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000000.png",
+      "pixels_sha256": "2dc64b9d3c10364f08ddb8663171944e83a19d3c637bdc97f730d896ab75f338",
+      "boxes": []
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 30,
+      "second": 1.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000030.png",
+      "pixels_sha256": "1ea31da2f05fa55834a355efd43c6e43bf0c3137b27d1b562f7c415953a4c589",
+      "boxes": []
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 60,
+      "second": 2.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000060.png",
+      "pixels_sha256": "43c4548970d7223e897500feb498220a782346f9fee2b52ff30a929657ac07c2",
+      "boxes": []
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 90,
+      "second": 3.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000090.png",
+      "pixels_sha256": "9227aeec6fde00b6db9eb836514097c38c3212023f60240c5d2705a64c550dd0",
+      "boxes": []
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 120,
+      "second": 4.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000120.png",
+      "pixels_sha256": "bded875a605d16679eae6b5371137920f270ff548d1afc0bff4cd061b3d6977e",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            0,
+            819,
+            576,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 150,
+      "second": 5.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000150.png",
+      "pixels_sha256": "faf92666f06fe2142ddd8bc998118a40379d368c65522746dc32aa508326c114",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            0,
+            534,
+            1182,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 180,
+      "second": 6.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000180.png",
+      "pixels_sha256": "4a6af765412fb90b33106ff1a86dbf77cdd596d74e41d0132a8dd2a2eff75005",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            246,
+            270,
+            1761,
+            1080
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 210,
+      "second": 7.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000210.png",
+      "pixels_sha256": "2b6fae2b87009e8c7760c4b6efac6adb4e9197be39a9c5417d335d61c94e0f88",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            756,
+            249,
+            1920,
+            765
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 240,
+      "second": 8.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000240.png",
+      "pixels_sha256": "6b3cc3afbe881e16b5ba97cb1ab5b388bcb4ed705121f3705b7c55a3693bd989",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            1287,
+            351,
+            1920,
+            753
+          ],
+          "uncertain": false,
+          "note": "Principal passage animal; identity from publisher clip label, continuity checked visually."
+        }
+      ]
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 270,
+      "second": 9.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000270.png",
+      "pixels_sha256": "cbbf91cc3104e4fbac17cfa14841582315450e40fdfd87cbd71b3edbca275f05",
+      "boxes": [
+        {
+          "cow": 2238,
+          "box": [
+            1710,
+            537,
+            1920,
+            747
+          ],
+          "uncertain": true,
+          "note": "Tiny entering/exiting fragment; extent approximate under motion blur."
+        }
+      ]
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 300,
+      "second": 10.0,
+      "principal_cow": 2238,
+      "image": ".cache/cow-passage-annotation/clip-fc5e78e24a8ca747/frame-000300.png",
+      "pixels_sha256": "9e18ec1a642080a613a53abfa980f2a1ce6e9ea17cee011c1da4c035fb64f142",
+      "boxes": []
+    }
+  ],
+  "protocol_sha256": "d39b3814ea05e4265c8162582c7bbdced3ca382a0135ed724ce286673709b97f",
+  "manifest_sha256": "0200e21caad98df815eb0bab9fec5a3bdb91e82802c52b4d399e858426d716d0",
+  "coordinate_convention": "Native1920x1080 visible whole-animal xyxy, excluding shadows; partial border/occluded animals retained; no amodal extent inferred.",
+  "frozen_at": "2026-10-03T07:51:44.553597+00:00",
+  "status": "frozen_before_query_inference",
+  "uncertainty_policy": "All boxes retained for conservative full-visible metrics. Also report definite-only sensitivity, separately separating withheld-principal animals and nuisance fragments; uncertain means presence and/or extent cannot be firmly established under truncation, occlusion or blur.",
+  "second_review": {
+    "reviewer": "independent parent AI agent",
+    "checked": [
+      [
+        2238,
+        270
+      ],
+      [
+        6079,
+        240
+      ],
+      [
+        5953,
+        300
+      ],
+      [
+        6109,
+        120
+      ],
+      [
+        6110,
+        120
+      ],
+      [
+        6102,
+        0
+      ],
+      [
+        6102,
+        30
+      ],
+      [
+        6102,
+        60
+      ],
+      [
+        6102,
+        90
+      ],
+      [
+        6102,
+        120
+      ],
+      [
+        6102,
+        150
+      ],
+      [
+        6102,
+        180
+      ],
+      [
+        6102,
+        210
+      ]
+    ],
+    "findings": "Retain ambiguous trailing fragments as uncertain; include stationary6110 upper-left fragment as uncertain nuisance; principal6102 sequence reasonable. No predicted detections or recognition used."
+  },
+  "provenance": {
+    "principal_labels_sha256": "c095e21b36022b05294fd443a4bfd859b48daeea4c8513848d3c8c1b1cfe96d3",
+    "source_frames_sha256": "94da50ad60f2e8386b7e3014143bf3855aa94e94a6c87b79518739af916cb9e5",
+    "native_resolution": [
+      1920,
+      1080
+    ],
+    "model_outputs_used": false,
+    "publisher_annotation_reuse": "Publisher COCO files have torso masks/keypoints for only4/9 query cows and no trustworthy source-frame mapping; filename12 is dataset_id, not frame number. No automatic truth transfer."
+  },
+  "counts": {
+    "frames": 105,
+    "boxes": 76,
+    "by_group": {
+      "known": 46,
+      "nuisance": 20,
+      "withheld_principal": 10
+    },
+    "uncertain_by_group": {
+      "known": 6,
+      "nuisance": 20,
+      "withheld_principal": 1
+    }
+  }
+}

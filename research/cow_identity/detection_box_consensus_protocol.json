@@ -1,0 +1,29 @@
+{
+  "frozen_at_utc": "2026-10-03T09:03:58.252468+00:00",
+  "scope": "Exposed development control only. Actual reviewed detector seeds; fixed raw YOLO and Cutie outputs. No hidden windows opened. Original object identities unchanged.",
+  "hypothesis": "Original named errors are unmatched geometry; independent localization can corroborate and refine extent without discarding additional identities. Reciprocal correspondence prevents a detector box confirming two slots.",
+  "reference": "https://arxiv.org/abs/1910.13302",
+  "reference_scope": "Box averaging motivated by detector ensemble literature; this equal-mean reciprocal-pair control is not the published confidence-weighted WBF clustering algorithm. Scores from these models are not commensurate.",
+  "minimum_iou": 0.5,
+  "conditions": [
+    "baseline",
+    "reciprocal",
+    "reciprocal_mean"
+  ],
+  "unchanged": "LCC, raw p10>=.7, causal v2 quarantine, exact source times and six original known names; unpaired boxes retained unnamed; pair selection uses all slots before name gating.",
+  "selection": "No grid or automatic promotion; report all3arms/all3exposedpanels and exact baseline parity.",
+  "files": {
+    "research/cow_identity/detection_box_consensus.py": "d81721ec2268225715903a45c2b3c79e7588c6088b09cfc482d291e8430df3cf",
+    "research/cow_identity/test_detection_box_consensus.py": "36169a16b85b859829375e236a01c1644159b00ee1092c0f92b9f66c4201fb21",
+    "research/cow_identity/detection_actual_seed_protocol.json": "aaac7595cebc8beacace4260380d6c00b2b1c5eccf39def8cc4d0e6a7b7595d6",
+    "research/cow_identity/detection_actual_score.py": "48692aed8c4355b1699f7786917c5fa98a89c1981b12c28c7673ae304659b009",
+    "research/cow_identity/detection_corroboration.py": "c381591a6609ff422c4ac784da2c36efb54637440bef49f926b5d3c9942e84b4",
+    "research/cow_identity/detection_cutie_quarantine.py": "7bbd7e52a16b344a82a8848788e4f78f85bdb60ab43fd1ad08ae04977a213707",
+    "research/cow_identity/detection_cutie_variants.py": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+    "research/cow_identity/detection_sam_tracking.py": "920c722775042efc3c71e3b7ae3b52473dde2d21facdd4b33bfb5fa297361128",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6",
+    "research/cow_identity/results/2026-10-03/detection/cutie-actual-seed-pipeline.json": "26a7006ec9d6a71c9835b15914fd6416e5e5b781b63aa9c0c1193f81d5a62428",
+    ".cache/cow-cutie/actual-seed-2fps/propagation.json": "98721b3a84a525d63b70bb720d7b8d0b7a7811de06b71d92c7b12818629a2e26",
+    ".cache/cow-cutie/actual-seed-corroborator.json": "179da21b10e713902e0245e6a8f0e5a6f3b13e276a7c221deb618f2c42ca1707"
+  }
+}

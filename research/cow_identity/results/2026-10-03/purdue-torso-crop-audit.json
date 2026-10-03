@@ -1,0 +1,1127 @@
+{
+  "diagnostic_sha256": "f8c845975ba76520a0d449e910869bfb4bfc1c7a507dca8bc0514333e9427254",
+  "records": [
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "cow": 5676,
+      "frame": 270,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5676,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.0619376003742218,
+        "margin_pass": false,
+        "similarity": 0.4676620662212372,
+        "similarity_pass": false,
+        "track": 2
+      },
+      "rival_cow": 5953,
+      "rival_reference": "bcf63d87f3f245159466bdd520e22a5d",
+      "rival_similarity": 0.4057244658470154,
+      "same_cow_margin": 0.0619376003742218,
+      "same_cow_reference": "771d33b51a1345b7b642d10eafe3a7cc",
+      "same_cow_similarity": 0.4676620662212372,
+      "second": 9.0,
+      "torso_box": [
+        0,
+        362,
+        575,
+        720
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        0,
+        201,
+        842,
+        720
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "cow": 5676,
+      "frame": 300,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": 5676,
+        "agreement_observations": 1,
+        "associated": true,
+        "best": 5676,
+        "candidate": 5676,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.1525278091430664,
+        "margin_pass": true,
+        "similarity": 0.6583400964736938,
+        "similarity_pass": true,
+        "track": 2
+      },
+      "rival_cow": 6110,
+      "rival_reference": "30785485585f44a98d7c9de09cc45d8b",
+      "rival_similarity": 0.5058122873306274,
+      "same_cow_margin": 0.1525278091430664,
+      "same_cow_reference": "075f070f95a245a291bebecadc384865",
+      "same_cow_similarity": 0.6583400964736938,
+      "second": 10.0,
+      "torso_box": [
+        77,
+        194,
+        859,
+        686
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        52,
+        105,
+        1148,
+        687
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "cow": 5676,
+      "frame": 330,
+      "production_scores": {
+        "actual": 5676,
+        "after_conflict": 5676,
+        "agreement_observations": 3,
+        "associated": true,
+        "best": 5676,
+        "candidate": 5676,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.32994145154953003,
+        "margin_pass": true,
+        "similarity": 0.7891201972961426,
+        "similarity_pass": true,
+        "track": 2
+      },
+      "rival_cow": 2234,
+      "rival_reference": "8c417fba4a42467eba73fafaaf6c2949",
+      "rival_similarity": 0.45917874574661255,
+      "same_cow_margin": 0.32994145154953003,
+      "same_cow_reference": "3f325f0d825f46a2a75ee80f88a5b697",
+      "same_cow_similarity": 0.7891201972961426,
+      "second": 11.0,
+      "torso_box": [
+        303,
+        197,
+        1096,
+        621
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        281,
+        186,
+        1280,
+        689
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "cow": 5676,
+      "frame": 360,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5676,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.021699488162994385,
+        "margin_pass": false,
+        "similarity": 0.5199606418609619,
+        "similarity_pass": false,
+        "track": 2
+      },
+      "rival_cow": 2234,
+      "rival_reference": "8c417fba4a42467eba73fafaaf6c2949",
+      "rival_similarity": 0.49826115369796753,
+      "same_cow_margin": 0.021699488162994385,
+      "same_cow_reference": "3f325f0d825f46a2a75ee80f88a5b697",
+      "same_cow_similarity": 0.5199606418609619,
+      "second": 12.0,
+      "torso_box": [
+        591,
+        134,
+        1280,
+        515
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        531,
+        91,
+        1280,
+        582
+      ]
+    },
+    {
+      "clip": "clip-0196f5e66f776dab",
+      "cow": 5676,
+      "frame": 390,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5953,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.012688755989074707,
+        "margin_pass": false,
+        "similarity": 0.3650189936161041,
+        "similarity_pass": false,
+        "track": 2
+      },
+      "rival_cow": 5953,
+      "rival_reference": "fda6f89a5af342ad9026b3b36ddd861e",
+      "rival_similarity": 0.3650189936161041,
+      "same_cow_margin": -0.0382104218006134,
+      "same_cow_reference": "fa33b17d00d344f2be8f0db7d72a003f",
+      "same_cow_similarity": 0.3268085718154907,
+      "second": 13.0,
+      "torso_box": [
+        948,
+        207,
+        1279,
+        533
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        763,
+        193,
+        1280,
+        566
+      ]
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "cow": 5953,
+      "frame": 180,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5953,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.074496328830719,
+        "margin_pass": false,
+        "similarity": 0.48518097400665283,
+        "similarity_pass": false,
+        "track": 2
+      },
+      "rival_cow": 2234,
+      "rival_reference": "494def4f17ec43c983d2465a78a1f6af",
+      "rival_similarity": 0.41068464517593384,
+      "same_cow_margin": 0.074496328830719,
+      "same_cow_reference": "ea2b02ed99f04cc085fbd0d622b9763d",
+      "same_cow_similarity": 0.48518097400665283,
+      "second": 6.0,
+      "torso_box": [
+        1,
+        250,
+        811,
+        720
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        0,
+        168,
+        997,
+        720
+      ]
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "cow": 5953,
+      "frame": 210,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5953,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.18736833333969116,
+        "margin_pass": true,
+        "similarity": 0.6378680467605591,
+        "similarity_pass": false,
+        "track": 2
+      },
+      "rival_cow": 5676,
+      "rival_reference": "075f070f95a245a291bebecadc384865",
+      "rival_similarity": 0.4504997134208679,
+      "same_cow_margin": 0.18736833333969116,
+      "same_cow_reference": "ea2b02ed99f04cc085fbd0d622b9763d",
+      "same_cow_similarity": 0.6378680467605591,
+      "second": 7.0,
+      "torso_box": [
+        289,
+        223,
+        1111,
+        639
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        280,
+        212,
+        1280,
+        689
+      ]
+    },
+    {
+      "clip": "clip-599003c30cfa3db0",
+      "cow": 5953,
+      "frame": 240,
+      "production_scores": {
+        "actual": 5953,
+        "after_conflict": 5953,
+        "agreement_observations": 3,
+        "associated": true,
+        "best": 5953,
+        "candidate": 5953,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.24566170573234558,
+        "margin_pass": true,
+        "similarity": 0.678979754447937,
+        "similarity_pass": true,
+        "track": 2
+      },
+      "rival_cow": 6079,
+      "rival_reference": "b134d8108bd744eabc24c9afa4179784",
+      "rival_similarity": 0.43331804871559143,
+      "same_cow_margin": 0.24566170573234558,
+      "same_cow_reference": "40f65ebf942242e7a3ea1f25d72fad9d",
+      "same_cow_similarity": 0.678979754447937,
+      "second": 8.0,
+      "torso_box": [
+        643,
+        185,
+        1279,
+        518
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        592,
+        165,
+        1280,
+        579
+      ]
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "cow": 6102,
+      "frame": 150,
+      "production_scores": {
+        "actual": 6102,
+        "after_conflict": 6102,
+        "agreement_observations": 3,
+        "associated": true,
+        "best": 6102,
+        "candidate": 6102,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.31651434302330017,
+        "margin_pass": true,
+        "similarity": 0.7563535571098328,
+        "similarity_pass": true,
+        "track": 1
+      },
+      "rival_cow": 6110,
+      "rival_reference": "2a9a51765cf1434fa68d0f8ee8a0b11d",
+      "rival_similarity": 0.4398392140865326,
+      "same_cow_margin": 0.31651434302330017,
+      "same_cow_reference": "3596ddabead14748ace71fce45df5e3a",
+      "same_cow_similarity": 0.7563535571098328,
+      "second": 5.0,
+      "torso_box": [
+        52,
+        226,
+        878,
+        706
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        44,
+        168,
+        1129,
+        716
+      ]
+    },
+    {
+      "clip": "clip-5f019d003878b7d3",
+      "cow": 6102,
+      "frame": 180,
+      "production_scores": {
+        "actual": 6102,
+        "after_conflict": 6102,
+        "agreement_observations": 3,
+        "associated": true,
+        "best": 6102,
+        "candidate": 6102,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.27975988388061523,
+        "margin_pass": true,
+        "similarity": 0.7311259508132935,
+        "similarity_pass": true,
+        "track": 1
+      },
+      "rival_cow": 6110,
+      "rival_reference": "0ab15bb491ea4fe687badee98d04333b",
+      "rival_similarity": 0.4513660669326782,
+      "same_cow_margin": 0.27975988388061523,
+      "same_cow_reference": "960d5283ff84458e8968f2ab0df789b7",
+      "same_cow_similarity": 0.7311259508132935,
+      "second": 6.0,
+      "torso_box": [
+        458,
+        194,
+        1274,
+        528
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        440,
+        180,
+        1280,
+        633
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "cow": 6110,
+      "frame": 120,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 6110,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.011965841054916382,
+        "margin_pass": false,
+        "similarity": 0.38557833433151245,
+        "similarity_pass": false,
+        "track": 3
+      },
+      "rival_cow": 6102,
+      "rival_reference": "a595ef9fd2ed475d8e1546628a3d4211",
+      "rival_similarity": 0.37361249327659607,
+      "same_cow_margin": 0.011965841054916382,
+      "same_cow_reference": "0ab15bb491ea4fe687badee98d04333b",
+      "same_cow_similarity": 0.38557833433151245,
+      "second": 4.0,
+      "torso_box": [
+        0,
+        418,
+        449,
+        720
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        0,
+        277,
+        632,
+        720
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "cow": 6110,
+      "frame": 150,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": 6110,
+        "agreement_observations": 2,
+        "associated": true,
+        "best": 6110,
+        "candidate": 6110,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.33271437883377075,
+        "margin_pass": true,
+        "similarity": 0.6843029260635376,
+        "similarity_pass": true,
+        "track": 3
+      },
+      "rival_cow": 6102,
+      "rival_reference": "3596ddabead14748ace71fce45df5e3a",
+      "rival_similarity": 0.35158854722976685,
+      "same_cow_margin": 0.33271437883377075,
+      "same_cow_reference": "2a9a51765cf1434fa68d0f8ee8a0b11d",
+      "same_cow_similarity": 0.6843029260635376,
+      "second": 5.0,
+      "torso_box": [
+        80,
+        230,
+        881,
+        713
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        67,
+        173,
+        1126,
+        716
+      ]
+    },
+    {
+      "clip": "clip-9aae6a2524836934",
+      "cow": 6110,
+      "frame": 180,
+      "production_scores": {
+        "actual": 6110,
+        "after_conflict": 6110,
+        "agreement_observations": 3,
+        "associated": true,
+        "best": 6110,
+        "candidate": 6110,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.23341819643974304,
+        "margin_pass": true,
+        "similarity": 0.7013542652130127,
+        "similarity_pass": true,
+        "track": 3
+      },
+      "rival_cow": 6102,
+      "rival_reference": "a595ef9fd2ed475d8e1546628a3d4211",
+      "rival_similarity": 0.46793606877326965,
+      "same_cow_margin": 0.23341819643974304,
+      "same_cow_reference": "0ab15bb491ea4fe687badee98d04333b",
+      "same_cow_similarity": 0.7013542652130127,
+      "second": 6.0,
+      "torso_box": [
+        581,
+        199,
+        1278,
+        515
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        569,
+        191,
+        1280,
+        583
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "cow": 6109,
+      "frame": 150,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5953,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.008611798286437988,
+        "margin_pass": false,
+        "similarity": 0.35965949296951294,
+        "similarity_pass": false,
+        "track": 3
+      },
+      "rival_cow": 5953,
+      "rival_reference": "bcf63d87f3f245159466bdd520e22a5d",
+      "rival_similarity": 0.35965949296951294,
+      "same_cow_margin": null,
+      "same_cow_reference": null,
+      "same_cow_similarity": null,
+      "second": 5.0,
+      "torso_box": [
+        0,
+        401,
+        501,
+        720
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        2,
+        311,
+        804,
+        720
+      ]
+    },
+    {
+      "clip": "clip-a504eef23f8ccef9",
+      "cow": 6109,
+      "frame": 210,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 6110,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.040321946144104004,
+        "margin_pass": false,
+        "similarity": 0.48947471380233765,
+        "similarity_pass": false,
+        "track": 3
+      },
+      "rival_cow": 6110,
+      "rival_reference": "ef5faeb5f2e84523a3010935ae828ac2",
+      "rival_similarity": 0.48947471380233765,
+      "same_cow_margin": null,
+      "same_cow_reference": null,
+      "same_cow_similarity": null,
+      "second": 7.0,
+      "torso_box": [
+        636,
+        148,
+        1280,
+        515
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        598,
+        125,
+        1280,
+        581
+      ]
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "cow": 6113,
+      "frame": 0,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 2234,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.014455705881118774,
+        "margin_pass": false,
+        "similarity": 0.28181594610214233,
+        "similarity_pass": false,
+        "track": 1
+      },
+      "rival_cow": 2234,
+      "rival_reference": "8c417fba4a42467eba73fafaaf6c2949",
+      "rival_similarity": 0.28181594610214233,
+      "same_cow_margin": null,
+      "same_cow_reference": null,
+      "same_cow_similarity": null,
+      "second": 0.0,
+      "torso_box": [
+        0,
+        367,
+        581,
+        720
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        4,
+        291,
+        772,
+        720
+      ]
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "cow": 6113,
+      "frame": 30,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5676,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.006611526012420654,
+        "margin_pass": false,
+        "similarity": 0.49091070890426636,
+        "similarity_pass": false,
+        "track": 1
+      },
+      "rival_cow": 5676,
+      "rival_reference": "771d33b51a1345b7b642d10eafe3a7cc",
+      "rival_similarity": 0.49091070890426636,
+      "same_cow_margin": null,
+      "same_cow_reference": null,
+      "same_cow_similarity": null,
+      "second": 1.0,
+      "torso_box": [
+        204,
+        192,
+        945,
+        605
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        186,
+        167,
+        1177,
+        703
+      ]
+    },
+    {
+      "clip": "clip-bf67d1e5dd0579ce",
+      "cow": 6113,
+      "frame": 60,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5953,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.00960308313369751,
+        "margin_pass": false,
+        "similarity": 0.43755343556404114,
+        "similarity_pass": false,
+        "track": 1
+      },
+      "rival_cow": 5953,
+      "rival_reference": "bcf63d87f3f245159466bdd520e22a5d",
+      "rival_similarity": 0.43755343556404114,
+      "same_cow_margin": null,
+      "same_cow_reference": null,
+      "same_cow_similarity": null,
+      "second": 2.0,
+      "torso_box": [
+        661,
+        167,
+        1280,
+        515
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        597,
+        144,
+        1280,
+        581
+      ]
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "cow": 6079,
+      "frame": 150,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5676,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.024310439825057983,
+        "margin_pass": false,
+        "similarity": 0.36582186818122864,
+        "similarity_pass": false,
+        "track": 2
+      },
+      "rival_cow": 5676,
+      "rival_reference": "075f070f95a245a291bebecadc384865",
+      "rival_similarity": 0.36582186818122864,
+      "same_cow_margin": -0.024310439825057983,
+      "same_cow_reference": "b134d8108bd744eabc24c9afa4179784",
+      "same_cow_similarity": 0.34151142835617065,
+      "second": 5.0,
+      "torso_box": [
+        11,
+        274,
+        824,
+        720
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        0,
+        178,
+        1052,
+        720
+      ]
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "cow": 6079,
+      "frame": 180,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": 6079,
+        "agreement_observations": 1,
+        "associated": true,
+        "best": 6079,
+        "candidate": 6079,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.18885964155197144,
+        "margin_pass": true,
+        "similarity": 0.6539353132247925,
+        "similarity_pass": true,
+        "track": 2
+      },
+      "rival_cow": 5953,
+      "rival_reference": "bcf63d87f3f245159466bdd520e22a5d",
+      "rival_similarity": 0.46507567167282104,
+      "same_cow_margin": 0.18885964155197144,
+      "same_cow_reference": "b134d8108bd744eabc24c9afa4179784",
+      "same_cow_similarity": 0.6539353132247925,
+      "second": 6.0,
+      "torso_box": [
+        449,
+        175,
+        1263,
+        541
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        432,
+        148,
+        1280,
+        642
+      ]
+    },
+    {
+      "clip": "clip-c67a675ca284da38",
+      "cow": 6079,
+      "frame": 210,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5953,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.060936182737350464,
+        "margin_pass": false,
+        "similarity": 0.45042961835861206,
+        "similarity_pass": false,
+        "track": 2
+      },
+      "rival_cow": 5953,
+      "rival_reference": "40f65ebf942242e7a3ea1f25d72fad9d",
+      "rival_similarity": 0.45042961835861206,
+      "same_cow_margin": -0.08777940273284912,
+      "same_cow_reference": "b134d8108bd744eabc24c9afa4179784",
+      "same_cow_similarity": 0.36265021562576294,
+      "second": 7.0,
+      "torso_box": [
+        1038,
+        211,
+        1279,
+        465
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        830,
+        200,
+        1280,
+        524
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "cow": 2234,
+      "frame": 180,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5676,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.03371652960777283,
+        "margin_pass": false,
+        "similarity": 0.47185757756233215,
+        "similarity_pass": false,
+        "track": 1
+      },
+      "rival_cow": 5676,
+      "rival_reference": "3159f64723df4fc9834fa42d3139146f",
+      "rival_similarity": 0.47185757756233215,
+      "same_cow_margin": -0.05073446035385132,
+      "same_cow_reference": "8c417fba4a42467eba73fafaaf6c2949",
+      "same_cow_similarity": 0.42112311720848083,
+      "second": 6.0,
+      "torso_box": [
+        0,
+        366,
+        555,
+        720
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        0,
+        242,
+        792,
+        720
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "cow": 2234,
+      "frame": 210,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 2234,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.05887496471405029,
+        "margin_pass": false,
+        "similarity": 0.5517482757568359,
+        "similarity_pass": false,
+        "track": 1
+      },
+      "rival_cow": 5676,
+      "rival_reference": "771d33b51a1345b7b642d10eafe3a7cc",
+      "rival_similarity": 0.49287331104278564,
+      "same_cow_margin": 0.05887496471405029,
+      "same_cow_reference": "85aef495e0c64461918a92b876ee862b",
+      "same_cow_similarity": 0.5517482757568359,
+      "second": 7.0,
+      "torso_box": [
+        95,
+        233,
+        906,
+        678
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        67,
+        197,
+        1133,
+        710
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "cow": 2234,
+      "frame": 240,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 2234,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.12395548820495605,
+        "margin_pass": true,
+        "similarity": 0.5174980163574219,
+        "similarity_pass": false,
+        "track": 1
+      },
+      "rival_cow": 6110,
+      "rival_reference": "ef5faeb5f2e84523a3010935ae828ac2",
+      "rival_similarity": 0.3935425281524658,
+      "same_cow_margin": 0.12395548820495605,
+      "same_cow_reference": "8c417fba4a42467eba73fafaaf6c2949",
+      "same_cow_similarity": 0.5174980163574219,
+      "second": 8.0,
+      "torso_box": [
+        452,
+        205,
+        1269,
+        544
+      ],
+      "touches_boundary": false,
+      "whole_box": [
+        426,
+        191,
+        1280,
+        649
+      ]
+    },
+    {
+      "clip": "clip-d0af881960f7aa1d",
+      "cow": 2234,
+      "frame": 270,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 2234,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.02811223268508911,
+        "margin_pass": false,
+        "similarity": 0.4124581217765808,
+        "similarity_pass": false,
+        "track": 1
+      },
+      "rival_cow": 6110,
+      "rival_reference": "0ab15bb491ea4fe687badee98d04333b",
+      "rival_similarity": 0.3843458890914917,
+      "same_cow_margin": 0.02811223268508911,
+      "same_cow_reference": "8c417fba4a42467eba73fafaaf6c2949",
+      "same_cow_similarity": 0.4124581217765808,
+      "second": 9.0,
+      "torso_box": [
+        1046,
+        216,
+        1280,
+        467
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        813,
+        209,
+        1279,
+        526
+      ]
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "cow": 2238,
+      "frame": 150,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 6079,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.029973089694976807,
+        "margin_pass": false,
+        "similarity": 0.2687343955039978,
+        "similarity_pass": false,
+        "track": 2
+      },
+      "rival_cow": 6079,
+      "rival_reference": "96ae54e4aa39422286f2f317eef6f668",
+      "rival_similarity": 0.2687343955039978,
+      "same_cow_margin": null,
+      "same_cow_reference": null,
+      "same_cow_similarity": null,
+      "second": 5.0,
+      "torso_box": [
+        0,
+        434,
+        616,
+        720
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        4,
+        303,
+        802,
+        720
+      ]
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "cow": 2238,
+      "frame": 180,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 6079,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.0252363383769989,
+        "margin_pass": false,
+        "similarity": 0.3616877794265747,
+        "similarity_pass": false,
+        "track": 2
+      },
+      "rival_cow": 6079,
+      "rival_reference": "bb4fa11f1c914f36af227f1c17e14518",
+      "rival_similarity": 0.3616877794265747,
+      "same_cow_margin": null,
+      "same_cow_reference": null,
+      "same_cow_similarity": null,
+      "second": 6.0,
+      "torso_box": [
+        108,
+        226,
+        903,
+        720
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        105,
+        166,
+        1150,
+        720
+      ]
+    },
+    {
+      "clip": "clip-fc5e78e24a8ca747",
+      "cow": 2238,
+      "frame": 210,
+      "production_scores": {
+        "actual": null,
+        "after_conflict": null,
+        "agreement_observations": 0,
+        "associated": true,
+        "best": 5953,
+        "candidate": null,
+        "eligible": true,
+        "geometry_rejection": null,
+        "margin": 0.049464672803878784,
+        "margin_pass": false,
+        "similarity": 0.43508192896842957,
+        "similarity_pass": false,
+        "track": 2
+      },
+      "rival_cow": 5953,
+      "rival_reference": "bcf63d87f3f245159466bdd520e22a5d",
+      "rival_similarity": 0.43508192896842957,
+      "same_cow_margin": null,
+      "same_cow_reference": null,
+      "same_cow_similarity": null,
+      "second": 7.0,
+      "torso_box": [
+        499,
+        160,
+        1280,
+        528
+      ],
+      "touches_boundary": true,
+      "whole_box": [
+        463,
+        137,
+        1280,
+        592
+      ]
+    }
+  ],
+  "source_sha256": "f07b41be19f8f3785612f88c865c818023433ad3ad353e8035915b6ac70141f3",
+  "status": "After-result cache-only qualitative diagnostic; ground truth selects same-cow comparison only for analysis, never used in inference. No new matching policy or accuracy claims."
+}

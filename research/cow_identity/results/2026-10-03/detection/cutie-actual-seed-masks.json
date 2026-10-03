@@ -1,0 +1,267 @@
+{
+  "comparison": {
+    "actual_overlap_pixels": 0,
+    "actual_present_indexed_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "comparison_overlap_pixels": 174,
+    "indexed_pixels_changed": 4817,
+    "objects": [
+      {
+        "actual_area": 7250,
+        "actual_indexed_area": 7250,
+        "binary_mask_agreement_iou": 0.7714871131241238,
+        "comparison_area": 9177,
+        "comparison_indexed_area": 9177,
+        "indexed_mask_agreement_iou": 0.7714871131241238,
+        "original_slot_id": 1
+      },
+      {
+        "actual_area": 9078,
+        "actual_indexed_area": 9078,
+        "binary_mask_agreement_iou": 0.9754541522491349,
+        "comparison_area": 9191,
+        "comparison_indexed_area": 9191,
+        "indexed_mask_agreement_iou": 0.9754541522491349,
+        "original_slot_id": 2
+      },
+      {
+        "actual_area": 8659,
+        "actual_indexed_area": 8659,
+        "binary_mask_agreement_iou": 0.9915743305632503,
+        "comparison_area": 8596,
+        "comparison_indexed_area": 8596,
+        "indexed_mask_agreement_iou": 0.9915743305632503,
+        "original_slot_id": 3
+      },
+      {
+        "actual_area": 7257,
+        "actual_indexed_area": 7257,
+        "binary_mask_agreement_iou": 0.9738183822516191,
+        "comparison_area": 7067,
+        "comparison_indexed_area": 7067,
+        "indexed_mask_agreement_iou": 0.9738183822516191,
+        "original_slot_id": 4
+      },
+      {
+        "actual_area": 5109,
+        "actual_indexed_area": 5109,
+        "binary_mask_agreement_iou": 0.9878645527500489,
+        "comparison_area": 5047,
+        "comparison_indexed_area": 5047,
+        "indexed_mask_agreement_iou": 0.9878645527500489,
+        "original_slot_id": 5
+      },
+      {
+        "actual_area": 9441,
+        "actual_indexed_area": 9441,
+        "binary_mask_agreement_iou": 0.97100387312886,
+        "comparison_area": 9388,
+        "comparison_indexed_area": 9214,
+        "indexed_mask_agreement_iou": 0.9562709731543624,
+        "original_slot_id": 6
+      },
+      {
+        "actual_area": 11081,
+        "actual_indexed_area": 11081,
+        "binary_mask_agreement_iou": 0.9394426580921758,
+        "comparison_area": 10633,
+        "comparison_indexed_area": 10633,
+        "indexed_mask_agreement_iou": 0.9394426580921758,
+        "original_slot_id": 7
+      },
+      {
+        "actual_area": 6424,
+        "actual_indexed_area": 6424,
+        "binary_mask_agreement_iou": 0.8408222427197259,
+        "comparison_area": 7546,
+        "comparison_indexed_area": 7546,
+        "indexed_mask_agreement_iou": 0.8408222427197259,
+        "original_slot_id": 8
+      }
+    ]
+  },
+  "contact_sha256": "f6cf6974c29163720e6dabec4bcd8a32631af316faac1a9b9c5ce974203253c5",
+  "inference": {
+    "actual_device": "cpu",
+    "actual_dtype": "torch.float32",
+    "elapsed_seconds": 1.033823834033683,
+    "libraries": {
+      "lap": "0.5.13",
+      "numpy": "2.5.0",
+      "opencv": "4.13.0",
+      "scipy": null,
+      "torch": "2.12.1",
+      "torchvision": "0.27.1",
+      "ultralytics": "8.4.80"
+    }
+  },
+  "mask_file_sha256": "0301626c21e92d54e2edb17ce397492a72aaa0b0d07ec32ea603c7f51f82151a",
+  "protocol": {
+    "confirmed": [
+      {
+        "cow": 1,
+        "named": true,
+        "proposal": 4,
+        "reason": "The right foreground calf has one complete proposal; overlapping neighbor remains a separate animal."
+      },
+      {
+        "cow": 2,
+        "named": true,
+        "proposal": 7,
+        "reason": "P7 covers more of the visible upper-left animal than P6/P8/P9; retain original bounds without edits."
+      },
+      {
+        "cow": 3,
+        "named": true,
+        "proposal": 2,
+        "reason": "Single clear central animal proposal."
+      },
+      {
+        "cow": 4,
+        "named": true,
+        "proposal": 3,
+        "reason": "Single right-middle animal proposal."
+      },
+      {
+        "cow": 5,
+        "named": true,
+        "proposal": 1,
+        "reason": "Single upper-right animal proposal."
+      },
+      {
+        "cow": 6,
+        "named": true,
+        "proposal": 0,
+        "reason": "The left foreground calf has one complete proposal; adjacent calf remains separately seeded."
+      },
+      {
+        "cow": 7,
+        "named": false,
+        "proposal": 5,
+        "reason": "P5 covers the lower-right animal more completely than the truncated P11; keep anonymous."
+      },
+      {
+        "cow": 8,
+        "named": false,
+        "proposal": 10,
+        "reason": "Single upper-center animal proposal; keep anonymous."
+      }
+    ],
+    "limitations": [
+      "Frame0 was used to train the localization model, making initialization feasibility optimistic.",
+      "Original SAM masks are comparison outputs from annotation-box prompts, not segmentation ground truth. Mask agreement is not mask accuracy.",
+      "No source pixels beyond frame0, no additional SAM prompts, no query labels, no continuous Cutie inference and no reserved footage."
+    ],
+    "original_masks_sha256": "5d385ca2492d64a3f25c249368bab90df3a651f0b322d65d2f484a0e51fc765d",
+    "overlap_policy": "Same as original Cutie initialization: preserve eight binary SAM masks; when converted to indexed IDs, overlapping pixels belong to the first original slot.",
+    "proposal_report_sha256": "52d50c9543b27fc228b965d3d595ce6d2a7ff54288d5ca0291ce2ed3a7ccf741",
+    "rejected_proposals": [
+      6,
+      8,
+      9,
+      11
+    ],
+    "review": "AI visual review of source pixels and all actual proposals. Publisher cow numbers describe the simulated names and are not read ear tags; this is not measured farmer onboarding. All twelve original proposals retained in the bound report.",
+    "sam_sha256": "3c1e81ca9b037dd39d70a014ddb9a813d6c4c4e12555420db7eaff31689bd4e3",
+    "scope": "Actual first-frame detector boxes reviewed as simulated farmer prompts; compare initialization only, no tracking or query performance",
+    "settings": {
+      "device": "cpu",
+      "imgsz": 1024,
+      "quantize": 32
+    },
+    "version": 1,
+    "video_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825"
+  },
+  "protocol_sha256": "dbb6389cb900fb332c3c4932027c09b7e1a675179cbba3dfd3ff3f1565997e53",
+  "rows": [
+    {
+      "frame": 1,
+      "mask_file_sha256": "0301626c21e92d54e2edb17ce397492a72aaa0b0d07ec32ea603c7f51f82151a",
+      "prompts": [
+        {
+          "box": [
+            205.9642333984375,
+            347.7969970703125,
+            374.84649658203125,
+            526.3373413085938
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            196.76585388183594,
+            7.1869707107543945,
+            329.18768310546875,
+            164.6800537109375
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            248.4268798828125,
+            144.3514862060547,
+            428.3359375,
+            299.2070617675781
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            563.657470703125,
+            304.2561950683594,
+            687.2448120117188,
+            441.0980224609375
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            518.0762939453125,
+            87.2020492553711,
+            612.0076904296875,
+            206.85313415527344
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            124.35855865478516,
+            346.3227844238281,
+            300.2774353027344,
+            531.0787353515625
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            520.2232055664062,
+            412.458984375,
+            749.978759765625,
+            562.9124755859375
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            386.2817687988281,
+            2.991962432861328,
+            482.60906982421875,
+            108.92845153808594
+          ],
+          "cow": 8
+        }
+      ],
+      "second": 0,
+      "source_pixels_sha256": "52909f3311a8860533070433b10a46f74a3f2138b04da04774d91412f25a5a10"
+    }
+  ],
+  "runner_sha256": "f95f3fd7df60451e69116deb7d8eb158bf0cfae8e3bf1404e24a130fdc6a5cbf"
+}

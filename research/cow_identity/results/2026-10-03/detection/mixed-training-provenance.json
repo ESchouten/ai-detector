@@ -1,0 +1,15 @@
+{
+  "best_model_sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+  "initial_model_sha256": "42344ebbc0d8ff48166687ca6c6f2409bf276b493a77f616bd5c1c0faabe7727",
+  "libraries": {
+    "lap": "0.5.13",
+    "numpy": "2.5.0",
+    "opencv": "4.13.0",
+    "scipy": null,
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "ultralytics": "8.4.80"
+  },
+  "note": "Only class cow is fitted; all calf identity labels are discarded.",
+  "protocol_sha256": "8a67c77c4e2d9974d74e2d6cc612c3a18ba2da8f260680589c54639fa6bdb222"
+}

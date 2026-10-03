@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "frozen_at": "2026-10-03T08:39:36.092792+00:00",
+  "scope": "Cached cross-model geometry veto on exposed calibration/development; no identity reassignment, no new inference, no reserved video",
+  "model_sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+  "propagation_sha256": "5089d986a636ee1b633faa4e3ded27bacc1a1696f617a001336d01a28551de71",
+  "source_protocol_sha256": "b568784583b562ca2a7ebe8c3216a65f0a46dfdeb96e4a21ba51f156a0cafc30",
+  "quarantine_report_sha256": "7ce2afb558c61f895d84c21be834e20163cd7b9e0a302ca7756e7b1a015d78e1",
+  "source_protocol": "detection_cutie_calibration_protocol.json",
+  "thresholds": [
+    0.5,
+    0.7
+  ],
+  "minimum_p10_probability": 0.7,
+  "selection_window": [
+    1230,
+    1529
+  ],
+  "development_windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ]
+  ],
+  "selection": "Highest known correct coverage with conservative precision>=.99 and unknown false naming<=.01; tieshigherprecisionthenlowerIoUthreshold. Include baseline as no added veto; >=.60coverage additionally required. Select only on1230\u20131529, then replay exact choice on both exposeddevelopment panels. Preserve all conditions.",
+  "decision": "Retain original LCC geometry and slot. Originalp10.7+quarantinev2 naming additionally requires maxIoU>=threshold against same-frame cached independentYOLO boxes. No GT association, one-to-one matching or labels enter veto. One detector box may corroborate multiple original slots; duplicate identity errors remain in strict scorer.",
+  "cache_note": "Existing mixedYOLO11s FP16 MPS outputs afterByteTrack1fps/conf.4, not raw untracked detections. Model trainedearlycalves+publicadults; no new inference. Crop hashes from bound feature manifests verified against cached source frame pixels before scoring.",
+  "sources": [
+    {
+      "start": 330,
+      "stop": 629,
+      "tracking": ".cache/cow-detectors/mixed-bytetrack-1fps-330.json",
+      "tracking_sha256": "48d070e4f6bc812ab862ff8013c50e125d60aaca1bd90c48748b610bf68748db",
+      "features": ".cache/cow-tracked-features/mixed-330/manifest.json",
+      "features_sha256": "02500ead7977a99f0706f69e2d0568f76ea7662a21938c09cc93eeb26ef26ba3"
+    },
+    {
+      "start": 930,
+      "stop": 1229,
+      "tracking": ".cache/cow-detectors/mixed-bytetrack-1fps-930.json",
+      "tracking_sha256": "c78133a770ed696cd5802ddede4c4c83300e2a487ffc0d3a39ec95ff309bf23b",
+      "features": ".cache/cow-tracked-features/mixed-930/manifest.json",
+      "features_sha256": "e9f6c29036f905d839b65ea0fe5de9ae00d1c2f27d91fab95a676f11f2ed0595"
+    },
+    {
+      "start": 1230,
+      "stop": 1529,
+      "tracking": ".cache/cow-detectors/mixed-bytetrack-1fps-1230.json",
+      "tracking_sha256": "356fa72b03c39d07bee568ff95d96db8eedff44ddab79c2d34676c21a5dcf264",
+      "features": ".cache/cow-tracked-features/mixed-1230/manifest.json",
+      "features_sha256": "6e2ddc0012060ade513047317930efebdd21b0337e7a3b99cf98d001bba54279"
+    }
+  ]
+}

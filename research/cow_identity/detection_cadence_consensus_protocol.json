@@ -1,0 +1,31 @@
+{
+  "frozen_at_utc": "2026-10-03T09:08:42.479998+00:00",
+  "scope": "Exposed development only. Five-fps original manual seeds, not actual detector initialization. Apply same frozen .7 quality/v2 quarantine/.5 reciprocal confirmation; no new threshold selection or production promotion.",
+  "inputs": {
+    "propagation": ".cache/cow-cutie/cadence-5fps/propagation.json",
+    "corroborator": ".cache/cow-cutie/actual-seed-corroborator.json",
+    "clip": ".cache/cow-cutie/cadence-5fps-clip/sampled.json",
+    "baseline": "research/cow_identity/results/2026-10-03/detection/cutie-cadence-5fps.json",
+    "cadence": "research/cow_identity/cutie_cadence_protocol.json"
+  },
+  "conditions": [
+    "quarantine_baseline",
+    "maximum_confirmation",
+    "reciprocal_confirmation"
+  ],
+  "source_check": "Every integer source timestamp/publisher frame and decoded pixel hash must agree between 5fps clip and raw1fpsYOLO; original full metrics must match exactly.",
+  "hypothesis": "Faster mask propagation retained more coverage; independent reciprocal geometry confirmation may suppress its residual bad extents. Manual initialization remains optimistic.",
+  "files": {
+    ".cache/cow-cutie/cadence-5fps/propagation.json": "cf8632cd077a8e44fd19947f83531ad498ba7f501adf0a2d1156a47bef85a475",
+    ".cache/cow-cutie/actual-seed-corroborator.json": "179da21b10e713902e0245e6a8f0e5a6f3b13e276a7c221deb618f2c42ca1707",
+    ".cache/cow-cutie/cadence-5fps-clip/sampled.json": "3ade9b74984a03fa1cf62c95b9c1d61469646bb80673f0dadbe97cdaf526b687",
+    "research/cow_identity/results/2026-10-03/detection/cutie-cadence-5fps.json": "99e17201db734cbef2724cb833ead52049c40a778d8f632d7a81309317557935",
+    "research/cow_identity/cutie_cadence_protocol.json": "c0f7273ebbf360b64492a1ea0cea2f9202fdb94f423dfead91c83130fa14b4d4",
+    "research/cow_identity/detection_cadence_consensus.py": "27b96879e97d2e9d260038300620eac90f90d74f4bf11fb0e624eddec2f356bb",
+    "research/cow_identity/detection_box_consensus.py": "d81721ec2268225715903a45c2b3c79e7588c6088b09cfc482d291e8430df3cf",
+    "research/cow_identity/detection_cutie_variants.py": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+    "research/cow_identity/detection_sam_tracking.py": "920c722775042efc3c71e3b7ae3b52473dde2d21facdd4b33bfb5fa297361128",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  },
+  "pre_run_revision": "Extracted input-loading function to satisfy complexity check before any control ran; no algorithm change."
+}

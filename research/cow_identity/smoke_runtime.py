@@ -10,6 +10,8 @@ import importlib.metadata
 import json
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import nullcontext
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -25,6 +27,7 @@ from aidetector.adapters.identity_catalog import (
     EnrolledIdentity,
     IdentityCatalog,
 )
+from aidetector.adapters.inference.device import mps_inference
 from aidetector.adapters.inference.identity import EmbeddingCache
 from aidetector.adapters.inference.identity_observations import GalleryIdentifier
 from aidetector.adapters.inference.miewid import MiewidEncoder
@@ -169,18 +172,19 @@ def collect_video(capture, args, catalog, crops, identifier, detector):
                         "Empty-gallery mode did not retain any real cow crops"
                     )
                 document = seed_gallery(catalog, crops, base_time)
-            result = detector.track(
-                image,
-                persist=True,
-                tracker="bytetrack.yaml",
-                device=args.device,
-                classes=cow_classes,
-                conf=0.25,
-                imgsz=640,
-                quantize=32,
-                verbose=False,
-            )[0]
-            observation = map_observations(result, (Frame(at, image),), classes)[0]
+            with mps_inference() if args.device == "mps" else nullcontext():
+                result = detector.track(
+                    image,
+                    persist=True,
+                    tracker="bytetrack.yaml",
+                    device=args.device,
+                    classes=cow_classes,
+                    conf=0.25,
+                    imgsz=640,
+                    quantize=32,
+                    verbose=False,
+                )[0]
+                observation = map_observations(result, (Frame(at, image),), classes)[0]
             identified = identifier.identify(source, observation)
             for before, after in zip(observation.boxes, identified.boxes, strict=True):
                 if (before.x1, before.y1, before.x2, before.y2) != (
@@ -240,7 +244,8 @@ def run(args) -> dict:
     cache = EmbeddingCache(args.output / "embeddings.sqlite")
     catalog = IdentityCatalog(args.output / "identity")
     settings = IdentityConfig(labels=("cow",))
-    identifier = GalleryIdentifier(settings, catalog, counted, cache)
+    executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="identity-smoke")
+    identifier = GalleryIdentifier(settings, catalog, counted, cache, executor)
     detector = YOLO(str(args.detector))
     started = time.perf_counter()
     try:
@@ -278,6 +283,7 @@ def run(args) -> dict:
         counts["encoded_images"] = counted.images
     finally:
         capture.release()
+        executor.shutdown(wait=True, cancel_futures=True)
         cache.close()
     return {
         "purpose": "Same-clip production integration smoke; not independent identity accuracy",

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "scope": "First-frame actual-proposal initialization diagnostic only; not held-out detection accuracy or continuous identity performance",
+  "second": 0,
+  "model_sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+  "video_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825",
+  "source_annotations_sha256": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+  "settings": {"imgsz": 640, "conf": 0.4, "iou": 0.7, "classes": [0], "device": "cpu", "quantize": 32},
+  "named_cows": [1, 2, 3, 4, 5, 6],
+  "matching": "Generate and cache every actual detector proposal before loading annotations. Score maximum-cardinality one-to-one IoU>=0.5; never replace proposal bounds with annotation bounds.",
+  "limitations": [
+    "Frame0 is included in this model's early-frame training data: the result is optimistic initialization feasibility, not independent generalization.",
+    "Coverage ceiling assumes an ideal farmer correctly labels every matched proposal and rejects every false proposal.",
+    "Matching does not prove a predicted box contains a clean single-animal segmentation seed. No SAM masks or continuous tracking are run.",
+    "Only frame0 is decoded. Reserved footage remains unopened. No confidence tuning is allowed."
+  ]
+}

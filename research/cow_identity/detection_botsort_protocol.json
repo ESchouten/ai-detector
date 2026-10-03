@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "frozen_at": "2026-10-03T07:17:10Z",
+  "purpose": "Compare upstream BoT-SORT with and without native YOLO appearance features, without training another encoder",
+  "model_sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+  "localization_protocol": "detection_mixed_protocol.json",
+  "confidence": 0.4,
+  "imgsz": 640,
+  "device": "mps",
+  "precision": "FP16",
+  "inference_fps": 1,
+  "scoring_fps": 1,
+  "primary_comparison_window": [1230, 1529],
+  "subsequent_development_window": [330, 629],
+  "conditions": {
+    "stock": "Installed Ultralytics8.4.80 botsort.yaml, with_reid=false",
+    "native": "detection_botsort_native.yaml, same settings except with_reid=true/model=auto"
+  },
+  "checks": [
+    "Verify YOLO11 Detect head is not end-to-end before using auto features.",
+    "Record actual native-feature hook and resolved tracker configuration.",
+    "Compare localization recall/precision and track-cow switches alongside global track-ID F1.",
+    "No confidence, proximity or appearance-threshold search.",
+    "These are anonymous tracking results, not permanent name accuracy.",
+    "Do not open reserved final windows."
+  ]
+}

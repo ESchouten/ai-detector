@@ -1,0 +1,266 @@
+{
+  "protocol_sha256": "80eb478f8ee0ac18fde3ecdd7ad7b727f396eb6db858a1464e70744ce84b3bcb",
+  "candidates_sha256": "71bda723e9c7af4254ecc155142e50706854c713a1b09afa6eaa806456a28ff3",
+  "reviewer": "Independent AI-assisted visual review of all40 assigned candidate crops plus chronological source-context contact sheets, with native crop inspection for blur/boundary cases. This is not expert biological identity certification. The publisher principal ID is used only after following that animal through the first-day clip. No June9 image, embedding, similarity or prediction was used to accept examples. No rejected candidate was backfilled.",
+  "validation": {
+    "frozen_files_verified": 144,
+    "chronological_selection_recomputed": true,
+    "maximum_per_clip": 10,
+    "assigned": 40,
+    "accepted": 34,
+    "rejected": 6,
+    "separate_2238_check": "Original candidate source row37 was independently inspected and remains unsuitable: severe motion blur smears coat details. This does not substitute for the other reviewer's complete2238 selection review."
+  },
+  "rows": [
+    {
+      "candidate": 0,
+      "accepted": true,
+      "cow": 6102,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 1,
+      "accepted": true,
+      "cow": 6102,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 2,
+      "accepted": true,
+      "cow": 6102,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 3,
+      "accepted": true,
+      "cow": 6102,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 4,
+      "accepted": true,
+      "cow": 6102,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 5,
+      "accepted": true,
+      "cow": 6102,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 6,
+      "accepted": true,
+      "cow": 6102,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 7,
+      "accepted": true,
+      "cow": 6102,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern. Partial exit view retains a substantial coat-bearing portion; accepted before any query-score review."
+    },
+    {
+      "candidate": 8,
+      "accepted": false,
+      "cow": null,
+      "note": "Only exiting rump/tail and a small cropped coat remnant remain; insufficient torso pattern for a reliable example."
+    },
+    {
+      "candidate": 9,
+      "accepted": false,
+      "cow": null,
+      "note": "Tiny exiting hindquarter fragment with blur; insufficient coat extent."
+    },
+    {
+      "candidate": 10,
+      "accepted": true,
+      "cow": 6079,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 11,
+      "accepted": true,
+      "cow": 6079,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 12,
+      "accepted": true,
+      "cow": 6079,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 13,
+      "accepted": true,
+      "cow": 6079,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 14,
+      "accepted": true,
+      "cow": 6079,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 15,
+      "accepted": true,
+      "cow": 6079,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 16,
+      "accepted": true,
+      "cow": 6079,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern. Partial exit view retains a substantial coat-bearing portion; accepted before any query-score review."
+    },
+    {
+      "candidate": 17,
+      "accepted": true,
+      "cow": 6079,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern. Partial exit view retains a substantial coat-bearing portion; accepted before any query-score review."
+    },
+    {
+      "candidate": 18,
+      "accepted": false,
+      "cow": null,
+      "note": "Only heavily cropped exiting hindquarter remains; torso landmarks largely outside the image."
+    },
+    {
+      "candidate": 19,
+      "accepted": false,
+      "cow": null,
+      "note": "Tiny blurred exiting rump fragment; insufficient visible coat."
+    },
+    {
+      "candidate": 40,
+      "accepted": true,
+      "cow": 5953,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern. The preceding animal remains outside this crop."
+    },
+    {
+      "candidate": 41,
+      "accepted": true,
+      "cow": 5953,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern. The preceding animal remains outside this crop."
+    },
+    {
+      "candidate": 42,
+      "accepted": true,
+      "cow": 5953,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern. The preceding animal remains outside this crop."
+    },
+    {
+      "candidate": 43,
+      "accepted": true,
+      "cow": 5953,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 44,
+      "accepted": true,
+      "cow": 5953,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 45,
+      "accepted": true,
+      "cow": 5953,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 46,
+      "accepted": true,
+      "cow": 5953,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 47,
+      "accepted": true,
+      "cow": 5953,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern. Partial exit view retains a substantial coat-bearing portion; accepted before any query-score review."
+    },
+    {
+      "candidate": 48,
+      "accepted": true,
+      "cow": 5953,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern. Partial exit view retains a substantial coat-bearing portion; accepted before any query-score review."
+    },
+    {
+      "candidate": 49,
+      "accepted": false,
+      "cow": null,
+      "note": "Tiny blurred rear fragment; insufficient torso pattern."
+    },
+    {
+      "candidate": 50,
+      "accepted": true,
+      "cow": 2234,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 51,
+      "accepted": true,
+      "cow": 2234,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 52,
+      "accepted": true,
+      "cow": 2234,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 53,
+      "accepted": true,
+      "cow": 2234,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 54,
+      "accepted": true,
+      "cow": 2234,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 55,
+      "accepted": true,
+      "cow": 2234,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 56,
+      "accepted": true,
+      "cow": 2234,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern."
+    },
+    {
+      "candidate": 57,
+      "accepted": true,
+      "cow": 2234,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern. Partial exit view retains a substantial coat-bearing portion; accepted before any query-score review."
+    },
+    {
+      "candidate": 58,
+      "accepted": true,
+      "cow": 2234,
+      "note": "Principal animal verified from first-day passage context; substantial torso coat and recognizable patch layout remain visible, without neighboring-animal pixels. Moderate motion softness or boundary truncation alone does not erase the broad coat pattern. Partial exit view retains a substantial coat-bearing portion; accepted before any query-score review."
+    },
+    {
+      "candidate": 59,
+      "accepted": false,
+      "cow": null,
+      "note": "Tiny exiting rear fragment with blur; insufficient identifiable coat."
+    }
+  ],
+  "secondary_2238_review": {
+    "candidates": [
+      20,
+      21,
+      22,
+      23
+    ],
+    "decision": "Agree with independent cattle reviewer acceptance after inspecting all four native crops and chronological source context. Single principal dark cow, substantial coat-bearing torso, moderate softness visibly less severe than original source row37. Dark unmarked appearance is weak identity evidence; acceptance does not claim the encoder can distinguish this cow. Row37 remains rejected.",
+    "used_query_evidence": false
+  }
+}

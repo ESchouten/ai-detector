@@ -1,0 +1,36 @@
+{
+  "arms": {
+    "border-hold-1s": {
+      "correct_names": 5,
+      "known_coverage": 0.10869565217391304,
+      "report": "purdue-torso-border-hold-1s.json",
+      "sha256": "d25f567e1758e5a102546de67b47311e597339d796484b4f9bcf21071cfb242a",
+      "unknown_principal_named": 0,
+      "visible_unknown_principal": 10,
+      "wrong_names": 0
+    },
+    "border-only": {
+      "correct_names": 5,
+      "known_coverage": 0.10869565217391304,
+      "report": "purdue-torso-border-only.json",
+      "sha256": "0aef2992ea5b303220c919de81b1f253a1628ac3df936233f2c757981fe1a376",
+      "unknown_principal_named": 0,
+      "visible_unknown_principal": 10,
+      "wrong_names": 0
+    }
+  },
+  "cached_pipeline_seconds_excluding_encoder_startup": 9.60051600006409,
+  "freeze_sha256": "adbee3bd535b82698f32383851155bd89ddb79a1a5f44f6e4c8398c1dcfb4f7a",
+  "held_names_differ_from_border_only_at_any_of_508_processing_frames": false,
+  "new_encoded_border_crops": 90,
+  "qualitative_audit": "purdue-torso-crop-audit.json",
+  "scored_known_funnel": {
+    "associated_and_eligible_torso": 23,
+    "correct_rank1": 16,
+    "correct_three_observation_names": 5,
+    "correct_thresholded": 8,
+    "visible": 46,
+    "whole_matched": 41
+  },
+  "status": "Completed exposed-regression controls; neither meets the coverage target; no production promotion"
+}

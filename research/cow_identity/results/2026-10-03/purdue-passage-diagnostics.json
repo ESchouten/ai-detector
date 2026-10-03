@@ -1,0 +1,1283 @@
+{
+  "annotation_groups": {
+    "definite_border_principal": {
+      "detected": 17,
+      "eligible": 6,
+      "visible": 46
+    },
+    "definite_nonborder_principal": {
+      "detected": 2,
+      "eligible": 2,
+      "visible": 3
+    },
+    "nuisance": {
+      "detected": 0,
+      "eligible": 0,
+      "visible": 20
+    },
+    "uncertain_principal": {
+      "detected": 0,
+      "eligible": 0,
+      "visible": 7
+    }
+  },
+  "freeze_sha256": "c29570d0228d5bb94106c0c3a4a49236c3a39a19bac970f8d3cec80fe3807f38",
+  "group_definition": "Definite nonborder principal means independently marked not uncertain and annotated rectangle does not touch native image boundary; this is a visibility proxy, not a guarantee of no occlusion. Nuisance included in official main result.",
+  "predictions_sha256": "0d9cb16261c0c11ece0a90b3b084c2ad10a3b8c05080d310a6ee9046b0c8277f",
+  "processing_counts": {
+    "actual_names": 7,
+    "detected_boxes": 92,
+    "eligible_boxes": 45,
+    "processing_frames": 508,
+    "single_observation_candidates": 13
+  },
+  "scored_stages": {
+    "actual_three_observation_policy": {
+      "conservative_named_precision": 1.0,
+      "counts": {
+        "correct_names": 2,
+        "frames": 105,
+        "matched": 19,
+        "missed": 57,
+        "nuisance_unknown_named": 0,
+        "predictions": 19,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 27,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 46,
+        "visible_nuisance_unknown": 20,
+        "visible_principal_unknown": 10,
+        "visible_unknown": 30,
+        "wrong_known_names": 0
+      },
+      "known_coverage": 0.043478260869565216,
+      "nuisance_unknown_false_acceptance_rate": 0.0,
+      "principal_unknown_false_acceptance_rate": 0.0,
+      "unknown_false_acceptance_rate": 0.0
+    },
+    "eligible_rank1": {
+      "conservative_named_precision": 0.875,
+      "counts": {
+        "correct_names": 7,
+        "frames": 105,
+        "matched": 19,
+        "missed": 57,
+        "nuisance_unknown_named": 0,
+        "predictions": 19,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 27,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 46,
+        "visible_nuisance_unknown": 20,
+        "visible_principal_unknown": 10,
+        "visible_unknown": 30,
+        "wrong_known_names": 1
+      },
+      "known_coverage": 0.15217391304347827,
+      "nuisance_unknown_false_acceptance_rate": 0.0,
+      "principal_unknown_false_acceptance_rate": 0.0,
+      "unknown_false_acceptance_rate": 0.0
+    },
+    "single_observation_threshold": {
+      "conservative_named_precision": 1.0,
+      "counts": {
+        "correct_names": 4,
+        "frames": 105,
+        "matched": 19,
+        "missed": 57,
+        "nuisance_unknown_named": 0,
+        "predictions": 19,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 27,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 46,
+        "visible_nuisance_unknown": 20,
+        "visible_principal_unknown": 10,
+        "visible_unknown": 30,
+        "wrong_known_names": 0
+      },
+      "known_coverage": 0.08695652173913043,
+      "nuisance_unknown_false_acceptance_rate": 0.0,
+      "principal_unknown_false_acceptance_rate": 0.0,
+      "unknown_false_acceptance_rate": 0.0
+    }
+  },
+  "status": "Post-result diagnostic; no new inference, fitting, threshold changes or June9 claim of a new blind evaluation",
+  "timeline": [
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 0,
+      "scores": [],
+      "second": 0.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 30,
+      "scores": [],
+      "second": 1.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 60,
+      "scores": [],
+      "second": 2.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 90,
+      "scores": [],
+      "second": 3.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 120,
+      "scores": [],
+      "second": 4.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 150,
+      "scores": [],
+      "second": 5.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 180,
+      "scores": [],
+      "second": 6.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 210,
+      "scores": [],
+      "second": 7.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 240,
+      "scores": [],
+      "second": 8.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 270,
+      "scores": [],
+      "second": 9.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.91455078125,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": 0.6689202189445496
+          },
+          "label": "cow",
+          "track_id": 5,
+          "x1": 109,
+          "x2": 1069,
+          "y1": 159,
+          "y2": 702
+        }
+      ],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 300,
+      "scores": [
+        {
+          "best": 5676,
+          "candidate": 5676,
+          "eligible": true,
+          "margin": 0.18352222442626953,
+          "similarity": 0.6689202189445496
+        }
+      ],
+      "second": 10.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 330,
+      "scores": [],
+      "second": 11.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.8837890625,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": 0.4659324586391449
+          },
+          "label": "cow",
+          "track_id": 5,
+          "x1": 622,
+          "x2": 1252,
+          "y1": 161,
+          "y2": 487
+        }
+      ],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 360,
+      "scores": [
+        {
+          "best": 2234,
+          "candidate": null,
+          "eligible": true,
+          "margin": 0.019048690795898438,
+          "similarity": 0.4659324586391449
+        }
+      ],
+      "second": 12.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 390,
+      "scores": [],
+      "second": 13.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 420,
+      "scores": [],
+      "second": 14.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 450,
+      "scores": [],
+      "second": 15.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 480,
+      "scores": [],
+      "second": 16.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-0196f5e66f776dab",
+      "frame": 510,
+      "scores": [],
+      "second": 17.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 0,
+      "scores": [],
+      "second": 0.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 30,
+      "scores": [],
+      "second": 1.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 60,
+      "scores": [],
+      "second": 2.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 90,
+      "scores": [],
+      "second": 3.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 120,
+      "scores": [],
+      "second": 4.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 150,
+      "scores": [],
+      "second": 5.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.6064453125,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": null,
+          "x1": 1,
+          "x2": 976,
+          "y1": 174,
+          "y2": 720
+        }
+      ],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 180,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 6.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 210,
+      "scores": [],
+      "second": 7.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.66650390625,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": 2,
+          "x1": 586,
+          "x2": 1280,
+          "y1": 194,
+          "y2": 503
+        }
+      ],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 240,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 8.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.75390625,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": 2,
+          "x1": 729,
+          "x2": 1280,
+          "y1": 259,
+          "y2": 563
+        }
+      ],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 270,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 9.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 300,
+      "scores": [],
+      "second": 10.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 330,
+      "scores": [],
+      "second": 11.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-599003c30cfa3db0",
+      "frame": 360,
+      "scores": [],
+      "second": 12.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 0,
+      "scores": [],
+      "second": 0.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 30,
+      "scores": [],
+      "second": 1.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 60,
+      "scores": [],
+      "second": 2.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 90,
+      "scores": [],
+      "second": 3.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.724609375,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": 0.5528497695922852
+          },
+          "label": "cow",
+          "track_id": null,
+          "x1": 3,
+          "x2": 691,
+          "y1": 247,
+          "y2": 713
+        }
+      ],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 120,
+      "scores": [
+        {
+          "best": 6102,
+          "candidate": null,
+          "eligible": true,
+          "margin": 0.02461409568786621,
+          "similarity": 0.5528497695922852
+        }
+      ],
+      "second": 4.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.88623046875,
+          "identity": {
+            "identity_id": "000000000000000000000000000017d6",
+            "name": "6102",
+            "similarity": 0.7350019812583923
+          },
+          "label": "cow",
+          "track_id": 1,
+          "x1": 217,
+          "x2": 952,
+          "y1": 236,
+          "y2": 707
+        }
+      ],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 150,
+      "scores": [
+        {
+          "best": 6102,
+          "candidate": 6102,
+          "eligible": true,
+          "margin": 0.2923097014427185,
+          "similarity": 0.7350019812583923
+        }
+      ],
+      "second": 5.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.87451171875,
+          "identity": {
+            "identity_id": "000000000000000000000000000017d6",
+            "name": "6102",
+            "similarity": 0.6545243859291077
+          },
+          "label": "cow",
+          "track_id": 1,
+          "x1": 586,
+          "x2": 1165,
+          "y1": 203,
+          "y2": 513
+        }
+      ],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 180,
+      "scores": [
+        {
+          "best": 6102,
+          "candidate": 6102,
+          "eligible": true,
+          "margin": 0.2595847249031067,
+          "similarity": 0.6545243859291077
+        }
+      ],
+      "second": 6.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.4033203125,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": 1,
+          "x1": 792,
+          "x2": 1280,
+          "y1": 199,
+          "y2": 481
+        }
+      ],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 210,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 7.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 240,
+      "scores": [],
+      "second": 8.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 270,
+      "scores": [],
+      "second": 9.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 300,
+      "scores": [],
+      "second": 10.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-5f019d003878b7d3",
+      "frame": 330,
+      "scores": [],
+      "second": 11.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-9aae6a2524836934",
+      "frame": 0,
+      "scores": [],
+      "second": 0.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-9aae6a2524836934",
+      "frame": 30,
+      "scores": [],
+      "second": 1.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-9aae6a2524836934",
+      "frame": 60,
+      "scores": [],
+      "second": 2.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-9aae6a2524836934",
+      "frame": 90,
+      "scores": [],
+      "second": 3.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-9aae6a2524836934",
+      "frame": 120,
+      "scores": [],
+      "second": 4.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.379150390625,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": 0.7319967150688171
+          },
+          "label": "cow",
+          "track_id": 2,
+          "x1": 136,
+          "x2": 1015,
+          "y1": 210,
+          "y2": 706
+        }
+      ],
+      "clip": "clip-9aae6a2524836934",
+      "frame": 150,
+      "scores": [
+        {
+          "best": 6110,
+          "candidate": 6110,
+          "eligible": true,
+          "margin": 0.33558404445648193,
+          "similarity": 0.7319967150688171
+        }
+      ],
+      "second": 5.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.53955078125,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": 0.5312815308570862
+          },
+          "label": "cow",
+          "track_id": 2,
+          "x1": 673,
+          "x2": 1195,
+          "y1": 219,
+          "y2": 493
+        }
+      ],
+      "clip": "clip-9aae6a2524836934",
+      "frame": 180,
+      "scores": [
+        {
+          "best": 6110,
+          "candidate": null,
+          "eligible": true,
+          "margin": 0.10811370611190796,
+          "similarity": 0.5312815308570862
+        }
+      ],
+      "second": 6.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-9aae6a2524836934",
+      "frame": 210,
+      "scores": [],
+      "second": 7.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-9aae6a2524836934",
+      "frame": 240,
+      "scores": [],
+      "second": 8.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 0,
+      "scores": [],
+      "second": 0.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 30,
+      "scores": [],
+      "second": 1.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 60,
+      "scores": [],
+      "second": 2.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 90,
+      "scores": [],
+      "second": 3.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 120,
+      "scores": [],
+      "second": 4.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 150,
+      "scores": [],
+      "second": 5.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 180,
+      "scores": [],
+      "second": 6.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.59716796875,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": 6,
+          "x1": 561,
+          "x2": 1280,
+          "y1": 174,
+          "y2": 494
+        }
+      ],
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 210,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 7.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 240,
+      "scores": [],
+      "second": 8.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-a504eef23f8ccef9",
+      "frame": 270,
+      "scores": [],
+      "second": 9.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 0,
+      "scores": [],
+      "second": 0.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 30,
+      "scores": [],
+      "second": 1.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.64599609375,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": 3,
+          "x1": 530,
+          "x2": 1280,
+          "y1": 187,
+          "y2": 492
+        }
+      ],
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 60,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 2.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 90,
+      "scores": [],
+      "second": 3.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 120,
+      "scores": [],
+      "second": 4.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 150,
+      "scores": [],
+      "second": 5.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 180,
+      "scores": [],
+      "second": 6.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-bf67d1e5dd0579ce",
+      "frame": 210,
+      "scores": [],
+      "second": 7.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 0,
+      "scores": [],
+      "second": 0.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 30,
+      "scores": [],
+      "second": 1.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 60,
+      "scores": [],
+      "second": 2.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 90,
+      "scores": [],
+      "second": 3.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 120,
+      "scores": [],
+      "second": 4.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 150,
+      "scores": [],
+      "second": 5.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.35400390625,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": 2,
+          "x1": 395,
+          "x2": 1280,
+          "y1": 192,
+          "y2": 533
+        }
+      ],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 180,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 6.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.771484375,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": 2,
+          "x1": 681,
+          "x2": 1280,
+          "y1": 218,
+          "y2": 513
+        }
+      ],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 210,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 7.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 240,
+      "scores": [],
+      "second": 8.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 270,
+      "scores": [],
+      "second": 9.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 300,
+      "scores": [],
+      "second": 10.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-c67a675ca284da38",
+      "frame": 330,
+      "scores": [],
+      "second": 11.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 0,
+      "scores": [],
+      "second": 0.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 30,
+      "scores": [],
+      "second": 1.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 60,
+      "scores": [],
+      "second": 2.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 90,
+      "scores": [],
+      "second": 3.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 120,
+      "scores": [],
+      "second": 4.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 150,
+      "scores": [],
+      "second": 5.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.71484375,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": 1,
+          "x1": 0,
+          "x2": 782,
+          "y1": 273,
+          "y2": 713
+        }
+      ],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 180,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 6.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.66015625,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": 0.542677104473114
+          },
+          "label": "cow",
+          "track_id": 1,
+          "x1": 204,
+          "x2": 1004,
+          "y1": 246,
+          "y2": 670
+        }
+      ],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 210,
+      "scores": [
+        {
+          "best": 2234,
+          "candidate": null,
+          "eligible": true,
+          "margin": 0.049588561058044434,
+          "similarity": 0.542677104473114
+        }
+      ],
+      "second": 7.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 240,
+      "scores": [],
+      "second": 8.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.8857421875,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": 1,
+          "x1": 766,
+          "x2": 1280,
+          "y1": 218,
+          "y2": 507
+        }
+      ],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 270,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 9.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 300,
+      "scores": [],
+      "second": 10.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-d0af881960f7aa1d",
+      "frame": 330,
+      "scores": [],
+      "second": 11.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 0,
+      "scores": [],
+      "second": 0.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 30,
+      "scores": [],
+      "second": 1.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 60,
+      "scores": [],
+      "second": 2.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 90,
+      "scores": [],
+      "second": 3.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 120,
+      "scores": [],
+      "second": 4.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 150,
+      "scores": [],
+      "second": 5.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 180,
+      "scores": [],
+      "second": 6.0
+    },
+    {
+      "actual_boxes": [
+        {
+          "confidence": 0.55517578125,
+          "identity": {
+            "identity_id": null,
+            "name": null,
+            "similarity": null
+          },
+          "label": "cow",
+          "track_id": null,
+          "x1": 507,
+          "x2": 1279,
+          "y1": 182,
+          "y2": 504
+        }
+      ],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 210,
+      "scores": [
+        {
+          "best": null,
+          "candidate": null,
+          "eligible": false,
+          "margin": null,
+          "similarity": null
+        }
+      ],
+      "second": 7.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 240,
+      "scores": [],
+      "second": 8.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 270,
+      "scores": [],
+      "second": 9.0
+    },
+    {
+      "actual_boxes": [],
+      "clip": "clip-fc5e78e24a8ca747",
+      "frame": 300,
+      "scores": [],
+      "second": 10.0
+    }
+  ]
+}

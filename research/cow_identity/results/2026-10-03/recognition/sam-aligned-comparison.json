@@ -1,0 +1,895 @@
+{
+  "models": {
+    "baseline": {
+      "conditions": {
+        "diverse10": {
+          "margin": 0.09,
+          "panels": {
+            "calibration": {
+              "abstentions": 379,
+              "accepted_precision": 0.9900990099009901,
+              "correct_accepts": 100,
+              "known": 360,
+              "known_coverage": 0.2777777777777778,
+              "known_rank1": 0.7027777777777777,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.008333333333333333,
+              "unknown_false_accepts": 1,
+              "wrong_known_accepts": 0
+            },
+            "development": {
+              "abstentions": 400,
+              "accepted_precision": 0.9875,
+              "correct_accepts": 79,
+              "known": 360,
+              "known_coverage": 0.21944444444444444,
+              "known_rank1": 0.7,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.008333333333333333,
+              "unknown_false_accepts": 1,
+              "wrong_known_accepts": 0
+            },
+            "development_later": {
+              "abstentions": 380,
+              "accepted_precision": 0.9693877551020408,
+              "correct_accepts": 95,
+              "known": 359,
+              "known_coverage": 0.2646239554317549,
+              "known_rank1": 0.7632311977715878,
+              "observations": 478,
+              "unknown": 119,
+              "unknown_false_acceptance_rate": 0.025210084033613446,
+              "unknown_false_accepts": 3,
+              "wrong_known_accepts": 0
+            }
+          },
+          "threshold": 0.5500000000000003
+        },
+        "own_diverse10": {
+          "margin": 0.09,
+          "panels": {
+            "calibration": {
+              "abstentions": 379,
+              "accepted_precision": 0.9900990099009901,
+              "correct_accepts": 100,
+              "known": 360,
+              "known_coverage": 0.2777777777777778,
+              "known_rank1": 0.7027777777777777,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.008333333333333333,
+              "unknown_false_accepts": 1,
+              "wrong_known_accepts": 0
+            },
+            "development": {
+              "abstentions": 400,
+              "accepted_precision": 0.9875,
+              "correct_accepts": 79,
+              "known": 360,
+              "known_coverage": 0.21944444444444444,
+              "known_rank1": 0.7,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.008333333333333333,
+              "unknown_false_accepts": 1,
+              "wrong_known_accepts": 0
+            },
+            "development_later": {
+              "abstentions": 380,
+              "accepted_precision": 0.9693877551020408,
+              "correct_accepts": 95,
+              "known": 359,
+              "known_coverage": 0.2646239554317549,
+              "known_rank1": 0.7632311977715878,
+              "observations": 478,
+              "unknown": 119,
+              "unknown_false_acceptance_rate": 0.025210084033613446,
+              "unknown_false_accepts": 3,
+              "wrong_known_accepts": 0
+            }
+          },
+          "threshold": 0.5500000000000003
+        },
+        "uniform10": {
+          "margin": 0.06,
+          "panels": {
+            "calibration": {
+              "abstentions": 345,
+              "accepted_precision": 0.9925925925925926,
+              "correct_accepts": 134,
+              "known": 360,
+              "known_coverage": 0.37222222222222223,
+              "known_rank1": 0.7444444444444445,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 1
+            },
+            "development": {
+              "abstentions": 367,
+              "accepted_precision": 0.9734513274336283,
+              "correct_accepts": 110,
+              "known": 360,
+              "known_coverage": 0.3055555555555556,
+              "known_rank1": 0.6972222222222222,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.016666666666666666,
+              "unknown_false_accepts": 2,
+              "wrong_known_accepts": 1
+            },
+            "development_later": {
+              "abstentions": 325,
+              "accepted_precision": 0.8954248366013072,
+              "correct_accepts": 137,
+              "known": 359,
+              "known_coverage": 0.3816155988857939,
+              "known_rank1": 0.7214484679665738,
+              "observations": 478,
+              "unknown": 119,
+              "unknown_false_acceptance_rate": 0.1092436974789916,
+              "unknown_false_accepts": 13,
+              "wrong_known_accepts": 3
+            }
+          },
+          "threshold": 0.5400000000000003
+        }
+      },
+      "encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+      "manifest_sha256": "16fa9783c41b08cc88800d052ec3a45967f4d18bc3bf778fa581787aa7bbcd50"
+    },
+    "candidate": {
+      "conditions": {
+        "diverse10": {
+          "margin": 0.06,
+          "panels": {
+            "calibration": {
+              "abstentions": 295,
+              "accepted_precision": 0.9945945945945946,
+              "correct_accepts": 184,
+              "known": 360,
+              "known_coverage": 0.5111111111111111,
+              "known_rank1": 0.7777777777777778,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 1
+            },
+            "development": {
+              "abstentions": 319,
+              "accepted_precision": 0.937888198757764,
+              "correct_accepts": 151,
+              "known": 360,
+              "known_coverage": 0.41944444444444445,
+              "known_rank1": 0.7333333333333333,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.05,
+              "unknown_false_accepts": 6,
+              "wrong_known_accepts": 4
+            },
+            "development_later": {
+              "abstentions": 330,
+              "accepted_precision": 0.972972972972973,
+              "correct_accepts": 144,
+              "known": 359,
+              "known_coverage": 0.4011142061281337,
+              "known_rank1": 0.7604456824512534,
+              "observations": 478,
+              "unknown": 119,
+              "unknown_false_acceptance_rate": 0.03361344537815126,
+              "unknown_false_accepts": 4,
+              "wrong_known_accepts": 0
+            }
+          },
+          "threshold": 0.5500000000000003
+        },
+        "own_diverse10": {
+          "margin": 0.05,
+          "panels": {
+            "calibration": {
+              "abstentions": 333,
+              "accepted_precision": 0.9931972789115646,
+              "correct_accepts": 146,
+              "known": 360,
+              "known_coverage": 0.40555555555555556,
+              "known_rank1": 0.7666666666666667,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.008333333333333333,
+              "unknown_false_accepts": 1,
+              "wrong_known_accepts": 0
+            },
+            "development": {
+              "abstentions": 370,
+              "accepted_precision": 0.990909090909091,
+              "correct_accepts": 109,
+              "known": 360,
+              "known_coverage": 0.30277777777777776,
+              "known_rank1": 0.6888888888888889,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.0,
+              "unknown_false_accepts": 0,
+              "wrong_known_accepts": 1
+            },
+            "development_later": {
+              "abstentions": 384,
+              "accepted_precision": 0.9787234042553191,
+              "correct_accepts": 92,
+              "known": 359,
+              "known_coverage": 0.2562674094707521,
+              "known_rank1": 0.6796657381615598,
+              "observations": 478,
+              "unknown": 119,
+              "unknown_false_acceptance_rate": 0.01680672268907563,
+              "unknown_false_accepts": 2,
+              "wrong_known_accepts": 0
+            }
+          },
+          "threshold": 0.5800000000000003
+        },
+        "uniform10": {
+          "margin": 0.05,
+          "panels": {
+            "calibration": {
+              "abstentions": 280,
+              "accepted_precision": 0.995,
+              "correct_accepts": 199,
+              "known": 360,
+              "known_coverage": 0.5527777777777778,
+              "known_rank1": 0.8416666666666667,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.008333333333333333,
+              "unknown_false_accepts": 1,
+              "wrong_known_accepts": 0
+            },
+            "development": {
+              "abstentions": 320,
+              "accepted_precision": 0.9625,
+              "correct_accepts": 154,
+              "known": 360,
+              "known_coverage": 0.42777777777777776,
+              "known_rank1": 0.7611111111111111,
+              "observations": 480,
+              "unknown": 120,
+              "unknown_false_acceptance_rate": 0.03333333333333333,
+              "unknown_false_accepts": 4,
+              "wrong_known_accepts": 2
+            },
+            "development_later": {
+              "abstentions": 324,
+              "accepted_precision": 0.9675324675324676,
+              "correct_accepts": 149,
+              "known": 359,
+              "known_coverage": 0.415041782729805,
+              "known_rank1": 0.7576601671309192,
+              "observations": 478,
+              "unknown": 119,
+              "unknown_false_acceptance_rate": 0.03361344537815126,
+              "unknown_false_accepts": 4,
+              "wrong_known_accepts": 1
+            }
+          },
+          "threshold": 0.5600000000000003
+        }
+      },
+      "encoder_fingerprint": "461b69eb1755231547d90625c90b1846fc12303e56d0fcf2c8287212e7043c4e",
+      "manifest_sha256": "31697eab89363f75740b68070cd5912d5dda8a041be11aa0cbeaf2f2e10622d0"
+    }
+  },
+  "reference_photos": {
+    "diverse10": [
+      [
+        "enrollment",
+        1,
+        225
+      ],
+      [
+        "enrollment",
+        1,
+        100
+      ],
+      [
+        "enrollment",
+        1,
+        260
+      ],
+      [
+        "enrollment",
+        1,
+        245
+      ],
+      [
+        "enrollment",
+        1,
+        115
+      ],
+      [
+        "enrollment",
+        1,
+        130
+      ],
+      [
+        "enrollment",
+        1,
+        210
+      ],
+      [
+        "enrollment",
+        1,
+        270
+      ],
+      [
+        "enrollment",
+        1,
+        200
+      ],
+      [
+        "enrollment",
+        1,
+        235
+      ],
+      [
+        "enrollment",
+        2,
+        130
+      ],
+      [
+        "enrollment",
+        2,
+        285
+      ],
+      [
+        "enrollment",
+        2,
+        250
+      ],
+      [
+        "enrollment",
+        2,
+        220
+      ],
+      [
+        "enrollment",
+        2,
+        170
+      ],
+      [
+        "enrollment",
+        2,
+        230
+      ],
+      [
+        "enrollment",
+        2,
+        200
+      ],
+      [
+        "enrollment",
+        2,
+        175
+      ],
+      [
+        "enrollment",
+        2,
+        115
+      ],
+      [
+        "enrollment",
+        2,
+        105
+      ],
+      [
+        "enrollment",
+        3,
+        250
+      ],
+      [
+        "enrollment",
+        3,
+        15
+      ],
+      [
+        "enrollment",
+        3,
+        80
+      ],
+      [
+        "enrollment",
+        3,
+        0
+      ],
+      [
+        "enrollment",
+        3,
+        90
+      ],
+      [
+        "enrollment",
+        3,
+        65
+      ],
+      [
+        "enrollment",
+        3,
+        170
+      ],
+      [
+        "enrollment",
+        3,
+        145
+      ],
+      [
+        "enrollment",
+        3,
+        95
+      ],
+      [
+        "enrollment",
+        3,
+        110
+      ],
+      [
+        "enrollment",
+        4,
+        135
+      ],
+      [
+        "enrollment",
+        4,
+        0
+      ],
+      [
+        "enrollment",
+        4,
+        220
+      ],
+      [
+        "enrollment",
+        4,
+        65
+      ],
+      [
+        "enrollment",
+        4,
+        255
+      ],
+      [
+        "enrollment",
+        4,
+        185
+      ],
+      [
+        "enrollment",
+        4,
+        90
+      ],
+      [
+        "enrollment",
+        4,
+        50
+      ],
+      [
+        "enrollment",
+        4,
+        105
+      ],
+      [
+        "enrollment",
+        4,
+        30
+      ],
+      [
+        "enrollment",
+        5,
+        105
+      ],
+      [
+        "enrollment",
+        5,
+        295
+      ],
+      [
+        "enrollment",
+        5,
+        285
+      ],
+      [
+        "enrollment",
+        5,
+        200
+      ],
+      [
+        "enrollment",
+        5,
+        205
+      ],
+      [
+        "enrollment",
+        5,
+        20
+      ],
+      [
+        "enrollment",
+        5,
+        235
+      ],
+      [
+        "enrollment",
+        5,
+        15
+      ],
+      [
+        "enrollment",
+        5,
+        280
+      ],
+      [
+        "enrollment",
+        5,
+        220
+      ],
+      [
+        "enrollment",
+        6,
+        225
+      ],
+      [
+        "enrollment",
+        6,
+        105
+      ],
+      [
+        "enrollment",
+        6,
+        255
+      ],
+      [
+        "enrollment",
+        6,
+        250
+      ],
+      [
+        "enrollment",
+        6,
+        160
+      ],
+      [
+        "enrollment",
+        6,
+        120
+      ],
+      [
+        "enrollment",
+        6,
+        90
+      ],
+      [
+        "enrollment",
+        6,
+        215
+      ],
+      [
+        "enrollment",
+        6,
+        115
+      ],
+      [
+        "enrollment",
+        6,
+        245
+      ]
+    ],
+    "uniform10": [
+      [
+        "enrollment",
+        1,
+        0
+      ],
+      [
+        "enrollment",
+        1,
+        30
+      ],
+      [
+        "enrollment",
+        1,
+        65
+      ],
+      [
+        "enrollment",
+        1,
+        95
+      ],
+      [
+        "enrollment",
+        1,
+        130
+      ],
+      [
+        "enrollment",
+        1,
+        160
+      ],
+      [
+        "enrollment",
+        1,
+        195
+      ],
+      [
+        "enrollment",
+        1,
+        225
+      ],
+      [
+        "enrollment",
+        1,
+        260
+      ],
+      [
+        "enrollment",
+        1,
+        295
+      ],
+      [
+        "enrollment",
+        2,
+        0
+      ],
+      [
+        "enrollment",
+        2,
+        30
+      ],
+      [
+        "enrollment",
+        2,
+        65
+      ],
+      [
+        "enrollment",
+        2,
+        95
+      ],
+      [
+        "enrollment",
+        2,
+        130
+      ],
+      [
+        "enrollment",
+        2,
+        160
+      ],
+      [
+        "enrollment",
+        2,
+        195
+      ],
+      [
+        "enrollment",
+        2,
+        225
+      ],
+      [
+        "enrollment",
+        2,
+        260
+      ],
+      [
+        "enrollment",
+        2,
+        295
+      ],
+      [
+        "enrollment",
+        3,
+        0
+      ],
+      [
+        "enrollment",
+        3,
+        30
+      ],
+      [
+        "enrollment",
+        3,
+        65
+      ],
+      [
+        "enrollment",
+        3,
+        95
+      ],
+      [
+        "enrollment",
+        3,
+        130
+      ],
+      [
+        "enrollment",
+        3,
+        160
+      ],
+      [
+        "enrollment",
+        3,
+        195
+      ],
+      [
+        "enrollment",
+        3,
+        225
+      ],
+      [
+        "enrollment",
+        3,
+        260
+      ],
+      [
+        "enrollment",
+        3,
+        295
+      ],
+      [
+        "enrollment",
+        4,
+        0
+      ],
+      [
+        "enrollment",
+        4,
+        30
+      ],
+      [
+        "enrollment",
+        4,
+        65
+      ],
+      [
+        "enrollment",
+        4,
+        95
+      ],
+      [
+        "enrollment",
+        4,
+        130
+      ],
+      [
+        "enrollment",
+        4,
+        160
+      ],
+      [
+        "enrollment",
+        4,
+        195
+      ],
+      [
+        "enrollment",
+        4,
+        225
+      ],
+      [
+        "enrollment",
+        4,
+        260
+      ],
+      [
+        "enrollment",
+        4,
+        295
+      ],
+      [
+        "enrollment",
+        5,
+        0
+      ],
+      [
+        "enrollment",
+        5,
+        30
+      ],
+      [
+        "enrollment",
+        5,
+        65
+      ],
+      [
+        "enrollment",
+        5,
+        95
+      ],
+      [
+        "enrollment",
+        5,
+        130
+      ],
+      [
+        "enrollment",
+        5,
+        160
+      ],
+      [
+        "enrollment",
+        5,
+        195
+      ],
+      [
+        "enrollment",
+        5,
+        225
+      ],
+      [
+        "enrollment",
+        5,
+        260
+      ],
+      [
+        "enrollment",
+        5,
+        295
+      ],
+      [
+        "enrollment",
+        6,
+        0
+      ],
+      [
+        "enrollment",
+        6,
+        30
+      ],
+      [
+        "enrollment",
+        6,
+        65
+      ],
+      [
+        "enrollment",
+        6,
+        95
+      ],
+      [
+        "enrollment",
+        6,
+        130
+      ],
+      [
+        "enrollment",
+        6,
+        160
+      ],
+      [
+        "enrollment",
+        6,
+        195
+      ],
+      [
+        "enrollment",
+        6,
+        225
+      ],
+      [
+        "enrollment",
+        6,
+        260
+      ],
+      [
+        "enrollment",
+        6,
+        295
+      ]
+    ]
+  },
+  "scope": "Single-image oracle comparison on common rows; no temporal-policy or final-test claim",
+  "shared_rows": 1798,
+  "threshold_selection": "Each condition uses calibration only, target99%precision/1%unknownFA"
+}

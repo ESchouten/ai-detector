@@ -1,0 +1,19 @@
+{
+  "complete": true,
+  "frames": 51,
+  "elapsed_s": 15.944431290961802,
+  "mean_all_including_startup_s": 0.306020492637603,
+  "mean_after10_s": 0.24103751326002543,
+  "p95_after10_s": 0.255781790940091,
+  "worst_30frame_mean_after_warmup_s": 0.23938259591814132,
+  "peak_post_reclamation_driver_gib": 7.811065673828125,
+  "peak_before_reclamation_driver_gib": 8.818878173828125,
+  "reclamations": 17,
+  "last_driver_gib": 4.301300048828125,
+  "peak_process_rss_gib": 1.6308746337890625,
+  "dtype": "torch.float32",
+  "device": "mps:0",
+  "report_sha256": "97fb60c61afbcc33ed8f3113b098ad8240ecc4a0c6aec8976331f3da0136a0d2",
+  "propagation_sha256": "809909b592837fa5034e7fb76436a7344e50580c10d3f95328c9f9b469919683",
+  "interpretation": "Passed the frozen51-input hardware gate only. Initial25-second metrics are not candidate-quality selection; full1259-frame trial not run."
+}

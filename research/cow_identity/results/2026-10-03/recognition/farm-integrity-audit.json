@@ -1,0 +1,53 @@
+{
+  "enrollment_manifest_sha256": "e8134849dcc2d9a3dc22fd53aa3dec0dfa3f12a02df2f351221a2e00d8b63ef3",
+  "gallery_counts": {
+    "1": 10,
+    "2": 10,
+    "3": 10,
+    "4": 10,
+    "5": 10,
+    "6": 10
+  },
+  "protocol_sha256": "27be67e7af9ddad292eafaf9f165b9454841cb3a0a90cd05d8080800438588e9",
+  "scope": "Independent CPU integrity audit; no model inference, no development or final-window evaluation",
+  "source_crops_sha256": "f66a421ac8da2d874667c26a838bc07fdd6556605bbfe7bb68cbf4175033a779",
+  "source_frames": 300,
+  "source_manifest_sha256": "70af9a6423dfbac4aa531819ebd8b4721794da785ebee273050a071e9a6bd238",
+  "source_rows": 2526,
+  "steps": {
+    "0": {
+      "calibration_report_sha256": "bdd4428ae1fc9e366996d30588bad86e1e9967711d52b336c10d7d0e13e94845",
+      "gallery_manifest_sha256": "271bbfdd31a24f2e3b8243e6dca19ba1e2a928dd3340a6a577e0c22744ccd4f6",
+      "query_manifest_sha256": "70af9a6423dfbac4aa531819ebd8b4721794da785ebee273050a071e9a6bd238",
+      "representation_fingerprint": "225c4f42643bb69729beb97a89838beedc33b104dc99e5e736c0a9603c82a1bd",
+      "same_confirmed_60": true,
+      "temporal_conditions": 36,
+      "unchanged_query_rows_and_frames": true,
+      "vectors_digest_shape_and_finiteness_checked": true,
+      "verified": true
+    },
+    "100": {
+      "calibration_report_sha256": "97788203aa789c54ed927fed6f1e54c758fb1e702b524b0063bfbd42c11cc26d",
+      "gallery_manifest_sha256": "82d81aa6902e1c11c2fa5d53e5e241782d8d0abd15d717976c85d0b8b99849b7",
+      "query_manifest_sha256": "a491022d351fe2d28bad6dc097d2d0a10faee82492b6bcce6b46db4474145bdb",
+      "representation_fingerprint": "f70e048813086b7a103626e51406560a3e69d35a9b08df94dce7904a6eb88890",
+      "same_confirmed_60": true,
+      "temporal_conditions": 36,
+      "unchanged_query_rows_and_frames": true,
+      "vectors_digest_shape_and_finiteness_checked": true,
+      "verified": true
+    },
+    "200": {
+      "calibration_report_sha256": "12dfc402d697e7ff7ddea85c47d81a7f2ea0ab9d091aa326288523c1d4e77746",
+      "gallery_manifest_sha256": "699f6704b6d1a760b1960a5e2976d67aeab0624083fb6569b314c8c6887e8ec0",
+      "query_manifest_sha256": "b13311bc7cfa03c41e43d797a8e9eed6a1616d67185b93f6250e795b9244bafa",
+      "representation_fingerprint": "12dfdce0d96812b3ca1a3048dba081d6218cbac8778e15beb0a0ce73a591ad34",
+      "same_confirmed_60": true,
+      "temporal_conditions": 36,
+      "unchanged_query_rows_and_frames": true,
+      "vectors_digest_shape_and_finiteness_checked": true,
+      "verified": true
+    }
+  },
+  "training_report_sha256": "42236950cb59fe0dad36951e7ed33a330f94785055a283570e9268fbda29072a"
+}

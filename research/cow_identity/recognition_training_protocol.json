@@ -1,0 +1,31 @@
+{
+  "frozen_at_utc": "2026-10-03T06:47:09.759372+00:00",
+  "script_sha256": "50f08a875c76511577b8e5bdc4ab58fde4bd08fbb3e22b230e4756eb54eef857",
+  "purpose": "Bounded external public-cattle backbone adaptation pilot; no training started at protocol freeze",
+  "cohort_manifest_sha256": "29c72477157fad3d50b0a53951dd4652177f38906088f6b717ea7b8eb5668d71",
+  "base_encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+  "initial_weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
+  "steps": 200,
+  "checkpoint_steps": [
+    100,
+    200
+  ],
+  "seed": 42,
+  "batch": "4 identities, 2 distinct-day images each; 2 identities from each of Cows2021 and SideViewCows2026",
+  "input": "440x440 RGB bilinear resize, ImageNet normalization; native official validation transform",
+  "optimization": "AdamW backbone1e-5/classifier1e-3, weight_decay1e-4; supervised contrastive temperature0.1 +0.25cosine classifier crossentropy temperature0.1; gradient norm cap5",
+  "updated_parameters": "Full backbone, GeM, embedding BN affine; all BN running stats frozen",
+  "gradient_checkpointing": true,
+  "augmentation": "Crop90\u2013100%, restrained color, grayscale10%, quarter turns on Cows2021 only, no mirrored flank assumptions",
+  "selection": "Select unchanged baseline or checkpoint by correct validation accepts under99%precision/1%unknownFA, then rank1; only external identity/date-disjoint validation",
+  "transfer_only": [
+    "8-calves development windows",
+    "ETHZ adult video regression"
+  ],
+  "unopened": [
+    "8-calves1800\u20132099",
+    "8-calves2700\u20132999"
+  ],
+  "deployment": "Research only. No production model promotion without full held-out end-to-end evidence.",
+  "numerics": "Gradient clipping fails on non-finite norms rather than saving an invalid checkpoint."
+}

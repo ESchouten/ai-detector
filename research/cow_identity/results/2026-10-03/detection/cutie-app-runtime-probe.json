@@ -1,0 +1,606 @@
+{
+  "actual_device": "mps:0",
+  "aggregate_slot_iou": {
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.0,
+    "4": 1.0,
+    "5": 1.0,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 1.0
+  },
+  "baseline_prefix_mean_after10_seconds": 0.1270363444700928,
+  "baseline_propagation_sha256": "98721b3a84a525d63b70bb720d7b8d0b7a7811de06b71d92c7b12818629a2e26",
+  "baseline_provenance": {
+    "device": "mps",
+    "libraries": {
+      "einops": "0.8.2",
+      "hydra-core": "1.3.2",
+      "numpy": "2.5.3",
+      "torch": "2.11.0",
+      "torchvision": "0.26.0"
+    },
+    "protocol_sha256": "aaac7595cebc8beacace4260380d6c00b2b1c5eccf39def8cc4d0e6a7b7595d6",
+    "runner_sha256": "85c163664cdef3d7cef4268ac0970b569f8c7d62f95cc77add9ae6e46f51c9a7",
+    "seed_prompts": [
+      {
+        "box": [
+          205.9642333984375,
+          347.7969970703125,
+          374.84649658203125,
+          526.3373413085938
+        ],
+        "cow": 1
+      },
+      {
+        "box": [
+          196.76585388183594,
+          7.1869707107543945,
+          329.18768310546875,
+          164.6800537109375
+        ],
+        "cow": 2
+      },
+      {
+        "box": [
+          248.4268798828125,
+          144.3514862060547,
+          428.3359375,
+          299.2070617675781
+        ],
+        "cow": 3
+      },
+      {
+        "box": [
+          563.657470703125,
+          304.2561950683594,
+          687.2448120117188,
+          441.0980224609375
+        ],
+        "cow": 4
+      },
+      {
+        "box": [
+          518.0762939453125,
+          87.2020492553711,
+          612.0076904296875,
+          206.85313415527344
+        ],
+        "cow": 5
+      },
+      {
+        "box": [
+          124.35855865478516,
+          346.3227844238281,
+          300.2774353027344,
+          531.0787353515625
+        ],
+        "cow": 6
+      },
+      {
+        "box": [
+          520.2232055664062,
+          412.458984375,
+          749.978759765625,
+          562.9124755859375
+        ],
+        "cow": 7
+      },
+      {
+        "box": [
+          386.2817687988281,
+          2.991962432861328,
+          482.60906982421875,
+          108.92845153808594
+        ],
+        "cow": 8
+      }
+    ],
+    "smoke_frames": null,
+    "source_commit": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a"
+  },
+  "changed_pixels": 0,
+  "compared_pixels": 12480000,
+  "dtype": "torch.float32",
+  "elapsed_seconds": 6.431169959018007,
+  "exact_box_frames": 26,
+  "exact_pixel_frames": 26,
+  "frames": [
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 0,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 1,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 2,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 3,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 4,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 5,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 6,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 7,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 8,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 9,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 10,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 11,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 12,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 13,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 14,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 15,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 16,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 17,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 18,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 19,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 20,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 21,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 22,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 23,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 24,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    },
+    {
+      "changed_pixels": 0,
+      "exact_boxes": true,
+      "second": 25,
+      "slot_iou": {
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0
+      }
+    }
+  ],
+  "full_timeline_complete": false,
+  "hardware_probe_passed": true,
+  "integer_masks_compared": 26,
+  "limitation": "A51-frame prefix cannot establish long-term name continuity or sustained memory. The full2.12 replay remains gated on the original actual-seed pipeline passing the exposed development criteria.",
+  "maximum_p10_difference": 0,
+  "mean_frame_after10_seconds": 0.12356338206474192,
+  "mean_frame_seconds": 0.1260132377318965,
+  "minimum_slot_frame_iou": 1.0,
+  "model_initialization_seconds": 0.8222994999960065,
+  "peak_observed_post_reclaim_driver_gib": 3.1951751708984375,
+  "peak_sampled_process_rss_gib": 0.7293243408203125,
+  "probe_propagation_sha256": "a86b45edaa0136ed722a5688fbf1203a61cc30f02fa277e76f633ec7f42c05d2",
+  "probe_provenance": {
+    "device": "mps",
+    "libraries": {
+      "einops": "0.8.2",
+      "hydra-core": "1.3.2",
+      "numpy": "2.5.0",
+      "torch": "2.12.1",
+      "torchvision": "0.27.1"
+    },
+    "protocol_sha256": "aaac7595cebc8beacace4260380d6c00b2b1c5eccf39def8cc4d0e6a7b7595d6",
+    "runner_sha256": "85c163664cdef3d7cef4268ac0970b569f8c7d62f95cc77add9ae6e46f51c9a7",
+    "seed_prompts": [
+      {
+        "box": [
+          205.9642333984375,
+          347.7969970703125,
+          374.84649658203125,
+          526.3373413085938
+        ],
+        "cow": 1
+      },
+      {
+        "box": [
+          196.76585388183594,
+          7.1869707107543945,
+          329.18768310546875,
+          164.6800537109375
+        ],
+        "cow": 2
+      },
+      {
+        "box": [
+          248.4268798828125,
+          144.3514862060547,
+          428.3359375,
+          299.2070617675781
+        ],
+        "cow": 3
+      },
+      {
+        "box": [
+          563.657470703125,
+          304.2561950683594,
+          687.2448120117188,
+          441.0980224609375
+        ],
+        "cow": 4
+      },
+      {
+        "box": [
+          518.0762939453125,
+          87.2020492553711,
+          612.0076904296875,
+          206.85313415527344
+        ],
+        "cow": 5
+      },
+      {
+        "box": [
+          124.35855865478516,
+          346.3227844238281,
+          300.2774353027344,
+          531.0787353515625
+        ],
+        "cow": 6
+      },
+      {
+        "box": [
+          520.2232055664062,
+          412.458984375,
+          749.978759765625,
+          562.9124755859375
+        ],
+        "cow": 7
+      },
+      {
+        "box": [
+          386.2817687988281,
+          2.991962432861328,
+          482.60906982421875,
+          108.92845153808594
+        ],
+        "cow": 8
+      }
+    ],
+    "smoke_frames": 51,
+    "source_commit": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a"
+  },
+  "processed_inputs": 51,
+  "protocol_sha256": "aaac7595cebc8beacace4260380d6c00b2b1c5eccf39def8cc4d0e6a7b7595d6",
+  "requested_inputs": 51,
+  "scope": "Application-runtime compatibility probe only; same actual masks, source frames, SDK, config and FP32. No identity truth or accuracy scoring. All library versions recorded, not a Torch-only isolation experiment.",
+  "stop_reason": null
+}

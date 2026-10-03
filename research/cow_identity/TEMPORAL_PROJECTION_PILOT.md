@@ -98,7 +98,14 @@ and
 [`temporal-retrieval-distributions.json`](results/2026-10-03/recognition/temporal-retrieval-distributions.json).
 The latter records per-cow correct/wrong similarity and margin quantiles.
 
-## Proposed distinct next experiment — not started
+## Follow-up: spatial-tail adaptation
+
+The proposal below was subsequently executed under its own frozen protocol.
+It did not improve recognition: correct naming coverage fell from 1.204% to
+0.370% at the unchanged operating point. See the completed
+[spatial-tail pilot](SPATIAL_TAIL_PILOT.md) for its exact recipe, numerical checks
+and retained negative result. The following text records the original rationale;
+it is not an outstanding training request.
 
 A bounded spatial-tail adaptation is more informative than another global-vector
 head. The actual MIEWid EfficientNet contains 24 blocks in its final stage. Train
@@ -118,8 +125,8 @@ same uninterrupted-run positives, simultaneous negatives, noisy-teacher caveat
 and 30-second embargo remain. Use the already selected 96 reference observations
 unchanged for both baseline and adapted model, with no later gallery selection.
 
-The proposed budget is one short MPS prefix pass and 200 small-tail steps, an
-estimated few minutes with the existing 8 GiB cap. It requires a new exact protocol,
-source review and GPU slot; no training or new inference for this proposal has
-been performed. The current evidence neither proves that cow5's missing views can
-be recovered nor that appearance matching will generalize across visits or farms.
+The proposed budget was one short MPS prefix pass and 200 small-tail steps,
+estimated at a few minutes with the existing 8 GiB cap. Its separate protocol,
+source review and execution are recorded in the follow-up report. The evidence
+does not show that cow5's missing views can be recovered or that appearance
+matching generalizes across visits or farms.

@@ -1,0 +1,40 @@
+{
+  "archive": ".cache/cow-masked-reviewed-gallery-v1",
+  "counts": {
+    "initial_already_confirmed": 6,
+    "new_accepted": 33,
+    "new_uncertain_or_disagreed": 19,
+    "new_unique_questions": 52,
+    "references": 39,
+    "references_per_cow": {
+      "1": 10,
+      "2": 10,
+      "3": 2,
+      "4": 2,
+      "5": 5,
+      "6": 10
+    }
+  },
+  "elapsed_seconds": 2.1497694170102477,
+  "encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+  "libraries": {
+    "Pillow": "12.2.0",
+    "numpy": "2.5.0",
+    "safetensors": "0.8.0",
+    "timm": "1.0.30",
+    "torch": "2.12.1",
+    "torchvision": "0.27.1"
+  },
+  "limitations": "AI reviewers knew the scene; this is not independently blinded farmer truth. Actual-proposal-seeded early0..629 references, with training-frame optimism. Historical query masks used publisher-box initialization. Six initial photos add no new naming question;52new photos required multiple AI judgements.",
+  "manifest_sha256": "57d4703bd16fa1bce620e3477d9569f2130874d03c1412c7d98363bb9e237f48",
+  "mps_active_bytes_after": 205803520,
+  "mps_driver_bytes_after": 1299218432,
+  "protocol_sha256": "978951d3606d3033355ffd8c190153022f2cedc8b010b1537e0cf390190ca96d",
+  "shape": [
+    39,
+    2152
+  ],
+  "status": "COMPLETE_REFERENCE_ENCODING_ONLY",
+  "validation": "read_features digest, finite normalized vectors, row count verified; all197 recipe bindings unchanged after encoding. No query scoring.",
+  "vectors_sha256": "072eb290a085effc29958314e57f110f922588cb6d9d95cb06d11063aaab0b59"
+}

@@ -1,0 +1,63 @@
+"""Freeze one fixed two-gallery comparison before inspecting its outcomes."""
+import importlib.metadata
+import json
+from datetime import UTC, datetime
+from pathlib import Path
+from benchmark import digest, write_json
+
+root = Path('research/cow_identity')
+output = root / 'recognition_masked_comparison_protocol.json'
+if output.exists():
+    raise FileExistsError('Never replace a frozen comparison')
+encoding_path = root / 'recognition_masked_encoding_protocol.json'
+encoding = json.loads(encoding_path.read_text())
+files = dict(encoding['files'])
+paths = [
+    encoding_path,
+    Path(__file__),
+    root / 'recognition_masked_replay.py',
+    root / 'test_recognition_masked_replay.py',
+    root / 'cutie_appearance.py',
+    root / 'video_assessment.py',
+    root / 'scoring.py',
+    root / 'benchmark.py',
+    root / 'detection_sam_tracking.py',
+    Path('detector/src/aidetector/domain/identity.py'),
+    Path('detector/src/aidetector/domain/models.py'),
+    Path('detector/src/aidetector/adapters/inference/identity_observations.py'),
+    Path('detector/src/aidetector/adapters/inference/identity_gallery.py'),
+    Path('detector/src/aidetector/adapters/identity_catalog.py'),
+    Path('datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz'),
+    Path('datasets/8-calves/video/pmfeed_4_3_16.pkl'),
+]
+queries = Path('.cache/cow-cutie/miew-foreground')
+galleries = {
+    'original60': '.cache/cow-farm-evaluation/step-000/gallery',
+    'reviewed39': '.cache/cow-masked-reviewed-gallery-v1',
+}
+for directory in [queries, *map(Path, galleries.values())]:
+    paths.extend(directory / name for name in ('manifest.json', 'vectors.npz'))
+files.update({str(path): digest(path) for path in paths})
+for path, expected in files.items():
+    if digest(Path(path)) != expected:
+        raise ValueError(f'Previously frozen input changed: {path}')
+protocol = {
+    'status': 'FROZEN_BEFORE_NEW_GALLERY_QUERY_COMPARISON',
+    'frozen_at_utc': datetime.now(UTC).isoformat(),
+    'scope': 'Exposed-data appearance diagnostic: all anonymous masked query slots compared to all six confirmed cows; no inherited seed names, no threshold search, no held-out/application/re-entry claim.',
+    'files': files,
+    'libraries': {name: importlib.metadata.version(name) for name in ('torch', 'torchvision', 'timm', 'Pillow', 'numpy', 'safetensors', 'lap', 'pydantic')},
+    'encoder_fingerprint': encoding['encoder_fingerprint'],
+    'queries': str(queries),
+    'galleries': galleries,
+    'annotations': 'datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz',
+    'source_pickle': 'datasets/8-calves/video/pmfeed_4_3_16.pkl',
+    'panels': [[930, 1229], [1230, 1529]],
+    'reference_scope': 'Early0..629 reviewed photos;52new questions,33unanimous accepts,19uncertain/rejected plus6initially confirmed; no backfill. Old60gallery is publisher-prompt SAM masks, new39gallery is actual-proposal Cutie largest-component masks, so this tests a reference package, not chronology alone.',
+    'decision': {'minimum_similarity': 0.65, 'minimum_margin': 0.1, 'agreement_observations': 3, 'max_agreement_gap_seconds': 5, 'min_crop_side': 64, 'reject_border_contact': True, 'overlap_veto': False, 'p10_veto': False, 'duplicate_identity_conflicts': 'reject all', 'panel_state': 'fresh at each start, including contiguous1229to1230', 'missing_or_ineligible': 'clear agreement; no name hold'},
+    'scoring': 'Predictions complete before annotation loading. Original all-eight truth, HungarianIoU0.5. All visible known/unknown and unmatched predictions retained. Unmatched named counts as an error. Six enrolled identities;7and8withheld, without protective seed-slot knowledge.',
+    'success_reference': {'conservative_precision': 0.99, 'all_visible_known_coverage': 0.6, 'unknown_false_naming_rate': 0.01},
+    'followup': 'Report both packages regardless of outcome. No retuning/backfill after scoring. This diagnostic alone cannot promote app behavior or reopen3000+video.',
+}
+write_json(output, protocol)
+print(json.dumps({'path': str(output), 'sha256': digest(output), 'bindings': len(files)}))

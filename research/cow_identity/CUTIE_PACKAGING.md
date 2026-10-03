@@ -106,3 +106,35 @@ or historical IDs in the new core. Memory is sampled after disposal and cache
 reclamation, not at every transient peak. This verifies the correction on Metal;
 it does not test a continuously occupied camera, automatic departure decisions,
 full-resolution throughput or biological identity.
+
+## Combined inference package
+
+A separate source copy now combines the runtime, retirement and joint-readout
+patches into local wheel `cutie-1.0.0+aidetector.2`. It leaves the original SDK,
+the ongoing video experiment and the application's dependencies unchanged.
+The three patches apply cleanly to the pinned upstream commit. Building required
+fetching the pinned Hatchling build tool once; the subsequent model construction
+and inference proof explicitly blocks network access.
+
+The [frozen combined proof](cutie_combined_protocol.json) binds 223 source and
+artifact files. The [CPU result](results/2026-10-03/detection/cutie-combined-cpu.json)
+verifies exactly four changed SDK Python files, all thirteen original YAML
+resources, the original license and only the three inference requirements.
+Installed package bytes match the wheel. The real packaged constructor uses
+`pretrained_backbone=false`, strictly loads all 527 checkpoint tensors and makes
+no network requests; it does not use the research loader's constructor override.
+
+With real FP32 inference on synthetic 96×128 images, all sixteen complete
+probability arrays exactly match the separate joint-readout SDK through three
+insertion-time buckets and forced long-term memory consolidation. Deleting the
+middle bucket, adding a new stable ID, removing all objects and adding another
+fresh ID preserves the surviving channels and global own/other-object inputs.
+The earlier eight retirement checks also pass. An unprompted empty step bypasses
+readout and returns the SDK's all-zero background array; the application should
+dispose an empty core rather than treat that array as a calibrated probability.
+
+This complete CPU proof took 2.27 seconds. It establishes compatibility of the
+three patches at the actual inference boundary. It does not establish combined
+MPS behavior, full-resolution tracking quality, indefinite camera lifetime or
+complete installer support. The separate joint-only MPS video evaluation remains
+the accuracy experiment.

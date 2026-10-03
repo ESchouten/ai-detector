@@ -1,0 +1,53 @@
+import json
+from collections import Counter
+from pathlib import Path
+from types import SimpleNamespace
+from benchmark import digest,write_json
+from video_assessment import annotations,truth_at,pair_boxes
+from aidetector.domain.models import BoundingBox
+root=Path('research/cow_identity'); folder=root/'results/2026-10-03/recognition'
+protocol_path=root/'recognition_masked_comparison_protocol.json'
+report_path=folder/'masked-reference-comparison.json'
+output=folder/'masked-reference-comparison-independent-audit.json'
+assert not output.exists()
+p=json.loads(protocol_path.read_text()); report=json.loads(report_path.read_text())
+assert digest(protocol_path)=='a4075ce872b8b22a8112ad32ba3f27b253ed97dff68fd464bbcfa0b2e6520a6c'
+assert report['protocol_sha256']==digest(protocol_path)
+for path,expected in p['files'].items(): assert digest(Path(path))==expected,path
+records,_=annotations(SimpleNamespace(annotations=Path(p['annotations']),source_pickle=Path(p['source_pickle'])))
+keep=(records['frame_id']>=930*20+1)&(records['frame_id']<=1529*20+1)
+records={k:v[keep] for k,v in records.items()}
+summary={}; geometries={}
+for arm,panels in report['panels'].items():
+ totals=Counter(); output_panels={}
+ for start,end in p['panels']:
+  panel=panels[str(start)]; counts=Counter({k:0 for k in ['correct_name','wrong_name','unknown_named','unmatched_named']}); visible=Counter(); correct=Counter(); geometry=[]
+  assert [row['second'] for row in panel['timeline']]==list(range(start,end+1))
+  for row in panel['timeline']:
+   truth=truth_at(records,row['second']*20+1,800,600)
+   visible.update(t['cow'] for t in truth if t['cow']<=6)
+   decisions=row['decisions']; boxes=[BoundingBox(*d['box'],'cow',1.,d['track']) for d in decisions]
+   matches=pair_boxes(boxes,truth)
+   geometry.append((row['second'],[(d['box'],d['track'],d['eligible']) for d in decisions]))
+   counts.update(frames=1,visible_annotations=len(truth),visible_known=sum(t['cow']<=6 for t in truth),visible_unknown=sum(t['cow']>6 for t in truth),detector_boxes=len(boxes),matched_boxes=len(matches),missed_annotations=len(truth)-len(matches),unmatched_boxes=len(boxes)-len(matches))
+   for i,d in enumerate(decisions):
+    actual=truth[matches[i]]['cow'] if i in matches else None
+    name=d['name']; assert name is None or name in range(1,7)
+    outcome=('unmatched_named' if name is not None else 'unmatched_unnamed') if actual is None else ('known_unnamed' if actual<=6 else 'unknown_rejected') if name is None else 'unknown_named' if actual>6 else 'correct_name' if actual==name else 'wrong_name'
+    assert (d['truth'],d['outcome'])==(actual,outcome)
+    counts[outcome]+=1
+    if outcome=='correct_name':correct[actual]+=1
+  for k,v in counts.items(): assert panel['counts'][k]==v,(arm,start,k)
+  for cow in range(1,7):
+   assert panel['per_cow'][str(cow)]['visible']==visible[cow]
+   assert panel['per_cow'][str(cow)]['correctly_named']==correct[cow]
+  assert panel['known_coverage']==counts['correct_name']/counts['visible_known']
+  totals.update(counts);output_panels[str(start)]={'counts':dict(counts),'per_cow_correct':dict(correct),'per_cow_visible':dict(visible)}
+  if str(start) in geometries: assert geometry==geometries[str(start)]
+  else:geometries[str(start)]=geometry
+ summary[arm]={'panels':output_panels,'pooled':dict(totals),'pooled_known_coverage':totals['correct_name']/totals['visible_known']}
+sources=[protocol_path,report_path,Path(p['annotations']),Path(p['source_pickle']),root/'recognition_masked_replay.py',root/'video_assessment.py']
+recipe=folder/'masked-reference-comparison-independent-audit.recipe.py.txt'
+recipe.write_bytes(Path(__file__).read_bytes())
+value={'status':'COMPLETE_INDEPENDENT_CPU_RECOUNT','sources':{str(x):digest(x) for x in sources},'verified_freeze_bindings':len(p['files']),'recipe_path':str(recipe),'recipe_sha256':digest(recipe),'method':'Reconstruct original IoU0.5 assignment from every emitted box and original annotations, then explicitly recount names from assigned biological truth. No replay matcher/model or VideoMetrics call. Verify all600seconds/arm, geometry/eligibility equal across arms, per-cow visibility/correct counts and unchanged all-eight denominators.','arms':summary,'interpretation':'Both reference packages fail useful automatic identification coverage at fixed thresholds. Reviewed39 does not improve pooled correct coverage. No retuning, alternate labels or threshold recommendation.','limitations':'Exposed-data accounting audit with shared frozen IoU matcher, not independent biological ground truth, held-out re-identification, a full app replay or a causal isolation of gallery size versus crop provenance.'}
+write_json(output,value);print(output,digest(output));print({k:{'correct':v['pooled']['correct_name'],'visible':v['pooled']['visible_known'],'coverage':v['pooled_known_coverage'],'errors':sum(v['pooled'][x] for x in ['wrong_name','unknown_named','unmatched_named'])} for k,v in summary.items()})

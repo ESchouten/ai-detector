@@ -142,6 +142,13 @@ observations. Pooled coverage is 4046/5394, 75.01%, and conservative precision i
 correlated observations of a few animals in already exposed footage, not
 independent trials or an unseen-farm estimate.
 
+An [independent CPU recount](results/2026-10-03/detection/crowded-joint-readout-independent-audit.json)
+verified all 3,059 source/counter records, the exact 1,530 integer-row subset,
+the original six-name mapping and all eight animals' denominators. Explicit
+outcome accumulation reproduced every panel's named counts and acceptance gates
+without calling the main scorer; it retained the same frozen one-to-one IoU
+matcher. This checks accounting independently, not the biological truth labels.
+
 All 3,059 inputs completed, with the same anonymous births at 5 and 24 seconds.
 The ten pre-birth inputs are bit-exact against the original control. SAM was
 invoked twice, both accepted, instead of 54 times. Working/long-term memory

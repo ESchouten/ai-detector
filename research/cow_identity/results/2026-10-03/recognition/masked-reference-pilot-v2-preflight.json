@@ -1,0 +1,134 @@
+{
+  "added_winners": [],
+  "new_pilot": [
+    [
+      0,
+      5,
+      365
+    ],
+    [
+      0,
+      9,
+      621
+    ],
+    [
+      1,
+      5,
+      333
+    ],
+    [
+      1,
+      9,
+      581
+    ],
+    [
+      2,
+      5,
+      316
+    ],
+    [
+      2,
+      9,
+      595
+    ],
+    [
+      3,
+      5,
+      349
+    ],
+    [
+      3,
+      9,
+      629
+    ],
+    [
+      4,
+      7,
+      466
+    ],
+    [
+      4,
+      9,
+      582
+    ],
+    [
+      5,
+      5,
+      329
+    ],
+    [
+      5,
+      9,
+      568
+    ]
+  ],
+  "new_protocol": "da95964ded0025a00a278c007c30195ae8480e4342d2706e89d1f332a60cf30b",
+  "new_winners": 58,
+  "old_pilot": [
+    [
+      0,
+      5,
+      365
+    ],
+    [
+      0,
+      9,
+      621
+    ],
+    [
+      1,
+      5,
+      333
+    ],
+    [
+      1,
+      9,
+      581
+    ],
+    [
+      2,
+      5,
+      316
+    ],
+    [
+      2,
+      9,
+      595
+    ],
+    [
+      3,
+      5,
+      349
+    ],
+    [
+      3,
+      9,
+      629
+    ],
+    [
+      4,
+      7,
+      466
+    ],
+    [
+      4,
+      9,
+      582
+    ],
+    [
+      5,
+      5,
+      329
+    ],
+    [
+      5,
+      9,
+      568
+    ]
+  ],
+  "old_protocol": "1e9462da81ab0d098b8eac46d5bb52c5b046eea9dcd4c8a3dc8627ae806df3d0",
+  "old_winners": 58,
+  "pilot_keys_equal": true,
+  "reason": "Independent audit found zero-based tracks incorrectly compared with one-based stable conflicted_ids. No photos viewed or labels accepted before correction.",
+  "removed_winners": []
+}

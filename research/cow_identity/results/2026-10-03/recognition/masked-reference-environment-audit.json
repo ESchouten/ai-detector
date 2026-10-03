@@ -1,0 +1,136 @@
+{
+  "conclusion": "Current detector/.venv metadata exactly matches cached base MiewidEncoder fingerprint. Old researchenv does not. This reconstructs the constructor contract without proving new numerical inference parity. Future encoder instantiation must assert the same fingerprint before encoding.",
+  "environments": [
+    {
+      "computed_fingerprint": "4ffa7c7dca4287e5a5cfbe785622a34fcc55393c546fcbb9eef41ee8cb403cd8",
+      "contract": {
+        "device": "mps",
+        "libraries": {
+          "Pillow": "12.1.1",
+          "timm": "1.0.25",
+          "torch": "2.11.0",
+          "torchvision": "0.26.0"
+        },
+        "precision": "float32",
+        "preprocessing": "rgb-bilinear-stretch440-imagenet-gem-bn-l2-v1",
+        "weights": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348"
+      },
+      "executable": "/tmp/cow-identity-eval/bin/python",
+      "python": "3.12.0 (main, Oct  2 2023, 20:56:14) [Clang 16.0.3 ]"
+    },
+    {
+      "computed_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+      "contract": {
+        "device": "mps",
+        "libraries": {
+          "Pillow": "12.2.0",
+          "timm": "1.0.30",
+          "torch": "2.12.1",
+          "torchvision": "0.27.1"
+        },
+        "precision": "float32",
+        "preprocessing": "rgb-bilinear-stretch440-imagenet-gem-bn-l2-v1",
+        "weights": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348"
+      },
+      "executable": "/Users/erik/Projects/ESchouten/ai-detector/detector/.venv/bin/python",
+      "python": "3.12.14 (main, Aug 14 2026, 15:24:41) [Clang 22.1.3 ]"
+    }
+  ],
+  "files": {
+    ".cache/cow-cutie/actual-seed-masks/manifest.json": "9dc7367648d8f19d6beeec1e252be571d1fb59a0a41df0c5e1d9d7018fefbd4a",
+    ".cache/cow-cutie/miew-foreground/manifest.json": "1a721ae71a6d23d993a2a8e2c924883df58408d0225ffa6f4c456abbad1bb1d5",
+    ".cache/cow-farm-evaluation/step-000/gallery/manifest.json": "271bbfdd31a24f2e3b8243e6dca19ba1e2a928dd3340a6a577e0c22744ccd4f6",
+    ".cache/cow-masked-reference-pilot-v2/manifest.json": "60fa86a58eada0a5794d93238615cc3243a649803e433f975f6c0592152441a7",
+    "detector/src/aidetector/adapters/inference/miewid.py": "1dbbb9259b64a95aff9f6da872c3ee81966d0afaa04db1ea7cad3eb8f080a134",
+    "research/cow_identity/recognition_masked_pilot_v2_protocol.json": "da95964ded0025a00a278c007c30195ae8480e4342d2706e89d1f332a60cf30b",
+    "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-review-audit.json": "534fd2b4d7506f047c4566aa2ac22ebd4b6c31aa664d8325f8e2bed06f0c3ef2",
+    "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-review-cattle.json": "fa1a8a1ed89db000de111f55f7d95d07a995a253dd4b1ab241b251878fa31f26",
+    "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-review-root.json": "6eb6241c62d80d282561037a43c1ac36bae98f0b8e29ba91603b8b896e5a0150",
+    "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-v2-selection.json": "cfbfc83df838093ed16515c08187a9f4441b0d5586d2df6b6bf2d671c407d57d"
+  },
+  "gallery_contract_note": "Old masked gallery top-level1383cd... is a crop-cache namespace wrapping provenance; underlying contract.representation.encoder_fingerprint is af1f90d..., as are query features. Do not compare top-level wrappers or infer compatibility from weights alone.",
+  "initial_bin_conclusion": "All six bin0 winners are frame0 and the exact source/mask/LCC geometry used in initial comparison photos. Identity comes from pre-existing reviewed initial simulated-farmer proposals; t0 propagated mask resampling is not bit-identical to original SAM binaries, but no new biological naming question is introduced.",
+  "initial_bin_rows": [
+    {
+      "canonical_foreground_sha256": "513a3f00682011cc0bfb6a1f4a3475c55b86a4bc191244d3734f8f47e7007f92",
+      "cow": 1,
+      "is_initial_second": true,
+      "same_lcc_box": true,
+      "same_recorded_mask": true,
+      "same_source_pixels": true,
+      "second": 0
+    },
+    {
+      "canonical_foreground_sha256": "dafd5ce613404efd4693c01b59f237a89251a8aefab4176ebddf9d9ae537448e",
+      "cow": 2,
+      "is_initial_second": true,
+      "same_lcc_box": true,
+      "same_recorded_mask": true,
+      "same_source_pixels": true,
+      "second": 0
+    },
+    {
+      "canonical_foreground_sha256": "a2b199747c008bc614def301d71859bf1c398036ca5e4d3b02d056c8fc52d718",
+      "cow": 3,
+      "is_initial_second": true,
+      "same_lcc_box": true,
+      "same_recorded_mask": true,
+      "same_source_pixels": true,
+      "second": 0
+    },
+    {
+      "canonical_foreground_sha256": "3ead9933a95d2dca46c052d2297222b4c4aaf23021e3687582ef8106b94948bc",
+      "cow": 4,
+      "is_initial_second": true,
+      "same_lcc_box": true,
+      "same_recorded_mask": true,
+      "same_source_pixels": true,
+      "second": 0
+    },
+    {
+      "canonical_foreground_sha256": "3c54526842ba026cd5c6c29e9a679ba662de0b6a869434d7c96c5b169cf14e66",
+      "cow": 5,
+      "is_initial_second": true,
+      "same_lcc_box": true,
+      "same_recorded_mask": true,
+      "same_source_pixels": true,
+      "second": 0
+    },
+    {
+      "canonical_foreground_sha256": "b79363d1d2efc160298ccea8245f490809ea8ba74cae5c2ed343cbd426b1bc5b",
+      "cow": 6,
+      "is_initial_second": true,
+      "same_lcc_box": true,
+      "same_recorded_mask": true,
+      "same_source_pixels": true,
+      "second": 0
+    }
+  ],
+  "metadata_only_command_body": "import sys,json,hashlib\nfrom importlib.metadata import version\na={\"weights\":\"adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348\",\"preprocessing\":\"rgb-bilinear-stretch440-imagenet-gem-bn-l2-v1\",\"device\":\"mps\",\"precision\":\"float32\",\"libraries\":{name:version(name) for name in (\"torch\",\"torchvision\",\"timm\",\"Pillow\")}}\nprint(json.dumps({\"python\":sys.version,\"executable\":sys.executable,\"contract\":a,\"computed_fingerprint\":hashlib.sha256(json.dumps(a,sort_keys=True).encode()).hexdigest()}))",
+  "proposed_next_control": {
+    "description": "Use six already-confirmed initial photos as baseline; add only the seven unanimous pilot accepts0,1,2,3,5,10,11 to form13referencegallery. Exactlyonecomparison isolates the contribution of these additional confirmed views without40more reviews. This is a smaller pilot addendum, not completion of the original sixty-reference comparison.",
+    "encoder": "Same current app MIEWMPSFP32 constructor; assert af1f90d... and encode13exactPNGphotos once after authorization.",
+    "known_cows": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "limitations": "Historicalquerymasks use publisher-box seed initialization; references use actual-proposal seeds. This is simulated appearance reacquisition on existing mask geometry, not departure/re-entry proof or whole-runtime success.",
+    "policy": "Frozen .65similarity/.10margin/three-observationagreement; no model/threshold grid. Both galleries see same cached masks930\u20131229 and1230\u20131529 with seed names ignored/reset; preserve allknown/unknown/unmatched denominators.",
+    "remaining_coverage_gap": "Cows4and5retain only initial photo. No automatic label for uncertain examples.",
+    "status": "Proposal only, no encoding or score"
+  },
+  "question_budget": {
+    "full_selection_winners": 58,
+    "initial_already_reviewed": 6,
+    "maximum_new_questions_if_all_winners_reviewed": 52,
+    "new_pilot_questions": 12,
+    "note": "Count12uniquephotos as12farmer-likequestions, not six initial confirmations again. ThreeAIreviewers produce three judgments/photo, not a measured human burden. Rejected/uncertain questions remain in budget; no backfill.",
+    "remaining_unasked_candidates": 40
+  },
+  "scope": "Read-only environment/metadata audit. No model imported/constructed, no GPU call, no embeddings or new photos inspected.",
+  "target_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a"
+}

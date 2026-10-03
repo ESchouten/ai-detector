@@ -1,0 +1,130 @@
+{
+  "status": "INDEPENDENT_AI_REVIEW_FROZEN_NOT_ENROLLED",
+  "reviewer": "identity_integration_audit",
+  "protocol_sha256": "da95964ded0025a00a278c007c30195ae8480e4342d2706e89d1f332a60cf30b",
+  "render_record_sha256": "47c79bde61aa2d924c71faadfeebae80a1226b3f876e50808ba73f0f9505a183",
+  "selection_sha256": "cfbfc83df838093ed16515c08187a9f4441b0d5586d2df6b6bf2d671c407d57d",
+  "method": "All 12 displayed candidates compared against all six initial reference photos and their raw context. No root or cattle reviewer decisions were read before this file was written. Acceptance requires identifiable coat/anatomy correspondence, not the expected track slot. Uncertain photos are not backfilled.",
+  "limitations": [
+    "AI-assisted visual review, not a farmer, cattle owner or independent biological ground truth. These are small low-resolution crops; acceptance is provisional for this bounded pilot.",
+    "The reviewer had already audited the selector and knew candidates were paired by original slots, so ordering was not fully blinded. Image sheets concealed expected names, but this does not remove the ordering exposure.",
+    "After the visual decisions had been recorded in working notes, the render metadata was printed to obtain provenance and revealed some suggested_cow fields before the JSON freeze. Decisions below preserve those prior visual notes unchanged; this review cannot be described as fully label-blind.",
+    "Previously exposed video scenes and initial references were familiar from other geometry audits. No embedding scores, query accuracy or other reviewers decisions informed these assignments.",
+    "The six initial reference labels are accepted as the pilot reference convention, not independently verified biological identities. Unlisted animals remain possible; uncertain rows are not forced to the closest reference."
+  ],
+  "reviewed_images": {
+    ".cache/cow-masked-reference-pilot-v2/candidate-00-review.jpg": "ea2e703f0a14fa3cb2887b3071d1f40986863a67267ffbe3b9ea7a27fca32532",
+    ".cache/cow-masked-reference-pilot-v2/candidate-01-review.jpg": "9ce81bdca5240ee4658f360fd6316844a80a28a5669ba9abf11a278aa5bbd9b2",
+    ".cache/cow-masked-reference-pilot-v2/candidate-02-review.jpg": "0cc693797c70b2815987e283e9cda6e754f94a1a438201e591f818f276660d6f",
+    ".cache/cow-masked-reference-pilot-v2/candidate-03-review.jpg": "270460303727a51aced7709c611e294d0aef87c697712b44fe59aa3d181b5edd",
+    ".cache/cow-masked-reference-pilot-v2/candidate-04-review.jpg": "440f0b972f06c6355457e1524b5b53e1c83b9086a19e1e7201144caaf61f69b0",
+    ".cache/cow-masked-reference-pilot-v2/candidate-05-review.jpg": "efeb0484e9b94be85166bb361c9e12754f89e96bf8535e32df0f377e885ba6a0",
+    ".cache/cow-masked-reference-pilot-v2/candidate-06-review.jpg": "6a3a26da4276c8c1d7afdfd54ed88a6676b3a36c17bd96f71d27070c72cec673",
+    ".cache/cow-masked-reference-pilot-v2/candidate-07-review.jpg": "3467b0179aed20b1eb4583d169ef5604a3deaa364f11d7d0a34e315f36194c4b",
+    ".cache/cow-masked-reference-pilot-v2/candidate-08-review.jpg": "c9456bfb869a207fcd6aa53177e138e7b3e928ee432f5b018579945bcced9ee8",
+    ".cache/cow-masked-reference-pilot-v2/candidate-09-review.jpg": "d110ba5643cf28a7d18960babf9c9be039b6c6d377b94e235026a71eb7652399",
+    ".cache/cow-masked-reference-pilot-v2/candidate-10-review.jpg": "4a92810dce7d6fc354e302e279dd5dde8d687fc0c95e517ea74b064aa1e84e67",
+    ".cache/cow-masked-reference-pilot-v2/candidate-11-review.jpg": "8af60d71e12b78d1604a1d8bc2f7cc30f3dfbdb1f74eab5ef211049b3c0dc21d",
+    ".cache/cow-masked-reference-pilot-v2/initial-confirmed-reference-sheet.jpg": "2e8be17ed0d64b7645529ccde8c5cf8c4c83f4fb9a83da0adfc4f0507d3a8402"
+  },
+  "additional_reviewed_raw_context": {
+    "path": ".cache/cow-masked-reference-pilot-v2/initial-5-context.png",
+    "sha256": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963"
+  },
+  "rows": [
+    {
+      "candidate": 0,
+      "accepted": true,
+      "cow": 1,
+      "reason": "White ends and a broad black central saddle agree with reference 1. The darker island inside the upper white end and outline of the saddle give more than a generic white/black resemblance. The raw context shows one separated torso.",
+      "image_sha256": "ea2e703f0a14fa3cb2887b3071d1f40986863a67267ffbe3b9ea7a27fca32532"
+    },
+    {
+      "candidate": 1,
+      "accepted": true,
+      "cow": 1,
+      "reason": "The broad dark middle band, white areas at both ends, and dark island in the upper white patch agree with reference 1. The head is less complete, but the useful torso pattern is visible.",
+      "image_sha256": "9ce81bdca5240ee4658f360fd6316844a80a28a5669ba9abf11a278aa5bbd9b2"
+    },
+    {
+      "candidate": 2,
+      "accepted": true,
+      "cow": 2,
+      "reason": "The mainly black body has an irregular diagonal white collar near the front, a separate small middle island, and white blotches at the far end. This layout agrees with reference 2 better than the isolated shoulder/rump islands of reference 6.",
+      "image_sha256": "0cc693797c70b2815987e283e9cda6e754f94a1a438201e591f818f276660d6f"
+    },
+    {
+      "candidate": 3,
+      "accepted": true,
+      "cow": 2,
+      "reason": "The curved dark neck, white shoulder collar, separate middle white island and far-end white patch agree with reference 2. Context and mask follow a single animal.",
+      "image_sha256": "270460303727a51aced7709c611e294d0aef87c697712b44fe59aa3d181b5edd"
+    },
+    {
+      "candidate": 4,
+      "accepted": false,
+      "cow": null,
+      "reason": "White coat with several dark islands is visible, but this overhead end-on view does not establish a sufficiently specific correspondence to the lateral initial references. I cannot confidently distinguish a known animal from an unlisted white-coated animal.",
+      "image_sha256": "440f0b972f06c6355457e1524b5b53e1c83b9086a19e1e7201144caaf61f69b0"
+    },
+    {
+      "candidate": 5,
+      "accepted": true,
+      "cow": 3,
+      "reason": "The lateral white flank, dark neck/head, broken central flank/back spots and larger rear dark spot agree with reference 3. These spatially separated markings are more specific than the overall white body.",
+      "image_sha256": "efeb0484e9b94be85166bb361c9e12754f89e96bf8535e32df0f377e885ba6a0"
+    },
+    {
+      "candidate": 6,
+      "accepted": false,
+      "cow": null,
+      "reason": "A standing white torso with large dark islands is visible, but the initial curled animals hide the corresponding side. I cannot responsibly infer a biological identity from the changed posture alone.",
+      "image_sha256": "6a3a26da4276c8c1d7afdfd54ed88a6676b3a36c17bd96f71d27070c72cec673"
+    },
+    {
+      "candidate": 7,
+      "accepted": false,
+      "cow": null,
+      "reason": "The dark middle and white end regions may match a curled reference, but this crowded view and partial anatomy do not uniquely distinguish it from other similarly patterned animals. Retain as uncertain.",
+      "image_sha256": "3467b0179aed20b1eb4583d169ef5604a3deaa364f11d7d0a34e315f36194c4b"
+    },
+    {
+      "candidate": 8,
+      "accepted": false,
+      "cow": null,
+      "reason": "The dark bent neck and large white end patch do not provide enough unique correspondence to the small curled initial views. Several black animals share this broad layout.",
+      "image_sha256": "c9456bfb869a207fcd6aa53177e138e7b3e928ee432f5b018579945bcced9ee8"
+    },
+    {
+      "candidate": 9,
+      "accepted": false,
+      "cow": null,
+      "reason": "The curled dark torso with a large white outer patch has ambiguous correspondence to the initial curled animals. The side and coat islands cannot be established confidently from these still images.",
+      "image_sha256": "d110ba5643cf28a7d18960babf9c9be039b6c6d377b94e235026a71eb7652399"
+    },
+    {
+      "candidate": 10,
+      "accepted": true,
+      "cow": 6,
+      "reason": "The predominantly black lateral torso has two separated white islands: a smaller shoulder patch and a larger irregular rump patch. This agrees with reference 6, unlike the diagonal white collar in reference 2.",
+      "image_sha256": "4a92810dce7d6fc354e302e279dd5dde8d687fc0c95e517ea74b064aa1e84e67"
+    },
+    {
+      "candidate": 11,
+      "accepted": true,
+      "cow": 6,
+      "reason": "The long dark torso, separate small shoulder island and larger irregular rump island agree with reference 6. The raw context supports a single body rather than a joined pair.",
+      "image_sha256": "8af60d71e12b78d1604a1d8bc2f7cc30f3dfbdb1f74eab5ef211049b3c0dc21d"
+    }
+  ],
+  "summary": {
+    "accepted": 7,
+    "uncertain": 5,
+    "accepted_cows": [
+      1,
+      2,
+      3,
+      6
+    ]
+  }
+}

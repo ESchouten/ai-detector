@@ -1,0 +1,101 @@
+{
+  "accepted": 8,
+  "decisions": [
+    {
+      "candidate": 0,
+      "cow": 1,
+      "decision": "accept",
+      "evidence": "Broad dark middle saddle between mostly white fore/hind regions; matching large dark island near the pale rear. One coherent torso. Lower extremities are missing but the coat pattern is clear."
+    },
+    {
+      "candidate": 1,
+      "cow": 1,
+      "decision": "accept",
+      "evidence": "Same broad middle saddle, pale rear with dark terminal island, and pale forward torso as reference1. The body crop is coherent despite nearby animals."
+    },
+    {
+      "candidate": 2,
+      "cow": 2,
+      "decision": "accept",
+      "evidence": "Mostly black dorsal body with two pale rear markings, a narrow pale collar and a small isolated pale body fleck. This differs from reference6's larger separated shoulder/rump islands."
+    },
+    {
+      "candidate": 3,
+      "cow": 2,
+      "decision": "accept",
+      "evidence": "The narrow white collar, mostly black intervening body and paired rear markings agree with reference2. Bent posture differs, but the visible pattern supports the match."
+    },
+    {
+      "candidate": 4,
+      "cow": 3,
+      "decision": "accept",
+      "evidence": "Predominantly pale dorsal/flank surface with separated rounded dark islands and a dark neck; matches reference3's spotted pale body rather than the broad dark saddles of1/4."
+    },
+    {
+      "candidate": 5,
+      "cow": 3,
+      "decision": "accept",
+      "evidence": "Long pale dorsal strip with successive dark flank islands and dark neck agrees with reference3. Visible foreground follows one elongated animal."
+    },
+    {
+      "candidate": 6,
+      "cow": null,
+      "decision": "uncertain",
+      "evidence": "A side view with pale front and rear and dark middle is compatible with4, but the initial4 view is strongly foreshortened and the distinctive same-side islands cannot be confirmed reliably."
+    },
+    {
+      "candidate": 7,
+      "cow": null,
+      "decision": "uncertain",
+      "evidence": "The dark middle and pale end regions could fit4, but the low-resolution crop and changed posture do not establish a unique biological match from the six initial references."
+    },
+    {
+      "candidate": 8,
+      "cow": null,
+      "decision": "uncertain",
+      "evidence": "Mostly dark curved torso with pale rear; substantial posture/side change and partial occlusion. Reference5 lacks enough directly comparable visible coat detail to exclude the other dark animals confidently."
+    },
+    {
+      "candidate": 9,
+      "cow": null,
+      "decision": "uncertain",
+      "evidence": "Short dark torso with a pale rear, but head/neck detail is missing and initial5 is foreshortened. A useful exact biological match is not established."
+    },
+    {
+      "candidate": 10,
+      "cow": 6,
+      "decision": "accept",
+      "evidence": "Mostly dark body with separate pale shoulder and rump islands, without2's white collar. Their placement and the pointed forward patch agree with reference6."
+    },
+    {
+      "candidate": 11,
+      "cow": 6,
+      "decision": "accept",
+      "evidence": "Two separated pale dorsal islands on an otherwise dark body match reference6, including the irregular rear island and smaller triangular forward island. No obvious second torso in foreground."
+    }
+  ],
+  "exposure": "Previously saw general scene and candidate selection timestamps grouped by proposed source slot in agent messages. Review sheets show all six references; conclusions use visible coat evidence, but this is not a blinded review. No other reviewer decisions read. No query outcomes or3000+ footage examined.",
+  "limitation": "Apparent coat correspondence in a single low-resolution camera image is fallible; disagreement requires abstention, not majority voting to create training truth.",
+  "reviewer": "root",
+  "scope": "AI visual review, not independent external farmer truth or reliable animal-identification validation",
+  "sources": {
+    ".cache/cow-masked-reference-pilot-v2/candidate-00-review.jpg": "ea2e703f0a14fa3cb2887b3071d1f40986863a67267ffbe3b9ea7a27fca32532",
+    ".cache/cow-masked-reference-pilot-v2/candidate-01-review.jpg": "9ce81bdca5240ee4658f360fd6316844a80a28a5669ba9abf11a278aa5bbd9b2",
+    ".cache/cow-masked-reference-pilot-v2/candidate-02-review.jpg": "0cc693797c70b2815987e283e9cda6e754f94a1a438201e591f818f276660d6f",
+    ".cache/cow-masked-reference-pilot-v2/candidate-03-review.jpg": "270460303727a51aced7709c611e294d0aef87c697712b44fe59aa3d181b5edd",
+    ".cache/cow-masked-reference-pilot-v2/candidate-04-review.jpg": "440f0b972f06c6355457e1524b5b53e1c83b9086a19e1e7201144caaf61f69b0",
+    ".cache/cow-masked-reference-pilot-v2/candidate-05-review.jpg": "efeb0484e9b94be85166bb361c9e12754f89e96bf8535e32df0f377e885ba6a0",
+    ".cache/cow-masked-reference-pilot-v2/candidate-06-review.jpg": "6a3a26da4276c8c1d7afdfd54ed88a6676b3a36c17bd96f71d27070c72cec673",
+    ".cache/cow-masked-reference-pilot-v2/candidate-07-review.jpg": "3467b0179aed20b1eb4583d169ef5604a3deaa364f11d7d0a34e315f36194c4b",
+    ".cache/cow-masked-reference-pilot-v2/candidate-08-review.jpg": "c9456bfb869a207fcd6aa53177e138e7b3e928ee432f5b018579945bcced9ee8",
+    ".cache/cow-masked-reference-pilot-v2/candidate-09-review.jpg": "d110ba5643cf28a7d18960babf9c9be039b6c6d377b94e235026a71eb7652399",
+    ".cache/cow-masked-reference-pilot-v2/candidate-10-review.jpg": "4a92810dce7d6fc354e302e279dd5dde8d687fc0c95e517ea74b064aa1e84e67",
+    ".cache/cow-masked-reference-pilot-v2/candidate-11-review.jpg": "8af60d71e12b78d1604a1d8bc2f7cc30f3dfbdb1f74eab5ef211049b3c0dc21d",
+    ".cache/cow-masked-reference-pilot-v2/initial-confirmed-reference-sheet-enlarged.png": "a4780598e509aea33c95368dfc9763eca52760bd91bb1d1f36ae3a5723f928f3",
+    ".cache/cow-masked-reference-pilot-v2/initial-confirmed-reference-sheet.jpg": "2e8be17ed0d64b7645529ccde8c5cf8c4c83f4fb9a83da0adfc4f0507d3a8402",
+    ".cache/cow-masked-reference-pilot-v2/manifest.json": "60fa86a58eada0a5794d93238615cc3243a649803e433f975f6c0592152441a7",
+    "research/cow_identity/recognition_masked_pilot_v2_protocol.json": "da95964ded0025a00a278c007c30195ae8480e4342d2706e89d1f332a60cf30b"
+  },
+  "status": "frozen independent review before reading other reviewers biological conclusions",
+  "uncertain": 4
+}

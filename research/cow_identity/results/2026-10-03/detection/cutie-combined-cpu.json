@@ -1,0 +1,168 @@
+{
+  "all_active_memory_removed": true,
+  "elapsed_seconds": 2.2667112920898944,
+  "empty_step_bypasses_readout_then_new_id_initializes": true,
+  "long_term_consolidation_exercised": true,
+  "network_attempts": [],
+  "package": {
+    "changed_files": [
+      "cutie/inference/inference_core.py",
+      "cutie/inference/kv_memory_store.py",
+      "cutie/inference/memory_manager.py",
+      "cutie/model/big_modules.py"
+    ],
+    "yaml_resources": 13
+  },
+  "parity_steps": [
+    {
+      "exact_probabilities": true,
+      "step": 0
+    },
+    {
+      "exact_probabilities": true,
+      "step": 1
+    },
+    {
+      "exact_probabilities": true,
+      "step": 2
+    },
+    {
+      "exact_probabilities": true,
+      "step": 3
+    },
+    {
+      "exact_probabilities": true,
+      "step": 4
+    },
+    {
+      "exact_probabilities": true,
+      "step": 5
+    },
+    {
+      "exact_probabilities": true,
+      "step": 6
+    },
+    {
+      "exact_probabilities": true,
+      "step": 7
+    },
+    {
+      "exact_probabilities": true,
+      "step": 8
+    },
+    {
+      "exact_probabilities": true,
+      "step": 9
+    },
+    {
+      "exact_probabilities": true,
+      "step": 10
+    },
+    {
+      "exact_probabilities": true,
+      "step": 11
+    },
+    {
+      "exact_probabilities": true,
+      "step": 12
+    },
+    {
+      "exact_probabilities": true,
+      "step": 13
+    },
+    {
+      "exact_probabilities": true,
+      "step": 14
+    },
+    {
+      "exact_probabilities": true,
+      "step": 15
+    }
+  ],
+  "passed": true,
+  "post_retirement_steps": [
+    {
+      "ids": [
+        7,
+        91
+      ],
+      "joint_fusion": true,
+      "step": 16
+    },
+    {
+      "ids": [
+        7,
+        91
+      ],
+      "joint_fusion": true,
+      "step": 17
+    },
+    {
+      "ids": [
+        7,
+        91,
+        105
+      ],
+      "joint_fusion": true,
+      "step": 18
+    },
+    {
+      "ids": [
+        7,
+        91,
+        105
+      ],
+      "joint_fusion": true,
+      "step": 19
+    },
+    {
+      "ids": [
+        7,
+        91,
+        105
+      ],
+      "joint_fusion": true,
+      "step": 20
+    },
+    {
+      "ids": [
+        7,
+        91,
+        105
+      ],
+      "joint_fusion": true,
+      "step": 21
+    },
+    {
+      "ids": [
+        7,
+        91,
+        105
+      ],
+      "joint_fusion": true,
+      "step": 22
+    },
+    {
+      "ids": [
+        7,
+        91,
+        105
+      ],
+      "joint_fusion": true,
+      "step": 23
+    }
+  ],
+  "previous_retirement_checks": {
+    "all_bucket_offsets_removed": true,
+    "all_previous_channels_removed": true,
+    "all_summaries_removed": true,
+    "new_object_has_only_its_bucket_offset": true,
+    "new_object_has_only_its_summary": true,
+    "next_step_reads_survivor_mask": true,
+    "retired_summary_removed": true,
+    "survivor_channel_compacted": true
+  },
+  "protocol_sha256": "ebfcfde6cba42fd1f525a87a43a23f4884845c1d943feb24e16f49e50c0b5273",
+  "scope": "Actual CPU FP32 inference on synthetic96x128pixels only. No cattle accuracy, MPS, application dependency change or live-camera throughput claim.",
+  "strict_equal_checkpoint_tensors": 527
+}

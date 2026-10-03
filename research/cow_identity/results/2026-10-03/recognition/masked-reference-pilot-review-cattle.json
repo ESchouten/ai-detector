@@ -1,0 +1,104 @@
+{
+  "disclosure": "I authored the selector and saw suggested-slot metadata before viewing pixels. Candidate review sheets omitted expected names and were compared against all six initial references. No other reviewer conclusions, publisher query annotations or appearance-model outputs were read before this file was saved. Prior metadata exposure prevents calling this a blinded farmer study.",
+  "protocol_sha256": "da95964ded0025a00a278c007c30195ae8480e4342d2706e89d1f332a60cf30b",
+  "render_record_sha256": "47c79bde61aa2d924c71faadfeebae80a1226b3f876e50808ba73f0f9505a183",
+  "review_kind": "Independent AI visual matching, not blinded biological ground truth",
+  "reviewed_derivatives": {
+    ".cache/cow-masked-reference-pilot-v2/ambiguous-candidate-zoom-cattle.png": "fc95f11589f3d26351e43c07d07899d726ca79808e42c83840386107b9a20dc7",
+    ".cache/cow-masked-reference-pilot-v2/candidate-00-review.jpg": "ea2e703f0a14fa3cb2887b3071d1f40986863a67267ffbe3b9ea7a27fca32532",
+    ".cache/cow-masked-reference-pilot-v2/candidate-01-review.jpg": "9ce81bdca5240ee4658f360fd6316844a80a28a5669ba9abf11a278aa5bbd9b2",
+    ".cache/cow-masked-reference-pilot-v2/candidate-02-review.jpg": "0cc693797c70b2815987e283e9cda6e754f94a1a438201e591f818f276660d6f",
+    ".cache/cow-masked-reference-pilot-v2/candidate-03-review.jpg": "270460303727a51aced7709c611e294d0aef87c697712b44fe59aa3d181b5edd",
+    ".cache/cow-masked-reference-pilot-v2/candidate-04-review.jpg": "440f0b972f06c6355457e1524b5b53e1c83b9086a19e1e7201144caaf61f69b0",
+    ".cache/cow-masked-reference-pilot-v2/candidate-05-review.jpg": "efeb0484e9b94be85166bb361c9e12754f89e96bf8535e32df0f377e885ba6a0",
+    ".cache/cow-masked-reference-pilot-v2/candidate-06-review.jpg": "6a3a26da4276c8c1d7afdfd54ed88a6676b3a36c17bd96f71d27070c72cec673",
+    ".cache/cow-masked-reference-pilot-v2/candidate-07-review.jpg": "3467b0179aed20b1eb4583d169ef5604a3deaa364f11d7d0a34e315f36194c4b",
+    ".cache/cow-masked-reference-pilot-v2/candidate-08-review.jpg": "c9456bfb869a207fcd6aa53177e138e7b3e928ee432f5b018579945bcced9ee8",
+    ".cache/cow-masked-reference-pilot-v2/candidate-09-review.jpg": "d110ba5643cf28a7d18960babf9c9be039b6c6d377b94e235026a71eb7652399",
+    ".cache/cow-masked-reference-pilot-v2/candidate-10-review.jpg": "4a92810dce7d6fc354e302e279dd5dde8d687fc0c95e517ea74b064aa1e84e67",
+    ".cache/cow-masked-reference-pilot-v2/candidate-11-review.jpg": "8af60d71e12b78d1604a1d8bc2f7cc30f3dfbdb1f74eab5ef211049b3c0dc21d",
+    ".cache/cow-masked-reference-pilot-v2/initial-confirmed-reference-sheet-enlarged.png": "a4780598e509aea33c95368dfc9763eca52760bd91bb1d1f36ae3a5723f928f3",
+    ".cache/cow-masked-reference-pilot-v2/initial-confirmed-reference-sheet.jpg": "2e8be17ed0d64b7645529ccde8c5cf8c4c83f4fb9a83da0adfc4f0507d3a8402"
+  },
+  "reviewer": "cattle_research",
+  "rows": [
+    {
+      "accepted": true,
+      "candidate": 0,
+      "cow": 1,
+      "reason": "Broad white rump with the separate dark rump patch, solid dark central saddle and white front section agree with initial cow1; foreground is one coherent body."
+    },
+    {
+      "accepted": true,
+      "candidate": 1,
+      "cow": 1,
+      "reason": "Same distinctive broad white rear, dark oval near the rump edge and dark saddle/white front combination as initial cow1; no second body visible within crop."
+    },
+    {
+      "accepted": true,
+      "candidate": 2,
+      "cow": 2,
+      "reason": "Mostly black dorsal coat with the narrow white shoulder band, small white island immediately behind it and split white rump marking matches initial cow2, unlike cow6 two isolated broad white patches."
+    },
+    {
+      "accepted": true,
+      "candidate": 3,
+      "cow": 2,
+      "reason": "Turned side view preserves the white shoulder belt with the small adjoining island and rear white marking of initial cow2; sufficient coat remains visible."
+    },
+    {
+      "accepted": false,
+      "candidate": 4,
+      "cow": null,
+      "reason": "Likely the mostly white spotted animal represented by initial cow3, but the near-top view exposes a different side and merges some dark neck/body markings. I cannot uniquely confirm biological identity from the single initial view; do not use the propagated slot as proof."
+    },
+    {
+      "accepted": true,
+      "candidate": 5,
+      "cow": 3,
+      "reason": "White body with separate irregular dark dorsal/flank islands and a dark neck matches the corresponding side of initial cow3; coat remains clear across the long body."
+    },
+    {
+      "accepted": false,
+      "candidate": 6,
+      "cow": null,
+      "reason": "Clear isolated side-view crop, but the broad white neck and large dark side patches cannot be uniquely linked to the strongly foreshortened initial cow4 view by this reviewer. This is identity uncertainty rather than poor segmentation."
+    },
+    {
+      "accepted": true,
+      "candidate": 7,
+      "cow": 4,
+      "reason": "The white rear region, dark central coat with a small white island and branching narrow white slash, and lower white flare agree with the turned/foreshortened markings of initial cow4."
+    },
+    {
+      "accepted": false,
+      "candidate": 8,
+      "cow": null,
+      "reason": "Bent dark animal has limited visible side coat and a bright rear patch; initial cow5 is also strongly foreshortened. The common dark/white regions are insufficient to exclude the other predominantly black animals without trusting track continuity."
+    },
+    {
+      "accepted": false,
+      "candidate": 9,
+      "cow": null,
+      "reason": "Crop preserves a white rear patch and black trunk but clips away much of the other useful coat through occlusion/shape. Initial cow5 is too limited to uniquely confirm this changed view; reject rather than infer from its slot."
+    },
+    {
+      "accepted": true,
+      "candidate": 10,
+      "cow": 6,
+      "reason": "The predominantly black coat with one white shoulder triangle and separate rounded rear white patch matches initial cow6; side context supports a single unmerged animal."
+    },
+    {
+      "accepted": true,
+      "candidate": 11,
+      "cow": 6,
+      "reason": "The same separated shoulder and rump white patches on an otherwise dark back identify initial cow6; the intervening dark region remains intact and the foreground is coherent."
+    }
+  ],
+  "selection_sha256": "cfbfc83df838093ed16515c08187a9f4441b0d5586d2df6b6bf2d671c407d57d",
+  "summary": {
+    "accepted": 8,
+    "rejected_or_uncertain": 4,
+    "remaining_action": "Wait for independent reviewers; no enrollment or embedding extraction from this review alone."
+  }
+}

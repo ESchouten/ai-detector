@@ -1,0 +1,188 @@
+{
+  "arms": {
+    "original60": {
+      "panels": {
+        "1230": {
+          "counts": {
+            "correct_name": 24,
+            "detector_boxes": 2344,
+            "frames": 300,
+            "known_unnamed": 1627,
+            "matched_boxes": 2244,
+            "missed_annotations": 153,
+            "unknown_named": 0,
+            "unknown_rejected": 593,
+            "unmatched_boxes": 100,
+            "unmatched_named": 0,
+            "unmatched_unnamed": 100,
+            "visible_annotations": 2397,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_name": 0
+          },
+          "per_cow_correct": {
+            "2": 3,
+            "3": 7,
+            "4": 14
+          },
+          "per_cow_visible": {
+            "1": 300,
+            "2": 300,
+            "3": 300,
+            "4": 300,
+            "5": 300,
+            "6": 299
+          }
+        },
+        "930": {
+          "counts": {
+            "correct_name": 58,
+            "detector_boxes": 2397,
+            "frames": 300,
+            "known_unnamed": 1691,
+            "matched_boxes": 2335,
+            "missed_annotations": 58,
+            "unknown_named": 0,
+            "unknown_rejected": 586,
+            "unmatched_boxes": 62,
+            "unmatched_named": 0,
+            "unmatched_unnamed": 62,
+            "visible_annotations": 2393,
+            "visible_known": 1795,
+            "visible_unknown": 598,
+            "wrong_name": 0
+          },
+          "per_cow_correct": {
+            "2": 7,
+            "3": 19,
+            "4": 32
+          },
+          "per_cow_visible": {
+            "1": 300,
+            "2": 300,
+            "3": 300,
+            "4": 300,
+            "5": 300,
+            "6": 295
+          }
+        }
+      },
+      "pooled": {
+        "correct_name": 82,
+        "detector_boxes": 4741,
+        "frames": 600,
+        "known_unnamed": 3318,
+        "matched_boxes": 4579,
+        "missed_annotations": 211,
+        "unknown_named": 0,
+        "unknown_rejected": 1179,
+        "unmatched_boxes": 162,
+        "unmatched_named": 0,
+        "unmatched_unnamed": 162,
+        "visible_annotations": 4790,
+        "visible_known": 3594,
+        "visible_unknown": 1196,
+        "wrong_name": 0
+      },
+      "pooled_known_coverage": 0.022815804117974403
+    },
+    "reviewed39": {
+      "panels": {
+        "1230": {
+          "counts": {
+            "correct_name": 42,
+            "detector_boxes": 2344,
+            "frames": 300,
+            "known_unnamed": 1609,
+            "matched_boxes": 2244,
+            "missed_annotations": 153,
+            "unknown_named": 0,
+            "unknown_rejected": 593,
+            "unmatched_boxes": 100,
+            "unmatched_named": 0,
+            "unmatched_unnamed": 100,
+            "visible_annotations": 2397,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_name": 0
+          },
+          "per_cow_correct": {
+            "2": 42
+          },
+          "per_cow_visible": {
+            "1": 300,
+            "2": 300,
+            "3": 300,
+            "4": 300,
+            "5": 300,
+            "6": 299
+          }
+        },
+        "930": {
+          "counts": {
+            "correct_name": 26,
+            "detector_boxes": 2397,
+            "frames": 300,
+            "known_unnamed": 1723,
+            "matched_boxes": 2335,
+            "missed_annotations": 58,
+            "unknown_named": 0,
+            "unknown_rejected": 586,
+            "unmatched_boxes": 62,
+            "unmatched_named": 0,
+            "unmatched_unnamed": 62,
+            "visible_annotations": 2393,
+            "visible_known": 1795,
+            "visible_unknown": 598,
+            "wrong_name": 0
+          },
+          "per_cow_correct": {
+            "2": 21,
+            "6": 5
+          },
+          "per_cow_visible": {
+            "1": 300,
+            "2": 300,
+            "3": 300,
+            "4": 300,
+            "5": 300,
+            "6": 295
+          }
+        }
+      },
+      "pooled": {
+        "correct_name": 68,
+        "detector_boxes": 4741,
+        "frames": 600,
+        "known_unnamed": 3332,
+        "matched_boxes": 4579,
+        "missed_annotations": 211,
+        "unknown_named": 0,
+        "unknown_rejected": 1179,
+        "unmatched_boxes": 162,
+        "unmatched_named": 0,
+        "unmatched_unnamed": 162,
+        "visible_annotations": 4790,
+        "visible_known": 3594,
+        "visible_unknown": 1196,
+        "wrong_name": 0
+      },
+      "pooled_known_coverage": 0.018920422927100722
+    }
+  },
+  "interpretation": "Both reference packages fail useful automatic identification coverage at fixed thresholds. Reviewed39 does not improve pooled correct coverage. No retuning, alternate labels or threshold recommendation.",
+  "limitations": "Exposed-data accounting audit with shared frozen IoU matcher, not independent biological ground truth, held-out re-identification, a full app replay or a causal isolation of gallery size versus crop provenance.",
+  "method": "Reconstruct original IoU0.5 assignment from every emitted box and original annotations, then explicitly recount names from assigned biological truth. No replay matcher/model or VideoMetrics call. Verify all600seconds/arm, geometry/eligibility equal across arms, per-cow visibility/correct counts and unchanged all-eight denominators.",
+  "recipe_path": "research/cow_identity/results/2026-10-03/recognition/masked-reference-comparison-independent-audit.recipe.py.txt",
+  "recipe_sha256": "df7e8435b73313e061900c5b03f1c16a597e5ef9d40428716c1dc4440f2b9a0d",
+  "sources": {
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "research/cow_identity/recognition_masked_comparison_protocol.json": "a4075ce872b8b22a8112ad32ba3f27b253ed97dff68fd464bbcfa0b2e6520a6c",
+    "research/cow_identity/recognition_masked_replay.py": "6647aac45f641ad13686df44da4186074c92458a07a67e963739d8d8aed76244",
+    "research/cow_identity/results/2026-10-03/recognition/masked-reference-comparison.json": "d0702ebdddf889ae63c467c0470d0563d8c037e663e4ec193fef5aacf25d2885",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  },
+  "status": "COMPLETE_INDEPENDENT_CPU_RECOUNT",
+  "verified_freeze_bindings": 219
+}

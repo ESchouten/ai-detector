@@ -1,0 +1,201 @@
+{
+  "status": "FROZEN_AI_REVIEW_COMPARISON_NOT_ENROLLED",
+  "protocol_sha256": "da95964ded0025a00a278c007c30195ae8480e4342d2706e89d1f332a60cf30b",
+  "render_record": {
+    "path": "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-v2-render.json",
+    "sha256": "47c79bde61aa2d924c71faadfeebae80a1226b3f876e50808ba73f0f9505a183"
+  },
+  "reviews": {
+    "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-review-root.json": "6eb6241c62d80d282561037a43c1ac36bae98f0b8e29ba91603b8b896e5a0150",
+    "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-review-cattle.json": "fa1a8a1ed89db000de111f55f7d95d07a995a253dd4b1ab241b251878fa31f26",
+    "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-review-audit.json": "534fd2b4d7506f047c4566aa2ac22ebd4b6c31aa664d8325f8e2bed06f0c3ef2"
+  },
+  "images": {
+    ".cache/cow-masked-reference-pilot-v2/initial-1.png": "513a3f00682011cc0bfb6a1f4a3475c55b86a4bc191244d3734f8f47e7007f92",
+    ".cache/cow-masked-reference-pilot-v2/initial-1-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-2.png": "dafd5ce613404efd4693c01b59f237a89251a8aefab4176ebddf9d9ae537448e",
+    ".cache/cow-masked-reference-pilot-v2/initial-2-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-3.png": "a2b199747c008bc614def301d71859bf1c398036ca5e4d3b02d056c8fc52d718",
+    ".cache/cow-masked-reference-pilot-v2/initial-3-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-4.png": "3ead9933a95d2dca46c052d2297222b4c4aaf23021e3687582ef8106b94948bc",
+    ".cache/cow-masked-reference-pilot-v2/initial-4-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-5.png": "3c54526842ba026cd5c6c29e9a679ba662de0b6a869434d7c96c5b169cf14e66",
+    ".cache/cow-masked-reference-pilot-v2/initial-5-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-6.png": "b79363d1d2efc160298ccea8245f490809ea8ba74cae5c2ed343cbd426b1bc5b",
+    ".cache/cow-masked-reference-pilot-v2/initial-6-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/candidate-04.png": "cd955be66915b1ca06494820e6723babadb88e732f81952bcff6cfa2176aebd1",
+    ".cache/cow-masked-reference-pilot-v2/candidate-04-context.png": "36daed09274fb8696cdb1c69ddfb7e5775e68bf383c3c2795d4c9106e7a4bdce",
+    ".cache/cow-masked-reference-pilot-v2/candidate-10.png": "98ae28cb9aa2359659d152c3bec943e221c3dd6c01aeec3e8122c2614cb312c9",
+    ".cache/cow-masked-reference-pilot-v2/candidate-10-context.png": "9859affce5cbbe7b0a50dc9b44c1963b9e7d473d6e0b0799f5de37b08833edc8",
+    ".cache/cow-masked-reference-pilot-v2/candidate-02.png": "a0ca834a5cd164dfb185fa6d2e5fae341b0afa15a4b16f2997d776edd55d69bb",
+    ".cache/cow-masked-reference-pilot-v2/candidate-02-context.png": "3a00ca857af314a5d82c80a635062b9bfb59eb81b7d909c70fcbc630173494c0",
+    ".cache/cow-masked-reference-pilot-v2/candidate-06.png": "0557335be1af7c779a9525246b487642b406367b1933bcefe3576f5caa87f34f",
+    ".cache/cow-masked-reference-pilot-v2/candidate-06-context.png": "65d429773f534f301d43249881856511b2bc68e13e71a498ced54f54faa2eb01",
+    ".cache/cow-masked-reference-pilot-v2/candidate-00.png": "095acd1c88d663b36da55deb4518bbb837a54825e75dd3bc9452d76326483a03",
+    ".cache/cow-masked-reference-pilot-v2/candidate-00-context.png": "d84a9d3e2333075f227eda8dfb33ac39e9aa12b995ad35f2ba90fe69e32241a2",
+    ".cache/cow-masked-reference-pilot-v2/candidate-08.png": "ce231fcf6413b6323995d648c7c2e6f4d15c66e9f00bdd20ea769592ae37f416",
+    ".cache/cow-masked-reference-pilot-v2/candidate-08-context.png": "3a21828694df53faa9caac7d9dbf4cab9d5e683c51b04398604ea7f597c89849",
+    ".cache/cow-masked-reference-pilot-v2/candidate-11.png": "00a74f147b08114842eacb39d726bca3b911f4fcdad52518da74b805164e45c6",
+    ".cache/cow-masked-reference-pilot-v2/candidate-11-context.png": "eb4b6bd1cdd7181a9f6f9fdeb0e6dee796a86f493deea0e874ee3370aa05bded",
+    ".cache/cow-masked-reference-pilot-v2/candidate-03.png": "ea989d53b87bfdbc063b89db1d9447320d64d49e3f0e908cecbf93d0e118b8b2",
+    ".cache/cow-masked-reference-pilot-v2/candidate-03-context.png": "f7bde212984d2adbc22c315902caea77bcdd961a91fbbc3b479a1364cbdb4eb0",
+    ".cache/cow-masked-reference-pilot-v2/candidate-09.png": "57e0f81f0e57cfaec78434bebf348503f24d3c49aae0c2c1142a9b8805d71242",
+    ".cache/cow-masked-reference-pilot-v2/candidate-09-context.png": "b43d23d9a5d8e30f85ad53e72a1094a4e6c2908735588775724cd86902677960",
+    ".cache/cow-masked-reference-pilot-v2/candidate-05.png": "2a6e081adf085d2b5929b87630d32057273515e34cffde01576a9b4da448a0ad",
+    ".cache/cow-masked-reference-pilot-v2/candidate-05-context.png": "d97b6f24befa85db72e7e7dce91ee9ef35b393f4e1302d79a3524ff376351988",
+    ".cache/cow-masked-reference-pilot-v2/candidate-01.png": "2552e3a0b02bf081a5bacaa697f788fb7db75fb30de220ae19fa58adcd87de60",
+    ".cache/cow-masked-reference-pilot-v2/candidate-01-context.png": "1aee9e01fc17bdf3de3ee335e7a6a61d707b291d7fa3fc10964542972ae435c4",
+    ".cache/cow-masked-reference-pilot-v2/candidate-07.png": "e754f6f099df3e3fee4bcd58ef6b5b5d5b4582009f261489e038b187fefc6095",
+    ".cache/cow-masked-reference-pilot-v2/candidate-07-context.png": "a4e85e1f098f40786cc0bccb1b7f03f6448afb0b0be06b382fceb8aea42e129a"
+  },
+  "rows": [
+    {
+      "candidate": 0,
+      "reviewer_assignments": {
+        "root": 1,
+        "cattle": 1,
+        "audit": 1
+      },
+      "decision": "accept",
+      "cow": 1,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 1,
+      "reviewer_assignments": {
+        "root": 1,
+        "cattle": 1,
+        "audit": 1
+      },
+      "decision": "accept",
+      "cow": 1,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 2,
+      "reviewer_assignments": {
+        "root": 2,
+        "cattle": 2,
+        "audit": 2
+      },
+      "decision": "accept",
+      "cow": 2,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 3,
+      "reviewer_assignments": {
+        "root": 2,
+        "cattle": 2,
+        "audit": 2
+      },
+      "decision": "accept",
+      "cow": 2,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 4,
+      "reviewer_assignments": {
+        "root": 3,
+        "cattle": null,
+        "audit": null
+      },
+      "decision": "uncertain",
+      "cow": null,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 5,
+      "reviewer_assignments": {
+        "root": 3,
+        "cattle": 3,
+        "audit": 3
+      },
+      "decision": "accept",
+      "cow": 3,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 6,
+      "reviewer_assignments": {
+        "root": null,
+        "cattle": null,
+        "audit": null
+      },
+      "decision": "uncertain",
+      "cow": null,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 7,
+      "reviewer_assignments": {
+        "root": null,
+        "cattle": 4,
+        "audit": null
+      },
+      "decision": "uncertain",
+      "cow": null,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 8,
+      "reviewer_assignments": {
+        "root": null,
+        "cattle": null,
+        "audit": null
+      },
+      "decision": "uncertain",
+      "cow": null,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 9,
+      "reviewer_assignments": {
+        "root": null,
+        "cattle": null,
+        "audit": null
+      },
+      "decision": "uncertain",
+      "cow": null,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 10,
+      "reviewer_assignments": {
+        "root": 6,
+        "cattle": 6,
+        "audit": 6
+      },
+      "decision": "accept",
+      "cow": 6,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    },
+    {
+      "candidate": 11,
+      "reviewer_assignments": {
+        "root": 6,
+        "cattle": 6,
+        "audit": 6
+      },
+      "decision": "accept",
+      "cow": 6,
+      "rule": "Unanimous biological assignment required. An uncertain review is not overridden by majority."
+    }
+  ],
+  "summary": {
+    "unanimous_accepted": 7,
+    "uncertain": 5,
+    "contradictory_named_assignments": 0,
+    "accepted_cows": [
+      1,
+      2,
+      3,
+      6
+    ]
+  },
+  "limitations": [
+    "Not independent external farmer ground truth. All reviewers had some ordering/scene exposure; see individual disclosure, including audit reviewer metadata exposure after visual notes but before JSON freeze.",
+    "No backfill, majority vote, guessed identity or inference-based relabeling. Initial six references remain a pilot convention; unknown animals can resemble them.",
+    "This comparison adds no gallery files and encodes no crops. Remaining40 predefined questions are a separate bounded review, not replacements for uncertain photos."
+  ]
+}

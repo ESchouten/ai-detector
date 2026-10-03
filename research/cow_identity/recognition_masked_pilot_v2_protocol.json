@@ -1,0 +1,48 @@
+{
+  "bins": "Ten fixed63-second bins starting0; each ends inclusively62+63*i",
+  "crop": "Reuse object_crops: tight largest8-connected foreground, other pixels127, no alignment. Original whole context retained separately.",
+  "files": {
+    ".cache/cow-cutie/actual-seed-masks/manifest.json": "9dc7367648d8f19d6beeec1e252be571d1fb59a0a41df0c5e1d9d7018fefbd4a",
+    ".cache/cow-cutie/calibration-clip/sampled.avi": "11bff035d63f5e6399ada2ee82ebac05b242071b299b3c3ea023b4399972a8cf",
+    ".cache/cow-cutie/calibration-clip/sampled.json": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d",
+    ".cache/cow-cutie/streaming-development/streaming.json": "c4a5a561c9a8d201a8e02e2cc9fe77fe5deacd6bbf7639189c46dde041c431c7",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/cutie_features.py": "7f1bb165da9cc60bf8a85a25ed645e47c7d1976ee1db91dcc6f14aac1f84acad",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_cutie.py": "85c163664cdef3d7cef4268ac0970b569f8c7d62f95cc77add9ae6e46f51c9a7",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_cutie_variants.py": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_streaming.py": "a33618c315ecff17e8730b7d5ca81a38c9c809e162fad2555e0399feddccabe4",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_masked_pilot.py": "1688cda1304159954beb1cad1c69e3dd36f37aefbf72b1e20dcd8469baebadae",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_recognition_masked_pilot.py": "8dc47949a551f7ecc792bd5f569e6d84d037139b85ea15f1d0823cf40b9791c1",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  },
+  "frozen_at_utc": "2026-10-03T11:12:27.457610+00:00",
+  "identity_indexing": "track_id is zero-based; recorded conflicted_ids are one-based stable mask IDs, so compare track_id+1.",
+  "inputs": {
+    "clip": ".cache/cow-cutie/calibration-clip",
+    "run": ".cache/cow-cutie/streaming-development",
+    "seeds": ".cache/cow-cutie/actual-seed-masks/manifest.json"
+  },
+  "known_slots": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "libraries": {
+    "numpy": "2.5.0",
+    "opencv": "4.13.0"
+  },
+  "limits": "Actual-proposal-seeded development run; early-scene localizer training optimism. No source later than629 decoded. Not an autonomous re-entry test.",
+  "pilot": "For each named slot, choose first and last available winner among bins5..9. At most12 questions; if fewer than2 available, preserve fewer. No alternate/backfill after review rejection.",
+  "quality": "p10>=.7, no recorded quarantine, existing same-frame reciprocal confirmation, unclipped>=64px on both axes. No query label, embedding or outcome.",
+  "ranking": "Within each slot/bin: highest raw-mask p10, then largest raw-mask area, then earliest second. One winner per bin.",
+  "review": "Suggestions are not truth. Independent biological confirmation against initial confirmed source/mask is required before enrollment; ambiguity rejects. No encoding or query scoring authorized by this protocol.",
+  "source_seconds": [
+    0,
+    629
+  ],
+  "status": "FROZEN_SELECTION_AND_RENDER_ONLY",
+  "version": 2
+}

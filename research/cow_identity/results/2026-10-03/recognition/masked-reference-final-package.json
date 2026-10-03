@@ -1,0 +1,3084 @@
+{
+  "counts": {
+    "initial_already_confirmed": 6,
+    "new_accepted": 33,
+    "new_uncertain_or_disagreed": 19,
+    "new_unique_questions": 52,
+    "references": 39,
+    "references_per_cow": {
+      "1": 10,
+      "2": 10,
+      "3": 2,
+      "4": 2,
+      "5": 5,
+      "6": 10
+    }
+  },
+  "created_at_utc": "2026-10-03T11:30:31.086787+00:00",
+  "crop": "Exact reviewed PNG: tight largest8-connected foreground, other pixels127; BGR decode, no alignment, padding or new crop selection.",
+  "decision": "All reviewers accept the identical biological ID; every uncertainty/disagreement rejects. No majority override, backfill or inherited suggested slot labels.",
+  "files": {
+    ".cache/cow-cutie/actual-seed-masks/manifest.json": "9dc7367648d8f19d6beeec1e252be571d1fb59a0a41df0c5e1d9d7018fefbd4a",
+    ".cache/cow-masked-reference-pilot-v2/candidate-00-context.png": "d84a9d3e2333075f227eda8dfb33ac39e9aa12b995ad35f2ba90fe69e32241a2",
+    ".cache/cow-masked-reference-pilot-v2/candidate-00-marked-context.png": "52088a535e95844ba5c142bc70201f9cce2cb0b3b8e09543612c659f4dfc84f9",
+    ".cache/cow-masked-reference-pilot-v2/candidate-00.png": "095acd1c88d663b36da55deb4518bbb837a54825e75dd3bc9452d76326483a03",
+    ".cache/cow-masked-reference-pilot-v2/candidate-01-context.png": "1aee9e01fc17bdf3de3ee335e7a6a61d707b291d7fa3fc10964542972ae435c4",
+    ".cache/cow-masked-reference-pilot-v2/candidate-01-marked-context.png": "9497cc9971a11f4165e8a46ab10f61f0b769aaa4b42da19fdd840d82e2df4255",
+    ".cache/cow-masked-reference-pilot-v2/candidate-01.png": "2552e3a0b02bf081a5bacaa697f788fb7db75fb30de220ae19fa58adcd87de60",
+    ".cache/cow-masked-reference-pilot-v2/candidate-02-context.png": "3a00ca857af314a5d82c80a635062b9bfb59eb81b7d909c70fcbc630173494c0",
+    ".cache/cow-masked-reference-pilot-v2/candidate-02-marked-context.png": "2570e3b392dae06a1da99ebb302dc82e489b37704aeedbaf5b331d649f0c6ccd",
+    ".cache/cow-masked-reference-pilot-v2/candidate-02.png": "a0ca834a5cd164dfb185fa6d2e5fae341b0afa15a4b16f2997d776edd55d69bb",
+    ".cache/cow-masked-reference-pilot-v2/candidate-03-context.png": "f7bde212984d2adbc22c315902caea77bcdd961a91fbbc3b479a1364cbdb4eb0",
+    ".cache/cow-masked-reference-pilot-v2/candidate-03-marked-context.png": "5ab837ec1236a96a73fb2335bc755e7b69a9e26521be3fb12ded19d89bfa4ce8",
+    ".cache/cow-masked-reference-pilot-v2/candidate-03.png": "ea989d53b87bfdbc063b89db1d9447320d64d49e3f0e908cecbf93d0e118b8b2",
+    ".cache/cow-masked-reference-pilot-v2/candidate-04-context.png": "36daed09274fb8696cdb1c69ddfb7e5775e68bf383c3c2795d4c9106e7a4bdce",
+    ".cache/cow-masked-reference-pilot-v2/candidate-04-marked-context.png": "f21527d829ec21f8c55f01a5f74449e1fac5f24de1931bab9ca27d7d332c532e",
+    ".cache/cow-masked-reference-pilot-v2/candidate-04.png": "cd955be66915b1ca06494820e6723babadb88e732f81952bcff6cfa2176aebd1",
+    ".cache/cow-masked-reference-pilot-v2/candidate-05-context.png": "d97b6f24befa85db72e7e7dce91ee9ef35b393f4e1302d79a3524ff376351988",
+    ".cache/cow-masked-reference-pilot-v2/candidate-05-marked-context.png": "9aa20d814ef7574c90d7ad5f4176f24b1ecc5bbd8ab7663dbb9b9556281a5098",
+    ".cache/cow-masked-reference-pilot-v2/candidate-05.png": "2a6e081adf085d2b5929b87630d32057273515e34cffde01576a9b4da448a0ad",
+    ".cache/cow-masked-reference-pilot-v2/candidate-06-context.png": "65d429773f534f301d43249881856511b2bc68e13e71a498ced54f54faa2eb01",
+    ".cache/cow-masked-reference-pilot-v2/candidate-06-marked-context.png": "635796e87272526aaa947f3cd97b04879f036add08c05ccc5affbe52ccccaeae",
+    ".cache/cow-masked-reference-pilot-v2/candidate-06.png": "0557335be1af7c779a9525246b487642b406367b1933bcefe3576f5caa87f34f",
+    ".cache/cow-masked-reference-pilot-v2/candidate-07-context.png": "a4e85e1f098f40786cc0bccb1b7f03f6448afb0b0be06b382fceb8aea42e129a",
+    ".cache/cow-masked-reference-pilot-v2/candidate-07-marked-context.png": "9bddee6dd291558858d2d6431e1c2ade4de06e91ffadc55159ca01454f4809d1",
+    ".cache/cow-masked-reference-pilot-v2/candidate-07.png": "e754f6f099df3e3fee4bcd58ef6b5b5d5b4582009f261489e038b187fefc6095",
+    ".cache/cow-masked-reference-pilot-v2/candidate-08-context.png": "3a21828694df53faa9caac7d9dbf4cab9d5e683c51b04398604ea7f597c89849",
+    ".cache/cow-masked-reference-pilot-v2/candidate-08-marked-context.png": "5f8cb9bdac472e84a785908b26196f88b5f068adb30d95c9775de5587a9898d7",
+    ".cache/cow-masked-reference-pilot-v2/candidate-08.png": "ce231fcf6413b6323995d648c7c2e6f4d15c66e9f00bdd20ea769592ae37f416",
+    ".cache/cow-masked-reference-pilot-v2/candidate-09-context.png": "b43d23d9a5d8e30f85ad53e72a1094a4e6c2908735588775724cd86902677960",
+    ".cache/cow-masked-reference-pilot-v2/candidate-09-marked-context.png": "d8a12a379cba25f862b2a1cef83f4ac9080c06b07c2827f6f81ce76f891ac3e9",
+    ".cache/cow-masked-reference-pilot-v2/candidate-09.png": "57e0f81f0e57cfaec78434bebf348503f24d3c49aae0c2c1142a9b8805d71242",
+    ".cache/cow-masked-reference-pilot-v2/candidate-10-context.png": "9859affce5cbbe7b0a50dc9b44c1963b9e7d473d6e0b0799f5de37b08833edc8",
+    ".cache/cow-masked-reference-pilot-v2/candidate-10-marked-context.png": "389e4a68317a2865cda67972ab85619ed571352c06fc4bfe8cae8467f962ddfa",
+    ".cache/cow-masked-reference-pilot-v2/candidate-10.png": "98ae28cb9aa2359659d152c3bec943e221c3dd6c01aeec3e8122c2614cb312c9",
+    ".cache/cow-masked-reference-pilot-v2/candidate-11-context.png": "eb4b6bd1cdd7181a9f6f9fdeb0e6dee796a86f493deea0e874ee3370aa05bded",
+    ".cache/cow-masked-reference-pilot-v2/candidate-11-marked-context.png": "d62702450ed859f8996998064d3cba6c0f0122c20c11c90a5fb960c877a0f8ad",
+    ".cache/cow-masked-reference-pilot-v2/candidate-11.png": "00a74f147b08114842eacb39d726bca3b911f4fcdad52518da74b805164e45c6",
+    ".cache/cow-masked-reference-pilot-v2/initial-1-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-1-marked-context.png": "01c10799020375d475945a56c50bbc9ef54e785533da6bedfc1131d29d8a4896",
+    ".cache/cow-masked-reference-pilot-v2/initial-1.png": "513a3f00682011cc0bfb6a1f4a3475c55b86a4bc191244d3734f8f47e7007f92",
+    ".cache/cow-masked-reference-pilot-v2/initial-2-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-2-marked-context.png": "3f362ff726fb6e2f947821914fd7361f3dd1de1d5580d1416028a3d99dfb1c51",
+    ".cache/cow-masked-reference-pilot-v2/initial-2.png": "dafd5ce613404efd4693c01b59f237a89251a8aefab4176ebddf9d9ae537448e",
+    ".cache/cow-masked-reference-pilot-v2/initial-3-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-3-marked-context.png": "a1cff2138895165da4a1868de49d8eabe493c3e286aa5af03699032c99e3c766",
+    ".cache/cow-masked-reference-pilot-v2/initial-3.png": "a2b199747c008bc614def301d71859bf1c398036ca5e4d3b02d056c8fc52d718",
+    ".cache/cow-masked-reference-pilot-v2/initial-4-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-4-marked-context.png": "af1ca85f9b90e9f7604859a223311b3638dbc99e8db91343458ac5c8d0ea9fc6",
+    ".cache/cow-masked-reference-pilot-v2/initial-4.png": "3ead9933a95d2dca46c052d2297222b4c4aaf23021e3687582ef8106b94948bc",
+    ".cache/cow-masked-reference-pilot-v2/initial-5-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-5-marked-context.png": "2aefc79f56dc2f90ca653a9cbdec5bef5c49cbb937519e93ffef9e0184944d8c",
+    ".cache/cow-masked-reference-pilot-v2/initial-5.png": "3c54526842ba026cd5c6c29e9a679ba662de0b6a869434d7c96c5b169cf14e66",
+    ".cache/cow-masked-reference-pilot-v2/initial-6-context.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-masked-reference-pilot-v2/initial-6-marked-context.png": "55aa9f9bc3c7470fc80b5ba8b3619da23a5351fa971b3d72b581837c773df195",
+    ".cache/cow-masked-reference-pilot-v2/initial-6.png": "b79363d1d2efc160298ccea8245f490809ea8ba74cae5c2ed343cbd426b1bc5b",
+    ".cache/cow-masked-reference-pilot-v2/manifest.json": "60fa86a58eada0a5794d93238615cc3243a649803e433f975f6c0592152441a7",
+    ".cache/cow-masked-reference-remaining/candidate-12-context.png": "91578e509f193501b414ff2535f18b64c92ee3c0427e8d7a7b5880fd2107f97e",
+    ".cache/cow-masked-reference-remaining/candidate-12-marked-context.png": "dc0848573e072b384e432f8934a3d3024d41c7ba94c33ec0929d7fb27f3d25b3",
+    ".cache/cow-masked-reference-remaining/candidate-12.png": "5111d2a7d7b8a90e3b0bd19ebda7701e6fa0d9488c623a0e45b1929fff29f2b3",
+    ".cache/cow-masked-reference-remaining/candidate-13-context.png": "ac00b9d78ab56e0c4167d6c5821138105c2981131766c51126d08ff4a90139c6",
+    ".cache/cow-masked-reference-remaining/candidate-13-marked-context.png": "c637621f58c5e48719834a644cc3eadb5d58b590aba22ca66aa18fcea2d7f602",
+    ".cache/cow-masked-reference-remaining/candidate-13.png": "c93eb6a002809b975a2c1891c0c486f603303a77da4fa1fd13f06bb4a2f73806",
+    ".cache/cow-masked-reference-remaining/candidate-14-context.png": "9b4cc5c755363fa1216f675cb9324f0511602e2e65454ea2d4858122722739bb",
+    ".cache/cow-masked-reference-remaining/candidate-14-marked-context.png": "5290319c7bbef1436d67f5bbbe063b9d8b31a4027698bd6920dcf38647903349",
+    ".cache/cow-masked-reference-remaining/candidate-14.png": "62fd28eac69f6613af543b7736acf71ae9c97b18a921c4724b4b1974afd73e64",
+    ".cache/cow-masked-reference-remaining/candidate-15-context.png": "1b7ee6ccd8edc884b58ed5552f2f9551b9853ed17572fb345a4d180ebe660709",
+    ".cache/cow-masked-reference-remaining/candidate-15-marked-context.png": "f5001baaa4db29df2ace565bfdf6ecde883a6cbfc1a31bfe07288d905cd43a53",
+    ".cache/cow-masked-reference-remaining/candidate-15.png": "47311a6267afac790b22bb7ca3ec13f11352df8aea0f31c81105c55c56ec0937",
+    ".cache/cow-masked-reference-remaining/candidate-16-context.png": "b0cb486efd528310dc95d09b4c5de9e7c4323696aa29e0cf089bb8e388ec5c98",
+    ".cache/cow-masked-reference-remaining/candidate-16-marked-context.png": "7833a328de87118a15220f6060d6a1c8853fb943c40ba99d5ee3dbd228b0db17",
+    ".cache/cow-masked-reference-remaining/candidate-16.png": "fe13aadd323ca146cc3f7b2e1f8bf5d2272285e9650081832920cb64c40b27a0",
+    ".cache/cow-masked-reference-remaining/candidate-17-context.png": "c1e3c185b2536352a3a1cb017e3934eda18803dec777871b030922ba1284df85",
+    ".cache/cow-masked-reference-remaining/candidate-17-marked-context.png": "dc4f79d935cd6d791db444047d7ac98797c33aadaee2d69e583ba67442ccf86a",
+    ".cache/cow-masked-reference-remaining/candidate-17.png": "8e055c299e918166ee5c794ac1bca721b66629b2dded32b7d2046a7a19b9fa54",
+    ".cache/cow-masked-reference-remaining/candidate-18-context.png": "8b936d881a2280398bf002087bbdb48126e1995434aa909d1d9bcf5e9e239aae",
+    ".cache/cow-masked-reference-remaining/candidate-18-marked-context.png": "98d988ce54b801978bc4d44ab0bff7d11fabfed7702a078434a7d740b0c915fe",
+    ".cache/cow-masked-reference-remaining/candidate-18.png": "acdbc51e47a2a0acac285c94426eae8957a63b1c122d81cbedf5a3f92232522c",
+    ".cache/cow-masked-reference-remaining/candidate-19-context.png": "e35779730851636ac86f04ef59d841a9bcc65d67d89af553b732b2a2dce55f71",
+    ".cache/cow-masked-reference-remaining/candidate-19-marked-context.png": "38a36edabd9b0d77403d16332bdaa2475dd2895f95fb8b073bfeee876a7edc18",
+    ".cache/cow-masked-reference-remaining/candidate-19.png": "1c721301cb594685ec6b4602e7bf04a36ae9fbd5b280c78d5da5232c1c0c577b",
+    ".cache/cow-masked-reference-remaining/candidate-20-context.png": "101273148d1fb7bd4dda366d5baf04f7d1d2f6d998746fbec52145fda3e4dead",
+    ".cache/cow-masked-reference-remaining/candidate-20-marked-context.png": "b2eaac8ac74de7dcbf1117aa40bd06a51197aaf37be5d7d9e7c8e3b4c9e6bb7d",
+    ".cache/cow-masked-reference-remaining/candidate-20.png": "33d0972df1367264830bb35751789c82a9b1fc745b5e570a4161fb6794fbc8bd",
+    ".cache/cow-masked-reference-remaining/candidate-21-context.png": "380884b147c5fc3eb6a949d995ee36b6845a0ea74a3be905da3f227c64cd3ec5",
+    ".cache/cow-masked-reference-remaining/candidate-21-marked-context.png": "abc5a41b552bd35dbd5e0237e8f9fc589c1f0b6c4b39119dfc8df81bddb61eb1",
+    ".cache/cow-masked-reference-remaining/candidate-21.png": "1ed8be7fc51b8054260e444f6c5c6f8d7c99cd6427a25b53dd42d02f594ef95c",
+    ".cache/cow-masked-reference-remaining/candidate-22-context.png": "e627abd5c6f6f942d76f354d3cf8a2e3639ede82166d946532265deacaa6f7a0",
+    ".cache/cow-masked-reference-remaining/candidate-22-marked-context.png": "844ba8ca9465489edbdcb5f769a555e0ee93a60fc9767970772eed7f95618912",
+    ".cache/cow-masked-reference-remaining/candidate-22.png": "35ed223804ead4331a82a975fc72ac7433e91c450e218e43265280f9fd0f6df8",
+    ".cache/cow-masked-reference-remaining/candidate-23-context.png": "1517943c41e3f49e2049ced953518f892104b90cfa3224dba829f94299d7278b",
+    ".cache/cow-masked-reference-remaining/candidate-23-marked-context.png": "8f1535f050157f2cb05f3ecc2d1aeae20fec9869f19b06a89b301d0e5ec242d0",
+    ".cache/cow-masked-reference-remaining/candidate-23.png": "a69041fb805b62fdc65106df515336ec12430cd0316e94dee920651f8cd6f0d9",
+    ".cache/cow-masked-reference-remaining/candidate-24-context.png": "5cae7087c826ce414cc3fda1a0103da80b92636016db5b6cf7998279559856e6",
+    ".cache/cow-masked-reference-remaining/candidate-24-marked-context.png": "5e09b6b38e434fc1296b9754b2ca3d30c32346f69dfa0b037e4be0ea1b55af6d",
+    ".cache/cow-masked-reference-remaining/candidate-24.png": "9dd6c0d9592629f359f562f7fa8b8c78a7091edc50e1b0d6ee76270666209108",
+    ".cache/cow-masked-reference-remaining/candidate-25-context.png": "59e50d408c406101a7cc481b2925ae3b8a44e87a18f58a52edd742db6ca624b8",
+    ".cache/cow-masked-reference-remaining/candidate-25-marked-context.png": "22bed109d1b0ab328084d9f60d74ccd0754327c25af25bd76c0673e1a8e66f8d",
+    ".cache/cow-masked-reference-remaining/candidate-25.png": "722d511e87548f01039a28f90e14e9e37f243a201a3b779557196c4027c090ce",
+    ".cache/cow-masked-reference-remaining/candidate-26-context.png": "d2469b15f9fa2b6f944fd571fb1664cbe9d4bb1efa77e3aab7c5ce04d3b5026b",
+    ".cache/cow-masked-reference-remaining/candidate-26-marked-context.png": "82648286b7b725b255d8a47efe4bc4416f9f49a05ac9e811cba02618bf255c70",
+    ".cache/cow-masked-reference-remaining/candidate-26.png": "2f0e8fa176cf194913013df2ebcd1d8aa2b6bfc4ba5c6cbdb55d94313e3ed491",
+    ".cache/cow-masked-reference-remaining/candidate-27-context.png": "3deadf28543e0e3dcf4df072bb2e66e66df3308a67ff1f541f28e1044e59e4c5",
+    ".cache/cow-masked-reference-remaining/candidate-27-marked-context.png": "7141100ae091279c6c5edfa738a384eb4f10db5090e3e54cbd1b74e7af559fd3",
+    ".cache/cow-masked-reference-remaining/candidate-27.png": "7409f4d1e0b957ab70ac279df5d837f0ba46b20d092b27cd16a2e825a819f9c2",
+    ".cache/cow-masked-reference-remaining/candidate-28-context.png": "1cf9f0ad3c53cd334a31759551a8d8022c1c0c654017aca2bee968990d95e78c",
+    ".cache/cow-masked-reference-remaining/candidate-28-marked-context.png": "47bae06da09dfc77add6f2ee7d2aac7b565364357a3383c1fc1a051dd279aabf",
+    ".cache/cow-masked-reference-remaining/candidate-28.png": "7889480e58617dfd4ff143bfe2bc8a792f9f2d824152961a5461494ade6c0c86",
+    ".cache/cow-masked-reference-remaining/candidate-29-context.png": "86fbe59be917c0623c0a2168d5b8f9e03af668c7cc44e29c40a52a7322b5075d",
+    ".cache/cow-masked-reference-remaining/candidate-29-marked-context.png": "d73cac599a1355cd9a904137e7ab79b789dd3ec1c49c918e0e51bd041dd80fd7",
+    ".cache/cow-masked-reference-remaining/candidate-29.png": "f54ec8e65bcd5eb304308c864fdfec124295307be7439fc81750732439d1e1e0",
+    ".cache/cow-masked-reference-remaining/candidate-30-context.png": "f26347d92c8f96dd9264109cafc20fa9a1692d456ca0be2819229ea3201f7a06",
+    ".cache/cow-masked-reference-remaining/candidate-30-marked-context.png": "76c0ad94e6a87a678325e33d5adf666ef46dbd78836b8a9ac57b6e296ac7ae9f",
+    ".cache/cow-masked-reference-remaining/candidate-30.png": "eabc64fc7fbcb714217e33228a3b0468b3e9657069e2a8df8ad429969d0079c7",
+    ".cache/cow-masked-reference-remaining/candidate-31-context.png": "896d861ad8d11e90f6c78e81290869c77c3af82ad49bdd93d1f5115931c5f8c5",
+    ".cache/cow-masked-reference-remaining/candidate-31-marked-context.png": "7f1d5d60b08e1d8b3bb4611302926968f7b5b5979047d025a809d244428215a5",
+    ".cache/cow-masked-reference-remaining/candidate-31.png": "2ba18ea5635377529dcb241834d692be9ce8094df80ee1f167ab06973b160239",
+    ".cache/cow-masked-reference-remaining/candidate-32-context.png": "efacf01a33036e45385be7e384aa72e04e513e3bde1d4aa67935fe5ca36f0cf5",
+    ".cache/cow-masked-reference-remaining/candidate-32-marked-context.png": "b0bf427721b5017423318bd95bb26fd01a9306d78df0ff8bb64f05f97c0b12c0",
+    ".cache/cow-masked-reference-remaining/candidate-32.png": "35e2c6028e7ad1bec9ee645c500c2e0d67b652ebcba1708dece0c5ae7370cc79",
+    ".cache/cow-masked-reference-remaining/candidate-33-context.png": "5681fdeb17a1ca08a0910a17d57075a66c184bc4071118da6a6cb6b62d5d3312",
+    ".cache/cow-masked-reference-remaining/candidate-33-marked-context.png": "7b217a56c87921f696628ea92160cd6907986a8516c4aeb520c0edd86e5644b6",
+    ".cache/cow-masked-reference-remaining/candidate-33.png": "97018ae6461d747c7e65ba6535b4423f201413e569e8ba7bede6878886998737",
+    ".cache/cow-masked-reference-remaining/candidate-34-context.png": "fd9b98aef8fab9aa2aa43880e879c20a3d5ece25f9946a0f0a5008403fe28698",
+    ".cache/cow-masked-reference-remaining/candidate-34-marked-context.png": "a11a531ec395fb0be5119ce92f59f0b15ac39153e907c232810ad26535940b94",
+    ".cache/cow-masked-reference-remaining/candidate-34.png": "2f7fb89230c4d3b81f9576d1b038305491b4223b889947ec0c436c918dcb97b3",
+    ".cache/cow-masked-reference-remaining/candidate-35-context.png": "c60aadb53210facf9ed6dadf203a5912352941184b90446273c00151ac8c9704",
+    ".cache/cow-masked-reference-remaining/candidate-35-marked-context.png": "93443f14dada602cb38992b65feecaae842b863126c7edba2221b6435b864e01",
+    ".cache/cow-masked-reference-remaining/candidate-35.png": "bfaf4e16d55d6cb5c295be6e09beb982591a4e8ed0104fe0d8ba87f8096299d0",
+    ".cache/cow-masked-reference-remaining/candidate-36-context.png": "e81678bda77f85ed7e4fc7eeb875695302c45a43d96328ee1c2cde133d16c04c",
+    ".cache/cow-masked-reference-remaining/candidate-36-marked-context.png": "b910e4bd71011b1bc34cfd5c542b1d213f0b232e29bd675ae639412e9e0859f0",
+    ".cache/cow-masked-reference-remaining/candidate-36.png": "4050610b072103eb9293a5eb82f6f9275c2414e24e59c02925c567a67bd6a49f",
+    ".cache/cow-masked-reference-remaining/candidate-37-context.png": "d88483ec912f10ba605f055f80e2d10a8cca6ff53a60373c0ae0d5384d6eac15",
+    ".cache/cow-masked-reference-remaining/candidate-37-marked-context.png": "e536e994745fae90d5655f3f5ba1c81337b40c5771447788544b65cb8ff113e3",
+    ".cache/cow-masked-reference-remaining/candidate-37.png": "d08582dc404e4a71143d0b7f613a0adaeae64f5b4c4b62f0ab2f4d983e5a5272",
+    ".cache/cow-masked-reference-remaining/candidate-38-context.png": "fbeb81efb8fba8e3699f7b1129b46111ebd2aa791989860e3989dbc3277125a1",
+    ".cache/cow-masked-reference-remaining/candidate-38-marked-context.png": "4798753430a23d22e337ec95d849dd7ecbb8787a2819f6b3c23b52f95f609b40",
+    ".cache/cow-masked-reference-remaining/candidate-38.png": "66675980474b7a0f68fca3e5d38ab7032c6a1e668932dbdef03d1318bb07038f",
+    ".cache/cow-masked-reference-remaining/candidate-39-context.png": "9ae93b908f97f7034134021a0113882cc86d29ff1ce7dd7d0bc51e83b935a904",
+    ".cache/cow-masked-reference-remaining/candidate-39-marked-context.png": "be1278ceb451b20494884e89a0f0929f4b32ce76cbf1445c69c29884dd8333c6",
+    ".cache/cow-masked-reference-remaining/candidate-39.png": "50adf3a0a6712c68c983d25dfb3426326eabd0188f5ca012b10bd5b5ff0f7644",
+    ".cache/cow-masked-reference-remaining/candidate-40-context.png": "c7372945a61baf7e53e98b62c72fa2b8c4dc4766a9413dfe355683eb0592dd70",
+    ".cache/cow-masked-reference-remaining/candidate-40-marked-context.png": "35f373a4713fe35c024f4e49e3b0261ef719a16010ec52a60c989929e8d15fac",
+    ".cache/cow-masked-reference-remaining/candidate-40.png": "6147b7486fc924f9a989e81ae7dea669bd179a1821c7fd5738494a4e5a518bdc",
+    ".cache/cow-masked-reference-remaining/candidate-41-context.png": "9d4937637bcafc2e13f73cccb07f3596ef133277c87819273f67be693b0f647f",
+    ".cache/cow-masked-reference-remaining/candidate-41-marked-context.png": "f2a60b1209df9ab115804a10753ae757478c6749ff87fdb922180b809911e1ea",
+    ".cache/cow-masked-reference-remaining/candidate-41.png": "25a7ca2feb496ebff6817e1a27a07c66b7d8333a5cddc9e7f3f3b3d649aa091e",
+    ".cache/cow-masked-reference-remaining/candidate-42-context.png": "198ee9c50094bc0afa1fddae82ff91a061aabccbfc6e5db47e8985460383c642",
+    ".cache/cow-masked-reference-remaining/candidate-42-marked-context.png": "6a81ddf9d021757837de04ee839eb18493a608d77a9ff9513ac1a698054da065",
+    ".cache/cow-masked-reference-remaining/candidate-42.png": "951c478a20e43e881f2e7d3e5a2c280f8cc317e431c1f64558464852dd3434d4",
+    ".cache/cow-masked-reference-remaining/candidate-43-context.png": "c73007b7dbff31a63457d439a94a354383913004b76906bc2728b4a3cd7c6961",
+    ".cache/cow-masked-reference-remaining/candidate-43-marked-context.png": "43ac3cde3b382a1b413b169d983580866f982fe1d4f5d11f5c113024d63b2c44",
+    ".cache/cow-masked-reference-remaining/candidate-43.png": "75ab35bff435aaeee9b9352543658ad30bbf0fa6a0888ce7d97cd6ab45ec8b69",
+    ".cache/cow-masked-reference-remaining/candidate-44-context.png": "25f2f872c8a4400aaacae4781db46377bb72cb2595b41022b82a5f4ed06d18c4",
+    ".cache/cow-masked-reference-remaining/candidate-44-marked-context.png": "1f5e01b3a6889d1d88cb698c238f38becc6857758488e02ee7a90b9487b8831b",
+    ".cache/cow-masked-reference-remaining/candidate-44.png": "92163f1c979c0dd26dca45bd51fa20ceb0e50802648c10b4973cc01e3d5f74d4",
+    ".cache/cow-masked-reference-remaining/candidate-45-context.png": "19e490636e7926f8bb9d90e03c05a50df962cfc41da03ad981bf6a88d7f2fd3d",
+    ".cache/cow-masked-reference-remaining/candidate-45-marked-context.png": "028df08b6a6b8a9cca2421ccbb8937d82bf746061dce90c3575aa0270034b407",
+    ".cache/cow-masked-reference-remaining/candidate-45.png": "8d3aadb91ae6a527169de5a93aa20ecfd4b944941638287a5fe3e5ef5a5b7dac",
+    ".cache/cow-masked-reference-remaining/candidate-46-context.png": "6796dfd2211b092dea266c1fc77d978a44f857efcd3dfe24cf474a0f6f2e1a1a",
+    ".cache/cow-masked-reference-remaining/candidate-46-marked-context.png": "775c71f858c3e300705f10e34c8d58b498837380008db43752df50d7ca906566",
+    ".cache/cow-masked-reference-remaining/candidate-46.png": "cf91dd823aa0216cdae84cea5d52c60671e5f16c14f88fa95da62d50532e3478",
+    ".cache/cow-masked-reference-remaining/candidate-47-context.png": "ce5fdc69357f7fb9a752ced48861ddb9f852b7c3f671a3407ff7e5050d6c8f54",
+    ".cache/cow-masked-reference-remaining/candidate-47-marked-context.png": "7f6e59a2fca76ace0812015b3b6482c7798019ff078f2bf6054ee7469388ba3f",
+    ".cache/cow-masked-reference-remaining/candidate-47.png": "c0c1507b95f27637b66ba668f6a6f437264121378a8d6f15a6f0b8c4451577a9",
+    ".cache/cow-masked-reference-remaining/candidate-48-context.png": "e093c93a4c58487d14bdb34c6a03fe6e2bdbb47d3db4b89cf55576ee2d3baf7c",
+    ".cache/cow-masked-reference-remaining/candidate-48-marked-context.png": "2529019399483211d8aeafdaa65280ab9871e16f67bdf7bedfeedc3ccfe1e8d1",
+    ".cache/cow-masked-reference-remaining/candidate-48.png": "e0de3628fcf10439dcc7b31212c526f6f5e2b4ca900a7392c0d1dafcc5a122a6",
+    ".cache/cow-masked-reference-remaining/candidate-49-context.png": "e810d1a2b2829949dc32975ecafaa7debf8c7d78e710c82d46f81287f5fbd571",
+    ".cache/cow-masked-reference-remaining/candidate-49-marked-context.png": "eb7224dad3b2743e1840372461c552f0bb8a007a8c6730fd7b190249d7c52968",
+    ".cache/cow-masked-reference-remaining/candidate-49.png": "f306679bc3a31a499be5e8a9638cd131eaaf775adaf4f48965c10c790fed3114",
+    ".cache/cow-masked-reference-remaining/candidate-50-context.png": "732180e47e1968a95d9ef8af552aa05444bb9d783010c8ad3a02c2525e534e84",
+    ".cache/cow-masked-reference-remaining/candidate-50-marked-context.png": "fc389f0705d8133c7eff66f7ae6a0c7944bf1977daad5af17512d174d9b997e1",
+    ".cache/cow-masked-reference-remaining/candidate-50.png": "f49b04a693eda513d7adb28226cdf749e03e27d26fe8046edd13932c213a7798",
+    ".cache/cow-masked-reference-remaining/candidate-51-context.png": "a33e3d1ae4220fe702ad6479b1766371aa9dc26811e392d91ae9a74a2c0663b4",
+    ".cache/cow-masked-reference-remaining/candidate-51-marked-context.png": "580588f59d15d597d807ac33bac7974bee67ebe8d72597f24ddbee48a10fa275",
+    ".cache/cow-masked-reference-remaining/candidate-51.png": "7816393b6032a38f9802b68580823e40650b14034fe378c0462a184ec094a7bd",
+    ".cache/cow-masked-reference-remaining/manifest.json": "7729a592f40d51f9ef33e0f649e87ec056740caf4f7c523d96afd4e6e4ebf826",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_masked_gallery.py": "fa7bad96988365b78ad4e090b476654af9e59fbbdc2bba31abde22eb785271cd",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_masked_pilot_v2_protocol.json": "da95964ded0025a00a278c007c30195ae8480e4342d2706e89d1f332a60cf30b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_masked_remaining_protocol.json": "27a0462ffa912c2f2fa1be6b12f666a2d23f79cf368029fb8ae3459210944ddc",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/masked-reference-environment-audit.json": "0721f0e8c5de2a32244bc308e4ba6f338bfc370ade52be6d2c9a2953057f7563",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-review-audit.json": "534fd2b4d7506f047c4566aa2ac22ebd4b6c31aa664d8325f8e2bed06f0c3ef2",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-review-cattle.json": "fa1a8a1ed89db000de111f55f7d95d07a995a253dd4b1ab241b251878fa31f26",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-review-root.json": "6eb6241c62d80d282561037a43c1ac36bae98f0b8e29ba91603b8b896e5a0150",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-v2-render.json": "47c79bde61aa2d924c71faadfeebae80a1226b3f876e50808ba73f0f9505a183",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-v2-selection.json": "cfbfc83df838093ed16515c08187a9f4441b0d5586d2df6b6bf2d671c407d57d",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/masked-reference-remaining-render.json": "7729a592f40d51f9ef33e0f649e87ec056740caf4f7c523d96afd4e6e4ebf826",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/masked-reference-remaining-review-audit.json": "0aa9d307289095aa7500d6be08111e3f5ed7389bfc28365a64b8a2a940d8c70a",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/masked-reference-remaining-review-cattle.json": "0d41395c18c13aefb46f3e4dfe10a1ab4e8f6fae3b5383ada930ecb019f57289",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_recognition_masked_gallery.py": "d03eeeb9514f1968c685852462c8dbd909d1002e1c2619e5f6b1d6f8b3b326d4"
+  },
+  "limits": "AI reviewers knew the scene; this is not independently blinded farmer truth. Actual-proposal-seeded early0..629 references, with training-frame optimism. Historical query masks used publisher-box initialization. Six initial photos add no new naming question;52new photos required multiple AI judgements.",
+  "questions": [
+    {
+      "accepted": true,
+      "candidate": 0,
+      "cow": 1,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 0,
+            "cow": 1,
+            "image_sha256": "ea2e703f0a14fa3cb2887b3071d1f40986863a67267ffbe3b9ea7a27fca32532",
+            "reason": "White ends and a broad black central saddle agree with reference 1. The darker island inside the upper white end and outline of the saddle give more than a generic white/black resemblance. The raw context shows one separated torso."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 0,
+            "cow": 1,
+            "reason": "Broad white rump with the separate dark rump patch, solid dark central saddle and white front section agree with initial cow1; foreground is one coherent body."
+          }
+        },
+        "root": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "candidate": 0,
+            "cow": 1,
+            "decision": "accept",
+            "evidence": "Broad dark middle saddle between mostly white fore/hind regions; matching large dark island near the pale rear. One coherent torso. Lower extremities are missing but the coat pattern is clear."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 1,
+      "cow": 1,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 1,
+            "cow": 1,
+            "image_sha256": "9ce81bdca5240ee4658f360fd6316844a80a28a5669ba9abf11a278aa5bbd9b2",
+            "reason": "The broad dark middle band, white areas at both ends, and dark island in the upper white patch agree with reference 1. The head is less complete, but the useful torso pattern is visible."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 1,
+            "cow": 1,
+            "reason": "Same distinctive broad white rear, dark oval near the rump edge and dark saddle/white front combination as initial cow1; no second body visible within crop."
+          }
+        },
+        "root": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "candidate": 1,
+            "cow": 1,
+            "decision": "accept",
+            "evidence": "Same broad middle saddle, pale rear with dark terminal island, and pale forward torso as reference1. The body crop is coherent despite nearby animals."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 2,
+      "cow": 2,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 2,
+            "cow": 2,
+            "image_sha256": "0cc693797c70b2815987e283e9cda6e754f94a1a438201e591f818f276660d6f",
+            "reason": "The mainly black body has an irregular diagonal white collar near the front, a separate small middle island, and white blotches at the far end. This layout agrees with reference 2 better than the isolated shoulder/rump islands of reference 6."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 2,
+            "cow": 2,
+            "reason": "Mostly black dorsal coat with the narrow white shoulder band, small white island immediately behind it and split white rump marking matches initial cow2, unlike cow6 two isolated broad white patches."
+          }
+        },
+        "root": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "candidate": 2,
+            "cow": 2,
+            "decision": "accept",
+            "evidence": "Mostly black dorsal body with two pale rear markings, a narrow pale collar and a small isolated pale body fleck. This differs from reference6's larger separated shoulder/rump islands."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 3,
+      "cow": 2,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 3,
+            "cow": 2,
+            "image_sha256": "270460303727a51aced7709c611e294d0aef87c697712b44fe59aa3d181b5edd",
+            "reason": "The curved dark neck, white shoulder collar, separate middle white island and far-end white patch agree with reference 2. Context and mask follow a single animal."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 3,
+            "cow": 2,
+            "reason": "Turned side view preserves the white shoulder belt with the small adjoining island and rear white marking of initial cow2; sufficient coat remains visible."
+          }
+        },
+        "root": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "candidate": 3,
+            "cow": 2,
+            "decision": "accept",
+            "evidence": "The narrow white collar, mostly black intervening body and paired rear markings agree with reference2. Bent posture differs, but the visible pattern supports the match."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 4,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 4,
+            "cow": null,
+            "image_sha256": "440f0b972f06c6355457e1524b5b53e1c83b9086a19e1e7201144caaf61f69b0",
+            "reason": "White coat with several dark islands is visible, but this overhead end-on view does not establish a sufficiently specific correspondence to the lateral initial references. I cannot confidently distinguish a known animal from an unlisted white-coated animal."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 4,
+            "cow": null,
+            "reason": "Likely the mostly white spotted animal represented by initial cow3, but the near-top view exposes a different side and merges some dark neck/body markings. I cannot uniquely confirm biological identity from the single initial view; do not use the propagated slot as proof."
+          }
+        },
+        "root": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "candidate": 4,
+            "cow": 3,
+            "decision": "accept",
+            "evidence": "Predominantly pale dorsal/flank surface with separated rounded dark islands and a dark neck; matches reference3's spotted pale body rather than the broad dark saddles of1/4."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 5,
+      "cow": 3,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "accepted": true,
+            "candidate": 5,
+            "cow": 3,
+            "image_sha256": "efeb0484e9b94be85166bb361c9e12754f89e96bf8535e32df0f377e885ba6a0",
+            "reason": "The lateral white flank, dark neck/head, broken central flank/back spots and larger rear dark spot agree with reference 3. These spatially separated markings are more specific than the overall white body."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "accepted": true,
+            "candidate": 5,
+            "cow": 3,
+            "reason": "White body with separate irregular dark dorsal/flank islands and a dark neck matches the corresponding side of initial cow3; coat remains clear across the long body."
+          }
+        },
+        "root": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "candidate": 5,
+            "cow": 3,
+            "decision": "accept",
+            "evidence": "Long pale dorsal strip with successive dark flank islands and dark neck agrees with reference3. Visible foreground follows one elongated animal."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 6,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 6,
+            "cow": null,
+            "image_sha256": "6a3a26da4276c8c1d7afdfd54ed88a6676b3a36c17bd96f71d27070c72cec673",
+            "reason": "A standing white torso with large dark islands is visible, but the initial curled animals hide the corresponding side. I cannot responsibly infer a biological identity from the changed posture alone."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 6,
+            "cow": null,
+            "reason": "Clear isolated side-view crop, but the broad white neck and large dark side patches cannot be uniquely linked to the strongly foreshortened initial cow4 view by this reviewer. This is identity uncertainty rather than poor segmentation."
+          }
+        },
+        "root": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "candidate": 6,
+            "cow": null,
+            "decision": "uncertain",
+            "evidence": "A side view with pale front and rear and dark middle is compatible with4, but the initial4 view is strongly foreshortened and the distinctive same-side islands cannot be confirmed reliably."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 7,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 7,
+            "cow": null,
+            "image_sha256": "3467b0179aed20b1eb4583d169ef5604a3deaa364f11d7d0a34e315f36194c4b",
+            "reason": "The dark middle and white end regions may match a curled reference, but this crowded view and partial anatomy do not uniquely distinguish it from other similarly patterned animals. Retain as uncertain."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 4,
+          "review": {
+            "accepted": true,
+            "candidate": 7,
+            "cow": 4,
+            "reason": "The white rear region, dark central coat with a small white island and branching narrow white slash, and lower white flare agree with the turned/foreshortened markings of initial cow4."
+          }
+        },
+        "root": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "candidate": 7,
+            "cow": null,
+            "decision": "uncertain",
+            "evidence": "The dark middle and pale end regions could fit4, but the low-resolution crop and changed posture do not establish a unique biological match from the six initial references."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 8,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 8,
+            "cow": null,
+            "image_sha256": "c9456bfb869a207fcd6aa53177e138e7b3e928ee432f5b018579945bcced9ee8",
+            "reason": "The dark bent neck and large white end patch do not provide enough unique correspondence to the small curled initial views. Several black animals share this broad layout."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 8,
+            "cow": null,
+            "reason": "Bent dark animal has limited visible side coat and a bright rear patch; initial cow5 is also strongly foreshortened. The common dark/white regions are insufficient to exclude the other predominantly black animals without trusting track continuity."
+          }
+        },
+        "root": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "candidate": 8,
+            "cow": null,
+            "decision": "uncertain",
+            "evidence": "Mostly dark curved torso with pale rear; substantial posture/side change and partial occlusion. Reference5 lacks enough directly comparable visible coat detail to exclude the other dark animals confidently."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 9,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 9,
+            "cow": null,
+            "image_sha256": "d110ba5643cf28a7d18960babf9c9be039b6c6d377b94e235026a71eb7652399",
+            "reason": "The curled dark torso with a large white outer patch has ambiguous correspondence to the initial curled animals. The side and coat islands cannot be established confidently from these still images."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 9,
+            "cow": null,
+            "reason": "Crop preserves a white rear patch and black trunk but clips away much of the other useful coat through occlusion/shape. Initial cow5 is too limited to uniquely confirm this changed view; reject rather than infer from its slot."
+          }
+        },
+        "root": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "candidate": 9,
+            "cow": null,
+            "decision": "uncertain",
+            "evidence": "Short dark torso with a pale rear, but head/neck detail is missing and initial5 is foreshortened. A useful exact biological match is not established."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 10,
+      "cow": 6,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 10,
+            "cow": 6,
+            "image_sha256": "4a92810dce7d6fc354e302e279dd5dde8d687fc0c95e517ea74b064aa1e84e67",
+            "reason": "The predominantly black lateral torso has two separated white islands: a smaller shoulder patch and a larger irregular rump patch. This agrees with reference 6, unlike the diagonal white collar in reference 2."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 10,
+            "cow": 6,
+            "reason": "The predominantly black coat with one white shoulder triangle and separate rounded rear white patch matches initial cow6; side context supports a single unmerged animal."
+          }
+        },
+        "root": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "candidate": 10,
+            "cow": 6,
+            "decision": "accept",
+            "evidence": "Mostly dark body with separate pale shoulder and rump islands, without2's white collar. Their placement and the pointed forward patch agree with reference6."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 11,
+      "cow": 6,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 11,
+            "cow": 6,
+            "image_sha256": "8af60d71e12b78d1604a1d8bc2f7cc30f3dfbdb1f74eab5ef211049b3c0dc21d",
+            "reason": "The long dark torso, separate small shoulder island and larger irregular rump island agree with reference 6. The raw context supports a single body rather than a joined pair."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 11,
+            "cow": 6,
+            "reason": "The same separated shoulder and rump white patches on an otherwise dark back identify initial cow6; the intervening dark region remains intact and the foreground is coherent."
+          }
+        },
+        "root": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "candidate": 11,
+            "cow": 6,
+            "decision": "accept",
+            "evidence": "Two separated pale dorsal islands on an otherwise dark body match reference6, including the irregular rear island and smaller triangular forward island. No obvious second torso in foreground."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 12,
+      "cow": 2,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 12,
+            "cow": 2,
+            "image_sha256": "78971cfc68f8e083c58c7f516585d526545595ca265b9cc23e02741c088cad36",
+            "reason": "Narrow white shoulder collar, small separated middle fleck and split far-end marking on a mainly dark body match initial 2 and pilot P02/P03."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 12,
+            "cow": 2,
+            "reason": "White shoulder belt and nearby small white island, plus the rear white streak on a dark back, match initial cow2 and confirmed P02/P03."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 13,
+      "cow": 6,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 13,
+            "cow": 6,
+            "image_sha256": "0ab047eaf7d7b2a18ab1f4d1af9930511c77d674bb4236a80961de1f6e9e1bcc",
+            "reason": "Two separated irregular white shoulder/rump islands on the dark torso match initial 6 and P10/P11; neck is bent but the coat regions remain coherent."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 13,
+            "cow": 6,
+            "reason": "Two isolated white regions, shoulder triangle and rear patch, separated by the long black middle match cow6 despite the bent pose."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 14,
+      "cow": 6,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 14,
+            "cow": 6,
+            "image_sha256": "11cf5ca6e87d94a314f6bd7786674a30e23cf0daf17fe2d13e01e46487178375",
+            "reason": "A smaller triangular shoulder island and larger notched rump island are separated by a long dark region, consistent with initial 6 and the accepted side views."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 14,
+            "cow": 6,
+            "reason": "White shoulder triangle and separate irregular rump patch on mostly black coat agree with cow6/P10; coherent single-animal crop."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 15,
+      "cow": 6,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 15,
+            "cow": 6,
+            "image_sha256": "12cbb9af883d0cf1da3d980afd9dd1bbe65679cf988eefa1d5f083bf0c99e81b",
+            "reason": "Distinct isolated white patches at shoulder and rump, with dark coat between and no collar, match initial 6; context supports one foreground-left animal."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 15,
+            "cow": 6,
+            "reason": "Clear separate white shoulder and rump islands on a dark back match cow6; sufficient torso visible despite neck truncation."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 16,
+      "cow": 1,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 16,
+            "cow": 1,
+            "image_sha256": "7a4d4caf47a55d26d1af96ffa947595135c0798f7920e33c0e34114481ff20de",
+            "reason": "White forward and rear regions surround the broad dark middle saddle; the dark island on the pale rear matches initial 1 and both accepted pilot views despite the bent neck."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 16,
+            "cow": 1,
+            "reason": "Broad dark middle saddle bounded by large white fore/hind regions, with the separate rump island, agrees with cow1 despite its bend."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 17,
+      "cow": 6,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 17,
+            "cow": 6,
+            "image_sha256": "75a96209cae02e8aefa1da973876fbd3116573e8389ba33fc530c6810d5a1725",
+            "reason": "The pale shoulder triangle and separate rear white island, with a long unbroken black middle, match the accepted cow6 views; context contains one isolated body."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 17,
+            "cow": 6,
+            "reason": "The isolated white shoulder triangle and rear white patch, with a long dark region between them, match cow6/P10."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 18,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 18,
+            "cow": null,
+            "image_sha256": "4aedce20a76632fd9fd8ee44ad9dba94177b7b300f3551343fe16096d7b20180",
+            "reason": "A side view shows white ends and large dark flank regions, but the relevant curled initial reference hides this side. The pattern is not uniquely linked to a known animal; posture and generic color layout alone are insufficient."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 18,
+            "cow": null,
+            "reason": "Clear side view but its white neck, dark side patches and pale rump cannot be uniquely linked to the foreshortened initial cow4; no confirmed pilot side view for that cow is available."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 19,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 19,
+            "cow": null,
+            "image_sha256": "85cc5d041c4a93db5f6b38f63a0f42e61a4d024ad87226f747f58a622163e484",
+            "reason": "Mostly dark dorsal coat with one broad rear white region and only small forward flecks. The initial dark curled animals do not provide a sufficiently direct view of the same markings; do not infer its identity from location or slot."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 19,
+            "cow": null,
+            "reason": "Large rear white patch and small frontal white markings suggest a predominantly dark animal, but initial cow5 provides insufficient comparable detail to exclude other dark animals. Do not infer from scene position."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 20,
+      "cow": 2,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 20,
+            "cow": 2,
+            "image_sha256": "8ed58754667639360cb828cd8beaf5f729003cb10e75ae7c8b0f27bc85e51e5a",
+            "reason": "The thin V-shaped shoulder collar, small white island immediately behind it and divided rump markings agree with initial2 and P02/P03; the whole visible body is coherent."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 20,
+            "cow": 2,
+            "reason": "Distinct narrow white V-shaped shoulder belt with small white island above it and divided rump marks matches cow2/P02."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 21,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 21,
+            "cow": null,
+            "image_sha256": "8fffe51fce4b35ae95a7a14b85e115e94d3f245a917238168f251dbe8b497218",
+            "reason": "A mostly pale side with a dark central patch is visible, but the same-side correspondence to curled initial4 is unclear. Neither the broad colors nor feeder location establish a unique identity."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 21,
+            "cow": null,
+            "reason": "Pale neck and rump with large dark side markings are clear but this view does not uniquely match the limited initial cow4 view; avoid relying on its usual feeder location."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 22,
+      "cow": 1,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 22,
+            "cow": 1,
+            "image_sha256": "746ab3246a39d06e87fca22b46fad0771cded949c1e2616fe527c27f1e11c834",
+            "reason": "The broad central dark saddle and pale rump with a separate dark terminal island match initial1 and both accepted pilot examples; the foreground is one animal."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 22,
+            "cow": 1,
+            "reason": "White ends, broad dark saddle and isolated dark rump patch reproduce cow1/P00 coat pattern."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 23,
+      "cow": 5,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 5,
+          "review": {
+            "accepted": true,
+            "candidate": 23,
+            "cow": 5,
+            "image_sha256": "12d55bb6d8caf204385f72b78d212ed41a29546233f379a31bd7ced93a73664e",
+            "reason": "The curled dark body retains the distinctive broad white lower flank with separate dark islands/notches seen in initial5, plus the small pale upper shoulder fleck. This near-matching pose provides direct coat correspondence absent from the uncertain later standing views."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 5,
+          "review": {
+            "accepted": true,
+            "candidate": 23,
+            "cow": 5,
+            "reason": "Foreshortened pose closely matches initial cow5: large dark middle, small pale fore markings and distinctive branching white rear/flank region surrounding dark islands. Unlike later views, corresponding coat is visible."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 24,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 24,
+            "cow": null,
+            "image_sha256": "afcf86640b5a7659fec2f70c08b05602167af16ebb0b88d8b68e910305423b25",
+            "reason": "This spotted pale back is compatible with reference3, but the changed side/top angle does not establish unique matching islands against the initial and accepted lateral photos. Other spotted animals are present; leave uncertain."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "accepted": true,
+            "candidate": 24,
+            "cow": 3,
+            "reason": "Mostly white coat with a chain of separate irregular dark flank islands and dark neck agrees with cow3/P05; the same flank pattern is visible in this turn."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 25,
+      "cow": 2,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 25,
+            "cow": 2,
+            "image_sha256": "9bc61429effe0b28fe514645305e6a47affab45bb33f40254888d96f16c41a84",
+            "reason": "Bent pose still reveals the pale shoulder belt with a small adjacent island and the split rear marking of initial2; it differs from reference6's two isolated broader islands."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 25,
+            "cow": 2,
+            "reason": "Bent pose still shows the characteristic white shoulder belt, small white patch behind it and rear white streak of cow2; similar to initial reference."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 26,
+      "cow": 2,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 26,
+            "cow": 2,
+            "image_sha256": "eb01ebf55b05745276a307bd251e4db7aff71543c55be339cbe56bcc44f2bfdd",
+            "reason": "Thin shoulder collar, small upper-body fleck and divided rear white marking on a dark back match initial2 and P02/P03."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 26,
+            "cow": 2,
+            "reason": "Dark back, narrow shoulder V and distinct small white island behind it match cow2/P02."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 27,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 27,
+            "cow": null,
+            "image_sha256": "337fb0e9862002099458da346a74faa805f1e158a339bc4480a080bff1d8e867",
+            "reason": "Clean lateral cow crop, but broad pale regions with dark central flank islands cannot be uniquely matched to the strongly curled initial4 image. Segmentation clarity alone does not establish identity."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 27,
+            "cow": null,
+            "reason": "Clear side coat, but the initial cow4 reference is too foreshortened to establish a unique match for these large side patches; cannot use the feeder position as identity evidence."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 28,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 4,
+          "review": {
+            "accepted": true,
+            "candidate": 28,
+            "cow": 4,
+            "image_sha256": "32fdf97b4380c4aed5c2f7a932821a99159dfd2c69fbe68043b1946dec89d61c",
+            "reason": "The curled torso reveals the small pale island and branching thin pale flank mark inside a dark middle, with broad white regions at the ends. Those specific marks and bent anatomy correspond to initial4 more directly than the ambiguous standing views."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 28,
+            "cow": null,
+            "reason": "Strongly bent, foreshortened black/white body. Some markings resemble initial cow4, but their correspondence across the changed pose is not unique enough to enroll without relying on sequence identity."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 29,
+      "cow": 5,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 5,
+          "review": {
+            "accepted": true,
+            "candidate": 29,
+            "cow": 5,
+            "image_sha256": "224492a23c7d6bcd1d0f817854d2bb3695bd45440b3e80f0f2c69302633e4787",
+            "reason": "The black curled trunk, broad pale lower flank with dark islands/notches, small upper white fleck and bent head agree with initial5 in a comparable pose."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 5,
+          "review": {
+            "accepted": true,
+            "candidate": 29,
+            "cow": 5,
+            "reason": "The dark trunk and branching white rear/flank patch around small dark islands closely match the same visible coat in initial cow5; coherent single curled animal."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 30,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 30,
+            "cow": null,
+            "image_sha256": "02c3971286536a8c41fb37b2126d978a2145210a49877ba86641dd9e7c341cd0",
+            "reason": "The white spotted torso is plausible for3, but the near-dorsal view does not expose a uniquely corresponding flank pattern against the initial lateral reference. Preserve uncertainty rather than relying on a spotted-coat category."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "accepted": true,
+            "candidate": 30,
+            "cow": 3,
+            "reason": "Mostly white trunk with a series of irregular separated dark flank patches and dark neck matches initial cow3 plus confirmed side-view P05; no second body in the crop."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 31,
+      "cow": 1,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 31,
+            "cow": 1,
+            "image_sha256": "3f0821695e461e3924547f7f6f290af8ec7469c7fd3bad58ec1f2a5e8ee19b76",
+            "reason": "The broad dark central saddle bordered by white front/rear and the dark island on the pale rear correspond to initial1 and P00/P01, despite the curved head posture."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 31,
+            "cow": 1,
+            "reason": "Broad dark mid-body saddle between white front and rear, with the rump island, matches cow1; bend changes outline but not distinctive coat."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 32,
+      "cow": 6,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 32,
+            "cow": 6,
+            "image_sha256": "c9bc8e6f4686f6d1ee20d3cccb447b4d7ba915315fd20ed627d063fa17a0372f",
+            "reason": "Separated shoulder triangle and irregular rear white island on an otherwise black lateral body match P10 and initial6. Foreground does not visibly combine neighboring torsos."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 32,
+            "cow": 6,
+            "reason": "Separate white shoulder and rump patches on an otherwise dark body match cow6/P10; side view is clear."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 33,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 33,
+            "cow": null,
+            "image_sha256": "95824c92dc5600caa8c60bbfe375be0e35c05eb9b78729ae52fe56a68f3dac54",
+            "reason": "The white spotted crop lacks much head/neck context and presents a different top-side pattern from the confirmed lateral cow3 images. A likely resemblance is not sufficient for a unique biological assignment."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "accepted": true,
+            "candidate": 33,
+            "cow": 3,
+            "reason": "White coat with the same sequence of irregular dark flank islands as cow3/P05; body is coherent despite the close neighboring animal."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 34,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 34,
+            "cow": null,
+            "image_sha256": "6972787fe4c3b128f0645878ed06f6f02add3013458c8705f30a4b3d7a530a53",
+            "reason": "A sharply turned white-and-black torso exposes a side not established by the curled initial reference. Neighboring feeder animals and changed posture make exact coat correspondence uncertain."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 34,
+            "cow": null,
+            "reason": "Turned, folded torso shows large black and white blocks but not enough corresponding distinctive coat from the limited initial reference to uniquely establish identity."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 35,
+      "cow": 4,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 4,
+          "review": {
+            "accepted": true,
+            "candidate": 35,
+            "cow": 4,
+            "image_sha256": "27fa460d5282f4eecffd0cb382fef048c6daf73aea34d33b93d6504e6e96de17",
+            "reason": "Comparable curled pose to initial4 shows the broad pale rear, dark middle with a small isolated pale mark and branching pale lower-flank pattern. These matching internal markings support4 rather than merely a black/white body class."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 4,
+          "review": {
+            "accepted": true,
+            "candidate": 35,
+            "cow": 4,
+            "reason": "Curled pose preserves initial cow4's broad white rear region with a small dark fleck, dark central coat with a small white island and branching white lower/side region. These correspond beyond a generic black/white resemblance."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 36,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 36,
+            "cow": null,
+            "image_sha256": "b7d2a81893a7028d79b3f72ffec9fd5833a9bef942715246fd5c4c5e88c5fedb",
+            "reason": "The curled spotted pale torso has too different a viewing angle from the accepted lateral cow3 references to confidently align individual coat islands. Context supports one animal but not its biological name."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "accepted": true,
+            "candidate": 36,
+            "cow": 3,
+            "reason": "The white trunk with distinct separated dark flank patches and dark neck is consistent with cow3's initial and confirmed P05 side coat; the changed orientation still exposes matching markings."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 37,
+      "cow": 6,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 37,
+            "cow": 6,
+            "image_sha256": "e67de5e3b4f70b36d38632fff69bca8603a9968b5fd85d27fd0d3e3953abf9e4",
+            "reason": "Long black dorsal body with an isolated shoulder white patch and a separated notched rump patch closely agrees with P11 and initial6."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 37,
+            "cow": 6,
+            "reason": "Two separated white shoulder/rump islands and continuous dark middle agree closely with cow6/P11."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 38,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 38,
+            "cow": null,
+            "image_sha256": "46b175668b84424dfc20e54b1b16485cdb139603dec79b67e6e0c6a50137279e",
+            "reason": "The rear-facing pale-and-dark body shows a tiny white central spot, but broad side patches and foreshortening do not uniquely align with the initial curled reference. Retain uncertainty rather than trusting a likely slot."
+          }
+        },
+        "cattle": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 38,
+            "cow": null,
+            "reason": "White fore/rear regions and dark saddle are visible, but this back-facing view cannot be uniquely linked to the limited initial cow4 markings; do not substitute its track label."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 39,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 39,
+            "cow": null,
+            "image_sha256": "d98cc53f00e475fb725d223ccbdf7806e968b5abcbbf16f4580286724e78e732",
+            "reason": "Spotted pale body is visible but blurred/foreshortened, with head detail largely absent. Individual island correspondence is not sufficiently clear against the initial lateral view."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "accepted": true,
+            "candidate": 39,
+            "cow": 3,
+            "reason": "Mostly white coat with the same chain of dark side islands and dark neck as cow3/P05; frontal shortening changes outline but preserves identifying coat."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 40,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 40,
+            "cow": null,
+            "image_sha256": "f6577d1d14bda3d52903a001494385ce3b7fa45fbe1e1f9ee832ccb81fb4d2fe",
+            "reason": "Only the pale spotted torso is preserved, with head/neck mostly absent. This opposite/top view does not securely match specific islands to the accepted cow3 side view; retain identity uncertainty."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "accepted": true,
+            "candidate": 40,
+            "cow": 3,
+            "reason": "White body with the distinctive linked-but-separated dark flank islands and dark neck agrees with cow3/P05."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 41,
+      "cow": 2,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 41,
+            "cow": 2,
+            "image_sha256": "e5a612c128b1378652f0fd9f38c5ff2eb3a7a0e398af9da1ad8f1a4e3365acf3",
+            "reason": "The narrow pale collar with a small adjacent isolated fleck on the dark body matches initial2 and the accepted turned P03 view; the rear is partial but the distinctive forward pattern remains."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 41,
+            "cow": 2,
+            "reason": "White shoulder belt, adjoining small white island and dark back match cow2/P03 even in the sideways turn."
+          }
+        }
+      }
+    },
+    {
+      "accepted": false,
+      "candidate": 42,
+      "cow": null,
+      "reviews": {
+        "audit": {
+          "accepted": false,
+          "cow": null,
+          "review": {
+            "accepted": false,
+            "candidate": 42,
+            "cow": null,
+            "image_sha256": "d3a69546ec8fb70a1d8aaaf929f796434e98ba5a1c0cecc549e509e66c116819",
+            "reason": "A curled pale spotted body is coherent, but the small initial lateral photo does not establish the exact same-side pattern in this foreshortened view. Do not force a likely3 assignment."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 3,
+          "review": {
+            "accepted": true,
+            "candidate": 42,
+            "cow": 3,
+            "reason": "White torso and the same irregular dark side-island sequence match cow3/P05; the head bend does not obscure the useful coat."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 43,
+      "cow": 2,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 43,
+            "cow": 2,
+            "image_sha256": "5ea218c7805af15d2480035a141d36f82a6d861f092e687bf5bf711a14f74026",
+            "reason": "Clear thin white collar, separate front-body fleck and divided rear marking agree with initial2/P02; there is no broad isolated shoulder island as in6."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 43,
+            "cow": 2,
+            "reason": "The small white island behind a narrow V-shaped shoulder band on the dark body clearly matches cow2/P02."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 44,
+      "cow": 1,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 44,
+            "cow": 1,
+            "image_sha256": "9033a2788b629207b9a964b9e4277df763f7f9bd6ef4a118c54c0f5b598248aa",
+            "reason": "White front/rear regions, a broad dark middle saddle and the distinct dark island on the pale rump match initial1 and P00/P01."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 44,
+            "cow": 1,
+            "reason": "The dark central saddle and isolated rump island bordered by broad white coat closely match cow1/P00."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 45,
+      "cow": 1,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 45,
+            "cow": 1,
+            "image_sha256": "f226e03d766eb5c0184b5880bc93bf4660cfbf7e8aabe27ee0cc79aac359d2f0",
+            "reason": "Near-comparable dorsal view shows the same broad central black band and separate rump island within white coat as initial1."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 45,
+            "cow": 1,
+            "reason": "Distinct pale rump with a dark island, dark middle saddle and white forward body agree with initial cow1; nearly the same viewing direction."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 46,
+      "cow": 1,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 46,
+            "cow": 1,
+            "image_sha256": "9e4d3b80b898f5a1da33e37b44a3a97d814c6c706d41cb92548b10f2ff405247",
+            "reason": "The curved torso retains the dark central saddle with pale regions on either side and the separate dark rear island. Those marks match the accepted cow1 references."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 46,
+            "cow": 1,
+            "reason": "White fore/hind blocks, broad dark saddle and rear dark island match cow1. More of the neck is visible, with identifying torso intact."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 47,
+      "cow": 2,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 47,
+            "cow": 2,
+            "image_sha256": "9a2d59c77f35ccd1d9bb1bf88f9a97fd255a5df86a98375d28ed6b9e9377ef22",
+            "reason": "Turned neck retains the thin pale collar, small separate body fleck and divided pale rump marking of initial2, distinct from6's broad isolated patches."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 2,
+          "review": {
+            "accepted": true,
+            "candidate": 47,
+            "cow": 2,
+            "reason": "Bent view retains the white shoulder belt plus nearby small white island and pale rear streak characteristic of initial cow2."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 48,
+      "cow": 5,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 5,
+          "review": {
+            "accepted": true,
+            "candidate": 48,
+            "cow": 5,
+            "image_sha256": "0a9e11db48e14b17de9f59a2651004d0c35cd68beb6d20af04019abd82a0f37b",
+            "reason": "The curled dark trunk and broad pale lower flank with two distinct dark islands/notches match initial5 in a similar posture, with the small upper pale fleck also visible."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 5,
+          "review": {
+            "accepted": true,
+            "candidate": 48,
+            "cow": 5,
+            "reason": "Foreshortened dark trunk and branching rear white region with dark islands closely match initial cow5. A visible crossing limb changes silhouette but useful coat remains identifiable."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 49,
+      "cow": 1,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 49,
+            "cow": 1,
+            "image_sha256": "c3a9bc13a6665cc7122f40523b84a786c5def0bf5b05b6271af5fcd5653d3e21",
+            "reason": "White fore/rear regions, broad dark central band and dark island within the pale rump closely match initial1 and accepted pilot views."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 1,
+          "review": {
+            "accepted": true,
+            "candidate": 49,
+            "cow": 1,
+            "reason": "Broad white ends, dark central saddle and isolated dark patch within the pale rear match cow1/P00."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 50,
+      "cow": 5,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 5,
+          "review": {
+            "accepted": true,
+            "candidate": 50,
+            "cow": 5,
+            "image_sha256": "173751145ef98945fe3c6cc7b7a9fceaac4a99fcc39f5c3283360a09dd00334c",
+            "reason": "Despite low resolution, the curled body retains the initial5 pattern of a broad white lower flank around distinct dark islands, plus the small upper shoulder fleck. Comparable pose makes this more identifiable than the later standing views."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 5,
+          "review": {
+            "accepted": true,
+            "candidate": 50,
+            "cow": 5,
+            "reason": "The small pale fore markings, dark central body and distinctive branching white rear patch match initial cow5 in a closely comparable curled pose."
+          }
+        }
+      }
+    },
+    {
+      "accepted": true,
+      "candidate": 51,
+      "cow": 6,
+      "reviews": {
+        "audit": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 51,
+            "cow": 6,
+            "image_sha256": "50709e3398ca78949fa4190dd906c1db77b98a6ff54dac9b9959c0a19e9b95fd",
+            "reason": "The dark body with separate triangular shoulder white island and notched rear white patch matches initial6 and P10/P11; the bent head does not obscure those two distinctive regions."
+          }
+        },
+        "cattle": {
+          "accepted": true,
+          "cow": 6,
+          "review": {
+            "accepted": true,
+            "candidate": 51,
+            "cow": 6,
+            "reason": "Separate white shoulder triangle and rounded rear white island, with uninterrupted dark middle, match cow6/P10 despite the curve."
+          }
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "box": [
+        228,
+        359,
+        365,
+        511
+      ],
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-1-context.png",
+        "pixels_sha256": "52909f3311a8860533070433b10a46f74a3f2138b04da04774d91412f25a5a10",
+        "sha256": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963"
+      },
+      "cow": 1,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-1.png",
+        "pixels_sha256": "be8d7333c1d25ba65a9fe13ec34fcba0ac6e271e2fddc4d4ed3b3e494c0a8905",
+        "sha256": "513a3f00682011cc0bfb6a1f4a3475c55b86a4bc191244d3734f8f47e7007f92"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-1-marked-context.png",
+        "pixels_sha256": "34aa7108cf0de0be0f9df5c8a2886129acf77ff3af8e70c105c912ba701e5e66",
+        "sha256": "01c10799020375d475945a56c50bbc9ef54e785533da6bedfc1131d29d8a4896"
+      },
+      "review_basis": "initial_confirmed",
+      "second": 0,
+      "suggested_cow": 1,
+      "track_id": 0
+    },
+    {
+      "box": [
+        208,
+        15,
+        336,
+        164
+      ],
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-2-context.png",
+        "pixels_sha256": "52909f3311a8860533070433b10a46f74a3f2138b04da04774d91412f25a5a10",
+        "sha256": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963"
+      },
+      "cow": 2,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-2.png",
+        "pixels_sha256": "9c4cc9982874853ea816d9414a79ea9f4f245dc528d07d62a6ef429d40414ff1",
+        "sha256": "dafd5ce613404efd4693c01b59f237a89251a8aefab4176ebddf9d9ae537448e"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-2-marked-context.png",
+        "pixels_sha256": "bba33efbd080f5c5daf6681f69f4a2fc701c07cbaad3cab9a5cf79ee86d081a6",
+        "sha256": "3f362ff726fb6e2f947821914fd7361f3dd1de1d5580d1416028a3d99dfb1c51"
+      },
+      "review_basis": "initial_confirmed",
+      "second": 0,
+      "suggested_cow": 2,
+      "track_id": 1
+    },
+    {
+      "box": [
+        261,
+        163,
+        423,
+        281
+      ],
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-3-context.png",
+        "pixels_sha256": "52909f3311a8860533070433b10a46f74a3f2138b04da04774d91412f25a5a10",
+        "sha256": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963"
+      },
+      "cow": 3,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-3.png",
+        "pixels_sha256": "9b954d851975a639b9f645916f398e8e01684362bbe1375c8b6b10b29a16c1fb",
+        "sha256": "a2b199747c008bc614def301d71859bf1c398036ca5e4d3b02d056c8fc52d718"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-3-marked-context.png",
+        "pixels_sha256": "ecd1c0fd261765e27e9301293ce5f7595fdafc2da0c05f89fb715452d1762c21",
+        "sha256": "a1cff2138895165da4a1868de49d8eabe493c3e286aa5af03699032c99e3c766"
+      },
+      "review_basis": "initial_confirmed",
+      "second": 0,
+      "suggested_cow": 3,
+      "track_id": 2
+    },
+    {
+      "box": [
+        579,
+        315,
+        671,
+        431
+      ],
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-4-context.png",
+        "pixels_sha256": "52909f3311a8860533070433b10a46f74a3f2138b04da04774d91412f25a5a10",
+        "sha256": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963"
+      },
+      "cow": 4,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-4.png",
+        "pixels_sha256": "8d368111eaa4f9bac37ca2e48c9261a7b6aec34777c9b61a0dc10ede8d597801",
+        "sha256": "3ead9933a95d2dca46c052d2297222b4c4aaf23021e3687582ef8106b94948bc"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-4-marked-context.png",
+        "pixels_sha256": "323132e479aad3b069caf1c110fc1ab1b2da14a072087154fc32c63b846de463",
+        "sha256": "af1ca85f9b90e9f7604859a223311b3638dbc99e8db91343458ac5c8d0ea9fc6"
+      },
+      "review_basis": "initial_confirmed",
+      "second": 0,
+      "suggested_cow": 4,
+      "track_id": 3
+    },
+    {
+      "box": [
+        528,
+        98,
+        601,
+        198
+      ],
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-5-context.png",
+        "pixels_sha256": "52909f3311a8860533070433b10a46f74a3f2138b04da04774d91412f25a5a10",
+        "sha256": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963"
+      },
+      "cow": 5,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-5.png",
+        "pixels_sha256": "b0f1691c678d62fad855573817ad3ce1dab86211c0bc0bf3ef1d50b6e1b57626",
+        "sha256": "3c54526842ba026cd5c6c29e9a679ba662de0b6a869434d7c96c5b169cf14e66"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-5-marked-context.png",
+        "pixels_sha256": "23d42e5563394d7001da67c716891783bdc26dc6461b74bef60ee763cd568478",
+        "sha256": "2aefc79f56dc2f90ca653a9cbdec5bef5c49cbb937519e93ffef9e0184944d8c"
+      },
+      "review_basis": "initial_confirmed",
+      "second": 0,
+      "suggested_cow": 5,
+      "track_id": 4
+    },
+    {
+      "box": [
+        143,
+        355,
+        299,
+        530
+      ],
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-6-context.png",
+        "pixels_sha256": "52909f3311a8860533070433b10a46f74a3f2138b04da04774d91412f25a5a10",
+        "sha256": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963"
+      },
+      "cow": 6,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-6.png",
+        "pixels_sha256": "99e97aab034f168e7ac1e166d6cfcd20184fe49f3411a62b15d7135f0e34573d",
+        "sha256": "b79363d1d2efc160298ccea8245f490809ea8ba74cae5c2ed343cbd426b1bc5b"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/initial-6-marked-context.png",
+        "pixels_sha256": "401be41b6b0ee00cf1f0454fa4b970d23863a2355b1b7c21ce767dd2be7d379f",
+        "sha256": "55aa9f9bc3c7470fc80b5ba8b3619da23a5351fa971b3d72b581837c773df195"
+      },
+      "review_basis": "initial_confirmed",
+      "second": 0,
+      "suggested_cow": 6,
+      "track_id": 5
+    },
+    {
+      "area": 8002,
+      "bin": 5,
+      "box": [
+        227,
+        350,
+        334,
+        495
+      ],
+      "candidate": 0,
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-00-context.png",
+        "pixels_sha256": "0f881ab60ab19e5bb6595705b9a25376899764e5ac8d6995de32138948bbc77b",
+        "sha256": "d84a9d3e2333075f227eda8dfb33ac39e9aa12b995ad35f2ba90fe69e32241a2"
+      },
+      "cow": 1,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-00.png",
+        "pixels_sha256": "2fa16c26c198246e69db4a497a28868fc046c91a646cc7115f65573052f3ce73",
+        "sha256": "095acd1c88d663b36da55deb4518bbb837a54825e75dd3bc9452d76326483a03"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-00-marked-context.png",
+        "pixels_sha256": "f1b1b4b8876b5dc8588c91fb551b866870b6cd1f107da8a6d374c58adcc5ce97",
+        "sha256": "52088a535e95844ba5c142bc70201f9cce2cb0b3b8e09543612c659f4dfc84f9"
+      },
+      "mask_sha256": "b35e68072fb0c0bd2fdb8915a352c25797bb849d40d5ffe27eaa3fa6c7eaf0fb",
+      "p10_probability": 0.9265536069869995,
+      "review_basis": "unanimous_photo_review",
+      "second": 365,
+      "source_pixels_sha256": "0f881ab60ab19e5bb6595705b9a25376899764e5ac8d6995de32138948bbc77b",
+      "suggested_cow": 1,
+      "track_id": 0
+    },
+    {
+      "area": 9903,
+      "bin": 9,
+      "box": [
+        123,
+        341,
+        245,
+        502
+      ],
+      "candidate": 1,
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-01-context.png",
+        "pixels_sha256": "873cc1590af46ea67573dfd9d7c9e4191066059f30788edfaeafdd8e3522831c",
+        "sha256": "1aee9e01fc17bdf3de3ee335e7a6a61d707b291d7fa3fc10964542972ae435c4"
+      },
+      "cow": 1,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-01.png",
+        "pixels_sha256": "ac1910782b4192e435565d314e090aeb8e448710891e8da5d0c20e19b16c2af7",
+        "sha256": "2552e3a0b02bf081a5bacaa697f788fb7db75fb30de220ae19fa58adcd87de60"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-01-marked-context.png",
+        "pixels_sha256": "7eecc393fbbb10d8dcc371e55d872528394272ab944af31be900f7e05c3e3b41",
+        "sha256": "9497cc9971a11f4165e8a46ab10f61f0b769aaa4b42da19fdd840d82e2df4255"
+      },
+      "mask_sha256": "062ff4834e96d79abd1c7f7821921269502fbee2001c3d9a2ba92dbd09cf656e",
+      "p10_probability": 0.9153599143028259,
+      "review_basis": "unanimous_photo_review",
+      "second": 621,
+      "source_pixels_sha256": "873cc1590af46ea67573dfd9d7c9e4191066059f30788edfaeafdd8e3522831c",
+      "suggested_cow": 1,
+      "track_id": 0
+    },
+    {
+      "area": 8634,
+      "bin": 5,
+      "box": [
+        352,
+        319,
+        422,
+        521
+      ],
+      "candidate": 2,
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-02-context.png",
+        "pixels_sha256": "ecbe4f72e851b1c0e9e9e42bd074d2b4da1a85a7f4ca0844c433e5249f335bd2",
+        "sha256": "3a00ca857af314a5d82c80a635062b9bfb59eb81b7d909c70fcbc630173494c0"
+      },
+      "cow": 2,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-02.png",
+        "pixels_sha256": "a99f16ec2b9535e8ac56c6368f8638f31539741d57e1ebf1e25fef50a02978b7",
+        "sha256": "a0ca834a5cd164dfb185fa6d2e5fae341b0afa15a4b16f2997d776edd55d69bb"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-02-marked-context.png",
+        "pixels_sha256": "cb0466abba8c1d9971b3036e7c8459450dfadf88fbb6c4544d3c3955fad65b25",
+        "sha256": "2570e3b392dae06a1da99ebb302dc82e489b37704aeedbaf5b331d649f0c6ccd"
+      },
+      "mask_sha256": "e249cb33c82a1f2f03f19bfde9a5603eefd02ca1f9a2f6889860a2783fb01c82",
+      "p10_probability": 0.9387479424476624,
+      "review_basis": "unanimous_photo_review",
+      "second": 333,
+      "source_pixels_sha256": "ecbe4f72e851b1c0e9e9e42bd074d2b4da1a85a7f4ca0844c433e5249f335bd2",
+      "suggested_cow": 2,
+      "track_id": 1
+    },
+    {
+      "area": 10428,
+      "bin": 9,
+      "box": [
+        138,
+        336,
+        324,
+        551
+      ],
+      "candidate": 3,
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-03-context.png",
+        "pixels_sha256": "6e9bba0df4ada604669a1b0704f69f5a2f070ed9a1ebe95fc91044a1bb90d0f3",
+        "sha256": "f7bde212984d2adbc22c315902caea77bcdd961a91fbbc3b479a1364cbdb4eb0"
+      },
+      "cow": 2,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-03.png",
+        "pixels_sha256": "50218fd1f4fa2b312283911b536e95d6ef35297e3d73263ae6c0a0fab9b91fae",
+        "sha256": "ea989d53b87bfdbc063b89db1d9447320d64d49e3f0e908cecbf93d0e118b8b2"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-03-marked-context.png",
+        "pixels_sha256": "df1d73910c155e24f16c882723099448da0f600135d33f28f85518d99758170c",
+        "sha256": "5ab837ec1236a96a73fb2335bc755e7b69a9e26521be3fb12ded19d89bfa4ce8"
+      },
+      "mask_sha256": "0954d39bc8b22faea404717f854f143f44a98fbd80b3df6ec8b873544a48cba7",
+      "p10_probability": 0.8018708229064941,
+      "review_basis": "unanimous_photo_review",
+      "second": 581,
+      "source_pixels_sha256": "6e9bba0df4ada604669a1b0704f69f5a2f070ed9a1ebe95fc91044a1bb90d0f3",
+      "suggested_cow": 2,
+      "track_id": 1
+    },
+    {
+      "area": 9870,
+      "bin": 9,
+      "box": [
+        109,
+        276,
+        358,
+        353
+      ],
+      "candidate": 5,
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-05-context.png",
+        "pixels_sha256": "506ebe924bc137f9b86ec87a6452eac48e704456598c6a09856199707dfcae10",
+        "sha256": "d97b6f24befa85db72e7e7dce91ee9ef35b393f4e1302d79a3524ff376351988"
+      },
+      "cow": 3,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-05.png",
+        "pixels_sha256": "105ff0fd6e787225e0e45aa56b8516fd3f07890b94394a0b3bd4eab42c3f7bd5",
+        "sha256": "2a6e081adf085d2b5929b87630d32057273515e34cffde01576a9b4da448a0ad"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-05-marked-context.png",
+        "pixels_sha256": "6f6a4a6bf1aeb450d0d1c723c0b9ca7e918429fee511068f19789ab34932510e",
+        "sha256": "9aa20d814ef7574c90d7ad5f4176f24b1ecc5bbd8ab7663dbb9b9556281a5098"
+      },
+      "mask_sha256": "86b5668dc942bbadadbee2cbcccbed8f5ba5089f15318ddb1ae38f7de0554d2b",
+      "p10_probability": 0.7750744223594666,
+      "review_basis": "unanimous_photo_review",
+      "second": 595,
+      "source_pixels_sha256": "506ebe924bc137f9b86ec87a6452eac48e704456598c6a09856199707dfcae10",
+      "suggested_cow": 3,
+      "track_id": 2
+    },
+    {
+      "area": 8186,
+      "bin": 5,
+      "box": [
+        190,
+        182,
+        370,
+        252
+      ],
+      "candidate": 10,
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-10-context.png",
+        "pixels_sha256": "7266b1f72dbb26437cd1b60ab2035b994f5bf74a5aa96edf66deb4b82eeb3213",
+        "sha256": "9859affce5cbbe7b0a50dc9b44c1963b9e7d473d6e0b0799f5de37b08833edc8"
+      },
+      "cow": 6,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-10.png",
+        "pixels_sha256": "b484bd798fe0bbb7a503dae96f046440d38d3392b410edb5333c62dd45b6df11",
+        "sha256": "98ae28cb9aa2359659d152c3bec943e221c3dd6c01aeec3e8122c2614cb312c9"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-10-marked-context.png",
+        "pixels_sha256": "7e729c3316ab56df2eb410db59a303d7412c383f8351ff102c1c9b74743e0450",
+        "sha256": "389e4a68317a2865cda67972ab85619ed571352c06fc4bfe8cae8467f962ddfa"
+      },
+      "mask_sha256": "8ee09bb233db9bcd63fc0ff7f81475a9b8566be8287e3003106dc501b7827ae7",
+      "p10_probability": 0.9179121851921082,
+      "review_basis": "unanimous_photo_review",
+      "second": 329,
+      "source_pixels_sha256": "7266b1f72dbb26437cd1b60ab2035b994f5bf74a5aa96edf66deb4b82eeb3213",
+      "suggested_cow": 6,
+      "track_id": 5
+    },
+    {
+      "area": 7598,
+      "bin": 9,
+      "box": [
+        375,
+        271,
+        522,
+        427
+      ],
+      "candidate": 11,
+      "context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-11-context.png",
+        "pixels_sha256": "2e51e429c61fdf7de71a1c706979d42b61e277134176a1ee8c10e16f12d97309",
+        "sha256": "eb4b6bd1cdd7181a9f6f9fdeb0e6dee796a86f493deea0e874ee3370aa05bded"
+      },
+      "cow": 6,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-11.png",
+        "pixels_sha256": "b6aa525709319aeb743987dc256ec00830018632463f3a4af159c59a27fb079a",
+        "sha256": "00a74f147b08114842eacb39d726bca3b911f4fcdad52518da74b805164e45c6"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-pilot-v2/candidate-11-marked-context.png",
+        "pixels_sha256": "eca973f2d1a6c575bc9f58e597a5a95f16af852270f3f9d8fd7ebb7415fbae72",
+        "sha256": "d62702450ed859f8996998064d3cba6c0f0122c20c11c90a5fb960c877a0f8ad"
+      },
+      "mask_sha256": "d17ca215acb8257be912a8a498da22848e04b3664a06738658379381b78de686",
+      "p10_probability": 0.8808783888816833,
+      "review_basis": "unanimous_photo_review",
+      "second": 568,
+      "source_pixels_sha256": "2e51e429c61fdf7de71a1c706979d42b61e277134176a1ee8c10e16f12d97309",
+      "suggested_cow": 6,
+      "track_id": 5
+    },
+    {
+      "area": 7766,
+      "bin": 1,
+      "box": [
+        244,
+        106,
+        317,
+        284
+      ],
+      "candidate": 12,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-12-context.png",
+        "pixels_sha256": "274e08b19b987b91fcecee44f3530d5fec243c35376fc5a2e06ed2f91c092725",
+        "sha256": "91578e509f193501b414ff2535f18b64c92ee3c0427e8d7a7b5880fd2107f97e"
+      },
+      "cow": 2,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-12.png",
+        "pixels_sha256": "bf129d9c770857277c035a91892474c930b71b725ac196f4c4bde6f79f6b93de",
+        "sha256": "5111d2a7d7b8a90e3b0bd19ebda7701e6fa0d9488c623a0e45b1929fff29f2b3"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-12-marked-context.png",
+        "pixels_sha256": "9535b067156648650ddf967dadf21b8b624f0c171e45d733b071f8a0b72a726c",
+        "sha256": "dc0848573e072b384e432f8934a3d3024d41c7ba94c33ec0929d7fb27f3d25b3"
+      },
+      "mask_sha256": "dee436af512205741cfd9ebb922f95786c3c4bbffc2c90563a55d71f9c615022",
+      "p10_probability": 0.9294775724411011,
+      "review_basis": "unanimous_photo_review",
+      "second": 97,
+      "source_pixels_sha256": "274e08b19b987b91fcecee44f3530d5fec243c35376fc5a2e06ed2f91c092725",
+      "suggested_cow": 2,
+      "track_id": 1
+    },
+    {
+      "area": 14206,
+      "bin": 2,
+      "box": [
+        112,
+        350,
+        273,
+        526
+      ],
+      "candidate": 13,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-13-context.png",
+        "pixels_sha256": "62cff63b9944f909444c0db48f5a7e0100a98da8c5ab1ad79b70c76f6c466c52",
+        "sha256": "ac00b9d78ab56e0c4167d6c5821138105c2981131766c51126d08ff4a90139c6"
+      },
+      "cow": 6,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-13.png",
+        "pixels_sha256": "57b05f09f2faed86c270018fac837f2b5bde241f9f3e55a4de76a36eea0c2c6d",
+        "sha256": "c93eb6a002809b975a2c1891c0c486f603303a77da4fa1fd13f06bb4a2f73806"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-13-marked-context.png",
+        "pixels_sha256": "b060019e6dfc35890654c81309afc668cbcedbe285533cecfb3a3518ff7ff518",
+        "sha256": "c637621f58c5e48719834a644cc3eadb5d58b590aba22ca66aa18fcea2d7f602"
+      },
+      "mask_sha256": "11977763a2d50092e7fc47caa434f2e8f7bfd260dc5f52245f67e708693c9952",
+      "p10_probability": 0.9230660200119019,
+      "review_basis": "unanimous_photo_review",
+      "second": 180,
+      "source_pixels_sha256": "62cff63b9944f909444c0db48f5a7e0100a98da8c5ab1ad79b70c76f6c466c52",
+      "suggested_cow": 6,
+      "track_id": 5
+    },
+    {
+      "area": 8210,
+      "bin": 4,
+      "box": [
+        220,
+        185,
+        296,
+        352
+      ],
+      "candidate": 14,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-14-context.png",
+        "pixels_sha256": "fb19f92e4c3d34f5dead500ea7a66a977e544f060faaec43af5f0a6ccc312c91",
+        "sha256": "9b4cc5c755363fa1216f675cb9324f0511602e2e65454ea2d4858122722739bb"
+      },
+      "cow": 6,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-14.png",
+        "pixels_sha256": "b886cb7512804d9fb9af3006bbb729a2a9e04bb3fcf232e995441158207a61ce",
+        "sha256": "62fd28eac69f6613af543b7736acf71ae9c97b18a921c4724b4b1974afd73e64"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-14-marked-context.png",
+        "pixels_sha256": "f7e3c0d03f9c2fe14eefc0b0dbdc4d666b9ff7639babb8764f47ce6ab89bbc06",
+        "sha256": "5290319c7bbef1436d67f5bbbe063b9d8b31a4027698bd6920dcf38647903349"
+      },
+      "mask_sha256": "34cc98e3503b66aa5c24ee30ba09d68fa2633d598200f9b9a8b6f499af2b19f6",
+      "p10_probability": 0.9311230182647705,
+      "review_basis": "unanimous_photo_review",
+      "second": 256,
+      "source_pixels_sha256": "fb19f92e4c3d34f5dead500ea7a66a977e544f060faaec43af5f0a6ccc312c91",
+      "suggested_cow": 6,
+      "track_id": 5
+    },
+    {
+      "area": 10460,
+      "bin": 1,
+      "box": [
+        116,
+        342,
+        219,
+        520
+      ],
+      "candidate": 15,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-15-context.png",
+        "pixels_sha256": "56329823f4ddbb51526c7cbaa1b3a370875afa7f7ca4eb5f4edb777f1b7361bb",
+        "sha256": "1b7ee6ccd8edc884b58ed5552f2f9551b9853ed17572fb345a4d180ebe660709"
+      },
+      "cow": 6,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-15.png",
+        "pixels_sha256": "d024d8f8011b2bf676fb9c7a5c9ddd2c11023ee16dc58f9ee232c390c3d00218",
+        "sha256": "47311a6267afac790b22bb7ca3ec13f11352df8aea0f31c81105c55c56ec0937"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-15-marked-context.png",
+        "pixels_sha256": "13d30bc7a4a37b7ed277088c9146bcb7cd0a2e88bf91db820c242d89664731fd",
+        "sha256": "f5001baaa4db29df2ace565bfdf6ecde883a6cbfc1a31bfe07288d905cd43a53"
+      },
+      "mask_sha256": "9e17070b0a018d4eb9eed30253f1606eca1a64d4cfb08bf891c512ca378b8d63",
+      "p10_probability": 0.9149541854858398,
+      "review_basis": "unanimous_photo_review",
+      "second": 96,
+      "source_pixels_sha256": "56329823f4ddbb51526c7cbaa1b3a370875afa7f7ca4eb5f4edb777f1b7361bb",
+      "suggested_cow": 6,
+      "track_id": 5
+    },
+    {
+      "area": 11503,
+      "bin": 2,
+      "box": [
+        218,
+        371,
+        388,
+        546
+      ],
+      "candidate": 16,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-16-context.png",
+        "pixels_sha256": "e91854a4daf53ec8289c986da0316740286abcced858d711ea75b9e41911bea6",
+        "sha256": "b0cb486efd528310dc95d09b4c5de9e7c4323696aa29e0cf089bb8e388ec5c98"
+      },
+      "cow": 1,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-16.png",
+        "pixels_sha256": "203c9483c1d0abf2b3839cff71e1fa23021987bd32987311beba8793b513f55e",
+        "sha256": "fe13aadd323ca146cc3f7b2e1f8bf5d2272285e9650081832920cb64c40b27a0"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-16-marked-context.png",
+        "pixels_sha256": "0d25e3520dbe95f1e55b7f79cd947315d4431b55736a6718f2cf187be8cd2e5c",
+        "sha256": "7833a328de87118a15220f6060d6a1c8853fb943c40ba99d5ee3dbd228b0db17"
+      },
+      "mask_sha256": "6cecdfd545976215ef395dafea13a155fe99462abc4cb3058beeba28857dabc3",
+      "p10_probability": 0.9058844447135925,
+      "review_basis": "unanimous_photo_review",
+      "second": 161,
+      "source_pixels_sha256": "e91854a4daf53ec8289c986da0316740286abcced858d711ea75b9e41911bea6",
+      "suggested_cow": 1,
+      "track_id": 0
+    },
+    {
+      "area": 10340,
+      "bin": 7,
+      "box": [
+        163,
+        156,
+        334,
+        303
+      ],
+      "candidate": 17,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-17-context.png",
+        "pixels_sha256": "3eac40632cf74d62968ae81b7bb4ea9c7c0a57f10a6181f0adc0c8ecc1d0425f",
+        "sha256": "c1e3c185b2536352a3a1cb017e3934eda18803dec777871b030922ba1284df85"
+      },
+      "cow": 6,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-17.png",
+        "pixels_sha256": "bce1e63b6e93163c5f1a0543b55a099e037cc24758aef9e43e2eb1deb0cc10c4",
+        "sha256": "8e055c299e918166ee5c794ac1bca721b66629b2dded32b7d2046a7a19b9fa54"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-17-marked-context.png",
+        "pixels_sha256": "4d79a592fa5e9fcdd0c388e56fe04407642718690b9b4e864e9813102049a1df",
+        "sha256": "dc4f79d935cd6d791db444047d7ac98797c33aadaee2d69e583ba67442ccf86a"
+      },
+      "mask_sha256": "7114aada41f78f14b66261bb6545a54f9ca474189060202ff0f44ce7b13d8a95",
+      "p10_probability": 0.923861563205719,
+      "review_basis": "unanimous_photo_review",
+      "second": 487,
+      "source_pixels_sha256": "3eac40632cf74d62968ae81b7bb4ea9c7c0a57f10a6181f0adc0c8ecc1d0425f",
+      "suggested_cow": 6,
+      "track_id": 5
+    },
+    {
+      "area": 8319,
+      "bin": 4,
+      "box": [
+        326,
+        314,
+        395,
+        525
+      ],
+      "candidate": 20,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-20-context.png",
+        "pixels_sha256": "df1d332d34e25d58737bcc270968987da8d28ca0fe0d47c89684a78c6de605c7",
+        "sha256": "101273148d1fb7bd4dda366d5baf04f7d1d2f6d998746fbec52145fda3e4dead"
+      },
+      "cow": 2,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-20.png",
+        "pixels_sha256": "5339ad8f0027771e5e265268b5232e57c9d655edd3435c86f0c01c0ba7e58091",
+        "sha256": "33d0972df1367264830bb35751789c82a9b1fc745b5e570a4161fb6794fbc8bd"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-20-marked-context.png",
+        "pixels_sha256": "94a8347433bafefceea82f278908086114c09498a83e459985042256cf097c68",
+        "sha256": "b2eaac8ac74de7dcbf1117aa40bd06a51197aaf37be5d7d9e7c8e3b4c9e6bb7d"
+      },
+      "mask_sha256": "ec055ac414e9a126fea5148bd276a2c40ebe589618235e733de44325f8b0715f",
+      "p10_probability": 0.8528626561164856,
+      "review_basis": "unanimous_photo_review",
+      "second": 312,
+      "source_pixels_sha256": "df1d332d34e25d58737bcc270968987da8d28ca0fe0d47c89684a78c6de605c7",
+      "suggested_cow": 2,
+      "track_id": 1
+    },
+    {
+      "area": 6992,
+      "bin": 6,
+      "box": [
+        252,
+        315,
+        323,
+        474
+      ],
+      "candidate": 22,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-22-context.png",
+        "pixels_sha256": "e76c0e4d5c3128097610a04803cae9a4af162c619be5d767dec380876ef76baf",
+        "sha256": "e627abd5c6f6f942d76f354d3cf8a2e3639ede82166d946532265deacaa6f7a0"
+      },
+      "cow": 1,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-22.png",
+        "pixels_sha256": "5c5e14100b7ba0bd47ea0bb0ea3b676e673f23e44abccad455e59f2978141d7a",
+        "sha256": "35ed223804ead4331a82a975fc72ac7433e91c450e218e43265280f9fd0f6df8"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-22-marked-context.png",
+        "pixels_sha256": "37e8151dded8b63503dab8eace6421e3256e29d625920c47ba61c2ab893252eb",
+        "sha256": "844ba8ca9465489edbdcb5f769a555e0ee93a60fc9767970772eed7f95618912"
+      },
+      "mask_sha256": "d1c9f1a61e9101ea64ac037c06fa9c7bcd02edddbc3080c73df3572ae185a830",
+      "p10_probability": 0.9331978559494019,
+      "review_basis": "unanimous_photo_review",
+      "second": 439,
+      "source_pixels_sha256": "e76c0e4d5c3128097610a04803cae9a4af162c619be5d767dec380876ef76baf",
+      "suggested_cow": 1,
+      "track_id": 0
+    },
+    {
+      "area": 5161,
+      "bin": 4,
+      "box": [
+        515,
+        94,
+        597,
+        199
+      ],
+      "candidate": 23,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-23-context.png",
+        "pixels_sha256": "4db1442e5639f4250879f5396939bf67415380a63a876cd7fe8f244ae29b65b0",
+        "sha256": "1517943c41e3f49e2049ced953518f892104b90cfa3224dba829f94299d7278b"
+      },
+      "cow": 5,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-23.png",
+        "pixels_sha256": "35fc69b305f933dcc647fa4777ccb34302a7cb9512fd6bf130dcb71d0c65f90b",
+        "sha256": "a69041fb805b62fdc65106df515336ec12430cd0316e94dee920651f8cd6f0d9"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-23-marked-context.png",
+        "pixels_sha256": "2d8c36c920d4d496165a48d75454145004063fcbbd7bda4b33f90503c2bab54e",
+        "sha256": "8f1535f050157f2cb05f3ecc2d1aeae20fec9869f19b06a89b301d0e5ec242d0"
+      },
+      "mask_sha256": "8ae7a5d8a8671ec43216b4550e1b142f06d9c6a4fa3f6f5d83f89b053e998c46",
+      "p10_probability": 0.9255107641220093,
+      "review_basis": "unanimous_photo_review",
+      "second": 280,
+      "source_pixels_sha256": "4db1442e5639f4250879f5396939bf67415380a63a876cd7fe8f244ae29b65b0",
+      "suggested_cow": 5,
+      "track_id": 4
+    },
+    {
+      "area": 8907,
+      "bin": 2,
+      "box": [
+        209,
+        157,
+        320,
+        303
+      ],
+      "candidate": 25,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-25-context.png",
+        "pixels_sha256": "c6c0ed07f68e437028fe839a13311c355fde325ff6421ff0bbf1c49f99aaaac9",
+        "sha256": "59e50d408c406101a7cc481b2925ae3b8a44e87a18f58a52edd742db6ca624b8"
+      },
+      "cow": 2,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-25.png",
+        "pixels_sha256": "de9eb4b8f9ba08c9da21110ba0435fd7bc7b70a9ba0327d46bc094e64cb5542f",
+        "sha256": "722d511e87548f01039a28f90e14e9e37f243a201a3b779557196c4027c090ce"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-25-marked-context.png",
+        "pixels_sha256": "ecca8b14d817c12196629da915f1b67867d75683fdafc2ade20e9833bdde6eb9",
+        "sha256": "22bed109d1b0ab328084d9f60d74ccd0754327c25af25bd76c0673e1a8e66f8d"
+      },
+      "mask_sha256": "0ae4da9d021e917a4e1d9de3c4c3c3989d835246b3395c30b69d3d118e6b2a7d",
+      "p10_probability": 0.9441342353820801,
+      "review_basis": "unanimous_photo_review",
+      "second": 169,
+      "source_pixels_sha256": "c6c0ed07f68e437028fe839a13311c355fde325ff6421ff0bbf1c49f99aaaac9",
+      "suggested_cow": 2,
+      "track_id": 1
+    },
+    {
+      "area": 8574,
+      "bin": 6,
+      "box": [
+        362,
+        313,
+        429,
+        525
+      ],
+      "candidate": 26,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-26-context.png",
+        "pixels_sha256": "df3dec225832d91a5b6940f5fadea826dd160ba5acefc2b03883043925a07846",
+        "sha256": "d2469b15f9fa2b6f944fd571fb1664cbe9d4bb1efa77e3aab7c5ce04d3b5026b"
+      },
+      "cow": 2,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-26.png",
+        "pixels_sha256": "a4eb9330107c7867a7a4c07bd38bd3d6369b8bf9fdb7b313e3641e440e44fc63",
+        "sha256": "2f0e8fa176cf194913013df2ebcd1d8aa2b6bfc4ba5c6cbdb55d94313e3ed491"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-26-marked-context.png",
+        "pixels_sha256": "a2db0f0d401f12e78d867cb9d3e5a97b808138194ba75426307f668d6c529e01",
+        "sha256": "82648286b7b725b255d8a47efe4bc4416f9f49a05ac9e811cba02618bf255c70"
+      },
+      "mask_sha256": "c84c3f3ddef5f493592c85b12587fb8ddcdc02022bbacfb1f79a1acaa6afc373",
+      "p10_probability": 0.8946564197540283,
+      "review_basis": "unanimous_photo_review",
+      "second": 438,
+      "source_pixels_sha256": "df3dec225832d91a5b6940f5fadea826dd160ba5acefc2b03883043925a07846",
+      "suggested_cow": 2,
+      "track_id": 1
+    },
+    {
+      "area": 5050,
+      "bin": 3,
+      "box": [
+        527,
+        84,
+        596,
+        198
+      ],
+      "candidate": 29,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-29-context.png",
+        "pixels_sha256": "620aeaa4254d403a658a0445a64cf2b17ae5d0aa574cb9ecbe3f5e67af30003c",
+        "sha256": "86fbe59be917c0623c0a2168d5b8f9e03af668c7cc44e29c40a52a7322b5075d"
+      },
+      "cow": 5,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-29.png",
+        "pixels_sha256": "9fffb7126cd525076b6726dee8bc2c2a06250f2fcdea41030d866b0ccbaaabd2",
+        "sha256": "f54ec8e65bcd5eb304308c864fdfec124295307be7439fc81750732439d1e1e0"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-29-marked-context.png",
+        "pixels_sha256": "89a5be0fb4cf4f85be05f73e0165b58802b66140c0a2d9d692c452a30f99ef50",
+        "sha256": "d73cac599a1355cd9a904137e7ab79b789dd3ec1c49c918e0e51bd041dd80fd7"
+      },
+      "mask_sha256": "8b6ead2ad9386d87b9111c4ffbc55c41cb981396e5db05aed954c2908eba8cb4",
+      "p10_probability": 0.9265398383140564,
+      "review_basis": "unanimous_photo_review",
+      "second": 239,
+      "source_pixels_sha256": "620aeaa4254d403a658a0445a64cf2b17ae5d0aa574cb9ecbe3f5e67af30003c",
+      "suggested_cow": 5,
+      "track_id": 4
+    },
+    {
+      "area": 10240,
+      "bin": 3,
+      "box": [
+        213,
+        375,
+        360,
+        550
+      ],
+      "candidate": 31,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-31-context.png",
+        "pixels_sha256": "02adee3ea36ea8d60e3366a67a687b13b4922e53a2f8617a446c38d1d538857f",
+        "sha256": "896d861ad8d11e90f6c78e81290869c77c3af82ad49bdd93d1f5115931c5f8c5"
+      },
+      "cow": 1,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-31.png",
+        "pixels_sha256": "84912c25182195be69490066df0ad73fa9102eaa1aedc8fb76a0d4199d04f6c8",
+        "sha256": "2ba18ea5635377529dcb241834d692be9ce8094df80ee1f167ab06973b160239"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-31-marked-context.png",
+        "pixels_sha256": "eac3e42138f5c7592a5b4e1a9c2dd04726e0fe0334af7fc7d42b3687add9b122",
+        "sha256": "7f1d5d60b08e1d8b3bb4611302926968f7b5b5979047d025a809d244428215a5"
+      },
+      "mask_sha256": "6471a417d7ce2f54a6ad55fd3498d9f91918d12a3081bf1ac911d901ab2dafe1",
+      "p10_probability": 0.931034505367279,
+      "review_basis": "unanimous_photo_review",
+      "second": 226,
+      "source_pixels_sha256": "02adee3ea36ea8d60e3366a67a687b13b4922e53a2f8617a446c38d1d538857f",
+      "suggested_cow": 1,
+      "track_id": 0
+    },
+    {
+      "area": 7998,
+      "bin": 6,
+      "box": [
+        230,
+        155,
+        402,
+        249
+      ],
+      "candidate": 32,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-32-context.png",
+        "pixels_sha256": "afc6a45792903586ef91c62ef1890d997c2adb8202df8895bb425ff46f37a447",
+        "sha256": "efacf01a33036e45385be7e384aa72e04e513e3bde1d4aa67935fe5ca36f0cf5"
+      },
+      "cow": 6,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-32.png",
+        "pixels_sha256": "44a4b54504de5040c8be717893998d0f10d2038d66dde5c4dbf7794c1fe5a65c",
+        "sha256": "35e2c6028e7ad1bec9ee645c500c2e0d67b652ebcba1708dece0c5ae7370cc79"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-32-marked-context.png",
+        "pixels_sha256": "b273fedf3976426e5621a9ecc4fb05037339f71140dc2627c691c65ceabaf2ad",
+        "sha256": "b0bf427721b5017423318bd95bb26fd01a9306d78df0ff8bb64f05f97c0b12c0"
+      },
+      "mask_sha256": "61ce8daca1b7c628d0369f6432f0987960cd5bd6d28eb678a9bba3142e78cd68",
+      "p10_probability": 0.9055395722389221,
+      "review_basis": "unanimous_photo_review",
+      "second": 397,
+      "source_pixels_sha256": "afc6a45792903586ef91c62ef1890d997c2adb8202df8895bb425ff46f37a447",
+      "suggested_cow": 6,
+      "track_id": 5
+    },
+    {
+      "area": 14402,
+      "bin": 1,
+      "box": [
+        577,
+        326,
+        740,
+        455
+      ],
+      "candidate": 35,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-35-context.png",
+        "pixels_sha256": "89c559b89c24d7ef3d62cd3d0cf9f255dafbed40462a097f2b55e2b010a822f2",
+        "sha256": "c60aadb53210facf9ed6dadf203a5912352941184b90446273c00151ac8c9704"
+      },
+      "cow": 4,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-35.png",
+        "pixels_sha256": "cd34899d016b97a809314ec2875c7485e82300d3c97a1843bff88cba016c7c52",
+        "sha256": "bfaf4e16d55d6cb5c295be6e09beb982591a4e8ed0104fe0d8ba87f8096299d0"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-35-marked-context.png",
+        "pixels_sha256": "73ce9e9f871d057032425d3502a75a5b93c157fb45ab693e1ebbce3f3940b1d9",
+        "sha256": "93443f14dada602cb38992b65feecaae842b863126c7edba2221b6435b864e01"
+      },
+      "mask_sha256": "8df150d33888c05b6e373d849fab23ded2fb47685de4d6f026082027860c8c42",
+      "p10_probability": 0.9792693257331848,
+      "review_basis": "unanimous_photo_review",
+      "second": 65,
+      "source_pixels_sha256": "89c559b89c24d7ef3d62cd3d0cf9f255dafbed40462a097f2b55e2b010a822f2",
+      "suggested_cow": 4,
+      "track_id": 3
+    },
+    {
+      "area": 7778,
+      "bin": 8,
+      "box": [
+        329,
+        320,
+        460,
+        500
+      ],
+      "candidate": 37,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-37-context.png",
+        "pixels_sha256": "3f5252f416fb4de37f9d01532b460d87358f5880cfd274fc7027da675cd89a1b",
+        "sha256": "d88483ec912f10ba605f055f80e2d10a8cca6ff53a60373c0ae0d5384d6eac15"
+      },
+      "cow": 6,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-37.png",
+        "pixels_sha256": "3ecf779b64cfb28dc328c3008b1b21e2bed1ee03c4b0dc810ca930353825e2f5",
+        "sha256": "d08582dc404e4a71143d0b7f613a0adaeae64f5b4c4b62f0ab2f4d983e5a5272"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-37-marked-context.png",
+        "pixels_sha256": "9ca2fad0fef95000a4c475eef97de4aa92693ac062c232787797c2e4e3752823",
+        "sha256": "e536e994745fae90d5655f3f5ba1c81337b40c5771447788544b65cb8ff113e3"
+      },
+      "mask_sha256": "b25156a1eb811e6c9a0433432d6ae1f6b4718727d78758855a0e0d6e80e524b7",
+      "p10_probability": 0.913790225982666,
+      "review_basis": "unanimous_photo_review",
+      "second": 564,
+      "source_pixels_sha256": "3f5252f416fb4de37f9d01532b460d87358f5880cfd274fc7027da675cd89a1b",
+      "suggested_cow": 6,
+      "track_id": 5
+    },
+    {
+      "area": 6807,
+      "bin": 8,
+      "box": [
+        341,
+        166,
+        490,
+        276
+      ],
+      "candidate": 41,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-41-context.png",
+        "pixels_sha256": "53257bc3ed6174b017bfa39de479211e87d866bf16fb7c987f4efaacf9cce0c9",
+        "sha256": "9d4937637bcafc2e13f73cccb07f3596ef133277c87819273f67be693b0f647f"
+      },
+      "cow": 2,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-41.png",
+        "pixels_sha256": "be3442ff1209e4ff187173a114129b0dbf29a6355cf880e60b68fca00c2eaa8b",
+        "sha256": "25a7ca2feb496ebff6817e1a27a07c66b7d8333a5cddc9e7f3f3b3d649aa091e"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-41-marked-context.png",
+        "pixels_sha256": "9cf147ce0d2659c3473c8862f397772911fc862110eeefff2dc19ea271876e06",
+        "sha256": "f2a60b1209df9ab115804a10753ae757478c6749ff87fdb922180b809911e1ea"
+      },
+      "mask_sha256": "fc5240fa62f3a9ad8cd44fb34b3a14017935e4b576df58a97c39a4d896863290",
+      "p10_probability": 0.9342315793037415,
+      "review_basis": "unanimous_photo_review",
+      "second": 542,
+      "source_pixels_sha256": "53257bc3ed6174b017bfa39de479211e87d866bf16fb7c987f4efaacf9cce0c9",
+      "suggested_cow": 2,
+      "track_id": 1
+    },
+    {
+      "area": 7754,
+      "bin": 7,
+      "box": [
+        372,
+        279,
+        449,
+        478
+      ],
+      "candidate": 43,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-43-context.png",
+        "pixels_sha256": "48ec965a553f836ff4d5d6341511dc0930fd63287b893afed73d2c5715327398",
+        "sha256": "c73007b7dbff31a63457d439a94a354383913004b76906bc2728b4a3cd7c6961"
+      },
+      "cow": 2,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-43.png",
+        "pixels_sha256": "727ba3bf7365a68390b293b6a089af3f7243cfa111ee36503cdb9746e40d99fe",
+        "sha256": "75ab35bff435aaeee9b9352543658ad30bbf0fa6a0888ce7d97cd6ab45ec8b69"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-43-marked-context.png",
+        "pixels_sha256": "c1a8b157dc63fac730eb56b3e811fd97509a6661c61b563c2e04d8cb7ece746e",
+        "sha256": "43ac3cde3b382a1b413b169d983580866f982fe1d4f5d11f5c113024d63b2c44"
+      },
+      "mask_sha256": "2c540b0ef4832e994a32f9549bbfacaba74f3b38fc7290e200c9682f8ecbbcce",
+      "p10_probability": 0.9302433133125305,
+      "review_basis": "unanimous_photo_review",
+      "second": 442,
+      "source_pixels_sha256": "48ec965a553f836ff4d5d6341511dc0930fd63287b893afed73d2c5715327398",
+      "suggested_cow": 2,
+      "track_id": 1
+    },
+    {
+      "area": 6740,
+      "bin": 7,
+      "box": [
+        255,
+        321,
+        322,
+        480
+      ],
+      "candidate": 44,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-44-context.png",
+        "pixels_sha256": "d1bb98284a0ad0cc7d5bc467a3f39b5a327ddcd32b5dc21c4c6d0942d9a69790",
+        "sha256": "25f2f872c8a4400aaacae4781db46377bb72cb2595b41022b82a5f4ed06d18c4"
+      },
+      "cow": 1,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-44.png",
+        "pixels_sha256": "1ebabcc329c52760f0ee5d2021e41e26800d06b30cefbf63df9fbce2be410930",
+        "sha256": "92163f1c979c0dd26dca45bd51fa20ceb0e50802648c10b4973cc01e3d5f74d4"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-44-marked-context.png",
+        "pixels_sha256": "9c1da4de3f672610da6eed240b46a78ea39fa9169f6fdf55207dfa8df0b7845c",
+        "sha256": "1f5e01b3a6889d1d88cb698c238f38becc6857758488e02ee7a90b9487b8831b"
+      },
+      "mask_sha256": "f0f982fc04795178d5665a6aa5c42d4658534e2b5fc7e68b63929a725f505832",
+      "p10_probability": 0.9164832830429077,
+      "review_basis": "unanimous_photo_review",
+      "second": 444,
+      "source_pixels_sha256": "d1bb98284a0ad0cc7d5bc467a3f39b5a327ddcd32b5dc21c4c6d0942d9a69790",
+      "suggested_cow": 1,
+      "track_id": 0
+    },
+    {
+      "area": 8665,
+      "bin": 1,
+      "box": [
+        182,
+        352,
+        323,
+        499
+      ],
+      "candidate": 45,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-45-context.png",
+        "pixels_sha256": "e171c35e8a3e6d436f363dd99ce1c1af8c771b35ebffccb64d186ee513a98b3f",
+        "sha256": "19e490636e7926f8bb9d90e03c05a50df962cfc41da03ad981bf6a88d7f2fd3d"
+      },
+      "cow": 1,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-45.png",
+        "pixels_sha256": "b8919fcfd9c47c8742196c6658a4a04e6a85f248d1c11ee3e1c371d887c62982",
+        "sha256": "8d3aadb91ae6a527169de5a93aa20ecfd4b944941638287a5fe3e5ef5a5b7dac"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-45-marked-context.png",
+        "pixels_sha256": "248e4f30cd929c3edbfa35189f0f0d10f4497fbd110aaf8124aafd9cdcb30bf1",
+        "sha256": "028df08b6a6b8a9cca2421ccbb8937d82bf746061dce90c3575aa0270034b407"
+      },
+      "mask_sha256": "fbab3b67b5e1b169a87c839b013b74adc3623346283496cff0c09a01550506b6",
+      "p10_probability": 0.915428102016449,
+      "review_basis": "unanimous_photo_review",
+      "second": 63,
+      "source_pixels_sha256": "e171c35e8a3e6d436f363dd99ce1c1af8c771b35ebffccb64d186ee513a98b3f",
+      "suggested_cow": 1,
+      "track_id": 0
+    },
+    {
+      "area": 8836,
+      "bin": 8,
+      "box": [
+        237,
+        338,
+        322,
+        549
+      ],
+      "candidate": 46,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-46-context.png",
+        "pixels_sha256": "d366f839175c01624aa09edcc17f352ed2022598307333b8c2920fe1e0dac1ec",
+        "sha256": "6796dfd2211b092dea266c1fc77d978a44f857efcd3dfe24cf474a0f6f2e1a1a"
+      },
+      "cow": 1,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-46.png",
+        "pixels_sha256": "54e8d0ade1363e78624050685e9422c1e2d50ad3d3812835b5baaa72413fa227",
+        "sha256": "cf91dd823aa0216cdae84cea5d52c60671e5f16c14f88fa95da62d50532e3478"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-46-marked-context.png",
+        "pixels_sha256": "fcd44cd7245bc28424971c2180af71aed370e9f8e54b8581e8c472a3ddfc46d7",
+        "sha256": "775c71f858c3e300705f10e34c8d58b498837380008db43752df50d7ca906566"
+      },
+      "mask_sha256": "9f43d68ac36a2f47f093358171c16b1ec6f11c4eb09dfcf7ffd5c9cbb72c344e",
+      "p10_probability": 0.9013444781303406,
+      "review_basis": "unanimous_photo_review",
+      "second": 533,
+      "source_pixels_sha256": "d366f839175c01624aa09edcc17f352ed2022598307333b8c2920fe1e0dac1ec",
+      "suggested_cow": 1,
+      "track_id": 0
+    },
+    {
+      "area": 6158,
+      "bin": 3,
+      "box": [
+        279,
+        32,
+        377,
+        154
+      ],
+      "candidate": 47,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-47-context.png",
+        "pixels_sha256": "bba82bd16ca4a4872f94a321106743f6de2d03666a7c09696c85be58972cb5da",
+        "sha256": "ce5fdc69357f7fb9a752ced48861ddb9f852b7c3f671a3407ff7e5050d6c8f54"
+      },
+      "cow": 2,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-47.png",
+        "pixels_sha256": "95356439da8f3b13dc93b721ad09656abc75b56fa51227ea5c1f075d9836c164",
+        "sha256": "c0c1507b95f27637b66ba668f6a6f437264121378a8d6f15a6f0b8c4451577a9"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-47-marked-context.png",
+        "pixels_sha256": "76b77877cc8bfecab5816edd639d59f93db7ef36ae9c9e313a0ef2634d11c969",
+        "sha256": "7f6e59a2fca76ace0812015b3b6482c7798019ff078f2bf6054ee7469388ba3f"
+      },
+      "mask_sha256": "6aa1370c39fa1f6a59797f8f57b2ee7f2c0b263ed2c8aafe5808fa5469807d91",
+      "p10_probability": 0.9358453750610352,
+      "review_basis": "unanimous_photo_review",
+      "second": 232,
+      "source_pixels_sha256": "bba82bd16ca4a4872f94a321106743f6de2d03666a7c09696c85be58972cb5da",
+      "suggested_cow": 2,
+      "track_id": 1
+    },
+    {
+      "area": 5196,
+      "bin": 2,
+      "box": [
+        534,
+        93,
+        604,
+        198
+      ],
+      "candidate": 48,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-48-context.png",
+        "pixels_sha256": "0addb423c2ee859ded7b4b02100eda7fa9aed3691f5a3b0cd4e27e34db3fb712",
+        "sha256": "e093c93a4c58487d14bdb34c6a03fe6e2bdbb47d3db4b89cf55576ee2d3baf7c"
+      },
+      "cow": 5,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-48.png",
+        "pixels_sha256": "a2078722d16cbd90d4f0915ad7c9940d971f982324deec371ce805df8a1a8817",
+        "sha256": "e0de3628fcf10439dcc7b31212c526f6f5e2b4ca900a7392c0d1dafcc5a122a6"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-48-marked-context.png",
+        "pixels_sha256": "674ff7082409faa3408535949c05c07798b8e9060d893ec62215f185d656b63a",
+        "sha256": "2529019399483211d8aeafdaa65280ab9871e16f67bdf7bedfeedc3ccfe1e8d1"
+      },
+      "mask_sha256": "73d46c751726b694603eef0e6331f9d654c93e04e59edbde608f1ec681381529",
+      "p10_probability": 0.9397895336151123,
+      "review_basis": "unanimous_photo_review",
+      "second": 178,
+      "source_pixels_sha256": "0addb423c2ee859ded7b4b02100eda7fa9aed3691f5a3b0cd4e27e34db3fb712",
+      "suggested_cow": 5,
+      "track_id": 4
+    },
+    {
+      "area": 6618,
+      "bin": 4,
+      "box": [
+        267,
+        343,
+        341,
+        496
+      ],
+      "candidate": 49,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-49-context.png",
+        "pixels_sha256": "dcf998eb2beb55aeb4ef5b4afcad2bf41af6949253e157c0af7babe9c7d04f9a",
+        "sha256": "e810d1a2b2829949dc32975ecafaa7debf8c7d78e710c82d46f81287f5fbd571"
+      },
+      "cow": 1,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-49.png",
+        "pixels_sha256": "d36cd32cd5be73c956ee030373fa81256f8f3ddeb57fe56f5519220c717f05d6",
+        "sha256": "f306679bc3a31a499be5e8a9638cd131eaaf775adaf4f48965c10c790fed3114"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-49-marked-context.png",
+        "pixels_sha256": "991bd97ac5e3f10cf5ae9a56098cecc9c329c295ffc0165b39d5cf486fad9b50",
+        "sha256": "eb7224dad3b2743e1840372461c552f0bb8a007a8c6730fd7b190249d7c52968"
+      },
+      "mask_sha256": "bdbdd4589b6f36f7eabd50cd956c20d908f8e039165eec448d22e363423a8409",
+      "p10_probability": 0.9538515210151672,
+      "review_basis": "unanimous_photo_review",
+      "second": 258,
+      "source_pixels_sha256": "dcf998eb2beb55aeb4ef5b4afcad2bf41af6949253e157c0af7babe9c7d04f9a",
+      "suggested_cow": 1,
+      "track_id": 0
+    },
+    {
+      "area": 5220,
+      "bin": 1,
+      "box": [
+        531,
+        93,
+        599,
+        198
+      ],
+      "candidate": 50,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-50-context.png",
+        "pixels_sha256": "bf5410982d74b146007036305e2b9f1d56aca15d1577d97b16edacba39d37e6e",
+        "sha256": "732180e47e1968a95d9ef8af552aa05444bb9d783010c8ad3a02c2525e534e84"
+      },
+      "cow": 5,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-50.png",
+        "pixels_sha256": "5b3a76b6a1f97857cd57f9f87da70f4f9f8d71d7d6b9c150a503cf8a7db92dec",
+        "sha256": "f49b04a693eda513d7adb28226cdf749e03e27d26fe8046edd13932c213a7798"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-50-marked-context.png",
+        "pixels_sha256": "6e8c221c1cf29d93859c69bbe0afb4a87b8a535938493422fe6bb8e9cf6a6ed3",
+        "sha256": "fc389f0705d8133c7eff66f7ae6a0c7944bf1977daad5af17512d174d9b997e1"
+      },
+      "mask_sha256": "575ecc680fd7e0f8ff65d174ecdf8b96e9365c1a9369a95b4a338b18bc21d9aa",
+      "p10_probability": 0.9331349730491638,
+      "review_basis": "unanimous_photo_review",
+      "second": 99,
+      "source_pixels_sha256": "bf5410982d74b146007036305e2b9f1d56aca15d1577d97b16edacba39d37e6e",
+      "suggested_cow": 5,
+      "track_id": 4
+    },
+    {
+      "area": 9803,
+      "bin": 3,
+      "box": [
+        160,
+        254,
+        251,
+        405
+      ],
+      "candidate": 51,
+      "context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-51-context.png",
+        "pixels_sha256": "6f149e4468da3bf8cc2752dbc7920fa9fab0c2a0a282f8e3b90d403699c285c2",
+        "sha256": "a33e3d1ae4220fe702ad6479b1766371aa9dc26811e392d91ae9a74a2c0663b4"
+      },
+      "cow": 6,
+      "foreground": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-51.png",
+        "pixels_sha256": "8e8926c404dd47d14b589cee15f733b2f29540f1d5ddfcc44d903172d930507a",
+        "sha256": "7816393b6032a38f9802b68580823e40650b14034fe378c0462a184ec094a7bd"
+      },
+      "marked_context": {
+        "path": ".cache/cow-masked-reference-remaining/candidate-51-marked-context.png",
+        "pixels_sha256": "a65e6240ad24f8b54e1c340141c849562bac2f938db03f548c10a42aed3c12bc",
+        "sha256": "580588f59d15d597d807ac33bac7974bee67ebe8d72597f24ddbee48a10fa275"
+      },
+      "mask_sha256": "770d7763b1295b729853252e2d48e2371ac32a4c4327aa029bb1d34723f2bb44",
+      "p10_probability": 0.9440394043922424,
+      "review_basis": "unanimous_photo_review",
+      "second": 245,
+      "source_pixels_sha256": "6f149e4468da3bf8cc2752dbc7920fa9fab0c2a0a282f8e3b90d403699c285c2",
+      "suggested_cow": 6,
+      "track_id": 5
+    }
+  ],
+  "status": "FROZEN_REVIEWED_REFERENCES_NOT_ENCODED"
+}

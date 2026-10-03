@@ -1,0 +1,11 @@
+{
+  "original_protocol": "research/cow_identity/recognition_masked_pilot_protocol.json",
+  "original_render": "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-render.json",
+  "original_selection": "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-selection.json",
+  "reason": "Selector confused zero-based track_id with one-based conflicted_ids. Original protocol/selection/render retained unchanged; these exact old code/test bytes preserve provenance before a separately frozen correction.",
+  "source_blobs": {
+    "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-preflight-v1/recognition_masked_pilot.py.txt": "96612f5463ddc3c47889375f6ca12994e28546b0790966cf9a7956c8b8fa3091",
+    "research/cow_identity/results/2026-10-03/recognition/masked-reference-pilot-preflight-v1/test_recognition_masked_pilot.py.txt": "d6ee616a4b9152f13800503288b4a137a4eded3ecc14f8a4d70c6ed1b778049b"
+  },
+  "status": "FAILED_PREFLIGHT_NOT_REVIEWED_OR_ENROLLED"
+}

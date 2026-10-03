@@ -1,0 +1,267 @@
+{
+  "actual_models": {
+    "class_names": {
+      "0": "item"
+    },
+    "cutie_device": "mps:0",
+    "cutie_dtype": "torch.float32",
+    "resolved_preprocessing": {
+      "batch": 1,
+      "conf": 0.4,
+      "imgsz": 640,
+      "iou": 0.7,
+      "max_det": 300,
+      "quantize": 16,
+      "rect": true
+    },
+    "yolo_device": "mps",
+    "yolo_fp16": true
+  },
+  "all_output_names_empty": true,
+  "continuity": {
+    "anchored_precision": 0.9916666666666667,
+    "counts": {
+      "correct_initial_instance": 952,
+      "matched": 952,
+      "matched_unanchored": 0,
+      "missed_annotations": 7,
+      "predictions": 960,
+      "unmatched_anchored": 8,
+      "unmatched_unanchored": 0,
+      "visible_annotations": 959,
+      "wrong_initial_instance": 0
+    },
+    "errors": [
+      {
+        "initial_anchor": 3,
+        "matched_animal": null,
+        "outcome": "unmatched_anchored",
+        "second": 4,
+        "track": 2
+      },
+      {
+        "initial_anchor": 7,
+        "matched_animal": null,
+        "outcome": "unmatched_anchored",
+        "second": 6,
+        "track": 5
+      },
+      {
+        "initial_anchor": 1,
+        "matched_animal": null,
+        "outcome": "unmatched_anchored",
+        "second": 31,
+        "track": 4
+      },
+      {
+        "initial_anchor": 5,
+        "matched_animal": null,
+        "outcome": "unmatched_anchored",
+        "second": 85,
+        "track": 1
+      },
+      {
+        "initial_anchor": 5,
+        "matched_animal": null,
+        "outcome": "unmatched_anchored",
+        "second": 97,
+        "track": 1
+      },
+      {
+        "initial_anchor": 5,
+        "matched_animal": null,
+        "outcome": "unmatched_anchored",
+        "second": 98,
+        "track": 1
+      },
+      {
+        "initial_anchor": 5,
+        "matched_animal": null,
+        "outcome": "unmatched_anchored",
+        "second": 99,
+        "track": 1
+      },
+      {
+        "initial_anchor": 2,
+        "matched_animal": null,
+        "outcome": "unmatched_anchored",
+        "second": 117,
+        "track": 6
+      }
+    ],
+    "initial_instance_coverage": 0.9927007299270073,
+    "per_slot": {
+      "0": {
+        "correct_initial_instance": 120
+      },
+      "1": {
+        "correct_initial_instance": 116,
+        "unmatched_anchored": 4
+      },
+      "2": {
+        "correct_initial_instance": 119,
+        "unmatched_anchored": 1
+      },
+      "3": {
+        "correct_initial_instance": 120
+      },
+      "4": {
+        "correct_initial_instance": 119,
+        "unmatched_anchored": 1
+      },
+      "5": {
+        "correct_initial_instance": 119,
+        "unmatched_anchored": 1
+      },
+      "6": {
+        "correct_initial_instance": 119,
+        "unmatched_anchored": 1
+      },
+      "7": {
+        "correct_initial_instance": 120
+      }
+    }
+  },
+  "initial": {
+    "geometry_anchors": {
+      "0": 6,
+      "1": 5,
+      "2": 3,
+      "3": 4,
+      "4": 1,
+      "5": 7,
+      "6": 2,
+      "7": 8
+    },
+    "initial_truth_count": 8,
+    "slots": [
+      {
+        "anonymous_label": "A",
+        "identity_id": null,
+        "proposal_index": 0,
+        "slot": 1
+      },
+      {
+        "anonymous_label": "B",
+        "identity_id": null,
+        "proposal_index": 1,
+        "slot": 2
+      },
+      {
+        "anonymous_label": "C",
+        "identity_id": null,
+        "proposal_index": 2,
+        "slot": 3
+      },
+      {
+        "anonymous_label": "D",
+        "identity_id": null,
+        "proposal_index": 3,
+        "slot": 4
+      },
+      {
+        "anonymous_label": "E",
+        "identity_id": null,
+        "proposal_index": 4,
+        "slot": 5
+      },
+      {
+        "anonymous_label": "F",
+        "identity_id": null,
+        "proposal_index": 5,
+        "slot": 6
+      },
+      {
+        "anonymous_label": "G",
+        "identity_id": null,
+        "proposal_index": 7,
+        "slot": 7
+      },
+      {
+        "anonymous_label": "H",
+        "identity_id": null,
+        "proposal_index": 10,
+        "slot": 8
+      }
+    ]
+  },
+  "prediction_sha256": "1d7cd590b7ad83e5f240f61dd0aded7aecf888eda1746b03a4383de4119c5e9b",
+  "protocol_sha256": "5fbb7f1c45d3aa8e5e1372d6723aea446363c679d8e3e2122f61791956b88881",
+  "runtime": {
+    "elapsed_seconds": 36.03970954194665,
+    "fraction_above_input_interval": 0.004149377593360996,
+    "initialization_seconds": 0.7749035418964922,
+    "maximum_long_term_tokens": 1024,
+    "maximum_working_tokens": 10800,
+    "mean_seconds_per_input": 0.14597053940531593,
+    "mean_within_input_budget": true,
+    "model_metadata": {
+      "class_names": {
+        "0": "item"
+      },
+      "cutie_device": "mps:0",
+      "cutie_dtype": "torch.float32",
+      "resolved_preprocessing": {
+        "batch": 1,
+        "conf": 0.4,
+        "imgsz": 640,
+        "iou": 0.7,
+        "max_det": 300,
+        "quantize": 16,
+        "rect": true
+      },
+      "yolo_device": "mps",
+      "yolo_fp16": true
+    },
+    "p95_seconds_per_input": 0.20693620899692178,
+    "p99_seconds_per_input": 0.23512269966304297,
+    "peak_observed_driver_before_reclaim_bytes": 4593106944,
+    "peak_observed_driver_bytes": 4593106944,
+    "peak_observed_rss_bytes": 1314652160,
+    "processed_frames": 241,
+    "steady_after_first_input": {
+      "fraction_above_input_interval": 0.0,
+      "mean_seconds_per_input": 0.14301506995301072,
+      "p95_seconds_per_input": 0.20668631904991344,
+      "p99_seconds_per_input": 0.23001410600030792,
+      "processed_frames": 240
+    }
+  },
+  "scope": "One automatic exact-frame startup,0\u2013120seconds/241inputs, all selected objects anonymous. First-frame geometry policy only: no two-frame temporal gate. Existing two-frame report remains unchanged. No births, retirement, correction, human live confirmation or appearance recognition in this isolated control.",
+  "scoring": {
+    "claim": "Geometry-anchored anonymous track continuity; not actual farmer confirmation or durable recognition. Initial detector training includes early recording frames, so optimistic exposed-scene evidence.",
+    "frames": "Score every integer second1..120, retaining all visible annotations and every output box. Frame0 sets anchors only, never contributes future-quality counts.",
+    "outcomes": "Correct initial-instance association, wrong animal, unmatched anchored prediction, unanchored slot, missed truth, per-slot survival and switches. Global optimally remapped ID-F1 is separate and cannot replace fixed-initial-anchor correctness.",
+    "selection": "No labels before complete immutable inference. Initial supplied masks, reduced to LCC geometry, receive maximum-cardinality then IoU-maximal one-to-one publisher-box association atIoU>=.5; this mapping is frozen thereafter.",
+    "unmatched_initial": "Unmatched or duplicate initial slots never gain a later biological anchor. No remapping or dropping weak slots from denominators."
+  },
+  "tracking": {
+    "counts": {
+      "correct_name": 0,
+      "cow_name_switches": 0,
+      "cow_track_switches": 0,
+      "detector_boxes": 960,
+      "eligible_boxes": 960,
+      "eligible_matched": 952,
+      "frames": 120,
+      "known_unnamed": 713,
+      "matched_boxes": 952,
+      "missed_annotations": 7,
+      "track_cow_switches": 0,
+      "unknown_named": 0,
+      "unknown_rejected": 239,
+      "unmatched_boxes": 8,
+      "unmatched_named": 0,
+      "unmatched_unnamed": 8,
+      "visible_annotations": 959,
+      "visible_known": 719,
+      "visible_unknown": 240,
+      "wrong_name": 0
+    },
+    "global_identity_f1": 0.9921834288692027,
+    "global_identity_true_positives": 952,
+    "note": "Global one-to-one track/cow assignment at IoU .5 on 1 fps scoring timestamps; not permanent cow recognition.",
+    "precision": 0.9916666666666667,
+    "recall": 0.9927007299270073
+  }
+}

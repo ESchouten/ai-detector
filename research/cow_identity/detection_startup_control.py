@@ -1,0 +1,264 @@
+"""Freeze and run one anonymous, exact-frame startup from every raw proposal."""
+
+import argparse
+import copy
+import importlib.metadata
+import importlib.util
+import json
+from datetime import UTC, datetime
+from pathlib import Path
+
+import numpy as np
+from benchmark import digest, write_json
+from detection_startup_containment import BASE, containment_selection
+from detection_streaming import run as stream
+from detection_streaming import validate_cadence
+
+ROOT = Path(__file__).parent
+RESULTS = ROOT / "results/2026-10-03/detection"
+CONTAINMENT = ROOT / "detection_startup_containment_protocol.json"
+MPS = ROOT / "cutie_combined_mps_protocol.json"
+BASE_PROTOCOL = ROOT / "detection_streaming_protocol.json"
+INSTALLED = Path("/tmp/cow-cutie-integrated-proof/installed")
+
+
+def initial_masks(frame):
+    """The policy sees all proposals; opaque labels follow input order only."""
+    with np.load(frame["masks"], allow_pickle=False) as archive:
+        original = archive["original"]
+    decision, disjoint = containment_selection(original, frame["proposals"])
+    selected = sorted(decision["selected"])
+    if not 1 <= len(selected) <= 8:
+        raise ValueError("Startup needs1–8 survivors; do not silently truncate")
+    prompts = [
+        {
+            "slot": index + 1,
+            "anonymous_label": chr(65 + index),
+            "proposal_index": proposal,
+            "identity_id": None,
+        }
+        for index, proposal in enumerate(selected)
+    ]
+    # Persist integer-keyed relation maps as their JSON representation so the
+    # fresh replay comparison checks values rather than Python/JSON key types.
+    return disjoint[selected], prompts, json.loads(json.dumps(decision))
+
+
+def prefix_clip(clip, protocol):
+    prefix = {**clip, "rows": clip["rows"][:241]}
+    validate_cadence(prefix, protocol)
+    return prefix
+
+
+def verify_files(files):
+    for filename, expected in files.items():
+        if digest(Path(filename)) != expected:
+            raise ValueError(f"Frozen startup input changed:{filename}")
+
+
+def prepare_seeds(directory):
+    frame = json.loads(BASE.read_text())["frames"][0]
+    if frame["second"] != 0 or digest(Path(frame["masks"])) != frame["masks_sha256"]:
+        raise ValueError("Use the exact complete initial proposal-mask frame")
+    masks, prompts, decision = initial_masks(frame)
+    directory.mkdir(parents=True, exist_ok=False)
+    np.savez_compressed(directory / "masks.npz", masks=masks)
+    value = {
+        "source_manifest_sha256": digest(BASE),
+        "source_frame": frame,
+        "prompts": prompts,
+        "containment_decision": decision,
+        "masks_sha256": digest(directory / "masks.npz"),
+        "scope": "Automatic anonymous slots from all initial proposals; no truth or manual candidate selection",
+    }
+    write_json(directory / "manifest.json", value)
+    return value
+
+
+def freeze(path, seed_directory):
+    containment = json.loads(CONTAINMENT.read_text())
+    verify_files(containment["files"])
+    mps = json.loads(MPS.read_text())
+    verify_files(mps["files"])
+    for name in ("cutie-combined-cpu.json", "cutie-combined-mps.json"):
+        result = json.loads((RESULTS / name).read_text())
+        recipe = MPS if "mps" in name else ROOT / "cutie_combined_protocol.json"
+        if not result["passed"] or result["protocol_sha256"] != digest(recipe):
+            raise ValueError("The installed combined SDK prerequisites must pass")
+    seeds = prepare_seeds(seed_directory)
+    protocol = copy.deepcopy(json.loads(BASE_PROTOCOL.read_text()))
+    protocol["files"] = {**containment["files"], **mps["files"]}
+    protocol["inputs"].update(
+        upstream=str(INSTALLED),
+        seed_masks=str(seed_directory / "masks.npz"),
+        seed_manifest=str(seed_directory / "manifest.json"),
+    )
+    protocol.update(
+        frozen_at_utc=datetime.now(UTC).isoformat(),
+        status="FROZEN_ANONYMOUS_STARTUP_PENDING_GPU_RELEASE",
+        last_processed_second=120,
+        processing_fps=2,
+        seeded_cows=[row["anonymous_label"] for row in seeds["prompts"]],
+        named_cows=[],
+        anonymous_cows=[row["anonymous_label"] for row in seeds["prompts"]],
+        libraries={
+            **protocol["libraries"],
+            "cutie": mps["libraries"]["cutie"],
+            "lap": importlib.metadata.version("lap"),
+        },
+        comparison_windows=[[1, 120]],
+        scope="One automatic exact-frame startup,0–120seconds/241inputs, all selected objects anonymous. First-frame geometry policy only: no two-frame temporal gate. Existing two-frame report remains unchanged. No births, retirement, correction, human live confirmation or appearance recognition in this isolated control.",
+        scoring={
+            "selection": "No labels before complete immutable inference. Initial supplied masks, reduced to LCC geometry, receive maximum-cardinality then IoU-maximal one-to-one publisher-box association atIoU>=.5; this mapping is frozen thereafter.",
+            "frames": "Score every integer second1..120, retaining all visible annotations and every output box. Frame0 sets anchors only, never contributes future-quality counts.",
+            "outcomes": "Correct initial-instance association, wrong animal, unmatched anchored prediction, unanchored slot, missed truth, per-slot survival and switches. Global optimally remapped ID-F1 is separate and cannot replace fixed-initial-anchor correctness.",
+            "unmatched_initial": "Unmatched or duplicate initial slots never gain a later biological anchor. No remapping or dropping weak slots from denominators.",
+            "claim": "Geometry-anchored anonymous track continuity; not actual farmer confirmation or durable recognition. Initial detector training includes early recording frames, so optimistic exposed-scene evidence.",
+        },
+        prefix_parity="Installed combinedSDK CPU/MPS proofs establish exact old-joint probability parity on the same16syntheticsteps withbirths/consolidation. New anonymous masks/order differ from old cattle seeds, so cattle prefix equality is not assumed.",
+        output_contract="Every1Hz row retains all visible LCC boxes with deterministic zero-based anonymous track IDs. named_track_ids is empty throughout. Actual paired YOLO confidence or null is preserved; no synthetic identity score. All121 original masks are cached.",
+        limitations=[
+            "Single exact-frame startup differs explicitly from prior two-frame temporal admission; no change to the prior result.",
+            "Automatic selection does not establish that every candidate is one biological animal; full truth counts are retained after inference.",
+            "No farmer command, births, retirement, disappearance recovery, cross-day recognition or new-farm generalization demonstrated.",
+            "The detector trained on early frames from this exposed recording; first-frame success is optimistic.",
+        ],
+    )
+    protocol["corroborator"].update(
+        seconds={"start": 0, "stop": 120, "step": 1},
+        mode="Raw YOLO.predict on each current integer-second source frame, no tracking/cache substitution; all121predictions saved before truth scoring.",
+    )
+    extra = [
+        Path(__file__),
+        ROOT / "test_detection_startup_control.py",
+        ROOT / "detection_startup_score.py",
+        ROOT / "test_detection_startup_score.py",
+        ROOT / "detection_tracking.py",
+        ROOT / "video_assessment.py",
+        ROOT / "detection_reserved_score.py",
+        ROOT / "detection_sam_tracking.py",
+        ROOT / "detection_streaming.py",
+        ROOT / "detection_cutie.py",
+        ROOT / "detection_box_consensus.py",
+        ROOT / "detection_corroboration.py",
+        ROOT / "detection_quarantine_recovery.py",
+        ROOT / "detection_cutie_quarantine.py",
+        ROOT / "detection_cutie_variants.py",
+        ROOT / "benchmark.py",
+        BASE_PROTOCOL,
+        MPS,
+        CONTAINMENT,
+        RESULTS / "cutie-combined-cpu.json",
+        RESULTS / "cutie-combined-mps.json",
+        Path("detector/src/aidetector/domain/models.py"),
+        Path("datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz"),
+        Path("datasets/8-calves/video/pmfeed_4_3_16.pkl"),
+        seed_directory / "masks.npz",
+        seed_directory / "manifest.json",
+    ]
+    extra.extend(
+        Path(protocol["inputs"][key])
+        for key in ("yolo_model", "cutie_model", "quarantine_protocol")
+    )
+    extra.extend(
+        Path(protocol["inputs"]["clip"]) / f"sampled.{suffix}"
+        for suffix in ("avi", "json")
+    )
+    protocol["files"].update({str(p): digest(p) for p in extra})
+    write_json(path, protocol)
+    print(
+        json.dumps(
+            {"protocol_sha256": digest(path), "anonymous_slots": len(seeds["prompts"])}
+        )
+    )
+
+
+def checked(path):
+    protocol = json.loads(path.read_text())
+    verify_files(protocol["files"])
+    if (
+        protocol["last_processed_second"] != 120
+        or protocol["processing_fps"] != 2
+        or protocol["named_cows"]
+    ):
+        raise ValueError("Only the fixed anonymous120second2Hz control is allowed")
+    spec = importlib.util.find_spec("cutie")
+    locations = (
+        [Path(p).resolve() for p in spec.submodule_search_locations]
+        if spec is not None and spec.submodule_search_locations is not None
+        else []
+    )
+    if locations != [(INSTALLED / "cutie").resolve()]:
+        raise ValueError("Use the bound installed combined SDK, not another checkout")
+    libraries = {
+        name: importlib.metadata.version(name) for name in protocol["libraries"]
+    }
+    if libraries != protocol["libraries"]:
+        raise ValueError("Installed libraries differ from the frozen app runtime")
+    clip = prefix_clip(
+        json.loads((Path(protocol["inputs"]["clip"]) / "sampled.json").read_text()),
+        protocol,
+    )
+    seeds = json.loads(Path(protocol["inputs"]["seed_manifest"]).read_text())
+    masks, prompts, decision = initial_masks(seeds["source_frame"])
+    if (
+        seeds["source_frame"]["source_pixels_sha256"]
+        != clip["rows"][0]["pixels_sha256"]
+        or masks.shape != (len(prompts), clip["height"], clip["width"])
+        or [p["anonymous_label"] for p in prompts] != protocol["seeded_cows"]
+    ):
+        raise ValueError("Initial masks, source pixels or anonymous slots differ")
+    with np.load(protocol["inputs"]["seed_masks"], allow_pickle=False) as archive:
+        recorded = archive["masks"]
+    if (
+        not np.array_equal(recorded, masks)
+        or prompts != seeds["prompts"]
+        or decision != seeds["containment_decision"]
+    ):
+        raise ValueError("All-proposal initial selection or pixels changed")
+    return protocol, clip, masks, seeds, libraries
+
+
+def run(args):
+    protocol, clip, masks, seeds, libraries = checked(args.protocol)
+    args.frames = None
+    try:
+        stream(args, protocol, clip, masks, seeds, libraries)
+    finally:
+        result = args.output / "streaming.json"
+        if result.exists():
+            value = json.loads(result.read_text())
+            value["provenance"].update(
+                identity_origin="Automatic anonymous exact-frame containment masks; A–Hare opaque labels, no biological assignments",
+                startup_runner_sha256=digest(Path(__file__)),
+                installed_sdk=str(INSTALLED),
+                seed_manifest_sha256=digest(Path(protocol["inputs"]["seed_manifest"])),
+            )
+            write_json(result, value)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("mode", choices=("freeze", "verify", "run"))
+    parser.add_argument("--protocol", type=Path, required=True)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    if args.mode == "freeze":
+        if args.protocol.exists() or args.output is None:
+            parser.error("Preserve freezes and supply a fresh seed directory")
+        freeze(args.protocol, args.output)
+    elif args.mode == "verify":
+        value, clip, masks, _, _ = checked(args.protocol)
+        print(
+            json.dumps(
+                {
+                    "bindings": len(value["files"]),
+                    "frames": len(clip["rows"]),
+                    "anonymous_slots": len(masks),
+                }
+            )
+        )
+    else:
+        if args.output is None or args.output.exists():
+            parser.error("Supply a fresh output directory")
+        run(args)

@@ -1,0 +1,317 @@
+{
+  "conclusion": "Most masks visibly follow a real single calf body, with substantially different box extent from publisher annotations. No obvious empty-background names seen in these sheets. Two annotated-absent instances contain visible animals; four crowded/shifted cases remain ambiguous. This does not certify all biological identities, erase any of34strict errors, or justify changing annotations/thresholds after the result.",
+  "files": {
+    "research/cow_identity/results/2026-10-03/detection/extended-error-render.json": "ed2743bc895a2aa287fdf05819277a441577b33d0b810a745d58156183d27559",
+    "research/cow_identity/results/2026-10-03/detection/extended-error-selection.json": "61e5bda0d6850480239d346f0713b5c08911fbaa0b60a4abee7a376ad1965a04"
+  },
+  "order": "All six prediction-only sheets inspected before all six publisher-truth sheets. All34cases retained, no model calls or frame reselection.",
+  "reviewer": "identity_evaluation agent; AI visual review, not human field certification",
+  "rows": [
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 0,
+      "named_cow": 6,
+      "observation": "Tight real-calf body mask; publisher extent includes wider head/limb region.",
+      "second": 1818.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 1,
+      "named_cow": 3,
+      "observation": "A single spotted calf silhouette; publisher extent is substantially wider than the visible silhouette.",
+      "second": 1840.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "crowded_or_shifted_extent_ambiguous",
+      "index": 2,
+      "named_cow": 1,
+      "observation": "Crowded foreground: mask extends left of own publisher box. Extent/identity alignment is ambiguous from this single view; do not certify biological correctness.",
+      "second": 1847.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 3,
+      "named_cow": 6,
+      "observation": "One upright calf torso; partially hidden lower/head area differs from publisher extent.",
+      "second": 1890.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 4,
+      "named_cow": 2,
+      "observation": "One upright calf; mask extends below publisher box while their lateral extents differ.",
+      "second": 1932.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_animal_unannotated",
+      "index": 5,
+      "named_cow": 4,
+      "observation": "Visible large calf at right edge has no own publisher annotation in this frame.",
+      "second": 2770.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 6,
+      "named_cow": 1,
+      "observation": "One stationary foreground calf; mask body narrower/shorter than publisher extent.",
+      "second": 2784.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 7,
+      "named_cow": 1,
+      "observation": "Same foreground calf view as preceding selected frame; mask extent is smaller than publisher extent.",
+      "second": 2786.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 8,
+      "named_cow": 1,
+      "observation": "Same foreground calf view; head/legs/background extent disagreement.",
+      "second": 2787.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 9,
+      "named_cow": 1,
+      "observation": "Same foreground calf view; small detached mask fringe visible but emitted LCC remains on calf.",
+      "second": 2788.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 10,
+      "named_cow": 3,
+      "observation": "One narrow moving spotted calf silhouette; publisher box includes broader surrounding region.",
+      "second": 2790.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_animal_unannotated",
+      "index": 11,
+      "named_cow": 4,
+      "observation": "Visible calf in central-right area has no own publisher annotation in this frame.",
+      "second": 2790.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 12,
+      "named_cow": 3,
+      "observation": "One standing spotted calf torso; wider publisher extent surrounds it.",
+      "second": 2793.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 13,
+      "named_cow": 3,
+      "observation": "Strong motion blur; narrow body mask versus broad publisher extent, precise visible boundary uncertain.",
+      "second": 2803.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 14,
+      "named_cow": 6,
+      "observation": "Motion-blurred upright calf; body mask omits faint blurred extremities.",
+      "second": 2803.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 15,
+      "named_cow": 5,
+      "observation": "One upright calf with motion-soft extremities; narrower body mask than publisher extent.",
+      "second": 2805.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 16,
+      "named_cow": 5,
+      "observation": "Rapid motion and neighbor overlap: mask follows visible elongated body, blurred/head boundary uncertain.",
+      "second": 2807.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 17,
+      "named_cow": 6,
+      "observation": "One moving upright calf; foreground extent and publisher position disagree slightly, legs/head uncertain.",
+      "second": 2825.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 18,
+      "named_cow": 6,
+      "observation": "One narrow upright calf torso; publisher extent wider.",
+      "second": 2829.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 19,
+      "named_cow": 5,
+      "observation": "One upright calf body; motion-blurred extremity boundary differs.",
+      "second": 2832.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 20,
+      "named_cow": 6,
+      "observation": "One upright calf body; publisher box and raw proposal are wider than mask extent.",
+      "second": 2833.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "crowded_or_shifted_extent_ambiguous",
+      "index": 21,
+      "named_cow": 6,
+      "observation": "Crowded lower-right calf: body mask is coherent, but publisher box extends left into adjacent animals; exact extent attribution uncertain.",
+      "second": 2856.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 22,
+      "named_cow": 6,
+      "observation": "One vertical moving calf silhouette, with blur at upper extremity; publisher box wider.",
+      "second": 2863.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 23,
+      "named_cow": 2,
+      "observation": "Mask captures body of left calf while head/upper extent is omitted; both detector and mask are tighter than publisher.",
+      "second": 2864.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "crowded_or_shifted_extent_ambiguous",
+      "index": 24,
+      "named_cow": 1,
+      "observation": "One diagonally extended animal silhouette reaches outside its tighter publisher box; head/neck/tail extent is uncertain, not proof of label error.",
+      "second": 2865.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 25,
+      "named_cow": 2,
+      "observation": "One calf standing near feed barrier; visible-body mask narrow relative to publisher box.",
+      "second": 2868.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 26,
+      "named_cow": 6,
+      "observation": "One bent calf silhouette with nearby animals; publisher box includes wider surroundings.",
+      "second": 2873.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 27,
+      "named_cow": 3,
+      "observation": "One motion-blurred vertical calf; narrow body mask versus broad publisher extent.",
+      "second": 2877.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 28,
+      "named_cow": 4,
+      "observation": "One upright calf body; possible extremity omission and shifted publisher extent.",
+      "second": 2878.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "crowded_or_shifted_extent_ambiguous",
+      "index": 29,
+      "named_cow": 5,
+      "observation": "Crowded upper-right interaction: coherent selected body but occlusion/neighbor boundaries uncertain; cannot rule out mask contamination.",
+      "second": 2883.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 30,
+      "named_cow": 5,
+      "observation": "One calf near feed barrier with head/neighbor occlusion; mask body narrower than publisher extent.",
+      "second": 2888.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 31,
+      "named_cow": 3,
+      "observation": "One strongly motion-blurred upright calf; narrow silhouette versus broad publisher extent.",
+      "second": 2889.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 32,
+      "named_cow": 5,
+      "observation": "Right member of adjacent pair: selected mask follows one body; publisher box wider and overlapping neighbor extent.",
+      "second": 2935.0,
+      "strict_error_retained": true
+    },
+    {
+      "biological_identity_independently_certified": false,
+      "category": "visible_body_extent_disagreement",
+      "index": 33,
+      "named_cow": 6,
+      "observation": "Left member of same adjacent pair: narrow body mask, publisher extent spans substantial surrounding area.",
+      "second": 2935.0,
+      "strict_error_retained": true
+    }
+  ]
+}

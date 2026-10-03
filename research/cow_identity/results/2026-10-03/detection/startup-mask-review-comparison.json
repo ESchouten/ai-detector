@@ -1,0 +1,75 @@
+{
+  "differences": [
+    {
+      "audit_geometry": "partial",
+      "cattle_geometry": "single_visible_animal",
+      "frame": 1,
+      "interpretation": "Both describe one coherent central animal; audit treats visible leg loss as partial, cattle treats it as minor boundary uncertainty. No biological identity disagreement.",
+      "proposal": 4
+    }
+  ],
+  "files": {
+    ".cache/cow-startup-mask-control/manifest.json": "cd41104ef82a93c725eb0c8cf68c7e3de2d3b918da361853fcd5857cda23961b",
+    ".cache/cow-startup-mask-review/render.json": "94c8f640fc6523627035239279f69d638d37d9fcf4ac279782e6590f50439887",
+    "research/cow_identity/results/2026-10-03/detection/startup-mask-review-audit.json": "32c3ee2351d46980dedb8832ac056fecdb3aeee21ee67c1ba8260debea713c27",
+    "research/cow_identity/results/2026-10-03/detection/startup-mask-review-cattle.json": "bd92a6bc56df0a2d1f6b3a1c5797a3e63a4e9f6129c44b7b69eebbee35c494eb"
+  },
+  "findings": [
+    "Both independently identify upper-left frame0 proposals6/8/9 as partial duplicate variants of the more complete7, and lower-right5/11 (frame0) and6/7 (frame1) as whole-versus-part duplicates.",
+    "The fixed intersection/min-area rejection removes both whole and part variants because ordinary IoU NMS did not suppress contained partial masks; this loses real animal candidates without evidence of a two-animal merge. No rules are changed here.",
+    "The central moving animal survives both frame filters but misses the fixed temporal IoU0.5 gate. Its movement and mask extent change are real source evidence, not a missing camera frame.",
+    "The top-border animal has a coherent visible proposal only in frame0, so cannot satisfy this two-frame confirmation. The upper-left animal reappears as a coherent candidate in frame1 but its frame0 candidates were all rejected.",
+    "The resulting four anonymous matches correspond to coherent distinct visible regions according to both reviews. This is geometry review only, not biological-name validation, pixel-ground-truth accuracy, or an alternate pass score."
+  ],
+  "fixed_selection": {
+    "central_animal_original_mask_iou": 0.49534347625633934,
+    "frame_survivors": [
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        10
+      ],
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    ],
+    "temporal_matches": [
+      {
+        "current_proposal": 0,
+        "mask_iou": 0.9057618178129438,
+        "previous_proposal": 0
+      },
+      {
+        "current_proposal": 1,
+        "mask_iou": 0.9689009078616959,
+        "previous_proposal": 1
+      },
+      {
+        "current_proposal": 2,
+        "mask_iou": 0.9635572477563231,
+        "previous_proposal": 3
+      },
+      {
+        "current_proposal": 3,
+        "mask_iou": 0.8704663212435233,
+        "previous_proposal": 4
+      }
+    ]
+  },
+  "geometry_category_agreement": 19,
+  "limitations": [
+    "AI-assisted reviewers share prior scene exposure; independent decision ordering is not unseen farm annotation.",
+    "One fine-boundary classification disagreement remains explicit.",
+    "No publisher annotation or model identity assignment was used, and no failed benchmark metric is reinterpreted."
+  ],
+  "reviewed_original_proposals": 20,
+  "status": "POST_FREEZE_GEOMETRY_COMPARISON_NO_TRUTH_LOADED"
+}

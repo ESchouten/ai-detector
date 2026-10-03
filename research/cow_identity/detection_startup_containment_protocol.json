@@ -1,0 +1,34 @@
+{
+  "algorithm": [
+    "Replay original support.9 and maskIoU.8confidence/indexNMS exactly.",
+    "For each surviving candidate, record strict-larger-area parents containing>=.9of its pixels. Compute all relations before removing candidates.",
+    "If a parent contains two children whose intersection/minarea<=.1, mark parent and ALL its contained children ambiguous. Head+torso can also abstain; no semantic exception.",
+    "Among unguarded candidates process largestarea first, then detectorconfidence/index; suppress contained unsuppressed fragments only when their parent itself is unblocked/unsuppressed.",
+    "Apply original remaining-overlap>.1 rejection to BOTH endpoints, including guarded candidates, excluding suppressed fragments.",
+    "Assign small residual shared pixels in originalconfidence/indexorder. Unchanged unique temporalIoU.5links on the resulting masks. No biological name supplied."
+  ],
+  "baseline": ".cache/cow-startup-mask-control/manifest.json",
+  "files": {
+    ".cache/cow-startup-mask-control/0-masks.npz": "51be8d5ed42d37f5ced243f70f113738d8434e44cba8bb25f5505b6d8645f4b6",
+    ".cache/cow-startup-mask-control/1-masks.npz": "aef4ee3928497c71819581e00e53f6e86d214b8198fc8cb30492d5093959a0bc",
+    ".cache/cow-startup-mask-control/manifest.json": "cd41104ef82a93c725eb0c8cf68c7e3de2d3b918da361853fcd5857cda23961b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_startup_containment.py": "3aa55bb12e9e0c68d696a01c3a3b1ca4711492d1b70086ef7da5c34800197535",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_startup_masks.py": "f219cf6342bfada2826606b8a7b2d778bb9acc0a87a5bc04aadbdb4033b14d29",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_startup_masks_protocol.json": "5bd79d736aca213a278a77fe1ac01083bafe89597a8841f7e56cc1a7c77cb219",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/startup-mask-review-audit.json": "32c3ee2351d46980dedb8832ac056fecdb3aeee21ee67c1ba8260debea713c27",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/startup-mask-review-cattle.json": "bd92a6bc56df0a2d1f6b3a1c5797a3e63a4e9f6129c44b7b69eebbee35c494eb",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_detection_startup_containment.py": "c68173abc82bb41ac4c7f610616f087f7e47b6b07c2822881fc6844bfdd59734",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_detection_startup_masks.py": "317cae2311b99efd545e9ed48cf700f834e6d79dd569708a342bc047a01f8df1"
+  },
+  "frozen_at_utc": "2026-10-03T11:52:10.384623+00:00",
+  "minimum_containment": 0.9,
+  "scope": "Both original frames0/0.5 and all20candidates; no new SAM/GPU/source decode, no truths or threshold sweep. Compare exact original decision/disjoint-mask parity before accepting report. Use frozen geometry reviews only for subsequent descriptive interpretation; do not change temporal.495failure or infer independent generalization.",
+  "status": "FROZEN_CACHED_MASK_CONTROL_BEFORE_OUTCOME",
+  "unchanged_rules": {
+    "duplicate_mask_iou": 0.8,
+    "maximum_remaining_overlap": 0.1,
+    "minimum_prompt_support": 0.9,
+    "temporal_mask_iou": 0.5
+  }
+}

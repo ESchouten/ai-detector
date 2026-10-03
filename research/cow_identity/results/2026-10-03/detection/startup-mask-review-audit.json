@@ -1,0 +1,319 @@
+{
+  "created_at_utc": "2026-10-03T11:46:32.788241+00:00",
+  "reviewer": "identity_integration_audit; AI-assisted visual review, not external human ground truth",
+  "protocol_sha256": "5bd79d736aca213a278a77fe1ac01083bafe89597a8841f7e56cc1a7c77cb219",
+  "render_sha256": "94c8f640fc6523627035239279f69d638d37d9fcf4ac279782e6590f50439887",
+  "reviewed_images": [
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-00.png",
+      "proposal": 0,
+      "sha256": "289efeede3e585767bd84df8a6fea2bb87b6bb397a52bdae6ed3b1e9ebe382c4"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-01.png",
+      "proposal": 1,
+      "sha256": "23b492aeccbd3f934e3cb901f56767c984158ce5e100b50931cc4025f6a7f877"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-02.png",
+      "proposal": 2,
+      "sha256": "1e801638e819194bd6f51dad782d22cdf7b4e6ad631f89641d05690d984c8390"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-03.png",
+      "proposal": 3,
+      "sha256": "37b8ffd830a6cdf1d1fa9f6c44cb5299c7f7f10b52184a095f3b26ac77f97baf"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-04.png",
+      "proposal": 4,
+      "sha256": "050a756cb301d8eeec2a5a5a8ef097558bbc72aab8dbc0ac47e1f968d2593134"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-05.png",
+      "proposal": 5,
+      "sha256": "dac14803a269857d58f9319207d95279ab7c9afd51f125cb3730a425f8569bd0"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-06.png",
+      "proposal": 6,
+      "sha256": "469ab3727bdbdc23821a9770e1642f8e804e206a292cdeb23083cd86d5e98fa9"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-07.png",
+      "proposal": 7,
+      "sha256": "8f4e67e71e55ac20d69a7152a02cde168ce920de69c87088064186967b5b52b8"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-08.png",
+      "proposal": 8,
+      "sha256": "28ff9b63f1d8f0506fe9fbe117b9785c5ea968ea0968d3814d226e824cb0b1eb"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-09.png",
+      "proposal": 9,
+      "sha256": "f0ed22d5c604ab2eb8033a43bc5d70dd114cd1ddadb72557ae16ce1fa12c3af8"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-10.png",
+      "proposal": 10,
+      "sha256": "748d12533dc9676d8f618014f807d09880c241ca2d55c23619cd1f22a715c558"
+    },
+    {
+      "frame": 0,
+      "path": ".cache/cow-startup-mask-review/0-11.png",
+      "proposal": 11,
+      "sha256": "13b2571ed827fc2fe3412e8a2efe9ac7840d072dc50b2738162e439a267c8eed"
+    },
+    {
+      "sha256": "354f114964ca6fe392d7c6610e8a79eb798228876ea6a5197023162dbfcdc1da",
+      "sheet": ".cache/cow-startup-mask-review/frame0-sheet0.jpg"
+    },
+    {
+      "sha256": "fefd8b8ef14bd1c65485263e5a3e8081508dcf6458c41dda2a6d69c659a881fa",
+      "sheet": ".cache/cow-startup-mask-review/frame0-sheet1.jpg"
+    },
+    {
+      "sha256": "8278ad843df130619b3c68360da9bce7d91beec0802bb4e5d887b9ac41012936",
+      "sheet": ".cache/cow-startup-mask-review/frame0-sheet2.jpg"
+    },
+    {
+      "frame": 1,
+      "path": ".cache/cow-startup-mask-review/1-00.png",
+      "proposal": 0,
+      "sha256": "4fb95dccf34403c742ab3df2c2f60c55ef0b224d68d6a955b3107d417e9e5eb4"
+    },
+    {
+      "frame": 1,
+      "path": ".cache/cow-startup-mask-review/1-01.png",
+      "proposal": 1,
+      "sha256": "5d68c61dda80eee0fccf727225678f11b3f3fb60f0ca4892dbae3fe0ed2d3b2b"
+    },
+    {
+      "frame": 1,
+      "path": ".cache/cow-startup-mask-review/1-02.png",
+      "proposal": 2,
+      "sha256": "8cedb5f7238ad3ff4dc7d68b24b8d0e6d7a0dacab05e489ceefb17bed12db169"
+    },
+    {
+      "frame": 1,
+      "path": ".cache/cow-startup-mask-review/1-03.png",
+      "proposal": 3,
+      "sha256": "bd1b89f83c6bfd64b179fa1dea8d9d20461b5c43489c96d2337f277ec8aae5d2"
+    },
+    {
+      "frame": 1,
+      "path": ".cache/cow-startup-mask-review/1-04.png",
+      "proposal": 4,
+      "sha256": "e7413c41a3592d8e1b908ebac352298f3c4cf4ee76506ab7d758283c97045dce"
+    },
+    {
+      "frame": 1,
+      "path": ".cache/cow-startup-mask-review/1-05.png",
+      "proposal": 5,
+      "sha256": "7356fe76271c462e3699c5098415c1c50f46c9819e0606bcae6d143239013723"
+    },
+    {
+      "frame": 1,
+      "path": ".cache/cow-startup-mask-review/1-06.png",
+      "proposal": 6,
+      "sha256": "e04339ddc19a3031919d1073562a0c0b32ece87c0f7c2fa8034c3b7b38a6004f"
+    },
+    {
+      "frame": 1,
+      "path": ".cache/cow-startup-mask-review/1-07.png",
+      "proposal": 7,
+      "sha256": "710f52b4bc52c2b9589480747f5e399f3614a0f052b81cd392806aa35ce4747e"
+    },
+    {
+      "sha256": "ccc795a84ddd677939409ca4fab06e98cc3d72bce8589c9e5b52c0b7041dbd87",
+      "sheet": ".cache/cow-startup-mask-review/frame1-sheet0.jpg"
+    },
+    {
+      "sha256": "ae2cabab8c7fbbabba7bf9bab2aab79c4d144546ecdd4fdf14218e43d958d3ae",
+      "sheet": ".cache/cow-startup-mask-review/frame1-sheet1.jpg"
+    }
+  ],
+  "source_files": {
+    ".cache/cow-startup-mask-control/0-source.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-startup-mask-control/1-source.png": "ad119455c26dffe2b7ee31dce8a6b30eed83f0dcf389da5b27e17557a67334de",
+    ".cache/cow-startup-mask-control/0-masks.npz": "51be8d5ed42d37f5ced243f70f113738d8434e44cba8bb25f5505b6d8645f4b6",
+    ".cache/cow-startup-mask-control/1-masks.npz": "aef4ee3928497c71819581e00e53f6e86d214b8198fc8cb30492d5093959a0bc"
+  },
+  "blinding": "All20 original pretrim SAM outputs reviewed from neutral proposal/context sheets before reading selection decisions, publisher boxes, biological label counts or another reviewer verdict. The scene and some earlier initial masks were seen during prior research, so this is independently ordered geometry review, not previously unseen-source blinding. Region labels are spatial descriptions, not biological identities.",
+  "policy": "mostly_complete means a coherent single visible animal at this image quality, not pixel-exact segmentation or certified whole biological body. Partial masks can still contain useful coat texture. frame_truncated preserves a genuine edge animal without inventing invisible extent. No acceptance threshold, labels or original masks are changed.",
+  "rows": [
+    {
+      "frame": 0,
+      "proposal": 0,
+      "anonymous_region": "foreground-left-dark",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Coherent dark-backed foreground animal, with its head and visible narrow limbs retained; no visible white-backed neighbour incorporated."
+    },
+    {
+      "frame": 0,
+      "proposal": 1,
+      "anonymous_region": "upper-right-wall",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Coherent visible oval body beside the upper-right wall; coat and outline follow one animal. Fine extremities/occluded parts cannot be certified from this overhead view."
+    },
+    {
+      "frame": 0,
+      "proposal": 2,
+      "anonymous_region": "central-walking",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "The isolated central walking animal has a coherent coat, head/neck and visible leg shapes; no neighbouring animal appears in the mask."
+    },
+    {
+      "frame": 0,
+      "proposal": 3,
+      "anonymous_region": "lower-right-wall",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Coherent visible body at the lower-right wall, separated from the long foreground animal below it; no obvious second-animal pixels."
+    },
+    {
+      "frame": 0,
+      "proposal": 4,
+      "anonymous_region": "foreground-left-white-back",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Long white-backed foreground animal is separated from its dark-backed left neighbour. Small disconnected extremity pixels remain; fine boundary accuracy is uncertain."
+    },
+    {
+      "frame": 0,
+      "proposal": 5,
+      "anonymous_region": "foreground-right-long",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "The long foreground-right animal includes its visible right end and the leftward protruding narrow anatomy; no obvious wall-side neighbour merge."
+    },
+    {
+      "frame": 0,
+      "proposal": 6,
+      "anonymous_region": "upper-left-rail",
+      "geometry": "partial",
+      "duplicate_of": 7,
+      "note": "Mostly torso and a narrow leg: the large visible head/neck at the left of this same animal is missing, leaving disconnected dark fragments. Candidate7 is the more complete view of the same body."
+    },
+    {
+      "frame": 0,
+      "proposal": 7,
+      "anonymous_region": "upper-left-rail",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Coherent upper-left animal including left-facing head/neck, torso and forelegs. This is the same source animal as proposals6/8/9, not four animals."
+    },
+    {
+      "frame": 0,
+      "proposal": 8,
+      "anonymous_region": "upper-left-rail",
+      "geometry": "partial",
+      "duplicate_of": 7,
+      "note": "Head/neck and front-leg region retained but substantial torso is greyed out or fragmented; another partial mask of the animal represented by7."
+    },
+    {
+      "frame": 0,
+      "proposal": 9,
+      "anonymous_region": "upper-left-rail",
+      "geometry": "partial",
+      "duplicate_of": 7,
+      "note": "Head/neck and forelegs only, with the posterior body absent; another part of the animal represented by7."
+    },
+    {
+      "frame": 0,
+      "proposal": 10,
+      "anonymous_region": "top-border",
+      "geometry": "frame_truncated",
+      "duplicate_of": null,
+      "note": "A distinct animal is visibly cut by the top image boundary. The mask retains its visible underside/legs and right-facing dark head; full off-frame extent is unknowable."
+    },
+    {
+      "frame": 0,
+      "proposal": 11,
+      "anonymous_region": "foreground-right-long",
+      "geometry": "partial",
+      "duplicate_of": 5,
+      "note": "Same elongated foreground-right animal as5, but the visible right-end white/black region is missing. This is a duplicate partial-body proposal, not an additional animal."
+    },
+    {
+      "frame": 1,
+      "proposal": 0,
+      "anonymous_region": "foreground-left-dark",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Same coherent dark-backed foreground animal region as frame0; tiny disconnected extremity pieces remain but no obvious neighbouring body."
+    },
+    {
+      "frame": 1,
+      "proposal": 1,
+      "anonymous_region": "upper-right-wall",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Coherent upper-right wall-side visible body; no second animal incorporated."
+    },
+    {
+      "frame": 1,
+      "proposal": 2,
+      "anonymous_region": "lower-right-wall",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Coherent lower-right wall-side body separated from the elongated foreground animal."
+    },
+    {
+      "frame": 1,
+      "proposal": 3,
+      "anonymous_region": "foreground-left-white-back",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Coherent long white-backed body; dark disconnected pixels at the lower-left end make exact fine anatomy uncertain, but no evident neighbouring torso is included."
+    },
+    {
+      "frame": 1,
+      "proposal": 4,
+      "anonymous_region": "central-walking",
+      "geometry": "partial",
+      "duplicate_of": null,
+      "note": "Coherent central animal coat/head, but the narrow legs evident in the raw frame are not cleanly retained; the lower silhouette is incomplete. No mixed second animal."
+    },
+    {
+      "frame": 1,
+      "proposal": 5,
+      "anonymous_region": "upper-left-rail",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Coherent upper-left head/neck, torso and forelegs, unlike the several part masks in frame0."
+    },
+    {
+      "frame": 1,
+      "proposal": 6,
+      "anonymous_region": "foreground-right-long",
+      "geometry": "mostly_complete",
+      "duplicate_of": null,
+      "note": "Main elongated body and right-end white/black anatomy are retained, with small fragmented pixels at the far right. This is one visible animal."
+    },
+    {
+      "frame": 1,
+      "proposal": 7,
+      "anonymous_region": "foreground-right-long",
+      "geometry": "partial",
+      "duplicate_of": 6,
+      "note": "Same source animal as6; right-end anatomy omitted, leaving only the elongated trunk/leftward anatomy. Duplicate partial-body proposal."
+    }
+  ],
+  "summary": "Several raw proposals target parts of the same upper-left animal or a shortened version of the lower-right long animal. No clear two-animal merge was visible in these20 mask renderings; fine extremity ownership remains uncertain. Automatic selection and two-frame persistence have not yet been consulted; no final animal or identity count is asserted."
+}

@@ -1,0 +1,70 @@
+import json
+from collections import Counter
+from pathlib import Path
+from types import SimpleNamespace
+from benchmark import digest, write_json
+from video_assessment import annotations, truth_at, pair_boxes
+from aidetector.domain.models import BoundingBox
+from joint_readout_prefix import FIELDS
+root=Path('research/cow_identity'); folder=root/'results/2026-10-03/detection'
+reportpath=folder/'crowded-joint-extended.json'; protocolpath=root/'detection_birth_extended_protocol.json'
+runpath=Path('.cache/cow-cutie/crowded-joint-extended/streaming.json')
+output=folder/'crowded-joint-extended-independent-audit.json'; assert not output.exists()
+report,protocol,value=[json.loads(p.read_text()) for p in (reportpath,protocolpath,runpath)]
+assert value['complete'] and report['status']=='COMPLETE_EXPOSED_EXTENSION'
+for p in (runpath,protocolpath): assert report['sources'][str(p)]==digest(p)
+for p,expected in protocol['files'].items(): assert digest(Path(p))==expected,p
+clip_path=Path(protocol['inputs']['clip'])/'sampled.json';seed_path=Path(protocol['inputs']['seed_manifest'])
+clip=json.loads(clip_path.read_text());seeds=json.loads(seed_path.read_text())['rows'][0]['prompts']
+assert [s['cow'] for s in seeds]==list(range(1,7))
+assert protocol['comparison_windows']==[[1800,2099],[2700,2999]]
+assert [r['second'] for r in value['all_frames']]==[i/2 for i in range(5999)]
+assert [r['second'] for r in value['timeline']]==list(range(3000))
+assert value['timeline']==[r for r in value['all_frames'] if float(r['second']).is_integer()]
+for i,(frame,source) in enumerate(zip(value['all_frames'],clip['rows'],strict=True)):
+ assert frame['upstream_step']==i and frame['second']==source['second']
+ assert frame['publisher_frame']==source['publisher_frame'] and frame['source_pixels_sha256']==source['pixels_sha256']
+ assert set(frame['named_track_ids'])<=set(range(6))
+prefixpath=Path(protocol['inputs']['prefix_predictions']);prefix=json.loads(prefixpath.read_text())
+assert prefix['complete'] and len(prefix['all_frames'])==3059
+for old,new in zip(prefix['all_frames'],value['all_frames'][:3059],strict=True):
+ for field in (*FIELDS,'publisher_frame'): assert old[field]==new[field],(old['second'],field)
+ for before,after in zip(old['sam_attempts'],new['sam_attempts'],strict=True):
+  assert {k:v for k,v in before.items() if k not in ('cache','batch_seconds')}=={k:v for k,v in after.items() if k not in ('cache','batch_seconds')}
+assert prefix['quarantine_events']==[e for e in value['quarantine_events'] if e['second']<=1529]
+annpath=Path('datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz');pklpath=Path('datasets/8-calves/video/pmfeed_4_3_16.pkl')
+for p in (clip_path,seed_path,annpath,pklpath): assert digest(p)==protocol['files'][str(p)]
+records,_=annotations(SimpleNamespace(annotations=annpath,source_pickle=pklpath))
+keep=(records['frame_id']>=1800*20+1)&(records['frame_id']<=2999*20+1)
+records={k:v[keep] for k,v in records.items()}
+results={}
+for start,end in protocol['comparison_windows']:
+ counts=Counter({k:0 for k in ['correct_name','wrong_name','unknown_named','unmatched_named']});presence=Counter();first_errors={}
+ for frame in value['timeline'][start:end+1]:
+  truth=truth_at(records,frame['publisher_frame'],clip['width'],clip['height']);assert all(1<=r['cow']<=8 for r in truth)
+  presence.update(r['cow'] for r in truth);boxes=[BoundingBox(**row) for row in frame['boxes']];pairs=pair_boxes(boxes,truth)
+  counts.update(frames=1,visible_annotations=len(truth),visible_known=sum(r['cow']<=6 for r in truth),visible_unknown=sum(r['cow']>6 for r in truth),detector_boxes=len(boxes),matched_boxes=len(pairs),missed_annotations=len(truth)-len(pairs),unmatched_boxes=len(boxes)-len(pairs))
+  for i,box in enumerate(boxes):
+   if box.track_id not in frame['named_track_ids']:continue
+   assert 0<=box.track_id<6
+   name=seeds[box.track_id]['cow'];actual=truth[pairs[i]]['cow'] if i in pairs else None
+   key='unmatched_named' if actual is None else 'unknown_named' if actual>6 else 'correct_name' if actual==name else 'wrong_name';counts[key]+=1
+   if key!='correct_name' and key not in first_errors:first_errors[key]={'second':frame['second'],'name':name,'truth':actual,'track_id':box.track_id}
+ expected=report['conditions'][str(start)]
+ for k,v in counts.items():assert expected['naming_counts'][k]==v,(start,k,v,expected['naming_counts'][k])
+ named=sum(counts[k] for k in ['correct_name','wrong_name','unknown_named','unmatched_named'])
+ coverage=counts['correct_name']/counts['visible_known'];precision=counts['correct_name']/named if named else 0;unknownfa=counts['unknown_named']/counts['visible_unknown']
+ assert expected['known_coverage']==coverage and expected['conservative_precision']==precision
+ passed=coverage>=.6 and precision>=.99 and unknownfa<=.01;assert report['acceptance'][str(start)]==passed
+ results[str(start)]={'counts':dict(counts),'per_cow_presence':dict(presence),'known_coverage':coverage,'conservative_precision':precision,'unknown_false_name_rate':unknownfa,'independently_passes':passed,'first_errors':first_errors}
+pooled=Counter()
+for result in results.values():pooled.update(result['counts'])
+for k,v in pooled.items():assert report['pooled']['naming_counts'][k]==v
+baselinepath=folder/'cutie-streaming-reserved.json';baseline=json.loads(baselinepath.read_text());comparison={}
+for start,result in results.items():
+ prev=baseline['conditions'][start]['naming_counts'];now=result['counts']
+ assert all(prev[k]==now[k] for k in ['visible_known','visible_unknown','visible_annotations'])
+ comparison[start]={k:{'eight_seed_previous':prev[k],'six_seed_joint_births':now[k]} for k in ['correct_name','wrong_name','unknown_named','unmatched_named']}
+sources=[reportpath,protocolpath,runpath,clip_path,seed_path,annpath,pklpath,prefixpath,baselinepath,root/'video_assessment.py',root/'joint_readout_prefix.py']
+out={'status':'COMPLETE_INDEPENDENT_CPU_RECOUNT','sources':{str(p):digest(p) for p in sources},'recipe_sha256':digest(Path(__file__)),'method':'Explicit count accumulation from every output in both fixed300framepanels with original all8annotations. Shared frozen maximum-cardinality IoU0.5 association, no VideoMetrics or score() call. All5999sourcecounter/pixel/frame records and3000integer subset checked; original6named seeds retained and anonymousborn objects cannot name. All3059prefix decision fields and quarantine events exact; source PNG geometry and SAM asset hashes rely on official strict validation and are not decoded again. No new inference,3000+queries,labels or tuning.','panels':results,'pooled_counts':dict(pooled),'comparison_with_previous_eight_seed_reserved':comparison,'all_panels_pass':all(r['independently_passes'] for r in results.values()),'limitation':'Previously exposed later footage, not independent farm or re-identification validation. Later97.87%precision failure is retained; zero wrong-known/unknownmatched names does not erase34named-unmatched errors. No alternate acceptance metric.'}
+write_json(output,out);print(output,digest(output));print(json.dumps({'panels':results,'all_pass':out['all_panels_pass']},indent=2))

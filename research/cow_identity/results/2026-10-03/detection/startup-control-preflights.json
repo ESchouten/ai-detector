@@ -1,0 +1,30 @@
+{
+  "all_anonymous_prompt_maps_equal": true,
+  "all_seed_arrays_equal": true,
+  "failed_preflights": [
+    {
+      "failure": "Installed SDK is a namespace package; origin was None. No model call.",
+      "protocol": "research/cow_identity/detection_startup_control_protocol.json",
+      "protocol_sha256": "001fe701cda2766963d26a9db163eb3034567f838cabce5ddc7f35a294a66607",
+      "source_sha256": "6ce067269bff5de9ece059a3868cc31c63e1f6ef54b11f82c913496b2c6d9182",
+      "source_snapshot": "research/cow_identity/results/2026-10-03/detection/startup-control-preflight-source.py.txt",
+      "version": "v1"
+    },
+    {
+      "failure": "JSON integer relation keys became strings; strict replay falsely rejected identical decision. No model call.",
+      "protocol": "research/cow_identity/detection_startup_control_v2_protocol.json",
+      "protocol_sha256": "1741f62c9898c478af5110dcfd125fbda9e447ef11617a256a260f5ac5dd45dd",
+      "source_sha256": "c36b216cc524fadc86547e8cc8a1f60a149cd79d13186b31355b0cc70e9cd91c",
+      "source_snapshot": "research/cow_identity/results/2026-10-03/detection/startup-control-v2-preflight-source.py.txt",
+      "version": "v2"
+    }
+  ],
+  "final_protocol": "research/cow_identity/detection_startup_control_v3_protocol.json",
+  "final_protocol_sha256": "5fbb7f1c45d3aa8e5e1372d6723aea446363c679d8e3e2122f61791956b88881",
+  "final_verify": {
+    "anonymous_slots": 8,
+    "bindings": 265,
+    "inputs": 241
+  },
+  "inference_performed": false
+}

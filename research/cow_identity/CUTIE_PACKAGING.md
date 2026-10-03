@@ -133,8 +133,20 @@ The earlier eight retirement checks also pass. An unprompted empty step bypasses
 readout and returns the SDK's all-zero background array; the application should
 dispose an empty core rather than treat that array as a calibrated probability.
 
-This complete CPU proof took 2.27 seconds. It establishes compatibility of the
-three patches at the actual inference boundary. It does not establish combined
-MPS behavior, full-resolution tracking quality, indefinite camera lifetime or
-complete installer support. The separate joint-only MPS video evaluation remains
-the accuracy experiment.
+This complete CPU proof took 2.27 seconds. The separately
+[frozen combined Metal proof](cutie_combined_mps_protocol.json) reuses the same
+unchanged helpers after loading the checkpoint on CPU and moving the model to
+actual `mps:0` in FP32. Its
+[result](results/2026-10-03/detection/cutie-combined-mps.json) passes all sixteen
+exact probability comparisons, consolidation, retirement and reinsertion checks,
+and the earlier eight lifecycle checks in 3.40 seconds, with zero network
+attempts. The largest stage-boundary Metal driver sample was 209,993,728 bytes;
+process peak RSS was 857,341,952 bytes. The frozen 8 GiB guards did not trigger.
+Metal measurements are synchronized stage samples, not the peak of every
+temporary allocation, and numerical parity is between SDK variants on the same
+device, not between CPU and Metal.
+
+Together these controls establish compatibility of the three patches at the
+actual CPU and Metal inference boundary. They do not establish full-resolution
+tracking quality, indefinite camera lifetime or complete installer support.
+The separate joint-only MPS video evaluation remains the accuracy experiment.

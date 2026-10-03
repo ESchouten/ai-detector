@@ -159,8 +159,10 @@ post-reclamation Metal driver allocation reached 6.43 GB. These timings use cach
 detector proposals, exclude some per-input bookkeeping, and are not complete
 live-camera throughput. The two SAM invocations took 0.945 seconds altogether.
 
-The original failed reserved test remains unchanged. Later exposed panels still
-need this exact candidate, and seconds 3000 onward remain closed. The candidate
+The original failed reserved test remains unchanged. The subsequent
+[continuous extension](EXTENDED_JOINT_READOUT.md) reproduces the whole earlier
+prefix exactly, but fails late-panel precision at 97.87%. Seconds 3000 onward
+remain closed. The candidate
 has not yet established actual departure/re-entry, cross-day recognition,
 human confirmation burden or application integration. Passing development alone
 does not complete the identity goal.

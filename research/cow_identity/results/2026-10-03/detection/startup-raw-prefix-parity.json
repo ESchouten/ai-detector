@@ -1,0 +1,614 @@
+{
+  "all121_raw_detector_outputs_equal": true,
+  "all121_sources_equal": true,
+  "prior_raw_prediction_sha256": "179da21b10e713902e0245e6a8f0e5a6f3b13e276a7c221deb618f2c42ca1707",
+  "rows": [
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 0
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 1
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 2
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 3
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 4
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 5
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 6
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 7
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 8
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 9
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 10
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 11
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 12
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 13
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 14
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 15
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 16
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 17
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 18
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 19
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 20
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 21
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 22
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 23
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 24
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 25
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 26
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 27
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 28
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 29
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 30
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 31
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 32
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 33
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 34
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 35
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 36
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 37
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 38
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 39
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 40
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 41
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 42
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 43
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 44
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 45
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 46
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 47
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 48
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 49
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 50
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 51
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 52
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 53
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 54
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 55
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 56
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 57
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 58
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 59
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 60
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 61
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 62
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 63
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 64
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 65
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 66
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 67
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 68
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 69
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 70
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 71
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 72
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 73
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 74
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 75
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 76
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 77
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 78
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 79
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 80
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 81
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 82
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 83
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 84
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 85
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 86
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 87
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 88
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 89
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 90
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 91
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 92
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 93
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 94
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 95
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 96
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 97
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 98
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 99
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 100
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 101
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 102
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 103
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 104
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 105
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 106
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 107
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 108
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 109
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 110
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 111
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 112
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 113
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 114
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 115
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 116
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 117
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 118
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 119
+    },
+    {
+      "exact_detector_boxes": true,
+      "same_source": true,
+      "second": 120
+    }
+  ],
+  "scope": "Post-run input/corroborator regression only; new automatic masks are not assumed equal to the previous reviewed masks. No biological truth or identity score changes.",
+  "startup_prediction_sha256": "1d7cd590b7ad83e5f240f61dd0aded7aecf888eda1746b03a4383de4119c5e9b"
+}

@@ -1,0 +1,60 @@
+{
+  "scope": "Independent CPU recount of fixed exposed anonymous startup; no new inference, no biological name certification and no promotion. Firstframe anchors only; all120 later integerframes/all8truth IDs/everytrack retained.",
+  "sources": {
+    "research/cow_identity/detection_startup_control_v3_protocol.json": "5fbb7f1c45d3aa8e5e1372d6723aea446363c679d8e3e2122f61791956b88881",
+    ".cache/cow-startup-propagation/streaming.json": "1d7cd590b7ad83e5f240f61dd0aded7aecf888eda1746b03a4383de4119c5e9b",
+    "research/cow_identity/results/2026-10-03/detection/startup-propagation.json": "715b06eb421d47f0394b888e667ef9d9955a48eacc49d85fde05b45f91d47892"
+  },
+  "verified_bindings": 265,
+  "processed_input_frames": 241,
+  "validated_original_masks": 121,
+  "all_names_empty": true,
+  "independent_first_frame_anchors": {
+    "0": 6,
+    "1": 5,
+    "2": 3,
+    "3": 4,
+    "4": 1,
+    "5": 7,
+    "6": 2,
+    "7": 8
+  },
+  "future_counts": {
+    "correct_initial_instance": 952,
+    "matched": 952,
+    "matched_unanchored": 0,
+    "missed_annotations": 7,
+    "predictions": 960,
+    "unmatched_anchored": 8,
+    "unmatched_unanchored": 0,
+    "visible_annotations": 959,
+    "wrong_initial_instance": 0
+  },
+  "visible_per_animal": {
+    "1": 120,
+    "2": 119,
+    "3": 120,
+    "4": 120,
+    "5": 120,
+    "6": 120,
+    "7": 120,
+    "8": 120
+  },
+  "predictions_per_slot": {
+    "0": 120,
+    "1": 120,
+    "2": 120,
+    "3": 120,
+    "4": 120,
+    "5": 120,
+    "6": 120,
+    "7": 120
+  },
+  "matched_animal_changes": 0,
+  "exact_report_count_parity": true,
+  "limitations": [
+    "Association is publisher geometry atfirstframe, not farmer-confirmed biological identity.",
+    "Detector trained on earlyframes from this recording; this120sexposed result is optimistic.",
+    "No births,retirement,manualcommands,reconnect,cross-day recognition or sustainedfarmvalidation demonstrated."
+  ]
+}

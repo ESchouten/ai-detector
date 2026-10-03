@@ -16,7 +16,7 @@ Each configured physical source has one worker-owned Cutie core and one temporal
 
 ## Keep the runtime small and faithful
 
-Use one additional `cutie_runtime.py` adapter for the pinned SDK/model load, reviewed joint-readout patch, stable object/channel mapping, initialization and resource release. Extract the successful pure policy into one `domain/continuous_identity.py` module: largest-component geometry, probability/reciprocal confirmation, causal quarantine/recovery and explicit slot lifecycle. Do not import research runners or their file/protocol machinery in the application.
+Use one additional `cutie_runtime.py` adapter for the pinned SDK/model load, reviewed joint-readout patch, stable object/channel mapping, initialization and resource release. Keep largest-component geometry and mask-based collision evidence in the inference adapters; these operations inspect pixels. Domain code owns human assignments and lifecycle decisions over ordinary values. Do not import research runners or their file/protocol machinery in the application.
 
 The processing cadence, raw-detector cadence, model weights and precision must match the finally selected joint control. In particular, anonymous births currently require raw same-frame proposals at2Hz; the older fixed-seed experiment only corroborated names at1Hz. Do not substitute one cadence while claiming another result. Use a monotonic per-source schedule and retain no inference backlog. A duplicate or nonincreasing capture sequence never advances Cutie. A dropped scheduled frame is recorded; a continuity gap invalidates the source rather than processing stale frames to catch up.
 

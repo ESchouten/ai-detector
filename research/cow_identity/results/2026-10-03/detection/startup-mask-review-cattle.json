@@ -1,0 +1,221 @@
+{
+  "disclosure": "Reviewed all five opaque-ID original-mask sheets and their source context before reading per-proposal selection/rejection details or other reviewer opinions. Already familiar with the scene and previously selected seed study; this is not blind farm annotation. Parent had reported aggregate12/8 ->6/6 ->4 mask counts, but no candidate identities or policy outcomes were inspected. No publisher annotation, truth overlay or biological names read for this review.",
+  "findings": [
+    "Several initial upper-left proposals are disjoint/partial anatomical variants of one visible animal; candidate07 is visually more complete.",
+    "The lower-right animal has full-versus-partial duplicates in both frames. Raw proposal count is not animal count.",
+    "The top-center border animal visible in both sources has a proposal in frame0 but no corresponding candidate in frame1; temporalconfirmation can therefore omit a real visible animal independently of segmentation quality.",
+    "No clear two-animal merged torso mask is established among these20; minor segmentation fragments/boundary uncertainty remain. These are visual diagnostic observations, not mask-ground-truth accuracy."
+  ],
+  "render_sha256": "94c8f640fc6523627035239279f69d638d37d9fcf4ac279782e6590f50439887",
+  "reviewed_sheets": [
+    {
+      "sha256": "354f114964ca6fe392d7c6610e8a79eb798228876ea6a5197023162dbfcdc1da",
+      "sheet": ".cache/cow-startup-mask-review/frame0-sheet0.jpg"
+    },
+    {
+      "sha256": "fefd8b8ef14bd1c65485263e5a3e8081508dcf6458c41dda2a6d69c659a881fa",
+      "sheet": ".cache/cow-startup-mask-review/frame0-sheet1.jpg"
+    },
+    {
+      "sha256": "8278ad843df130619b3c68360da9bce7d91beec0802bb4e5d887b9ac41012936",
+      "sheet": ".cache/cow-startup-mask-review/frame0-sheet2.jpg"
+    },
+    {
+      "sha256": "ccc795a84ddd677939409ca4fab06e98cc3d72bce8589c9e5b52c0b7041dbd87",
+      "sheet": ".cache/cow-startup-mask-review/frame1-sheet0.jpg"
+    },
+    {
+      "sha256": "ae2cabab8c7fbbabba7bf9bab2aab79c4d144546ecdd4fdf14218e43d958d3ae",
+      "sheet": ".cache/cow-startup-mask-review/frame1-sheet1.jpg"
+    }
+  ],
+  "reviewer": "cattle_research",
+  "rows": [
+    {
+      "frame": 0,
+      "geometry": "single_visible_animal",
+      "note": "Left foreground animal; main coat-bearing body and visible lower extremities are isolated. Rail hides part of head/feet; no second body apparent.",
+      "proposal": 0,
+      "review_image_sha256": "289efeede3e585767bd84df8a6fea2bb87b6bb397a52bdae6ed3b1e9ebe382c4",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 0,
+      "geometry": "single_visible_animal",
+      "note": "Upper-right lying animal; visible curled body and head isolated.",
+      "proposal": 1,
+      "review_image_sha256": "23b492aeccbd3f934e3cb901f56767c984158ce5e100b50931cc4025f6a7f877",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 0,
+      "geometry": "single_visible_animal",
+      "note": "Central standing animal, coherent body/head/legs; minor boundary loss possible.",
+      "proposal": 2,
+      "review_image_sha256": "1e801638e819194bd6f51dad782d22cdf7b4e6ad631f89641d05690d984c8390",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 0,
+      "geometry": "single_visible_animal",
+      "note": "Right-middle lying animal isolated as one curled body.",
+      "proposal": 3,
+      "review_image_sha256": "37b8ffd830a6cdf1d1fa9f6c44cb5299c7f7f10b52184a095f3b26ac77f97baf",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 0,
+      "geometry": "single_visible_animal",
+      "note": "Right animal of close foreground pair; coherent narrow body separate from its neighbour.",
+      "proposal": 4,
+      "review_image_sha256": "050a756cb301d8eeec2a5a5a8ef097558bbc72aab8dbc0ac47e1f968d2593134",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 0,
+      "geometry": "single_visible_animal",
+      "note": "Lower-right side-on animal; body and long head/neck visible. Head boundary is ragged near image edge.",
+      "proposal": 5,
+      "review_image_sha256": "dac14803a269857d58f9319207d95279ab7c9afd51f125cb3730a425f8569bd0",
+      "same_visible_animal_other_proposals": [
+        11
+      ]
+    },
+    {
+      "frame": 0,
+      "geometry": "partial_animal",
+      "note": "Upper-left animal torso/rear only; neck and forebody omitted. Overlaps the more complete candidate07.",
+      "proposal": 6,
+      "review_image_sha256": "469ab3727bdbdc23821a9770e1642f8e804e206a292cdeb23083cd86d5e98fa9",
+      "same_visible_animal_other_proposals": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "frame": 0,
+      "geometry": "single_visible_animal",
+      "note": "Upper-left animal with bent head/neck, trunk and legs; more complete than candidates06/08/09.",
+      "proposal": 7,
+      "review_image_sha256": "8f4e67e71e55ac20d69a7152a02cde168ce920de69c87088064186967b5b52b8",
+      "same_visible_animal_other_proposals": [
+        6,
+        8,
+        9
+      ]
+    },
+    {
+      "frame": 0,
+      "geometry": "partial_animal",
+      "note": "Upper-left animal head/neck and legs with a perforated or missing rear trunk. It is not a separate animal from07.",
+      "proposal": 8,
+      "review_image_sha256": "28ff9b63f1d8f0506fe9fbe117b9785c5ea968ea0968d3814d226e824cb0b1eb",
+      "same_visible_animal_other_proposals": [
+        6,
+        7,
+        9
+      ]
+    },
+    {
+      "frame": 0,
+      "geometry": "partial_animal",
+      "note": "Upper-left animal head/neck/forelegs only; anatomical fragment of07.",
+      "proposal": 9,
+      "review_image_sha256": "f0ed22d5c604ab2eb8033a43bc5d70dd114cd1ddadb72557ae16ce1fa12c3af8",
+      "same_visible_animal_other_proposals": [
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "frame": 0,
+      "geometry": "border_visible_animal",
+      "note": "Top-center animal cut by source top edge; visible trunk/legs/head appear one animal. Hidden beyond-image extent must not be invented.",
+      "proposal": 10,
+      "review_image_sha256": "748d12533dc9676d8f618014f807d09880c241ca2d55c23619cd1f22a715c558",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 0,
+      "geometry": "partial_animal",
+      "note": "Same lower-right animal as05; right head/neck end omitted, body-only segmentation.",
+      "proposal": 11,
+      "review_image_sha256": "13b2571ed827fc2fe3412e8a2efe9ac7840d072dc50b2738162e439a267c8eed",
+      "same_visible_animal_other_proposals": [
+        5
+      ]
+    },
+    {
+      "frame": 1,
+      "geometry": "single_visible_animal",
+      "note": "Left foreground animal; coherent main body and visible extremities, rail occlusion at lower left.",
+      "proposal": 0,
+      "review_image_sha256": "4fb95dccf34403c742ab3df2c2f60c55ef0b224d68d6a955b3107d417e9e5eb4",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 1,
+      "geometry": "single_visible_animal",
+      "note": "Upper-right lying animal isolated.",
+      "proposal": 1,
+      "review_image_sha256": "5d68c61dda80eee0fccf727225678f11b3f3fb60f0ca4892dbae3fe0ed2d3b2b",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 1,
+      "geometry": "single_visible_animal",
+      "note": "Right-middle lying animal isolated.",
+      "proposal": 2,
+      "review_image_sha256": "8cedb5f7238ad3ff4dc7d68b24b8d0e6d7a0dacab05e489ceefb17bed12db169",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 1,
+      "geometry": "single_visible_animal",
+      "note": "Right animal of foreground pair, main body/head isolated; a detached small dark end fragment warrants caution but no second torso apparent.",
+      "proposal": 3,
+      "review_image_sha256": "bd1b89f83c6bfd64b179fa1dea8d9d20461b5c43489c96d2337f277ec8aae5d2",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 1,
+      "geometry": "single_visible_animal",
+      "note": "Central moving animal with coherent body/head; small leg/tail boundary loss possible.",
+      "proposal": 4,
+      "review_image_sha256": "e7413c41a3592d8e1b908ebac352298f3c4cf4ee76506ab7d758283c97045dce",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 1,
+      "geometry": "single_visible_animal",
+      "note": "Upper-left animal, coherent bent neck/head/trunk/legs.",
+      "proposal": 5,
+      "review_image_sha256": "7356fe76271c462e3699c5098415c1c50f46c9819e0606bcae6d143239013723",
+      "same_visible_animal_other_proposals": []
+    },
+    {
+      "frame": 1,
+      "geometry": "single_visible_animal",
+      "note": "Lower-right animal; includes the long neck/head better than07, with ragged head boundary.",
+      "proposal": 6,
+      "review_image_sha256": "e04339ddc19a3031919d1073562a0c0b32ece87c0f7c2fa8034c3b7b38a6004f",
+      "same_visible_animal_other_proposals": [
+        7
+      ]
+    },
+    {
+      "frame": 1,
+      "geometry": "partial_animal",
+      "note": "Same lower-right animal as06, body/neck fragment missing farther head portion.",
+      "proposal": 7,
+      "review_image_sha256": "710f52b4bc52c2b9589480747f5e399f3614a0f052b81cd392806aa35ce4747e",
+      "same_visible_animal_other_proposals": [
+        6
+      ]
+    }
+  ],
+  "source_manifest_sha256": "cd41104ef82a93c725eb0c8cf68c7e3de2d3b918da361853fcd5857cda23961b",
+  "status": "FROZEN_INDEPENDENT_SOURCE_GEOMETRY_REVIEW"
+}

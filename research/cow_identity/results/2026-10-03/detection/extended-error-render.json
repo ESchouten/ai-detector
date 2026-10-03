@@ -1,0 +1,6168 @@
+{
+  "prediction_only": [
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/00-prediction.png",
+      "sha256": "535f7771dc9a88fa0958688068f5bdb131471bd80d71a52944d6da92ca764ed8"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/01-prediction.png",
+      "sha256": "4c8eaae3a218405c27127f20eb51d3a63e0da23f18146b84850328a4dbc611c9"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/02-prediction.png",
+      "sha256": "e23b6daee9cd339cf8277e37da9c3cbead25d21b4fc0a8f1ef164ed01508dfac"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/03-prediction.png",
+      "sha256": "33cdc8771dccfa5a11fd0b3c4fe30614a508897c69d8df33e95e42faca78bb56"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/04-prediction.png",
+      "sha256": "ed823ee6ae0345b4845243684a85b018d1628e6c452a560ea7c350041d90dc2c"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/05-prediction.png",
+      "sha256": "89cec3332c25dc968673f7e991f008e07b6167abd61c23a6f33b2ede70f804b7"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/06-prediction.png",
+      "sha256": "2b509353a9a4adb9c5d1327c4bc7c1e7bab3019aa632c3e2641eadba905511c5"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/07-prediction.png",
+      "sha256": "1343ffbe9b48f946f44d378328ced0e1c0b3ee8f712ae0db3d0ebbcf17124921"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/08-prediction.png",
+      "sha256": "76504f45f90e3931c8e141a847c5b124d8a14fc12e8dc50be2d1d11a3d9f2d4c"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/09-prediction.png",
+      "sha256": "419d19caad819d21805da295ff2776f033623c2df3b1f8711f6bafa4033a1180"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/10-prediction.png",
+      "sha256": "1707fe1796b911d7696ba6fec824773f4ffc6952db32d6a6e19c844f8379ad78"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/11-prediction.png",
+      "sha256": "ec29230bf52578898dab98bbdb79e7ec1893a9629f4e9970368fe0d082f6d6c3"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/12-prediction.png",
+      "sha256": "e65ecc37122f8ff07d133645a88571edb629681e4c9baef21dd23ee7e0613cd9"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/13-prediction.png",
+      "sha256": "e307ea4ba95532208e3e4a5b3ded2c793ecb5e546b3d6a4c27881e6c2b4452fb"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/14-prediction.png",
+      "sha256": "c1cf6750c89a42937859f67e8d10a3e2cde56a46ab47469b7938670e14d86873"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/15-prediction.png",
+      "sha256": "8e1f952a9ba2eb2333a12d2cc8ab5574f4d7ebc2b5d06078754c44c97ffe30b3"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/16-prediction.png",
+      "sha256": "5f8ab8958a0df43cf26ad3e7396c2a72dca3750dfdcf69ea8e46158ab7f65803"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/17-prediction.png",
+      "sha256": "8ced3b36fa977e6a0ae833d8b8f300c3ec03b925f40577aa01f84d28fdab08c2"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/18-prediction.png",
+      "sha256": "9546d3957cc4edf72951ec767358703260d0c01f55f2e509625fca9c002bef5d"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/19-prediction.png",
+      "sha256": "125ea28284544a3c1a81b4f13f25020f892901bccd7c3eaa223e3bca5d5adf95"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/20-prediction.png",
+      "sha256": "36117c96a16bd4c027507be0ce773cf77330d20e3278f3385214fc97c9edefcf"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/21-prediction.png",
+      "sha256": "6e6ef53162ffead70313ce23ff10386b9299a5b18ba8c775cdf01d586ef717a2"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/22-prediction.png",
+      "sha256": "c1dabbce94913049dcc06cd5a168d394d3b3e0e7a0dfd097f73b53b72cbb6c5a"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/23-prediction.png",
+      "sha256": "43a5d0951dbee1efcce37bc94343cddf1317f6da3a2db228d29bdea1cb412c1a"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/24-prediction.png",
+      "sha256": "f7bd883095076b8c9be1fece73d142d8334671b65f8e966420c1eb997128dc9b"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/25-prediction.png",
+      "sha256": "77e2d4fff3c4c11e7eab235bad730c2d556c459be21260575895fa18d5068d60"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/26-prediction.png",
+      "sha256": "fe274295de578b50ac6f0f0f6592f017960dda84acbaed0a36e8a7f2f5b9f244"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/27-prediction.png",
+      "sha256": "84365ccf3f85f1476b47d5215e6c0262637fd4771f08cf6895a507eeb325c68f"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/28-prediction.png",
+      "sha256": "58d9f794988b6490b3e07eb27eb20304b2721579518df1b72f1320d9dcfa8b80"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/29-prediction.png",
+      "sha256": "12119bb13571a4115ac56baba58fcbc949f8dfd63758836aa156c5e1f2f4dcea"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/30-prediction.png",
+      "sha256": "ede796dc2698bf317d35da1c6270db1e0312aa8cdafc2a10e5c0622657bb428d"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/31-prediction.png",
+      "sha256": "c995a4b1d7c41728ff029c8df1e4d8a411081c61e693d1e8d9632343694c25a1"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/32-prediction.png",
+      "sha256": "237b8e3f40863733cbd5378a09e0b74383ef05ba5d019098389c7fb677efe9a5"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/33-prediction.png",
+      "sha256": "ec009307431354ba1d0354a71de47dae63cf5dd0f043947d4dec49e8711dfe09"
+    }
+  ],
+  "prediction_sheets": [
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/prediction-sheet-01.jpg",
+      "sha256": "9dbbe04e7c697b94ec8c9464c69e550bbaab5a7a60da5ced637bbc0e8f41f9b8"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/prediction-sheet-02.jpg",
+      "sha256": "fd8b57d94eeebb2f7c614804894dd678067cd026bfa89440095637ad7f7e8f72"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/prediction-sheet-03.jpg",
+      "sha256": "8af47b2d7c17510fc997ca38203d26d10823a087c35b84322d42b31d89cdc770"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/prediction-sheet-04.jpg",
+      "sha256": "ba0da13e93f713794535f58a1a6f38afb7a07cf18b36ba939afe3682839f1d94"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/prediction-sheet-05.jpg",
+      "sha256": "fe0b714c7523f5caf5f88baa8c11122e61f5e96d2188d22914f70a2636e53ae0"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/prediction-sheet-06.jpg",
+      "sha256": "1e46a1607884315c6ed89b731e847fc4ea967085c3073401b02596509389acf8"
+    }
+  ],
+  "scope": "All34cases preserved, no image-based reselection. Inspect prediction-only panels first, then separate publisher overlays. No altered metric or automatic biological classification.",
+  "selection_sha256": "61e5bda0d6850480239d346f0713b5c08911fbaa0b60a4abee7a376ad1965a04",
+  "truth_diagnostics": [
+    {
+      "index": 0,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.41156756756756757,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.59484375,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.04614093959731544,
+          "relative_area": 1.0359183673469388,
+          "truth_covered": 0.08979591836734693
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.519963578420214,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.30767780172413794,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.45516499282639883,
+          "relative_area": 0.45516499282639883,
+          "truth_covered": 0.45516499282639883
+        },
+        {
+          "cow": 7,
+          "iou": 0.011373881683889312,
+          "relative_area": 0.6436179205409974,
+          "truth_covered": 0.018484080022541562
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9997373949579832,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 6,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.8127567567567567,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1746875,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.11074724620422745,
+          "relative_area": 2.045714285714286,
+          "truth_covered": 0.3036734693877551
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.0268153881174595,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.6075969827586207,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.7125296527927539,
+          "relative_area": 0.8988522238163558,
+          "truth_covered": 0.790052606408417
+        },
+        {
+          "cow": 7,
+          "iou": 0.057744297750597126,
+          "relative_area": 1.2710059171597634,
+          "truth_covered": 0.12397858551704706
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.974264705882353,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 1818.0,
+      "truth": [
+        {
+          "box": [
+            452,
+            419,
+            702,
+            530
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            350,
+            103,
+            500,
+            231
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            270,
+            85,
+            345,
+            232
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            515,
+            190,
+            630,
+            381
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            450,
+            355,
+            770,
+            471
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            212,
+            143,
+            335,
+            347
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            299,
+            261,
+            494,
+            352
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            336,
+            225,
+            504,
+            293
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.122859100251199,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1229232086782757,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.4447258338044093,
+          "relative_area": 0.4447258338044093,
+          "truth_covered": 0.4447258338044093
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.546347983332023,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.1941712204007287,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.7854030501089324,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.04011887072808321,
+          "relative_area": 1.4117140396210164,
+          "truth_covered": 0.09302325581395349
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.6433823529411764,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 3,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.7081525462434346,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.7082500713673994,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.5248329048843188,
+          "relative_area": 0.6765404183154324,
+          "truth_covered": 0.5770491803278689
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 2.352386193883167,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.8166363084395871,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 2.7160493827160495,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.06073873394451029,
+          "relative_area": 2.147573930519667,
+          "truth_covered": 0.18023255813953487
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 2.5,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 1840.0,
+      "truth": [
+        {
+          "box": [
+            510,
+            312,
+            626,
+            463
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            501,
+            150,
+            656,
+            263
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            208,
+            273,
+            513,
+            418
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            645,
+            229,
+            724,
+            390
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            581,
+            339,
+            671,
+            522
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            409,
+            188,
+            562,
+            260
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            424,
+            296,
+            596,
+            377
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            457,
+            254,
+            633,
+            322
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.45073011688807185,
+          "relative_area": 1.023512336719884,
+          "truth_covered": 0.6286889211417513
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.0933333333333333,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.01509206157561123,
+          "relative_area": 1.101875,
+          "truth_covered": 0.03125
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.0603448275862069,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.26223881094411305,
+          "relative_area": 1.265311004784689,
+          "truth_covered": 0.470633971291866
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.2148148148148148,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.07916402786573781,
+          "relative_area": 2.223203026481715,
+          "truth_covered": 0.2364438839848676
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.2878013148283418,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 1,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.4573263995105537,
+          "relative_area": 1.304789550072569,
+          "truth_covered": 0.7232704402515723
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.3937984496124032,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.03934987168520103,
+          "relative_area": 1.4046875,
+          "truth_covered": 0.09104166666666667
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.3517441860465116,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.2285240277816832,
+          "relative_area": 1.6130382775119618,
+          "truth_covered": 0.4860645933014354
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.5486649440137812,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.20598929067230778,
+          "relative_area": 2.8341740226986127,
+          "truth_covered": 0.6548970155527533
+        },
+        {
+          "cow": 8,
+          "iou": 0.015585509688289806,
+          "relative_area": 1.641709276844412,
+          "truth_covered": 0.04054054054054054
+        }
+      ],
+      "second": 1847.0,
+      "truth": [
+        {
+          "box": [
+            500,
+            354,
+            659,
+            484
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            543,
+            154,
+            693,
+            283
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            351,
+            239,
+            479,
+            389
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            627,
+            313,
+            743,
+            485
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            552,
+            369,
+            662,
+            521
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            439,
+            164,
+            574,
+            293
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            463,
+            332,
+            646,
+            384
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            504,
+            275,
+            726,
+            349
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.4397804054054054,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.4234710474951204,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.39717772692601067,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.103255594323041,
+          "relative_area": 0.32912992636136656,
+          "truth_covered": 0.12439556271925666
+        },
+        {
+          "cow": 5,
+          "iou": 0.02053847672964255,
+          "relative_area": 0.5057303807303807,
+          "truth_covered": 0.030303030303030304
+        },
+        {
+          "cow": 6,
+          "iou": 0.46539567677892196,
+          "relative_area": 0.4917599282240166,
+          "truth_covered": 0.4737687113377721
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.5649956597222222,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.6902173913043478,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 6,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7152027027027027,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.6886792452830188,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.6459191456903127,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.14803960957625317,
+          "relative_area": 0.5352548908062325,
+          "truth_covered": 0.19797098701052432
+        },
+        {
+          "cow": 5,
+          "iou": 0.08249682704511364,
+          "relative_area": 0.8224553224553225,
+          "truth_covered": 0.1388888888888889
+        },
+        {
+          "cow": 6,
+          "iou": 0.5650870565045992,
+          "relative_area": 0.7997355621665014,
+          "truth_covered": 0.6498087547811304
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.9188368055555556,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.1224814422057263,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 1890.0,
+      "truth": [
+        {
+          "box": [
+            525,
+            263,
+            653,
+            448
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            211,
+            303,
+            317,
+            535
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            149,
+            302,
+            263,
+            532
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            360,
+            371,
+            559,
+            530
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            319,
+            315,
+            418,
+            523
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            374,
+            286,
+            491,
+            467
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            279,
+            289,
+            375,
+            481
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            418,
+            450,
+            602,
+            532
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.0426829268292683,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.4837837837837838,
+          "relative_area": 1.474426807760141,
+          "truth_covered": 0.8067803252988438
+        },
+        {
+          "cow": 3,
+          "iou": 0.006934273160014647,
+          "relative_area": 0.5197747918897447,
+          "truth_covered": 0.010465959725052675
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.5563442768411713,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.103225806451613,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.7152771175967297,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.3239031532709303,
+          "relative_area": 1.4653812445223489,
+          "truth_covered": 0.6031746031746031
+        },
+        {
+          "cow": 8,
+          "iou": 0.0056433408577878106,
+          "relative_area": 0.8837209302325582,
+          "truth_covered": 0.010570824524312896
+        }
+      ],
+      "named_cow": 2,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.1694844789356984,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.5312075983717774,
+          "relative_area": 1.6537330981775427,
+          "truth_covered": 0.9206349206349206
+        },
+        {
+          "cow": 3,
+          "iou": 0.03211494718825304,
+          "relative_area": 0.5829850436945183,
+          "truth_covered": 0.049255638838036686
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.6240017746228926,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.2373900293255131,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.802262572487879,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.2797341253005233,
+          "relative_area": 1.6435874963482326,
+          "truth_covered": 0.5778556821501607
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9911909795630726,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 1932.0,
+      "truth": [
+        {
+          "box": [
+            336,
+            364,
+            500,
+            452
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            245,
+            180,
+            299,
+            369
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            125,
+            298,
+            256,
+            519
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            344,
+            255,
+            528,
+            402
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            348,
+            183,
+            503,
+            271
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            475,
+            216,
+            632,
+            350
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            287,
+            222,
+            350,
+            385
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            265,
+            396,
+            463,
+            482
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.4392674077060417,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 2.65625,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 2.0659722222222223,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 5.348314606741573,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 2.2072072072072073,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 3.3926147162639153,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 2.8290032263542195,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 4,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.5970166445890688,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 2.9473852040816326,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.009224297407566966,
+          "relative_area": 2.2924107142857144,
+          "truth_covered": 0.03009259259259259
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 5.934510433386838,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 2.4491255961844196,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 3.7644583220200922,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 3.1390728476821192,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2770.0,
+      "truth": [
+        {
+          "box": [
+            170,
+            355,
+            349,
+            549
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            162,
+            292,
+            274,
+            460
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            478,
+            170,
+            622,
+            338
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            237,
+            0,
+            342,
+            89
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            281,
+            332,
+            434,
+            480
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            217,
+            52,
+            333,
+            179
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            204,
+            179,
+            355,
+            296
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.4765947988441876,
+          "relative_area": 0.6668004817342432,
+          "truth_covered": 0.53798675230831
+        },
+        {
+          "cow": 2,
+          "iou": 0.014725749797352068,
+          "relative_area": 0.7930293626163762,
+          "truth_covered": 0.02602052995941752
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.7315166529039362,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.6564893038881479,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.2622779519331244,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.052875243664717346,
+          "relative_area": 0.6244360902255639,
+          "truth_covered": 0.08157894736842106
+        },
+        {
+          "cow": 7,
+          "iou": 0.09516306916653537,
+          "relative_area": 0.9154036924772665,
+          "truth_covered": 0.16643703499586662
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.5660731021555764,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 1,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.7274658573596358,
+          "relative_area": 1.2850260939381775,
+          "truth_covered": 0.9622641509433962
+        },
+        {
+          "cow": 2,
+          "iou": 0.04970513900589722,
+          "relative_area": 1.5282883743136786,
+          "truth_covered": 0.11971830985915492
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.4097440132122212,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.2651548836519935,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 2.4326018808777428,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.14632178568809134,
+          "relative_area": 1.2033834586466166,
+          "truth_covered": 0.28125
+        },
+        {
+          "cow": 7,
+          "iou": 0.15531241002015547,
+          "relative_area": 1.7641223477542023,
+          "truth_covered": 0.37158996968861946
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.0909090909090908,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2784.0,
+      "truth": [
+        {
+          "box": [
+            266,
+            337,
+            372,
+            525
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            135,
+            311,
+            253,
+            453
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            454,
+            130,
+            627,
+            235
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            311,
+            85,
+            484,
+            202
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            249,
+            0,
+            336,
+            121
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            323,
+            308,
+            456,
+            468
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            189,
+            343,
+            265,
+            534
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            183,
+            214,
+            377,
+            335
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.47512940596499875,
+          "relative_area": 0.6413252152926334,
+          "truth_covered": 0.5286599747682519
+        },
+        {
+          "cow": 2,
+          "iou": 0.0039722289385513455,
+          "relative_area": 0.6729595947968229,
+          "truth_covered": 0.006619085990560608
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.4581504702194357,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7426321138211383,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.0963990997749438,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.011698757007068,
+          "relative_area": 0.5434095556794943,
+          "truth_covered": 0.01784718349135527
+        },
+        {
+          "cow": 7,
+          "iou": 0.07864302235929067,
+          "relative_area": 0.8667160859896219,
+          "truth_covered": 0.13610081541882876
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.5096774193548387,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 1,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.49797519075834434,
+          "relative_area": 0.9275410015906972,
+          "truth_covered": 0.6407766990291263
+        },
+        {
+          "cow": 2,
+          "iou": 0.06438994101210804,
+          "relative_area": 0.973293426959825,
+          "truth_covered": 0.11937377690802348
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.6626175548589341,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.0740599593495934,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.585708927231808,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.028918759706528144,
+          "relative_area": 0.7859267521844209,
+          "truth_covered": 0.0501952035694367
+        },
+        {
+          "cow": 7,
+          "iou": 0.18049083566324944,
+          "relative_area": 1.2535211267605635,
+          "truth_covered": 0.34455151964418085
+        },
+        {
+          "cow": 8,
+          "iou": 0.004790721129601614,
+          "relative_area": 0.7371403661726242,
+          "truth_covered": 0.008282476024411508
+        }
+      ],
+      "second": 2786.0,
+      "truth": [
+        {
+          "box": [
+            264,
+            334,
+            367,
+            511
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            133,
+            309,
+            252,
+            455
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            487,
+            194,
+            663,
+            339
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            462,
+            83,
+            558,
+            247
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            251,
+            1,
+            337,
+            125
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            322,
+            305,
+            454,
+            468
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            192,
+            345,
+            263,
+            535
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            201,
+            211,
+            386,
+            335
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.4789174347911355,
+          "relative_area": 0.5345950345950345,
+          "truth_covered": 0.49694749694749696
+        },
+        {
+          "cow": 2,
+          "iou": 0.012827946079141905,
+          "relative_area": 0.6024538470358903,
+          "truth_covered": 0.020295837633298935
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.418312101910828,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.52897055122074,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.9585841999635103,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.008129056651332787,
+          "relative_area": 0.48901712583767687,
+          "truth_covered": 0.012006701414743113
+        },
+        {
+          "cow": 7,
+          "iou": 0.08962616822429907,
+          "relative_area": 0.8202966432474629,
+          "truth_covered": 0.14972677595628414
+        },
+        {
+          "cow": 8,
+          "iou": 0.016311584553928095,
+          "relative_area": 0.524822695035461,
+          "truth_covered": 0.02447307961242633
+        }
+      ],
+      "named_cow": 1,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.5361101780315755,
+          "relative_area": 0.8612128612128612,
+          "truth_covered": 0.6495726495726496
+        },
+        {
+          "cow": 2,
+          "iou": 0.0536480686695279,
+          "relative_area": 0.9705309024194473,
+          "truth_covered": 0.10033253067308795
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.6738853503184713,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.8521520261766927,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.5442437511403029,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.04436711613745106,
+          "relative_area": 0.7877885331347729,
+          "truth_covered": 0.0759493670886076
+        },
+        {
+          "cow": 7,
+          "iou": 0.16218539940597154,
+          "relative_area": 1.3214676034348165,
+          "truth_covered": 0.3239656518345043
+        },
+        {
+          "cow": 8,
+          "iou": 0.03125872174155735,
+          "relative_area": 0.8454699830186795,
+          "truth_covered": 0.055938467685545896
+        }
+      ],
+      "second": 2787.0,
+      "truth": [
+        {
+          "box": [
+            253,
+            338,
+            370,
+            506
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            137,
+            304,
+            251,
+            457
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            509,
+            180,
+            666,
+            340
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            420,
+            94,
+            557,
+            239
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            251,
+            0,
+            338,
+            126
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            317,
+            310,
+            453,
+            468
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            192,
+            350,
+            262,
+            533
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            249,
+            204,
+            390,
+            346
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.4677526595744681,
+          "relative_area": 0.5099179206566348,
+          "truth_covered": 0.48119015047879615
+        },
+        {
+          "cow": 2,
+          "iou": 0.05730994152046784,
+          "relative_area": 0.37909992372234935,
+          "truth_covered": 0.07475209763539283
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.4561625874125874,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7660745742806812,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.9161692415730337,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.01208242272869185,
+          "relative_area": 0.4748407643312102,
+          "truth_covered": 0.017606915377616016
+        },
+        {
+          "cow": 7,
+          "iou": 0.08314271042434994,
+          "relative_area": 0.8176263219741481,
+          "truth_covered": 0.13952213082647866
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.7412642045454545,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 1,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.5558883808923223,
+          "relative_area": 0.9286691420754348,
+          "truth_covered": 0.6890756302521008
+        },
+        {
+          "cow": 2,
+          "iou": 0.12169197396963123,
+          "relative_area": 0.6904217064400131,
+          "truth_covered": 0.18339326577312848
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.8307692307692308,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.3951849677040518,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.6685393258426966,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.06401536784175277,
+          "relative_area": 0.8647861692447679,
+          "truth_covered": 0.11219290263876251
+        },
+        {
+          "cow": 7,
+          "iou": 0.1660244412638996,
+          "relative_area": 1.4890716803760282,
+          "truth_covered": 0.354406580493537
+        },
+        {
+          "cow": 8,
+          "iou": 0.002150407365902414,
+          "relative_area": 1.35,
+          "truth_covered": 0.005042613636363637
+        }
+      ],
+      "second": 2788.0,
+      "truth": [
+        {
+          "box": [
+            252,
+            339,
+            371,
+            511
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            129,
+            312,
+            262,
+            519
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            507,
+            149,
+            667,
+            292
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            408,
+            94,
+            512,
+            225
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            249,
+            0,
+            338,
+            128
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            316,
+            312,
+            456,
+            469
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            192,
+            350,
+            261,
+            535
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            263,
+            205,
+            373,
+            333
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7183470560820258,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.6413314840499307,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.45724833542092425,
+          "relative_area": 0.45724833542092425,
+          "truth_covered": 0.45724833542092425
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.000865800865801,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.5455403492213308,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.1968938740293356,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9350859453993934,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 3,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.8982445238465123,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.8019417475728156,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.5717581910475311,
+          "relative_area": 0.5717581910475311,
+          "truth_covered": 0.5717581910475311
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.2515151515151515,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.6821613968853233,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.496635030198447,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.1692618806875632,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2790.0,
+      "truth": [
+        {
+          "box": [
+            247,
+            342,
+            370,
+            499
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            142,
+            318,
+            247,
+            524
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            457,
+            33,
+            654,
+            187
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            234,
+            1,
+            339,
+            133
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            313,
+            293,
+            469,
+            456
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            183,
+            341,
+            244,
+            531
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            263,
+            202,
+            378,
+            331
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5048935839676868,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.4507628294036061,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0222097559731749,
+          "relative_area": 0.32137912848572747,
+          "truth_covered": 0.028709868811391655
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.7034632034632035,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0062932662051604785,
+          "relative_area": 0.3834355828220859,
+          "truth_covered": 0.008651879817523989
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.8412424503882657,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.6572295247724975,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 4,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7158614261301849,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.6391123439667129,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.06194392343577165,
+          "relative_area": 0.4556661612499176,
+          "truth_covered": 0.084910013844024
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.9974025974025974,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.5436526663520529,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.1927523727351166,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.931850353892821,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2790.0,
+      "truth": [
+        {
+          "box": [
+            247,
+            342,
+            370,
+            499
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            142,
+            318,
+            247,
+            524
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            457,
+            33,
+            654,
+            187
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            234,
+            1,
+            339,
+            133
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            313,
+            293,
+            469,
+            456
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            183,
+            341,
+            244,
+            531
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            263,
+            202,
+            378,
+            331
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5351613965744401,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.4956528370957901,
+          "relative_area": 0.4956528370957901,
+          "truth_covered": 0.4956528370957901
+        },
+        {
+          "cow": 4,
+          "iou": 0.05309613410879234,
+          "relative_area": 0.7308816914080072,
+          "truth_covered": 0.08726945569050833
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.1271245230662503,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.6877248677248677,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.5894784580498866,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.8739913932221625,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 3,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.6911231884057971,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.6067092532406888,
+          "relative_area": 0.6401006711409396,
+          "truth_covered": 0.6193181818181818
+        },
+        {
+          "cow": 4,
+          "iou": 0.08557073323912702,
+          "relative_area": 0.9438821412505624,
+          "truth_covered": 0.15322762033288348
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.4556018036767255,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.8881481481481481,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.7612698412698413,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.128698224852071,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2793.0,
+      "truth": [
+        {
+          "box": [
+            242,
+            340,
+            380,
+            516
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            442,
+            106,
+            618,
+            255
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            417,
+            22,
+            588,
+            126
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            243,
+            0,
+            336,
+            124
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            316,
+            294,
+            496,
+            399
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            154,
+            318,
+            252,
+            543
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            276,
+            202,
+            364,
+            371
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.0962566844919786,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.716365754222481,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.4304288136961964,
+          "relative_area": 0.4304288136961964,
+          "truth_covered": 0.4304288136961964
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.9639498432601881,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.9126794258373205,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.02659710144927536,
+          "relative_area": 0.5653772717629588,
+          "truth_covered": 0.04055583056360936
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.00806960030261,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9048211860570394,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 3,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 2.0819964349376114,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.3605125218404193,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.7824388183426173,
+          "relative_area": 0.817464803897817,
+          "truth_covered": 0.7978142076502732
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.8307210031347962,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 3.632535885167464,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.05145213338114019,
+          "relative_area": 1.073757160031115,
+          "truth_covered": 0.10147797185489003
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.9145126717942251,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.007550335570469799,
+          "relative_area": 1.7184246265278407,
+          "truth_covered": 0.020371208691715707
+        }
+      ],
+      "second": 2803.0,
+      "truth": [
+        {
+          "box": [
+            236,
+            335,
+            314,
+            522
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            123,
+            298,
+            224,
+            519
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            341,
+            154,
+            524,
+            357
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            189,
+            100,
+            305,
+            243
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            290,
+            0,
+            366,
+            110
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            434,
+            33,
+            613,
+            191
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            180,
+            313,
+            257,
+            519
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            279,
+            334,
+            373,
+            522
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9020979020979021,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.5894897182025894,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0352938755350675,
+          "relative_area": 0.35419526770572557,
+          "truth_covered": 0.04616544186922932
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7932240173619484,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.5739234449760766,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.4652429106852415,
+          "relative_area": 0.4652429106852415,
+          "truth_covered": 0.4652429106852415
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.8295296936073635,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.7445676776822091,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 6,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.517825311942959,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.9918462434478742,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.04858421322580075,
+          "relative_area": 0.595951438800506,
+          "truth_covered": 0.07394546286575682
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.334639498432602,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 2.648205741626794,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.6963630858257914,
+          "relative_area": 0.7827947104165194,
+          "truth_covered": 0.7318435754189944
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.3957256335897112,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.2527727478497057,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2803.0,
+      "truth": [
+        {
+          "box": [
+            236,
+            335,
+            314,
+            522
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            123,
+            298,
+            224,
+            519
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            341,
+            154,
+            524,
+            357
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            189,
+            100,
+            305,
+            243
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            290,
+            0,
+            366,
+            110
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            434,
+            33,
+            613,
+            191
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            180,
+            313,
+            257,
+            519
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            279,
+            334,
+            373,
+            522
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.0716180371352786,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.5405887600356825,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.0422604422604422,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7602150537634409,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.48796480027607625,
+          "relative_area": 0.48796480027607625,
+          "truth_covered": 0.48796480027607625
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.6251105216622458,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.1434732798706113,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.1405525307521678,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 5,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.422761146899078,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7177265196890531,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.3837837837837839,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.0093189964157707,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.629860340757175,
+          "relative_area": 0.64785897104075,
+          "truth_covered": 0.6368159203980099
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.8299440023577954,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.5181616011860637,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.5142837937756268,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2805.0,
+      "truth": [
+        {
+          "box": [
+            242,
+            337,
+            329,
+            519
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            91,
+            300,
+            224,
+            536
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            445,
+            235,
+            593,
+            345
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            237,
+            82,
+            423,
+            202
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            505,
+            60,
+            706,
+            233
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            198,
+            124,
+            354,
+            298
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            187,
+            317,
+            258,
+            526
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            288,
+            336,
+            375,
+            507
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.1950228542407313,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.6799104240410315,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.20801733477789816,
+          "relative_area": 0.6721416839248733,
+          "truth_covered": 0.2879382989359423
+        },
+        {
+          "cow": 4,
+          "iou": 0.023630003886513797,
+          "relative_area": 0.5560675883256528,
+          "truth_covered": 0.035921068179132695
+        },
+        {
+          "cow": 5,
+          "iou": 0.47058823529411764,
+          "relative_area": 0.47058823529411764,
+          "truth_covered": 0.47058823529411764
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.2506810178725667,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.0452551502026763,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.04266558309630231,
+          "relative_area": 1.1008187134502925,
+          "truth_covered": 0.08596491228070176
+        }
+      ],
+      "named_cow": 5,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.667788217369223,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.9488911363143827,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.2538289172769064,
+          "relative_area": 0.9380489895022495,
+          "truth_covered": 0.3923444976076555
+        },
+        {
+          "cow": 4,
+          "iou": 0.04636349396961312,
+          "relative_area": 0.7760545905707196,
+          "truth_covered": 0.07869549805033677
+        },
+        {
+          "cow": 5,
+          "iou": 0.6119475591662005,
+          "relative_area": 0.6567585810354741,
+          "truth_covered": 0.6289592760180995
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.7454654175802273,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.4587706146926536,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.06533860627348874,
+          "relative_area": 1.5363157894736843,
+          "truth_covered": 0.15555555555555556
+        }
+      ],
+      "second": 2807.0,
+      "truth": [
+        {
+          "box": [
+            242,
+            339,
+            330,
+            518
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            109,
+            262,
+            236,
+            480
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            396,
+            214,
+            605,
+            348
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            441,
+            130,
+            658,
+            286
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            295,
+            222,
+            516,
+            403
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            245,
+            131,
+            332,
+            304
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            174,
+            320,
+            261,
+            527
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            282,
+            333,
+            377,
+            513
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.0480549199084668,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.398384326696775,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.1514770584538025,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.6029290768471285,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.9087301587301587,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.43680160588825695,
+          "relative_area": 0.5180629197596324,
+          "truth_covered": 0.46150583244962884
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.7504352278545827,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.04789941123640355,
+          "relative_area": 1.0981018981018982,
+          "truth_covered": 0.0959040959040959
+        }
+      ],
+      "named_cow": 6,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.3976926010678872,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.864894090706698,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.5356170123611983,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.004995951293294425,
+          "relative_area": 0.8040699906752236,
+          "truth_covered": 0.008968240908342933
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.2118882275132274,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.6431483008152423,
+          "relative_area": 0.6908919523977849,
+          "truth_covered": 0.6618357487922706
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.000785116914149,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.03006388575723412,
+          "relative_area": 1.4644355644355644,
+          "truth_covered": 0.07192807192807193
+        }
+      ],
+      "second": 2825.0,
+      "truth": [
+        {
+          "box": [
+            250,
+            358,
+            364,
+            542
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            126,
+            281,
+            325,
+            360
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            254,
+            84,
+            402,
+            213
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            442,
+            15,
+            648,
+            192
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            180,
+            191,
+            404,
+            299
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            378,
+            193,
+            585,
+            398
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            96,
+            364,
+            251,
+            553
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            332,
+            383,
+            486,
+            513
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.4117252181696129,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.5693069306930693,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.1012457979038956,
+          "relative_area": 0.9825560697757209,
+          "truth_covered": 0.18227127091491635
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.6762830245976312,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.6860125520412602,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.4292713274749203,
+          "relative_area": 0.4292713274749203,
+          "truth_covered": 0.4292713274749203
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.40075504573834764,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 6,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.8064816886700977,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1151505775577557,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.18473519126077081,
+          "relative_area": 1.924617301530794,
+          "truth_covered": 0.45603417586329653
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 3.283480109322806,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.3437519418380663,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.6557549050466898,
+          "relative_area": 0.8408507660004666,
+          "truth_covered": 0.7290613578038728
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.7849934659503413,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2829.0,
+      "truth": [
+        {
+          "box": [
+            234,
+            334,
+            357,
+            552
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            193,
+            57,
+            294,
+            249
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            378,
+            44,
+            484,
+            150
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            377,
+            0,
+            466,
+            74
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            539,
+            237,
+            660,
+            370
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            380,
+            112,
+            547,
+            266
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            125,
+            233,
+            267,
+            427
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.6105204492840607,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.921389751552795,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.4787856374394836,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7800723049956179,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.45603304726527477,
+          "relative_area": 0.45603304726527477,
+          "truth_covered": 0.45603304726527477
+        },
+        {
+          "cow": 6,
+          "iou": 0.22285371364021464,
+          "relative_area": 0.6980882352941177,
+          "truth_covered": 0.3094607843137255
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.5783147208121827,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.8911764705882353,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 5,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9248906799279774,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.3958333333333333,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.725322754168908,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.1817484662576687,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.6015165301789506,
+          "relative_area": 0.6908543614704752,
+          "truth_covered": 0.6350710900473934
+        },
+        {
+          "cow": 6,
+          "iou": 0.2807103191554281,
+          "relative_area": 1.0575490196078432,
+          "truth_covered": 0.45098039215686275
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.8761015228426396,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.3500625782227784,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2832.0,
+      "truth": [
+        {
+          "box": [
+            239,
+            335,
+            346,
+            553
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            193,
+            53,
+            277,
+            237
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            205,
+            142,
+            374,
+            318
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            399,
+            339,
+            562,
+            451
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            389,
+            73,
+            600,
+            221
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            355,
+            111,
+            505,
+            247
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            115,
+            229,
+            240,
+            426
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            315,
+            118,
+            400,
+            306
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.38892606222816994,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.5835843373493976,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.043555555555555556,
+          "relative_area": 0.4926891290527654,
+          "truth_covered": 0.062301335028607754
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.34807994610375026,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0021960986952590106,
+          "relative_area": 0.6655216831258051,
+          "truth_covered": 0.0036496350364963502
+        },
+        {
+          "cow": 6,
+          "iou": 0.46962581427056505,
+          "relative_area": 0.46962581427056505,
+          "truth_covered": 0.46962581427056505
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.3642630527593905,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.7380952380952381,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 6,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7025342924054868,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.0541541164658634,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.06254653760238273,
+          "relative_area": 0.8899660945115491,
+          "truth_covered": 0.11125238397965671
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.6287521521071937,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.004307953395776901,
+          "relative_area": 1.2021611564333763,
+          "truth_covered": 0.009446114212108201
+        },
+        {
+          "cow": 6,
+          "iou": 0.8383726770467101,
+          "relative_area": 0.8483058122506691,
+          "truth_covered": 0.8429025905165884
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.6579844111080647,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.024034274966038525,
+          "relative_area": 1.3332539682539684,
+          "truth_covered": 0.05476190476190476
+        }
+      ],
+      "second": 2833.0,
+      "truth": [
+        {
+          "box": [
+            243,
+            344,
+            365,
+            540
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            198,
+            46,
+            281,
+            238
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            299,
+            0,
+            442,
+            132
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            219,
+            192,
+            365,
+            375
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            445,
+            251,
+            582,
+            353
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            376,
+            98,
+            499,
+            259
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            118,
+            213,
+            239,
+            424
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            317,
+            116,
+            387,
+            296
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.02674142764718568,
+          "relative_area": 1.502027027027027,
+          "truth_covered": 0.06516516516516517
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.9538043478260869,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.6724137931034483,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.6244576921876464,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.007624551054395153,
+          "relative_area": 0.6622203098106713,
+          "truth_covered": 0.012577783662121011
+        },
+        {
+          "cow": 6,
+          "iou": 0.45004327339167227,
+          "relative_area": 0.49634076757051776,
+          "truth_covered": 0.46441241410106926
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.9223641141487253,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.25116279069767444,
+          "relative_area": 0.6165865384615384,
+          "truth_covered": 0.3245192307692308
+        }
+      ],
+      "named_cow": 6,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0643876079041971,
+          "relative_area": 2.489864864864865,
+          "truth_covered": 0.2111111111111111
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.5810926773455378,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.1146400483968542,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.0351446674365616,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.04961825739885063,
+          "relative_area": 1.0977426188269561,
+          "truth_covered": 0.09916589434661724
+        },
+        {
+          "cow": 6,
+          "iou": 0.6353357519642102,
+          "relative_area": 0.8227691086357886,
+          "truth_covered": 0.7081545064377682
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.5289751509842793,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.3255954906357961,
+          "relative_area": 1.0220968934911243,
+          "truth_covered": 0.4966715976331361
+        }
+      ],
+      "second": 2856.0,
+      "truth": [
+        {
+          "box": [
+            184,
+            398,
+            364,
+            472
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            209,
+            75,
+            323,
+            259
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            114,
+            199,
+            285,
+            373
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            552,
+            113,
+            713,
+            312
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            172,
+            218,
+            354,
+            384
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            291,
+            300,
+            524,
+            473
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            83,
+            254,
+            192,
+            453
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            333,
+            223,
+            541,
+            379
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.08240992634861655,
+          "relative_area": 0.4314671814671815,
+          "truth_covered": 0.10898560898560898
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.2865384615384615,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.7917874396135266,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.43574973413683094,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.018954703832752613,
+          "relative_area": 0.8127944458219688,
+          "truth_covered": 0.0337217951896851
+        },
+        {
+          "cow": 6,
+          "iou": 0.45351411178749307,
+          "relative_area": 0.45351411178749307,
+          "truth_covered": 0.45351411178749307
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.6584532976230332,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.5179060459237413,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 6,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.1331249638247381,
+          "relative_area": 0.7178834678834679,
+          "truth_covered": 0.20182520182520183
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.47674825174825175,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.317391304347826,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7250088621056363,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.05235718247365502,
+          "relative_area": 1.3523431688569303,
+          "truth_covered": 0.11703446565831888
+        },
+        {
+          "cow": 6,
+          "iou": 0.7068640646029609,
+          "relative_area": 0.7545655783065855,
+          "truth_covered": 0.7266187050359713
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.0955473719450954,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.8617021276595744,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2863.0,
+      "truth": [
+        {
+          "box": [
+            516,
+            28,
+            670,
+            176
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            126,
+            347,
+            412,
+            467
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            437,
+            269,
+            572,
+            361
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            216,
+            214,
+            340,
+            396
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            376,
+            24,
+            485,
+            135
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            441,
+            81,
+            580,
+            237
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            282,
+            4,
+            385,
+            149
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            570,
+            197,
+            664,
+            399
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.6805429864253394,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.3026021639989269,
+          "relative_area": 0.3026021639989269,
+          "truth_covered": 0.3026021639989269
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.4573591025814299,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.9379157427937915,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.7258687258687259,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.6307548928238583,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.0313142857142856,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.6410608572105139,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 2,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9773755656108597,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.42693231343947347,
+          "relative_area": 0.4345882142537781,
+          "truth_covered": 0.4292229276580524
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.6568455196648195,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.3470066518847006,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.0424710424710424,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.9058713886300093,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.481142857142857,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9206725076959508,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2864.0,
+      "truth": [
+        {
+          "box": [
+            546,
+            118,
+            663,
+            288
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            96,
+            201,
+            307,
+            413
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            287,
+            221,
+            483,
+            372
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            214,
+            37,
+            302,
+            201
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            485,
+            14,
+            633,
+            140
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            355,
+            140,
+            540,
+            256
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            314,
+            5,
+            419,
+            130
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            295,
+            376,
+            500,
+            479
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.44337785579111927,
+          "relative_area": 1.9323563826823424,
+          "truth_covered": 0.9007633587786259
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.5243956043956044,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0069983401372751336,
+          "relative_area": 1.06181684577937,
+          "truth_covered": 0.014329016257922293
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 2.446043165467626,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0283876298394712,
+          "relative_area": 1.9710144927536233,
+          "truth_covered": 0.08201193520886615
+        },
+        {
+          "cow": 6,
+          "iou": 0.03070507960576194,
+          "relative_area": 1.5469021811856014,
+          "truth_covered": 0.07587314331593738
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.9066468744845786,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.8896413729413576,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 1,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.4797380379577653,
+          "relative_area": 2.084470942218755,
+          "truth_covered": 1.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.6443956043956045,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.01061512944400375,
+          "relative_area": 1.1454027739505832,
+          "truth_covered": 0.022534521294510272
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 2.6385950063478627,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 2.12617220801364,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0022447441159226065,
+          "relative_area": 1.6686738926803157,
+          "truth_covered": 0.0059770730184218746
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 2.0567375886524824,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9596736955517932,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2865.0,
+      "truth": [
+        {
+          "box": [
+            473,
+            296,
+            610,
+            427
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            167,
+            126,
+            297,
+            301
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            272,
+            170,
+            443,
+            361
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            256,
+            8,
+            358,
+            147
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            532,
+            104,
+            647,
+            257
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            343,
+            130,
+            502,
+            271
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            410,
+            29,
+            551,
+            158
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            177,
+            306,
+            396,
+            484
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 25,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5358835035861769,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.4149906047741666,
+          "relative_area": 0.43506493506493504,
+          "truth_covered": 0.42087803500846976
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.262080262080262,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.5559163059163059,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.3141051773338769,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.0794151125120393,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.5707407407407408,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 2,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7010649858726364,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.5481894150417828,
+          "relative_area": 0.5691699604743083,
+          "truth_covered": 0.5556182947487295
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.651105651105651,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7272727272727273,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.4109253974724827,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.4121355397951143,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.7466666666666667,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2868.0,
+      "truth": [
+        {
+          "box": [
+            258,
+            376,
+            473,
+            483
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            215,
+            20,
+            369,
+            204
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            347,
+            110,
+            458,
+            198
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            495,
+            82,
+            671,
+            208
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            142,
+            210,
+            318,
+            433
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            362,
+            205,
+            503,
+            286
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            232,
+            265,
+            448,
+            365
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7773076923076923,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.6705374917053749,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0026152787336545078,
+          "relative_area": 0.7128747795414462,
+          "truth_covered": 0.004467960023515579
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7645649432534678,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.7140081257728317,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.38274098857395367,
+          "relative_area": 0.38274098857395367,
+          "truth_covered": 0.38274098857395367
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.1396616541353384,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.7411074440777411,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 6,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.1887179487179487,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.0254368502543685,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.010114211034717881,
+          "relative_area": 1.0901822457378012,
+          "truth_covered": 0.02092886537330982
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.1692307692307693,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.0919154448566213,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.549515641389523,
+          "relative_area": 0.5853165835490184,
+          "truth_covered": 0.5622119815668203
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.7428571428571429,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.1333577802224666,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2873.0,
+      "truth": [
+        {
+          "box": [
+            254,
+            385,
+            454,
+            463
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            218,
+            8,
+            350,
+            145
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            223,
+            212,
+            385,
+            317
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            357,
+            0,
+            487,
+            122
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            197,
+            144,
+            350,
+            255
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            335,
+            151,
+            552,
+            297
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            217,
+            309,
+            369,
+            379
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            219,
+            0,
+            381,
+            101
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 27,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5546016483516484,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7244182786655453,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.37160607455131156,
+          "relative_area": 0.37160607455131156,
+          "truth_covered": 0.37160607455131156
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.4846938775510204,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.7292842628132762,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.9047619047619048,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.9817629179331308,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.0492122787071625,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 3,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9041466346153846,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1809924306139614,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.5374087842489329,
+          "relative_area": 0.6058156925908882,
+          "truth_covered": 0.5613207547169812
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7901785714285714,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.1889252652969067,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.475,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.600531914893617,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.7104921227870715,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2877.0,
+      "truth": [
+        {
+          "box": [
+            180,
+            392,
+            404,
+            496
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            236,
+            2,
+            359,
+            147
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            400,
+            86,
+            612,
+            250
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            393,
+            391,
+            631,
+            503
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            188,
+            140,
+            360,
+            243
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            133,
+            237,
+            337,
+            307
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            206,
+            313,
+            394,
+            383
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            251,
+            0,
+            382,
+            94
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 28,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5944875107665806,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.9339142671573933,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.8840104513550899,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.44573643410852715,
+          "relative_area": 0.5154900964956831,
+          "truth_covered": 0.46724225495175215
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.1360194877872145,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.7435897435897436,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.1074849237318198,
+          "relative_area": 0.7395739573957396,
+          "truth_covered": 0.16883116883116883
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.1168284789644014,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 4,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9181395348837209,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.4423576531716822,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.3652851068189968,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.7811287216708636,
+          "relative_area": 0.7961341977115884,
+          "truth_covered": 0.7877094972067039
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.7544933833695437,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.14841628959276,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.15121501785097316,
+          "relative_area": 1.1422142214221422,
+          "truth_covered": 0.2813852813852814
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.7248543689320388,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2878.0,
+      "truth": [
+        {
+          "box": [
+            139,
+            384,
+            364,
+            513
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            239,
+            5,
+            363,
+            154
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            491,
+            64,
+            622,
+            213
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            385,
+            215,
+            564,
+            402
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            188,
+            161,
+            371,
+            244
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            82,
+            244,
+            337,
+            335
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            234,
+            298,
+            465,
+            399
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            231,
+            0,
+            381,
+            103
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "index": 29,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.45345830639948287,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.15025276521342507,
+          "relative_area": 1.2539848056010725,
+          "truth_covered": 0.2944287203932668
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.8431490384615384,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.47512125022453744,
+          "relative_area": 0.5190529041805402,
+          "truth_covered": 0.4892711801701813
+        },
+        {
+          "cow": 6,
+          "iou": 0.002621359223300971,
+          "relative_area": 0.6879699248120301,
+          "truth_covered": 0.0044132069303694016
+        },
+        {
+          "cow": 7,
+          "iou": 0.15710701236959104,
+          "relative_area": 1.7815873015873016,
+          "truth_covered": 0.37767195767195766
+        }
+      ],
+      "named_cow": 5,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.8819489334195216,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.2169798887688131,
+          "relative_area": 2.4389244748994487,
+          "truth_covered": 0.6131386861313869
+        },
+        {
+          "cow": 4,
+          "iou": 0.021985691851334845,
+          "relative_area": 1.6398737980769231,
+          "truth_covered": 0.056790865384615384
+        },
+        {
+          "cow": 5,
+          "iou": 0.7675724048161405,
+          "relative_area": 1.00952645209027,
+          "truth_covered": 0.8726415094339622
+        },
+        {
+          "cow": 6,
+          "iou": 0.02259038836166068,
+          "relative_area": 1.3380598234717227,
+          "truth_covered": 0.05165086629617522
+        },
+        {
+          "cow": 7,
+          "iou": 0.17567567567567569,
+          "relative_area": 3.465079365079365,
+          "truth_covered": 0.6671957671957672
+        }
+      ],
+      "second": 2883.0,
+      "truth": [
+        {
+          "box": [
+            163,
+            334,
+            345,
+            538
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            240,
+            10,
+            377,
+            108
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            352,
+            168,
+            480,
+            324
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            292,
+            3,
+            504,
+            156
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            188,
+            161,
+            372,
+            294
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            413,
+            80,
+            488,
+            206
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "index": 30,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.607520325203252,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1743059193294918,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.08490065444254466,
+          "relative_area": 0.4812042179827739,
+          "truth_covered": 0.11591403042743299
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.4608993157380255,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.4185492905153099,
+          "relative_area": 0.4185492905153099,
+          "truth_covered": 0.4185492905153099
+        },
+        {
+          "cow": 6,
+          "iou": 0.19279028082055366,
+          "relative_area": 0.9963333333333333,
+          "truth_covered": 0.32266666666666666
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.991157289709296,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 5,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7845528455284553,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.5165007857517026,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.09777099569458826,
+          "relative_area": 0.6214279964581824,
+          "truth_covered": 0.14440956290751025
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.8866080156402738,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.5405153099327856,
+          "relative_area": 0.5405153099327856,
+          "truth_covered": 0.5405153099327856
+        },
+        {
+          "cow": 6,
+          "iou": 0.20140105078809106,
+          "relative_area": 1.2866666666666666,
+          "truth_covered": 0.38333333333333336
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.2799823145794187,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2888.0,
+      "truth": [
+        {
+          "box": [
+            185,
+            337,
+            349,
+            517
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            225,
+            5,
+            391,
+            97
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            230,
+            221,
+            533,
+            344
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            485,
+            302,
+            609,
+            401
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            131,
+            95,
+            337,
+            303
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            224,
+            78,
+            374,
+            198
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            304,
+            96,
+            470,
+            205
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "index": 31,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.30158730158730157,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.41797910104494773,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.36768263183357525,
+          "relative_area": 0.36768263183357525,
+          "truth_covered": 0.36768263183357525
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.16267123287671234,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.3980952380952381,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.4683998207082026,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.4403708386009271,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 3,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5735930735930735,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7949602519874006,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.6844835854732528,
+          "relative_area": 0.6993006993006993,
+          "truth_covered": 0.6905044640893697
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.30938667496886674,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.7571428571428571,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.8908561183325863,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0031921318264170476,
+          "relative_area": 0.8375474083438685,
+          "truth_covered": 0.005847029077117573
+        }
+      ],
+      "second": 2889.0,
+      "truth": [
+        {
+          "box": [
+            188,
+            339,
+            342,
+            519
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            221,
+            11,
+            398,
+            124
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            405,
+            72,
+            548,
+            231
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            359,
+            279,
+            651,
+            455
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            161,
+            115,
+            281,
+            290
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            269,
+            137,
+            366,
+            321
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            318,
+            118,
+            431,
+            286
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "index": 32,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9355847404627893,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.8725575969670458,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.04234683219433585,
+          "relative_area": 0.749198717948718,
+          "truth_covered": 0.07106370192307693
+        },
+        {
+          "cow": 4,
+          "iou": 0.025240697371844912,
+          "relative_area": 0.5271317829457365,
+          "truth_covered": 0.037596899224806204
+        },
+        {
+          "cow": 5,
+          "iou": 0.3955160744500846,
+          "relative_area": 0.3955160744500846,
+          "truth_covered": 0.3955160744500846
+        },
+        {
+          "cow": 6,
+          "iou": 0.25984072338130987,
+          "relative_area": 0.32673029462511194,
+          "truth_covered": 0.27363662174853126
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.237386269644334,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 5,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.7307692307692308,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.6141732283464567,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.06978780734253957,
+          "relative_area": 1.3859675480769231,
+          "truth_covered": 0.15564903846153846
+        },
+        {
+          "cow": 4,
+          "iou": 0.08627405383407942,
+          "relative_area": 0.9751585623678647,
+          "truth_covered": 0.15687103594080337
+        },
+        {
+          "cow": 5,
+          "iou": 0.6836057988895743,
+          "relative_area": 0.7316782994923858,
+          "truth_covered": 0.703125
+        },
+        {
+          "cow": 6,
+          "iou": 0.32934023379537475,
+          "relative_area": 0.6044292047961212,
+          "truth_covered": 0.3974927381134383
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 2.2890818858560795,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2935.0,
+      "truth": [
+        {
+          "box": [
+            274,
+            207,
+            356,
+            402
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            224,
+            0,
+            351,
+            135
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            469,
+            191,
+            661,
+            295
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            501,
+            352,
+            666,
+            524
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            383,
+            259,
+            575,
+            456
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            282,
+            258,
+            499,
+            469
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            412,
+            83,
+            490,
+            238
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "index": 33,
+      "mask_lcc_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.8544090056285178,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7968503937007874,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.6841947115384616,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.4813953488372093,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.2054505864999649,
+          "relative_area": 0.3611992385786802,
+          "truth_covered": 0.23199555837563451
+        },
+        {
+          "cow": 6,
+          "iou": 0.29838163670910955,
+          "relative_area": 0.29838163670910955,
+          "truth_covered": 0.29838163670910955
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.1300248138957816,
+          "truth_covered": 0.0
+        }
+      ],
+      "named_cow": 6,
+      "paired_raw_proposal_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0413589364844904,
+          "relative_area": 1.424953095684803,
+          "truth_covered": 0.09631019387116949
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.3289588801399825,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.1410757211538463,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.8028541226215645,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.2730041376992712,
+          "relative_area": 0.602395304568528,
+          "truth_covered": 0.3436442470389171
+        },
+        {
+          "cow": 6,
+          "iou": 0.4640561948886564,
+          "relative_area": 0.4976303317535545,
+          "truth_covered": 0.47469805840085616
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.8846153846153846,
+          "truth_covered": 0.0
+        }
+      ],
+      "second": 2935.0,
+      "truth": [
+        {
+          "box": [
+            274,
+            207,
+            356,
+            402
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            224,
+            0,
+            351,
+            135
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            469,
+            191,
+            661,
+            295
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            501,
+            352,
+            666,
+            524
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            383,
+            259,
+            575,
+            456
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            282,
+            258,
+            499,
+            469
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            412,
+            83,
+            490,
+            238
+          ],
+          "cow": 7
+        }
+      ]
+    }
+  ],
+  "truth_overlay": [
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/00-truth.png",
+      "sha256": "cf85459ed2f553eed15d557699772975fde880e2b67d4233144616d35cbfd14a"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/01-truth.png",
+      "sha256": "dbfb3def489a4e15d2d3c82a2854e3f2fef178f9f80428e0a019ff2e73f73aca"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/02-truth.png",
+      "sha256": "e5cac9281576e3f3565ba6532438bd3bc99bd82539921788950e8c632e0b6cf9"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/03-truth.png",
+      "sha256": "a309dd0aaa9e28b43401fe4bd11e2b6d655c63a952d78c9aad7cc5458ecbddce"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/04-truth.png",
+      "sha256": "d82e7d4b146d0299654b3e7ae8df195099a5ef9b74a8df1f736bdb4449eb7d68"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/05-truth.png",
+      "sha256": "9b870f5c3f1ab48240faa8ea47e7846cfa2ded83983640b9325d3838f78d4f4e"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/06-truth.png",
+      "sha256": "480eefa33ef1b51e151640821aac244a8787e56541b3551095c32b0586974b7f"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/07-truth.png",
+      "sha256": "6a1a16b36c1e0f37a56f141d6caf4bbd0c932ea790da1f0586c1d100c462a93f"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/08-truth.png",
+      "sha256": "a9e4c1ef7ff18884d697df97b5a847fa63e3d77f708ec2a89f820b3ab03f2ca5"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/09-truth.png",
+      "sha256": "0e320837469be44ee589c6101d38d710105396faaf86fb4d50015b90c7002e1e"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/10-truth.png",
+      "sha256": "cc2f89d977a49fd9d45a0722a4dba66247e34b832ec9a068aff2f44f898e427c"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/11-truth.png",
+      "sha256": "2436fafcae87f858a2bab30be6359af3955cb083cd783c5ddd310171bd4ea7c6"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/12-truth.png",
+      "sha256": "2cfef8b9a5fb4f7778ad29295fe43750fc86b212cfc9e0b854694adccd5d4cef"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/13-truth.png",
+      "sha256": "abbe799bb6f94b5215c87753deabd39020e09cfbc3149bcaa007032a8db4276b"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/14-truth.png",
+      "sha256": "8c99851a7ea07fbba96e9e834d9701769dd01f7af22090c615015192d0278fa8"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/15-truth.png",
+      "sha256": "df391b4787137ffa3a76291f93d16037f9a8e64b10498bc2299550b97e833605"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/16-truth.png",
+      "sha256": "5dbc514a15b99174225aaf1058295a57598cdbf1b5aa810d87871a83223a0285"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/17-truth.png",
+      "sha256": "cf18426fe7ef44fbafe18f2c36d3b567b35e5e1205264ec285280c7b545ccab9"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/18-truth.png",
+      "sha256": "016f583fca9b6e4c6eaf44ea53fd7de6f8dbd916cb39721f1e021f76bd1523ff"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/19-truth.png",
+      "sha256": "f80c49174c256589293478a09ce41ee983e0d2c45d3122a934dd9d68ee6aa02a"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/20-truth.png",
+      "sha256": "b7782acdaf125bf66dca6b73685fedba2be024f78b6913d87275acf4e7eb9d6a"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/21-truth.png",
+      "sha256": "b7fc9fc206611c44697dfc440df9a8eeac14449c0a74d9d472e3e30455cd27b9"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/22-truth.png",
+      "sha256": "b793959149ee76151bf349943ef8a218cb8939137808d29773d8e2fcf61b47d3"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/23-truth.png",
+      "sha256": "7230cbea5003aa0ca664d7b654c212e15bb3a367b3f1d3aa418c3f218ecfa501"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/24-truth.png",
+      "sha256": "b955909e8f6672d8bd4cd341cafba8b94c17b1e818967a08ace4f8f8422ada04"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/25-truth.png",
+      "sha256": "f8aaca6767a3d80a2660a68087cebabe06fd26d22bcf7ce9542a0f5731cd8aaa"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/26-truth.png",
+      "sha256": "5825b41f204163c634edc4f78ae13cd0501ed2e3bc72fffa79792d39537f1b6e"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/27-truth.png",
+      "sha256": "4daeef997a869d2f9dcf5f6b28f81582bc3c2407c835d487060d29b43d4b1b2f"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/28-truth.png",
+      "sha256": "0f662a90080853e6c73961d36d05e719336fb3501f63123ba374940c9612bcc0"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/29-truth.png",
+      "sha256": "caf83674c06a4e32e569c529e3aa012673749911cd8f6ce65a5379cf7846f3f7"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/30-truth.png",
+      "sha256": "429eb58c2378611551087d0fb723d46cfcf49f018f7b596738c57542767ccb83"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/31-truth.png",
+      "sha256": "9971bc522884ee2de666e397d8fccf65872a1268b47fe780fea4408705758245"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/32-truth.png",
+      "sha256": "dd568bc08b66cadd56576603bb4ad85b69490a32fd685e6921841ce16a942d5c"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/33-truth.png",
+      "sha256": "dfa6d6095593bfd2e525ce4996da8ff7fe9bda8e9f54516f8851e58d0d0cf6f3"
+    }
+  ],
+  "truth_sheets": [
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/truth-sheet-01.jpg",
+      "sha256": "97c673dc16cb48fa62752a662bfaa1f8f3b12738ff91d8a47114c39334d2338f"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/truth-sheet-02.jpg",
+      "sha256": "e4b517c0478be5cd94ad00fd5c13d039834f40eac4526e2800c538b2d731baa3"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/truth-sheet-03.jpg",
+      "sha256": "9a79b5a980f604f1df60468152a517caddef34ef19ccb77e07550e4eeb52b608"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/truth-sheet-04.jpg",
+      "sha256": "58d0347fce811dddc6dc9e45f05a4a65c070f65deaf5ed89df685953a636beb2"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/truth-sheet-05.jpg",
+      "sha256": "37451e05f20070f85f155c2839e9908482f2f50ac16c28ddd135938d2aaa0c03"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/truth-sheet-06.jpg",
+      "sha256": "f6714edccedaa7498c8e945e585427edbfecce2fd8e4906febb36808fb51fda3"
+    }
+  ]
+}

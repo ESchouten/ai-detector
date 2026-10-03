@@ -1,0 +1,50 @@
+import hashlib,json
+from collections import Counter
+from pathlib import Path
+import cv2,numpy as np
+from aidetector.domain.models import BoundingBox
+from detection_cutie import boxes_from_mask,indexed_seed
+from detection_cutie_variants import largest_components
+from video_assessment import pair_boxes,truth_at
+
+def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+root=Path('research/cow_identity');out=root/'results/2026-10-03/detection';protocol_path=root/'detection_startup_control_v3_protocol.json';runpath=Path('.cache/cow-startup-propagation/streaming.json');reportpath=out/'startup-propagation.json'
+p=json.loads(protocol_path.read_text());run=json.loads(runpath.read_text());report=json.loads(reportpath.read_text())
+for name,expected in p['files'].items():assert digest(name)==expected,name
+assert run['complete'] and run['stop_reason'] is None
+assert run['provenance']['protocol_sha256']==digest(protocol_path)==report['protocol_sha256']
+assert report['prediction_sha256']==digest(runpath)
+clip=json.loads((Path(p['inputs']['clip'])/'sampled.json').read_text());rows=clip['rows'][:241]
+assert len(run['frame_samples'])==241
+assert [r['second'] for r in run['frame_samples']]==[i/2 for i in range(241)]
+for actual,expected in zip(run['frame_samples'],rows,strict=True):
+ assert actual['pixels_sha256']==expected['pixels_sha256'] and actual['publisher_frame']==expected['publisher_frame']
+assert [r['second'] for r in run['timeline']]==list(range(121))
+for frame,source in zip(run['timeline'],rows[::2],strict=True):
+ assert not frame['named_track_ids']
+ assert frame['source_pixels_sha256']==source['pixels_sha256'] and frame['publisher_frame']==source['publisher_frame']
+ path=runpath.parent/'masks'/f"{frame['second']}.png";assert digest(path)==frame['mask_sha256']
+ clean,_=largest_components(cv2.imread(str(path),cv2.IMREAD_UNCHANGED))
+ keys=('x1','y1','x2','y2','track_id')
+ assert [{k:b[k] for k in keys} for b in boxes_from_mask(clean)]==[{k:b[k] for k in keys} for b in frame['boxes']]
+with np.load(p['inputs']['seed_masks'],allow_pickle=False) as a:seed=a['masks']
+with np.load('datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz',allow_pickle=False) as a:
+ keep=(a['frame_id']>=1)&(a['frame_id']<=2401)
+ records={key:a[key][keep] for key in ['frame_id','cow_id','x_center','y_center','width','height']}
+clean,_=largest_components(indexed_seed(seed));boxes=[BoundingBox(**x) for x in boxes_from_mask(clean)];initial=truth_at(records,1,clip['width'],clip['height']);pairs=pair_boxes(boxes,initial)
+anchors={boxes[i].track_id:initial[j]['cow'] for i,j in pairs.items()};assert {str(k):v for k,v in anchors.items()}==report['initial']['geometry_anchors']
+counts=Counter({k:0 for k in report['continuity']['counts']});visible=Counter();per_slot=Counter();switches=0;last_cow={}
+for frame in run['timeline'][1:]:
+ truth=truth_at(records,frame['publisher_frame'],clip['width'],clip['height']);visible.update(x['cow'] for x in truth)
+ boxes=[BoundingBox(**x) for x in frame['boxes']];matches=pair_boxes(boxes,truth)
+ counts.update(visible_annotations=len(truth),predictions=len(boxes),matched=len(matches),missed_annotations=len(truth)-len(matches))
+ for i,b in enumerate(boxes):
+  actual=truth[matches[i]]['cow'] if i in matches else None; anchor=anchors.get(b.track_id)
+  outcome=('matched_unanchored' if actual is not None else 'unmatched_unanchored') if anchor is None else 'unmatched_anchored' if actual is None else 'correct_initial_instance' if actual==anchor else 'wrong_initial_instance'
+  counts[outcome]+=1;per_slot[str(b.track_id)]+=1
+  if actual is not None:
+   switches+=b.track_id in last_cow and actual!=last_cow[b.track_id];last_cow[b.track_id]=actual
+assert dict(counts)==report['continuity']['counts'];assert set(visible)==set(range(1,9));assert len(run['timeline'][1:])==120
+assert len(anchors)==8 and len(seed)==8 and switches==0
+result={'scope':'Independent CPU recount of fixed exposed anonymous startup; no new inference, no biological name certification and no promotion. Firstframe anchors only; all120 later integerframes/all8truth IDs/everytrack retained.','sources':{str(protocol_path):digest(protocol_path),str(runpath):digest(runpath),str(reportpath):digest(reportpath)},'verified_bindings':len(p['files']),'processed_input_frames':241,'validated_original_masks':121,'all_names_empty':True,'independent_first_frame_anchors':anchors,'future_counts':dict(counts),'visible_per_animal':dict(visible),'predictions_per_slot':dict(per_slot),'matched_animal_changes':switches,'exact_report_count_parity':True,'limitations':['Association is publisher geometry atfirstframe, not farmer-confirmed biological identity.','Detector trained on earlyframes from this recording; this120sexposed result is optimistic.','No births,retirement,manualcommands,reconnect,cross-day recognition or sustainedfarmvalidation demonstrated.']}
+path=out/'startup-propagation-independent-audit.json';assert not path.exists();path.write_text(json.dumps(result,indent=2)+'\n');print(digest(path));print(dict(counts))

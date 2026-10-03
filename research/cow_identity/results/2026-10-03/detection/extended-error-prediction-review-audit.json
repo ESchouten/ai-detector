@@ -1,0 +1,352 @@
+{
+  "reviewer": "identity_integration_audit (AI visual review)",
+  "stage": "PREDICTION_ONLY_FROZEN_BEFORE_PUBLISHER_OVERLAYS",
+  "render_manifest_sha256": "ed2743bc895a2aa287fdf05819277a441577b33d0b810a745d58156183d27559",
+  "selection_sha256": "61e5bda0d6850480239d346f0713b5c08911fbaa0b60a4abee7a376ad1965a04",
+  "scope": "All34 fixed named-unmatched errors. Viewed all6 prediction-only sheets and individual03/23/29 at larger resolution. No publisher overlay, root visual review or per-error truth geometry read at this stage. Not a biological identity audit; prior familiarity with exposed recording and method is disclosed. No score relabeling.",
+  "prediction_files": [
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/00-prediction.png",
+      "sha256": "535f7771dc9a88fa0958688068f5bdb131471bd80d71a52944d6da92ca764ed8"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/01-prediction.png",
+      "sha256": "4c8eaae3a218405c27127f20eb51d3a63e0da23f18146b84850328a4dbc611c9"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/02-prediction.png",
+      "sha256": "e23b6daee9cd339cf8277e37da9c3cbead25d21b4fc0a8f1ef164ed01508dfac"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/03-prediction.png",
+      "sha256": "33cdc8771dccfa5a11fd0b3c4fe30614a508897c69d8df33e95e42faca78bb56"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/04-prediction.png",
+      "sha256": "ed823ee6ae0345b4845243684a85b018d1628e6c452a560ea7c350041d90dc2c"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/05-prediction.png",
+      "sha256": "89cec3332c25dc968673f7e991f008e07b6167abd61c23a6f33b2ede70f804b7"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/06-prediction.png",
+      "sha256": "2b509353a9a4adb9c5d1327c4bc7c1e7bab3019aa632c3e2641eadba905511c5"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/07-prediction.png",
+      "sha256": "1343ffbe9b48f946f44d378328ced0e1c0b3ee8f712ae0db3d0ebbcf17124921"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/08-prediction.png",
+      "sha256": "76504f45f90e3931c8e141a847c5b124d8a14fc12e8dc50be2d1d11a3d9f2d4c"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/09-prediction.png",
+      "sha256": "419d19caad819d21805da295ff2776f033623c2df3b1f8711f6bafa4033a1180"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/10-prediction.png",
+      "sha256": "1707fe1796b911d7696ba6fec824773f4ffc6952db32d6a6e19c844f8379ad78"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/11-prediction.png",
+      "sha256": "ec29230bf52578898dab98bbdb79e7ec1893a9629f4e9970368fe0d082f6d6c3"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/12-prediction.png",
+      "sha256": "e65ecc37122f8ff07d133645a88571edb629681e4c9baef21dd23ee7e0613cd9"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/13-prediction.png",
+      "sha256": "e307ea4ba95532208e3e4a5b3ded2c793ecb5e546b3d6a4c27881e6c2b4452fb"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/14-prediction.png",
+      "sha256": "c1cf6750c89a42937859f67e8d10a3e2cde56a46ab47469b7938670e14d86873"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/15-prediction.png",
+      "sha256": "8e1f952a9ba2eb2333a12d2cc8ab5574f4d7ebc2b5d06078754c44c97ffe30b3"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/16-prediction.png",
+      "sha256": "5f8ab8958a0df43cf26ad3e7396c2a72dca3750dfdcf69ea8e46158ab7f65803"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/17-prediction.png",
+      "sha256": "8ced3b36fa977e6a0ae833d8b8f300c3ec03b925f40577aa01f84d28fdab08c2"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/18-prediction.png",
+      "sha256": "9546d3957cc4edf72951ec767358703260d0c01f55f2e509625fca9c002bef5d"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/19-prediction.png",
+      "sha256": "125ea28284544a3c1a81b4f13f25020f892901bccd7c3eaa223e3bca5d5adf95"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/20-prediction.png",
+      "sha256": "36117c96a16bd4c027507be0ce773cf77330d20e3278f3385214fc97c9edefcf"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/21-prediction.png",
+      "sha256": "6e6ef53162ffead70313ce23ff10386b9299a5b18ba8c775cdf01d586ef717a2"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/22-prediction.png",
+      "sha256": "c1dabbce94913049dcc06cd5a168d394d3b3e0e7a0dfd097f73b53b72cbb6c5a"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/23-prediction.png",
+      "sha256": "43a5d0951dbee1efcce37bc94343cddf1317f6da3a2db228d29bdea1cb412c1a"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/24-prediction.png",
+      "sha256": "f7bd883095076b8c9be1fece73d142d8334671b65f8e966420c1eb997128dc9b"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/25-prediction.png",
+      "sha256": "77e2d4fff3c4c11e7eab235bad730c2d556c459be21260575895fa18d5068d60"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/26-prediction.png",
+      "sha256": "fe274295de578b50ac6f0f0f6592f017960dda84acbaed0a36e8a7f2f5b9f244"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/27-prediction.png",
+      "sha256": "84365ccf3f85f1476b47d5215e6c0262637fd4771f08cf6895a507eeb325c68f"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/28-prediction.png",
+      "sha256": "58d9f794988b6490b3e07eb27eb20304b2721579518df1b72f1320d9dcfa8b80"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/29-prediction.png",
+      "sha256": "12119bb13571a4115ac56baba58fcbc949f8dfd63758836aa156c5e1f2f4dcea"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/30-prediction.png",
+      "sha256": "ede796dc2698bf317d35da1c6270db1e0312aa8cdafc2a10e5c0622657bb428d"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/31-prediction.png",
+      "sha256": "c995a4b1d7c41728ff029c8df1e4d8a411081c61e693d1e8d9632343694c25a1"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/32-prediction.png",
+      "sha256": "237b8e3f40863733cbd5378a09e0b74383ef05ba5d019098389c7fb677efe9a5"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/33-prediction.png",
+      "sha256": "ec009307431354ba1d0354a71de47dae63cf5dd0f043947d4dec49e8711dfe09"
+    }
+  ],
+  "rows": [
+    {
+      "index": 0,
+      "category": "occluded_extents",
+      "note": "Vertical torso beside left rail is coherent; lower head/leg ownership is crowded and not established from this still.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 1,
+      "category": "coherent_body",
+      "note": "Curved spotted animal is a coherent single visible body; fine legs and blurred head extent remain uncertain.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 2,
+      "category": "occluded_extents",
+      "note": "Foreground bent body is coherent but overlaps neighbours; head and leg ownership at the lower rail is uncertain.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 3,
+      "category": "partial_or_occluded",
+      "note": "Mask captures central dark torso. Lower head/neck region merges visually with foreground animals; whole visible extent is not established.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 4,
+      "category": "occluded_extents",
+      "note": "Vertical left torso and head region are coherent; lower extremities overlap foreground animals.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 5,
+      "category": "coherent_body",
+      "note": "Broad bent animal on lower right is coherent; edge truncation and extremities complicate its tight rectangle.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 6,
+      "category": "occluded_extents",
+      "note": "Front-facing vertical animal has coherent dorsal coat; its lower head extends into the rail area and is only partly resolved.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 7,
+      "category": "occluded_extents",
+      "note": "Same front-facing animal; broad coat is coherent, lower head/feet against rail are uncertain.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 8,
+      "category": "occluded_extents",
+      "note": "Same frontal animal and coat, with ambiguous low head/leg extent.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 9,
+      "category": "occluded_extents",
+      "note": "Same frontal animal; coherent torso, crowded extremities.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 10,
+      "category": "coherent_body",
+      "note": "Isolated long spotted animal at right appears represented as one body; narrow legs are not reliably resolved.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 11,
+      "category": "coherent_body",
+      "note": "Shorter curved animal below the spotted one appears separate and coherent; exact leg outline unclear.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 12,
+      "category": "coherent_body",
+      "note": "Curved spotted body is coherent; foreshortened head and leg edges are blurred.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 13,
+      "category": "motion_blur",
+      "note": "Isolated moving spotted animal is strongly blurred; mask follows its main body, precise extremities are uncertain.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 14,
+      "category": "motion_blur",
+      "note": "Dark animal behind the moving spotted animal is separately masked; motion blur limits outline judgment.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 15,
+      "category": "coherent_body",
+      "note": "Near-wall dark animal is one coherent body; fine limbs remain unclear.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 16,
+      "category": "motion_blur",
+      "note": "Vertical moving animal is blurred; mask follows continuous torso and neck without a clear second animal.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 17,
+      "category": "coherent_body",
+      "note": "Central dark vertical animal is separately represented; lower head/leg edges blurred.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 18,
+      "category": "coherent_body",
+      "note": "Dark central body is separate from passing neighbours; no obvious body merger.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 19,
+      "category": "coherent_body",
+      "note": "Dark upper-right animal is represented separately; foreshortened outline is uncertain.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 20,
+      "category": "coherent_body",
+      "note": "Narrow vertical dark body is coherent; no clear second body included.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 21,
+      "category": "occluded_extents",
+      "note": "Bent dark foreground animal is coherent; neighbour contact and motion obscure limb ownership.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 22,
+      "category": "motion_blur",
+      "note": "Moving narrow body on right is blurred; mask follows one longitudinal body.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 23,
+      "category": "coherent_body",
+      "note": "Broad foreshortened animal at left is coherent, including the bowed torso; legs near body margins uncertain.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 24,
+      "category": "coherent_body",
+      "note": "Isolated lower-right running animal is coherent and broadly covered; fine limbs are blurred.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 25,
+      "category": "coherent_body",
+      "note": "Vertical animal at top-left rail is coherent, with head/neck directed into rail; fine appendages uncertain.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 26,
+      "category": "coherent_body",
+      "note": "Curved central animal is represented as one continuous body; nearby animals appear separate.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 27,
+      "category": "motion_blur",
+      "note": "Upper-right spotted animal is moving; main body is coherent but exact edges are blurred.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 28,
+      "category": "coherent_body",
+      "note": "Central vertical spotted body is coherent; lower head/limb extent uncertain.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 29,
+      "category": "occluded_extents",
+      "note": "Broad upper-left body is coherent, but lies tightly between neighbours. Exact right head/neck and leg ownership is uncertain.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 30,
+      "category": "occluded_extents",
+      "note": "Left-rail dark body is coherent; crowded rail/head region prevents reliable total outline.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 31,
+      "category": "motion_blur",
+      "note": "Narrow upper-right moving spotted animal is coherent; blur limits exact limb extent.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 32,
+      "category": "occluded_extents",
+      "note": "Central dark torso is coherent, but neighbouring bodies obscure head/leg ownership at top and bottom.",
+      "biological_identity_verified": false
+    },
+    {
+      "index": 33,
+      "category": "occluded_extents",
+      "note": "Adjacent narrow dark animal has a separate main body; boundary ownership against the central neighbour remains uncertain.",
+      "biological_identity_verified": false
+    }
+  ],
+  "summary": "No unambiguous two-animal mask merger or biological name switch established from these still images. Many main bodies are coherent; crowded occlusion and motion blur prevent asserting complete whole-animal masks. Apparent coherence must not be converted into corrected naming scores."
+}

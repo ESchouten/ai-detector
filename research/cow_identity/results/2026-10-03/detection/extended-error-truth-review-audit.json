@@ -1,0 +1,716 @@
+{
+  "reviewer": "identity_integration_audit (AI visual review)",
+  "scope": "All34 fixed strict errors, after separately frozen prediction-only review. Error-selected diagnostic, not representative dataset audit. No threshold, name, annotation, metric or acceptance change. No alternate-pass score.",
+  "sources": {
+    "research/cow_identity/results/2026-10-03/detection/extended-error-selection.json": "61e5bda0d6850480239d346f0713b5c08911fbaa0b60a4abee7a376ad1965a04",
+    "research/cow_identity/results/2026-10-03/detection/extended-error-render.json": "ed2743bc895a2aa287fdf05819277a441577b33d0b810a745d58156183d27559",
+    "research/cow_identity/results/2026-10-03/detection/extended-error-prediction-review-audit.json": "53189c65b0fe975d30dd02599352b4d292658cd26e6674a8c850d6c66e80ba84"
+  },
+  "truth_overlay_files": [
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/00-truth.png",
+      "sha256": "cf85459ed2f553eed15d557699772975fde880e2b67d4233144616d35cbfd14a"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/01-truth.png",
+      "sha256": "dbfb3def489a4e15d2d3c82a2854e3f2fef178f9f80428e0a019ff2e73f73aca"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/02-truth.png",
+      "sha256": "e5cac9281576e3f3565ba6532438bd3bc99bd82539921788950e8c632e0b6cf9"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/03-truth.png",
+      "sha256": "a309dd0aaa9e28b43401fe4bd11e2b6d655c63a952d78c9aad7cc5458ecbddce"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/04-truth.png",
+      "sha256": "d82e7d4b146d0299654b3e7ae8df195099a5ef9b74a8df1f736bdb4449eb7d68"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/05-truth.png",
+      "sha256": "9b870f5c3f1ab48240faa8ea47e7846cfa2ded83983640b9325d3838f78d4f4e"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/06-truth.png",
+      "sha256": "480eefa33ef1b51e151640821aac244a8787e56541b3551095c32b0586974b7f"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/07-truth.png",
+      "sha256": "6a1a16b36c1e0f37a56f141d6caf4bbd0c932ea790da1f0586c1d100c462a93f"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/08-truth.png",
+      "sha256": "a9e4c1ef7ff18884d697df97b5a847fa63e3d77f708ec2a89f820b3ab03f2ca5"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/09-truth.png",
+      "sha256": "0e320837469be44ee589c6101d38d710105396faaf86fb4d50015b90c7002e1e"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/10-truth.png",
+      "sha256": "cc2f89d977a49fd9d45a0722a4dba66247e34b832ec9a068aff2f44f898e427c"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/11-truth.png",
+      "sha256": "2436fafcae87f858a2bab30be6359af3955cb083cd783c5ddd310171bd4ea7c6"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/12-truth.png",
+      "sha256": "2cfef8b9a5fb4f7778ad29295fe43750fc86b212cfc9e0b854694adccd5d4cef"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/13-truth.png",
+      "sha256": "abbe799bb6f94b5215c87753deabd39020e09cfbc3149bcaa007032a8db4276b"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/14-truth.png",
+      "sha256": "8c99851a7ea07fbba96e9e834d9701769dd01f7af22090c615015192d0278fa8"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/15-truth.png",
+      "sha256": "df391b4787137ffa3a76291f93d16037f9a8e64b10498bc2299550b97e833605"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/16-truth.png",
+      "sha256": "5dbc514a15b99174225aaf1058295a57598cdbf1b5aa810d87871a83223a0285"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/17-truth.png",
+      "sha256": "cf18426fe7ef44fbafe18f2c36d3b567b35e5e1205264ec285280c7b545ccab9"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/18-truth.png",
+      "sha256": "016f583fca9b6e4c6eaf44ea53fd7de6f8dbd916cb39721f1e021f76bd1523ff"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/19-truth.png",
+      "sha256": "f80c49174c256589293478a09ce41ee983e0d2c45d3122a934dd9d68ee6aa02a"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/20-truth.png",
+      "sha256": "b7782acdaf125bf66dca6b73685fedba2be024f78b6913d87275acf4e7eb9d6a"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/21-truth.png",
+      "sha256": "b7fc9fc206611c44697dfc440df9a8eeac14449c0a74d9d472e3e30455cd27b9"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/22-truth.png",
+      "sha256": "b793959149ee76151bf349943ef8a218cb8939137808d29773d8e2fcf61b47d3"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/23-truth.png",
+      "sha256": "7230cbea5003aa0ca664d7b654c212e15bb3a367b3f1d3aa418c3f218ecfa501"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/24-truth.png",
+      "sha256": "b955909e8f6672d8bd4cd341cafba8b94c17b1e818967a08ace4f8f8422ada04"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/25-truth.png",
+      "sha256": "f8aaca6767a3d80a2660a68087cebabe06fd26d22bcf7ce9542a0f5731cd8aaa"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/26-truth.png",
+      "sha256": "5825b41f204163c634edc4f78ae13cd0501ed2e3bc72fffa79792d39537f1b6e"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/27-truth.png",
+      "sha256": "4daeef997a869d2f9dcf5f6b28f81582bc3c2407c835d487060d29b43d4b1b2f"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/28-truth.png",
+      "sha256": "0f662a90080853e6c73961d36d05e719336fb3501f63123ba374940c9612bcc0"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/29-truth.png",
+      "sha256": "caf83674c06a4e32e569c529e3aa012673749911cd8f6ce65a5379cf7846f3f7"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/30-truth.png",
+      "sha256": "429eb58c2378611551087d0fb723d46cfcf49f018f7b596738c57542767ccb83"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/31-truth.png",
+      "sha256": "9971bc522884ee2de666e397d8fccf65872a1268b47fe780fea4408705758245"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/32-truth.png",
+      "sha256": "dd568bc08b66cadd56576603bb4ad85b69490a32fd685e6921841ce16a942d5c"
+    },
+    {
+      "path": ".cache/cow-cutie/extended-error-audit/33-truth.png",
+      "sha256": "dfa6d6095593bfd2e525ce4996da8ff7fe9bda8e9f54516f8851e58d0d0cf6f3"
+    }
+  ],
+  "rows": [
+    {
+      "index": 0,
+      "second": 1818.0,
+      "recorded_name": 6,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 6,
+        "iou": 0.45516499282639883,
+        "relative_area": 0.45516499282639883,
+        "truth_covered": 0.45516499282639883
+      },
+      "note": "Publisher rectangle extends above the named torso and is wider. Head ownership near rail remains visually crowded, so this is not proof of a complete mask.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 1,
+      "second": 1840.0,
+      "recorded_name": 3,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 3,
+        "iou": 0.4447258338044093,
+        "relative_area": 0.4447258338044093,
+        "truth_covered": 0.4447258338044093
+      },
+      "note": "Publisher rectangle includes broad empty ground on both sides of the curved body; mask follows main visible animal more tightly.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 2,
+      "second": 1847.0,
+      "recorded_name": 1,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 1,
+        "iou": 0.45073011688807185,
+        "relative_area": 1.023512336719884,
+        "truth_covered": 0.6286889211417513
+      },
+      "note": "Publisher rectangle is shifted right relative to the bent foreground coat; crowded limb ownership prevents a confident replacement outline.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 3,
+      "second": 1890.0,
+      "recorded_name": 6,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 6,
+        "iou": 0.46539567677892196,
+        "relative_area": 0.4917599282240166,
+        "truth_covered": 0.4737687113377721
+      },
+      "note": "Publisher includes the lower crowded head/neck region beyond the torso mask. Mask incompleteness and ambiguous occlusion both remain plausible.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 4,
+      "second": 1932.0,
+      "recorded_name": 2,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 2,
+        "iou": 0.4837837837837838,
+        "relative_area": 1.474426807760141,
+        "truth_covered": 0.8067803252988438
+      },
+      "note": "Prediction extends further down than the publisher rectangle, with lateral offset; no consistent expand-only rule explains this.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 5,
+      "second": 2770.0,
+      "recorded_name": 4,
+      "publisher_annotation_present": false,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": null,
+      "note": "A substantial visible animal at lower right has no publisher annotation for the claimed cow and no matching body box. Biological identity still not independently certified.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 6,
+      "second": 2784.0,
+      "recorded_name": 1,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 1,
+        "iou": 0.4765947988441876,
+        "relative_area": 0.6668004817342432,
+        "truth_covered": 0.53798675230831
+      },
+      "note": "Publisher is wider/right-shifted and reaches lower into the rail than the coherent frontal torso mask; extremity ownership remains uncertain.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 7,
+      "second": 2786.0,
+      "recorded_name": 1,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 1,
+        "iou": 0.47512940596499875,
+        "relative_area": 0.6413252152926334,
+        "truth_covered": 0.5286599747682519
+      },
+      "note": "Repeated frontal pose: publisher is wider/right-shifted; no unambiguous biological switch is visible.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 8,
+      "second": 2787.0,
+      "recorded_name": 1,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 1,
+        "iou": 0.4789174347911355,
+        "relative_area": 0.5345950345950345,
+        "truth_covered": 0.49694749694749696
+      },
+      "note": "Repeated frontal pose: publisher includes right/lower margin; exact head/leg extent remains uncertain.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 9,
+      "second": 2788.0,
+      "recorded_name": 1,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 1,
+        "iou": 0.4677526595744681,
+        "relative_area": 0.5099179206566348,
+        "truth_covered": 0.48119015047879615
+      },
+      "note": "Repeated frontal pose: expanded/shifted publisher box and small disconnected mask detail; no new biological conclusion.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 10,
+      "second": 2790.0,
+      "recorded_name": 3,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 3,
+        "iou": 0.45724833542092425,
+        "relative_area": 0.45724833542092425,
+        "truth_covered": 0.45724833542092425
+      },
+      "note": "Broad publisher rectangle adds substantial lateral background to the long isolated spotted body.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 11,
+      "second": 2790.0,
+      "recorded_name": 4,
+      "publisher_annotation_present": false,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": null,
+      "note": "A visible curved animal beneath the spotted animal has no publisher annotation for the claimed cow; no other annotation encloses its body.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 12,
+      "second": 2793.0,
+      "recorded_name": 3,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 3,
+        "iou": 0.4956528370957901,
+        "relative_area": 0.4956528370957901,
+        "truth_covered": 0.4956528370957901
+      },
+      "note": "Publisher rectangle is wider around a curved visible body; close threshold failure does not establish identity correctness.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 13,
+      "second": 2803.0,
+      "recorded_name": 3,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 3,
+        "iou": 0.4304288136961964,
+        "relative_area": 0.4304288136961964,
+        "truth_covered": 0.4304288136961964
+      },
+      "note": "Publisher rectangle is substantially wider around a moving blurred body; mask follows torso but fine edges cannot be certified.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 14,
+      "second": 2803.0,
+      "recorded_name": 6,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 6,
+        "iou": 0.4652429106852415,
+        "relative_area": 0.4652429106852415,
+        "truth_covered": 0.4652429106852415
+      },
+      "note": "Expanded horizontal publisher margin surrounds the separately masked dark moving body.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 15,
+      "second": 2805.0,
+      "recorded_name": 5,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 5,
+        "iou": 0.48796480027607625,
+        "relative_area": 0.48796480027607625,
+        "truth_covered": 0.48796480027607625
+      },
+      "note": "Publisher rectangle adds broad lateral background to a mostly isolated near-wall body.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 16,
+      "second": 2807.0,
+      "recorded_name": 5,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 5,
+        "iou": 0.47058823529411764,
+        "relative_area": 0.47058823529411764,
+        "truth_covered": 0.47058823529411764
+      },
+      "note": "Publisher is wider around a blurred longitudinal body, including neighbouring ground/body region.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 17,
+      "second": 2825.0,
+      "recorded_name": 6,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 6,
+        "iou": 0.43680160588825695,
+        "relative_area": 0.5180629197596324,
+        "truth_covered": 0.46150583244962884
+      },
+      "note": "Publisher is wider and slightly vertically shifted relative to the narrow body; exact lower extremities blurred.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 18,
+      "second": 2829.0,
+      "recorded_name": 6,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 6,
+        "iou": 0.4292713274749203,
+        "relative_area": 0.4292713274749203,
+        "truth_covered": 0.4292713274749203
+      },
+      "note": "Broad publisher rectangle encloses a much tighter coherent main-body mask.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 19,
+      "second": 2832.0,
+      "recorded_name": 5,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 5,
+        "iou": 0.45603304726527477,
+        "relative_area": 0.45603304726527477,
+        "truth_covered": 0.45603304726527477
+      },
+      "note": "Publisher is wider around a curved main-body mask and overlaps neighbouring object space.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 20,
+      "second": 2833.0,
+      "recorded_name": 6,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 6,
+        "iou": 0.46962581427056505,
+        "relative_area": 0.46962581427056505,
+        "truth_covered": 0.46962581427056505
+      },
+      "note": "Publisher is wider than the narrow visible body mask.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 21,
+      "second": 2856.0,
+      "recorded_name": 6,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 6,
+        "iou": 0.45004327339167227,
+        "relative_area": 0.49634076757051776,
+        "truth_covered": 0.46441241410106926
+      },
+      "note": "Publisher spans broader foreground space around a bent animal; occluded neighbour contact prevents precise full outline judgment.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 22,
+      "second": 2863.0,
+      "recorded_name": 6,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 6,
+        "iou": 0.45351411178749307,
+        "relative_area": 0.45351411178749307,
+        "truth_covered": 0.45351411178749307
+      },
+      "note": "Publisher has broad horizontal margins around a narrow blurred moving body.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 23,
+      "second": 2864.0,
+      "recorded_name": 2,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 2,
+        "iou": 0.3026021639989269,
+        "relative_area": 0.3026021639989269,
+        "truth_covered": 0.3026021639989269
+      },
+      "note": "Publisher extends far above/left of the broad visible body; main mask matches its visible coat, but rail/head edge still uncertain.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 24,
+      "second": 2865.0,
+      "recorded_name": 1,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 1,
+        "iou": 0.44337785579111927,
+        "relative_area": 1.9323563826823424,
+        "truth_covered": 0.9007633587786259
+      },
+      "note": "Opposite-direction discrepancy: publisher box is smaller and excludes parts of the full moving animal represented by prediction.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 25,
+      "second": 2868.0,
+      "recorded_name": 2,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 2,
+        "iou": 0.4149906047741666,
+        "relative_area": 0.43506493506493504,
+        "truth_covered": 0.42087803500846976
+      },
+      "note": "Publisher is much wider/left-shifted around a vertical rail-facing body; extent into rail is uncertain.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 26,
+      "second": 2873.0,
+      "recorded_name": 6,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 6,
+        "iou": 0.38274098857395367,
+        "relative_area": 0.38274098857395367,
+        "truth_covered": 0.38274098857395367
+      },
+      "note": "Publisher rectangle adds broad background around a curved central animal.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 27,
+      "second": 2877.0,
+      "recorded_name": 3,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 3,
+        "iou": 0.37160607455131156,
+        "relative_area": 0.37160607455131156,
+        "truth_covered": 0.37160607455131156
+      },
+      "note": "Publisher rectangle is much wider than isolated spotted moving body.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 28,
+      "second": 2878.0,
+      "recorded_name": 4,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 4,
+        "iou": 0.44573643410852715,
+        "relative_area": 0.5154900964956831,
+        "truth_covered": 0.46724225495175215
+      },
+      "note": "Publisher is wider while mask extends slightly below it; fine blurred extremities unresolved.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 29,
+      "second": 2883.0,
+      "recorded_name": 5,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": false,
+      "original_geometry_diagnostic": {
+        "cow": 5,
+        "iou": 0.47512125022453744,
+        "relative_area": 0.5190529041805402,
+        "truth_covered": 0.4892711801701813
+      },
+      "note": "Publisher encloses more of crowded neighbours/ground above and to either side. Main body is coherent, but head/leg ownership uncertain.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 30,
+      "second": 2888.0,
+      "recorded_name": 5,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 5,
+        "iou": 0.4185492905153099,
+        "relative_area": 0.4185492905153099,
+        "truth_covered": 0.4185492905153099
+      },
+      "note": "Publisher is much wider around the left-rail body and overlapping neighbours.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 31,
+      "second": 2889.0,
+      "recorded_name": 3,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 3,
+        "iou": 0.36768263183357525,
+        "relative_area": 0.36768263183357525,
+        "truth_covered": 0.36768263183357525
+      },
+      "note": "Publisher is much wider than the narrow moving spotted body.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 32,
+      "second": 2935.0,
+      "recorded_name": 5,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 5,
+        "iou": 0.3955160744500846,
+        "relative_area": 0.3955160744500846,
+        "truth_covered": 0.3955160744500846
+      },
+      "note": "Publisher is much wider around one central animal and overlaps the adjacent animal; exact head/leg ownership remains uncertain.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    },
+    {
+      "index": 33,
+      "second": 2935.0,
+      "recorded_name": 6,
+      "publisher_annotation_present": true,
+      "publisher_contains_entire_prediction_box": true,
+      "original_geometry_diagnostic": {
+        "cow": 6,
+        "iou": 0.29838163670910955,
+        "relative_area": 0.29838163670910955,
+        "truth_covered": 0.29838163670910955
+      },
+      "note": "Publisher is much wider around the neighbouring narrow animal and spans adjacent body/ground. This is not evidence that the masked biological identity is correct.",
+      "biological_identity_verified": false,
+      "official_outcome_unchanged": "unmatched_named"
+    }
+  ],
+  "summary": {
+    "reviewed": 34,
+    "missing_claimed_cow_annotation": [
+      5,
+      11
+    ],
+    "prediction_rectangle_fully_contained_in_publisher": [
+      0,
+      1,
+      10,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      22,
+      23,
+      26,
+      27,
+      30,
+      31,
+      32,
+      33
+    ],
+    "findings": [
+      "Broad or shifted publisher rectangles account for many strict extent mismatches, especially later isolated moving animals. Two visible animals lack their claimed-cow annotation at2770/2790. These facts do not establish biological identity correctness.",
+      "Other cases retain genuine ambiguity in occluded head/leg extent, and some predictions extend beyond publisher rectangles. This is not a universal padding convention.",
+      "The strict failed later-panel score remains a failure. Do not repair just these error-selected labels or compute corrected pass rates. Any replacement geometry truth needs an independently sampled, separately frozen annotation effort with full-frame denominators."
+    ]
+  }
+}

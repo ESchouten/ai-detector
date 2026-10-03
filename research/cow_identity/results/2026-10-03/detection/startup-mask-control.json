@@ -1,0 +1,539 @@
+{
+  "causes": [
+    "No mask passed the duplicateIoU.8 suppression condition; all rejections are pairwiseambiguous_overlap. True partial/full duplicate pairs have high containment but lower unionIoU, so this policy rejects their fuller mask too.",
+    "The central moving animal is a coherent match by raw-source review but its foreground overlap across0.5s is below.5; strict unique maskIoU confirmation therefore loses it.",
+    "The top-border visible animal has no detector proposal in frame1, independently preventing immediate two-frameconfirmation.",
+    "Unknown startup is not solved by this control: four anonymous candidates are not coverage of the eight visible animals; no biological labels or publisher score loaded."
+  ],
+  "central_moving_mask_iou": 0.49534347625633934,
+  "control": {
+    "complete": true,
+    "frames": [
+      {
+        "actual_device": "cpu",
+        "actual_dtype": "torch.float32",
+        "decision": {
+          "ambiguous_pairs": [
+            {
+              "left": 5,
+              "overlap_of_smaller": 0.9788952579468473,
+              "right": 11
+            },
+            {
+              "left": 6,
+              "overlap_of_smaller": 0.9350528855075153,
+              "right": 7
+            },
+            {
+              "left": 6,
+              "overlap_of_smaller": 0.35962145110410093,
+              "right": 8
+            },
+            {
+              "left": 6,
+              "overlap_of_smaller": 0.15844994617868677,
+              "right": 9
+            },
+            {
+              "left": 7,
+              "overlap_of_smaller": 0.9866396076441738,
+              "right": 8
+            },
+            {
+              "left": 7,
+              "overlap_of_smaller": 0.9922497308934338,
+              "right": 9
+            },
+            {
+              "left": 8,
+              "overlap_of_smaller": 0.9935414424111948,
+              "right": 9
+            }
+          ],
+          "confidence_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "rows": [
+            {
+              "area": 9431,
+              "assigned_area": 9431,
+              "prompt_support": 0.9998939667055455,
+              "proposal": 0,
+              "rejections": []
+            },
+            {
+              "area": 5097,
+              "assigned_area": 5097,
+              "prompt_support": 1.0,
+              "proposal": 1,
+              "rejections": []
+            },
+            {
+              "area": 8657,
+              "assigned_area": 8657,
+              "prompt_support": 1.0,
+              "proposal": 2,
+              "rejections": []
+            },
+            {
+              "area": 7258,
+              "assigned_area": 7258,
+              "prompt_support": 1.0,
+              "proposal": 3,
+              "rejections": []
+            },
+            {
+              "area": 7245,
+              "assigned_area": 7245,
+              "prompt_support": 1.0,
+              "proposal": 4,
+              "rejections": []
+            },
+            {
+              "area": 10982,
+              "prompt_support": 0.9669459114915316,
+              "proposal": 5,
+              "rejections": [
+                "ambiguous_overlap"
+              ]
+            },
+            {
+              "area": 5389,
+              "prompt_support": 1.0,
+              "proposal": 6,
+              "rejections": [
+                "ambiguous_overlap"
+              ]
+            },
+            {
+              "area": 9023,
+              "prompt_support": 0.9714064058517123,
+              "proposal": 7,
+              "rejections": [
+                "ambiguous_overlap"
+              ]
+            },
+            {
+              "area": 5913,
+              "prompt_support": 0.9709115508202266,
+              "proposal": 8,
+              "rejections": [
+                "ambiguous_overlap"
+              ]
+            },
+            {
+              "area": 4645,
+              "prompt_support": 1.0,
+              "proposal": 9,
+              "rejections": [
+                "ambiguous_overlap"
+              ]
+            },
+            {
+              "area": 7516,
+              "assigned_area": 7516,
+              "prompt_support": 1.0,
+              "proposal": 10,
+              "rejections": []
+            },
+            {
+              "area": 7676,
+              "prompt_support": 0.971990620114643,
+              "proposal": 11,
+              "rejections": [
+                "ambiguous_overlap"
+              ]
+            }
+          ],
+          "selected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            10
+          ]
+        },
+        "elapsed_seconds": 0.7558053750544786,
+        "image": ".cache/cow-startup-mask-control/0-source.png",
+        "image_sha256": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+        "masks": ".cache/cow-startup-mask-control/0-masks.npz",
+        "masks_sha256": "51be8d5ed42d37f5ced243f70f113738d8434e44cba8bb25f5505b6d8645f4b6",
+        "proposals": [
+          {
+            "confidence": 0.86279296875,
+            "x1": 124,
+            "x2": 300,
+            "y1": 346,
+            "y2": 530
+          },
+          {
+            "confidence": 0.82080078125,
+            "x1": 518,
+            "x2": 611,
+            "y1": 87,
+            "y2": 206
+          },
+          {
+            "confidence": 0.8017578125,
+            "x1": 248,
+            "x2": 428,
+            "y1": 144,
+            "y2": 299
+          },
+          {
+            "confidence": 0.796875,
+            "x1": 563,
+            "x2": 687,
+            "y1": 304,
+            "y2": 441
+          },
+          {
+            "confidence": 0.7744140625,
+            "x1": 205,
+            "x2": 375,
+            "y1": 347,
+            "y2": 526
+          },
+          {
+            "confidence": 0.6884765625,
+            "x1": 520,
+            "x2": 750,
+            "y1": 412,
+            "y2": 562
+          },
+          {
+            "confidence": 0.6240234375,
+            "x1": 235,
+            "x2": 345,
+            "y1": 8,
+            "y2": 151
+          },
+          {
+            "confidence": 0.60205078125,
+            "x1": 196,
+            "x2": 328,
+            "y1": 7,
+            "y2": 164
+          },
+          {
+            "confidence": 0.58154296875,
+            "x1": 198,
+            "x2": 309,
+            "y1": 35,
+            "y2": 166
+          },
+          {
+            "confidence": 0.51513671875,
+            "x1": 197,
+            "x2": 306,
+            "y1": 73,
+            "y2": 165
+          },
+          {
+            "confidence": 0.48681640625,
+            "x1": 381,
+            "x2": 496,
+            "y1": 0,
+            "y2": 107
+          },
+          {
+            "confidence": 0.423828125,
+            "x1": 510,
+            "x2": 677,
+            "y1": 410,
+            "y2": 547
+          }
+        ],
+        "second": 0.0,
+        "source_pixels_sha256": "52909f3311a8860533070433b10a46f74a3f2138b04da04774d91412f25a5a10"
+      },
+      {
+        "actual_device": "cpu",
+        "actual_dtype": "torch.float32",
+        "decision": {
+          "ambiguous_pairs": [
+            {
+              "left": 6,
+              "overlap_of_smaller": 0.978905824714208,
+              "right": 7
+            }
+          ],
+          "confidence_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "rows": [
+            {
+              "area": 9356,
+              "assigned_area": 9356,
+              "prompt_support": 1.0,
+              "proposal": 0,
+              "rejections": []
+            },
+            {
+              "area": 5096,
+              "assigned_area": 5096,
+              "prompt_support": 1.0,
+              "proposal": 1,
+              "rejections": []
+            },
+            {
+              "area": 7182,
+              "assigned_area": 7182,
+              "prompt_support": 1.0,
+              "proposal": 2,
+              "rejections": []
+            },
+            {
+              "area": 7917,
+              "assigned_area": 7917,
+              "prompt_support": 0.9949475811544777,
+              "proposal": 3,
+              "rejections": []
+            },
+            {
+              "area": 7560,
+              "assigned_area": 7560,
+              "prompt_support": 1.0,
+              "proposal": 4,
+              "rejections": []
+            },
+            {
+              "area": 9291,
+              "assigned_area": 9291,
+              "prompt_support": 0.9989236895920783,
+              "proposal": 5,
+              "rejections": []
+            },
+            {
+              "area": 10166,
+              "prompt_support": 0.9908518591383042,
+              "proposal": 6,
+              "rejections": [
+                "ambiguous_overlap"
+              ]
+            },
+            {
+              "area": 7348,
+              "prompt_support": 0.9926510615133369,
+              "proposal": 7,
+              "rejections": [
+                "ambiguous_overlap"
+              ]
+            }
+          ],
+          "selected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "elapsed_seconds": 0.5142385000362992,
+        "image": ".cache/cow-startup-mask-control/1-source.png",
+        "image_sha256": "ad119455c26dffe2b7ee31dce8a6b30eed83f0dcf389da5b27e17557a67334de",
+        "masks": ".cache/cow-startup-mask-control/1-masks.npz",
+        "masks_sha256": "aef4ee3928497c71819581e00e53f6e86d214b8198fc8cb30492d5093959a0bc",
+        "proposals": [
+          {
+            "confidence": 0.84423828125,
+            "x1": 129,
+            "x2": 309,
+            "y1": 341,
+            "y2": 526
+          },
+          {
+            "confidence": 0.81396484375,
+            "x1": 518,
+            "x2": 609,
+            "y1": 87,
+            "y2": 204
+          },
+          {
+            "confidence": 0.796875,
+            "x1": 564,
+            "x2": 686,
+            "y1": 301,
+            "y2": 441
+          },
+          {
+            "confidence": 0.76611328125,
+            "x1": 200,
+            "x2": 374,
+            "y1": 345,
+            "y2": 529
+          },
+          {
+            "confidence": 0.755859375,
+            "x1": 290,
+            "x2": 464,
+            "y1": 121,
+            "y2": 281
+          },
+          {
+            "confidence": 0.73779296875,
+            "x1": 200,
+            "x2": 345,
+            "y1": 8,
+            "y2": 168
+          },
+          {
+            "confidence": 0.677734375,
+            "x1": 513,
+            "x2": 747,
+            "y1": 411,
+            "y2": 560
+          },
+          {
+            "confidence": 0.51025390625,
+            "x1": 508,
+            "x2": 675,
+            "y1": 410,
+            "y2": 546
+          }
+        ],
+        "second": 0.5,
+        "source_pixels_sha256": "7ac43d082347e71ec7539c964f286272dfc2b8e1d39c1fe13b584861fc47c07f"
+      }
+    ],
+    "protocol_sha256": "5bd79d736aca213a278a77fe1ac01083bafe89597a8841f7e56cc1a7c77cb219",
+    "status": "PENDING_MASK_REVIEW_NO_BIOLOGICAL_NAMES_OR_TRUTH_LOADED",
+    "temporal": {
+      "edges": [
+        {
+          "current_proposal": 0,
+          "mask_iou": 0.9057618178129438,
+          "previous_proposal": 0
+        },
+        {
+          "current_proposal": 1,
+          "mask_iou": 0.9689009078616959,
+          "previous_proposal": 1
+        },
+        {
+          "current_proposal": 2,
+          "mask_iou": 0.9635572477563231,
+          "previous_proposal": 3
+        },
+        {
+          "current_proposal": 3,
+          "mask_iou": 0.8704663212435233,
+          "previous_proposal": 4
+        }
+      ],
+      "matched": [
+        {
+          "current_proposal": 0,
+          "mask_iou": 0.9057618178129438,
+          "previous_proposal": 0
+        },
+        {
+          "current_proposal": 1,
+          "mask_iou": 0.9689009078616959,
+          "previous_proposal": 1
+        },
+        {
+          "current_proposal": 2,
+          "mask_iou": 0.9635572477563231,
+          "previous_proposal": 3
+        },
+        {
+          "current_proposal": 3,
+          "mask_iou": 0.8704663212435233,
+          "previous_proposal": 4
+        }
+      ],
+      "unconfirmed_current": [
+        4,
+        5
+      ]
+    }
+  },
+  "duplicate_diagnostics": [
+    {
+      "fraction_partial_in_complete": 0.9350528855075153,
+      "frame": 0,
+      "mask_iou": 0.5376080230449163,
+      "more_complete_proposal": 7,
+      "partial_proposal": 6,
+      "relation_source": "Both independent frozen visual reviews identify an anatomical partial/full duplicate; not publisher biological labels."
+    },
+    {
+      "fraction_partial_in_complete": 0.9866396076441738,
+      "frame": 0,
+      "mask_iou": 0.6409580312019336,
+      "more_complete_proposal": 7,
+      "partial_proposal": 8,
+      "relation_source": "Both independent frozen visual reviews identify an anatomical partial/full duplicate; not publisher biological labels."
+    },
+    {
+      "fraction_partial_in_complete": 0.9922497308934338,
+      "frame": 0,
+      "mask_iou": 0.5087758030687713,
+      "more_complete_proposal": 7,
+      "partial_proposal": 9,
+      "relation_source": "Both independent frozen visual reviews identify an anatomical partial/full duplicate; not publisher biological labels."
+    },
+    {
+      "fraction_partial_in_complete": 0.9788952579468473,
+      "frame": 0,
+      "mask_iou": 0.6742641780330223,
+      "more_complete_proposal": 5,
+      "partial_proposal": 11,
+      "relation_source": "Both independent frozen visual reviews identify an anatomical partial/full duplicate; not publisher biological labels."
+    },
+    {
+      "fraction_partial_in_complete": 0.978905824714208,
+      "frame": 1,
+      "mask_iou": 0.6969285921906792,
+      "more_complete_proposal": 6,
+      "partial_proposal": 7,
+      "relation_source": "Both independent frozen visual reviews identify an anatomical partial/full duplicate; not publisher biological labels."
+    }
+  ],
+  "files": {
+    ".cache/cow-startup-mask-control/manifest.json": "cd41104ef82a93c725eb0c8cf68c7e3de2d3b918da361853fcd5857cda23961b",
+    ".cache/cow-startup-mask-review/render.json": "94c8f640fc6523627035239279f69d638d37d9fcf4ac279782e6590f50439887",
+    "research/cow_identity/detection_startup_masks_protocol.json": "5bd79d736aca213a278a77fe1ac01083bafe89597a8841f7e56cc1a7c77cb219",
+    "research/cow_identity/render_startup_masks.py": "96cbcc0b29481117b0a0af6c9b239606e58fa3ddc46183832d45eabd00aa30a8",
+    "research/cow_identity/results/2026-10-03/detection/startup-mask-review-audit.json": "32c3ee2351d46980dedb8832ac056fecdb3aeee21ee67c1ba8260debea713c27",
+    "research/cow_identity/results/2026-10-03/detection/startup-mask-review-cattle.json": "bd92a6bc56df0a2d1f6b3a1c5797a3e63a4e9f6129c44b7b69eebbee35c494eb"
+  },
+  "review_comparison": "Both reviewers agree on all duplicate-body groups and absence of an obvious merged two-torso mask. Auditor calls frame1proposal4 partial due missing legs; cattle notes minor leg loss but a coherent single body. Preserve both descriptions, no adjudicated mask truth.",
+  "scope": "Fixed two-frame startup control and subsequent source-only geometry audit; no truth/count matching, no model or threshold changes",
+  "summary": {
+    "confirmed_anonymous_masks": 4,
+    "gpu_used": false,
+    "named_objects": 0,
+    "raw_proposals": [
+      12,
+      8
+    ],
+    "survivors_per_frame": [
+      6,
+      6
+    ],
+    "total_sam_and_serialization_seconds": 1.2700438750907779
+  },
+  "unchanged_negative": "Keep this fixed failed proposal control. Do not retroactively call the eight prior human-selected masks an automatic initializer."
+}

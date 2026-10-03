@@ -1,0 +1,257 @@
+{
+  "acceptance": {
+    "1800": true,
+    "2700": false
+  },
+  "births": [
+    {
+      "name": null,
+      "second": 5.0,
+      "stable_id": 7
+    },
+    {
+      "name": null,
+      "second": 24.0,
+      "stable_id": 8
+    }
+  ],
+  "conditions": {
+    "1800": {
+      "conservative_precision": 0.9956140350877193,
+      "known_coverage": 0.6309060589216231,
+      "name_confusion": {
+        "1->1": 82,
+        "1->unknown": 212,
+        "2->2": 249,
+        "2->unknown": 42,
+        "3->3": 247,
+        "3->unknown": 50,
+        "4->4": 169,
+        "4->unknown": 127,
+        "5->5": 166,
+        "5->unknown": 119,
+        "6->6": 222,
+        "6->unknown": 72,
+        "7->unknown": 294,
+        "8->unknown": 277,
+        "unmatched->1": 1,
+        "unmatched->2": 1,
+        "unmatched->3": 1,
+        "unmatched->6": 2,
+        "unmatched->unknown": 67
+      },
+      "naming_counts": {
+        "correct_name": 1135,
+        "cow_name_switches": 0,
+        "cow_track_switches": 4,
+        "detector_boxes": 2400,
+        "eligible_boxes": 2400,
+        "eligible_matched": 2328,
+        "frames": 300,
+        "known_unnamed": 622,
+        "matched_boxes": 2328,
+        "missed_annotations": 62,
+        "track_cow_switches": 4,
+        "unknown_named": 0,
+        "unknown_rejected": 571,
+        "unmatched_boxes": 72,
+        "unmatched_named": 5,
+        "unmatched_unnamed": 67,
+        "visible_annotations": 2390,
+        "visible_known": 1799,
+        "visible_unknown": 591,
+        "wrong_name": 0
+      },
+      "tracking": {
+        "counts": {
+          "correct_name": 0,
+          "cow_name_switches": 0,
+          "cow_track_switches": 4,
+          "detector_boxes": 2400,
+          "eligible_boxes": 2400,
+          "eligible_matched": 2328,
+          "frames": 300,
+          "known_unnamed": 1757,
+          "matched_boxes": 2328,
+          "missed_annotations": 62,
+          "track_cow_switches": 4,
+          "unknown_named": 0,
+          "unknown_rejected": 571,
+          "unmatched_boxes": 72,
+          "unmatched_named": 0,
+          "unmatched_unnamed": 72,
+          "visible_annotations": 2390,
+          "visible_known": 1799,
+          "visible_unknown": 591,
+          "wrong_name": 0
+        },
+        "global_identity_f1": 0.9711899791231733,
+        "global_identity_true_positives": 2326,
+        "note": "Global one-to-one track/cow assignment at IoU .5 on 1 fps scoring timestamps; not permanent cow recognition.",
+        "precision": 0.97,
+        "recall": 0.9740585774058578
+      }
+    },
+    "2700": {
+      "conservative_precision": 0.9786764705882353,
+      "known_coverage": 0.7473329590117911,
+      "name_confusion": {
+        "1->1": 208,
+        "1->unknown": 85,
+        "2->2": 215,
+        "2->unknown": 63,
+        "3->3": 235,
+        "3->unknown": 49,
+        "4->4": 243,
+        "4->unknown": 37,
+        "5->5": 188,
+        "5->unknown": 97,
+        "6->6": 242,
+        "6->unknown": 45,
+        "7->unknown": 282,
+        "8->unknown": 208,
+        "unmatched->1": 5,
+        "unmatched->2": 2,
+        "unmatched->3": 5,
+        "unmatched->4": 3,
+        "unmatched->5": 6,
+        "unmatched->6": 8,
+        "unmatched->unknown": 169
+      },
+      "naming_counts": {
+        "correct_name": 1331,
+        "cow_name_switches": 0,
+        "cow_track_switches": 10,
+        "detector_boxes": 2395,
+        "eligible_boxes": 2395,
+        "eligible_matched": 2197,
+        "frames": 300,
+        "known_unnamed": 376,
+        "matched_boxes": 2197,
+        "missed_annotations": 96,
+        "track_cow_switches": 11,
+        "unknown_named": 0,
+        "unknown_rejected": 490,
+        "unmatched_boxes": 198,
+        "unmatched_named": 29,
+        "unmatched_unnamed": 169,
+        "visible_annotations": 2293,
+        "visible_known": 1781,
+        "visible_unknown": 512,
+        "wrong_name": 0
+      },
+      "tracking": {
+        "counts": {
+          "correct_name": 0,
+          "cow_name_switches": 0,
+          "cow_track_switches": 10,
+          "detector_boxes": 2395,
+          "eligible_boxes": 2395,
+          "eligible_matched": 2197,
+          "frames": 300,
+          "known_unnamed": 1707,
+          "matched_boxes": 2197,
+          "missed_annotations": 96,
+          "track_cow_switches": 11,
+          "unknown_named": 0,
+          "unknown_rejected": 490,
+          "unmatched_boxes": 198,
+          "unmatched_named": 0,
+          "unmatched_unnamed": 198,
+          "visible_annotations": 2293,
+          "visible_known": 1781,
+          "visible_unknown": 512,
+          "wrong_name": 0
+        },
+        "global_identity_f1": 0.9325938566552902,
+        "global_identity_true_positives": 2186,
+        "note": "Global one-to-one track/cow assignment at IoU .5 on 1 fps scoring timestamps; not permanent cow recognition.",
+        "precision": 0.9173277661795407,
+        "recall": 0.9581334496293066
+      }
+    }
+  },
+  "extended_detector_fill": {
+    "elapsed_seconds": 33.77181925019249,
+    "model_seconds": 22.1069219103083,
+    "new_calls": 1470
+  },
+  "full_development_prefix_parity": {
+    "differences": [],
+    "exact": true,
+    "input_frames": 3059,
+    "quarantine_events_equal": true
+  },
+  "limitation": "Previously exposed1800\u20132099/2700\u20132999 regression with unchanged method, full all-eight denominators and continuous state. Cached detector timing is not measured live performance. No biological re-identification, deletion, automatic promotion or new-farm claim;3000+ remains closed.",
+  "pooled": {
+    "conservative_precision": 0.9864,
+    "known_coverage": 0.6888268156424581,
+    "naming_counts": {
+      "correct_name": 2466,
+      "cow_name_switches": 0,
+      "cow_track_switches": 14,
+      "detector_boxes": 4795,
+      "eligible_boxes": 4795,
+      "eligible_matched": 4525,
+      "frames": 600,
+      "known_unnamed": 998,
+      "matched_boxes": 4525,
+      "missed_annotations": 158,
+      "track_cow_switches": 15,
+      "unknown_named": 0,
+      "unknown_rejected": 1061,
+      "unmatched_boxes": 270,
+      "unmatched_named": 34,
+      "unmatched_unnamed": 236,
+      "visible_annotations": 4683,
+      "visible_known": 3580,
+      "visible_unknown": 1103,
+      "wrong_name": 0
+    },
+    "pooling": "Sum disjoint-panel raw counts; neither gap frames nor an average of window percentages",
+    "unknown_false_naming_rate": 0.0
+  },
+  "runtime_cached_propagation_plus_sam": {
+    "elapsed_seconds": 1398.3483320421074,
+    "fraction_above_input_interval": 0.0003333888981496916,
+    "initialization_seconds": 0.9203657091129571,
+    "maximum_long_term_tokens": 29696,
+    "maximum_working_tokens": 30000,
+    "mean_seconds_per_input": 0.2193993503261363,
+    "mean_within_input_budget": true,
+    "model_metadata": {
+      "cutie_device": "mps:0",
+      "cutie_dtype": "torch.float32",
+      "detector": {
+        "device": "mps",
+        "fp16": true,
+        "names": {
+          "0": "item"
+        }
+      },
+      "sam_device": "cpu"
+    },
+    "p95_seconds_per_input": 0.2636618252377957,
+    "p99_seconds_per_input": 0.2765535143995657,
+    "peak_observed_driver_before_reclaim_bytes": 7061716992,
+    "peak_observed_driver_bytes": 6426279936,
+    "peak_observed_rss_bytes": 1578205184,
+    "processed_frames": 5999,
+    "steady_after_first_input": {
+      "fraction_above_input_interval": 0.00033344448149383126,
+      "mean_seconds_per_input": 0.21937330445257164,
+      "p95_seconds_per_input": 0.26358002057531843,
+      "p99_seconds_per_input": 0.2765180498035624,
+      "processed_frames": 5998
+    }
+  },
+  "sam_batch_seconds": 0.9106610410381109,
+  "sam_batches": 2,
+  "sam_prompt_count": 2,
+  "sources": {
+    ".cache/cow-cutie/crowded-joint-extended/streaming.json": "4aaaa8efca1bbe75d5b885ac003d8b285d1e90a6366476e0cc3f45646c5710d5",
+    "research/cow_identity/detection_birth_extended.py": "69c52e177062e177f7b10a422d43328521606e174207a21b01e97480242e5c47",
+    "research/cow_identity/detection_birth_extended_protocol.json": "a4ccf625671acde3115bf8f56276c67310584305ace8a08b66331ed7e2a5fa5a"
+  },
+  "status": "COMPLETE_EXPOSED_EXTENSION"
+}

@@ -1,0 +1,629 @@
+{
+  "baseline_parity": true,
+  "containment_temporal": {
+    "edges": [
+      {
+        "current_proposal": 0,
+        "mask_iou": 0.9057618178129438,
+        "previous_proposal": 0
+      },
+      {
+        "current_proposal": 1,
+        "mask_iou": 0.9689009078616959,
+        "previous_proposal": 1
+      },
+      {
+        "current_proposal": 2,
+        "mask_iou": 0.9635572477563231,
+        "previous_proposal": 3
+      },
+      {
+        "current_proposal": 3,
+        "mask_iou": 0.8704663212435233,
+        "previous_proposal": 4
+      },
+      {
+        "current_proposal": 6,
+        "mask_iou": 0.8824995549225565,
+        "previous_proposal": 5
+      },
+      {
+        "current_proposal": 5,
+        "mask_iou": 0.9142887007421344,
+        "previous_proposal": 7
+      }
+    ],
+    "matched": [
+      {
+        "current_proposal": 0,
+        "mask_iou": 0.9057618178129438,
+        "previous_proposal": 0
+      },
+      {
+        "current_proposal": 1,
+        "mask_iou": 0.9689009078616959,
+        "previous_proposal": 1
+      },
+      {
+        "current_proposal": 2,
+        "mask_iou": 0.9635572477563231,
+        "previous_proposal": 3
+      },
+      {
+        "current_proposal": 3,
+        "mask_iou": 0.8704663212435233,
+        "previous_proposal": 4
+      },
+      {
+        "current_proposal": 6,
+        "mask_iou": 0.8824995549225565,
+        "previous_proposal": 5
+      },
+      {
+        "current_proposal": 5,
+        "mask_iou": 0.9142887007421344,
+        "previous_proposal": 7
+      }
+    ],
+    "unconfirmed_current": [
+      4
+    ]
+  },
+  "frames": [
+    {
+      "containment_decision": {
+        "ambiguous_pairs": [],
+        "confidence_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "contains": {
+          "0": [],
+          "1": [],
+          "2": [],
+          "3": [],
+          "4": [],
+          "5": [
+            11
+          ],
+          "6": [],
+          "7": [
+            6,
+            8,
+            9
+          ],
+          "8": [
+            9
+          ],
+          "9": [],
+          "10": [],
+          "11": []
+        },
+        "guarded_groups": [],
+        "rows": [
+          {
+            "area": 9431,
+            "assigned_area": 9431,
+            "prompt_support": 0.9998939667055455,
+            "proposal": 0,
+            "rejections": []
+          },
+          {
+            "area": 5097,
+            "assigned_area": 5097,
+            "prompt_support": 1.0,
+            "proposal": 1,
+            "rejections": []
+          },
+          {
+            "area": 8657,
+            "assigned_area": 8657,
+            "prompt_support": 1.0,
+            "proposal": 2,
+            "rejections": []
+          },
+          {
+            "area": 7258,
+            "assigned_area": 7258,
+            "prompt_support": 1.0,
+            "proposal": 3,
+            "rejections": []
+          },
+          {
+            "area": 7245,
+            "assigned_area": 7245,
+            "prompt_support": 1.0,
+            "proposal": 4,
+            "rejections": []
+          },
+          {
+            "area": 10982,
+            "assigned_area": 10982,
+            "prompt_support": 0.9669459114915316,
+            "proposal": 5,
+            "rejections": []
+          },
+          {
+            "area": 5389,
+            "prompt_support": 1.0,
+            "proposal": 6,
+            "rejections": [
+              "contained_fragment"
+            ],
+            "suppressed_by": 7
+          },
+          {
+            "area": 9023,
+            "assigned_area": 9023,
+            "prompt_support": 0.9714064058517123,
+            "proposal": 7,
+            "rejections": []
+          },
+          {
+            "area": 5913,
+            "prompt_support": 0.9709115508202266,
+            "proposal": 8,
+            "rejections": [
+              "contained_fragment"
+            ],
+            "suppressed_by": 7
+          },
+          {
+            "area": 4645,
+            "prompt_support": 1.0,
+            "proposal": 9,
+            "rejections": [
+              "contained_fragment"
+            ],
+            "suppressed_by": 7
+          },
+          {
+            "area": 7516,
+            "assigned_area": 7516,
+            "prompt_support": 1.0,
+            "proposal": 10,
+            "rejections": []
+          },
+          {
+            "area": 7676,
+            "prompt_support": 0.971990620114643,
+            "proposal": 11,
+            "rejections": [
+              "contained_fragment"
+            ],
+            "suppressed_by": 5
+          }
+        ],
+        "selected": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          10
+        ]
+      },
+      "original_decision": {
+        "ambiguous_pairs": [
+          {
+            "left": 5,
+            "overlap_of_smaller": 0.9788952579468473,
+            "right": 11
+          },
+          {
+            "left": 6,
+            "overlap_of_smaller": 0.9350528855075153,
+            "right": 7
+          },
+          {
+            "left": 6,
+            "overlap_of_smaller": 0.35962145110410093,
+            "right": 8
+          },
+          {
+            "left": 6,
+            "overlap_of_smaller": 0.15844994617868677,
+            "right": 9
+          },
+          {
+            "left": 7,
+            "overlap_of_smaller": 0.9866396076441738,
+            "right": 8
+          },
+          {
+            "left": 7,
+            "overlap_of_smaller": 0.9922497308934338,
+            "right": 9
+          },
+          {
+            "left": 8,
+            "overlap_of_smaller": 0.9935414424111948,
+            "right": 9
+          }
+        ],
+        "confidence_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "rows": [
+          {
+            "area": 9431,
+            "assigned_area": 9431,
+            "prompt_support": 0.9998939667055455,
+            "proposal": 0,
+            "rejections": []
+          },
+          {
+            "area": 5097,
+            "assigned_area": 5097,
+            "prompt_support": 1.0,
+            "proposal": 1,
+            "rejections": []
+          },
+          {
+            "area": 8657,
+            "assigned_area": 8657,
+            "prompt_support": 1.0,
+            "proposal": 2,
+            "rejections": []
+          },
+          {
+            "area": 7258,
+            "assigned_area": 7258,
+            "prompt_support": 1.0,
+            "proposal": 3,
+            "rejections": []
+          },
+          {
+            "area": 7245,
+            "assigned_area": 7245,
+            "prompt_support": 1.0,
+            "proposal": 4,
+            "rejections": []
+          },
+          {
+            "area": 10982,
+            "prompt_support": 0.9669459114915316,
+            "proposal": 5,
+            "rejections": [
+              "ambiguous_overlap"
+            ]
+          },
+          {
+            "area": 5389,
+            "prompt_support": 1.0,
+            "proposal": 6,
+            "rejections": [
+              "ambiguous_overlap"
+            ]
+          },
+          {
+            "area": 9023,
+            "prompt_support": 0.9714064058517123,
+            "proposal": 7,
+            "rejections": [
+              "ambiguous_overlap"
+            ]
+          },
+          {
+            "area": 5913,
+            "prompt_support": 0.9709115508202266,
+            "proposal": 8,
+            "rejections": [
+              "ambiguous_overlap"
+            ]
+          },
+          {
+            "area": 4645,
+            "prompt_support": 1.0,
+            "proposal": 9,
+            "rejections": [
+              "ambiguous_overlap"
+            ]
+          },
+          {
+            "area": 7516,
+            "assigned_area": 7516,
+            "prompt_support": 1.0,
+            "proposal": 10,
+            "rejections": []
+          },
+          {
+            "area": 7676,
+            "prompt_support": 0.971990620114643,
+            "proposal": 11,
+            "rejections": [
+              "ambiguous_overlap"
+            ]
+          }
+        ],
+        "selected": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          10
+        ]
+      },
+      "second": 0.0,
+      "source_mask_sha256": "51be8d5ed42d37f5ced243f70f113738d8434e44cba8bb25f5505b6d8645f4b6"
+    },
+    {
+      "containment_decision": {
+        "ambiguous_pairs": [],
+        "confidence_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "contains": {
+          "0": [],
+          "1": [],
+          "2": [],
+          "3": [],
+          "4": [],
+          "5": [],
+          "6": [
+            7
+          ],
+          "7": []
+        },
+        "guarded_groups": [],
+        "rows": [
+          {
+            "area": 9356,
+            "assigned_area": 9356,
+            "prompt_support": 1.0,
+            "proposal": 0,
+            "rejections": []
+          },
+          {
+            "area": 5096,
+            "assigned_area": 5096,
+            "prompt_support": 1.0,
+            "proposal": 1,
+            "rejections": []
+          },
+          {
+            "area": 7182,
+            "assigned_area": 7182,
+            "prompt_support": 1.0,
+            "proposal": 2,
+            "rejections": []
+          },
+          {
+            "area": 7917,
+            "assigned_area": 7917,
+            "prompt_support": 0.9949475811544777,
+            "proposal": 3,
+            "rejections": []
+          },
+          {
+            "area": 7560,
+            "assigned_area": 7560,
+            "prompt_support": 1.0,
+            "proposal": 4,
+            "rejections": []
+          },
+          {
+            "area": 9291,
+            "assigned_area": 9291,
+            "prompt_support": 0.9989236895920783,
+            "proposal": 5,
+            "rejections": []
+          },
+          {
+            "area": 10166,
+            "assigned_area": 10166,
+            "prompt_support": 0.9908518591383042,
+            "proposal": 6,
+            "rejections": []
+          },
+          {
+            "area": 7348,
+            "prompt_support": 0.9926510615133369,
+            "proposal": 7,
+            "rejections": [
+              "contained_fragment"
+            ],
+            "suppressed_by": 6
+          }
+        ],
+        "selected": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "original_decision": {
+        "ambiguous_pairs": [
+          {
+            "left": 6,
+            "overlap_of_smaller": 0.978905824714208,
+            "right": 7
+          }
+        ],
+        "confidence_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "rows": [
+          {
+            "area": 9356,
+            "assigned_area": 9356,
+            "prompt_support": 1.0,
+            "proposal": 0,
+            "rejections": []
+          },
+          {
+            "area": 5096,
+            "assigned_area": 5096,
+            "prompt_support": 1.0,
+            "proposal": 1,
+            "rejections": []
+          },
+          {
+            "area": 7182,
+            "assigned_area": 7182,
+            "prompt_support": 1.0,
+            "proposal": 2,
+            "rejections": []
+          },
+          {
+            "area": 7917,
+            "assigned_area": 7917,
+            "prompt_support": 0.9949475811544777,
+            "proposal": 3,
+            "rejections": []
+          },
+          {
+            "area": 7560,
+            "assigned_area": 7560,
+            "prompt_support": 1.0,
+            "proposal": 4,
+            "rejections": []
+          },
+          {
+            "area": 9291,
+            "assigned_area": 9291,
+            "prompt_support": 0.9989236895920783,
+            "proposal": 5,
+            "rejections": []
+          },
+          {
+            "area": 10166,
+            "prompt_support": 0.9908518591383042,
+            "proposal": 6,
+            "rejections": [
+              "ambiguous_overlap"
+            ]
+          },
+          {
+            "area": 7348,
+            "prompt_support": 0.9926510615133369,
+            "proposal": 7,
+            "rejections": [
+              "ambiguous_overlap"
+            ]
+          }
+        ],
+        "selected": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "second": 0.5,
+      "source_mask_sha256": "aef4ee3928497c71819581e00e53f6e86d214b8198fc8cb30492d5093959a0bc"
+    }
+  ],
+  "limits": "Both original frames0/0.5 and all20candidates; no new SAM/GPU/source decode, no truths or threshold sweep. Compare exact original decision/disjoint-mask parity before accepting report. Use frozen geometry reviews only for subsequent descriptive interpretation; do not change temporal.495failure or infer independent generalization.",
+  "original_temporal": {
+    "edges": [
+      {
+        "current_proposal": 0,
+        "mask_iou": 0.9057618178129438,
+        "previous_proposal": 0
+      },
+      {
+        "current_proposal": 1,
+        "mask_iou": 0.9689009078616959,
+        "previous_proposal": 1
+      },
+      {
+        "current_proposal": 2,
+        "mask_iou": 0.9635572477563231,
+        "previous_proposal": 3
+      },
+      {
+        "current_proposal": 3,
+        "mask_iou": 0.8704663212435233,
+        "previous_proposal": 4
+      }
+    ],
+    "matched": [
+      {
+        "current_proposal": 0,
+        "mask_iou": 0.9057618178129438,
+        "previous_proposal": 0
+      },
+      {
+        "current_proposal": 1,
+        "mask_iou": 0.9689009078616959,
+        "previous_proposal": 1
+      },
+      {
+        "current_proposal": 2,
+        "mask_iou": 0.9635572477563231,
+        "previous_proposal": 3
+      },
+      {
+        "current_proposal": 3,
+        "mask_iou": 0.8704663212435233,
+        "previous_proposal": 4
+      }
+    ],
+    "unconfirmed_current": [
+      4,
+      5
+    ]
+  },
+  "protocol_sha256": "877d5b2cf17147ab1bb95e6be07b000d8fa8db4ac193af39ea5ce793a4452f8e",
+  "summary": {
+    "containment_survivors": [
+      8,
+      7
+    ],
+    "containment_temporal_confirmed": 6,
+    "original_survivors": [
+      6,
+      6
+    ],
+    "original_temporal_confirmed": 4,
+    "raw_candidates": [
+      12,
+      8
+    ]
+  }
+}

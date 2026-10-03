@@ -1,0 +1,79 @@
+import json
+from collections import Counter
+from pathlib import Path
+from types import SimpleNamespace
+from benchmark import digest,write_json
+from video_assessment import annotations,truth_at,pair_boxes
+from aidetector.domain.models import BoundingBox
+root=Path('research/cow_identity')
+folder=root/'results/2026-10-03/detection'
+reportpath=folder/'crowded-joint-readout.json'
+protocolpath=root/'detection_birth_joint_readout_protocol.json'
+runpath=Path('.cache/cow-cutie/crowded-joint-readout/streaming.json')
+output=folder/'crowded-joint-readout-independent-audit.json'
+assert not output.exists()
+report,protocol,value=[json.loads(p.read_text()) for p in [reportpath,protocolpath,runpath]]
+assert value['complete'] and report['status']=='COMPLETE_EXPOSED_CONTROL'
+assert report['sources'][str(runpath)]==digest(runpath)
+assert report['sources'][str(protocolpath)]==digest(protocolpath)
+clip_path=Path(protocol['inputs']['clip'])/'sampled.json'
+seed_path=Path(protocol['inputs']['seed_manifest'])
+clip=json.loads(clip_path.read_text()); seeds=json.loads(seed_path.read_text())['rows'][0]['prompts']
+assert [s['cow'] for s in seeds]==list(range(1,7))
+assert protocol['comparison_windows']==[[330,629],[930,1229],[1230,1529]]
+assert [r['second'] for r in value['all_frames']]==[i/2 for i in range(3059)]
+assert [r['second'] for r in value['timeline']]==list(range(1530))
+assert value['timeline']==[r for r in value['all_frames'] if float(r['second']).is_integer()]
+for i,(frame,source) in enumerate(zip(value['all_frames'],clip['rows'],strict=True)):
+ assert frame['upstream_step']==i
+ assert frame['second']==source['second']
+ assert frame['publisher_frame']==source['publisher_frame']
+ assert frame['source_pixels_sha256']==source['pixels_sha256']
+ assert set(frame['named_track_ids'])<=set(range(6))
+annpath=Path('datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz')
+pklpath=Path('datasets/8-calves/video/pmfeed_4_3_16.pkl')
+for p in [clip_path,seed_path,annpath,pklpath]: assert digest(p)==protocol['files'][str(p)]
+records,_=annotations(SimpleNamespace(annotations=annpath,source_pickle=pklpath))
+keep=(records['frame_id']>=1)&(records['frame_id']<=1529*20+1)
+records={k:v[keep] for k,v in records.items()}
+results={}
+for start,end in protocol['comparison_windows']:
+ counts=Counter({k:0 for k in ['correct_name','wrong_name','unknown_named','unmatched_named']})
+ presence=Counter(); first_errors={}
+ for frame in value['timeline'][start:end+1]:
+  truth=truth_at(records,frame['publisher_frame'],clip['width'],clip['height'])
+  assert all(1<=r['cow']<=8 for r in truth)
+  presence.update(r['cow'] for r in truth)
+  boxes=[BoundingBox(**row) for row in frame['boxes']]
+  pairs=pair_boxes(boxes,truth)
+  counts.update(frames=1,visible_annotations=len(truth),visible_known=sum(r['cow']<=6 for r in truth),visible_unknown=sum(r['cow']>6 for r in truth),detector_boxes=len(boxes),matched_boxes=len(pairs),missed_annotations=len(truth)-len(pairs),unmatched_boxes=len(boxes)-len(pairs))
+  for i,box in enumerate(boxes):
+   if box.track_id not in frame['named_track_ids']: continue
+   assert 0<=box.track_id<6
+   name=seeds[box.track_id]['cow']
+   actual=truth[pairs[i]]['cow'] if i in pairs else None
+   key='unmatched_named' if actual is None else 'unknown_named' if actual>6 else 'correct_name' if actual==name else 'wrong_name'
+   counts[key]+=1
+   if key!='correct_name' and key not in first_errors: first_errors[key]={'second':frame['second'],'name':name,'truth':actual,'track_id':box.track_id}
+ expected=report['conditions'][str(start)]
+ for k,v in counts.items(): assert expected['naming_counts'][k]==v,(start,k,v,expected['naming_counts'][k])
+ totalnamed=sum(counts[k] for k in ['correct_name','wrong_name','unknown_named','unmatched_named'])
+ coverage=counts['correct_name']/counts['visible_known'];precision=counts['correct_name']/totalnamed if totalnamed else 0
+ unknownfa=counts['unknown_named']/counts['visible_unknown']
+ assert expected['known_coverage']==coverage and expected['conservative_precision']==precision
+ passed=coverage>=.6 and precision>=.99 and unknownfa<=.01
+ assert report['acceptance'][str(start)]==passed
+ results[str(start)]={'counts':dict(counts),'per_cow_presence':dict(presence),'known_coverage':coverage,'conservative_precision':precision,'unknown_false_name_rate':unknownfa,'independently_passes':passed,'first_errors':first_errors}
+baselines={name:folder/filename for name,filename in [('six_seed_no_birth','uninitialized-unknown.json'),('six_seed_original_births','crowded-births.json'),('eight_seed_optimistic','cutie-streaming-development.json')]}
+comparison={}
+for name,path in baselines.items():
+ before=json.loads(path.read_text())
+ comparison[name]={}
+ for start,row in results.items():
+  prev=before['conditions'][start]['naming_counts']
+  assert [prev[k] for k in ['visible_known','visible_unknown','visible_annotations']]==[row['counts'][k] for k in ['visible_known','visible_unknown','visible_annotations']]
+  comparison[name][start]={k:{'before':prev[k],'after':row['counts'][k],'change':row['counts'][k]-prev[k]} for k in ['correct_name','wrong_name','unknown_named','unmatched_named']}
+sources=[reportpath,protocolpath,runpath,clip_path,seed_path,annpath,pklpath,*baselines.values(),root/'video_assessment.py',root/'detection_birth_score.py']
+out={'status':'COMPLETE_INDEPENDENT_CPU_RECOUNT','sources':{str(p):digest(p) for p in sources},'recipe_sha256':digest(Path(__file__)),'method':'Independent explicit accumulation from every recorded integer output and original eight-animal annotations, retaining all boxes and shared frozen maximum-cardinality IoU0.5 assignment. No VideoMetrics or score() call. Every half-second upstream counter/pixel/frame mapping and integer subset checked. Original known seed mapping1..6 verified; born objects cannot name. All named errors retained. No new inference or alternate labels.','panels':results,'comparison':comparison,'all_panels_pass':all(r['independently_passes'] for r in results.values()),'limitation':'These are exposed-development panels, not unseen farms or biological re-identification. Shared matcher means this is independent accounting, not an independently designed localization metric. Full PNG geometry validation is in the bound original scorer, not repeated here. No deployment or live endurance claim.'}
+write_json(output,out)
+print(output,digest(output)); print(json.dumps({'panels':results,'all_pass':out['all_panels_pass']},indent=2))

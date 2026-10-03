@@ -1,0 +1,42 @@
+{
+  "reviewer": "cattle_research",
+  "scope": "Independent source/mask review of the frozen first unmatched named example per development panel; after inference and scoring. No new labels, exclusion, score, model or parameter change. No footage at or beyond3000seconds viewed.",
+  "files": {
+    "research/cow_identity/results/2026-10-03/detection/crowded-births-audit-selection.json": "7a5855bf5e949e4c327f6cec013f9127ee610d4e63c061d1d38d700a6cb739f1",
+    ".cache/cow-cutie/crowded-birth-audit/471.0-4-raw.png": "8892d935a6e930700607b2f9d6718de8f6e38940964b8714196c955189d700ae",
+    ".cache/cow-cutie/crowded-birth-audit/471.0-4-mask.png": "0c1be8ed12ab3cd590b10611eb8969eec08c9aae3c39e44f9fecf7e91f0cf4b9",
+    ".cache/cow-cutie/crowded-birth-audit/471.0-4-truth.png": "e1613a55939153b7488f5f4efcfc59e51b739d1fed05a0951c955b228f0d4398",
+    ".cache/cow-cutie/crowded-birth-audit/seed-5.png": "46dec8218ec6034e0ac8621d01c826e459881ddfd217511558f8643835e222f5",
+    ".cache/cow-cutie/crowded-birth-audit/996.0-2-raw.png": "5bef4bcea5d10d477e13fedf1073d1ad96c47a40052da331d98a9b9300a1509d",
+    ".cache/cow-cutie/crowded-birth-audit/996.0-2-mask.png": "01b5fcb66b5fb7e89ace41a1e35c1beaec7976595b689b7036888ce0c103eca7",
+    ".cache/cow-cutie/crowded-birth-audit/996.0-2-truth.png": "80dedfbbb2bd9239cce7ba1b4e4e550c8d5824aa0a3bfa5b75f60abdefa61bf4",
+    ".cache/cow-cutie/crowded-birth-audit/seed-3.png": "62da5f0b3c6ef458f804f7394949effbe1ce1ba16f600f34b4c54b3fdcea1734",
+    ".cache/cow-cutie/crowded-birth-audit/context-995.png": "97d192d8a33f1577cc819b00c743a9ef3d79146d45d03f8b29bf7999236d4201",
+    ".cache/cow-cutie/crowded-birth-audit/context-997.png": "5e0e1dfe8368b1624bc9e5c7ccba0f9d982035201b031f96ff2fa33c611fe259",
+    ".cache/cow-cutie/crowded-birth-audit/1230.0-0-raw.png": "b06f6706c09d252d5005e07ba2233836acb5734e3270527e5ef9b97e49e13ee5",
+    ".cache/cow-cutie/crowded-birth-audit/1230.0-0-mask.png": "014dbfde1cd9f178e9803d2781bc0b140868dd27f08200643a44397b7e194b90",
+    ".cache/cow-cutie/crowded-birth-audit/1230.0-0-truth.png": "93bd80992784754b7eef19570743e2ac4603a895e77a62b4b9c872221bd044fd",
+    ".cache/cow-cutie/crowded-birth-audit/seed-1.png": "22ffbeb410c525785707a37e6a9f44271a32b2024a82372f08adea3adeb6a23e"
+  },
+  "findings": [
+    {
+      "second": 471,
+      "recorded_name": 5,
+      "finding": "Definite partial-mask extent loss. The mask retains the upper dorsal section while visible right white flank and legs extend beyond it. Initial seed5 appears to isolate a single animal. This still-image comparison is not independent proof of permanent biological identity.",
+      "classification": "partial_mask"
+    },
+    {
+      "second": 996,
+      "recorded_name": 3,
+      "finding": "The mask covers the upper-left white-backed body and a long dark foreground continuation. Clean995/997context does not reliably establish which lower pixels belong to this bent animal versus its close neighbour. Initial seed3 is an isolated lateral animal, but a biological switch or initial seed contamination is not established from these images. Retain the strict unmatched error.",
+      "classification": "unresolved_crowded_anatomy"
+    },
+    {
+      "second": 1230,
+      "recorded_name": 1,
+      "finding": "The mask follows the main visible lower-right bent body. Some left head/neck/leg extent appears omitted, while ownership is occluded by neighbours and the publisher rectangle also includes lower/right margin. A combination of partial output and extent uncertainty is plausible; no biological switch is independently established. Initial seed1 appears to isolate one animal.",
+      "classification": "partial_extent_with_occlusion_uncertainty"
+    }
+  ],
+  "conclusion": "These examples do not prove initial-seed contamination or name swaps. They include a definite segmentation failure and uncertain anatomy/extent; uncertainty does not remove any original metric error."
+}

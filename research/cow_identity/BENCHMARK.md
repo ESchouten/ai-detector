@@ -315,6 +315,17 @@ other research work ran concurrently. This is not a Metal speed comparison.
 from cached arrays; `recognition/megab.json` preserves all conditions and hashes.
 The larger encoder offers no measured reason to replace MIEWid here.
 
+A source review also considered MegaDescriptor-L-384, without downloading or
+evaluating it. The authors' [model-size ablation](https://openaccess.thecvf.com/content/WACV2024/supplemental/Cermak_WildlifeDatasets_An_Open-Source_WACV_2024_supplemental.pdf)
+does not show a consistent cattle-specific advantage over the base model:
+Cows2021 improves from 99.37% to 99.54%, while FriesianCattle2017 falls from
+97.47% to 96.46%. Their [evaluation recipe](https://wildlifedatasets.github.io/wildlife-tools/megadescriptor/)
+also uses known identities represented in training and excludes unknown ones;
+these results cannot establish open-set performance on this video. Given the
+negative base-model control, foreground quality and confirmed reference coverage
+remain the next experiment. This is a prioritization decision, not evidence
+that the untested large model would fail.
+
 ## Additional confirmations
 
 `recognition_enrollment_protocol.json` freezes a separate active-enrollment arm.

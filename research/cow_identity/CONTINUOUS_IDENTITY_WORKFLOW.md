@@ -270,3 +270,49 @@ with actual anonymous mask creation, several human-style naming delays, an
 entrant and a reconnect. Initial manually supplied perfect masks alone do not
 exercise that user journey. Freeze these scenarios before measuring them and
 retain unknown output whenever current identity cannot be supported.
+
+## What a five-second retirement rule would mean
+
+The [cached absence inventory](results/2026-10-03/detection/departure-inventory.json)
+hash-checks every indexed mask in the completed births-only crowded run (3,059
+inputs, 0–1529 seconds) and passage (22 inputs). It counts even isolated mask
+pixels. No model, tracker state or existing score was changed.
+
+Five seconds continuously without any foreground would first retire original
+slot 5 at 1299.5 seconds. Its animal remains publisher-annotated throughout all
+eleven half-second observations. Later zero-mask spells last 8.5 and 13 seconds;
+slot 6 loses its mask for three seconds. Other slots never reach five seconds.
+This signal can mean **tracking was lost**, not that the animal physically left.
+Publisher annotations do not classify occlusion and include omissions, so an
+absent annotation alone cannot establish a departure either.
+
+Missing reciprocal detector confirmation is still less suitable: slot 5 lacks
+it for 153.5 seconds while its animal is annotated in 307 of 308 observations.
+Every other slot also has a gap longer than five seconds. Do not retire merely
+because the detector cannot corroborate a crowded or partial mask.
+
+The [permanent-name-removal overlay](results/2026-10-03/detection/retirement-name-burden.json)
+keeps cached geometry unchanged and drops slot 5's binding after the first
+five-second gap. It removes 0, 0 and **106 previously correct names** from the
+three original panels. Its longest continuously annotated correct-name gap grows
+from 168 seconds (1209–1377) to at least 320 seconds (1209–1529, end-censored).
+Other original animals already have maximum correct-name gaps of 32, 43, 28,
+46 and 154 seconds. These are strict correctly located name gaps at 1 Hz, not
+proof that no name was displayed anywhere on screen. At least one new explicit
+confirmation would be required to restore the lost binding. This optimistic
+overlay does not simulate the changed masks, competition or births after SDK
+deletion, and computes no alternative acceptance score.
+
+The smallest candidate policy is therefore a **lost-track cleanup**: after five
+seconds of actual consecutive zero-foreground observations, discard both the
+track and its biological binding. Any pixel resets the timer; capture gaps do
+not count as observed absence. A later object is anonymous with a new generation,
+never an automatic revival of the old name. Source-epoch changes still dispose
+the whole camera state. Persistent fragments or wrongly inherited masks can
+prevent cleanup indefinitely, so this rule alone does not guarantee capacity
+under repeated arrivals; a full object budget must remain an explicit failure.
+
+The passage's five empty frames span only 8.5–10.5 seconds, two elapsed seconds.
+They do not test this five-second cleanup. A longer annotated exit/empty/re-entry
+sequence and an actual retirement replay remain prerequisites; the independently
+fixed SDK deletion mechanics alone do not validate the policy.

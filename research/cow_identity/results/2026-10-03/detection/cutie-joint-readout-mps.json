@@ -1,0 +1,902 @@
+{
+  "actual_device": "mps:0",
+  "actual_dtype": "torch.float32",
+  "bucket_token_lengths": [
+    288,
+    240,
+    192
+  ],
+  "config": {
+    "amp": false,
+    "chunk_size": -1,
+    "dataset": "d17-val",
+    "datasets": {
+      "burst-test": {
+        "image_directory": "../BURST/frames/test",
+        "json_directory": "../BURST/test/first_frame_annotations.json",
+        "mem_every": 10,
+        "save_all": false,
+        "size": 600,
+        "skip_frames": -1,
+        "use_long_term": true
+      },
+      "burst-val": {
+        "image_directory": "../BURST/frames/val",
+        "json_directory": "../BURST/val/first_frame_annotations.json",
+        "mem_every": 10,
+        "save_all": false,
+        "size": 600,
+        "skip_frames": -1,
+        "use_long_term": true
+      },
+      "d16-val": {
+        "image_directory": "../DAVIS/2016/JPEGImages/480p",
+        "mask_directory": "../DAVIS/2016/Annotations/480p",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "subset": "../DAVIS/2017/trainval/ImageSets/2016/val.txt",
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "d17-test-dev": {
+        "image_directory": "../DAVIS/2017/test-dev/JPEGImages/480p",
+        "mask_directory": "../DAVIS/2017/test-dev/Annotations/480p",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "subset": "../DAVIS/2017/test-dev/ImageSets/2017/test-dev.txt",
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "d17-val": {
+        "image_directory": "../DAVIS/2017/trainval/JPEGImages/480p",
+        "mask_directory": "../DAVIS/2017/trainval/Annotations/480p",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "subset": "../DAVIS/2017/trainval/ImageSets/2017/val.txt",
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "generic": {
+        "image_directory": null,
+        "mask_directory": null,
+        "mem_every": 5,
+        "save_all": true,
+        "size": -1,
+        "use_all_masks": false,
+        "use_long_term": true
+      },
+      "lvos-test": {
+        "image_directory": "../LVOS/test/JPEGImages",
+        "mask_directory": "../LVOS/test/Annotations",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": true
+      },
+      "lvos-val": {
+        "image_directory": "../LVOS/valid/JPEGImages",
+        "mask_directory": "../LVOS/valid/Annotations_first_only",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": true
+      },
+      "mose-val": {
+        "image_directory": "../MOSE/valid/JPEGImages",
+        "mask_directory": "../MOSE/valid/Annotations",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "y18-val": {
+        "image_directory": "../YouTube2018/all_frames/valid_all_frames/JPEGImages",
+        "json_directory": "../YouTube2018/valid/meta.json",
+        "mask_directory": "../YouTube2018/valid/Annotations",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": false
+      },
+      "y19-val": {
+        "image_directory": "../YouTube/all_frames/valid_all_frames/JPEGImages",
+        "json_directory": "../YouTube/valid/meta.json",
+        "mask_directory": "../YouTube/valid/Annotations",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": false
+      }
+    },
+    "exp_id": "default",
+    "flip_aug": false,
+    "image_directory": null,
+    "json_directory": null,
+    "long_term": {
+      "buffer_tokens": 2000,
+      "count_usage": true,
+      "max_mem_frames": 10,
+      "max_num_tokens": 10000,
+      "min_mem_frames": 5,
+      "num_prototypes": 128
+    },
+    "mask_directory": null,
+    "max_internal_size": 480,
+    "max_mem_frames": 5,
+    "mem_every": 2,
+    "model": {
+      "aux_loss": {
+        "query": {
+          "enabled": true,
+          "weight": 0.01
+        },
+        "sensory": {
+          "enabled": true,
+          "weight": 0.01
+        }
+      },
+      "embed_dim": 256,
+      "key_dim": 64,
+      "mask_decoder": {
+        "up_dims": [
+          256,
+          128,
+          128
+        ]
+      },
+      "mask_encoder": {
+        "final_dim": 256,
+        "type": "resnet18"
+      },
+      "object_summarizer": {
+        "add_pe": true,
+        "embed_dim": 256,
+        "num_summaries": 16
+      },
+      "object_transformer": {
+        "embed_dim": 256,
+        "ff_dim": 2048,
+        "num_blocks": 3,
+        "num_heads": 8,
+        "num_queries": 16,
+        "pixel_self_attention": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "query_self_attention": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "read_from_memory": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "read_from_past": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "read_from_pixel": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ],
+          "input_add_pe": false,
+          "input_norm": false
+        },
+        "read_from_query": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ],
+          "output_norm": false
+        }
+      },
+      "pixel_dim": 256,
+      "pixel_encoder": {
+        "ms_dims": [
+          1024,
+          512,
+          256
+        ],
+        "type": "resnet50"
+      },
+      "pixel_mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "pixel_pe_scale": 32,
+      "pixel_pe_temperature": 128,
+      "pixel_std": [
+        0.229,
+        0.224,
+        0.225
+      ],
+      "sensory_dim": 256,
+      "value_dim": 256
+    },
+    "output_dir": null,
+    "save_all": null,
+    "save_aux": false,
+    "save_scores": false,
+    "size": null,
+    "stagger_updates": 5,
+    "top_k": 30,
+    "use_all_masks": null,
+    "use_long_term": true,
+    "visualize": false,
+    "weights": "output/cutie-base-mega.pth"
+  },
+  "elapsed_seconds": 3.554738000035286,
+  "final_memory": {
+    "mps_allocated_bytes": 142521600,
+    "mps_driver_before_reclaim_bytes": 218382336,
+    "mps_driver_bytes": 218382336,
+    "peak_rss_bytes": 846413824
+  },
+  "identical_state": {
+    "affinities_exact": true,
+    "joint_fuser_calls": 1,
+    "original_fuser_calls": 3,
+    "stable_id_output_mapping_exact": true,
+    "usage_updates_exact": true,
+    "visual_readouts_exact": true
+  },
+  "multiple_bucket_steps": [
+    {
+      "incoming": [
+        7
+      ],
+      "joint": {
+        "fusion": [],
+        "queries": []
+      },
+      "memory": {
+        "mps_allocated_bytes": 141454080,
+        "mps_driver_before_reclaim_bytes": 209764352,
+        "mps_driver_bytes": 209764352,
+        "peak_rss_bytes": 762068992
+      },
+      "original": {
+        "fusion": [],
+        "queries": []
+      },
+      "step": 0
+    },
+    {
+      "incoming": [],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 141601536,
+        "mps_driver_before_reclaim_bytes": 209813504,
+        "mps_driver_bytes": 209813504,
+        "peak_rss_bytes": 785367040
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1
+        ]
+      },
+      "step": 1
+    },
+    {
+      "incoming": [
+        42
+      ],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 142577920,
+        "mps_driver_before_reclaim_bytes": 209862656,
+        "mps_driver_bytes": 209862656,
+        "peak_rss_bytes": 807010304
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1
+        ]
+      },
+      "step": 2
+    },
+    {
+      "incoming": [],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 2
+          }
+        ],
+        "queries": [
+          2
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 142577920,
+        "mps_driver_before_reclaim_bytes": 209993728,
+        "mps_driver_bytes": 209993728,
+        "peak_rss_bytes": 830439424
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1,
+          1
+        ]
+      },
+      "step": 3
+    },
+    {
+      "incoming": [
+        91
+      ],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 2
+          }
+        ],
+        "queries": [
+          2
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 144022272,
+        "mps_driver_before_reclaim_bytes": 209993728,
+        "mps_driver_bytes": 209993728,
+        "peak_rss_bytes": 830455808
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1,
+          1
+        ]
+      },
+      "step": 4
+    },
+    {
+      "incoming": [],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 3
+          }
+        ],
+        "queries": [
+          3
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 144218880,
+        "mps_driver_before_reclaim_bytes": 209993728,
+        "mps_driver_bytes": 209993728,
+        "peak_rss_bytes": 832094208
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1,
+          1,
+          1
+        ]
+      },
+      "step": 5
+    },
+    {
+      "incoming": [],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 3
+          }
+        ],
+        "queries": [
+          3
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 144501504,
+        "mps_driver_before_reclaim_bytes": 209993728,
+        "mps_driver_bytes": 209993728,
+        "peak_rss_bytes": 832176128
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1,
+          1,
+          1
+        ]
+      },
+      "step": 6
+    },
+    {
+      "incoming": [],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 3
+          }
+        ],
+        "queries": [
+          3
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 144403200,
+        "mps_driver_before_reclaim_bytes": 209993728,
+        "mps_driver_bytes": 209993728,
+        "peak_rss_bytes": 832241664
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1,
+          1,
+          1
+        ]
+      },
+      "step": 7
+    },
+    {
+      "incoming": [],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 3
+          }
+        ],
+        "queries": [
+          3
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 144918784,
+        "mps_driver_before_reclaim_bytes": 209993728,
+        "mps_driver_bytes": 209993728,
+        "peak_rss_bytes": 832274432
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1,
+          1,
+          1
+        ]
+      },
+      "step": 8
+    },
+    {
+      "incoming": [],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 3
+          }
+        ],
+        "queries": [
+          3
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 144918784,
+        "mps_driver_before_reclaim_bytes": 209993728,
+        "mps_driver_bytes": 209993728,
+        "peak_rss_bytes": 832339968
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1,
+          1,
+          1
+        ]
+      },
+      "step": 9
+    },
+    {
+      "incoming": [],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 3
+          }
+        ],
+        "queries": [
+          3
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 145533184,
+        "mps_driver_before_reclaim_bytes": 209993728,
+        "mps_driver_bytes": 209993728,
+        "peak_rss_bytes": 832421888
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1,
+          1,
+          1
+        ]
+      },
+      "step": 10
+    },
+    {
+      "incoming": [],
+      "joint": {
+        "fusion": [
+          {
+            "global_others_equal": true,
+            "global_own_equal": true,
+            "objects": 3
+          }
+        ],
+        "queries": [
+          3
+        ]
+      },
+      "memory": {
+        "mps_allocated_bytes": 145385728,
+        "mps_driver_before_reclaim_bytes": 209993728,
+        "mps_driver_bytes": 209993728,
+        "peak_rss_bytes": 832487424
+      },
+      "original": {
+        "fusion": [
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          },
+          {
+            "global_others_equal": false,
+            "global_own_equal": false,
+            "objects": 1
+          }
+        ],
+        "queries": [
+          1,
+          1,
+          1
+        ]
+      },
+      "step": 11
+    }
+  ],
+  "passed": true,
+  "positive_chunk_rejected": "Joint readout control requires chunk_size <= 0",
+  "protocol_sha256": "ea3a6a28bf079fbfb16661e4dcf052b19c1b044ab06d05c221132a3d716802ed",
+  "requested_device": "mps",
+  "single_bucket_steps": [
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 143335424,
+        "mps_driver_before_reclaim_bytes": 200163328,
+        "mps_driver_bytes": 200163328,
+        "peak_rss_bytes": 694468608
+      },
+      "step": 0
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 143237120,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 733085696
+      },
+      "step": 1
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 143742976,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 733200384
+      },
+      "step": 2
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 143939584,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 735739904
+      },
+      "step": 3
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 143770368,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 736395264
+      },
+      "step": 4
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 143966976,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 739065856
+      },
+      "step": 5
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 145464576,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 739115008
+      },
+      "step": 6
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 145661184,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 741687296
+      },
+      "step": 7
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 145427712,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 741736448
+      },
+      "step": 8
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 145624320,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 744210432
+      },
+      "step": 9
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 145477376,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 744243200
+      },
+      "step": 10
+    },
+    {
+      "exact_probability_equality": true,
+      "max_absolute_difference": 0.0,
+      "memory": {
+        "mps_allocated_bytes": 145575680,
+        "mps_driver_before_reclaim_bytes": 209715200,
+        "mps_driver_bytes": 209715200,
+        "peak_rss_bytes": 746913792
+      },
+      "step": 11
+    }
+  ],
+  "torch": "2.12.1"
+}

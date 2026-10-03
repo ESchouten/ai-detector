@@ -1,0 +1,344 @@
+{
+  "all_panels_pass": true,
+  "comparison": {
+    "eight_seed_optimistic": {
+      "1230": {
+        "correct_name": {
+          "after": 1413,
+          "before": 1226,
+          "change": 187
+        },
+        "unknown_named": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        },
+        "unmatched_named": {
+          "after": 10,
+          "before": 6,
+          "change": 4
+        },
+        "wrong_name": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        }
+      },
+      "330": {
+        "correct_name": {
+          "after": 1287,
+          "before": 1240,
+          "change": 47
+        },
+        "unknown_named": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        },
+        "unmatched_named": {
+          "after": 11,
+          "before": 10,
+          "change": 1
+        },
+        "wrong_name": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        }
+      },
+      "930": {
+        "correct_name": {
+          "after": 1346,
+          "before": 1293,
+          "change": 53
+        },
+        "unknown_named": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        },
+        "unmatched_named": {
+          "after": 9,
+          "before": 7,
+          "change": 2
+        },
+        "wrong_name": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        }
+      }
+    },
+    "six_seed_no_birth": {
+      "1230": {
+        "correct_name": {
+          "after": 1413,
+          "before": 956,
+          "change": 457
+        },
+        "unknown_named": {
+          "after": 0,
+          "before": 177,
+          "change": -177
+        },
+        "unmatched_named": {
+          "after": 10,
+          "before": 38,
+          "change": -28
+        },
+        "wrong_name": {
+          "after": 0,
+          "before": 84,
+          "change": -84
+        }
+      },
+      "330": {
+        "correct_name": {
+          "after": 1287,
+          "before": 1283,
+          "change": 4
+        },
+        "unknown_named": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        },
+        "unmatched_named": {
+          "after": 11,
+          "before": 12,
+          "change": -1
+        },
+        "wrong_name": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        }
+      },
+      "930": {
+        "correct_name": {
+          "after": 1346,
+          "before": 932,
+          "change": 414
+        },
+        "unknown_named": {
+          "after": 0,
+          "before": 175,
+          "change": -175
+        },
+        "unmatched_named": {
+          "after": 9,
+          "before": 45,
+          "change": -36
+        },
+        "wrong_name": {
+          "after": 0,
+          "before": 13,
+          "change": -13
+        }
+      }
+    },
+    "six_seed_original_births": {
+      "1230": {
+        "correct_name": {
+          "after": 1413,
+          "before": 1077,
+          "change": 336
+        },
+        "unknown_named": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        },
+        "unmatched_named": {
+          "after": 10,
+          "before": 7,
+          "change": 3
+        },
+        "wrong_name": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        }
+      },
+      "330": {
+        "correct_name": {
+          "after": 1287,
+          "before": 1266,
+          "change": 21
+        },
+        "unknown_named": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        },
+        "unmatched_named": {
+          "after": 11,
+          "before": 10,
+          "change": 1
+        },
+        "wrong_name": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        }
+      },
+      "930": {
+        "correct_name": {
+          "after": 1346,
+          "before": 1100,
+          "change": 246
+        },
+        "unknown_named": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        },
+        "unmatched_named": {
+          "after": 9,
+          "before": 6,
+          "change": 3
+        },
+        "wrong_name": {
+          "after": 0,
+          "before": 0,
+          "change": 0
+        }
+      }
+    }
+  },
+  "limitation": "These are exposed-development panels, not unseen farms or biological re-identification. Shared matcher means this is independent accounting, not an independently designed localization metric. Full PNG geometry validation is in the bound original scorer, not repeated here. No deployment or live endurance claim.",
+  "method": "Independent explicit accumulation from every recorded integer output and original eight-animal annotations, retaining all boxes and shared frozen maximum-cardinality IoU0.5 assignment. No VideoMetrics or score() call. Every half-second upstream counter/pixel/frame mapping and integer subset checked. Original known seed mapping1..6 verified; born objects cannot name. All named errors retained. No new inference or alternate labels.",
+  "panels": {
+    "1230": {
+      "conservative_precision": 0.9929725931131412,
+      "counts": {
+        "correct_name": 1413,
+        "detector_boxes": 2400,
+        "frames": 300,
+        "matched_boxes": 2352,
+        "missed_annotations": 45,
+        "unknown_named": 0,
+        "unmatched_boxes": 48,
+        "unmatched_named": 10,
+        "visible_annotations": 2397,
+        "visible_known": 1799,
+        "visible_unknown": 598,
+        "wrong_name": 0
+      },
+      "first_errors": {
+        "unmatched_named": {
+          "name": 1,
+          "second": 1230.0,
+          "track_id": 0,
+          "truth": null
+        }
+      },
+      "independently_passes": true,
+      "known_coverage": 0.7854363535297387,
+      "per_cow_presence": {
+        "1": 300,
+        "2": 300,
+        "3": 300,
+        "4": 300,
+        "5": 300,
+        "6": 299,
+        "7": 298,
+        "8": 300
+      },
+      "unknown_false_name_rate": 0.0
+    },
+    "330": {
+      "conservative_precision": 0.9915254237288136,
+      "counts": {
+        "correct_name": 1287,
+        "detector_boxes": 2400,
+        "frames": 300,
+        "matched_boxes": 2360,
+        "missed_annotations": 40,
+        "unknown_named": 0,
+        "unmatched_boxes": 40,
+        "unmatched_named": 11,
+        "visible_annotations": 2400,
+        "visible_known": 1800,
+        "visible_unknown": 600,
+        "wrong_name": 0
+      },
+      "first_errors": {
+        "unmatched_named": {
+          "name": 5,
+          "second": 471.0,
+          "track_id": 4,
+          "truth": null
+        }
+      },
+      "independently_passes": true,
+      "known_coverage": 0.715,
+      "per_cow_presence": {
+        "1": 300,
+        "2": 300,
+        "3": 300,
+        "4": 300,
+        "5": 300,
+        "6": 300,
+        "7": 300,
+        "8": 300
+      },
+      "unknown_false_name_rate": 0.0
+    },
+    "930": {
+      "conservative_precision": 0.9933579335793358,
+      "counts": {
+        "correct_name": 1346,
+        "detector_boxes": 2397,
+        "frames": 300,
+        "matched_boxes": 2338,
+        "missed_annotations": 55,
+        "unknown_named": 0,
+        "unmatched_boxes": 59,
+        "unmatched_named": 9,
+        "visible_annotations": 2393,
+        "visible_known": 1795,
+        "visible_unknown": 598,
+        "wrong_name": 0
+      },
+      "first_errors": {
+        "unmatched_named": {
+          "name": 3,
+          "second": 996.0,
+          "track_id": 2,
+          "truth": null
+        }
+      },
+      "independently_passes": true,
+      "known_coverage": 0.7498607242339833,
+      "per_cow_presence": {
+        "1": 300,
+        "2": 300,
+        "3": 300,
+        "4": 300,
+        "5": 300,
+        "6": 295,
+        "7": 300,
+        "8": 298
+      },
+      "unknown_false_name_rate": 0.0
+    }
+  },
+  "recipe_path": "research/cow_identity/results/2026-10-03/detection/crowded-joint-readout-independent-audit.recipe.py.txt",
+  "recipe_sha256": "8c19de413e963884e8125a06bff46c05c751841bf19d1eaca8a5209612cbdc8d",
+  "sources": {
+    ".cache/cow-cutie/calibration-clip/sampled.json": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d",
+    ".cache/cow-cutie/crowded-joint-readout/streaming.json": "ec02709da73c39ee875b718cc021f3e6a806564d5e15aaf42f40913b67c52f29",
+    ".cache/cow-cutie/uninitialized-seeds/manifest.json": "81067ebb13ef7fdd2e60d9f6be9abe802d82c9022aa401b4e07657bb10516699",
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "research/cow_identity/detection_birth_joint_readout_protocol.json": "dbee637886b490060e1cd7ec56150e02f6f4712084a95b51eb1ecbb3d29d6e55",
+    "research/cow_identity/detection_birth_score.py": "6018e5debe34f8dc318d92ac5840d2b7a42e66c0fc5e5d068086699d32bd6a4a",
+    "research/cow_identity/results/2026-10-03/detection/crowded-births.json": "ab656bc9fd7cf3fab87639437a3075c67faf3f45ceb1229c9934a8902f733207",
+    "research/cow_identity/results/2026-10-03/detection/crowded-joint-readout.json": "0909d57e9db2b8fec010959d7453b55e8fc377291e394d81d7e2752b88ea443e",
+    "research/cow_identity/results/2026-10-03/detection/cutie-streaming-development.json": "a204ef7acdeb279f19476b480b51f90b76129385a1e3aa12646d51b7847508c1",
+    "research/cow_identity/results/2026-10-03/detection/uninitialized-unknown.json": "232bd5afa1d59b2fc25094ac91c5d641eedd6e62a1b487b8060373a65abf1938",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  },
+  "status": "COMPLETE_INDEPENDENT_CPU_RECOUNT"
+}

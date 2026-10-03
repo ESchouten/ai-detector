@@ -1,0 +1,463 @@
+{
+  "confirmation_burden": "One previously named track loses its binding in this baseline. Regaining its name would require at least one explicit new confirmation on an unambiguous current anonymous object; successful new-object creation is not established by this overlay.",
+  "first_binding_removal_seconds": {
+    "5": 1299.5
+  },
+  "full_exposed_visible_gaps": {
+    "1": {
+      "correct_after": {
+        "end": 768.0,
+        "observed_span_seconds": 32.0,
+        "right_censored": false,
+        "samples_1hz": 33,
+        "start": 736.0
+      },
+      "correct_before": {
+        "end": 768.0,
+        "observed_span_seconds": 32.0,
+        "right_censored": false,
+        "samples_1hz": 33,
+        "start": 736.0
+      }
+    },
+    "2": {
+      "correct_after": {
+        "end": 947.0,
+        "observed_span_seconds": 43.0,
+        "right_censored": false,
+        "samples_1hz": 44,
+        "start": 904.0
+      },
+      "correct_before": {
+        "end": 947.0,
+        "observed_span_seconds": 43.0,
+        "right_censored": false,
+        "samples_1hz": 44,
+        "start": 904.0
+      }
+    },
+    "3": {
+      "correct_after": {
+        "end": 591.0,
+        "observed_span_seconds": 28.0,
+        "right_censored": false,
+        "samples_1hz": 29,
+        "start": 563.0
+      },
+      "correct_before": {
+        "end": 591.0,
+        "observed_span_seconds": 28.0,
+        "right_censored": false,
+        "samples_1hz": 29,
+        "start": 563.0
+      }
+    },
+    "4": {
+      "correct_after": {
+        "end": 948.0,
+        "observed_span_seconds": 46.0,
+        "right_censored": false,
+        "samples_1hz": 47,
+        "start": 902.0
+      },
+      "correct_before": {
+        "end": 948.0,
+        "observed_span_seconds": 46.0,
+        "right_censored": false,
+        "samples_1hz": 47,
+        "start": 902.0
+      }
+    },
+    "5": {
+      "correct_after": {
+        "end": 1529.0,
+        "observed_span_seconds": 320.0,
+        "right_censored": true,
+        "samples_1hz": 321,
+        "start": 1209.0
+      },
+      "correct_before": {
+        "end": 1377.0,
+        "observed_span_seconds": 168.0,
+        "right_censored": false,
+        "samples_1hz": 169,
+        "start": 1209.0
+      }
+    },
+    "6": {
+      "correct_after": {
+        "end": 1352.0,
+        "observed_span_seconds": 154.0,
+        "right_censored": false,
+        "samples_1hz": 155,
+        "start": 1198.0
+      },
+      "correct_before": {
+        "end": 1352.0,
+        "observed_span_seconds": 154.0,
+        "right_censored": false,
+        "samples_1hz": 155,
+        "start": 1198.0
+      }
+    }
+  },
+  "limitation": "This is an optimistic compatibility calculation on untouched cached geometry. Real SDK retirement changes competition, memory and subsequent births, so these are not predicted post-retirement metrics. Missing publisher annotations break visible-gap spans; they do not prove physical absence. No alternative acceptance score is computed.",
+  "panels": {
+    "1230": {
+      "by_cow": {
+        "1": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1361.0,
+            "observed_span_seconds": 9.0,
+            "right_censored": false,
+            "samples_1hz": 10,
+            "start": 1352.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1361.0,
+            "observed_span_seconds": 9.0,
+            "right_censored": false,
+            "samples_1hz": 10,
+            "start": 1352.0
+          },
+          "original_correct_names": 202,
+          "previously_correct_names_removed": 0
+        },
+        "2": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1529.0,
+            "observed_span_seconds": 14.0,
+            "right_censored": true,
+            "samples_1hz": 15,
+            "start": 1515.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1529.0,
+            "observed_span_seconds": 14.0,
+            "right_censored": true,
+            "samples_1hz": 15,
+            "start": 1515.0
+          },
+          "original_correct_names": 208,
+          "previously_correct_names_removed": 0
+        },
+        "3": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1529.0,
+            "observed_span_seconds": 8.0,
+            "right_censored": true,
+            "samples_1hz": 9,
+            "start": 1521.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1529.0,
+            "observed_span_seconds": 8.0,
+            "right_censored": true,
+            "samples_1hz": 9,
+            "start": 1521.0
+          },
+          "original_correct_names": 203,
+          "previously_correct_names_removed": 0
+        },
+        "4": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1529.0,
+            "observed_span_seconds": 23.0,
+            "right_censored": true,
+            "samples_1hz": 24,
+            "start": 1506.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1529.0,
+            "observed_span_seconds": 23.0,
+            "right_censored": true,
+            "samples_1hz": 24,
+            "start": 1506.0
+          },
+          "original_correct_names": 245,
+          "previously_correct_names_removed": 0
+        },
+        "5": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1529.0,
+            "observed_span_seconds": 299.0,
+            "right_censored": true,
+            "samples_1hz": 300,
+            "start": 1230.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1377.0,
+            "observed_span_seconds": 147.0,
+            "right_censored": false,
+            "samples_1hz": 148,
+            "start": 1230.0
+          },
+          "original_correct_names": 106,
+          "previously_correct_names_removed": 106
+        },
+        "6": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1352.0,
+            "observed_span_seconds": 122.0,
+            "right_censored": false,
+            "samples_1hz": 123,
+            "start": 1230.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1352.0,
+            "observed_span_seconds": 122.0,
+            "right_censored": false,
+            "samples_1hz": 123,
+            "start": 1230.0
+          },
+          "original_correct_names": 113,
+          "previously_correct_names_removed": 0
+        }
+      },
+      "original_correct_names": 1077,
+      "previously_correct_names_removed": 106,
+      "visible_known": 1799
+    },
+    "330": {
+      "by_cow": {
+        "1": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 580.0,
+            "observed_span_seconds": 17.0,
+            "right_censored": false,
+            "samples_1hz": 18,
+            "start": 563.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 580.0,
+            "observed_span_seconds": 17.0,
+            "right_censored": false,
+            "samples_1hz": 18,
+            "start": 563.0
+          },
+          "original_correct_names": 209,
+          "previously_correct_names_removed": 0
+        },
+        "2": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 615.0,
+            "observed_span_seconds": 23.0,
+            "right_censored": false,
+            "samples_1hz": 24,
+            "start": 592.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 615.0,
+            "observed_span_seconds": 23.0,
+            "right_censored": false,
+            "samples_1hz": 24,
+            "start": 592.0
+          },
+          "original_correct_names": 179,
+          "previously_correct_names_removed": 0
+        },
+        "3": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 591.0,
+            "observed_span_seconds": 28.0,
+            "right_censored": false,
+            "samples_1hz": 29,
+            "start": 563.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 591.0,
+            "observed_span_seconds": 28.0,
+            "right_censored": false,
+            "samples_1hz": 29,
+            "start": 563.0
+          },
+          "original_correct_names": 213,
+          "previously_correct_names_removed": 0
+        },
+        "4": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 495.0,
+            "observed_span_seconds": 21.0,
+            "right_censored": false,
+            "samples_1hz": 22,
+            "start": 474.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 495.0,
+            "observed_span_seconds": 21.0,
+            "right_censored": false,
+            "samples_1hz": 22,
+            "start": 474.0
+          },
+          "original_correct_names": 146,
+          "previously_correct_names_removed": 0
+        },
+        "5": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 616.0,
+            "observed_span_seconds": 3.0,
+            "right_censored": false,
+            "samples_1hz": 4,
+            "start": 613.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 616.0,
+            "observed_span_seconds": 3.0,
+            "right_censored": false,
+            "samples_1hz": 4,
+            "start": 613.0
+          },
+          "original_correct_names": 274,
+          "previously_correct_names_removed": 0
+        },
+        "6": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 621.0,
+            "observed_span_seconds": 7.0,
+            "right_censored": false,
+            "samples_1hz": 8,
+            "start": 614.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 621.0,
+            "observed_span_seconds": 7.0,
+            "right_censored": false,
+            "samples_1hz": 8,
+            "start": 614.0
+          },
+          "original_correct_names": 245,
+          "previously_correct_names_removed": 0
+        }
+      },
+      "original_correct_names": 1266,
+      "previously_correct_names_removed": 0,
+      "visible_known": 1800
+    },
+    "930": {
+      "by_cow": {
+        "1": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1229.0,
+            "observed_span_seconds": 4.0,
+            "right_censored": true,
+            "samples_1hz": 5,
+            "start": 1225.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1229.0,
+            "observed_span_seconds": 4.0,
+            "right_censored": true,
+            "samples_1hz": 5,
+            "start": 1225.0
+          },
+          "original_correct_names": 270,
+          "previously_correct_names_removed": 0
+        },
+        "2": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1146.0,
+            "observed_span_seconds": 42.0,
+            "right_censored": false,
+            "samples_1hz": 43,
+            "start": 1104.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1146.0,
+            "observed_span_seconds": 42.0,
+            "right_censored": false,
+            "samples_1hz": 43,
+            "start": 1104.0
+          },
+          "original_correct_names": 160,
+          "previously_correct_names_removed": 0
+        },
+        "3": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1153.0,
+            "observed_span_seconds": 24.0,
+            "right_censored": false,
+            "samples_1hz": 25,
+            "start": 1129.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1153.0,
+            "observed_span_seconds": 24.0,
+            "right_censored": false,
+            "samples_1hz": 25,
+            "start": 1129.0
+          },
+          "original_correct_names": 156,
+          "previously_correct_names_removed": 0
+        },
+        "4": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 948.0,
+            "observed_span_seconds": 18.0,
+            "right_censored": false,
+            "samples_1hz": 19,
+            "start": 930.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 948.0,
+            "observed_span_seconds": 18.0,
+            "right_censored": false,
+            "samples_1hz": 19,
+            "start": 930.0
+          },
+          "original_correct_names": 234,
+          "previously_correct_names_removed": 0
+        },
+        "5": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1229.0,
+            "observed_span_seconds": 20.0,
+            "right_censored": true,
+            "samples_1hz": 21,
+            "start": 1209.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1229.0,
+            "observed_span_seconds": 20.0,
+            "right_censored": true,
+            "samples_1hz": 21,
+            "start": 1209.0
+          },
+          "original_correct_names": 203,
+          "previously_correct_names_removed": 0
+        },
+        "6": {
+          "longest_after_binding_removed_gap_while_annotated": {
+            "end": 1092.0,
+            "observed_span_seconds": 57.0,
+            "right_censored": false,
+            "samples_1hz": 58,
+            "start": 1035.0
+          },
+          "longest_original_correct_name_gap_while_annotated": {
+            "end": 1092.0,
+            "observed_span_seconds": 57.0,
+            "right_censored": false,
+            "samples_1hz": 58,
+            "start": 1035.0
+          },
+          "original_correct_names": 77,
+          "previously_correct_names_removed": 0
+        }
+      },
+      "original_correct_names": 1100,
+      "previously_correct_names_removed": 0,
+      "visible_known": 1795
+    }
+  },
+  "scope": "CPU binding-only overlay: first5s zero-mask retirement permanently removes that original name; no automatic return, no score-based threshold choice and no inference.",
+  "sources": {
+    ".cache/cow-cutie/crowded-births/streaming.json": "2647641cdbd770a1d71ed1f28e2f2cf2e196f22e75a7dd908772cda90e40ce47",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_birth_losses.py": "3a9c3bcefe79ad8e351cef4e7c4a18a453293a4a247566b4ee1bddd1f5016bec",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_retirement_burden.py": "9941aa9dd155aa2ee3665439fc8ccd1d88fc87d0f16255b8a28631655ebfb614",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/crowded-births.json": "ab656bc9fd7cf3fab87639437a3075c67faf3f45ceb1229c9934a8902f733207",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/departure-inventory.json": "fd615e490b8fdd5b233ff74b964691539e3deda49ec944ad0b6fff3cdbbabf32",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6",
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26"
+  }
+}

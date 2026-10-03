@@ -1,0 +1,64 @@
+{
+  "birth_schedules": {
+    "joint": [
+      {
+        "ids": [
+          2
+        ],
+        "second": 2.0
+      }
+    ],
+    "original": [
+      {
+        "ids": [
+          2
+        ],
+        "second": 2.0
+      }
+    ]
+  },
+  "compared_fields": [
+    "second",
+    "sequence_frame",
+    "source_frame",
+    "source_pixels_sha256",
+    "input_pixels_sha256",
+    "mask_sha256",
+    "boxes",
+    "objects",
+    "raw_detector_boxes",
+    "conflicted_ids",
+    "named_track_ids",
+    "reciprocal_pairs",
+    "object_to_channel",
+    "pending_proposals",
+    "upstream_step"
+  ],
+  "elapsed_seconds": 5.923800125019625,
+  "exact_prefix_parity": true,
+  "peak_mps_driver_bytes": 1992769536,
+  "prefix_frames": [
+    {
+      "different_fields": [],
+      "second": 0.0
+    },
+    {
+      "different_fields": [],
+      "second": 0.5
+    },
+    {
+      "different_fields": [],
+      "second": 1.0
+    },
+    {
+      "different_fields": [],
+      "second": 1.5
+    }
+  ],
+  "prefix_stops_before_second": 2.0,
+  "scope": "Posthoc exact pre-first-birth real-source parity; no tolerance/threshold fitting, no new inference",
+  "sources": {
+    ".cache/cow-passage-entry-births/predictions.json": "5ee220f5d32270c4717a4a9170652056bcace0defdc1317aeb16474b46c778ea",
+    ".cache/cow-passage-entry-joint-readout/predictions.json": "14e299561331bd20b3718d410dee694aaa1698bf58e80656c8c572be1c9e2051"
+  }
+}

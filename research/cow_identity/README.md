@@ -43,10 +43,12 @@ Only confirmed-gallery embeddings are cached by the running application. New cam
 
 See [the actual-policy video assessment](VIDEO_ASSESSMENT.md), [cropped-image benchmark](BENCHMARK.md), [detection training](DETECTION_STUDY.md), [foreground/local-pattern controls](SEGMENTATION_STUDY.md), [research review](RESEARCH.md), and [source revisions](sources.json).
 
-The continuous-tracking candidate passed exposed development in the combined
+The earlier continuous-tracking candidate passed exposed development in the combined
 application Python runtime, but its [frozen reserved evaluation failed](RESERVED_RESULT.md):
 late-panel precision was 97.97%, below the required 99%. Application integration
-and reliable unattended operation remain outstanding. These controls measure different
+and reliable unattended operation remain outstanding. The later joint-readout
+candidate passes exposed development; its later evaluation is still pending.
+These controls measure different
 things and are not interchangeable accuracy estimates:
 
 | Control | Measured outcome | Decision |
@@ -63,6 +65,7 @@ things and are not interchangeable accuracy estimates:
 | Same combined runtime on the separately reserved continuous sequence | 62.42% / 73.16% coverage and 99.29% / 97.97% precision; pooled 35 unmatched named errors | Failed frozen evaluation. The late and pooled precision gates fail; all errors remain counted. |
 | Replace mask geometry with raw detector proposals, or union each reciprocal pair while retaining original slots | Raw-output precision is 95.49–97.00%; union precision is 96.82–98.80% across five exposed panels | Both fail every panel. Extra proposals and worse individual extents are separate problems; reject both global geometry changes. |
 | Initialize only six named cows, then add separated anonymous animals automatically | Across the three exposed panels: 63.83% correct naming coverage, 99.34% conservative precision, zero unknown-animal names; two anonymous objects added | The first two panels pass. The third has 1077/1799 correct names, 59.8666%, and fails the 60% coverage gate. No rounding or retuning; see [the births control](CROWDED_BIRTHS.md). |
+| Jointly fuse/query all active animals while preserving their separate insertion-time memory histories | Same births, models and naming gates: 71.50–78.54% coverage and 99.15–99.34% precision; zero wrong-known/unknown names, thirty unmatched named errors retained | All three exposed panels pass. The separate entry test improves to eight of nine correct names without naming the unknown entrant. [The joint-readout control](JOINT_READOUT.md) still needs later and held-out evaluation; no application promotion. |
 | Give the existing box-crop application perfect appearance matches on cached crowded detections | Crop eligibility alone caps coverage at 7.30% / 8.34%; actual temporal policy yields 3.96% / 5.95% in the idealized replay | Better gallery photos alone cannot fix this crowded-camera path; [the ceiling record](results/2026-10-03/recognition/production-policy-ceiling.json) isolates the geometry and temporal limits. |
 | Additional MIEW appearance on those masks | Its selected combination with quarantine adds no benefit over quarantine alone | Do not add an extra live encoder for this purpose without new evidence. |
 | Temporal pooling of MIEW mask features | The calibration selector prefers the unsmoothed baseline; it still misses the coverage target | No improvement demonstrated; pooling combined with quarantine has not been tested. |
@@ -148,7 +151,7 @@ Run the normal detector and web quality commands. Focused contracts are in `test
 
 ## Current research priorities
 
-1. Resolve the remaining crowded-tracking coverage loss and validate animal departures. Anonymous births improve the six-seed control substantially, but one exposed panel still fails. The completed [uniform geometry audit](ANNOTATION_AUDIT.md#results-and-limits) found both annotation disagreements and real mask failures; it does not justify dismissing the original failed scores or repeatedly changing box coordinates.
+1. Verify the [joint-readout candidate](JOINT_READOUT.md) on later footage and validate lost tracks and departures. It resolves the preceding birth control's development coverage failure, but later accuracy remains unmeasured. The completed [uniform geometry audit](ANNOTATION_AUDIT.md#results-and-limits) found both annotation disagreements and real mask failures; it does not justify dismissing original failed scores or repeatedly changing box coordinates.
 2. Measure the value and effort of additional farmer confirmations. The separate enrollment arm uses a fixed question budget and tests only later footage; repeated or unknown answers count as work too.
 3. Test only materially different adaptation hypotheses. The original 60-photo partial-backbone fine-tune, public metric head and external full-backbone adaptation are documented negative controls, not production features.
 4. Keep seconds 3000 through the end closed until a new complete method is frozen. The earlier reserved panels are now exposed. Then perform a small independently labelled multi-day farm trial, including night, camera changes, arrivals, departures and restarts.

@@ -1,0 +1,124 @@
+{
+  "birth_schedules": {
+    "joint": [
+      {
+        "ids": [
+          7
+        ],
+        "second": 5.0
+      },
+      {
+        "ids": [
+          8
+        ],
+        "second": 24.0
+      }
+    ],
+    "original": [
+      {
+        "ids": [
+          7
+        ],
+        "second": 5.0
+      },
+      {
+        "ids": [
+          8
+        ],
+        "second": 24.0
+      }
+    ]
+  },
+  "exact_prefix_parity": true,
+  "prefix_contains_sam_attempts": false,
+  "prefix_frames": [
+    {
+      "different_fields": [],
+      "sam_attempt_counts": [
+        0,
+        0
+      ],
+      "second": 0.0
+    },
+    {
+      "different_fields": [],
+      "sam_attempt_counts": [
+        0,
+        0
+      ],
+      "second": 0.5
+    },
+    {
+      "different_fields": [],
+      "sam_attempt_counts": [
+        0,
+        0
+      ],
+      "second": 1.0
+    },
+    {
+      "different_fields": [],
+      "sam_attempt_counts": [
+        0,
+        0
+      ],
+      "second": 1.5
+    },
+    {
+      "different_fields": [],
+      "sam_attempt_counts": [
+        0,
+        0
+      ],
+      "second": 2.0
+    },
+    {
+      "different_fields": [],
+      "sam_attempt_counts": [
+        0,
+        0
+      ],
+      "second": 2.5
+    },
+    {
+      "different_fields": [],
+      "sam_attempt_counts": [
+        0,
+        0
+      ],
+      "second": 3.0
+    },
+    {
+      "different_fields": [],
+      "sam_attempt_counts": [
+        0,
+        0
+      ],
+      "second": 3.5
+    },
+    {
+      "different_fields": [],
+      "sam_attempt_counts": [
+        0,
+        0
+      ],
+      "second": 4.0
+    },
+    {
+      "different_fields": [],
+      "sam_attempt_counts": [
+        0,
+        0
+      ],
+      "second": 4.5
+    }
+  ],
+  "prefix_stops_before_second": 5.0,
+  "scope": "Posthoc real-prefix diagnostic only; exact cached values before either first anonymous birth, no tolerance fitting or model calls. Later closed-loop birth schedules may legitimately differ.",
+  "sources": {
+    ".cache/cow-cutie/crowded-births/streaming.json": "2647641cdbd770a1d71ed1f28e2f2cf2e196f22e75a7dd908772cda90e40ce47",
+    ".cache/cow-cutie/crowded-joint-readout/streaming.json": "ec02709da73c39ee875b718cc021f3e6a806564d5e15aaf42f40913b67c52f29",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/joint_readout_prefix.py": "ab42432a59d00c0d8ba5162d836ce5934aaae3849df7fcefdbc4aa90970bad06",
+    "research/cow_identity/detection_birth_joint_readout_protocol.json": "dbee637886b490060e1cd7ec56150e02f6f4712084a95b51eb1ecbb3d29d6e55"
+  }
+}

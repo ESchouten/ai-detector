@@ -35,23 +35,45 @@ class DetectionPipeline:
         if self.detector is None:
             snapshots = [
                 DetectionEvent(
-                    source, (Observation(frames[-1].date, frames[-1].image, {}),)
+                    source,
+                    (
+                        Observation(
+                            frames[-1].date,
+                            frames[-1].image,
+                            {},
+                            capture=frames[-1].capture,
+                        ),
+                    ),
                 )
                 for source, frames in batch.frames.items()
             ]
             for event in snapshots:
-                self.publish_observation(event.source, event.observations[-1])
-                self.report_status(StatusEvent("processed", event.source))
+                latest = event.observations[-1]
+                self.publish_observation(event.source, latest)
+                self.report_status(
+                    StatusEvent(
+                        "processed",
+                        event.source,
+                        source_epoch=latest.capture.epoch if latest.capture else None,
+                    )
+                )
             return snapshots
         completed: list[DetectionEvent] = []
         if batch.frames:
             for source, observations in self.detector.detect(batch.frames).items():
+                latest = observations[-1]
                 if self.identifier is not None:
                     # Context frames reuse the latest boxes; only this frame was inferred.
-                    latest = self.identifier.identify(source, observations[-1])
+                    latest = self.identifier.identify(source, latest)
                     observations = (*observations[:-1], latest)
-                self.publish_observation(source, observations[-1])
-                self.report_status(StatusEvent("inference", source))
+                self.publish_observation(source, latest)
+                self.report_status(
+                    StatusEvent(
+                        "inference",
+                        source,
+                        source_epoch=latest.capture.epoch if latest.capture else None,
+                    )
+                )
                 completed.extend(self.events.observe(source, observations))
         if batch.advance_to is not None:
             completed.extend(self.events.advance(batch.advance_to))

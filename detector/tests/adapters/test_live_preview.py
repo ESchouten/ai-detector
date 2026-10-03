@@ -12,7 +12,13 @@ import numpy as np
 from aidetector.adapters.live_preview import LivePreview
 from aidetector.adapters.media import MediaError
 from aidetector.adapters.media.images import encode_jpeg
-from aidetector.domain.models import BoundingBox, IdentityMatch, Observation
+from aidetector.application.status import StatusEvent
+from aidetector.domain.models import (
+    BoundingBox,
+    CaptureStamp,
+    IdentityMatch,
+    Observation,
+)
 
 
 def wait_for(condition):
@@ -233,3 +239,106 @@ def test_preview_distinguishes_matched_unknown_and_unanalyzed_individuals(tmp_pa
         "similarity": 0.3,
     }
     assert "identity" not in record["boxes"][2]
+
+
+def captured(value, epoch, sequence=0):
+    return replace(
+        observation(value), capture=CaptureStamp(epoch, sequence, sequence / 10)
+    )
+
+
+def test_reconnect_rejects_queued_and_late_old_frames_without_affecting_other_camera(
+    tmp_path, monkeypatch
+):
+    first = lease(tmp_path, "first")
+    second = lease(tmp_path, "second")
+    entered, release = Event(), Event()
+    encoded = []
+
+    def encode(image, quality):
+        value = int(image[0, 0, 0])
+        encoded.append(value)
+        if value == 1:
+            entered.set()
+            assert release.wait(5)
+        return encode_jpeg(image, quality)
+
+    monkeypatch.setattr("aidetector.adapters.live_preview.encode_jpeg", encode)
+    publisher = LivePreview(tmp_path, interval=0.01)
+    publish = publisher.observer("detector-1", ("first", "second"))
+    publisher.source_status(StatusEvent("source_epoch", "first", source_epoch="old"))
+    publisher.source_status(StatusEvent("source_epoch", "second", source_epoch="other"))
+    publisher.source_status(
+        StatusEvent("source_epoch", "not-configured", source_epoch="ignored")
+    )
+    first_file = tmp_path / "frames" / f"{first}.detector-1.json"
+    second_file = tmp_path / "frames" / f"{second}.detector-1.json"
+    with publisher.open():
+        try:
+            wait_for(lambda: read_record(tmp_path / "session.json"))
+            publish("first", captured(1, "old"))
+            assert entered.wait(3)
+            publish("first", captured(2, "old", 1))  # Pending while JPEG 1 is blocked.
+            publish("second", captured(7, "other"))
+            publisher.source_status(StatusEvent("offline", "first"))
+            publisher.source_status(
+                StatusEvent("source_epoch", "first", source_epoch="new")
+            )
+            publish("first", captured(3, "new"))
+            publish(
+                "first", captured(4, "old", 2)
+            )  # Late old worker result cannot replace it.
+            publish(
+                "first", observation(5)
+            )  # Missing metadata cannot bypass known continuity.
+        finally:
+            release.set()
+        record = wait_for(lambda: read_record(first_file))
+        other = wait_for(lambda: read_record(second_file))
+        assert record["capture"] == {"epoch": "new", "sequence": 0}
+        assert other["capture"] == {"epoch": "other", "sequence": 0}
+        assert encoded == [1, 7, 3]
+        session = wait_for(
+            lambda: (
+                (value := read_record(tmp_path / "session.json"))
+                and value["sourceEpochs"].get(first) == "new"
+                and value
+            )
+        )
+        assert session["sourceEpochs"] == {first: "new", second: "other"}
+
+
+def test_disconnect_during_jpeg_encoding_cannot_publish_a_fresh_looking_old_picture(
+    tmp_path, monkeypatch
+):
+    key = lease(tmp_path, "camera")
+    entered, release = Event(), Event()
+
+    def encode(image, quality):
+        entered.set()
+        assert release.wait(5)
+        return encode_jpeg(image, quality)
+
+    monkeypatch.setattr("aidetector.adapters.live_preview.encode_jpeg", encode)
+    publisher = LivePreview(tmp_path, interval=0.01)
+    publish = publisher.observer("detector-1", ("camera",))
+    publisher.source_status(StatusEvent("source_epoch", "camera", source_epoch="old"))
+    file = tmp_path / "frames" / f"{key}.detector-1.json"
+    with publisher.open():
+        try:
+            wait_for(lambda: read_record(tmp_path / "session.json"))
+            publish("camera", captured(1, "old"))
+            assert entered.wait(3)
+            publisher.source_status(StatusEvent("offline", "camera"))
+            publish("camera", captured(2, "old", 1))
+        finally:
+            release.set()
+        wait_for(
+            lambda: (
+                (value := read_record(tmp_path / "session.json"))
+                and key in value["sourceEpochs"]
+                and value["sourceEpochs"][key] is None
+            )
+        )
+        assert not file.exists()
+        assert not list((tmp_path / "frames").glob("*.tmp"))

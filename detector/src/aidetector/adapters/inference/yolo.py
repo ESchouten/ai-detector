@@ -79,13 +79,21 @@ def map_observations(
             confidences[name] = max(confidences.get(name, 0), score)
     detected_boxes = tuple(boxes)
     context = tuple(
-        Observation(frame.date, frame.image, {}, boxes=detected_boxes)
+        Observation(
+            frame.date, frame.image, {}, boxes=detected_boxes, capture=frame.capture
+        )
         for frame in frames[:-1]
     )
     latest = frames[-1]
     return (
         *context,
-        Observation(latest.date, latest.image, confidences, boxes=detected_boxes),
+        Observation(
+            latest.date,
+            latest.image,
+            confidences,
+            boxes=detected_boxes,
+            capture=latest.capture,
+        ),
     )
 
 

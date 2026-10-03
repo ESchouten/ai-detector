@@ -2,10 +2,17 @@ from dataclasses import replace
 from datetime import datetime, timedelta
 
 import numpy as np
+import pytest
 
 from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import SourceBatch
-from aidetector.domain.models import BoundingBox, Frame, IdentityMatch, Observation
+from aidetector.domain.models import (
+    BoundingBox,
+    CaptureStamp,
+    Frame,
+    IdentityMatch,
+    Observation,
+)
 from aidetector.domain.policy import EventPolicy
 
 
@@ -16,7 +23,14 @@ class ScoringDetector:
     def detect(self, frames):
         self.calls += 1
         return {
-            source: (Observation(batch[-1].date, batch[-1].image, {"cow": 0.9}),)
+            source: (
+                Observation(
+                    batch[-1].date,
+                    batch[-1].image,
+                    {"cow": 0.9},
+                    capture=batch[-1].capture,
+                ),
+            )
             for source, batch in frames.items()
         }
 
@@ -25,7 +39,9 @@ def test_no_detector_emits_only_the_latest_frame_for_each_source():
     pipeline = DetectionPipeline()
     image = np.zeros((8, 8, 3), dtype=np.uint8)
     first = Frame(datetime(2026, 1, 1), image)
-    latest = Frame(first.date + timedelta(seconds=1), image.copy())
+    latest = Frame(
+        first.date + timedelta(seconds=1), image.copy(), CaptureStamp("camera", 1, 1)
+    )
 
     events = pipeline.process(SourceBatch({"one": (first, latest), "two": (first,)}))
 
@@ -34,6 +50,7 @@ def test_no_detector_emits_only_the_latest_frame_for_each_source():
         assert len(event.observations) == 1
         assert event.best.date == frame.date
         assert event.best.image is frame.image
+        assert event.best.capture is frame.capture
         assert event.best.confidence == {}
         assert event.best.boxes == ()
     assert pipeline.finish() == []
@@ -173,3 +190,25 @@ def test_identity_uses_only_new_inference_and_preserves_source_and_context():
     assert published[1][1] is events[1].best
     assert pipeline.process(SourceBatch({}, advance_to=other.date)) == []
     assert len(calls) == 2
+
+
+@pytest.mark.parametrize("detect", [False, True])
+def test_processing_status_uses_latest_analyzed_capture_epoch_and_legacy_sources(
+    detect,
+):
+    reports = []
+    pipeline = DetectionPipeline(
+        ScoringDetector() if detect else None, report_status=reports.append
+    )
+    image = np.zeros((8, 8, 3), dtype=np.uint8)
+    first = Frame(datetime(2026, 1, 1), image, CaptureStamp("old", 4, 4))
+    current = Frame(
+        first.date + timedelta(seconds=1), image, CaptureStamp("current", 0, 5)
+    )
+    legacy = Frame(first.date, image)
+    pipeline.process(SourceBatch({"camera": (first, current), "file": (legacy,)}))
+    kind = "inference" if detect else "processed"
+    assert [(event.kind, event.source, event.source_epoch) for event in reports] == [
+        (kind, "camera", "current"),
+        (kind, "file", None),
+    ]

@@ -83,3 +83,51 @@ def test_queue_wait_is_throttled_per_rule_without_delaying_resume():
         ("waiting_delivery", "detector-2"),
         ("processing_resumed", "detector-1"),
     ]
+
+
+def test_quick_capture_epochs_and_disconnects_are_never_throttled():
+    output = StringIO()
+    report = JsonStatusReporter(output)
+    for epoch in ("first", "second"):
+        report(StatusEvent("source_epoch", "camera", source_epoch=epoch))
+        report(StatusEvent("frame", "camera"))
+        report(StatusEvent("offline", "camera", "Disconnected"))
+    records = [
+        json.loads(line.removeprefix(STATUS_PREFIX))
+        for line in output.getvalue().splitlines()
+    ]
+    assert [record["event"] for record in records] == [
+        "source_epoch",
+        "frame",
+        "offline",
+        "source_epoch",
+        "offline",
+    ]
+    assert [record["sourceEpoch"] for record in records if "sourceEpoch" in record] == [
+        "first",
+        "second",
+    ]
+
+
+def test_late_old_epoch_result_cannot_throttle_the_first_result_after_reconnect(
+    monkeypatch,
+):
+    monkeypatch.setattr("aidetector.adapters.operational_status.monotonic", lambda: 10)
+    output = StringIO()
+    report = JsonStatusReporter(output)
+    for kind in ("inference", "processed"):
+        # Every transition occurs within one rate-limit interval, including a
+        # slow old batch that finishes after capture has already reconnected.
+        report(StatusEvent("source_epoch", "camera", source_epoch="new"))
+        for epoch in ("old", "old", "new", "new", "newer", "newer"):
+            report(
+                StatusEvent(kind, "camera", rule_id="detector-1", source_epoch=epoch)
+            )
+    records = [
+        json.loads(line.removeprefix(STATUS_PREFIX))
+        for line in output.getvalue().splitlines()
+    ]
+    for kind in ("inference", "processed"):
+        assert [
+            record["sourceEpoch"] for record in records if record["event"] == kind
+        ] == ["old", "new", "newer"]

@@ -102,6 +102,17 @@ def test_gallery_change_clears_confirmation():
     assert agreement.update("camera", 7, at(5), BELLA) == BELLA
 
 
+def test_camera_reset_does_not_remove_another_cameras_agreement():
+    agreement = TrackAgreement()
+    for second in range(3):
+        agreement.update("camera", 7, at(second), BELLA)
+        agreement.update("other", 7, at(second), DAISY)
+    agreement.clear_source("camera")
+
+    assert agreement.update("camera", 7, at(3), BELLA).identity_id is None
+    assert agreement.update("other", 7, at(3), DAISY) == DAISY
+
+
 def test_stale_cleanup_only_discards_expired_tracks_for_its_source():
     agreement = TrackAgreement()
     for second in range(3):

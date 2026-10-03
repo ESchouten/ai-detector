@@ -2,11 +2,15 @@ import logging
 from collections import deque
 from collections.abc import Generator, Iterator
 from contextlib import contextmanager
+from dataclasses import replace
 from datetime import datetime
 from threading import Condition, Event, Thread
 from time import monotonic
+from uuid import uuid4
 
 import cv2
+import numpy as np
+from numpy.typing import NDArray
 
 from aidetector.adapters.diagnostics import resource_label
 from aidetector.adapters.media.images import even_width, shrink_image
@@ -17,10 +21,11 @@ from aidetector.application.status import (
     StatusEvent,
     ignore_status,
 )
-from aidetector.domain.models import Frame
+from aidetector.domain.models import CaptureStamp, Frame
 
 logger = logging.getLogger(__name__)
 _CAPTURE_TIMEOUT_MS = 10000
+_CONTINUITY_GAP_SECONDS = 5
 
 
 class CapturedFrame:
@@ -42,8 +47,42 @@ class CapturedFrame:
         if width not in self._sizes:
             image = shrink_image(self.original.image, width)
             image.setflags(write=False)
-            self._sizes[width] = Frame(self.original.date, image)
+            self._sizes[width] = replace(self.original, image=image)
         return self._sizes[width]
+
+
+class _CaptureSession:
+    """Stamp decoded frames; lost timing or geometry starts a new epoch."""
+
+    def __init__(self, source: str, report_status: ReportStatus):
+        self.source = source
+        self.report_status = report_status
+        self._shape: tuple[int, ...] | None = None
+        self._epoch = ""
+        self._sequence = 0
+        self._previous_read: tuple[datetime, float] | None = None
+
+    def frame(self, image: NDArray[np.uint8], sampled_at: float) -> CapturedFrame:
+        date = datetime.now()
+        interrupted = False
+        if self._previous_read is not None:
+            previous_date, previous_time = self._previous_read
+            interrupted = not (
+                0 <= sampled_at - previous_time <= _CONTINUITY_GAP_SECONDS
+                and 0
+                <= (date - previous_date).total_seconds()
+                <= _CONTINUITY_GAP_SECONDS
+            )
+        if image.shape != self._shape or interrupted:
+            self._shape = image.shape
+            self._epoch, self._sequence = uuid4().hex, 0
+            self.report_status(
+                StatusEvent("source_epoch", self.source, source_epoch=self._epoch)
+            )
+        stamp = CaptureStamp(self._epoch, self._sequence, sampled_at)
+        self._sequence += 1
+        self._previous_read = date, sampled_at
+        return CapturedFrame(Frame(date, image, stamp))
 
 
 class StreamSource:
@@ -63,12 +102,20 @@ class StreamSource:
         self._condition = Condition()
         self._frames: dict[str, deque[Frame]] = {}
         self._next_sample = dict.fromkeys(sources, 0.0)
+        self._epochs: dict[str, str] = {}
         self._closed = False
         self._error: Exception | None = None
 
     def publish(self, source: str, frame: CapturedFrame, sampled_at: float) -> None:
         with self._condition:
-            if self._closed or sampled_at < self._next_sample[source]:
+            if self._closed:
+                return
+            capture = frame.original.capture
+            if capture is not None and capture.epoch != self._epochs.get(source):
+                self._epochs[source] = capture.epoch
+                self._frames.pop(source, None)
+                self._next_sample[source] = 0.0
+            if sampled_at < self._next_sample[source]:
                 return
             self._next_sample[source] = sampled_at + self.interval
             self._frames.setdefault(source, deque(maxlen=self.retention)).append(
@@ -215,6 +262,7 @@ class StreamPool:
                     )
                 else:
                     first_frame = True
+                    session = _CaptureSession(source, self.report_status)
                     measured_at = monotonic()
                     reads = 0
                     read_seconds = publish_seconds = 0.0
@@ -248,7 +296,7 @@ class StreamPool:
                                 image.dtype,
                             )
                             first_frame = False
-                        frame = CapturedFrame(Frame(datetime.now(), image))
+                        frame = session.frame(image, sampled_at)
                         self.report_status(StatusEvent("frame", source))
                         for subscriber in self._subscribers[source]:
                             subscriber.publish(source, frame, sampled_at)

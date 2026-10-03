@@ -14,7 +14,7 @@ from aidetector.adapters.operational_status import source_key
 from aidetector.adapters.sources.streams import CapturedFrame, StreamPool, StreamSource
 from aidetector.bootstrap import run_application
 from aidetector.configuration import Config
-from aidetector.domain.models import Frame
+from aidetector.domain.models import CaptureStamp, Frame
 from tests.support.onnx_model import write_detection_model
 
 
@@ -99,8 +99,9 @@ def test_capture_status_tracks_decoded_frames_and_disconnects(cameras):
         camera = cameras["0"]
         camera.send(1)
         camera.flush()
-        assert reports[0].kind == "frame"
-        assert reports[0].source == "0"
+        assert [event.kind for event in reports] == ["source_epoch", "frame"]
+        assert all(event.source == "0" for event in reports)
+        assert reports[0].source_epoch
         camera.finish()
         assert offline.wait(3), "A failed capture read did not report disconnection"
         assert reports[-1].kind == "offline"
@@ -204,13 +205,18 @@ def test_resized_frames_are_shared_by_width_without_changing_pixels(cameras):
         cameras["0"].flush()
         frames = [next(batch).frames["0"][0] for batch in batches]
         assert frames[0] is frames[1]
+        assert all(frame.capture is frames[0].capture for frame in frames)
+        assert frames[0].capture.sequence == 0
         for frame, width in zip(frames, (32, 33, 16), strict=True):
             np.testing.assert_array_equal(frame.image, shrink_image(image, width))
             assert not frame.image.flags.writeable
-        cameras["0"].send(123)
+        cameras["0"].inputs.put(np.full_like(image, 123))
         cameras["0"].flush()
         updated = next(batches[0]).frames["0"][0]
         assert updated is not frames[0]
+        assert updated.capture.epoch == frames[0].capture.epoch
+        assert updated.capture.sequence == 1
+        assert updated.capture.monotonic_at > frames[0].capture.monotonic_at
         assert np.all(updated.image == 123)
         np.testing.assert_array_equal(frames[0].image, shrink_image(image, 32))
 
@@ -265,11 +271,17 @@ def test_reconnection_is_shared_by_subscribers(cameras, caplog):
     with running(streams, cameras):
         camera.send(1)
         camera.flush()
-        assert pixels(next(left), "0") == pixels(next(right), "0") == [1]
+        before = next(left).frames["0"][0]
+        assert int(before.image[0, 0, 0]) == pixels(next(right), "0")[0] == 1
         camera.finish()
         camera.send(2)
         camera.flush()
-        assert pixels(next(left), "0") == pixels(next(right), "0") == [2]
+        after = next(left).frames["0"][0]
+        shared = next(right).frames["0"][0]
+        assert int(after.image[0, 0, 0]) == int(shared.image[0, 0, 0]) == 2
+        assert after.capture is shared.capture
+        assert before.capture.epoch != after.capture.epoch
+        assert before.capture.sequence == after.capture.sequence == 0
         assert camera.opens == 2
     assert camera.releases == 2
     openings = [
@@ -290,11 +302,130 @@ def test_reconnection_is_shared_by_subscribers(cameras, caplog):
     )
 
 
+def test_new_epoch_drops_only_its_cameras_unread_frames_and_sampling_wait():
+    subscription = StreamSource(("one", "two"), retention=3, interval=10, width=16)
+    started = datetime(2026, 1, 1)
+
+    def publish(source, value, at, epoch):
+        frame = Frame(
+            started + timedelta(seconds=at),
+            np.full((32, 32, 3), value, dtype=np.uint8),
+            CaptureStamp(epoch, 0, at),
+        )
+        subscription.publish(source, CapturedFrame(frame), at)
+        return frame
+
+    publish("one", 1, 0, "before")
+    other = publish("two", 2, 0.1, "other")
+    replacement = publish("one", 3, 0.2, "after")
+    batch = next(subscription.batches())
+
+    assert pixels(batch, "one") == [3]
+    assert pixels(batch, "two") == [2]
+    assert batch.frames["one"][0].capture is replacement.capture
+    assert batch.frames["two"][0].capture is other.capture
+    assert batch.frames["one"][0].image.shape == (16, 16, 3)
+
+
+def test_geometry_change_starts_a_new_epoch_only_for_the_changed_camera(cameras):
+    statuses = []
+    streams = StreamPool(statuses.append)
+    subscription = streams.subscribe(("0", "1"), width=32)
+    batches = subscription.batches()
+    with running(streams, cameras):
+        for source in ("0", "1"):
+            cameras[source].send(1)
+            cameras[source].flush()
+        first = next(batches)
+        cameras["0"].inputs.put(np.zeros((128, 128, 3), dtype=np.uint8))
+        cameras["0"].flush()
+        cameras["1"].send(2)
+        cameras["1"].flush()
+        following = next(batches)
+
+    before = first.frames["0"][0]
+    changed = following.frames["0"][0]
+    assert before.image.shape == changed.image.shape == (32, 32, 3)
+    assert before.capture.epoch != changed.capture.epoch
+    assert changed.capture.sequence == 0
+    assert first.frames["1"][0].capture.epoch == following.frames["1"][0].capture.epoch
+    assert following.frames["1"][0].capture.sequence == 1
+    zero = [event for event in statuses if event.source == "0"]
+    assert [event.kind for event in zero[:4]] == [
+        "source_epoch",
+        "frame",
+        "source_epoch",
+        "frame",
+    ]
+    assert [event.source_epoch for event in zero if event.kind == "source_epoch"] == [
+        before.capture.epoch,
+        changed.capture.epoch,
+    ]
+    assert (
+        sum(event.kind == "source_epoch" and event.source == "1" for event in statuses)
+        == 1
+    )
+
+
+@pytest.mark.parametrize(
+    ("elapsed", "wall_elapsed", "interrupted"),
+    [
+        (1, 1, False),
+        (5, 5, False),
+        (6, 1, True),
+        (1, 6, True),
+        (-1, 1, True),
+        (1, -1, True),
+    ],
+)
+def test_capture_timing_break_resets_even_without_reopening(
+    cameras, monkeypatch, elapsed, wall_elapsed, interrupted
+):
+    clock = [100.0, datetime(2026, 1, 1)]
+
+    class WallClock(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return clock[1]
+
+    monkeypatch.setattr("aidetector.adapters.sources.streams.datetime", WallClock)
+    monkeypatch.setattr(
+        "aidetector.adapters.sources.streams.monotonic", lambda: clock[0]
+    )
+    statuses = []
+    streams = StreamPool(statuses.append)
+    fast = streams.subscribe(("0",))
+    slow = streams.subscribe(("0",), interval=60)
+    batches = fast.batches()
+    camera = cameras["0"]
+    with running(streams, cameras):
+        camera.send(1)
+        camera.flush()
+        before = next(batches).frames["0"][0]
+        clock[:] = [100.0 + elapsed, clock[1] + timedelta(seconds=wall_elapsed)]
+        camera.send(2)
+        camera.flush()
+        after = next(batches).frames["0"][0]
+        slow_batch = next(slow.batches())
+
+    assert camera.opens == 1
+    assert (before.capture.epoch != after.capture.epoch) is interrupted
+    assert after.capture.sequence == (0 if interrupted else 1)
+    assert pixels(slow_batch, "0") == ([2] if interrupted else [1])
+    epochs = [event.source_epoch for event in statuses if event.kind == "source_epoch"]
+    assert epochs == (
+        [before.capture.epoch, after.capture.epoch]
+        if interrupted
+        else [before.capture.epoch]
+    )
+
+
 @pytest.mark.parametrize("use_yolo", [False, True])
 def test_application_shares_capture_across_detectors_and_archives_for_both(
     tmp_path, monkeypatch, cameras, use_yolo
 ):
     stop = Event()
+    reports = []
     delivered = {label: Event() for label in ("first", "second")}
     original_export = DiskExporter.export
 
@@ -328,7 +459,14 @@ def test_application_shares_capture_across_detectors_and_archives_for_both(
         }
     )
     with ThreadPoolExecutor(max_workers=1) as workers:
-        task = workers.submit(run_application, config, tmp_path, tmp_path, stop)
+        task = workers.submit(
+            run_application,
+            config,
+            tmp_path,
+            tmp_path,
+            stop,
+            report_status=reports.append,
+        )
         try:
             # Both real models and first-use SDK imports finish before capture starts.
             assert cameras["0"].opened.wait(30)
@@ -339,6 +477,13 @@ def test_application_shares_capture_across_detectors_and_archives_for_both(
             cameras["0"].finish()
         stats = task.result(timeout=5)
     assert [item.events for item in stats] == [1, 1]
+    [epoch] = [event.source_epoch for event in reports if event.kind == "source_epoch"]
+    completed_kind = "inference" if use_yolo else "processed"
+    assert sorted(
+        (event.rule_id, event.source_epoch)
+        for event in reports
+        if event.kind == completed_kind
+    ) == [("detector-1", epoch), ("detector-2", epoch)]
     assert cameras["0"].opens == cameras["0"].releases == 1
     for label in delivered:
         [metadata] = (tmp_path / "detections" / label).glob(

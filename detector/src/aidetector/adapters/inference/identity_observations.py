@@ -28,7 +28,12 @@ from aidetector.domain.identity import (
     choose_identity,
     reject_conflicting_matches,
 )
-from aidetector.domain.models import BoundingBox, IdentityMatch, Observation
+from aidetector.domain.models import (
+    BoundingBox,
+    CaptureStamp,
+    IdentityMatch,
+    Observation,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +86,13 @@ def usable_crop(
 
 
 @dataclass
+class _SourceState:
+    at: datetime
+    capture: CaptureStamp | None
+    shape: tuple[int, int]
+
+
+@dataclass
 class _Track:
     at: datetime
     candidate: IdentityMatch
@@ -121,6 +133,40 @@ class GalleryIdentifier:
         self._gallery = np.empty((0, encoder.dimension), dtype=np.float32)
         self._owners: tuple[tuple[str, str], ...] = ()
         self._tracks: dict[tuple[str, int | None], _Track] = {}
+        self._sources: dict[str, _SourceState] = {}
+
+    def _accept_observation(self, source: str, observation: Observation) -> bool:
+        previous = self._sources.get(source)
+        height, width = observation.image.shape[:2]
+        current = _SourceState(observation.date, observation.capture, (height, width))
+        if previous is None:
+            self._sources[source] = current
+            return True
+        old_epoch = previous.capture.epoch if previous.capture else None
+        epoch = current.capture.epoch if current.capture else None
+        elapsed = (current.at - previous.at).total_seconds()
+        captured_elapsed = elapsed
+        if epoch == old_epoch and current.capture and previous.capture:
+            if current.capture.sequence <= previous.capture.sequence:
+                return False
+            captured_elapsed = (
+                current.capture.monotonic_at - previous.capture.monotonic_at
+            )
+        self._sources[source] = current
+        if (
+            epoch != old_epoch
+            or current.shape != previous.shape
+            or min(elapsed, captured_elapsed) < 0
+            or max(elapsed, captured_elapsed) > self.agreement.max_gap
+        ):
+            self._clear_source(source)
+        return epoch != old_epoch or (captured_elapsed > 0 and elapsed != 0)
+
+    def _clear_source(self, source: str) -> None:
+        self.agreement.clear_source(source)
+        self._tracks = {
+            key: track for key, track in self._tracks.items() if key[0] != source
+        }
 
     def _refresh_gallery(self) -> Catalog:
         catalog = self.catalog.load()
@@ -209,6 +255,16 @@ class GalleryIdentifier:
     def identify(self, source: str, observation: Observation) -> Observation:
         if self._retry_at is not None and self.clock() < self._retry_at:
             return observation
+        if not self._accept_observation(source, observation):
+            return replace(
+                observation,
+                boxes=tuple(
+                    replace(box, identity=None)
+                    if box.label in self.settings.labels
+                    else box
+                    for box in observation.boxes
+                ),
+            )
         try:
             result = self._identify(source, observation)
         except (OSError, sqlite3.Error, ValidationError):
@@ -360,7 +416,7 @@ class GalleryIdentifier:
             expired = same_source and (
                 track_id not in current
                 or (observation.date - track.at).total_seconds()
-                > max(5, self.settings.sample_interval * 3)
+                > self.agreement.max_gap
                 or observation.date < track.at
             )
             if expired:

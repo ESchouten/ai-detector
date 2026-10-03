@@ -9,6 +9,12 @@ export const frameSchema = v.object({
 	ruleId: v.string(),
 	capturedAt: v.string(),
 	publishedAt: v.pipe(v.string(), v.isoTimestamp()),
+	capture: v.optional(
+		v.object({
+			epoch: v.pipe(v.string(), v.minLength(1)),
+			sequence: v.pipe(v.number(), v.integer(), v.minValue(0))
+		})
+	),
 	image: v.object({
 		width: v.pipe(v.number(), v.integer(), v.minValue(1)),
 		height: v.pipe(v.number(), v.integer(), v.minValue(1)),

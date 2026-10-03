@@ -1,6 +1,7 @@
 import json
 import sqlite3
 from concurrent.futures import CancelledError, Executor, Future
+from dataclasses import replace
 from datetime import datetime, timedelta
 from threading import Event
 
@@ -20,7 +21,12 @@ from aidetector.adapters.inference.identity_observations import (
     usable_crop,
 )
 from aidetector.configuration import IdentityConfig
-from aidetector.domain.models import BoundingBox, IdentityMatch, Observation
+from aidetector.domain.models import (
+    BoundingBox,
+    CaptureStamp,
+    IdentityMatch,
+    Observation,
+)
 
 START = datetime(2026, 1, 1)
 BELLA, DAISY = "a" * 32, "b" * 32
@@ -115,7 +121,7 @@ def environment(tmp_path):
         cache.close()
 
 
-def observation(second, *subjects):
+def observation(second, *subjects, capture=None):
     image = np.zeros((200, 240, 3), dtype=np.uint8)
     boxes = []
     for track_id, color, coordinates, label in subjects:
@@ -123,7 +129,11 @@ def observation(second, *subjects):
         image[max(0, y1) : min(200, y2), max(0, x1) : min(240, x2)] = color
         boxes.append(BoundingBox(x1, y1, x2, y2, label, 0.95, track_id))
     return Observation(
-        START + timedelta(seconds=second), image, {"cow": 0.95}, tuple(boxes)
+        START + timedelta(seconds=second),
+        image,
+        {"cow": 0.95},
+        tuple(boxes),
+        capture=capture,
     )
 
 
@@ -162,6 +172,139 @@ def test_identity_requires_three_sampled_frames_and_preserves_original_observati
     assert [item["gallery_revision"] for item in captured if item["track_id"] == 7] == [
         1
     ]
+
+
+def test_quick_reconnect_restarts_only_that_cameras_identity_and_sampling(environment):
+    identifier, _, encoder, _ = environment
+    for second in range(3):
+        old = identifier.identify(
+            "camera",
+            observation(second, cow(), capture=CaptureStamp("old", second, second)),
+        )
+        identifier.identify(
+            "other",
+            observation(
+                second, cow(color=GREEN), capture=CaptureStamp("other", second, second)
+            ),
+        )
+    assert old.boxes[0].identity.identity_id == BELLA
+    calls = len(encoder.calls)
+    returned = identifier.identify(
+        "camera", observation(2.1, cow(), capture=CaptureStamp("new", 0, 2.1))
+    )
+    assert returned.boxes[0].identity.identity_id is None
+    assert len(encoder.calls) == calls + 1  # No cached pre-reconnect sample.
+    unaffected = identifier.identify(
+        "other",
+        observation(2.2, cow(color=GREEN), capture=CaptureStamp("other", 3, 2.2)),
+    )
+    assert unaffected.boxes[0].identity.identity_id == DAISY
+    for sequence, second in enumerate((3.2, 4.3), start=1):
+        returned = identifier.identify(
+            "camera",
+            observation(second, cow(), capture=CaptureStamp("new", sequence, second)),
+        )
+        assert (returned.boxes[0].identity.identity_id == BELLA) == (sequence == 2)
+
+
+@pytest.mark.parametrize(
+    "wall,monotonic_at",
+    [(2.1, 20), (20, 3), (-10, 3)],
+    ids=["capture-gap", "wall-gap", "wall-clock-reversal"],
+)
+def test_discontinuous_clock_requires_fresh_identity_agreement(
+    environment, wall, monotonic_at
+):
+    identifier, _, _, _ = environment
+    for second in range(3):
+        identifier.identify(
+            "camera",
+            observation(second, cow(), capture=CaptureStamp("epoch", second, second)),
+        )
+    for offset in range(3):
+        stamp = CaptureStamp("epoch", 3 + offset, monotonic_at + offset)
+        result = identifier.identify(
+            "camera", observation(wall + offset, cow(), capture=stamp)
+        )
+        assert result.capture is stamp
+        assert (result.boxes[0].identity.identity_id == BELLA) == (offset == 2)
+
+
+def test_duplicate_and_delayed_frames_neither_display_names_nor_add_evidence(
+    environment,
+):
+    identifier, catalog, encoder, _ = environment
+    for second in range(3):
+        latest = identifier.identify(
+            "camera",
+            observation(second, cow(), capture=CaptureStamp("epoch", second, second)),
+        )
+    assert latest.boxes[0].identity.identity_id == BELLA
+    calls = len(encoder.calls)
+    files = set((catalog.directory / "sightings").iterdir())
+    delayed = replace(latest, date=START + timedelta(seconds=20))
+    for stale in (
+        latest,
+        delayed,
+        observation(1, cow(), capture=CaptureStamp("epoch", 1, 1)),
+    ):
+        assert identifier.identify("camera", stale).boxes[0].identity is None
+    assert len(encoder.calls) == calls
+    assert set((catalog.directory / "sightings").iterdir()) == files
+    fresh = identifier.identify(
+        "camera", observation(3, cow(), capture=CaptureStamp("epoch", 3, 3))
+    )
+    assert fresh.boxes[0].identity.identity_id == BELLA
+
+
+def test_metadata_free_repeated_timestamps_do_not_reuse_a_displayed_name(environment):
+    identifier, _, encoder, _ = environment
+    for second in range(3):
+        latest = identifier.identify("camera", observation(second, cow()))
+    calls = len(encoder.calls)
+    assert identifier.identify("camera", latest).boxes[0].identity is None
+    assert len(encoder.calls) == calls
+    assert (
+        identifier.identify("camera", observation(-1, cow())).boxes[0].identity is None
+    )
+    assert len(encoder.calls) == calls
+    for second in range(3):
+        result = identifier.identify("camera", observation(second, cow()))
+        assert (result.boxes[0].identity.identity_id == BELLA) == (second == 2)
+
+
+def test_reversed_capture_clock_discards_that_frame_and_clears_prior_names(environment):
+    identifier, _, encoder, _ = environment
+    for second in range(3):
+        identifier.identify(
+            "camera",
+            observation(second, cow(), capture=CaptureStamp("epoch", second, second)),
+        )
+    calls = len(encoder.calls)
+    reversed_clock = observation(3, cow(), capture=CaptureStamp("epoch", 3, 1))
+    assert identifier.identify("camera", reversed_clock).boxes[0].identity is None
+    assert len(encoder.calls) == calls
+    for offset in range(3):
+        result = identifier.identify(
+            "camera",
+            observation(
+                4 + offset, cow(), capture=CaptureStamp("epoch", 4 + offset, 2 + offset)
+            ),
+        )
+        assert (result.boxes[0].identity.identity_id == BELLA) == (offset == 2)
+
+
+def test_geometry_change_clears_identity_even_without_capture_metadata(environment):
+    identifier, _, _, _ = environment
+    for second in range(3):
+        identifier.identify("camera", observation(second, cow()))
+    for offset in range(3):
+        original = observation(2.1 + offset, cow())
+        changed = replace(
+            original, image=np.pad(original.image, ((0, 10), (0, 0), (0, 0)))
+        )
+        result = identifier.identify("camera", changed)
+        assert (result.boxes[0].identity.identity_id == BELLA) == (offset == 2)
 
 
 def test_removed_gallery_reference_clears_previously_confirmed_identity(environment):

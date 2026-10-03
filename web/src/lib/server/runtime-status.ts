@@ -9,41 +9,46 @@ import type {
 } from '../runtime.ts';
 
 export const STATUS_PREFIX = 'AIDETECTOR_STATUS ';
-const eventSchema = v.object({
-	version: v.literal(1),
-	event: v.picklist([
-		'preparing',
-		'preparation_failed',
-		'ready',
-		'models_ready',
-		'frame',
-		'inference',
-		'processed',
-		'recording',
-		'offline',
-		'recording_failed',
-		'notice',
-		'backend',
-		'validation',
-		'validation_failed',
-		'identity_collecting',
-		'identity_preparing',
-		'identity_ready',
-		'identity_failed',
-		'delivery',
-		'delivery_failed',
-		'waiting_delivery',
-		'processing_resumed'
-	]),
-	at: v.pipe(
-		v.string(),
-		v.check((value) => Number.isFinite(Date.parse(value)))
-	),
-	sourceKey: v.optional(v.pipe(v.string(), v.regex(/^[a-f0-9]{64}$/))),
-	message: v.optional(v.string()),
-	ruleId: v.optional(v.pipe(v.string(), v.regex(/^detector-[1-9]\d*$/))),
-	destinationId: v.optional(v.pipe(v.string(), v.regex(/^(?:disk|telegram|webhook)-[1-9]\d*$/)))
-});
+const eventSchema = v.pipe(
+	v.object({
+		version: v.literal(1),
+		event: v.picklist([
+			'preparing',
+			'preparation_failed',
+			'ready',
+			'models_ready',
+			'frame',
+			'source_epoch',
+			'inference',
+			'processed',
+			'recording',
+			'offline',
+			'recording_failed',
+			'notice',
+			'backend',
+			'validation',
+			'validation_failed',
+			'identity_collecting',
+			'identity_preparing',
+			'identity_ready',
+			'identity_failed',
+			'delivery',
+			'delivery_failed',
+			'waiting_delivery',
+			'processing_resumed'
+		]),
+		at: v.pipe(
+			v.string(),
+			v.check((value) => Number.isFinite(Date.parse(value)))
+		),
+		sourceKey: v.optional(v.pipe(v.string(), v.regex(/^[a-f0-9]{64}$/))),
+		message: v.optional(v.string()),
+		sourceEpoch: v.optional(v.pipe(v.string(), v.minLength(1))),
+		ruleId: v.optional(v.pipe(v.string(), v.regex(/^detector-[1-9]\d*$/))),
+		destinationId: v.optional(v.pipe(v.string(), v.regex(/^(?:disk|telegram|webhook)-[1-9]\d*$/)))
+	}),
+	v.check((event) => event.event !== 'source_epoch' || event.sourceEpoch !== undefined)
+);
 
 type ProgressEvent = v.InferOutput<typeof eventSchema>;
 interface RuleProgress {
@@ -56,6 +61,7 @@ interface RuleProgress {
 	recordings: Map<string, string | undefined>;
 }
 interface CameraProgress {
+	sourceEpoch?: string;
 	status: CameraRuntimeStatus;
 	source: string;
 	connectedAt: string | null;
@@ -233,9 +239,16 @@ export class RuntimeProgress {
 	}
 
 	private observe(camera: CameraProgress, event: ProgressEvent): void {
+		if (event.event === 'source_epoch') camera.sourceEpoch = event.sourceEpoch;
+		if (
+			(event.event === 'inference' || event.event === 'processed') &&
+			camera.sourceEpoch !== undefined &&
+			event.sourceEpoch !== camera.sourceEpoch
+		)
+			return;
 		const status = camera.status;
-		if (event.event === 'frame') {
-			if (!camera.connectedAt || status.state === 'offline') {
+		if (event.event === 'frame' || event.event === 'source_epoch') {
+			if (event.event === 'source_epoch' || !camera.connectedAt || status.state === 'offline') {
 				camera.connectedAt = event.at;
 				for (const rule of camera.rules.values()) rule.lastProcessedAt = null;
 			}

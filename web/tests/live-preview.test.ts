@@ -26,10 +26,14 @@ async function fixture(t: TestContext) {
 		for (const reader of readers) await reader.cancel();
 		await rm(directory, { recursive: true, force: true });
 	});
-	const session = async (runId = 'run-1', updatedAt = new Date().toISOString()) => {
+	const session = async (
+		runId = 'run-1',
+		updatedAt = new Date().toISOString(),
+		sourceEpochs?: Record<string, string | null>
+	) => {
 		await writeFileAtomic(
 			path.join(directory, 'session.json'),
-			JSON.stringify({ version: 1, runId, updatedAt })
+			JSON.stringify({ version: 1, runId, updatedAt, sourceEpochs })
 		);
 	};
 	const frame = async (ruleId: string, changes = {}, key = sourceKey) => {
@@ -321,3 +325,50 @@ test('identity suggestions survive the camera stream without changing coordinate
 		'cow · 90% · #17'
 	]);
 });
+
+test(
+	'disconnect and quick reconnect invalidate only that camera despite recent frame publication',
+	{ timeout: 5000 },
+	async (t) => {
+		const { session, frame, open } = await fixture(t);
+		const otherKey = liveSourceKey('rtsp://other-camera/live', '/data');
+		const epochs = { [sourceKey]: 'before', [otherKey]: 'stable' };
+		await session('run-1', new Date().toISOString(), epochs);
+		await frame('detector-1', { capture: { epoch: 'before', sequence: 100 } });
+		await frame('detector-1', { capture: { epoch: 'stable', sequence: 50 } }, otherKey);
+		const { reader } = open([
+			{ id: 'shed', sourceKey, rules: [rules[0]] },
+			{ id: 'pen', sourceKey: otherKey, rules: [rules[0]] }
+		]);
+		assert.match(await chunk(reader), /"epoch":"before"/);
+		await session('run-1', new Date().toISOString(), { ...epochs, [sourceKey]: null });
+		const disconnected = await nextUpdate(reader);
+		assert.match(disconnected, /Camera disconnected/);
+		assert.match(disconnected, /"cameraId":"shed"/);
+		assert.ok(!disconnected.includes('"cameraId":"pen"'));
+		assert.ok(!disconnected.includes('event: frame'));
+		await session('run-1', new Date().toISOString(), { ...epochs, [sourceKey]: 'after' });
+		assert.match(await nextUpdate(reader), /current camera connection/);
+		await frame('detector-1', { capture: { epoch: 'after', sequence: 0 } });
+		const recovered = await nextUpdate(reader);
+		assert.match(recovered, /event: frame/);
+		assert.match(recovered, /"epoch":"after","sequence":0/);
+		assert.ok(!recovered.includes('"cameraId":"pen"'));
+	}
+);
+
+for (const capture of [undefined, { epoch: 'previous', sequence: 2 }]) {
+	test(
+		`known capture epoch refuses ${capture ? 'old-epoch' : 'metadata-free'} fresh frame`,
+		{ timeout: 5000 },
+		async (t) => {
+			const { session, frame, open } = await fixture(t);
+			await session('run-1', new Date().toISOString(), { [sourceKey]: 'current' });
+			await frame('detector-1', { capture });
+			const { reader } = open([{ id: 'shed', sourceKey, rules: [rules[0]] }]);
+			const output = await chunk(reader);
+			assert.match(output, /current camera connection/);
+			assert.ok(!output.includes('event: frame'));
+		}
+	);
+}

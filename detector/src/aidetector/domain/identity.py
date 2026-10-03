@@ -113,3 +113,9 @@ class TrackAgreement:
     def clear(self) -> None:
         """Forget decisions after gallery changes; old confirmations must not persist."""
         self._tracks.clear()
+
+    def clear_source(self, source: str) -> None:
+        """A camera discontinuity invalidates only that camera's track history."""
+        self._tracks = {
+            key: state for key, state in self._tracks.items() if key[0] != source
+        }

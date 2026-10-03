@@ -1,4 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import replace
 from datetime import datetime, timedelta
 from threading import Barrier, Event, get_ident
 from types import SimpleNamespace
@@ -19,8 +20,10 @@ from aidetector.adapters.inference.yolo import (
     map_observations,
     resolve_classes,
 )
+from aidetector.application.pipeline import DetectionPipeline
+from aidetector.application.ports import SourceBatch
 from aidetector.configuration import YoloConfig
-from aidetector.domain.models import Frame
+from aidetector.domain.models import CaptureStamp, Frame
 
 
 def result(boxes=(), *, tracking=False):
@@ -71,15 +74,23 @@ def test_real_ultralytics_results_are_mapped_at_the_boundary(device):
 
 
 def test_tracker_ids_are_preserved_without_changing_context_frame_scores():
+    frames = tuple(
+        replace(frame(second), capture=CaptureStamp("epoch", second, float(second)))
+        for second in (0, 1)
+    )
     observations = map_observations(
         result([[10, 20, 30, 40, 7, 0.8, 0]], tracking=True),
-        (frame(0), frame(1)),
+        frames,
         {0: ("cow", 0.5)},
     )
     assert observations[0].confidence == {}
     assert observations[1].confidence == {"cow": pytest.approx(0.8)}
     assert observations[0].boxes == observations[1].boxes
     assert observations[1].boxes[0].track_id == 7
+    assert all(
+        observation.capture is original.capture
+        for observation, original in zip(observations, frames, strict=True)
+    )
 
 
 def test_no_boxes_still_produce_unscored_observations_for_trailing_footage():
@@ -102,6 +113,29 @@ class Model:
     def track(self, **kwargs):
         self.calls.append(kwargs)
         return [result([[1, 2, 3, 4, 0.9, 0]]) for _ in kwargs["source"].sources]
+
+
+def test_tracker_placeholders_do_not_reach_identity_as_new_camera_evidence():
+    observed = []
+
+    class Identifier:
+        def identify(self, source, observation):
+            observed.append((source, observation.capture))
+            return observation
+
+    detector = YoloDetector(
+        Model(),
+        YoloConfig(model="model.onnx", tracking=True),
+        ("one", "two"),
+        InferenceOptions(),
+    )
+    pipeline = DetectionPipeline(detector, identifier=Identifier())
+    first = replace(frame(0), capture=CaptureStamp("first", 0, 0))
+    second = replace(frame(1), capture=CaptureStamp("second", 0, 1))
+    pipeline.process(SourceBatch({"one": (first,)}))
+    pipeline.process(SourceBatch({"two": (second,)}))
+
+    assert observed == [("one", first.capture), ("two", second.capture)]
 
 
 @pytest.mark.parametrize(

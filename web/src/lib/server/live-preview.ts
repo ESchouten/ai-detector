@@ -56,7 +56,13 @@ function targetKey(target: PreviewTarget): string {
 const sessionSchema = v.object({
 	version: v.literal(1),
 	runId: v.string(),
-	updatedAt: v.pipe(v.string(), v.isoTimestamp())
+	updatedAt: v.pipe(v.string(), v.isoTimestamp()),
+	sourceEpochs: v.optional(
+		v.record(
+			v.pipe(v.string(), v.regex(/^[a-f0-9]{64}$/)),
+			v.nullable(v.pipe(v.string(), v.minLength(1)))
+		)
+	)
 });
 
 export function liveSourceKey(source: string, configurationDirectory: string): string {
@@ -203,6 +209,9 @@ async function readPreview(
 		return status(rule, 'waiting', 'Waiting for the detector to publish a live picture.');
 	if (Date.now() - Date.parse(session.updatedAt) > 6000)
 		return status(rule, 'unavailable', 'The detector is no longer publishing live pictures.');
+	const epoch = session.sourceEpochs?.[sourceKey];
+	if (epoch === null)
+		return status(rule, 'unavailable', 'Camera disconnected. Waiting for a new analyzed picture.');
 	try {
 		const frame = v.parse(
 			frameSchema,
@@ -212,6 +221,8 @@ async function readPreview(
 			return status(rule, 'waiting', 'Waiting for a picture from the current detector run.');
 		if (frame.sourceKey !== sourceKey || frame.ruleId !== rule.id)
 			return status(rule, 'unavailable', 'The live picture does not match this camera and rule.');
+		if (epoch !== undefined && frame.capture?.epoch !== epoch)
+			return status(rule, 'waiting', 'Waiting for a picture from the current camera connection.');
 		const age = Date.now() - Date.parse(frame.publishedAt);
 		if (age < -5000 || age > Math.max(15000, rule.interval * 3000 + 5000))
 			return status(

@@ -1,5 +1,9 @@
 # Detector migration
 
+## Source continuity metadata
+
+`Frame` and `Observation` gain an optional trailing `capture` field; existing positional constructors remain valid. Live streams create a new opaque epoch on camera reopen, native geometry change, backward capture time, or a raw read gap above five seconds and preserve it through resizing and inference. The optional identity adapter clears only the affected camera's temporal and sampling state, ignores duplicate/out-of-order evidence, and requires fresh agreement after discontinuities. Snapshot mode preserves the same metadata. JSON configuration and archive files remain unchanged. The additive live-preview contract is described below; live animal confirmation remains separate work.
+
 The rebuild covers the Python detector, its schemas, tests, and distributions. The Python rewrite preserved the web archive contract. The subsequent application setup work adds a combined web/native download and optional parent-controlled shutdown.
 
 ## Optional identity trial — 2026-10-03
@@ -257,3 +261,7 @@ New Jetson work targets JetPack 7.2 and Python 3.12. A supported JetPack 7.2 det
 Launcher status records now include `backend`, `validation`, `validation_failed`, `delivery` and `delivery_failed`. Delivery records carry the same detector/destination IDs as recording outcomes; disk delivery can emit both recording and delivery records. Consumers should dispatch by event kind, not positional order. Configuration, presets, archive metadata and inference decisions remain unchanged. The desktop supervisor can restart a stalled processing worker while respecting explicit pause and application shutdown.
 
 `waiting_delivery` and `processing_resumed` identify intentional queue backpressure. Queue waits keep emitting a throttled, rule-scoped observation, so healthy slow validation/export does not trigger inference-stall recovery. The launcher retains separate frame/inference timestamps and reports the wait; absent observations still expire. Configuration, event acceptance and queue/drain behavior are unchanged.
+
+## Live preview continuity
+
+An additive `source_epoch` operational event carries `sourceEpoch`; it and `offline` events are not rate-limited. Pipeline `inference` and snapshot `processed` records also carry the analyzed epoch, preserved by the rule reporter. The launcher ignores stale/missing epochs after continuity is declared, while metadata-free legacy runs retain their behavior. Version 1 preview files gain optional frame `capture` (epoch/sequence) and session `sourceEpochs` fields. Updated readers still accept legacy records when the session has no epoch for that source. Once an epoch is declared, a missing or mismatched frame epoch is unavailable. No configuration, archive or identity catalog schema changes are required.

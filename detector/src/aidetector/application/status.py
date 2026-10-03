@@ -13,6 +13,7 @@ class StatusEvent:
         "ready",
         "models_ready",
         "frame",
+        "source_epoch",
         "inference",
         "processed",
         "recording",
@@ -35,6 +36,7 @@ class StatusEvent:
     message: str | None = None
     rule_id: str | None = None
     destination_id: str | None = None
+    source_epoch: str | None = None
 
 
 ReportStatus = Callable[[StatusEvent], None]

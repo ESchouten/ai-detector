@@ -46,11 +46,21 @@ class BoundingBox:
 
 
 @dataclass(frozen=True)
+class CaptureStamp:
+    """Live capture epoch, decoded-frame sequence and monotonic read time."""
+
+    epoch: str
+    sequence: int
+    monotonic_at: float
+
+
+@dataclass(frozen=True)
 class Frame:
     """Source timestamp and borrowed read-only uint8 H×W×3 BGR pixels."""
 
     date: datetime
     image: NDArray[np.uint8]
+    capture: CaptureStamp | None = None
 
 
 @dataclass(frozen=True)
@@ -65,6 +75,7 @@ class Observation:
     image: NDArray[np.uint8]
     confidence: Mapping[str, float]
     boxes: tuple[BoundingBox, ...] = ()
+    capture: CaptureStamp | None = None
 
     @property
     def enclosing_box(self) -> BoundingBox | None:

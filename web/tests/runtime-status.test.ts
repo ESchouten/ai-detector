@@ -36,7 +36,7 @@ function record(
 	event: string,
 	message?: string,
 	at = now,
-	identity: { ruleId?: string; destinationId?: string } = {}
+	identity: { ruleId?: string; destinationId?: string; sourceEpoch?: string } = {}
 ) {
 	state.accept(
 		STATUS_PREFIX +
@@ -325,3 +325,68 @@ test('recording failures remain attached to their rule and destination until tha
 	record(state, 'recording');
 	assert.equal(state.snapshot(now).readiness, 'monitoring');
 });
+
+test('an unthrottled capture epoch clears previous inference readiness on reconnect or geometry change', () => {
+	const state = progress();
+	record(state, 'frame');
+	record(state, 'inference');
+	assert.equal(state.snapshot(now).cameras[0].state, 'monitoring');
+	const epoch = (at: number, sourceEpoch: string) =>
+		state.accept(
+			STATUS_PREFIX +
+				JSON.stringify({
+					version: 1,
+					event: 'source_epoch',
+					sourceKey,
+					sourceEpoch,
+					at: new Date(at).toISOString()
+				})
+		);
+	assert.equal(epoch(now + 10, 'resized')?.sourceEpoch, 'resized');
+	assert.equal(state.snapshot(now + 10).cameras[0].state, 'receiving');
+	record(state, 'inference', undefined, now + 20);
+	record(state, 'offline', 'Disconnected', now + 30);
+	epoch(now + 40, 'reconnected');
+	assert.equal(state.snapshot(now + 40).cameras[0].state, 'receiving');
+	assert.equal(state.snapshot(now + 40).cameras[0].error, undefined);
+});
+
+for (const kind of ['inference', 'processed']) {
+	test(`late ${kind} cannot mark a reconnected camera as monitored or hide its stall`, () => {
+		const state = progress();
+		record(state, 'frame');
+		record(state, kind); // Legacy runs still become ready without capture metadata.
+		assert.equal(state.snapshot(now).cameras[0].state, 'monitoring');
+		record(state, 'offline', 'Disconnected', now + 1);
+		record(state, 'source_epoch', undefined, now + 2, { sourceEpoch: 'new' });
+		record(state, kind, undefined, now + 3, { sourceEpoch: 'old' });
+		record(state, kind, undefined, now + 4); // Missing metadata is stale once epoch is declared.
+		const pending = state.snapshot(now + 4).cameras[0];
+		assert.equal(pending.state, 'receiving');
+		assert.equal(pending.lastProcessedAt, new Date(now).toISOString());
+		record(state, kind, undefined, now + 5, { sourceEpoch: 'new' });
+		assert.equal(state.snapshot(now + 5).cameras[0].state, 'monitoring');
+		record(state, kind, undefined, now + 6, { sourceEpoch: 'old' });
+		assert.equal(
+			state.snapshot(now + 6).cameras[0].lastProcessedAt,
+			new Date(now + 5).toISOString()
+		);
+		assert.equal(
+			state.accept(
+				STATUS_PREFIX +
+					JSON.stringify({
+						version: 1,
+						event: 'source_epoch',
+						sourceKey,
+						at: new Date(now + 7).toISOString()
+					})
+			),
+			undefined
+		); // A malformed epoch cannot erase the continuity guard.
+		record(state, kind, undefined, now + 8);
+		assert.equal(
+			state.snapshot(now + 8).cameras[0].lastProcessedAt,
+			new Date(now + 5).toISOString()
+		);
+	});
+}

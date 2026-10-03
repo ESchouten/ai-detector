@@ -160,8 +160,14 @@ def run_application(
             engines = EnginePreparation(
                 data_directory / "models" / "prepared", stop_requested, report_status
             )
-        streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None
+
+        def source_status(event: StatusEvent) -> None:
+            if preview is not None:
+                preview.source_status(event)
+            report_status(event)
+
+        streams = StreamPool(source_status)
         workers: list[DetectorWorker] = []
         identifiers = _identity_resources(
             config, data_directory, resources, report_status

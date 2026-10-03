@@ -21,7 +21,9 @@ class JsonStatusReporter:
     def __init__(self, output: TextIO):
         self.output = output
         self._lock = Lock()
-        self._last_sent: dict[tuple[str, str | None, str | None], float] = {}
+        self._last_sent: dict[
+            tuple[str, str | None, str | None], tuple[float, str | None]
+        ] = {}
 
     def __call__(self, event: StatusEvent) -> None:
         # Captures and delivery workers report concurrently. Keep each record
@@ -33,13 +35,16 @@ class JsonStatusReporter:
                 "frame",
                 "inference",
                 "processed",
-                "offline",
                 "waiting_delivery",
             }:
                 previous = self._last_sent.get(key)
-                if previous is not None and now - previous < 1:
+                if (
+                    previous is not None
+                    and now - previous[0] < 1
+                    and previous[1] == event.source_epoch
+                ):
                     return
-                self._last_sent[key] = now
+                self._last_sent[key] = (now, event.source_epoch)
             record: dict[str, str | int] = {
                 "version": 1,
                 "event": event.kind,
@@ -53,5 +58,7 @@ class JsonStatusReporter:
                 record["ruleId"] = event.rule_id
             if event.destination_id is not None:
                 record["destinationId"] = event.destination_id
+            if event.source_epoch is not None:
+                record["sourceEpoch"] = event.source_epoch
             self.output.write(STATUS_PREFIX + json.dumps(record) + "\n")
             self.output.flush()

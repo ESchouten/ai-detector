@@ -1,0 +1,414 @@
+{
+  "baseline": {
+    "details": [
+      {
+        "id": "cow1207",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 2,
+          "missed": 9,
+          "pairs": {
+            "0": 2,
+            "1": 1
+          },
+          "predicted": 2,
+          "truth": 11,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "head": {
+          "matched": 0,
+          "missed": 4,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 4,
+          "unmatched_predictions": 0
+        },
+        "id": "cow1897",
+        "panel": "development",
+        "tag": {
+          "matched": 0,
+          "missed": 3,
+          "pairs": {},
+          "predicted": 1,
+          "truth": 3,
+          "unmatched_predictions": 1
+        }
+      },
+      {
+        "head": {
+          "matched": 0,
+          "missed": 6,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 6,
+          "unmatched_predictions": 0
+        },
+        "id": "cow1983",
+        "panel": "development",
+        "tag": {
+          "matched": 0,
+          "missed": 6,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 6,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "head": {
+          "matched": 1,
+          "missed": 1,
+          "pairs": {
+            "0": 1
+          },
+          "predicted": 1,
+          "truth": 2,
+          "unmatched_predictions": 0
+        },
+        "id": "cow2070",
+        "panel": "development",
+        "tag": {
+          "matched": 0,
+          "missed": 2,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 2,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "id": "cow2156",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 2,
+          "missed": 0,
+          "pairs": {
+            "0": 1,
+            "1": 0
+          },
+          "predicted": 2,
+          "truth": 2,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "id": "cow2242",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 2,
+          "missed": 3,
+          "pairs": {
+            "0": 0,
+            "2": 1
+          },
+          "predicted": 3,
+          "truth": 5,
+          "unmatched_predictions": 1
+        }
+      },
+      {
+        "id": "cow2328",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 1,
+          "missed": 1,
+          "pairs": {
+            "0": 1
+          },
+          "predicted": 1,
+          "truth": 2,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "id": "cow2415",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 2,
+          "missed": 1,
+          "pairs": {
+            "0": 0,
+            "1": 1
+          },
+          "predicted": 2,
+          "truth": 3,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "id": "cow2501",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 3,
+          "missed": 2,
+          "pairs": {
+            "0": 1,
+            "1": 0,
+            "2": 3
+          },
+          "predicted": 3,
+          "truth": 5,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "id": "cow2587",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 0,
+          "missed": 1,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 1,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "id": "cow2674",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 0,
+          "missed": 4,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 4,
+          "unmatched_predictions": 0
+        }
+      }
+    ],
+    "development_heads": {
+      "matched": 1,
+      "missed": 11,
+      "predicted": 1,
+      "truth": 12,
+      "unmatched_predictions": 0
+    },
+    "panels": {
+      "development": {
+        "matched": 0,
+        "missed": 11,
+        "predicted": 1,
+        "truth": 11,
+        "unmatched_predictions": 1
+      },
+      "evaluation": {
+        "matched": 12,
+        "missed": 21,
+        "predicted": 13,
+        "truth": 33,
+        "unmatched_predictions": 1
+      }
+    }
+  },
+  "limitations": "No independent heldout result. Tile context differs and can create extra fragment/background predictions. Publisher tag completeness uncertain; extras remain errors. Native lowresolution pixels cannot recover missing detail. This does not test OCR, work-number semantics or animal ownership.",
+  "lowres_exact_parity": true,
+  "original_counter_parity": true,
+  "protocol_sha256": "1c01f11eb861d0e19e16d3b276ebe0b82858d4b32f8e76627791478ff87adb65",
+  "raw_sha256": "0ee666e3e69cf4d1bbc5593e7eca9a86ab0169d0b2e1796354da0530b367c134",
+  "scope": "Single exploratory input-scale control on already exposed11frames. No retraining, GT-centered crops, new image or threshold adjustment. All44tags/12developmentheads retained; outdoor heads lack truth and are not scored.",
+  "status": "COMPLETE_FIXED_TILE_CONTROL",
+  "tiled": {
+    "details": [
+      {
+        "id": "cow1207",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 2,
+          "missed": 9,
+          "pairs": {
+            "3": 8,
+            "11": 1
+          },
+          "predicted": 12,
+          "truth": 11,
+          "unmatched_predictions": 10
+        }
+      },
+      {
+        "head": {
+          "matched": 0,
+          "missed": 4,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 4,
+          "unmatched_predictions": 0
+        },
+        "id": "cow1897",
+        "panel": "development",
+        "tag": {
+          "matched": 0,
+          "missed": 3,
+          "pairs": {},
+          "predicted": 1,
+          "truth": 3,
+          "unmatched_predictions": 1
+        }
+      },
+      {
+        "head": {
+          "matched": 0,
+          "missed": 6,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 6,
+          "unmatched_predictions": 0
+        },
+        "id": "cow1983",
+        "panel": "development",
+        "tag": {
+          "matched": 0,
+          "missed": 6,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 6,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "head": {
+          "matched": 1,
+          "missed": 1,
+          "pairs": {
+            "0": 1
+          },
+          "predicted": 1,
+          "truth": 2,
+          "unmatched_predictions": 0
+        },
+        "id": "cow2070",
+        "panel": "development",
+        "tag": {
+          "matched": 0,
+          "missed": 2,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 2,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "id": "cow2156",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 1,
+          "missed": 1,
+          "pairs": {
+            "0": 1
+          },
+          "predicted": 2,
+          "truth": 2,
+          "unmatched_predictions": 1
+        }
+      },
+      {
+        "id": "cow2242",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 1,
+          "missed": 4,
+          "pairs": {
+            "2": 0
+          },
+          "predicted": 4,
+          "truth": 5,
+          "unmatched_predictions": 3
+        }
+      },
+      {
+        "id": "cow2328",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 1,
+          "missed": 1,
+          "pairs": {
+            "0": 1
+          },
+          "predicted": 1,
+          "truth": 2,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "id": "cow2415",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 3,
+          "missed": 0,
+          "pairs": {
+            "0": 2,
+            "1": 1,
+            "2": 0
+          },
+          "predicted": 3,
+          "truth": 3,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "id": "cow2501",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 3,
+          "missed": 2,
+          "pairs": {
+            "0": 1,
+            "1": 2,
+            "3": 3
+          },
+          "predicted": 4,
+          "truth": 5,
+          "unmatched_predictions": 1
+        }
+      },
+      {
+        "id": "cow2587",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 0,
+          "missed": 1,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 1,
+          "unmatched_predictions": 0
+        }
+      },
+      {
+        "id": "cow2674",
+        "panel": "evaluation",
+        "tag": {
+          "matched": 0,
+          "missed": 4,
+          "pairs": {},
+          "predicted": 0,
+          "truth": 4,
+          "unmatched_predictions": 0
+        }
+      }
+    ],
+    "development_heads": {
+      "matched": 1,
+      "missed": 11,
+      "predicted": 1,
+      "truth": 12,
+      "unmatched_predictions": 0
+    },
+    "panels": {
+      "development": {
+        "matched": 0,
+        "missed": 11,
+        "predicted": 1,
+        "truth": 11,
+        "unmatched_predictions": 1
+      },
+      "evaluation": {
+        "matched": 11,
+        "missed": 22,
+        "predicted": 26,
+        "truth": 33,
+        "unmatched_predictions": 15
+      }
+    }
+  }
+}

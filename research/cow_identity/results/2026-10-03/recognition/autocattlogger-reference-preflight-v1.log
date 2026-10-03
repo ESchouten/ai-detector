@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/autocattlogger_reference.py", line 258, in <module>
+    main()
+  File "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/autocattlogger_reference.py", line 166, in main
+    model, head, candidate, candidate_head = models(reference, config, state)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/autocattlogger_reference.py", line 91, in models
+    author.load_state_dict(
+    ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'load_state_dict'

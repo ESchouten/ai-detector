@@ -1,0 +1,5 @@
+{
+  "status": "FAILED_BEFORE_FORWARD",
+  "protocol_sha256": "52b6ab83fa6a46e7e2d998721c6fe4f16c4f59de333219cc497ad637ea6a86e9",
+  "reason": "Author HRNet overrides train without returning self; chained eval() assigned None. Harness fixed to call eval separately; author source unchanged."
+}

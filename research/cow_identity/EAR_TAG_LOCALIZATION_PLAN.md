@@ -297,3 +297,48 @@ Artifacts under `results/2026-10-03/ear-tags/`:
 The separate [public-model availability check](EAR_TAG_PUBLIC_MODELS.md) found
 usable general OCR components, but did not verify a downloadable author-trained
 cattle ear-tag localization/ownership model that removes this gap.
+
+## Fixed native-tile control: no improvement
+
+The next single control reused the same final checkpoint and all 11 now-exposed
+images, with no retraining or confidence changes. Protocol
+`eartag_localization_tiles_protocol.json`, SHA256
+`1c01f11eb861d0e19e16d3b276ebe0b82858d4b32f8e76627791478ff87adb65`,
+bound 548 files before inference. All 55 deterministic 1280-pixel tiles used
+20% overlap, with edge anchoring and no annotation-centered crops. Predictions
+were translated to native coordinates, then merged by public class-aware
+`torchvision.ops.batched_nms` on CPU at the same 0.7 IoU. Every tile's raw and
+mapped predictions are retained; there is no global 300-output cap.
+
+The three low-resolution images passed exact original raw-box, input-shape and
+post-merge parity before scoring. The old full-frame counters and pairings also
+reproduced exactly. All tag and head denominators remain unchanged.
+
+| Panel | Matched | Missed | Unmatched predictions |
+| --- | ---: | ---: | ---: |
+| Development tags | 0/11 | 11 | 1 |
+| Outdoor tags | 11/33 | 22 | 15 |
+| Development heads | 1/12 | 11 | 0 |
+
+Outdoor performance worsened from 12 matches and 1 extra to 11 matches and 15
+extras. Preserving source scale alone does not rescue the small training set;
+cropping also changes context and creates partial-object predictions. This is a
+failed exploratory control, not evidence against retaining original pixels for
+OCR. No additional tile size, merge threshold or model was tried.
+
+The guarded operation took 3.58 seconds, with peak Metal driver allocation
+1.163 GB and RSS 0.780 GB. The guard is an in-process watcher thread with
+180-second/8-GiB limits; the caller also supervised elapsed time. It is not an
+external operating-system watchdog or a streaming throughput benchmark.
+
+Results under `results/2026-10-03/ear-tags/`:
+
+- `localization-tiles-raw.json`: SHA256
+  `0ee666e3e69cf4d1bbc5593e7eca9a86ab0169d0b2e1796354da0530b367c134`.
+- `localization-tiles-score.json`: SHA256
+  `7c6f670e9ca0afb5424fd2d479c0776a6343091075bf7cb674ade6e996273de4`.
+- `localization-tiles-execution.json`: complete timing and resource record.
+
+Nine CPU tests cover edge/uneven tile coverage, coordinate translation,
+class-aware duplicate suppression, retained extras beyond 300 and fail-closed
+low-resolution parity before truth access.

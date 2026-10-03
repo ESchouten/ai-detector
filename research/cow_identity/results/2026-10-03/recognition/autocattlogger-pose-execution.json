@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/Users/erik/Projects/ESchouten/ai-detector/detector/.venv/bin/python",
+    "research/cow_identity/autocattlogger_pose_pilot.py",
+    "infer"
+  ],
+  "env_overrides": {
+    "PYTHONPATH": "/tmp/cow-pose-reference-deps:research/cow_identity",
+    "OMP_NUM_THREADS": "2",
+    "PYTORCH_ENABLE_MPS_FALLBACK": "unset"
+  },
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 8.505811042152345,
+  "rss_sampled_max_bytes": 1187627008,
+  "watchdog_source_sha256": "3d1247ef9b59dd8274bb1da9bc304ca204776fa0f54fc3102fd1a9266b9b3c8a",
+  "protocol_sha256": "9196cb6546caaca46d95c6d3055e1e6755c3407b208e2a1afb4723cd08f134d5",
+  "scope": "External wall/RSS watchdog; internal per-batch MPS driver check retained; no semantic changes."
+}

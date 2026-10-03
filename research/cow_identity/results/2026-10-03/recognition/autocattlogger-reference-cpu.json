@@ -1,0 +1,397 @@
+{
+  "protocol_sha256": "36475a8284c67494cd7f5a2512ed0aaa92c8cee6808375293901ad3b3fe4c1ac",
+  "geometry": [
+    {
+      "pixels": {
+        "shape": [
+          256,
+          192,
+          3
+        ],
+        "finite": true,
+        "exact": true,
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      },
+      "source_points_roundtrip": {
+        "shape": [
+          1,
+          3,
+          2
+        ],
+        "finite": true,
+        "exact": false,
+        "max_abs": 3.0517578125e-05,
+        "relative_l2": 7.51659013807461e-08
+      },
+      "adjusted_scale": {
+        "shape": [
+          2
+        ],
+        "finite": true,
+        "exact": true,
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    {
+      "pixels": {
+        "shape": [
+          256,
+          192,
+          3
+        ],
+        "finite": true,
+        "exact": true,
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      },
+      "source_points_roundtrip": {
+        "shape": [
+          1,
+          3,
+          2
+        ],
+        "finite": true,
+        "exact": false,
+        "max_abs": 6.103515625e-05,
+        "relative_l2": 8.496182095695268e-08
+      },
+      "adjusted_scale": {
+        "shape": [
+          2
+        ],
+        "finite": true,
+        "exact": true,
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      }
+    }
+  ],
+  "input": {
+    "shape": [
+      2,
+      3,
+      256,
+      192
+    ],
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "relative_l2": 0.0
+  },
+  "steps": [
+    {
+      "flip": false,
+      "branches": {
+        "conv1": [
+          {
+            "shape": [
+              2,
+              64,
+              128,
+              96
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          }
+        ],
+        "layer1": [
+          {
+            "shape": [
+              2,
+              256,
+              64,
+              48
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          }
+        ],
+        "stage2": [
+          {
+            "shape": [
+              2,
+              48,
+              64,
+              48
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          },
+          {
+            "shape": [
+              2,
+              96,
+              32,
+              24
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          }
+        ],
+        "stage3": [
+          {
+            "shape": [
+              2,
+              48,
+              64,
+              48
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          },
+          {
+            "shape": [
+              2,
+              96,
+              32,
+              24
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          },
+          {
+            "shape": [
+              2,
+              192,
+              16,
+              12
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          }
+        ],
+        "stage4": [
+          {
+            "shape": [
+              2,
+              48,
+              64,
+              48
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          }
+        ]
+      },
+      "raw_or_unflipped_heatmaps": {
+        "shape": [
+          2,
+          10,
+          64,
+          48
+        ],
+        "finite": true,
+        "exact": true,
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    {
+      "flip": true,
+      "branches": {
+        "conv1": [
+          {
+            "shape": [
+              2,
+              64,
+              128,
+              96
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          }
+        ],
+        "layer1": [
+          {
+            "shape": [
+              2,
+              256,
+              64,
+              48
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          }
+        ],
+        "stage2": [
+          {
+            "shape": [
+              2,
+              48,
+              64,
+              48
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          },
+          {
+            "shape": [
+              2,
+              96,
+              32,
+              24
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          }
+        ],
+        "stage3": [
+          {
+            "shape": [
+              2,
+              48,
+              64,
+              48
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          },
+          {
+            "shape": [
+              2,
+              96,
+              32,
+              24
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          },
+          {
+            "shape": [
+              2,
+              192,
+              16,
+              12
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          }
+        ],
+        "stage4": [
+          {
+            "shape": [
+              2,
+              48,
+              64,
+              48
+            ],
+            "finite": true,
+            "exact": true,
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          }
+        ]
+      },
+      "raw_or_unflipped_heatmaps": {
+        "shape": [
+          2,
+          10,
+          64,
+          48
+        ],
+        "finite": true,
+        "exact": true,
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      }
+    }
+  ],
+  "combined_heatmaps": {
+    "shape": [
+      2,
+      10,
+      64,
+      48
+    ],
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "relative_l2": 0.0
+  },
+  "decoded": [
+    {
+      "coordinates": {
+        "shape": [
+          1,
+          10,
+          2
+        ],
+        "finite": true,
+        "exact": true,
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      },
+      "scores": {
+        "shape": [
+          1,
+          10
+        ],
+        "finite": true,
+        "exact": true,
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    {
+      "coordinates": {
+        "shape": [
+          1,
+          10,
+          2
+        ],
+        "finite": true,
+        "exact": true,
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      },
+      "scores": {
+        "shape": [
+          1,
+          10
+        ],
+        "finite": true,
+        "exact": true,
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      }
+    }
+  ],
+  "status": "PASS",
+  "actual_device": "cpu",
+  "actual_dtype": "torch.float32",
+  "seconds": 6.3489069999195635,
+  "rss_bytes": 1369391104,
+  "scope": "Synthetic CPU forward + published UDP decoding only; no pose accuracy or full author application parity"
+}

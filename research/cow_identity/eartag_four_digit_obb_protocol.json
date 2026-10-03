@@ -1,0 +1,21 @@
+{
+  "files": {
+    ".cache/cow-ear-tags/obb-pilot-crops/manifest.json": "9f3b301866fd0d0ea8dcf9541779befe7b6db6b58bf9c647fd008d01cd9460e6",
+    ".cache/cow-eartag-inventory/manifest-v1.json": "901e26db3f0fc8242607586b6027629f402549eac0d4362d51250efed7463cbf",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_four_digit_diagnostic.py": "7fb240ca6be5913ed043b4f443884a47d8c22a20083920a99f0d04e241900e82",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_four_digit_diagnostic_protocol.json": "c8e86da3d530624587f803350503e6128ab09338245c56a9cf8ce0eca63a348c",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_four_digit_obb.py": "8f7e8ce0922d344484a04368a05a7a5ea672a1aaf7108d0b4e79defab17262c7",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_obb_evaluation.py": "df5b3234a5fb3935610cc48463ad65fcc3983d26e3e8aae9291f8ede61a60a06",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_obb_evaluation_protocol.json": "f4fc942165844abbf6339c8d778186760d4fcdc5c2ab4e670242f019150b4487",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_ocr.py": "55bac86c881dd82218cb7be6f5c94a81c81a56a6b2af9e53130087133c903db0",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_work_numbers.py": "258a2da38fe4a488f039224894754f6e0246c3f61e36b53a0d9a82f40197612f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/ear-tags/four-digit-exploratory.json": "2567a1619fcb23289a9787ab5b11396dbf990aaa5e8b4699bf6674adcc595e85",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/ear-tags/obb-detection-raw.json": "c55bacdd8881812bc3247b10b2ee36e216f2da0f55075650b27face6e6d3f234",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/ear-tags/obb-development-score.json": "e4d200a44edf9b559eb0255660f817c7fa4a60548fcb08076046d45f44811d6f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/ear-tags/obb-rapid-raw.json": "5171b3060e2185c1566a3caaa42a01366275c9a386f3ddb55307c42dced7a4d5",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/ear-tags/obb-trocr-raw.json": "2dfec2430a368760fdc4eed40e55a6690fe1927d5da17835d9ec67b1ee302a12"
+  },
+  "rule": "Identical previous strip-only ASCII4 helper and all157 original geometry, cardinality-first polygonIoU.5, all emitted4 included. Original Rapid.95+literal same-crop correctedTrOCR agreement unchanged. Replay all original OBB condition counts before additional four-digit scoring.",
+  "scope": "RETROSPECTIVE EXPLORATORY additional cached OBB agreement row only. Same64 exposed images/all18 literal4 targets; no work-number semantics, ownership or biological identity claim. Original full-line and four-digit results preserved."
+}

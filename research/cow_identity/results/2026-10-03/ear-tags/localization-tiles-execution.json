@@ -1,0 +1,15 @@
+{
+  "limits": {
+    "mps_driver_bytes": 8589934592,
+    "rss_bytes": 8589934592,
+    "seconds": 180
+  },
+  "peaks": {
+    "mps_driver_bytes": 1163493376,
+    "rss_bytes": 779763712
+  },
+  "protocol_sha256": "1c01f11eb861d0e19e16d3b276ebe0b82858d4b32f8e76627791478ff87adb65",
+  "raw_sha256": "0ee666e3e69cf4d1bbc5593e7eca9a86ab0169d0b2e1796354da0530b367c134",
+  "seconds": 3.5772114591673017,
+  "status": "COMPLETE_FIXED_TILE_INFERENCE"
+}

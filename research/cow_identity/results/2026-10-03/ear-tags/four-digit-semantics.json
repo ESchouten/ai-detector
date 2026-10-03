@@ -1,0 +1,443 @@
+{
+  "images": 64,
+  "literal_four_digit_targets": 18,
+  "localization_dataset_inventory": {
+    "indexed_files": 5126,
+    "note": "Matched image/label presence must be checked before any download/train subset. Missing labels are not verified negative examples.",
+    "source": "https://www.kaggle.com/api/v1/datasets/list/fandaoerji/cow-eartag-detection-dataset",
+    "suffix_counts": {
+      ".jpg": 2675,
+      ".txt": 2451
+    }
+  },
+  "numeric_line_length_counts": {
+    "1": 1,
+    "2": 39,
+    "4": 18,
+    "5": 29,
+    "6": 19
+  },
+  "publisher_line_fields": [
+    "polygon",
+    "text"
+  ],
+  "scope": "Retrospective data-semantics inventory of the original64 exposed pilot only. No model inference, new split, semantic truth replacement or work-number accuracy claim. Eight listed visual examples were inspected; other literal4 targets remain unreviewed semantically. All18 targets remain in both scored diagnostics.",
+  "source_files": {
+    ".cache/cow-ear-tags/work-number-semantics/exposed-examples.png": "ae29757a579ad11898ab50eaddc92b1729fab9549ba65b9cfe0a5a6fd4516dbc",
+    ".cache/cow-eartag-inventory/detection-file-index.json": "0e5afda61e761abd61d784f005391bf99cd824bad80472c7fadd4e632f74ec60",
+    ".cache/cow-eartag-inventory/manifest-v1.json": "901e26db3f0fc8242607586b6027629f402549eac0d4362d51250efed7463cbf",
+    "research/cow_identity/eartag_ocr_protocol.json": "631ff60a6d249d5e3482c5bf44a616babd1815809e4ab8e5440f3340cc14e759"
+  },
+  "targets": [
+    {
+      "id": "eartags1064",
+      "image_sha256": "e8f4b852135b9701242d767cecbc26b54cc58cd950ed7bfc0812557c388c64ed",
+      "label_sha256": "1eb5f2b9140068e0bd82763602a02f348d599c0418f2f84b669740db44b8fe28",
+      "line_index": 0,
+      "other_literal_lines": [],
+      "polygon": [
+        10.0,
+        68.0,
+        63.0,
+        60.0,
+        66.0,
+        87.0,
+        12.0,
+        95.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "2167",
+      "visual_note": "Large2167, visually plausible main field but semantic identity not certified."
+    },
+    {
+      "id": "eartags1376",
+      "image_sha256": "14d6f0b24985cfaf9f6d6a3a4e1fd467e9cfd7f1642c52f9e33eab11e4331a46",
+      "label_sha256": "e32479a45e1a468a80aeef1fdd674bb475257c45f10b8b77f3ab7302f4b8dda8",
+      "line_index": 1,
+      "other_literal_lines": [
+        "20562"
+      ],
+      "polygon": [
+        33.0,
+        46.0,
+        73.0,
+        36.0,
+        76.0,
+        56.0,
+        33.0,
+        65.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "1210",
+      "visual_note": "Small date-like 1210 above large20562; no publisher field-role annotation."
+    },
+    {
+      "id": "eartags1423",
+      "image_sha256": "112be63fd67bfcd71495b0cbb5073b1dc452f8756b1b78595b7d19f73c32c22f",
+      "label_sha256": "30d86b915fe4d5b45de783eba2b807e4de71628d211f83a27eb331acc56cfbc2",
+      "line_index": 1,
+      "other_literal_lines": [
+        "8.19",
+        "22"
+      ],
+      "polygon": [
+        20.0,
+        72.0,
+        73.0,
+        67.0,
+        77.0,
+        91.0,
+        18.0,
+        98.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "5364",
+      "visual_note": "Large5364 below22/8.19, visually plausible main field but semantic identity not certified."
+    },
+    {
+      "id": "eartags1689",
+      "image_sha256": "102618f9c949b2b71009a098dadf3455d676561bfca50ef5267c02998d91402a",
+      "label_sha256": "84ba8b84a54a2a5933e17d14192194e58998ed04dade1f633f0622415d6d3bf6",
+      "line_index": 1,
+      "other_literal_lines": [
+        "49",
+        "7-"
+      ],
+      "polygon": [
+        29.0,
+        92.0,
+        102.0,
+        92.0,
+        102.0,
+        141.0,
+        29.0,
+        141.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "1601",
+      "visual_note": "1601 is visibly occluded at right; complete printed identifier is not certified."
+    },
+    {
+      "id": "eartags170",
+      "image_sha256": "e098ac785e347a6ff44a5f6c448dbc458617e3e9a3a55ca1cfb4260506ccd881",
+      "label_sha256": "076dbf754e06efbae64ceab99b6a70e293d7ae33a3237ba5a789fb07596446b4",
+      "line_index": 1,
+      "other_literal_lines": [
+        "20",
+        "20581"
+      ],
+      "polygon": [
+        40.0,
+        61.0,
+        63.0,
+        56.0,
+        65.0,
+        69.0,
+        39.0,
+        73.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "1217",
+      "visual_note": "Small date-like1217 alongside large20581 and20; no publisher field-role annotation."
+    },
+    {
+      "id": "eartags1938",
+      "image_sha256": "e29bc3f19fc38df88dd313e90fc99496e1c9f4cb82407a6d92031f2aba138ab9",
+      "label_sha256": "62795b570a5afa0df39eed0242c41c9c688d91f3f1809a314a3b5935c955882c",
+      "line_index": 2,
+      "other_literal_lines": [
+        "20",
+        "12.8"
+      ],
+      "polygon": [
+        23.0,
+        80.0,
+        94.0,
+        99.0,
+        83.0,
+        135.0,
+        30.0,
+        110.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "7088",
+      "visual_note": null
+    },
+    {
+      "id": "eartags2081",
+      "image_sha256": "04861b871b521408017b1ea767a4333e648c0ab5eeb982d8801f8ccf42e9cdad",
+      "label_sha256": "87105286b95c4dc96faff299d53963188e7fb9645222f3aeaa338e56276747a6",
+      "line_index": 2,
+      "other_literal_lines": [
+        "22",
+        "8.22"
+      ],
+      "polygon": [
+        20.0,
+        53.0,
+        56.0,
+        48.0,
+        54.0,
+        69.0,
+        21.0,
+        72.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "5375",
+      "visual_note": null
+    },
+    {
+      "id": "eartags2149",
+      "image_sha256": "a866e6e6be1b5466b45cc7e017f833f42b50a1e6772b8209e99e2084bd2d6744",
+      "label_sha256": "ced7d05efef73112d8635b68989ad2f7f176a299c709a3cfb227f0a1f79d220f",
+      "line_index": 1,
+      "other_literal_lines": [
+        "24"
+      ],
+      "polygon": [
+        23.0,
+        84.0,
+        83.0,
+        84.0,
+        83.0,
+        106.0,
+        23.0,
+        106.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "7016",
+      "visual_note": null
+    },
+    {
+      "id": "eartags2380",
+      "image_sha256": "fa9dc8327523c4ffdd9094d7987447c6eb91efcf4b70086db4aafb4a9027f3cc",
+      "label_sha256": "00f022b1ff8c208b0ff898c7d2bba671e27be267a796a22f78b0225da3c9ee46",
+      "line_index": 2,
+      "other_literal_lines": [
+        "49",
+        "12-1"
+      ],
+      "polygon": [
+        36.0,
+        98.0,
+        103.0,
+        98.0,
+        103.0,
+        147.0,
+        36.0,
+        147.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "1602",
+      "visual_note": "1602 reaches cropped right edge; complete printed identifier is not certified."
+    },
+    {
+      "id": "eartags2665",
+      "image_sha256": "821b21bbe8123e5a50196fa1e5f5dcf90995f0c2a4e871f4272d27052f0e4c8e",
+      "label_sha256": "786531b3d9079176d80ac8f0f2d86eedb72b142220168cbcfde064e05daa1e2d",
+      "line_index": 2,
+      "other_literal_lines": [
+        "22",
+        "8.19"
+      ],
+      "polygon": [
+        41.0,
+        118.0,
+        65.0,
+        91.0,
+        75.0,
+        129.0,
+        50.0,
+        156.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "5366",
+      "visual_note": null
+    },
+    {
+      "id": "eartags2922",
+      "image_sha256": "0f9bbc6dc7a87176829a6e9047402732b6e8c13a5afaf249cdc15dcc6e251f55",
+      "label_sha256": "b5d4c7d030d3a553229973382c2567bd465ee7a04056658293c3bb98062253d2",
+      "line_index": 0,
+      "other_literal_lines": [],
+      "polygon": [
+        11.0,
+        67.0,
+        41.0,
+        67.0,
+        41.0,
+        102.0,
+        11.0,
+        102.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "2641",
+      "visual_note": null
+    },
+    {
+      "id": "eartags3100",
+      "image_sha256": "c23fda86e5da87067fe3932c689f8c6dd882961c4a2298155f468b087f1733ea",
+      "label_sha256": "76a893dcf57de3b1db7d3129507aeeab3bbfe37f780c4220f5fec758d318fa89",
+      "line_index": 0,
+      "other_literal_lines": [],
+      "polygon": [
+        22.0,
+        72.0,
+        56.0,
+        49.0,
+        54.0,
+        88.0,
+        25.0,
+        110.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "5249",
+      "visual_note": null
+    },
+    {
+      "id": "eartags3219",
+      "image_sha256": "988637ba84faf1aeee73ca70bae9f496dac5f75fe1a411624e694a637c2b4b8e",
+      "label_sha256": "ea5265c2480b888bdf30ae154260c2e2bfdda585be57907c11bcddcee1380d20",
+      "line_index": 1,
+      "other_literal_lines": [
+        "8."
+      ],
+      "polygon": [
+        32.0,
+        35.0,
+        79.0,
+        67.0,
+        73.0,
+        95.0,
+        33.0,
+        64.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "5317",
+      "visual_note": null
+    },
+    {
+      "id": "eartags461",
+      "image_sha256": "17333dd42e9c7346adfbc37909bc0d6b9b244ef11eb28a32434cffac6b596191",
+      "label_sha256": "44bb6f6a47e2d55a9407979023bd951717aa694d3c16f3fad9b9f19a66084045",
+      "line_index": 2,
+      "other_literal_lines": [
+        "22",
+        "8.6"
+      ],
+      "polygon": [
+        17.0,
+        113.0,
+        80.0,
+        95.0,
+        65.0,
+        133.0,
+        9.0,
+        146.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "5256",
+      "visual_note": null
+    },
+    {
+      "id": "eartags606",
+      "image_sha256": "0b5fdd2921d9bfed8c055035536e845db6321df0a982e69683cc68fd09211453",
+      "label_sha256": "1e34f1fc48aa8ec69c86334f25aa272410369ed9031d2a48845c47b9c5e8d4b6",
+      "line_index": 1,
+      "other_literal_lines": [
+        "8.31",
+        "22"
+      ],
+      "polygon": [
+        23.0,
+        79.0,
+        89.0,
+        70.0,
+        92.0,
+        106.0,
+        25.0,
+        112.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "5409",
+      "visual_note": "Large5409 below22/8.31, visually plausible main field but semantic identity not certified."
+    },
+    {
+      "id": "eartags693",
+      "image_sha256": "48f9b2ceb3f7ae4ec4fad611015db8ed057d93a65206ad298e24e986a84a405d",
+      "label_sha256": "440b4c99160a23b7c607a093c52ce9e9091af835b57c8b7dcd14850ac052cfb6",
+      "line_index": 2,
+      "other_literal_lines": [
+        "22",
+        "8.7"
+      ],
+      "polygon": [
+        28.0,
+        98.0,
+        93.0,
+        90.0,
+        93.0,
+        122.0,
+        34.0,
+        131.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "5262",
+      "visual_note": null
+    },
+    {
+      "id": "eartags775",
+      "image_sha256": "a42cd35aac7041fa855a6e088ba118d53370737b80cffb93515938764581b0cf",
+      "label_sha256": "a81f64887c45e4ad6c4b18b26164fdec561a6c90ee751773f8ea622384f18e61",
+      "line_index": 0,
+      "other_literal_lines": [],
+      "polygon": [
+        1.0,
+        52.0,
+        42.0,
+        52.0,
+        42.0,
+        77.0,
+        1.0,
+        77.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "3698",
+      "visual_note": "Large3698, visually plausible main field but semantic identity not certified."
+    },
+    {
+      "id": "eartags880",
+      "image_sha256": "99b4296528febc285a8738c6a3bf1e8b822bd1ddc26c8e8d6918cff1fbfec91e",
+      "label_sha256": "8d8b0f43de698503610c66059b8de21724cbf185599dff49b930512667da5779",
+      "line_index": 1,
+      "other_literal_lines": [
+        "22",
+        "8.5"
+      ],
+      "polygon": [
+        21.0,
+        78.0,
+        77.0,
+        89.0,
+        71.0,
+        118.0,
+        16.0,
+        105.0
+      ],
+      "semantic_label": "unavailable",
+      "text": "5245",
+      "visual_note": null
+    }
+  ],
+  "text_lines": 157,
+  "visual_example_ids": [
+    "eartags1376",
+    "eartags170",
+    "eartags1689",
+    "eartags2380",
+    "eartags1423",
+    "eartags606",
+    "eartags1064",
+    "eartags775"
+  ]
+}

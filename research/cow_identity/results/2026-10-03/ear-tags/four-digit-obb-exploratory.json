@@ -1,0 +1,783 @@
+{
+  "conditions": {
+    "obb_literal_agreement": {
+      "rows": [
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2149",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags691",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags461",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1760",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags3069",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1423",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags265",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 1,
+          "emitted_four_digit_lines": 1,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2380",
+          "matches": [
+            {
+              "iou": 0.7755707383060376,
+              "literal_correct": true,
+              "reading": "1602",
+              "truth_index": 2,
+              "truth_text": "1602"
+            }
+          ],
+          "target_lines": 1,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1376",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1938",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1664",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1342",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 1,
+          "emitted_four_digit_lines": 1,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags693",
+          "matches": [
+            {
+              "iou": 0.8849996971511247,
+              "literal_correct": true,
+              "reading": "5262",
+              "truth_index": 2,
+              "truth_text": "5262"
+            }
+          ],
+          "target_lines": 1,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1727",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1262",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 1,
+          "emitted_four_digit_lines": 1,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1689",
+          "matches": [
+            {
+              "iou": 0.8578446075754099,
+              "literal_correct": true,
+              "reading": "1601",
+              "truth_index": 1,
+              "truth_text": "1601"
+            }
+          ],
+          "target_lines": 1,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags622",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags775",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1985",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1318",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 1,
+          "emitted_four_digit_lines": 1,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags606",
+          "matches": [
+            {
+              "iou": 0.9230961376987876,
+              "literal_correct": true,
+              "reading": "5409",
+              "truth_index": 1,
+              "truth_text": "5409"
+            }
+          ],
+          "target_lines": 1,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 1,
+          "emitted_four_digit_lines": 1,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags880",
+          "matches": [
+            {
+              "iou": 0.952956244116156,
+              "literal_correct": true,
+              "reading": "5245",
+              "truth_index": 1,
+              "truth_text": "5245"
+            }
+          ],
+          "target_lines": 1,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1237",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags3162",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags3219",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1592",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags73",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2922",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 1,
+          "emitted_four_digit_lines": 1,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2081",
+          "matches": [
+            {
+              "iou": 0.7900457703905448,
+              "literal_correct": true,
+              "reading": "5375",
+              "truth_index": 2,
+              "truth_text": "5375"
+            }
+          ],
+          "target_lines": 1,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags3016",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2023",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2665",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2174",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags185",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1588",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags60",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags3155",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags491",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2928",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags170",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags52",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2803",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1593",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags3100",
+          "matches": [],
+          "target_lines": 1,
+          "targets_not_correctly_read": 1,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags481",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1606",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2777",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags3114",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1454",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2038",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1643",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1406",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags557",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags264",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1090",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags514",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1418",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags583",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags670",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags2234",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags702",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags167",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 1,
+          "emitted_four_digit_lines": 1,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1064",
+          "matches": [
+            {
+              "iou": 0.8845591036614243,
+              "literal_correct": true,
+              "reading": "2167",
+              "truth_index": 0,
+              "truth_text": "2167"
+            }
+          ],
+          "target_lines": 1,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        },
+        {
+          "correct": 0,
+          "emitted_four_digit_lines": 0,
+          "extra_on_non_four_digit_truth": 0,
+          "extra_unmatched": 0,
+          "id": "eartags1717",
+          "matches": [],
+          "target_lines": 0,
+          "targets_not_correctly_read": 0,
+          "wrong_four_digit_target": 0
+        }
+      ],
+      "totals": {
+        "correct": 7,
+        "emitted_four_digit_lines": 7,
+        "extra_on_non_four_digit_truth": 0,
+        "extra_unmatched": 0,
+        "literal_precision": 1.0,
+        "literal_recall": 0.3888888888888889,
+        "target_lines": 18,
+        "targets_not_correctly_read": 11,
+        "wrong_four_digit_target": 0
+      }
+    }
+  },
+  "original_all_line_counter_parity": true,
+  "protocol_sha256": "f3d9be09af9727cc3ff8bd85d495d9533afd529b5c6b0acd6af1c6573db471fc",
+  "rule": "Identical previous strip-only ASCII4 helper and all157 original geometry, cardinality-first polygonIoU.5, all emitted4 included. Original Rapid.95+literal same-crop correctedTrOCR agreement unchanged. Replay all original OBB condition counts before additional four-digit scoring.",
+  "scope": "RETROSPECTIVE EXPLORATORY additional cached OBB agreement row only. Same64 exposed images/all18 literal4 targets; no work-number semantics, ownership or biological identity claim. Original full-line and four-digit results preserved."
+}

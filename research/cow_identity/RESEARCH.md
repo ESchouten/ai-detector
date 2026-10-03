@@ -78,6 +78,17 @@ individual cameras. Its recognition experiment is closed-set. A production
 gallery should retain several confirmed appearances per cow, including different
 views, rather than assume that one averaged vector covers every camera.
 
+Its self-supervised learner still depends on cleaned tracklets: the authors
+manually checked continuity, removed crops with insufficient visible torso or
+overlapping animals, and repaired proximity errors. The data collection also
+assumes one passage per cow per day. Those steps matter for our zero-input
+requirement: eliminating identity labels during training does not eliminate
+human work elsewhere in the pipeline. We must measure mistakes in automatically
+collected tracks and retain partial/overlapping animals in the full-system
+evaluation. The published closed-set accuracy is not evidence of safe automatic
+enrollment or unknown-cow rejection.
+[Tracklet preparation](https://arxiv.org/html/2410.12695v2#S3.SS2).
+
 ### OpenCowID: a future route to cattle-specific weights
 
 [OpenCowID](https://openaccess.thecvf.com/content/WACV2026/papers/Prabhune_OpenCowID_Zero-Shot_Visual_Identification_of_Dairy_Cows_WACV_2026_paper.pdf)

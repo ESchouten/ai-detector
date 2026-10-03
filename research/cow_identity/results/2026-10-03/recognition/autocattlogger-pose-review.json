@@ -1,0 +1,147 @@
+{
+  "status": "COMPLETE_ALL16_QUALITATIVE_REVIEW",
+  "protocol_sha256": "9196cb6546caaca46d95c6d3055e1e6755c3407b208e2a1afb4723cd08f134d5",
+  "prediction_sha256": "f25c5663dbfd51edfd8679046547172e038aaae8ff584d69f6afe650ed33ed36",
+  "preinference_review_sha256": "4b1f8bdcf19de9c68aece0c166f503bcaae1d8f10a1914215b4d39d18efd2c9c",
+  "reviewer": "AI visual reviewer, not external anatomical ground truth",
+  "review_exposure": "Reviewed75/225/375 outputs and noted failures before parent general failure impression; parent general assessment arrived before review of525 outputs. No per-case parent annotations supplied.",
+  "complete_rows": 16,
+  "finite_landmarks": 160,
+  "actual_device": "mps:0",
+  "actual_dtype": "torch.float32",
+  "inference_seconds": 6.3764126668684185,
+  "rss_sampled_max_bytes": 1187512320,
+  "mps_driver_sampled_max_bytes": 325926912,
+  "rows": [
+    {
+      "second": 75,
+      "raw_index": 0,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-75-0.png",
+      "overlay_sha256": "117da6dde39a1639486dd99c796f94e02a67c9788d7dd3113129d81e2f1cbde1",
+      "all_landmarks_retained": true,
+      "assessment": "Rough headward/tailward separation follows the down-left body axis, but tail_head8 falls on the adjacent white-backed calf; withers1 lies near the lowered head/rail rather than shoulder junction. Not a reliable complete anatomical warp."
+    },
+    {
+      "second": 75,
+      "raw_index": 7,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-75-7.png",
+      "overlay_sha256": "7bc4c90b5dd1d102ba3685ce0c5b1293cec50a60b740706e5d0cfdbf170b8f5d",
+      "all_landmarks_retained": true,
+      "assessment": "Withers1 lies near the clipped upper body while tail_head8 falls on the separate central black calf outside the selected box. Truncation/neighbor contamination; no coherent target-only ordering."
+    },
+    {
+      "second": 75,
+      "raw_index": 6,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-75-6.png",
+      "overlay_sha256": "72d60b11fedf1c78919a40731aaa064f90187315be3636bf8efa95f2c89e822c",
+      "all_landmarks_retained": true,
+      "assessment": "Shoulder0/2 points lie toward the lower neck, but withers1, hip/pin/tail landmarks cluster near the top rump. Midline anatomy collapses despite a mostly visible long torso."
+    },
+    {
+      "second": 75,
+      "raw_index": 4,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-75-4.png",
+      "overlay_sha256": "a6843b9c815de9b38007593d90974d3a0d5a4ca1940d8588fbbf1c4ffd88d874",
+      "all_landmarks_retained": true,
+      "assessment": "Center_back3 is in background above the animal; withers1 and other shoulder points sit outside the right/lower body. Several rump points plausible, but full layout is inconsistent with the bent side-view target."
+    },
+    {
+      "second": 225,
+      "raw_index": 5,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-225-5.png",
+      "overlay_sha256": "1e71445ad637cb9e0854557b34db75104272ed6acebb0911233657a88b8ef09d",
+      "all_landmarks_retained": true,
+      "assessment": "Several shoulder/withers/center points lie on the left wall/background outside the calf; tail point is nearer the upper rump. Occlusion persists and the full warp is unreliable."
+    },
+    {
+      "second": 225,
+      "raw_index": 4,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-225-4.png",
+      "overlay_sha256": "ccc37ad6919bfc420a3a46fe6fc6f4753c2faf4286b8deccdcffdb0bcb08e381",
+      "all_landmarks_retained": true,
+      "assessment": "Landmarks scatter from top rump to turned neck; withers1 and tail_head8 nearly coincide on midbody. No consistent shoulder-to-tail ordering despite visible head direction."
+    },
+    {
+      "second": 225,
+      "raw_index": 7,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-225-7.png",
+      "overlay_sha256": "b8ac848f2507b0b00e8cd2bc60c5cf3994d22ef2a0e93180f81fb8b15c70d38b",
+      "all_landmarks_retained": true,
+      "assessment": "Most midline/hip/pin points collapse at the upper rump; withers1 is also above that rump although headward direction was down. One hip point lies on right background/gate. Shoulder pair alone does not establish usable pose."
+    },
+    {
+      "second": 225,
+      "raw_index": 1,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-225-1.png",
+      "overlay_sha256": "fac17d915819649763867df0517ad05775df889609c88b6a32f0f7dfc3de3cc9",
+      "all_landmarks_retained": true,
+      "assessment": "Points cluster along right body edge; center_back3 is outside above/right. Withers/tail are near one another despite head at top and hindquarters below. Compact lying posture remains ambiguous."
+    },
+    {
+      "second": 375,
+      "raw_index": 6,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-375-6.png",
+      "overlay_sha256": "dac34fd967907fa1d017eb5be114c6b92f8321e805a0c7619fc78bd552667b29",
+      "all_landmarks_retained": true,
+      "assessment": "Some pin/tail points occupy upper rump, but other hips and midline points sit at the lower head or on left wall. Target roughly spanned but anatomical roles are inconsistent."
+    },
+    {
+      "second": 375,
+      "raw_index": 3,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-375-3.png",
+      "overlay_sha256": "97668a1ae520ee9b0a426324acc596e332d6da6136c56ecaf14aa07faf97b78f",
+      "all_landmarks_retained": true,
+      "assessment": "Many landmarks land at or above the image top edge; head/tail were not visibly definable beforehand. Severe truncation prevents anatomical validation; retain as unresolved rather than infer missing parts."
+    },
+    {
+      "second": 375,
+      "raw_index": 5,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-375-5.png",
+      "overlay_sha256": "c82ce5a736925766f265e1f9a676c293d8429723bc38ae7b3e9c296b3358b7ca",
+      "all_landmarks_retained": true,
+      "assessment": "Withers1 appears far outside the target on straw; center_back3 and hip_connector5 lie on the adjacent white animal. Strong neighbor/background contamination."
+    },
+    {
+      "second": 375,
+      "raw_index": 4,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-375-4.png",
+      "overlay_sha256": "dcd59cd21b0e58b8380c1b68832ae35d3265cc18c88c4d26ba0d16266338e59f",
+      "all_landmarks_retained": true,
+      "assessment": "Some rump points are near the actual rump, but hips4/5 sit on the separate left animal; withers1/center3 are background above. Bent neck/side view is not reliably represented."
+    },
+    {
+      "second": 525,
+      "raw_index": 3,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-525-3.png",
+      "overlay_sha256": "aec8a6db015f1e9c537a04dcb8605a570bc7e17b65b8a2e2e4cd44f624b70e58",
+      "all_landmarks_retained": true,
+      "assessment": "Tail/pin cluster partly follows upper rump, but withers1 and hip_connector5 move onto the adjacent calf. Other hip points occupy lower gate/head; full anatomy is inconsistent."
+    },
+    {
+      "second": 525,
+      "raw_index": 5,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-525-5.png",
+      "overlay_sha256": "98c46512ef350b1be1cf0bac127dc51250ca7848b6a5a40184b6264ed89795b5",
+      "all_landmarks_retained": true,
+      "assessment": "Box was preidentified as mixed. Points distribute across both adjacent calves, with center_back3 down at the head/gate and withers1 on the upper neighboring rump. Target ownership remains ambiguous."
+    },
+    {
+      "second": 525,
+      "raw_index": 7,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-525-7.png",
+      "overlay_sha256": "699343e4ba7586afb6cacb67ddebae5d9bf6bf9a6f918f31d8dfaac77ce0dcde",
+      "all_landmarks_retained": true,
+      "assessment": "Most landmarks shift onto the neighboring white calf left of the selected narrow body; this is not target-specific pose."
+    },
+    {
+      "second": 525,
+      "raw_index": 0,
+      "overlay": ".cache/cow-autocattlogger/pose-pilot/pose-525-0.png",
+      "overlay_sha256": "a5278f87c08eaadb4cae47af25a80ed2ee437c2e41352a3ceb80afe4915aecc7",
+      "all_landmarks_retained": true,
+      "assessment": "Withers/center/hip/pin/tail cluster at upper rump although target faces down. Other points extend to bottom/right background. Isolated target still lacks consistent anatomy."
+    }
+  ],
+  "conclusion": "Native pose is not ready for canonical coat matching on these exposed crowded calf crops. Layouts include background/neighbor landmarks, collapsed anatomical roles and truncation. No confidence threshold, orientation search, exclusion or biological naming was attempted. The qualitative review does not produce a landmark accuracy score.",
+  "next_boundary": "Check one author-published original image with pose visualization or annotation to distinguish remaining recipe/metadata uncertainty from domain transfer; no new model training or rotation grid based on these outputs."
+}

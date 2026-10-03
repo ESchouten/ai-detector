@@ -1,0 +1,2865 @@
+{
+  "status": "FROZEN_BEFORE_MPS_INFERENCE",
+  "reference_protocol_sha256": "36475a8284c67494cd7f5a2512ed0aaa92c8cee6808375293901ad3b3fe4c1ac",
+  "reference_report_sha256": "2cf5a0b26fb6b8d9b950616057fb9dd847ac9069943d812111e675ce920796d0",
+  "method": "Same exact author CPU modules and converted timm backbone/head on real MPS; original batch2 synthetic inputs, FP32 inference_mode, no autocast. No cattle pixels.",
+  "library_versions": {
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "timm": "1.0.30",
+    "numpy": "2.5.0",
+    "opencv-python": "4.13.0.92"
+  },
+  "source_mapping_path": "/tmp/autocattlogger-feasibility/topdown-estimator.py",
+  "source_mapping": "Exact pinned TopdownPoseEstimator.add_pred_to_datasample AST-selected method body executed unchanged on real PoseDataSample/InstanceData; independent minimal formula uses input_size, not input_size-minus-one.",
+  "comparisons": {
+    "intermediate_and_heatmap_allclose": {
+      "atol": 0.0001,
+      "rtol": 0.001
+    },
+    "finite": "all stages, heatmaps, coordinates",
+    "discrete_peak_agreement": "all20 channel peaks on original, unflipped and averaged outputs exact",
+    "decoded_input_coordinates_max_abs": 0.01,
+    "decoded_source_coordinates_max_abs": ".01 * max(author_input_scale / input_size)",
+    "source_mapping_formula": "exact original method versus independent formula",
+    "parameter_values": "exact CPU/MPS before forward"
+  },
+  "limits": {
+    "wall_seconds": 180,
+    "rss_or_mps_driver_bytes": 8589934592
+  },
+  "input": {
+    "seed": 17,
+    "synthetic_source_shape": [
+      2,
+      480,
+      640,
+      3
+    ],
+    "channel_order": "BGR",
+    "boxes": [
+      [
+        43,
+        71,
+        357,
+        421
+      ],
+      [
+        219,
+        38,
+        588,
+        466
+      ]
+    ],
+    "network_width_height": [
+      192,
+      256
+    ],
+    "bbox_padding": 1.25,
+    "flip_indices": [
+      2,
+      1,
+      0,
+      3,
+      6,
+      5,
+      4,
+      9,
+      8,
+      7
+    ],
+    "flipped_heatmap_shift": false
+  },
+  "failure_policy": "Preserve report; no tolerance changes or automatic retries. GPU starts only after parent explicit release.",
+  "orientation_proposal": {
+    "input_rotation_degrees": 0,
+    "padding": 1.25,
+    "input_width_height": [
+      192,
+      256
+    ],
+    "flip_test": true,
+    "heatmap_shift": false,
+    "selection": "Proposed later fixed uniform actual predicted-body crops from exposed scenes only; not executed or selected here.",
+    "evidence": "Saved V5 uses horizontal flip and pinned RandomBBoxTransform default +/-80 degrees with probability0.6. Author pose precedes keypoint-based upright warp.",
+    "limitations": "Augmentation is not evidence of arbitrary-heading accuracy; no PCA or rotation grid."
+  },
+  "files": [
+    {
+      "path": ".cache/cow-autocattlogger/metadata-59.txt",
+      "sha256": "c737fd5095d70c33ae77b43e3ba4c35db7ca07b01f2b1618bd465e5cf278e391"
+    },
+    {
+      "path": ".cache/cow-autocattlogger/pose-state-only.pt",
+      "sha256": "1cf87ca21347f86fde5917245102ac679921bab08abdfc1f37537384f5042f5f"
+    },
+    {
+      "path": ".cache/cow-autocattlogger/reference/inputs.npz",
+      "sha256": "5f011d2c65ff4092a43b304ce28fb135d37d238822ccfcbb9ed44c59f134f247"
+    },
+    {
+      "path": ".cache/cow-autocattlogger/reference/model-config.json",
+      "sha256": "e2583cfc23299bb0cada03054d56c659ca0ea4608c4f743e342358434bb2367c"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/autoCattlogger/autoCattlogger.py",
+      "sha256": "4b458c048089a5df3bee35ea957324a3d0c94d93aa53d19384545cd2cb3b1997"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/autoCattlogger/helpers/helper_for_morph.py",
+      "sha256": "8d444e70d39d600c5cfca3923eb61da22446945f3438437554daeac0e680c0ed"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/__init__.py",
+      "sha256": "592371e7429edc2b715db26201cf12c7bee198bf136b29cbee6c3192ba35aca4"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/apis/inference.py",
+      "sha256": "37e7c59a5243b0584d00da31c5cc5615b7022b4e970f8133cafdd4826c31d5ad"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/codecs/base.py",
+      "sha256": "2f29f90bd9bd24c8a16ecb2ffb8bee52ac943595d5a321b6ea566d79ac41468a"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/codecs/udp_heatmap.py",
+      "sha256": "4481e8546e9430616e169fd36bba1842a0e467566e87297429da5121f039d840"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/codecs/utils/__init__.py",
+      "sha256": "9a2973ab2b7b6e430768b029a5f5311bf312427aa3bc13c1a2605f029eb7bcf7"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/codecs/utils/gaussian_heatmap.py",
+      "sha256": "536d69a37a7bec793c637c09383c56faca491e16180f08c4e8c43c07bedfbcec"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/codecs/utils/offset_heatmap.py",
+      "sha256": "71e353aa497d9ac2f0683eece8b2b8d4be413d8624494eac2ce879996f979a25"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/codecs/utils/post_processing.py",
+      "sha256": "51d121bcb5a359ceda78848514b351120cdf50ba57ac310f59e43f8196cfea9f"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/codecs/utils/refinement.py",
+      "sha256": "7868752e0dd383b5e072ada7b14ac5f455445349e9f5c6ba981a16585afbc2d9"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/datasets/transforms/topdown_transforms.py",
+      "sha256": "e7beb8e65ab4abb7f3d1b4c6edf09043c462fc330e9fb3560cf7eb519109cb05"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/evaluation/functional/keypoint_eval.py",
+      "sha256": "70892de7b0378366f56b4474ee4c282181619bfde38c627d41907a582e5f080a"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/evaluation/functional/mesh_eval.py",
+      "sha256": "536c001830aa83fd8f112f0036b8522b20218d908f12a620577d82a53fd6aee3"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/__init__.py",
+      "sha256": "6308a5c7f059d284847aa20f943c0ce334731bd7c31b30bebb8e52ebbe5ad0cd"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/backbones/__init__.py",
+      "sha256": "9e9fbab5eebd6d02e080c0895d99650dd1d8e32e91acf52a35faae8e415b4df7"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/backbones/base_backbone.py",
+      "sha256": "a813bd230148bd271bce1cf40aa409181c765c6c13122a969d3a1eb6e0d6c67d"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/backbones/hrnet.py",
+      "sha256": "486abcaf3bff8308119c6c33245b7b7ea74211b56f571116399fcc29e3705bea"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/backbones/pvt.py",
+      "sha256": "d4b95b32f41331cba7ed3ca60c2dd15eb707d6fd6313149b7d0a9c6c628fb7ac"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/backbones/resnet.py",
+      "sha256": "5e5ac90a34f6cee9f9698abba8af26ee8568df426ce32d8af9df23d7400ab490"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/heads/__init__.py",
+      "sha256": "e0236180aaac6d3744592c9a2acdfa83272a4e2aea8dca651b0fda4e933e8337"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/heads/base_head.py",
+      "sha256": "81e70ce333ab96e48277618365c1ee510c117b99bef517161ae3ea230507806d"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/heads/heatmap_heads/heatmap_head.py",
+      "sha256": "f423d2c11139b8c1405ba2329bd503355ad3bc333ffb02566d2be066f7796dc8"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/heads/transformer_heads/edpose_head.py",
+      "sha256": "3eff8f4e0a4f251e35875a2bb6341a7644950a4caec78be4b1ca83c80d1c2645"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/losses/heatmap_loss.py",
+      "sha256": "659b3080c40065847953779e79ff1f61b1853355b8251f684d80364f84c1e769"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/utils/__init__.py",
+      "sha256": "cde4698f0700e8437f7ae64ed2f9bcb79e8863d343879b307250f6902450951d"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/utils/transformer.py",
+      "sha256": "c35034032a2ca7f8627edf87a206d71712e61da25ae2fd913b3f3570f3f80f8c"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/utils/tta.py",
+      "sha256": "75876126549392787eceb90e3eaab2b318f1ed0ffd6a8125e195acafe8a72417"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/registry.py",
+      "sha256": "1e9d81df468d70681d5815d51f1c52e0a6951a98c459135072268177a64513aa"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/structures/bbox/transforms.py",
+      "sha256": "f08047f2672ae58c2428adc8a7c11b1557bed6bad052b834395577c5678692f0"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/structures/multilevel_pixel_data.py",
+      "sha256": "8ea864ecb948108d57bb1319ebf3561f5d991308ce1e59ee2eb4904b4eb954af"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/structures/pose_data_sample.py",
+      "sha256": "e41abe648d1a4cde6394b13a2fae441b4fcdd8f287ab0985fcad57dba54c8549"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/utils/setup_env.py",
+      "sha256": "58bec6eca08972c60747b4f2213828e82d200d5f9a9e909f7cca793d56a42c67"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/utils/tensor_utils.py",
+      "sha256": "1d22cab42214909f73b6cf3c4d48b35e76dd8749d05c7dc25f1be331196b1b06"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/utils/typing.py",
+      "sha256": "4f7e567b4b6b675af37d47318f7e39aaa21fd795527203bcb3f25e6531b0eb86"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/orientation-common-transforms.py",
+      "sha256": "a1596938bdee78c7e7be71c27f74224e8e4b1ea5c53d6b2537ab64c7d4010e4d"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/topdown-estimator.py",
+      "sha256": "f954aab7f7dd08dae8884894a26b5d3a4baf496e21f12aa687e1f8eb9a58c02f"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/addict/__init__.py",
+      "sha256": "c6694d898615a000f7fc57e681f38cd9c737c08d7b19282c3013836c546cfe66"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/addict/addict.py",
+      "sha256": "49c39f72568033bba0c99a17396d871cbf60097b7f5cf7be8b96d32e263cb9f5"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/__init__.py",
+      "sha256": "81da76107986f2354bda536e94bad1a3f6d6efe2b303ee91cbdc9c5596ce5907"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/arraymisc/__init__.py",
+      "sha256": "76d170b469ed59da81b04b1df97247895946a755fa15959902f7e79d7aeee8d3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/arraymisc/quantization.py",
+      "sha256": "1055dd92cd8475f4162c8af4349b50ab46ade34cf55f74004919a5c13b2d0db2"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/__init__.py",
+      "sha256": "6c8d408c8bb8f1e1dbadc5fcfefc87c5c351f337bc2e80cd896f0d6ca7f7c8a8"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/alexnet.py",
+      "sha256": "5a0ef905f74fcb7b21e782b207bd705179c4eb45830d7d50756589a1455d116f"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/__init__.py",
+      "sha256": "c04f4f25b39172355fda8b1041576392a662c719f8529121a014419651f70257"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/activation.py",
+      "sha256": "884dbc709a1961d8f692d869301729cf1e27b30d2c703c57fd45a504b5f29772"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/context_block.py",
+      "sha256": "89f08d7f52f4abe96f0be593084d14c44096a601b34cc468d6992c3941a132f8"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/conv.py",
+      "sha256": "19ebd5b67b2475ef4fbe311230f5835f2fda5ebc246074dbdce41dba974eae10"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/conv2d_adaptive_padding.py",
+      "sha256": "f8194404e8a8ff6b46764de55676b9ad27f9038d53d105e5a0376dab4261836e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/conv_module.py",
+      "sha256": "26cd1132eb21aa61b1cbe920412d950ead0605f37023943c7fb672b8cbaa7eb9"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/conv_ws.py",
+      "sha256": "51dd9bb77b524a9ca9e3775dc3710b5bebeaefe028e42fc3485433cdc9af96d3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/depthwise_separable_conv_module.py",
+      "sha256": "1650fd3ddccee05b0646ba80b323fc6f8c448845e9cf64310727891cb947c6c3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/drop.py",
+      "sha256": "bd5ee4a32ab2f109d66ec31c775ac2aa4bbf43534f377944aef3e4f0ec099d6d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/generalized_attention.py",
+      "sha256": "ffe3a82dd1f75b49bb00d651ec5a596d7406172be4f5b5617773c857df2d5ffc"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/hsigmoid.py",
+      "sha256": "7001df06bca5e8f6eb5a3f9887337fd4c161e0364b126edab55fa0e961c1e9d8"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/hswish.py",
+      "sha256": "500055ed3895b767c906b42f3713e0cb2f57c0d3fd15cd41185d5cf97737617f"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/non_local.py",
+      "sha256": "56b5bc7c2c948cff35c48bc2cc317f0d9037028d9ed177d3bc0b8e356024d816"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/norm.py",
+      "sha256": "2789596b10b56374831ea4c7c207d6765e4261eb2b5b46c70e4a195332a5b3d8"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/padding.py",
+      "sha256": "41d8eb284f22779a9bbc03efc14ab27818de5c302f5ff335d058dc133fa15d4b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/plugin.py",
+      "sha256": "a67eccb5bcdaf937576d60d4a8aa8f67e838286935977ca879bc6762f2c321f2"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/scale.py",
+      "sha256": "5a7ef2d0f14417a66338039debdb4b3d90deca32ebf7410eb6ca2ec17ec4b8cd"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/swish.py",
+      "sha256": "cf08a730746d85d34743a0e9d08faebbec6ea8cdaf7d608110abc7c46ad99525"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/transformer.py",
+      "sha256": "9bbcc17eff9be2f018e1be50684ec066e8022fcca99aa594344467412654aca7"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/upsample.py",
+      "sha256": "1dd3baf35257ecf5ff587435758840cee8c0f595bd7cddda523a028260b0f0b0"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/bricks/wrappers.py",
+      "sha256": "05f250c4c324a93cc8fd19cc4dd94aa7c1b1f8ff3ac3de86bcbabc85bf10d28e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/resnet.py",
+      "sha256": "94e4e5d32bb021ce0e478997226c7ffa4b6fab3a80bc20cd5e5aab9eac929756"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/rfsearch/__init__.py",
+      "sha256": "c2da33d5e8e70edb37fd14c692412ab9c8866e0c4eff2e66ecf0dacce01f7662"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/rfsearch/operator.py",
+      "sha256": "66080204e858f222b5466cc0c733dd5b3948c6232ba292d53e7154821189f523"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/rfsearch/search.py",
+      "sha256": "e4111486209900d29490bae1a73dbc8145629a1735bb38999968a98f8bc8c3be"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/rfsearch/utils.py",
+      "sha256": "43f88319b173b847cabf6f5d7c80a694af00d913fb40a59402e58654310d5445"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/utils/__init__.py",
+      "sha256": "ab0786896a86fdfcb3c77cdcaf20639a3ba9df4c4cc037bea520d4054c729f99"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/utils/flops_counter.py",
+      "sha256": "a45ad657ec2c9e95aec048ea9c4583c13f863978769f36d81606053468389b8c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/utils/fuse_conv_bn.py",
+      "sha256": "2b5eab6117a26c2a41a133e05d6ecaf9fd53538cd609403d8ad8f70e88fec108"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/cnn/vgg.py",
+      "sha256": "e4ca2e797d4ffa06a24539dd40e35f6e447b1c289db3305e4132c735362b4d35"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/image/__init__.py",
+      "sha256": "67fcb5a4ee10dfdc6c456fece4696333645353569cccca1b1795bc72385c8335"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/image/colorspace.py",
+      "sha256": "3416e8ec5d6f80ad4506534f459461f93c8608781cd25d9dd076c0d57f907640"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/image/geometric.py",
+      "sha256": "84db79bf6e793ecbddfc1a7b1e92f724b6bc276366fb56e33df40dc9bcbbd2a3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/image/io.py",
+      "sha256": "2e134b468ff6c51f1d116cd03f35a97f91196428bb66d9a21cd91136c0376f86"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/image/misc.py",
+      "sha256": "6fba4cc6bde998f641b223e80c1e95a5352b819287431eda2604a1ca4a03d676"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/image/photometric.py",
+      "sha256": "7fe2744e5879eb61f01f7c9f365424736bd767bc0f6a427aef278340ca5528fb"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/__init__.py",
+      "sha256": "5862e1fb29c68d9aefb40c7808483f50f2f1dcaa04cc146827b9c425674f4a2d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/active_rotated_filter.py",
+      "sha256": "50d11f202e969076566874add72292d4cf29bdee43b49d078fc370a98fae9e74"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/assign_score_withk.py",
+      "sha256": "109f4e8455e605762c0a9c63e82d2c56c1249be60c4584023141cb00c8ad4ca3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/ball_query.py",
+      "sha256": "7635c5f32eee61a901d3c394118b9287d7377940485c23b8ca95e3ec07d32338"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/bbox.py",
+      "sha256": "a3b8bd98bdd464df0371879976b00bf37819380214e45e491287305f59ef93c5"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/bezier_align.py",
+      "sha256": "f34af1af59423f8fcdcb5befb23e272c4bbfebabf897d233fe83012d171b5bf2"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/bias_act.py",
+      "sha256": "1a8bdeccae9af95b5a726181308425f08bb2bd70ac799e1c111ccd53e4b95786"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/border_align.py",
+      "sha256": "a69cb2bab9f265fb91987d7d694f601677f18c95f4037853740c9316f14c0c26"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/box_iou_quadri.py",
+      "sha256": "c65ddb21d9424efdb5f42af6d5403bea1b1b818402fb9fd185f20201b4ba0e5d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/box_iou_rotated.py",
+      "sha256": "550458470262e12c71fb4e8e80d38beafd1c6399a35eee5be996e628c1329b42"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/carafe.py",
+      "sha256": "23b69582e66ec0daacf6a72d5858c1c5a8f55192bc982121c237c61307790fc5"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/cc_attention.py",
+      "sha256": "80affd0d84737acd7c9fd4c36caa8cae1cba504d14732b524e57004d6bf61067"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/chamfer_distance.py",
+      "sha256": "d144f75ea21a5d654465ce60d8588a4b9c3320a514cfe3dad33b728f8965cc28"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/contour_expand.py",
+      "sha256": "8b62b40914dfaaf61de3a4ef900152272b59c180cba71ac002f5d81f75447275"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/conv2d_gradfix.py",
+      "sha256": "a4d263dad9fbbe82fa1b0734911fa30e05eca3777be0ccfd58d3e1826db6106b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/convex_iou.py",
+      "sha256": "db536e1c98d22ffcd75969b7e1912565d253fd46327c20a900ba0fc1788f6119"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/corner_pool.py",
+      "sha256": "3e2fba3903bf74656974866dd5505de922f371a43617f3cdc1a83fcfebb0d921"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/correlation.py",
+      "sha256": "2d4e9fc73b83d6d1ef7be5cfe73b4b3ecee74351d609c48792826cd6f999ac19"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/deform_conv.py",
+      "sha256": "669bd741798a6804ae3d91b00edaa0eff5844899ad9ca246bec74129b1687d8b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/deform_roi_pool.py",
+      "sha256": "affd53ac61f6f75a6f4bc1ebe686cd564deeeee1099e66d5850767b6f32fa34a"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/deprecated_wrappers.py",
+      "sha256": "acc5ae423314a06022545794fe63f4b219a76502f540730d2adebbcd99d694e5"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/diff_iou_rotated.py",
+      "sha256": "1faac41fbd58f011d74f87bdd7e378aafe60d6cc1bd6151c36d90b8fbad8ad6c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/filtered_lrelu.py",
+      "sha256": "81ec448785bc393b8b126921145c9b961632ecc035d5217fda55076a5718f797"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/focal_loss.py",
+      "sha256": "772e2fac1fb62488ac3ae8a287ec05257040070031afa208cf7e1662da99dde0"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/furthest_point_sample.py",
+      "sha256": "b808919fb157ab75b43ffb39d6555daa4d1b23196bcc179849d070c3b97e97f9"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/fused_bias_leakyrelu.py",
+      "sha256": "271045f3a6f0e8f01b6d0d812dbdd0f510973f152cbe35db021c4ac127ac41cf"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/gather_points.py",
+      "sha256": "060fc1cc9405ba4ddd626508e26bf5bc1a5b210ffff9a83f1c5c307f30ce0548"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/group_points.py",
+      "sha256": "8126f4487443e39a417574aa126e0eec3aa700e74dea244f5e78d60d69253c8b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/info.py",
+      "sha256": "d0c5f5995b375e283e728a983cedd2795e9e6fd2abe8cc21b29c85736ff36642"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/iou3d.py",
+      "sha256": "53f170354bedc243848274c47994ba4b5b9837594a64848086cae8eafa001320"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/knn.py",
+      "sha256": "6596a1fb11e282caa7a239354f7bdae4ad7e7ddd4f776809545e247c6af61fc9"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/masked_conv.py",
+      "sha256": "99f3c787b03afef7fe26ae6da24db5ad3c30488743c36738d095a7ae276fef3b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/merge_cells.py",
+      "sha256": "acf9a2fe5fe3aec27daf5df2147a6724f5dc8c5f67509da070526f472f7a7e1f"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/min_area_polygons.py",
+      "sha256": "d93f25b7437d4e8a425685b8dad510b22a53e920e4a5f9196b3f3c682bec35d6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/modulated_deform_conv.py",
+      "sha256": "ac079a8a73c9dc872bc60dcc4488695a360512eeca5bd831cde4c4591f06baea"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/multi_scale_deform_attn.py",
+      "sha256": "223a5406010eb5109bd8a12c06b589baf876db02c4192fdac93c85097e659727"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/nms.py",
+      "sha256": "339b03a2e3f8566a3e46e6a00b5c766fcce22e4993d3a3ee7275118578ca5d68"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/pixel_group.py",
+      "sha256": "05e7c63c6bce5111d2aa7c1a07f337099cfdb4570198333483ae0ee866b4c78a"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/point_sample.py",
+      "sha256": "4bd2f9c0e6e9c410987c556ef51f1cb80a2bb3cabbd350a9091bb67ac4f94e3d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/points_in_boxes.py",
+      "sha256": "9754826665a1eb19e65c79eaf67b215e05490255cb26a57fd34368790f329970"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/points_in_polygons.py",
+      "sha256": "65f3477a3ebaf6bd8cc1aedc084b0f8ad19ca8e0b084e7c6e16f3ffe837c7d41"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/points_sampler.py",
+      "sha256": "613964afea179c5402e30c1c4f7971b9941d9d5cdb8f134be9fc52916800ead0"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/prroi_pool.py",
+      "sha256": "ca606b1ab96f80533bbf15c0e3452e42c4a993b41de87d9d326627fda4b93403"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/psa_mask.py",
+      "sha256": "51eaa394aa472cb1869e1bec1b4216b27d21fe8422e36aea4f530463225dd56b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/riroi_align_rotated.py",
+      "sha256": "4d7540e6a57c15d00ed0d3f3c510b8357ec6e43857d5f20f18df48542fd9f386"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/roi_align.py",
+      "sha256": "2a6c6ed94bccf2c0cbf643db99bfdf04ccae62b59f7806e86b97962d857807f0"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/roi_align_rotated.py",
+      "sha256": "7e57d747a3ae3db40061847784a007f111ee285f81cf11e2decfb427ae177ba3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/roi_pool.py",
+      "sha256": "448d79ad8e238f94517a263bcc57537da3a78c42bc528245545e4dcdb8281928"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/roiaware_pool3d.py",
+      "sha256": "43e032bcb4875c409e6b354a30f0ed981c2d53c3c830cdcdc44ac0d94de8d6f6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/roipoint_pool3d.py",
+      "sha256": "7180c66623aeb1b051b828df00e3c15cfc49430fb467d7a8fd3f9d71b535848c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/rotated_feature_align.py",
+      "sha256": "af4a4e7c59d5eba19a6dfe3e2e60273dca5e728780ffbdd3375d9833ea5f9660"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/saconv.py",
+      "sha256": "ab71590e26d9efb5f9e0e29e5c234e5ebe439fb785a821f8972a41409b99cd02"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/scatter_points.py",
+      "sha256": "61038f6ff129974c168d0162483bdff471ac88b9518406375e03eeca34e6dc20"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/sparse_conv.py",
+      "sha256": "a25e18cab946bfda702c603cd7ead435f806c8382d625898c7d7d940405b46c8"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/sparse_functional.py",
+      "sha256": "2beceb4e945ea2ab202bc15e24a9b1cd0cc216637d6ffa19aba5e8790e648ddc"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/sparse_modules.py",
+      "sha256": "b9e0933ba1c0d7c205144052b9f38530a535014a214e8c152ae0e26bda2d753a"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/sparse_ops.py",
+      "sha256": "b54f38c776e77dbe2baf6244bd82635ff1f0187a39df77516657d8dd5e560eb5"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/sparse_pool.py",
+      "sha256": "b50d5d5e6737bbc6ced87abca1b5de6b82cbb4f48a4b56535cee4978b441d8c0"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/sparse_structure.py",
+      "sha256": "64c7148cbe7b1192520300f44d8147e295eba1780c17a43e6339c65dadaeac9f"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/sync_bn.py",
+      "sha256": "7f7b2131646f16377e51a91ca37426020590d9c5915a44b1da50d38457a709d0"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/three_interpolate.py",
+      "sha256": "9ef5d0529995fdccc4540b97bf397a52b084991885dad5eac2ece19d12831ed7"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/three_nn.py",
+      "sha256": "20c0d6a296a351e1581fa3847026a70c5f4629639ac8955880d14c569649e130"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/tin_shift.py",
+      "sha256": "d11e67eb60e9e56b2711b7460d1592f3d78e467ea58d8157ca205f30459c8b31"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/upfirdn2d.py",
+      "sha256": "7fc47d66dec8a24988c0b4abb4581ea630c44c99f014a4b2c8ef25a14ab864c6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/ops/voxelize.py",
+      "sha256": "745fe000b838cd37bddcd079e73bea854179f6e4057625553c420ff0c2480b58"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/transforms/__init__.py",
+      "sha256": "f3a15e99ce39ca982e8d0ffe13fe32b33a52f561e8e2e0314c30c51ea91586c3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/transforms/base.py",
+      "sha256": "8be1a9fc39094f412213cec09d0ff0047355eb9a711603e3926aa5cbe82af000"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/transforms/builder.py",
+      "sha256": "05c3bdc45f2f5ecfbf678db363fe993a0aa825a1193acab9f19d9485a8974ae6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/transforms/formatting.py",
+      "sha256": "8d608710b71d0e8035a99baf0d36653f28e44eb1c0b2313d9f0da5384b7e433c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/transforms/loading.py",
+      "sha256": "9c78886bdc87b8d85b75e00262d4395a998e66266d2e3ed203b4cfb22279c374"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/transforms/processing.py",
+      "sha256": "1dca213db24243099535fc73e7fd954f7d021e0390a737336e732a6df891ccdb"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/transforms/utils.py",
+      "sha256": "8bf5e66d522a3af37076d1f3a53f3ba3e59e5cae6dc3d25af592a32dc9122660"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/transforms/wrappers.py",
+      "sha256": "8e5b75e91a789338a68ac1e2b714c44e4fc1941d1041e30b0c829a5f0aadb2a1"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/utils/__init__.py",
+      "sha256": "e13f8020a972859cb890ba8c15b1d305895d01f4111e7faf5f23dbe5e071138e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/utils/device_type.py",
+      "sha256": "e95a132c47e63380f31873da3544c1d90f3485489a08c68c8244bfcd21820fc4"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/utils/env.py",
+      "sha256": "45edcfc6b3dd6945a1d419c4c82f4775288afd4cf29f8bf2875fc01516361199"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/utils/ext_loader.py",
+      "sha256": "374abe60c0e2a242fc4955ecb2d2802bd7547b9510f96ad71af8741300c2d2e1"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/utils/parrots_jit.py",
+      "sha256": "ccfda1bc60dfe66b47d17ad34cb3d27d84036b26cbba6e3030c8465ec85d7697"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/version.py",
+      "sha256": "18b4b71ebc1495f208c8e943f61eca0fdfe8c48e320c0a64303ba020abeb1e5f"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/video/__init__.py",
+      "sha256": "7600a0eed48bef7003c42faf9ead575048d322e48e262b54dce2199c5aa9584c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/video/io.py",
+      "sha256": "721d6f5d38151c2d384f290121579a2706a6e20770c1f5a479cc2724f0f878e9"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/video/optflow.py",
+      "sha256": "fe38ab5c9dfde15615d6983e4da73d7b685e9a81fcc9bbd0b21b8342c0f04646"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/video/processing.py",
+      "sha256": "619c4c67f6135600351eec08ff7e775dde2ecd7afbda03d1c87bb56704616b32"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/visualization/__init__.py",
+      "sha256": "379e4fde6d0b2a75e96fa161756c9f7c1c6280998bc16340d5d391bace8a9321"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/visualization/color.py",
+      "sha256": "f70ce66a9bf1fb8522bdcd2e2e7dd9187f500eb35777d01d2a71ffcd141b11c7"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/visualization/image.py",
+      "sha256": "e798e5d54f84d8bcc619c08664d79d0bc521ec8aa010204301fe0bc1ac393d91"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmcv/visualization/optflow.py",
+      "sha256": "2b6db5c0e5097be5ffff80dba560fa635a8ee91b07fdbb415c2eb072d61990c0"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/__init__.py",
+      "sha256": "a3f87418ee8b1836c8853e3cc2da9ca9e2cbd035c3ce3466ae8b8799a1dbe02d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/_strategy/__init__.py",
+      "sha256": "733f96c767d55566f93e96f7a87b5e69c604ab230b476c188804ddb82eb3235b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/_strategy/base.py",
+      "sha256": "eb608e98cfdafde8278d6de26e5281c3cfe7d24af625e424f6ea688ec9df28d4"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/_strategy/colossalai.py",
+      "sha256": "ee6ff4c3fac280502602af1843637b4e87e938146a89078504b288dae49f69c6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/_strategy/deepspeed.py",
+      "sha256": "29d0e00decc077c3fc3fe0263de1d077f2bca840673a95686d773ad7639ed71d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/_strategy/distributed.py",
+      "sha256": "f31133411e91a885628881f5425f2dcca163b6365577068997b69b5d60875dc6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/_strategy/fsdp.py",
+      "sha256": "ccb2ce1abf56edcee1abec28760451f26ec353033b60f8e651b47ef123094f9f"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/_strategy/single_device.py",
+      "sha256": "30329b5a7a5b3bac8a6e8ce80a449fe3d2445b6a2d9a44829c0ce83e0a4a964c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/_strategy/utils.py",
+      "sha256": "51f3b524c35ab359e7b6fbe6a405fca09b9a642f7b1f34843fdadad9d85bc43e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/analysis/__init__.py",
+      "sha256": "7bd05a82bec3c10fe6f9c857732b4150d841014e5dcc8509b53078b0edadd693"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/analysis/complexity_analysis.py",
+      "sha256": "25c6034833b6ec07b35d4a594df7b3ba3a4578abe9746406baeae81964ad2ec2"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/analysis/jit_analysis.py",
+      "sha256": "9ef99aef6231db74b39d47b10d82cd34eb22a72ac2c9ed4a8b21b4a8a6b92377"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/analysis/jit_handles.py",
+      "sha256": "68f2f4a2ca053b7d5ef439d4fdce2447df70f2a6ff05cee47c3dd6865f1fd938"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/analysis/print_helper.py",
+      "sha256": "b0cf390d31031a12a9b960d8f0e9dddb58d60ac05933a2b9e6c81fb2539797c0"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/config/__init__.py",
+      "sha256": "7350ee717ae70354664cb0a738549bf601d7e38c66856072166099689279cacc"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/config/config.py",
+      "sha256": "0afde07009ac16b5e84a873f1a12dcb83b19188e1f478f0146cfc5450dc939fd"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/config/lazy.py",
+      "sha256": "d7fe74c3c71e29901653427dde080b1da6be00a440b64a339ee30ae61acc3764"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/config/utils.py",
+      "sha256": "42cf41d864f45fb0438dfba936f58426a550ba84c02351ce952882f5dff56ee1"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/dataset/__init__.py",
+      "sha256": "ebae834ec5a7266154629d88bab02d3041274e355306ca1b13bfe81b73a3a4e6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/dataset/base_dataset.py",
+      "sha256": "b50f3f653990256d57d3218be886d330324a50ce231126e48db29ee1a66c0e09"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/dataset/dataset_wrapper.py",
+      "sha256": "bf88ca7add74ce6bd336cb04422df1bd70d625fac68e003f0b21f241fcc3ad6c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/dataset/sampler.py",
+      "sha256": "38fc147bf4b99f76d74ee7da14ffcfae4498151d22e7ce9973c6ce8f345071db"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/dataset/utils.py",
+      "sha256": "cd848a61aae8841d585b768ceb982ad5873f2330d8e951be02d272d68aba1f47"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/device/__init__.py",
+      "sha256": "9bce154a4ab842b2d8c428e4e5a97e7ec3a423efab02607676cdebde8d293970"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/device/utils.py",
+      "sha256": "62eb0dfa1ae1e7f0e89548ea4547a04ca23c1057ceee69e5558599f44df7e5bf"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/dist/__init__.py",
+      "sha256": "ddd18714c93979ee94a6b8d12d95469a5689ea43bf63db733a90995a6018375e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/dist/dist.py",
+      "sha256": "e077cb37f0e6be71e34e8b3750a9c8f76dfb371df317b407c5c5dd18ac17f484"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/dist/utils.py",
+      "sha256": "eb49eb4c36c778e6bc16da3044e3b612c8b3769449f139d78192978a0839b216"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/evaluator/__init__.py",
+      "sha256": "3bcdf183eab9161ab1e7a15c4fe85f47a3baac64da3013e018b9a8a142ec2897"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/evaluator/evaluator.py",
+      "sha256": "b69f3065ea669387c8944a615c9389942e204cb21ab9f567c49ddf9ff421cb9d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/evaluator/metric.py",
+      "sha256": "2777c3275275757c71c9686ae0f3c92534c6ada1902d2bd47b0931b95cab0bdc"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/evaluator/utils.py",
+      "sha256": "9a4dd6f48ec3532f4a28a3b9a0227bfbf9a4c294565b338359d159ff69827834"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/__init__.py",
+      "sha256": "1d077f5edcf46282095c5f54cc8172221902b86106025011cda2a571db4e558e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/backends/__init__.py",
+      "sha256": "e1dafa960150946aea67d009bc331052890157391005c20d41804e6bb7dd9b24"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/backends/base.py",
+      "sha256": "4491593e447324601a0393562096562d648914eeded8bfb3a6c8bb987827c5dc"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/backends/http_backend.py",
+      "sha256": "b6a2bd0f15304112cc565f893b417938ea2eb6fe930a9bf1330740c48f1dbc39"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/backends/lmdb_backend.py",
+      "sha256": "207001ad6ed099e03839a57ebb2cb22a2a79cd790d383a38d0ac608812de5ed1"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/backends/local_backend.py",
+      "sha256": "feba6d156ac1be0d324ecfd15d930bff73b76241073408d43ed8c49b25232b6a"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/backends/memcached_backend.py",
+      "sha256": "fb6bd57bf296784f092610e2ea08af9c5917f9a18bbbda2f979f21045e1eaf2b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/backends/petrel_backend.py",
+      "sha256": "aaf0e47d831a63162e05d93309cb9f73fdefce8301740c904269d12779b79418"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/backends/registry_utils.py",
+      "sha256": "c2245a2820166beb18907894c87e906188fe1028d5b4f9a228ffdc586b0c1a80"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/file_client.py",
+      "sha256": "2bd2b4b4bc1a452ed7a522135c87280d6552c3ee711fe9c20e7dd81fd3281be7"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/handlers/__init__.py",
+      "sha256": "c6440e7f14357fa3dca448b174222a2102091154f6c322cc91d90827d1feaf7d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/handlers/base.py",
+      "sha256": "34d95c1aef71a747d48422e2c9c0631c933daebd4bbbbf38e0af09631de15afc"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/handlers/json_handler.py",
+      "sha256": "2cd46101562660fb04e68cb5934cc2303c4660d2d9494313be7614ef712929d3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/handlers/pickle_handler.py",
+      "sha256": "8933115483a876083ea46b402bac260aeb6360111f1cf9480fbc1a6ed761c14d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/handlers/registry_utils.py",
+      "sha256": "024106216b1de117b75bfa46ab883c4b430bf5ad05f13a4c4e4a30142290f565"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/handlers/yaml_handler.py",
+      "sha256": "faa37e5d7947249bd13ecc15b3c3efd4312c09319231f7ddc0f52ac943d1fc60"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/io.py",
+      "sha256": "46b46ca3a30e6938ec97bf5ecd4b9122ea1d47b45230fb60eaf1f800cf19189e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/fileio/parse.py",
+      "sha256": "7106690a50ce5c6f2d84c2dbbe8aa85590a3b0f44fbbf2e4bc0edfbf99f7ece7"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/__init__.py",
+      "sha256": "fb523a2d5d849b25e529039cec37b22b9d8f928e4e2ca7372952beab692a8b43"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/checkpoint_hook.py",
+      "sha256": "16df1754c5a90109ebf86c7d2a7858b77df68a8191ab1b77641fbe0a11cd8a7e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/early_stopping_hook.py",
+      "sha256": "dd945659e9bd7a9ec10810e0b95498982e098dfe9ac7c5241f155937448acb34"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/ema_hook.py",
+      "sha256": "edb7d228a45f91febaacfbc1c3267dc2b50ef0e8fcd16be62868cf0f6d84565d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/empty_cache_hook.py",
+      "sha256": "11ec0dbc42aecba17513ab30afcb7d0ce57460ef7504d779215da063382dc878"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/hook.py",
+      "sha256": "0303cee5d195b420da58a55513105304927567627ec1397972412313c7fa5ea8"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/iter_timer_hook.py",
+      "sha256": "43d14a5da8e1d284475e4126e12ba0e74d5fa99c38aac4fd46e54cd036826a9d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/logger_hook.py",
+      "sha256": "44ae644ba11250a6c5e2b28e01827d802f22d83d4541dd147cd6873038f01f15"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/naive_visualization_hook.py",
+      "sha256": "aa9f8bc7ff6596ff3dd8eb6693aadd1841a465c1412f956a0ea60133cd3c79f3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/param_scheduler_hook.py",
+      "sha256": "9388b75e5b1796fbfb96acf87a38c042b3148597ad279a8a0cdcfed0f5511d7e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/profiler_hook.py",
+      "sha256": "33e74f6c951d76c87e4500d9e03080481a9265130b5c7df14d38bdaa6e52fd0c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/runtime_info_hook.py",
+      "sha256": "0d9ab45df2030af1146f8f24e62e0436cbeed6a71662c781e3108b4137082238"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/sampler_seed_hook.py",
+      "sha256": "827c30f9d632e29f4a04763fab7b71e322f49110bd0d0124c4cea9a76736d379"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/sync_buffer_hook.py",
+      "sha256": "0f709ddd82998ddcd49cf9720aebbe81de5f4b9093df7b3645ec6fc718b7baf7"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hooks/test_time_aug_hook.py",
+      "sha256": "46be7f481109ddeb77adc9b912977a77c505ab183c726e3190651918f016028b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hub/__init__.py",
+      "sha256": "7279cd7b0e261bb1d73ea8cf44e3190f63cbecb449cef46c4877107a580faf77"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/hub/hub.py",
+      "sha256": "c49a450bbc8de260154dea53efab15895915768f1aa48ed74269e3e432691dad"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/infer/__init__.py",
+      "sha256": "08f5c239dce127a6247ff9fd03a782673efe849c4e124da1555fa604af82e85e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/infer/infer.py",
+      "sha256": "2ac95d255618d666e90ff33a3ec67b10a5184b7cc398d3a829ab1d36110fdf57"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/logging/__init__.py",
+      "sha256": "7649c2e747a6800ca5e0628e9d95dc3435a6a9949f4155579f5caecf5a5bd354"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/logging/history_buffer.py",
+      "sha256": "0c5c05851fa5566a2e400987421d548fff30bb7f70178079132a6356bb7a98ad"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/logging/logger.py",
+      "sha256": "ab75800fed6bbf8ffd818d29cdcb40450f5c5131db630bbb36eecd1bca932c51"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/logging/message_hub.py",
+      "sha256": "67b4e81c2f905d0eaac07bbd5a42ec9cc3115351aa9690c7a2afdb25a2f89a48"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/__init__.py",
+      "sha256": "718ba884cd46fe7e3088ca6d1b78dcfc3e621179042bb5b6a4d924ef7ed09965"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/averaged_model.py",
+      "sha256": "96dfadb6c6087f47e4f73c084500ebf3ff20fa1cf110aa207691394cf8df3e20"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/base_model/__init__.py",
+      "sha256": "be739803676c7d5662327525d4f33757ad4607eab37e3f2c6406e8bb35634189"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/base_model/base_model.py",
+      "sha256": "e1eecb1fad343d20f79d305c60f49f5bf5212f29e05c3e2db9d85f88a4102a4d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/base_model/data_preprocessor.py",
+      "sha256": "c323985d585e637ef30f4d694f55a32cebed889e35949ddf54ca1a8fdfd05b0e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/base_module.py",
+      "sha256": "ad1820dc6ca470ef5fcd07549437657aad83f70a3e6c5ca7684671cabbb45d87"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/efficient_conv_bn_eval.py",
+      "sha256": "b470d7d86cf6b4c8e19d99657314207f65d41dbe0bbeaf4d72e9515a73340ede"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/test_time_aug.py",
+      "sha256": "dbe6efe369f8ffd79219c71d18027c5ca4769b7be0c7624f83cd3261e3a95e57"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/utils.py",
+      "sha256": "eeb81ed33f40a4bd02dd3da71bf0e2bdfe05e4f04a37a67a190ad06eef6de1ff"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/weight_init.py",
+      "sha256": "ad59cd07a88caefc3f8f4cc4934281106386e1a45693dccd537132798397ff15"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/wrappers/__init__.py",
+      "sha256": "31e6fab2a1633aff620a1b890c7305c62ca76125c96335916d121d88d492551e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/wrappers/distributed.py",
+      "sha256": "72b53b43b2188f99e3c0ed70cc3b32d9bb09cdda3779a3117ec803b19f3f7493"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/wrappers/fully_sharded_distributed.py",
+      "sha256": "99f0732e277a51368918554028830f9c06094b1fcfadf03862fd751c00e112b0"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/wrappers/seperate_distributed.py",
+      "sha256": "8759c8755630321e99d18b58f7e6768169e78c4cd1b5bbd1dacca04896229863"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/model/wrappers/utils.py",
+      "sha256": "729159cd2c20a146c6897705ab8dce481318c67470c54f451343ad7d202886da"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/__init__.py",
+      "sha256": "52ba816a08eb7323c085d98aa8a91d032a74d3a92336ea1360bb5d5f6f2f147a"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/optimizer/__init__.py",
+      "sha256": "d7e5d5089cf27475ee8ee7d3166a7c807754f945fe1e9ce783bbf69b354b1177"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/optimizer/amp_optimizer_wrapper.py",
+      "sha256": "3343dcdc01f48f0edf06bb73cf0b0a2559142919004c99d3c3fe4c7a91c160b9"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/optimizer/apex_optimizer_wrapper.py",
+      "sha256": "693be6f101c817ad0f67c66d7490ddc92bb250af24320d5fe1681b9696e87f49"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/optimizer/base.py",
+      "sha256": "2ffb92f38a9a114e1ec718154c087c1b9582018896d120a42212313db0a8b9fa"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/optimizer/builder.py",
+      "sha256": "6b73b37a4f3b6ff6fcd015a7b51e9d4231e44942d2c88706778c4357d47506c4"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/optimizer/default_constructor.py",
+      "sha256": "f5718879a8697e81937a6011e639f94152f6cb70496b160e8c519368e7d6fbb1"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/optimizer/optimizer_wrapper.py",
+      "sha256": "5cebfa663c9f7cbea1516e50e414c1a69cca4120753f0c33107831d3f561774f"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/optimizer/optimizer_wrapper_dict.py",
+      "sha256": "68ef1ffe570a248c5a4d79b230df3758c6fae8c235d9e85228758304ad692474"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/optimizer/zero_optimizer.py",
+      "sha256": "0202f6307618ed871b9593a7605c38cebb80479d41d10218e83e2e766a651d33"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/scheduler/__init__.py",
+      "sha256": "07994d79f19e13cffab80ec3a09a43ebd9b8d25345150ba84dce2233b896ca73"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/scheduler/lr_scheduler.py",
+      "sha256": "0c3541f83887ef64d0cc5a4e1b5861de49869b865094c41c50140fa3d585a8f3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/scheduler/momentum_scheduler.py",
+      "sha256": "2801923e523694cdea798552cde752582f94832fa9c53b5fd6654dc710f8d8f2"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/optim/scheduler/param_scheduler.py",
+      "sha256": "fdd54119a1938f572a83145514886b7f5b665b11867a8eab0982a239a23f86a3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/registry/__init__.py",
+      "sha256": "70b8bd44e3834be83aaf31adaa53ac3f920170470c4433bdcf61f44d75998493"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/registry/build_functions.py",
+      "sha256": "415621536e791bb453ddafc357e8ee9834254c9d63ec5a688ea697b796810d96"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/registry/default_scope.py",
+      "sha256": "c90c5bb1cebe784024a859decefffc5221771392c6468c36372f15409af58aae"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/registry/registry.py",
+      "sha256": "2d9e7bcf0292b463e2ea800c90bc4781a0658c41a5ae10a95c9ce668030d7b06"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/registry/root.py",
+      "sha256": "0e7c816eb15ae39692a1d8e42234ba87b898f1b6e88180ef5c59a8bf63eefdac"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/registry/utils.py",
+      "sha256": "9d13d13136985c7a45bbcb90968a3f4696611b0c8fad64981d3e757882d0b924"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/__init__.py",
+      "sha256": "3fbf05f3366bebba04e3eac1e94cfb537798b6780599fe0a61a4936741ad284c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/_flexible_runner.py",
+      "sha256": "36c7f49065abd5d31e20d1108efcaa2fb2f75ef9c7ed7e6d7953a9e4605effe8"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/activation_checkpointing.py",
+      "sha256": "bbe38c0990105ea14cafe657db7f1472a781ad853934b1ec853220362f16f7d2"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/amp.py",
+      "sha256": "54026df79ae85d0d0a63b2f040b14b5de0bc2042dcecc86a378a4230702b5f39"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/base_loop.py",
+      "sha256": "9104fe27f16b4fac649ed5cd796f2aa403e755107356fae5b9ef08c71e45ea87"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/checkpoint.py",
+      "sha256": "fe0d05fde8bb4d9d357353a75e46713d7e29b5a2716c2d9f6ee4928d752792e8"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/log_processor.py",
+      "sha256": "f705a074bd2325a575ffb57bc2618b1101c5745f3c176573e3c8dad129537bb0"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/loops.py",
+      "sha256": "4553be8601d957006cb1e203bd98874f9e5251f1ff086af12eea0480a5026f26"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/priority.py",
+      "sha256": "de6d0b2a396d4ac9cc015628aa5f9e4c55bc2070f51447b24ada0435ec28d1ea"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/runner.py",
+      "sha256": "955a1b66ebc75173868aac8acff3d9fd5e211fa0480f33120aa46114d267ed8c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/runner/utils.py",
+      "sha256": "2649223cf04b2d4b48ee179bdc3ec93d67f6f35e2a787569339ece9b2fe3a5a3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/structures/__init__.py",
+      "sha256": "396e829b25ae28de5584d65a99e25eae0de6146c6b9bfea5ab42aa8c2df86c1f"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/structures/base_data_element.py",
+      "sha256": "27ed6980cf0fd202c1d0b64f9021fee13b9bb42fe7f9903387a7dda5db7fcdce"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/structures/instance_data.py",
+      "sha256": "40770a47cb0308d37ea72f09eff01a7196b11aa8c4778fb10571b98e63555909"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/structures/label_data.py",
+      "sha256": "4a497ca4e53017205d6b8a576a9fbc0fc5ee9cf55d0e43e52904e81fc92c2b53"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/structures/pixel_data.py",
+      "sha256": "a287dffe3200fa7fc2b131b10b0b05575e0ecfc3d7b961d4e4c2e2409f738634"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/testing/__init__.py",
+      "sha256": "e8f771c869b88b55593062df2ddddce9cdb8a78b29a37fc54527ea78e5221138"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/testing/_internal/__init__.py",
+      "sha256": "3d8e12fdc7839efdac830cb6482c82a709f383ec8f127c67be3d395939c97b2b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/testing/_internal/distributed.py",
+      "sha256": "a6fdfefa8f4673aa19b3eed73f2124acbe1f44235c35dc163fa1b62e3c4d276e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/testing/compare.py",
+      "sha256": "8252516596ce56ff02989bd62179b698694a2a158cb5318a6a66d4ca9f1df41b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/testing/runner_test_case.py",
+      "sha256": "42be22bd2800c09460354d5d5f798694c0ea1ec76c6701c93763351dff653b07"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/__init__.py",
+      "sha256": "538c0bd76e2ede9370f81f4b1980dbe280088b396194e6d3a6665f1951132bd4"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/dl_utils/__init__.py",
+      "sha256": "8e275bbcb3af74bfcf475c74d2a3ef35aafe45ceb40a37a627ad41d179bda622"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/dl_utils/collect_env.py",
+      "sha256": "2c05bdbeb1a16bfc72d7b020a59b020b2c333092c758a766ed2a81d447a340af"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/dl_utils/hub.py",
+      "sha256": "2027fff8c1cdf9f41e091bca75dc222157ee2ef17e9a261cafe498b00860ec09"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/dl_utils/misc.py",
+      "sha256": "6fefb820c979d61ecb83f1bb06fbf5046a3590e061d40834a8f13a314f4748f3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/dl_utils/parrots_wrapper.py",
+      "sha256": "63b8997645a38f8d5329c509d9f44e96addd7b4e5f95a74388aa12cf86dde2bf"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/dl_utils/setup_env.py",
+      "sha256": "3cbbedccc9f0e561cf4b854c9ddaf8984c01409ae14394b9dd122802adab6745"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/dl_utils/time_counter.py",
+      "sha256": "b54573e71308cbccf9d815d6a418a1a98fe613f6ff6c8d0866f2a5a022e35735"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/dl_utils/torch_ops.py",
+      "sha256": "3fbabc41cd740d611193cc164f5c7e3720ecc2abbe7f29d051da88cb439b5e82"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/dl_utils/trace.py",
+      "sha256": "dffc603dfe5186ef4d7a080d0d48025ba0ea10f771c2bca02a99c542f1fb53a9"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/dl_utils/visualize.py",
+      "sha256": "546f3bf7ab1545776459bb6730b060cfcee23e6cea1b782e05e76a6910831716"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/manager.py",
+      "sha256": "0b4d75679ec181c1445168d6593c9e3ae89dab5ada0225322d616b7d0402e9d6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/misc.py",
+      "sha256": "cdefd1ec2e9fb088c03b452e25f5b917fa65d197dcccdb5b9fd02a7dae15f7e3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/package_utils.py",
+      "sha256": "34e1950d893efe1ed25bbbfdb9b0cc0d8a0dee0169980087d6e5a9646419c03d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/path.py",
+      "sha256": "81f68bdcb15a8317aa202d27aca67df40a431edf43b676d2cf8d4ecb8c53b362"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/progressbar.py",
+      "sha256": "55d0487b3db5584c61dcf712bd5375b092d676e13f7fa9ffb61432b2806edaee"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/progressbar_rich.py",
+      "sha256": "d244a783de1a0164647c2219d3ee5bf568e61ba60ac8d9ffba33bd3a864c7cb9"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/timer.py",
+      "sha256": "a03f20fe7468be02648e081c432439f60b4c1d2959799c95a966875a05e0a4cf"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/utils/version_utils.py",
+      "sha256": "5ed5448656b73fa4496797a53979a0ddd3299591841a69a90de337c7fa37226c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/version.py",
+      "sha256": "1af17e188af1acf3f81ba8a08796915f72578fb0e6db338ce4fbd98802f48671"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/visualization/__init__.py",
+      "sha256": "9c09b28f41f458b978620ee8e712f4b7060d4a8d9c1fe0f724094dfd1196f5cc"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/visualization/utils.py",
+      "sha256": "3896b8ab84e0d2e0767607bcb7af33a2de500a8b61927c4fd9cf39215a67f6b3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/visualization/vis_backend.py",
+      "sha256": "df057feeb5b721a199e45154942767b7400c2e59eaeca987d2739e4c95e7ce0e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/mmengine/visualization/visualizer.py",
+      "sha256": "1a31b1529ad8852b0fa3079167093f391cbdb56fd777388ed0cc86a34e90e696"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/termcolor/__init__.py",
+      "sha256": "0469c24bbbb47926f3660fffa8922b552729218265f088a3684203ec9a5cb7b3"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/termcolor/__main__.py",
+      "sha256": "8fddcd3762ce094e323dc973f3993ece6ef282f9cbc4dbb4dac7b8691dbe26a6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/termcolor/_types.py",
+      "sha256": "d144d84a8b487e9fd6ea21b53af3aa0b76c26f229e0ff854d562e072cb72dc47"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/termcolor/termcolor.py",
+      "sha256": "2b5bc975f553297266791c95b23853adc1f2788b2631c8c3808f115c3edac55c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/__init__.py",
+      "sha256": "a436e403745626ff7afa19b131041adc160873a4a415cb9424c182d5cdc2394e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/__main__.py",
+      "sha256": "8c9e457307bab5b5f1a92b94c513b7b9e978e2d1cfe77bd549ca2396eb347013"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pyparser/__init__.py",
+      "sha256": "746451b441bb401e61544886c65e6d0563d8df734eaed3efa1f5636dc41d03bb"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pyparser/pyparser.py",
+      "sha256": "384012cca4507d4dc7cd950c4c3192122580c4ddcc0d1d15fcce11c828a7c06e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pyparser/pyparser_utils.py",
+      "sha256": "592e0d1edab4d47e08e539dff47a3604d67b7f821827a2a558165fbce15af7bf"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pyparser/split_penalty_visitor.py",
+      "sha256": "1030f5e158f4bb60a5c1a8a3ec50f3c1e57b91cbb907b306263bb2e8259d83b6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pytree/__init__.py",
+      "sha256": "d0140706ca301b8324a9ee6aa8b0567fd907ebeac35e9220cb2b5786651e5dcc"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pytree/blank_line_calculator.py",
+      "sha256": "0f62220e024f4185d80fccfda22bc5ecd59d50c862c69eebfb8e4edb9034d27a"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pytree/comment_splicer.py",
+      "sha256": "931e788601458381d177577f4041e99ecc0a889318e55413f195deb7d68dd11c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pytree/continuation_splicer.py",
+      "sha256": "9349b9b3b15651512f098b914d298e1770485cb876608606d33214b0dec6b230"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pytree/pytree_unwrapper.py",
+      "sha256": "222de77cc554a8d435e70bf5478d237f20a883541301dd222a6bb27841648586"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pytree/pytree_utils.py",
+      "sha256": "f0b809255123b8bbbddcbe7e7ebcb9672f88671e9dae37e5e6794b65918fe232"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pytree/pytree_visitor.py",
+      "sha256": "0cfd6333ceab17daec0d2e8f5bd4f1ab39bc375f200b592eba228321e4169c45"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pytree/split_penalty.py",
+      "sha256": "7616887993d9754a10ea7512c68cf67dbb5c2b3dca8ff35ab65e5287f4d068c1"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/pytree/subtype_assigner.py",
+      "sha256": "422d5b1976ec78f969243c92f1109731c4a7a21fb10ddb07e490ba2e466bad45"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/__init__.py",
+      "sha256": "69b06a86aa8f3f5d232baa4d084b795435597d82b4bb47d0ba04e9d800b42b89"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/errors.py",
+      "sha256": "465a116c2c2cd36739b2dc2148fa991824831b5b698b92ca8dbc97e686d0fd76"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/file_resources.py",
+      "sha256": "8a2f221ab6b2101f02e30773a6804c8093dc76e791ee4732847541f50c038337"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/format_decision_state.py",
+      "sha256": "44ad017119be0ad175aa470daf7671f12789bdf192bc9a165e7c00203efb3035"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/format_token.py",
+      "sha256": "b72896b868a7d99cacf2160fdb6c0f34bfe54d9b8ea083a3b9085f48d73e7140"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/identify_container.py",
+      "sha256": "7eabfeac722ea6019c5c03c7d88903858ec3d05da35a7490612c0fb18f155164"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/line_joiner.py",
+      "sha256": "1d1fe35508d1dec5fb9363dc27f77c71215fd9c84a396d7e8167f68b179961c6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/logical_line.py",
+      "sha256": "063febc60ae8367aff2a5a4749fc2a50fcd31a1d6243394482d95f18371f960b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/object_state.py",
+      "sha256": "f8938259a077e01062d733ead6b33e221f43951f50aa09b93cbd8fbd79b5dbe1"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/reformatter.py",
+      "sha256": "aa596b0ce4effd784555966edeedbdda54d12032f4ea7ec23c53698f9beb4ef7"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/split_penalty.py",
+      "sha256": "b5b4d0962538f4e20b6cfb8d1a31fdc4226bf2caf6618f529849d0510b9fa35b"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/style.py",
+      "sha256": "54642c518172c903e6a3160b8e32ff220006590387c1162971e85719c615487a"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/subtypes.py",
+      "sha256": "039be1dc303079e12eeecd07965dbb00182d542526a3d43fcaba1077e337f55c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf/yapflib/yapf_api.py",
+      "sha256": "1bb551d6eb579516f8dce01b489be17c6ea713d74347e1948e3ee544a8ae41de"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/__init__.py",
+      "sha256": "aa34a9c67b7c66d29a9b1cf4cc1c658f414809221b7d8858109ef64fdfa2b5a9"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/fixer_base.py",
+      "sha256": "547d419055015846491d899d3433374ea74139d7ba871d1366b4bc056c4eff50"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/fixer_util.py",
+      "sha256": "d12925a77bd1f5e8ff1c812e04766f671d406976c89e832052424bf768c9572e"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/patcomp.py",
+      "sha256": "c93763a4801ff4c724d362c359bbbc3c88bb603bfbeab0da4c36f415db7fad2a"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pgen2/__init__.py",
+      "sha256": "ed621e4cd288e3c8cb0f627b47cf9e0a230a3daba0c9aa7ecc89b7294f6fd70c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pgen2/conv.py",
+      "sha256": "1f016fb3c39278852cbb3c5a767ebc52748b4935ba350e701ce207c8725e29e7"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pgen2/driver.py",
+      "sha256": "98e013c155845cae5dd8f713016897ad8542d3ed8a8844422868045a11ce66b7"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pgen2/grammar.py",
+      "sha256": "16f6e39eea4f07b03c30a4427437e23dafc51158acc9f90d424f3a4fecd04530"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pgen2/literals.py",
+      "sha256": "ccf2af4c4359e2fe54a57b1ff4a0ab930dd869bd394079d45928df206a42b9d2"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pgen2/parse.py",
+      "sha256": "3a1163bc654d40fb2017a26457f547c3ffdde7917e5a37121a9f17514284d114"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pgen2/pgen.py",
+      "sha256": "a9726222305380e343f90a8ca1b364e674d51c7597e7020b7e32e3c2ae352cb5"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pgen2/token.py",
+      "sha256": "9624fd6b02f70882ee5096a89753b8fede06fa275d32c2373baa9104dc68b9e2"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pgen2/tokenize.py",
+      "sha256": "a86bd271d5d42ed480e9c3943ae08d4d0ecf240dfbcd692673a2ccfa8ac0f8a2"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pygram.py",
+      "sha256": "98bd40c13f5e4934a2a252ff36cc16490f4cad374e4e251140be933c7817a8f5"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/_ylib2to3/pytree.py",
+      "sha256": "cacd0109c742cdac87d04e45bc3492265c6a914f32bf540d7fbf447fef9393f9"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/yapf_diff/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapf_third_party/yapf_diff/yapf_diff.py",
+      "sha256": "e63bf3168275b7e18f2959df1bfeec53133a3a163287366181dbd969ad69e933"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/__init__.py",
+      "sha256": "69b06a86aa8f3f5d232baa4d084b795435597d82b4bb47d0ba04e9d800b42b89"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/blank_line_calculator_test.py",
+      "sha256": "eef830c977db4216310b37b3849b2eca31d8ffebfdb5e7965064955286222a57"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/comment_splicer_test.py",
+      "sha256": "58bb87ab263c118b850fe05688ac86ad90d0c759d1cf66db0ddfa62d208ba3c4"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/file_resources_test.py",
+      "sha256": "3052d0518157d17081da4e2d303b7b50544b63b4b2c5da135db0ddb84e9290a4"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/format_decision_state_test.py",
+      "sha256": "5c0075bf79b4f1fc9d548cc4bcddb7c4dc152418a883c9ad820ecb186d88b989"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/format_token_test.py",
+      "sha256": "24eebe5e76e8aa7b9f00f17496858f6da6153073eaaaae25a2a72ef6686dccc6"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/line_joiner_test.py",
+      "sha256": "1acc2231c55102e6a850dbc4a01cce44c6561ecbd55eee0020ae2b0089c27a04"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/logical_line_test.py",
+      "sha256": "9174a2828a06eb72b41493c1b3f21fc78c4dce54e26d24e553e136625b1465b9"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/main_test.py",
+      "sha256": "b781cc08b91bd32d15c8c4251355b37990d3da21b4d9769dac465e9149e911aa"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/pytree_unwrapper_test.py",
+      "sha256": "1e2a2e2d4401a5ce6536597c30a6788624d3bc4c16c12838bbe9779ab469529d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/pytree_utils_test.py",
+      "sha256": "be18172da4b272c77bce14434e7b9a22b4829f5f51fb6540091b0a6a303e330a"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/pytree_visitor_test.py",
+      "sha256": "072ea0a47701675970eddc7f656d3c22f9ad8d16cc8f9d382fbb742ad986ebd1"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/reformatter_basic_test.py",
+      "sha256": "5bf85a9afd9077f9f269e83377545832fe48d8097c5a776a06d84bb8deb7687c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/reformatter_buganizer_test.py",
+      "sha256": "2470f2e840e2c6fa1bb611266b91bb8b9c0d30b04d3138356ee92eb840a5b846"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/reformatter_facebook_test.py",
+      "sha256": "928c533e4b180556e1c31cd6c2fab3d3faaf860dea623bbeb5c7d5690490f435"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/reformatter_pep8_test.py",
+      "sha256": "7b29d565583e448dc37b5e8ec0b81c054e900a6b1986ac6fcf48bcaf4dcc0b21"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/reformatter_python3_test.py",
+      "sha256": "dc393d3e302258fb656a06db217ddb2ef8607e7ae09af71f4a45be05217b6929"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/reformatter_style_config_test.py",
+      "sha256": "764b20e27e8e4adeff2d790dfe34f2786d22fcac8e46e4b62ec680fb93d4964f"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/split_penalty_test.py",
+      "sha256": "ccde0015e5b49c4285e2974e5726f9cbb69cc273625a8254da833d5e10a9d3a7"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/style_test.py",
+      "sha256": "dbb70384bd4ecd74e1a4265860f2e42f7ca2e4896c5de454e6f51c36da0f4d4c"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/subtype_assigner_test.py",
+      "sha256": "727187718c529a9b040f88ccd873d715195cb88ee7e99c6f6b4f6cf9d8c65995"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/utils.py",
+      "sha256": "4ac804c2a32c835cd3d1bb2728f54f21d52e4f381db56599ca878d3a496674a8"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/yapf_test.py",
+      "sha256": "1c9fc6ef06a0a7964799cc47b0542a3236f5db4293cd2ac70ff1b44e6a6ec79d"
+    },
+    {
+      "path": "/tmp/cow-pose-reference-deps/yapftests/yapf_test_helper.py",
+      "sha256": "f9e65e0bbb7815857b126a2e44df8042fbc29f9fdd21c8ce60e2daf877691546"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/__init__.py",
+      "sha256": "9668df8ff48b33f846428cd7607399cf14b4f0feef157930eabf6defe932b1d3"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/__init__.py",
+      "sha256": "68b3c5369e59249bb9bfe7c765b4dd6da02fa20eeb7e6ebb389197dd3c6329f9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/auto_augment.py",
+      "sha256": "577613832dcf6213a9695617e8ab143ac7d107308993eb2394445a869abd19e2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/config.py",
+      "sha256": "b9fda9fa6356ff09ed09edf82bf5ebdc9e3970987c216125fdc33083228647e8"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/constants.py",
+      "sha256": "6644abed002b72c0f238e051610a4b7b873654e24a4406280d1535270609b1e1"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/dataset.py",
+      "sha256": "d2340ca03764e115871da297d5488f2582c847c4689bf1d0d4ca01b7e8adf401"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/dataset_factory.py",
+      "sha256": "1058ccb9ccd392c3bbe9f96e5e7d0e5e653b5a487de7580235aa86f8ef3fe408"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/dataset_info.py",
+      "sha256": "07a1989cb0dcf8f29b299701b0a7156ea7e6f76d824d3bf9958c1fc5ebe333d9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/distributed_sampler.py",
+      "sha256": "99f712fdbccbff3108444a517abf0b01d5f0d56bd415826b5e0a8ac367ea9471"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/imagenet_info.py",
+      "sha256": "cdd521ee39702b4b4fcc95da95308488c053a7f68687f02f27b369c0218c32a5"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/loader.py",
+      "sha256": "f0a0b755febc2b2fc3025419e1d3479b63d433161baaec5c5664bb5e83174533"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/mixup.py",
+      "sha256": "c71833c183701134a0c26f5ac33d18ae4b9595d316dd61a462e1f4acb7fc304a"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/naflex_dataset.py",
+      "sha256": "61bdcd11c301bcdb87c086c6bdfc92fe497f94d38792188810289a74da13124f"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/naflex_loader.py",
+      "sha256": "c41ce473b6814782c0dbce741fc9f6c0d555e3a913b4cc02e40bdc85e8087131"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/naflex_mixup.py",
+      "sha256": "bf28e87f1417022ac25b1b10acf9b9c6aad601eec34dc085e81d2d1b2857e4a0"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/naflex_random_erasing.py",
+      "sha256": "1e582a239ede44622e6f9ff85e411d416829421a3ad8ed1f6bb71a3bdc62c379"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/naflex_transforms.py",
+      "sha256": "4180d0f54f990c03abfbd3a5e6632f7f38ddda8d318eae683908b039bbc9107e"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/random_erasing.py",
+      "sha256": "8d24c9abed731994f5cd15afe41cb206e038950763fc415ca226dd2e3450683a"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/__init__.py",
+      "sha256": "02e2a0423679abd5c82c866eea2443209cbe5f276283fcc2d5395a5519917026"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/class_map.py",
+      "sha256": "f632bab6c01562ecb3b16e44655824e316383d4a10aeb145c1dd2e6f5b684add"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/img_extensions.py",
+      "sha256": "293b640b27eb3a12f01fbbf0b3b93bc6c86412a7a476b10667eae612bc92bdc4"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/reader.py",
+      "sha256": "fc5a7def02c8d5cc45148d5094e92f5882b0766b5068f1201fdeca9ad4036682"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/reader_factory.py",
+      "sha256": "6b32177f056baa50b19ded699833b70b2bb0892c0e847658f312a9199c139554"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/reader_hfds.py",
+      "sha256": "5c800180eb4b7afd88234d0f4b4640e5b6d29f9f8448e234abf5d00a5ae36512"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/reader_hfids.py",
+      "sha256": "059fdacaf2c539cb75d254e9230d73d7acb522b11e57c1d8e162f028365321c5"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/reader_image_folder.py",
+      "sha256": "0aa0b08e67698fddc71b800c4c57b040decdfd35b5396eaf920324d50db64b88"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/reader_image_in_tar.py",
+      "sha256": "be348ee04435afdb9dc23dea413e60f12d801a420e9e26b1b2f5e8b6d8c44469"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/reader_image_tar.py",
+      "sha256": "8743e58661d4ff5433532e29de9b08f49a1e6806a8d7f38114ad7f2ba45ef5ee"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/reader_tfds.py",
+      "sha256": "e5d69aaa127362aee16d80407ae174ea55c23bb034b4f8a91db25530532ff8d9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/reader_wds.py",
+      "sha256": "64836bd22077c6bcfd5629b576fa1b7a950ea45c906403fc48574ea1b2c36249"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/readers/shared_count.py",
+      "sha256": "ffffd1bcb47e8e8851674227b3a88a54090a538e0bc54de8e07ec4d01d1bdb9a"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/real_labels.py",
+      "sha256": "c5d7b17a853f284e9cd876341bcd4dcb6f93fe24d0ff51ce58b8fb47f59f025b"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/scheduled_sampler.py",
+      "sha256": "f7e633e26d0df2eb8a9dd02c12ac9431301e95e74e10653cbd29e0b699e85fab"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/tf_preprocessing.py",
+      "sha256": "c4294c799c943f1f1801306f567ce28346c324d05af19ab3729995594c1e7d68"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/transforms.py",
+      "sha256": "c2b65d35981b17239225be027a40e980e5070339799ef0ee4276917b74003456"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/data/transforms_factory.py",
+      "sha256": "e4a882732a221327495457cad7a381292375d7b407b49875b92b95012a61f067"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/__init__.py",
+      "sha256": "dcf836e7d240a2965dde733b5575462ab776eb2508ed70f3e30c193524fc6af9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/_fx.py",
+      "sha256": "234f6b7faf759c0c30e2e84483b20c358c1cc4c6f3c34af221f10b17c957ab8c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/activations.py",
+      "sha256": "effc50cc017066d60f3e8bc9f4a65b2765ad374a1b4da7bf023c1db99e8f1cd9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/activations_me.py",
+      "sha256": "a17a65e5f72c7938cdcd2ca7e54e779548e49c06af8f488c1666bf8c174cc60b"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/adaptive_avgmax_pool.py",
+      "sha256": "c82fd5bc5e44c0b2adf1165261cb2f318aa76db3d0a831304e3dd9e5538efe97"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/attention.py",
+      "sha256": "91094ccb54a743b7e70f38431c7e330e750ce4f575d49ba34153b16829bb5622"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/attention2d.py",
+      "sha256": "eea95e2f73f1500719dfb2d023d5968bc5ae919fd08ed43c53e5f69158b78c5e"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/attention_pool.py",
+      "sha256": "9c78e7472898892b02a8c5056380e5177e6fb0a9ffaef8689ec96ef74a048f79"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/attention_pool2d.py",
+      "sha256": "74d95d43b026fe71a671aac086bba250e4a962109091e180ef4a045f642882b2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/blur_pool.py",
+      "sha256": "be6b5a5c89ac86d3c0678e5bb671991a4e9b82c10fd9dbe7eae456043b45a2f0"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/bottleneck_attn.py",
+      "sha256": "b09c15992ea042c412f17c28bb5145660d20483c10750c6edc8ac04bb00887d1"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/cbam.py",
+      "sha256": "43512ab18f21a4817c53c9c8af6a8d9bc72c5e66926ea756dc606a5674f833ea"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/classifier.py",
+      "sha256": "447aaa6ad2d70e6297f0b7d4a47e19cbfe6d910f933246c3c233d355b85671be"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/cond_conv2d.py",
+      "sha256": "315fd5d71c324474b8a3bf7a073c006f6773c4bfc2d110a7569c99a68d3c83f2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/config.py",
+      "sha256": "59ec44335504ed70c5c3a02a7cf91d943c6435ee87c1006063730835783fa4e5"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/conv2d_same.py",
+      "sha256": "225395241462682adb5696b8cf29dd853d54babcd2ac78b27b7eb9e0ea55ea1c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/conv_bn_act.py",
+      "sha256": "4855d97df31fb588634ac0cebd9fde7f4dced9aee9007c635c670c31cd97981e"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/coord_attn.py",
+      "sha256": "952afa523e35ae6082ee4705b47189e601bb531ac0019fb7608585650ef77a42"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/create_act.py",
+      "sha256": "88a6300c35d175c63a37943be714a9b7677edf001489897a95746f720d695b19"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/create_attn.py",
+      "sha256": "f9b13c1c2879bc3d14378cbc3b7818219d553b569153fbd377cce461dc6a37e8"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/create_conv2d.py",
+      "sha256": "75aaf153392f3d853182eb89fd625dd4f7a993138ae227f92702730b9202f399"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/create_norm.py",
+      "sha256": "fe540d7462a2e9031b3c3a941a5fa9ad37c1a89043e65d71109b3044336ac156"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/create_norm_act.py",
+      "sha256": "7523d591ba2c3c7ac6efe374483f1dc5eaf5357baa953dbb475dd10807449750"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/diff_attention.py",
+      "sha256": "a3a4d9a7bf034aac5734ef23ad57d5e149452929890efd58a4ffb49076e6bc9d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/drop.py",
+      "sha256": "2047ce241398537d6e502716f1f3bb7a285b006554f2e27e9a68618d68376ac2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/eca.py",
+      "sha256": "c98058c0876fb71d3bec59c8ce5602685a03809d4f804afea3ea2b96017bcfa4"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/evo_norm.py",
+      "sha256": "f4f7783e110c8ee899c4f29ce44686e100475fcd7a1fa5cc5bfba03fbdafa180"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/fast_norm.py",
+      "sha256": "f2bc1b8841ae01ff782ffd768335d27f95ccf7e8ef1d1ad7e930e38580600e0b"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/filter_response_norm.py",
+      "sha256": "dbd5cfe10d85d21eaf9bc96be6291eff12bdcf9ccd6c8e53ebb678262cb53010"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/format.py",
+      "sha256": "95c87c90abfc1968f2aa45d7e85e4a80d151eb46d2aa60364329b50073cf2ff0"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/gather_excite.py",
+      "sha256": "5ea5566fa417ced7a87a39313e63666acb1d4e9eb1d222ab2f99875c48ce5940"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/global_context.py",
+      "sha256": "82800e62e82da04a383594aa7bd02b8f6bbc22cfdd000884f678c6101d745888"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/grid.py",
+      "sha256": "94c33c6ccde0831ba7bd016a40207de3749901f63b370d38c3e94568c064c6df"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/grn.py",
+      "sha256": "7a357b2a2f53c549cf8fc5ba4829934f7eb416456d0f4964cca825f0526ee95d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/halo_attn.py",
+      "sha256": "6b06d69e6f591a76f9da1ee18912b86df85c6e4f53fd571ea918450e95fa5b1f"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/helpers.py",
+      "sha256": "f4aaf505d3a44d0d2d2af8f5b6f0912fb1059fa6e4bca24c35944e64640756c3"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/hybrid_embed.py",
+      "sha256": "1215d2a428beb4cd20997388767252142fabd26f18c372504778e5cf83bb911e"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/inplace_abn.py",
+      "sha256": "b84f39bf33413cb651de20543f2af0a346e1de9b60e24a179f9c6e68d2fbfe35"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/interpolate.py",
+      "sha256": "3aca1b5aa1750aba4b7ba6245cb991cc049b02cc3fbb3cedcaab0167ac5462bb"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/lambda_layer.py",
+      "sha256": "c3b0c0319ad8b60d7e026e23a8d82c37c180ccfbf3d30aba94fcb9825f983485"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/layer_scale.py",
+      "sha256": "499631e59c5ae5d2a36e3172a7e9e1a0feb8fc22fa3b404be38c447a1eef7b6c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/linear.py",
+      "sha256": "6da4b65a9974bd810b9ef86743a2f0eb98d5a2d689cf98866eba0927d2662113"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/median_pool.py",
+      "sha256": "8e4eabb9356fef792e1794c47b07d16d4e59d8467c7aee82954656ed63d8f1ef"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/mixed_conv2d.py",
+      "sha256": "6dbfad421f06f72b558e15349f9cab7bd1e2da6393268c96cbe8b9c0302caca3"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/ml_decoder.py",
+      "sha256": "de8ad42a254b1960612008c6d4246bb07a9e20d479a2f518c227c36b64901945"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/mlp.py",
+      "sha256": "c024128a1c7e2a55ebc5e33a7c94c585ae1e960cd032b39b08445ea30f05c5a5"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/non_local_attn.py",
+      "sha256": "2f8a117c915150d76ef6bf92d177e7ca102adb5c13e62868cd10a374e69162bd"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/norm.py",
+      "sha256": "afe3abf01a4379065c1c11bf6b6f947a1a743aff7f5e51849b353697b0db557d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/norm_act.py",
+      "sha256": "4821c9fa7b73c19cb63d16a4c86912f36380c56e34d25bc6170ea728aa21fed6"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/other_pool.py",
+      "sha256": "85272f303f4fc61814e28abebb1c93bf6d548bc361264f1fd462ec6f8d5f9f97"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/padding.py",
+      "sha256": "ed3a083809391e23acf0aa623f3aa935023c5221901c86f0596931927367219a"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/patch_dropout.py",
+      "sha256": "829053987061419344ed83cefd5ec2f12024bf1801dcc0b4f936d85b1b701ee3"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/patch_embed.py",
+      "sha256": "fb308cdb0bd12576baf851fe5cfc1abd49d0079e2e0e7dc2751fbfbd8b3f8d9d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/pool1d.py",
+      "sha256": "730f4c3cac736e0d63b564d79fc5d8e024e6255eefff70f3eceb2effba0aefc1"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/pool2d_same.py",
+      "sha256": "27c011e2d12ac580d95c7b3358cf23469d0ffe27634ada0a8929dde7f0405845"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/pos_embed.py",
+      "sha256": "06b469fbe07a42fa6ef485874678a847e209aa188d09902258af44fdb57834c1"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/pos_embed_rel.py",
+      "sha256": "fcc07b7ebcb8b807ed46d04eb5491ee8c985fd46ab13b1ea0158e485309ad254"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/pos_embed_sincos.py",
+      "sha256": "99dc063e449d1f941373523795aeae6538d1de979310168f55d4e2d77c7a8af5"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/selective_kernel.py",
+      "sha256": "70e06298d6c9be1d98bb9cc98825db8a612ba9e526f1e2d6fefec08c4efe7b10"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/separable_conv.py",
+      "sha256": "72b805d1e7bcc5dc3b0c64749d0501fadf1a4fcb3527f01a542376dace0b943c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/space_to_depth.py",
+      "sha256": "2fb48f6b310ead760dd31898cf52f329f8620377a48fd31a52a27aaf57a51d35"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/split_attn.py",
+      "sha256": "fb71f37b4b616848298c1e656c61edb126cb62371b523b0768c5b237dbcb4c02"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/split_batchnorm.py",
+      "sha256": "46f243533e2d883876e085e92746762f780b1565319ac7dbf63a3f14bd5c9afe"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/squeeze_excite.py",
+      "sha256": "6d45bc824a71872e0035c25b2efe32feced5180ef5f702e46b39fb675065d4e5"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/std_conv.py",
+      "sha256": "7851e78f4cbd91bef5e6e42f42a0fd19c442e688e6ac046021828b932ff8a888"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/test_time_pool.py",
+      "sha256": "f4efe24ed6d4fa08235d40a7ca04d684171bcdf65c7f3890b1146d509f78dea9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/trace_utils.py",
+      "sha256": "71b66e7ce6862a685318431ce764009eacc64537e7e2fbf3aac00e25a2ca250f"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/typing.py",
+      "sha256": "74f4a5f6ba98a42cc18a0d096118003de530dfba2b73a3f1df4b464745b8761a"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/layers/weight_init.py",
+      "sha256": "cabd60684d955367d39fc58b02ac94e86f5285a3f3d97b1aa9f819a72aa92df8"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/loss/__init__.py",
+      "sha256": "882341f5b5007faf6778d7b5fd73b479e835417bb1bba8d14c0bb2e15f7214bf"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/loss/asymmetric_loss.py",
+      "sha256": "0557fc49367c327a6b7f5c6f3445e533e59b286aa51d2361b0b5f1ff4faa7ac2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/loss/binary_cross_entropy.py",
+      "sha256": "f40800482bc3f94446652d44e97c9a6980717f450ec7c0071ca0bbb532d34335"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/loss/cross_entropy.py",
+      "sha256": "5c3135f459e16237ae7407ab6fa52e948203df80266685d0d423c40231240903"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/loss/jsd.py",
+      "sha256": "3057bc1ff242d6cac513f14a8a717b8cc54841880d5a0793ee464bf567885c62"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/__init__.py",
+      "sha256": "cfe433fb906771fba5892ac1c7064c5aa1b66df4c7be878067b523a98ea55962"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_builder.py",
+      "sha256": "bda088022ec2733c64d428108e6251f5a9231b6cf2c4d623f5a18a2f00cf9062"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_efficientnet_blocks.py",
+      "sha256": "2a3de2c0371a74d7f4fe165f4ad062d768473ca9565a9ebf63fadbd0aa5ae021"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_efficientnet_builder.py",
+      "sha256": "084cf15cc4725fd926966f0dad94c8b4786f4c96aae625a8497f35ae00704000"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_factory.py",
+      "sha256": "5c9437a1be7e9a4e07cb6b623484b17a53b0eeb17e004fc87f61672c6cb7c812"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_features.py",
+      "sha256": "7db8cd957988bce4d78a6686986b08253d1c20451034ab1808d55edf573e9cba"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_features_fx.py",
+      "sha256": "0f14bc2648dd3bd89505e5e119883a4f471e48e56e44b373252a830d1ad6d332"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_helpers.py",
+      "sha256": "c680cfe4740447ac7cf82c735da24e65c5228370d2875a07754078799a82b411"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_hub.py",
+      "sha256": "b34c71bece3c1c02ba549a635ab9a513cb85f002a5434347fe1f694a7c8e98df"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_manipulate.py",
+      "sha256": "67930863b7a9bb92c1bebcac360e72ad12b07a9d4c41a8588e04cffe31e327a3"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_pretrained.py",
+      "sha256": "ae6d5d38e817333bcdf5b327739f512b97663bd722005bf5363ea3dea4e36386"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_prune.py",
+      "sha256": "f6bd1fb20235ff1fa892f8bd5fd3a3fdf994ddab4cf1093f5e2cc364bd33ab64"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/_registry.py",
+      "sha256": "4c8d2bb3d2fe6174d103ef33bb1acd5844f3add1b00f93de916d9452851a8db8"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/beit.py",
+      "sha256": "e852a2ab1bc91bd645d1701d0e74cab3198b4425f2c1de6c61f7fbceb2beeee3"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/byoanet.py",
+      "sha256": "1486532a903ad95286c275e4ae2c02aba11e2b5d96e5663778dfa1f4a7fbd396"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/byobnet.py",
+      "sha256": "2976ce2225b4e9b13636f1645574f07cea6efcd94e14dcf997e65073b8f81e36"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/cait.py",
+      "sha256": "d78517b2067cbe99ed9039be62584ee7200c8d67c09fcec6265a184c3599cf06"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/coat.py",
+      "sha256": "c6727c42feba62d9f6a462aa97bc68f8b5307db926c08978e432563731f98020"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/convit.py",
+      "sha256": "502493f8cf8d252547147f5ca237ba0a78827b55359aca5a2bfcd610f0e20c9e"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/convmixer.py",
+      "sha256": "7e0fc25be86e531b37d7c11e8e8e63cb8d6f9a55ee8aa9fbfc85d49928992d79"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/convnext.py",
+      "sha256": "84345f20872589a0ab62f1bbc8b3ad750863aece995bda28db2a8b35ca0897a6"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/cpubone.py",
+      "sha256": "196ad6663b8d77e76326a740ff6ac8f0802808a73c165326420530612ac7e5d2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/crossvit.py",
+      "sha256": "a96020a7d99f7fae369d9603b316955ff1246a19fd67e8c12c5f91244be52634"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/csatv2.py",
+      "sha256": "a4cd7f940bdba7af7b0803f82a7b42bbbacb73e60c6a82c443f96da5fb0c17d4"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/cspnet.py",
+      "sha256": "632a93cbf511a0a70a71ed1ce10fa365a93c81cd1ee9cc99f789ef1d5aa04931"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/davit.py",
+      "sha256": "a95beec38f05c88f04829beb02519765c7accffa7fa7d011601900c1e51407c2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/deepseek_vit.py",
+      "sha256": "463dd03173ec6774bfe093e0aa4ec534f347e0262552939a3ea299c43d71fa21"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/deit.py",
+      "sha256": "5d064ca39779594015156daabed7ec55cd8443ebcd9fd3fad33420de200976af"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/densenet.py",
+      "sha256": "4fee749c6aa3afd8319adfd80fefbb77d77e4ba63eb55770642720625713adc9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/dla.py",
+      "sha256": "cc3c91a8ec37aa2ecd26c333d2b74f25e33295d1aef9ab76f32ddb2c2df4a416"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/dpn.py",
+      "sha256": "7bd9e0d70760cc39db827298f087ea6fd73f254b2d2ae138e04cf9620ad70bc9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/edgenext.py",
+      "sha256": "5200ed0c96f5e5a4be518dd92226fbeee5d0eebba48e6159069b228e08c244c5"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/efficientformer.py",
+      "sha256": "63be065e081cb498334b408b803c53b4e5b7353234c93dd0f77b483be5f94c73"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/efficientformer_v2.py",
+      "sha256": "ce3bd5659bd9c026af50a3fa50cce7c852dfb4154eee98ca3ccd453ce4e64022"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/efficientnet.py",
+      "sha256": "e8fad9ee8e718343c7ecbf8db704d256a9904f7821fe35d4d9b3ffe7743e5674"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/efficientvim.py",
+      "sha256": "472eba5b6dd8f51436a2cc31800e6fa1240596d6054fbc6388734f7391587354"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/efficientvit_mit.py",
+      "sha256": "f42ab4711f11158810a0a4168ecb0f475d8238410a906f21ae4701d78ddc2985"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/efficientvit_msra.py",
+      "sha256": "32bc8e9bc0c1de2d064fafed4c270dc139268374b95235d72a34c458c4ea4ace"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/eva.py",
+      "sha256": "a8c9807ef5e8dabc725c1e2a89439760a900d6af6cdafefea18fc121173643a2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/factory.py",
+      "sha256": "bdb5d3ab756c187f07ef54654e2d232cc7a61e93529f9d1f4d3ff82b990db1bd"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/fasternet.py",
+      "sha256": "7b13a01c318184ea7b7878122fbb7d1f895f0dc15fb4a4593a37dd78cc94fedd"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/fastvit.py",
+      "sha256": "c2ddec5203b8aa4cf3386741d8fc2fa7848d03f7f38b0fb279cb26aae5a415b3"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/features.py",
+      "sha256": "97ed6905adfaaf42264919d545dea42d839da0cc7c4ef50c0a06c8910028a13d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/focalnet.py",
+      "sha256": "2e1b5d5df466fdfe69ba3926072a8742fc6aae9d2f5179da7164abe78e385c32"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/fx_features.py",
+      "sha256": "fb1c879d3f96a6e54524f562564869751160930e463574acfd1cc56031e42079"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/gcvit.py",
+      "sha256": "2b7e806e81e0e94e392215af41c70397f8806fd813c19874b1448a1199be9286"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/gemma4_vit.py",
+      "sha256": "e4650abc6c3cb0f67909a34bd5ae959f25567ab4e462b183bcf0b5121a1704c8"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/ghostnet.py",
+      "sha256": "e70e12531c0c49c0105a8ff75790e57bc22bc3101fbaae60c4387d60a974cdea"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/hardcorenas.py",
+      "sha256": "1c13f0bd46413f0655f2644a6bc77cf2a363f61ccbeb3b0e45c058662e96636e"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/helpers.py",
+      "sha256": "27cd5917e961a7c2f7a291fc6f4d88a1bf9514c9bfdfa95e1755b9a7744b5ace"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/hgnet.py",
+      "sha256": "91d4586d765cfe261934fd0a432c5acdcbdd94eb712c62412f23a4007f0150bd"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/hiera.py",
+      "sha256": "ebe9ce69a040a5d7078e80e22c9a0372eaca189ae1eb9dbb05f8ffc505e9519f"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/hieradet_sam2.py",
+      "sha256": "62e01a96101043b624b974d7b5b901dcb61784e14aa8ccd961463e6e20f296e4"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/hrnet.py",
+      "sha256": "ea17f7e9ffdd622db19cb9683612fe9304c06581a90564cedca26a670da90d41"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/hub.py",
+      "sha256": "59d525b346d99537c0b50e38ed69395be8d6134ef86e4ce774e7e528f275bb2a"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/iformer.py",
+      "sha256": "4e363e169cd18766399c0d9f18f9632dde15c94e8f3d46335093711d20e9c80c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/inception_next.py",
+      "sha256": "e6a367c6f9f78045e7b2dc3455ae46d66685e6d841c7c2cc6cbe29688e09f2bd"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/inception_resnet_v2.py",
+      "sha256": "aebbb7e75098de43e251839351cc7d87dc0a5b079e8b4180e60b15faca463ccc"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/inception_v3.py",
+      "sha256": "c6878de6438a9d5efaa796322262120f4d7b41c7b787c465338bbcdc52a9bf0c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/inception_v4.py",
+      "sha256": "c3e4461e03b69db5b547224f17d37a7e8a09ca7b3b7a8a1444ae79d624e7d1c8"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/layers/__init__.py",
+      "sha256": "1b3551ffeb1ac21207eadf7748974048eeed6dded661f9b7e48e12fb2a9554dc"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/lcnetv2.py",
+      "sha256": "3df1342a8d0f93fb82fa1a557669f4972058cf669eb07c5256fcd2ae1045cbf7"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/levit.py",
+      "sha256": "08b920500bedc894bce1fb201cc75b96ae99fae0eb69e966f2336d8535f86de0"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/lowformer.py",
+      "sha256": "ef8f82e95b65aad41de683dbf2465118a26faf9db28c27d67883153f12f09c92"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/mambaout.py",
+      "sha256": "ab08af3343b0608297675de6c03b640ecbbdec918b3f4dfd35d855d5bd83f805"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/maxxvit.py",
+      "sha256": "a904be655fc8ec4f5171ad313a1ee8b189c6a29e10ff2d82429f22a1fb3cbdc8"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/metaformer.py",
+      "sha256": "07612aca30bf2f48caac468236a553f0398c2c73bed0b5001af8d1e3c9c764b9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/mlp_mixer.py",
+      "sha256": "0f533c69b5c6097eed939e9140c16e1c8d167b7b5f2dc8d3fe41dac2ac9b425b"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/mobilenetv3.py",
+      "sha256": "d3ec97b206dac9554d1354870cff051053c9ffd095dd2e0716b4023a007e9239"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/mobilenetv5.py",
+      "sha256": "c5844154b23bb8a8b165cffaf92e36031e32ef8625077e6e7f7a2a1144fe3fc8"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/mobilevit.py",
+      "sha256": "904ff7754708a964cece18ada44a7f0af974296170b4d4fdc5c7573bb2cfe418"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/mvitv2.py",
+      "sha256": "70f3d9bd74a9b82f91124aaaa993ad5a60c70377b7f0f3527a89aeb63481573c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/naflexvit.py",
+      "sha256": "f1b267c051bc60776f11e63e7a4d193d85c27daca53dd3ccc6b6ee4a00f41a61"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/nasnet.py",
+      "sha256": "26fc5ac0c4a06d25632e24a3addd6b8360de7996793c705da921a80d4600a7f0"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/nest.py",
+      "sha256": "060232829129f643ce0413e0c2197b36dceb9fde4a5424dee2795bad4604a94c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/nextvit.py",
+      "sha256": "bb4b5df97daf9449f588d52eb943bad3d0c38f958e3189aa1170b6a95de53142"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/nfnet.py",
+      "sha256": "feaa03181923e1930522bda507aecfa1ba9899c4fdce477c01080e78acac2030"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/pit.py",
+      "sha256": "e6f0e8164acc50ba0c897c3bfe7fa136287f0b84cbfa4892b48e7576ca768493"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/pnasnet.py",
+      "sha256": "e7f6ec05a432701973fd1923c56e0b42b33d4ce3991b4cae58580770d30ddf51"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/pvt_v2.py",
+      "sha256": "c6b23a4b22408865f5a400a19417e66c7eb8f4b76e83e39cd809c36e8f3fa1d1"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/qwen3_vit.py",
+      "sha256": "441ed701cabf1085722f9a0833fb98df00daff59b061e3bbad0d088360b72392"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/rdnet.py",
+      "sha256": "5d6cbeac2b7d6b2c17a5500e8a7b25f07d275e3be3d994761950b9253d8865a1"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/registry.py",
+      "sha256": "25d6d623e6c6c1587382375c8bbdd2330f0942c8c711961a4be12dbad3f3f60d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/regnet.py",
+      "sha256": "00c0436f54de0021b71d1b645f2db0c11d5af94c421d525283f8d86d8bb6c819"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/repghost.py",
+      "sha256": "e67b50242b92bced9669a7bc71604f947195651697c98a5eb35c1a019d06a9fc"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/repvit.py",
+      "sha256": "81cea9a058dd34ddc93f00b36c21ddce1f8c5c53591d376c62c968afd5938b5d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/res2net.py",
+      "sha256": "2da99a4faaaf360391cc9ff3f87ea1f080c19423c0b8ba1426633601bb7432d6"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/resnest.py",
+      "sha256": "f97bc1a68d7d59eba85b5231294fdebb1ed4b6029d39bb253d89d88518167c1f"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/resnet.py",
+      "sha256": "1f5f941e35961769ad95dd9fa80ad55596f5daf2da955097396230b4513fb2a9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/resnetv2.py",
+      "sha256": "b75e64b6d5fbf25c55a3572ebf0502e7ae5a719243116bc7997b5bf14886d5d5"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/rexnet.py",
+      "sha256": "1064dde94746c5bdffed2f2c586e3f8dfc9dc598089f753eb219c892b8fea278"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/selecsls.py",
+      "sha256": "895b948467d005b48c9bc57e7bdf3e1cb1b71cdc5c03dae8df2e04de3a10b32c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/senet.py",
+      "sha256": "3a1a965f03c58125fd1a32d661785ea8a1af8bc41b2640d7f660248d868da0ee"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/sequencer.py",
+      "sha256": "ff3696d35e316931e86a77b50104a2369930b33ae05b23a2de3fe0d17a2a4264"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/shvit.py",
+      "sha256": "07df5aa0246caa5c850000cafaea0a2da2dd5e953adaddbf5e9d6f2df1f589ea"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/sknet.py",
+      "sha256": "1260a96f6dc4308a55434efa2d477fd14dd157f65eab397200dbb905f6e3eca9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/starnet.py",
+      "sha256": "1d802aa8bb774c30cb0bff4cc1d8032e834e32d172e582e1ea64e8f10bcb69ea"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/swiftformer.py",
+      "sha256": "525da9b24082fdd8bdabb42307b1594bc5f1637e7beef4ba536aea24be508a81"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/swin_transformer.py",
+      "sha256": "712f5ca827f87d17efbc797ad8e822674b12d5f1cf482c3e03aacd109a23da0f"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/swin_transformer_v2.py",
+      "sha256": "02a4f46aafeaab34c9427dddd904ded12d2f995ff54ee4cc45b1bb783bfee6e1"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/swin_transformer_v2_cr.py",
+      "sha256": "40b7a0d6c3fd538a3fa1a48b0f170f3549d366aba76a38f96f68d285968dbb85"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/tiny_vit.py",
+      "sha256": "6ed4738f19284885d578c3cc1f15a744f9c26c61d74c5f0cd9a9cb6c32d9ad90"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/tnt.py",
+      "sha256": "b18ffa873eb7ac2e5540c0a41963192a8ed67a07679a98892782a30b7eb62863"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/tresnet.py",
+      "sha256": "b6f28274047ed6c5168bf58b433c1c701c4cecf0b161805a9bc996a3420ae857"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/twins.py",
+      "sha256": "f310af3bae1bf59a43f920d4cfe1baa9261444812866e974fa09aeff484d4832"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/vgg.py",
+      "sha256": "d4365532487ce2191b9807eaf7e68ee9c8771b9fd6633992937cd41a1b06fbd0"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/visformer.py",
+      "sha256": "dcec27d1ddc9e5ba7703d426d876dbb2b8169a7ddbe5f59d3e9e95faa75e9a6b"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/vision_transformer.py",
+      "sha256": "88891e4af894a7797b2d625db1be93c85c9843110d8491fd6aba927320b06df7"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/vision_transformer_hybrid.py",
+      "sha256": "c7d7326760e9afc2a7cd91c8bf27f3e50f70f381833cecd22dc44ad60b1f2501"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/vision_transformer_relpos.py",
+      "sha256": "06a4c6774fb953cdbdaa610c1a46800a9d7e1f264aed93169d033259024c2532"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/vision_transformer_sam.py",
+      "sha256": "b42b427f6df4ce9477de92ab9d2bb0968337fb5106ccac0598924b8cad0e71d9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/vitamin.py",
+      "sha256": "5722b047ed6825808b8109f8edce4466d354f88d16793b3db1fe0b1e35f67e8f"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/volo.py",
+      "sha256": "35efde0fcc8f0c57a64390dbf04d7087418d564784526d4be9ebdad873592e25"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/vovnet.py",
+      "sha256": "1538283dce4c854167a40446e8015ef396fdac2e879a082519033de6d282e32d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/xception.py",
+      "sha256": "2e31476db88adcad1aa3940c971bfe658ba443444ad1060e8b123426f00d7921"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/xception_aligned.py",
+      "sha256": "a5d5a5cce8e0585654b5e610ecdf74ea93e58ea9f66cf6eb8a69fab79b56b7b0"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/xcit.py",
+      "sha256": "03a5ab92552be1033e959b143dea653d43bd2be80e96283d19e657ef43a90b58"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/__init__.py",
+      "sha256": "23e205eb4a9550856f3fae32f0de174f2081d1d67df5b4c747884d4d280975ce"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/_helpers.py",
+      "sha256": "7495c9fc733c1339405e43a0cc0dfc5d3ccd384adf38226d6b6997fde9b7e7f6"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/_optim_factory.py",
+      "sha256": "786ce0e9e2644b706b356824465277680c4b6e59fc8fe46c46e461db1fe49d2e"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/_param_groups.py",
+      "sha256": "e74c3775825b24de615ba0a9e75c25447e31de14cd5dde2fa6b52ee3946b2ade"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/_types.py",
+      "sha256": "5dbfdd801607791d7168556ccba0f040cbcea0e30dc6ad1a7b5ec19be127366b"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/adabelief.py",
+      "sha256": "3b0f78048d7b02d695975daf597cec560c5436ab7ddb1a49f1734f7bad136df4"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/adafactor.py",
+      "sha256": "a99956882619acf42dc0f128a1ef5a23616212e8391921c7963da642e4b2fdcb"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/adafactor_bv.py",
+      "sha256": "16507c7585ea86825fe1b005aa8a8cd2f0919c716d13786293d98cc91794d2ff"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/adahessian.py",
+      "sha256": "79c747b1f71e17ae89630331cd6ab02336a76379c3cda0541ce2540be96af0a8"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/adamp.py",
+      "sha256": "2b98a32a7403a6f449fb8a1bfbcc5670f4ccf8f2e2c9448d1bcc7bc72af38ade"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/adamw.py",
+      "sha256": "8616dd48057f957ec3acdd3b17d3e3d5b117e551ea340d51febbe98362941a63"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/adan.py",
+      "sha256": "b9b0daa9c952445081e2d4a2b523b3c0dffc1f5de73823354fa987aaeae96b3c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/adopt.py",
+      "sha256": "ba5abb912b28412e3f7d465166e50dff95639cc4a6ff0d0977bdc0caf86a66c9"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/kron.py",
+      "sha256": "9a57988f6ef41e7f86070f7dcd8c848e32c4c193f194d23f1f57b3324684d860"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/lamb.py",
+      "sha256": "f3cfdc6cbcf0ade75a539b0dac9812e3478509f74e2e19a3ece0bce45111ef98"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/laprop.py",
+      "sha256": "8f180e17e36fe1927f8a101a19262f12402557e0a470795220d35d85573429c2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/lars.py",
+      "sha256": "a1bb7fa52f35a2a2243f62208ff1d7c4b507f6051eeff931b15aee83bca51d18"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/lion.py",
+      "sha256": "b4374a6779291d3937915f7ed7d44027f579d33b88ae188d12bacd1ea00a7d50"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/lookahead.py",
+      "sha256": "f9f3350c4c057ff6e96cdab6717764272ae86c5e2269534806e99a9ff45f464f"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/madgrad.py",
+      "sha256": "bb701f725aab921f054a73a951ed07306b2e3d7c43fd927935c36d45219942e3"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/mars.py",
+      "sha256": "2d5ac9feb3accb8b0e9d1ff7a973f624f9c9ce3d5174bfdbb08778be9548227c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/muon.py",
+      "sha256": "428219504fe66d12204e4f99604f9c9ebf15377fbab34fd975fdc215713beeb2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/nadam.py",
+      "sha256": "44b3936e6b14bd38e5efc767d07f4b65a4334e695d7cb50f967b2657511f7e55"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/nadamw.py",
+      "sha256": "9e2a9d3d4fec63177956920e39d244cf5230407f168c084672c590aed78a94f2"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/nvnovograd.py",
+      "sha256": "4ee419b590de4fd5618031d34cbcd7106c7d3e820b3e1dc6504b2df72b08c594"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/optim_factory.py",
+      "sha256": "aa76617a7d36d3f96bdc54fb860d047a0b18c6600a302d1e9ffceeba0b64119c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/radam.py",
+      "sha256": "3b4014a7a9a09ea5991b352f71e306d58d74a016fe33b3205ec0d9284b30cc5c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/rmsprop_tf.py",
+      "sha256": "b06b0513ed1c8bb1b5092d1885b3bd6eaebf7245b8bee8a4093129fac1be781c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/sgdp.py",
+      "sha256": "dd698a06b68c04d5fd446caed69ab1387ab69bd9fc0c09ec8577642d44134ad4"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/optim/sgdw.py",
+      "sha256": "897d6fbe088a38830c772717011d634fe3f07c8fdb3eeaae21acd479f6fe3c80"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/scheduler/__init__.py",
+      "sha256": "3b7c8d45c8237bd97fc1487137956d7800114463290b13a685b3a657ff23d83c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/scheduler/cosine_lr.py",
+      "sha256": "d80b20a42975bcef0d6f90e13fb745d0f089192d0078ddaa69a519b33ab3f4ec"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/scheduler/multistep_lr.py",
+      "sha256": "b5752d8a54f1265ffd7a6b30b4a8addad09830362c9792b9bb2d472990af252d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/scheduler/plateau_lr.py",
+      "sha256": "a219d831358aebb496c54efa80a72e23275686970f4353b3043986bcc6152f86"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/scheduler/poly_lr.py",
+      "sha256": "2614683a91fc82959c300fafd6a9b7239878549d1bf3ee2ef0d31ef9c7f1ce84"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/scheduler/scheduler.py",
+      "sha256": "1378a9ddf091ac98c466c18a4c91f593f36757a8cd5a8bb771462ed557304bb5"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/scheduler/scheduler_factory.py",
+      "sha256": "15884c2f03b9416790f9b367bdfd1453c309ba116cfad31777eee8cb3bdd72dc"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/scheduler/step_lr.py",
+      "sha256": "dbfe5c91deaeacf571fd3156811078c3b3e00264ce558c6c8d00111be272b6de"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/scheduler/tanh_lr.py",
+      "sha256": "31ed82f5d3803c33d65f34340a12fc92ec8fc348f2a8514cf0a943746b9d7b55"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/task/__init__.py",
+      "sha256": "a9314ab281e9f5bb232ad9a2ebab0ed3395f93bb44597326a082e34f3cf4512c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/task/_helpers.py",
+      "sha256": "c792d2116d980d14941ecc4c0f81a205982ff826328a898d074a8edaf0ad64c3"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/task/classification.py",
+      "sha256": "cb3b8d46eda78a31b23e9c9866d5a88fc982a5b162f5aec0cef6c78dabb68841"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/task/distillation.py",
+      "sha256": "57df620b42f3863c1b187d4203f724282dce135556a3ac939840762bbaf60eca"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/task/task.py",
+      "sha256": "dca838dfa665715b85710efd9da924fa162de5dbae679dc211f001c5be385878"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/task/token_distillation.py",
+      "sha256": "d7c40dc3ff36c5609526f51d662d8ef45707a77027dfe1547dede252f92f895e"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/__init__.py",
+      "sha256": "afe9a013bb003986ad14462381d5d7287d118ce2ef439147d2b731bfcfa0351d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/agc.py",
+      "sha256": "ea56420a17db5b428634c7e4cf3b560ff34ff3b112a298e4db85ed6f759b06a5"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/attention_extract.py",
+      "sha256": "0823cc9a7124e1d33552bbcea58eec7c6648f0a2d07a42484fbadf960fb8a83c"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/checkpoint_saver.py",
+      "sha256": "e6bd895efc161674ee2c2d9c43e49f1e21eb7521831a183ca62589cb9b9ca013"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/clip_grad.py",
+      "sha256": "8981447fb7ef3dba728792b5488f8429ecb91aab36833b51f555141a36b4181d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/cuda.py",
+      "sha256": "17e3fe0bf6df05b23f2e86dc5cb655527d12a993877e87bd95e7ef75669d51b3"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/decay_batch.py",
+      "sha256": "e5f3ab30ef7ce4fc3cbb3bc12bbf11c180a81f736fda36f8e8e19af46909e8b0"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/distributed.py",
+      "sha256": "0d4166c612b21c6d5e702a0029dd4c7d01aea40b84aa7d924eb9b0abcc3561d4"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/jit.py",
+      "sha256": "13aa862c777d8daec2c89f1d018335b4c3f49a6e436fc63c233393748e78f9e6"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/log.py",
+      "sha256": "05d6763aa5a8deff1def0b03449fae00272878d5214bc4c94b0237098beadd2b"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/metrics.py",
+      "sha256": "1bb613b59a40319c5f406a337e11a1b060af86398301f6371e8962c5553bc2ca"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/misc.py",
+      "sha256": "d65cda1eef8e68e6b6ee2296db936abfb25edb9ed8355673406244b9611f3f0a"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/model.py",
+      "sha256": "cbd0ae079c31bbdef9c21e6eabe038ab440661bbf6d341b65ada29fe99425a4d"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/model_ema.py",
+      "sha256": "2e9a25fed2f8a319ffc62b0b803f997f33ae4f6b8df34e885eb171fa406a3384"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/onnx.py",
+      "sha256": "0d9a91dfd92bbe2086eecdec958250f44456920b4b0941a402b6aaf1e397ff8b"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/random.py",
+      "sha256": "62cbfa1779c83bc25813c8fa52b0f11b2243a77b8da6ae6ff14d0aa8bffc7627"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/utils/summary.py",
+      "sha256": "1d80f99c9b13383dc31aa08f52ed8bdec5f85633454f26c76e3c27b52116062e"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/version.py",
+      "sha256": "56e45a5f0daeccbf73a28f14ddc64c6dc01a43fe1d4095ae08b0e5b20c4e1f44"
+    },
+    {
+      "path": "research/cow_identity/autocattlogger_mps.py",
+      "sha256": "b9e3939b7ef8c32aa84d4faba0490f50ba2b49b91581ad5223a0bc5c4dab6c46"
+    },
+    {
+      "path": "research/cow_identity/autocattlogger_reference.py",
+      "sha256": "a984fae4cfd327bb5fb5b407e471e9a2e7d136bf95c349b36fe867250974eba7"
+    },
+    {
+      "path": "research/cow_identity/autocattlogger_reference_imports.py",
+      "sha256": "53de608ffbd113fc3fde3985f9b733750c4b42ac790120dff8e32bda466bfc77"
+    },
+    {
+      "path": "research/cow_identity/autocattlogger_reference_protocol.json",
+      "sha256": "36475a8284c67494cd7f5a2512ed0aaa92c8cee6808375293901ad3b3fe4c1ac"
+    },
+    {
+      "path": "research/cow_identity/results/2026-10-03/recognition/autocattlogger-reference-cpu.json",
+      "sha256": "2cf5a0b26fb6b8d9b950616057fb9dd847ac9069943d812111e675ce920796d0"
+    }
+  ]
+}

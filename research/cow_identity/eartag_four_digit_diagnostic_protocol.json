@@ -1,0 +1,32 @@
+{
+  "conditions": [
+    "detected_rapid_raw",
+    "detected_rapid_0.95",
+    "detected_adapted_trocr",
+    "detected_literal_agreement",
+    "oracle_adapted_trocr"
+  ],
+  "data": ".cache/cow-ear-tags/trocr-lines/manifest.json",
+  "files": {
+    ".cache/cow-ear-tags/trocr-lines/manifest.json": "f0ce91ab748f8e505e80e8a3951a5ad571364f387600844c7929c407fd48416d",
+    ".cache/cow-eartag-inventory/manifest-v1.json": "901e26db3f0fc8242607586b6027629f402549eac0d4362d51250efed7463cbf",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_four_digit_diagnostic.py": "7fb240ca6be5913ed043b4f443884a47d8c22a20083920a99f0d04e241900e82",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_ocr.py": "55bac86c881dd82218cb7be6f5c94a81c81a56a6b2af9e53130087133c903db0",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_ocr_protocol.json": "631ff60a6d249d5e3482c5bf44a616babd1815809e4ab8e5440f3340cc14e759",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_reader_agreement.py": "cf975191ca1e940df470760f9a5e76bbaf2620c84e364545b192ccd1a04bab71",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_trocr_cpu_evaluation_protocol.json": "e57928cac00a158a408019167e99e087318d56c05b729c7095e9484f3d330676",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_trocr_score.py": "94037f2f17a5a60c2bff290559ac64397cc06647c9829d10e9b89f91d429137e",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_work_numbers.py": "258a2da38fe4a488f039224894754f6e0246c3f61e36b53a0d9a82f40197612f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/ear-tags/ocr-development-raw.json": "8ba14cee7dfa68636571596951d088878e341424b807aa6586b891d2953287bf",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/ear-tags/trocr-cpu-corrected-raw.json": "91ba0a40508fe0fed446bf809ba94ca34a00b26db752bf63ce7a849769cfb3c2",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_eartag_four_digit_diagnostic.py": "1a23e53bdaf85655837887d2d7165b385b641c1826353cb158b6234e0102ceef"
+  },
+  "libraries": {
+    "numpy": "2.5.3",
+    "opencv-python": "5.0.0.93",
+    "scipy": "1.18.1"
+  },
+  "rule": "Use existing work_number strip-only ASCII4 helper. Every emitted4 counts; match against ALL157 original line polygons with original unique cardinality-first IoU.5. All18 literal4 targets retained. Wrong4,4onother-lengthtruth,unmatched/duplicate4 all hurt precision. Do not infer missing digits, join, select largest line or discard date-like/clipped examples. Oracle row is conditional on provided true line geometry.",
+  "scope": "RETROSPECTIVE EXPLORATORY: already exposed64 grayscale tag crops only. Literal ASCII four-digit transcription, NOT work-number semantics, biological identity, ownership or field accuracy. Original all-line studies stay unchanged. No calibration/reserved images, new model, threshold or semantic filtering."
+}

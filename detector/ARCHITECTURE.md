@@ -114,6 +114,20 @@ Model paths and the application cache belong to `adapters/inference/model_assets
 
 ## Domain boundary and language
 
+The continuous-camera identity work adds `domain/live_identity.py`: bounded,
+worker-owned human assignments to temporary instances. Generation and revision
+tokens prevent an old photo from naming a reused tracker slot. This is separate
+from appearance matching and does not manufacture a similarity score.
+`adapters/identity_control.py` retains exact analyzed JPEGs with capture stamps,
+queues validated commands from the input thread, checks the confirmed catalog
+and applies assignments on the camera worker. Snapshot expiry, run/source/epoch
+scope, current reviewability and command deadlines are checked before mutation;
+bounded receipts make retries idempotent. A temporary tracking-quality gate can
+hide a name without declaring continuity lost. The caller explicitly owns that
+decision and must deliver source resets before processing confirmations.
+These components are tested integration building blocks; the CLI, live tracking
+adapter and Herd confirmation screen are not connected to them yet.
+
 The Python detector has one event-processing model: turn footage from a source into a completed event, obtain its verification outcome, and apply cooldown and export policies. Treat this as one bounded context. The domain, application and adapter packages are layers within that context. Capture, inference and delivery are integrations with different technical responsibilities; they do not each need another domain model or service.
 
 This vocabulary describes the implemented behavior and is used in code and tests. It is a working model to refine with farmers as their use cases develop; it has not been validated as their preferred terminology.

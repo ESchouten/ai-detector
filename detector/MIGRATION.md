@@ -14,6 +14,11 @@ Confirmed names/examples and review crops live under `<data directory>/identitie
 
 ## Compatibility commitments
 
+The new live-confirmation domain and transport components currently have no
+startup or browser hook. They change no saved configuration, catalog, archive,
+CLI protocol or existing identity behavior. Continuous-camera confirmation
+remains experimental work, distinct from the existing gallery-photo action.
+
 - Existing top-level `detectors`, `onnx`, and `health` configuration remains supported.
 - Single values and lists remain accepted for sources, VLM configurations/models, and exporters.
 - VLM verification is controlled by `key`: null or omitted means disabled, while a string requires a provider model. An explicit empty string supports unauthenticated local services without environment-key lookup. The web app expands shared connections into `config.json`; Python never reads `app.json`. The web app upgrades former preview enable flags on loading saved settings, before managed monitoring starts. Standalone configurations must remove `enabled` / `vlm_enabled` and clear keys on disabled entries. `--test-vlm FILE` checks a connected model with synthetic media without starting detection.

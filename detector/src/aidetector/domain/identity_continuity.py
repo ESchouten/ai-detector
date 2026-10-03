@@ -1,0 +1,201 @@
+"""Bounded, single-camera conflict gates for continuously tracked objects.
+
+This is the fixed research policy, not biological recognition. The caller owns
+cadence, continuity loss, names and a matching thirty-frame raw-mask ring. Every
+update is one consecutive 1 Hz evidence frame, not every 2 Hz tracking step.
+No gap tolerance, automatic retirement or new-object policy is inferred here.
+"""
+
+from collections import deque
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import Literal, cast
+
+from aidetector.domain.models import BoundingBox
+
+# Fraction of an earlier donor's raw foreground occupied by a current receiver.
+# The adapter computes this from immutable current/history pixels, without I/O.
+# Only the preceding thirty frames can be requested; the callback is not saved.
+AnchorCoverage = Callable[[int, int, int], float]
+
+
+@dataclass(frozen=True)
+class ObjectQuality:
+    object_id: int
+    area: int
+    p10_probability: float | None
+
+
+@dataclass(frozen=True)
+class ContinuityChange:
+    kind: Literal["quarantined", "restored"]
+    donor: int
+    receiver: int
+    anchor_frame: int | None = None
+
+
+@dataclass(frozen=True)
+class ContinuityDecision:
+    """Eligible IDs may display an existing human name; none is assigned here.
+
+    Pairs are stable object ID -> same-frame raw proposal index. Proposal order
+    breaks IoU ties. A mask's probability is never a detection or identity score.
+    Changes are this update's deltas, not an indefinitely growing event log.
+    """
+
+    eligible_ids: frozenset[int]
+    conflicted_ids: frozenset[int]
+    reciprocal_pairs: tuple[tuple[int, int], ...]
+    changes: tuple[ContinuityChange, ...]
+
+
+@dataclass(frozen=True)
+class _PastFrame:
+    index: int
+    objects: dict[int, ObjectQuality]
+    conflicted_ids: frozenset[int]
+
+
+@dataclass
+class _Conflict:
+    reference_area: float
+    restored_frames: int = 0
+
+
+def _iou(left: BoundingBox, right: BoundingBox) -> float:
+    intersection = max(0, min(left.x2, right.x2) - max(left.x1, right.x1)) * max(
+        0, min(left.y2, right.y2) - max(left.y1, right.y1)
+    )
+    area = (left.x2 - left.x1) * (left.y2 - left.y1)
+    other = (right.x2 - right.x1) * (right.y2 - right.y1)
+    # Preserve the research convention: no +1 or coordinate adjustment, even
+    # though the upstream largest-component box retains inclusive maxima.
+    return intersection / (area + other - intersection)
+
+
+def reciprocal_matches(
+    boxes: tuple[BoundingBox, ...], proposals: tuple[BoundingBox, ...]
+) -> dict[int, int]:
+    """Mutual best IoU >= .5, with smaller input indices winning exact ties."""
+    if not boxes or not proposals:
+        return {}
+    overlaps = [[_iou(box, proposal) for proposal in proposals] for box in boxes]
+    best = [max(range(len(proposals)), key=lambda j: row[j]) for row in overlaps]
+    reverse = [
+        max(range(len(boxes)), key=lambda i: overlaps[i][j])
+        for j in range(len(proposals))
+    ]
+    return {
+        i: j for i, j in enumerate(best) if overlaps[i][j] >= 0.5 and reverse[j] == i
+    }
+
+
+class IdentityContinuity:
+    """One worker owns a fixed set of at most eight stable object IDs.
+
+    A fresh owner is required after declared continuity loss or a changed object
+    set. Thirty *preceding* scalar records include absent objects with zero area.
+    Raw masks remain in the adapter; only selected anchor overlap is requested.
+    Recovery precedes discovery, suppression, then appending the current record.
+    """
+
+    def __init__(self, object_ids: tuple[int, ...]):
+        if (
+            not 1 <= len(object_ids) <= 8
+            or len(set(object_ids)) != len(object_ids)
+            or any(object_id <= 0 for object_id in object_ids)
+        ):
+            raise ValueError("Continuity requires one to eight distinct stable IDs")
+        self._object_ids = object_ids
+        self._history: deque[_PastFrame] = deque(maxlen=30)
+        self._conflicts: dict[tuple[int, int], _Conflict] = {}
+
+    def observe(
+        self,
+        frame_index: int,
+        objects: tuple[ObjectQuality, ...],
+        boxes: tuple[BoundingBox, ...],
+        proposals: tuple[BoundingBox, ...],
+        coverage: AnchorCoverage,
+    ) -> ContinuityDecision:
+        if self._history and frame_index != self._history[-1].index + 1:
+            raise ValueError("Continuity requires consecutive 1 Hz evidence frames")
+        qualities = {item.object_id: item for item in objects}
+        if len(qualities) != len(objects) or qualities.keys() != set(self._object_ids):
+            raise ValueError("Include every fixed object, with zero area when absent")
+        if any(box.track_id not in qualities for box in boxes) or len(
+            {box.track_id for box in boxes}
+        ) != len(boxes):
+            raise ValueError("Each display box must have one distinct stable object ID")
+        matches = reciprocal_matches(boxes, proposals)
+        confirmations = {cast(int, boxes[i].track_id): j for i, j in matches.items()}
+        changes = self._restore(qualities, confirmations)
+        changes.extend(self._discover(qualities, coverage))
+        conflicted = frozenset(i for pair in self._conflicts for i in pair)
+        eligible = frozenset(
+            i
+            for i in confirmations
+            if i not in conflicted and self._probability(qualities[i]) >= 0.7
+        )
+        self._history.append(_PastFrame(frame_index, qualities, conflicted))
+        return ContinuityDecision(
+            eligible, conflicted, tuple(confirmations.items()), tuple(changes)
+        )
+
+    @staticmethod
+    def _probability(item: ObjectQuality) -> float:
+        return item.p10_probability if item.p10_probability is not None else 0.0
+
+    def _restore(
+        self, objects: dict[int, ObjectQuality], confirmations: dict[int, int]
+    ) -> list[ContinuityChange]:
+        changes = []
+        for (donor, receiver), conflict in tuple(self._conflicts.items()):
+            restored = (
+                donor in confirmations
+                and receiver in confirmations
+                and confirmations[donor] != confirmations[receiver]
+                and self._probability(objects[donor]) >= 0.7
+                and self._probability(objects[receiver]) >= 0.7
+                and objects[donor].area >= 0.5 * conflict.reference_area
+            )
+            conflict.restored_frames = conflict.restored_frames + 1 if restored else 0
+            if conflict.restored_frames >= 3:
+                del self._conflicts[(donor, receiver)]
+                changes.append(ContinuityChange("restored", donor, receiver))
+        return changes
+
+    def _discover(
+        self, objects: dict[int, ObjectQuality], coverage: AnchorCoverage
+    ) -> list[ContinuityChange]:
+        changes: list[ContinuityChange] = []
+        if len(self._history) < 30:
+            return changes
+        for donor in self._object_ids:
+            areas = sorted(row.objects[donor].area for row in self._history)
+            reference = (areas[14] + areas[15]) / 2
+            if reference <= 0 or objects[donor].area >= 0.25 * reference:
+                continue
+            anchor = max(
+                (
+                    row
+                    for row in self._history
+                    if donor not in row.conflicted_ids
+                    and self._probability(row.objects[donor]) >= 0
+                    and row.objects[donor].area >= 0.5 * reference
+                ),
+                key=lambda row: (self._probability(row.objects[donor]), row.index),
+                default=None,
+            )
+            if anchor is None:
+                continue
+            for receiver in self._object_ids:
+                pair = (donor, receiver)
+                if receiver == donor or pair in self._conflicts:
+                    continue
+                if coverage(anchor.index, donor, receiver) >= 0.5:
+                    self._conflicts[pair] = _Conflict(reference)
+                    changes.append(
+                        ContinuityChange("quarantined", donor, receiver, anchor.index)
+                    )
+        return changes

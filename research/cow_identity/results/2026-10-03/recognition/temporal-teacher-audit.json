@@ -1,0 +1,132 @@
+{
+  "all_disagreements": [
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 4.0,
+      "suggested_cow": 3
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 31.0,
+      "suggested_cow": 1
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 85.0,
+      "suggested_cow": 5
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 97.0,
+      "suggested_cow": 5
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 98.0,
+      "suggested_cow": 5
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 471.0,
+      "suggested_cow": 5
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 505.0,
+      "suggested_cow": 5
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 596.0,
+      "suggested_cow": 1
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 597.0,
+      "suggested_cow": 1
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 601.0,
+      "suggested_cow": 1
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 602.0,
+      "suggested_cow": 1
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 603.0,
+      "suggested_cow": 1
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 604.0,
+      "suggested_cow": 1
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 605.0,
+      "suggested_cow": 1
+    },
+    {
+      "category": "unmatched_geometry",
+      "matched_publisher_cow": null,
+      "second": 614.0,
+      "suggested_cow": 3
+    }
+  ],
+  "counts": {
+    "same_known_label": 2789,
+    "unmatched_geometry": 15
+  },
+  "files": {
+    ".cache/cow-cutie/crowded-joint-extended/streaming.json": "4aaaa8efca1bbe75d5b885ac003d8b285d1e90a6366476e0cc3f45646c5710d5",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_temporal_teacher_audit.py": "0d9d9933f81bb8ed9674253a56088499a1cf7af5dfcdb031156bce37e42794d5",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/temporal-training-inventory.json": "84d7909a224ca92ec33ec669e3c4a33de676b437710257cca0857a5cd49c360e",
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26"
+  },
+  "limits": "Publisher rectangle mismatch is not proof of a biological pseudo-label error; a correct rectangle match does not certify a clean single-animal foreground. No disagreements removed, IDs repaired, thresholds fitted or unknown7/8 examples added to training.",
+  "matching": "Original all-slot/all-eight maximum-cardinality thenIoU.5 matching, without names; count only preselected teacher candidates afterward.",
+  "per_original_known_slot": {
+    "1": {
+      "same_known_label": 512,
+      "unmatched_geometry": 8
+    },
+    "2": {
+      "same_known_label": 367
+    },
+    "3": {
+      "same_known_label": 483,
+      "unmatched_geometry": 2
+    },
+    "4": {
+      "same_known_label": 469
+    },
+    "5": {
+      "same_known_label": 412,
+      "unmatched_geometry": 5
+    },
+    "6": {
+      "same_known_label": 546
+    }
+  },
+  "pool_size": 2804,
+  "scope": "Teacher contamination diagnostic on fixed0..629 candidate pool only, not training, calibration or query scoring. Original labels/selection unchanged."
+}

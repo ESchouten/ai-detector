@@ -129,7 +129,9 @@ mutating tracking state. The worker checks it again after catalog I/O, with the
 same lock held only around the final assignment. A disconnect or reconnect can
 therefore invalidate an old click while inference or a catalog read is running;
 an old frame cannot reopen a superseded epoch. Core and name resets remain
-worker-owned.
+worker-owned. On entry to temporary ambiguity the worker discards that instance's
+review snapshots, separately from the stored name. Recovery therefore cannot
+make an old frozen photo valid again; a fresh review is required.
 These components are tested integration building blocks; the CLI, live tracking
 adapter and Herd confirmation screen are not connected to them yet.
 
@@ -140,6 +142,11 @@ scripts. Stable object IDs remain separate from SDK channel positions. Geometry
 alone supplies neither class confidence nor an identity score. Cached parity
 covers all twenty original startup candidates and 121 propagated mask frames;
 this is implementation equivalence, not a new recognition-quality result.
+`identity_startup.segment_startup` runs the existing Ultralytics SAM implementation
+once on CPU/FP32, using every raw proposal from the exact source frame. It
+releases that model after selection. Actual inference through this boundary
+reproduces the two frozen initialization frames exactly. Capacity, opaque IDs
+and human names remain the camera owner's responsibility.
 
 The Python detector has one event-processing model: turn footage from a source into a completed event, obtain its verification outcome, and apply cooldown and export policies. Treat this as one bounded context. The domain, application and adapter packages are layers within that context. Capture, inference and delivery are integrations with different technical responsibilities; they do not each need another domain model or service.
 
@@ -162,7 +169,7 @@ Context observations may carry display boxes propagated from a scored frame. Box
 
 `DetectionPipeline` creates an `EventAssembler` from an immutable `EventPolicy`. The assembler owns changes to active windows and emits completed records; it always has a real policy. `Cooldown` owns whether a verification outcome consumes the interval, and `ExportPolicy` owns eligibility for an individual destination. The application invokes these rules in order; adapters translate SDK responses and perform I/O. These responsibilities fit ordinary records and policy objects. There is no current need for a repository, aggregate base class or domain-event bus.
 
-Source and inference adapters supply nonempty, ordered per-source batches. The assembler establishes completed-event invariants. Domain consumers rely on those producer contracts rather than repeatedly validating or copying internal data. Frozen records borrow image arrays and confidence mappings as read-only values; adapters must preserve that ownership contract.
+Source and inference adapters supply nonempty, ordered per-source batches. A temporal detector may omit a source for an intermediate tracking step that has no publishable observation; the pipeline already processes only returned sources. Omission never conceals a failed inference or copies an old name onto new pixels. The assembler establishes completed-event invariants. Domain consumers rely on those producer contracts rather than repeatedly validating or copying internal data. Frozen records borrow image arrays and confidence mappings as read-only values; adapters must preserve that ownership contract.
 
 Images are `uint8` H×W×3 arrays in BGR channel order. `Frame` and `Observation` document this representation, and `DetectionEvent` documents its nonempty, chronological observations. These are producer obligations, not additional validation at every consumer.
 

@@ -1,0 +1,222 @@
+"""CPU replay of the typed domain policy against complete recorded mask evidence."""
+
+import argparse
+import json
+import time
+from collections import OrderedDict
+from dataclasses import asdict
+from pathlib import Path
+
+import cv2
+import numpy as np
+from benchmark import digest, write_json
+from detection_quarantine_recovery import CorroboratedRecovery
+from detection_streaming import decide_frame
+
+from aidetector.adapters.inference.identity_masks import foreground_boxes
+from aidetector.domain.identity_continuity import IdentityContinuity, ObjectQuality
+from aidetector.domain.models import BoundingBox
+
+ROOT = Path(__file__).parent
+
+
+def freeze(args):
+    value = json.loads(args.run.read_text())
+    execution = json.loads(args.execution.read_text())
+    if not value["complete"] or len(value["timeline"]) != 3000:
+        raise ValueError("A complete0–2999 fixed-object run is required")
+    if value["provenance"]["protocol_sha256"] != digest(args.execution):
+        raise ValueError("Recorded execution protocol differs")
+    files = [
+        Path(__file__),
+        args.run,
+        args.execution,
+        Path(execution["inputs"]["quarantine_protocol"]),
+        Path("detector/src/aidetector/domain/identity_continuity.py"),
+        Path("detector/src/aidetector/domain/models.py"),
+        Path("detector/src/aidetector/adapters/inference/identity_masks.py"),
+        Path("detector/tests/domain/test_identity_continuity.py"),
+        *(
+            ROOT / name
+            for name in (
+                "benchmark.py",
+                "detection_cutie_quarantine.py",
+                "detection_quarantine_recovery.py",
+                "detection_streaming.py",
+                "detection_cutie.py",
+                "detection_cutie_variants.py",
+                "detection_box_consensus.py",
+                "detection_corroboration.py",
+            )
+        ),
+    ]
+    write_json(
+        args.protocol,
+        {
+            "scope": "CPU application-policy parity only: all3000original indexed masks/raw proposals, no model inference, truth, new quality score or live cadence/retirement claim.",
+            "files": {str(path): digest(path) for path in files},
+            "run": str(args.run),
+            "execution": str(args.execution),
+            "mask_binding": "Every PNG hash is verified against the hash-bound run record before decoding.",
+        },
+    )
+
+
+def load(protocol):
+    frozen = json.loads(protocol.read_text())
+    for path, expected in frozen["files"].items():
+        if digest(Path(path)) != expected:
+            raise ValueError(f"Frozen replay input changed: {path}")
+    run = Path(frozen["run"])
+    value = json.loads(run.read_text())
+    execution = json.loads(Path(frozen["execution"]).read_text())
+    if (
+        not value["complete"]
+        or [row["second"] for row in value["timeline"]] != list(range(3000))
+        or value["provenance"]["protocol_sha256"] != digest(Path(frozen["execution"]))
+    ):
+        raise ValueError("Require the complete frozen0–2999 chronology")
+    return run, value, execution
+
+
+def replay_frame(frame, mask, history, domain, reference, names, naming):
+    boxes = foreground_boxes(mask.astype(np.int64), "cow")
+    proposals = tuple(
+        BoundingBox(
+            *(p[key] for key in ("x1", "y1", "x2", "y2")), confidence=p["confidence"]
+        )
+        for p in frame["raw_detector_boxes"]
+    )
+    quality = tuple(
+        ObjectQuality(row["track_id"] + 1, row["area"], row["p10_probability"])
+        for row in frame["objects"]
+    )
+
+    def coverage(anchor_frame, donor, receiver):
+        anchor = history[anchor_frame] == donor
+        return float(np.count_nonzero((mask == receiver) & anchor) / anchor.sum())
+
+    decision = domain.observe(frame["second"], quality, boxes, proposals, coverage)
+    before = len(reference.events)
+    old = decide_frame(
+        frame["second"],
+        mask,
+        frame["objects"],
+        frame["raw_detector_boxes"],
+        reference,
+        set(range(1, 9)),
+        naming,
+    )
+    expected_changes = [
+        {
+            "kind": row["kind"],
+            "donor": row["pair"][0],
+            "receiver": row["pair"][1],
+            "anchor_frame": row.get("anchor_second"),
+        }
+        for row in reference.events[before:]
+    ]
+    if [asdict(change) for change in decision.changes] != expected_changes:
+        raise AssertionError(f"Conflict transition differs at {frame['second']}")
+    actual = [
+        {
+            **{key: getattr(box, key) for key in ("x1", "y1", "x2", "y2")},
+            "track_id": box.track_id - 1,
+            "label": box.label,
+            "confidence": proposals[
+                dict(decision.reciprocal_pairs)[box.track_id]
+            ].confidence
+            if box.track_id in dict(decision.reciprocal_pairs)
+            else None,
+        }
+        for box in boxes
+    ]
+    pairs = [
+        {"track_id": i - 1, "proposal_index": j} for i, j in decision.reciprocal_pairs
+    ]
+    fields = {
+        "boxes": actual,
+        "conflicted_ids": sorted(decision.conflicted_ids),
+        "reciprocal_pairs": pairs,
+    }
+    if any(fields[key] != frame[key] or fields[key] != old[key] for key in fields):
+        raise AssertionError(f"Geometry/pair/conflict differs at {frame['second']}")
+    if sorted(i - 1 for i in decision.eligible_ids) != sorted(old["named_track_ids"]):
+        raise AssertionError(f"All-object eligibility differs at {frame['second']}")
+    if sorted(i - 1 for i in decision.eligible_ids & names) != sorted(
+        frame["named_track_ids"]
+    ):
+        raise AssertionError(f"Recorded name gate differs at {frame['second']}")
+    return len(decision.changes)
+
+
+def run(args):
+    path, value, execution = load(args.protocol)
+    if len(execution["seeded_cows"]) != 8:
+        raise ValueError("This proof requires all eight fixed objects from startup")
+    names = {
+        i + 1
+        for i, name in enumerate(execution["seeded_cows"])
+        if name in execution["named_cows"]
+    }
+    rules = json.loads(Path(execution["inputs"]["quarantine_protocol"]).read_text())
+    reference = CorroboratedRecovery(rules, range(1, 9), execution["recovery"])
+    domain = IdentityContinuity(tuple(range(1, 9)))
+    history = OrderedDict()
+    report = {
+        "protocol_sha256": digest(args.protocol),
+        "passed": False,
+        "processed": 0,
+        "matched_changes": 0,
+        "error": None,
+    }
+    started = time.perf_counter()
+    try:
+        for frame in value["timeline"]:
+            image = path.parent / "masks" / f"{frame['second']}.png"
+            if digest(image) != frame["mask_sha256"]:
+                raise ValueError("Original mask pixels changed")
+            mask = cv2.imread(str(image), cv2.IMREAD_UNCHANGED)
+            report["matched_changes"] += replay_frame(
+                frame, mask, history, domain, reference, names, execution["naming"]
+            )
+            history[frame["second"]] = mask
+            if len(history) > 30:
+                history.popitem(last=False)
+            report["processed"] += 1
+            if report["processed"] % 500 == 0:
+                print(json.dumps(report), flush=True)
+        if reference.events != value["quarantine_events"]:
+            raise AssertionError(
+                "Original research event log differs from recorded run"
+            )
+        report["passed"] = report["processed"] == 3000
+    except BaseException as error:
+        report["error"] = f"{type(error).__name__}: {error}"
+        raise
+    finally:
+        report["elapsed_seconds"] = time.perf_counter() - started
+        write_json(args.output, report)
+        print(json.dumps(report), flush=True)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("mode", choices=("freeze", "run"))
+    parser.add_argument("--protocol", type=Path, required=True)
+    parser.add_argument("--run", type=Path)
+    parser.add_argument("--execution", type=Path)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    if args.mode == "freeze":
+        if args.protocol.exists() or args.run is None or args.execution is None:
+            parser.error("Pass source run/execution and a new protocol path")
+        freeze(args)
+    else:
+        if args.output is None or args.output.exists():
+            parser.error("Pass a new output path")
+        run(args)
+
+
+if __name__ == "__main__":
+    main()

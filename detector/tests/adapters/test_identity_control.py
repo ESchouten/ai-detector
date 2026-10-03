@@ -140,6 +140,32 @@ def test_queue_deadline_and_shutdown_never_apply_late_confirmation(camera):
     assert state.target("animal-a") is None
 
 
+def test_recovery_needs_a_fresh_photo_without_forgetting_the_confirmed_name(camera):
+    control, state, _, replies, initial = camera
+    control.submit(command(initial))
+    control.drain({"animal-a"})
+    confirmed = state.identity("animal-a")
+    before_ambiguity = control.publish_review("animal-a", initial.capture, b"old")
+    state.add("animal-b")
+    other = control.publish_review("animal-b", initial.capture, b"unaffected")
+
+    # A click may be queued while inference discovers ambiguity. Recovery must
+    # not make that old frozen photo a valid confirmation target again.
+    control.submit(command(before_ambiguity, request_id="6" * 32))
+    control.invalidate_reviews({"animal-a"})
+    control.drain({"animal-a", "animal-b"})
+    assert replies[-1].status == "stale"
+    assert state.identity("animal-a") == confirmed
+    control.submit(command(other, request_id="7" * 32))
+    control.drain({"animal-a", "animal-b"})
+    assert replies[-1].status == "identity_in_use"
+
+    after_recovery = control.publish_review("animal-a", initial.capture, b"fresh")
+    control.submit(command(after_recovery, request_id="8" * 32))
+    control.drain({"animal-a", "animal-b"})
+    assert replies[-1].status == "confirmed"
+
+
 def test_name_comes_from_current_catalog_and_revision_is_checked(camera, tmp_path):
     control, state, _, replies, review = camera
     write_catalog(tmp_path, revision=2, name="Bella renamed")

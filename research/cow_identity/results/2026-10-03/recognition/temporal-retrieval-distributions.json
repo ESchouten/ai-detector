@@ -1,0 +1,760 @@
+{
+  "files": {
+    ".cache/cow-temporal-head-v1/calibration.json": "100e79d442f4a69224633090866bfd5fbb4a09ed5603199e48c164cd010ca706",
+    ".cache/cow-temporal-head-v1/head-20.safetensors": "801ae69856acdb8e603a88c652297c282e6d4ec83bebfc04f0b686cb2619b947",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_temporal_head_protocol.json": "5cf2883a7f83044c3a1636951609bec010aff2901126544da7ab161c0147b664",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_temporal_retrieval.py": "d1228b5521d3189cc943bc274fa3b90e1b2d38508b35b82cbc07cf3cd200b2e1"
+  },
+  "panels": {
+    "baseline": {
+      "per_cow": {
+        "1": {
+          "correct_top1_margin": {
+            "n": 170,
+            "p05_median_p95": [
+              0.06582677066326142,
+              0.12313129007816315,
+              0.22280877232551574
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 170,
+            "p05_median_p95": [
+              0.5024366289377212,
+              0.5675505995750427,
+              0.6647625058889388
+            ]
+          },
+          "eligible_correct": 170,
+          "matched": 175,
+          "rank1_correct": 170,
+          "true_identity_similarity_all_matched": {
+            "n": 175,
+            "p05_median_p95": [
+              0.4697622150182724,
+              0.5645363926887512,
+              0.6641656696796416
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 5,
+            "p05_median_p95": [
+              0.3723015010356903,
+              0.41346046328544617,
+              0.4540522933006287
+            ]
+          }
+        },
+        "2": {
+          "correct_top1_margin": {
+            "n": 139,
+            "p05_median_p95": [
+              0.0200236588716507,
+              0.18988001346588135,
+              0.38941769003868104
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 139,
+            "p05_median_p95": [
+              0.3994594573974609,
+              0.6574716567993164,
+              0.7776641607284546
+            ]
+          },
+          "eligible_correct": 110,
+          "matched": 164,
+          "rank1_correct": 139,
+          "true_identity_similarity_all_matched": {
+            "n": 164,
+            "p05_median_p95": [
+              0.365973699092865,
+              0.5354291796684265,
+              0.7742206364870071
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 25,
+            "p05_median_p95": [
+              0.3732388138771057,
+              0.4247881770133972,
+              0.461803263425827
+            ]
+          }
+        },
+        "3": {
+          "correct_top1_margin": {
+            "n": 62,
+            "p05_median_p95": [
+              0.008183300495147705,
+              0.06106539070606232,
+              0.13877150863409038
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 62,
+            "p05_median_p95": [
+              0.314492304623127,
+              0.3738022744655609,
+              0.44539543390274045
+            ]
+          },
+          "eligible_correct": 60,
+          "matched": 174,
+          "rank1_correct": 62,
+          "true_identity_similarity_all_matched": {
+            "n": 174,
+            "p05_median_p95": [
+              0.2697443008422852,
+              0.31862080097198486,
+              0.41534305065870286
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 112,
+            "p05_median_p95": [
+              0.321768581867218,
+              0.36431968212127686,
+              0.42190000265836713
+            ]
+          }
+        },
+        "4": {
+          "correct_top1_margin": {
+            "n": 4,
+            "p05_median_p95": [
+              0.0022534400224685667,
+              0.008259102702140808,
+              0.01565316021442413
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 4,
+            "p05_median_p95": [
+              0.3935306817293167,
+              0.41493815183639526,
+              0.4377911910414696
+            ]
+          },
+          "eligible_correct": 4,
+          "matched": 178,
+          "rank1_correct": 4,
+          "true_identity_similarity_all_matched": {
+            "n": 178,
+            "p05_median_p95": [
+              0.2922002196311951,
+              0.39151015877723694,
+              0.4674657881259918
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 174,
+            "p05_median_p95": [
+              0.38230021148920057,
+              0.45301075279712677,
+              0.5238896518945694
+            ]
+          }
+        },
+        "5": {
+          "correct_top1_margin": {
+            "n": 2,
+            "p05_median_p95": [
+              0.0008069723844528198,
+              0.004099786281585693,
+              0.007392600178718567
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 2,
+            "p05_median_p95": [
+              0.36061971485614774,
+              0.40941116213798523,
+              0.4582026094198227
+            ]
+          },
+          "eligible_correct": 1,
+          "matched": 178,
+          "rank1_correct": 2,
+          "true_identity_similarity_all_matched": {
+            "n": 178,
+            "p05_median_p95": [
+              0.32760720103979113,
+              0.3771510124206543,
+              0.4414828881621361
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 176,
+            "p05_median_p95": [
+              0.38873593509197235,
+              0.44954752922058105,
+              0.5000214651226997
+            ]
+          }
+        },
+        "6": {
+          "correct_top1_margin": {
+            "n": 124,
+            "p05_median_p95": [
+              0.004135054349899292,
+              0.03767670691013336,
+              0.16599866300821303
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 124,
+            "p05_median_p95": [
+              0.46772661060094833,
+              0.5326782763004303,
+              0.5926904052495956
+            ]
+          },
+          "eligible_correct": 114,
+          "matched": 178,
+          "rank1_correct": 124,
+          "true_identity_similarity_all_matched": {
+            "n": 178,
+            "p05_median_p95": [
+              0.4590974673628807,
+              0.5246482193470001,
+              0.5865309715270997
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 54,
+            "p05_median_p95": [
+              0.4605299890041351,
+              0.527060866355896,
+              0.5832263708114623
+            ]
+          }
+        }
+      },
+      "stage_limit": "These are descriptive fixed-model quantiles, not an alternative threshold or rescored trial. Incorrect biological names and unmatched localization errors remain separate in the original report.",
+      "unknown7_8_top1_margin": {
+        "n": 353,
+        "p05_median_p95": [
+          0.0033959507942199706,
+          0.03473120927810669,
+          0.20800504684448237
+        ]
+      },
+      "unknown7_8_top1_similarity": {
+        "n": 353,
+        "p05_median_p95": [
+          0.37940795421600343,
+          0.4529450535774231,
+          0.5719877004623413
+        ]
+      },
+      "unmatched_top1_similarity": {
+        "n": 40,
+        "p05_median_p95": [
+          0.35636928528547285,
+          0.4395081549882889,
+          0.623390194773674
+        ]
+      }
+    },
+    "residual20": {
+      "per_cow": {
+        "1": {
+          "correct_top1_margin": {
+            "n": 170,
+            "p05_median_p95": [
+              0.04949260205030441,
+              0.13353441655635834,
+              0.2571171760559081
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 170,
+            "p05_median_p95": [
+              0.4782097801566124,
+              0.5992820262908936,
+              0.6973456263542175
+            ]
+          },
+          "eligible_correct": 170,
+          "matched": 175,
+          "rank1_correct": 170,
+          "true_identity_similarity_all_matched": {
+            "n": 175,
+            "p05_median_p95": [
+              0.46469532549381254,
+              0.5958357453346252,
+              0.6971318840980529
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 5,
+            "p05_median_p95": [
+              0.33659950494766233,
+              0.38756129145622253,
+              0.4593678653240204
+            ]
+          }
+        },
+        "2": {
+          "correct_top1_margin": {
+            "n": 157,
+            "p05_median_p95": [
+              0.016724735498428345,
+              0.2194652259349823,
+              0.39261879324913024
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 157,
+            "p05_median_p95": [
+              0.40836893320083617,
+              0.596015989780426,
+              0.8081686854362488
+            ]
+          },
+          "eligible_correct": 123,
+          "matched": 164,
+          "rank1_correct": 157,
+          "true_identity_similarity_all_matched": {
+            "n": 164,
+            "p05_median_p95": [
+              0.38349617570638656,
+              0.5806936919689178,
+              0.8076582789421082
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 7,
+            "p05_median_p95": [
+              0.35868304371833803,
+              0.4259617030620575,
+              0.4547235667705536
+            ]
+          }
+        },
+        "3": {
+          "correct_top1_margin": {
+            "n": 83,
+            "p05_median_p95": [
+              0.029540392756462107,
+              0.13700494170188904,
+              0.20876350998878473
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 83,
+            "p05_median_p95": [
+              0.32596940994262696,
+              0.4296865463256836,
+              0.48346915841102595
+            ]
+          },
+          "eligible_correct": 80,
+          "matched": 174,
+          "rank1_correct": 83,
+          "true_identity_similarity_all_matched": {
+            "n": 174,
+            "p05_median_p95": [
+              0.25086131542921064,
+              0.31384924054145813,
+              0.47224812805652616
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 91,
+            "p05_median_p95": [
+              0.3236524760723114,
+              0.359529584646225,
+              0.4256903827190399
+            ]
+          }
+        },
+        "4": {
+          "correct_top1_margin": {
+            "n": 19,
+            "p05_median_p95": [
+              0.0057262003421783446,
+              0.014798343181610107,
+              0.036827194690704335
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 19,
+            "p05_median_p95": [
+              0.3294463336467743,
+              0.4759569764137268,
+              0.5094202041625976
+            ]
+          },
+          "eligible_correct": 19,
+          "matched": 178,
+          "rank1_correct": 19,
+          "true_identity_similarity_all_matched": {
+            "n": 178,
+            "p05_median_p95": [
+              0.23814914524555206,
+              0.4219084829092026,
+              0.5197097957134247
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 159,
+            "p05_median_p95": [
+              0.34893742501735686,
+              0.45689424872398376,
+              0.5615665018558502
+            ]
+          }
+        },
+        "5": {
+          "correct_top1_margin": {
+            "n": 3,
+            "p05_median_p95": [
+              0.004950022697448731,
+              0.007973462343215942,
+              0.03536208868026733
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 3,
+            "p05_median_p95": [
+              0.39015455842018126,
+              0.44057032465934753,
+              0.46502161026000977
+            ]
+          },
+          "eligible_correct": 2,
+          "matched": 178,
+          "rank1_correct": 3,
+          "true_identity_similarity_all_matched": {
+            "n": 178,
+            "p05_median_p95": [
+              0.33450507521629336,
+              0.38716423511505127,
+              0.4528889447450638
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 175,
+            "p05_median_p95": [
+              0.4002360552549362,
+              0.45475009083747864,
+              0.5134468913078308
+            ]
+          }
+        },
+        "6": {
+          "correct_top1_margin": {
+            "n": 146,
+            "p05_median_p95": [
+              0.011203564703464508,
+              0.05375473201274872,
+              0.17583605647087097
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 146,
+            "p05_median_p95": [
+              0.4641308933496475,
+              0.5295508205890656,
+              0.5817646533250809
+            ]
+          },
+          "eligible_correct": 137,
+          "matched": 178,
+          "rank1_correct": 146,
+          "true_identity_similarity_all_matched": {
+            "n": 178,
+            "p05_median_p95": [
+              0.45642855018377304,
+              0.5228005945682526,
+              0.5761269420385361
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 32,
+            "p05_median_p95": [
+              0.4598091527819633,
+              0.5214313268661499,
+              0.557461428642273
+            ]
+          }
+        }
+      },
+      "stage_limit": "These are descriptive fixed-model quantiles, not an alternative threshold or rescored trial. Incorrect biological names and unmatched localization errors remain separate in the original report.",
+      "unknown7_8_top1_margin": {
+        "n": 353,
+        "p05_median_p95": [
+          0.00603819489479065,
+          0.04851076006889343,
+          0.2330213963985443
+        ]
+      },
+      "unknown7_8_top1_similarity": {
+        "n": 353,
+        "p05_median_p95": [
+          0.36807764172554014,
+          0.4711894989013672,
+          0.607288646697998
+        ]
+      },
+      "unmatched_top1_similarity": {
+        "n": 40,
+        "p05_median_p95": [
+          0.327602256834507,
+          0.45883946120738983,
+          0.6647688388824462
+        ]
+      }
+    },
+    "untrained_dense_bank": {
+      "per_cow": {
+        "1": {
+          "correct_top1_margin": {
+            "n": 162,
+            "p05_median_p95": [
+              0.029461154341697694,
+              0.13460387289524078,
+              0.2255597978830337
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 162,
+            "p05_median_p95": [
+              0.5182407110929489,
+              0.608055830001831,
+              0.6741831332445144
+            ]
+          },
+          "eligible_correct": 162,
+          "matched": 175,
+          "rank1_correct": 162,
+          "true_identity_similarity_all_matched": {
+            "n": 175,
+            "p05_median_p95": [
+              0.4623694181442261,
+              0.6054589748382568,
+              0.6727953970432281
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 13,
+            "p05_median_p95": [
+              0.42785109877586364,
+              0.48883044719696045,
+              0.5244094491004944
+            ]
+          }
+        },
+        "2": {
+          "correct_top1_margin": {
+            "n": 144,
+            "p05_median_p95": [
+              0.013128775358200073,
+              0.12044043838977814,
+              0.2996624305844307
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 144,
+            "p05_median_p95": [
+              0.4433155983686447,
+              0.598916232585907,
+              0.7335708677768707
+            ]
+          },
+          "eligible_correct": 115,
+          "matched": 164,
+          "rank1_correct": 144,
+          "true_identity_similarity_all_matched": {
+            "n": 164,
+            "p05_median_p95": [
+              0.38469593077898023,
+              0.5372010767459869,
+              0.7321622788906097
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 20,
+            "p05_median_p95": [
+              0.3491182938218117,
+              0.4012290835380554,
+              0.4945344150066376
+            ]
+          }
+        },
+        "3": {
+          "correct_top1_margin": {
+            "n": 174,
+            "p05_median_p95": [
+              0.04954243302345276,
+              0.11408214271068573,
+              0.18434699475765226
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 174,
+            "p05_median_p95": [
+              0.43424986600875853,
+              0.5356705188751221,
+              0.623749080300331
+            ]
+          },
+          "eligible_correct": 169,
+          "matched": 174,
+          "rank1_correct": 174,
+          "true_identity_similarity_all_matched": {
+            "n": 174,
+            "p05_median_p95": [
+              0.43424986600875853,
+              0.5356705188751221,
+              0.623749080300331
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 0,
+            "p05_median_p95": null
+          }
+        },
+        "4": {
+          "correct_top1_margin": {
+            "n": 149,
+            "p05_median_p95": [
+              0.00902002453804016,
+              0.04616543650627136,
+              0.10919587016105652
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 149,
+            "p05_median_p95": [
+              0.44234907627105713,
+              0.5069345831871033,
+              0.5534604668617249
+            ]
+          },
+          "eligible_correct": 146,
+          "matched": 178,
+          "rank1_correct": 149,
+          "true_identity_similarity_all_matched": {
+            "n": 178,
+            "p05_median_p95": [
+              0.39986154437065125,
+              0.4972276836633682,
+              0.5516546964645386
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 29,
+            "p05_median_p95": [
+              0.3929411947727203,
+              0.47693830728530884,
+              0.5199720382690429
+            ]
+          }
+        },
+        "5": {
+          "correct_top1_margin": {
+            "n": 2,
+            "p05_median_p95": [
+              0.003662252426147461,
+              0.0069210827350616455,
+              0.01017991304397583
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 2,
+            "p05_median_p95": [
+              0.39073558449745177,
+              0.39685842394828796,
+              0.40298126339912416
+            ]
+          },
+          "eligible_correct": 0,
+          "matched": 178,
+          "rank1_correct": 2,
+          "true_identity_similarity_all_matched": {
+            "n": 178,
+            "p05_median_p95": [
+              0.3276489496231079,
+              0.38907647132873535,
+              0.4517687872052193
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 176,
+            "p05_median_p95": [
+              0.41557440906763077,
+              0.47186486423015594,
+              0.5150204747915268
+            ]
+          }
+        },
+        "6": {
+          "correct_top1_margin": {
+            "n": 162,
+            "p05_median_p95": [
+              0.01834484338760376,
+              0.06441710889339447,
+              0.17075305879116046
+            ]
+          },
+          "correct_top1_similarity": {
+            "n": 162,
+            "p05_median_p95": [
+              0.493258461356163,
+              0.5601403117179871,
+              0.6258030474185943
+            ]
+          },
+          "eligible_correct": 155,
+          "matched": 178,
+          "rank1_correct": 162,
+          "true_identity_similarity_all_matched": {
+            "n": 178,
+            "p05_median_p95": [
+              0.486189129948616,
+              0.5576673746109009,
+              0.6219358026981354
+            ]
+          },
+          "wrong_top1_similarity": {
+            "n": 16,
+            "p05_median_p95": [
+              0.4859762191772461,
+              0.508987694978714,
+              0.5615377426147461
+            ]
+          }
+        }
+      },
+      "stage_limit": "These are descriptive fixed-model quantiles, not an alternative threshold or rescored trial. Incorrect biological names and unmatched localization errors remain separate in the original report.",
+      "unknown7_8_top1_margin": {
+        "n": 353,
+        "p05_median_p95": [
+          0.005979263782501222,
+          0.05079162120819092,
+          0.12287385463714598
+        ]
+      },
+      "unknown7_8_top1_similarity": {
+        "n": 353,
+        "p05_median_p95": [
+          0.4133469521999359,
+          0.4753175377845764,
+          0.5393157601356506
+        ]
+      },
+      "unmatched_top1_similarity": {
+        "n": 40,
+        "p05_median_p95": [
+          0.38943592458963394,
+          0.51394122838974,
+          0.6729056298732757
+        ]
+      }
+    }
+  },
+  "scope": "All completed450\u2013629 predictions, no new selection/parameter/grid or future observation"
+}

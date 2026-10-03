@@ -1,0 +1,8 @@
+{
+  "elapsed_seconds": 41.649332917295396,
+  "error": "ValueError: Include every fixed object, with zero area when absent",
+  "matched_changes": 0,
+  "passed": false,
+  "processed": 741,
+  "protocol_sha256": "65fa09d7a2b3dfafa68256a2dce2e6f75d78c09697e72b41b7cc69164bfbf196"
+}

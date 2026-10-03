@@ -1,0 +1,29 @@
+{
+  "criteria": "Selected original proposal indices, all rejection reasons and every selected mask pixel must match exactly on both source frames.",
+  "files": {
+    ".cache/cow-segmentation/sam2.1_t.pt": "3c1e81ca9b037dd39d70a014ddb9a813d6c4c4e12555420db7eaff31689bd4e3",
+    ".cache/cow-startup-mask-control/0-masks.npz": "51be8d5ed42d37f5ced243f70f113738d8434e44cba8bb25f5505b6d8645f4b6",
+    ".cache/cow-startup-mask-control/0-source.png": "fd3b47851960fc9521ce812ffc3578e7792aab2e845c0b33667359e74533f963",
+    ".cache/cow-startup-mask-control/1-masks.npz": "aef4ee3928497c71819581e00e53f6e86d214b8198fc8cb30492d5093959a0bc",
+    ".cache/cow-startup-mask-control/1-source.png": "ad119455c26dffe2b7ee31dce8a6b30eed83f0dcf389da5b27e17557a67334de",
+    ".cache/cow-startup-mask-control/manifest.json": "cd41104ef82a93c725eb0c8cf68c7e3de2d3b918da361853fcd5857cda23961b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/application_startup_parity.py": "6848a8f8aebbd3da2fdbbf17fe27a760fe18e7fd8927b130dda2dee89c525675",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_startup_containment.py": "3aa55bb12e9e0c68d696a01c3a3b1ca4711492d1b70086ef7da5c34800197535",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_startup_masks.py": "f219cf6342bfada2826606b8a7b2d778bb9acc0a87a5bc04aadbdb4033b14d29",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6",
+    "detector/src/aidetector/adapters/inference/identity_masks.py": "76c7f446ceba576356dd3809388755f82c325928f17cdfd18ca651234a67dbe3",
+    "detector/src/aidetector/adapters/inference/identity_startup.py": "6a0e6682d3707ed1be774948e957ce848806fb1ceeddb6ad59f633a8270eea81",
+    "detector/src/aidetector/domain/models.py": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0"
+  },
+  "libraries": {
+    "Pillow": "12.2.0",
+    "numpy": "2.5.0",
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "ultralytics": "8.4.80"
+  },
+  "original": ".cache/cow-startup-mask-control/manifest.json",
+  "scope": "Actual app CPU FP32 SAM2.1 initialization and containment against all20 original same-frame proposals. No labels, naming, threshold selection or new quality claim.",
+  "weights": ".cache/cow-segmentation/sam2.1_t.pt"
+}

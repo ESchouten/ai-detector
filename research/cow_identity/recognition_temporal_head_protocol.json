@@ -1,0 +1,748 @@
+{
+  "dense_bank": {
+    "indices": [
+      419,
+      955,
+      747,
+      2171,
+      1787,
+      3147,
+      211,
+      1947,
+      2299,
+      283,
+      979,
+      2491,
+      2587,
+      1019,
+      891,
+      1051,
+      356,
+      3196,
+      1340,
+      1972,
+      1756,
+      1380,
+      1836,
+      1588,
+      1396,
+      1356,
+      1316,
+      1796,
+      2964,
+      1964,
+      1660,
+      916,
+      1957,
+      109,
+      717,
+      765,
+      14,
+      469,
+      1037,
+      813,
+      26,
+      2389,
+      421,
+      1333,
+      237,
+      2685,
+      20,
+      2901,
+      2022,
+      502,
+      1750,
+      40,
+      47,
+      1302,
+      1862,
+      574,
+      310,
+      798,
+      1662,
+      2990,
+      214,
+      1438,
+      358,
+      1646,
+      1079,
+      2367,
+      2239,
+      1599,
+      2215,
+      2383,
+      1623,
+      2399,
+      1631,
+      132,
+      1615,
+      439,
+      1959,
+      1703,
+      2415,
+      719,
+      1536,
+      2512,
+      2064,
+      2000,
+      2216,
+      2904,
+      1976,
+      896,
+      2968,
+      2008,
+      1696,
+      352,
+      2712,
+      3128,
+      3224,
+      2480
+    ],
+    "limits": "Lineage-derived pseudo-references, not96independent farmer confirmations. More reference views/budget than27AI-reviewed photos; this isolates view coverage as a separate comparator, not headtraining effectiveness.",
+    "references": [
+      {
+        "cow": 1,
+        "pixels_sha256": "375809a02c77e6f75bfcf815fc8f4fb89adce447612571aac98311de35e33620",
+        "second": 56,
+        "source_index": 419
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "e1d332f2c46b306042a211090fc4632a9fba61b83889eed9fa53a1723842dc50",
+        "second": 123,
+        "source_index": 955
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "4a6ebe08aab7d4ece13e2b62ff88f5ee2799f3257bdd3b06df6e787dd5f3e2b8",
+        "second": 97,
+        "source_index": 747
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "39760dbf7fcd8da2ed72cd48f597076f7c2f422ea88860e76bdcf0b3bf385364",
+        "second": 275,
+        "source_index": 2171
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "6a82524e6cb033032df817a68f4500e38d854332c8f101e3b95d0e419474ca88",
+        "second": 227,
+        "source_index": 1787
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "86f35506d9ccae4a746b4a9b0ac37c35039096b4be8dba3733bc33e13cbda501",
+        "second": 397,
+        "source_index": 3147
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "bc9b02f7fcf06df0d1d430d16cf13c649164a9fe7de9effa52666ca970d536b5",
+        "second": 30,
+        "source_index": 211
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "a8756297f253c0d100ab572559ff3a36171d9658e41c36c6bf75248c16473fc1",
+        "second": 247,
+        "source_index": 1947
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "0def5eca5d3d7210b680323ed67fcb7b8828effcc811d5eed68c227dced91900",
+        "second": 291,
+        "source_index": 2299
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "e798c88ba20165d12435b9c3a61f6ecdc9b1fc3808bba0d800e4352672f50498",
+        "second": 39,
+        "source_index": 283
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "27aced1e9d7ee2f7a62b19de489f3facaa7f0e049f91f6b4c269c88542d1e673",
+        "second": 126,
+        "source_index": 979
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "a89e0f621374c4919d6e32e0e0cc4e13e4a3e4bc1db344483e1d15ec6280630c",
+        "second": 315,
+        "source_index": 2491
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "4d5b3d31e16516cc22c7796c38dda339df2fcdf55c7003940a2b65a36b7eaf82",
+        "second": 327,
+        "source_index": 2587
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "8fa608406f99c2396520811a9c004cab99b2ca0e0a5994dd8cea95b7967cbf87",
+        "second": 131,
+        "source_index": 1019
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "55aafee5aeddffc0b62a8ff18ef61829c836a32cb25b6e6e6853e14e8e0e1e62",
+        "second": 115,
+        "source_index": 891
+      },
+      {
+        "cow": 1,
+        "pixels_sha256": "d0b34747298c99a822f84d5af90b7e1dde6c1705167489af0a23f727f7c2dab5",
+        "second": 135,
+        "source_index": 1051
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "b87c180d1ebf375a75ccf099bbf98329224ba1923c2a20f162017295cb03d3d0",
+        "second": 48,
+        "source_index": 356
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "98d37289dabfa10e091eeae681a69e6db0d8a2d6fd1afb247e8001df8e7ee4d9",
+        "second": 403,
+        "source_index": 3196
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "7877088debccd30e4078aedd10bb148e1a4cdee34e030e61c05ed763a8d97ad9",
+        "second": 171,
+        "source_index": 1340
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "cfdcacd133d1129ae6ae4a004bbe2cc77d3f4d42aace231e804ddfdaedf3051e",
+        "second": 250,
+        "source_index": 1972
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "fda0c702e87e4ef07d08dea06adb5ba4b4841f122759ad7008b97724b5543293",
+        "second": 223,
+        "source_index": 1756
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "c6ab33efa35940a5e2c22642f4f9e8cc6b4089d06ef1b21115f69e3f7d740262",
+        "second": 176,
+        "source_index": 1380
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "7053f3c5eff9bccd6cc0790bfe2fe86116f7ec981a43b8e5dd6a5f5871d208a5",
+        "second": 233,
+        "source_index": 1836
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "b5d13a4c35f71789b250abbed61b8148572db7ad22bd600cb217d863a95bbd62",
+        "second": 202,
+        "source_index": 1588
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "6090ab93add4a9b0622d66f1a297b2f1b7f1fd7d5dc4fa9ca4843705808a5752",
+        "second": 178,
+        "source_index": 1396
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "e8c0b4e54f32ab91073b62111b591891d375ad8a260b0a083fc2dd0c895e087f",
+        "second": 173,
+        "source_index": 1356
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "b04c6cd273c9f52fd074f0ea3db2d32238e82d0f17b2c9f272b434b36635e4cb",
+        "second": 168,
+        "source_index": 1316
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "427a563a54aa57e40f113747c041619d25c2bed1da4f70b452502c32ccb4f088",
+        "second": 228,
+        "source_index": 1796
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "d83c9422b17d620ebd6954606a34909c916bbab413e6e98b8cacef2dc57bbc63",
+        "second": 374,
+        "source_index": 2964
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "ccbc25fd6a854a263ea0df4f4cee27d11fb9182d99e47fa76379f023414dd760",
+        "second": 249,
+        "source_index": 1964
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "8a7558e426781fa8d0eff68f60f0e840a47e188e8e4caa9bf36b8e3927bb4f27",
+        "second": 211,
+        "source_index": 1660
+      },
+      {
+        "cow": 2,
+        "pixels_sha256": "f4994a6eebefe92fcea9c8e0bccbf8d7b398573ec7111cab6820687349c56fc0",
+        "second": 118,
+        "source_index": 916
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "05c3f1ad3ab571ee6c32e57b24b35b5e222123673404c187de82cb095ce8193e",
+        "second": 248,
+        "source_index": 1957
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "e72e55e59b8a0efab8b5caea0d9eb0e63ed7e1b173e3e6bbe5a6f13d60c86db0",
+        "second": 16,
+        "source_index": 109
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "49ca11fa7cb900f7c821c8b0c030c359360339506f9dbe5d12f7a41ccefd4fb8",
+        "second": 93,
+        "source_index": 717
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "9e260cfc8f29ea797738b61c027e94b6de1a00cbcee1c219d799ab1f6854fbac",
+        "second": 99,
+        "source_index": 765
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "3c2a92cd5bd9aa38a8440d69acbcb5c5dff31c93b9bc6e485e417c82f8fa9a38",
+        "second": 2,
+        "source_index": 14
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "61658786efcc663799920bc8c6339443046c4f36f0c45d6a4863f50fab9f5de8",
+        "second": 62,
+        "source_index": 469
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "37cc0379eaeef4ebdf7d6d4af78a971c6489813ad7ef104a8115e030e743a74f",
+        "second": 133,
+        "source_index": 1037
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "8fdcadd5bb2049f949a85e4fb8ca044fdd7f00bb784ff29cc6a900345902afdc",
+        "second": 105,
+        "source_index": 813
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "53cea593104a866f47e5ba7660d3b3540521423531949963319960f3529a70fe",
+        "second": 4,
+        "source_index": 26
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "596ec9e393253ede901b646c38444daa1916e899197a14370d648073e57d7d4b",
+        "second": 302,
+        "source_index": 2389
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "37f764c2a0f18ad80155748e1e4d0c2d65e34f2208b3f728d86ee357e817cac7",
+        "second": 56,
+        "source_index": 421
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "d20764652e81d85133f886232700a468d1c1bce8c6ddc6866ca9cd53053b7237",
+        "second": 170,
+        "source_index": 1333
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "ea914709bdd59170ca0d8545626bca88a82984f79a6282f1c55f911de4f5760f",
+        "second": 33,
+        "source_index": 237
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "58650d08113b7be07b4aca5ba940a2fbc0afee26ae34a4c13de223b1efe68096",
+        "second": 339,
+        "source_index": 2685
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "c09f0c17a709dec18fbde6416e39dc9826c4683ea79e008c0906379523879e26",
+        "second": 3,
+        "source_index": 20
+      },
+      {
+        "cow": 3,
+        "pixels_sha256": "7a25800857d70b5ed70516797694e64b97d206e5f935f071c7e56ba2c078c9e2",
+        "second": 366,
+        "source_index": 2901
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "abfa48f89053d9a56640aadf91179d0d23fee4032d02da51c97bf1d05ca2c830",
+        "second": 256,
+        "source_index": 2022
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "c07694b99be68548f3b36b201b7e4664f7fd46bb8d84aed7b9e7aad4cacbf9bb",
+        "second": 66,
+        "source_index": 502
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "73315a328a0f46e434889eec8146ab85965f3780e444599965a9d98ff12847ae",
+        "second": 222,
+        "source_index": 1750
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "d7a33b4deacb0b1d11ee471ac95feb8736e7506b0abb71c09efb7b446582d797",
+        "second": 6,
+        "source_index": 40
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "475a25bc34f348444be1dff8600c6bdc8546b5bbf0cdcd380096c87df6f04301",
+        "second": 7,
+        "source_index": 47
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "2ed9b3ee26e38672eb0fe1884e24feefb15605314ad9040e47d67ebf33b4e899",
+        "second": 166,
+        "source_index": 1302
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "a371844a786de58bdce4dd3330e5b7d9cfdcddf2869db2591aca2f8fe1818a5e",
+        "second": 236,
+        "source_index": 1862
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "a72e7307d2c9fab359d408f454aad83a568298cc4300663bedae63ffdfb31d89",
+        "second": 75,
+        "source_index": 574
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "598d1529ff388c9c409761899758dfe9f09cc14ef8afc063a874468df944e16c",
+        "second": 42,
+        "source_index": 310
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "45d09e98732b470d4f396491be46604110bb19f57c669063a8055b1e7f6791b9",
+        "second": 103,
+        "source_index": 798
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "35b8af711f95621b45b5410080df88b30300eeafc946f7acf27307ad35f70bd1",
+        "second": 211,
+        "source_index": 1662
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "038cc2353c448bef503a7bc3fad936a6a67a41cc36ab18cb8f1659c35c5a9478",
+        "second": 377,
+        "source_index": 2990
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "099f8bb0da70297a7a50303d403e75ab094c7c4e1b03c4e6617926820a840ab3",
+        "second": 30,
+        "source_index": 214
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "7def09ad57a5d84a146be9cb829687ecbddc5bf558e6b63a00e7f50fde2f5314",
+        "second": 183,
+        "source_index": 1438
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "f4375ed0d5bea909cb79f31dcd80156f0d6120b0bfd1eaa0a706b200a5943bb5",
+        "second": 48,
+        "source_index": 358
+      },
+      {
+        "cow": 4,
+        "pixels_sha256": "8af8df47f57dd73bece3cf9bf937360768bfc05645db9927d44cfb3a9da686ea",
+        "second": 209,
+        "source_index": 1646
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "790a023e42e179745f64ab77527c2564b8da60bf1a1e8f86aa0c44a57367acb4",
+        "second": 138,
+        "source_index": 1079
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "dcd5d9846b20a5b77888d41a83e7fa23948147c310dfb94e9dfe55eea15778dc",
+        "second": 299,
+        "source_index": 2367
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "eeff8346db4ec11b2e6ccb2f3491ce32751069f1eb08bfb80809d81090a52867",
+        "second": 283,
+        "source_index": 2239
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "2a6e4a8b3d3c82a7f2b70681b88675035ac3fe33e06f96ebb5d43f6f896bbe1d",
+        "second": 203,
+        "source_index": 1599
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "7d63cc869cafe8e74a0f9905687e88265641e50daec743a8e0267c9db6f27067",
+        "second": 280,
+        "source_index": 2215
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "b1d5985b62553a985648004b6f1a70101be6e3d7d11f0de314aed2cdccc11b38",
+        "second": 301,
+        "source_index": 2383
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "1cc6a3462c10bd12a75b0495f51613cd8443b64750f249fa1da5b19ef896f28c",
+        "second": 206,
+        "source_index": 1623
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "ac9d4e44b65aa48ba92069d359d70190d7dfd0fe5d07ced90ee4de2689faddde",
+        "second": 303,
+        "source_index": 2399
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "b6ea7f894d3271af27b9f0ebd63796bb0a32ec8ba911fb87ee5b0f5fb7df439d",
+        "second": 207,
+        "source_index": 1631
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "ff0e59d83bbee9f6d3ac5d37abae46146d4269b52a350abee87be6dadb1b296a",
+        "second": 19,
+        "source_index": 132
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "ec89fc1d72c392204f847f794258207d00de6c42d7538b15cfab7e468c938184",
+        "second": 205,
+        "source_index": 1615
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "edb04cecfbb4be1395739e5b737ddf995ff99006fb59b8f5064009c4d8200802",
+        "second": 58,
+        "source_index": 439
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "db5e74d7b1862d3c0d845ff51338732445868dd4d451fbdc177882023692b054",
+        "second": 248,
+        "source_index": 1959
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "943f89ff62ea63fdefffda796d0708f9c85e017780e0b6607635fe7d40333a57",
+        "second": 216,
+        "source_index": 1703
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "b9fd8cbfec9757f12a616fd24dd278a2afb00b26ac2698c785150237f5a39315",
+        "second": 305,
+        "source_index": 2415
+      },
+      {
+        "cow": 5,
+        "pixels_sha256": "6332a95fa5d0a986329026450bb9c20ff4cbe31b27bcc1dda0adbb351eeec8cf",
+        "second": 93,
+        "source_index": 719
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "fc750b99b3d3b9a9780b3bca11824ceb0317abb1c4b86d4ef13777e9b66de8c8",
+        "second": 195,
+        "source_index": 1536
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "29a3285e5b6a90a6d3c34586f85ba944910a209370e65e13b38ac2de2035e157",
+        "second": 317,
+        "source_index": 2512
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "7e4ede5bdaf3a8e8a5930458177fc899e7962d63893abe049a12f72f92183eea",
+        "second": 261,
+        "source_index": 2064
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "d76ba4c589186ae0e6fed0c34705a61bd40f66981f7df439307354d152c1344c",
+        "second": 253,
+        "source_index": 2000
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "eaa190408ef0948d2af88c57d59106a447a545afc609e2b634af0ade10f42b80",
+        "second": 280,
+        "source_index": 2216
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "ed0d17b5afcfe076957936a27236b616f5bf4ee35860446d711e0218e0f52e25",
+        "second": 366,
+        "source_index": 2904
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "0c1335686e058594b4bd32a51e0ca7f96bc5239b7f9823638cf323cf3d087e59",
+        "second": 250,
+        "source_index": 1976
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "13aeda586babb69f64fae12de72556a00f48e6eabd29b5f82da4fd017bda1952",
+        "second": 115,
+        "source_index": 896
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "036796a260cb2c6cf0e0ad2a49fb8c6a84d101cafa40660a08c24b14d8f805b9",
+        "second": 374,
+        "source_index": 2968
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "6f0bce1b5ef4baf72d9db24ce993d707a9b1feed9619cd64106cbb753c734490",
+        "second": 254,
+        "source_index": 2008
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "918775e38d2d2324c39c589089416d4b3ecd96d73b7d6d8c372047039668aaba",
+        "second": 215,
+        "source_index": 1696
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "81ab00cd9d57ab6d4c28a6ab9cff9bb0c26b00a588c2f322a687041472bfc5ff",
+        "second": 47,
+        "source_index": 352
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "57a6771834795d23be19433ff3acdcfaeb2e6a9dd2ba329d44439975f10af068",
+        "second": 342,
+        "source_index": 2712
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "dbe9c32dc382d0f6035197e99f72589e81fb9853565fae1d61ce54eec94f850d",
+        "second": 394,
+        "source_index": 3128
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "617c17c60fb6a1f903863aa22055618a5231d554430c6109a02c63cf89244093",
+        "second": 406,
+        "source_index": 3224
+      },
+      {
+        "cow": 6,
+        "pixels_sha256": "ce6bead14f5704bfcdb568ed72a4a97cff5049750af853e9bbdf36d4480bdd99",
+        "second": 313,
+        "source_index": 2480
+      }
+    ],
+    "selection": "One fixed untrained bank comparator: all6 initialknown quality-qualified lineagecrops0\u2013419; max16/cow; first maximummean-cosinemedoid, then1\u2212maximumcosinetoselected farthest-first; tieinputchronological. Only original descriptors. No truth or calibration score selection, no appgallerywrites."
+  },
+  "evaluation": "Unchanged predict_panel,450..629 only; names reset; all8 visible truth+unmatchederrors; no prior seednames in matching. Labels read only after both baseline/fixedhead predictions.",
+  "features": ".cache/cow-temporal-dense-v2",
+  "files": {
+    ".cache/cow-temporal-dense-v2/manifest.json": "f2373463cd99319444c19395bf8a37cf7ac478a6e1e6f6b1b87d663d408c3ef5",
+    ".cache/cow-temporal-dense-v2/vectors.npz": "d574609b7dfda92c842b37e0038f70a5a796a724aa00748203c5c5870c82c614",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_masked_replay.py": "6647aac45f641ad13686df44da4186074c92458a07a67e963739d8d8aed76244",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_temporal_head.py": "cfc02ca7e6a00748ff06b2e758ab12a3e36ef734013a10e43c0f17dc6c3bc5b7",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_recognition_temporal_head.py": "12dac2f98bfcb7b3ef3123e375b9080f5b9dd3c795053b7b16c935a5360562df",
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "detector/src/aidetector/adapters/inference/identity_observations.py": "209c3bf59f92baab01388dcb36930e1e2e3d57fdc0227aeef0cadbab8443d9e8",
+    "detector/src/aidetector/domain/identity.py": "de5fcc34f51688ff383e266d12e5bd7a3a27b6ddbce8384e39063a0f37fb3967",
+    "research/cow_identity/recognition_temporal_pilot_v2_protocol.json": "1ceccda7ab8ed5a80c994ebad25db667ddc2240fbd6be65120ef7ec4656bef9f"
+  },
+  "groups": 369,
+  "labels": {
+    "annotations": "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz",
+    "source_pickle": "datasets/8-calves/video/pmfeed_4_3_16.pkl"
+  },
+  "pilot": {
+    "architecture": "Same-dimensional residual: normalize(x +0.1*Wout*Dropout.1(GELU(LayerNorm(Win*x))));2152\u2192256\u21922152; both Linear biasfalse; Win standard PyTorch Kaiming-uniform initialization, Wout exactlyzero; initialoutputequals normalizedbase; backbone frozen",
+    "augmentation": "Only existing head dropout.1; no feature/noise or image augmentation",
+    "batch_frames": 16,
+    "calibration_window": [
+      450,
+      629
+    ],
+    "checkpoint_epochs": [
+      20
+    ],
+    "data_flow": "Only training_groups enter optimization. Encoded other rows are isolated evaluation cache; no feature normalization fitting/PCA/BN adaptation. Unknown7/8 never supply positives, negatives, classifier weights or gradients.",
+    "descriptor": "Residual2152Doutput retains original cosinegeometry at initialization; no blend/threshold search",
+    "embargo": [
+      420,
+      449
+    ],
+    "epochs": 20,
+    "limits": "Teacher already assessed on this farm; four training identities and onecamera are a weak adaptation pilot, not fresh generalization. Calibration includes teacher-history geometry; no biological identity field enters inference. Dense crops represent inferred continuity, not thousands of farmer confirmations.",
+    "loss": "Per-anchor crossentropy of its temporal-positive cosine against only same-frame other-anchor cosines, all dividedby.1; average over eligible anchors; add1.0*mean(1-cosine(base,adapted)) over only those training anchors/positives",
+    "negatives": "Other qualified anchor slots in exactly same source frame, only1..4. No cross-frame/cross-batch negatives and no unknown negatives.",
+    "optimizer": "AdamW lr.001 weight_decay.0001; no scheduler",
+    "positives": "Same stable slot within uninterrupted fixed-quality run; gap10..30s, closest absolute gap20s, tie earlier. No pair across run boundary.",
+    "reset": "Fresh identity state at450; known seed labels/quarantine/named_track_ids NEVER initialize matcher labels. Stable slot used only for causal3observation state, never candidate name. Later930+ queries require separate frozen evaluation after calibration decision.",
+    "seed": 42,
+    "selection": "Only baseline versus fixed epoch20. Fixed similarity.65/margin.10/3same-candidate observations/maxgap5s. Retain duplicates/geometry abstention and full one-to-one visible-animal denominators. Baseline eligible; candidate must meet99%precision/<=1%unknown false naming and improve correct coverage on450..629. No threshold grid, checkpoint search, retraining on5/6 or late-query-based selection. Report untrained5/6 separately.",
+    "training_slots": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "training_window": [
+      0,
+      419
+    ],
+    "untrained_known_cows": [
+      5,
+      6
+    ],
+    "withheld_unknown_cows": [
+      7,
+      8
+    ]
+  },
+  "protocol": "research/cow_identity/recognition_temporal_pilot_v2_protocol.json",
+  "status": "FROZEN_BEFORE_CPU_TRAINING_OR_CALIBRATION"
+}

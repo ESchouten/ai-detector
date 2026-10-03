@@ -65,10 +65,13 @@ class FrameSource(Protocol):
 
 
 class ObjectDetector(Protocol):
-    """Return nonempty, time-ordered observations for each input source.
+    """Return nonempty, time-ordered observations for analyzed input sources.
 
     Keep source identities separate and preserve borrowed input images.
     Returned images and confidence mappings are read-only to their consumers.
+    A temporal detector may omit a source while it consumes an intermediate
+    frame without a publishable result. Do not copy old evidence onto that
+    frame or use omission to hide an inference failure.
     """
 
     def detect(self, frames: Frames) -> dict[str, tuple[Observation, ...]]: ...

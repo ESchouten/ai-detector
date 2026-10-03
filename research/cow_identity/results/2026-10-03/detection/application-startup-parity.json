@@ -1,0 +1,38 @@
+{
+  "frames": [
+    {
+      "elapsed_seconds": 0.9670838750898838,
+      "exact": true,
+      "proposals": 12,
+      "second": 0.0,
+      "selected": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        10
+      ]
+    },
+    {
+      "elapsed_seconds": 0.7290336661972106,
+      "exact": true,
+      "proposals": 8,
+      "second": 0.5,
+      "selected": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  ],
+  "passed": true,
+  "protocol_sha256": "bce84ec9ccd16b0a60aa3841190ba4969d496a31ffc21df0e77c31b16783a510",
+  "scope": "Actual app CPU FP32 SAM2.1 initialization and containment against all20 original same-frame proposals. No labels, naming, threshold selection or new quality claim."
+}

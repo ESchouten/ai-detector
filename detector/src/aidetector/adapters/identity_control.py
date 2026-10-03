@@ -159,6 +159,19 @@ class LiveIdentityControl:
         if reply is not None:
             self._report(reply)
 
+    def invalidate_reviews(self, instance_ids: Set[str]) -> None:
+        """The worker discards photos when their animals enter ambiguity.
+
+        A recovered track needs a fresh review photo. Its existing human name
+        remains available to the separate continuity policy; this operation
+        neither confirms nor clears an identity.
+        """
+        self._snapshots = OrderedDict(
+            (key, review)
+            for key, review in self._snapshots.items()
+            if review.target.instance_id not in instance_ids
+        )
+
     def drain(self, reviewable: Set[str]) -> None:
         """Apply clicks only to currently unambiguous instances, between frames."""
         self._expire_reviews(self._clock())

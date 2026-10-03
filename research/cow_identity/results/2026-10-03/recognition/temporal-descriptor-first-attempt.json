@@ -1,0 +1,11 @@
+{
+  "status": "FAILED_INPUT_VALIDATION_BEFORE_FIRST_ENCODE",
+  "protocol_sha256": "b5119fe6dd9f90344fafe65243d45c78ef751f993f33cbdc2f5aac454659853b",
+  "reason": "Original indexed masks are uint16; frozen validation incorrectly required uint8. No pixels or masks changed; no descriptor or score was computed.",
+  "gpu_process_exit_code": 1,
+  "recorded_mask_dtype": "uint16",
+  "recorded_mask_shape": [
+    600,
+    800
+  ]
+}

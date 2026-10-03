@@ -1,0 +1,237 @@
+{
+  "files": {
+    ".cache/cow-cutie/crowded-joint-extended/streaming.json": "4aaaa8efca1bbe75d5b885ac003d8b285d1e90a6366476e0cc3f45646c5710d5",
+    ".cache/cow-cutie/reserved-2fps-clip/sampled.avi": "4b7a4ef4f3bae5871e43ab49526419be7fcf2b584cf75304e006f64a6b6cf429",
+    ".cache/cow-cutie/reserved-2fps-clip/sampled.json": "fc8aafcd7f05b07081c15a447c6bcf7718c170e97433bc325f55f77322f5389b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/cutie_features.py": "7f1bb165da9cc60bf8a85a25ed645e47c7d1976ee1db91dcc6f14aac1f84acad",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_masked_pilot.py": "1688cda1304159954beb1cad1c69e3dd36f37aefbf72b1e20dcd8469baebadae",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_temporal_review.py": "acfbb9df1339ebf4cc035cafd5a00512d3bccec8cab6c2b8f0e673746d2c988d"
+  },
+  "method": "Slots1..4, four105-second bins0..419; midpoint of longest uninterrupted quality run within each bin, tie earliest. No truth or embedding selection. No later replacement after review.",
+  "rows": [
+    {
+      "bin": 0,
+      "box": [
+        236,
+        359,
+        353,
+        492
+      ],
+      "mask_sha256": "1c56db81bb4cc2905971e6eeee865be1c09592a0d45d61ba8865f8585c97de76",
+      "run_start": 0,
+      "second": 40,
+      "source_pixels_sha256": "a17b1f1c97b86eb01189197345a52ee357eba7f9e8b26ad82b18abe34c55676d",
+      "track_id": 0
+    },
+    {
+      "bin": 1,
+      "box": [
+        215,
+        377,
+        384,
+        549
+      ],
+      "mask_sha256": "b4952a67432bf0b184aab67f2b307165500a8fe8042ee46e24d49856b9165489",
+      "run_start": 158,
+      "second": 183,
+      "source_pixels_sha256": "f360323e6c9aada591bd36952eeb272589911a54299de3ff00501ef2edbf5929",
+      "track_id": 0
+    },
+    {
+      "bin": 2,
+      "box": [
+        223,
+        365,
+        384,
+        527
+      ],
+      "mask_sha256": "0ba08613aa380ac72b2818c7818b77e38bfe7ffd3b5180128c94316b0d1826d5",
+      "run_start": 216,
+      "second": 231,
+      "source_pixels_sha256": "305b790766cfc43159140ccd3bc8c9e75cb326a2b9e7c4f420eada6bb044222c",
+      "track_id": 0
+    },
+    {
+      "bin": 3,
+      "box": [
+        209,
+        354,
+        326,
+        512
+      ],
+      "mask_sha256": "d4f398a687374b423d75f31222aea9ea9fafd7a1b223b0def9e51693f7bcdbc1",
+      "run_start": 310,
+      "second": 339,
+      "source_pixels_sha256": "9622c0c1249bc97e299e5cda673d65a223759eaf91ceef6a83603ae68b0fc755",
+      "track_id": 0
+    },
+    {
+      "bin": 0,
+      "box": [
+        235,
+        7,
+        351,
+        160
+      ],
+      "mask_sha256": "6259411c93961c20c6c26d966e96de43c3ec6113e6c324be066aa2a6a6478836",
+      "run_start": 26,
+      "second": 48,
+      "source_pixels_sha256": "19495e201c3d08eb994481eaec6c242cce043250382027d7e6947bd5834ce30e",
+      "track_id": 1
+    },
+    {
+      "bin": 1,
+      "box": [
+        220,
+        98,
+        303,
+        279
+      ],
+      "mask_sha256": "37bc2e19a6e1d696818134f1bbbeb3462e6bd9b6b697405ec5e649ac1a1f77e0",
+      "run_start": 123,
+      "second": 166,
+      "source_pixels_sha256": "80be9e6dea72c8d29ba9714cc2e7d979bca60eb5670fcb2c5fd6f036fc7077b2",
+      "track_id": 1
+    },
+    {
+      "bin": 2,
+      "box": [
+        250,
+        26,
+        334,
+        178
+      ],
+      "mask_sha256": "c50679bb775e1b9c7369991b2eaa6a22bf402fc942c5fbf4669769e61402d22f",
+      "run_start": 222,
+      "second": 225,
+      "source_pixels_sha256": "958f9690f7a69ae6e9af42fb1f4b051f0037add13489324125ed1b67cb3097d1",
+      "track_id": 1
+    },
+    {
+      "bin": 3,
+      "box": [
+        351,
+        316,
+        427,
+        518
+      ],
+      "mask_sha256": "315de9072ef335e2d82c80ceffbde9ab37a9c6bbe3b7935eea8263a99b3eb56b",
+      "run_start": 339,
+      "second": 350,
+      "source_pixels_sha256": "18358f4743daf7745cf9678d9fa2cb9b59ab41049884bd60002c32c3715ef11a",
+      "track_id": 1
+    },
+    {
+      "bin": 0,
+      "box": [
+        443,
+        191,
+        614,
+        278
+      ],
+      "mask_sha256": "ea2c6aedc963ee23e214cef90fc78b97d009c8fa1d9cd051e731e42663480333",
+      "run_start": 0,
+      "second": 8,
+      "source_pixels_sha256": "d2035f435c918fca30848aa2265d6412eaa57335100d43a362ffa13025836351",
+      "track_id": 2
+    },
+    {
+      "bin": 1,
+      "box": [
+        390,
+        339,
+        499,
+        528
+      ],
+      "mask_sha256": "5e299e924d531d6af4d7e8411a094a370918af073b597fac70303b8e7476b722",
+      "run_start": 188,
+      "second": 198,
+      "source_pixels_sha256": "0ac8a45d16a760b011ed4fe99149e48dc89a03356b319dac0ce226e466fc2f11",
+      "track_id": 2
+    },
+    {
+      "bin": 2,
+      "box": [
+        403,
+        332,
+        484,
+        562
+      ],
+      "mask_sha256": "a7a7bad9f8542c388f97eb75547e5d455ae4618a48f5f3a5b3aa531e00aab465",
+      "run_start": 258,
+      "second": 286,
+      "source_pixels_sha256": "1970fde2627931219d49dabc0b02958a41d39948191ce5c2e636f3db7ff137ee",
+      "track_id": 2
+    },
+    {
+      "bin": 3,
+      "box": [
+        355,
+        161,
+        504,
+        268
+      ],
+      "mask_sha256": "cbcbbc2fa4eebadd46651eccb437fbd596083e96ca995212e0eef33dca9a7842",
+      "run_start": 333,
+      "second": 361,
+      "source_pixels_sha256": "5529c5710dcc4f515d88bcb79dbf4d6d5ef6d03a87c62ad07f0648ce28b0d68b",
+      "track_id": 2
+    },
+    {
+      "bin": 0,
+      "box": [
+        571,
+        323,
+        748,
+        490
+      ],
+      "mask_sha256": "37c1c6abc63970f89f34724e1ee8a8f8273c50d917a74e2c90439374be0a1c3d",
+      "run_start": 46,
+      "second": 73,
+      "source_pixels_sha256": "da10d8dba35ec3b8aef4103f30700bf0fdcc0911536af6da2e02dec6fa5df9a6",
+      "track_id": 3
+    },
+    {
+      "bin": 1,
+      "box": [
+        319,
+        271,
+        423,
+        399
+      ],
+      "mask_sha256": "49edd79e8cfeb3ec89fc6a63155caec6ac636fcac9957a2d90dc2eaa57c5c727",
+      "run_start": 107,
+      "second": 145,
+      "source_pixels_sha256": "6b030aacf570a04d2a06a2fdc487cf98b4748d686988de75480637b0e1ec94d9",
+      "track_id": 3
+    },
+    {
+      "bin": 2,
+      "box": [
+        215,
+        83,
+        351,
+        262
+      ],
+      "mask_sha256": "ae91b56ebf672fd6b08238c72336ab625f9a861f3971d0bb16a164984a1a8566",
+      "run_start": 186,
+      "second": 262,
+      "source_pixels_sha256": "1d6e55fb776540503c74c96efe22d6f47fa882d58f132df429bf35d8523bdff1",
+      "track_id": 3
+    },
+    {
+      "bin": 3,
+      "box": [
+        205,
+        78,
+        357,
+        201
+      ],
+      "mask_sha256": "49d1abf35bcbf47410d8a4d03a656f02921a9bf7c5677947b9fefe6f21a6904d",
+      "run_start": 338,
+      "second": 349,
+      "source_pixels_sha256": "c17e296c95d3b8cd78e6e6664d3d298a4b1ad48562b74a539dd3d310bae58ccc",
+      "track_id": 3
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "acceptance": {
+    "maximum_unknown_false_naming_rate": 0.01,
+    "minimum_conservative_precision": 0.99,
+    "minimum_known_coverage": 0.6
+  },
+  "conditions": [
+    "recorded_mask_slots",
+    "reciprocal_detector_bounds_same_slots"
+  ],
+  "files": {
+    ".cache/cow-cutie/crowded-joint-extended/streaming.json": "4aaaa8efca1bbe75d5b885ac003d8b285d1e90a6366476e0cc3f45646c5710d5",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/ANNOTATION_TEMPORAL_GEOMETRY.md": "0eb2b60270239aeab3ddbfdcbaa028a47575110dd21daadd75b39323f1722c6f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/annotation_temporal_geometry.py": "4a70156225c47f9da430c3c6fd762a8c092b1c3ef44d203d1f9cbdf896482970",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_birth_extended_protocol.json": "a4ccf625671acde3115bf8f56276c67310584305ace8a08b66331ed7e2a5fa5a",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_output_geometry.py": "1f75ed86ae53b80ca69189c1ac647b5d44812ecbcc3c1682fee5e8fee55b62a0",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_reciprocal_geometry.py": "341f1e797e967dfae6b6872bd073e2bd5f9101cd8995b9302f23a99e0962c4e4",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_union_geometry.py": "8616cb452a51137e6d980ed576fac9d380ed632fd3d0b2ceea7fdf2fbe382da4",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/annotation-temporal-geometry.json": "a9cab8b5665ec8fa02dc258eea76f54e61837eb724a3ee5c464e7d33a76f502e",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/crowded-joint-extended-independent-audit.json": "54e89fc54e071051f75250df472fb02a330e444755e52b4e17ca86ede336cc42",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/crowded-joint-extended.json": "c2a1eef350ead52f87cc87665bfb2382c238de169ebc377ef220bfd49ee2eac7",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/crowded-joint-readout.json": "0909d57e9db2b8fec010959d7453b55e8fc377291e394d81d7e2752b88ea443e",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-output-geometry.json": "2f75e7a198250978c2f4127be1a2130da52e9ad99c5eaa09261d1ffb458d39a8",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-union-geometry.json": "f9f7381784d3055e5bd106ac9d7f72d3b0900c57aa9fab107608b1fb0cf1dc59",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_detection_reciprocal_geometry.py": "a9e5c7661713fee74383474ba7b25f649862946750e7996e0eb9483591525a47",
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26"
+  },
+  "inherited_validation": "detection_birth_extended.checked_inputs verifies every original execution binding; validate_frames verifies all5999 source/mask/stable-ID rows. Complete report and independent audit are additionally bound.",
+  "inputs": {
+    "annotations": "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz",
+    "audit": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/crowded-joint-extended-independent-audit.json",
+    "development": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/crowded-joint-readout.json",
+    "execution": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_birth_extended_protocol.json",
+    "extension": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/crowded-joint-extended.json",
+    "source_pickle": "datasets/8-calves/video/pmfeed_4_3_16.pkl",
+    "streaming": ".cache/cow-cutie/crowded-joint-extended/streaming.json"
+  },
+  "libraries": {
+    "lap": "0.5.13",
+    "numpy": "2.5.0"
+  },
+  "no_model_or_video_decode": true,
+  "order": "Transform every scored timeline row before opening annotation arrays, then score both conditions with the same original scorer and all-eight truth. Exact baseline counts/confusions required on each panel.",
+  "policy": "Keep every original slot, order, label, track ID, name and temporal decision verbatim. For every unique recorded reciprocal pair, named or unnamed, replace only x1/y1/x2/y2 and confidence with its existing same-frame raw detector proposal. Unpaired slots remain unchanged; unpaired proposals never appear. The frozen detector has only class0 cow, so original cow labels stay unchanged. No averaging, padding, clipping, filtering, new association or threshold.",
+  "preflight": "Independent source/hash audit required before run; no need for GPU.",
+  "scope": "One fixed CPU output-geometry comparison on all five exposed panels; no new video/model access, no parameter search, original failure retained. Source seconds >=3000 remain closed.",
+  "windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ],
+    [
+      1230,
+      1529
+    ],
+    [
+      1800,
+      2099
+    ],
+    [
+      2700,
+      2999
+    ]
+  ]
+}

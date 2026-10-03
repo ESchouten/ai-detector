@@ -18,6 +18,11 @@ The new live-confirmation domain and transport components currently have no
 startup or browser hook. They change no saved configuration, catalog, archive,
 CLI protocol or existing identity behavior. Continuous-camera confirmation
 remains experimental work, distinct from the existing gallery-photo action.
+Review snapshots now have an explicit worker-owned invalidation operation for
+temporary ambiguity, without clearing a confirmed name. A recovered instance
+requires a fresh review photo. The detector port also documents its existing
+ability to defer publication by omitting an intermediate source result; normal
+YOLO and snapshot behavior is unchanged.
 
 The optional `identity-continuous` source-install extra now provides the pinned
 Cutie SDK for its tested CPU/MPS adapter. Development installs include the SDK

@@ -13,7 +13,7 @@ Use the detector and web app from this branch together. Follow the normal [sourc
 5. The camera overlay can now show **Possible 274**, for example. Ambiguous or unsuitable observations remain **Unknown**. Review suggestions before adding them to the gallery.
 6. Use **Edit examples → Change cow** to move a mistaken example directly to the correct cow. A confirmed reference appears beside the photo so you can compare them. Remove unclear examples to return them to review. A cow can also be renamed or removed. Corrections affect subsequent matching, not archived results. Pending photos keep their images but lose suggestions made using an older gallery revision.
 
-The application never teaches itself from an unconfirmed prediction. The gallery belongs to this installation and is shared by its configured identity detectors. A second farm should use a separate data directory. Familiar names are labels you supply; the model does not read ear tags.
+The application never teaches itself from an unconfirmed prediction. The gallery belongs to this installation and is shared by its configured identity detectors. A second farm should use a separate data directory. Familiar names are labels you supply; the model does not read ear tags. A separate [ear-number reading experiment](EAR_TAG_IDENTITY.md) investigates clear tag views without enabling OCR assignments in the application.
 
 ## What runs
 
@@ -155,14 +155,22 @@ Run the normal detector and web quality commands. Focused contracts are in `test
 
 ## Current research priorities
 
-1. Verify the [joint-readout candidate](JOINT_READOUT.md) on later footage and validate lost tracks and departures. It resolves the preceding birth control's development coverage failure, but later accuracy remains unmeasured. The completed [uniform geometry audit](ANNOTATION_AUDIT.md#results-and-limits) found both annotation disagreements and real mask failures; it does not justify dismissing original failed scores or repeatedly changing box coordinates.
+1. Complete the automatic eight-object startup control and validate lost tracks and departures. The [joint-readout extension](EXTENDED_JOINT_READOUT.md) failed late precision; [replacing reciprocal geometry](RECIPROCAL_GEOMETRY.md) also failed. Neither is a passed system. Annotation disagreements remain counted and do not justify further geometry tuning.
 2. Measure the value and effort of additional farmer confirmations. The separate enrollment arm uses a fixed question budget and tests only later footage; repeated or unknown answers count as work too.
-3. Test only materially different adaptation hypotheses. The original 60-photo partial-backbone fine-tune, public metric head and external full-backbone adaptation are documented negative controls, not production features.
+3. Test only materially different adaptation hypotheses. The original 60-photo partial-backbone fine-tune, public metric head and external full-backbone adaptation are documented negative controls. The [dense temporal projection pilot](TEMPORAL_PROJECTION_PILOT.md) also fails: its fixed residual head achieves 5.09% early coverage at 91.67% precision; the fixed 96-view untrained bank achieves 1.20% at 72.22%. Better raw retrieval alone is insufficient. Spatial feature adaptation and readable ear numbers are separate pending hypotheses, not production features.
 4. Keep seconds 3000 through the end closed until a new complete method is frozen. The earlier reserved panels are now exposed. Then perform a small independently labelled multi-day farm trial, including night, camera changes, arrivals, departures and restarts.
 5. Verify complete installer behaviour and camera throughput on each supported platform before wider deployment. Confirmed-herd backup/restore and background preparation already use the normal application flows.
 6. Associate reliably identified individual animals with behaviour events and add per-cow history only after identity reliability is established. Never treat predicted names as confirmed training labels.
 
 ## Verification on 3 October 2026
+
+The later startup/control checkpoint passes 745 Python tests with five skips,
+Ruff, formatting, type checks, schema generation and all five import contracts.
+Actual CPU initialization reproduces both original startup-mask selections;
+the typed continuity policy reproduces all 3,000 recorded frames and eleven
+conflict/recovery transitions exactly. These are implementation checks, not a
+new passed identity benchmark. The browser and native installers were unchanged
+and were not revalidated in this checkpoint.
 
 At application checkpoint `0de302967b`, the detector suite passed 702 tests with
 four skips and the web suite passed 381 tests with one platform skip. Ruff,

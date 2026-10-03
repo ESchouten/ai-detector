@@ -1,0 +1,8 @@
+{
+  "elapsed_seconds": 0.06574650015681982,
+  "error": "AssertionError: Geometry/pair/conflict differs at 0",
+  "matched_changes": 0,
+  "passed": false,
+  "processed": 0,
+  "protocol_sha256": "a5a2c6b23d97b550788fe30871f08b0da7ad0336724e00d18f40d29dac0ac9d8"
+}

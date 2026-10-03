@@ -112,6 +112,37 @@ def test_observation_callback_receives_the_analyzed_frame_before_event_completio
     assert result.confidence == {"cow": 0.9}
 
 
+def test_temporal_intermediate_frame_does_not_publish_or_repeat_old_evidence():
+    class TemporalDetector(ScoringDetector):
+        def detect(self, frames):
+            if next(iter(frames.values()))[-1].capture.sequence == 2:
+                return {}
+            return super().detect(frames)
+
+    published, reports = [], []
+    pipeline = DetectionPipeline(
+        TemporalDetector(),
+        EventPolicy(min_frames=1),
+        report_status=reports.append,
+        publish_observation=lambda source, result: published.append(result),
+    )
+    at = datetime(2026, 1, 1)
+    for sequence in (1, 2, 3):
+        frame = Frame(
+            at + timedelta(seconds=(sequence - 1) / 2),
+            np.full((8, 8, 3), sequence, dtype=np.uint8),
+            CaptureStamp("camera", sequence, sequence / 2),
+        )
+        assert pipeline.process(SourceBatch({"camera": (frame,)})) == []
+    assert [result.capture.sequence for result in published] == [1, 3]
+    assert len(reports) == 2
+    [event] = pipeline.finish()
+    assert [observation.capture.sequence for observation in event.observations] == [
+        1,
+        3,
+    ]
+
+
 def test_snapshot_pipeline_publishes_without_fabricating_detections():
     published = []
     pipeline = DetectionPipeline(

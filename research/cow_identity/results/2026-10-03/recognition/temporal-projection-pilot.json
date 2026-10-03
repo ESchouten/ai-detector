@@ -1,0 +1,479 @@
+{
+  "descriptor_runtime": {
+    "elapsed_seconds": 120.20864491723478,
+    "mps_driver_peak": 1309081600,
+    "new_encoded_images": 5032,
+    "new_encoder_batches": 651
+  },
+  "files": {
+    ".cache/cow-temporal-dense-v2/manifest.json": "f2373463cd99319444c19395bf8a37cf7ac478a6e1e6f6b1b87d663d408c3ef5",
+    ".cache/cow-temporal-dense-v2/vectors.npz": "d574609b7dfda92c842b37e0038f70a5a796a724aa00748203c5c5870c82c614",
+    ".cache/cow-temporal-head-v1/calibration.json": "100e79d442f4a69224633090866bfd5fbb4a09ed5603199e48c164cd010ca706",
+    ".cache/cow-temporal-head-v1/head-20.safetensors": "801ae69856acdb8e603a88c652297c282e6d4ec83bebfc04f0b686cb2619b947",
+    ".cache/cow-temporal-head-v1/training.json": "085fb8994aecba3b68b47cce2657c28b6257ffb0439512a756425f71912e9d26",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_temporal_diagnosis.py": "ab901beadc8db06821507097a038742bb67344bec1013fe4560865c4027d4f50",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_temporal_head_protocol.json": "5cf2883a7f83044c3a1636951609bec010aff2901126544da7ab161c0147b664"
+  },
+  "limits": "Exposed early within-camera calibration, four pseudo-labelledtraining animals;5/6 untrained,7/8 unknown. No late query evaluation, no refitall6, no newfarm/physicalreentry claim.",
+  "no_further_run": "No later-query or finalwindow inference, no threshold/epoch search, no all-six refit; unknown7/8 excluded from optimization. Densebank is pseudo-lineage-derived, not96human-confirmedphotos.",
+  "panels": {
+    "baseline": {
+      "confusion": {
+        "1->1": 7,
+        "1->unknown": 168,
+        "2->2": 27,
+        "2->unknown": 137,
+        "3->unknown": 174,
+        "4->unknown": 178,
+        "5->unknown": 178,
+        "6->unknown": 178,
+        "7->unknown": 173,
+        "8->unknown": 180,
+        "unmatched->unknown": 40
+      },
+      "conservative_named_precision": 1.0,
+      "counts": {
+        "correct_name": 34,
+        "cow_name_switches": 0,
+        "cow_track_switches": 4,
+        "detector_boxes": 1440,
+        "eligible_boxes": 1259,
+        "eligible_matched": 1222,
+        "frames": 180,
+        "known_unnamed": 1013,
+        "matched_boxes": 1400,
+        "missed_annotations": 40,
+        "track_cow_switches": 2,
+        "unknown_named": 0,
+        "unknown_rejected": 353,
+        "unmatched_boxes": 40,
+        "unmatched_named": 0,
+        "unmatched_unnamed": 40,
+        "visible_annotations": 1440,
+        "visible_known": 1080,
+        "visible_unknown": 360,
+        "wrong_name": 0
+      },
+      "known_coverage": 0.03148148148148148,
+      "per_cow": {
+        "1": {
+          "correctly_named": 7,
+          "coverage": 0.03888888888888889,
+          "visible": 180
+        },
+        "2": {
+          "correctly_named": 27,
+          "coverage": 0.15,
+          "visible": 180
+        },
+        "3": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        },
+        "4": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        },
+        "5": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        },
+        "6": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        }
+      },
+      "score_stages": {
+        "counts": {
+          "all_predicted_crops": 1440,
+          "geometry_eligible_rank1_correct": 459,
+          "raw_rank1_correct_matched_known": 501,
+          "similarity_and_margin_pass_correct": 60,
+          "similarity_and_margin_pass_wrong_or_unmatched": 0,
+          "similarity_pass_rank1_correct": 60
+        },
+        "interpretation": "Per-crop upper bounds before collision rejection and three-sample agreement, at exactly frozen.65/.10; rawrank1 has no abstention and is not naming precision. Original strict finalcounts remain authoritative.",
+        "per_cow": {
+          "1": {
+            "matched_observations": 175,
+            "median_distinct_margin": 0.12197938561439514,
+            "median_max_similarity": 0.5645363926887512,
+            "rank1_correct": 170
+          },
+          "2": {
+            "matched_observations": 164,
+            "median_distinct_margin": 0.1210506409406662,
+            "median_max_similarity": 0.5354291796684265,
+            "rank1_correct": 139
+          },
+          "3": {
+            "matched_observations": 174,
+            "median_distinct_margin": 0.018530651926994324,
+            "median_max_similarity": 0.36502161622047424,
+            "rank1_correct": 62
+          },
+          "4": {
+            "matched_observations": 178,
+            "median_distinct_margin": 0.03315393626689911,
+            "median_max_similarity": 0.45256638526916504,
+            "rank1_correct": 4
+          },
+          "5": {
+            "matched_observations": 178,
+            "median_distinct_margin": 0.023307889699935913,
+            "median_max_similarity": 0.44954752922058105,
+            "rank1_correct": 2
+          },
+          "6": {
+            "matched_observations": 178,
+            "median_distinct_margin": 0.02802152931690216,
+            "median_max_similarity": 0.5313186943531036,
+            "rank1_correct": 124
+          }
+        }
+      },
+      "unknown_false_naming_rate": 0.0
+    },
+    "residual20": {
+      "confusion": {
+        "1->1": 20,
+        "1->unknown": 155,
+        "2->2": 35,
+        "2->unknown": 129,
+        "3->unknown": 174,
+        "4->unknown": 178,
+        "5->unknown": 178,
+        "6->unknown": 178,
+        "7->unknown": 173,
+        "8->unknown": 180,
+        "unmatched->1": 5,
+        "unmatched->unknown": 35
+      },
+      "conservative_named_precision": 0.9166666666666666,
+      "counts": {
+        "correct_name": 55,
+        "cow_name_switches": 0,
+        "cow_track_switches": 4,
+        "detector_boxes": 1440,
+        "eligible_boxes": 1259,
+        "eligible_matched": 1222,
+        "frames": 180,
+        "known_unnamed": 992,
+        "matched_boxes": 1400,
+        "missed_annotations": 40,
+        "track_cow_switches": 2,
+        "unknown_named": 0,
+        "unknown_rejected": 353,
+        "unmatched_boxes": 40,
+        "unmatched_named": 5,
+        "unmatched_unnamed": 35,
+        "visible_annotations": 1440,
+        "visible_known": 1080,
+        "visible_unknown": 360,
+        "wrong_name": 0
+      },
+      "known_coverage": 0.05092592592592592,
+      "per_cow": {
+        "1": {
+          "correctly_named": 20,
+          "coverage": 0.1111111111111111,
+          "visible": 180
+        },
+        "2": {
+          "correctly_named": 35,
+          "coverage": 0.19444444444444445,
+          "visible": 180
+        },
+        "3": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        },
+        "4": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        },
+        "5": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        },
+        "6": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        }
+      },
+      "score_stages": {
+        "counts": {
+          "all_predicted_crops": 1440,
+          "geometry_eligible_rank1_correct": 531,
+          "raw_rank1_correct_matched_known": 578,
+          "similarity_and_margin_pass_correct": 82,
+          "similarity_and_margin_pass_wrong_or_unmatched": 6,
+          "similarity_pass_rank1_correct": 82
+        },
+        "interpretation": "Per-crop upper bounds before collision rejection and three-sample agreement, at exactly frozen.65/.10; rawrank1 has no abstention and is not naming precision. Original strict finalcounts remain authoritative.",
+        "per_cow": {
+          "1": {
+            "matched_observations": 175,
+            "median_distinct_margin": 0.12816673517227173,
+            "median_max_similarity": 0.5958357453346252,
+            "rank1_correct": 170
+          },
+          "2": {
+            "matched_observations": 164,
+            "median_distinct_margin": 0.18765506148338318,
+            "median_max_similarity": 0.5806936919689178,
+            "rank1_correct": 157
+          },
+          "3": {
+            "matched_observations": 174,
+            "median_distinct_margin": 0.040023595094680786,
+            "median_max_similarity": 0.37917691469192505,
+            "rank1_correct": 83
+          },
+          "4": {
+            "matched_observations": 178,
+            "median_distinct_margin": 0.0333276093006134,
+            "median_max_similarity": 0.459536150097847,
+            "rank1_correct": 19
+          },
+          "5": {
+            "matched_observations": 178,
+            "median_distinct_margin": 0.0213882178068161,
+            "median_max_similarity": 0.4541374146938324,
+            "rank1_correct": 3
+          },
+          "6": {
+            "matched_observations": 178,
+            "median_distinct_margin": 0.04730604588985443,
+            "median_max_similarity": 0.5258629620075226,
+            "rank1_correct": 146
+          }
+        }
+      },
+      "unknown_false_naming_rate": 0.0
+    },
+    "untrained_dense_bank": {
+      "confusion": {
+        "1->1": 10,
+        "1->unknown": 165,
+        "2->2": 3,
+        "2->unknown": 161,
+        "3->unknown": 174,
+        "4->unknown": 178,
+        "5->unknown": 178,
+        "6->unknown": 178,
+        "7->unknown": 173,
+        "8->unknown": 180,
+        "unmatched->1": 5,
+        "unmatched->unknown": 35
+      },
+      "conservative_named_precision": 0.7222222222222222,
+      "counts": {
+        "correct_name": 13,
+        "cow_name_switches": 0,
+        "cow_track_switches": 4,
+        "detector_boxes": 1440,
+        "eligible_boxes": 1259,
+        "eligible_matched": 1222,
+        "frames": 180,
+        "known_unnamed": 1034,
+        "matched_boxes": 1400,
+        "missed_annotations": 40,
+        "track_cow_switches": 2,
+        "unknown_named": 0,
+        "unknown_rejected": 353,
+        "unmatched_boxes": 40,
+        "unmatched_named": 5,
+        "unmatched_unnamed": 35,
+        "visible_annotations": 1440,
+        "visible_known": 1080,
+        "visible_unknown": 360,
+        "wrong_name": 0
+      },
+      "known_coverage": 0.012037037037037037,
+      "per_cow": {
+        "1": {
+          "correctly_named": 10,
+          "coverage": 0.05555555555555555,
+          "visible": 180
+        },
+        "2": {
+          "correctly_named": 3,
+          "coverage": 0.016666666666666666,
+          "visible": 180
+        },
+        "3": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        },
+        "4": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        },
+        "5": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        },
+        "6": {
+          "correctly_named": 0,
+          "coverage": 0.0,
+          "visible": 180
+        }
+      },
+      "score_stages": {
+        "counts": {
+          "all_predicted_crops": 1440,
+          "geometry_eligible_rank1_correct": 747,
+          "raw_rank1_correct_matched_known": 793,
+          "similarity_and_margin_pass_correct": 44,
+          "similarity_and_margin_pass_wrong_or_unmatched": 8,
+          "similarity_pass_rank1_correct": 44
+        },
+        "interpretation": "Per-crop upper bounds before collision rejection and three-sample agreement, at exactly frozen.65/.10; rawrank1 has no abstention and is not naming precision. Original strict finalcounts remain authoritative.",
+        "per_cow": {
+          "1": {
+            "matched_observations": 175,
+            "median_distinct_margin": 0.1298900842666626,
+            "median_max_similarity": 0.6054589748382568,
+            "rank1_correct": 162
+          },
+          "2": {
+            "matched_observations": 164,
+            "median_distinct_margin": 0.08586783707141876,
+            "median_max_similarity": 0.5372010767459869,
+            "rank1_correct": 144
+          },
+          "3": {
+            "matched_observations": 174,
+            "median_distinct_margin": 0.11408214271068573,
+            "median_max_similarity": 0.5356705188751221,
+            "rank1_correct": 174
+          },
+          "4": {
+            "matched_observations": 178,
+            "median_distinct_margin": 0.04121135175228119,
+            "median_max_similarity": 0.4984276294708252,
+            "rank1_correct": 149
+          },
+          "5": {
+            "matched_observations": 178,
+            "median_distinct_margin": 0.02116599678993225,
+            "median_max_similarity": 0.4712596833705902,
+            "rank1_correct": 2
+          },
+          "6": {
+            "matched_observations": 178,
+            "median_distinct_margin": 0.06101924180984497,
+            "median_max_similarity": 0.5576673746109009,
+            "rank1_correct": 162
+          }
+        }
+      },
+      "unknown_false_naming_rate": 0.0
+    }
+  },
+  "selected": "baseline",
+  "status": "COMPLETE_NEGATIVE_NO_PROMOTION",
+  "training": {
+    "candidate": "Only fixedepoch20; no calibration seen during optimization",
+    "checkpoint_sha256": "801ae69856acdb8e603a88c652297c282e6d4ec83bebfc04f0b686cb2619b947",
+    "device": "cpu",
+    "epochs": [
+      {
+        "epoch": 1,
+        "loss": 0.06743944187959035
+      },
+      {
+        "epoch": 2,
+        "loss": 0.04066864408863088
+      },
+      {
+        "epoch": 3,
+        "loss": 0.037104752069960036
+      },
+      {
+        "epoch": 4,
+        "loss": 0.03424989618360996
+      },
+      {
+        "epoch": 5,
+        "loss": 0.03361988447917005
+      },
+      {
+        "epoch": 6,
+        "loss": 0.033286780662213765
+      },
+      {
+        "epoch": 7,
+        "loss": 0.03176924136156837
+      },
+      {
+        "epoch": 8,
+        "loss": 0.03181548432136575
+      },
+      {
+        "epoch": 9,
+        "loss": 0.03076339342320959
+      },
+      {
+        "epoch": 10,
+        "loss": 0.02945336311434706
+      },
+      {
+        "epoch": 11,
+        "loss": 0.029405339853838086
+      },
+      {
+        "epoch": 12,
+        "loss": 0.0289695435979714
+      },
+      {
+        "epoch": 13,
+        "loss": 0.028570292983204126
+      },
+      {
+        "epoch": 14,
+        "loss": 0.02935153292492032
+      },
+      {
+        "epoch": 15,
+        "loss": 0.02818244299851358
+      },
+      {
+        "epoch": 16,
+        "loss": 0.028120472251127165
+      },
+      {
+        "epoch": 17,
+        "loss": 0.028339788628121216
+      },
+      {
+        "epoch": 18,
+        "loss": 0.028694238048046827
+      },
+      {
+        "epoch": 19,
+        "loss": 0.02777531820659836
+      },
+      {
+        "epoch": 20,
+        "loss": 0.027895771743108828
+      }
+    ],
+    "freeze_sha256": "5cf2883a7f83044c3a1636951609bec010aff2901126544da7ab161c0147b664",
+    "initial_max_absolute_error": 1.4901161193847656e-08,
+    "seconds": 2.831606292165816,
+    "unique_training_rows": 1110
+  }
+}

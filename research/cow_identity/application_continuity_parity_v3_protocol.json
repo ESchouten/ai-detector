@@ -1,0 +1,24 @@
+{
+  "execution": "research/cow_identity/detection_reserved_execution.json",
+  "files": {
+    ".cache/cow-cutie/streaming-reserved/streaming.json": "2a39500ee305d3049fdd6aeea0f4cebe626f5b704ec02f5ca2337ab75a6c6fd3",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/application_continuity_parity.py": "dc489017aae9743dee018f7ac1ee3b91651a166c19458805bef0ef719d9db903",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_box_consensus.py": "d81721ec2268225715903a45c2b3c79e7588c6088b09cfc482d291e8430df3cf",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_corroboration.py": "c381591a6609ff422c4ac784da2c36efb54637440bef49f926b5d3c9942e84b4",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_cutie.py": "85c163664cdef3d7cef4268ac0970b569f8c7d62f95cc77add9ae6e46f51c9a7",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_cutie_quarantine.py": "7bbd7e52a16b344a82a8848788e4f78f85bdb60ab43fd1ad08ae04977a213707",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_cutie_variants.py": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_quarantine_recovery.py": "aca8e85b9f658ec9c183938dc0438614f5362525aca0ca4ee9fae1d050479e81",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_streaming.py": "a33618c315ecff17e8730b7d5ca81a38c9c809e162fad2555e0399feddccabe4",
+    "detector/src/aidetector/adapters/inference/identity_masks.py": "76c7f446ceba576356dd3809388755f82c325928f17cdfd18ca651234a67dbe3",
+    "detector/src/aidetector/domain/identity_continuity.py": "55259fa0a9f97c39a02dd4f35f821c76f98355c0ade6e78513937a70bf6991ea",
+    "detector/src/aidetector/domain/models.py": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0",
+    "detector/tests/domain/test_identity_continuity.py": "4dc516e5b5618a4ab0fb2d2542c3a067af1331b525f6b4ac6a21ff0ac68571dc",
+    "research/cow_identity/detection_cutie_quarantine_v2_protocol.json": "294b16744d0efe7705024edbb465f158f91a4fcad4c1881853e53683ea354165",
+    "research/cow_identity/detection_reserved_execution.json": "423255817381b1350a777f5f9e302676c39f4bacdb55c776ff5a7ccba1504aae"
+  },
+  "mask_binding": "Every PNG hash is verified against the hash-bound run record before decoding.",
+  "run": ".cache/cow-cutie/streaming-reserved/streaming.json",
+  "scope": "CPU application-policy parity only: all3000original indexed masks/raw proposals, no model inference, truth, new quality score or live cadence/retirement claim."
+}

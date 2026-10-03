@@ -93,6 +93,54 @@ test('concurrent and stale edits cannot overwrite another farmer confirmation', 
 	assert.equal((await catalog.list()).identities.length, 2);
 });
 
+test('moving a confirmed example changes ownership in one revision and preserves its evidence', async (t) => {
+	const { catalog, sighting } = await fixture(t);
+	await sighting(photoA);
+	await sighting(photoB);
+	await catalog.assign(0, photoA, null, 'Bella');
+	await catalog.assign(1, photoB, null, 'Daisy');
+	const [bella, daisy] = (await catalog.list()).identities;
+	const original = await catalog.snapshot();
+
+	await catalog.assign(2, photoA, daisy.id, '', bella.id);
+
+	const data = await catalog.list();
+	assert.equal(data.revision, 3);
+	assert.deepEqual(
+		data.identities.map((cow) => cow.samples),
+		[[], [photoB, photoA]]
+	);
+	assert.equal(data.review.length, 0);
+	assert.equal(await readFile(catalog.image(photoA)!, 'utf8'), 'test image');
+	assert.deepEqual((await catalog.snapshot()).sightings, original.sightings.toReversed());
+
+	await catalog.assign(3, photoA, null, 'Clover', daisy.id);
+	const moved = await catalog.list();
+	assert.equal(moved.revision, 4);
+	assert.deepEqual(moved.identities.find((cow) => cow.name === 'Clover')?.samples, [photoA]);
+	assert.deepEqual(moved.identities.find((cow) => cow.id === daisy.id)?.samples, [photoB]);
+});
+
+test('invalid or stale photo corrections leave the original owner and revision intact', async (t) => {
+	const { catalog, sighting } = await fixture(t);
+	await sighting(photoA);
+	await sighting(photoB);
+	await sighting(photoC);
+	await catalog.assign(0, photoA, null, 'Bella');
+	await catalog.assign(1, photoB, null, 'Daisy');
+	const original = await catalog.list();
+	const [bella, daisy] = original.identities;
+
+	await assert.rejects(catalog.assign(1, photoA, daisy.id, '', bella.id), { status: 409 });
+	await assert.rejects(catalog.assign(2, photoA, null, 'Clover', daisy.id), /no longer belongs/);
+	await assert.rejects(catalog.assign(2, photoC, daisy.id, '', bella.id), /no longer belongs/);
+	await assert.rejects(catalog.assign(2, photoA, bella.id, '', bella.id), /different cow/);
+	await assert.rejects(catalog.assign(2, photoA, null, '', bella.id), /name or tag number/);
+	await assert.rejects(catalog.assign(2, photoA, null, 'daisy', bella.id), /must be unique/);
+	await assert.rejects(catalog.assign(2, photoA, 'f'.repeat(32), '', bella.id), /cow was removed/);
+	assert.deepEqual(await catalog.list(), original);
+});
+
 test('rejects duplicate labels, confirmed photos, and invalid names without changing the catalogue', async (t) => {
 	const { catalog, sighting } = await fixture(t);
 	await sighting(photoA);
@@ -151,11 +199,21 @@ test('bounds enrollment without losing existing reference photos', async (t) => 
 		JSON.stringify({
 			version: 1,
 			revision: 7,
-			identities: [{ id: cowId, name: '142', samples }]
+			identities: [
+				{ id: cowId, name: '142', samples },
+				{ id: 'e'.repeat(32), name: '143', samples: [photoB] }
+			]
 		})
 	);
 	await assert.rejects(catalog.assign(7, photoA, cowId, ''), /already has 32 examples/);
+	await sighting(photoB);
+	await assert.rejects(
+		catalog.assign(7, photoB, cowId, '', 'e'.repeat(32)),
+		/already has 32 examples/
+	);
 	assert.deepEqual((await catalog.list()).identities[0].samples, samples);
+	assert.deepEqual((await catalog.list()).identities[1].samples, [photoB]);
+	assert.equal((await catalog.list()).revision, 7);
 });
 
 test('gallery corrections invalidate old suggestions without hiding or rewriting evidence', async (t) => {

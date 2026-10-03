@@ -7,6 +7,10 @@ import { liveSourceKey } from '$lib/server/live-preview';
 import { DATA_DIRECTORY } from '$lib/server/application-paths';
 import type { Actions, PageServerLoad } from './$types';
 
+function formText(form: FormData, name: string): string {
+	return String(form.get(name) ?? '');
+}
+
 export const load: PageServerLoad = async () => {
 	const [catalog, { config, app }] = await Promise.all([readHerdPage(herd), configuration.read()]);
 	return {
@@ -27,13 +31,19 @@ export const actions: Actions = {
 		const revision = Number(form.get('revision'));
 		if (!form.has('revision') || !Number.isSafeInteger(revision) || revision < 0)
 			return fail(400, { message: 'Refresh the herd and try again.' });
-		const cow = String(form.get('cow') ?? '');
-		const photo = String(form.get('photo') ?? '');
-		const name = String(form.get('name') ?? '');
+		const cow = formText(form, 'cow');
+		const photo = formText(form, 'photo');
+		const name = formText(form, 'name');
 		try {
 			switch (form.get('operation')) {
 				case 'assign':
-					await herd.assign(revision, photo, cow || null, name);
+					await herd.assign(
+						revision,
+						photo,
+						cow || null,
+						name,
+						formText(form, 'previousCow') || null
+					);
 					break;
 				case 'rename':
 					await herd.rename(revision, cow, name);

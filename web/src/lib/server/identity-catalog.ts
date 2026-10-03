@@ -164,13 +164,23 @@ export class IdentityCatalog {
 		return result;
 	}
 
-	assign(revision: number, sightingId: string, cowId: string | null, label: string) {
+	assign(
+		revision: number,
+		sightingId: string,
+		cowId: string | null,
+		label: string,
+		previousCowId: string | null = null
+	) {
 		return this.change(revision, async (catalog) => {
 			const sighting = await this.sighting(sightingId);
 			if (!sighting)
 				throw new HerdError('This photo is no longer available. Refresh and try again.');
-			if (catalog.identities.some((cow) => cow.samples.includes(sightingId)))
+			const previous = previousCowId ? findCow(catalog, previousCowId) : null;
+			if (previous && !previous.samples.includes(sightingId))
+				throw new HerdError('This photo no longer belongs to this cow. Refresh and try again.');
+			if (!previous && catalog.identities.some((cow) => cow.samples.includes(sightingId)))
 				throw new HerdError('This photo has already been confirmed.');
+			if (previous && previous.id === cowId) throw new HerdError('Choose a different cow.');
 			const cow = cowId
 				? findCow(catalog, cowId)
 				: { id: randomUUID().replaceAll('-', ''), name: cowName(label), samples: [] as string[] };
@@ -179,6 +189,7 @@ export class IdentityCatalog {
 			if (!cowId) catalog.identities.push(cow);
 			if (cow.samples.length >= 32)
 				throw new HerdError('This cow already has 32 examples. Remove a less useful photo first.');
+			if (previous) previous.samples = previous.samples.filter((sample) => sample !== sightingId);
 			cow.samples.push(sightingId);
 		});
 	}

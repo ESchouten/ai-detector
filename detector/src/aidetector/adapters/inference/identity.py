@@ -6,7 +6,7 @@ import hashlib
 import json
 import logging
 import sqlite3
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from contextlib import nullcontext
 from importlib.metadata import version
 from pathlib import Path
@@ -24,11 +24,57 @@ REVISION = "ed25f3a31f01632728cabb09d1542f84ab7b0056"
 WEIGHTS_SHA256 = "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1"
 
 
+def download_identity_asset(
+    model: str, filename: str, revision: str, directory: Path
+) -> Path:
+    from huggingface_hub import hf_hub_download
+
+    try:
+        return Path(
+            hf_hub_download(
+                model,
+                filename,
+                revision=revision,
+                cache_dir=directory,
+                token=False,
+            )
+        )
+    except RuntimeError as error:
+        # The native Xet transport uses RuntimeError rather than HTTP/OSError.
+        # Limit translation to the transfer; inference RuntimeErrors must propagate.
+        raise OSError(f"Identity model download failed: {model}/{filename}") from error
+
+
 class ImageEncoder(Protocol):
-    fingerprint: str
+    @property
+    def fingerprint(self) -> str: ...
+
     dimension: int
 
     def encode(self, images: Sequence[NDArray[np.uint8]]) -> NDArray[np.float32]: ...
+
+
+class DeferredEncoder:
+    """Share one model, downloading it only when enrollment can support matching."""
+
+    def __init__(self, dimension: int, load: Callable[[], ImageEncoder]):
+        self.dimension = dimension
+        self._load = load
+        self._encoder: ImageEncoder | None = None
+        self._lock = Lock()
+
+    def _ready(self) -> ImageEncoder:
+        with self._lock:
+            if self._encoder is None:
+                self._encoder = self._load()
+            return self._encoder
+
+    @property
+    def fingerprint(self) -> str:
+        return self._ready().fingerprint
+
+    def encode(self, images: Sequence[NDArray[np.uint8]]) -> NDArray[np.float32]:
+        return self._ready().encode(images)
 
 
 class DinoEncoder:
@@ -40,7 +86,6 @@ class DinoEncoder:
         self, cache_directory: Path, device: str = "auto", image_size: int = 224
     ):
         import torch
-        from huggingface_hub import hf_hub_download
         from transformers.models.dinov2.modeling_dinov2 import Dinov2Model
 
         if image_size not in (224, 336):
@@ -54,30 +99,21 @@ class DinoEncoder:
         self._lock = Lock()
         logger.info("Opening identity encoder %s on %s (FP32)", MODEL, device)
         files = {
-            name: Path(
-                hf_hub_download(
-                    MODEL,
-                    name,
-                    revision=REVISION,
-                    cache_dir=cache_directory,
-                    token=False,
-                )
-            )
+            name: download_identity_asset(MODEL, name, REVISION, cache_directory)
             for name in ("config.json", "model.safetensors")
         }
         with files["model.safetensors"].open("rb") as stream:
             if hashlib.file_digest(stream, "sha256").hexdigest() != WEIGHTS_SHA256:
-                raise ValueError("Downloaded identity weights failed the SHA-256 check")
-        self.model = (
-            Dinov2Model.from_pretrained(
-                files["config.json"].parent,
-                local_files_only=True,
-                use_safetensors=True,
-                attn_implementation="sdpa",
-            )
-            .eval()
-            .to(device)
-        )
+                raise OSError("Downloaded identity weights failed the SHA-256 check")
+        self.model = Dinov2Model.from_pretrained(
+            files["config.json"].parent,
+            local_files_only=True,
+            use_safetensors=True,
+            attn_implementation="sdpa",
+        ).eval()
+        scope = mps_inference if device == "mps" else nullcontext
+        with scope():
+            self.model.to(device)
         contract = {
             "weights": WEIGHTS_SHA256,
             "preprocessing": "rgb-pil-bicubic-pad-imagenet-cls-l2-v1",
@@ -125,17 +161,31 @@ class EmbeddingCache:
     """SQLite owns publication; keys include actual pixels and encoder provenance."""
 
     def __init__(self, path: Path):
-        path.parent.mkdir(parents=True, exist_ok=True)
+        self._path = path
         self._lock = Lock()
-        self._connection = sqlite3.connect(path, check_same_thread=False)
-        self._connection.execute("PRAGMA journal_mode=WAL")
-        self._connection.execute(
-            "CREATE TABLE IF NOT EXISTS embeddings "
-            "(key TEXT PRIMARY KEY, vector BLOB NOT NULL)"
-        )
+        self._connection: sqlite3.Connection | None = None
 
     def close(self) -> None:
-        self._connection.close()
+        with self._lock:
+            if self._connection is not None:
+                self._connection.close()
+                self._connection = None
+
+    def _database(self) -> sqlite3.Connection:
+        if self._connection is None:
+            self._path.parent.mkdir(parents=True, exist_ok=True)
+            database = sqlite3.connect(self._path, check_same_thread=False)
+            try:
+                database.execute("PRAGMA journal_mode=WAL")
+                database.execute(
+                    "CREATE TABLE IF NOT EXISTS embeddings "
+                    "(key TEXT PRIMARY KEY, vector BLOB NOT NULL)"
+                )
+            except sqlite3.Error:
+                database.close()
+                raise
+            self._connection = database
+        return self._connection
 
     def encode(
         self, encoder: ImageEncoder, images: Sequence[NDArray[np.uint8]]
@@ -144,11 +194,12 @@ class EmbeddingCache:
             return np.empty((0, encoder.dimension), dtype=np.float32)
         keys = [self.key(encoder.fingerprint, image) for image in images]
         with self._lock:
+            database = self._database()
             vectors = {
-                key: np.frombuffer(row[0], dtype=np.float32).copy()
+                key: self._read_vector(row[0], encoder.dimension)
                 for key in dict.fromkeys(keys)
                 if (
-                    row := self._connection.execute(
+                    row := database.execute(
                         "SELECT vector FROM embeddings WHERE key = ?", (key,)
                     ).fetchone()
                 )
@@ -166,9 +217,9 @@ class EmbeddingCache:
                     or not np.isfinite(encoded).all()
                 ):
                     raise ValueError("Identity encoder returned invalid embeddings")
-                with self._connection:
+                with database:
                     for (key, _), vector in zip(chunk, encoded, strict=True):
-                        self._connection.execute(
+                        database.execute(
                             "INSERT OR REPLACE INTO embeddings VALUES (?, ?)",
                             (key, vector.astype(np.float32).tobytes()),
                         )
@@ -178,8 +229,21 @@ class EmbeddingCache:
             result.shape != (len(images), encoder.dimension)
             or not np.isfinite(result).all()
         ):
-            raise ValueError("Identity embedding cache contains invalid vectors")
+            raise sqlite3.DataError("Identity embedding cache contains invalid vectors")
         return result
+
+    @staticmethod
+    def _read_vector(payload: bytes, dimension: int) -> NDArray[np.float32]:
+        if len(payload) != dimension * np.dtype(np.float32).itemsize:
+            raise sqlite3.DataError(
+                "Identity embedding cache contains an invalid vector size"
+            )
+        vector = np.frombuffer(payload, dtype=np.float32).copy()
+        if not np.isfinite(vector).all():
+            raise sqlite3.DataError(
+                "Identity embedding cache contains nonfinite values"
+            )
+        return vector
 
     @staticmethod
     def key(fingerprint: str, image: NDArray[np.uint8]) -> str:

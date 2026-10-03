@@ -126,7 +126,8 @@
 		<div class="space-y-2">
 			<h1 class="settings-heading">Use your existing setup</h1>
 			<p class="text-sm text-muted-foreground">
-				Bring your cameras, detectors, alerts and recordings from your previous AI Detector folder.
+				Bring your setup, confirmed herd and recordings from a previous AI Detector folder or an
+				extracted settings backup.
 			</p>
 		</div>
 		{#if !local}
@@ -135,7 +136,8 @@
 			</p>
 		{:else if !summary}
 			<p class="text-sm text-muted-foreground">
-				Choose the folder containing your old config.json, usually next to the old application.
+				Choose the folder containing config.json, from your previous installation or extracted
+				backup.
 			</p>
 			<div class="flex flex-wrap gap-2">
 				<Button onclick={choose} disabled={busy}

@@ -16,6 +16,7 @@ import torch
 from numpy.typing import NDArray
 
 from aidetector.adapters.inference.device import mps_inference
+from aidetector.adapters.inference.identity import download_identity_asset
 
 logger = logging.getLogger(__name__)
 MODEL = "conservationxlabs/miewid-msv3"
@@ -60,7 +61,6 @@ class MiewidEncoder:
     def __init__(
         self, cache_directory: Path, device: str = "auto", weights: Path | None = None
     ):
-        from huggingface_hub import hf_hub_download
         from safetensors.torch import load_file
         from torchvision import transforms
 
@@ -70,21 +70,21 @@ class MiewidEncoder:
                 device = "mps"
         self.device = device
         self._lock = Lock()
-        weights = weights or Path(
-            hf_hub_download(
-                MODEL,
-                "model.safetensors",
-                revision=REVISION,
-                cache_dir=cache_directory,
-                token=False,
-            )
+        weights = weights or download_identity_asset(
+            MODEL,
+            "model.safetensors",
+            REVISION,
+            cache_directory,
         )
         with weights.open("rb") as stream:
             if hashlib.file_digest(stream, "sha256").hexdigest() != WEIGHTS_SHA256:
-                raise ValueError("Identity weights failed the SHA-256 check")
+                raise OSError("Identity weights failed the SHA-256 check")
         self.model = MiewidNetwork()
         self.model.load_state_dict(load_file(str(weights)), strict=True)
-        self.model.eval().requires_grad_(False).to(device)
+        self.model.eval().requires_grad_(False)
+        scope = mps_inference if device == "mps" else nullcontext
+        with scope():
+            self.model.to(device)
         self.transform = transforms.Compose(
             [
                 transforms.Resize(

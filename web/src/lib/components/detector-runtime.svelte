@@ -20,6 +20,15 @@
 	// Query.current is client-only; the awaited value also supports server rendering.
 	const initial = monitor.query.current ?? (await monitor.query);
 	const runtime = $derived(monitor.query.current ?? initial);
+	const identification = $derived(
+		runtime.phase === 'running' && !monitor.stale ? (runtime.identification ?? []) : []
+	);
+	const identityLabels = {
+		collecting: 'Collecting clear photos; name at least two cows to suggest matches.',
+		preparing: 'Preparing cow identification; detection continues.',
+		ready: 'Ready to suggest cow matches.',
+		failed: 'Cow identification is unavailable; detection continues. Check Logs for details.'
+	};
 	let requestError = $state('');
 	const stale = $derived(monitor.stale);
 	let controlling = $state(false);
@@ -158,9 +167,19 @@
 			</Card.Description>
 		{/if}
 	</Card.Header>
-	{#if !compact || runtime.notice || runtime.storageWarning || requestError || needsAttention}
+	{#if !compact || runtime.notice || runtime.storageWarning || requestError || needsAttention || identification.length}
 		<Card.Content class={compact ? 'flex flex-col gap-3 px-0' : 'flex flex-col gap-4'}>
 			{#if runtime.notice}<p class="text-sm text-muted-foreground">{runtime.notice}</p>{/if}
+			{#each identification as identity (identity.ruleId)}
+				<p
+					role="status"
+					class={identity.state === 'failed'
+						? 'text-sm text-destructive'
+						: 'text-sm text-muted-foreground'}
+				>
+					{identity.label}: {identity.message || identityLabels[identity.state]}
+				</p>
+			{/each}
 			{#if runtime.storageWarning}<p role="status" class="text-sm text-destructive">
 					{runtime.storageWarning}
 				</p>{/if}

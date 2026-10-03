@@ -21,6 +21,13 @@ export interface CameraRuntimeStatus {
 	recordingError?: string;
 }
 
+export interface IdentificationRuntimeStatus {
+	ruleId: string;
+	label: string;
+	state: 'collecting' | 'preparing' | 'ready' | 'failed';
+	message?: string;
+}
+
 export interface RuntimeStatus {
 	managed: boolean;
 	mode: RuntimeMode;
@@ -35,5 +42,6 @@ export interface RuntimeStatus {
 	notice?: string;
 	issues?: string[];
 	backends?: { label: string; engine: string }[];
+	identification?: IdentificationRuntimeStatus[];
 	storageWarning?: string;
 }

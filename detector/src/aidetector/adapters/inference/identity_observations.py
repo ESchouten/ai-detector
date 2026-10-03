@@ -2,14 +2,26 @@
 
 from __future__ import annotations
 
+import logging
+import sqlite3
+from collections.abc import Callable
+from concurrent.futures import Executor, Future
 from dataclasses import dataclass, replace
 from datetime import datetime
+from threading import Event
+from time import monotonic
 
 import numpy as np
 from numpy.typing import NDArray
+from pydantic import ValidationError
 
 from aidetector.adapters.identity_catalog import Catalog, IdentityCatalog
 from aidetector.adapters.inference.identity import EmbeddingCache, ImageEncoder
+from aidetector.adapters.inference.identity_gallery import (
+    PreparedGallery,
+    prepare_gallery,
+)
+from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import IdentityConfig
 from aidetector.domain.identity import (
     TrackAgreement,
@@ -17,6 +29,8 @@ from aidetector.domain.identity import (
     reject_conflicting_matches,
 )
 from aidetector.domain.models import BoundingBox, IdentityMatch, Observation
+
+logger = logging.getLogger(__name__)
 
 
 def distinct_identity_scores(
@@ -83,11 +97,23 @@ class GalleryIdentifier:
         catalog: IdentityCatalog,
         encoder: ImageEncoder,
         cache: EmbeddingCache,
+        executor: Executor,
+        *,
+        report_status: ReportStatus = ignore_status,
+        clock: Callable[[], float] = monotonic,
+        preparation_stopped: Event | None = None,
     ):
         self.settings = settings
         self.catalog = catalog
         self.encoder = encoder
         self.cache = cache
+        self.executor = executor
+        self.clock = clock
+        self.report_status = report_status
+        self.preparation_stopped = preparation_stopped
+        self._retry_at: float | None = None
+        self._preparation: tuple[Catalog, Future[PreparedGallery]] | None = None
+        self._prepared_catalog: Catalog | None = None
         self.agreement = TrackAgreement(
             settings.min_observations, max_gap=max(5, settings.sample_interval * 3)
         )
@@ -98,31 +124,69 @@ class GalleryIdentifier:
 
     def _refresh_gallery(self) -> Catalog:
         catalog = self.catalog.load()
-        if catalog == self._catalog:
-            return catalog
-        samples = [
-            (item, sample) for item in catalog.identities for sample in item.samples
-        ]
-        batches = [
-            self.cache.encode(
-                self.encoder,
-                [
-                    self.catalog.read_image(sample)
-                    for _, sample in samples[start : start + 8]
-                ],
+        if catalog != self._catalog:
+            self._catalog = catalog
+            self._prepared_catalog = None
+            self._owners = ()
+            self._tracks.clear()
+            self.agreement.clear()
+            available = sum(bool(cow.samples) for cow in catalog.identities)
+            logger.info(
+                "Identity gallery revision %d: %d identities with references, %d photos",
+                catalog.revision,
+                available,
+                sum(len(cow.samples) for cow in catalog.identities),
             )
-            for start in range(0, len(samples), 8)
-        ]
-        self._gallery = (
-            np.concatenate(batches)
-            if batches
-            else np.empty((0, self.encoder.dimension), dtype=np.float32)
-        )
-        self._owners = tuple((item.id, item.name) for item, _ in samples)
-        self._catalog = catalog
+            self.report_status(
+                StatusEvent(
+                    "identity_preparing" if available >= 2 else "identity_collecting",
+                    message="Preparing identification from the confirmed herd…"
+                    if available >= 2
+                    else "Collecting photos. Confirm at least two animals to start matching.",
+                )
+            )
+        self._finish_preparation(catalog)
+        if (
+            self._preparation is None
+            and self._prepared_catalog != catalog
+            and sum(bool(cow.samples) for cow in catalog.identities) >= 2
+        ):
+            self._preparation = (
+                catalog,
+                self.executor.submit(
+                    prepare_gallery,
+                    catalog,
+                    self.catalog,
+                    self.encoder,
+                    self.cache,
+                    self.preparation_stopped,
+                ),
+            )
+            self._finish_preparation(catalog)
+        return catalog
+
+    def _finish_preparation(self, catalog: Catalog) -> None:
+        if self._preparation is None or not self._preparation[1].done():
+            return
+        submitted_catalog, future = self._preparation
+        self._preparation = None
+        try:
+            gallery = future.result()
+        except (OSError, sqlite3.Error, ValidationError):
+            if submitted_catalog == catalog:
+                raise
+            logger.debug("Discarded unavailable references from an older herd revision")
+            return
+        if submitted_catalog != catalog:
+            return
+        self._prepared_catalog = catalog
+        self._gallery, self._owners = gallery.vectors, gallery.owners
         self._tracks.clear()
         self.agreement.clear()
-        return catalog
+        logger.info("Identity gallery revision %d is ready", catalog.revision)
+        self.report_status(
+            StatusEvent("identity_ready", message="Identification is ready.")
+        )
 
     def _match(self, images: list[NDArray[np.uint8]]) -> list[IdentityMatch]:
         if not images:
@@ -143,6 +207,33 @@ class GalleryIdentifier:
         ]
 
     def identify(self, source: str, observation: Observation) -> Observation:
+        if self._retry_at is not None and self.clock() < self._retry_at:
+            return observation
+        try:
+            result = self._identify(source, observation)
+        except (OSError, sqlite3.Error, ValidationError):
+            self._catalog = None
+            self._prepared_catalog = None
+            self._owners = ()
+            self._tracks.clear()
+            self.agreement.clear()
+            self._retry_at = self.clock() + 60
+            logger.exception(
+                "Identification unavailable; detection continues. Retrying after 60 seconds"
+            )
+            self.report_status(
+                StatusEvent(
+                    "identity_failed",
+                    message="Identification is temporarily unavailable. Detection continues; check Logs for details.",
+                )
+            )
+            return observation
+        if self._retry_at is not None:
+            self._retry_at = None
+            logger.info("Identification resumed")
+        return result
+
+    def _identify(self, source: str, observation: Observation) -> Observation:
         catalog = self._refresh_gallery()
         self._retire_tracks(source, observation)
         height, width = observation.image.shape[:2]

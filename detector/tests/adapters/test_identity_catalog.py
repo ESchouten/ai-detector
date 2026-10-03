@@ -136,7 +136,7 @@ def test_malformed_catalog_and_missing_image_remain_visible_failures(tmp_path):
     (tmp_path / "catalog.json").write_text("not json")
     with pytest.raises(ValidationError):
         catalog.load()
-    with pytest.raises(ValueError, match="missing or unreadable"):
+    with pytest.raises(OSError, match="missing or unreadable"):
         catalog.read_image("a" * 32)
 
 

@@ -1,6 +1,8 @@
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import ExitStack
 from dataclasses import replace
+from functools import partial
 from pathlib import Path
 from threading import Event
 from urllib.parse import urlsplit
@@ -287,34 +289,49 @@ def _identity_resources(
         return {}
     from aidetector.adapters.identity_catalog import IdentityCatalog
     from aidetector.adapters.inference.identity import (
+        DeferredEncoder,
         DinoEncoder,
         EmbeddingCache,
         ImageEncoder,
     )
     from aidetector.adapters.inference.identity_observations import GalleryIdentifier
-    from aidetector.adapters.inference.miewid import MiewidEncoder
 
     catalog = IdentityCatalog(directory / "identities")
     cache = EmbeddingCache(directory / "identities" / "embeddings.sqlite")
     resources.callback(cache.close)
-    encoders: dict[str, ImageEncoder] = {}
-    for model in sorted({settings.model for _, settings in configured}):
-        report_status(
-            StatusEvent(
-                "preparing",
-                message="Preparing identification. The first start downloads its model…",
-            )
-        )
+    executor = ThreadPoolExecutor(
+        max_workers=1, thread_name_prefix="identity-preparation"
+    )
+    preparation_stopped = Event()
+    resources.callback(executor.shutdown, wait=True, cancel_futures=True)
+    resources.callback(preparation_stopped.set)
+
+    def load(model: str) -> ImageEncoder:
         logger.info("Loading identity encoder %s (downloaded once, then cached)", model)
-        encoders[model] = (
-            MiewidEncoder(directory / "models" / "identity")
-            if model == "miewid-msv3"
-            else DinoEncoder(
-                directory / "models" / "identity",
-                image_size=int(model.rsplit("-", 1)[1]),
-            )
+        if model == "miewid-msv3":
+            from aidetector.adapters.inference.miewid import MiewidEncoder
+
+            return MiewidEncoder(directory / "models" / "identity")
+        return DinoEncoder(
+            directory / "models" / "identity",
+            image_size=int(model.rsplit("-", 1)[1]),
         )
+
+    encoders = {
+        model: DeferredEncoder(
+            2152 if model == "miewid-msv3" else 384, partial(load, model)
+        )
+        for model in {settings.model for _, settings in configured}
+    }
     return {
-        index: GalleryIdentifier(settings, catalog, encoders[settings.model], cache)
+        index: GalleryIdentifier(
+            settings,
+            catalog,
+            encoders[settings.model],
+            cache,
+            executor,
+            report_status=_rule_reporter(report_status, f"detector-{index}"),
+            preparation_stopped=preparation_stopped,
+        )
         for index, settings in configured
     }

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 from datetime import datetime
 from pathlib import Path
 from threading import Lock
@@ -19,6 +20,7 @@ from aidetector.adapters.media.images import encode_jpeg
 from aidetector.domain.models import IdentityMatch
 
 Identifier = Annotated[str, Field(pattern=r"^[a-f0-9]{32}$")]
+logger = logging.getLogger(__name__)
 
 
 class EnrolledIdentity(BaseModel):
@@ -60,6 +62,7 @@ class IdentityCatalog:
         self._lock = Lock()
         self._stamp: tuple[int, int] | None = None
         self._catalog = Catalog()
+        self._pending_full = False
 
     def load(self) -> Catalog:
         path = self.directory / "catalog.json"
@@ -79,7 +82,7 @@ class IdentityCatalog:
     def read_image(self, sample: str) -> NDArray[np.uint8]:
         image = cv2.imread(str(self.directory / "images" / f"{sample}.jpg"))
         if image is None:
-            raise ValueError(f"Identity example {sample} is missing or unreadable")
+            raise OSError(f"Identity example {sample} is missing or unreadable")
         return image
 
     def save_sighting(
@@ -101,7 +104,16 @@ class IdentityCatalog:
                 file.stem not in enrolled for file in sightings.glob("*.json")
             )
             if pending >= self.max_pending:
+                if not self._pending_full:
+                    logger.warning(
+                        "Herd review queue is full (%d photos); review photos to resume collection. Matching continues.",
+                        self.max_pending,
+                    )
+                    self._pending_full = True
                 return None
+            if self._pending_full:
+                logger.info("Herd photo collection resumed after review")
+                self._pending_full = False
             images = self.directory / "images"
             images.mkdir(exist_ok=True)
             sample = uuid4().hex

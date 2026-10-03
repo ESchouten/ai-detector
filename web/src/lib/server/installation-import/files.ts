@@ -33,6 +33,21 @@ export async function fileInfo(file: ReferencedFile): Promise<ImportFile> {
 	return { ...file, bytes: info.size, modified: info.mtimeMs };
 }
 
+/** Selected herd references must be regular files beneath the chosen installation. */
+export async function containedFile(root: string, relative: string): Promise<ImportFile> {
+	const source = path.join(root, relative);
+	if (!contains(root, source)) throw new ConfigurationError('Invalid imported file path.');
+	let current = root;
+	for (const part of relative.split(path.sep)) {
+		current = path.join(current, part);
+		if ((await lstat(current)).isSymbolicLink())
+			throw new ConfigurationError(
+				`The herd contains a symbolic link at ${relative}. Select a folder with the original files.`
+			);
+	}
+	return fileInfo({ source, relative });
+}
+
 /** Walk recording and preset folders without following links out of the selected installation. */
 export async function collectFiles(root: string, relative: string): Promise<ImportFile[]> {
 	const directory = path.join(root, relative);

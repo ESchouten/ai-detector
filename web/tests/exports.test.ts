@@ -14,6 +14,7 @@ import { backupSettings } from '../src/lib/server/settings-backup.ts';
 import { zipDownload } from '../src/lib/server/zip-download.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { InstallationImport } from '../src/lib/server/installation-import/service.ts';
+import { IdentityCatalog } from '../src/lib/server/identity-catalog.ts';
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-export-'));
@@ -303,7 +304,13 @@ test('settings backup preserves cameras, detector options and alerts, and import
 	await store.updateDevices(() => [
 		{ id: 'local-device', name: 'Phone', hash: 'device-hash', created: 1, expires: 9999999999999 }
 	]);
-	const zipped = await unzip(await backupSettings(store, new Request('http://localhost/backup')));
+	const zipped = await unzip(
+		await backupSettings(
+			store,
+			new IdentityCatalog(directory),
+			new Request('http://localhost/backup')
+		)
+	);
 	assert.deepEqual(Object.keys(zipped).sort(), ['README.txt', 'app.json', 'config.json']);
 	assert.deepEqual(JSON.parse(Buffer.from(zipped['config.json']).toString()), expected.config);
 	assert.deepEqual(JSON.parse(Buffer.from(zipped['app.json']).toString()), expected.app);

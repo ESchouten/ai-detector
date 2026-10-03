@@ -12,9 +12,7 @@
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title>Back up settings</Dialog.Title>
-			<Dialog.Description
-				>Save your cameras, detectors and alert settings in one ZIP.</Dialog.Description
-			>
+			<Dialog.Description>Save your setup and confirmed herd photos in one ZIP.</Dialog.Description>
 		</Dialog.Header>
 		<p class="text-sm">Includes saved passwords and tokens. Keep this backup private.</p>
 		<p class="text-sm text-muted-foreground">

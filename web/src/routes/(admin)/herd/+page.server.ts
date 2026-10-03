@@ -1,9 +1,17 @@
 import { fail } from '@sveltejs/kit';
 import { herd } from '$lib/server/herd';
+import { configuration } from '$lib/server/configuration';
 import { HerdError } from '$lib/server/identity-catalog';
+import { readHerdPage } from '$lib/server/herd-page';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = () => herd.list();
+export const load: PageServerLoad = async () => {
+	const [catalog, { config }] = await Promise.all([readHerdPage(herd), configuration.read()]);
+	return {
+		catalog,
+		identityConfigured: config.detectors.some((detector) => detector.identity != null)
+	};
+};
 
 export const actions: Actions = {
 	default: async ({ request }) => {

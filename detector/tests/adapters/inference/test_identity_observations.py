@@ -1,11 +1,19 @@
 import json
+import sqlite3
+from concurrent.futures import CancelledError, Executor, Future
 from datetime import datetime, timedelta
+from threading import Event
 
 import numpy as np
 import pytest
 
 from aidetector.adapters.identity_catalog import Catalog, IdentityCatalog
-from aidetector.adapters.inference.identity import EmbeddingCache
+from aidetector.adapters.inference.identity import (
+    DeferredEncoder,
+    EmbeddingCache,
+    download_identity_asset,
+)
+from aidetector.adapters.inference.identity_gallery import prepare_gallery
 from aidetector.adapters.inference.identity_observations import (
     GalleryIdentifier,
     distinct_identity_scores,
@@ -17,6 +25,35 @@ from aidetector.domain.models import BoundingBox, IdentityMatch, Observation
 START = datetime(2026, 1, 1)
 BELLA, DAISY = "a" * 32, "b" * 32
 BLUE, GREEN = (240, 0, 0), (0, 240, 0)
+
+
+class ImmediateExecutor(Executor):
+    """Resolve background I/O deterministically for matching-policy tests."""
+
+    def submit(self, fn, /, *args, **kwargs):
+        future = Future()
+        try:
+            future.set_result(fn(*args, **kwargs))
+        except Exception as error:
+            future.set_exception(error)
+        return future
+
+
+class ManualExecutor(Executor):
+    def __init__(self):
+        self.pending = []
+
+    def submit(self, fn, /, *args, **kwargs):
+        future = Future()
+        self.pending.append((future, fn, args, kwargs))
+        return future
+
+    def finish_next(self):
+        future, fn, args, kwargs = self.pending.pop(0)
+        try:
+            future.set_result(fn(*args, **kwargs))
+        except Exception as error:
+            future.set_exception(error)
 
 
 class FakeEncoder:
@@ -66,7 +103,11 @@ def environment(tmp_path):
     cache = EmbeddingCache(tmp_path / "embeddings.sqlite")
     encoder = FakeEncoder()
     identifier = GalleryIdentifier(
-        IdentityConfig(labels=("cow",), min_crop_size=32), catalog, encoder, cache
+        IdentityConfig(labels=("cow",), min_crop_size=32),
+        catalog,
+        encoder,
+        cache,
+        ImmediateExecutor(),
     )
     try:
         yield identifier, catalog, encoder, identities
@@ -284,12 +325,18 @@ def test_live_encoder_failure_does_not_become_an_unknown_identity(environment):
     assert set((catalog.directory / "sightings").glob("*.json")) == evidence_before
 
 
-def test_deleted_gallery_image_is_an_explicit_failure_not_an_empty_gallery(environment):
+def test_deleted_gallery_image_reports_unavailability_without_erasing_the_herd(
+    environment, caplog
+):
     identifier, catalog, _, identities = environment
     (catalog.directory / "images" / f"{identities[0]['samples'][0]}.jpg").unlink()
-
-    with pytest.raises(ValueError, match="missing or unreadable"):
-        identifier.identify("camera", observation(0, cow()))
+    statuses = []
+    identifier.report_status = statuses.append
+    original = observation(0, cow())
+    assert identifier.identify("camera", original) is original
+    assert "missing or unreadable" in caplog.text
+    assert statuses[-1].kind == "identity_failed"
+    assert len(catalog.load().identities) == 2
 
 
 @pytest.mark.parametrize(
@@ -390,3 +437,253 @@ def test_failed_encoder_is_not_cached_as_a_successful_empty_result(tmp_path):
         assert len(encoder.calls) == 2
     finally:
         cache.close()
+
+
+def test_first_enrollment_collects_photos_without_downloading_a_model(tmp_path):
+    loads = []
+
+    def load():
+        loads.append(True)
+        return FakeEncoder()
+
+    catalog = IdentityCatalog(tmp_path / "identities")
+    cache = EmbeddingCache(tmp_path / "embeddings.sqlite")
+    identifier = GalleryIdentifier(
+        IdentityConfig(labels=("cow",), min_crop_size=32),
+        catalog,
+        DeferredEncoder(384, load),
+        cache,
+        ImmediateExecutor(),
+    )
+    try:
+        result = identifier.identify("camera", observation(0, cow()))
+        assert result.boxes[0].identity.identity_id is None
+        samples = list((catalog.directory / "sightings").glob("*.json"))
+        assert len(samples) == 1
+        write_gallery(
+            catalog.directory,
+            1,
+            [
+                {"id": BELLA, "name": "Bella", "samples": [samples[0].stem]},
+                {"id": DAISY, "name": "Daisy", "samples": []},
+            ],
+        )
+        identifier.identify("camera", observation(1, cow()))
+        assert loads == []
+        assert not (tmp_path / "embeddings.sqlite").exists()
+        second = catalog.save_sighting(
+            np.full((40, 40, 3), GREEN, dtype=np.uint8),
+            "enrollment",
+            START,
+            8,
+            IdentityMatch(),
+        )
+        write_gallery(
+            catalog.directory,
+            2,
+            [
+                {"id": BELLA, "name": "Bella", "samples": [samples[0].stem]},
+                {"id": DAISY, "name": "Daisy", "samples": [second]},
+            ],
+        )
+        for at in (2, 3, 4):
+            result = identifier.identify("camera", observation(at, cow()))
+        assert loads == [True]
+        assert result.boxes[0].identity.identity_id == BELLA
+    finally:
+        cache.close()
+
+
+def test_broken_gallery_suppresses_names_and_recovers_without_stopping_detection(
+    environment,
+    caplog,
+):
+    identifier, catalog, encoder, identities = environment
+    statuses = []
+    identifier.report_status = statuses.append
+    clock = [0.0]
+    identifier.clock = lambda: clock[0]
+    for at in range(3):
+        identifier.identify("camera", observation(at, cow()))
+    (catalog.directory / "catalog.json").write_text("broken JSON")
+
+    original = observation(3, cow())
+    assert identifier.identify("camera", original) is original
+    assert "Identification unavailable" in caplog.text
+    assert statuses[-1].kind == "identity_failed"
+    calls = len(encoder.calls)
+    write_gallery(catalog.directory, 2, identities)
+    assert (
+        identifier.identify("camera", observation(10000, cow())).boxes[0].identity
+        is None
+    )
+    assert len(encoder.calls) == calls
+    clock[0] = 60.0
+    for at in (63, 64):
+        assert (
+            identifier.identify("camera", observation(at, cow()))
+            .boxes[0]
+            .identity.identity_id
+            is None
+        )
+    assert (
+        identifier.identify("camera", observation(65, cow()))
+        .boxes[0]
+        .identity.identity_id
+        == BELLA
+    )
+    assert statuses[-1].kind == "identity_ready"
+
+
+def test_gallery_preparation_is_bounded_and_cannot_publish_a_stale_revision(
+    environment,
+):
+    original, catalog, encoder, identities = environment
+    executor = ManualExecutor()
+    statuses = []
+    identifier = GalleryIdentifier(
+        original.settings,
+        catalog,
+        encoder,
+        original.cache,
+        executor,
+        report_status=statuses.append,
+    )
+    for at in range(3):
+        assert (
+            identifier.identify("camera", observation(at, cow()))
+            .boxes[0]
+            .identity.identity_id
+            is None
+        )
+    assert len(executor.pending) == 1
+    assert encoder.calls == []
+    assert statuses[-1].kind == "identity_preparing"
+    corrected = [
+        {**identities[0], "samples": identities[1]["samples"]},
+        {**identities[1], "samples": identities[0]["samples"]},
+    ]
+    write_gallery(catalog.directory, 2, corrected)
+    identifier.identify("camera", observation(3, cow()))
+    assert len(executor.pending) == 1
+    executor.finish_next()
+    identifier.identify("camera", observation(4, cow()))
+    assert len(executor.pending) == 1
+    assert all(status.kind != "identity_ready" for status in statuses)
+    executor.finish_next()
+    for at in (5, 6):
+        assert (
+            identifier.identify("camera", observation(at, cow()))
+            .boxes[0]
+            .identity.identity_id
+            is None
+        )
+    result = identifier.identify("camera", observation(7, cow()))
+    assert result.boxes[0].identity.identity_id == DAISY
+    assert statuses[-1].kind == "identity_ready"
+    assert executor.pending == []
+
+
+def test_missing_reference_from_obsolete_preparation_does_not_suspend_new_herd(
+    environment,
+):
+    original, catalog, encoder, identities = environment
+    executor = ManualExecutor()
+    statuses = []
+    identifier = GalleryIdentifier(
+        original.settings,
+        catalog,
+        encoder,
+        original.cache,
+        executor,
+        report_status=statuses.append,
+    )
+    identifier.identify("camera", observation(0, cow()))
+    (catalog.directory / "images" / f"{identities[0]['samples'][0]}.jpg").unlink()
+    write_gallery(catalog.directory, 2, identities[1:])
+    executor.finish_next()
+    result = identifier.identify("camera", observation(1, cow()))
+    assert result.boxes[0].identity.identity_id is None
+    assert statuses[-1].kind == "identity_collecting"
+    assert all(status.kind != "identity_failed" for status in statuses)
+    assert executor.pending == []
+
+
+def test_accelerator_failure_from_obsolete_preparation_is_still_supervised(environment):
+    original, catalog, encoder, identities = environment
+    executor = ManualExecutor()
+    identifier = GalleryIdentifier(
+        original.settings,
+        catalog,
+        encoder,
+        original.cache,
+        executor,
+    )
+    identifier.identify("camera", observation(0, cow()))
+    encoder.failure = True
+    write_gallery(catalog.directory, 2, identities[1:])
+    executor.finish_next()
+    with pytest.raises(RuntimeError, match="Encoder unavailable"):
+        identifier.identify("camera", observation(1, cow()))
+
+
+def test_gallery_preparation_stops_between_encoder_batches(environment):
+    original, catalog, _, identities = environment
+    stopped = Event()
+
+    class StoppingEncoder(FakeEncoder):
+        def encode(self, images):
+            result = super().encode(images)
+            stopped.set()
+            return result
+
+    encoder = StoppingEncoder()
+    samples = [
+        catalog.save_sighting(
+            np.full((40, 40, 3), BLUE, dtype=np.uint8),
+            "enrollment",
+            START,
+            index,
+            IdentityMatch(),
+        )
+        for index in range(9)
+    ]
+    write_gallery(
+        catalog.directory, 2, [{**identities[0], "samples": samples}, identities[1]]
+    )
+    with pytest.raises(CancelledError, match="preparation stopped"):
+        prepare_gallery(catalog.load(), catalog, encoder, original.cache, stopped)
+    assert len(encoder.calls) == 1
+
+
+def test_invalid_cached_vector_is_an_observable_storage_failure(tmp_path):
+    cache_path = tmp_path / "embeddings.sqlite"
+    encoder = FakeEncoder()
+    image = np.full((40, 40, 3), BLUE, dtype=np.uint8)
+    cache = EmbeddingCache(cache_path)
+    try:
+        cache.encode(encoder, [image])
+        with sqlite3.connect(cache_path) as database:
+            database.execute("UPDATE embeddings SET vector = ?", (b"broken",))
+        with pytest.raises(sqlite3.DataError, match="invalid vector size"):
+            cache.encode(encoder, [image])
+    finally:
+        cache.close()
+
+
+def test_native_model_transfer_failure_is_limited_to_the_download_boundary(
+    tmp_path, monkeypatch
+):
+    import huggingface_hub
+
+    failure = RuntimeError("Native transfer failed")
+
+    def failed_transfer(*args, **kwargs):
+        raise failure
+
+    monkeypatch.setattr(huggingface_hub, "hf_hub_download", failed_transfer)
+    with pytest.raises(OSError, match="Identity model download failed") as caught:
+        download_identity_asset(
+            "example/public", "model.safetensors", "pinned", tmp_path
+        )
+    assert caught.value.__cause__ is failure

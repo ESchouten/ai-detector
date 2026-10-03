@@ -26,6 +26,10 @@ class StatusEvent:
         "delivery_failed",
         "waiting_delivery",
         "processing_resumed",
+        "identity_collecting",
+        "identity_preparing",
+        "identity_ready",
+        "identity_failed",
     ]
     source: str | None = None
     message: str | None = None

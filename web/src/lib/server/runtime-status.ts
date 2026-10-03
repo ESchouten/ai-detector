@@ -2,7 +2,11 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import * as v from 'valibot';
 import type { AppConfig, Config, DetectorConfig } from '../schema.ts';
-import type { CameraRuntimeStatus, RuntimeReadiness } from '../runtime.ts';
+import type {
+	CameraRuntimeStatus,
+	IdentificationRuntimeStatus,
+	RuntimeReadiness
+} from '../runtime.ts';
 
 export const STATUS_PREFIX = 'AIDETECTOR_STATUS ';
 const eventSchema = v.object({
@@ -22,6 +26,10 @@ const eventSchema = v.object({
 		'backend',
 		'validation',
 		'validation_failed',
+		'identity_collecting',
+		'identity_preparing',
+		'identity_ready',
+		'identity_failed',
 		'delivery',
 		'delivery_failed',
 		'waiting_delivery',
@@ -74,6 +82,10 @@ export class RuntimeProgress {
 	private cameras = new Map<string, CameraProgress>();
 	private failures = new Map<string, string>();
 	private engines = new Map<string, string>();
+	private identityStates = new Map<
+		string,
+		Pick<IdentificationRuntimeStatus, 'state' | 'message'>
+	>();
 	preparation: string | undefined;
 	preparationFailure: string | undefined;
 	notice: string | undefined;
@@ -83,6 +95,7 @@ export class RuntimeProgress {
 		this.cameras.clear();
 		this.failures.clear();
 		this.engines.clear();
+		this.identityStates.clear();
 		this.preparation = undefined;
 		this.preparationFailure = undefined;
 		this.notice = undefined;
@@ -145,11 +158,19 @@ export class RuntimeProgress {
 			return event;
 		}
 		if (
-			['backend', 'validation', 'validation_failed', 'delivery', 'delivery_failed'].includes(
-				event.event
-			)
+			[
+				'backend',
+				'validation',
+				'validation_failed',
+				'delivery',
+				'delivery_failed',
+				'identity_collecting',
+				'identity_preparing',
+				'identity_ready',
+				'identity_failed'
+			].includes(event.event)
 		) {
-			this.observeConnection(event);
+			this.observeRuleStatus(event);
 			return event;
 		}
 		if (event.event === 'ready') {
@@ -188,8 +209,17 @@ export class RuntimeProgress {
 		}
 	}
 
-	private observeConnection(event: ProgressEvent): void {
+	private observeRuleStatus(event: ProgressEvent): void {
 		if (!event.ruleId) return;
+		if (event.event.startsWith('identity_')) {
+			if (!Array.from(this.cameras.values()).some((camera) => camera.rules.has(event.ruleId!)))
+				return;
+			this.identityStates.set(event.ruleId, {
+				state: event.event.slice('identity_'.length) as IdentificationRuntimeStatus['state'],
+				message: event.message
+			});
+			return;
+		}
 		if (event.event === 'backend') {
 			if (event.message) this.engines.set(event.ruleId, event.message);
 			return;
@@ -287,6 +317,14 @@ export class RuntimeProgress {
 		return Array.from(this.engines, ([rule, engine]) => ({ label: this.ruleLabel(rule), engine }));
 	}
 
+	get identification(): IdentificationRuntimeStatus[] {
+		return Array.from(this.identityStates, ([ruleId, status]) => ({
+			ruleId,
+			label: this.ruleLabel(ruleId),
+			...status
+		}));
+	}
+
 	/** Fresh capture with no completed work is a processing stall, not an offline camera. */
 	stalledDetector(now = Date.now()): string | undefined {
 		if (!this.prepared) return;
@@ -309,6 +347,7 @@ export class RuntimeProgress {
 		if (this.preparationFailure) return { cameras, readiness: 'failed' };
 		if (
 			this.failures.size ||
+			this.identification.some((identity) => identity.state === 'failed') ||
 			cameras.some((camera) => camera.state === 'offline' || camera.recordingError || camera.error)
 		)
 			return { cameras, readiness: 'degraded' };

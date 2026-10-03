@@ -7,6 +7,8 @@ import type { ImportStatus, ImportSummary } from '../../installation-import.ts';
 import { STAGES, type Configuration } from '../../schema.ts';
 import type { ConfigurationStore } from '../configuration/store.ts';
 import { readJson, writeJson } from '../json-file.ts';
+import { IdentityCatalog, HerdError } from '../identity-catalog.ts';
+import { confirmedHerdFiles } from '../herd-backup.ts';
 import { readLegacyConfiguration } from './configuration.ts';
 import {
 	availableSpace,
@@ -94,13 +96,18 @@ export class InstallationImport {
 			await mkdir(this.destination, { recursive: true });
 			const source = await sourceDirectory(input, this.destination);
 			const { document, files: references, notes } = await readLegacyConfiguration(source);
-			const [recordings, presets, files, settings] = await Promise.all([
+			const [recordings, presets, files, settings, herd] = await Promise.all([
 				collectFiles(source, 'detections'),
 				collectFiles(source, 'presets'),
 				Promise.all(references.map(fileInfo)),
-				this.settingsFiles(source)
+				this.settingsFiles(source),
+				confirmedHerdFiles(new IdentityCatalog(source))
 			]);
-			const allFiles = [...recordings, ...presets, ...files];
+			const allFiles = [...recordings, ...presets, ...files, ...(herd?.files ?? [])];
+			if (herd?.catalog.identities.length)
+				notes.push(
+					`Confirmed herd: ${herd.catalog.identities.length} ${herd.catalog.identities.length === 1 ? 'cow' : 'cows'}, ${herd.sightings.length} ${herd.sightings.length === 1 ? 'photo' : 'photos'}.`
+				);
 			const summary: ImportSummary = {
 				id: randomUUID(),
 				source,
@@ -159,10 +166,18 @@ export class InstallationImport {
 	}
 
 	private async requireEmptySetup(): Promise<void> {
+		await this.requireEmptyHerd();
 		const { config, app } = await this.configuration.read();
 		if (config.detectors.length || app.streams.length || app.telegrams.length || app.llms.length)
 			throw new ConfigurationError(
 				'This application already has a setup. Import is available before adding cameras or detectors.'
+			);
+	}
+
+	private async requireEmptyHerd(): Promise<void> {
+		if (await exists(path.join(this.destination, 'identities', 'catalog.json')))
+			throw new ConfigurationError(
+				'This application already has a herd. Import is available in a new installation and will not overwrite confirmed cows.'
 			);
 	}
 
@@ -227,6 +242,7 @@ export class InstallationImport {
 
 	private async publish(job: ImportJob): Promise<void> {
 		if (!job.publishing) {
+			await this.requireEmptyHerd();
 			await this.requireAvailableFolders(job.files);
 			// Record ownership before the first rename so a restart can finish publishing.
 			job.publishing = true;
@@ -260,7 +276,8 @@ function isRecording(file: ImportFile): boolean {
 }
 
 export function importError(error: unknown): string {
-	if (error instanceof ConfigurationError || isValiError(error)) return error.message;
+	if (error instanceof ConfigurationError || error instanceof HerdError || isValiError(error))
+		return error.message;
 	const code = (error as NodeJS.ErrnoException).code;
 	if (code === 'ENOENT')
 		return 'The old folder or a file could not be found. Connect the drive and choose the folder again.';

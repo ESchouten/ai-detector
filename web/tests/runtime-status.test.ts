@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { test } from 'node:test';
 import { RuntimeProgress, STATUS_PREFIX } from '../src/lib/server/runtime-status.ts';
+import type { Config } from '../src/lib/schema.ts';
 
 const source = 'rtsp://farmer:secret@camera.example.test/live';
 const sourceKey = createHash('sha256').update(source).digest('hex');
@@ -150,6 +151,61 @@ test('validator and delivery failures remain visible until that connection succe
 	assert.equal(state.issues.length, 1);
 	record(state, 'delivery', undefined, now, { destinationId: 'telegram-1' });
 	assert.equal(state.snapshot(now).readiness, 'monitoring');
+});
+
+test('identity preparation and recovery are per rule and do not erase other failures or notices', () => {
+	const state = new RuntimeProgress();
+	const config: Config = {
+		detectors: [
+			{ detection: { source: [source] }, identity: { labels: ['cow'] } },
+			{ detection: { source: [source] }, identity: { labels: ['cow'] } }
+		]
+	};
+	const app = {
+		streams: [],
+		telegrams: [],
+		llms: [],
+		detectors: [{ label: 'Barn identity' }, { label: 'Passage identity' }]
+	};
+	state.configure(config, app, '/data');
+	record(state, 'notice', 'Other runtime information');
+	record(state, 'identity_collecting', 'Name two cows first.');
+	assert.equal(state.identification[0].state, 'collecting');
+	assert.equal(
+		state.snapshot(now).readiness,
+		'preparing',
+		'Identity status is not camera readiness'
+	);
+	record(state, 'frame');
+	record(state, 'inference');
+	record(state, 'inference', undefined, now, { ruleId: 'detector-2' });
+	record(state, 'identity_preparing', 'Preparing references.');
+	record(state, 'identity_failed', 'Reference photo missing.', now, { ruleId: 'detector-2' });
+	record(state, 'identity_ready', 'Suggestions ready.');
+	assert.deepEqual(state.identification, [
+		{ ruleId: 'detector-1', label: 'Barn identity', state: 'ready', message: 'Suggestions ready.' },
+		{
+			ruleId: 'detector-2',
+			label: 'Passage identity',
+			state: 'failed',
+			message: 'Reference photo missing.'
+		}
+	]);
+	assert.equal(state.notice, 'Other runtime information');
+	assert.equal(state.snapshot(now).readiness, 'degraded');
+	assert.equal(state.snapshot(now).cameras[0].state, 'monitoring', 'Detection continues');
+	record(state, 'identity_ready', undefined, now, { ruleId: 'detector-2' });
+	assert.equal(state.snapshot(now).readiness, 'monitoring');
+	state.configure(config, app, '/data');
+	assert.deepEqual(state.identification, [], 'A fresh run cannot inherit earlier readiness');
+});
+
+test('identity events without a configured rule cannot create success or a phantom failure', () => {
+	const state = progress();
+	record(state, 'identity_failed', 'Unknown rule', now, { ruleId: 'detector-99' });
+	record(state, 'identity_ready', undefined, now, { ruleId: undefined });
+	assert.deepEqual(state.identification, []);
+	assert.equal(state.snapshot(now).readiness, 'preparing');
 });
 
 test('delivery backpressure keeps the worker alive without pretending inference completed', () => {

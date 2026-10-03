@@ -37,7 +37,7 @@ Choose the single installer for your operating system from the release. On Windo
 
 ## Your settings and recordings
 
-Use **Export recordings** on Recordings to share a ZIP, optionally limited by date and the current filters. **Back up settings** on Settings saves cameras, detectors and alerts separately; this backup includes passwords and tokens and should stay private. See the [export and backup guide](web/README.md#export-recordings-and-back-up-settings).
+Use **Export recordings** on Recordings to share a ZIP, optionally limited by date and the current filters. **Back up settings** on Settings saves cameras, detectors, alerts and the confirmed herd with its reference photos; this backup includes passwords and tokens and should stay private. See the [export and backup guide](web/README.md#export-recordings-and-back-up-settings).
 
 The monitoring controls show the storage folder under **Advanced and troubleshooting**:
 

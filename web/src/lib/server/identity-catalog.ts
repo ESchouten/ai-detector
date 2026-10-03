@@ -102,6 +102,22 @@ export class IdentityCatalog {
 			: null;
 	}
 
+	/** Keep confirmed enrollment and its original evidence together in settings backups. */
+	async snapshot() {
+		await this.pending;
+		const catalog = await this.read();
+		const sightings: Sighting[] = [];
+		for (const sample of catalog.identities.flatMap((cow) => cow.samples)) {
+			const sighting = await this.sighting(sample);
+			if (!sighting)
+				throw new HerdError(
+					'A confirmed cow photo has missing or invalid details. Restore its sighting file before backing up or importing.'
+				);
+			sightings.push(sighting);
+		}
+		return { catalog, sightings };
+	}
+
 	async list() {
 		await this.pending;
 		const catalog = await this.read();

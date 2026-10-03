@@ -352,7 +352,7 @@ test(
 );
 
 test(
-	'failed or cancelled checks leave no partial recording and allow another attempt',
+	'failed or cancelled checks leave no partial recording and permit one immediate retry',
 	{ timeout: 10000 },
 	async (t) => {
 		assert.ok(ffmpeg);
@@ -373,12 +373,15 @@ test(
 		await connected;
 		await assert.rejects(cache.check(address, ffmpeg, []), /still running/);
 		controller.abort(new Error('Setup cancelled'));
-		await assert.rejects(pending, /Setup cancelled/);
+		// Retry before awaiting the cancelled check's process and file cleanup.
+		const retry = cache.check(address, path.join(dir, 'missing-ffmpeg'), []);
+		const duplicate = cache.check(address, path.join(dir, 'missing-ffmpeg'), []);
+		await Promise.all([
+			assert.rejects(pending, /Setup cancelled/),
+			assert.rejects(retry, /software is missing/),
+			assert.rejects(duplicate, /still running/)
+		]);
 		assert.deepEqual(await readdir(dir), []);
-		await assert.rejects(
-			cache.check(address, path.join(dir, 'missing-ffmpeg'), []),
-			/software is missing/
-		);
 	}
 );
 

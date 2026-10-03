@@ -85,7 +85,8 @@ export class ManagedDetector {
 			preparation: readiness === 'preparing' ? this.progress.preparation : undefined,
 			notice: this.progress.notice,
 			issues: this.progress.issues,
-			backends: this.progress.backends
+			backends: this.progress.backends,
+			identification: this.progress.identification
 		};
 	}
 

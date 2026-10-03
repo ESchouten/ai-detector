@@ -86,7 +86,7 @@ export async function recordCameraTest(
 /** Short-lived setup recordings, isolated from real detections and addressed without credentials. */
 export class CameraChecks {
 	private readonly checks = new Map<string, Check>();
-	private active = false;
+	private active?: { signal?: AbortSignal; finished: Promise<void> };
 	private readonly directory: string;
 	private readonly now: () => number;
 	constructor(directory: string, now: () => number = Date.now) {
@@ -100,11 +100,16 @@ export class CameraChecks {
 		profiles: CameraProfile[],
 		signal?: AbortSignal
 	): Promise<CameraConnectionResult> {
+		// Cancellation stops FFmpeg before its temporary files finish being removed.
+		// Let an immediate retry wait for that cleanup without overlapping checks.
+		if (this.active?.signal?.aborted) await this.active.finished;
+		signal?.throwIfAborted();
 		if (this.active)
 			throw new CameraConnectionError(
 				'Another camera check is still running. Please wait a moment and try again.'
 			);
-		this.active = true;
+		const finished = Promise.withResolvers<void>();
+		this.active = { signal, finished: finished.promise };
 		const id = randomUUID();
 		const directory = path.join(this.directory, id);
 		try {
@@ -132,7 +137,8 @@ export class CameraChecks {
 			}
 			throw cameraStorageFailure(cause) ?? cause;
 		} finally {
-			this.active = false;
+			this.active = undefined;
+			finished.resolve();
 		}
 	}
 

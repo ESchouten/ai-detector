@@ -1,0 +1,259 @@
+{
+  "status": "READ_ONLY_FEASIBILITY_COMPLETE",
+  "reviewed_at_utc": "2026-10-03T14:13:10+00:00",
+  "started_at_utc": "2026-10-03T14:06:13Z",
+  "scope": "Pinned public source text and public model metadata only; no weights, dataset or environment downloads; no model execution; no production changes.",
+  "repository": {
+    "url": "https://github.com/VADL-Purdue/AutoCattlogger",
+    "revision": "d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044",
+    "license": "Apache-2.0",
+    "submodules": {
+      "mmpose": "759b39c13fea6ba094afc1fa932f51dc1b11cbf9",
+      "detectron2": "fd27788985af0f4ca800bca563acdb700bb890e2",
+      "opencv_srgb_gamma": "2d5b843c7d4b51c6d4d185ea4027fe9a037c6b47",
+      "cow_matcher": "61ca20a1802f38b0cd9d887c5ea8043a6d7cfb96"
+    }
+  },
+  "official_hrnet": {
+    "revision": "6f69e4676ad8d43d0d61b64b1b9726f0c369e7b1",
+    "license": "MIT",
+    "compatibility_with_cow_checkpoint": "NOT_TESTED"
+  },
+  "models": [
+    {
+      "page": "https://app.box.com/s/0lh7opyprerc10rhw660bealryyltumq",
+      "file_id": 2045681867015,
+      "name": "epoch_210_kpDatasetV5_2024.pth",
+      "bytes": 768697571,
+      "can_download": true,
+      "binary_download_attempted": false,
+      "checkpoint_sha256": null
+    },
+    {
+      "page": "https://app.box.com/s/aa8cu8cv0pszhj64446yiim9dtpkjs6h",
+      "file_id": 2045670306611,
+      "name": "maskRCNN_kpDatasetv6_orbbec2025_model_final.pth",
+      "bytes": 280289315,
+      "can_download": true,
+      "binary_download_attempted": false,
+      "checkpoint_sha256": null
+    }
+  ],
+  "model_availability_caveat": "Advertised static URLs returned HTTP404 to HEAD; public Box file pages returned200 and canDownload true. No binary transfer or model-key validation was performed.",
+  "paper": {
+    "doi": "10.1016/j.atech.2025.101561",
+    "url": "https://doi.org/10.1016/j.atech.2025.101561",
+    "author_pdf": "https://engineering.purdue.edu/VADL/publications/AutoCattlogger_SAT2025_ManuRamesh_AmyReibman.pdf",
+    "access": "Primary publisher text via web search extraction; no claim of locally archived complete PDF."
+  },
+  "decisions": {
+    "materially_distinct": true,
+    "basis": "Ten named dorsal anatomical landmarks supply piecewise body correspondence absent from earlier global/PCA/local-patch controls.",
+    "production_integration": "NOT_APPROVED",
+    "next_step": "Only a separately frozen pose-checkpoint/CPU-MPS parity feasibility experiment; reuse existing masks; stop before framework overhaul.",
+    "cross_visit_accuracy": "NOT_ESTABLISHED",
+    "unknown_rejection": "NOT_PROVIDED_BY_NEAREST_HAMMING",
+    "new_heldout_data_found": false,
+    "reserved_8calves_3000_plus_opened": false
+  },
+  "read_sources": [
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/.gitmodules",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/.gitmodules",
+      "bytes": 516,
+      "sha256": "33335c10735c7ed84bd06a40e1a71c9534281764adce424c0cf44cbbf6a26f2b"
+    },
+    {
+      "source": "https://app.box.com/s/0lh7opyprerc10rhw660bealryyltumq",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/0lh7opyprerc10rhw660bealryyltumq.html",
+      "bytes": 29205,
+      "sha256": "149f33f2da826d89e979419e769f34a2d12a3f75ae8b3e29858e88acac98b96f"
+    },
+    {
+      "source": "https://app.box.com/s/aa8cu8cv0pszhj64446yiim9dtpkjs6h",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/aa8cu8cv0pszhj64446yiim9dtpkjs6h.html",
+      "bytes": 29256,
+      "sha256": "f410773ae78fee339bb267d17d3bf2f63e162e8c26571c62d31339125aab8b60"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/autoCattleID/autoCattleID.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/autoCattleID/autoCattleID.py",
+      "bytes": 30295,
+      "sha256": "621855d2e2bdaa510ddfdfa7c226d18a1a91c4ec591c4a29444b89d227970712"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/autoCattlogger/_autoCattloggerBase.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/autoCattlogger/_autoCattloggerBase.py",
+      "bytes": 11973,
+      "sha256": "808f37e1a38e7e8793525cb1b2a728925274d6ef1e767693a81ac2fb32df9331"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/autoCattlogger/autoCattlogger.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/autoCattlogger/autoCattlogger.py",
+      "bytes": 79197,
+      "sha256": "4b458c048089a5df3bee35ea957324a3d0c94d93aa53d19384545cd2cb3b1997"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/autoCattlogger/helpers/helper_for_QR_and_inference.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/autoCattlogger/helpers/helper_for_QR_and_inference.py",
+      "bytes": 25918,
+      "sha256": "c3d8f12bc9c92d7d155a004be06e3ce1baabbec11b2874f03f54fe8d21e8aa72"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/autoCattlogger/helpers/helper_for_infer.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/autoCattlogger/helpers/helper_for_infer.py",
+      "bytes": 54084,
+      "sha256": "e80471496df85125abe9e61e9494fe48dbaedf2e5946ca7a78680f47a0420187"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/autoCattlogger/helpers/helper_for_morph.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/autoCattlogger/helpers/helper_for_morph.py",
+      "bytes": 11215,
+      "sha256": "8d444e70d39d600c5cfca3923eb61da22446945f3438437554daeac0e680c0ed"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/autoCattlogger/helpers/helper_for_tracking.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/autoCattlogger/helpers/helper_for_tracking.py",
+      "bytes": 8358,
+      "sha256": "2b0c6db607c80ccb1305160ad0ae135299ba99b63253b105caea0eceadf0e7de"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/configs/autoCattlogger_configs/autoCattlogger_example_config.yaml",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/configs/autoCattlogger_configs/autoCattlogger_example_config.yaml",
+      "bytes": 2316,
+      "sha256": "f0ca0b82ca79fde1c1ff8d8909d5301e7c44c2e9b616bf0070ee8fd41e958326"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/configs/mmpose_configs/metadata_config/cow_tv_keypoints.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/configs/mmpose_configs/metadata_config/cow_tv_keypoints.py",
+      "bytes": 4036,
+      "sha256": "be0890235912e070e6ef84fa2c43ab831f23be86abadc2dfcfb5e362edbe01a0"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/configs/mmpose_configs/trainer_config/td-hm_hrnet-w48_udp-8xb32-210e_coco-256x192_cow-tv_orbbecCam2025.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/configs/mmpose_configs/trainer_config/td-hm_hrnet-w48_udp-8xb32-210e_coco-256x192_cow-tv_orbbecCam2025.py",
+      "bytes": 7547,
+      "sha256": "705f14acf5ec688d71987742f1410176917f0e2332dc4c6b8eeaaf6523b7c037"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/data/readme.md",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/data/readme.md",
+      "bytes": 3204,
+      "sha256": "74ccea259765c4ae9f7768ec3f3108cc8dabff22deda78235aef5c6f8ef3fd4c"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/__init__.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/__init__.py",
+      "bytes": 1031,
+      "sha256": "592371e7429edc2b715db26201cf12c7bee198bf136b29cbee6c3192ba35aca4"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/apis/inference.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/apis/inference.py",
+      "bytes": 9415,
+      "sha256": "37e7c59a5243b0584d00da31c5cc5615b7022b4e970f8133cafdd4826c31d5ad"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/codecs/udp_heatmap.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/codecs/udp_heatmap.py",
+      "bytes": 7851,
+      "sha256": "4481e8546e9430616e169fd36bba1842a0e467566e87297429da5121f039d840"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/models/__init__.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/__init__.py",
+      "bytes": 669,
+      "sha256": "6308a5c7f059d284847aa20f943c0ce334731bd7c31b30bebb8e52ebbe5ad0cd"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/models/backbones/__init__.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/backbones/__init__.py",
+      "bytes": 1505,
+      "sha256": "9e9fbab5eebd6d02e080c0895d99650dd1d8e32e91acf52a35faae8e415b4df7"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/models/backbones/hrnet.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/backbones/hrnet.py",
+      "bytes": 22592,
+      "sha256": "486abcaf3bff8308119c6c33245b7b7ea74211b56f571116399fcc29e3705bea"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/models/backbones/pvt.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/backbones/pvt.py",
+      "bytes": 21991,
+      "sha256": "d4b95b32f41331cba7ed3ca60c2dd15eb707d6fd6313149b7d0a9c6c628fb7ac"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/models/heads/__init__.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/heads/__init__.py",
+      "bytes": 1043,
+      "sha256": "e0236180aaac6d3744592c9a2acdfa83272a4e2aea8dca651b0fda4e933e8337"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/models/heads/heatmap_heads/heatmap_head.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/heads/heatmap_heads/heatmap_head.py",
+      "bytes": 14853,
+      "sha256": "f423d2c11139b8c1405ba2329bd503355ad3bc333ffb02566d2be066f7796dc8"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/models/heads/transformer_heads/edpose_head.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/heads/transformer_heads/edpose_head.py",
+      "bytes": 62355,
+      "sha256": "3eff8f4e0a4f251e35875a2bb6341a7644950a4caec78be4b1ca83c80d1c2645"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/models/utils/__init__.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/utils/__init__.py",
+      "bytes": 801,
+      "sha256": "cde4698f0700e8437f7ae64ed2f9bcb79e8863d343879b307250f6902450951d"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/models/utils/transformer.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/utils/transformer.py",
+      "bytes": 32492,
+      "sha256": "c35034032a2ca7f8627edf87a206d71712e61da25ae2fd913b3f3570f3f80f8c"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/open-mmlab/mmpose/759b39c13fea6ba094afc1fa932f51dc1b11cbf9/mmpose/utils/setup_env.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/utils/setup_env.py",
+      "bytes": 4079,
+      "sha256": "58bec6eca08972c60747b4f2213828e82d200d5f9a9e909f7cca793d56a42c67"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/dependencies/readme.md",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/dependencies/readme.md",
+      "bytes": 8480,
+      "sha256": "9270bd5abd28f2384f134e22c80e9d85d6697d3ecdeda24f46e95cdcb4fc63c7"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/docs/Cattlog on Custom Data.md",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/docs/Cattlog on Custom Data.md",
+      "bytes": 5681,
+      "sha256": "54c6c6fc35af6a166d9075d551efaef521785a41b52840421f5e739988846997"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/docs/FAQs.md",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/docs/FAQs.md",
+      "bytes": 4638,
+      "sha256": "0b0bd27cb12f39c38d667579205b3795bb16e879722cd2e71f745fe8fbbfad81"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/models/readme.md",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/models/readme.md",
+      "bytes": 2044,
+      "sha256": "40c33d7a4e3e4e388d78f6eaced592d2a324b43671de955f4ad069b8409d4412"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/leoxiaobin/deep-high-resolution-net.pytorch/6f69e4676ad8d43d0d61b64b1b9726f0c369e7b1/lib/models/pose_hrnet.py",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/official-pose-hrnet.py",
+      "bytes": 18140,
+      "sha256": "c0f2f8a137836c6e8c489e4a1c46010bfce5308584e13d231565f7f90a2636f8"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/VADL-Purdue/AutoCattlogger/d284cf7fcc2e514bbc4e2f87e50a8dcde7c1f044/setup/readme.md",
+      "local_read_only_copy": "/tmp/autocattlogger-feasibility/setup/readme.md",
+      "bytes": 5892,
+      "sha256": "2bc614e1992c0bdb2227c472ed14c4df577876f29ca171920e68d2e42a24aceb"
+    }
+  ]
+}

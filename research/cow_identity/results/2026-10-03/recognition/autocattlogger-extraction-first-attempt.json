@@ -1,0 +1,7 @@
+{
+  "status": "FAILED_BEFORE_TENSOR_LOAD",
+  "source_sha256": "004c0a4243accfd77aa93c15f52de0a011761c659861e76d385760fce20cc7d1",
+  "reason": "PyTorch restricted pickle scanner does not implement harmless POP opcode used by first prefix. No metadata globals allowed; no model construction or forward.",
+  "source_checkpoint_sha256": "a23cfd37a78a0745392e5b0457dd468e9afbea3eebbbf19b94d32b988734438f",
+  "correction": "Inline the statically verified empty string at external memo130 reads, preserving all other state opcodes and storage bytes."
+}

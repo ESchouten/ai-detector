@@ -1,0 +1,5813 @@
+{
+  "source_sha256": "a23cfd37a78a0745392e5b0457dd468e9afbea3eebbbf19b94d32b988734438f",
+  "state_slice": [
+    12441,
+    295404
+  ],
+  "external_memo": {
+    "130": ""
+  },
+  "inlined_external_memo_offsets": [
+    236262
+  ],
+  "globals": [
+    "collections OrderedDict",
+    "torch FloatStorage",
+    "torch LongStorage",
+    "torch._utils _rebuild_tensor_v2"
+  ],
+  "storage_count": 1754,
+  "storage_bytes": 254702280,
+  "state_archive_sha256": "1cf87ca21347f86fde5917245102ac679921bab08abdfc1f37537384f5042f5f",
+  "timm": "1.0.30",
+  "torch": "2.12.1",
+  "strict_backbone_tensors": 1752,
+  "strict_head_tensors": 2,
+  "removed_unused_final_output_tensors": [
+    "stage4.2.fuse_layers.1.0.0.0.weight",
+    "stage4.2.fuse_layers.1.0.0.1.weight",
+    "stage4.2.fuse_layers.1.0.0.1.bias",
+    "stage4.2.fuse_layers.1.0.0.1.running_mean",
+    "stage4.2.fuse_layers.1.0.0.1.running_var",
+    "stage4.2.fuse_layers.1.0.0.1.num_batches_tracked",
+    "stage4.2.fuse_layers.1.2.0.weight",
+    "stage4.2.fuse_layers.1.2.1.weight",
+    "stage4.2.fuse_layers.1.2.1.bias",
+    "stage4.2.fuse_layers.1.2.1.running_mean",
+    "stage4.2.fuse_layers.1.2.1.running_var",
+    "stage4.2.fuse_layers.1.2.1.num_batches_tracked",
+    "stage4.2.fuse_layers.1.3.0.weight",
+    "stage4.2.fuse_layers.1.3.1.weight",
+    "stage4.2.fuse_layers.1.3.1.bias",
+    "stage4.2.fuse_layers.1.3.1.running_mean",
+    "stage4.2.fuse_layers.1.3.1.running_var",
+    "stage4.2.fuse_layers.1.3.1.num_batches_tracked",
+    "stage4.2.fuse_layers.2.0.0.0.weight",
+    "stage4.2.fuse_layers.2.0.0.1.weight",
+    "stage4.2.fuse_layers.2.0.0.1.bias",
+    "stage4.2.fuse_layers.2.0.0.1.running_mean",
+    "stage4.2.fuse_layers.2.0.0.1.running_var",
+    "stage4.2.fuse_layers.2.0.0.1.num_batches_tracked",
+    "stage4.2.fuse_layers.2.0.1.0.weight",
+    "stage4.2.fuse_layers.2.0.1.1.weight",
+    "stage4.2.fuse_layers.2.0.1.1.bias",
+    "stage4.2.fuse_layers.2.0.1.1.running_mean",
+    "stage4.2.fuse_layers.2.0.1.1.running_var",
+    "stage4.2.fuse_layers.2.0.1.1.num_batches_tracked",
+    "stage4.2.fuse_layers.2.1.0.0.weight",
+    "stage4.2.fuse_layers.2.1.0.1.weight",
+    "stage4.2.fuse_layers.2.1.0.1.bias",
+    "stage4.2.fuse_layers.2.1.0.1.running_mean",
+    "stage4.2.fuse_layers.2.1.0.1.running_var",
+    "stage4.2.fuse_layers.2.1.0.1.num_batches_tracked",
+    "stage4.2.fuse_layers.2.3.0.weight",
+    "stage4.2.fuse_layers.2.3.1.weight",
+    "stage4.2.fuse_layers.2.3.1.bias",
+    "stage4.2.fuse_layers.2.3.1.running_mean",
+    "stage4.2.fuse_layers.2.3.1.running_var",
+    "stage4.2.fuse_layers.2.3.1.num_batches_tracked",
+    "stage4.2.fuse_layers.3.0.0.0.weight",
+    "stage4.2.fuse_layers.3.0.0.1.weight",
+    "stage4.2.fuse_layers.3.0.0.1.bias",
+    "stage4.2.fuse_layers.3.0.0.1.running_mean",
+    "stage4.2.fuse_layers.3.0.0.1.running_var",
+    "stage4.2.fuse_layers.3.0.0.1.num_batches_tracked",
+    "stage4.2.fuse_layers.3.0.1.0.weight",
+    "stage4.2.fuse_layers.3.0.1.1.weight",
+    "stage4.2.fuse_layers.3.0.1.1.bias",
+    "stage4.2.fuse_layers.3.0.1.1.running_mean",
+    "stage4.2.fuse_layers.3.0.1.1.running_var",
+    "stage4.2.fuse_layers.3.0.1.1.num_batches_tracked",
+    "stage4.2.fuse_layers.3.0.2.0.weight",
+    "stage4.2.fuse_layers.3.0.2.1.weight",
+    "stage4.2.fuse_layers.3.0.2.1.bias",
+    "stage4.2.fuse_layers.3.0.2.1.running_mean",
+    "stage4.2.fuse_layers.3.0.2.1.running_var",
+    "stage4.2.fuse_layers.3.0.2.1.num_batches_tracked",
+    "stage4.2.fuse_layers.3.1.0.0.weight",
+    "stage4.2.fuse_layers.3.1.0.1.weight",
+    "stage4.2.fuse_layers.3.1.0.1.bias",
+    "stage4.2.fuse_layers.3.1.0.1.running_mean",
+    "stage4.2.fuse_layers.3.1.0.1.running_var",
+    "stage4.2.fuse_layers.3.1.0.1.num_batches_tracked",
+    "stage4.2.fuse_layers.3.1.1.0.weight",
+    "stage4.2.fuse_layers.3.1.1.1.weight",
+    "stage4.2.fuse_layers.3.1.1.1.bias",
+    "stage4.2.fuse_layers.3.1.1.1.running_mean",
+    "stage4.2.fuse_layers.3.1.1.1.running_var",
+    "stage4.2.fuse_layers.3.1.1.1.num_batches_tracked",
+    "stage4.2.fuse_layers.3.2.0.0.weight",
+    "stage4.2.fuse_layers.3.2.0.1.weight",
+    "stage4.2.fuse_layers.3.2.0.1.bias",
+    "stage4.2.fuse_layers.3.2.0.1.running_mean",
+    "stage4.2.fuse_layers.3.2.0.1.running_var",
+    "stage4.2.fuse_layers.3.2.0.1.num_batches_tracked"
+  ],
+  "head_shape": [
+    10,
+    48,
+    1,
+    1
+  ],
+  "trainable_parameters": 63595402,
+  "forward_executed": false,
+  "author_reference_equivalence": "NOT_TESTED",
+  "extractor_sha256": "a4a0e0058903071e5e34fd25abca1ce8c3be20eee764c5fa6e95ab87969d4a4f",
+  "state_shapes": {
+    "backbone.conv1.weight": [
+      64,
+      3,
+      3,
+      3
+    ],
+    "backbone.bn1.weight": [
+      64
+    ],
+    "backbone.bn1.bias": [
+      64
+    ],
+    "backbone.bn1.running_mean": [
+      64
+    ],
+    "backbone.bn1.running_var": [
+      64
+    ],
+    "backbone.bn1.num_batches_tracked": [],
+    "backbone.conv2.weight": [
+      64,
+      64,
+      3,
+      3
+    ],
+    "backbone.bn2.weight": [
+      64
+    ],
+    "backbone.bn2.bias": [
+      64
+    ],
+    "backbone.bn2.running_mean": [
+      64
+    ],
+    "backbone.bn2.running_var": [
+      64
+    ],
+    "backbone.bn2.num_batches_tracked": [],
+    "backbone.layer1.0.conv1.weight": [
+      64,
+      64,
+      1,
+      1
+    ],
+    "backbone.layer1.0.bn1.weight": [
+      64
+    ],
+    "backbone.layer1.0.bn1.bias": [
+      64
+    ],
+    "backbone.layer1.0.bn1.running_mean": [
+      64
+    ],
+    "backbone.layer1.0.bn1.running_var": [
+      64
+    ],
+    "backbone.layer1.0.bn1.num_batches_tracked": [],
+    "backbone.layer1.0.conv2.weight": [
+      64,
+      64,
+      3,
+      3
+    ],
+    "backbone.layer1.0.bn2.weight": [
+      64
+    ],
+    "backbone.layer1.0.bn2.bias": [
+      64
+    ],
+    "backbone.layer1.0.bn2.running_mean": [
+      64
+    ],
+    "backbone.layer1.0.bn2.running_var": [
+      64
+    ],
+    "backbone.layer1.0.bn2.num_batches_tracked": [],
+    "backbone.layer1.0.conv3.weight": [
+      256,
+      64,
+      1,
+      1
+    ],
+    "backbone.layer1.0.bn3.weight": [
+      256
+    ],
+    "backbone.layer1.0.bn3.bias": [
+      256
+    ],
+    "backbone.layer1.0.bn3.running_mean": [
+      256
+    ],
+    "backbone.layer1.0.bn3.running_var": [
+      256
+    ],
+    "backbone.layer1.0.bn3.num_batches_tracked": [],
+    "backbone.layer1.0.downsample.0.weight": [
+      256,
+      64,
+      1,
+      1
+    ],
+    "backbone.layer1.0.downsample.1.weight": [
+      256
+    ],
+    "backbone.layer1.0.downsample.1.bias": [
+      256
+    ],
+    "backbone.layer1.0.downsample.1.running_mean": [
+      256
+    ],
+    "backbone.layer1.0.downsample.1.running_var": [
+      256
+    ],
+    "backbone.layer1.0.downsample.1.num_batches_tracked": [],
+    "backbone.layer1.1.conv1.weight": [
+      64,
+      256,
+      1,
+      1
+    ],
+    "backbone.layer1.1.bn1.weight": [
+      64
+    ],
+    "backbone.layer1.1.bn1.bias": [
+      64
+    ],
+    "backbone.layer1.1.bn1.running_mean": [
+      64
+    ],
+    "backbone.layer1.1.bn1.running_var": [
+      64
+    ],
+    "backbone.layer1.1.bn1.num_batches_tracked": [],
+    "backbone.layer1.1.conv2.weight": [
+      64,
+      64,
+      3,
+      3
+    ],
+    "backbone.layer1.1.bn2.weight": [
+      64
+    ],
+    "backbone.layer1.1.bn2.bias": [
+      64
+    ],
+    "backbone.layer1.1.bn2.running_mean": [
+      64
+    ],
+    "backbone.layer1.1.bn2.running_var": [
+      64
+    ],
+    "backbone.layer1.1.bn2.num_batches_tracked": [],
+    "backbone.layer1.1.conv3.weight": [
+      256,
+      64,
+      1,
+      1
+    ],
+    "backbone.layer1.1.bn3.weight": [
+      256
+    ],
+    "backbone.layer1.1.bn3.bias": [
+      256
+    ],
+    "backbone.layer1.1.bn3.running_mean": [
+      256
+    ],
+    "backbone.layer1.1.bn3.running_var": [
+      256
+    ],
+    "backbone.layer1.1.bn3.num_batches_tracked": [],
+    "backbone.layer1.2.conv1.weight": [
+      64,
+      256,
+      1,
+      1
+    ],
+    "backbone.layer1.2.bn1.weight": [
+      64
+    ],
+    "backbone.layer1.2.bn1.bias": [
+      64
+    ],
+    "backbone.layer1.2.bn1.running_mean": [
+      64
+    ],
+    "backbone.layer1.2.bn1.running_var": [
+      64
+    ],
+    "backbone.layer1.2.bn1.num_batches_tracked": [],
+    "backbone.layer1.2.conv2.weight": [
+      64,
+      64,
+      3,
+      3
+    ],
+    "backbone.layer1.2.bn2.weight": [
+      64
+    ],
+    "backbone.layer1.2.bn2.bias": [
+      64
+    ],
+    "backbone.layer1.2.bn2.running_mean": [
+      64
+    ],
+    "backbone.layer1.2.bn2.running_var": [
+      64
+    ],
+    "backbone.layer1.2.bn2.num_batches_tracked": [],
+    "backbone.layer1.2.conv3.weight": [
+      256,
+      64,
+      1,
+      1
+    ],
+    "backbone.layer1.2.bn3.weight": [
+      256
+    ],
+    "backbone.layer1.2.bn3.bias": [
+      256
+    ],
+    "backbone.layer1.2.bn3.running_mean": [
+      256
+    ],
+    "backbone.layer1.2.bn3.running_var": [
+      256
+    ],
+    "backbone.layer1.2.bn3.num_batches_tracked": [],
+    "backbone.layer1.3.conv1.weight": [
+      64,
+      256,
+      1,
+      1
+    ],
+    "backbone.layer1.3.bn1.weight": [
+      64
+    ],
+    "backbone.layer1.3.bn1.bias": [
+      64
+    ],
+    "backbone.layer1.3.bn1.running_mean": [
+      64
+    ],
+    "backbone.layer1.3.bn1.running_var": [
+      64
+    ],
+    "backbone.layer1.3.bn1.num_batches_tracked": [],
+    "backbone.layer1.3.conv2.weight": [
+      64,
+      64,
+      3,
+      3
+    ],
+    "backbone.layer1.3.bn2.weight": [
+      64
+    ],
+    "backbone.layer1.3.bn2.bias": [
+      64
+    ],
+    "backbone.layer1.3.bn2.running_mean": [
+      64
+    ],
+    "backbone.layer1.3.bn2.running_var": [
+      64
+    ],
+    "backbone.layer1.3.bn2.num_batches_tracked": [],
+    "backbone.layer1.3.conv3.weight": [
+      256,
+      64,
+      1,
+      1
+    ],
+    "backbone.layer1.3.bn3.weight": [
+      256
+    ],
+    "backbone.layer1.3.bn3.bias": [
+      256
+    ],
+    "backbone.layer1.3.bn3.running_mean": [
+      256
+    ],
+    "backbone.layer1.3.bn3.running_var": [
+      256
+    ],
+    "backbone.layer1.3.bn3.num_batches_tracked": [],
+    "backbone.transition1.0.0.weight": [
+      48,
+      256,
+      3,
+      3
+    ],
+    "backbone.transition1.0.1.weight": [
+      48
+    ],
+    "backbone.transition1.0.1.bias": [
+      48
+    ],
+    "backbone.transition1.0.1.running_mean": [
+      48
+    ],
+    "backbone.transition1.0.1.running_var": [
+      48
+    ],
+    "backbone.transition1.0.1.num_batches_tracked": [],
+    "backbone.transition1.1.0.0.weight": [
+      96,
+      256,
+      3,
+      3
+    ],
+    "backbone.transition1.1.0.1.weight": [
+      96
+    ],
+    "backbone.transition1.1.0.1.bias": [
+      96
+    ],
+    "backbone.transition1.1.0.1.running_mean": [
+      96
+    ],
+    "backbone.transition1.1.0.1.running_var": [
+      96
+    ],
+    "backbone.transition1.1.0.1.num_batches_tracked": [],
+    "backbone.stage2.0.branches.0.0.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.0.0.bn1.weight": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.0.bn1.bias": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.0.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.0.bn1.running_var": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.0.bn1.num_batches_tracked": [],
+    "backbone.stage2.0.branches.0.0.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.0.0.bn2.weight": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.0.bn2.bias": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.0.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.0.bn2.running_var": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.0.bn2.num_batches_tracked": [],
+    "backbone.stage2.0.branches.0.1.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.0.1.bn1.weight": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.1.bn1.bias": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.1.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.1.bn1.running_var": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.1.bn1.num_batches_tracked": [],
+    "backbone.stage2.0.branches.0.1.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.0.1.bn2.weight": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.1.bn2.bias": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.1.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.1.bn2.running_var": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.1.bn2.num_batches_tracked": [],
+    "backbone.stage2.0.branches.0.2.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.0.2.bn1.weight": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.2.bn1.bias": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.2.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.2.bn1.running_var": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.2.bn1.num_batches_tracked": [],
+    "backbone.stage2.0.branches.0.2.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.0.2.bn2.weight": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.2.bn2.bias": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.2.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.2.bn2.running_var": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.2.bn2.num_batches_tracked": [],
+    "backbone.stage2.0.branches.0.3.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.0.3.bn1.weight": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.3.bn1.bias": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.3.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.3.bn1.running_var": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.3.bn1.num_batches_tracked": [],
+    "backbone.stage2.0.branches.0.3.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.0.3.bn2.weight": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.3.bn2.bias": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.3.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.3.bn2.running_var": [
+      48
+    ],
+    "backbone.stage2.0.branches.0.3.bn2.num_batches_tracked": [],
+    "backbone.stage2.0.branches.1.0.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.1.0.bn1.weight": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.0.bn1.bias": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.0.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.0.bn1.running_var": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.0.bn1.num_batches_tracked": [],
+    "backbone.stage2.0.branches.1.0.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.1.0.bn2.weight": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.0.bn2.bias": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.0.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.0.bn2.running_var": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.0.bn2.num_batches_tracked": [],
+    "backbone.stage2.0.branches.1.1.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.1.1.bn1.weight": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.1.bn1.bias": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.1.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.1.bn1.running_var": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.1.bn1.num_batches_tracked": [],
+    "backbone.stage2.0.branches.1.1.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.1.1.bn2.weight": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.1.bn2.bias": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.1.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.1.bn2.running_var": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.1.bn2.num_batches_tracked": [],
+    "backbone.stage2.0.branches.1.2.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.1.2.bn1.weight": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.2.bn1.bias": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.2.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.2.bn1.running_var": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.2.bn1.num_batches_tracked": [],
+    "backbone.stage2.0.branches.1.2.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.1.2.bn2.weight": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.2.bn2.bias": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.2.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.2.bn2.running_var": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.2.bn2.num_batches_tracked": [],
+    "backbone.stage2.0.branches.1.3.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.1.3.bn1.weight": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.3.bn1.bias": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.3.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.3.bn1.running_var": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.3.bn1.num_batches_tracked": [],
+    "backbone.stage2.0.branches.1.3.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage2.0.branches.1.3.bn2.weight": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.3.bn2.bias": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.3.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.3.bn2.running_var": [
+      96
+    ],
+    "backbone.stage2.0.branches.1.3.bn2.num_batches_tracked": [],
+    "backbone.stage2.0.fuse_layers.0.1.0.weight": [
+      48,
+      96,
+      1,
+      1
+    ],
+    "backbone.stage2.0.fuse_layers.0.1.1.weight": [
+      48
+    ],
+    "backbone.stage2.0.fuse_layers.0.1.1.bias": [
+      48
+    ],
+    "backbone.stage2.0.fuse_layers.0.1.1.running_mean": [
+      48
+    ],
+    "backbone.stage2.0.fuse_layers.0.1.1.running_var": [
+      48
+    ],
+    "backbone.stage2.0.fuse_layers.0.1.1.num_batches_tracked": [],
+    "backbone.stage2.0.fuse_layers.1.0.0.0.weight": [
+      96,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage2.0.fuse_layers.1.0.0.1.weight": [
+      96
+    ],
+    "backbone.stage2.0.fuse_layers.1.0.0.1.bias": [
+      96
+    ],
+    "backbone.stage2.0.fuse_layers.1.0.0.1.running_mean": [
+      96
+    ],
+    "backbone.stage2.0.fuse_layers.1.0.0.1.running_var": [
+      96
+    ],
+    "backbone.stage2.0.fuse_layers.1.0.0.1.num_batches_tracked": [],
+    "backbone.transition2.2.0.0.weight": [
+      192,
+      96,
+      3,
+      3
+    ],
+    "backbone.transition2.2.0.1.weight": [
+      192
+    ],
+    "backbone.transition2.2.0.1.bias": [
+      192
+    ],
+    "backbone.transition2.2.0.1.running_mean": [
+      192
+    ],
+    "backbone.transition2.2.0.1.running_var": [
+      192
+    ],
+    "backbone.transition2.2.0.1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.0.0.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.0.0.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.0.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.0.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.0.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.0.0.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.0.0.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.0.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.0.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.0.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.0.1.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.0.1.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.1.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.1.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.1.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.0.1.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.0.1.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.1.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.1.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.1.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.0.2.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.0.2.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.2.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.2.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.2.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.0.2.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.0.2.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.2.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.2.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.2.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.0.3.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.0.3.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.3.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.3.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.3.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.0.3.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.0.3.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.3.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.3.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.3.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.0.branches.0.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.1.0.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.1.0.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.0.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.0.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.0.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.1.0.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.1.0.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.0.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.0.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.0.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.1.1.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.1.1.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.1.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.1.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.1.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.1.1.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.1.1.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.1.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.1.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.1.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.1.2.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.1.2.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.2.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.2.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.2.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.1.2.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.1.2.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.2.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.2.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.2.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.1.3.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.1.3.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.3.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.3.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.3.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.1.3.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.1.3.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.3.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.3.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.3.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.0.branches.1.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.2.0.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.2.0.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.0.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.0.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.0.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.2.0.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.2.0.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.0.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.0.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.0.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.2.1.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.2.1.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.1.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.1.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.1.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.2.1.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.2.1.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.1.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.1.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.1.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.2.2.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.2.2.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.2.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.2.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.2.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.2.2.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.2.2.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.2.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.2.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.2.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.branches.2.3.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.2.3.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.3.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.3.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.3.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.0.branches.2.3.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.0.branches.2.3.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.3.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.3.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.3.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.0.branches.2.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.0.fuse_layers.0.1.0.weight": [
+      48,
+      96,
+      1,
+      1
+    ],
+    "backbone.stage3.0.fuse_layers.0.1.1.weight": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.0.1.1.bias": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.0.1.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.0.1.1.running_var": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.0.1.1.num_batches_tracked": [],
+    "backbone.stage3.0.fuse_layers.0.2.0.weight": [
+      48,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage3.0.fuse_layers.0.2.1.weight": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.0.2.1.bias": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.0.2.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.0.2.1.running_var": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.0.2.1.num_batches_tracked": [],
+    "backbone.stage3.0.fuse_layers.1.0.0.0.weight": [
+      96,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.fuse_layers.1.0.0.1.weight": [
+      96
+    ],
+    "backbone.stage3.0.fuse_layers.1.0.0.1.bias": [
+      96
+    ],
+    "backbone.stage3.0.fuse_layers.1.0.0.1.running_mean": [
+      96
+    ],
+    "backbone.stage3.0.fuse_layers.1.0.0.1.running_var": [
+      96
+    ],
+    "backbone.stage3.0.fuse_layers.1.0.0.1.num_batches_tracked": [],
+    "backbone.stage3.0.fuse_layers.1.2.0.weight": [
+      96,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage3.0.fuse_layers.1.2.1.weight": [
+      96
+    ],
+    "backbone.stage3.0.fuse_layers.1.2.1.bias": [
+      96
+    ],
+    "backbone.stage3.0.fuse_layers.1.2.1.running_mean": [
+      96
+    ],
+    "backbone.stage3.0.fuse_layers.1.2.1.running_var": [
+      96
+    ],
+    "backbone.stage3.0.fuse_layers.1.2.1.num_batches_tracked": [],
+    "backbone.stage3.0.fuse_layers.2.0.0.0.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.fuse_layers.2.0.0.1.weight": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.2.0.0.1.bias": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.2.0.0.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.2.0.0.1.running_var": [
+      48
+    ],
+    "backbone.stage3.0.fuse_layers.2.0.0.1.num_batches_tracked": [],
+    "backbone.stage3.0.fuse_layers.2.0.1.0.weight": [
+      192,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.0.fuse_layers.2.0.1.1.weight": [
+      192
+    ],
+    "backbone.stage3.0.fuse_layers.2.0.1.1.bias": [
+      192
+    ],
+    "backbone.stage3.0.fuse_layers.2.0.1.1.running_mean": [
+      192
+    ],
+    "backbone.stage3.0.fuse_layers.2.0.1.1.running_var": [
+      192
+    ],
+    "backbone.stage3.0.fuse_layers.2.0.1.1.num_batches_tracked": [],
+    "backbone.stage3.0.fuse_layers.2.1.0.0.weight": [
+      192,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.0.fuse_layers.2.1.0.1.weight": [
+      192
+    ],
+    "backbone.stage3.0.fuse_layers.2.1.0.1.bias": [
+      192
+    ],
+    "backbone.stage3.0.fuse_layers.2.1.0.1.running_mean": [
+      192
+    ],
+    "backbone.stage3.0.fuse_layers.2.1.0.1.running_var": [
+      192
+    ],
+    "backbone.stage3.0.fuse_layers.2.1.0.1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.0.0.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.0.0.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.0.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.0.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.0.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.0.0.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.0.0.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.0.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.0.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.0.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.0.1.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.0.1.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.1.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.1.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.1.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.0.1.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.0.1.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.1.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.1.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.1.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.0.2.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.0.2.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.2.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.2.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.2.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.0.2.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.0.2.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.2.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.2.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.2.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.0.3.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.0.3.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.3.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.3.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.3.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.0.3.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.0.3.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.3.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.3.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.3.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.1.branches.0.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.1.0.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.1.0.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.0.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.0.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.0.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.1.0.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.1.0.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.0.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.0.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.0.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.1.1.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.1.1.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.1.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.1.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.1.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.1.1.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.1.1.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.1.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.1.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.1.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.1.2.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.1.2.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.2.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.2.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.2.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.1.2.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.1.2.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.2.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.2.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.2.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.1.3.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.1.3.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.3.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.3.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.3.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.1.3.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.1.3.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.3.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.3.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.3.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.1.branches.1.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.2.0.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.2.0.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.0.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.0.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.0.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.2.0.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.2.0.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.0.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.0.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.0.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.2.1.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.2.1.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.1.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.1.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.1.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.2.1.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.2.1.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.1.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.1.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.1.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.2.2.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.2.2.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.2.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.2.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.2.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.2.2.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.2.2.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.2.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.2.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.2.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.branches.2.3.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.2.3.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.3.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.3.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.3.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.1.branches.2.3.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.1.branches.2.3.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.3.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.3.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.3.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.1.branches.2.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.1.fuse_layers.0.1.0.weight": [
+      48,
+      96,
+      1,
+      1
+    ],
+    "backbone.stage3.1.fuse_layers.0.1.1.weight": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.0.1.1.bias": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.0.1.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.0.1.1.running_var": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.0.1.1.num_batches_tracked": [],
+    "backbone.stage3.1.fuse_layers.0.2.0.weight": [
+      48,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage3.1.fuse_layers.0.2.1.weight": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.0.2.1.bias": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.0.2.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.0.2.1.running_var": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.0.2.1.num_batches_tracked": [],
+    "backbone.stage3.1.fuse_layers.1.0.0.0.weight": [
+      96,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.fuse_layers.1.0.0.1.weight": [
+      96
+    ],
+    "backbone.stage3.1.fuse_layers.1.0.0.1.bias": [
+      96
+    ],
+    "backbone.stage3.1.fuse_layers.1.0.0.1.running_mean": [
+      96
+    ],
+    "backbone.stage3.1.fuse_layers.1.0.0.1.running_var": [
+      96
+    ],
+    "backbone.stage3.1.fuse_layers.1.0.0.1.num_batches_tracked": [],
+    "backbone.stage3.1.fuse_layers.1.2.0.weight": [
+      96,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage3.1.fuse_layers.1.2.1.weight": [
+      96
+    ],
+    "backbone.stage3.1.fuse_layers.1.2.1.bias": [
+      96
+    ],
+    "backbone.stage3.1.fuse_layers.1.2.1.running_mean": [
+      96
+    ],
+    "backbone.stage3.1.fuse_layers.1.2.1.running_var": [
+      96
+    ],
+    "backbone.stage3.1.fuse_layers.1.2.1.num_batches_tracked": [],
+    "backbone.stage3.1.fuse_layers.2.0.0.0.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.fuse_layers.2.0.0.1.weight": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.2.0.0.1.bias": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.2.0.0.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.2.0.0.1.running_var": [
+      48
+    ],
+    "backbone.stage3.1.fuse_layers.2.0.0.1.num_batches_tracked": [],
+    "backbone.stage3.1.fuse_layers.2.0.1.0.weight": [
+      192,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.1.fuse_layers.2.0.1.1.weight": [
+      192
+    ],
+    "backbone.stage3.1.fuse_layers.2.0.1.1.bias": [
+      192
+    ],
+    "backbone.stage3.1.fuse_layers.2.0.1.1.running_mean": [
+      192
+    ],
+    "backbone.stage3.1.fuse_layers.2.0.1.1.running_var": [
+      192
+    ],
+    "backbone.stage3.1.fuse_layers.2.0.1.1.num_batches_tracked": [],
+    "backbone.stage3.1.fuse_layers.2.1.0.0.weight": [
+      192,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.1.fuse_layers.2.1.0.1.weight": [
+      192
+    ],
+    "backbone.stage3.1.fuse_layers.2.1.0.1.bias": [
+      192
+    ],
+    "backbone.stage3.1.fuse_layers.2.1.0.1.running_mean": [
+      192
+    ],
+    "backbone.stage3.1.fuse_layers.2.1.0.1.running_var": [
+      192
+    ],
+    "backbone.stage3.1.fuse_layers.2.1.0.1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.0.0.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.0.0.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.0.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.0.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.0.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.0.0.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.0.0.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.0.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.0.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.0.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.0.1.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.0.1.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.1.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.1.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.1.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.0.1.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.0.1.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.1.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.1.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.1.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.0.2.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.0.2.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.2.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.2.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.2.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.0.2.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.0.2.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.2.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.2.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.2.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.0.3.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.0.3.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.3.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.3.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.3.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.0.3.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.0.3.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.3.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.3.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.3.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.2.branches.0.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.1.0.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.1.0.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.0.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.0.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.0.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.1.0.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.1.0.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.0.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.0.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.0.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.1.1.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.1.1.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.1.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.1.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.1.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.1.1.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.1.1.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.1.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.1.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.1.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.1.2.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.1.2.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.2.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.2.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.2.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.1.2.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.1.2.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.2.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.2.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.2.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.1.3.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.1.3.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.3.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.3.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.3.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.1.3.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.1.3.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.3.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.3.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.3.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.2.branches.1.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.2.0.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.2.0.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.0.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.0.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.0.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.2.0.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.2.0.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.0.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.0.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.0.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.2.1.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.2.1.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.1.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.1.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.1.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.2.1.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.2.1.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.1.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.1.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.1.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.2.2.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.2.2.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.2.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.2.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.2.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.2.2.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.2.2.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.2.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.2.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.2.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.branches.2.3.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.2.3.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.3.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.3.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.3.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.2.branches.2.3.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.2.branches.2.3.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.3.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.3.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.3.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.2.branches.2.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.2.fuse_layers.0.1.0.weight": [
+      48,
+      96,
+      1,
+      1
+    ],
+    "backbone.stage3.2.fuse_layers.0.1.1.weight": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.0.1.1.bias": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.0.1.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.0.1.1.running_var": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.0.1.1.num_batches_tracked": [],
+    "backbone.stage3.2.fuse_layers.0.2.0.weight": [
+      48,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage3.2.fuse_layers.0.2.1.weight": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.0.2.1.bias": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.0.2.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.0.2.1.running_var": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.0.2.1.num_batches_tracked": [],
+    "backbone.stage3.2.fuse_layers.1.0.0.0.weight": [
+      96,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.fuse_layers.1.0.0.1.weight": [
+      96
+    ],
+    "backbone.stage3.2.fuse_layers.1.0.0.1.bias": [
+      96
+    ],
+    "backbone.stage3.2.fuse_layers.1.0.0.1.running_mean": [
+      96
+    ],
+    "backbone.stage3.2.fuse_layers.1.0.0.1.running_var": [
+      96
+    ],
+    "backbone.stage3.2.fuse_layers.1.0.0.1.num_batches_tracked": [],
+    "backbone.stage3.2.fuse_layers.1.2.0.weight": [
+      96,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage3.2.fuse_layers.1.2.1.weight": [
+      96
+    ],
+    "backbone.stage3.2.fuse_layers.1.2.1.bias": [
+      96
+    ],
+    "backbone.stage3.2.fuse_layers.1.2.1.running_mean": [
+      96
+    ],
+    "backbone.stage3.2.fuse_layers.1.2.1.running_var": [
+      96
+    ],
+    "backbone.stage3.2.fuse_layers.1.2.1.num_batches_tracked": [],
+    "backbone.stage3.2.fuse_layers.2.0.0.0.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.fuse_layers.2.0.0.1.weight": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.2.0.0.1.bias": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.2.0.0.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.2.0.0.1.running_var": [
+      48
+    ],
+    "backbone.stage3.2.fuse_layers.2.0.0.1.num_batches_tracked": [],
+    "backbone.stage3.2.fuse_layers.2.0.1.0.weight": [
+      192,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.2.fuse_layers.2.0.1.1.weight": [
+      192
+    ],
+    "backbone.stage3.2.fuse_layers.2.0.1.1.bias": [
+      192
+    ],
+    "backbone.stage3.2.fuse_layers.2.0.1.1.running_mean": [
+      192
+    ],
+    "backbone.stage3.2.fuse_layers.2.0.1.1.running_var": [
+      192
+    ],
+    "backbone.stage3.2.fuse_layers.2.0.1.1.num_batches_tracked": [],
+    "backbone.stage3.2.fuse_layers.2.1.0.0.weight": [
+      192,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.2.fuse_layers.2.1.0.1.weight": [
+      192
+    ],
+    "backbone.stage3.2.fuse_layers.2.1.0.1.bias": [
+      192
+    ],
+    "backbone.stage3.2.fuse_layers.2.1.0.1.running_mean": [
+      192
+    ],
+    "backbone.stage3.2.fuse_layers.2.1.0.1.running_var": [
+      192
+    ],
+    "backbone.stage3.2.fuse_layers.2.1.0.1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.0.0.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.0.0.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.0.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.0.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.0.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.0.0.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.0.0.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.0.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.0.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.0.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.0.1.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.0.1.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.1.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.1.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.1.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.0.1.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.0.1.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.1.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.1.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.1.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.0.2.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.0.2.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.2.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.2.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.2.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.0.2.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.0.2.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.2.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.2.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.2.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.0.3.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.0.3.bn1.weight": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.3.bn1.bias": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.3.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.3.bn1.running_var": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.0.3.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.0.3.bn2.weight": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.3.bn2.bias": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.3.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.3.bn2.running_var": [
+      48
+    ],
+    "backbone.stage3.3.branches.0.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.1.0.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.1.0.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.0.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.0.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.0.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.1.0.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.1.0.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.0.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.0.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.0.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.1.1.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.1.1.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.1.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.1.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.1.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.1.1.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.1.1.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.1.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.1.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.1.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.1.2.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.1.2.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.2.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.2.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.2.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.1.2.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.1.2.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.2.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.2.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.2.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.1.3.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.1.3.bn1.weight": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.3.bn1.bias": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.3.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.3.bn1.running_var": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.1.3.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.1.3.bn2.weight": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.3.bn2.bias": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.3.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.3.bn2.running_var": [
+      96
+    ],
+    "backbone.stage3.3.branches.1.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.2.0.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.2.0.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.0.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.0.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.0.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.0.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.2.0.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.2.0.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.0.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.0.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.0.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.0.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.2.1.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.2.1.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.1.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.1.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.1.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.1.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.2.1.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.2.1.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.1.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.1.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.1.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.1.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.2.2.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.2.2.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.2.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.2.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.2.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.2.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.2.2.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.2.2.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.2.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.2.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.2.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.2.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.branches.2.3.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.2.3.bn1.weight": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.3.bn1.bias": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.3.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.3.bn1.running_var": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.3.bn1.num_batches_tracked": [],
+    "backbone.stage3.3.branches.2.3.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage3.3.branches.2.3.bn2.weight": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.3.bn2.bias": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.3.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.3.bn2.running_var": [
+      192
+    ],
+    "backbone.stage3.3.branches.2.3.bn2.num_batches_tracked": [],
+    "backbone.stage3.3.fuse_layers.0.1.0.weight": [
+      48,
+      96,
+      1,
+      1
+    ],
+    "backbone.stage3.3.fuse_layers.0.1.1.weight": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.0.1.1.bias": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.0.1.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.0.1.1.running_var": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.0.1.1.num_batches_tracked": [],
+    "backbone.stage3.3.fuse_layers.0.2.0.weight": [
+      48,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage3.3.fuse_layers.0.2.1.weight": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.0.2.1.bias": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.0.2.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.0.2.1.running_var": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.0.2.1.num_batches_tracked": [],
+    "backbone.stage3.3.fuse_layers.1.0.0.0.weight": [
+      96,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.fuse_layers.1.0.0.1.weight": [
+      96
+    ],
+    "backbone.stage3.3.fuse_layers.1.0.0.1.bias": [
+      96
+    ],
+    "backbone.stage3.3.fuse_layers.1.0.0.1.running_mean": [
+      96
+    ],
+    "backbone.stage3.3.fuse_layers.1.0.0.1.running_var": [
+      96
+    ],
+    "backbone.stage3.3.fuse_layers.1.0.0.1.num_batches_tracked": [],
+    "backbone.stage3.3.fuse_layers.1.2.0.weight": [
+      96,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage3.3.fuse_layers.1.2.1.weight": [
+      96
+    ],
+    "backbone.stage3.3.fuse_layers.1.2.1.bias": [
+      96
+    ],
+    "backbone.stage3.3.fuse_layers.1.2.1.running_mean": [
+      96
+    ],
+    "backbone.stage3.3.fuse_layers.1.2.1.running_var": [
+      96
+    ],
+    "backbone.stage3.3.fuse_layers.1.2.1.num_batches_tracked": [],
+    "backbone.stage3.3.fuse_layers.2.0.0.0.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.fuse_layers.2.0.0.1.weight": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.2.0.0.1.bias": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.2.0.0.1.running_mean": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.2.0.0.1.running_var": [
+      48
+    ],
+    "backbone.stage3.3.fuse_layers.2.0.0.1.num_batches_tracked": [],
+    "backbone.stage3.3.fuse_layers.2.0.1.0.weight": [
+      192,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage3.3.fuse_layers.2.0.1.1.weight": [
+      192
+    ],
+    "backbone.stage3.3.fuse_layers.2.0.1.1.bias": [
+      192
+    ],
+    "backbone.stage3.3.fuse_layers.2.0.1.1.running_mean": [
+      192
+    ],
+    "backbone.stage3.3.fuse_layers.2.0.1.1.running_var": [
+      192
+    ],
+    "backbone.stage3.3.fuse_layers.2.0.1.1.num_batches_tracked": [],
+    "backbone.stage3.3.fuse_layers.2.1.0.0.weight": [
+      192,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage3.3.fuse_layers.2.1.0.1.weight": [
+      192
+    ],
+    "backbone.stage3.3.fuse_layers.2.1.0.1.bias": [
+      192
+    ],
+    "backbone.stage3.3.fuse_layers.2.1.0.1.running_mean": [
+      192
+    ],
+    "backbone.stage3.3.fuse_layers.2.1.0.1.running_var": [
+      192
+    ],
+    "backbone.stage3.3.fuse_layers.2.1.0.1.num_batches_tracked": [],
+    "backbone.transition3.3.0.0.weight": [
+      384,
+      192,
+      3,
+      3
+    ],
+    "backbone.transition3.3.0.1.weight": [
+      384
+    ],
+    "backbone.transition3.3.0.1.bias": [
+      384
+    ],
+    "backbone.transition3.3.0.1.running_mean": [
+      384
+    ],
+    "backbone.transition3.3.0.1.running_var": [
+      384
+    ],
+    "backbone.transition3.3.0.1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.0.0.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.0.0.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.0.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.0.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.0.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.0.0.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.0.0.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.0.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.0.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.0.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.0.1.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.0.1.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.1.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.1.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.1.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.0.1.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.0.1.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.1.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.1.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.1.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.0.2.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.0.2.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.2.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.2.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.2.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.0.2.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.0.2.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.2.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.2.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.2.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.0.3.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.0.3.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.3.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.3.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.3.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.0.3.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.0.3.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.3.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.3.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.3.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.0.branches.0.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.1.0.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.1.0.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.0.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.0.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.0.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.1.0.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.1.0.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.0.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.0.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.0.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.1.1.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.1.1.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.1.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.1.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.1.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.1.1.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.1.1.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.1.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.1.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.1.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.1.2.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.1.2.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.2.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.2.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.2.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.1.2.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.1.2.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.2.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.2.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.2.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.1.3.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.1.3.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.3.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.3.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.3.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.1.3.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.1.3.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.3.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.3.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.3.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.0.branches.1.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.2.0.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.2.0.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.0.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.0.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.0.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.2.0.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.2.0.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.0.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.0.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.0.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.2.1.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.2.1.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.1.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.1.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.1.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.2.1.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.2.1.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.1.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.1.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.1.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.2.2.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.2.2.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.2.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.2.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.2.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.2.2.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.2.2.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.2.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.2.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.2.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.2.3.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.2.3.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.3.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.3.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.3.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.2.3.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.2.3.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.3.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.3.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.3.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.0.branches.2.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.3.0.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.3.0.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.0.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.0.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.0.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.3.0.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.3.0.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.0.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.0.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.0.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.3.1.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.3.1.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.1.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.1.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.1.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.3.1.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.3.1.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.1.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.1.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.1.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.3.2.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.3.2.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.2.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.2.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.2.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.3.2.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.3.2.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.2.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.2.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.2.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.branches.3.3.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.3.3.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.3.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.3.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.3.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.0.branches.3.3.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.0.branches.3.3.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.3.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.3.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.3.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.0.branches.3.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.0.1.0.weight": [
+      48,
+      96,
+      1,
+      1
+    ],
+    "backbone.stage4.0.fuse_layers.0.1.1.weight": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.1.1.bias": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.1.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.1.1.running_var": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.1.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.0.2.0.weight": [
+      48,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage4.0.fuse_layers.0.2.1.weight": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.2.1.bias": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.2.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.2.1.running_var": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.2.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.0.3.0.weight": [
+      48,
+      384,
+      1,
+      1
+    ],
+    "backbone.stage4.0.fuse_layers.0.3.1.weight": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.3.1.bias": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.3.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.3.1.running_var": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.0.3.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.1.0.0.0.weight": [
+      96,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.fuse_layers.1.0.0.1.weight": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.0.0.1.bias": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.0.0.1.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.0.0.1.running_var": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.0.0.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.1.2.0.weight": [
+      96,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage4.0.fuse_layers.1.2.1.weight": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.2.1.bias": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.2.1.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.2.1.running_var": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.2.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.1.3.0.weight": [
+      96,
+      384,
+      1,
+      1
+    ],
+    "backbone.stage4.0.fuse_layers.1.3.1.weight": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.3.1.bias": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.3.1.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.3.1.running_var": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.1.3.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.2.0.0.0.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.fuse_layers.2.0.0.1.weight": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.2.0.0.1.bias": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.2.0.0.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.2.0.0.1.running_var": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.2.0.0.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.2.0.1.0.weight": [
+      192,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.fuse_layers.2.0.1.1.weight": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.0.1.1.bias": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.0.1.1.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.0.1.1.running_var": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.0.1.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.2.1.0.0.weight": [
+      192,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.fuse_layers.2.1.0.1.weight": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.1.0.1.bias": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.1.0.1.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.1.0.1.running_var": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.1.0.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.2.3.0.weight": [
+      192,
+      384,
+      1,
+      1
+    ],
+    "backbone.stage4.0.fuse_layers.2.3.1.weight": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.3.1.bias": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.3.1.running_mean": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.3.1.running_var": [
+      192
+    ],
+    "backbone.stage4.0.fuse_layers.2.3.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.3.0.0.0.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.0.1.weight": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.0.1.bias": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.0.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.0.1.running_var": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.0.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.3.0.1.0.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.1.1.weight": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.1.1.bias": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.1.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.1.1.running_var": [
+      48
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.1.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.3.0.2.0.weight": [
+      384,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.2.1.weight": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.2.1.bias": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.2.1.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.2.1.running_var": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.0.2.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.3.1.0.0.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.fuse_layers.3.1.0.1.weight": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.3.1.0.1.bias": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.3.1.0.1.running_mean": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.3.1.0.1.running_var": [
+      96
+    ],
+    "backbone.stage4.0.fuse_layers.3.1.0.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.3.1.1.0.weight": [
+      384,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.0.fuse_layers.3.1.1.1.weight": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.1.1.1.bias": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.1.1.1.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.1.1.1.running_var": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.1.1.1.num_batches_tracked": [],
+    "backbone.stage4.0.fuse_layers.3.2.0.0.weight": [
+      384,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.0.fuse_layers.3.2.0.1.weight": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.2.0.1.bias": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.2.0.1.running_mean": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.2.0.1.running_var": [
+      384
+    ],
+    "backbone.stage4.0.fuse_layers.3.2.0.1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.0.0.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.0.0.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.0.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.0.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.0.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.0.0.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.0.0.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.0.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.0.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.0.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.0.1.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.0.1.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.1.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.1.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.1.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.0.1.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.0.1.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.1.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.1.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.1.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.0.2.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.0.2.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.2.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.2.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.2.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.0.2.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.0.2.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.2.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.2.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.2.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.0.3.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.0.3.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.3.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.3.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.3.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.0.3.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.0.3.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.3.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.3.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.3.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.1.branches.0.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.1.0.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.1.0.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.0.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.0.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.0.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.1.0.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.1.0.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.0.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.0.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.0.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.1.1.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.1.1.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.1.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.1.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.1.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.1.1.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.1.1.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.1.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.1.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.1.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.1.2.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.1.2.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.2.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.2.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.2.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.1.2.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.1.2.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.2.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.2.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.2.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.1.3.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.1.3.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.3.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.3.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.3.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.1.3.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.1.3.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.3.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.3.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.3.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.1.branches.1.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.2.0.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.2.0.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.0.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.0.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.0.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.2.0.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.2.0.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.0.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.0.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.0.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.2.1.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.2.1.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.1.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.1.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.1.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.2.1.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.2.1.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.1.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.1.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.1.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.2.2.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.2.2.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.2.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.2.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.2.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.2.2.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.2.2.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.2.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.2.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.2.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.2.3.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.2.3.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.3.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.3.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.3.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.2.3.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.2.3.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.3.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.3.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.3.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.1.branches.2.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.3.0.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.3.0.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.0.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.0.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.0.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.3.0.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.3.0.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.0.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.0.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.0.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.3.1.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.3.1.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.1.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.1.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.1.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.3.1.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.3.1.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.1.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.1.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.1.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.3.2.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.3.2.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.2.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.2.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.2.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.3.2.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.3.2.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.2.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.2.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.2.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.branches.3.3.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.3.3.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.3.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.3.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.3.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.1.branches.3.3.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.1.branches.3.3.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.3.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.3.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.3.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.1.branches.3.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.0.1.0.weight": [
+      48,
+      96,
+      1,
+      1
+    ],
+    "backbone.stage4.1.fuse_layers.0.1.1.weight": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.1.1.bias": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.1.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.1.1.running_var": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.1.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.0.2.0.weight": [
+      48,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage4.1.fuse_layers.0.2.1.weight": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.2.1.bias": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.2.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.2.1.running_var": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.2.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.0.3.0.weight": [
+      48,
+      384,
+      1,
+      1
+    ],
+    "backbone.stage4.1.fuse_layers.0.3.1.weight": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.3.1.bias": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.3.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.3.1.running_var": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.0.3.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.1.0.0.0.weight": [
+      96,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.fuse_layers.1.0.0.1.weight": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.0.0.1.bias": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.0.0.1.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.0.0.1.running_var": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.0.0.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.1.2.0.weight": [
+      96,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage4.1.fuse_layers.1.2.1.weight": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.2.1.bias": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.2.1.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.2.1.running_var": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.2.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.1.3.0.weight": [
+      96,
+      384,
+      1,
+      1
+    ],
+    "backbone.stage4.1.fuse_layers.1.3.1.weight": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.3.1.bias": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.3.1.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.3.1.running_var": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.1.3.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.2.0.0.0.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.fuse_layers.2.0.0.1.weight": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.2.0.0.1.bias": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.2.0.0.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.2.0.0.1.running_var": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.2.0.0.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.2.0.1.0.weight": [
+      192,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.fuse_layers.2.0.1.1.weight": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.0.1.1.bias": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.0.1.1.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.0.1.1.running_var": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.0.1.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.2.1.0.0.weight": [
+      192,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.fuse_layers.2.1.0.1.weight": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.1.0.1.bias": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.1.0.1.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.1.0.1.running_var": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.1.0.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.2.3.0.weight": [
+      192,
+      384,
+      1,
+      1
+    ],
+    "backbone.stage4.1.fuse_layers.2.3.1.weight": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.3.1.bias": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.3.1.running_mean": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.3.1.running_var": [
+      192
+    ],
+    "backbone.stage4.1.fuse_layers.2.3.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.3.0.0.0.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.0.1.weight": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.0.1.bias": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.0.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.0.1.running_var": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.0.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.3.0.1.0.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.1.1.weight": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.1.1.bias": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.1.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.1.1.running_var": [
+      48
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.1.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.3.0.2.0.weight": [
+      384,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.2.1.weight": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.2.1.bias": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.2.1.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.2.1.running_var": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.0.2.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.3.1.0.0.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.fuse_layers.3.1.0.1.weight": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.3.1.0.1.bias": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.3.1.0.1.running_mean": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.3.1.0.1.running_var": [
+      96
+    ],
+    "backbone.stage4.1.fuse_layers.3.1.0.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.3.1.1.0.weight": [
+      384,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.1.fuse_layers.3.1.1.1.weight": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.1.1.1.bias": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.1.1.1.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.1.1.1.running_var": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.1.1.1.num_batches_tracked": [],
+    "backbone.stage4.1.fuse_layers.3.2.0.0.weight": [
+      384,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.1.fuse_layers.3.2.0.1.weight": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.2.0.1.bias": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.2.0.1.running_mean": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.2.0.1.running_var": [
+      384
+    ],
+    "backbone.stage4.1.fuse_layers.3.2.0.1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.0.0.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.0.0.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.0.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.0.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.0.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.0.0.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.0.0.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.0.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.0.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.0.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.0.1.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.0.1.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.1.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.1.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.1.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.0.1.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.0.1.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.1.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.1.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.1.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.0.2.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.0.2.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.2.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.2.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.2.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.0.2.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.0.2.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.2.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.2.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.2.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.0.3.conv1.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.0.3.bn1.weight": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.3.bn1.bias": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.3.bn1.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.3.bn1.running_var": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.0.3.conv2.weight": [
+      48,
+      48,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.0.3.bn2.weight": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.3.bn2.bias": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.3.bn2.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.3.bn2.running_var": [
+      48
+    ],
+    "backbone.stage4.2.branches.0.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.1.0.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.1.0.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.0.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.0.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.0.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.1.0.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.1.0.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.0.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.0.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.0.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.1.1.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.1.1.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.1.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.1.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.1.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.1.1.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.1.1.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.1.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.1.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.1.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.1.2.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.1.2.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.2.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.2.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.2.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.1.2.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.1.2.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.2.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.2.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.2.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.1.3.conv1.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.1.3.bn1.weight": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.3.bn1.bias": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.3.bn1.running_mean": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.3.bn1.running_var": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.1.3.conv2.weight": [
+      96,
+      96,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.1.3.bn2.weight": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.3.bn2.bias": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.3.bn2.running_mean": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.3.bn2.running_var": [
+      96
+    ],
+    "backbone.stage4.2.branches.1.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.2.0.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.2.0.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.0.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.0.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.0.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.2.0.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.2.0.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.0.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.0.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.0.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.2.1.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.2.1.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.1.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.1.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.1.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.2.1.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.2.1.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.1.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.1.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.1.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.2.2.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.2.2.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.2.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.2.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.2.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.2.2.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.2.2.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.2.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.2.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.2.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.2.3.conv1.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.2.3.bn1.weight": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.3.bn1.bias": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.3.bn1.running_mean": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.3.bn1.running_var": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.2.3.conv2.weight": [
+      192,
+      192,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.2.3.bn2.weight": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.3.bn2.bias": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.3.bn2.running_mean": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.3.bn2.running_var": [
+      192
+    ],
+    "backbone.stage4.2.branches.2.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.3.0.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.3.0.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.0.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.0.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.0.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.0.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.3.0.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.3.0.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.0.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.0.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.0.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.0.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.3.1.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.3.1.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.1.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.1.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.1.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.1.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.3.1.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.3.1.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.1.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.1.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.1.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.1.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.3.2.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.3.2.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.2.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.2.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.2.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.2.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.3.2.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.3.2.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.2.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.2.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.2.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.2.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.branches.3.3.conv1.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.3.3.bn1.weight": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.3.bn1.bias": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.3.bn1.running_mean": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.3.bn1.running_var": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.3.bn1.num_batches_tracked": [],
+    "backbone.stage4.2.branches.3.3.conv2.weight": [
+      384,
+      384,
+      3,
+      3
+    ],
+    "backbone.stage4.2.branches.3.3.bn2.weight": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.3.bn2.bias": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.3.bn2.running_mean": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.3.bn2.running_var": [
+      384
+    ],
+    "backbone.stage4.2.branches.3.3.bn2.num_batches_tracked": [],
+    "backbone.stage4.2.fuse_layers.0.1.0.weight": [
+      48,
+      96,
+      1,
+      1
+    ],
+    "backbone.stage4.2.fuse_layers.0.1.1.weight": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.1.1.bias": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.1.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.1.1.running_var": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.1.1.num_batches_tracked": [],
+    "backbone.stage4.2.fuse_layers.0.2.0.weight": [
+      48,
+      192,
+      1,
+      1
+    ],
+    "backbone.stage4.2.fuse_layers.0.2.1.weight": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.2.1.bias": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.2.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.2.1.running_var": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.2.1.num_batches_tracked": [],
+    "backbone.stage4.2.fuse_layers.0.3.0.weight": [
+      48,
+      384,
+      1,
+      1
+    ],
+    "backbone.stage4.2.fuse_layers.0.3.1.weight": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.3.1.bias": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.3.1.running_mean": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.3.1.running_var": [
+      48
+    ],
+    "backbone.stage4.2.fuse_layers.0.3.1.num_batches_tracked": [],
+    "head.final_layer.weight": [
+      10,
+      48,
+      1,
+      1
+    ],
+    "head.final_layer.bias": [
+      10
+    ]
+  },
+  "download": {
+    "status": "DOWNLOADED",
+    "public_page": "https://app.box.com/s/0lh7opyprerc10rhw660bealryyltumq",
+    "public_file_id": "2045681867015",
+    "public_version_id": "2259197723015",
+    "path": ".cache/cow-autocattlogger/epoch_210_kpDatasetV5_2024.pth",
+    "bytes": 768697571,
+    "sha256": "a23cfd37a78a0745392e5b0457dd468e9afbea3eebbbf19b94d32b988734438f",
+    "publisher_sha1": "ed23410602d4b13677d5c883651a729822ec5fce",
+    "seconds": 40.493147291243076,
+    "attempts": [
+      {
+        "url": "https://app.box.com/shared/static/0lh7opyprerc10rhw660bealryyltumq",
+        "status": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "768697571"
+      }
+    ]
+  },
+  "completed_at_utc": "2026-10-03T14:21:31+00:00",
+  "status": "SAFE_STATE_LOAD_AND_STRICT_TOPOLOGY_PASS_NO_INFERENCE",
+  "original_restricted_load": {
+    "status": "REJECTED",
+    "weights_only": true,
+    "unsupported_globals": [
+      "numpy.core.multiarray.scalar",
+      "numpy.core.multiarray._reconstruct",
+      "mmengine.logging.history_buffer.HistoryBuffer",
+      "builtins.getattr",
+      "numpy.dtype",
+      "numpy.ndarray"
+    ],
+    "fallback_unrestricted_load": false,
+    "safe_globals_added": false
+  },
+  "passive_metadata": {
+    "method": "pickletools opcode strings; config never executed",
+    "config_sha256": "c737fd5095d70c33ae77b43e3ba4c35db7ca07b01f2b1618bd465e5cf278e391",
+    "epoch": 210,
+    "iteration": 37590,
+    "dataset_root": "../../../Data/CowTopView/Datasets/kp_dataset_v5/",
+    "training_annotations": "annotations/kp_dataset_v5_train.json",
+    "validation_annotations": "annotations/kp_dataset_v5_test.json",
+    "experiment": "td-hm_hrnet-w48_udp-8xb32-210e_coco-256x192_cow-tv_openBarn2024_20250416_211851",
+    "recorded_time": "20250416_225810",
+    "mmengine_version": "0.10.4",
+    "keypoints": [
+      "left_shoulder",
+      "withers",
+      "right_shoulder",
+      "center_back",
+      "left_hip_bone",
+      "hip_connector",
+      "right_hip_bone",
+      "left_pin_bone",
+      "tail_head",
+      "right_pin_bone"
+    ],
+    "flip_indices": [
+      2,
+      1,
+      0,
+      3,
+      6,
+      5,
+      4,
+      9,
+      8,
+      7
+    ],
+    "input_width_height": [
+      192,
+      256
+    ],
+    "heatmap_width_height": [
+      48,
+      64
+    ],
+    "decoder": "UDPHeatmap",
+    "sigma": 2,
+    "flip_test": true,
+    "flip_mode": "heatmap",
+    "shift_heatmap": false,
+    "bgr_to_rgb": true,
+    "mean": [
+      123.675,
+      116.28,
+      103.53
+    ],
+    "std": [
+      58.395,
+      57.12,
+      57.375
+    ],
+    "limitation": "Checkpoint metadata resolves supplied file as V5/OpenBarn, not verified V6/Orbbec2025; self-reported training provenance is not independently audited."
+  },
+  "source_files": [
+    {
+      "path": "research/cow_identity/autocattlogger_checkpoint.py",
+      "sha256": "a4a0e0058903071e5e34fd25abca1ce8c3be20eee764c5fa6e95ab87969d4a4f"
+    },
+    {
+      "path": "research/cow_identity/test_autocattlogger_checkpoint.py",
+      "sha256": "ce43a3f30d9376e779f9397c1bfbe843ed1131ce41e26526710543d35b3a9e8a"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/hrnet.py",
+      "sha256": "ea17f7e9ffdd622db19cb9683612fe9304c06581a90564cedca26a670da90d41"
+    },
+    {
+      "path": "detector/.venv/lib/python3.12/site-packages/timm/models/resnet.py",
+      "sha256": "1f5f941e35961769ad95dd9fa80ad55596f5daf2da955097396230b4513fb2a9"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/backbones/hrnet.py",
+      "sha256": "486abcaf3bff8308119c6c33245b7b7ea74211b56f571116399fcc29e3705bea"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/dependencies/mmpose/mmpose/models/heads/heatmap_heads/heatmap_head.py",
+      "sha256": "f423d2c11139b8c1405ba2329bd503355ad3bc333ffb02566d2be066f7796dc8"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/official-pose-hrnet.py",
+      "sha256": "c0f2f8a137836c6e8c489e4a1c46010bfce5308584e13d231565f7f90a2636f8"
+    },
+    {
+      "path": "/tmp/autocattlogger-feasibility/configs/mmpose_configs/trainer_config/td-hm_hrnet-w48_udp-8xb32-210e_coco-256x192_cow-tv_orbbecCam2025.py",
+      "sha256": "705f14acf5ec688d71987742f1410176917f0e2332dc4c6b8eeaaf6523b7c037"
+    }
+  ],
+  "extra_fusion_removal": "Only stage4[2].fuse_layers outputs1,2,3 removed; output0 and all input branches kept. No source tensor omitted, renamed except backbone/head prefix, or partially loaded.",
+  "proof_limits": [
+    "No forward pass or CPU/MPS numerical comparison",
+    "No author MMPose reference forward equivalence",
+    "No keypoint accuracy or recognition result",
+    "No configuration/model download beyond the one author pose artifact",
+    "No MaskRCNN/data/framework environment installed"
+  ]
+}

@@ -20,6 +20,17 @@ The mode owns effective capture sampling of 0.5 seconds and retention of four fr
 
 The actual MPS wrapper passed exact 241-input model/qualification parity and a paced 60-second local-source reconnect check. This checks mechanics, not general camera accuracy: the longer exposed-scene control still failed its final precision window. The existing appearance mode and all ordinary detector settings retain their previous execution paths.
 
+Continuous subscriptions now preserve the original decoded frame alongside the
+same resized analysis frame for optional anonymous evidence. They still share one
+capture with ordinary detectors. The collector stores a source-resolution JPEG
+when the original is at most 32 MiB; larger originals generate one notice per
+camera epoch and collection remains explicitly analysis-only. Tracking, preview,
+review images and event resolution are unchanged. New disposable evidence facts
+record `image_resolution` and `analysis_shape`; existing stored facts are neither
+rewritten nor relabeled. Callers without native pixels continue to produce
+analysis-resolution evidence. No configuration or confirmed-herd schema changes,
+extra stream, OCR model, or automatic number assignment are introduced.
+
 ## Compatibility commitments
 
 The live-confirmation domain and control boundary are used for temporary

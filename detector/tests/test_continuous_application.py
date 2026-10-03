@@ -239,7 +239,9 @@ def test_unenrolled_continuous_application_keeps_tracking_with_optional_storage(
     result = run_application(config, tmp_path, tmp_path, report_status=statuses.append)
     assert result[0].events > 0
     assert not result[0].failed
-    assert subscriptions == [{"width": 1280, "retention": 4, "interval": 0.5}]
+    assert subscriptions == [
+        {"width": 1280, "retention": 4, "interval": 0.5, "preserve_native": True}
+    ]
     assert config.detectors[0].detection.interval == 9
     assert config.detectors[0].detection.frame_retention == 1
     assert startup == [

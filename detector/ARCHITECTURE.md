@@ -24,6 +24,24 @@ Qualified `TrackEvidence` goes to a bounded synchronous collector, not a gallery
 
 Live frames optionally carry a `CaptureStamp`: an opaque capture epoch, a decoded-frame sequence and monotonic read time. A reopened capture, changed native image geometry, backward capture clock, or decoded-frame gap above five seconds starts a new epoch. Raw read timing is checked before detector sampling, using both wall and monotonic clocks so sleep is detected even when a platform’s monotonic clock excludes suspended time. Subscriptions clear only that source's unread frames and sampling delay, and resizing, YOLO mapping and snapshot observations preserve the stamp. Existing positional constructors and metadata-free finite inputs remain supported; this metadata is internal and does not change configuration or archive schemas.
 
+Only the continuous subscription also borrows `Frame.native_image`: the original
+read-only decoded array from that exact capture. The ordinary cached resized
+frames do not reference it. Native attachment is limited to 32 MiB before the
+bounded subscription queue; larger originals produce one notice per source epoch
+and continue as explicitly analysis-only evidence. Inference, mask history,
+observations, events, previews and requested review JPEGs still use the configured
+analysis pixels. There is no second capture or lookup of a newer image.
+
+The collector maps qualified inclusive mask bounds into the attached original
+using independent width/height ratios, flooring starts and ceiling the end of the
+last included pixel. The persistent fact records both image and analysis shapes,
+whether its pixels are source- or analysis-resolution, and the exact capture stamp.
+No native attachment means analysis-only provenance, including existing callers.
+The source image is encoded once per selected frame as a quality-95 JPEG, so it
+remains lossy. Existing 32 MiB input, 48 MiB image-cache and database quotas still
+apply, and the source-epoch acceptance latch is rechecked after encoding. This
+preserves future OCR evidence; it does not implement OCR or reliable identity.
+
 Identity state is scoped by camera. An epoch/geometry change, backward wall clock, or observation gap larger than `max(5 seconds, 3 × identity sampling interval)` clears that camera's agreement and sampled matches. Monotonic capture gaps also detect interruptions when wall time changes. Repeated/out-of-order sequences and repeated wall timestamps provide no new identity evidence or displayed name. Invalid backward capture time is discarded and clears previous agreement; the following valid observations must establish identity again. Metadata-free callers use timestamp continuity: a reversed timestamp clears history but that frame is not evidence. A fresh capture stamp permits a real newly decoded frame after a wall-clock correction to start new agreement. Tracker placeholder images for inactive cameras remain outside the identity pipeline.
 
 Capture reports a new epoch before publishing its first frame. Bootstrap synchronously passes connection changes to the preview, which rejects queued and in-flight observations from old epochs. The existing session heartbeat communicates the current epoch or disconnected state to browser readers. Inference status also carries its input epoch, so a late old result cannot restore current camera readiness. Browser invalidation follows the heartbeat/poll cadence; it is not instantaneous. Live confirmation still needs an object-specific target and acknowledgement from its owning worker. A decoded image with identical pixels is not automatically stale: a stationary scene is valid. Capture stamps establish local read continuity, not a camera firmware freshness guarantee or persistent animal identity.

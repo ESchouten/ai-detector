@@ -56,11 +56,17 @@ class CaptureStamp:
 
 @dataclass(frozen=True)
 class Frame:
-    """Source timestamp and borrowed read-only uint8 H×W×3 BGR pixels."""
+    """Source timestamp and borrowed read-only uint8 H×W×3 BGR pixels.
+
+    An opted-in live subscriber may also borrow the original decoded pixels
+    from this exact capture. Ordinary analysis, observations and event history
+    use only ``image``. Native pixels are optional and never imply a later frame.
+    """
 
     date: datetime
     image: NDArray[np.uint8]
     capture: CaptureStamp | None = None
+    native_image: NDArray[np.uint8] | None = None
 
 
 @dataclass(frozen=True)

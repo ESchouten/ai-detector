@@ -1,0 +1,455 @@
+{
+  "complete": true,
+  "elapsed_seconds": 1.7022868329659104,
+  "error": null,
+  "files": {
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/native_evidence_cost.py": "f869256df22637bb9a5dadbb198732779a1722885802024087a4cf5bc8aab85a",
+    "detector/src/aidetector/__init__.py": "ff4a682382b5aa6309844b03ba4a5eb0dc1f71eac0975592e226c09ad83ec0da",
+    "detector/src/aidetector/__main__.py": "1b745a2a09cbf94551dbf7a29f5b7377cb4a3b9d6026ae09240786a0528bc818",
+    "detector/src/aidetector/adapters/__init__.py": "5596ac2da950e1f7916c5f44a5aa940a7ef317997ab587c76573d53201f63dd3",
+    "detector/src/aidetector/adapters/diagnostics.py": "7b50033c1c03b31e24ee8c48fbf2104da9ede0c1b5821ceac4dcc67be7c18018",
+    "detector/src/aidetector/adapters/exporters/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "detector/src/aidetector/adapters/exporters/archive_metadata.py": "b46359c5c20b39f2622a173cec5d9ccad1d7d6e2a7dcaea0450d616eab6e6d48",
+    "detector/src/aidetector/adapters/exporters/disk.py": "7c656f8407c536cf5be6834742d738cc0a95f12e8a4b5ec6712c06767c2ffe7c",
+    "detector/src/aidetector/adapters/exporters/telegram.py": "04a81cbf63758dd40691aba3546f59870995fca35b6cc0f9dc74e0a71b13fee5",
+    "detector/src/aidetector/adapters/exporters/webhook.py": "df2b3ba26be945deb144000f5f26ef16e10cee761f8b5de9fc6db0c5e769105f",
+    "detector/src/aidetector/adapters/health.py": "1c345d39ae675e0547b56ed73f3771281786d9bc021d643a0eb8f6fd8f16e093",
+    "detector/src/aidetector/adapters/http.py": "aecfcdf0c64f5dd3a67c610f710e22029b6627b92e37ca4d4fbf092a7bcc2177",
+    "detector/src/aidetector/adapters/identity_catalog.py": "9a5ab675862540311e3e6d41b84e12d210713106db25779b8b82dbec34b5f079",
+    "detector/src/aidetector/adapters/identity_control.py": "7edf9187c3bac8e5575ccdbf2d37458d162caa6392f7a3f2375c2ca10b0ff82f",
+    "detector/src/aidetector/adapters/identity_profile_collector.py": "b19d874c95f6a2c7ad28af0dfabe3a0d3cfd9fe6b75928107b0763079886aa31",
+    "detector/src/aidetector/adapters/identity_profiles.py": "6d1067b5465fdd2612d222343033dc7c1f2c520c9381de5302bcb53f847b659b",
+    "detector/src/aidetector/adapters/inference/__init__.py": "4fe1095a503307bba665c422d166e175706f527d35f12499740e05368e3f7415",
+    "detector/src/aidetector/adapters/inference/continuous_identity.py": "6b338b76910b1f68ab053140c47a789ee8b265332a9530c698834dc54de2d715",
+    "detector/src/aidetector/adapters/inference/continuous_models.py": "5cbb5d930d24fcbb68038c9684d5f80312df339cf6a322086117caf2aca7e32f",
+    "detector/src/aidetector/adapters/inference/cutie_runtime.py": "3dccfc8917dc36a459c0fdb70ffbbe59ac60362f18581ffb258af958b1999b90",
+    "detector/src/aidetector/adapters/inference/device.py": "695e9326aec56640512f672b5836a3294283677005b9b0c10349e70ff4b4d5f7",
+    "detector/src/aidetector/adapters/inference/export_settings.py": "b439a34eb3d367eb15c5d843f249d28b2aeaef2667ac7a86ce639b6a383c92b7",
+    "detector/src/aidetector/adapters/inference/identity.py": "953f80f29d15a7b4c9bb41f58b0388faaffb0643445605166bd20b6ccc386bef",
+    "detector/src/aidetector/adapters/inference/identity_gallery.py": "e6de362d378f93b51fb77dd272da6191d55f0539fe153872e73c1a0b8eff6c45",
+    "detector/src/aidetector/adapters/inference/identity_masks.py": "76c7f446ceba576356dd3809388755f82c325928f17cdfd18ca651234a67dbe3",
+    "detector/src/aidetector/adapters/inference/identity_observations.py": "209c3bf59f92baab01388dcb36930e1e2e3d57fdc0227aeef0cadbab8443d9e8",
+    "detector/src/aidetector/adapters/inference/identity_startup.py": "6a0e6682d3707ed1be774948e957ce848806fb1ceeddb6ad59f633a8270eea81",
+    "detector/src/aidetector/adapters/inference/miewid.py": "1dbbb9259b64a95aff9f6da872c3ee81966d0afaa04db1ea7cad3eb8f080a134",
+    "detector/src/aidetector/adapters/inference/model_assets.py": "35439cda75c27938b12193ee6f1830e7cfb06bf6814d6f1a7805de6622db8cde",
+    "detector/src/aidetector/adapters/inference/onnx.py": "33c262809a00fe7470b2c20b51fd3cdcf41014bdefa617129c7248e8c890e1f8",
+    "detector/src/aidetector/adapters/inference/prepared_engines.py": "b76d1b37da663e0465b2124220959cd597362cecf52a606d123874dc8bd5865b",
+    "detector/src/aidetector/adapters/inference/prepared_models.py": "f782a88f3e9b9bcd800f5ea311aacc1948536ff7ca069a3fd70a015790c0f7f4",
+    "detector/src/aidetector/adapters/inference/tensorrt_worker.py": "e55a26b939155621fffaa94d6d0bbe3768742c91d1e0eaec50f612d25c17d0b5",
+    "detector/src/aidetector/adapters/inference/windows_ml.py": "3cc22af670d1d6d5ac8bef405d4ada0f799c76ee77151384f27627da015e4500",
+    "detector/src/aidetector/adapters/inference/yolo.py": "f1bd6e4a0d3a53b9d7902604cf7836cfd64ae138728197dd2bfca01b0e3c0ec1",
+    "detector/src/aidetector/adapters/live_preview.py": "707ffb354eaa581bcd360027f19d371d6a39ae741bc55383d52e63695e7d7e44",
+    "detector/src/aidetector/adapters/media/__init__.py": "dbcf10cffd44603587bae6440afffad1ac6c6cdea6f4f2a4486aab9ad566f70d",
+    "detector/src/aidetector/adapters/media/event_media.py": "0488a11c34a749e8d80490a69488dad6c53c44ce0642bbeadd9f74a220a75cee",
+    "detector/src/aidetector/adapters/media/images.py": "2d73e9970e0df6126a565f1bf0bc60224f3e2f42ef987247df4a2ad88c899595",
+    "detector/src/aidetector/adapters/media/video.py": "a51813d5b021ff2ac850bd30d1eff6ac39eea595a1779171939ca2e05882b528",
+    "detector/src/aidetector/adapters/operational_status.py": "9f87d6f62164e429d88fa9bda7544e8e1d3a3e2ffe2deb222bdd3dd8a6afbff4",
+    "detector/src/aidetector/adapters/sources/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "detector/src/aidetector/adapters/sources/files.py": "4550c8c5eeaea676634312603f0deceb1a521c6085a1ee100c2c13f72701ddf6",
+    "detector/src/aidetector/adapters/sources/streams.py": "cc1d8c43a26c3eff43c602f6e82a5a0a69729d9596bb106bc5705958368f4001",
+    "detector/src/aidetector/adapters/vlm.py": "9dc4f5f5ae39aaa3eb765a41af02a55fccac4d856d45f45cf865aa315dc23ccd",
+    "detector/src/aidetector/adapters/vlm_check.py": "45eaea52a09d4f3fa77930c1cae56c62922b9075e3dd88928e913a4ea72a87ca",
+    "detector/src/aidetector/application/__init__.py": "36f9d429af02049bd3fb3abb4ff3e017cb6ef5d1a2fc6ae966be91c2ae5a8de0",
+    "detector/src/aidetector/application/delivery.py": "9e14ee5e2f4de75a86ffa3e903bee483ae494a77b2b3b89e0d430f8392c41ae0",
+    "detector/src/aidetector/application/pipeline.py": "7f3cf816a27ec17e6e537468c6e1f7181a44f72f6e001e5059bff481c2f0fad8",
+    "detector/src/aidetector/application/ports.py": "e0f02d4ef9c99c6850d4388124f344a858bc3c581dbaa2d1521b5acea9b44180",
+    "detector/src/aidetector/application/status.py": "dcfd8a7de5116946e060049f6f81a579a8165a673bda5faf4cbb1f6dc53103e1",
+    "detector/src/aidetector/bootstrap.py": "a4554643b27c25df8a7b573b492eb794a11954f213344f61e44c2c2d6ea8608b",
+    "detector/src/aidetector/cli.py": "2a654041ff43f90924e76c0577fb8a4b2e88ef4231eb3bcbe0b1a089c9b29aea",
+    "detector/src/aidetector/configuration.py": "a248cc091ab0f6590de0bc921d1fb5d3a74b9fd97d325f52a00284be8532836c",
+    "detector/src/aidetector/domain/__init__.py": "9973109e2b0d48b03b4264d14bcfd12a36f45077eaec8b0c16728d4759869107",
+    "detector/src/aidetector/domain/events.py": "8d8761f477683332894ea6de470ea29ec6db886c1874725e469458ae8bf4db1a",
+    "detector/src/aidetector/domain/identity.py": "de5fcc34f51688ff383e266d12e5bd7a3a27b6ddbce8384e39063a0f37fb3967",
+    "detector/src/aidetector/domain/identity_continuity.py": "55259fa0a9f97c39a02dd4f35f821c76f98355c0ade6e78513937a70bf6991ea",
+    "detector/src/aidetector/domain/live_identity.py": "e0ca481072bedc16eb3d5fccba88ee4459dc5d85fc2646bc6b98cbfa92e3a200",
+    "detector/src/aidetector/domain/models.py": "012b4dd539ea25d1eb9bd99c676250334e8cda4e0b9056e59bf69d802cced781",
+    "detector/src/aidetector/domain/policy.py": "afdb479cac40864e19b6f344fe75a5692d43cbeff52bc56b4d8f921b77f542a7",
+    "detector/src/aidetector/runtime.py": "ec6c0551e683841c2ca4d5fce00770778f97e28fc134a477d76ca5f385dce72d",
+    "detector/src/aidetector/schema.py": "04173e9b26197fc3d902f5bc243e4d9df8bca75a0dfe5bba0cda596b4bab9db5",
+    "detector/src/aidetector/version.py": "809bd2ddd077ccf9e2360aabcb1de2b7ac954c62381ef9eb86d19f62e7f6bf31"
+  },
+  "libraries": {
+    "numpy": "2.5.0",
+    "opencv-python": "4.13.0.92"
+  },
+  "limits": {
+    "opencv_threads": 2,
+    "seconds": 120
+  },
+  "opencv_threads": 12,
+  "python": "3.12.14",
+  "rows": [
+    {
+      "analysis_shape": [
+        720,
+        1280,
+        3
+      ],
+      "collector_callbacks": 480,
+      "eight_instance_frame_maximum_seconds": 0.01426020823419094,
+      "eight_instance_frame_median_seconds": 0.010693562449887395,
+      "native_shape": [
+        720,
+        1280,
+        3
+      ],
+      "saving_callback_maximum_seconds": 0.011043999809771776,
+      "saving_callback_median_seconds": 0.0004412501584738493,
+      "saving_callbacks": 48,
+      "saving_frames": 6,
+      "saving_frames_detail": [
+        {
+          "call_seconds": [
+            0.011043999809771776,
+            0.0004983749240636826,
+            0.00046120770275592804,
+            0.0005163750611245632,
+            0.00045404210686683655,
+            0.0004315418191254139,
+            0.0004382091574370861,
+            0.00041512493044137955
+          ],
+          "second": 2,
+          "seconds": 0.01426020823419094
+        },
+        {
+          "call_seconds": [
+            0.007947416044771671,
+            0.0004805419594049454,
+            0.0004276670515537262,
+            0.0004148748703300953,
+            0.00044012535363435745,
+            0.0004378343001008034,
+            0.0005215001292526722,
+            0.00046395789831876755
+          ],
+          "second": 12,
+          "seconds": 0.011134791187942028
+        },
+        {
+          "call_seconds": [
+            0.007457999978214502,
+            0.00044237496331334114,
+            0.00042575038969516754,
+            0.0004119160585105419,
+            0.0004054578021168709,
+            0.00042837485671043396,
+            0.0004058331251144409,
+            0.0003803330473601818
+          ],
+          "second": 22,
+          "seconds": 0.010358791798353195
+        },
+        {
+          "call_seconds": [
+            0.007409499958157539,
+            0.000431290827691555,
+            0.0004137502983212471,
+            0.0004470418207347393,
+            0.00041525019332766533,
+            0.0004097921773791313,
+            0.00045391684398055077,
+            0.00040733302012085915
+          ],
+          "second": 32,
+          "seconds": 0.010388541035354137
+        },
+        {
+          "call_seconds": [
+            0.007495457772165537,
+            0.0005788751877844334,
+            0.0004732920788228512,
+            0.0004614158533513546,
+            0.0004869583062827587,
+            0.0004382077604532242,
+            0.0004159999080002308,
+            0.0004619997926056385
+          ],
+          "second": 42,
+          "seconds": 0.010812833905220032
+        },
+        {
+          "call_seconds": [
+            0.007455707993358374,
+            0.0004619583487510681,
+            0.00048058386892080307,
+            0.00042904214933514595,
+            0.0004260842688381672,
+            0.00046558305621147156,
+            0.000432583037763834,
+            0.0004220833070576191
+          ],
+          "second": 52,
+          "seconds": 0.010574290994554758
+        }
+      ],
+      "storage": {
+        "candidates": 48,
+        "database_bytes": 6606848,
+        "images": 6,
+        "jpeg_bytes": [
+          1081366,
+          1081833,
+          1081349,
+          1081531,
+          1081855,
+          1081323
+        ],
+        "native_bytes": 2764800,
+        "profiles": 8
+      },
+      "verified": true
+    },
+    {
+      "analysis_shape": [
+        720,
+        1280,
+        3
+      ],
+      "collector_callbacks": 480,
+      "eight_instance_frame_maximum_seconds": 0.037320083007216454,
+      "eight_instance_frame_median_seconds": 0.03229887527413666,
+      "native_shape": [
+        1440,
+        2560,
+        3
+      ],
+      "saving_callback_maximum_seconds": 0.03355229087173939,
+      "saving_callback_median_seconds": 0.0005416455678641796,
+      "saving_callbacks": 48,
+      "saving_frames": 6,
+      "saving_frames_detail": [
+        {
+          "call_seconds": [
+            0.03355229087173939,
+            0.0006107920780777931,
+            0.0005070832557976246,
+            0.0005799583159387112,
+            0.0005019577220082283,
+            0.0004836246371269226,
+            0.0005422909744083881,
+            0.0005410001613199711
+          ],
+          "second": 2,
+          "seconds": 0.037320083007216454
+        },
+        {
+          "call_seconds": [
+            0.029931541997939348,
+            0.0005618329159915447,
+            0.0004996252246201038,
+            0.0004953327588737011,
+            0.000546417199075222,
+            0.00050400011241436,
+            0.0004842081107199192,
+            0.0005434169434010983
+          ],
+          "second": 12,
+          "seconds": 0.03356704208999872
+        },
+        {
+          "call_seconds": [
+            0.028440665919333696,
+            0.0005503748543560505,
+            0.0005440842360258102,
+            0.0004821247421205044,
+            0.0004881671629846096,
+            0.0005456251092255116,
+            0.0005091670900583267,
+            0.0005344171077013016
+          ],
+          "second": 22,
+          "seconds": 0.032095249742269516
+        },
+        {
+          "call_seconds": [
+            0.02847862523049116,
+            0.0005324999801814556,
+            0.0004896246828138828,
+            0.0005367500707507133,
+            0.0005489159375429153,
+            0.000550874974578619,
+            0.0006029577925801277,
+            0.0005484591238200665
+          ],
+          "second": 32,
+          "seconds": 0.03228954179212451
+        },
+        {
+          "call_seconds": [
+            0.028424791060388088,
+            0.0005850410088896751,
+            0.0005109580233693123,
+            0.0004948750138282776,
+            0.0005566668696701527,
+            0.0005250000394880772,
+            0.0004919171333312988,
+            0.0005402499809861183
+          ],
+          "second": 42,
+          "seconds": 0.03213024977594614
+        },
+        {
+          "call_seconds": [
+            0.028474458027631044,
+            0.0005872920155525208,
+            0.0005607078783214092,
+            0.0005246670916676521,
+            0.00052258325740695,
+            0.0005653752014040947,
+            0.0005390001460909843,
+            0.0005333749577403069
+          ],
+          "second": 52,
+          "seconds": 0.032308208756148815
+        }
+      ],
+      "storage": {
+        "candidates": 48,
+        "database_bytes": 26112000,
+        "images": 6,
+        "jpeg_bytes": [
+          4324268,
+          4323602,
+          4322976,
+          4323699,
+          4324536,
+          4324449
+        ],
+        "native_bytes": 11059200,
+        "profiles": 8
+      },
+      "verified": true
+    },
+    {
+      "analysis_shape": [
+        720,
+        1280,
+        3
+      ],
+      "collector_callbacks": 480,
+      "eight_instance_frame_maximum_seconds": 0.07296733278781176,
+      "eight_instance_frame_median_seconds": 0.0710054999217391,
+      "native_shape": [
+        2160,
+        3840,
+        3
+      ],
+      "saving_callback_maximum_seconds": 0.0684586251154542,
+      "saving_callback_median_seconds": 0.0006811667699366808,
+      "saving_callbacks": 48,
+      "saving_frames": 6,
+      "saving_frames_detail": [
+        {
+          "call_seconds": [
+            0.0684586251154542,
+            0.0006452077068388462,
+            0.0006097503937780857,
+            0.00067912507802248,
+            0.0006082500331103802,
+            0.0006109578534960747,
+            0.0006825416348874569,
+            0.0006720828823745251
+          ],
+          "second": 2,
+          "seconds": 0.07296733278781176
+        },
+        {
+          "call_seconds": [
+            0.0670806672424078,
+            0.0010624160058796406,
+            0.0006307503208518028,
+            0.0006121667101979256,
+            0.000645332969725132,
+            0.0005822498351335526,
+            0.000592667143791914,
+            0.000629042275249958
+          ],
+          "second": 12,
+          "seconds": 0.07183633418753743
+        },
+        {
+          "call_seconds": [
+            0.06461070897057652,
+            0.0006872094236314297,
+            0.0006796251982450485,
+            0.0006082085892558098,
+            0.0006110840477049351,
+            0.0006631249561905861,
+            0.0006056670099496841,
+            0.000631208997219801
+          ],
+          "second": 22,
+          "seconds": 0.06909787515178323
+        },
+        {
+          "call_seconds": [
+            0.06478079129010439,
+            0.0008387500420212746,
+            0.0007011252455413342,
+            0.0009079170413315296,
+            0.0007651252672076225,
+            0.0007682079449295998,
+            0.0007329168729484081,
+            0.0006782081909477711
+          ],
+          "second": 32,
+          "seconds": 0.07017466565594077
+        },
+        {
+          "call_seconds": [
+            0.06389266718178988,
+            0.000768125057220459,
+            0.0006499998271465302,
+            0.0006499160081148148,
+            0.0007008751854300499,
+            0.0006388751789927483,
+            0.0006918748840689659,
+            0.0007551661692559719
+          ],
+          "second": 42,
+          "seconds": 0.06874870788305998
+        },
+        {
+          "call_seconds": [
+            0.06650770828127861,
+            0.0009507080540060997,
+            0.0009347503073513508,
+            0.0007642502896487713,
+            0.0007062498480081558,
+            0.0007290830835700035,
+            0.0006797919049859047,
+            0.0006574997678399086
+          ],
+          "second": 52,
+          "seconds": 0.07193187484517694
+        }
+      ],
+      "storage": {
+        "candidates": 48,
+        "database_bytes": 58605568,
+        "images": 6,
+        "jpeg_bytes": [
+          9728308,
+          9728788,
+          9728486,
+          9726903,
+          9727748,
+          9727768
+        ],
+        "native_bytes": 24883200,
+        "profiles": 8
+      },
+      "verified": true
+    }
+  ],
+  "scope": "Synthetic CPU storage cost only. Same readonly native image shared by8 instances,6 independent noise images per resolution; real collector3-consecutive qualification and10-second cadence. Controlled clock is NOT a real-time deadline or endurance proof.",
+  "sqlite": "3.53.1",
+  "thread_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "VECLIB_MAXIMUM_THREADS": "2"
+  },
+  "timing": "Time the8 actual collector calls for each saving frame, including first lazy database initialization, pixel hash, quality95 JPEG, quota checks and SQLite writes. Exclude random generation, resizing, constructing TrackEvidence, verification and teardown. The previous native JPEG cache may be replaced inside the timed calls.",
+  "torch_imported": false
+}

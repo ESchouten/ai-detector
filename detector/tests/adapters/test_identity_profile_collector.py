@@ -3,6 +3,7 @@ from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from threading import Event
 
+import cv2
 import numpy as np
 
 from aidetector.adapters.identity_profile_collector import IdentityProfileCollector
@@ -56,7 +57,50 @@ def test_paced_eight_instances_share_images_and_collect_only_every_ten_seconds(
         assert store.usage()["images"] == 6
         assert store.usage()["profiles"] == 8
         assert all("identity_id" not in fact and "name" not in fact for fact in facts)
+        assert all(f["image_resolution"] == "analysis" for f in facts)
+        assert all(f["analysis_shape"] == f["image_shape"] for f in facts)
         assert "synthetic-password" not in str(facts)
+    finally:
+        collector.close()
+        store.close()
+
+
+def test_native_evidence_maps_inclusive_bounds_and_preserves_exact_capture(tmp_path):
+    now = [0.0]
+    store = IdentityProfileStore(tmp_path, "observer")
+    collector = IdentityProfileCollector(tmp_path, "run", SOURCE, clock=lambda: now[0])
+    collector.source_changed("e1")
+    native = np.full((203, 307, 3), 123, np.uint8)
+    native.flags.writeable = False
+    try:
+        for second in range(3):
+            now[0] = second + 0.1
+            collector(replace(evidence(second), native_image=native))
+        fact = store.snapshot()[0]
+        assert fact["image_resolution"] == "source"
+        assert fact["image_encoding"] == "source-resolution-jpeg-quality95"
+        assert fact["analysis_shape"] == [80, 128, 3]
+        assert fact["image_shape"] == [203, 307, 3]
+        assert fact["box"] == [9, 10, 290, 192]
+        assert (fact["epoch"], fact["capture_sequence"], fact["analysis_index"]) == (
+            "e1",
+            60,
+            2,
+        )
+        encoded = store.image(fact["id"])
+        decoded = cv2.imdecode(np.frombuffer(encoded, np.uint8), cv2.IMREAD_COLOR)
+        assert decoded.shape == native.shape and np.all(decoded == 123)
+        # Full inclusive analysis bounds reach the final native pixel.
+        for second in range(10, 13):
+            now[0] = second + 0.1
+            collector(
+                replace(
+                    evidence(second),
+                    native_image=native,
+                    box=BoundingBox(0, 0, 127, 79, "cow", track_id=0),
+                )
+            )
+        assert store.snapshot()[-1]["box"] == [0, 0, 306, 202]
     finally:
         collector.close()
         store.close()
@@ -145,7 +189,9 @@ def test_disconnect_during_encoding_is_nonblocking_and_cannot_publish_old_eviden
             collector(evidence(second))
         now[0] = 2.1
         with ThreadPoolExecutor(max_workers=1) as pool:
-            pending = pool.submit(collector, evidence(2))
+            native = np.full((161, 259, 3), 37, np.uint8)
+            native.flags.writeable = False
+            pending = pool.submit(collector, replace(evidence(2), native_image=native))
             try:
                 assert entered.wait(timeout=5)
                 collector.source_changed(None)

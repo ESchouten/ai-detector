@@ -92,6 +92,7 @@ def build_source(
         width=settings.frames_width,
         retention=settings.frame_retention,
         interval=settings.interval,
+        preserve_native=continuous,
     )
 
 

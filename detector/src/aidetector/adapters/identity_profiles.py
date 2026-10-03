@@ -3,8 +3,9 @@
 This I/O boundary assigns no animal identity and performs no matching. The
 caller selects useful current observations; this store keeps at most sixteen
 recent candidates per scoped instance. Old candidates expire or are evicted
-automatically. Shared full analyzed-resolution JPEGs preserve head/context for
-later inspection, but are lossy: their digest differs from original BGR pixels.
+automatically. Shared full-frame JPEGs preserve head/context for later inspection.
+Facts distinguish source-resolution from analysis-only inputs and record the
+analysis shape. JPEGs are lossy: their digest differs from original BGR pixels.
 """
 
 from __future__ import annotations
@@ -17,7 +18,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from threading import Lock
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 from numpy.typing import NDArray
@@ -224,6 +225,8 @@ class IdentityProfileStore:
         episode_id: str,
         analysis_index: int,
         accept: Callable[[], bool] | None = None,
+        analysis_shape: tuple[int, ...] | None = None,
+        image_resolution: Literal["analysis", "source"] = "analysis",
     ) -> str | None:
         """Save one selected fact, or skip a stale/oversized observation.
 
@@ -233,9 +236,12 @@ class IdentityProfileStore:
         optional acceptance check runs after encoding, immediately before
         storage mutation; a source change during encoding can reject the fact.
         Already accepted historical facts are not current tracking state.
+        ``image_resolution`` describes the supplied pixels, never a guess from
+        their dimensions. Legacy callers default to explicit analysis-only facts.
         """
         if image.nbytes > _MAX_FRAME_BYTES or (accept is not None and not accept()):
             return None
+        analyzed = list(image.shape if analysis_shape is None else analysis_shape)
         scope = {
             "run_id": self.run_id,
             "source_key": source_key(source),
@@ -275,6 +281,8 @@ class IdentityProfileStore:
                     and old["captured_at"] == captured_at.isoformat()
                     and old["box"] == [box.x1, box.y1, box.x2, box.y2]
                     and old["mask_p10"] == mask_p10
+                    and old.get("analysis_shape", old["image_shape"]) == analyzed
+                    and old.get("image_resolution", "analysis") == image_resolution
                     else None
                 )
             if previous and capture.monotonic_at <= previous[2]:
@@ -315,7 +323,11 @@ class IdentityProfileStore:
                 "analysis_index": analysis_index,
                 "original_pixels_sha256": pixels,
                 "image_shape": list(image.shape),
-                "image_encoding": "full-analyzed-resolution-jpeg-quality95",
+                "analysis_shape": analyzed,
+                "image_resolution": image_resolution,
+                "image_encoding": "source-resolution-jpeg-quality95"
+                if image_resolution == "source"
+                else "full-analyzed-resolution-jpeg-quality95",
                 "encoded_sha256": encoded_sha,
                 "box": [box.x1, box.y1, box.x2, box.y2],
                 "temporary_track_id": box.track_id,

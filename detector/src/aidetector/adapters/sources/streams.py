@@ -26,6 +26,7 @@ from aidetector.domain.models import CaptureStamp, Frame
 logger = logging.getLogger(__name__)
 _CAPTURE_TIMEOUT_MS = 10000
 _CONTINUITY_GAP_SECONDS = 5
+_MAX_NATIVE_FRAME_BYTES = 32 * 1024**2
 
 
 class CapturedFrame:
@@ -94,11 +95,17 @@ class StreamSource:
         width: int = 1280,
         retention: int = 15,
         interval: float = 0,
+        *,
+        preserve_native: bool = False,
+        report_status: ReportStatus = ignore_status,
     ):
         self.sources = sources
         self.width = width
         self.retention = retention
         self.interval = interval
+        self.preserve_native = preserve_native
+        self._report_status = report_status
+        self._native_warning: set[str] = set()
         self._condition = Condition()
         self._frames: dict[str, deque[Frame]] = {}
         self._next_sample = dict.fromkeys(sources, 0.0)
@@ -115,11 +122,33 @@ class StreamSource:
                 self._epochs[source] = capture.epoch
                 self._frames.pop(source, None)
                 self._next_sample[source] = 0.0
+                self._native_warning.discard(source)
             if sampled_at < self._next_sample[source]:
                 return
             self._next_sample[source] = sampled_at + self.interval
+            selected = frame.at_width(self.width)
+            if self.preserve_native:
+                original = frame.original.image
+                if original.nbytes <= _MAX_NATIVE_FRAME_BYTES:
+                    # Never attach originals to the shared analysis-width cache.
+                    selected = replace(selected, native_image=original)
+                elif source not in self._native_warning:
+                    self._native_warning.add(source)
+                    message = (
+                        "Original camera frame exceeds the 32 MiB evidence limit; "
+                        "tracking continues with explicitly analysis-resolution evidence"
+                    )
+                    logger.warning("Source %s: %s", source_key(source)[:12], message)
+                    self._report_status(
+                        StatusEvent(
+                            "notice",
+                            source,
+                            message,
+                            source_epoch=capture.epoch if capture else None,
+                        )
+                    )
             self._frames.setdefault(source, deque(maxlen=self.retention)).append(
-                frame.at_width(self.width)
+                selected
             )
             self._condition.notify()
 
@@ -154,6 +183,7 @@ class StreamSource:
                     default=datetime.now(),
                 )
                 yield SourceBatch(snapshot, advance_to)
+                del snapshot
         finally:
             self.close()
 
@@ -179,8 +209,17 @@ class StreamPool:
         width: int = 1280,
         retention: int = 15,
         interval: float = 0,
+        *,
+        preserve_native: bool = False,
     ) -> StreamSource:
-        subscription = StreamSource(sources, width, retention, interval)
+        subscription = StreamSource(
+            sources,
+            width,
+            retention,
+            interval,
+            preserve_native=preserve_native,
+            report_status=self.report_status,
+        )
         for source in sources:
             self._subscribers.setdefault(source, []).append(subscription)
         return subscription

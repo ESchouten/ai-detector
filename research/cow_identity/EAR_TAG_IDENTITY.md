@@ -158,11 +158,13 @@ distance has been measured, and no barcode dependency was added to the app.
   reinterpreted as work numbers. Readability determines whether a reading is possible, not
   whether a cow exists. Unreadable animals remain in the coverage denominator.
 - Keep source-resolution tag input separate from resized tracking input, bound
-  to the exact same camera epoch and capture sequence. The current collector
-  saves analyzed-resolution JPEGs; those are useful context but cannot stand in
-  for a native-resolution OCR path. Reuse the existing shared capture rather
-  than opening another camera stream. A newer high-resolution frame must not
-  inherit an older frame's ownership without tracking evidence.
+  to the exact same camera epoch and capture sequence. The continuous source now
+  attaches the original read-only pixels to that analyzed frame, and the collector
+  saves a source-resolution JPEG with correctly scaled animal bounds. Images
+  exceeding the 32 MiB attachment limit remain explicitly analysis-only; older
+  analyzed-resolution evidence is not relabelled. JPEGs are still lossy, and no
+  OCR reader is enabled. The shared capture is reused. A newer high-resolution
+  frame must not inherit an older frame's ownership without tracking evidence.
 - Automatically attach a number only after calibrated reading acceptance and
   unambiguous same-frame tag-to-animal ownership. Independent chronological
   observations can strengthen evidence; repeated frames and repeated cached

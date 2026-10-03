@@ -1,10 +1,11 @@
 """Camera-worker behavior through real control/policy, without model downloads."""
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from pathlib import Path
 
+import cv2
 import numpy as np
 import pytest
 
@@ -187,6 +188,30 @@ def test_current_anonymous_evidence_and_requested_photo_have_exact_source(camera
     send(camera, 2.5)
     send(camera, 3)
     assert len(reviews) == 1  # No per-frame photo churn.
+
+
+def test_native_pixels_only_reach_evidence_not_inference_or_review(camera):
+    owner, _, clock, raw, tracker, evidence, reviews, _, starts = camera
+    native = np.full((81, 127, 3), 231, np.uint8)
+    native.flags.writeable = False
+    for second in (0, 0.5, 1):
+        current = replace(frame(second), native_image=native)
+        clock.now = current.capture.monotonic_at
+        if second == 1:
+            owner.request_review()
+        observed = owner.detect({SOURCE: (current,)})
+    result = observed[SOURCE][0]
+    assert evidence[0].native_image is native
+    assert evidence[0].image is result.image is current.image
+    assert evidence[0].box == result.boxes[0]
+    assert evidence[0].capture is current.capture
+    assert all(call.image.shape == (20, 30, 3) for call in raw.calls)
+    assert all(call[0].shape == (20, 30, 3) for call in tracker.calls)
+    assert all(image.shape == (20, 30, 3) for image in starts)
+    jpeg = reviews[0][0].review.jpeg
+    decoded = cv2.imdecode(np.frombuffer(jpeg, np.uint8), cv2.IMREAD_COLOR)
+    assert decoded.shape == (20, 30, 3)
+    assert not hasattr(result, "native_image")
 
 
 def test_anonymous_startup_catches_up_without_publishing_retained_evidence(camera):

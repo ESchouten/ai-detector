@@ -50,6 +50,8 @@ class TrackEvidence:
     The callback borrows read-only pixels. Retained copies must be bounded by
     its owner and keyed by source, capture epoch and the full target generation.
     A reset never reuses an instance ID. Mask p10 is segmentation quality only.
+    ``image`` and ``box`` remain analysis-resolution evidence; optional native
+    pixels belong to exactly the same capture and are mapped only by the collector.
     """
 
     source: str
@@ -60,6 +62,7 @@ class TrackEvidence:
     image: NDArray[np.uint8]
     analysis_index: int
     captured_at: datetime
+    native_image: NDArray[np.uint8] | None = None
 
 
 @dataclass(frozen=True)
@@ -435,6 +438,7 @@ class ContinuousIdentityDetector:
                     frame.image,
                     analysis_index=index,
                     captured_at=frame.date,
+                    native_image=frame.native_image,
                 )
             )
             if jpeg is not None and self._current(frame, fresh=True):

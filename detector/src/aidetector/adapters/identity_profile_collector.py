@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 import sqlite3
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from threading import Lock
 from time import monotonic
@@ -22,7 +22,7 @@ from aidetector.adapters.media import MediaError
 from aidetector.adapters.operational_status import source_key
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.domain.live_identity import LiveTarget
-from aidetector.domain.models import CaptureStamp
+from aidetector.domain.models import BoundingBox, CaptureStamp
 
 if TYPE_CHECKING:
     from aidetector.adapters.inference.continuous_identity import TrackEvidence
@@ -32,6 +32,21 @@ _MAX_INSTANCES = 8
 _SAMPLE_SECONDS = 10.0
 _IDLE_SECONDS = 3.0
 _MAINTAIN_SECONDS = 60.0
+
+
+def _native_box(evidence: TrackEvidence) -> BoundingBox:
+    """Cover the source pixels represented by inclusive analysis-mask bounds."""
+    assert evidence.native_image is not None
+    height, width = evidence.native_image.shape[:2]
+    analysis_height, analysis_width = evidence.image.shape[:2]
+    box = evidence.box
+    return replace(
+        box,
+        x1=max(0, box.x1 * width // analysis_width),
+        y1=max(0, box.y1 * height // analysis_height),
+        x2=min(width - 1, ((box.x2 + 1) * width - 1) // analysis_width),
+        y2=min(height - 1, ((box.y2 + 1) * height - 1) // analysis_height),
+    )
 
 
 @dataclass
@@ -235,12 +250,20 @@ class IdentityProfileCollector:
                 evidence.capture,
                 evidence.target,
                 evidence.captured_at,
-                evidence.box,
+                evidence.box
+                if evidence.native_image is None
+                else _native_box(evidence),
                 evidence.mask_p10,
-                evidence.image,
+                evidence.image
+                if evidence.native_image is None
+                else evidence.native_image,
                 episode_id=current.episode_id,
                 analysis_index=evidence.analysis_index,
                 accept=accept,
+                analysis_shape=evidence.image.shape,
+                image_resolution="analysis"
+                if evidence.native_image is None
+                else "source",
             )
         except (OSError, sqlite3.Error, MediaError) as error:
             self._failure(error, self._clock())

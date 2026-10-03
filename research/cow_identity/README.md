@@ -171,7 +171,7 @@ All identity data lives below the existing application data directory:
 | `identities/images/` | Detector; JPEG crops referenced by sightings and confirmed examples |
 | `identities/sightings/` | Detector; immutable observation records with hashed camera sources |
 | `identities/embeddings.sqlite` | Detector; disposable, versioned embedding cache |
-| `identities/automatic/profiles.sqlite` | Continuous mode; bounded anonymous observations and analyzed-resolution images, separate from confirmed identities |
+| `identities/automatic/profiles.sqlite` | Continuous mode; bounded anonymous observations with explicitly recorded source/analysis image resolution, separate from confirmed identities |
 | `models/identity/` | Pinned downloaded model weights |
 
 In the manual-gallery path, new photo collection stops at 200 pending photos;

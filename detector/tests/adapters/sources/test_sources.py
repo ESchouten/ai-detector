@@ -21,6 +21,7 @@ def test_live_source_classification_is_independent_of_the_url_suffix(tmp_path, v
     source = build_source(config, tmp_path, StreamPool())
     assert isinstance(source, StreamSource)
     assert source.sources == (value,)
+    assert not source.preserve_native
 
 
 def test_relative_file_paths_resolve_from_config_without_changing_cwd(tmp_path):

@@ -1,4 +1,5 @@
 import json
+import weakref
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from datetime import datetime, timedelta
@@ -219,6 +220,73 @@ def test_resized_frames_are_shared_by_width_without_changing_pixels(cameras):
         assert updated.capture.monotonic_at > frames[0].capture.monotonic_at
         assert np.all(updated.image == 123)
         np.testing.assert_array_equal(frames[0].image, shrink_image(image, 32))
+
+
+def test_native_subscription_keeps_exact_capture_without_changing_shared_analysis(
+    cameras,
+):
+    streams = StreamPool()
+    ordinary = streams.subscribe(("0",), width=32)
+    native = streams.subscribe(("0",), width=32, preserve_native=True)
+    unscaled = streams.subscribe(("0",), width=128, preserve_native=True)
+    readers = [source.batches() for source in (ordinary, native, unscaled)]
+    image = np.random.default_rng(7).integers(0, 256, (65, 97, 3), dtype=np.uint8)
+    with running(streams, cameras):
+        camera = cameras["0"]
+        camera.inputs.put(image)
+        camera.flush()
+        normal, original, full = [next(reader).frames["0"][0] for reader in readers]
+        assert normal.native_image is None
+        assert normal.image is original.image
+        assert original.native_image is full.native_image is image
+        assert full.image is image
+        assert original.capture is normal.capture is full.capture
+        assert original.date == normal.date == full.date
+        assert not image.flags.writeable and not original.image.flags.writeable
+        camera.inputs.put(np.full_like(image, 123))
+        camera.flush()
+        updated = next(readers[1]).frames["0"][0]
+        assert updated.capture.sequence == original.capture.sequence + 1
+        assert updated.capture.epoch == original.capture.epoch
+        assert updated.native_image is not image
+        assert original.native_image is image
+        assert camera.opens == 1
+        np.testing.assert_array_equal(original.image, shrink_image(image, 32))
+
+
+def test_native_limit_is_checked_before_queue_and_reported_once_per_epoch():
+    reports = []
+    source = StreamSource(
+        ("0",), width=16, preserve_native=True, report_status=reports.append
+    )
+    ordinary = StreamSource(("0",), width=16)
+    huge = np.broadcast_to(np.zeros((1, 1, 3), np.uint8), (4096, 4096, 3))
+    for sequence, epoch in enumerate(("first", "first", "second")):
+        captured = CapturedFrame(
+            Frame(datetime.now(), huge, CaptureStamp(epoch, sequence, sequence))
+        )
+        source.publish("0", captured, sequence)
+        ordinary.publish("0", captured, sequence)
+    assert len(reports) == 2
+    assert [r.source_epoch for r in reports] == ["first", "second"]
+    assert all(r.kind == "notice" and "32 MiB" in r.message for r in reports)
+    for subscription in (source, ordinary):
+        current = next(subscription.batches()).frames["0"][0]
+        assert current.native_image is None
+        assert current.image.shape == (16, 16, 3)
+
+
+def test_native_queue_does_not_retain_evicted_frames():
+    source = StreamSource(("0",), width=8, retention=1, preserve_native=True)
+    image = np.zeros((16, 16, 3), np.uint8)
+    reference = weakref.ref(image)
+    source.publish("0", CapturedFrame(Frame(datetime.now(), image)), 0)
+    del image
+    assert reference() is not None
+    source.publish(
+        "0", CapturedFrame(Frame(datetime.now(), np.ones((16, 16, 3), np.uint8))), 1
+    )
+    assert reference() is None
 
 
 def test_skipped_samples_do_not_resize_and_same_width_resizes_only_once(monkeypatch):

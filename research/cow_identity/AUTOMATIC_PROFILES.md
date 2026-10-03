@@ -36,11 +36,23 @@ an earlier one.
 `IdentityProfileStore` is the minimal persistence boundary.
 It owns `identities/automatic/profiles.sqlite`, shares a JPEG between instances
 observed in the same frame, and stores immutable capture/episode/geometry facts.
-The image is the full analyzed-resolution frame, with context for later ear-tag
-ownership checks. It may already have been resized by capture. Original BGR and
-encoded JPEG hashes are distinct; decoded JPEG pixels are not claimed to match
-the original frame. Numeric OCR should inspect the original live pixel callback
-or a separately verified lossless crop when available.
+Continuous subscriptions now preserve the original decoded frame alongside the
+resized analysis image, with the exact same capture stamp. Only that subscription
+borrows the original array; cached resized frames, inference, observations,
+previews and event history keep their previous resolution. No additional camera
+connection or latest-frame lookup is used. The attachment is bounded to 32 MiB
+before entering the four-frame subscription queue. Larger originals produce a
+notice once per camera epoch and remain explicitly analysis-only.
+
+The collector stores a source-resolution JPEG when original pixels are present.
+It maps inclusive animal bounds with independent, exact integer width/height
+scaling, including the even-height rounding used by capture. Facts record
+`image_resolution`, `analysis_shape`, `image_shape`, the source-coordinate bounds
+and the original capture stamp. Existing facts and callers without native pixels
+remain analysis-only. Original BGR and encoded JPEG hashes are distinct; decoded
+JPEG pixels are not claimed to match the original frame. Numeric OCR should use
+the original live pixel callback or a separately verified lossless crop. This
+change preserves evidence; it does not enable a reader or assign cow numbers.
 
 Retention is automatic: at most sixteen recent candidates per instance, 500
 instances, 256 MiB of persistent database storage and seven days. Expiry applies
@@ -81,6 +93,18 @@ noise frames, each stored for eight animals, took median 10.76 ms (maximum
 11.95 ms) at 1280×720 and median 33.22 ms (maximum 34.66 ms) at 2560×1440.
 This supports the simple synchronous ten-second cadence on this machine, not a
 general disk-latency guarantee. There is no extra background writer.
+
+A separate native-evidence check exercises the current collector and store with
+eight instances, a 640-pixel analysis width, and source frames at 720p, 1440p and
+4K. Across 480 callbacks per resolution, 48 saving callbacks produce 48 facts,
+six shared JPEGs and eight profiles. Median/maximum cost of an eight-instance
+saving batch is 10.69/14.26 ms at 720p, 32.30/37.32 ms at 1440p and
+71.01/72.97 ms at 4K. Capture provenance, stored geometry, JPEG dimensions and
+storage quotas pass verification. This CPU-only synthetic benchmark uses a
+controlled clock and excludes frame generation, resizing and result verification
+from the timed batches; it is not a real-time deadline or endurance test.
+The reproducible script is `native_evidence_cost.py`, with results in
+`results/2026-10-03/ear-tags/native-evidence-cost.json`.
 
 Seventeen focused tests use real JPEG/SQLite operations and controlled clocks.
 They cover paced eight-animal collection, a real thread-barrier disconnect during

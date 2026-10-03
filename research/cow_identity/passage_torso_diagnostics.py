@@ -453,7 +453,8 @@ def run(allow_border=False, chronological=False):
                 )
     result = {
         "status": "Post-result cache-only causal diagnostic. No inference, threshold fitting or changes to the frozen query outcome.",
-        "freeze_sha256": digest(FREEZE),
+        "freeze_sha256": digest(followup_protocol if allow_border else FREEZE),
+        "original_freeze_sha256": digest(FREEZE),
         "predictions_sha256": digest(prediction_path),
         "allow_border": allow_border,
         "chronological_gallery": chronological,
@@ -475,7 +476,7 @@ def run(allow_border=False, chronological=False):
         "per_clip": {key: dict(value) for key, value in per_clip.items()},
         "limitations": [
             "Stage rank1 and single-sample outputs are diagnostic ablations, not new accepted runtime policies.",
-            "Every known observation remains in denominator, including cow2238 without clean enrollment. Ground truth appears only after cached production predictions.",
+            "Every intended known observation remains in denominator regardless of enrollment coverage. Ground truth appears only after cached production predictions.",
             "Annotations are AI-assisted review. June9 remains exposed regression, not a new blind test. No reserved crowded-calf frames used.",
         ],
         "timeline": timeline,

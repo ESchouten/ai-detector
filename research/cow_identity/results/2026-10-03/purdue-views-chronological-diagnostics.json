@@ -65,12 +65,13 @@
   },
   "annotations_sha256": "a3da09f93b8f5182d23b9643aa54634508c7521f374ea526ca54c51db76b94cf",
   "chronological_gallery": true,
-  "freeze_sha256": "a622753ee8b97c0551532b6a0a01ba937967578606d802aee2641e73ebbfe351",
+  "freeze_sha256": "922e096219dc3528ff2424b99aa054370821251b2ae6e3396c150343c3ea88dc",
   "limitations": [
     "Stage rank1 and single-sample outputs are diagnostic ablations, not new accepted runtime policies.",
-    "Every known observation remains in denominator, including cow2238 without clean enrollment. Ground truth appears only after cached production predictions.",
+    "Every intended known observation remains in denominator regardless of enrollment coverage. Ground truth appears only after cached production predictions.",
     "Annotations are AI-assisted review. June9 remains exposed regression, not a new blind test. No reserved crowded-calf frames used."
   ],
+  "original_freeze_sha256": "a622753ee8b97c0551532b6a0a01ba937967578606d802aee2641e73ebbfe351",
   "per_clip": {
     "clip-0196f5e66f776dab": {
       "actual_correct_name": 3,
@@ -509,7 +510,7 @@
       "unknown_false_acceptance_rate": 0.0
     }
   },
-  "source_sha256": "205bf8fe582a615b220f109cfbf8f007083a0a6d924c44724b44126a2aa640b3",
+  "source_sha256": "bb2e2e20407d7588b2bca9db19ac063d715f7f1763ca5aa9ccaf9b7a96387c0f",
   "status": "Post-result cache-only causal diagnostic. No inference, threshold fitting or changes to the frozen query outcome.",
   "timeline": [
     {

@@ -281,7 +281,72 @@ strong contrary pending identity clears continuity. Unsafe continuity resets
 actual matcher agreement before matching, and competing pending identities
 also suppress held names. A held name never renews its five-second expiry.
 
-The original failures remain intact. These conditions are frozen before their
-query runs and have 23 focused tests. Final independent input/implementation
-review and the shared GPU slot are pending. The outcome must include all seven
-known cows and both unknown principals, with the same original truth.
+The independent audit verified all 372 frozen bindings and the complete 55-photo
+gallery before execution. The original failures remain intact. All three fixed
+conditions are now complete:
+
+| Condition | Correct names / visible known | Coverage |
+|---|---:|---:|
+| Original 32 references, five-second hold | 11 / 46 | 23.91% |
+| Chronological 55 references, border evidence | 7 / 46 | 15.22% |
+| Chronological 55 references, five-second hold | 14 / 46 | 30.43% |
+
+All three have zero observed wrong known names, named unknowns, or named
+unmatched boxes. The denominators remain all 105 annotated frames, 46 known
+observations, ten withheld-principal observations and 20 nuisance observations.
+This small correlated sample cannot certify the zero-error precision estimate.
+The encoder filled 37 additional reference vectors; the processing pass took
+8.09 seconds excluding model startup, with every query vector reused.
+
+In the best of these fixed conditions, per-cow correct counts are 1/7 for 2234,
+0/6 for 2238, 6/9 for 5676, 2/7 for 5953, 0/6 for 6079, 3/6 for 6102 and 2/5 for
+6110. First scored confirmation arrives two to five seconds after the first
+visible fragment; two cows never receive a name. This misses the target and
+does not justify promotion.
+
+The cache-only causal replay verifies every name on all 508 processing frames.
+Among the 23 available scored known torso crops, the expanded gallery raises
+correct rank-one decisions to 20, but only ten pass the unchanged confidence
+and margin thresholds and seven reach three-sample confirmation. Unthresholded
+rank-one assignment would also misname three known observations and five
+withheld-principal observations. Neither relaxing the thresholds nor treating
+all nearest neighbors as known identities is supported. See the
+[three-condition summary](results/2026-10-03/purdue-views-summary.json) and
+[causal replay](results/2026-10-03/purdue-views-chronological-diagnostics.json).
+
+## Fixed local coat-pattern control
+
+[RootSIFT protocol](passage_local_protocol.json) reuses the earlier OpenCV
+extractor: 256 features at a maximum dimension of 320 pixels, centered ellipse,
+mutual ratio matches and partial-affine RANSAC. The fixed operating rule is at
+least **11 geometric inliers** and a **five-inlier margin over another cow**,
+carried over from separate calf calibration rather than selected on these
+passages. These are counts, not cosine similarities or probabilities. References,
+whole boxes, minimum crop size, overlap, three-sample agreement and five-second
+hold are unchanged. All 377 input/source bindings were verified before scoring;
+16 focused tests include scalar-score parity and threshold boundaries.
+
+The CPU pass takes 7.45 seconds for 142 distinct query crops against the original
+55 references, using two OpenCV threads. Border-only names seven of 46 known
+observations; the same confirmation hold names 14 of 46. Neither has an observed
+wrong known, unknown or unmatched name. This equals the neural baseline's
+aggregate coverage and does not meet the target. Per-frame complementarity is
+small: the held local method gains one scored observation of 6110 but loses one
+of 5676. See the [fixed result summary](results/2026-10-03/purdue-local-summary.json)
+and [geometric diagnostic](results/2026-10-03/purdue-local-diagnostics.json).
+
+The retained inlier diagrams reveal an actual background trap. For cow 2234 at
+frame 210, the wrong nearest reference is cow 5953: 12 consistent matches all
+cluster on the gate, covering only .9% of the crop. The unchanged margin rule
+rejects it because the distinct-cow margin is three. Cow 2238 at frame 180 also
+produces gate-only matches, tied and rejected. In contrast, reviewed accepted
+5676 pairs match coat boundaries over 5–37% of the crop with 13–39 inliers.
+The centered ellipse therefore does not establish foreground purity. No
+post-hoc support filter or parameter change was applied.
+
+Among the 23 scored known torsos, 17 have a unique positive correct local rank
+one and one has a wrong positive rank one; the remaining five have no unique
+positive evidence. Ten pass the fixed single-image rule and seven confirm.
+All five available scored withheld-principal torsos have zero eligible geometric
+scores, but those five correlated images do not certify open-set reliability.
+Dark cow 2238 still receives no name. The local control remains research-only.

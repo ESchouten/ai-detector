@@ -1,0 +1,182 @@
+{
+  "background_audit": [
+    "2234frame210 wrongnearest5953 has12gate-only inliers/hull.009, rejected bymargin3<5.",
+    "2238frame180 best7matches are gate-only/tied and rejected.",
+    "Reviewedaccepted5676pairs show coat-boundary support13\u201339inliers/hull.05\u2013.37. No posthoc filter applied."
+  ],
+  "conditions": {
+    "local_border": {
+      "overall": {
+        "conservative_named_precision": 1.0,
+        "counts": {
+          "correct_names": 7,
+          "frames": 105,
+          "matched": 51,
+          "missed": 25,
+          "nuisance_unknown_named": 0,
+          "predictions": 59,
+          "principal_unknown_named": 0,
+          "uncertain_annotations": 27,
+          "unknown_named": 0,
+          "unmatched_named": 0,
+          "visible_known": 46,
+          "visible_nuisance_unknown": 20,
+          "visible_principal_unknown": 10,
+          "visible_unknown": 30,
+          "wrong_known_names": 0
+        },
+        "known_coverage": 0.15217391304347827,
+        "nuisance_unknown_false_acceptance_rate": 0.0,
+        "principal_unknown_false_acceptance_rate": 0.0,
+        "unknown_false_acceptance_rate": 0.0
+      },
+      "per_cow": {
+        "2234": {
+          "matched": 6,
+          "unnamed": 6,
+          "visible": 7
+        },
+        "2238": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 6
+        },
+        "5676": {
+          "correct_names": 3,
+          "matched": 9,
+          "unnamed": 6,
+          "visible": 9
+        },
+        "5953": {
+          "correct_names": 1,
+          "matched": 6,
+          "unnamed": 5,
+          "visible": 7
+        },
+        "6079": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 6
+        },
+        "6102": {
+          "correct_names": 2,
+          "matched": 5,
+          "unnamed": 3,
+          "visible": 6
+        },
+        "6109": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 5
+        },
+        "6110": {
+          "correct_names": 1,
+          "matched": 5,
+          "unnamed": 4,
+          "visible": 5
+        },
+        "6113": {
+          "matched": 4,
+          "unnamed": 4,
+          "visible": 5
+        },
+        "unresolved-nuisance": {
+          "matched": 1,
+          "unnamed": 1,
+          "visible": 20
+        }
+      },
+      "report_sha256": "5c54afc6a4029dffe0e66461940ae0bf347854923bec3adc734e2342c1c38874"
+    },
+    "local_hold_5s": {
+      "overall": {
+        "conservative_named_precision": 1.0,
+        "counts": {
+          "correct_names": 14,
+          "frames": 105,
+          "matched": 51,
+          "missed": 25,
+          "nuisance_unknown_named": 0,
+          "predictions": 59,
+          "principal_unknown_named": 0,
+          "uncertain_annotations": 27,
+          "unknown_named": 0,
+          "unmatched_named": 0,
+          "visible_known": 46,
+          "visible_nuisance_unknown": 20,
+          "visible_principal_unknown": 10,
+          "visible_unknown": 30,
+          "wrong_known_names": 0
+        },
+        "known_coverage": 0.30434782608695654,
+        "nuisance_unknown_false_acceptance_rate": 0.0,
+        "principal_unknown_false_acceptance_rate": 0.0,
+        "unknown_false_acceptance_rate": 0.0
+      },
+      "per_cow": {
+        "2234": {
+          "correct_names": 1,
+          "matched": 6,
+          "unnamed": 5,
+          "visible": 7
+        },
+        "2238": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 6
+        },
+        "5676": {
+          "correct_names": 5,
+          "matched": 9,
+          "unnamed": 4,
+          "visible": 9
+        },
+        "5953": {
+          "correct_names": 2,
+          "matched": 6,
+          "unnamed": 4,
+          "visible": 7
+        },
+        "6079": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 6
+        },
+        "6102": {
+          "correct_names": 3,
+          "matched": 5,
+          "unnamed": 2,
+          "visible": 6
+        },
+        "6109": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 5
+        },
+        "6110": {
+          "correct_names": 3,
+          "matched": 5,
+          "unnamed": 2,
+          "visible": 5
+        },
+        "6113": {
+          "matched": 4,
+          "unnamed": 4,
+          "visible": 5
+        },
+        "unresolved-nuisance": {
+          "matched": 1,
+          "unnamed": 1,
+          "visible": 20
+        }
+      },
+      "report_sha256": "7267996cdd80e68547e25c9bfe46c78f19f9484278b7fd7a58483e20c228f0da"
+    }
+  },
+  "decision": "No promotion:30.43%visible-known coverage remains below60%target",
+  "protocol_sha256": "8544f95e7e899534f0358a752bda2037bcf688a45cab64e3adc00cd38af29d76",
+  "query_crops": 142,
+  "references": 55,
+  "scope": "Fixed377bindings verified before scoring. No threshold grid, model training or reference edits. Same105frames/46known/30unknown observations. AI-assisted annotations; exposed June9 regression, not new blind test. Zero errors cannot certify precision on this small correlated sample.",
+  "seconds": 7.4535950410645455
+}

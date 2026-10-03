@@ -1,0 +1,292 @@
+{
+  "all_detector_geometry_identical": true,
+  "all_masks_identical": true,
+  "all_naming_decisions_identical": true,
+  "comparisons": [
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 0
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 1
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 2
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 3
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 4
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 5
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 6
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 7
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 8
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 9
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 10
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 11
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 12
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 13
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 14
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 15
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 16
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 17
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 18
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 19
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 20
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 21
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 22
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 23
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 24
+    },
+    {
+      "conflicts_equal": true,
+      "mask_changed_pixels": 0,
+      "maximum_detector_confidence_difference": 0.0,
+      "maximum_p10_difference": 0.0,
+      "names_equal": true,
+      "raw_detector_geometry_equal": true,
+      "second": 25
+    }
+  ],
+  "complete_for_full_source": false,
+  "complete_for_requested_smoke": true,
+  "inputs": 51,
+  "integer_decisions": 26,
+  "libraries": {
+    "antlr4-python3-runtime": "4.9.3",
+    "einops": "0.8.2",
+    "hydra-core": "1.3.2",
+    "numpy": "2.5.0",
+    "omegaconf": "2.3.1",
+    "opencv-python": "4.13.0.92",
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "ultralytics": "8.4.80"
+  },
+  "limitations": "The prefix does not cover crowded collisions/recovery or long-term memory pressure. No production integration or full3059-input run has started.",
+  "performance": {
+    "elapsed_seconds": 8.54077829211019,
+    "initialization_seconds": 0.7676709999796003,
+    "mean_yolo_seconds_per_called_frame": 0.036062495299400046,
+    "peak_postreclaim_mps_driver_bytes": 3456466944,
+    "peak_process_rss_bytes": 1173028864,
+    "steady_max_seconds_per_input": 0.21415529190562665,
+    "steady_mean_seconds_per_input": 0.14086511496613482,
+    "steady_p95_seconds_per_input": 0.2041294581722468
+  },
+  "protocol_sha256": "ba93acb3de65163780fa83d2384c968a491f079dcd55bdf28e61ac82ff227e30",
+  "reference_propagation_sha256": "98721b3a84a525d63b70bb720d7b8d0b7a7811de06b71d92c7b12818629a2e26",
+  "reference_raw_detector_sha256": "179da21b10e713902e0245e6a8f0e5a6f3b13e276a7c221deb618f2c42ca1707",
+  "reference_recovery_sha256": "732094eb7f21d1aed13138835db72b145591d95fe357858dcc6fc6abe9310c73",
+  "runtime": {
+    "class_names": {
+      "0": "item"
+    },
+    "cutie_device": "mps:0",
+    "cutie_dtype": "torch.float32",
+    "resolved_preprocessing": {
+      "batch": 1,
+      "conf": 0.4,
+      "imgsz": 640,
+      "iou": 0.7,
+      "max_det": 300,
+      "quantize": 16,
+      "rect": true
+    },
+    "yolo_device": "mps",
+    "yolo_fp16": true
+  },
+  "scope": "51-input appTorch2.12.1 joint hardware/parity smoke only, not full-video accuracy or held-out evaluation",
+  "stop_reason": null,
+  "streaming_sha256": "1f871d86b41a766a0398c75eb0f208452f789656866786eb03c084251023f8a5"
+}

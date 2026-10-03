@@ -44,8 +44,8 @@ Only confirmed-gallery embeddings are cached by the running application. New cam
 See [the actual-policy video assessment](VIDEO_ASSESSMENT.md), [cropped-image benchmark](BENCHMARK.md), [detection training](DETECTION_STUDY.md), [foreground/local-pattern controls](SEGMENTATION_STUDY.md), [research review](RESEARCH.md), and [source revisions](sources.json).
 
 One continuous-tracking candidate now meets the numerical targets on exposed
-development footage. Complete app-runtime verification, reserved evaluation and
-application integration remain outstanding. These controls measure different
+development footage in the combined application Python runtime. Reserved
+evaluation and application integration remain outstanding. These controls measure different
 things and are not interchangeable accuracy estimates:
 
 | Control | Measured outcome | Decision |
@@ -58,13 +58,33 @@ things and are not interchangeable accuracy estimates:
 | Cutie plus a separate detector's geometry confirmation | A predefined IoU 0.5 condition reaches 63.34–68.65% coverage and 99.13–99.36% precision across the exposed panels | Promising development choice. The earlier calibration-only selector chose the failing baseline; actual initialization and continuous execution still require verification. |
 | Same policy with reviewed detector proposals as initial masks and stateless detector confirmation | 54.71–70.28% coverage and 98.91–99.52% precision across the exposed panels | Fails: the initial-mask change alters later conflicts, and one segment loses too much coverage. The earlier favorable result is insufficient for integration. |
 | Reciprocal geometry confirmation on that actual-seed run | 53.54–68.89% coverage and 99.20–99.51% precision | Preventing one proposal from confirming two identities improves precision; the middle segment still fails coverage. Averaging box coordinates adds no useful improvement. |
-| Reciprocal confirmation plus current-evidence recovery after a conflict | 68.15–72.03% coverage and 99.20–99.51% precision; no withheld cow named | First actual-initialization candidate to meet all three development targets. It still needs combined execution, reserved evaluation and integration. |
+| Reciprocal confirmation plus current-evidence recovery after a conflict | 68.15–72.03% coverage and 99.20–99.51% precision; no withheld cow named | Combined app-runtime execution reproduces every mask, detector box and naming decision. Reserved evaluation and integration remain. |
 | Additional MIEW appearance on those masks | Its selected combination with quarantine adds no benefit over quarantine alone | Do not add an extra live encoder for this purpose without new evidence. |
 | Temporal pooling of MIEW mask features | The calibration selector prefers the unsmoothed baseline; it still misses the coverage target | No improvement demonstrated; pooling combined with quarantine has not been tested. |
 | [Next-day passage test](CONTROLLED_PASSAGE.md) using the application | Two correct names among 46 visible known-cow observations; most visible animals are clipped at the frame boundary | Test separate whole-animal tracking and visible-torso crops. |
 | [Adapted passage detector](PASSAGE_ADAPTATION.md) with separate torso crops | All 49 definite visible boxes localized, but only three correct names among 46 known observations | Localization improves; torso availability, boundary rejection and temporal agreement still prevent useful coverage. |
 | Same passage model allowing border-contact torso crops | Five correct names among 46 known observations; a one-second hold during absent torso evidence adds none | More diverse enrollment views and continuity need evaluation; matching thresholds remain unchanged. |
 | Chronologically varied, independently reviewed first-day references plus a five-second confirmed-track hold | Fourteen correct names among 46 known observations; no named errors | Improves cross-day coverage to 30.43%, still below the target. Two cows never obtain a confirmed name. |
+| RootSIFT geometric matching on those same passage crops and references | Fourteen correct names among the same 46 known observations with the hold; no named errors | No coverage improvement. Retained inlier images expose gate/background matches; do not promote it. |
+
+The [combined development report](results/2026-10-03/detection/cutie-streaming-development.json)
+scores names actually emitted online. Across the three panels, it records 3,759
+correct names, 23 named boxes that do not match an annotated animal, and no
+wrong-known or unknown-animal names. That is 99.39% conservative precision and
+69.69% coverage of 5,394 visible known-animal observations. These are correlated
+observations of six initially named calves, not thousands of independent animals.
+All 1,530 integer-second masks and all naming decisions match the earlier
+separate-model execution exactly.
+
+Processing all 3,059 input frames took 482.54 seconds: mean 154.8 ms, p95 222.4 ms
+and p99 237.8 ms per input at a 500 ms sampling interval. Two inputs exceeded
+that interval. Peak observed process RSS was 1.70 GiB; Metal driver allocation
+reached 7.00 GiB before cache reclamation and 6.00 GiB afterward. This proves
+neither packaged-app operation nor multi-camera capacity. The
+[continuous tracking protocol](CONTINUOUS_TRACKING_PROTOCOL.md) separates the
+forthcoming reserved test from disconnected-window recognition, and the
+[farmer workflow assessment](CONTINUOUS_IDENTITY_WORKFLOW.md) records the live
+confirmation, reconnect and new-animal work still required.
 
 Reserved video windows remain closed while these controls are developed. The
 earlier Cutie results use precise initial masks and names supplied by an idealized

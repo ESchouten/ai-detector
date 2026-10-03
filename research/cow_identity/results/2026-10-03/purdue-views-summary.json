@@ -1,0 +1,263 @@
+{
+  "conditions": {
+    "chronological_gallery_border": {
+      "new_gallery_images": 37,
+      "overall": {
+        "conservative_named_precision": 1.0,
+        "counts": {
+          "correct_names": 7,
+          "frames": 105,
+          "matched": 51,
+          "missed": 25,
+          "nuisance_unknown_named": 0,
+          "predictions": 59,
+          "principal_unknown_named": 0,
+          "uncertain_annotations": 27,
+          "unknown_named": 0,
+          "unmatched_named": 0,
+          "visible_known": 46,
+          "visible_nuisance_unknown": 20,
+          "visible_principal_unknown": 10,
+          "visible_unknown": 30,
+          "wrong_known_names": 0
+        },
+        "known_coverage": 0.15217391304347827,
+        "nuisance_unknown_false_acceptance_rate": 0.0,
+        "principal_unknown_false_acceptance_rate": 0.0,
+        "unknown_false_acceptance_rate": 0.0
+      },
+      "per_cow": {
+        "2234": {
+          "matched": 6,
+          "unnamed": 6,
+          "visible": 7
+        },
+        "2238": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 6
+        },
+        "5676": {
+          "correct_names": 3,
+          "matched": 9,
+          "unnamed": 6,
+          "visible": 9
+        },
+        "5953": {
+          "correct_names": 1,
+          "matched": 6,
+          "unnamed": 5,
+          "visible": 7
+        },
+        "6079": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 6
+        },
+        "6102": {
+          "correct_names": 2,
+          "matched": 5,
+          "unnamed": 3,
+          "visible": 6
+        },
+        "6109": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 5
+        },
+        "6110": {
+          "correct_names": 1,
+          "matched": 5,
+          "unnamed": 4,
+          "visible": 5
+        },
+        "6113": {
+          "matched": 4,
+          "unnamed": 4,
+          "visible": 5
+        },
+        "unresolved-nuisance": {
+          "matched": 1,
+          "unnamed": 1,
+          "visible": 20
+        }
+      },
+      "processing_seconds": 8.06902008317411,
+      "report_sha256": "5b001887a52b0f6dab26a9af24a2b012f076b41fa61f8bcb77f55745304e7e79"
+    },
+    "chronological_gallery_hold_5s": {
+      "new_gallery_images": 37,
+      "overall": {
+        "conservative_named_precision": 1.0,
+        "counts": {
+          "correct_names": 14,
+          "frames": 105,
+          "matched": 51,
+          "missed": 25,
+          "nuisance_unknown_named": 0,
+          "predictions": 59,
+          "principal_unknown_named": 0,
+          "uncertain_annotations": 27,
+          "unknown_named": 0,
+          "unmatched_named": 0,
+          "visible_known": 46,
+          "visible_nuisance_unknown": 20,
+          "visible_principal_unknown": 10,
+          "visible_unknown": 30,
+          "wrong_known_names": 0
+        },
+        "known_coverage": 0.30434782608695654,
+        "nuisance_unknown_false_acceptance_rate": 0.0,
+        "principal_unknown_false_acceptance_rate": 0.0,
+        "unknown_false_acceptance_rate": 0.0
+      },
+      "per_cow": {
+        "2234": {
+          "correct_names": 1,
+          "matched": 6,
+          "unnamed": 5,
+          "visible": 7
+        },
+        "2238": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 6
+        },
+        "5676": {
+          "correct_names": 6,
+          "matched": 9,
+          "unnamed": 3,
+          "visible": 9
+        },
+        "5953": {
+          "correct_names": 2,
+          "matched": 6,
+          "unnamed": 4,
+          "visible": 7
+        },
+        "6079": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 6
+        },
+        "6102": {
+          "correct_names": 3,
+          "matched": 5,
+          "unnamed": 2,
+          "visible": 6
+        },
+        "6109": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 5
+        },
+        "6110": {
+          "correct_names": 2,
+          "matched": 5,
+          "unnamed": 3,
+          "visible": 5
+        },
+        "6113": {
+          "matched": 4,
+          "unnamed": 4,
+          "visible": 5
+        },
+        "unresolved-nuisance": {
+          "matched": 1,
+          "unnamed": 1,
+          "visible": 20
+        }
+      },
+      "processing_seconds": 8.080925416201353,
+      "report_sha256": "2266949f5ab2a078556bad4cef171a7631113a10372399e586ef5a4caf1db5d1"
+    },
+    "original_gallery_hold_5s": {
+      "new_gallery_images": 37,
+      "overall": {
+        "conservative_named_precision": 1.0,
+        "counts": {
+          "correct_names": 11,
+          "frames": 105,
+          "matched": 51,
+          "missed": 25,
+          "nuisance_unknown_named": 0,
+          "predictions": 59,
+          "principal_unknown_named": 0,
+          "uncertain_annotations": 27,
+          "unknown_named": 0,
+          "unmatched_named": 0,
+          "visible_known": 46,
+          "visible_nuisance_unknown": 20,
+          "visible_principal_unknown": 10,
+          "visible_unknown": 30,
+          "wrong_known_names": 0
+        },
+        "known_coverage": 0.2391304347826087,
+        "nuisance_unknown_false_acceptance_rate": 0.0,
+        "principal_unknown_false_acceptance_rate": 0.0,
+        "unknown_false_acceptance_rate": 0.0
+      },
+      "per_cow": {
+        "2234": {
+          "matched": 6,
+          "unnamed": 6,
+          "visible": 7
+        },
+        "2238": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 6
+        },
+        "5676": {
+          "correct_names": 4,
+          "matched": 9,
+          "unnamed": 5,
+          "visible": 9
+        },
+        "5953": {
+          "correct_names": 2,
+          "matched": 6,
+          "unnamed": 4,
+          "visible": 7
+        },
+        "6079": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 6
+        },
+        "6102": {
+          "correct_names": 3,
+          "matched": 5,
+          "unnamed": 2,
+          "visible": 6
+        },
+        "6109": {
+          "matched": 5,
+          "unnamed": 5,
+          "visible": 5
+        },
+        "6110": {
+          "correct_names": 2,
+          "matched": 5,
+          "unnamed": 3,
+          "visible": 5
+        },
+        "6113": {
+          "matched": 4,
+          "unnamed": 4,
+          "visible": 5
+        },
+        "unresolved-nuisance": {
+          "matched": 1,
+          "unnamed": 1,
+          "visible": 20
+        }
+      },
+      "processing_seconds": 8.056729041039944,
+      "report_sha256": "32e7057662ca7ea071fd24fd3da9b3d93bedaa42acfd9b78f21b0b1d14d09cd4"
+    }
+  },
+  "protocol_sha256": "922e096219dc3528ff2424b99aa054370821251b2ae6e3396c150343c3ea88dc",
+  "scope": "Same 105 annotated frames and 76 whole-visible boxes, including 46 intended-known observations. AI-reviewed truth, exposed regression, not new blind test. Zero errors in a small correlated sample does not establish reliability.",
+  "status": "Fixed conditions all complete; no promotion; coverage target not met"
+}

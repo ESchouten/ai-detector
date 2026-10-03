@@ -1,0 +1,141 @@
+{
+  "source_commit": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
+  "video_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825",
+  "processing_fps": 2,
+  "last_processed_second": 1529,
+  "seeded_cows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "named_cows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "anonymous_cows": [
+    7,
+    8
+  ],
+  "max_internal_size": 480,
+  "mem_every": 5,
+  "use_long_term": true,
+  "resource_limits": {
+    "max_mps_driver_bytes": 8589934592,
+    "max_mean_seconds_per_frame": 1.0,
+    "warmup_frames": 10,
+    "timing_window_frames": 30,
+    "max_peak_rss_bytes": 8589934592
+  },
+  "cache_reclaim_bytes": 6442450944,
+  "corroborator": {
+    "model_sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    "runner_sha256": "37670c587178e3d42f17e3cf9e107812a0de4bb2d89257002d4093c0dea49e83",
+    "settings": {
+      "imgsz": 640,
+      "conf": 0.4,
+      "iou": 0.7,
+      "classes": [
+        0
+      ],
+      "device": "mps",
+      "quantize": 16
+    },
+    "seconds": {
+      "start": 0,
+      "stop": 1529,
+      "step": 1
+    },
+    "minimum_iou": 0.5,
+    "mode": "YOLO.predict independentlyperframe, no tracker, no temporalstate or windowresets. Cacheall1530frames beforelabels/scoring; integertruncatebounds likeapp. Geometryveto only; no identityfeatures or annotationinput.",
+    "preprocessing": "Ultralytics8.4.80 YOLO.predict receives sourceBGRuint8 arrays; its standard letterbox/normalization and resolvedimgsz/rect/batch/quantize/conf/iou/max_det are recorded. FP16MPS matches priorcorroboration cache; CPUFP32appliesonlyinitialSAM."
+  },
+  "comparison_windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ],
+    [
+      1230,
+      1529
+    ]
+  ],
+  "frozen_at_utc": "2026-10-03T09:20:34.100875+00:00",
+  "scope": "Single-process app-runtime verification of the selected exposed-development candidate. No reserved footage or truth is loaded by inference.",
+  "inputs": {
+    "clip": ".cache/cow-cutie/calibration-clip",
+    "upstream": "/tmp/cow-identity-cutie",
+    "cutie_model": ".cache/cow-cutie/cutie-base-mega.pth",
+    "yolo_model": ".cache/cow-detectors/training/mixed-full-backbone/weights/best.pt",
+    "seed_masks": ".cache/cow-cutie/actual-seed-masks/0-masks.npz",
+    "seed_manifest": ".cache/cow-cutie/actual-seed-masks/manifest.json",
+    "quarantine_protocol": "research/cow_identity/detection_cutie_quarantine_v2_protocol.json"
+  },
+  "recovery": {
+    "minimum_iou": 0.5,
+    "minimum_p10": 0.7,
+    "donor_area_ratio": 0.5,
+    "consecutive_frames": 3
+  },
+  "naming": {
+    "minimum_iou": 0.5,
+    "minimum_p10": 0.7,
+    "pairing": "reciprocal-best same-frame IoU; no coordinate averaging"
+  },
+  "libraries": {
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "numpy": "2.5.0",
+    "opencv-python": "4.13.0.92",
+    "ultralytics": "8.4.80",
+    "hydra-core": "1.3.2",
+    "omegaconf": "2.3.1",
+    "antlr4-python3-runtime": "4.9.3",
+    "einops": "0.8.2"
+  },
+  "files": {
+    ".cache/cow-cutie/cutie-base-mega.pth": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+    ".cache/cow-detectors/training/mixed-full-backbone/weights/best.pt": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    ".cache/cow-cutie/actual-seed-masks/0-masks.npz": "0301626c21e92d54e2edb17ce397492a72aaa0b0d07ec32ea603c7f51f82151a",
+    ".cache/cow-cutie/actual-seed-masks/manifest.json": "9dc7367648d8f19d6beeec1e252be571d1fb59a0a41df0c5e1d9d7018fefbd4a",
+    "research/cow_identity/detection_cutie_quarantine_v2_protocol.json": "294b16744d0efe7705024edbb465f158f91a4fcad4c1881853e53683ea354165",
+    ".cache/cow-cutie/calibration-clip/sampled.avi": "11bff035d63f5e6399ada2ee82ebac05b242071b299b3c3ea023b4399972a8cf",
+    ".cache/cow-cutie/calibration-clip/sampled.json": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d",
+    "research/cow_identity/detection_streaming.py": "a33618c315ecff17e8730b7d5ca81a38c9c809e162fad2555e0399feddccabe4",
+    "research/cow_identity/test_detection_streaming.py": "dbae443e02679fdd689cd88e30eb6859fc64fdf57a6f889ee4090eda9542fcf7",
+    "research/cow_identity/detection_actual_seed_protocol.json": "aaac7595cebc8beacace4260380d6c00b2b1c5eccf39def8cc4d0e6a7b7595d6",
+    "research/cow_identity/detection_recovery_consensus_protocol.json": "d7136e6710a7a947c0a3a15a4d062a4dc831bf165fbb4f4f8c08ac13025d44f1",
+    "research/cow_identity/detection_quarantine_recovery_protocol.json": "4f6768a4d165a964c956741ce6ecbbd434a5559f5b35b4a59c5ef1aa6c658d97",
+    "research/cow_identity/detection_cutie.py": "85c163664cdef3d7cef4268ac0970b569f8c7d62f95cc77add9ae6e46f51c9a7",
+    "research/cow_identity/detection_cutie_variants.py": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+    "research/cow_identity/detection_quarantine_recovery.py": "aca8e85b9f658ec9c183938dc0438614f5362525aca0ca4ee9fae1d050479e81",
+    "research/cow_identity/detection_cutie_quarantine.py": "7bbd7e52a16b344a82a8848788e4f78f85bdb60ab43fd1ad08ae04977a213707",
+    "research/cow_identity/detection_box_consensus.py": "d81721ec2268225715903a45c2b3c79e7588c6088b09cfc482d291e8430df3cf",
+    "research/cow_identity/detection_corroboration.py": "c381591a6609ff422c4ac784da2c36efb54637440bef49f926b5d3c9942e84b4",
+    "research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  },
+  "execution": "One MPS thread reads each verified frame once. CutieFP32 every0.5s; rawYOLOFP16 plus original-mask quarantine, LCC geometry, p10 and reciprocal naming at1Hz. Parent approval required before GPU launch.",
+  "output_contract": "Each1Hz row retains all visible LCC boxes and original zero-based track IDs. named_track_ids includes only original named seeds1-6. Class confidence is actual paired YOLO score or null, never fabricated1.0. Original indexed masks, raw-assigned-pixel probabilities and frame hashes permit independent replay.",
+  "timing": "Per-input stage timings include decode/hash, synchronized models, decision/mask cache and Metal reclamation. Overall elapsed additionally includes initialization and report writes. Existing1s sustained-processing stop is a safety cap;2fps throughput requires mean<=0.5s/input and is reported separately.",
+  "memory": "SDK defaults bound working and long-term memory. Quarantine keeps30past indexed masks plus active anchors. No source RGB frames are retained. Post-reclaimMetaldriver and peakRSS each capped8GiB.",
+  "limitations": [
+    "Original reviewed seeds only; no automatic enrollment, new arrivals, reentry or reconnect names.",
+    "Geometry-based recovery is not independent identity proof.",
+    "All three panels are exposed development, not blind evaluation.",
+    "No labels at intermediate half seconds; prior corroboration is never treated as fresh evidence."
+  ],
+  "prelaunch_correction": "Accept equivalent torch.device Metal spellings mps and mps:0; reject CPU. Corrected before any joint GPU inference; candidate decisions unchanged."
+}

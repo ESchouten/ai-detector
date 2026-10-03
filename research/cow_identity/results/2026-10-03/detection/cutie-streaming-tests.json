@@ -1,0 +1,17 @@
+{
+  "assessment_sha256": "a204ef7acdeb279f19476b480b51f90b76129385a1e3aa12646d51b7847508c1",
+  "command": "PYTHONPATH=detector/src:research/cow_identity detector/.venv/bin/python -m pytest -q research/cow_identity/test_detection_streaming.py research/cow_identity/test_detection_reserved_score.py research/cow_identity/test_detection_quarantine_recovery.py research/cow_identity/test_detection_box_consensus.py research/cow_identity/test_detection_sam_tracking.py research/cow_identity/test_detection_assessment.py",
+  "execution_protocol_sha256": "ba93acb3de65163780fa83d2384c968a491f079dcd55bdf28e61ac82ff227e30",
+  "exit_code": 0,
+  "pytest_summary": "30 passed in 14.17s",
+  "run_sha256": "c4a5a561c9a8d201a8e02e2cc9fe77fe5deacd6bbf7639189c46dde041c431c7",
+  "scope": "CPU public policy/source/provenance/metric regression tests after complete app-runtime streaming development run",
+  "test_files_sha256": {
+    "research/cow_identity/test_detection_assessment.py": "a4634a3a97e0f6a84c26b842de9cf34617dfdb7cd2836f3479d1873113f6be8f",
+    "research/cow_identity/test_detection_box_consensus.py": "36169a16b85b859829375e236a01c1644159b00ee1092c0f92b9f66c4201fb21",
+    "research/cow_identity/test_detection_quarantine_recovery.py": "527d23ba7d61a72ecbf1f5944cd5e4ccf8f10330b9474e33c9f6048c5c08adb5",
+    "research/cow_identity/test_detection_reserved_score.py": "c694c4555fa16b69966881e3e4750d2bd39f5d339cb7c4f7d4f90541b38c0e20",
+    "research/cow_identity/test_detection_sam_tracking.py": "1c59ad8197c7b3fafcb382c015de7da23d63705adc94f230eafff22934e3e87f",
+    "research/cow_identity/test_detection_streaming.py": "dbae443e02679fdd689cd88e30eb6859fc64fdf57a6f889ee4090eda9542fcf7"
+  }
+}

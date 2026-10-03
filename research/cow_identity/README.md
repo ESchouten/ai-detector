@@ -2,6 +2,13 @@
 
 This branch adds a local identity assistant: it collects individual cow photos, lets a farmer name them, and suggests those names on later camera observations. It is an experimental tool for building and checking a herd gallery, not a reliable unattended animal-identification system yet.
 
+The requested next product flow is automatic: accumulate anonymous animal
+profiles and attach reliably read ear numbers, without mandatory farmer
+enrollment. The existing manual gallery below describes current behavior, not
+that completed flow. [Automatic enrollment requirements](EAR_TAG_IDENTITY.md)
+keep number reading, animal ownership and cross-visit association separate and
+require evaluation from an empty catalog.
+
 ## Try it
 
 Use the detector and web app from this branch together. Follow the normal [source setup](../../detector/README.md#run-from-source) and [web development instructions](../../web/README.md), including a fresh locked dependency sync. Existing camera settings do not need migration.
@@ -155,7 +162,7 @@ Run the normal detector and web quality commands. Focused contracts are in `test
 
 ## Current research priorities
 
-1. Complete the automatic eight-object startup control and validate lost tracks and departures. The [joint-readout extension](EXTENDED_JOINT_READOUT.md) failed late precision; [replacing reciprocal geometry](RECIPROCAL_GEOMETRY.md) also failed. Neither is a passed system. Annotation disagreements remain counted and do not justify further geometry tuning.
+1. Validate actual anonymous tracking, lost tracks and departures. The [completed automatic eight-object startup control](AUTOMATIC_STARTUP_EXTENDED.md) preserves its exact short prefix but still fails late precision, as does the [joint-readout extension](EXTENDED_JOINT_READOUT.md); [replacing reciprocal geometry](RECIPROCAL_GEOMETRY.md) also failed. None is a passed system. Annotation disagreements remain counted and do not justify further geometry tuning.
 2. Measure the value and effort of additional farmer confirmations. The separate enrollment arm uses a fixed question budget and tests only later footage; repeated or unknown answers count as work too.
 3. Test only materially different adaptation hypotheses. The original 60-photo partial-backbone fine-tune, public metric head and external full-backbone adaptation are documented negative controls. The [dense temporal projection pilot](TEMPORAL_PROJECTION_PILOT.md) also fails: its fixed residual head achieves 5.09% early coverage at 91.67% precision; the fixed 96-view untrained bank achieves 1.20% at 72.22%. Better raw retrieval alone is insufficient. Spatial feature adaptation and readable ear numbers are separate pending hypotheses, not production features.
 4. Keep seconds 3000 through the end closed until a new complete method is frozen. The earlier reserved panels are now exposed. Then perform a small independently labelled multi-day farm trial, including night, camera changes, arrivals, departures and restarts.

@@ -1,0 +1,38 @@
+{
+  "conditions": {
+    "accepted_0.95": {
+      "accepted": 113,
+      "accepted_exact_precision": 0.9203539823008849,
+      "correct_text": 104,
+      "exact_line_coverage": 0.6624203821656051,
+      "full_tag_exact": 24,
+      "ground_truth_lines": 157,
+      "missed_or_rejected": 44,
+      "tags": 64,
+      "wrong_text": 9
+    },
+    "all_raw": {
+      "accepted": 157,
+      "accepted_exact_precision": 0.7388535031847133,
+      "correct_text": 116,
+      "exact_line_coverage": 0.7388535031847133,
+      "full_tag_exact": 31,
+      "ground_truth_lines": 157,
+      "missed_or_rejected": 0,
+      "tags": 64,
+      "wrong_text": 41
+    }
+  },
+  "cpu_seconds": {
+    "initialization": 0.09631904074922204,
+    "per_line_p50_p95_max": [
+      0.016881416086107492,
+      0.018359483871608972,
+      0.023023124784231186
+    ],
+    "total": 2.7948819580487907
+  },
+  "protocol_sha256": "cb5ebe77ee274ffabeb0c63ed6796f3588f223b6e60e286fa4936a4c0b1d73e0",
+  "raw_sha256": "3ca4e2fb1806d493ffa2a8832467264b9b8abf751d4be7002d78aaabc70aa807",
+  "scope": "Oracle localization diagnostic on the same fixed64 development tags and all157 publisher text polygons. Not an automatic detector or cow-ID result. No calibration/reserved images."
+}

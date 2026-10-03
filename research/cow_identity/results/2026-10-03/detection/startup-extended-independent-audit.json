@@ -1,0 +1,185 @@
+{
+  "all_bindings_verified": 275,
+  "all_quality_gates_pass": false,
+  "exact_prefix_masks": 121,
+  "integer_rows": 3000,
+  "method": "Independent explicit named-count accumulation; shared fixed pair_boxes maximum-cardinality IoU.5, no official score or VideoMetrics invocation. Exact raw JSON/source bindings/initial anchor mapping/prefix evidence/name gate checked. Mask PNG/full native pixel validation relies on completed official immutable scorer; no redundant decode or new inference. All eight original truth animals, all five panels and every unmatched name retained. Already exposed development data, not human-certified field validation.",
+  "panels": {
+    "1230": {
+      "conservative_precision": 0.9951219512195122,
+      "counts": {
+        "correct_name": 1224,
+        "detector_boxes": 2342,
+        "frames": 300,
+        "matched_boxes": 2237,
+        "missed_annotations": 160,
+        "unknown_named": 0,
+        "unmatched_boxes": 105,
+        "unmatched_named": 6,
+        "visible_annotations": 2397,
+        "visible_known": 1799,
+        "visible_unknown": 598,
+        "wrong_name": 0
+      },
+      "known_coverage": 0.6803779877709839,
+      "passes": true,
+      "per_cow_presence": {
+        "1": 300,
+        "2": 300,
+        "3": 300,
+        "4": 300,
+        "5": 300,
+        "6": 299,
+        "7": 298,
+        "8": 300
+      },
+      "unknown_false_naming_rate": 0.0
+    },
+    "1800": {
+      "conservative_precision": 0.9937833037300178,
+      "counts": {
+        "correct_name": 1119,
+        "detector_boxes": 2400,
+        "frames": 300,
+        "matched_boxes": 2315,
+        "missed_annotations": 75,
+        "unknown_named": 0,
+        "unmatched_boxes": 85,
+        "unmatched_named": 7,
+        "visible_annotations": 2390,
+        "visible_known": 1799,
+        "visible_unknown": 591,
+        "wrong_name": 0
+      },
+      "known_coverage": 0.6220122290161201,
+      "passes": true,
+      "per_cow_presence": {
+        "1": 300,
+        "2": 299,
+        "3": 300,
+        "4": 300,
+        "5": 300,
+        "6": 300,
+        "7": 300,
+        "8": 291
+      },
+      "unknown_false_naming_rate": 0.0
+    },
+    "2700": {
+      "conservative_precision": 0.9796839729119639,
+      "counts": {
+        "correct_name": 1302,
+        "detector_boxes": 2398,
+        "frames": 300,
+        "matched_boxes": 2193,
+        "missed_annotations": 100,
+        "unknown_named": 0,
+        "unmatched_boxes": 205,
+        "unmatched_named": 27,
+        "visible_annotations": 2293,
+        "visible_known": 1781,
+        "visible_unknown": 512,
+        "wrong_name": 0
+      },
+      "known_coverage": 0.7310499719258844,
+      "passes": false,
+      "per_cow_presence": {
+        "1": 300,
+        "2": 287,
+        "3": 299,
+        "4": 298,
+        "5": 297,
+        "6": 300,
+        "7": 299,
+        "8": 213
+      },
+      "unknown_false_naming_rate": 0.0
+    },
+    "330": {
+      "conservative_precision": 0.9920191540303273,
+      "counts": {
+        "correct_name": 1243,
+        "detector_boxes": 2400,
+        "frames": 300,
+        "matched_boxes": 2308,
+        "missed_annotations": 92,
+        "unknown_named": 0,
+        "unmatched_boxes": 92,
+        "unmatched_named": 10,
+        "visible_annotations": 2400,
+        "visible_known": 1800,
+        "visible_unknown": 600,
+        "wrong_name": 0
+      },
+      "known_coverage": 0.6905555555555556,
+      "passes": true,
+      "per_cow_presence": {
+        "1": 300,
+        "2": 300,
+        "3": 300,
+        "4": 300,
+        "5": 300,
+        "6": 300,
+        "7": 300,
+        "8": 300
+      },
+      "unknown_false_naming_rate": 0.0
+    },
+    "930": {
+      "conservative_precision": 0.9946236559139785,
+      "counts": {
+        "correct_name": 1295,
+        "detector_boxes": 2397,
+        "frames": 300,
+        "matched_boxes": 2335,
+        "missed_annotations": 58,
+        "unknown_named": 0,
+        "unmatched_boxes": 62,
+        "unmatched_named": 7,
+        "visible_annotations": 2393,
+        "visible_known": 1795,
+        "visible_unknown": 598,
+        "wrong_name": 0
+      },
+      "known_coverage": 0.7214484679665738,
+      "passes": true,
+      "per_cow_presence": {
+        "1": 300,
+        "2": 300,
+        "3": 300,
+        "4": 300,
+        "5": 300,
+        "6": 295,
+        "7": 300,
+        "8": 298
+      },
+      "unknown_false_naming_rate": 0.0
+    }
+  },
+  "pooled_counts": {
+    "correct_name": 6183,
+    "detector_boxes": 11937,
+    "frames": 1500,
+    "matched_boxes": 11388,
+    "missed_annotations": 485,
+    "unknown_named": 0,
+    "unmatched_boxes": 549,
+    "unmatched_named": 57,
+    "visible_annotations": 11873,
+    "visible_known": 8974,
+    "visible_unknown": 2899,
+    "wrong_name": 0
+  },
+  "source_rows": 5999,
+  "sources": {
+    ".cache/cow-cutie/reserved-2fps-clip/sampled.json": "fc8aafcd7f05b07081c15a447c6bcf7718c170e97433bc325f55f77322f5389b",
+    ".cache/cow-startup-extended/streaming.json": "1bec4b7970dbcbad43b30be23fbcd92d580207139e5dd1698ca201f7a430694c",
+    ".cache/cow-startup-propagation/streaming.json": "1d7cd590b7ad83e5f240f61dd0aded7aecf888eda1746b03a4383de4119c5e9b",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "research/cow_identity/detection_startup_extended_protocol.json": "db708d013ee6419a6fb948bb1870df5dc213340174f12bf33af1cca29d46e8aa",
+    "research/cow_identity/results/2026-10-03/detection/startup-extended-independent-audit.recipe.py.txt": "ea5bef7a0b2e407f797f8adc75ebe256a31e022c6c73b4b7047ea10ed565e414",
+    "research/cow_identity/results/2026-10-03/detection/startup-extended.json": "ba4d56f21963692609d12bc228472d30e2cc99c972b2c14f7ff9bd86ed755a4e",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  },
+  "status": "PASS_INDEPENDENT_RECOUNT_ORIGINAL_QUALITY_FAILURE_RETAINED"
+}

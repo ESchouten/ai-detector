@@ -1,0 +1,22 @@
+{
+  "files": {
+    ".cache/cow-cutie/reserved-2fps-clip/sampled.json": "fc8aafcd7f05b07081c15a447c6bcf7718c170e97433bc325f55f77322f5389b",
+    ".cache/cow-startup-extended/streaming.json": "1bec4b7970dbcbad43b30be23fbcd92d580207139e5dd1698ca201f7a430694c",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/anonymous_profile_audit.py": "ef021bdc5fcd483d91469079dd3b88f31e2ffd94f9b0903e3240c6794c362b97",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/anonymous_profile_inventory.py": "dce9255e908e574cd8f6e4d1477eb3132ce8cbab2adf63efc3238767d8b648a8",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/anonymous_profile_inventory_protocol.json": "dc9da19735ccb90102f2aa897ae06049662e4f4931be9bcd856a07160a0f7eff",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/recognition/anonymous-profile-inventory.json": "250755acecc69b33494a436ae6ff502dfbf082b1bbf20c8dfdcdfedf2f504fa4",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_anonymous_profile_audit.py": "68c809aafcab23948f95f9e955214e65264461b08c24a2fe060af4cdd406e16f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "detector/src/aidetector/domain/models.py": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0"
+  },
+  "limits": "Exposed public development recording; no fresh held-out result, new-farm claim, pixel-perfect mask ownership, readable tags, cross-camera matching or automatic biological enrollment. The maximum dominant-cow fraction is a diagnostic upper bound, not a predicted identity.",
+  "method": "Use all same-frame raw tracked boxes in cardinality-first one-to-one IoU>=.5 matching before choosing qualified tracks. Audit all quality episodes and both the1546proposals/128retained separately. No known/unknown or initial names affect the matching or denominator; no new model calls, label-based photo selection, thresholds or merges. Unmatched observations stay failures. A common slot across episodes is only an observation-instance scope.",
+  "range": [
+    0,
+    2999
+  ],
+  "status": "FROZEN_GEOMETRY_AUDIT_OF_COMPLETED_PREDICTION_ONLY_SELECTION"
+}

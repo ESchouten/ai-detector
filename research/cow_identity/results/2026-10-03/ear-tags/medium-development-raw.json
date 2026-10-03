@@ -1,0 +1,3138 @@
+{
+  "complete": true,
+  "elapsed_seconds": 60.44975037500262,
+  "error": null,
+  "initialization_seconds": 0.096174499951303,
+  "protocol_sha256": "40b47f1691fb32c6c563b6e55b88fe02efeae759d17ce16e6673013ab4b36881",
+  "providers": {
+    "text_cls": [
+      "CPUExecutionProvider"
+    ],
+    "text_det": [
+      "CPUExecutionProvider"
+    ],
+    "text_rec": [
+      "CPUExecutionProvider"
+    ]
+  },
+  "rows": [
+    {
+      "cache_hit": false,
+      "cache_key": "73cb648f7a7642017edb8078cea61f746e8fd40ab4dd3e7832cdcfb51950a735",
+      "id": "eartags2149",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2149.jpg",
+      "image_sha256": "a866e6e6be1b5466b45cc7e017f833f42b50a1e6772b8209e99e2084bd2d6744",
+      "inference_bgr_pixels_sha256": "5987c94e3551fc72074d5503a6f740923930f522ecf15c38d381ec9fc18b18ea",
+      "pixels_sha256": "90f0a4819299a00f4e2ee3c6bd4bab69c649096fabf44051049c5ce5b8a997c0",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              15.0,
+              79.0
+            ],
+            [
+              83.0,
+              74.0
+            ],
+            [
+              86.0,
+              112.0
+            ],
+            [
+              18.0,
+              117.0
+            ]
+          ],
+          "score": 0.90901,
+          "text": "7016"
+        }
+      ],
+      "seconds": 0.9161502080969512
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "dde239f008cccfde6bed4d4197b9f88e6373f88e08a622af38b661981fa69da0",
+      "id": "eartags691",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags691.jpg",
+      "image_sha256": "19dab72fdf3be747b5920c7064a1f927a85470d8a159cb86514a6712a1ba10c8",
+      "inference_bgr_pixels_sha256": "41b221b152ca329a9fd05768200037268ffe8254fa44867b2cef79d8721e8d3b",
+      "pixels_sha256": "718e494241ad979ca529e08fa781e5441c24b28e4ac1f68df5d876dee72509a1",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              23.0,
+              57.0
+            ],
+            [
+              84.0,
+              24.0
+            ],
+            [
+              121.0,
+              93.0
+            ],
+            [
+              60.0,
+              126.0
+            ]
+          ],
+          "score": 0.99305,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              9.0,
+              107.0
+            ],
+            [
+              160.0,
+              117.0
+            ],
+            [
+              157.0,
+              213.0
+            ],
+            [
+              4.0,
+              204.0
+            ]
+          ],
+          "score": 0.99983,
+          "text": "160008"
+        }
+      ],
+      "seconds": 1.0181395406834781
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "d997dab77fc539c7950d453849fc6288b196c1c9f4192ce67dede1a3704b2bd2",
+      "id": "eartags461",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags461.jpg",
+      "image_sha256": "17333dd42e9c7346adfbc37909bc0d6b9b244ef11eb28a32434cffac6b596191",
+      "inference_bgr_pixels_sha256": "1651df11c4cbdf9cf635382b85256501cf623891ec00e76433a52950f1ccf13b",
+      "pixels_sha256": "d543f2cd3a1ef3fd8a2cc889fbd9161b9b28a6b899cd3c894483240cd21fcfe5",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              59.0,
+              65.0
+            ],
+            [
+              68.0,
+              65.0
+            ],
+            [
+              67.0,
+              78.0
+            ],
+            [
+              58.0,
+              77.0
+            ]
+          ],
+          "score": 0.98398,
+          "text": "2"
+        }
+      ],
+      "seconds": 1.0797367920167744
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "4b9d0c33cd5db619ad551891f747f1d8ce7c3db2cc072798bd3ce382a781b3a9",
+      "id": "eartags1760",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1760.jpg",
+      "image_sha256": "d6edc1324bbdd4da084852eda0af3c430da79ebdc418c07576c05c439bd9767f",
+      "inference_bgr_pixels_sha256": "500130b0492e605c2f77ef1a513b798d78bdf1cba7e56e59cb3d1519ad65b81a",
+      "pixels_sha256": "85db20fd1bb9b5e1f0b1eff34dc1f810b0b7edc8230e7e00a147c58a8ea36547",
+      "predictions": [],
+      "seconds": 0.9580528750084341
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "2e03c6679ceaaa29bbaab055a9f5a3ad3ac97f48a7b2cf9af17497d00b47f29c",
+      "id": "eartags3069",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3069.jpg",
+      "image_sha256": "252bae71fabe76ce9fb0a7e0c993eb78f27840af72c41baf79ddcc29d7c2a896",
+      "inference_bgr_pixels_sha256": "063dfb2ee3176edd68286e8bcc71e8c5ff3b30c2c42aef1dce40b5e5e79bcf85",
+      "pixels_sha256": "7910c6251a1f74952c8ef797ea6602ab30e288db67fc9fcf169d51794d0b7ee2",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              6.0,
+              44.0
+            ],
+            [
+              52.0,
+              51.0
+            ],
+            [
+              47.0,
+              84.0
+            ],
+            [
+              1.0,
+              78.0
+            ]
+          ],
+          "score": 0.99875,
+          "text": "12038"
+        }
+      ],
+      "seconds": 1.0341277499683201
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "b604d3ac3931c3b6c843d190943b5e27c6bba9f3da19360fe7213d1d45d5ee89",
+      "id": "eartags1423",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1423.jpg",
+      "image_sha256": "112be63fd67bfcd71495b0cbb5073b1dc452f8756b1b78595b7d19f73c32c22f",
+      "inference_bgr_pixels_sha256": "f1d4384729fd2fc43bf2c0d2942bd52ce6be9061e9699b946176164ac45919e8",
+      "pixels_sha256": "e75b0125e16ee153ee6468fd4f8dcf90bb9e1593248e985e3577ca35a7912213",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              25.0,
+              53.0
+            ],
+            [
+              63.0,
+              49.0
+            ],
+            [
+              66.0,
+              68.0
+            ],
+            [
+              27.0,
+              73.0
+            ]
+          ],
+          "score": 0.85323,
+          "text": "61.8"
+        },
+        {
+          "polygon": [
+            [
+              15.0,
+              67.0
+            ],
+            [
+              79.0,
+              64.0
+            ],
+            [
+              80.0,
+              96.0
+            ],
+            [
+              16.0,
+              99.0
+            ]
+          ],
+          "score": 1.0,
+          "text": "5364"
+        }
+      ],
+      "seconds": 0.8871410419233143
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "771567bc48af1cf38fb39e26b4d31f3b50022e9537c8b8111b3e9a862e5e78d9",
+      "id": "eartags265",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags265.jpg",
+      "image_sha256": "7fdccab51d17c97c7edb541d4e221a0c177934a3665b1a099af865f7f8ab6723",
+      "inference_bgr_pixels_sha256": "e70f5915c954e7bcc6b50a9aff4b9612eff6e0a22e2639b0c0d0b4ffd7197d76",
+      "pixels_sha256": "c9fd575657a1fb8a24d94eca9cda0b77f78e415ad56adf0a740a3b28379b0b53",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              23.0,
+              57.0
+            ],
+            [
+              100.0,
+              65.0
+            ],
+            [
+              95.0,
+              111.0
+            ],
+            [
+              18.0,
+              103.0
+            ]
+          ],
+          "score": 0.99997,
+          "text": "20055"
+        }
+      ],
+      "seconds": 0.8247322905808687
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "56c8a78fcf2a35b592dbd661ad44f6eeccb8df91300eb23095775d42a42e3b99",
+      "id": "eartags2380",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2380.jpg",
+      "image_sha256": "fa9dc8327523c4ffdd9094d7987447c6eb91efcf4b70086db4aafb4a9027f3cc",
+      "inference_bgr_pixels_sha256": "6e248c8f7da6f02f4fada207fdad9fa8e86fd609e3b562c635e8a1cedea5b07f",
+      "pixels_sha256": "46198f3dbf430272f9801870d98669165694ec86a7ae0f5e9a53d2bec2264790",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              68.0,
+              56.0
+            ],
+            [
+              102.0,
+              58.0
+            ],
+            [
+              102.0,
+              82.0
+            ],
+            [
+              66.0,
+              80.0
+            ]
+          ],
+          "score": 0.99998,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              48.0,
+              75.0
+            ],
+            [
+              102.0,
+              76.0
+            ],
+            [
+              102.0,
+              102.0
+            ],
+            [
+              47.0,
+              101.0
+            ]
+          ],
+          "score": 0.96637,
+          "text": "12-1"
+        },
+        {
+          "polygon": [
+            [
+              24.0,
+              88.0
+            ],
+            [
+              102.0,
+              89.0
+            ],
+            [
+              102.0,
+              158.0
+            ],
+            [
+              24.0,
+              157.0
+            ]
+          ],
+          "score": 0.99991,
+          "text": "1602"
+        }
+      ],
+      "seconds": 1.4167910842224956
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "566d8f841a1661940ad83af045d5ba14512d306bee226ed4293fb35c15e335a0",
+      "id": "eartags1376",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1376.jpg",
+      "image_sha256": "14d6f0b24985cfaf9f6d6a3a4e1fd467e9cfd7f1642c52f9e33eab11e4331a46",
+      "inference_bgr_pixels_sha256": "123b8723438f6f218c6a33130125e6d92b7ec2f78272ac67ca25e5f5d52486c3",
+      "pixels_sha256": "c279547bf176a49fce253f9fb146584ca92b3a9fbdc7ba9190dbb1ab3fcac635",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              17.0,
+              62.0
+            ],
+            [
+              106.0,
+              53.0
+            ],
+            [
+              110.0,
+              99.0
+            ],
+            [
+              22.0,
+              108.0
+            ]
+          ],
+          "score": 0.99999,
+          "text": "20562"
+        },
+        {
+          "polygon": [
+            [
+              122.0,
+              77.0
+            ],
+            [
+              133.0,
+              77.0
+            ],
+            [
+              133.0,
+              91.0
+            ],
+            [
+              122.0,
+              91.0
+            ]
+          ],
+          "score": 0.56897,
+          "text": "59"
+        }
+      ],
+      "seconds": 0.8321702918037772
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "ff01a6167ff76aae4876e2a34d3c436beb3a809699bd1f7bb58de526688b5c30",
+      "id": "eartags1938",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1938.jpg",
+      "image_sha256": "e29bc3f19fc38df88dd313e90fc99496e1c9f4cb82407a6d92031f2aba138ab9",
+      "inference_bgr_pixels_sha256": "0080d4a76f2d047ca0efd1f09c4625a9a782b08c0dd99f8dd24358afc1dd947e",
+      "pixels_sha256": "bd0758f5898d8cb51de42b04065c48618d090131a7390170822c4ff72bbb070d",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              35.0,
+              59.0
+            ],
+            [
+              84.0,
+              64.0
+            ],
+            [
+              80.0,
+              97.0
+            ],
+            [
+              32.0,
+              91.0
+            ]
+          ],
+          "score": 0.91989,
+          "text": "12.8"
+        },
+        {
+          "polygon": [
+            [
+              28.0,
+              75.0
+            ],
+            [
+              102.0,
+              98.0
+            ],
+            [
+              88.0,
+              143.0
+            ],
+            [
+              14.0,
+              120.0
+            ]
+          ],
+          "score": 0.9995,
+          "text": "7088"
+        }
+      ],
+      "seconds": 0.8953876672312617
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "5416393756f858267a0abfa7c8d1da756e3c6998cefc7027d35ed1d301d4e685",
+      "id": "eartags1664",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1664.jpg",
+      "image_sha256": "679aa270a4a4a4b885dc3c99f58b9050df78827380944ceab6e2bf01ecdf339d",
+      "inference_bgr_pixels_sha256": "e858e47d559cdcc8cd73a708da89e8ee6528cf245af6a6019b294d0e94f28663",
+      "pixels_sha256": "1924552d2855567ddc63761581976564b9e05cc411c6351ab3878f89fc27a2e1",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              27.0,
+              22.0
+            ],
+            [
+              49.0,
+              22.0
+            ],
+            [
+              49.0,
+              40.0
+            ],
+            [
+              27.0,
+              40.0
+            ]
+          ],
+          "score": 0.99992,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              10.0,
+              58.0
+            ],
+            [
+              83.0,
+              40.0
+            ],
+            [
+              90.0,
+              73.0
+            ],
+            [
+              19.0,
+              91.0
+            ]
+          ],
+          "score": 0.99998,
+          "text": "253462"
+        }
+      ],
+      "seconds": 0.8676471672952175
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "3ecef97887099fd9077177ceda829976bd9a8de5d54beebf98ee24bd64ce0544",
+      "id": "eartags1342",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1342.jpg",
+      "image_sha256": "90882234fa5d4510208f16529917fe36b42912bfb8bdcde67f57c3af0758937a",
+      "inference_bgr_pixels_sha256": "aac22760b6e56e48f8c142efc532b4a55e419d87eb9484f6074c2ee186fff36f",
+      "pixels_sha256": "7e9002634d3548279cd5927a7a266d3a324ab95a604d79ec050cfdef7b6fd38e",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              0.0,
+              40.0
+            ],
+            [
+              117.0,
+              41.0
+            ],
+            [
+              117.0,
+              96.0
+            ],
+            [
+              0.0,
+              95.0
+            ]
+          ],
+          "score": 0.92163,
+          "text": "68012"
+        }
+      ],
+      "seconds": 0.8534783748909831
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "c61c00d75742385062ebcc1c08d2ac59057fcf42f923cae44ce68ae7958a7a36",
+      "id": "eartags693",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags693.jpg",
+      "image_sha256": "48f9b2ceb3f7ae4ec4fad611015db8ed057d93a65206ad298e24e986a84a405d",
+      "inference_bgr_pixels_sha256": "1d93869b62ca13a37d67a453eb20b939cce5e4098fe192b3d5273289368a2aed",
+      "pixels_sha256": "24e14aec0cf35c9c3df1a168cbc948178eaccdbd5c7d8908c171f493500e08d9",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              43.0,
+              57.0
+            ],
+            [
+              60.0,
+              50.0
+            ],
+            [
+              67.0,
+              66.0
+            ],
+            [
+              50.0,
+              74.0
+            ]
+          ],
+          "score": 0.99981,
+          "text": "22"
+        },
+        {
+          "polygon": [
+            [
+              31.0,
+              70.0
+            ],
+            [
+              70.0,
+              61.0
+            ],
+            [
+              77.0,
+              93.0
+            ],
+            [
+              38.0,
+              102.0
+            ]
+          ],
+          "score": 0.95106,
+          "text": "8.7"
+        },
+        {
+          "polygon": [
+            [
+              18.0,
+              92.0
+            ],
+            [
+              95.0,
+              80.0
+            ],
+            [
+              103.0,
+              127.0
+            ],
+            [
+              26.0,
+              139.0
+            ]
+          ],
+          "score": 1.0,
+          "text": "5262"
+        }
+      ],
+      "seconds": 1.0862988750450313
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "e3dfea4edb03198c154e497e30293c5956726baf1d98e54a245935a7b6fa1fd7",
+      "id": "eartags1727",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1727.jpg",
+      "image_sha256": "481afd368ee04e81d61c9ef3ac46ce411061d98564e0d3200f6dbab8340fff23",
+      "inference_bgr_pixels_sha256": "a59ce537afa761774abb5ab7a38647052ead69f1cdba5f37743c0b12e61f3b94",
+      "pixels_sha256": "c6a1b767c1470c1e141ff10741f3da3f61e80d46258e916cb4bf471a4351858e",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              82.0,
+              46.0
+            ],
+            [
+              133.0,
+              51.0
+            ],
+            [
+              130.0,
+              87.0
+            ],
+            [
+              78.0,
+              82.0
+            ]
+          ],
+          "score": 1.0,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              68.0,
+              73.0
+            ],
+            [
+              163.0,
+              84.0
+            ],
+            [
+              159.0,
+              117.0
+            ],
+            [
+              65.0,
+              106.0
+            ]
+          ],
+          "score": 0.99732,
+          "text": "7-21"
+        },
+        {
+          "polygon": [
+            [
+              21.0,
+              89.0
+            ],
+            [
+              172.0,
+              101.0
+            ],
+            [
+              166.0,
+              180.0
+            ],
+            [
+              15.0,
+              168.0
+            ]
+          ],
+          "score": 0.99999,
+          "text": "160144"
+        }
+      ],
+      "seconds": 0.9663142501376569
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "2dad6584e1d1d28f3e696c5ba0fb1969e7e68158f9fd5c54d2409dd6577dbeaa",
+      "id": "eartags1262",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1262.jpg",
+      "image_sha256": "216ae267d095a42db5e1948e1aa86daac9dc32e4a378bb26daefe54a8d37f2f9",
+      "inference_bgr_pixels_sha256": "36c5ccd51cc01a9d785b9f99479a9cfada6d7bc6486c271ab14d135aa378b24c",
+      "pixels_sha256": "5e05097c728b51a6ce9c16dfe7105fe78d3285334af0b0718f618bdda42e445f",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              56.0,
+              51.0
+            ],
+            [
+              85.0,
+              54.0
+            ],
+            [
+              83.0,
+              75.0
+            ],
+            [
+              54.0,
+              72.0
+            ]
+          ],
+          "score": 1.0,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              27.0,
+              74.0
+            ],
+            [
+              118.0,
+              86.0
+            ],
+            [
+              110.0,
+              144.0
+            ],
+            [
+              19.0,
+              132.0
+            ]
+          ],
+          "score": 0.99988,
+          "text": "160324"
+        },
+        {
+          "polygon": [
+            [
+              43.0,
+              66.0
+            ],
+            [
+              106.0,
+              75.0
+            ],
+            [
+              103.0,
+              94.0
+            ],
+            [
+              40.0,
+              85.0
+            ]
+          ],
+          "score": 0.98322,
+          "text": "12-23"
+        }
+      ],
+      "seconds": 1.003621291834861
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "386d4ae9577d5ee87c6ee29057f15e5e8b3935ea674707d2c5dbfbe50f97c341",
+      "id": "eartags1689",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1689.jpg",
+      "image_sha256": "102618f9c949b2b71009a098dadf3455d676561bfca50ef5267c02998d91402a",
+      "inference_bgr_pixels_sha256": "77cbf56c6b911c63fa77b94a8613385a554c347fa9f0950e5e886fa04f306856",
+      "pixels_sha256": "ef71828a39f498ea57b8cd76c3b73a0e35af8991b14977343343c9e6e0ea3f94",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              62.0,
+              45.0
+            ],
+            [
+              103.0,
+              45.0
+            ],
+            [
+              103.0,
+              84.0
+            ],
+            [
+              62.0,
+              84.0
+            ]
+          ],
+          "score": 0.99994,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              21.0,
+              75.0
+            ],
+            [
+              109.0,
+              72.0
+            ],
+            [
+              111.0,
+              143.0
+            ],
+            [
+              23.0,
+              146.0
+            ]
+          ],
+          "score": 0.99964,
+          "text": "1601"
+        }
+      ],
+      "seconds": 0.8874038327485323
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "8242c1c2deb009c172d2230346f77e2ca80ab65beb3a0763bbfff2341f5dd3b7",
+      "id": "eartags622",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags622.jpg",
+      "image_sha256": "9574a95c6e7e75be39dcd8be33f2d5722478ab0113ead9731446d03edc412a8c",
+      "inference_bgr_pixels_sha256": "b9de156abb9c7857559b6760d2f17ef47970ced699585abba911efd5d05001b5",
+      "pixels_sha256": "34854d39cb90762348bc578c669a8d4090a1fd5b1a485b846eaa67ae7d5d4a46",
+      "predictions": [],
+      "seconds": 0.8269663751125336
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "fe3054773041d5b1c1f9a82a0da22caed16b1b6130e4a9e9804bce39973b38fe",
+      "id": "eartags775",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags775.jpg",
+      "image_sha256": "a42cd35aac7041fa855a6e088ba118d53370737b80cffb93515938764581b0cf",
+      "inference_bgr_pixels_sha256": "c9b759dd192a30d82f4cd2f30e61a486ff2f00544ba617ad9476cff7a7788738",
+      "pixels_sha256": "a403e4619714e8becf99257a4d1b215f5919dfcb80429b230e20f75ef9cc2b3d",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              4.0,
+              48.0
+            ],
+            [
+              46.0,
+              53.0
+            ],
+            [
+              42.0,
+              83.0
+            ],
+            [
+              0.0,
+              78.0
+            ]
+          ],
+          "score": 0.97739,
+          "text": "13698"
+        }
+      ],
+      "seconds": 1.1086406246758997
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "86e368ee980f29b7c3bda03ce5cf40ab7e6c353b5fdc304a84ed63a4bd5e4d4a",
+      "id": "eartags1985",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1985.jpg",
+      "image_sha256": "4a275244383a28224fedecd1381219b33869cf1e656820c3c4b6818b9f05acbc",
+      "inference_bgr_pixels_sha256": "c6da5d4753f0ddc67e3d3f550927a00cdd1f89b08de8c5de781691c5469e8517",
+      "pixels_sha256": "b3823d1b14df8503e65d6a3eab12c5d9ad1a09e3a31ba5edca3c761c666b384e",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              6.0,
+              52.0
+            ],
+            [
+              63.0,
+              55.0
+            ],
+            [
+              61.0,
+              89.0
+            ],
+            [
+              4.0,
+              86.0
+            ]
+          ],
+          "score": 0.99997,
+          "text": "253134"
+        }
+      ],
+      "seconds": 0.8922573341988027
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "eb4f670a0dbcde6651a474d4a1963746adf8b0c4c4562176ca7bffd57675c541",
+      "id": "eartags1318",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1318.jpg",
+      "image_sha256": "3e7448a9db50cd598822e4379c3bf4a972b494fc8531253e669304370c72a574",
+      "inference_bgr_pixels_sha256": "8e632f9d1b80d2670b4ae6b83ed4cfd07367ab1ba480ba2f183ceff300674c09",
+      "pixels_sha256": "c8323bc9b1763d35f4a80383dbfd6a348120b9c4f6c585d86cde126fe34e9b66",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              33.0,
+              23.0
+            ],
+            [
+              76.0,
+              35.0
+            ],
+            [
+              68.0,
+              65.0
+            ],
+            [
+              25.0,
+              53.0
+            ]
+          ],
+          "score": 0.99731,
+          "text": "2.31"
+        }
+      ],
+      "seconds": 0.7490857923403382
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "cb8e819215fbe7cd534d8609df2fe8a1c998fde1294151138bb420cdef87537d",
+      "id": "eartags606",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags606.jpg",
+      "image_sha256": "0b5fdd2921d9bfed8c055035536e845db6321df0a982e69683cc68fd09211453",
+      "inference_bgr_pixels_sha256": "e12312b1885f3a67baa091530a85b8aab1a7706d0aaf57d7500c9f1979d3621a",
+      "pixels_sha256": "c30205bf9514f1a5d182e923b0fb704689550c5121e2fab11835753fe81f723c",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              53.0,
+              53.0
+            ],
+            [
+              74.0,
+              54.0
+            ],
+            [
+              73.0,
+              74.0
+            ],
+            [
+              52.0,
+              74.0
+            ]
+          ],
+          "score": 0.99799,
+          "text": "31"
+        },
+        {
+          "polygon": [
+            [
+              15.0,
+              71.0
+            ],
+            [
+              95.0,
+              65.0
+            ],
+            [
+              98.0,
+              111.0
+            ],
+            [
+              19.0,
+              118.0
+            ]
+          ],
+          "score": 0.99985,
+          "text": "5409"
+        }
+      ],
+      "seconds": 0.9075540420599282
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "6a3f34b227a86d5efd77e2982ccab81a27669b75262d1239d0e870ab34b8393d",
+      "id": "eartags880",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags880.jpg",
+      "image_sha256": "99b4296528febc285a8738c6a3bf1e8b822bd1ddc26c8e8d6918cff1fbfec91e",
+      "inference_bgr_pixels_sha256": "a3c0ba7d9394b158ca8bf101e17fd7f5a4049844f8ffe5fb38698a16fa441357",
+      "pixels_sha256": "7510876aafe5f27b038403e455a4ebd17930903faf063be5410f8e27bf801563",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              44.0,
+              49.0
+            ],
+            [
+              63.0,
+              54.0
+            ],
+            [
+              59.0,
+              67.0
+            ],
+            [
+              40.0,
+              62.0
+            ]
+          ],
+          "score": 0.99903,
+          "text": "22"
+        },
+        {
+          "polygon": [
+            [
+              15.0,
+              70.0
+            ],
+            [
+              83.0,
+              81.0
+            ],
+            [
+              76.0,
+              123.0
+            ],
+            [
+              8.0,
+              111.0
+            ]
+          ],
+          "score": 0.99999,
+          "text": "5245"
+        }
+      ],
+      "seconds": 1.0657196668908
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "2a2b4aa80a706e12320e5e46cd64e050335db6b4546a4ad8be087311846fc3fb",
+      "id": "eartags1237",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1237.jpg",
+      "image_sha256": "80fe22fa51831a7ceadd716b46eda6ee500d9904f10662267369baf2eaba7646",
+      "inference_bgr_pixels_sha256": "afd979c4644ea0a328eb0c2d917467411548dd4240d2684e957680b151cb7e5f",
+      "pixels_sha256": "1b9dd2d0d0bd174c7c04e5e98e879c567cfc3c1c29d6584d0ad1be069f308262",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              25.0,
+              34.0
+            ],
+            [
+              127.0,
+              65.0
+            ],
+            [
+              115.0,
+              106.0
+            ],
+            [
+              13.0,
+              75.0
+            ]
+          ],
+          "score": 0.99995,
+          "text": "67051"
+        }
+      ],
+      "seconds": 0.9158298331312835
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "08d7adec67c0410702cc569c59af91e0f6bceb18eb0d853c6d6edc064d018c65",
+      "id": "eartags3162",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3162.jpg",
+      "image_sha256": "926a66be7ec057d0678925092abdf346bd9ef5cef434c8600235f620865e3dbe",
+      "inference_bgr_pixels_sha256": "c0d373166efd8e6a17672d0ab391a798a1d63c8d1b9272d2a5f06f0745148ab7",
+      "pixels_sha256": "e6d27adb10a1457022e0e4b1eead50ecde039b2cb676fb0d30e9447ef803255d",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              32.0,
+              49.0
+            ],
+            [
+              67.0,
+              55.0
+            ],
+            [
+              64.0,
+              74.0
+            ],
+            [
+              28.0,
+              67.0
+            ]
+          ],
+          "score": 0.97587,
+          "text": "11.1"
+        },
+        {
+          "polygon": [
+            [
+              16.0,
+              61.0
+            ],
+            [
+              89.0,
+              75.0
+            ],
+            [
+              84.0,
+              106.0
+            ],
+            [
+              11.0,
+              92.0
+            ]
+          ],
+          "score": 0.99989,
+          "text": "66826"
+        }
+      ],
+      "seconds": 0.8620523330755532
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "1fa0f16d316763eb773db499c25fa1ba90b10ff237e6a9504626ce71bc3ace23",
+      "id": "eartags3219",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3219.jpg",
+      "image_sha256": "988637ba84faf1aeee73ca70bae9f496dac5f75fe1a411624e694a637c2b4b8e",
+      "inference_bgr_pixels_sha256": "072ddbab646f2b5dfecccf9980dfbc04c1d626ec0be0f7f35256ecffd5cdf0fe",
+      "pixels_sha256": "07c1128d543b52163c74903ae7128a2a656e259d4f43b4687278687ff8962e81",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              56.0,
+              100.0
+            ],
+            [
+              74.0,
+              101.0
+            ],
+            [
+              73.0,
+              112.0
+            ],
+            [
+              55.0,
+              112.0
+            ]
+          ],
+          "score": 0.21342,
+          "text": "pA"
+        }
+      ],
+      "seconds": 0.803835750091821
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "54c47a3c3d3830118cb5926fa894061fec347b897743aa7c3b0e4407d1e7ca8e",
+      "id": "eartags1592",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1592.jpg",
+      "image_sha256": "8fc249fe2797997610bbff610fd9e9d37039746080b3f72094316c9a4e150d56",
+      "inference_bgr_pixels_sha256": "55fb94938849b76ce66c7bd4316600ab58eded0fb866c3415bc2ea1df9e7d18d",
+      "pixels_sha256": "1fd63db1ade9838246d87382c5aef7e620071a06a243fec3a982abc76c554b42",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              15.0,
+              41.0
+            ],
+            [
+              57.0,
+              34.0
+            ],
+            [
+              62.0,
+              59.0
+            ],
+            [
+              19.0,
+              67.0
+            ]
+          ],
+          "score": 0.99977,
+          "text": "66996"
+        }
+      ],
+      "seconds": 0.7824106668122113
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "41852ea30e479a37c917bd4dab8dc74c7539538255d8e71f8846438aba6b47dd",
+      "id": "eartags73",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags73.jpg",
+      "image_sha256": "133e8339e3dd60eb1ce94709631446b8f9e4bc84d724f97a77dd3837373a7f02",
+      "inference_bgr_pixels_sha256": "bc9f774c3f8fe1daa52cfc55e8bdcfa1207a9f202fcf3c58e20edba3c2a9fe7a",
+      "pixels_sha256": "ee7b605be8f1209d23cb3256822446fa9aa633b8932fb1680b9acda466f4b7f8",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              0.0,
+              81.0
+            ],
+            [
+              99.0,
+              28.0
+            ],
+            [
+              136.0,
+              110.0
+            ],
+            [
+              22.0,
+              163.0
+            ]
+          ],
+          "score": 0.29273,
+          "text": "LOE"
+        }
+      ],
+      "seconds": 0.8716056658886373
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "b4e8d2e5b9d0f3f2cb942c0eeadcbeb924c25e2dc3c55140d4fd8383e2ed4912",
+      "id": "eartags2922",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2922.jpg",
+      "image_sha256": "0f9bbc6dc7a87176829a6e9047402732b6e8c13a5afaf249cdc15dcc6e251f55",
+      "inference_bgr_pixels_sha256": "47637a20c7327624f353ea9c6db7d99b1f0a0a21d7be8f2c0456927c95587957",
+      "pixels_sha256": "714c94eea021ff9857e608a6761a96ca1e62f8bf138003582399923a306052f0",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              19.0,
+              8.0
+            ],
+            [
+              37.0,
+              8.0
+            ],
+            [
+              37.0,
+              29.0
+            ],
+            [
+              19.0,
+              29.0
+            ]
+          ],
+          "score": 0.19372,
+          "text": "1"
+        },
+        {
+          "polygon": [
+            [
+              10.0,
+              63.0
+            ],
+            [
+              47.0,
+              68.0
+            ],
+            [
+              41.0,
+              109.0
+            ],
+            [
+              4.0,
+              104.0
+            ]
+          ],
+          "score": 0.9977,
+          "text": "264"
+        }
+      ],
+      "seconds": 1.4125204170122743
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "3cfa4862ca9d06f82be146ba8a3e83fe8152d8fdc6fea29998043cbbe37f31c8",
+      "id": "eartags2081",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2081.jpg",
+      "image_sha256": "04861b871b521408017b1ea767a4333e648c0ab5eeb982d8801f8ccf42e9cdad",
+      "inference_bgr_pixels_sha256": "6fb19c9d9b78d768d3aa690e3f98afd20c595c18448b4ae01e87876e776485a1",
+      "pixels_sha256": "090fad32714a073ee64887400eb23f00a430c3a179ed31405c765069f8d66473",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              15.0,
+              48.0
+            ],
+            [
+              58.0,
+              46.0
+            ],
+            [
+              60.0,
+              74.0
+            ],
+            [
+              17.0,
+              77.0
+            ]
+          ],
+          "score": 0.99995,
+          "text": "5375"
+        }
+      ],
+      "seconds": 0.8645079578272998
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "422e74e076ebd4f9fbfddf288d86d8991b4ba2d50182e15b26a9e3224253f5d0",
+      "id": "eartags3016",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3016.jpg",
+      "image_sha256": "3ba48c05bd9c37450e1ebd689e0a84293fb3cead6511fb24df5d0709d8f93e6f",
+      "inference_bgr_pixels_sha256": "ce54c5eb0a4e124ad5887b038b7e64ba4289f7204c877f4305a69758566c328e",
+      "pixels_sha256": "a1878a948f0f80531b012d54e63930afbaf44bdebc399280c18d9f6307d15147",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              93.0,
+              60.0
+            ],
+            [
+              153.0,
+              64.0
+            ],
+            [
+              150.0,
+              110.0
+            ],
+            [
+              90.0,
+              106.0
+            ]
+          ],
+          "score": 1.0,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              72.0,
+              95.0
+            ],
+            [
+              157.0,
+              101.0
+            ],
+            [
+              154.0,
+              146.0
+            ],
+            [
+              70.0,
+              141.0
+            ]
+          ],
+          "score": 0.9999,
+          "text": "9-5"
+        },
+        {
+          "polygon": [
+            [
+              14.0,
+              116.0
+            ],
+            [
+              186.0,
+              129.0
+            ],
+            [
+              177.0,
+              237.0
+            ],
+            [
+              6.0,
+              224.0
+            ]
+          ],
+          "score": 0.99876,
+          "text": "160171"
+        }
+      ],
+      "seconds": 1.0785793331451714
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "f0aa3d15efa4ec60457be3e62cdf6fea9250762fa05202d47d23aa4e39da883c",
+      "id": "eartags2023",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2023.jpg",
+      "image_sha256": "00e9693e0e3207cb42ea4c48b4cbae87576c6766ce266f30275244343295e1c3",
+      "inference_bgr_pixels_sha256": "24e4247d0aab4a98b66b3cf1209a579e8c2707c65f5292e0b6823654d74e0036",
+      "pixels_sha256": "aeb735c1307f46b813024a25632403e36084cb001e376f675309ac0a4a7c4844",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              24.0,
+              44.0
+            ],
+            [
+              89.0,
+              45.0
+            ],
+            [
+              89.0,
+              80.0
+            ],
+            [
+              23.0,
+              79.0
+            ]
+          ],
+          "score": 0.88034,
+          "text": "66200"
+        },
+        {
+          "polygon": [
+            [
+              56.0,
+              35.0
+            ],
+            [
+              76.0,
+              35.0
+            ],
+            [
+              76.0,
+              51.0
+            ],
+            [
+              56.0,
+              51.0
+            ]
+          ],
+          "score": 0.86394,
+          "text": "-2"
+        }
+      ],
+      "seconds": 0.8936742921359837
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "ae192ae80d057433995097f78483b10f19913e55c69126163a86e5efc3df65c6",
+      "id": "eartags2665",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2665.jpg",
+      "image_sha256": "821b21bbe8123e5a50196fa1e5f5dcf90995f0c2a4e871f4272d27052f0e4c8e",
+      "inference_bgr_pixels_sha256": "c5f39bd405766aa8f98bee16688d3aa6d0152bba021b740a526a3338b27eebce",
+      "pixels_sha256": "816ef3530ad67190a7852cba5f5d1daa56ef2125ce785c06491a2b30a12b169f",
+      "predictions": [],
+      "seconds": 1.080669749993831
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "d40bedd32e528b806b05ecb58d186ec0abb9a887b8a5d3435863cb763b6be28f",
+      "id": "eartags2174",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2174.jpg",
+      "image_sha256": "6604b62705fbdee8efe23c9442463ad7642ef47f2c0b68b7a33a8a65b790420d",
+      "inference_bgr_pixels_sha256": "dddfd0a41d4da41b7cd19d2c312f7ddbce57fee5255b28a2ba741f7c239b3bee",
+      "pixels_sha256": "f3ae4e70ae2880be9c002b56b1eccce081a91201d026328fc8a7ea63f62e8df2",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              28.0,
+              41.0
+            ],
+            [
+              71.0,
+              31.0
+            ],
+            [
+              76.0,
+              57.0
+            ],
+            [
+              34.0,
+              67.0
+            ]
+          ],
+          "score": 0.77695,
+          "text": "4.21"
+        },
+        {
+          "polygon": [
+            [
+              21.0,
+              62.0
+            ],
+            [
+              90.0,
+              47.0
+            ],
+            [
+              98.0,
+              88.0
+            ],
+            [
+              30.0,
+              102.0
+            ]
+          ],
+          "score": 0.99999,
+          "text": "4022"
+        }
+      ],
+      "seconds": 0.8428452499210835
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "f1d6a05bc4044de5afcbbb63397e43fc27b80cbf022c1b7c8e00cc57654b586e",
+      "id": "eartags185",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags185.jpg",
+      "image_sha256": "cc81c2263d02f933ec34742ea42e2ac4a3d90c78beb0678d8d586f1b258903ac",
+      "inference_bgr_pixels_sha256": "82cad18879ac20f63a5de094f35a74f8922737fb77f85cd4df3b52d67f708be4",
+      "pixels_sha256": "499cf0698d2c2a17580c63f303838ad905a0b4f83ff19b26bf252ed09b64c317",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              47.0,
+              29.0
+            ],
+            [
+              78.0,
+              29.0
+            ],
+            [
+              78.0,
+              60.0
+            ],
+            [
+              47.0,
+              60.0
+            ]
+          ],
+          "score": 0.99998,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              0.0,
+              57.0
+            ],
+            [
+              106.0,
+              29.0
+            ],
+            [
+              125.0,
+              122.0
+            ],
+            [
+              18.0,
+              143.0
+            ]
+          ],
+          "score": 0.99774,
+          "text": "253427"
+        }
+      ],
+      "seconds": 0.8988960413262248
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "333c43e6ca749ca1e7e6d9f8bea09f03c8bea2859d613c44c432bbb37a2ce1c5",
+      "id": "eartags1588",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1588.jpg",
+      "image_sha256": "81ea92069c4946e5010cb84ec2e28eea444868790305b099184f815fe92dad3e",
+      "inference_bgr_pixels_sha256": "ea95b68faba5a8cd37eae1d9106dc27fd8594aa4940930fcf58c0d45fe115a73",
+      "pixels_sha256": "9201997cb0d0933f2063fe1bbce1e7749c40a1869864dda9fd75c7f4ac22ea5f",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              20.0,
+              36.0
+            ],
+            [
+              107.0,
+              45.0
+            ],
+            [
+              103.0,
+              90.0
+            ],
+            [
+              15.0,
+              82.0
+            ]
+          ],
+          "score": 0.99992,
+          "text": "160127"
+        },
+        {
+          "polygon": [
+            [
+              44.0,
+              33.0
+            ],
+            [
+              78.0,
+              38.0
+            ],
+            [
+              76.0,
+              52.0
+            ],
+            [
+              42.0,
+              48.0
+            ]
+          ],
+          "score": 0.9707,
+          "text": "6-1"
+        }
+      ],
+      "seconds": 0.8666429161094129
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "a0d488aa9441174334db3299c82492b74283afd7a7ae548523ccc5061de22f8e",
+      "id": "eartags60",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags60.jpg",
+      "image_sha256": "bec0679f20baa251008299e1f99b900f091237fcdc3a62f60a67b0b7b38b7616",
+      "inference_bgr_pixels_sha256": "6f9cf878c795922cf0c75b583325a6a57fb0fbf63b7d6896669a224cc2beee46",
+      "pixels_sha256": "bacedcebf8ba30c974fecfbba4cf34bfb8b5725e4a7267048c8d54fa7f995686",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              34.0,
+              28.0
+            ],
+            [
+              63.0,
+              37.0
+            ],
+            [
+              56.0,
+              57.0
+            ],
+            [
+              28.0,
+              48.0
+            ]
+          ],
+          "score": 0.99816,
+          "text": "5"
+        },
+        {
+          "polygon": [
+            [
+              55.0,
+              41.0
+            ],
+            [
+              73.0,
+              41.0
+            ],
+            [
+              73.0,
+              59.0
+            ],
+            [
+              55.0,
+              59.0
+            ]
+          ],
+          "score": 0.42257,
+          "text": "9"
+        }
+      ],
+      "seconds": 0.8070297501981258
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "e6f4b7b6cc47a1c6d5249d4dee35539ff475433267aac25710bdbc80a4c44af4",
+      "id": "eartags3155",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3155.jpg",
+      "image_sha256": "f477833779d041bedf725a6dbea460397000d9f183540cd62f393176924d4324",
+      "inference_bgr_pixels_sha256": "1e9961931e836d6dad0baa4332c3806d796fc640f88c776a2f71fac748ae91f1",
+      "pixels_sha256": "83bf2e7c41f3db0434e7d1f650ddc7738e0b480e41fc820a95ca704d5e9a87fa",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              21.0,
+              48.0
+            ],
+            [
+              136.0,
+              73.0
+            ],
+            [
+              126.0,
+              124.0
+            ],
+            [
+              10.0,
+              99.0
+            ]
+          ],
+          "score": 0.99962,
+          "text": "67149"
+        }
+      ],
+      "seconds": 0.829383207950741
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "9ff2fd37c983f3738558f193356f6db3c7772e200c0e2c3e690e250f7ecdf5bb",
+      "id": "eartags491",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags491.jpg",
+      "image_sha256": "350f9a58d0ad793c295ec14e75a5e831bb3d7bf966720bbd044cd3d556c86130",
+      "inference_bgr_pixels_sha256": "e2750ef098a698c7bd8315240d58d8d65c965d40bfd0afe131e139f042473052",
+      "pixels_sha256": "d01d78e7fbbbb7de829b044fdd2b3c065eca26587d25d333d6fbb9012f6bc0bf",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              23.0,
+              33.0
+            ],
+            [
+              90.0,
+              35.0
+            ],
+            [
+              89.0,
+              75.0
+            ],
+            [
+              22.0,
+              73.0
+            ]
+          ],
+          "score": 0.9998,
+          "text": "253091"
+        },
+        {
+          "polygon": [
+            [
+              39.0,
+              26.0
+            ],
+            [
+              73.0,
+              28.0
+            ],
+            [
+              72.0,
+              45.0
+            ],
+            [
+              38.0,
+              42.0
+            ]
+          ],
+          "score": 0.97918,
+          "text": "3-1"
+        }
+      ],
+      "seconds": 0.9783780840225518
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "02bdab24e089d9b3273e15b8b6b8e3d62d613aa3953a755d68b7ec3371939d90",
+      "id": "eartags2928",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2928.jpg",
+      "image_sha256": "21125249b1c19d84fd180b3e136d0c236f9145b4613098dfaf6bd4d92d488654",
+      "inference_bgr_pixels_sha256": "92623e4e6273b79a888f8f134e6d3fb73cf31f57291c39ad62bae30e3c6a67ab",
+      "pixels_sha256": "91c223c0d612829b25b0e2c661fcbcd7a123b72e8d451934face78ca73393228",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              67.0,
+              66.0
+            ],
+            [
+              141.0,
+              62.0
+            ],
+            [
+              143.0,
+              114.0
+            ],
+            [
+              69.0,
+              117.0
+            ]
+          ],
+          "score": 1.0,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              60.0,
+              100.0
+            ],
+            [
+              140.0,
+              105.0
+            ],
+            [
+              137.0,
+              153.0
+            ],
+            [
+              57.0,
+              149.0
+            ]
+          ],
+          "score": 0.99897,
+          "text": "-6"
+        },
+        {
+          "polygon": [
+            [
+              148.0,
+              99.0
+            ],
+            [
+              204.0,
+              99.0
+            ],
+            [
+              204.0,
+              140.0
+            ],
+            [
+              148.0,
+              140.0
+            ]
+          ],
+          "score": 0.97458,
+          "text": "18"
+        },
+        {
+          "polygon": [
+            [
+              13.0,
+              134.0
+            ],
+            [
+              240.0,
+              111.0
+            ],
+            [
+              252.0,
+              229.0
+            ],
+            [
+              25.0,
+              252.0
+            ]
+          ],
+          "score": 0.99999,
+          "text": "160174"
+        }
+      ],
+      "seconds": 0.9424742497503757
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "05162f9980a7dd3b06f9faff58cb139dc2cb84a6f1014307ef341f5fdbead056",
+      "id": "eartags170",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags170.jpg",
+      "image_sha256": "e098ac785e347a6ff44a5f6c448dbc458617e3e9a3a55ca1cfb4260506ccd881",
+      "inference_bgr_pixels_sha256": "05e8b9bf9e9cbaa8b34652c20eb2bdc324870246582cf4ffc764fe6837fe1a85",
+      "pixels_sha256": "25f58d5680fe5faef3db5fc2d3f34185d2f218100b77243b8b6c133006a396c4",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              45.0,
+              43.0
+            ],
+            [
+              60.0,
+              43.0
+            ],
+            [
+              60.0,
+              58.0
+            ],
+            [
+              45.0,
+              58.0
+            ]
+          ],
+          "score": 0.98866,
+          "text": "20"
+        },
+        {
+          "polygon": [
+            [
+              22.0,
+              85.0
+            ],
+            [
+              97.0,
+              81.0
+            ],
+            [
+              99.0,
+              125.0
+            ],
+            [
+              24.0,
+              129.0
+            ]
+          ],
+          "score": 0.99996,
+          "text": "20581"
+        }
+      ],
+      "seconds": 0.9811417502351105
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "817e150dd72c04456cc7085fe9a216ee8b0373a699a332899a461d0f747482e0",
+      "id": "eartags52",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags52.jpg",
+      "image_sha256": "03d3bdbefc734355a4b9e86d865a7d9c59696be26a73852f1b1f4df1b05dc243",
+      "inference_bgr_pixels_sha256": "033de767333a51a07b860c362d8304902d1903e367eb83ae5f53e116eda440d8",
+      "pixels_sha256": "400683951f5927a3c0781e05e70ebe5125439795b935b81e02b98b42757e4cd9",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              38.0,
+              73.0
+            ],
+            [
+              80.0,
+              100.0
+            ],
+            [
+              55.0,
+              139.0
+            ],
+            [
+              12.0,
+              111.0
+            ]
+          ],
+          "score": 0.71693,
+          "text": "06051"
+        }
+      ],
+      "seconds": 1.0421579168178141
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "f019a6ad6bf8ef581ecda6554905a9591d1c3cfd32f0f080f64ba1743780663b",
+      "id": "eartags2803",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2803.jpg",
+      "image_sha256": "9628399c6bbebfe36627d5c94a9b2bb245df5a4bcb5546b5f2c130374d6a69fb",
+      "inference_bgr_pixels_sha256": "90d4dac63dfd3d8169fb87942fdb08ab10024277cc107eca4d43f5e76dc3c758",
+      "pixels_sha256": "a435cf83540dfdccc8f8f6ccc2eb02f043caab9342342e2552a9b6f34913b7fc",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              23.0,
+              33.0
+            ],
+            [
+              111.0,
+              78.0
+            ],
+            [
+              86.0,
+              137.0
+            ],
+            [
+              0.0,
+              105.0
+            ]
+          ],
+          "score": 0.93788,
+          "text": "253454"
+        },
+        {
+          "polygon": [
+            [
+              54.0,
+              40.0
+            ],
+            [
+              82.0,
+              54.0
+            ],
+            [
+              72.0,
+              77.0
+            ],
+            [
+              43.0,
+              64.0
+            ]
+          ],
+          "score": 0.99996,
+          "text": "49"
+        }
+      ],
+      "seconds": 0.9657285418361425
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "3aa4e25f7781a1928fb113df4c508f60bc5be65ac48038c8358b9aa115995a6d",
+      "id": "eartags1593",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1593.jpg",
+      "image_sha256": "4895ed8dd4821e900e67b7f9bbcc745cfbb7ded5dda7e7f1534d79c90ca3be71",
+      "inference_bgr_pixels_sha256": "9fc58804e6f7b9732a598f8ed44192c8fc2908066be0442e4538c390a7ae25d0",
+      "pixels_sha256": "83ace911029b4cfb145fdc877b073c456b97a610ea404d3452574340f7f0c7ed",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              0.0,
+              56.0
+            ],
+            [
+              127.0,
+              25.0
+            ],
+            [
+              127.0,
+              105.0
+            ],
+            [
+              0.0,
+              132.0
+            ]
+          ],
+          "score": 0.89985,
+          "text": "20003"
+        }
+      ],
+      "seconds": 0.7878627921454608
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "f6a317326a4dab7131899335b0272f175328295f7e4027b72fed6d732c1a0684",
+      "id": "eartags3100",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3100.jpg",
+      "image_sha256": "c23fda86e5da87067fe3932c689f8c6dd882961c4a2298155f468b087f1733ea",
+      "inference_bgr_pixels_sha256": "435a97f90cf23fecb6c90552761832bc198ffdbb50e744e82556e3d95364aa2a",
+      "pixels_sha256": "eda696167291c47a5859121f59e4b47f8eb6163f3fee681fdc012c65a991302c",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              24.0,
+              99.0
+            ],
+            [
+              30.0,
+              99.0
+            ],
+            [
+              30.0,
+              106.0
+            ],
+            [
+              24.0,
+              106.0
+            ]
+          ],
+          "score": 0.67407,
+          "text": "2"
+        }
+      ],
+      "seconds": 1.0784171661362052
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "ab2abcbeb5b955395cc35faa0dbcee64e992d8313dd5df3b2706cdb9129dd8bd",
+      "id": "eartags481",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags481.jpg",
+      "image_sha256": "562d834aef0e5923cdf458a1a0a0d0d17cf0515f95d45e14f0b12f928f36cfcf",
+      "inference_bgr_pixels_sha256": "c1df05f4864e79590b94f8dbfc6de433017cdbe0df5e19c0dab0bd92b08eb53d",
+      "pixels_sha256": "4b154d66de388f6f6bf260bf732cfa4004ed5a13a32c0e7538e509ca31d89b8a",
+      "predictions": [],
+      "seconds": 0.7526829582639039
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "937e1f9d19aecbb2027abd349460ad8a136cec37fe35d0784bbc610b1e57ffbc",
+      "id": "eartags1606",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1606.jpg",
+      "image_sha256": "666b3f07a56c9a35ad804a01e9aedaceda383f2b53df8d83cb5410de91c0ca45",
+      "inference_bgr_pixels_sha256": "4ddae7f8e92c501308c6a29949461b400496cec45f336ef657e223cecea78f87",
+      "pixels_sha256": "3294eb79db02bb55e31ffe3124a6f9b7a861ba505864054e6d5dd8ec391b76f2",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              44.0,
+              51.0
+            ],
+            [
+              76.0,
+              45.0
+            ],
+            [
+              81.0,
+              71.0
+            ],
+            [
+              49.0,
+              77.0
+            ]
+          ],
+          "score": 0.99999,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              40.0,
+              72.0
+            ],
+            [
+              95.0,
+              65.0
+            ],
+            [
+              98.0,
+              90.0
+            ],
+            [
+              43.0,
+              97.0
+            ]
+          ],
+          "score": 0.94531,
+          "text": "0-26"
+        },
+        {
+          "polygon": [
+            [
+              20.0,
+              92.0
+            ],
+            [
+              101.0,
+              77.0
+            ],
+            [
+              112.0,
+              140.0
+            ],
+            [
+              31.0,
+              154.0
+            ]
+          ],
+          "score": 0.99999,
+          "text": "160163"
+        }
+      ],
+      "seconds": 1.10221404209733
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "bbc2a0dae1f99bdf99d55e5658eaac6fa8ef24d6975b0d2663333120e17e8da7",
+      "id": "eartags2777",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2777.jpg",
+      "image_sha256": "aebe889a05bd2103a46c6c04c1fe6c135038246b2700301df55a52a9cacb9b16",
+      "inference_bgr_pixels_sha256": "ce6d1edbd75223cd65c05e77a94f949dec2a8dfbf67fea46de38b351072f6419",
+      "pixels_sha256": "99781914703e5d035c0344abffc28b65ee6fe8e7e6cc9011f5c729e41eeedf70",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              58.0,
+              54.0
+            ],
+            [
+              82.0,
+              58.0
+            ],
+            [
+              79.0,
+              79.0
+            ],
+            [
+              55.0,
+              76.0
+            ]
+          ],
+          "score": 1.0,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              27.0,
+              72.0
+            ],
+            [
+              103.0,
+              96.0
+            ],
+            [
+              86.0,
+              151.0
+            ],
+            [
+              10.0,
+              127.0
+            ]
+          ],
+          "score": 0.99992,
+          "text": "160308"
+        },
+        {
+          "polygon": [
+            [
+              46.0,
+              66.0
+            ],
+            [
+              97.0,
+              82.0
+            ],
+            [
+              90.0,
+              103.0
+            ],
+            [
+              39.0,
+              87.0
+            ]
+          ],
+          "score": 0.88807,
+          "text": "12-13"
+        }
+      ],
+      "seconds": 1.0767070418223739
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "a253bf86867f7612a07a838628cf4eac4a0ca4235659a4aa375c000e25d956f2",
+      "id": "eartags3114",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3114.jpg",
+      "image_sha256": "89c3993a829ff7e732e4c9b5d82ec77d04c75f7695a6f7ea35129bac7955d1f6",
+      "inference_bgr_pixels_sha256": "c94901476a3bff696f4d384f27e5c2c0a4533fe9dd95c6afbf1040880562257a",
+      "pixels_sha256": "db5b778289a07e941c68878308519497b080375dc86b3b3655b7a68c779df4fe",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              72.0,
+              36.0
+            ],
+            [
+              107.0,
+              44.0
+            ],
+            [
+              98.0,
+              80.0
+            ],
+            [
+              63.0,
+              72.0
+            ]
+          ],
+          "score": 1.0,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              25.0,
+              73.0
+            ],
+            [
+              131.0,
+              106.0
+            ],
+            [
+              110.0,
+              171.0
+            ],
+            [
+              4.0,
+              141.0
+            ]
+          ],
+          "score": 0.98372,
+          "text": "230005"
+        }
+      ],
+      "seconds": 0.8990220418199897
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "184998bfce432d562e67d1e5d392ad358b7977ea9ec8d6bf22f7a2a1bee45575",
+      "id": "eartags1454",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1454.jpg",
+      "image_sha256": "05dad8a88336dd81c285fe9f42f6ce40b0ba09ca4ff110ee9cee966884f981c6",
+      "inference_bgr_pixels_sha256": "486c7c4ecc94cc1abd198140a665187e9d1185cf7ca8682e24159c258715ef0d",
+      "pixels_sha256": "ba2b1059b250074b066475ae778400b8e64498a3575753cce18abb923a4db4b9",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              33.0,
+              55.0
+            ],
+            [
+              65.0,
+              45.0
+            ],
+            [
+              71.0,
+              63.0
+            ],
+            [
+              39.0,
+              74.0
+            ]
+          ],
+          "score": 0.60902,
+          "text": "11.0"
+        },
+        {
+          "polygon": [
+            [
+              25.0,
+              71.0
+            ],
+            [
+              78.0,
+              53.0
+            ],
+            [
+              92.0,
+              97.0
+            ],
+            [
+              39.0,
+              114.0
+            ]
+          ],
+          "score": 0.99893,
+          "text": "2056"
+        }
+      ],
+      "seconds": 0.913009749725461
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "b6e5f980381c9b45b42231ba32eed25c7fad498ce4eed2d840a62baacb492c9f",
+      "id": "eartags2038",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2038.jpg",
+      "image_sha256": "e370af26dabb3438d3c349ab6f8bf70e2a11533f6753707cd882401005a0c622",
+      "inference_bgr_pixels_sha256": "256e1d99bec5390e19ed948eda6dabd52a4a2d1e6321cffa3655c163c8c88318",
+      "pixels_sha256": "30fffafe2c2ead2994b5a0c5133844a3944a33bb4dd91843858e973f6c80ee6f",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              26.0,
+              87.0
+            ],
+            [
+              109.0,
+              72.0
+            ],
+            [
+              116.0,
+              112.0
+            ],
+            [
+              33.0,
+              127.0
+            ]
+          ],
+          "score": 0.88516,
+          "text": "16119"
+        }
+      ],
+      "seconds": 0.8434320841915905
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "c6fc9ae4368901faccd095b57f272acd341fc7e4f77bd375e00e8c234493cc05",
+      "id": "eartags1643",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1643.jpg",
+      "image_sha256": "bb07a11989490bb9bed6da75b09d2f546e8be83896af905acc743324654df2ab",
+      "inference_bgr_pixels_sha256": "7017443791b270d644c291330b85f676ca780729f151035a20b21279fdb2d241",
+      "pixels_sha256": "3dca19554a48aa9455a8ea2bfb80609b5d466eb1c085f2a3bcb07766d46f320d",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              24.0,
+              58.0
+            ],
+            [
+              84.0,
+              76.0
+            ],
+            [
+              71.0,
+              122.0
+            ],
+            [
+              10.0,
+              105.0
+            ]
+          ],
+          "score": 0.97266,
+          "text": "67841"
+        }
+      ],
+      "seconds": 0.9356475002132356
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "83e2ad695ccc8b22c144cc7bf66ff51937054a836dbdb8213b49839cf1fc5849",
+      "id": "eartags1406",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1406.jpg",
+      "image_sha256": "10a10bc9a012d2643f9826bb993ac3956a7ab613380a0f75d42735d04b9d6fcb",
+      "inference_bgr_pixels_sha256": "e370cabbcbbea3dee5d8c239ea45f9f2dd7baeb22e7d13b0484fdfc3db746b60",
+      "pixels_sha256": "4336860563a6b1859e22b35543cd7f73c734a4236ab149eaa89c86882f0ddabd",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              47.0,
+              15.0
+            ],
+            [
+              132.0,
+              58.0
+            ],
+            [
+              86.0,
+              150.0
+            ],
+            [
+              1.0,
+              107.0
+            ]
+          ],
+          "score": 0.8501,
+          "text": "81281"
+        }
+      ],
+      "seconds": 0.8410863750614226
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "70444ca44ce5762ae7a6f05b22932032810ff2e54d5222e42e65d944a14c9cf6",
+      "id": "eartags557",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags557.jpg",
+      "image_sha256": "563938c1e5345f2e9207aa978a27c6ad9ca0bd886c4ca3c6bf9cd11f16fa2258",
+      "inference_bgr_pixels_sha256": "a94ee6178a4e714cef295d4d411ee6e8628685d151e9326d30dd4859f35a1fb3",
+      "pixels_sha256": "ae8630288d33a41a2a8d07668174439f0808d3514cc8bcf1e518f85d823be7cb",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              41.0,
+              10.0
+            ],
+            [
+              104.0,
+              56.0
+            ],
+            [
+              77.0,
+              94.0
+            ],
+            [
+              12.0,
+              48.0
+            ]
+          ],
+          "score": 0.99753,
+          "text": "40251"
+        }
+      ],
+      "seconds": 0.7819714997895062
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "b00128ec34812cfe0f253d197d68ba310045b651d833b7765dabdc593256fa10",
+      "id": "eartags264",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags264.jpg",
+      "image_sha256": "64682d0562819764859e1c26833026048687c21d91e85ffdbdd84e4e98133e94",
+      "inference_bgr_pixels_sha256": "fb4926ecd787f070575cda89b5acc1bc5489c7a085598d3542ddccf47702dbb6",
+      "pixels_sha256": "badb60f1744689dbd1834b8f8215170f0f55948b91eaa2cb9e4243acbac22992",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              48.0,
+              51.0
+            ],
+            [
+              84.0,
+              49.0
+            ],
+            [
+              86.0,
+              79.0
+            ],
+            [
+              49.0,
+              81.0
+            ]
+          ],
+          "score": 1.0,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              37.0,
+              76.0
+            ],
+            [
+              119.0,
+              72.0
+            ],
+            [
+              121.0,
+              106.0
+            ],
+            [
+              39.0,
+              110.0
+            ]
+          ],
+          "score": 0.91466,
+          "text": "1-2.4"
+        },
+        {
+          "polygon": [
+            [
+              17.0,
+              99.0
+            ],
+            [
+              130.0,
+              92.0
+            ],
+            [
+              134.0,
+              165.0
+            ],
+            [
+              22.0,
+              171.0
+            ]
+          ],
+          "score": 0.99999,
+          "text": "253025"
+        }
+      ],
+      "seconds": 1.1052456246688962
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "cfb24e463ecee423aa714561f1962e2754f22ca4e05c1d59711d074e9abf9493",
+      "id": "eartags1090",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1090.jpg",
+      "image_sha256": "52806e2e2685e714d71c2b35e4f6721d35de16446beea20d967787d35f88f3fd",
+      "inference_bgr_pixels_sha256": "3a4bc54ebb43bc4fbee7cb5596e6202f7ad1a4a3daa8dade6548e2a67056ca59",
+      "pixels_sha256": "f3442e1a3377154a5c55abca8925d7cfe02dcd5b46953739ae9157db8ed24c0f",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              28.0,
+              38.0
+            ],
+            [
+              62.0,
+              24.0
+            ],
+            [
+              71.0,
+              46.0
+            ],
+            [
+              37.0,
+              60.0
+            ]
+          ],
+          "score": 0.9022,
+          "text": "4.26"
+        }
+      ],
+      "seconds": 0.8423410831019282
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "6744f420b54c02962553d1143964acb007c69f524966e2f0d12779a3d37f554b",
+      "id": "eartags514",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags514.jpg",
+      "image_sha256": "d9f224a2a4d8b55371cc2f756c9ab2e365cb7941f6d86c8061797a4418c6ac39",
+      "inference_bgr_pixels_sha256": "87ed8801bb1f066b012b6d73f841e7c1c01eb2ccc1e56404f24ef69589971bb9",
+      "pixels_sha256": "0680018aa13b8cf8fac29501bc2c0b90109260e3ab9302df6f081525abcf6676",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              59.0,
+              35.0
+            ],
+            [
+              85.0,
+              62.0
+            ],
+            [
+              64.0,
+              83.0
+            ],
+            [
+              38.0,
+              56.0
+            ]
+          ],
+          "score": 0.93298,
+          "text": "5.14"
+        },
+        {
+          "polygon": [
+            [
+              68.0,
+              43.0
+            ],
+            [
+              84.0,
+              33.0
+            ],
+            [
+              92.0,
+              44.0
+            ],
+            [
+              76.0,
+              55.0
+            ]
+          ],
+          "score": 0.37912,
+          "text": "12"
+        }
+      ],
+      "seconds": 0.8473956659436226
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "dcd20ec8fcf6ff84f939d25251c4c3f6b8a7e51304f13873b188f31a0b4b3ea8",
+      "id": "eartags1418",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1418.jpg",
+      "image_sha256": "380ca20b7816c2c5ac164fe5e415d569d5b7847fe52d920ef982b7d070fb92fe",
+      "inference_bgr_pixels_sha256": "7d52fbb9914d732363ec43575f0d15acd4c83594861ffae6a7c09f9ea50dcbd0",
+      "pixels_sha256": "4ab3b1aa1394d5e9fcc4ec0786bf992a10ed812cc9edeb12c63e0f80dbe3b9ff",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              47.0,
+              57.0
+            ],
+            [
+              80.0,
+              41.0
+            ],
+            [
+              94.0,
+              71.0
+            ],
+            [
+              61.0,
+              86.0
+            ]
+          ],
+          "score": 0.99976,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              23.0,
+              84.0
+            ],
+            [
+              113.0,
+              85.0
+            ],
+            [
+              113.0,
+              161.0
+            ],
+            [
+              23.0,
+              160.0
+            ]
+          ],
+          "score": 0.99551,
+          "text": "160153"
+        }
+      ],
+      "seconds": 0.9728275830857456
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "f486fcd87783e75db39c9cf6e2385631103345159f0372e462f0084ef578177a",
+      "id": "eartags583",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags583.jpg",
+      "image_sha256": "2f8b1325e71efeacbf9c2c6c2290dbc4c8a5e9cad9c3c332ba06bb2d7c8e99ea",
+      "inference_bgr_pixels_sha256": "b30f076cf24f4e0f6a484b1593de26e0e1c55c466320693718c8223cb3484b81",
+      "pixels_sha256": "2a319954e0cf0684b50c2772b22fa951f9465a25df440ec9a9bebd387e00fe46",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              23.0,
+              64.0
+            ],
+            [
+              58.0,
+              55.0
+            ],
+            [
+              65.0,
+              83.0
+            ],
+            [
+              30.0,
+              92.0
+            ]
+          ],
+          "score": 0.9995,
+          "text": "5.9"
+        },
+        {
+          "polygon": [
+            [
+              31.0,
+              78.0
+            ],
+            [
+              79.0,
+              81.0
+            ],
+            [
+              78.0,
+              116.0
+            ],
+            [
+              30.0,
+              113.0
+            ]
+          ],
+          "score": 0.97764,
+          "text": "2129"
+        }
+      ],
+      "seconds": 0.9577498747967184
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "d9149feebb88be50fcbdcbe3e0ba4d30af2e4078af876f0b5f6a45a69c9a94bc",
+      "id": "eartags670",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags670.jpg",
+      "image_sha256": "da754ffe63a521f54f8781f6559152f20c1d5f8067eae4551aa6e5bad5fdef75",
+      "inference_bgr_pixels_sha256": "7a5b9715a7efffc649b40f8413e9d771b4c409d0f13dfa4867644683aa6f2f57",
+      "pixels_sha256": "66b7e52c261d67a5776d001f3d8d3c4e50020a160b14979b7b95d002075aa4b5",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              83.0,
+              60.0
+            ],
+            [
+              105.0,
+              60.0
+            ],
+            [
+              105.0,
+              79.0
+            ],
+            [
+              83.0,
+              79.0
+            ]
+          ],
+          "score": 0.90848,
+          "text": "2J"
+        },
+        {
+          "polygon": [
+            [
+              40.0,
+              87.0
+            ],
+            [
+              109.0,
+              82.0
+            ],
+            [
+              112.0,
+              122.0
+            ],
+            [
+              43.0,
+              128.0
+            ]
+          ],
+          "score": 0.99964,
+          "text": "5.17"
+        },
+        {
+          "polygon": [
+            [
+              17.0,
+              115.0
+            ],
+            [
+              140.0,
+              120.0
+            ],
+            [
+              137.0,
+              183.0
+            ],
+            [
+              14.0,
+              178.0
+            ]
+          ],
+          "score": 0.99997,
+          "text": "21338"
+        }
+      ],
+      "seconds": 1.0872577908448875
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "0bc81fe4fdb93f4c4ebd097f42e9ce6a4270a669d33f1653578ae0193e99287a",
+      "id": "eartags2234",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2234.jpg",
+      "image_sha256": "15d6167c6fb7319067c177c320cad94f7dbd71a0a448ce0dd3ad897f5d9ad7df",
+      "inference_bgr_pixels_sha256": "ad71f20cc9147022c19b835ecbd1e5e898aa59346891c8f11d0314c30a67e413",
+      "pixels_sha256": "bbcbd03829ab81116ba34873b11a8c576cdfd38793cea33a72f6df5778220c99",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              16.0,
+              33.0
+            ],
+            [
+              32.0,
+              31.0
+            ],
+            [
+              34.0,
+              53.0
+            ],
+            [
+              18.0,
+              55.0
+            ]
+          ],
+          "score": 0.99788,
+          "text": "9"
+        }
+      ],
+      "seconds": 0.9188107908703387
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "8e79b08d3e6eeaaed9dc05937f8a3b2d1f924269a303e0e6a096b625da0242a6",
+      "id": "eartags702",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags702.jpg",
+      "image_sha256": "a0d5a63ea268963d8fcb38551ad0c96763709eedecf1dd2fa4d4c2e77ef8cd1a",
+      "inference_bgr_pixels_sha256": "36a82d304bd69de5385cc02524abe7a89a46e7d0723b853cc60202c5088b834a",
+      "pixels_sha256": "b1a05b679f6e3a83b71b252c3a31ee04d2aabd0ca64117908b63e1053fba7161",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              21.0,
+              43.0
+            ],
+            [
+              40.0,
+              43.0
+            ],
+            [
+              40.0,
+              63.0
+            ],
+            [
+              21.0,
+              63.0
+            ]
+          ],
+          "score": 0.97739,
+          "text": "24"
+        }
+      ],
+      "seconds": 1.0356890833936632
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "0f46268181164207bcad866f82d04f57adf8f7f19e3fe34070836f0caf35010f",
+      "id": "eartags167",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags167.jpg",
+      "image_sha256": "ac293006799517e985649318a8b5558a13e069af35aa921ae59ecb212fa9e4db",
+      "inference_bgr_pixels_sha256": "797576f510d25295d7126522bf72da74b1e036d8376e682605eb35b5ed563690",
+      "pixels_sha256": "8b620c11d185a390b2341e68f3cb6cebfa29818b9c67bbbfeb86972e663fee52",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              74.0,
+              43.0
+            ],
+            [
+              96.0,
+              43.0
+            ],
+            [
+              96.0,
+              63.0
+            ],
+            [
+              74.0,
+              63.0
+            ]
+          ],
+          "score": 0.35866,
+          "text": "T"
+        },
+        {
+          "polygon": [
+            [
+              52.0,
+              60.0
+            ],
+            [
+              106.0,
+              66.0
+            ],
+            [
+              104.0,
+              90.0
+            ],
+            [
+              50.0,
+              84.0
+            ]
+          ],
+          "score": 0.77621,
+          "text": "3\u30011"
+        },
+        {
+          "polygon": [
+            [
+              26.0,
+              71.0
+            ],
+            [
+              125.0,
+              91.0
+            ],
+            [
+              114.0,
+              144.0
+            ],
+            [
+              15.0,
+              124.0
+            ]
+          ],
+          "score": 0.99998,
+          "text": "20984"
+        }
+      ],
+      "seconds": 0.9581749998033047
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "3ec01c7ecd62516182c621fbc61ceb0c6fb04e89de6c4e5bd9340174f06dcdf6",
+      "id": "eartags1064",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1064.jpg",
+      "image_sha256": "e8f4b852135b9701242d767cecbc26b54cc58cd950ed7bfc0812557c388c64ed",
+      "inference_bgr_pixels_sha256": "3bdf6695a3bc800cc27902fa81a57f2adedfe032ca0613eabbf6c36082199282",
+      "pixels_sha256": "95173aae9de22d74313b794c9e1f6c40a71f948e4ef3a0e14f0625792589edcc",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              0.0,
+              66.0
+            ],
+            [
+              64.0,
+              55.0
+            ],
+            [
+              71.0,
+              93.0
+            ],
+            [
+              7.0,
+              103.0
+            ]
+          ],
+          "score": 0.99998,
+          "text": "2167"
+        }
+      ],
+      "seconds": 0.9210560000501573
+    },
+    {
+      "cache_hit": false,
+      "cache_key": "5208c920924c5df34e2462fcaaa3ad4c1fb7f6096bda9defdc5c01a2f5301a1b",
+      "id": "eartags1717",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1717.jpg",
+      "image_sha256": "5a4689439248fad534cd989579f34043996fbeda19b50a72c7ce6724314afca4",
+      "inference_bgr_pixels_sha256": "a1ea8f8e2c750cd88d526d03f0fca66cc9747f444e5231be3d1562dd8a9b94c7",
+      "pixels_sha256": "4960a07cea6f3a19f6453dcbfb271d62c11bcc671a4bd98f6466ce7d4502700c",
+      "predictions": [
+        {
+          "polygon": [
+            [
+              60.0,
+              46.0
+            ],
+            [
+              94.0,
+              42.0
+            ],
+            [
+              97.0,
+              70.0
+            ],
+            [
+              63.0,
+              74.0
+            ]
+          ],
+          "score": 0.99999,
+          "text": "49"
+        },
+        {
+          "polygon": [
+            [
+              18.0,
+              100.0
+            ],
+            [
+              126.0,
+              76.0
+            ],
+            [
+              139.0,
+              138.0
+            ],
+            [
+              31.0,
+              161.0
+            ]
+          ],
+          "score": 0.99974,
+          "text": "253422"
+        }
+      ],
+      "seconds": 0.8970984159968793
+    }
+  ]
+}

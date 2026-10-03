@@ -1,0 +1,37 @@
+{
+  "scope": "Pre-launch checks for one frozen exposed-data automatic-startup extension; no model outcome or promotion claim.",
+  "protocol_sha256": "db708d013ee6419a6fb948bb1870df5dc213340174f12bf33af1cca29d46e8aa",
+  "bindings_verified": 275,
+  "source_frames": 5999,
+  "last_source_second": 2999,
+  "initial_mask_count": 8,
+  "named_opaque_labels": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "G"
+  ],
+  "cpu_tests": {
+    "passed": 6,
+    "seconds": 1.74,
+    "files": [
+      "research/cow_identity/test_detection_startup_extended.py"
+    ]
+  },
+  "reviewers": [
+    "root: method/scorer and fail-closed ordering",
+    "identity_evaluation: source, fixed anchors and prefix rule"
+  ],
+  "prelaunch_corrections": [
+    "Historical PEP420 namespace-count guard replaced in new wrapper with exact actual-module origin, source hash and installed library checks; old runner unchanged.",
+    "A mismatched startup prefix now writes scores:null and exits before reading annotation arrays; old unexecuted freeze retained."
+  ],
+  "limitations": [
+    "Allfive panels have already been exposed. This is a hypothesis-driven development control, not a new held-out test.",
+    "Initial masks are automatic but initial biological labels are scoring-derived enrollment anchors, not demonstrated live farmer commands.",
+    "Localization training includes early frames from this recording; startup generalization is not established.",
+    "No later arrivals, retirement, reconnection, identity across visits or new-farm reliability demonstrated. Pixels at3000seconds and later stay closed."
+  ]
+}

@@ -1,0 +1,66 @@
+import json
+from collections import Counter
+from pathlib import Path
+import numpy as np
+from benchmark import digest, write_json
+from video_assessment import pair_boxes, truth_at
+from aidetector.domain.models import BoundingBox
+root=Path('research/cow_identity'); folder=root/'results/2026-10-03/detection'
+reportpath=folder/'startup-extended.json'; protocolpath=root/'detection_startup_extended_protocol.json'; runpath=Path('.cache/cow-startup-extended/streaming.json')
+output=folder/'startup-extended-independent-audit.json'
+assert not output.exists()
+report,protocol,value=[json.loads(p.read_text()) for p in (reportpath,protocolpath,runpath)]
+assert report['status']=='COMPLETE' and value['complete']
+assert digest(runpath)==report['prediction_sha256'] and digest(protocolpath)==report['protocol_sha256']
+for p,expected in protocol['files'].items(): assert digest(Path(p))==expected,p
+clip_path=Path(protocol['inputs']['clip'])/'sampled.json'; clip=json.loads(clip_path.read_text())
+assert [r['second'] for r in value['frame_samples']]==[i/2 for i in range(5999)]
+assert [r['second'] for r in value['timeline']]==list(range(3000))
+for frame,source in zip(value['frame_samples'],clip['rows'],strict=True):
+ for k in ('second','publisher_frame','pixels_sha256'): assert frame[k]==source[k]
+for frame,source in zip(value['timeline'],clip['rows'][::2],strict=True):
+ assert frame['second']==source['second'] and frame['publisher_frame']==source['publisher_frame'] and frame['source_pixels_sha256']==source['pixels_sha256']
+anchors={r['track_id']:r['cow'] for r in protocol['initial_anchors']}; assert set(anchors.values())==set(range(1,9))
+assert anchors=={r['track_id']:r['cow'] for r in report['initial_anchors']}
+# Independently reproduce the completed startup prefix; emitted names only differ by fixed anchors.
+prefixpath=Path('.cache/cow-startup-propagation/streaming.json'); prefix=json.loads(prefixpath.read_text())
+assert len(prefix['frame_samples'])==241 and len(prefix['timeline'])==121 and prefix['complete']
+for a,b in zip(prefix['timeline'],value['timeline'][:121],strict=True):
+ assert {k:v for k,v in a.items() if k!='named_track_ids'}=={k:v for k,v in b.items() if k!='named_track_ids'}
+ p10={o['track_id']:o['p10_probability'] for o in a['objects']}; reciprocal={p['track_id'] for p in a['reciprocal_pairs']}
+ named=[box['track_id'] for box in a['boxes'] if anchors[box['track_id']]<=6 and box['track_id'] in reciprocal and box['track_id']+1 not in a['conflicted_ids'] and p10.get(box['track_id'],0)>=protocol['naming']['minimum_p10']]
+ assert b['named_track_ids']==named and a['named_track_ids']==[]
+assert prefix['quarantine_events']==[e for e in value['quarantine_events'] if e['second']<=120]
+assert all(prefix[k]==value[k] for k in ('model_metadata','config'))
+annpath=Path('datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz')
+with np.load(annpath,allow_pickle=False) as archive:
+ keep=archive['frame_id']<=59981
+ records={k:archive[k][keep] for k in ('frame_id','cow_id','x_center','y_center','width','height')}
+ assert json.loads(str(archive['metadata_json']))['source_sha256']==digest(Path('datasets/8-calves/video/pmfeed_4_3_16.pkl'))
+results={}
+for start,end in protocol['comparison_windows']:
+ counts=Counter({k:0 for k in ('correct_name','wrong_name','unknown_named','unmatched_named')}); presence=Counter()
+ for frame in value['timeline'][start:end+1]:
+  truth=truth_at(records,frame['publisher_frame'],clip['width'],clip['height']); presence.update(r['cow'] for r in truth)
+  boxes=[BoundingBox(**row) for row in frame['boxes']]; pairs=pair_boxes(boxes,truth)
+  counts.update(frames=1,visible_annotations=len(truth),visible_known=sum(r['cow']<=6 for r in truth),visible_unknown=sum(r['cow']>6 for r in truth),detector_boxes=len(boxes),matched_boxes=len(pairs),missed_annotations=len(truth)-len(pairs),unmatched_boxes=len(boxes)-len(pairs))
+  for i,box in enumerate(boxes):
+   if box.track_id not in frame['named_track_ids']:continue
+   name=anchors[box.track_id]; assert name<=6
+   actual=truth[pairs[i]]['cow'] if i in pairs else None
+   counts['unmatched_named' if actual is None else 'unknown_named' if actual>6 else 'correct_name' if actual==name else 'wrong_name']+=1
+ expected=report['conditions'][str(start)]
+ assert all(expected['naming_counts'][k]==v for k,v in counts.items())
+ n=sum(counts[k] for k in ('correct_name','wrong_name','unknown_named','unmatched_named'))
+ coverage=counts['correct_name']/counts['visible_known']; precision=counts['correct_name']/n if n else 0; unknown=counts['unknown_named']/counts['visible_unknown']
+ passed=coverage>=.6 and precision>=.99 and unknown<=.01
+ assert expected['known_coverage']==coverage and expected['conservative_precision']==precision and report['acceptance'][str(start)]==passed
+ previous=report['six_seed_births_baseline'][str(start)]['naming_counts']; assert all(previous[k]==counts[k] for k in ('visible_known','visible_unknown','visible_annotations'))
+ results[str(start)]={'counts':dict(counts),'per_cow_presence':dict(presence),'known_coverage':coverage,'conservative_precision':precision,'unknown_false_naming_rate':unknown,'passes':passed}
+pooled=Counter()
+for panel in results.values():pooled.update(panel['counts'])
+assert all(report['pooled']['naming_counts'][k]==v for k,v in pooled.items())
+recipe=folder/'startup-extended-independent-audit.recipe.py.txt'; recipe.write_text(Path(__file__).read_text())
+sources=[reportpath,protocolpath,runpath,clip_path,prefixpath,annpath,root/'video_assessment.py',recipe]
+write_json(output,{'status':'PASS_INDEPENDENT_RECOUNT_ORIGINAL_QUALITY_FAILURE_RETAINED','sources':{str(p):digest(p) for p in sources},'all_bindings_verified':len(protocol['files']),'source_rows':5999,'integer_rows':3000,'exact_prefix_masks':121,'panels':results,'pooled_counts':dict(pooled),'all_quality_gates_pass':all(r['passes'] for r in results.values()),'method':'Independent explicit named-count accumulation; shared fixed pair_boxes maximum-cardinality IoU.5, no official score or VideoMetrics invocation. Exact raw JSON/source bindings/initial anchor mapping/prefix evidence/name gate checked. Mask PNG/full native pixel validation relies on completed official immutable scorer; no redundant decode or new inference. All eight original truth animals, all five panels and every unmatched name retained. Already exposed development data, not human-certified field validation.'})
+print(output,digest(output));print(json.dumps({k:{'correct':v['counts']['correct_name'],'unmatched':v['counts']['unmatched_named'],'pass':v['passes']} for k,v in results.items()}))

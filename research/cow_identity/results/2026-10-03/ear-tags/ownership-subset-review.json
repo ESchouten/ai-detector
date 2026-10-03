@@ -1,0 +1,22 @@
+{
+  "reviewer": "cattle_research",
+  "kind": "Post-download visual feasibility review only; all32 source contact sheets plus tagcrop sheets0/3, not a new accuracy benchmark or biological identity labeling. No OCR/detector calls.",
+  "inventory_sha256": "9aab8579ef83cbe5e241d803f8a76d48935ab9f55dd89faf8e2df3516bbecf71",
+  "renders": {
+    ".cache/cow-ear-tags/ownership-review/clean-0.jpg": "420bf44faa48024d9216e35dbbf91b57bdbe448d3a30144dc9bd068f2a83fb3a",
+    ".cache/cow-ear-tags/ownership-review/clean-1.jpg": "7ab4b06f47f2737f1366ff1a1c55b4ed8015eb50c28a15f19c11bf8d4a852ab2",
+    ".cache/cow-ear-tags/ownership-review/clean-2.jpg": "3417b108c2478d115558483977d1969fbd911a64ddae0d8314b77c66b5e061e7",
+    ".cache/cow-ear-tags/ownership-review/clean-3.jpg": "4ff229ebdcceadebb1d7693458f65630a71b837098dafb983034724f4f7c4d77",
+    ".cache/cow-ear-tags/ownership-review/tags-0.jpg": "65c44fbe0a9c2b5a31ef49cfc8d8f50cc7b96588d48aec926fc8d7e2e4055866",
+    ".cache/cow-ear-tags/ownership-review/tags-3.jpg": "ae78b41c5c9687a4db76d99bfd391689a1bf480508cdbd46d187d31048481c23"
+  },
+  "observations": [
+    "Most frontal feeding-barrier images make an ear tag physically attributable to a nearby head by visible attachment. Dense heads, rails, cropped/occluded bodies and edge-on tags require explicit ambiguity; nearest bodybox is not certified ownership.",
+    "Some native4000-pixel images show legible handwritten longnumbers mixed with short herd/date lines. This does not certify a legal identifier scheme. No country labels or valid-checkdigit guarantee are published.",
+    "The640x368 imagegroup has10\u201323pixel tag boxes, where source text is not recoverably legible in the displayed nativecrops. Several1440x1080examples also show substantial motionblur/interlacing despite adequate rectangle size.",
+    "At least one native4000-pixel image gives two tag views from one visible cow, useful for within-frame attachment consistency. Such correlated views are not independent temporal confirmations.",
+    "The published rectangles do not supply biologicalcowID, tagtranscript, cowbodyinstances or video/temporalgrouping. No sourcefilename order was used as timing. Three missingTXTfiles retained explicitly as unannotated, not emptynegative truth.",
+    "CEGD-R and CEID-D derive from the same authorcollection. Potential source/cowoverlap must be resolved before claiming independent OCRgeneralization on fullframes."
+  ],
+  "next_distinct_question": "A frozen, independently reviewed tag-to-head/body ownership sample with completevisible animal instances and literaltext uncertainty could test same-animal binding. It cannot establish repeated-frame reliability without sourcevideo provenance. Keep OCRnumber proposals reversible and do not automatically merge anonymous cowprofiles from generic confidence alone."
+}

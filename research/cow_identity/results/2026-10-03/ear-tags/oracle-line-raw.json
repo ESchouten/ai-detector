@@ -1,0 +1,3942 @@
+{
+  "complete": true,
+  "elapsed_seconds": 2.7948819580487907,
+  "error": null,
+  "initialization_seconds": 0.09631904074922204,
+  "protocol_sha256": "cb5ebe77ee274ffabeb0c63ed6796f3588f223b6e60e286fa4936a4c0b1d73e0",
+  "providers": {
+    "text_cls": [
+      "CPUExecutionProvider"
+    ],
+    "text_rec": [
+      "CPUExecutionProvider"
+    ]
+  },
+  "rows": [
+    {
+      "crop_pixels_sha256": "1cc0d493ccdafe83ea0ca3b6eb09ee9e7f4ca76e0f57735dfec784ae182c2a13",
+      "crop_shape": [
+        17,
+        35,
+        3
+      ],
+      "id": "eartags2149",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "5987c94e3551fc72074d5503a6f740923930f522ecf15c38d381ec9fc18b18ea",
+      "issue": null,
+      "polygon": [
+        46.0,
+        64.0,
+        81.0,
+        64.0,
+        81.0,
+        81.0,
+        46.0,
+        81.0
+      ],
+      "score": 0.76322,
+      "seconds": 0.023023124784231186,
+      "text": "27"
+    },
+    {
+      "crop_pixels_sha256": "e42d518edb09a7722065d3c26ad2295a3c74fdb058422208369379620997b52f",
+      "crop_shape": [
+        22,
+        60,
+        3
+      ],
+      "id": "eartags2149",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "5987c94e3551fc72074d5503a6f740923930f522ecf15c38d381ec9fc18b18ea",
+      "issue": null,
+      "polygon": [
+        23.0,
+        84.0,
+        83.0,
+        84.0,
+        83.0,
+        106.0,
+        23.0,
+        106.0
+      ],
+      "score": 0.97748,
+      "seconds": 0.017299791797995567,
+      "text": "7016"
+    },
+    {
+      "crop_pixels_sha256": "929dab9936168d4ef9089152cde39828b8b7b7ab08791ff1fe8b86125b417a28",
+      "crop_shape": [
+        34,
+        40,
+        3
+      ],
+      "id": "eartags691",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "41b221b152ca329a9fd05768200037268ffe8254fa44867b2cef79d8721e8d3b",
+      "issue": null,
+      "polygon": [
+        52.0,
+        67.0,
+        92.0,
+        67.0,
+        92.0,
+        101.0,
+        52.0,
+        101.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.01800612499937415,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "d7f5ee032cb7591b460558bb789f54d80d6a34066a4c253c719ce15541f27c8b",
+      "crop_shape": [
+        70,
+        122,
+        3
+      ],
+      "id": "eartags691",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "41b221b152ca329a9fd05768200037268ffe8254fa44867b2cef79d8721e8d3b",
+      "issue": null,
+      "polygon": [
+        20.0,
+        127.0,
+        137.0,
+        133.0,
+        143.0,
+        198.0,
+        21.0,
+        197.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.016600333154201508,
+      "text": "160008"
+    },
+    {
+      "crop_pixels_sha256": "fc3878cc892fd98f75750461bf9039ca6d3a8e6d4830dae94b2eb3f6ead351cf",
+      "crop_shape": [
+        19,
+        27,
+        3
+      ],
+      "id": "eartags691",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "41b221b152ca329a9fd05768200037268ffe8254fa44867b2cef79d8721e8d3b",
+      "issue": null,
+      "polygon": [
+        62.0,
+        104.0,
+        89.0,
+        104.0,
+        89.0,
+        123.0,
+        62.0,
+        123.0
+      ],
+      "score": 0.0,
+      "seconds": 0.016198291908949614,
+      "text": ""
+    },
+    {
+      "crop_pixels_sha256": "d76e92d037a1e6bd126b5ff7de6b2fe393c4a9fad8004fc0ac21baf56f89dbee",
+      "crop_shape": [
+        20,
+        27,
+        3
+      ],
+      "id": "eartags461",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "1651df11c4cbdf9cf635382b85256501cf623891ec00e76433a52950f1ccf13b",
+      "issue": null,
+      "polygon": [
+        50.0,
+        63.0,
+        70.0,
+        59.0,
+        74.0,
+        77.0,
+        47.0,
+        83.0
+      ],
+      "score": 0.99991,
+      "seconds": 0.016303083393722773,
+      "text": "22"
+    },
+    {
+      "crop_pixels_sha256": "1c83f7274c38cd747196453bbf1c8fa7ef2b0fb4c490ba72c6b3dfc2d294f00c",
+      "crop_shape": [
+        26,
+        39,
+        3
+      ],
+      "id": "eartags461",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "1651df11c4cbdf9cf635382b85256501cf623891ec00e76433a52950f1ccf13b",
+      "issue": null,
+      "polygon": [
+        36.0,
+        86.0,
+        75.0,
+        78.0,
+        65.0,
+        102.0,
+        35.0,
+        109.0
+      ],
+      "score": 0.95662,
+      "seconds": 0.016416207887232304,
+      "text": "86"
+    },
+    {
+      "crop_pixels_sha256": "bf86ab3df614fa058161e3d1ac5ec2f10249b79c6b0436c0ff9e20e4e9e0eb34",
+      "crop_shape": [
+        40,
+        65,
+        3
+      ],
+      "id": "eartags461",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "1651df11c4cbdf9cf635382b85256501cf623891ec00e76433a52950f1ccf13b",
+      "issue": null,
+      "polygon": [
+        17.0,
+        113.0,
+        80.0,
+        95.0,
+        65.0,
+        133.0,
+        9.0,
+        146.0
+      ],
+      "score": 0.99996,
+      "seconds": 0.016369707882404327,
+      "text": "5256"
+    },
+    {
+      "crop_pixels_sha256": "bc07fd9ae054962032ce32a189c4de4e78f20a73baa101e19f292045196a577d",
+      "crop_shape": [
+        17,
+        51,
+        3
+      ],
+      "id": "eartags1760",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "500130b0492e605c2f77ef1a513b798d78bdf1cba7e56e59cb3d1519ad65b81a",
+      "issue": null,
+      "polygon": [
+        55.0,
+        36.0,
+        76.0,
+        77.0,
+        69.0,
+        91.0,
+        42.0,
+        47.0
+      ],
+      "score": 0.96026,
+      "seconds": 0.016441834159195423,
+      "text": "5.20"
+    },
+    {
+      "crop_pixels_sha256": "31255bf6ca5c72a1bb744aabb55102e3b237f99cc434e24563b43ee8e28aebbf",
+      "crop_shape": [
+        29,
+        79,
+        3
+      ],
+      "id": "eartags1760",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "500130b0492e605c2f77ef1a513b798d78bdf1cba7e56e59cb3d1519ad65b81a",
+      "issue": null,
+      "polygon": [
+        36.0,
+        47.0,
+        80.0,
+        113.0,
+        67.0,
+        139.0,
+        27.0,
+        72.0
+      ],
+      "score": 0.99612,
+      "seconds": 0.016358166933059692,
+      "text": "21343"
+    },
+    {
+      "crop_pixels_sha256": "61d0353e1796da1c64421a4d540a2e6de7f0bb3b08c030bb46abf3525a420a50",
+      "crop_shape": [
+        31,
+        39,
+        3
+      ],
+      "id": "eartags3069",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "063dfb2ee3176edd68286e8bcc71e8c5ff3b30c2c42aef1dce40b5e5e79bcf85",
+      "issue": null,
+      "polygon": [
+        5.0,
+        48.0,
+        44.0,
+        48.0,
+        44.0,
+        79.0,
+        5.0,
+        79.0
+      ],
+      "score": 0.99968,
+      "seconds": 0.016365292016416788,
+      "text": "12038"
+    },
+    {
+      "crop_pixels_sha256": "3fe7f92b4c0a54599b24283eb7a75135d19281f8d7a51ad555b83a9b4deda746",
+      "crop_shape": [
+        17,
+        35,
+        3
+      ],
+      "id": "eartags1423",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "f1d4384729fd2fc43bf2c0d2942bd52ce6be9061e9699b946176164ac45919e8",
+      "issue": null,
+      "polygon": [
+        27.0,
+        53.0,
+        62.0,
+        52.0,
+        64.0,
+        66.0,
+        29.0,
+        70.0
+      ],
+      "score": 0.78303,
+      "seconds": 0.01693562511354685,
+      "text": "61.8"
+    },
+    {
+      "crop_pixels_sha256": "ba51fb68b48a00114c9c1ca42261626ed6a797082992e43ea73440cab6e4992b",
+      "crop_shape": [
+        26,
+        59,
+        3
+      ],
+      "id": "eartags1423",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "f1d4384729fd2fc43bf2c0d2942bd52ce6be9061e9699b946176164ac45919e8",
+      "issue": null,
+      "polygon": [
+        20.0,
+        72.0,
+        73.0,
+        67.0,
+        77.0,
+        91.0,
+        18.0,
+        98.0
+      ],
+      "score": 0.99999,
+      "seconds": 0.018239916302263737,
+      "text": "5364"
+    },
+    {
+      "crop_pixels_sha256": "7449183766f184e559d334d304f5e9f0f3e65c823586d4b915582cdd66498883",
+      "crop_shape": [
+        11,
+        25,
+        3
+      ],
+      "id": "eartags1423",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "f1d4384729fd2fc43bf2c0d2942bd52ce6be9061e9699b946176164ac45919e8",
+      "issue": null,
+      "polygon": [
+        35.0,
+        41.0,
+        60.0,
+        41.0,
+        60.0,
+        52.0,
+        35.0,
+        52.0
+      ],
+      "score": 0.74283,
+      "seconds": 0.01663854205980897,
+      "text": "22"
+    },
+    {
+      "crop_pixels_sha256": "bc4245b70de296e355821e24ac1981496b910cfd6bc3d8d862399b10c8576b1b",
+      "crop_shape": [
+        42,
+        75,
+        3
+      ],
+      "id": "eartags265",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "e70f5915c954e7bcc6b50a9aff4b9612eff6e0a22e2639b0c0d0b4ffd7197d76",
+      "issue": null,
+      "polygon": [
+        20.0,
+        59.0,
+        95.0,
+        66.0,
+        92.0,
+        108.0,
+        17.0,
+        101.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.01659591682255268,
+      "text": "20055"
+    },
+    {
+      "crop_pixels_sha256": "979f38819fb220b90c4ac04a78222a84cbf80d8b984a14638e5f68d74a9b727a",
+      "crop_shape": [
+        18,
+        23,
+        3
+      ],
+      "id": "eartags265",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "e70f5915c954e7bcc6b50a9aff4b9612eff6e0a22e2639b0c0d0b4ffd7197d76",
+      "issue": null,
+      "polygon": [
+        44.0,
+        40.0,
+        66.0,
+        48.0,
+        62.0,
+        62.0,
+        40.0,
+        58.0
+      ],
+      "score": 0.97333,
+      "seconds": 0.01718666683882475,
+      "text": "9."
+    },
+    {
+      "crop_pixels_sha256": "6395502c15f33ccb27bbfc14f354543f3a5795029c91d6e98a60ab27e926068a",
+      "crop_shape": [
+        22,
+        32,
+        3
+      ],
+      "id": "eartags2380",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "6e248c8f7da6f02f4fada207fdad9fa8e86fd609e3b562c635e8a1cedea5b07f",
+      "issue": null,
+      "polygon": [
+        70.0,
+        57.0,
+        102.0,
+        57.0,
+        102.0,
+        79.0,
+        70.0,
+        79.0
+      ],
+      "score": 0.99999,
+      "seconds": 0.016260583885014057,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "9cbb39cce28177b9a0bec2f42bea2d98f13bc36b632add636d64afc375b38d1f",
+      "crop_shape": [
+        18,
+        52,
+        3
+      ],
+      "id": "eartags2380",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "6e248c8f7da6f02f4fada207fdad9fa8e86fd609e3b562c635e8a1cedea5b07f",
+      "issue": null,
+      "polygon": [
+        51.0,
+        79.0,
+        103.0,
+        79.0,
+        103.0,
+        97.0,
+        52.0,
+        97.0
+      ],
+      "score": 0.97074,
+      "seconds": 0.016133083030581474,
+      "text": "12-1"
+    },
+    {
+      "crop_pixels_sha256": "d559c77ae0e621a0e88169e11bf177bac88e5406cff32e212f7c2df4f2dc35b6",
+      "crop_shape": [
+        49,
+        67,
+        3
+      ],
+      "id": "eartags2380",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "6e248c8f7da6f02f4fada207fdad9fa8e86fd609e3b562c635e8a1cedea5b07f",
+      "issue": null,
+      "polygon": [
+        36.0,
+        98.0,
+        103.0,
+        98.0,
+        103.0,
+        147.0,
+        36.0,
+        147.0
+      ],
+      "score": 0.99999,
+      "seconds": 0.01821050001308322,
+      "text": "1602"
+    },
+    {
+      "crop_pixels_sha256": "61a9ba5ab54f778d86a72e6ccca1db1207e698d7ecf7b54b2bc69dce04782b5d",
+      "crop_shape": [
+        38,
+        89,
+        3
+      ],
+      "id": "eartags1376",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "123b8723438f6f218c6a33130125e6d92b7ec2f78272ac67ca25e5f5d52486c3",
+      "issue": null,
+      "polygon": [
+        16.0,
+        66.0,
+        105.0,
+        57.0,
+        109.0,
+        95.0,
+        20.0,
+        104.0
+      ],
+      "score": 0.99994,
+      "seconds": 0.016658292151987553,
+      "text": "20562"
+    },
+    {
+      "crop_pixels_sha256": "f56ca83d020b30183933430c3c3f66b9f4468c24281012e21bcc6fa75057bd87",
+      "crop_shape": [
+        20,
+        43,
+        3
+      ],
+      "id": "eartags1376",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "123b8723438f6f218c6a33130125e6d92b7ec2f78272ac67ca25e5f5d52486c3",
+      "issue": null,
+      "polygon": [
+        33.0,
+        46.0,
+        73.0,
+        36.0,
+        76.0,
+        56.0,
+        33.0,
+        65.0
+      ],
+      "score": 0.7245,
+      "seconds": 0.01618875004351139,
+      "text": "1210"
+    },
+    {
+      "crop_pixels_sha256": "06ddc965c929629240d1a62aaf39c03570a35cd7645729ee00fe02b54bbdbee0",
+      "crop_shape": [
+        23,
+        25,
+        3
+      ],
+      "id": "eartags1938",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "0080d4a76f2d047ca0efd1f09c4625a9a782b08c0dd99f8dd24358afc1dd947e",
+      "issue": null,
+      "polygon": [
+        53.0,
+        38.0,
+        78.0,
+        38.0,
+        78.0,
+        61.0,
+        53.0,
+        61.0
+      ],
+      "score": 0.9674,
+      "seconds": 0.017247958108782768,
+      "text": "20"
+    },
+    {
+      "crop_pixels_sha256": "9f9d1780f7dc4e33c5d7172ac312eda9a95d867f45846c17fac78a753d979c9f",
+      "crop_shape": [
+        24,
+        45,
+        3
+      ],
+      "id": "eartags1938",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "0080d4a76f2d047ca0efd1f09c4625a9a782b08c0dd99f8dd24358afc1dd947e",
+      "issue": null,
+      "polygon": [
+        36.0,
+        62.0,
+        81.0,
+        67.0,
+        78.0,
+        91.0,
+        33.0,
+        86.0
+      ],
+      "score": 0.99429,
+      "seconds": 0.01625908399000764,
+      "text": "12.8"
+    },
+    {
+      "crop_pixels_sha256": "4532ca8d720292702b2a2916f5618307c707af0780384946d0b68c9f31eadbbc",
+      "crop_shape": [
+        37,
+        73,
+        3
+      ],
+      "id": "eartags1938",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "0080d4a76f2d047ca0efd1f09c4625a9a782b08c0dd99f8dd24358afc1dd947e",
+      "issue": null,
+      "polygon": [
+        23.0,
+        80.0,
+        94.0,
+        99.0,
+        83.0,
+        135.0,
+        30.0,
+        110.0
+      ],
+      "score": 0.99986,
+      "seconds": 0.01726908329874277,
+      "text": "7088"
+    },
+    {
+      "crop_pixels_sha256": "5ab7e5979abf892feb004b1f6c4c68c75106752084b74aa0e5fa221300d160a1",
+      "crop_shape": [
+        14,
+        22,
+        3
+      ],
+      "id": "eartags1664",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "e858e47d559cdcc8cd73a708da89e8ee6528cf245af6a6019b294d0e94f28663",
+      "issue": null,
+      "polygon": [
+        24.0,
+        28.0,
+        45.0,
+        20.0,
+        50.0,
+        34.0,
+        29.0,
+        40.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.016805625054985285,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "994ebfedb0432a166245a4958d6f62dd1c240d8867535fe2493cda7bbed49b2e",
+      "crop_shape": [
+        22,
+        59,
+        3
+      ],
+      "id": "eartags1664",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "e858e47d559cdcc8cd73a708da89e8ee6528cf245af6a6019b294d0e94f28663",
+      "issue": null,
+      "polygon": [
+        13.0,
+        46.0,
+        68.0,
+        24.0,
+        71.0,
+        46.0,
+        16.0,
+        61.0
+      ],
+      "score": 0.99936,
+      "seconds": 0.01757754199206829,
+      "text": "12-29"
+    },
+    {
+      "crop_pixels_sha256": "f8ad8a4ec2c85990a2dd18ba23323cbc1b587562c0f79c719cc52e9cc4e9e4df",
+      "crop_shape": [
+        25,
+        61,
+        3
+      ],
+      "id": "eartags1664",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "e858e47d559cdcc8cd73a708da89e8ee6528cf245af6a6019b294d0e94f28663",
+      "issue": null,
+      "polygon": [
+        17.0,
+        64.0,
+        76.0,
+        45.0,
+        83.0,
+        69.0,
+        26.0,
+        87.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.017036084085702896,
+      "text": "253462"
+    },
+    {
+      "crop_pixels_sha256": "b68e1a7f45cbeef4f858268622de7a4260af31a208e270a52f95b48edfae3dde",
+      "crop_shape": [
+        34,
+        86,
+        3
+      ],
+      "id": "eartags1342",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "aac22760b6e56e48f8c142efc532b4a55e419d87eb9484f6074c2ee186fff36f",
+      "issue": null,
+      "polygon": [
+        23.0,
+        52.0,
+        109.0,
+        50.0,
+        110.0,
+        84.0,
+        25.0,
+        86.0
+      ],
+      "score": 0.98497,
+      "seconds": 0.017154499888420105,
+      "text": "68072"
+    },
+    {
+      "crop_pixels_sha256": "48824222cd76a87729013bcef1c662f5b73fb9a9f6d4d795c1fca991be5bc193",
+      "crop_shape": [
+        16,
+        19,
+        3
+      ],
+      "id": "eartags693",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "1d93869b62ca13a37d67a453eb20b939cce5e4098fe192b3d5273289368a2aed",
+      "issue": null,
+      "polygon": [
+        47.0,
+        54.0,
+        66.0,
+        54.0,
+        66.0,
+        70.0,
+        47.0,
+        70.0
+      ],
+      "score": 0.99938,
+      "seconds": 0.017688417341560125,
+      "text": "22"
+    },
+    {
+      "crop_pixels_sha256": "47cbab5c80c826efe5281e04bcb6fd55364d2466b58807b23ae862abb14e6d4d",
+      "crop_shape": [
+        22,
+        31,
+        3
+      ],
+      "id": "eartags693",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "1d93869b62ca13a37d67a453eb20b939cce5e4098fe192b3d5273289368a2aed",
+      "issue": null,
+      "polygon": [
+        41.0,
+        73.0,
+        68.0,
+        70.0,
+        71.0,
+        91.0,
+        40.0,
+        95.0
+      ],
+      "score": 0.97155,
+      "seconds": 0.01713783387094736,
+      "text": "8.1"
+    },
+    {
+      "crop_pixels_sha256": "6e41030f2077ccc8b5ae5d51e895b734c740c04b013cb144cda2096c3311dd7c",
+      "crop_shape": [
+        33,
+        65,
+        3
+      ],
+      "id": "eartags693",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "1d93869b62ca13a37d67a453eb20b939cce5e4098fe192b3d5273289368a2aed",
+      "issue": null,
+      "polygon": [
+        28.0,
+        98.0,
+        93.0,
+        90.0,
+        93.0,
+        122.0,
+        34.0,
+        131.0
+      ],
+      "score": 1.0,
+      "seconds": 0.017928916960954666,
+      "text": "5262"
+    },
+    {
+      "crop_pixels_sha256": "fc6ad7ae14e0d208e82a81595851beeedc307724181b3bf283a8b860df7b31df",
+      "crop_shape": [
+        26,
+        40,
+        3
+      ],
+      "id": "eartags1727",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "a59ce537afa761774abb5ab7a38647052ead69f1cdba5f37743c0b12e61f3b94",
+      "issue": null,
+      "polygon": [
+        84.0,
+        54.0,
+        124.0,
+        54.0,
+        124.0,
+        80.0,
+        84.0,
+        80.0
+      ],
+      "score": 1.0,
+      "seconds": 0.017862416803836823,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "8affc0741af7d69af30a2ee3864f019cdf370049369637bbec7242fe3020db54",
+      "crop_shape": [
+        26,
+        90,
+        3
+      ],
+      "id": "eartags1727",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "a59ce537afa761774abb5ab7a38647052ead69f1cdba5f37743c0b12e61f3b94",
+      "issue": null,
+      "polygon": [
+        74.0,
+        78.0,
+        164.0,
+        86.0,
+        162.0,
+        112.0,
+        72.0,
+        104.0
+      ],
+      "score": 0.99646,
+      "seconds": 0.016594458371400833,
+      "text": "7-21"
+    },
+    {
+      "crop_pixels_sha256": "bd9c9625413b8f70f7f2eae1d36d11a9bed31bb9eed4899934b45ab9b511c546",
+      "crop_shape": [
+        58,
+        133,
+        3
+      ],
+      "id": "eartags1727",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "a59ce537afa761774abb5ab7a38647052ead69f1cdba5f37743c0b12e61f3b94",
+      "issue": null,
+      "polygon": [
+        42.0,
+        99.0,
+        164.0,
+        112.0,
+        158.0,
+        170.0,
+        25.0,
+        155.0
+      ],
+      "score": 0.99999,
+      "seconds": 0.017578375060111284,
+      "text": "160144"
+    },
+    {
+      "crop_pixels_sha256": "1c83a87b60f10fa86ca395939e2b3f4f5ca661de184a3257093b4b9907b7ffd4",
+      "crop_shape": [
+        17,
+        23,
+        3
+      ],
+      "id": "eartags1262",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "36c5ccd51cc01a9d785b9f99479a9cfada6d7bc6486c271ab14d135aa378b24c",
+      "issue": null,
+      "polygon": [
+        58.0,
+        55.0,
+        81.0,
+        55.0,
+        81.0,
+        72.0,
+        58.0,
+        72.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.01839774986729026,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "dc24b454f4d6a212f421fd318ddd6c5387d06f4b89cfcd859ac6bb2c12b85aaa",
+      "crop_shape": [
+        41,
+        76,
+        3
+      ],
+      "id": "eartags1262",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "36c5ccd51cc01a9d785b9f99479a9cfada6d7bc6486c271ab14d135aa378b24c",
+      "issue": null,
+      "polygon": [
+        33.0,
+        82.0,
+        105.0,
+        93.0,
+        104.0,
+        134.0,
+        29.0,
+        119.0
+      ],
+      "score": 0.99996,
+      "seconds": 0.018041083123534918,
+      "text": "160324"
+    },
+    {
+      "crop_pixels_sha256": "d40499e2278f9ca5b57dab1c06fd1b73564b35ecd3bd9e95242acf177e11fb85",
+      "crop_shape": [
+        19,
+        57,
+        3
+      ],
+      "id": "eartags1262",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "36c5ccd51cc01a9d785b9f99479a9cfada6d7bc6486c271ab14d135aa378b24c",
+      "issue": null,
+      "polygon": [
+        47.0,
+        64.0,
+        103.0,
+        76.0,
+        98.0,
+        95.0,
+        42.0,
+        82.0
+      ],
+      "score": 0.97266,
+      "seconds": 0.017712250351905823,
+      "text": "12-23"
+    },
+    {
+      "crop_pixels_sha256": "a8418ea968d90e6402a8d7412f988833ce70c60d18026484cac8d7ede4a6ccac",
+      "crop_shape": [
+        20,
+        30,
+        3
+      ],
+      "id": "eartags1689",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "77cbf56c6b911c63fa77b94a8613385a554c347fa9f0950e5e886fa04f306856",
+      "issue": null,
+      "polygon": [
+        68.0,
+        48.0,
+        98.0,
+        51.0,
+        96.0,
+        71.0,
+        66.0,
+        68.0
+      ],
+      "score": 0.99996,
+      "seconds": 0.017219499684870243,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "833a2552da4db024a83f36ee595bf55acc4a67c9df063b819dff631d890e3502",
+      "crop_shape": [
+        49,
+        73,
+        3
+      ],
+      "id": "eartags1689",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "77cbf56c6b911c63fa77b94a8613385a554c347fa9f0950e5e886fa04f306856",
+      "issue": null,
+      "polygon": [
+        29.0,
+        92.0,
+        102.0,
+        92.0,
+        102.0,
+        141.0,
+        29.0,
+        141.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.017187457997351885,
+      "text": "1601"
+    },
+    {
+      "crop_pixels_sha256": "1615d11265d696f840b172f99930392627fd7d6ac5f89f28edb37e9375e14448",
+      "crop_shape": [
+        21,
+        60,
+        3
+      ],
+      "id": "eartags1689",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "77cbf56c6b911c63fa77b94a8613385a554c347fa9f0950e5e886fa04f306856",
+      "issue": null,
+      "polygon": [
+        33.0,
+        69.0,
+        93.0,
+        69.0,
+        93.0,
+        90.0,
+        33.0,
+        90.0
+      ],
+      "score": 0.67989,
+      "seconds": 0.016654708422720432,
+      "text": "11-"
+    },
+    {
+      "crop_pixels_sha256": "856a26b2fa4f91555d35aadb8adb1d830edd82f4b1ab01acf469d3ba427e37bd",
+      "crop_shape": [
+        39,
+        76,
+        3
+      ],
+      "id": "eartags622",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "b9de156abb9c7857559b6760d2f17ef47970ced699585abba911efd5d05001b5",
+      "issue": null,
+      "polygon": [
+        32.0,
+        25.0,
+        79.0,
+        85.0,
+        69.0,
+        111.0,
+        26.0,
+        64.0
+      ],
+      "score": 0.9723,
+      "seconds": 0.017023291904479265,
+      "text": "67072"
+    },
+    {
+      "crop_pixels_sha256": "8f9f63c60d148f0609a7041f50d309414b5aec5948c2b70b8c6a26ae8fc514e6",
+      "crop_shape": [
+        25,
+        41,
+        3
+      ],
+      "id": "eartags775",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "c9b759dd192a30d82f4cd2f30e61a486ff2f00544ba617ad9476cff7a7788738",
+      "issue": null,
+      "polygon": [
+        1.0,
+        52.0,
+        42.0,
+        52.0,
+        42.0,
+        77.0,
+        1.0,
+        77.0
+      ],
+      "score": 0.94534,
+      "seconds": 0.018306583166122437,
+      "text": "13698"
+    },
+    {
+      "crop_pixels_sha256": "9971d94733122692e6ba76186472090e631e2d53727d1c278ac6ec60efd4ebc0",
+      "crop_shape": [
+        25,
+        51,
+        3
+      ],
+      "id": "eartags1985",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "c6da5d4753f0ddc67e3d3f550927a00cdd1f89b08de8c5de781691c5469e8517",
+      "issue": null,
+      "polygon": [
+        9.0,
+        58.0,
+        60.0,
+        58.0,
+        60.0,
+        83.0,
+        9.0,
+        83.0
+      ],
+      "score": 0.9999,
+      "seconds": 0.018013374879956245,
+      "text": "253134"
+    },
+    {
+      "crop_pixels_sha256": "f26ae0b570b64e7eba8d11a1a59155c2a60c701814ea33727dc5b91cd68e8771",
+      "crop_shape": [
+        16,
+        42,
+        3
+      ],
+      "id": "eartags1985",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "c6da5d4753f0ddc67e3d3f550927a00cdd1f89b08de8c5de781691c5469e8517",
+      "issue": null,
+      "polygon": [
+        20.0,
+        41.0,
+        62.0,
+        41.0,
+        62.0,
+        57.0,
+        20.0,
+        57.0
+      ],
+      "score": 0.92609,
+      "seconds": 0.0174321667291224,
+      "text": "424"
+    },
+    {
+      "crop_pixels_sha256": "59e11b8ae22de912e33341c5850b96ef63a801251a85f462be189f1210c8051d",
+      "crop_shape": [
+        15,
+        19,
+        3
+      ],
+      "id": "eartags1985",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "c6da5d4753f0ddc67e3d3f550927a00cdd1f89b08de8c5de781691c5469e8517",
+      "issue": null,
+      "polygon": [
+        33.0,
+        29.0,
+        52.0,
+        29.0,
+        52.0,
+        44.0,
+        33.0,
+        44.0
+      ],
+      "score": 0.68682,
+      "seconds": 0.017777542117983103,
+      "text": "19"
+    },
+    {
+      "crop_pixels_sha256": "612dc5838d787f50019f38ad563db404f7510d0cb3323bd404ea3a43b0f16007",
+      "crop_shape": [
+        24,
+        35,
+        3
+      ],
+      "id": "eartags1318",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "8e632f9d1b80d2670b4ae6b83ed4cfd07367ab1ba480ba2f183ceff300674c09",
+      "issue": null,
+      "polygon": [
+        37.0,
+        32.0,
+        72.0,
+        32.0,
+        72.0,
+        56.0,
+        37.0,
+        56.0
+      ],
+      "score": 0.97544,
+      "seconds": 0.01694162469357252,
+      "text": "2.31"
+    },
+    {
+      "crop_pixels_sha256": "ecd6edd51f3aa87f6072cab6c1434b5edf830f79a8382eaf81661785e0ed145b",
+      "crop_shape": [
+        31,
+        68,
+        3
+      ],
+      "id": "eartags1318",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "8e632f9d1b80d2670b4ae6b83ed4cfd07367ab1ba480ba2f183ceff300674c09",
+      "issue": null,
+      "polygon": [
+        13.0,
+        50.0,
+        80.0,
+        66.0,
+        71.0,
+        96.0,
+        6.0,
+        81.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.017733875196427107,
+      "text": "20639"
+    },
+    {
+      "crop_pixels_sha256": "6ee63c9fc8e7c442139195b65069bf1a92301de7fa93a409a3153d08febf46c1",
+      "crop_shape": [
+        22,
+        42,
+        3
+      ],
+      "id": "eartags606",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "e12312b1885f3a67baa091530a85b8aab1a7706d0aaf57d7500c9f1979d3621a",
+      "issue": null,
+      "polygon": [
+        30.0,
+        57.0,
+        71.0,
+        49.0,
+        75.0,
+        71.0,
+        33.0,
+        79.0
+      ],
+      "score": 0.99356,
+      "seconds": 0.016699499916285276,
+      "text": "8.31"
+    },
+    {
+      "crop_pixels_sha256": "8623b69633a211e0c6e95629fa1151ced7085ce5703fd8e3c0f9ba7f84f195a0",
+      "crop_shape": [
+        36,
+        67,
+        3
+      ],
+      "id": "eartags606",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "e12312b1885f3a67baa091530a85b8aab1a7706d0aaf57d7500c9f1979d3621a",
+      "issue": null,
+      "polygon": [
+        23.0,
+        79.0,
+        89.0,
+        70.0,
+        92.0,
+        106.0,
+        25.0,
+        112.0
+      ],
+      "score": 1.0,
+      "seconds": 0.017310207709670067,
+      "text": "5409"
+    },
+    {
+      "crop_pixels_sha256": "eaaf0f9e3b8815d1878a8b45bb7ebb857a5b3ce23d896eea48c1f113b1b793bc",
+      "crop_shape": [
+        16,
+        17,
+        3
+      ],
+      "id": "eartags606",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "e12312b1885f3a67baa091530a85b8aab1a7706d0aaf57d7500c9f1979d3621a",
+      "issue": null,
+      "polygon": [
+        51.0,
+        38.0,
+        68.0,
+        38.0,
+        68.0,
+        54.0,
+        51.0,
+        54.0
+      ],
+      "score": 0.98132,
+      "seconds": 0.01645425008609891,
+      "text": "22"
+    },
+    {
+      "crop_pixels_sha256": "6242f44418f68bc5ab4a919bb448d0b9f99e9cf0395ecaa63284a3c623316ac9",
+      "crop_shape": [
+        15,
+        16,
+        3
+      ],
+      "id": "eartags880",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "a3c0ba7d9394b158ca8bf101e17fd7f5a4049844f8ffe5fb38698a16fa441357",
+      "issue": null,
+      "polygon": [
+        45.0,
+        49.0,
+        61.0,
+        49.0,
+        61.0,
+        64.0,
+        45.0,
+        64.0
+      ],
+      "score": 0.99892,
+      "seconds": 0.016482125036418438,
+      "text": "22"
+    },
+    {
+      "crop_pixels_sha256": "4eb2a64c7ffb84954a710894d50dcae194cac30e812e5be414124cd0fa86f86e",
+      "crop_shape": [
+        29,
+        57,
+        3
+      ],
+      "id": "eartags880",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "a3c0ba7d9394b158ca8bf101e17fd7f5a4049844f8ffe5fb38698a16fa441357",
+      "issue": null,
+      "polygon": [
+        21.0,
+        78.0,
+        77.0,
+        89.0,
+        71.0,
+        118.0,
+        16.0,
+        105.0
+      ],
+      "score": 1.0,
+      "seconds": 0.016465832944959402,
+      "text": "5245"
+    },
+    {
+      "crop_pixels_sha256": "5ca586d8e62e94580c1b63cd1811ebc21aafc25a157c75fb280c5fab6d7045a5",
+      "crop_shape": [
+        20,
+        28,
+        3
+      ],
+      "id": "eartags880",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "a3c0ba7d9394b158ca8bf101e17fd7f5a4049844f8ffe5fb38698a16fa441357",
+      "issue": null,
+      "polygon": [
+        38.0,
+        63.0,
+        66.0,
+        69.0,
+        55.0,
+        86.0,
+        34.0,
+        80.0
+      ],
+      "score": 0.91799,
+      "seconds": 0.016361957881599665,
+      "text": "8.5"
+    },
+    {
+      "crop_pixels_sha256": "b479531325c87de443c2a885bca66cb18f1379928123816c5b697c3fc154b91e",
+      "crop_shape": [
+        33,
+        91,
+        3
+      ],
+      "id": "eartags1237",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "afd979c4644ea0a328eb0c2d917467411548dd4240d2684e957680b151cb7e5f",
+      "issue": null,
+      "polygon": [
+        34.0,
+        45.0,
+        122.0,
+        71.0,
+        110.0,
+        102.0,
+        24.0,
+        71.0
+      ],
+      "score": 0.66767,
+      "seconds": 0.016368042211979628,
+      "text": "670"
+    },
+    {
+      "crop_pixels_sha256": "10f0bf81a6e04973bf34b6d4d028d9cf72953ff41830059f0e6afd9ce2799808",
+      "crop_shape": [
+        19,
+        64,
+        3
+      ],
+      "id": "eartags1237",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "afd979c4644ea0a328eb0c2d917467411548dd4240d2684e957680b151cb7e5f",
+      "issue": null,
+      "polygon": [
+        56.0,
+        35.0,
+        115.0,
+        50.0,
+        107.0,
+        68.0,
+        46.0,
+        47.0
+      ],
+      "score": 0.85831,
+      "seconds": 0.017358291894197464,
+      "text": "12.2"
+    },
+    {
+      "crop_pixels_sha256": "1af0d2f83bce2fb00e958c21b2bdb6475cc583c54d7742b08a644904b2a9ac03",
+      "crop_shape": [
+        25,
+        70,
+        3
+      ],
+      "id": "eartags3162",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "c0d373166efd8e6a17672d0ab391a798a1d63c8d1b9272d2a5f06f0745148ab7",
+      "issue": null,
+      "polygon": [
+        20.0,
+        64.0,
+        89.0,
+        77.0,
+        82.0,
+        102.0,
+        13.0,
+        89.0
+      ],
+      "score": 0.99974,
+      "seconds": 0.018066332675516605,
+      "text": "66826"
+    },
+    {
+      "crop_pixels_sha256": "bcedd4d6292cae31baf8f69d0dd4ef46491b0ea922183d5aa13472b990983a4a",
+      "crop_shape": [
+        19,
+        21,
+        3
+      ],
+      "id": "eartags3162",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "c0d373166efd8e6a17672d0ab391a798a1d63c8d1b9272d2a5f06f0745148ab7",
+      "issue": null,
+      "polygon": [
+        40.0,
+        34.0,
+        61.0,
+        34.0,
+        61.0,
+        53.0,
+        40.0,
+        53.0
+      ],
+      "score": 0.99886,
+      "seconds": 0.01665633311495185,
+      "text": "20"
+    },
+    {
+      "crop_pixels_sha256": "3ad8b2be00c9fbe4d9419ceb995e19d51e4d242b7447d00fed6cde22b7b6a9da",
+      "crop_shape": [
+        16,
+        33,
+        3
+      ],
+      "id": "eartags3162",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "c0d373166efd8e6a17672d0ab391a798a1d63c8d1b9272d2a5f06f0745148ab7",
+      "issue": null,
+      "polygon": [
+        33.0,
+        52.0,
+        66.0,
+        56.0,
+        61.0,
+        72.0,
+        30.0,
+        64.0
+      ],
+      "score": 0.97348,
+      "seconds": 0.01654925011098385,
+      "text": "11.1"
+    },
+    {
+      "crop_pixels_sha256": "83138d4bd442c72a5a83eb01d667f7b6edacda312f59d3eb0d65d8620abad383",
+      "crop_shape": [
+        12,
+        21,
+        3
+      ],
+      "id": "eartags3219",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "072ddbab646f2b5dfecccf9980dfbc04c1d626ec0be0f7f35256ecffd5cdf0fe",
+      "issue": null,
+      "polygon": [
+        41.0,
+        25.0,
+        53.0,
+        25.0,
+        53.0,
+        46.0,
+        41.0,
+        46.0
+      ],
+      "score": 0.40263,
+      "seconds": 0.01652870886027813,
+      "text": "8"
+    },
+    {
+      "crop_pixels_sha256": "2dd04c0f7df20a454fe8b2d02c623a29c3bf226a4343192f49cc411bc85cce68",
+      "crop_shape": [
+        29,
+        56,
+        3
+      ],
+      "id": "eartags3219",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "072ddbab646f2b5dfecccf9980dfbc04c1d626ec0be0f7f35256ecffd5cdf0fe",
+      "issue": null,
+      "polygon": [
+        32.0,
+        35.0,
+        79.0,
+        67.0,
+        73.0,
+        95.0,
+        33.0,
+        64.0
+      ],
+      "score": 0.99777,
+      "seconds": 0.016824000049382448,
+      "text": "5317"
+    },
+    {
+      "crop_pixels_sha256": "bd23abf257251876bd07672e470d6e77131d25ebdbe4306168f859a133672d18",
+      "crop_shape": [
+        27,
+        41,
+        3
+      ],
+      "id": "eartags1592",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "55fb94938849b76ce66c7bd4316600ab58eded0fb866c3415bc2ea1df9e7d18d",
+      "issue": null,
+      "polygon": [
+        16.0,
+        41.0,
+        56.0,
+        34.0,
+        61.0,
+        61.0,
+        20.0,
+        68.0
+      ],
+      "score": 0.99968,
+      "seconds": 0.01642037509009242,
+      "text": "66996"
+    },
+    {
+      "crop_pixels_sha256": "da8e95e36ccf024c7b8a487b5609c83c3cfa3cf424eed4d26b4f40109c3cacec",
+      "crop_shape": [
+        13,
+        24,
+        3
+      ],
+      "id": "eartags1592",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "55fb94938849b76ce66c7bd4316600ab58eded0fb866c3415bc2ea1df9e7d18d",
+      "issue": null,
+      "polygon": [
+        22.0,
+        24.0,
+        46.0,
+        24.0,
+        46.0,
+        37.0,
+        22.0,
+        37.0
+      ],
+      "score": 0.81785,
+      "seconds": 0.016944707836955786,
+      "text": "11.22"
+    },
+    {
+      "crop_pixels_sha256": "703e19884812258e3a44d499de8f300f19c57ef94a6f3e8175f714abbbd1b040",
+      "crop_shape": [
+        24,
+        29,
+        3
+      ],
+      "id": "eartags73",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "bc9f774c3f8fe1daa52cfc55e8bdcfa1207a9f202fcf3c58e20edba3c2a9fe7a",
+      "issue": null,
+      "polygon": [
+        83.0,
+        57.0,
+        112.0,
+        57.0,
+        112.0,
+        81.0,
+        83.0,
+        81.0
+      ],
+      "score": 0.15179,
+      "seconds": 0.0170952919870615,
+      "text": "L"
+    },
+    {
+      "crop_pixels_sha256": "b57a97812c687d59aa50c4d37f395dd793def075bc4946cd5d4cfdfeb397aefd",
+      "crop_shape": [
+        26,
+        51,
+        3
+      ],
+      "id": "eartags73",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "bc9f774c3f8fe1daa52cfc55e8bdcfa1207a9f202fcf3c58e20edba3c2a9fe7a",
+      "issue": null,
+      "polygon": [
+        69.0,
+        59.0,
+        103.0,
+        85.0,
+        86.0,
+        105.0,
+        49.0,
+        69.0
+      ],
+      "score": 0.99698,
+      "seconds": 0.016642624977976084,
+      "text": "5.29"
+    },
+    {
+      "crop_pixels_sha256": "5309a7f3ee57251ca6253c96a5515cb103dc66d16da481c5fd26f62bfc1ab9f0",
+      "crop_shape": [
+        54,
+        72,
+        3
+      ],
+      "id": "eartags73",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "bc9f774c3f8fe1daa52cfc55e8bdcfa1207a9f202fcf3c58e20edba3c2a9fe7a",
+      "issue": null,
+      "polygon": [
+        40.0,
+        64.0,
+        96.0,
+        110.0,
+        51.0,
+        140.0,
+        3.0,
+        100.0
+      ],
+      "score": 0.99949,
+      "seconds": 0.018324125092476606,
+      "text": "68241"
+    },
+    {
+      "crop_pixels_sha256": "063115c234fa64d7968aadd40095bb958691393d43ac3dc6994ef129fb3a033d",
+      "crop_shape": [
+        35,
+        30,
+        3
+      ],
+      "id": "eartags2922",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "47637a20c7327624f353ea9c6db7d99b1f0a0a21d7be8f2c0456927c95587957",
+      "issue": null,
+      "polygon": [
+        11.0,
+        67.0,
+        41.0,
+        67.0,
+        41.0,
+        102.0,
+        11.0,
+        102.0
+      ],
+      "score": 0.95347,
+      "seconds": 0.016881416086107492,
+      "text": "2641"
+    },
+    {
+      "crop_pixels_sha256": "81f6f56be1e3594873a5830b91a12b0a00c4c4ad60d1512ed24cd93190d13567",
+      "crop_shape": [
+        11,
+        16,
+        3
+      ],
+      "id": "eartags2081",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "6fb19c9d9b78d768d3aa690e3f98afd20c595c18448b4ae01e87876e776485a1",
+      "issue": null,
+      "polygon": [
+        31.0,
+        24.0,
+        47.0,
+        24.0,
+        47.0,
+        35.0,
+        31.0,
+        35.0
+      ],
+      "score": 0.11359,
+      "seconds": 0.01836375007405877,
+      "text": "\u513f"
+    },
+    {
+      "crop_pixels_sha256": "b18bd7957b0bbcee2d041f9300574b2c8e1cdd90aace0887df23769b04ddb96a",
+      "crop_shape": [
+        16,
+        25,
+        3
+      ],
+      "id": "eartags2081",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "6fb19c9d9b78d768d3aa690e3f98afd20c595c18448b4ae01e87876e776485a1",
+      "issue": null,
+      "polygon": [
+        28.0,
+        36.0,
+        51.0,
+        36.0,
+        51.0,
+        47.0,
+        26.0,
+        52.0
+      ],
+      "score": 0.85108,
+      "seconds": 0.016660500317811966,
+      "text": "8.22"
+    },
+    {
+      "crop_pixels_sha256": "1a1c47a415bc6a3d8cb714744a134a659f24a2f9e5c9832387279cbcd547d04d",
+      "crop_shape": [
+        21,
+        36,
+        3
+      ],
+      "id": "eartags2081",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "6fb19c9d9b78d768d3aa690e3f98afd20c595c18448b4ae01e87876e776485a1",
+      "issue": null,
+      "polygon": [
+        20.0,
+        53.0,
+        56.0,
+        48.0,
+        54.0,
+        69.0,
+        21.0,
+        72.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.016715416684746742,
+      "text": "5375"
+    },
+    {
+      "crop_pixels_sha256": "2734548f237c46abbc242fcccf394e78677fd5a8428204d48ad41a155a678fce",
+      "crop_shape": [
+        35,
+        41,
+        3
+      ],
+      "id": "eartags3016",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "ce54c5eb0a4e124ad5887b038b7e64ba4289f7204c877f4305a69758566c328e",
+      "issue": null,
+      "polygon": [
+        104.0,
+        64.0,
+        144.0,
+        68.0,
+        141.0,
+        103.0,
+        100.0,
+        99.0
+      ],
+      "score": 0.99999,
+      "seconds": 0.01738625019788742,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "65132e8f6b04790a6dd7802890da3230f05716309d12f11ba7bbc0cf7514f96d",
+      "crop_shape": [
+        36,
+        76,
+        3
+      ],
+      "id": "eartags3016",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "ce54c5eb0a4e124ad5887b038b7e64ba4289f7204c877f4305a69758566c328e",
+      "issue": null,
+      "polygon": [
+        77.0,
+        100.0,
+        153.0,
+        104.0,
+        151.0,
+        140.0,
+        75.0,
+        135.0
+      ],
+      "score": 0.99883,
+      "seconds": 0.016895082779228687,
+      "text": "9-5"
+    },
+    {
+      "crop_pixels_sha256": "caea1713fac5097ef9ae4d5e1895d2c76dd6a8bf33b7076bb558fff2fc04e9d9",
+      "crop_shape": [
+        81,
+        139,
+        3
+      ],
+      "id": "eartags3016",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "ce54c5eb0a4e124ad5887b038b7e64ba4289f7204c877f4305a69758566c328e",
+      "issue": null,
+      "polygon": [
+        47.0,
+        130.0,
+        170.0,
+        143.0,
+        156.0,
+        223.0,
+        18.0,
+        205.0
+      ],
+      "score": 0.99999,
+      "seconds": 0.016843833029270172,
+      "text": "160171"
+    },
+    {
+      "crop_pixels_sha256": "d5781213c8f848ec7811f061fad9fd7462f985630f24541a2e1c9676098d5136",
+      "crop_shape": [
+        22,
+        59,
+        3
+      ],
+      "id": "eartags2023",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "24e4247d0aab4a98b66b3cf1209a579e8c2707c65f5292e0b6823654d74e0036",
+      "issue": null,
+      "polygon": [
+        29.0,
+        54.0,
+        88.0,
+        52.0,
+        88.0,
+        74.0,
+        30.0,
+        74.0
+      ],
+      "score": 0.89024,
+      "seconds": 0.01678783306851983,
+      "text": "66200"
+    },
+    {
+      "crop_pixels_sha256": "2da2772654554fab25b28ac80bddf737271481be4eca3e73e1e50dddf4a00ba2",
+      "crop_shape": [
+        17,
+        30,
+        3
+      ],
+      "id": "eartags2023",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "24e4247d0aab4a98b66b3cf1209a579e8c2707c65f5292e0b6823654d74e0036",
+      "issue": null,
+      "polygon": [
+        43.0,
+        36.0,
+        73.0,
+        36.0,
+        73.0,
+        53.0,
+        43.0,
+        53.0
+      ],
+      "score": 0.97166,
+      "seconds": 0.0173504576086998,
+      "text": "7.2"
+    },
+    {
+      "crop_pixels_sha256": "1b3b91dca3da85761acdccb4146e2d4cbd86ba98e692ec7ccc8d1a0592ad1d2d",
+      "crop_shape": [
+        10,
+        18,
+        3
+      ],
+      "id": "eartags2665",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "c5f39bd405766aa8f98bee16688d3aa6d0152bba021b740a526a3338b27eebce",
+      "issue": null,
+      "polygon": [
+        39.0,
+        55.0,
+        49.0,
+        55.0,
+        49.0,
+        73.0,
+        39.0,
+        73.0
+      ],
+      "score": 0.51228,
+      "seconds": 0.01748954225331545,
+      "text": "2"
+    },
+    {
+      "crop_pixels_sha256": "82313824a830d61f489fad50dd497e63a8ff9f81525c5ede002f47c6ffef889d",
+      "crop_shape": [
+        32,
+        24,
+        3
+      ],
+      "id": "eartags2665",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "c5f39bd405766aa8f98bee16688d3aa6d0152bba021b740a526a3338b27eebce",
+      "issue": null,
+      "polygon": [
+        35.0,
+        81.0,
+        52.0,
+        65.0,
+        59.0,
+        95.0,
+        43.0,
+        113.0
+      ],
+      "score": 0.62173,
+      "seconds": 0.016281084157526493,
+      "text": "1.A"
+    },
+    {
+      "crop_pixels_sha256": "6330c3ac80c55c31c5dc98f0353b7b4bdc54dcd311fe3e101e171dac9c659e16",
+      "crop_shape": [
+        39,
+        36,
+        3
+      ],
+      "id": "eartags2665",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "c5f39bd405766aa8f98bee16688d3aa6d0152bba021b740a526a3338b27eebce",
+      "issue": null,
+      "polygon": [
+        41.0,
+        118.0,
+        65.0,
+        91.0,
+        75.0,
+        129.0,
+        50.0,
+        156.0
+      ],
+      "score": 0.87444,
+      "seconds": 0.01618729205802083,
+      "text": "6366"
+    },
+    {
+      "crop_pixels_sha256": "2c08fa5724c35581c5ff5f85c4f9e6461de85d74450981ce16f11044eb564274",
+      "crop_shape": [
+        29,
+        70,
+        3
+      ],
+      "id": "eartags2174",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "dddfd0a41d4da41b7cd19d2c312f7ddbce57fee5255b28a2ba741f7c239b3bee",
+      "issue": null,
+      "polygon": [
+        26.0,
+        70.0,
+        92.0,
+        53.0,
+        102.0,
+        79.0,
+        34.0,
+        98.0
+      ],
+      "score": 0.97461,
+      "seconds": 0.017056667245924473,
+      "text": "40221"
+    },
+    {
+      "crop_pixels_sha256": "de46e18d063c760b2ddc08c3b5d960bdff1e6e53b4f190a5a148d44ccda2d028",
+      "crop_shape": [
+        25,
+        43,
+        3
+      ],
+      "id": "eartags2174",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "dddfd0a41d4da41b7cd19d2c312f7ddbce57fee5255b28a2ba741f7c239b3bee",
+      "issue": null,
+      "polygon": [
+        31.0,
+        34.0,
+        74.0,
+        34.0,
+        74.0,
+        59.0,
+        31.0,
+        59.0
+      ],
+      "score": 0.65209,
+      "seconds": 0.017247625160962343,
+      "text": "4.21"
+    },
+    {
+      "crop_pixels_sha256": "62d3a2a08e08745f6530c66d0a09f07a761c25b5508c8fbd0c51281bce0bfbe3",
+      "crop_shape": [
+        21,
+        24,
+        3
+      ],
+      "id": "eartags185",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "82cad18879ac20f63a5de094f35a74f8922737fb77f85cd4df3b52d67f708be4",
+      "issue": null,
+      "polygon": [
+        52.0,
+        33.0,
+        76.0,
+        33.0,
+        76.0,
+        54.0,
+        52.0,
+        54.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.01829633302986622,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "5acffbdb3a4ec5779599f11cfcef23b2031a2efa0840712a0d07a382c3e8e0bb",
+      "crop_shape": [
+        26,
+        69,
+        3
+      ],
+      "id": "eartags185",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "82cad18879ac20f63a5de094f35a74f8922737fb77f85cd4df3b52d67f708be4",
+      "issue": null,
+      "polygon": [
+        22.0,
+        61.0,
+        90.0,
+        47.0,
+        94.0,
+        71.0,
+        26.0,
+        87.0
+      ],
+      "score": 0.99822,
+      "seconds": 0.018499667290598154,
+      "text": "12-8"
+    },
+    {
+      "crop_pixels_sha256": "5c2138d568aad79d5f99a0a28b31a21c1f257b4892dc3219e60f00d38efdf9bb",
+      "crop_shape": [
+        46,
+        87,
+        3
+      ],
+      "id": "eartags185",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "82cad18879ac20f63a5de094f35a74f8922737fb77f85cd4df3b52d67f708be4",
+      "issue": null,
+      "polygon": [
+        21.0,
+        89.0,
+        106.0,
+        68.0,
+        106.0,
+        114.0,
+        29.0,
+        133.0
+      ],
+      "score": 0.99997,
+      "seconds": 0.01689220778644085,
+      "text": "253427"
+    },
+    {
+      "crop_pixels_sha256": "fb14d13aaeef8e9731cea0c09645614b9ecdce7480eecd4c96324d051f9cb47d",
+      "crop_shape": [
+        15,
+        37,
+        3
+      ],
+      "id": "eartags1588",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "ea95b68faba5a8cd37eae1d9106dc27fd8594aa4940930fcf58c0d45fe115a73",
+      "issue": null,
+      "polygon": [
+        45.0,
+        35.0,
+        82.0,
+        35.0,
+        82.0,
+        50.0,
+        45.0,
+        50.0
+      ],
+      "score": 0.94496,
+      "seconds": 0.016470500268042088,
+      "text": "G-T"
+    },
+    {
+      "crop_pixels_sha256": "33ec89108611e04e2371d5f6638365679ab09346ab4fc36a57790cecfa8af0b4",
+      "crop_shape": [
+        37,
+        85,
+        3
+      ],
+      "id": "eartags1588",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "ea95b68faba5a8cd37eae1d9106dc27fd8594aa4940930fcf58c0d45fe115a73",
+      "issue": null,
+      "polygon": [
+        24.0,
+        46.0,
+        109.0,
+        46.0,
+        109.0,
+        83.0,
+        24.0,
+        83.0
+      ],
+      "score": 0.99995,
+      "seconds": 0.01730833388864994,
+      "text": "160127"
+    },
+    {
+      "crop_pixels_sha256": "adc00834a43496e70d8995688a2ab6a6560a8a32e8f2a6f92f56233af870cd0b",
+      "crop_shape": [
+        17,
+        21,
+        3
+      ],
+      "id": "eartags60",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "6f9cf878c795922cf0c75b583325a6a57fb0fbf63b7d6896669a224cc2beee46",
+      "issue": null,
+      "polygon": [
+        55.0,
+        27.0,
+        76.0,
+        27.0,
+        76.0,
+        44.0,
+        55.0,
+        44.0
+      ],
+      "score": 0.59043,
+      "seconds": 0.01655170787125826,
+      "text": "2"
+    },
+    {
+      "crop_pixels_sha256": "89853fa143b5d437aba01cea61fb5cc27fd0a2d3aa9add27653d42127e3ab0e8",
+      "crop_shape": [
+        21,
+        41,
+        3
+      ],
+      "id": "eartags60",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "6f9cf878c795922cf0c75b583325a6a57fb0fbf63b7d6896669a224cc2beee46",
+      "issue": null,
+      "polygon": [
+        44.0,
+        32.0,
+        76.0,
+        46.0,
+        67.0,
+        66.0,
+        32.0,
+        44.0
+      ],
+      "score": 0.97094,
+      "seconds": 0.01668587513267994,
+      "text": "5.9"
+    },
+    {
+      "crop_pixels_sha256": "940229f5f829febd2cb6a06412f8315c9ecd944f6d0bf8f3385856baa78fa43b",
+      "crop_shape": [
+        25,
+        59,
+        3
+      ],
+      "id": "eartags60",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "6f9cf878c795922cf0c75b583325a6a57fb0fbf63b7d6896669a224cc2beee46",
+      "issue": null,
+      "polygon": [
+        25.0,
+        42.0,
+        76.0,
+        72.0,
+        62.0,
+        92.0,
+        12.0,
+        64.0
+      ],
+      "score": 0.99936,
+      "seconds": 0.016439999919384718,
+      "text": "68090"
+    },
+    {
+      "crop_pixels_sha256": "3173586d9802eec77c3f32fbdc92dd82312f2f14b1a08e1821032b727930fb3f",
+      "crop_shape": [
+        38,
+        100,
+        3
+      ],
+      "id": "eartags3155",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "1e9961931e836d6dad0baa4332c3806d796fc640f88c776a2f71fac748ae91f1",
+      "issue": null,
+      "polygon": [
+        30.0,
+        54.0,
+        128.0,
+        78.0,
+        120.0,
+        116.0,
+        23.0,
+        91.0
+      ],
+      "score": 0.99987,
+      "seconds": 0.017718791961669922,
+      "text": "67149"
+    },
+    {
+      "crop_pixels_sha256": "099825a1e70342a0c627726c96e2f54ecfb77dc10c520eb6c9c196231d162d88",
+      "crop_shape": [
+        24,
+        36,
+        3
+      ],
+      "id": "eartags3155",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "1e9961931e836d6dad0baa4332c3806d796fc640f88c776a2f71fac748ae91f1",
+      "issue": null,
+      "polygon": [
+        72.0,
+        39.0,
+        108.0,
+        39.0,
+        108.0,
+        63.0,
+        72.0,
+        63.0
+      ],
+      "score": 0.99288,
+      "seconds": 0.016170707996934652,
+      "text": "20"
+    },
+    {
+      "crop_pixels_sha256": "bb58d20e5a02aaeefb956d37183ed63e7a4738926cf8cf672d93606361405f7a",
+      "crop_shape": [
+        16,
+        44,
+        3
+      ],
+      "id": "eartags491",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "e2750ef098a698c7bd8315240d58d8d65c965d40bfd0afe131e139f042473052",
+      "issue": null,
+      "polygon": [
+        39.0,
+        25.0,
+        83.0,
+        29.0,
+        81.0,
+        42.0,
+        38.0,
+        41.0
+      ],
+      "score": 0.96089,
+      "seconds": 0.017080875113606453,
+      "text": "3-"
+    },
+    {
+      "crop_pixels_sha256": "95328b0ce0757390f85154f9c068c0dd51d1831a6848606a9ddd0dd325cbaad8",
+      "crop_shape": [
+        27,
+        58,
+        3
+      ],
+      "id": "eartags491",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "e2750ef098a698c7bd8315240d58d8d65c965d40bfd0afe131e139f042473052",
+      "issue": null,
+      "polygon": [
+        26.0,
+        40.0,
+        84.0,
+        43.0,
+        82.0,
+        70.0,
+        27.0,
+        63.0
+      ],
+      "score": 0.99999,
+      "seconds": 0.016605291049927473,
+      "text": "253091"
+    },
+    {
+      "crop_pixels_sha256": "3cd043f5d28fcc031fcd347add8f19d5b766246a54f7c1d2637b0f0d19520989",
+      "crop_shape": [
+        39,
+        63,
+        3
+      ],
+      "id": "eartags2928",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "92623e4e6273b79a888f8f134e6d3fb73cf31f57291c39ad62bae30e3c6a67ab",
+      "issue": null,
+      "polygon": [
+        72.0,
+        70.0,
+        135.0,
+        67.0,
+        137.0,
+        106.0,
+        74.0,
+        109.0
+      ],
+      "score": 1.0,
+      "seconds": 0.01818904234096408,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "64a0879d3e83f682243f6508f2ff55d2241b4dac800319fc3fb936e282651871",
+      "crop_shape": [
+        86,
+        197,
+        3
+      ],
+      "id": "eartags2928",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "92623e4e6273b79a888f8f134e6d3fb73cf31f57291c39ad62bae30e3c6a67ab",
+      "issue": null,
+      "polygon": [
+        29.0,
+        151.0,
+        215.0,
+        130.0,
+        236.0,
+        212.0,
+        40.0,
+        237.0
+      ],
+      "score": 1.0,
+      "seconds": 0.017064000014215708,
+      "text": "160174"
+    },
+    {
+      "crop_pixels_sha256": "7a9e28d3d23a6e45adca805524016fe9c631ea50c069e60a590a469d0e7bdd13",
+      "crop_shape": [
+        34,
+        138,
+        3
+      ],
+      "id": "eartags2928",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "92623e4e6273b79a888f8f134e6d3fb73cf31f57291c39ad62bae30e3c6a67ab",
+      "issue": null,
+      "polygon": [
+        60.0,
+        110.0,
+        198.0,
+        100.0,
+        201.0,
+        129.0,
+        67.0,
+        144.0
+      ],
+      "score": 0.97517,
+      "seconds": 0.01649204082787037,
+      "text": "9-16"
+    },
+    {
+      "crop_pixels_sha256": "f5096319a99fc1236ef167e0213efda6cb08f872cad4c2191156f9dfa4af84eb",
+      "crop_shape": [
+        13,
+        16,
+        3
+      ],
+      "id": "eartags170",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "05e8b9bf9e9cbaa8b34652c20eb2bdc324870246582cf4ffc764fe6837fe1a85",
+      "issue": null,
+      "polygon": [
+        44.0,
+        44.0,
+        60.0,
+        44.0,
+        60.0,
+        57.0,
+        44.0,
+        57.0
+      ],
+      "score": 0.63774,
+      "seconds": 0.017454917076975107,
+      "text": "\u7531"
+    },
+    {
+      "crop_pixels_sha256": "4325dbab5c5c22b8bd7f7b22a356577461a7cb60be014b9baf4e136dcd2e9d61",
+      "crop_shape": [
+        13,
+        26,
+        3
+      ],
+      "id": "eartags170",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "05e8b9bf9e9cbaa8b34652c20eb2bdc324870246582cf4ffc764fe6837fe1a85",
+      "issue": null,
+      "polygon": [
+        40.0,
+        61.0,
+        63.0,
+        56.0,
+        65.0,
+        69.0,
+        39.0,
+        73.0
+      ],
+      "score": 0.58437,
+      "seconds": 0.016399167012423277,
+      "text": "Dn"
+    },
+    {
+      "crop_pixels_sha256": "55a661cbab5a1b681acb18d4e72c53a56efe8afae31555f39a26df2abde4f21d",
+      "crop_shape": [
+        35,
+        71,
+        3
+      ],
+      "id": "eartags170",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "05e8b9bf9e9cbaa8b34652c20eb2bdc324870246582cf4ffc764fe6837fe1a85",
+      "issue": null,
+      "polygon": [
+        24.0,
+        87.0,
+        95.0,
+        87.0,
+        95.0,
+        122.0,
+        24.0,
+        122.0
+      ],
+      "score": 0.99944,
+      "seconds": 0.01624470902606845,
+      "text": "20581"
+    },
+    {
+      "crop_pixels_sha256": "ebafdf29916afe7408aaf647e26f7538be4798cf6b4221417c8bd00611e1607b",
+      "crop_shape": [
+        17,
+        22,
+        3
+      ],
+      "id": "eartags52",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "033de767333a51a07b860c362d8304902d1903e367eb83ae5f53e116eda440d8",
+      "issue": null,
+      "polygon": [
+        46.0,
+        45.0,
+        66.0,
+        50.0,
+        63.0,
+        67.0,
+        41.0,
+        62.0
+      ],
+      "score": 0.99659,
+      "seconds": 0.01620324980467558,
+      "text": "20"
+    },
+    {
+      "crop_pixels_sha256": "1eee9322df3063cc5c6bc75aaeccb7338b912d0adcfc0b1a52d6b769e676e8e8",
+      "crop_shape": [
+        24,
+        33,
+        3
+      ],
+      "id": "eartags52",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "033de767333a51a07b860c362d8304902d1903e367eb83ae5f53e116eda440d8",
+      "issue": null,
+      "polygon": [
+        42.0,
+        65.0,
+        74.0,
+        74.0,
+        65.0,
+        97.0,
+        38.0,
+        84.0
+      ],
+      "score": 0.87023,
+      "seconds": 0.01724858395755291,
+      "text": "6.1"
+    },
+    {
+      "crop_pixels_sha256": "6a9361fd12b61625b84823577e428cf3cd1723d4891fa7194a13f62617236079",
+      "crop_shape": [
+        30,
+        47,
+        3
+      ],
+      "id": "eartags52",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "033de767333a51a07b860c362d8304902d1903e367eb83ae5f53e116eda440d8",
+      "issue": null,
+      "polygon": [
+        27.0,
+        78.0,
+        69.0,
+        100.0,
+        57.0,
+        128.0,
+        25.0,
+        107.0
+      ],
+      "score": 0.92232,
+      "seconds": 0.016306917183101177,
+      "text": "56051"
+    },
+    {
+      "crop_pixels_sha256": "84a06c690b2fd2c7dd767b5190b80c6a3db787233be4f72657be200acf982fcc",
+      "crop_shape": [
+        22,
+        23,
+        3
+      ],
+      "id": "eartags2803",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "90d4dac63dfd3d8169fb87942fdb08ab10024277cc107eca4d43f5e76dc3c758",
+      "issue": null,
+      "polygon": [
+        56.0,
+        44.0,
+        78.0,
+        52.0,
+        68.0,
+        72.0,
+        49.0,
+        64.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.016184000298380852,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "11906a0349acf44380ec7893ef13b15b7fe86cc489245186338c1b0f086ce648",
+      "crop_shape": [
+        22,
+        70,
+        3
+      ],
+      "id": "eartags2803",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "90d4dac63dfd3d8169fb87942fdb08ab10024277cc107eca4d43f5e76dc3c758",
+      "issue": null,
+      "polygon": [
+        25.0,
+        53.0,
+        91.0,
+        78.0,
+        84.0,
+        99.0,
+        21.0,
+        70.0
+      ],
+      "score": 0.99878,
+      "seconds": 0.018471833784133196,
+      "text": "12-26"
+    },
+    {
+      "crop_pixels_sha256": "311eebb90739ca7bf720b3a90568241ef586b1857f634329b53ef5190333f74c",
+      "crop_shape": [
+        31,
+        76,
+        3
+      ],
+      "id": "eartags2803",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "90d4dac63dfd3d8169fb87942fdb08ab10024277cc107eca4d43f5e76dc3c758",
+      "issue": null,
+      "polygon": [
+        20.0,
+        72.0,
+        87.0,
+        101.0,
+        81.0,
+        132.0,
+        12.0,
+        98.0
+      ],
+      "score": 1.0,
+      "seconds": 0.01651912508532405,
+      "text": "253454"
+    },
+    {
+      "crop_pixels_sha256": "f3b719642f6b1fcee3849a8bef1156b696ef41915243917ac9667470056a0379",
+      "crop_shape": [
+        39,
+        84,
+        3
+      ],
+      "id": "eartags1593",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "9fc58804e6f7b9732a598f8ed44192c8fc2908066be0442e4538c390a7ae25d0",
+      "issue": null,
+      "polygon": [
+        29.0,
+        61.0,
+        112.0,
+        47.0,
+        118.0,
+        86.0,
+        35.0,
+        99.0
+      ],
+      "score": 0.99874,
+      "seconds": 0.01626429194584489,
+      "text": "20003"
+    },
+    {
+      "crop_pixels_sha256": "b9e8e5f93e9d05ceea76df11aa170dd9d466f75ed39c65d2f70efcc92c319060",
+      "crop_shape": [
+        39,
+        41,
+        3
+      ],
+      "id": "eartags3100",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "435a97f90cf23fecb6c90552761832bc198ffdbb50e744e82556e3d95364aa2a",
+      "issue": null,
+      "polygon": [
+        22.0,
+        72.0,
+        56.0,
+        49.0,
+        54.0,
+        88.0,
+        25.0,
+        110.0
+      ],
+      "score": 0.99557,
+      "seconds": 0.018358417320996523,
+      "text": "5249"
+    },
+    {
+      "crop_pixels_sha256": "b30283270831798dad14de52fa00290ac45ff7625d9a94933edeb5912a4cbce6",
+      "crop_shape": [
+        25,
+        27,
+        3
+      ],
+      "id": "eartags481",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "c1df05f4864e79590b94f8dbfc6de433017cdbe0df5e19c0dab0bd92b08eb53d",
+      "issue": null,
+      "polygon": [
+        47.0,
+        26.0,
+        72.0,
+        24.0,
+        76.0,
+        46.0,
+        49.0,
+        51.0
+      ],
+      "score": 0.96934,
+      "seconds": 0.01643454097211361,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "4771918f9e976ddead7c7605a5c01e80ac5192a61159cb3b0ce4b7fb011d4546",
+      "crop_shape": [
+        24,
+        58,
+        3
+      ],
+      "id": "eartags481",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "c1df05f4864e79590b94f8dbfc6de433017cdbe0df5e19c0dab0bd92b08eb53d",
+      "issue": null,
+      "polygon": [
+        40.0,
+        55.0,
+        94.0,
+        38.0,
+        99.0,
+        62.0,
+        43.0,
+        78.0
+      ],
+      "score": 0.90679,
+      "seconds": 0.016264458186924458,
+      "text": "6-11"
+    },
+    {
+      "crop_pixels_sha256": "a97cad9ffb3caf691ba4670d7790edcad4f0ae8d2c81700adb33b55048048448",
+      "crop_shape": [
+        49,
+        87,
+        3
+      ],
+      "id": "eartags481",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "c1df05f4864e79590b94f8dbfc6de433017cdbe0df5e19c0dab0bd92b08eb53d",
+      "issue": null,
+      "polygon": [
+        27.0,
+        85.0,
+        110.0,
+        57.0,
+        121.0,
+        103.0,
+        39.0,
+        133.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.018521541263908148,
+      "text": "160122"
+    },
+    {
+      "crop_pixels_sha256": "350194ada716883827fbd694f404266dbca8a55b04ed2ae2955cb96b56b77b22",
+      "crop_shape": [
+        24,
+        27,
+        3
+      ],
+      "id": "eartags1606",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "4ddae7f8e92c501308c6a29949461b400496cec45f336ef657e223cecea78f87",
+      "issue": null,
+      "polygon": [
+        50.0,
+        48.0,
+        77.0,
+        48.0,
+        77.0,
+        72.0,
+        50.0,
+        72.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.016438332851976156,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "d68417d2a637df99c4fb835113fd0bcad47c29f65a96603fc2e8dd65543e9c2d",
+      "crop_shape": [
+        23,
+        56,
+        3
+      ],
+      "id": "eartags1606",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "4ddae7f8e92c501308c6a29949461b400496cec45f336ef657e223cecea78f87",
+      "issue": null,
+      "polygon": [
+        40.0,
+        73.0,
+        96.0,
+        67.0,
+        98.0,
+        90.0,
+        43.0,
+        96.0
+      ],
+      "score": 0.98677,
+      "seconds": 0.016259499825537205,
+      "text": "0-26"
+    },
+    {
+      "crop_pixels_sha256": "4a9418b90c83c690fcdf5c972f82349ecc7f38e5e857593dd748d8d88c681295",
+      "crop_shape": [
+        48,
+        75,
+        3
+      ],
+      "id": "eartags1606",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "4ddae7f8e92c501308c6a29949461b400496cec45f336ef657e223cecea78f87",
+      "issue": null,
+      "polygon": [
+        25.0,
+        97.0,
+        100.0,
+        88.0,
+        94.0,
+        134.0,
+        24.0,
+        145.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.016506625339388847,
+      "text": "160163"
+    },
+    {
+      "crop_pixels_sha256": "1fd00a3a5a6b9c4ec9dbfb421ab637deb2053eca52dbe9a58e2242dba212ff8a",
+      "crop_shape": [
+        15,
+        50,
+        3
+      ],
+      "id": "eartags2777",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "ce6d1edbd75223cd65c05e77a94f949dec2a8dfbf67fea46de38b351072f6419",
+      "issue": null,
+      "polygon": [
+        44.0,
+        70.0,
+        93.0,
+        83.0,
+        89.0,
+        98.0,
+        41.0,
+        85.0
+      ],
+      "score": 0.8826,
+      "seconds": 0.016278750263154507,
+      "text": "12-13"
+    },
+    {
+      "crop_pixels_sha256": "ad66e3a4f55863fd00c9b0e18905f19eada78c6e9a4fc4576924275532470dbc",
+      "crop_shape": [
+        17,
+        18,
+        3
+      ],
+      "id": "eartags2777",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "ce6d1edbd75223cd65c05e77a94f949dec2a8dfbf67fea46de38b351072f6419",
+      "issue": null,
+      "polygon": [
+        60.0,
+        59.0,
+        78.0,
+        59.0,
+        78.0,
+        76.0,
+        60.0,
+        76.0
+      ],
+      "score": 0.99821,
+      "seconds": 0.016196750104427338,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "39c39e984511be120de602306839f976cecf58062a252dcbb07cb1b6f41ecd36",
+      "crop_shape": [
+        41,
+        62,
+        3
+      ],
+      "id": "eartags2777",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "ce6d1edbd75223cd65c05e77a94f949dec2a8dfbf67fea46de38b351072f6419",
+      "issue": null,
+      "polygon": [
+        32.0,
+        84.0,
+        92.0,
+        102.0,
+        78.0,
+        141.0,
+        19.0,
+        120.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.016410041134804487,
+      "text": "160308"
+    },
+    {
+      "crop_pixels_sha256": "67a4e7fdd67b74e9e9150b620daed2b603c8fe77e4073df26eaf460736b84c65",
+      "crop_shape": [
+        29,
+        25,
+        3
+      ],
+      "id": "eartags3114",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "c94901476a3bff696f4d384f27e5c2c0a4533fe9dd95c6afbf1040880562257a",
+      "issue": null,
+      "polygon": [
+        77.0,
+        39.0,
+        101.0,
+        46.0,
+        94.0,
+        75.0,
+        70.0,
+        68.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.016181999817490578,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "7b08dd9f69fd49b4074022dc62c4dfcebb499871cffddbb4535f71d59ffdb3a7",
+      "crop_shape": [
+        30,
+        71,
+        3
+      ],
+      "id": "eartags3114",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "c94901476a3bff696f4d384f27e5c2c0a4533fe9dd95c6afbf1040880562257a",
+      "issue": null,
+      "polygon": [
+        52.0,
+        62.0,
+        117.0,
+        83.0,
+        106.0,
+        111.0,
+        38.0,
+        89.0
+      ],
+      "score": 0.99871,
+      "seconds": 0.016190499998629093,
+      "text": "1-4"
+    },
+    {
+      "crop_pixels_sha256": "10c2e389b9808b4613edfa65776e139841cf09123fd7462c2eaa489884eab561",
+      "crop_shape": [
+        47,
+        86,
+        3
+      ],
+      "id": "eartags3114",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "c94901476a3bff696f4d384f27e5c2c0a4533fe9dd95c6afbf1040880562257a",
+      "issue": null,
+      "polygon": [
+        30.0,
+        88.0,
+        113.0,
+        113.0,
+        100.0,
+        157.0,
+        21.0,
+        135.0
+      ],
+      "score": 0.99997,
+      "seconds": 0.016155249904841185,
+      "text": "230005"
+    },
+    {
+      "crop_pixels_sha256": "fde374b06fc9d8735a54df2c5ef0ff9947168aed3fe2b8dfda810a12249e7491",
+      "crop_shape": [
+        23,
+        38,
+        3
+      ],
+      "id": "eartags1454",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "486c7c4ecc94cc1abd198140a665187e9d1185cf7ca8682e24159c258715ef0d",
+      "issue": null,
+      "polygon": [
+        33.0,
+        51.0,
+        63.0,
+        40.0,
+        72.0,
+        60.0,
+        36.0,
+        74.0
+      ],
+      "score": 0.43992,
+      "seconds": 0.016311083920300007,
+      "text": "n0"
+    },
+    {
+      "crop_pixels_sha256": "44e3857f8b005620c762f0df46523d090c2e5fd4fbf86367c9d2c1b88e20406c",
+      "crop_shape": [
+        32,
+        59,
+        3
+      ],
+      "id": "eartags1454",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "486c7c4ecc94cc1abd198140a665187e9d1185cf7ca8682e24159c258715ef0d",
+      "issue": null,
+      "polygon": [
+        35.0,
+        75.0,
+        89.0,
+        56.0,
+        101.0,
+        86.0,
+        45.0,
+        105.0
+      ],
+      "score": 0.99977,
+      "seconds": 0.016404500231146812,
+      "text": "205"
+    },
+    {
+      "crop_pixels_sha256": "8f9c46fe769b61dfbf0e3c2cd635adaedb7d6bcfdbd8a58cb76eb9758d8c4d3a",
+      "crop_shape": [
+        33,
+        75,
+        3
+      ],
+      "id": "eartags2038",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "256e1d99bec5390e19ed948eda6dabd52a4a2d1e6321cffa3655c163c8c88318",
+      "issue": null,
+      "polygon": [
+        32.0,
+        90.0,
+        106.0,
+        77.0,
+        110.0,
+        110.0,
+        36.0,
+        122.0
+      ],
+      "score": 0.99979,
+      "seconds": 0.016353790648281574,
+      "text": "67197"
+    },
+    {
+      "crop_pixels_sha256": "e5c314dbabf2ab5ef41586a6140ed907f6a88790d9e9efe10ba8d57d7afba6a8",
+      "crop_shape": [
+        16,
+        20,
+        3
+      ],
+      "id": "eartags2038",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "256e1d99bec5390e19ed948eda6dabd52a4a2d1e6321cffa3655c163c8c88318",
+      "issue": null,
+      "polygon": [
+        47.0,
+        44.0,
+        67.0,
+        44.0,
+        67.0,
+        60.0,
+        47.0,
+        60.0
+      ],
+      "score": 0.97662,
+      "seconds": 0.01633829064667225,
+      "text": "20"
+    },
+    {
+      "crop_pixels_sha256": "f29d87ed2484974599d4a7e375799d9f6c21078794fcc90d4267ad7cf7d7974c",
+      "crop_shape": [
+        17,
+        44,
+        3
+      ],
+      "id": "eartags2038",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "256e1d99bec5390e19ed948eda6dabd52a4a2d1e6321cffa3655c163c8c88318",
+      "issue": null,
+      "polygon": [
+        41.0,
+        68.0,
+        85.0,
+        61.0,
+        84.0,
+        78.0,
+        43.0,
+        85.0
+      ],
+      "score": 0.68862,
+      "seconds": 0.016577458940446377,
+      "text": "B\u3001"
+    },
+    {
+      "crop_pixels_sha256": "19920e21d4c06e3504f5667717f5f9bf19923fad73fe77d6ef2428f268c8df47",
+      "crop_shape": [
+        16,
+        16,
+        3
+      ],
+      "id": "eartags1643",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "7017443791b270d644c291330b85f676ca780729f151035a20b21279fdb2d241",
+      "issue": null,
+      "polygon": [
+        52.0,
+        41.0,
+        68.0,
+        41.0,
+        68.0,
+        57.0,
+        52.0,
+        57.0
+      ],
+      "score": 0.94739,
+      "seconds": 0.016103750094771385,
+      "text": "2"
+    },
+    {
+      "crop_pixels_sha256": "90335ae323b03f37c739fd2515e901c37f1099e9fbf6f870b115a90ae83809a8",
+      "crop_shape": [
+        18,
+        24,
+        3
+      ],
+      "id": "eartags1643",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "7017443791b270d644c291330b85f676ca780729f151035a20b21279fdb2d241",
+      "issue": null,
+      "polygon": [
+        43.0,
+        55.0,
+        67.0,
+        55.0,
+        67.0,
+        73.0,
+        43.0,
+        73.0
+      ],
+      "score": 0.73738,
+      "seconds": 0.018369417171925306,
+      "text": "4.8"
+    },
+    {
+      "crop_pixels_sha256": "a2bf4119140574aa7ab5686b1317e5feeb2a884ee7187d0788c4d25f3fd83362",
+      "crop_shape": [
+        41,
+        61,
+        3
+      ],
+      "id": "eartags1643",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "7017443791b270d644c291330b85f676ca780729f151035a20b21279fdb2d241",
+      "issue": null,
+      "polygon": [
+        19.0,
+        72.0,
+        80.0,
+        72.0,
+        80.0,
+        113.0,
+        19.0,
+        113.0
+      ],
+      "score": 0.97314,
+      "seconds": 0.016579083167016506,
+      "text": "67844"
+    },
+    {
+      "crop_pixels_sha256": "509176cfdace1ab36c3f6c07b56d3c4050c2d3a6d34c62f745de41805bfde322",
+      "crop_shape": [
+        30,
+        42,
+        3
+      ],
+      "id": "eartags1406",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "e370cabbcbbea3dee5d8c239ea45f9f2dd7baeb22e7d13b0484fdfc3db746b60",
+      "issue": null,
+      "polygon": [
+        61.0,
+        37.0,
+        97.0,
+        59.0,
+        79.0,
+        83.0,
+        43.0,
+        61.0
+      ],
+      "score": 0.9973,
+      "seconds": 0.01695054117590189,
+      "text": "5.6"
+    },
+    {
+      "crop_pixels_sha256": "a5defec21aa28c3f15eebfe31b4f531b0cdf0c2a647dd9251731f219836ece6c",
+      "crop_shape": [
+        47,
+        76,
+        3
+      ],
+      "id": "eartags1406",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "e370cabbcbbea3dee5d8c239ea45f9f2dd7baeb22e7d13b0484fdfc3db746b60",
+      "issue": null,
+      "polygon": [
+        13.0,
+        78.0,
+        33.0,
+        57.0,
+        99.0,
+        91.0,
+        70.0,
+        129.0
+      ],
+      "score": 0.93319,
+      "seconds": 0.017394416965544224,
+      "text": "21281"
+    },
+    {
+      "crop_pixels_sha256": "944a9d0a648d119e81d3c0176986eb2f38eecda7540bce5376a7ee089481f900",
+      "crop_shape": [
+        22,
+        23,
+        3
+      ],
+      "id": "eartags1406",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "e370cabbcbbea3dee5d8c239ea45f9f2dd7baeb22e7d13b0484fdfc3db746b60",
+      "issue": null,
+      "polygon": [
+        72.0,
+        29.0,
+        95.0,
+        29.0,
+        95.0,
+        51.0,
+        72.0,
+        51.0
+      ],
+      "score": 0.11763,
+      "seconds": 0.017540249973535538,
+      "text": "A"
+    },
+    {
+      "crop_pixels_sha256": "a5d59efa321844aaf0cb2d4492723a16b22e874f7f7c3753bd2863779b30e8af",
+      "crop_shape": [
+        31,
+        70,
+        3
+      ],
+      "id": "eartags557",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "a94ee6178a4e714cef295d4d411ee6e8628685d151e9326d30dd4859f35a1fb3",
+      "issue": null,
+      "polygon": [
+        44.0,
+        18.0,
+        97.0,
+        63.0,
+        76.0,
+        86.0,
+        22.0,
+        40.0
+      ],
+      "score": 0.99636,
+      "seconds": 0.01742483302950859,
+      "text": "40251"
+    },
+    {
+      "crop_pixels_sha256": "307f687abccff76e6984cb0a38d5b08de7a0e0edf4d0525c2afc4571a4f607f2",
+      "crop_shape": [
+        25,
+        28,
+        3
+      ],
+      "id": "eartags264",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "fb4926ecd787f070575cda89b5acc1bc5489c7a085598d3542ddccf47702dbb6",
+      "issue": null,
+      "polygon": [
+        53.0,
+        51.0,
+        81.0,
+        51.0,
+        81.0,
+        76.0,
+        53.0,
+        76.0
+      ],
+      "score": 1.0,
+      "seconds": 0.017294541001319885,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "43d11ebedf8941b7840fa104e0311f8057920fe8ff7471e1ff2d73f35bfa681d",
+      "crop_shape": [
+        27,
+        81,
+        3
+      ],
+      "id": "eartags264",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "fb4926ecd787f070575cda89b5acc1bc5489c7a085598d3542ddccf47702dbb6",
+      "issue": null,
+      "polygon": [
+        36.0,
+        80.0,
+        117.0,
+        74.0,
+        119.0,
+        101.0,
+        38.0,
+        107.0
+      ],
+      "score": 0.99375,
+      "seconds": 0.018277791794389486,
+      "text": "1-24"
+    },
+    {
+      "crop_pixels_sha256": "8b5d305af81aabca7a493e8aa581bae1e1aaa27903c7dd90dde19e271f759faf",
+      "crop_shape": [
+        52,
+        97,
+        3
+      ],
+      "id": "eartags264",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "fb4926ecd787f070575cda89b5acc1bc5489c7a085598d3542ddccf47702dbb6",
+      "issue": null,
+      "polygon": [
+        23.0,
+        108.0,
+        120.0,
+        103.0,
+        123.0,
+        152.0,
+        35.0,
+        159.0
+      ],
+      "score": 0.99999,
+      "seconds": 0.01742287492379546,
+      "text": "253025"
+    },
+    {
+      "crop_pixels_sha256": "b1749177c295f3e29a7609a665592802ee1dc7d6c39fc85a759d45d8be33e7d5",
+      "crop_shape": [
+        20,
+        33,
+        3
+      ],
+      "id": "eartags1090",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "3a4bc54ebb43bc4fbee7cb5596e6202f7ad1a4a3daa8dade6548e2a67056ca59",
+      "issue": null,
+      "polygon": [
+        33.0,
+        33.0,
+        66.0,
+        33.0,
+        66.0,
+        53.0,
+        33.0,
+        53.0
+      ],
+      "score": 0.74985,
+      "seconds": 0.016080833971500397,
+      "text": "4.26"
+    },
+    {
+      "crop_pixels_sha256": "3cfa226976a62bd6ef94cc7a074d0e024f17a6ddf9cbbd06d881e5902855bece",
+      "crop_shape": [
+        28,
+        48,
+        3
+      ],
+      "id": "eartags1090",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "3a4bc54ebb43bc4fbee7cb5596e6202f7ad1a4a3daa8dade6548e2a67056ca59",
+      "issue": null,
+      "polygon": [
+        22.0,
+        61.0,
+        68.0,
+        47.0,
+        62.0,
+        75.0,
+        17.0,
+        88.0
+      ],
+      "score": 0.93033,
+      "seconds": 0.01635070890188217,
+      "text": "21223"
+    },
+    {
+      "crop_pixels_sha256": "33e4575a096443dd41f139ce199a2545eb59a785a31e682d0732146a0581264d",
+      "crop_shape": [
+        24,
+        30,
+        3
+      ],
+      "id": "eartags514",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "87ed8801bb1f066b012b6d73f841e7c1c01eb2ccc1e56404f24ef69589971bb9",
+      "issue": null,
+      "polygon": [
+        51.0,
+        39.0,
+        79.0,
+        52.0,
+        70.0,
+        75.0,
+        42.0,
+        62.0
+      ],
+      "score": 0.97721,
+      "seconds": 0.017433957662433386,
+      "text": "5.14"
+    },
+    {
+      "crop_pixels_sha256": "9a6a8379d4937708b0bb0a0aac24aa8f9408b0a86aaef7e9512162bb335b15da",
+      "crop_shape": [
+        20,
+        26,
+        3
+      ],
+      "id": "eartags514",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "87ed8801bb1f066b012b6d73f841e7c1c01eb2ccc1e56404f24ef69589971bb9",
+      "issue": null,
+      "polygon": [
+        69.0,
+        33.0,
+        95.0,
+        33.0,
+        95.0,
+        53.0,
+        69.0,
+        53.0
+      ],
+      "score": 0.47384,
+      "seconds": 0.017023709136992693,
+      "text": "A"
+    },
+    {
+      "crop_pixels_sha256": "5eb2cd18b582d7f13ab7e2d444155189b289692af6c063249c47f13fa4b90c62",
+      "crop_shape": [
+        38,
+        57,
+        3
+      ],
+      "id": "eartags514",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "87ed8801bb1f066b012b6d73f841e7c1c01eb2ccc1e56404f24ef69589971bb9",
+      "issue": null,
+      "polygon": [
+        34.0,
+        50.0,
+        73.0,
+        92.0,
+        46.0,
+        117.0,
+        10.0,
+        80.0
+      ],
+      "score": 0.999,
+      "seconds": 0.01750170812010765,
+      "text": "21317"
+    },
+    {
+      "crop_pixels_sha256": "70335046cf8429ab4b93f86f240ea855497c8099d185d820f0582b9e534e7a5b",
+      "crop_shape": [
+        23,
+        22,
+        3
+      ],
+      "id": "eartags1418",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "7d52fbb9914d732363ec43575f0d15acd4c83594861ffae6a7c09f9ea50dcbd0",
+      "issue": null,
+      "polygon": [
+        60.0,
+        51.0,
+        82.0,
+        51.0,
+        82.0,
+        74.0,
+        60.0,
+        74.0
+      ],
+      "score": 0.99994,
+      "seconds": 0.01803037477657199,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "e2e97be3f7970a5ee03ebcf16b27807d6b7fec8ebd594865dc4ad25be9428e53",
+      "crop_shape": [
+        22,
+        60,
+        3
+      ],
+      "id": "eartags1418",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "7d52fbb9914d732363ec43575f0d15acd4c83594861ffae6a7c09f9ea50dcbd0",
+      "issue": null,
+      "polygon": [
+        43.0,
+        78.0,
+        103.0,
+        78.0,
+        102.0,
+        99.0,
+        49.0,
+        100.0
+      ],
+      "score": 0.81361,
+      "seconds": 0.017444333992898464,
+      "text": "B-7"
+    },
+    {
+      "crop_pixels_sha256": "3ba33f9ea762281fae73f142f8ed0e3c752eafd223827070841db7fb5fa8f53a",
+      "crop_shape": [
+        58,
+        78,
+        3
+      ],
+      "id": "eartags1418",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "7d52fbb9914d732363ec43575f0d15acd4c83594861ffae6a7c09f9ea50dcbd0",
+      "issue": null,
+      "polygon": [
+        28.0,
+        97.0,
+        105.0,
+        100.0,
+        98.0,
+        156.0,
+        20.0,
+        155.0
+      ],
+      "score": 0.99989,
+      "seconds": 0.016553665976971388,
+      "text": "160153"
+    },
+    {
+      "crop_pixels_sha256": "6f127eaf8c6fd0279dc916190cfa053d92ee6fe35e22caf78d6387261eb2613e",
+      "crop_shape": [
+        26,
+        31,
+        3
+      ],
+      "id": "eartags583",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "b30f076cf24f4e0f6a484b1593de26e0e1c55c466320693718c8223cb3484b81",
+      "issue": null,
+      "polygon": [
+        28.0,
+        62.0,
+        59.0,
+        55.0,
+        62.0,
+        81.0,
+        31.0,
+        87.0
+      ],
+      "score": 0.99858,
+      "seconds": 0.01737708318978548,
+      "text": "5.9"
+    },
+    {
+      "crop_pixels_sha256": "1630c30f9c9ae325938d059ee7d63de8d24ffb532f0d87a2127b5841e110c689",
+      "crop_shape": [
+        33,
+        58,
+        3
+      ],
+      "id": "eartags583",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "b30f076cf24f4e0f6a484b1593de26e0e1c55c466320693718c8223cb3484b81",
+      "issue": null,
+      "polygon": [
+        28.0,
+        89.0,
+        85.0,
+        76.0,
+        91.0,
+        109.0,
+        37.0,
+        118.0
+      ],
+      "score": 0.9998,
+      "seconds": 0.017429667059332132,
+      "text": "21296"
+    },
+    {
+      "crop_pixels_sha256": "47e5f7ad53ce491878dc4c91cf9e6c60cf28a4d07817c2663b6dc3a21b6f4db0",
+      "crop_shape": [
+        18,
+        20,
+        3
+      ],
+      "id": "eartags583",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "b30f076cf24f4e0f6a484b1593de26e0e1c55c466320693718c8223cb3484b81",
+      "issue": null,
+      "polygon": [
+        35.0,
+        43.0,
+        55.0,
+        43.0,
+        55.0,
+        61.0,
+        35.0,
+        61.0
+      ],
+      "score": 0.99571,
+      "seconds": 0.017896290868520737,
+      "text": "2"
+    },
+    {
+      "crop_pixels_sha256": "21e5e366dfd5bd13f614def72329929bc6e870e9fdf4670ace7c0746afa9d831",
+      "crop_shape": [
+        33,
+        56,
+        3
+      ],
+      "id": "eartags670",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "7a5b9715a7efffc649b40f8413e9d771b4c409d0f13dfa4867644683aa6f2f57",
+      "issue": null,
+      "polygon": [
+        48.0,
+        88.0,
+        103.0,
+        85.0,
+        106.0,
+        118.0,
+        50.0,
+        121.0
+      ],
+      "score": 0.99688,
+      "seconds": 0.016775417141616344,
+      "text": "5.17"
+    },
+    {
+      "crop_pixels_sha256": "467afe1a2afdafee8fa7c2cab86e2067d600d50b9f4b7ab9e3a7f50aa60c50fa",
+      "crop_shape": [
+        50,
+        112,
+        3
+      ],
+      "id": "eartags670",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "7a5b9715a7efffc649b40f8413e9d771b4c409d0f13dfa4867644683aa6f2f57",
+      "issue": null,
+      "polygon": [
+        19.0,
+        121.0,
+        131.0,
+        126.0,
+        129.0,
+        176.0,
+        17.0,
+        171.0
+      ],
+      "score": 0.99988,
+      "seconds": 0.01846762513741851,
+      "text": "21338"
+    },
+    {
+      "crop_pixels_sha256": "9e16dceebc308d442a31afa5ceddb3d2158bcea6ef85215fe1408ef697448f53",
+      "crop_shape": [
+        19,
+        23,
+        3
+      ],
+      "id": "eartags670",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "7a5b9715a7efffc649b40f8413e9d771b4c409d0f13dfa4867644683aa6f2f57",
+      "issue": null,
+      "polygon": [
+        84.0,
+        59.0,
+        107.0,
+        59.0,
+        107.0,
+        78.0,
+        84.0,
+        78.0
+      ],
+      "score": 0.89378,
+      "seconds": 0.0171147920191288,
+      "text": "2J"
+    },
+    {
+      "crop_pixels_sha256": "82eb703b0e4302568e5b5600501bee6538b099758af0c609106f3f4d4d46f38d",
+      "crop_shape": [
+        18,
+        19,
+        3
+      ],
+      "id": "eartags2234",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "ad71f20cc9147022c19b835ecbd1e5e898aa59346891c8f11d0314c30a67e413",
+      "issue": null,
+      "polygon": [
+        17.0,
+        32.0,
+        36.0,
+        32.0,
+        36.0,
+        50.0,
+        17.0,
+        50.0
+      ],
+      "score": 0.99705,
+      "seconds": 0.017367458902299404,
+      "text": "9"
+    },
+    {
+      "crop_pixels_sha256": "84540f6ad78aaefbb5d7bb0dcbb371afbcfefef3be05f211044655066344790c",
+      "crop_shape": [
+        18,
+        29,
+        3
+      ],
+      "id": "eartags2234",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "ad71f20cc9147022c19b835ecbd1e5e898aa59346891c8f11d0314c30a67e413",
+      "issue": null,
+      "polygon": [
+        23.0,
+        47.0,
+        51.0,
+        42.0,
+        54.0,
+        60.0,
+        25.0,
+        65.0
+      ],
+      "score": 0.9741,
+      "seconds": 0.017031666822731495,
+      "text": "-21"
+    },
+    {
+      "crop_pixels_sha256": "daeb87794b9e172001a8f281125046141bf732f40f99347a9d8b7cf83e9ffbda",
+      "crop_shape": [
+        43,
+        72,
+        3
+      ],
+      "id": "eartags2234",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "ad71f20cc9147022c19b835ecbd1e5e898aa59346891c8f11d0314c30a67e413",
+      "issue": null,
+      "polygon": [
+        8.0,
+        76.0,
+        68.0,
+        55.0,
+        87.0,
+        94.0,
+        18.0,
+        115.0
+      ],
+      "score": 0.94132,
+      "seconds": 0.017723166849464178,
+      "text": "460182"
+    },
+    {
+      "crop_pixels_sha256": "d7f8886319ecf28ffb8a4dddf2c7d734f9e04a6788258c7c3b0c50ea91677a10",
+      "crop_shape": [
+        22,
+        31,
+        3
+      ],
+      "id": "eartags702",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "36a82d304bd69de5385cc02524abe7a89a46e7d0723b853cc60202c5088b834a",
+      "issue": null,
+      "polygon": [
+        10.0,
+        52.0,
+        39.0,
+        41.0,
+        37.0,
+        63.0,
+        10.0,
+        74.0
+      ],
+      "score": 0.99864,
+      "seconds": 0.016498207580298185,
+      "text": "16024"
+    },
+    {
+      "crop_pixels_sha256": "099a1aff66672fa8c996d1f8a952ead7f8f70626e45eb49a436a65eb796e544f",
+      "crop_shape": [
+        22,
+        52,
+        3
+      ],
+      "id": "eartags167",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "797576f510d25295d7126522bf72da74b1e036d8376e682605eb35b5ed563690",
+      "issue": null,
+      "polygon": [
+        55.0,
+        61.0,
+        107.0,
+        66.0,
+        105.0,
+        88.0,
+        53.0,
+        83.0
+      ],
+      "score": 0.82697,
+      "seconds": 0.0172112500295043,
+      "text": "3\u30017-"
+    },
+    {
+      "crop_pixels_sha256": "5d24e6525788f96d48c42a81a19690966841f4fff164b579e02a8972714707eb",
+      "crop_shape": [
+        44,
+        100,
+        3
+      ],
+      "id": "eartags167",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "797576f510d25295d7126522bf72da74b1e036d8376e682605eb35b5ed563690",
+      "issue": null,
+      "polygon": [
+        27.0,
+        72.0,
+        125.0,
+        96.0,
+        115.0,
+        139.0,
+        17.0,
+        115.0
+      ],
+      "score": 0.99995,
+      "seconds": 0.016422917135059834,
+      "text": "20984"
+    },
+    {
+      "crop_pixels_sha256": "5b69cf6ee049774fb43a72b896505bf2499eab6fdb551b5df77ea9548fe48c29",
+      "crop_shape": [
+        15,
+        18,
+        3
+      ],
+      "id": "eartags167",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "797576f510d25295d7126522bf72da74b1e036d8376e682605eb35b5ed563690",
+      "issue": null,
+      "polygon": [
+        78.0,
+        45.0,
+        96.0,
+        45.0,
+        96.0,
+        60.0,
+        78.0,
+        60.0
+      ],
+      "score": 0.97073,
+      "seconds": 0.016327499877661467,
+      "text": "2"
+    },
+    {
+      "crop_pixels_sha256": "1235fcb40639def5bf51da721415c49c327d2dcbbe82d41eb73200ba305f2b69",
+      "crop_shape": [
+        27,
+        54,
+        3
+      ],
+      "id": "eartags1064",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "3bdf6695a3bc800cc27902fa81a57f2adedfe032ca0613eabbf6c36082199282",
+      "issue": null,
+      "polygon": [
+        10.0,
+        68.0,
+        63.0,
+        60.0,
+        66.0,
+        87.0,
+        12.0,
+        95.0
+      ],
+      "score": 0.99999,
+      "seconds": 0.016568207647651434,
+      "text": "2167"
+    },
+    {
+      "crop_pixels_sha256": "0c8661570218c6fbb0976cedc893535757181117cec08d558df34b49f81da464",
+      "crop_shape": [
+        21,
+        28,
+        3
+      ],
+      "id": "eartags1717",
+      "index": 0,
+      "inference_bgr_pixels_sha256": "a1ea8f8e2c750cd88d526d03f0fca66cc9747f444e5231be3d1562dd8a9b94c7",
+      "issue": null,
+      "polygon": [
+        66.0,
+        46.0,
+        94.0,
+        46.0,
+        94.0,
+        67.0,
+        66.0,
+        67.0
+      ],
+      "score": 0.99998,
+      "seconds": 0.016294999979436398,
+      "text": "49"
+    },
+    {
+      "crop_pixels_sha256": "9795ddffe1c802a62195c2a0cf23aafb8858f687dcc1d0362974f8bed3abc5bd",
+      "crop_shape": [
+        23,
+        80,
+        3
+      ],
+      "id": "eartags1717",
+      "index": 1,
+      "inference_bgr_pixels_sha256": "a1ea8f8e2c750cd88d526d03f0fca66cc9747f444e5231be3d1562dd8a9b94c7",
+      "issue": null,
+      "polygon": [
+        31.0,
+        80.0,
+        105.0,
+        62.0,
+        114.0,
+        84.0,
+        36.0,
+        103.0
+      ],
+      "score": 0.88421,
+      "seconds": 0.01659804070368409,
+      "text": "12-5"
+    },
+    {
+      "crop_pixels_sha256": "252b12a91b4ab8101bafffe8c9a691d62e3cd9341f8f6f257b9ec76ae505b595",
+      "crop_shape": [
+        51,
+        99,
+        3
+      ],
+      "id": "eartags1717",
+      "index": 2,
+      "inference_bgr_pixels_sha256": "a1ea8f8e2c750cd88d526d03f0fca66cc9747f444e5231be3d1562dd8a9b94c7",
+      "issue": null,
+      "polygon": [
+        29.0,
+        104.0,
+        126.0,
+        82.0,
+        134.0,
+        133.0,
+        37.0,
+        154.0
+      ],
+      "score": 0.99996,
+      "seconds": 0.01779979234561324,
+      "text": "253422"
+    }
+  ]
+}

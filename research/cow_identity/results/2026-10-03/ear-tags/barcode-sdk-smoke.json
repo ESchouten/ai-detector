@@ -1,0 +1,224 @@
+{
+  "scope": "Synthetic Code128/ITF decoder and NL9 checksum integration only. No farm pixels, detection coverage, animal association or calibrated confidence claim.",
+  "libraries": {
+    "zxing-cpp": "3.1.1",
+    "numpy": "2.5.3",
+    "pillow": "12.3.0"
+  },
+  "files": {
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_barcode_smoke.py": "951acd40b32a629608384fd8184fda78d343e5f31d8f5588e2d88cf39ee93b2d",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_numbers.py": "ce83b8b129c04e3bac206f6d1766b609a46a12b421c024fbc4007b7d6e14a971"
+  },
+  "rows": [
+    {
+      "format": "Code128",
+      "payload": "0194625043",
+      "country": "NL",
+      "rotation_degrees": 0,
+      "pixels_sha256": "5a6f217072d732c0af630a3562a37e753600255eb5e426382f5e63a10c94a7ce",
+      "shape": [
+        150,
+        330
+      ],
+      "decoded": "0194625043",
+      "accepted_number": "194625043"
+    },
+    {
+      "format": "Code128",
+      "payload": "0194625043",
+      "country": "NL",
+      "rotation_degrees": 90,
+      "pixels_sha256": "87259309c5ac5b55affb6961876933569f7be381b369da4818ec11bc23a7fbe1",
+      "shape": [
+        330,
+        150
+      ],
+      "decoded": "0194625043",
+      "accepted_number": "194625043"
+    },
+    {
+      "format": "Code128",
+      "payload": "0123456814",
+      "country": "NL",
+      "rotation_degrees": 0,
+      "pixels_sha256": "4323caba9a82f8fc2f52b9e87e854951cf1cffecf346b8bfac30322c5687f262",
+      "shape": [
+        150,
+        330
+      ],
+      "decoded": "0123456814",
+      "accepted_number": "123456814"
+    },
+    {
+      "format": "Code128",
+      "payload": "0123456814",
+      "country": "NL",
+      "rotation_degrees": 90,
+      "pixels_sha256": "5b91bd116d9ba39de0b04031a088c13a54c6c55ca878bc06d4f0d7056bd376a6",
+      "shape": [
+        330,
+        150
+      ],
+      "decoded": "0123456814",
+      "accepted_number": "123456814"
+    },
+    {
+      "format": "Code128",
+      "payload": "0123456815",
+      "country": "NL",
+      "rotation_degrees": 0,
+      "pixels_sha256": "f4bf3f6d63d7879644d9968366a3f135bc70374dee77331155015459e2ad4208",
+      "shape": [
+        150,
+        330
+      ],
+      "decoded": "0123456815",
+      "accepted_number": null
+    },
+    {
+      "format": "Code128",
+      "payload": "0123456815",
+      "country": "NL",
+      "rotation_degrees": 90,
+      "pixels_sha256": "2030a0c6bb6662f34bbf08f7744750ddd12a97e4c7a1c3d833e091a2dfb5b923",
+      "shape": [
+        330,
+        150
+      ],
+      "decoded": "0123456815",
+      "accepted_number": null
+    },
+    {
+      "format": "Code128",
+      "payload": "0123456814",
+      "country": "",
+      "rotation_degrees": 0,
+      "pixels_sha256": "4323caba9a82f8fc2f52b9e87e854951cf1cffecf346b8bfac30322c5687f262",
+      "shape": [
+        150,
+        330
+      ],
+      "decoded": "0123456814",
+      "accepted_number": null
+    },
+    {
+      "format": "Code128",
+      "payload": "0123456814",
+      "country": "",
+      "rotation_degrees": 90,
+      "pixels_sha256": "5b91bd116d9ba39de0b04031a088c13a54c6c55ca878bc06d4f0d7056bd376a6",
+      "shape": [
+        330,
+        150
+      ],
+      "decoded": "0123456814",
+      "accepted_number": null
+    },
+    {
+      "format": "ITF",
+      "payload": "0194625043",
+      "country": "NL",
+      "rotation_degrees": 0,
+      "pixels_sha256": "c7a7cc16f7f6f6109aaed0200afb175b4047c90a1997e3b017204905c38e518f",
+      "shape": [
+        150,
+        357
+      ],
+      "decoded": "0194625043",
+      "accepted_number": "194625043"
+    },
+    {
+      "format": "ITF",
+      "payload": "0194625043",
+      "country": "NL",
+      "rotation_degrees": 90,
+      "pixels_sha256": "034e9f20b534661ffafbe9f0d66e40270ed4ad3ad44863bdd46b4656c9e5d9b0",
+      "shape": [
+        357,
+        150
+      ],
+      "decoded": "0194625043",
+      "accepted_number": "194625043"
+    },
+    {
+      "format": "ITF",
+      "payload": "0123456814",
+      "country": "NL",
+      "rotation_degrees": 0,
+      "pixels_sha256": "b43b61e9372615ef0995d9641cf2717c9feb0497eeca9daa0b1ea570b6327289",
+      "shape": [
+        150,
+        357
+      ],
+      "decoded": "0123456814",
+      "accepted_number": "123456814"
+    },
+    {
+      "format": "ITF",
+      "payload": "0123456814",
+      "country": "NL",
+      "rotation_degrees": 90,
+      "pixels_sha256": "86f8b79f4cca030df11b76e81e83b08d81954f083da6bad6e53844ca16c9c3db",
+      "shape": [
+        357,
+        150
+      ],
+      "decoded": "0123456814",
+      "accepted_number": "123456814"
+    },
+    {
+      "format": "ITF",
+      "payload": "0123456815",
+      "country": "NL",
+      "rotation_degrees": 0,
+      "pixels_sha256": "b4d528c73cf1e091264cd8d5aad2026368ab84659cb8e84fd6c936bd45fb7525",
+      "shape": [
+        150,
+        357
+      ],
+      "decoded": "0123456815",
+      "accepted_number": null
+    },
+    {
+      "format": "ITF",
+      "payload": "0123456815",
+      "country": "NL",
+      "rotation_degrees": 90,
+      "pixels_sha256": "3ff56bf7230836f3aeae67285dc43d526b2ad3146345bf48c3707104b80afff9",
+      "shape": [
+        357,
+        150
+      ],
+      "decoded": "0123456815",
+      "accepted_number": null
+    },
+    {
+      "format": "ITF",
+      "payload": "0123456814",
+      "country": "",
+      "rotation_degrees": 0,
+      "pixels_sha256": "b43b61e9372615ef0995d9641cf2717c9feb0497eeca9daa0b1ea570b6327289",
+      "shape": [
+        150,
+        357
+      ],
+      "decoded": "0123456814",
+      "accepted_number": null
+    },
+    {
+      "format": "ITF",
+      "payload": "0123456814",
+      "country": "",
+      "rotation_degrees": 90,
+      "pixels_sha256": "86f8b79f4cca030df11b76e81e83b08d81954f083da6bad6e53844ca16c9c3db",
+      "shape": [
+        357,
+        150
+      ],
+      "decoded": "0123456814",
+      "accepted_number": null
+    }
+  ],
+  "blank_has_no_reading": true,
+  "seconds": 0.0048737907782197
+}

@@ -1,0 +1,16 @@
+2026-10-03 15:15:09.594 python[13868:78694566] 2026-10-03 15:15:09.594087 [W:onnxruntime:Default, telemetry.cc:800 operator()] Failed to persist telemetry device ID; using an in-memory identifier
+Traceback (most recent call last):
+  File "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_ocr.py", line 392, in <module>
+    (infer if args.mode == "infer" else score)(args)
+  File "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_ocr.py", line 235, in infer
+    engine = RapidOCR(params=frozen["params"])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/main.py", line 42, in __init__
+    cfg = self._load_config(config_path, params)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/main.py", line 57, in _load_config
+    cfg = ParseParams.update_batch(cfg, params)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/parse_parameters.py", line 60, in update_batch
+    raise TypeError(f"The value of {k} must be Enum Type.")
+TypeError: The value of Det.model_type must be Enum Type.

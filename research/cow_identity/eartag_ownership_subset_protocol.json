@@ -1,0 +1,449 @@
+{
+  "scope": "Label-blind native image visibility and tag-to-animal ownership feasibility only; no model inference/training or fabricated ownership truth. No readability filtering.",
+  "source": "https://www.kaggle.com/datasets/fandaoerji/cow-eartag-detection-dataset",
+  "version": 1,
+  "index_sha256": "0e5afda61e761abd61d784f005391bf99cd824bad80472c7fadd4e632f74ec60",
+  "selection": "32 numeric-uniform indices round(i*2674/31), i0..31, before viewing any source image. Keep every selected image, including three missing label files as unannotated.",
+  "transport": "Public Kaggle single-file datasets/download API with exact fileName and datasetVersionNumber=1. Require metadata byte size per file; record downloaded byte hashes. No full archive.",
+  "expected_total_bytes": 93757813,
+  "missing_labels": [
+    "cow259",
+    "cow431",
+    "cow1208",
+    "cow1811"
+  ],
+  "rows": [
+    {
+      "id": "cow0",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow0.jpg",
+          "bytes": 592632
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow0.txt",
+          "bytes": 327
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow86",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow86.jpg",
+          "bytes": 436729
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow86.txt",
+          "bytes": 153
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow173",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow173.jpg",
+          "bytes": 458300
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow173.txt",
+          "bytes": 139
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow259",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow259.jpg",
+          "bytes": 477560
+        }
+      ],
+      "label_available": false
+    },
+    {
+      "id": "cow345",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow345.jpg",
+          "bytes": 423357
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow345.txt",
+          "bytes": 67
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow431",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow431.jpg",
+          "bytes": 548723
+        }
+      ],
+      "label_available": false
+    },
+    {
+      "id": "cow518",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow518.jpg",
+          "bytes": 598218
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow518.txt",
+          "bytes": 166
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow604",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow604.jpg",
+          "bytes": 484171
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow604.txt",
+          "bytes": 232
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow690",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow690.jpg",
+          "bytes": 874291
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow690.txt",
+          "bytes": 926
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow776",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow776.jpg",
+          "bytes": 795863
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow776.txt",
+          "bytes": 599
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow863",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow863.jpg",
+          "bytes": 650467
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow863.txt",
+          "bytes": 381
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow949",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow949.jpg",
+          "bytes": 5421883
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow949.txt",
+          "bytes": 113
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow1035",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1035.jpg",
+          "bytes": 5227132
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow1035.txt",
+          "bytes": 84
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow1121",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1121.jpg",
+          "bytes": 5856740
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow1121.txt",
+          "bytes": 288
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow1208",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1208.jpg",
+          "bytes": 6410714
+        }
+      ],
+      "label_available": false
+    },
+    {
+      "id": "cow1294",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1294.jpg",
+          "bytes": 5634785
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow1294.txt",
+          "bytes": 299
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow1380",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1380.jpg",
+          "bytes": 4599881
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow1380.txt",
+          "bytes": 158
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow1466",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1466.jpg",
+          "bytes": 5505163
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow1466.txt",
+          "bytes": 41
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow1553",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1553.jpg",
+          "bytes": 5195499
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow1553.txt",
+          "bytes": 280
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow1639",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1639.jpg",
+          "bytes": 2320856
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow1639.txt",
+          "bytes": 412
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow1725",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1725.jpg",
+          "bytes": 5693598
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow1725.txt",
+          "bytes": 229
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow1811",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1811.jpg",
+          "bytes": 4323536
+        }
+      ],
+      "label_available": false
+    },
+    {
+      "id": "cow1898",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1898.jpg",
+          "bytes": 117859
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow1898.txt",
+          "bytes": 291
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow1984",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow1984.jpg",
+          "bytes": 111562
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow1984.txt",
+          "bytes": 384
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow2070",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow2070.jpg",
+          "bytes": 126084
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow2070.txt",
+          "bytes": 138
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow2156",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow2156.jpg",
+          "bytes": 5406524
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow2156.txt",
+          "bytes": 114
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow2243",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow2243.jpg",
+          "bytes": 5775020
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow2243.txt",
+          "bytes": 245
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow2329",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow2329.jpg",
+          "bytes": 6426741
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow2329.txt",
+          "bytes": 370
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow2415",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow2415.jpg",
+          "bytes": 4677904
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow2415.txt",
+          "bytes": 175
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow2501",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow2501.jpg",
+          "bytes": 6461008
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow2501.txt",
+          "bytes": 276
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow2588",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow2588.jpg",
+          "bytes": 1087457
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow2588.txt",
+          "bytes": 143
+        }
+      ],
+      "label_available": true
+    },
+    {
+      "id": "cow2674",
+      "files": [
+        {
+          "name": "Cow eartag detection dataset/Images/cow2674.jpg",
+          "bytes": 1030229
+        },
+        {
+          "name": "Cow eartag detection dataset/Labels/cow2674.txt",
+          "bytes": 297
+        }
+      ],
+      "label_available": true
+    }
+  ]
+}

@@ -1,0 +1,6519 @@
+{
+  "annotation_issues": {},
+  "conditions": {
+    "accepted_0.95": {
+      "rows": [
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags2149",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags691",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags461",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1760",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": true,
+          "ground_truth_lines": 1,
+          "id": "eartags3069",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7590226505106233,
+              "prediction": {
+                "polygon": [
+                  [
+                    6.0,
+                    44.0
+                  ],
+                  [
+                    51.0,
+                    48.0
+                  ],
+                  [
+                    48.0,
+                    83.0
+                  ],
+                  [
+                    3.0,
+                    79.0
+                  ]
+                ],
+                "score": 0.99984,
+                "text": "12038"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1423",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7285429141716567,
+              "prediction": {
+                "polygon": [
+                  [
+                    26.0,
+                    52.0
+                  ],
+                  [
+                    64.0,
+                    51.0
+                  ],
+                  [
+                    65.0,
+                    70.0
+                  ],
+                  [
+                    26.0,
+                    72.0
+                  ]
+                ],
+                "score": 0.99957,
+                "text": "8.19"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5988074957410562,
+              "prediction": {
+                "polygon": [
+                  [
+                    13.0,
+                    66.0
+                  ],
+                  [
+                    80.0,
+                    63.0
+                  ],
+                  [
+                    81.0,
+                    98.0
+                  ],
+                  [
+                    14.0,
+                    101.0
+                  ]
+                ],
+                "score": 0.99998,
+                "text": "5364"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags265",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7993997713942769,
+              "prediction": {
+                "polygon": [
+                  [
+                    21.0,
+                    55.0
+                  ],
+                  [
+                    102.0,
+                    64.0
+                  ],
+                  [
+                    97.0,
+                    112.0
+                  ],
+                  [
+                    15.0,
+                    103.0
+                  ]
+                ],
+                "score": 0.99984,
+                "text": "20055"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2380",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.8157589803012746,
+              "prediction": {
+                "polygon": [
+                  [
+                    68.0,
+                    56.0
+                  ],
+                  [
+                    102.0,
+                    57.0
+                  ],
+                  [
+                    102.0,
+                    82.0
+                  ],
+                  [
+                    67.0,
+                    81.0
+                  ]
+                ],
+                "score": 1.0,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5788437444066583,
+              "prediction": {
+                "polygon": [
+                  [
+                    24.0,
+                    87.0
+                  ],
+                  [
+                    102.0,
+                    88.0
+                  ],
+                  [
+                    102.0,
+                    159.0
+                  ],
+                  [
+                    24.0,
+                    158.0
+                  ]
+                ],
+                "score": 0.99977,
+                "text": "1602"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1376",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.797909752939399,
+              "prediction": {
+                "polygon": [
+                  [
+                    17.0,
+                    64.0
+                  ],
+                  [
+                    107.0,
+                    53.0
+                  ],
+                  [
+                    112.0,
+                    99.0
+                  ],
+                  [
+                    23.0,
+                    109.0
+                  ]
+                ],
+                "score": 0.99988,
+                "text": "20562"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1938",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.73,
+              "prediction": {
+                "polygon": [
+                  [
+                    37.0,
+                    57.0
+                  ],
+                  [
+                    85.0,
+                    67.0
+                  ],
+                  [
+                    79.0,
+                    97.0
+                  ],
+                  [
+                    31.0,
+                    87.0
+                  ]
+                ],
+                "score": 0.96562,
+                "text": "12.8"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags1664",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6619449839667526,
+              "prediction": {
+                "polygon": [
+                  [
+                    25.0,
+                    23.0
+                  ],
+                  [
+                    48.0,
+                    20.0
+                  ],
+                  [
+                    51.0,
+                    39.0
+                  ],
+                  [
+                    27.0,
+                    42.0
+                  ]
+                ],
+                "score": 0.99998,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5470303339281163,
+              "prediction": {
+                "polygon": [
+                  [
+                    2.0,
+                    42.0
+                  ],
+                  [
+                    70.0,
+                    22.0
+                  ],
+                  [
+                    78.0,
+                    49.0
+                  ],
+                  [
+                    9.0,
+                    68.0
+                  ]
+                ],
+                "score": 0.9955,
+                "text": "12-29"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5601482854494902,
+              "prediction": {
+                "polygon": [
+                  [
+                    10.0,
+                    58.0
+                  ],
+                  [
+                    82.0,
+                    37.0
+                  ],
+                  [
+                    90.0,
+                    73.0
+                  ],
+                  [
+                    21.0,
+                    93.0
+                  ]
+                ],
+                "score": 0.99944,
+                "text": "253462"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags1342",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags693",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6383112581401841,
+              "prediction": {
+                "polygon": [
+                  [
+                    42.0,
+                    54.0
+                  ],
+                  [
+                    65.0,
+                    50.0
+                  ],
+                  [
+                    69.0,
+                    70.0
+                  ],
+                  [
+                    46.0,
+                    74.0
+                  ]
+                ],
+                "score": 0.99947,
+                "text": "22"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.5588235294117647,
+              "prediction": {
+                "polygon": [
+                  [
+                    33.0,
+                    71.0
+                  ],
+                  [
+                    73.0,
+                    66.0
+                  ],
+                  [
+                    77.0,
+                    93.0
+                  ],
+                  [
+                    37.0,
+                    99.0
+                  ]
+                ],
+                "score": 0.97711,
+                "text": "8.1"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5520833333333334,
+              "prediction": {
+                "polygon": [
+                  [
+                    19.0,
+                    92.0
+                  ],
+                  [
+                    96.0,
+                    81.0
+                  ],
+                  [
+                    103.0,
+                    128.0
+                  ],
+                  [
+                    26.0,
+                    139.0
+                  ]
+                ],
+                "score": 0.99992,
+                "text": "5262"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1727",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6049955003201579,
+              "prediction": {
+                "polygon": [
+                  [
+                    86.0,
+                    44.0
+                  ],
+                  [
+                    132.0,
+                    53.0
+                  ],
+                  [
+                    125.0,
+                    89.0
+                  ],
+                  [
+                    79.0,
+                    80.0
+                  ]
+                ],
+                "score": 1.0,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.6213619816080983,
+              "prediction": {
+                "polygon": [
+                  [
+                    70.0,
+                    74.0
+                  ],
+                  [
+                    142.0,
+                    83.0
+                  ],
+                  [
+                    138.0,
+                    113.0
+                  ],
+                  [
+                    66.0,
+                    105.0
+                  ]
+                ],
+                "score": 0.99295,
+                "text": "7-2"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.6267718528518393,
+              "prediction": {
+                "polygon": [
+                  [
+                    24.0,
+                    85.0
+                  ],
+                  [
+                    171.0,
+                    104.0
+                  ],
+                  [
+                    161.0,
+                    183.0
+                  ],
+                  [
+                    13.0,
+                    164.0
+                  ]
+                ],
+                "score": 0.99958,
+                "text": "160144"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags1262",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6647278798294831,
+              "prediction": {
+                "polygon": [
+                  [
+                    57.0,
+                    51.0
+                  ],
+                  [
+                    86.0,
+                    56.0
+                  ],
+                  [
+                    82.0,
+                    76.0
+                  ],
+                  [
+                    54.0,
+                    71.0
+                  ]
+                ],
+                "score": 1.0,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5961953727506427,
+              "prediction": {
+                "polygon": [
+                  [
+                    28.0,
+                    74.0
+                  ],
+                  [
+                    118.0,
+                    88.0
+                  ],
+                  [
+                    109.0,
+                    141.0
+                  ],
+                  [
+                    20.0,
+                    127.0
+                  ]
+                ],
+                "score": 0.99982,
+                "text": "160324"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.7688062651271396,
+              "prediction": {
+                "polygon": [
+                  [
+                    44.0,
+                    66.0
+                  ],
+                  [
+                    107.0,
+                    76.0
+                  ],
+                  [
+                    103.0,
+                    96.0
+                  ],
+                  [
+                    40.0,
+                    86.0
+                  ]
+                ],
+                "score": 0.97245,
+                "text": "12-23"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1689",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5926650366748166,
+              "prediction": {
+                "polygon": [
+                  [
+                    65.0,
+                    46.0
+                  ],
+                  [
+                    103.0,
+                    50.0
+                  ],
+                  [
+                    100.0,
+                    77.0
+                  ],
+                  [
+                    63.0,
+                    73.0
+                  ]
+                ],
+                "score": 0.99999,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.7479607255695905,
+              "prediction": {
+                "polygon": [
+                  [
+                    24.0,
+                    85.0
+                  ],
+                  [
+                    104.0,
+                    81.0
+                  ],
+                  [
+                    107.0,
+                    140.0
+                  ],
+                  [
+                    27.0,
+                    145.0
+                  ]
+                ],
+                "score": 0.99996,
+                "text": "1601"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags622",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags775",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.6906598590376825,
+              "prediction": {
+                "polygon": [
+                  [
+                    6.0,
+                    46.0
+                  ],
+                  [
+                    47.0,
+                    52.0
+                  ],
+                  [
+                    43.0,
+                    84.0
+                  ],
+                  [
+                    1.0,
+                    78.0
+                  ]
+                ],
+                "score": 0.98314,
+                "text": "13698"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1985",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6041222459132907,
+              "prediction": {
+                "polygon": [
+                  [
+                    5.0,
+                    51.0
+                  ],
+                  [
+                    64.0,
+                    54.0
+                  ],
+                  [
+                    62.0,
+                    90.0
+                  ],
+                  [
+                    4.0,
+                    87.0
+                  ]
+                ],
+                "score": 0.99963,
+                "text": "253134"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1318",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6563342429644441,
+              "prediction": {
+                "polygon": [
+                  [
+                    37.0,
+                    25.0
+                  ],
+                  [
+                    77.0,
+                    37.0
+                  ],
+                  [
+                    68.0,
+                    65.0
+                  ],
+                  [
+                    29.0,
+                    54.0
+                  ]
+                ],
+                "score": 0.99048,
+                "text": "2.31"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags606",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.5540196226557578,
+              "prediction": {
+                "polygon": [
+                  [
+                    46.0,
+                    52.0
+                  ],
+                  [
+                    75.0,
+                    50.0
+                  ],
+                  [
+                    76.0,
+                    75.0
+                  ],
+                  [
+                    47.0,
+                    77.0
+                  ]
+                ],
+                "score": 0.99688,
+                "text": "31"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.6419650291423813,
+              "prediction": {
+                "polygon": [
+                  [
+                    17.0,
+                    71.0
+                  ],
+                  [
+                    97.0,
+                    68.0
+                  ],
+                  [
+                    98.0,
+                    113.0
+                  ],
+                  [
+                    18.0,
+                    116.0
+                  ]
+                ],
+                "score": 0.99996,
+                "text": "5409"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags880",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6069293593113612,
+              "prediction": {
+                "polygon": [
+                  [
+                    44.0,
+                    48.0
+                  ],
+                  [
+                    65.0,
+                    54.0
+                  ],
+                  [
+                    61.0,
+                    68.0
+                  ],
+                  [
+                    40.0,
+                    63.0
+                  ]
+                ],
+                "score": 0.99834,
+                "text": "22"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5322856373471377,
+              "prediction": {
+                "polygon": [
+                  [
+                    34.0,
+                    59.0
+                  ],
+                  [
+                    66.0,
+                    63.0
+                  ],
+                  [
+                    62.0,
+                    90.0
+                  ],
+                  [
+                    31.0,
+                    86.0
+                  ]
+                ],
+                "score": 0.99208,
+                "text": "8.5"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1237",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7467914438502674,
+              "prediction": {
+                "polygon": [
+                  [
+                    32.0,
+                    38.0
+                  ],
+                  [
+                    131.0,
+                    72.0
+                  ],
+                  [
+                    119.0,
+                    106.0
+                  ],
+                  [
+                    21.0,
+                    72.0
+                  ]
+                ],
+                "score": 0.98751,
+                "text": "67051"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags3162",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6335252049537764,
+              "prediction": {
+                "polygon": [
+                  [
+                    7.0,
+                    57.0
+                  ],
+                  [
+                    91.0,
+                    76.0
+                  ],
+                  [
+                    85.0,
+                    108.0
+                  ],
+                  [
+                    0.0,
+                    90.0
+                  ]
+                ],
+                "score": 0.99808,
+                "text": "66826"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.7233716475095785,
+              "prediction": {
+                "polygon": [
+                  [
+                    31.0,
+                    50.0
+                  ],
+                  [
+                    67.0,
+                    56.0
+                  ],
+                  [
+                    65.0,
+                    73.0
+                  ],
+                  [
+                    28.0,
+                    68.0
+                  ]
+                ],
+                "score": 0.99289,
+                "text": "11.1"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags3219",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1592",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.8238962736833373,
+              "prediction": {
+                "polygon": [
+                  [
+                    13.0,
+                    40.0
+                  ],
+                  [
+                    59.0,
+                    32.0
+                  ],
+                  [
+                    64.0,
+                    60.0
+                  ],
+                  [
+                    18.0,
+                    68.0
+                  ]
+                ],
+                "score": 0.99908,
+                "text": "66996"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags73",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags2922",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2081",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.570954356846473,
+              "prediction": {
+                "polygon": [
+                  [
+                    15.0,
+                    49.0
+                  ],
+                  [
+                    59.0,
+                    45.0
+                  ],
+                  [
+                    61.0,
+                    73.0
+                  ],
+                  [
+                    18.0,
+                    76.0
+                  ]
+                ],
+                "score": 0.99992,
+                "text": "5375"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags3016",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6365051133837261,
+              "prediction": {
+                "polygon": [
+                  [
+                    99.0,
+                    59.0
+                  ],
+                  [
+                    150.0,
+                    67.0
+                  ],
+                  [
+                    143.0,
+                    110.0
+                  ],
+                  [
+                    92.0,
+                    102.0
+                  ]
+                ],
+                "score": 0.99998,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.7082679225536368,
+              "prediction": {
+                "polygon": [
+                  [
+                    74.0,
+                    95.0
+                  ],
+                  [
+                    158.0,
+                    102.0
+                  ],
+                  [
+                    154.0,
+                    147.0
+                  ],
+                  [
+                    71.0,
+                    141.0
+                  ]
+                ],
+                "score": 0.99912,
+                "text": "9-5"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.7382861798650406,
+              "prediction": {
+                "polygon": [
+                  [
+                    45.0,
+                    117.0
+                  ],
+                  [
+                    177.0,
+                    135.0
+                  ],
+                  [
+                    164.0,
+                    232.0
+                  ],
+                  [
+                    32.0,
+                    214.0
+                  ]
+                ],
+                "score": 0.99976,
+                "text": "160171"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags2023",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2665",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags2174",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.6608062651065126,
+              "prediction": {
+                "polygon": [
+                  [
+                    21.0,
+                    64.0
+                  ],
+                  [
+                    92.0,
+                    48.0
+                  ],
+                  [
+                    100.0,
+                    87.0
+                  ],
+                  [
+                    30.0,
+                    103.0
+                  ]
+                ],
+                "score": 0.99987,
+                "text": "4022"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags185",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6222222222222222,
+              "prediction": {
+                "polygon": [
+                  [
+                    48.0,
+                    29.0
+                  ],
+                  [
+                    78.0,
+                    29.0
+                  ],
+                  [
+                    78.0,
+                    56.0
+                  ],
+                  [
+                    48.0,
+                    56.0
+                  ]
+                ],
+                "score": 0.99999,
+                "text": "49"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1588",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5747441520467836,
+              "prediction": {
+                "polygon": [
+                  [
+                    16.0,
+                    36.0
+                  ],
+                  [
+                    112.0,
+                    36.0
+                  ],
+                  [
+                    112.0,
+                    93.0
+                  ],
+                  [
+                    16.0,
+                    93.0
+                  ]
+                ],
+                "score": 0.97257,
+                "text": "160127"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags60",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags3155",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5373635600335852,
+              "prediction": {
+                "polygon": [
+                  [
+                    12.0,
+                    47.0
+                  ],
+                  [
+                    144.0,
+                    72.0
+                  ],
+                  [
+                    134.0,
+                    125.0
+                  ],
+                  [
+                    3.0,
+                    99.0
+                  ]
+                ],
+                "score": 0.9988,
+                "text": "67149"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags491",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2928",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7120555073720729,
+              "prediction": {
+                "polygon": [
+                  [
+                    69.0,
+                    69.0
+                  ],
+                  [
+                    141.0,
+                    63.0
+                  ],
+                  [
+                    145.0,
+                    111.0
+                  ],
+                  [
+                    74.0,
+                    117.0
+                  ]
+                ],
+                "score": 0.99999,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5710905421393278,
+              "prediction": {
+                "polygon": [
+                  [
+                    9.0,
+                    133.0
+                  ],
+                  [
+                    243.0,
+                    114.0
+                  ],
+                  [
+                    253.0,
+                    236.0
+                  ],
+                  [
+                    19.0,
+                    255.0
+                  ]
+                ],
+                "score": 0.99993,
+                "text": "160174"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 4,
+          "unmatched_texts": 2,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags170",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6582781456953642,
+              "prediction": {
+                "polygon": [
+                  [
+                    19.0,
+                    85.0
+                  ],
+                  [
+                    99.0,
+                    80.0
+                  ],
+                  [
+                    102.0,
+                    127.0
+                  ],
+                  [
+                    22.0,
+                    132.0
+                  ]
+                ],
+                "score": 0.99731,
+                "text": "20581"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags52",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.502534759717117,
+              "prediction": {
+                "polygon": [
+                  [
+                    34.0,
+                    54.0
+                  ],
+                  [
+                    56.0,
+                    42.0
+                  ],
+                  [
+                    70.0,
+                    65.0
+                  ],
+                  [
+                    48.0,
+                    77.0
+                  ]
+                ],
+                "score": 0.99186,
+                "text": "2"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags2803",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5924861522740552,
+              "prediction": {
+                "polygon": [
+                  [
+                    56.0,
+                    40.0
+                  ],
+                  [
+                    82.0,
+                    55.0
+                  ],
+                  [
+                    70.0,
+                    78.0
+                  ],
+                  [
+                    43.0,
+                    64.0
+                  ]
+                ],
+                "score": 0.99995,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.625357149500263,
+              "prediction": {
+                "polygon": [
+                  [
+                    26.0,
+                    51.0
+                  ],
+                  [
+                    96.0,
+                    81.0
+                  ],
+                  [
+                    86.0,
+                    107.0
+                  ],
+                  [
+                    15.0,
+                    78.0
+                  ]
+                ],
+                "score": 0.99955,
+                "text": "12-26"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5521872601688411,
+              "prediction": {
+                "polygon": [
+                  [
+                    21.0,
+                    60.0
+                  ],
+                  [
+                    100.0,
+                    99.0
+                  ],
+                  [
+                    80.0,
+                    137.0
+                  ],
+                  [
+                    0.0,
+                    101.0
+                  ]
+                ],
+                "score": 0.99991,
+                "text": "253454"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags1593",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags3100",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags481",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7022256925641278,
+              "prediction": {
+                "polygon": [
+                  [
+                    43.0,
+                    26.0
+                  ],
+                  [
+                    73.0,
+                    23.0
+                  ],
+                  [
+                    76.0,
+                    52.0
+                  ],
+                  [
+                    46.0,
+                    55.0
+                  ]
+                ],
+                "score": 0.99948,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5941395145418762,
+              "prediction": {
+                "polygon": [
+                  [
+                    34.0,
+                    55.0
+                  ],
+                  [
+                    102.0,
+                    30.0
+                  ],
+                  [
+                    113.0,
+                    59.0
+                  ],
+                  [
+                    45.0,
+                    85.0
+                  ]
+                ],
+                "score": 0.97435,
+                "text": "6-11"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1606",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7859308671922377,
+              "prediction": {
+                "polygon": [
+                  [
+                    47.0,
+                    48.0
+                  ],
+                  [
+                    78.0,
+                    46.0
+                  ],
+                  [
+                    80.0,
+                    73.0
+                  ],
+                  [
+                    49.0,
+                    74.0
+                  ]
+                ],
+                "score": 0.99998,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5187663436394401,
+              "prediction": {
+                "polygon": [
+                  [
+                    12.0,
+                    88.0
+                  ],
+                  [
+                    104.0,
+                    75.0
+                  ],
+                  [
+                    114.0,
+                    144.0
+                  ],
+                  [
+                    23.0,
+                    158.0
+                  ]
+                ],
+                "score": 0.99742,
+                "text": "160163"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2777",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.533054317506794,
+              "prediction": {
+                "polygon": [
+                  [
+                    62.0,
+                    52.0
+                  ],
+                  [
+                    86.0,
+                    62.0
+                  ],
+                  [
+                    77.0,
+                    82.0
+                  ],
+                  [
+                    53.0,
+                    72.0
+                  ]
+                ],
+                "score": 0.99996,
+                "text": "49"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags3114",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5102199223803363,
+              "prediction": {
+                "polygon": [
+                  [
+                    26.0,
+                    73.0
+                  ],
+                  [
+                    133.0,
+                    108.0
+                  ],
+                  [
+                    111.0,
+                    171.0
+                  ],
+                  [
+                    3.0,
+                    140.0
+                  ]
+                ],
+                "score": 0.99921,
+                "text": "230005"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1454",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2038",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1643",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1406",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.8428094075398606,
+              "prediction": {
+                "polygon": [
+                  [
+                    58.0,
+                    34.0
+                  ],
+                  [
+                    98.0,
+                    58.0
+                  ],
+                  [
+                    83.0,
+                    84.0
+                  ],
+                  [
+                    43.0,
+                    60.0
+                  ]
+                ],
+                "score": 0.98978,
+                "text": "5.6"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": true,
+          "ground_truth_lines": 1,
+          "id": "eartags557",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5209502208427839,
+              "prediction": {
+                "polygon": [
+                  [
+                    40.0,
+                    6.0
+                  ],
+                  [
+                    104.0,
+                    59.0
+                  ],
+                  [
+                    75.0,
+                    98.0
+                  ],
+                  [
+                    8.0,
+                    46.0
+                  ]
+                ],
+                "score": 0.99625,
+                "text": "40251"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags264",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7352941176470589,
+              "prediction": {
+                "polygon": [
+                  [
+                    50.0,
+                    51.0
+                  ],
+                  [
+                    84.0,
+                    51.0
+                  ],
+                  [
+                    84.0,
+                    79.0
+                  ],
+                  [
+                    50.0,
+                    79.0
+                  ]
+                ],
+                "score": 1.0,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.6850467289719626,
+              "prediction": {
+                "polygon": [
+                  [
+                    34.0,
+                    74.0
+                  ],
+                  [
+                    119.0,
+                    72.0
+                  ],
+                  [
+                    121.0,
+                    109.0
+                  ],
+                  [
+                    35.0,
+                    112.0
+                  ]
+                ],
+                "score": 0.99891,
+                "text": "1-24"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5804486980299546,
+              "prediction": {
+                "polygon": [
+                  [
+                    17.0,
+                    98.0
+                  ],
+                  [
+                    129.0,
+                    93.0
+                  ],
+                  [
+                    132.0,
+                    165.0
+                  ],
+                  [
+                    21.0,
+                    170.0
+                  ]
+                ],
+                "score": 0.9999,
+                "text": "253025"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1090",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags514",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6074063639285714,
+              "prediction": {
+                "polygon": [
+                  [
+                    60.0,
+                    34.0
+                  ],
+                  [
+                    86.0,
+                    61.0
+                  ],
+                  [
+                    63.0,
+                    84.0
+                  ],
+                  [
+                    37.0,
+                    57.0
+                  ]
+                ],
+                "score": 0.9684,
+                "text": "5.14"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.7116499559540523,
+              "prediction": {
+                "polygon": [
+                  [
+                    32.0,
+                    45.0
+                  ],
+                  [
+                    79.0,
+                    84.0
+                  ],
+                  [
+                    49.0,
+                    120.0
+                  ],
+                  [
+                    2.0,
+                    81.0
+                  ]
+                ],
+                "score": 0.99793,
+                "text": "21317"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1418",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5816091954022988,
+              "prediction": {
+                "polygon": [
+                  [
+                    56.0,
+                    48.0
+                  ],
+                  [
+                    86.0,
+                    48.0
+                  ],
+                  [
+                    86.0,
+                    77.0
+                  ],
+                  [
+                    56.0,
+                    77.0
+                  ]
+                ],
+                "score": 0.99998,
+                "text": "49"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags583",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7530026489204533,
+              "prediction": {
+                "polygon": [
+                  [
+                    26.0,
+                    63.0
+                  ],
+                  [
+                    61.0,
+                    58.0
+                  ],
+                  [
+                    65.0,
+                    84.0
+                  ],
+                  [
+                    30.0,
+                    89.0
+                  ]
+                ],
+                "score": 0.99444,
+                "text": "5.9"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.6661740254941807,
+              "prediction": {
+                "polygon": [
+                  [
+                    24.0,
+                    80.0
+                  ],
+                  [
+                    90.0,
+                    74.0
+                  ],
+                  [
+                    93.0,
+                    115.0
+                  ],
+                  [
+                    28.0,
+                    121.0
+                  ]
+                ],
+                "score": 0.99921,
+                "text": "21296"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags670",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6879910213243546,
+              "prediction": {
+                "polygon": [
+                  [
+                    44.0,
+                    84.0
+                  ],
+                  [
+                    110.0,
+                    84.0
+                  ],
+                  [
+                    110.0,
+                    124.0
+                  ],
+                  [
+                    44.0,
+                    125.0
+                  ]
+                ],
+                "score": 0.99509,
+                "text": "5.17"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.6369209809264306,
+              "prediction": {
+                "polygon": [
+                  [
+                    14.0,
+                    109.0
+                  ],
+                  [
+                    143.0,
+                    118.0
+                  ],
+                  [
+                    139.0,
+                    186.0
+                  ],
+                  [
+                    10.0,
+                    177.0
+                  ]
+                ],
+                "score": 0.99982,
+                "text": "21338"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2234",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": true,
+          "ground_truth_lines": 1,
+          "id": "eartags702",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5092592592592593,
+              "prediction": {
+                "polygon": [
+                  [
+                    4.0,
+                    45.0
+                  ],
+                  [
+                    42.0,
+                    37.0
+                  ],
+                  [
+                    48.0,
+                    67.0
+                  ],
+                  [
+                    10.0,
+                    75.0
+                  ]
+                ],
+                "score": 0.99712,
+                "text": "16024"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags167",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7358334710061126,
+              "prediction": {
+                "polygon": [
+                  [
+                    25.0,
+                    65.0
+                  ],
+                  [
+                    129.0,
+                    93.0
+                  ],
+                  [
+                    115.0,
+                    147.0
+                  ],
+                  [
+                    11.0,
+                    120.0
+                  ]
+                ],
+                "score": 0.99991,
+                "text": "20984"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": true,
+          "ground_truth_lines": 1,
+          "id": "eartags1064",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6189771766694844,
+              "prediction": {
+                "polygon": [
+                  [
+                    4.0,
+                    64.0
+                  ],
+                  [
+                    67.0,
+                    57.0
+                  ],
+                  [
+                    72.0,
+                    94.0
+                  ],
+                  [
+                    9.0,
+                    101.0
+                  ]
+                ],
+                "score": 0.99993,
+                "text": "2167"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1717",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6569832402234637,
+              "prediction": {
+                "polygon": [
+                  [
+                    62.0,
+                    45.0
+                  ],
+                  [
+                    95.0,
+                    43.0
+                  ],
+                  [
+                    97.0,
+                    70.0
+                  ],
+                  [
+                    64.0,
+                    72.0
+                  ]
+                ],
+                "score": 0.99996,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.6547649793388429,
+              "prediction": {
+                "polygon": [
+                  [
+                    16.0,
+                    97.0
+                  ],
+                  [
+                    129.0,
+                    75.0
+                  ],
+                  [
+                    142.0,
+                    141.0
+                  ],
+                  [
+                    29.0,
+                    163.0
+                  ]
+                ],
+                "score": 0.99977,
+                "text": "253422"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        }
+      ],
+      "totals": {
+        "correct_text": 65,
+        "exact_line_coverage": 0.4140127388535032,
+        "exact_text_precision": 0.7926829268292683,
+        "full_tag_accuracy": 0.140625,
+        "full_tag_exact": 9,
+        "ground_truth_lines": 157,
+        "matched": 71,
+        "missed_lines": 86,
+        "predictions": 82,
+        "unmatched_texts": 11,
+        "wrong_text": 6
+      }
+    },
+    "all_raw": {
+      "rows": [
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags2149",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags691",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags461",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1760",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": true,
+          "ground_truth_lines": 1,
+          "id": "eartags3069",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7590226505106233,
+              "prediction": {
+                "polygon": [
+                  [
+                    6.0,
+                    44.0
+                  ],
+                  [
+                    51.0,
+                    48.0
+                  ],
+                  [
+                    48.0,
+                    83.0
+                  ],
+                  [
+                    3.0,
+                    79.0
+                  ]
+                ],
+                "score": 0.99984,
+                "text": "12038"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1423",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7285429141716567,
+              "prediction": {
+                "polygon": [
+                  [
+                    26.0,
+                    52.0
+                  ],
+                  [
+                    64.0,
+                    51.0
+                  ],
+                  [
+                    65.0,
+                    70.0
+                  ],
+                  [
+                    26.0,
+                    72.0
+                  ]
+                ],
+                "score": 0.99957,
+                "text": "8.19"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5988074957410562,
+              "prediction": {
+                "polygon": [
+                  [
+                    13.0,
+                    66.0
+                  ],
+                  [
+                    80.0,
+                    63.0
+                  ],
+                  [
+                    81.0,
+                    98.0
+                  ],
+                  [
+                    14.0,
+                    101.0
+                  ]
+                ],
+                "score": 0.99998,
+                "text": "5364"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags265",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7993997713942769,
+              "prediction": {
+                "polygon": [
+                  [
+                    21.0,
+                    55.0
+                  ],
+                  [
+                    102.0,
+                    64.0
+                  ],
+                  [
+                    97.0,
+                    112.0
+                  ],
+                  [
+                    15.0,
+                    103.0
+                  ]
+                ],
+                "score": 0.99984,
+                "text": "20055"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2380",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.8157589803012746,
+              "prediction": {
+                "polygon": [
+                  [
+                    68.0,
+                    56.0
+                  ],
+                  [
+                    102.0,
+                    57.0
+                  ],
+                  [
+                    102.0,
+                    82.0
+                  ],
+                  [
+                    67.0,
+                    81.0
+                  ]
+                ],
+                "score": 1.0,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.5883495145631068,
+              "prediction": {
+                "polygon": [
+                  [
+                    47.0,
+                    74.0
+                  ],
+                  [
+                    102.0,
+                    76.0
+                  ],
+                  [
+                    102.0,
+                    103.0
+                  ],
+                  [
+                    46.0,
+                    102.0
+                  ]
+                ],
+                "score": 0.86069,
+                "text": "12-"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5788437444066583,
+              "prediction": {
+                "polygon": [
+                  [
+                    24.0,
+                    87.0
+                  ],
+                  [
+                    102.0,
+                    88.0
+                  ],
+                  [
+                    102.0,
+                    159.0
+                  ],
+                  [
+                    24.0,
+                    158.0
+                  ]
+                ],
+                "score": 0.99977,
+                "text": "1602"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1376",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.797909752939399,
+              "prediction": {
+                "polygon": [
+                  [
+                    17.0,
+                    64.0
+                  ],
+                  [
+                    107.0,
+                    53.0
+                  ],
+                  [
+                    112.0,
+                    99.0
+                  ],
+                  [
+                    23.0,
+                    109.0
+                  ]
+                ],
+                "score": 0.99988,
+                "text": "20562"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1938",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.73,
+              "prediction": {
+                "polygon": [
+                  [
+                    37.0,
+                    57.0
+                  ],
+                  [
+                    85.0,
+                    67.0
+                  ],
+                  [
+                    79.0,
+                    97.0
+                  ],
+                  [
+                    31.0,
+                    87.0
+                  ]
+                ],
+                "score": 0.96562,
+                "text": "12.8"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags1664",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6619449839667526,
+              "prediction": {
+                "polygon": [
+                  [
+                    25.0,
+                    23.0
+                  ],
+                  [
+                    48.0,
+                    20.0
+                  ],
+                  [
+                    51.0,
+                    39.0
+                  ],
+                  [
+                    27.0,
+                    42.0
+                  ]
+                ],
+                "score": 0.99998,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5470303339281163,
+              "prediction": {
+                "polygon": [
+                  [
+                    2.0,
+                    42.0
+                  ],
+                  [
+                    70.0,
+                    22.0
+                  ],
+                  [
+                    78.0,
+                    49.0
+                  ],
+                  [
+                    9.0,
+                    68.0
+                  ]
+                ],
+                "score": 0.9955,
+                "text": "12-29"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5601482854494902,
+              "prediction": {
+                "polygon": [
+                  [
+                    10.0,
+                    58.0
+                  ],
+                  [
+                    82.0,
+                    37.0
+                  ],
+                  [
+                    90.0,
+                    73.0
+                  ],
+                  [
+                    21.0,
+                    93.0
+                  ]
+                ],
+                "score": 0.99944,
+                "text": "253462"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags1342",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags693",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6383112581401841,
+              "prediction": {
+                "polygon": [
+                  [
+                    42.0,
+                    54.0
+                  ],
+                  [
+                    65.0,
+                    50.0
+                  ],
+                  [
+                    69.0,
+                    70.0
+                  ],
+                  [
+                    46.0,
+                    74.0
+                  ]
+                ],
+                "score": 0.99947,
+                "text": "22"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.5588235294117647,
+              "prediction": {
+                "polygon": [
+                  [
+                    33.0,
+                    71.0
+                  ],
+                  [
+                    73.0,
+                    66.0
+                  ],
+                  [
+                    77.0,
+                    93.0
+                  ],
+                  [
+                    37.0,
+                    99.0
+                  ]
+                ],
+                "score": 0.97711,
+                "text": "8.1"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5520833333333334,
+              "prediction": {
+                "polygon": [
+                  [
+                    19.0,
+                    92.0
+                  ],
+                  [
+                    96.0,
+                    81.0
+                  ],
+                  [
+                    103.0,
+                    128.0
+                  ],
+                  [
+                    26.0,
+                    139.0
+                  ]
+                ],
+                "score": 0.99992,
+                "text": "5262"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1727",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6049955003201579,
+              "prediction": {
+                "polygon": [
+                  [
+                    86.0,
+                    44.0
+                  ],
+                  [
+                    132.0,
+                    53.0
+                  ],
+                  [
+                    125.0,
+                    89.0
+                  ],
+                  [
+                    79.0,
+                    80.0
+                  ]
+                ],
+                "score": 1.0,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.6213619816080983,
+              "prediction": {
+                "polygon": [
+                  [
+                    70.0,
+                    74.0
+                  ],
+                  [
+                    142.0,
+                    83.0
+                  ],
+                  [
+                    138.0,
+                    113.0
+                  ],
+                  [
+                    66.0,
+                    105.0
+                  ]
+                ],
+                "score": 0.99295,
+                "text": "7-2"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.6267718528518393,
+              "prediction": {
+                "polygon": [
+                  [
+                    24.0,
+                    85.0
+                  ],
+                  [
+                    171.0,
+                    104.0
+                  ],
+                  [
+                    161.0,
+                    183.0
+                  ],
+                  [
+                    13.0,
+                    164.0
+                  ]
+                ],
+                "score": 0.99958,
+                "text": "160144"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags1262",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6647278798294831,
+              "prediction": {
+                "polygon": [
+                  [
+                    57.0,
+                    51.0
+                  ],
+                  [
+                    86.0,
+                    56.0
+                  ],
+                  [
+                    82.0,
+                    76.0
+                  ],
+                  [
+                    54.0,
+                    71.0
+                  ]
+                ],
+                "score": 1.0,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5961953727506427,
+              "prediction": {
+                "polygon": [
+                  [
+                    28.0,
+                    74.0
+                  ],
+                  [
+                    118.0,
+                    88.0
+                  ],
+                  [
+                    109.0,
+                    141.0
+                  ],
+                  [
+                    20.0,
+                    127.0
+                  ]
+                ],
+                "score": 0.99982,
+                "text": "160324"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.7688062651271396,
+              "prediction": {
+                "polygon": [
+                  [
+                    44.0,
+                    66.0
+                  ],
+                  [
+                    107.0,
+                    76.0
+                  ],
+                  [
+                    103.0,
+                    96.0
+                  ],
+                  [
+                    40.0,
+                    86.0
+                  ]
+                ],
+                "score": 0.97245,
+                "text": "12-23"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1689",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5926650366748166,
+              "prediction": {
+                "polygon": [
+                  [
+                    65.0,
+                    46.0
+                  ],
+                  [
+                    103.0,
+                    50.0
+                  ],
+                  [
+                    100.0,
+                    77.0
+                  ],
+                  [
+                    63.0,
+                    73.0
+                  ]
+                ],
+                "score": 0.99999,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.7479607255695905,
+              "prediction": {
+                "polygon": [
+                  [
+                    24.0,
+                    85.0
+                  ],
+                  [
+                    104.0,
+                    81.0
+                  ],
+                  [
+                    107.0,
+                    140.0
+                  ],
+                  [
+                    27.0,
+                    145.0
+                  ]
+                ],
+                "score": 0.99996,
+                "text": "1601"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags622",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags775",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.6906598590376825,
+              "prediction": {
+                "polygon": [
+                  [
+                    6.0,
+                    46.0
+                  ],
+                  [
+                    47.0,
+                    52.0
+                  ],
+                  [
+                    43.0,
+                    84.0
+                  ],
+                  [
+                    1.0,
+                    78.0
+                  ]
+                ],
+                "score": 0.98314,
+                "text": "13698"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1985",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6041222459132907,
+              "prediction": {
+                "polygon": [
+                  [
+                    5.0,
+                    51.0
+                  ],
+                  [
+                    64.0,
+                    54.0
+                  ],
+                  [
+                    62.0,
+                    90.0
+                  ],
+                  [
+                    4.0,
+                    87.0
+                  ]
+                ],
+                "score": 0.99963,
+                "text": "253134"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.6789366053169734,
+              "prediction": {
+                "polygon": [
+                  [
+                    21.0,
+                    38.0
+                  ],
+                  [
+                    65.0,
+                    40.0
+                  ],
+                  [
+                    64.0,
+                    62.0
+                  ],
+                  [
+                    20.0,
+                    60.0
+                  ]
+                ],
+                "score": 0.91153,
+                "text": "424"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1318",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6563342429644441,
+              "prediction": {
+                "polygon": [
+                  [
+                    37.0,
+                    25.0
+                  ],
+                  [
+                    77.0,
+                    37.0
+                  ],
+                  [
+                    68.0,
+                    65.0
+                  ],
+                  [
+                    29.0,
+                    54.0
+                  ]
+                ],
+                "score": 0.99048,
+                "text": "2.31"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.6759449628340978,
+              "prediction": {
+                "polygon": [
+                  [
+                    13.0,
+                    43.0
+                  ],
+                  [
+                    85.0,
+                    61.0
+                  ],
+                  [
+                    75.0,
+                    102.0
+                  ],
+                  [
+                    2.0,
+                    84.0
+                  ]
+                ],
+                "score": 0.8378,
+                "text": "68902"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags606",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.5540196226557578,
+              "prediction": {
+                "polygon": [
+                  [
+                    46.0,
+                    52.0
+                  ],
+                  [
+                    75.0,
+                    50.0
+                  ],
+                  [
+                    76.0,
+                    75.0
+                  ],
+                  [
+                    47.0,
+                    77.0
+                  ]
+                ],
+                "score": 0.99688,
+                "text": "31"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.6419650291423813,
+              "prediction": {
+                "polygon": [
+                  [
+                    17.0,
+                    71.0
+                  ],
+                  [
+                    97.0,
+                    68.0
+                  ],
+                  [
+                    98.0,
+                    113.0
+                  ],
+                  [
+                    18.0,
+                    116.0
+                  ]
+                ],
+                "score": 0.99996,
+                "text": "5409"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags880",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6069293593113612,
+              "prediction": {
+                "polygon": [
+                  [
+                    44.0,
+                    48.0
+                  ],
+                  [
+                    65.0,
+                    54.0
+                  ],
+                  [
+                    61.0,
+                    68.0
+                  ],
+                  [
+                    40.0,
+                    63.0
+                  ]
+                ],
+                "score": 0.99834,
+                "text": "22"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5322856373471377,
+              "prediction": {
+                "polygon": [
+                  [
+                    34.0,
+                    59.0
+                  ],
+                  [
+                    66.0,
+                    63.0
+                  ],
+                  [
+                    62.0,
+                    90.0
+                  ],
+                  [
+                    31.0,
+                    86.0
+                  ]
+                ],
+                "score": 0.99208,
+                "text": "8.5"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1237",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7467914438502674,
+              "prediction": {
+                "polygon": [
+                  [
+                    32.0,
+                    38.0
+                  ],
+                  [
+                    131.0,
+                    72.0
+                  ],
+                  [
+                    119.0,
+                    106.0
+                  ],
+                  [
+                    21.0,
+                    72.0
+                  ]
+                ],
+                "score": 0.98751,
+                "text": "67051"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags3162",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6335252049537764,
+              "prediction": {
+                "polygon": [
+                  [
+                    7.0,
+                    57.0
+                  ],
+                  [
+                    91.0,
+                    76.0
+                  ],
+                  [
+                    85.0,
+                    108.0
+                  ],
+                  [
+                    0.0,
+                    90.0
+                  ]
+                ],
+                "score": 0.99808,
+                "text": "66826"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.7233716475095785,
+              "prediction": {
+                "polygon": [
+                  [
+                    31.0,
+                    50.0
+                  ],
+                  [
+                    67.0,
+                    56.0
+                  ],
+                  [
+                    65.0,
+                    73.0
+                  ],
+                  [
+                    28.0,
+                    68.0
+                  ]
+                ],
+                "score": 0.99289,
+                "text": "11.1"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags3219",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": true,
+          "ground_truth_lines": 2,
+          "id": "eartags1592",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.8238962736833373,
+              "prediction": {
+                "polygon": [
+                  [
+                    13.0,
+                    40.0
+                  ],
+                  [
+                    59.0,
+                    32.0
+                  ],
+                  [
+                    64.0,
+                    60.0
+                  ],
+                  [
+                    18.0,
+                    68.0
+                  ]
+                ],
+                "score": 0.99908,
+                "text": "66996"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.7850156993308116,
+              "prediction": {
+                "polygon": [
+                  [
+                    20.0,
+                    27.0
+                  ],
+                  [
+                    44.0,
+                    23.0
+                  ],
+                  [
+                    47.0,
+                    36.0
+                  ],
+                  [
+                    22.0,
+                    40.0
+                  ]
+                ],
+                "score": 0.74059,
+                "text": "11.22"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags73",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags2922",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2081",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5453774385072095,
+              "prediction": {
+                "polygon": [
+                  [
+                    21.0,
+                    36.0
+                  ],
+                  [
+                    51.0,
+                    32.0
+                  ],
+                  [
+                    54.0,
+                    51.0
+                  ],
+                  [
+                    23.0,
+                    55.0
+                  ]
+                ],
+                "score": 0.87607,
+                "text": "8.22"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.570954356846473,
+              "prediction": {
+                "polygon": [
+                  [
+                    15.0,
+                    49.0
+                  ],
+                  [
+                    59.0,
+                    45.0
+                  ],
+                  [
+                    61.0,
+                    73.0
+                  ],
+                  [
+                    18.0,
+                    76.0
+                  ]
+                ],
+                "score": 0.99992,
+                "text": "5375"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags3016",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6365051133837261,
+              "prediction": {
+                "polygon": [
+                  [
+                    99.0,
+                    59.0
+                  ],
+                  [
+                    150.0,
+                    67.0
+                  ],
+                  [
+                    143.0,
+                    110.0
+                  ],
+                  [
+                    92.0,
+                    102.0
+                  ]
+                ],
+                "score": 0.99998,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.7082679225536368,
+              "prediction": {
+                "polygon": [
+                  [
+                    74.0,
+                    95.0
+                  ],
+                  [
+                    158.0,
+                    102.0
+                  ],
+                  [
+                    154.0,
+                    147.0
+                  ],
+                  [
+                    71.0,
+                    141.0
+                  ]
+                ],
+                "score": 0.99912,
+                "text": "9-5"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.7382861798650406,
+              "prediction": {
+                "polygon": [
+                  [
+                    45.0,
+                    117.0
+                  ],
+                  [
+                    177.0,
+                    135.0
+                  ],
+                  [
+                    164.0,
+                    232.0
+                  ],
+                  [
+                    32.0,
+                    214.0
+                  ]
+                ],
+                "score": 0.99976,
+                "text": "160171"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": true,
+          "ground_truth_lines": 2,
+          "id": "eartags2023",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6964967026957235,
+              "prediction": {
+                "polygon": [
+                  [
+                    28.0,
+                    49.0
+                  ],
+                  [
+                    87.0,
+                    48.0
+                  ],
+                  [
+                    87.0,
+                    77.0
+                  ],
+                  [
+                    28.0,
+                    78.0
+                  ]
+                ],
+                "score": 0.93131,
+                "text": "66200"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5938037865748709,
+              "prediction": {
+                "polygon": [
+                  [
+                    50.0,
+                    35.0
+                  ],
+                  [
+                    76.0,
+                    35.0
+                  ],
+                  [
+                    76.0,
+                    51.0
+                  ],
+                  [
+                    50.0,
+                    51.0
+                  ]
+                ],
+                "score": 0.78674,
+                "text": "7.2"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2665",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags2174",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.6608062651065126,
+              "prediction": {
+                "polygon": [
+                  [
+                    21.0,
+                    64.0
+                  ],
+                  [
+                    92.0,
+                    48.0
+                  ],
+                  [
+                    100.0,
+                    87.0
+                  ],
+                  [
+                    30.0,
+                    103.0
+                  ]
+                ],
+                "score": 0.99987,
+                "text": "4022"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.7180033635966797,
+              "prediction": {
+                "polygon": [
+                  [
+                    26.0,
+                    39.0
+                  ],
+                  [
+                    74.0,
+                    29.0
+                  ],
+                  [
+                    80.0,
+                    57.0
+                  ],
+                  [
+                    32.0,
+                    67.0
+                  ]
+                ],
+                "score": 0.85246,
+                "text": "4.21"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 2
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags185",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6222222222222222,
+              "prediction": {
+                "polygon": [
+                  [
+                    48.0,
+                    29.0
+                  ],
+                  [
+                    78.0,
+                    29.0
+                  ],
+                  [
+                    78.0,
+                    56.0
+                  ],
+                  [
+                    48.0,
+                    56.0
+                  ]
+                ],
+                "score": 0.99999,
+                "text": "49"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1588",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5747441520467836,
+              "prediction": {
+                "polygon": [
+                  [
+                    16.0,
+                    36.0
+                  ],
+                  [
+                    112.0,
+                    36.0
+                  ],
+                  [
+                    112.0,
+                    93.0
+                  ],
+                  [
+                    16.0,
+                    93.0
+                  ]
+                ],
+                "score": 0.97257,
+                "text": "160127"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags60",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags3155",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5373635600335852,
+              "prediction": {
+                "polygon": [
+                  [
+                    12.0,
+                    47.0
+                  ],
+                  [
+                    144.0,
+                    72.0
+                  ],
+                  [
+                    134.0,
+                    125.0
+                  ],
+                  [
+                    3.0,
+                    99.0
+                  ]
+                ],
+                "score": 0.9988,
+                "text": "67149"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags491",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2928",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7120555073720729,
+              "prediction": {
+                "polygon": [
+                  [
+                    69.0,
+                    69.0
+                  ],
+                  [
+                    141.0,
+                    63.0
+                  ],
+                  [
+                    145.0,
+                    111.0
+                  ],
+                  [
+                    74.0,
+                    117.0
+                  ]
+                ],
+                "score": 0.99999,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5710905421393278,
+              "prediction": {
+                "polygon": [
+                  [
+                    9.0,
+                    133.0
+                  ],
+                  [
+                    243.0,
+                    114.0
+                  ],
+                  [
+                    253.0,
+                    236.0
+                  ],
+                  [
+                    19.0,
+                    255.0
+                  ]
+                ],
+                "score": 0.99993,
+                "text": "160174"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 4,
+          "unmatched_texts": 2,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags170",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.7707509881422925,
+              "prediction": {
+                "polygon": [
+                  [
+                    45.0,
+                    43.0
+                  ],
+                  [
+                    60.0,
+                    43.0
+                  ],
+                  [
+                    60.0,
+                    59.0
+                  ],
+                  [
+                    45.0,
+                    59.0
+                  ]
+                ],
+                "score": 0.42591,
+                "text": "\u7531"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.699789121345009,
+              "prediction": {
+                "polygon": [
+                  [
+                    41.0,
+                    56.0
+                  ],
+                  [
+                    66.0,
+                    56.0
+                  ],
+                  [
+                    66.0,
+                    71.0
+                  ],
+                  [
+                    41.0,
+                    71.0
+                  ]
+                ],
+                "score": 0.51874,
+                "text": "on"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.6582781456953642,
+              "prediction": {
+                "polygon": [
+                  [
+                    19.0,
+                    85.0
+                  ],
+                  [
+                    99.0,
+                    80.0
+                  ],
+                  [
+                    102.0,
+                    127.0
+                  ],
+                  [
+                    22.0,
+                    132.0
+                  ]
+                ],
+                "score": 0.99731,
+                "text": "20581"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 2
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags52",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.502534759717117,
+              "prediction": {
+                "polygon": [
+                  [
+                    34.0,
+                    54.0
+                  ],
+                  [
+                    56.0,
+                    42.0
+                  ],
+                  [
+                    70.0,
+                    65.0
+                  ],
+                  [
+                    48.0,
+                    77.0
+                  ]
+                ],
+                "score": 0.99186,
+                "text": "2"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.533179012345679,
+              "prediction": {
+                "polygon": [
+                  [
+                    46.0,
+                    57.0
+                  ],
+                  [
+                    81.0,
+                    77.0
+                  ],
+                  [
+                    64.0,
+                    105.0
+                  ],
+                  [
+                    30.0,
+                    85.0
+                  ]
+                ],
+                "score": 0.91061,
+                "text": "6.17"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": false,
+              "iou": 0.5326596528165366,
+              "prediction": {
+                "polygon": [
+                  [
+                    31.0,
+                    75.0
+                  ],
+                  [
+                    78.0,
+                    95.0
+                  ],
+                  [
+                    60.0,
+                    135.0
+                  ],
+                  [
+                    13.0,
+                    115.0
+                  ]
+                ],
+                "score": 0.62554,
+                "text": "156051"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 2
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags2803",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5924861522740552,
+              "prediction": {
+                "polygon": [
+                  [
+                    56.0,
+                    40.0
+                  ],
+                  [
+                    82.0,
+                    55.0
+                  ],
+                  [
+                    70.0,
+                    78.0
+                  ],
+                  [
+                    43.0,
+                    64.0
+                  ]
+                ],
+                "score": 0.99995,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.625357149500263,
+              "prediction": {
+                "polygon": [
+                  [
+                    26.0,
+                    51.0
+                  ],
+                  [
+                    96.0,
+                    81.0
+                  ],
+                  [
+                    86.0,
+                    107.0
+                  ],
+                  [
+                    15.0,
+                    78.0
+                  ]
+                ],
+                "score": 0.99955,
+                "text": "12-26"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5521872601688411,
+              "prediction": {
+                "polygon": [
+                  [
+                    21.0,
+                    60.0
+                  ],
+                  [
+                    100.0,
+                    99.0
+                  ],
+                  [
+                    80.0,
+                    137.0
+                  ],
+                  [
+                    0.0,
+                    101.0
+                  ]
+                ],
+                "score": 0.99991,
+                "text": "253454"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": true,
+          "ground_truth_lines": 1,
+          "id": "eartags1593",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5845152082775845,
+              "prediction": {
+                "polygon": [
+                  [
+                    17.0,
+                    57.0
+                  ],
+                  [
+                    115.0,
+                    39.0
+                  ],
+                  [
+                    125.0,
+                    94.0
+                  ],
+                  [
+                    28.0,
+                    113.0
+                  ]
+                ],
+                "score": 0.93611,
+                "text": "20003"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags3100",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags481",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7022256925641278,
+              "prediction": {
+                "polygon": [
+                  [
+                    43.0,
+                    26.0
+                  ],
+                  [
+                    73.0,
+                    23.0
+                  ],
+                  [
+                    76.0,
+                    52.0
+                  ],
+                  [
+                    46.0,
+                    55.0
+                  ]
+                ],
+                "score": 0.99948,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.5941395145418762,
+              "prediction": {
+                "polygon": [
+                  [
+                    34.0,
+                    55.0
+                  ],
+                  [
+                    102.0,
+                    30.0
+                  ],
+                  [
+                    113.0,
+                    59.0
+                  ],
+                  [
+                    45.0,
+                    85.0
+                  ]
+                ],
+                "score": 0.97435,
+                "text": "6-11"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5961211778029445,
+              "prediction": {
+                "polygon": [
+                  [
+                    11.0,
+                    84.0
+                  ],
+                  [
+                    110.0,
+                    43.0
+                  ],
+                  [
+                    135.0,
+                    104.0
+                  ],
+                  [
+                    36.0,
+                    145.0
+                  ]
+                ],
+                "score": 0.94405,
+                "text": "160122"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1606",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7859308671922377,
+              "prediction": {
+                "polygon": [
+                  [
+                    47.0,
+                    48.0
+                  ],
+                  [
+                    78.0,
+                    46.0
+                  ],
+                  [
+                    80.0,
+                    73.0
+                  ],
+                  [
+                    49.0,
+                    74.0
+                  ]
+                ],
+                "score": 0.99998,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.9117876878297416,
+              "prediction": {
+                "polygon": [
+                  [
+                    40.0,
+                    72.0
+                  ],
+                  [
+                    96.0,
+                    67.0
+                  ],
+                  [
+                    99.0,
+                    92.0
+                  ],
+                  [
+                    43.0,
+                    97.0
+                  ]
+                ],
+                "score": 0.92456,
+                "text": "0-26"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5187663436394401,
+              "prediction": {
+                "polygon": [
+                  [
+                    12.0,
+                    88.0
+                  ],
+                  [
+                    104.0,
+                    75.0
+                  ],
+                  [
+                    114.0,
+                    144.0
+                  ],
+                  [
+                    23.0,
+                    158.0
+                  ]
+                ],
+                "score": 0.99742,
+                "text": "160163"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2777",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5689630915944104,
+              "prediction": {
+                "polygon": [
+                  [
+                    46.0,
+                    65.0
+                  ],
+                  [
+                    98.0,
+                    82.0
+                  ],
+                  [
+                    91.0,
+                    105.0
+                  ],
+                  [
+                    38.0,
+                    89.0
+                  ]
+                ],
+                "score": 0.93915,
+                "text": "12-13"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.533054317506794,
+              "prediction": {
+                "polygon": [
+                  [
+                    62.0,
+                    52.0
+                  ],
+                  [
+                    86.0,
+                    62.0
+                  ],
+                  [
+                    77.0,
+                    82.0
+                  ],
+                  [
+                    53.0,
+                    72.0
+                  ]
+                ],
+                "score": 0.99996,
+                "text": "49"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags3114",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5102199223803363,
+              "prediction": {
+                "polygon": [
+                  [
+                    26.0,
+                    73.0
+                  ],
+                  [
+                    133.0,
+                    108.0
+                  ],
+                  [
+                    111.0,
+                    171.0
+                  ],
+                  [
+                    3.0,
+                    140.0
+                  ]
+                ],
+                "score": 0.99921,
+                "text": "230005"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1454",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2038",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.7761618716408473,
+              "prediction": {
+                "polygon": [
+                  [
+                    26.0,
+                    87.0
+                  ],
+                  [
+                    110.0,
+                    76.0
+                  ],
+                  [
+                    115.0,
+                    113.0
+                  ],
+                  [
+                    31.0,
+                    124.0
+                  ]
+                ],
+                "score": 0.79116,
+                "text": "671197"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.6904775996488131,
+              "prediction": {
+                "polygon": [
+                  [
+                    40.0,
+                    70.0
+                  ],
+                  [
+                    75.0,
+                    64.0
+                  ],
+                  [
+                    78.0,
+                    80.0
+                  ],
+                  [
+                    43.0,
+                    86.0
+                  ]
+                ],
+                "score": 0.52258,
+                "text": "B\u3001"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 2
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1643",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7476499943201689,
+              "prediction": {
+                "polygon": [
+                  [
+                    28.0,
+                    58.0
+                  ],
+                  [
+                    85.0,
+                    75.0
+                  ],
+                  [
+                    71.0,
+                    122.0
+                  ],
+                  [
+                    13.0,
+                    105.0
+                  ]
+                ],
+                "score": 0.93937,
+                "text": "67844"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1406",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.8428094075398606,
+              "prediction": {
+                "polygon": [
+                  [
+                    58.0,
+                    34.0
+                  ],
+                  [
+                    98.0,
+                    58.0
+                  ],
+                  [
+                    83.0,
+                    84.0
+                  ],
+                  [
+                    43.0,
+                    60.0
+                  ]
+                ],
+                "score": 0.98978,
+                "text": "5.6"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": true,
+          "ground_truth_lines": 1,
+          "id": "eartags557",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5209502208427839,
+              "prediction": {
+                "polygon": [
+                  [
+                    40.0,
+                    6.0
+                  ],
+                  [
+                    104.0,
+                    59.0
+                  ],
+                  [
+                    75.0,
+                    98.0
+                  ],
+                  [
+                    8.0,
+                    46.0
+                  ]
+                ],
+                "score": 0.99625,
+                "text": "40251"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 3,
+          "full_tag_exact": true,
+          "ground_truth_lines": 3,
+          "id": "eartags264",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7352941176470589,
+              "prediction": {
+                "polygon": [
+                  [
+                    50.0,
+                    51.0
+                  ],
+                  [
+                    84.0,
+                    51.0
+                  ],
+                  [
+                    84.0,
+                    79.0
+                  ],
+                  [
+                    50.0,
+                    79.0
+                  ]
+                ],
+                "score": 1.0,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.6850467289719626,
+              "prediction": {
+                "polygon": [
+                  [
+                    34.0,
+                    74.0
+                  ],
+                  [
+                    119.0,
+                    72.0
+                  ],
+                  [
+                    121.0,
+                    109.0
+                  ],
+                  [
+                    35.0,
+                    112.0
+                  ]
+                ],
+                "score": 0.99891,
+                "text": "1-24"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.5804486980299546,
+              "prediction": {
+                "polygon": [
+                  [
+                    17.0,
+                    98.0
+                  ],
+                  [
+                    129.0,
+                    93.0
+                  ],
+                  [
+                    132.0,
+                    165.0
+                  ],
+                  [
+                    21.0,
+                    170.0
+                  ]
+                ],
+                "score": 0.9999,
+                "text": "253025"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 2,
+          "id": "eartags1090",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags514",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6074063639285714,
+              "prediction": {
+                "polygon": [
+                  [
+                    60.0,
+                    34.0
+                  ],
+                  [
+                    86.0,
+                    61.0
+                  ],
+                  [
+                    63.0,
+                    84.0
+                  ],
+                  [
+                    37.0,
+                    57.0
+                  ]
+                ],
+                "score": 0.9684,
+                "text": "5.14"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.5388053300956712,
+              "prediction": {
+                "polygon": [
+                  [
+                    69.0,
+                    44.0
+                  ],
+                  [
+                    86.0,
+                    32.0
+                  ],
+                  [
+                    94.0,
+                    43.0
+                  ],
+                  [
+                    77.0,
+                    56.0
+                  ]
+                ],
+                "score": 0.14247,
+                "text": "2"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.7116499559540523,
+              "prediction": {
+                "polygon": [
+                  [
+                    32.0,
+                    45.0
+                  ],
+                  [
+                    79.0,
+                    84.0
+                  ],
+                  [
+                    49.0,
+                    120.0
+                  ],
+                  [
+                    2.0,
+                    81.0
+                  ]
+                ],
+                "score": 0.99793,
+                "text": "21317"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1418",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5816091954022988,
+              "prediction": {
+                "polygon": [
+                  [
+                    56.0,
+                    48.0
+                  ],
+                  [
+                    86.0,
+                    48.0
+                  ],
+                  [
+                    86.0,
+                    77.0
+                  ],
+                  [
+                    56.0,
+                    77.0
+                  ]
+                ],
+                "score": 0.99998,
+                "text": "49"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 2,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags583",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.7530026489204533,
+              "prediction": {
+                "polygon": [
+                  [
+                    26.0,
+                    63.0
+                  ],
+                  [
+                    61.0,
+                    58.0
+                  ],
+                  [
+                    65.0,
+                    84.0
+                  ],
+                  [
+                    30.0,
+                    89.0
+                  ]
+                ],
+                "score": 0.99444,
+                "text": "5.9"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.6661740254941807,
+              "prediction": {
+                "polygon": [
+                  [
+                    24.0,
+                    80.0
+                  ],
+                  [
+                    90.0,
+                    74.0
+                  ],
+                  [
+                    93.0,
+                    115.0
+                  ],
+                  [
+                    28.0,
+                    121.0
+                  ]
+                ],
+                "score": 0.99921,
+                "text": "21296"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags670",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 2,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6879910213243546,
+              "prediction": {
+                "polygon": [
+                  [
+                    44.0,
+                    84.0
+                  ],
+                  [
+                    110.0,
+                    84.0
+                  ],
+                  [
+                    110.0,
+                    124.0
+                  ],
+                  [
+                    44.0,
+                    125.0
+                  ]
+                ],
+                "score": 0.99509,
+                "text": "5.17"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.6369209809264306,
+              "prediction": {
+                "polygon": [
+                  [
+                    14.0,
+                    109.0
+                  ],
+                  [
+                    143.0,
+                    118.0
+                  ],
+                  [
+                    139.0,
+                    186.0
+                  ],
+                  [
+                    10.0,
+                    177.0
+                  ]
+                ],
+                "score": 0.99982,
+                "text": "21338"
+              },
+              "truth_index": 1
+            }
+          ],
+          "missed_lines": 1,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 0,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags2234",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 0,
+          "matches": [],
+          "missed_lines": 3,
+          "nonstandard_truth_strings": [],
+          "predictions": 0,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 1,
+          "id": "eartags702",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.5092592592592593,
+              "prediction": {
+                "polygon": [
+                  [
+                    4.0,
+                    45.0
+                  ],
+                  [
+                    42.0,
+                    37.0
+                  ],
+                  [
+                    48.0,
+                    67.0
+                  ],
+                  [
+                    10.0,
+                    75.0
+                  ]
+                ],
+                "score": 0.99712,
+                "text": "16024"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 2,
+          "unmatched_texts": 1,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags167",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": false,
+              "iou": 0.7647549460958393,
+              "prediction": {
+                "polygon": [
+                  [
+                    54.0,
+                    60.0
+                  ],
+                  [
+                    113.0,
+                    69.0
+                  ],
+                  [
+                    109.0,
+                    92.0
+                  ],
+                  [
+                    50.0,
+                    84.0
+                  ]
+                ],
+                "score": 0.79099,
+                "text": "3\u30017"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": true,
+              "iou": 0.7358334710061126,
+              "prediction": {
+                "polygon": [
+                  [
+                    25.0,
+                    65.0
+                  ],
+                  [
+                    129.0,
+                    93.0
+                  ],
+                  [
+                    115.0,
+                    147.0
+                  ],
+                  [
+                    11.0,
+                    120.0
+                  ]
+                ],
+                "score": 0.99991,
+                "text": "20984"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": false,
+              "iou": 0.6893604004380827,
+              "prediction": {
+                "polygon": [
+                  [
+                    78.0,
+                    42.0
+                  ],
+                  [
+                    96.0,
+                    46.0
+                  ],
+                  [
+                    91.0,
+                    63.0
+                  ],
+                  [
+                    74.0,
+                    59.0
+                  ]
+                ],
+                "score": 0.33848,
+                "text": "K"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 2
+        },
+        {
+          "correct_text": 1,
+          "full_tag_exact": true,
+          "ground_truth_lines": 1,
+          "id": "eartags1064",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 1,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6189771766694844,
+              "prediction": {
+                "polygon": [
+                  [
+                    4.0,
+                    64.0
+                  ],
+                  [
+                    67.0,
+                    57.0
+                  ],
+                  [
+                    72.0,
+                    94.0
+                  ],
+                  [
+                    9.0,
+                    101.0
+                  ]
+                ],
+                "score": 0.99993,
+                "text": "2167"
+              },
+              "truth_index": 0
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 1,
+          "unmatched_texts": 0,
+          "wrong_text": 0
+        },
+        {
+          "correct_text": 2,
+          "full_tag_exact": false,
+          "ground_truth_lines": 3,
+          "id": "eartags1717",
+          "invalid_prediction_polygons": [],
+          "invalid_truth_polygons": [],
+          "matched": 3,
+          "matches": [
+            {
+              "exact": true,
+              "iou": 0.6569832402234637,
+              "prediction": {
+                "polygon": [
+                  [
+                    62.0,
+                    45.0
+                  ],
+                  [
+                    95.0,
+                    43.0
+                  ],
+                  [
+                    97.0,
+                    70.0
+                  ],
+                  [
+                    64.0,
+                    72.0
+                  ]
+                ],
+                "score": 0.99996,
+                "text": "49"
+              },
+              "truth_index": 0
+            },
+            {
+              "exact": false,
+              "iou": 0.6710743838005582,
+              "prediction": {
+                "polygon": [
+                  [
+                    42.0,
+                    75.0
+                  ],
+                  [
+                    108.0,
+                    60.0
+                  ],
+                  [
+                    115.0,
+                    90.0
+                  ],
+                  [
+                    48.0,
+                    104.0
+                  ]
+                ],
+                "score": 0.83501,
+                "text": "9-2"
+              },
+              "truth_index": 1
+            },
+            {
+              "exact": true,
+              "iou": 0.6547649793388429,
+              "prediction": {
+                "polygon": [
+                  [
+                    16.0,
+                    97.0
+                  ],
+                  [
+                    129.0,
+                    75.0
+                  ],
+                  [
+                    142.0,
+                    141.0
+                  ],
+                  [
+                    29.0,
+                    163.0
+                  ]
+                ],
+                "score": 0.99977,
+                "text": "253422"
+              },
+              "truth_index": 2
+            }
+          ],
+          "missed_lines": 0,
+          "nonstandard_truth_strings": [],
+          "predictions": 3,
+          "unmatched_texts": 0,
+          "wrong_text": 1
+        }
+      ],
+      "totals": {
+        "correct_text": 74,
+        "exact_line_coverage": 0.4713375796178344,
+        "exact_text_precision": 0.6271186440677966,
+        "full_tag_accuracy": 0.1875,
+        "full_tag_exact": 12,
+        "ground_truth_lines": 157,
+        "matched": 94,
+        "missed_lines": 63,
+        "predictions": 118,
+        "unmatched_texts": 24,
+        "wrong_text": 20
+      }
+    }
+  },
+  "cpu_seconds": {
+    "cache_hits": 0,
+    "initialization": 0.09296149993315339,
+    "per_image_p50_p95_max": [
+      0.18930870853364468,
+      0.2439496956998482,
+      0.2895443746820092
+    ],
+    "total": 12.416842374950647
+  },
+  "protocol_sha256": "631ff60a6d249d5e3482c5bf44a616babd1815809e4ab8e5440f3340cc14e759",
+  "raw_sha256": "8ba14cee7dfa68636571596951d088878e341424b807aa6586b891d2953287bf",
+  "scope": "First64 frozen development groups from preselected grayscale ear-tag crops. CPU OCR only, no tag localization/full-animal association or automatic cow-ID claim. No calibration/reserved/ambiguous crops."
+}

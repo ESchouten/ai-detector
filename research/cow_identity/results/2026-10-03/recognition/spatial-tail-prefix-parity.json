@@ -1,0 +1,22 @@
+{
+  "all_descriptor_comparisons": 532,
+  "all_maps_and_parity_finite": true,
+  "driver_peak": 1343275008,
+  "elapsed_seconds": 72.95079333381727,
+  "files": {
+    ".cache/cow-spatial-tail-prefix-v1/manifest.json": "1a608a384bc96975c4d1e8c36a2ba3463f3ea869447487f4abc5dca79230310a",
+    ".cache/cow-spatial-tail-prefix-v1/maps.npy": "b1f7f4876a1f24975cbfe54c31655d85b9470cf9ff514a223e23d81d38152252",
+    "research/cow_identity/recognition_spatial_tail_protocol.json": "39ac51b300e11e4e277c6e63a9a5592d91e2e7db04296d3d8c04b923519178bd"
+  },
+  "full_split_batches": 1,
+  "maximum_absolute_error": 1.1920928955078125e-07,
+  "minimum_cosine": 0.9999998807907104,
+  "rows": 2582,
+  "shape": [
+    2582,
+    328,
+    14,
+    14
+  ],
+  "status": "PASS_COMPLETE_FINITE_PREFIX_PARITY_BEFORE_OPTIMIZATION"
+}

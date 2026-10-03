@@ -1,0 +1,596 @@
+{
+  "cv_threads": 2,
+  "disable_onnx_telemetry": true,
+  "expected_providers": [
+    "CPUExecutionProvider"
+  ],
+  "files": {
+    ".cache/cow-ear-tags/ocr-engine.json": "dfaecba9d1a3c73024393c383e9a3ea1293df8969dd8aab8814cae1bdca519a5",
+    ".cache/cow-eartag-inventory/manifest-v1.json": "901e26db3f0fc8242607586b6027629f402549eac0d4362d51250efed7463cbf",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_dataset_protocol.json": "9dbbf45add469a9afb17482e2581ea98a60d9c45537f716b58aad2586e7a7ed8",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_ocr.py": "55bac86c881dd82218cb7be6f5c94a81c81a56a6b2af9e53130087133c903db0",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/scoring.py": "f2bdabc93e47282aa452efa142e4155ec260f1f28d441c57f52b0b5e6219ffee",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_eartag_ocr.py": "37e22457a704760d2a20698cb9e64dad653b465a19dd2ea885a9f8a4b8072c21",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/__init__.py": "4b018fa0a163353d7da9a18b7d0115675514368d1f7998aaf414e0e2daa92feb",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/_version.py": "ee75df466c93952db231db01fa345c5a41bdff474ae847d4c2bc338f8b365420",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/cal_rec_boxes/__init__.py": "8f7cf65adf36e703938210347f54edb00142dc8104e42b14aef8076b770faeb6",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/cal_rec_boxes/main.py": "a5209c10af7b027469a5f31127a3e372a70ce3ea8d3f12e632838ca020abbe9c",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/ch_ppocr_cls/__init__.py": "1410118b1cd0e64921e51e9da2194a18ebda8a1964fb0d776f96758ac97a7f50",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/ch_ppocr_cls/main.py": "a48b3197d5588f035668f5adfc6d60006fcd851049a840ad03718c57cead2c45",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/ch_ppocr_cls/utils.py": "bcadd799e971fe42a2935c2568ad9a0299e24b6e8c55f57abced42eaac324cd9",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/ch_ppocr_det/__init__.py": "bd757fa9a88c5e07b1c54882ad2b1af5e51b1f59d09aeef4591fabf375bddc8c",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/ch_ppocr_det/main.py": "a56c0f51fd6a8c03a5abf2f0a5843b382b8f3257d1bfacf8d5ac6305d5e63024",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/ch_ppocr_det/utils.py": "01d25a0b1bbdcdd4aba70a23ae96714c5408df93b295c43ca194952e279adb9e",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/ch_ppocr_rec/__init__.py": "b96427ed3a4dd9652849aab959ee4d7a61e2e1cfc68a8a94caf3aaca9a7fcd9d",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/ch_ppocr_rec/main.py": "84b7a55a8972d14a92800b66facc73976b8d0b06bd8888e551414dbec8d6d326",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/ch_ppocr_rec/typings.py": "02b88178edab41b275d14bf8f61ce7148c13328f79f330b78f7c3cb77f7c4737",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/ch_ppocr_rec/utils.py": "ee16b3e71c85a8e55e572cd9b2d251f302642447fc4219d174d2092b9f3231f7",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/cli.py": "a985f342fadb2ee2b4be4034c0527b8be24e3dd3544b4e3a97fad82b37961d52",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/config.yaml": "06623941e188461a0bc263fe16175cb5e5f6f6b01f4387e546d3a741569fc021",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/__init__.py": "9be50628727edf5a8bee9062b389dfa05cf97f36fe757b224cb36a63ec694a80",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/base.py": "2767a940a57397d5a25838b806db256a219e66ff1219fb8efe20196b97b38e25",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/mnn/__init__.py": "677bebb9ee78d8bbd66b1bd71154f57e2507b8b68a9969cd821ebfe15bd35b3d",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/mnn/main.py": "bf1d18a580aeeaba82c463ec5ecb7f1029cf8f557d983edd259f6de5df828311",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/onnxruntime/__init__.py": "96136f90755258140f4da0878eb07ffdb0394091478aa5174abaa17221653b54",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/onnxruntime/main.py": "743b23a6c42d29e7aaf276ffcf40f3f5abb60458e6966007dca21306f01cd1ab",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/onnxruntime/provider_config.py": "6671aa43d720a3f4093e8eb5a5e89c05a94803aa8bbd04ced2a82246056e06f1",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/openvino/__init__.py": "1457a5d69511afebfa798421dffe59ca642ef4296571f5a7ff0d9a02cf94e75c",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/openvino/device_config.py": "b164b227e451dc5d081bbc4abc3af12c0f861d3e90baf8c32f88e991fc1d3332",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/openvino/main.py": "3a2801ffd2bbe8eb9b2e06c630cc42fc6845d2a907ae88a007f2cec80290b011",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/paddle/__init__.py": "2c33cd10377d1f83077e66fe32dfde74b1b71e6c6369716a1879f3cb1f814284",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/paddle/device_config.py": "8c9bb7413728f11ca54fa920812de47ee2973d0b9fc9bccc789b2d680085e79f",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/paddle/main.py": "82ce2d5702b96559244e632e8643286f4e4bf6f939ec2b7461955c56a8b9f4ac",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/__init__.py": "ddf310f471db4e9e242fd76536808b4285596ce809200e9c86b45e7d722b0b31",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/device_config.py": "9d257474299f0da9367e6e567e3c0c7fbcc51255d82c039ed735497e8eb71630",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/main.py": "0e1763220d8e4d7c0d218da4d35eca00a43eda8793ef6e86d410768b3989be7c",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/__init__.py": "9be50628727edf5a8bee9062b389dfa05cf97f36fe757b224cb36a63ec694a80",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/architectures/__init__.py": "0c203d152e26139a021c3941854ae460b77115e4086e13e3e0ff2827f811643f",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/architectures/base_model.py": "8cf0c39c3320cc9e4f3c7d29b8f526100940c63511a231a03dafe0ccefd595da",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/__init__.py": "da272ebf54f50c18e10ce897c83d8f10a128a7ccb5ce364a2c54b1ac6b7c9767",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/det_mobilenet_v3.py": "af48169c0d579add19c381502f1ee47fe596c1977fdba3df37384cd3976b72e1",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/rec_donut_swin.py": "f7b2e8c5811df0dbc4a962de68bdd68194b5e92958b76d0842c7728e5c643231",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/rec_hgnet.py": "52c21bcea37f928c86a128754c0f6bdbb4a08291db78a4b71e6992f80d80c34e",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/rec_lcnetv3.py": "b2f710810786f7da65beecba6bdbb0df93a3e43d3cff3bb71db3dab2a92a8d79",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/rec_lcnetv4.py": "b521cfcd138c3136b08ca86578fd93aad1799cb5481880cdddd8d57a92953189",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/rec_mobilenet_v3.py": "989984eb11a98c7647d956b0d7a2e5225a911459bd47dc91b122446b7627de7c",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/rec_mv1_enhance.py": "7cc28be5e1f77da1dd52bb44d3292551f17882674a3fa275cdee7712ddb9f7f7",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/rec_pphgnetv2.py": "dd826e8bcfa30093d8e2c2c2fc9267ce8cebec7c50630555ffd44de86a154506",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/rec_pplcnet.py": "b1255333f373f71047e5911dfb9ba35594687dc2558b2d61db9bb30df9030fda",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/backbones/rec_svtrnet.py": "008694677216064473da95a66a70634b441d25c6278a6312578316a1f36941c8",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/common.py": "546a8e159922b503f3f1a2b5a07a9d2e6678ff71a7be6f04c7f52f5139e6d051",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/heads/__init__.py": "a971dd140dc07d23efd9bed62e298fc6a4321d4e9402246c9eb034a665617ccc",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/heads/cls_head.py": "a6e232e46954b4029eafa792e0758abb4ecfcd177e1e50c0a88cf95aa8c11da0",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/heads/det_db_head.py": "d3a1e120d8cfc7cfac6f0dc47c0206ef64802bf2f97c080558d126d4d1b0b36d",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/heads/multiheadAttention.py": "1cd0dde2a5d1c36f13a14dafe22690be82283c3a64d9e12b6e93424a3e296581",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/heads/rec_ctc_head.py": "ed0a883fc2ad9fa4b7a6893fd606237e9ec1a86a0c5e99de3449339547b672dc",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/heads/rec_multi_head.py": "523ace040baa1a8cba217c902859e985431892729f57e0b97503f9b9af29307d",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/heads/rec_nrtr_head.py": "8762b3366ce22f39b2957f95ee176b54a96e04fffd4724f5ab7cf8108ba42883",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/main.py": "4d31c88e54bd98859078467a6292b1ec91ec82ea873903b28324c5fb26f3e2c3",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/necks/__init__.py": "182353d4ef2cd45dfff8aa8ed866158c94d7f828283e8535117f6e0495162d1a",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/necks/db_fpn.py": "2a012082e1065cb2591906105338c733bf7d8607dd052192cfd7c1260ab807d3",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/necks/intracl.py": "c3641dc1d23d069896f76552e26a8bdf5b1511121b639dd37db0f943aa2489a6",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/necks/rnn.py": "b739760c25f078c1dc801a558f31f54e545b8b8f92c411a1187e79fd395c9d3e",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/transforms/__init__.py": "f8645716c1093bee498f01d33cce2b2a73f4c464110e4db22d8cd1eb8b825489",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/transforms/stn.py": "8fe9c0dc45c6dbb17df456eeb57fbfffcce79c1c7cb1d2bf8c51b44f803342a6",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/transforms/tbsrn.py": "eafc9a3eb8896e46ccdc5afe4265be1447ebbee2cef6618fd68d3c06145a964d",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/transforms/tps.py": "06aa0ed234f84473a4f38284cafe1426d37824a5c2331fd07a262c04006950cc",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/transforms/tps_spatial_transformer.py": "d70f195757a458eabe8dd406b96627d0d2b3811093361d359dbbecd56a03e44c",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/pytorch/networks/transforms/tsrn.py": "49057d70a3aa2e8b85ee5ccf6a22ab05a58cd5549e76bf46f7ef6924ae84bd03",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/tensorrt/__init__.py": "8cca0c575c708343d0b83acc4c3521be80e9e861f8fbce307c4b0e5e3090294f",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/tensorrt/engine_builder.py": "1588e2e8943d4b93fff638ab49686627528fff1b2f4765f7b71c4ee935023fd1",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/tensorrt/main.py": "07de6009a94bd7493248a6142dadd579405cf5479b56889f7feedc76bd42ad52",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/inference_engine/tensorrt/memory_utils.py": "5fa0be06ed0be643680d555753dc69ed744d92f15ce04aabe5091938a3bfbf17",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/main.py": "c2ae17098dde838ac3d2933eec5b218d5c4404ded9fe5d32df7c24fd0e54aa39",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/models/PP-OCRv6_det_small.onnx": "090f04abcd9d9a7498bc4ebf677e4cb9bdce1fe4197ddb7e529f1ef44e1ff94f",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/models/PP-OCRv6_rec_small.onnx": "6f327246b50388f3c176ae304bd95767ea6dc0c9ae92153ef8cbe210b3c14884",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/models/ch_ppocr_mobile_v2.0_cls_mobile.onnx": "e47acedf663230f8863ff1ab0e64dd2d82b838fceb5957146dab185a89d6215c",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/__init__.py": "9be50628727edf5a8bee9062b389dfa05cf97f36fe757b224cb36a63ec694a80",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/download_file.py": "82dbc341379af4d535e04773eb0a1afadb3b45669283d4ee446339c428d2b7e9",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/download_models.py": "7f71f72ab2751323a236584f6ef2e3da67533154f6e800ab7b5348ef93156adc",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/load_image.py": "f6de151fdce9fdf6890650dc3f7305455a2cade9bbf7652a30a558ee3fbe3f59",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/log.py": "3928d19d7b195deb993d293e546e6166c1d71a69eb9eb9064e388f03ddfbf6f8",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/model_resolver.py": "aa21d7b6dcebcf44bea19d0235a9262519cc3ecd5301e71579df619b6d49e86b",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/output.py": "8467bbb4b3c140d1f1e8f214043baa7449a1d30b853af3da24fe26238a436314",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/parse_parameters.py": "e068cf420273d56c5f482a95c1e6e5aa5eec80cb9a3ab502b815473d677c1849",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/process_img.py": "abaf2ed615878f618a372cba6157bc6c41a494e05f6c41bf9f7c5c2ba1ee5772",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/to_json.py": "647f41722b2fd21bb525379c3d1cc0644b12f18aea2ed3cbe8d3e7aef571376b",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/to_markdown.py": "3923cc5c0f346f6c6fbf997d0e21e0c3e9378504a3ca1174c51dc725f5ff11f3",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/typings.py": "a4cd1dacd8dd705f56aa199df8cad4ea0e5dd58717b94b4e3af79382231be607",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/utils.py": "86f8687db6424714be5a6fbd283f6e3b7b198691fb292efd12622b5b40197582",
+    "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/utils/vis_res.py": "65ce9e6827855dae8be91b5e3a84143f76d55d1ef74551864b941ac5e6f95049",
+    "datasets/cow-eartag-recognition/images-v1/eartags1064.jpg": "e8f4b852135b9701242d767cecbc26b54cc58cd950ed7bfc0812557c388c64ed",
+    "datasets/cow-eartag-recognition/images-v1/eartags1090.jpg": "52806e2e2685e714d71c2b35e4f6721d35de16446beea20d967787d35f88f3fd",
+    "datasets/cow-eartag-recognition/images-v1/eartags1237.jpg": "80fe22fa51831a7ceadd716b46eda6ee500d9904f10662267369baf2eaba7646",
+    "datasets/cow-eartag-recognition/images-v1/eartags1262.jpg": "216ae267d095a42db5e1948e1aa86daac9dc32e4a378bb26daefe54a8d37f2f9",
+    "datasets/cow-eartag-recognition/images-v1/eartags1318.jpg": "3e7448a9db50cd598822e4379c3bf4a972b494fc8531253e669304370c72a574",
+    "datasets/cow-eartag-recognition/images-v1/eartags1342.jpg": "90882234fa5d4510208f16529917fe36b42912bfb8bdcde67f57c3af0758937a",
+    "datasets/cow-eartag-recognition/images-v1/eartags1376.jpg": "14d6f0b24985cfaf9f6d6a3a4e1fd467e9cfd7f1642c52f9e33eab11e4331a46",
+    "datasets/cow-eartag-recognition/images-v1/eartags1406.jpg": "10a10bc9a012d2643f9826bb993ac3956a7ab613380a0f75d42735d04b9d6fcb",
+    "datasets/cow-eartag-recognition/images-v1/eartags1418.jpg": "380ca20b7816c2c5ac164fe5e415d569d5b7847fe52d920ef982b7d070fb92fe",
+    "datasets/cow-eartag-recognition/images-v1/eartags1423.jpg": "112be63fd67bfcd71495b0cbb5073b1dc452f8756b1b78595b7d19f73c32c22f",
+    "datasets/cow-eartag-recognition/images-v1/eartags1454.jpg": "05dad8a88336dd81c285fe9f42f6ce40b0ba09ca4ff110ee9cee966884f981c6",
+    "datasets/cow-eartag-recognition/images-v1/eartags1588.jpg": "81ea92069c4946e5010cb84ec2e28eea444868790305b099184f815fe92dad3e",
+    "datasets/cow-eartag-recognition/images-v1/eartags1592.jpg": "8fc249fe2797997610bbff610fd9e9d37039746080b3f72094316c9a4e150d56",
+    "datasets/cow-eartag-recognition/images-v1/eartags1593.jpg": "4895ed8dd4821e900e67b7f9bbcc745cfbb7ded5dda7e7f1534d79c90ca3be71",
+    "datasets/cow-eartag-recognition/images-v1/eartags1606.jpg": "666b3f07a56c9a35ad804a01e9aedaceda383f2b53df8d83cb5410de91c0ca45",
+    "datasets/cow-eartag-recognition/images-v1/eartags1643.jpg": "bb07a11989490bb9bed6da75b09d2f546e8be83896af905acc743324654df2ab",
+    "datasets/cow-eartag-recognition/images-v1/eartags1664.jpg": "679aa270a4a4a4b885dc3c99f58b9050df78827380944ceab6e2bf01ecdf339d",
+    "datasets/cow-eartag-recognition/images-v1/eartags167.jpg": "ac293006799517e985649318a8b5558a13e069af35aa921ae59ecb212fa9e4db",
+    "datasets/cow-eartag-recognition/images-v1/eartags1689.jpg": "102618f9c949b2b71009a098dadf3455d676561bfca50ef5267c02998d91402a",
+    "datasets/cow-eartag-recognition/images-v1/eartags170.jpg": "e098ac785e347a6ff44a5f6c448dbc458617e3e9a3a55ca1cfb4260506ccd881",
+    "datasets/cow-eartag-recognition/images-v1/eartags1717.jpg": "5a4689439248fad534cd989579f34043996fbeda19b50a72c7ce6724314afca4",
+    "datasets/cow-eartag-recognition/images-v1/eartags1727.jpg": "481afd368ee04e81d61c9ef3ac46ce411061d98564e0d3200f6dbab8340fff23",
+    "datasets/cow-eartag-recognition/images-v1/eartags1760.jpg": "d6edc1324bbdd4da084852eda0af3c430da79ebdc418c07576c05c439bd9767f",
+    "datasets/cow-eartag-recognition/images-v1/eartags185.jpg": "cc81c2263d02f933ec34742ea42e2ac4a3d90c78beb0678d8d586f1b258903ac",
+    "datasets/cow-eartag-recognition/images-v1/eartags1938.jpg": "e29bc3f19fc38df88dd313e90fc99496e1c9f4cb82407a6d92031f2aba138ab9",
+    "datasets/cow-eartag-recognition/images-v1/eartags1985.jpg": "4a275244383a28224fedecd1381219b33869cf1e656820c3c4b6818b9f05acbc",
+    "datasets/cow-eartag-recognition/images-v1/eartags2023.jpg": "00e9693e0e3207cb42ea4c48b4cbae87576c6766ce266f30275244343295e1c3",
+    "datasets/cow-eartag-recognition/images-v1/eartags2038.jpg": "e370af26dabb3438d3c349ab6f8bf70e2a11533f6753707cd882401005a0c622",
+    "datasets/cow-eartag-recognition/images-v1/eartags2081.jpg": "04861b871b521408017b1ea767a4333e648c0ab5eeb982d8801f8ccf42e9cdad",
+    "datasets/cow-eartag-recognition/images-v1/eartags2149.jpg": "a866e6e6be1b5466b45cc7e017f833f42b50a1e6772b8209e99e2084bd2d6744",
+    "datasets/cow-eartag-recognition/images-v1/eartags2174.jpg": "6604b62705fbdee8efe23c9442463ad7642ef47f2c0b68b7a33a8a65b790420d",
+    "datasets/cow-eartag-recognition/images-v1/eartags2234.jpg": "15d6167c6fb7319067c177c320cad94f7dbd71a0a448ce0dd3ad897f5d9ad7df",
+    "datasets/cow-eartag-recognition/images-v1/eartags2380.jpg": "fa9dc8327523c4ffdd9094d7987447c6eb91efcf4b70086db4aafb4a9027f3cc",
+    "datasets/cow-eartag-recognition/images-v1/eartags264.jpg": "64682d0562819764859e1c26833026048687c21d91e85ffdbdd84e4e98133e94",
+    "datasets/cow-eartag-recognition/images-v1/eartags265.jpg": "7fdccab51d17c97c7edb541d4e221a0c177934a3665b1a099af865f7f8ab6723",
+    "datasets/cow-eartag-recognition/images-v1/eartags2665.jpg": "821b21bbe8123e5a50196fa1e5f5dcf90995f0c2a4e871f4272d27052f0e4c8e",
+    "datasets/cow-eartag-recognition/images-v1/eartags2777.jpg": "aebe889a05bd2103a46c6c04c1fe6c135038246b2700301df55a52a9cacb9b16",
+    "datasets/cow-eartag-recognition/images-v1/eartags2803.jpg": "9628399c6bbebfe36627d5c94a9b2bb245df5a4bcb5546b5f2c130374d6a69fb",
+    "datasets/cow-eartag-recognition/images-v1/eartags2922.jpg": "0f9bbc6dc7a87176829a6e9047402732b6e8c13a5afaf249cdc15dcc6e251f55",
+    "datasets/cow-eartag-recognition/images-v1/eartags2928.jpg": "21125249b1c19d84fd180b3e136d0c236f9145b4613098dfaf6bd4d92d488654",
+    "datasets/cow-eartag-recognition/images-v1/eartags3016.jpg": "3ba48c05bd9c37450e1ebd689e0a84293fb3cead6511fb24df5d0709d8f93e6f",
+    "datasets/cow-eartag-recognition/images-v1/eartags3069.jpg": "252bae71fabe76ce9fb0a7e0c993eb78f27840af72c41baf79ddcc29d7c2a896",
+    "datasets/cow-eartag-recognition/images-v1/eartags3100.jpg": "c23fda86e5da87067fe3932c689f8c6dd882961c4a2298155f468b087f1733ea",
+    "datasets/cow-eartag-recognition/images-v1/eartags3114.jpg": "89c3993a829ff7e732e4c9b5d82ec77d04c75f7695a6f7ea35129bac7955d1f6",
+    "datasets/cow-eartag-recognition/images-v1/eartags3155.jpg": "f477833779d041bedf725a6dbea460397000d9f183540cd62f393176924d4324",
+    "datasets/cow-eartag-recognition/images-v1/eartags3162.jpg": "926a66be7ec057d0678925092abdf346bd9ef5cef434c8600235f620865e3dbe",
+    "datasets/cow-eartag-recognition/images-v1/eartags3219.jpg": "988637ba84faf1aeee73ca70bae9f496dac5f75fe1a411624e694a637c2b4b8e",
+    "datasets/cow-eartag-recognition/images-v1/eartags461.jpg": "17333dd42e9c7346adfbc37909bc0d6b9b244ef11eb28a32434cffac6b596191",
+    "datasets/cow-eartag-recognition/images-v1/eartags481.jpg": "562d834aef0e5923cdf458a1a0a0d0d17cf0515f95d45e14f0b12f928f36cfcf",
+    "datasets/cow-eartag-recognition/images-v1/eartags491.jpg": "350f9a58d0ad793c295ec14e75a5e831bb3d7bf966720bbd044cd3d556c86130",
+    "datasets/cow-eartag-recognition/images-v1/eartags514.jpg": "d9f224a2a4d8b55371cc2f756c9ab2e365cb7941f6d86c8061797a4418c6ac39",
+    "datasets/cow-eartag-recognition/images-v1/eartags52.jpg": "03d3bdbefc734355a4b9e86d865a7d9c59696be26a73852f1b1f4df1b05dc243",
+    "datasets/cow-eartag-recognition/images-v1/eartags557.jpg": "563938c1e5345f2e9207aa978a27c6ad9ca0bd886c4ca3c6bf9cd11f16fa2258",
+    "datasets/cow-eartag-recognition/images-v1/eartags583.jpg": "2f8b1325e71efeacbf9c2c6c2290dbc4c8a5e9cad9c3c332ba06bb2d7c8e99ea",
+    "datasets/cow-eartag-recognition/images-v1/eartags60.jpg": "bec0679f20baa251008299e1f99b900f091237fcdc3a62f60a67b0b7b38b7616",
+    "datasets/cow-eartag-recognition/images-v1/eartags606.jpg": "0b5fdd2921d9bfed8c055035536e845db6321df0a982e69683cc68fd09211453",
+    "datasets/cow-eartag-recognition/images-v1/eartags622.jpg": "9574a95c6e7e75be39dcd8be33f2d5722478ab0113ead9731446d03edc412a8c",
+    "datasets/cow-eartag-recognition/images-v1/eartags670.jpg": "da754ffe63a521f54f8781f6559152f20c1d5f8067eae4551aa6e5bad5fdef75",
+    "datasets/cow-eartag-recognition/images-v1/eartags691.jpg": "19dab72fdf3be747b5920c7064a1f927a85470d8a159cb86514a6712a1ba10c8",
+    "datasets/cow-eartag-recognition/images-v1/eartags693.jpg": "48f9b2ceb3f7ae4ec4fad611015db8ed057d93a65206ad298e24e986a84a405d",
+    "datasets/cow-eartag-recognition/images-v1/eartags702.jpg": "a0d5a63ea268963d8fcb38551ad0c96763709eedecf1dd2fa4d4c2e77ef8cd1a",
+    "datasets/cow-eartag-recognition/images-v1/eartags73.jpg": "133e8339e3dd60eb1ce94709631446b8f9e4bc84d724f97a77dd3837373a7f02",
+    "datasets/cow-eartag-recognition/images-v1/eartags775.jpg": "a42cd35aac7041fa855a6e088ba118d53370737b80cffb93515938764581b0cf",
+    "datasets/cow-eartag-recognition/images-v1/eartags880.jpg": "99b4296528febc285a8738c6a3bf1e8b822bd1ddc26c8e8d6918cff1fbfec91e"
+  },
+  "libraries": {
+    "PyYAML": "6.0.3",
+    "antlr4-python3-runtime": "4.9.3",
+    "certifi": "2026.7.22",
+    "charset-normalizer": "3.5.2",
+    "colorlog": "6.12.0",
+    "flatbuffers": "25.12.19",
+    "idna": "3.20",
+    "numpy": "2.5.3",
+    "omegaconf": "2.3.1",
+    "onnxruntime": "1.30.0",
+    "opencv-python": "5.0.0.93",
+    "packaging": "26.3",
+    "pillow": "12.3.0",
+    "protobuf": "7.36.2",
+    "pyclipper": "1.4.0",
+    "pypdf": "6.19.0",
+    "rapidocr": "3.9.2",
+    "requests": "2.34.2",
+    "scipy": "1.18.1",
+    "shapely": "2.1.2",
+    "six": "1.17.0",
+    "tqdm": "4.70.1",
+    "urllib3": "2.8.0"
+  },
+  "params": {
+    "Cls.model_path": "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/models/ch_ppocr_mobile_v2.0_cls_mobile.onnx",
+    "Det.model_path": "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/models/PP-OCRv6_det_small.onnx",
+    "EngineConfig.onnxruntime.inter_op_num_threads": 1,
+    "EngineConfig.onnxruntime.intra_op_num_threads": 2,
+    "Global.log_level": "warning",
+    "Global.text_score": 0.0,
+    "Rec.model_path": "/tmp/cow-ear-tags-ocr/lib/python3.12/site-packages/rapidocr/models/PP-OCRv6_rec_small.onnx"
+  },
+  "raw_cache": "Key binds source JPEG/pixel hashes, engine versions/config/weights/source and all effective parameters. Cache contains rawquad/text/score only; no truth or inferred cowID.",
+  "raw_input": [
+    {
+      "id": "eartags2149",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2149.jpg",
+      "image_sha256": "a866e6e6be1b5466b45cc7e017f833f42b50a1e6772b8209e99e2084bd2d6744",
+      "pixels_sha256": "90f0a4819299a00f4e2ee3c6bd4bab69c649096fabf44051049c5ce5b8a997c0"
+    },
+    {
+      "id": "eartags691",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags691.jpg",
+      "image_sha256": "19dab72fdf3be747b5920c7064a1f927a85470d8a159cb86514a6712a1ba10c8",
+      "pixels_sha256": "718e494241ad979ca529e08fa781e5441c24b28e4ac1f68df5d876dee72509a1"
+    },
+    {
+      "id": "eartags461",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags461.jpg",
+      "image_sha256": "17333dd42e9c7346adfbc37909bc0d6b9b244ef11eb28a32434cffac6b596191",
+      "pixels_sha256": "d543f2cd3a1ef3fd8a2cc889fbd9161b9b28a6b899cd3c894483240cd21fcfe5"
+    },
+    {
+      "id": "eartags1760",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1760.jpg",
+      "image_sha256": "d6edc1324bbdd4da084852eda0af3c430da79ebdc418c07576c05c439bd9767f",
+      "pixels_sha256": "85db20fd1bb9b5e1f0b1eff34dc1f810b0b7edc8230e7e00a147c58a8ea36547"
+    },
+    {
+      "id": "eartags3069",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3069.jpg",
+      "image_sha256": "252bae71fabe76ce9fb0a7e0c993eb78f27840af72c41baf79ddcc29d7c2a896",
+      "pixels_sha256": "7910c6251a1f74952c8ef797ea6602ab30e288db67fc9fcf169d51794d0b7ee2"
+    },
+    {
+      "id": "eartags1423",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1423.jpg",
+      "image_sha256": "112be63fd67bfcd71495b0cbb5073b1dc452f8756b1b78595b7d19f73c32c22f",
+      "pixels_sha256": "e75b0125e16ee153ee6468fd4f8dcf90bb9e1593248e985e3577ca35a7912213"
+    },
+    {
+      "id": "eartags265",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags265.jpg",
+      "image_sha256": "7fdccab51d17c97c7edb541d4e221a0c177934a3665b1a099af865f7f8ab6723",
+      "pixels_sha256": "c9fd575657a1fb8a24d94eca9cda0b77f78e415ad56adf0a740a3b28379b0b53"
+    },
+    {
+      "id": "eartags2380",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2380.jpg",
+      "image_sha256": "fa9dc8327523c4ffdd9094d7987447c6eb91efcf4b70086db4aafb4a9027f3cc",
+      "pixels_sha256": "46198f3dbf430272f9801870d98669165694ec86a7ae0f5e9a53d2bec2264790"
+    },
+    {
+      "id": "eartags1376",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1376.jpg",
+      "image_sha256": "14d6f0b24985cfaf9f6d6a3a4e1fd467e9cfd7f1642c52f9e33eab11e4331a46",
+      "pixels_sha256": "c279547bf176a49fce253f9fb146584ca92b3a9fbdc7ba9190dbb1ab3fcac635"
+    },
+    {
+      "id": "eartags1938",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1938.jpg",
+      "image_sha256": "e29bc3f19fc38df88dd313e90fc99496e1c9f4cb82407a6d92031f2aba138ab9",
+      "pixels_sha256": "bd0758f5898d8cb51de42b04065c48618d090131a7390170822c4ff72bbb070d"
+    },
+    {
+      "id": "eartags1664",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1664.jpg",
+      "image_sha256": "679aa270a4a4a4b885dc3c99f58b9050df78827380944ceab6e2bf01ecdf339d",
+      "pixels_sha256": "1924552d2855567ddc63761581976564b9e05cc411c6351ab3878f89fc27a2e1"
+    },
+    {
+      "id": "eartags1342",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1342.jpg",
+      "image_sha256": "90882234fa5d4510208f16529917fe36b42912bfb8bdcde67f57c3af0758937a",
+      "pixels_sha256": "7e9002634d3548279cd5927a7a266d3a324ab95a604d79ec050cfdef7b6fd38e"
+    },
+    {
+      "id": "eartags693",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags693.jpg",
+      "image_sha256": "48f9b2ceb3f7ae4ec4fad611015db8ed057d93a65206ad298e24e986a84a405d",
+      "pixels_sha256": "24e14aec0cf35c9c3df1a168cbc948178eaccdbd5c7d8908c171f493500e08d9"
+    },
+    {
+      "id": "eartags1727",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1727.jpg",
+      "image_sha256": "481afd368ee04e81d61c9ef3ac46ce411061d98564e0d3200f6dbab8340fff23",
+      "pixels_sha256": "c6a1b767c1470c1e141ff10741f3da3f61e80d46258e916cb4bf471a4351858e"
+    },
+    {
+      "id": "eartags1262",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1262.jpg",
+      "image_sha256": "216ae267d095a42db5e1948e1aa86daac9dc32e4a378bb26daefe54a8d37f2f9",
+      "pixels_sha256": "5e05097c728b51a6ce9c16dfe7105fe78d3285334af0b0718f618bdda42e445f"
+    },
+    {
+      "id": "eartags1689",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1689.jpg",
+      "image_sha256": "102618f9c949b2b71009a098dadf3455d676561bfca50ef5267c02998d91402a",
+      "pixels_sha256": "ef71828a39f498ea57b8cd76c3b73a0e35af8991b14977343343c9e6e0ea3f94"
+    },
+    {
+      "id": "eartags622",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags622.jpg",
+      "image_sha256": "9574a95c6e7e75be39dcd8be33f2d5722478ab0113ead9731446d03edc412a8c",
+      "pixels_sha256": "34854d39cb90762348bc578c669a8d4090a1fd5b1a485b846eaa67ae7d5d4a46"
+    },
+    {
+      "id": "eartags775",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags775.jpg",
+      "image_sha256": "a42cd35aac7041fa855a6e088ba118d53370737b80cffb93515938764581b0cf",
+      "pixels_sha256": "a403e4619714e8becf99257a4d1b215f5919dfcb80429b230e20f75ef9cc2b3d"
+    },
+    {
+      "id": "eartags1985",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1985.jpg",
+      "image_sha256": "4a275244383a28224fedecd1381219b33869cf1e656820c3c4b6818b9f05acbc",
+      "pixels_sha256": "b3823d1b14df8503e65d6a3eab12c5d9ad1a09e3a31ba5edca3c761c666b384e"
+    },
+    {
+      "id": "eartags1318",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1318.jpg",
+      "image_sha256": "3e7448a9db50cd598822e4379c3bf4a972b494fc8531253e669304370c72a574",
+      "pixels_sha256": "c8323bc9b1763d35f4a80383dbfd6a348120b9c4f6c585d86cde126fe34e9b66"
+    },
+    {
+      "id": "eartags606",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags606.jpg",
+      "image_sha256": "0b5fdd2921d9bfed8c055035536e845db6321df0a982e69683cc68fd09211453",
+      "pixels_sha256": "c30205bf9514f1a5d182e923b0fb704689550c5121e2fab11835753fe81f723c"
+    },
+    {
+      "id": "eartags880",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags880.jpg",
+      "image_sha256": "99b4296528febc285a8738c6a3bf1e8b822bd1ddc26c8e8d6918cff1fbfec91e",
+      "pixels_sha256": "7510876aafe5f27b038403e455a4ebd17930903faf063be5410f8e27bf801563"
+    },
+    {
+      "id": "eartags1237",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1237.jpg",
+      "image_sha256": "80fe22fa51831a7ceadd716b46eda6ee500d9904f10662267369baf2eaba7646",
+      "pixels_sha256": "1b9dd2d0d0bd174c7c04e5e98e879c567cfc3c1c29d6584d0ad1be069f308262"
+    },
+    {
+      "id": "eartags3162",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3162.jpg",
+      "image_sha256": "926a66be7ec057d0678925092abdf346bd9ef5cef434c8600235f620865e3dbe",
+      "pixels_sha256": "e6d27adb10a1457022e0e4b1eead50ecde039b2cb676fb0d30e9447ef803255d"
+    },
+    {
+      "id": "eartags3219",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3219.jpg",
+      "image_sha256": "988637ba84faf1aeee73ca70bae9f496dac5f75fe1a411624e694a637c2b4b8e",
+      "pixels_sha256": "07c1128d543b52163c74903ae7128a2a656e259d4f43b4687278687ff8962e81"
+    },
+    {
+      "id": "eartags1592",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1592.jpg",
+      "image_sha256": "8fc249fe2797997610bbff610fd9e9d37039746080b3f72094316c9a4e150d56",
+      "pixels_sha256": "1fd63db1ade9838246d87382c5aef7e620071a06a243fec3a982abc76c554b42"
+    },
+    {
+      "id": "eartags73",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags73.jpg",
+      "image_sha256": "133e8339e3dd60eb1ce94709631446b8f9e4bc84d724f97a77dd3837373a7f02",
+      "pixels_sha256": "ee7b605be8f1209d23cb3256822446fa9aa633b8932fb1680b9acda466f4b7f8"
+    },
+    {
+      "id": "eartags2922",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2922.jpg",
+      "image_sha256": "0f9bbc6dc7a87176829a6e9047402732b6e8c13a5afaf249cdc15dcc6e251f55",
+      "pixels_sha256": "714c94eea021ff9857e608a6761a96ca1e62f8bf138003582399923a306052f0"
+    },
+    {
+      "id": "eartags2081",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2081.jpg",
+      "image_sha256": "04861b871b521408017b1ea767a4333e648c0ab5eeb982d8801f8ccf42e9cdad",
+      "pixels_sha256": "090fad32714a073ee64887400eb23f00a430c3a179ed31405c765069f8d66473"
+    },
+    {
+      "id": "eartags3016",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3016.jpg",
+      "image_sha256": "3ba48c05bd9c37450e1ebd689e0a84293fb3cead6511fb24df5d0709d8f93e6f",
+      "pixels_sha256": "a1878a948f0f80531b012d54e63930afbaf44bdebc399280c18d9f6307d15147"
+    },
+    {
+      "id": "eartags2023",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2023.jpg",
+      "image_sha256": "00e9693e0e3207cb42ea4c48b4cbae87576c6766ce266f30275244343295e1c3",
+      "pixels_sha256": "aeb735c1307f46b813024a25632403e36084cb001e376f675309ac0a4a7c4844"
+    },
+    {
+      "id": "eartags2665",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2665.jpg",
+      "image_sha256": "821b21bbe8123e5a50196fa1e5f5dcf90995f0c2a4e871f4272d27052f0e4c8e",
+      "pixels_sha256": "816ef3530ad67190a7852cba5f5d1daa56ef2125ce785c06491a2b30a12b169f"
+    },
+    {
+      "id": "eartags2174",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2174.jpg",
+      "image_sha256": "6604b62705fbdee8efe23c9442463ad7642ef47f2c0b68b7a33a8a65b790420d",
+      "pixels_sha256": "f3ae4e70ae2880be9c002b56b1eccce081a91201d026328fc8a7ea63f62e8df2"
+    },
+    {
+      "id": "eartags185",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags185.jpg",
+      "image_sha256": "cc81c2263d02f933ec34742ea42e2ac4a3d90c78beb0678d8d586f1b258903ac",
+      "pixels_sha256": "499cf0698d2c2a17580c63f303838ad905a0b4f83ff19b26bf252ed09b64c317"
+    },
+    {
+      "id": "eartags1588",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1588.jpg",
+      "image_sha256": "81ea92069c4946e5010cb84ec2e28eea444868790305b099184f815fe92dad3e",
+      "pixels_sha256": "9201997cb0d0933f2063fe1bbce1e7749c40a1869864dda9fd75c7f4ac22ea5f"
+    },
+    {
+      "id": "eartags60",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags60.jpg",
+      "image_sha256": "bec0679f20baa251008299e1f99b900f091237fcdc3a62f60a67b0b7b38b7616",
+      "pixels_sha256": "bacedcebf8ba30c974fecfbba4cf34bfb8b5725e4a7267048c8d54fa7f995686"
+    },
+    {
+      "id": "eartags3155",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3155.jpg",
+      "image_sha256": "f477833779d041bedf725a6dbea460397000d9f183540cd62f393176924d4324",
+      "pixels_sha256": "83bf2e7c41f3db0434e7d1f650ddc7738e0b480e41fc820a95ca704d5e9a87fa"
+    },
+    {
+      "id": "eartags491",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags491.jpg",
+      "image_sha256": "350f9a58d0ad793c295ec14e75a5e831bb3d7bf966720bbd044cd3d556c86130",
+      "pixels_sha256": "d01d78e7fbbbb7de829b044fdd2b3c065eca26587d25d333d6fbb9012f6bc0bf"
+    },
+    {
+      "id": "eartags2928",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2928.jpg",
+      "image_sha256": "21125249b1c19d84fd180b3e136d0c236f9145b4613098dfaf6bd4d92d488654",
+      "pixels_sha256": "91c223c0d612829b25b0e2c661fcbcd7a123b72e8d451934face78ca73393228"
+    },
+    {
+      "id": "eartags170",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags170.jpg",
+      "image_sha256": "e098ac785e347a6ff44a5f6c448dbc458617e3e9a3a55ca1cfb4260506ccd881",
+      "pixels_sha256": "25f58d5680fe5faef3db5fc2d3f34185d2f218100b77243b8b6c133006a396c4"
+    },
+    {
+      "id": "eartags52",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags52.jpg",
+      "image_sha256": "03d3bdbefc734355a4b9e86d865a7d9c59696be26a73852f1b1f4df1b05dc243",
+      "pixels_sha256": "400683951f5927a3c0781e05e70ebe5125439795b935b81e02b98b42757e4cd9"
+    },
+    {
+      "id": "eartags2803",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2803.jpg",
+      "image_sha256": "9628399c6bbebfe36627d5c94a9b2bb245df5a4bcb5546b5f2c130374d6a69fb",
+      "pixels_sha256": "a435cf83540dfdccc8f8f6ccc2eb02f043caab9342342e2552a9b6f34913b7fc"
+    },
+    {
+      "id": "eartags1593",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1593.jpg",
+      "image_sha256": "4895ed8dd4821e900e67b7f9bbcc745cfbb7ded5dda7e7f1534d79c90ca3be71",
+      "pixels_sha256": "83ace911029b4cfb145fdc877b073c456b97a610ea404d3452574340f7f0c7ed"
+    },
+    {
+      "id": "eartags3100",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3100.jpg",
+      "image_sha256": "c23fda86e5da87067fe3932c689f8c6dd882961c4a2298155f468b087f1733ea",
+      "pixels_sha256": "eda696167291c47a5859121f59e4b47f8eb6163f3fee681fdc012c65a991302c"
+    },
+    {
+      "id": "eartags481",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags481.jpg",
+      "image_sha256": "562d834aef0e5923cdf458a1a0a0d0d17cf0515f95d45e14f0b12f928f36cfcf",
+      "pixels_sha256": "4b154d66de388f6f6bf260bf732cfa4004ed5a13a32c0e7538e509ca31d89b8a"
+    },
+    {
+      "id": "eartags1606",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1606.jpg",
+      "image_sha256": "666b3f07a56c9a35ad804a01e9aedaceda383f2b53df8d83cb5410de91c0ca45",
+      "pixels_sha256": "3294eb79db02bb55e31ffe3124a6f9b7a861ba505864054e6d5dd8ec391b76f2"
+    },
+    {
+      "id": "eartags2777",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2777.jpg",
+      "image_sha256": "aebe889a05bd2103a46c6c04c1fe6c135038246b2700301df55a52a9cacb9b16",
+      "pixels_sha256": "99781914703e5d035c0344abffc28b65ee6fe8e7e6cc9011f5c729e41eeedf70"
+    },
+    {
+      "id": "eartags3114",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags3114.jpg",
+      "image_sha256": "89c3993a829ff7e732e4c9b5d82ec77d04c75f7695a6f7ea35129bac7955d1f6",
+      "pixels_sha256": "db5b778289a07e941c68878308519497b080375dc86b3b3655b7a68c779df4fe"
+    },
+    {
+      "id": "eartags1454",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1454.jpg",
+      "image_sha256": "05dad8a88336dd81c285fe9f42f6ce40b0ba09ca4ff110ee9cee966884f981c6",
+      "pixels_sha256": "ba2b1059b250074b066475ae778400b8e64498a3575753cce18abb923a4db4b9"
+    },
+    {
+      "id": "eartags2038",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2038.jpg",
+      "image_sha256": "e370af26dabb3438d3c349ab6f8bf70e2a11533f6753707cd882401005a0c622",
+      "pixels_sha256": "30fffafe2c2ead2994b5a0c5133844a3944a33bb4dd91843858e973f6c80ee6f"
+    },
+    {
+      "id": "eartags1643",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1643.jpg",
+      "image_sha256": "bb07a11989490bb9bed6da75b09d2f546e8be83896af905acc743324654df2ab",
+      "pixels_sha256": "3dca19554a48aa9455a8ea2bfb80609b5d466eb1c085f2a3bcb07766d46f320d"
+    },
+    {
+      "id": "eartags1406",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1406.jpg",
+      "image_sha256": "10a10bc9a012d2643f9826bb993ac3956a7ab613380a0f75d42735d04b9d6fcb",
+      "pixels_sha256": "4336860563a6b1859e22b35543cd7f73c734a4236ab149eaa89c86882f0ddabd"
+    },
+    {
+      "id": "eartags557",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags557.jpg",
+      "image_sha256": "563938c1e5345f2e9207aa978a27c6ad9ca0bd886c4ca3c6bf9cd11f16fa2258",
+      "pixels_sha256": "ae8630288d33a41a2a8d07668174439f0808d3514cc8bcf1e518f85d823be7cb"
+    },
+    {
+      "id": "eartags264",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags264.jpg",
+      "image_sha256": "64682d0562819764859e1c26833026048687c21d91e85ffdbdd84e4e98133e94",
+      "pixels_sha256": "badb60f1744689dbd1834b8f8215170f0f55948b91eaa2cb9e4243acbac22992"
+    },
+    {
+      "id": "eartags1090",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1090.jpg",
+      "image_sha256": "52806e2e2685e714d71c2b35e4f6721d35de16446beea20d967787d35f88f3fd",
+      "pixels_sha256": "f3442e1a3377154a5c55abca8925d7cfe02dcd5b46953739ae9157db8ed24c0f"
+    },
+    {
+      "id": "eartags514",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags514.jpg",
+      "image_sha256": "d9f224a2a4d8b55371cc2f756c9ab2e365cb7941f6d86c8061797a4418c6ac39",
+      "pixels_sha256": "0680018aa13b8cf8fac29501bc2c0b90109260e3ab9302df6f081525abcf6676"
+    },
+    {
+      "id": "eartags1418",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1418.jpg",
+      "image_sha256": "380ca20b7816c2c5ac164fe5e415d569d5b7847fe52d920ef982b7d070fb92fe",
+      "pixels_sha256": "4ab3b1aa1394d5e9fcc4ec0786bf992a10ed812cc9edeb12c63e0f80dbe3b9ff"
+    },
+    {
+      "id": "eartags583",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags583.jpg",
+      "image_sha256": "2f8b1325e71efeacbf9c2c6c2290dbc4c8a5e9cad9c3c332ba06bb2d7c8e99ea",
+      "pixels_sha256": "2a319954e0cf0684b50c2772b22fa951f9465a25df440ec9a9bebd387e00fe46"
+    },
+    {
+      "id": "eartags670",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags670.jpg",
+      "image_sha256": "da754ffe63a521f54f8781f6559152f20c1d5f8067eae4551aa6e5bad5fdef75",
+      "pixels_sha256": "66b7e52c261d67a5776d001f3d8d3c4e50020a160b14979b7b95d002075aa4b5"
+    },
+    {
+      "id": "eartags2234",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags2234.jpg",
+      "image_sha256": "15d6167c6fb7319067c177c320cad94f7dbd71a0a448ce0dd3ad897f5d9ad7df",
+      "pixels_sha256": "bbcbd03829ab81116ba34873b11a8c576cdfd38793cea33a72f6df5778220c99"
+    },
+    {
+      "id": "eartags702",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags702.jpg",
+      "image_sha256": "a0d5a63ea268963d8fcb38551ad0c96763709eedecf1dd2fa4d4c2e77ef8cd1a",
+      "pixels_sha256": "b1a05b679f6e3a83b71b252c3a31ee04d2aabd0ca64117908b63e1053fba7161"
+    },
+    {
+      "id": "eartags167",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags167.jpg",
+      "image_sha256": "ac293006799517e985649318a8b5558a13e069af35aa921ae59ecb212fa9e4db",
+      "pixels_sha256": "8b620c11d185a390b2341e68f3cb6cebfa29818b9c67bbbfeb86972e663fee52"
+    },
+    {
+      "id": "eartags1064",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1064.jpg",
+      "image_sha256": "e8f4b852135b9701242d767cecbc26b54cc58cd950ed7bfc0812557c388c64ed",
+      "pixels_sha256": "95173aae9de22d74313b794c9e1f6c40a71f948e4ef3a0e14f0625792589edcc"
+    },
+    {
+      "id": "eartags1717",
+      "image": "datasets/cow-eartag-recognition/images-v1/eartags1717.jpg",
+      "image_sha256": "5a4689439248fad534cd989579f34043996fbeda19b50a72c7ce6724314afca4",
+      "pixels_sha256": "4960a07cea6f3a19f6453dcbfb271d62c11bcc671a4bd98f6466ce7d4502700c"
+    }
+  ],
+  "scope": "First64 frozen development groups from preselected grayscale ear-tag crops. CPU OCR only, no tag localization/full-animal association or automatic cow-ID claim. No calibration/reserved/ambiguous crops.",
+  "score": {
+    "counts": "All GTlines in denominator, wrong matched transcripts plus unmatched accepted texts are false positives. Fulltag exact requires everyGTline exact and no extras.",
+    "matching": "Geometry only; unique global assignment maximizes(min(nGT,nPred)+1+IoU) on edgesIoU>=.5. This gives cardinality first then totalIoU. Invalid polygons remain unmatched and are explicitly counted.",
+    "minimum_accepted_score": 0.95,
+    "minimum_polygon_iou": 0.5,
+    "text": "Only strip outside whitespace; preserve zeros/punctuation/case/all lines. No roster, character allowlist, annotation cropping, label-order requirement or normalization."
+  }
+}

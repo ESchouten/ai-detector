@@ -1,0 +1,1774 @@
+{
+  "scope": "Image visibility inventory only. Publisher labels contain class0 tag rectangles, no tag transcripts, biologicalcowIDs, cowbody instances or sourcevideo/timestamps. Source grouping cannot be inferred from filenames.",
+  "protocol_sha256": "5608fe25256b05affec0a397967f5b5b0cb464c3289865a7ef5766271b3aacdf",
+  "download_manifest_sha256": "820492c32024a1b502607fcd0ccaacb511a150e1349ff4b0bef9683863f993df",
+  "image_count": 32,
+  "labeled_image_count": 29,
+  "tag_count": 125,
+  "tag_min_side_pixels_p0_p25_p50_p75_p100": [
+    10.0,
+    49.0,
+    69.0,
+    109.0,
+    193.0
+  ],
+  "tag_min_side_ge40": 104,
+  "rows": [
+    {
+      "id": "cow0",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow0.jpg",
+      "image_sha256": "6e342d42a5f263b85551f767ea89667f223816507b8a1647948321a286ae95c9",
+      "shape": [
+        1440,
+        1080
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            291.0,
+            623.0000000000001,
+            328.00000000000006,
+            707.0
+          ],
+          "width": 37.0,
+          "height": 84.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            878.9999999999999,
+            610.0000000000001,
+            945.0,
+            681.0
+          ],
+          "width": 66.0,
+          "height": 71.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            1143.0,
+            624.0000000000001,
+            1194.0,
+            706.0000000000001
+          ],
+          "width": 51.0,
+          "height": 82.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            1358.0,
+            646.0000000000001,
+            1416.0,
+            720.0
+          ],
+          "width": 58.00000000000001,
+          "height": 74.0
+        }
+      ]
+    },
+    {
+      "id": "cow86",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow86.jpg",
+      "image_sha256": "e7bec8345fd05f2b8c269f258f1eab835f3ed65bb10f0210cea5731198e2cf35",
+      "shape": [
+        1440,
+        1080
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            171.0,
+            5.0,
+            345.0,
+            101.00000000000001
+          ],
+          "width": 174.0,
+          "height": 96.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            853.0,
+            0.9999999999999996,
+            1015.0000000000001,
+            29.000000000000004
+          ],
+          "width": 162.0,
+          "height": 28.000000000000004
+        }
+      ]
+    },
+    {
+      "id": "cow172",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow172.jpg",
+      "image_sha256": "fc62305d3f5346b7e24c89db4160d487f621a7fd30af93aa3d926fb6b58c8a97",
+      "shape": [
+        1440,
+        1080
+      ],
+      "label_available": false,
+      "tags": []
+    },
+    {
+      "id": "cow258",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow258.jpg",
+      "image_sha256": "7cf75da872b680e425cc343cb048687027dace29accbfe453bd9521d871fe6b7",
+      "shape": [
+        1440,
+        1080
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            749.0,
+            524.0000000000001,
+            837.0000000000001,
+            646.0000000000001
+          ],
+          "width": 88.0,
+          "height": 122.00000000000001
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            339.0,
+            493.00000000000006,
+            435.99999999999994,
+            595.0000000000001
+          ],
+          "width": 97.0,
+          "height": 102.0
+        }
+      ]
+    },
+    {
+      "id": "cow345",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow345.jpg",
+      "image_sha256": "8747161305a0956da5f919d35035930ec24c5fc23567ef93525510c04ee4276e",
+      "shape": [
+        1440,
+        1080
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            311.0,
+            352.0,
+            369.00000000000006,
+            460.0
+          ],
+          "width": 58.00000000000001,
+          "height": 108.0
+        }
+      ]
+    },
+    {
+      "id": "cow431",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow431.jpg",
+      "image_sha256": "b061ce57371aa278b3eb597a99856f90db06a8efdfd37415c0de7e009b1c2df2",
+      "shape": [
+        1440,
+        1080
+      ],
+      "label_available": false,
+      "tags": []
+    },
+    {
+      "id": "cow517",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow517.jpg",
+      "image_sha256": "e42112413dabc31f867ee725bdab6da4566b0fbda00118fa8ceeec51cc6e9ea5",
+      "shape": [
+        1440,
+        1080
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            910.0000000000001,
+            451.00000000000006,
+            985.0,
+            539.0
+          ],
+          "width": 75.0,
+          "height": 88.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            675.0,
+            418.00000000000006,
+            753.0,
+            532.0
+          ],
+          "width": 78.0,
+          "height": 114.0
+        }
+      ]
+    },
+    {
+      "id": "cow603",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow603.jpg",
+      "image_sha256": "6a2a4a034a95708cd67f576c077ff5dad876fb9996e55e8636649272af98d29f",
+      "shape": [
+        1440,
+        1080
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            821.0000000000001,
+            565.0,
+            876.0000000000001,
+            664.0000000000001
+          ],
+          "width": 55.00000000000001,
+          "height": 99.00000000000001
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            473.0,
+            522.0000000000001,
+            500.00000000000006,
+            581.0
+          ],
+          "width": 27.0,
+          "height": 59.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            265.0,
+            460.00000000000006,
+            316.0,
+            530.0
+          ],
+          "width": 51.0,
+          "height": 70.0
+        }
+      ]
+    },
+    {
+      "id": "cow690",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow690.jpg",
+      "image_sha256": "f809f297cb16006e35858399849e01fae62ee4b86bdfab3c569c9ca11eca8c9f",
+      "shape": [
+        1920,
+        1080
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            30.000000000000007,
+            544.0,
+            110.00000000000001,
+            639.0
+          ],
+          "width": 80.0,
+          "height": 95.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            279.0,
+            782.0,
+            338.0,
+            852.0000000000001
+          ],
+          "width": 59.0,
+          "height": 70.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            506.99999999999994,
+            801.0,
+            571.0,
+            869.0
+          ],
+          "width": 64.0,
+          "height": 68.00000000000001
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            972.9999999999999,
+            516.0,
+            1015.0000000000001,
+            567.0
+          ],
+          "width": 42.0,
+          "height": 51.0
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            1228.9999999999998,
+            360.00000000000006,
+            1263.0,
+            408.0
+          ],
+          "width": 34.0,
+          "height": 48.0
+        },
+        {
+          "index": 5,
+          "xyxy": [
+            1038.0,
+            489.0,
+            1074.0000000000002,
+            544.0000000000001
+          ],
+          "width": 36.0,
+          "height": 55.00000000000001
+        },
+        {
+          "index": 6,
+          "xyxy": [
+            1374.0,
+            372.0,
+            1423.0,
+            426.00000000000006
+          ],
+          "width": 49.0,
+          "height": 54.0
+        },
+        {
+          "index": 7,
+          "xyxy": [
+            1336.0,
+            526.0,
+            1374.0,
+            573.0
+          ],
+          "width": 38.0,
+          "height": 47.0
+        },
+        {
+          "index": 8,
+          "xyxy": [
+            1467.0,
+            546.9999999999999,
+            1506.9999999999998,
+            592.0
+          ],
+          "width": 40.0,
+          "height": 45.00000000000001
+        },
+        {
+          "index": 9,
+          "xyxy": [
+            1589.0,
+            555.0000000000001,
+            1620.0,
+            601.0
+          ],
+          "width": 30.999999999999996,
+          "height": 46.0
+        },
+        {
+          "index": 10,
+          "xyxy": [
+            1779.0,
+            383.0,
+            1817.9999999999998,
+            422.0
+          ],
+          "width": 39.0,
+          "height": 39.00000000000001
+        },
+        {
+          "index": 11,
+          "xyxy": [
+            1798.9999999999998,
+            570.0,
+            1833.0,
+            608.0
+          ],
+          "width": 34.0,
+          "height": 38.0
+        }
+      ]
+    },
+    {
+      "id": "cow776",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow776.jpg",
+      "image_sha256": "75d46d431ff585a26a1af62b1d3ad3b68d3dfa7dc0a823893687fc897ee978e8",
+      "shape": [
+        1920,
+        1080
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            643.0,
+            420.00000000000006,
+            711.0,
+            523.0
+          ],
+          "width": 68.0,
+          "height": 103.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            841.0,
+            596.0000000000001,
+            910.0,
+            687.0000000000001
+          ],
+          "width": 69.0,
+          "height": 91.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            1130.0,
+            617.0,
+            1196.0,
+            714.0
+          ],
+          "width": 66.0,
+          "height": 97.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            1677.0,
+            790.0,
+            1743.0,
+            873.0000000000001
+          ],
+          "width": 66.0,
+          "height": 83.0
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            1734.9999999999998,
+            642.0,
+            1793.0,
+            724.0
+          ],
+          "width": 58.0,
+          "height": 82.0
+        },
+        {
+          "index": 5,
+          "xyxy": [
+            280.0,
+            223.0,
+            338.99999999999994,
+            311.0
+          ],
+          "width": 59.0,
+          "height": 88.0
+        },
+        {
+          "index": 6,
+          "xyxy": [
+            361.0,
+            433.0,
+            413.0,
+            529.0
+          ],
+          "width": 52.0,
+          "height": 96.0
+        },
+        {
+          "index": 7,
+          "xyxy": [
+            4.999999999999999,
+            300.99999999999994,
+            42.0,
+            399.0
+          ],
+          "width": 37.0,
+          "height": 98.0
+        }
+      ]
+    },
+    {
+      "id": "cow862",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow862.jpg",
+      "image_sha256": "ea49ff4d7e5e014eb1e2b679a38fc1131eb87879412d32f5e87a527eec8328be",
+      "shape": [
+        1920,
+        1080
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            210.0,
+            462.00000000000006,
+            270.0,
+            524.0
+          ],
+          "width": 60.0,
+          "height": 62.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            459.99999999999994,
+            480.0,
+            512.9999999999999,
+            564.0
+          ],
+          "width": 53.0,
+          "height": 84.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            835.0,
+            662.0,
+            913.0,
+            782.0
+          ],
+          "width": 78.0,
+          "height": 120.00000000000001
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            1123.9999999999998,
+            702.0000000000001,
+            1218.0,
+            804.0
+          ],
+          "width": 94.0,
+          "height": 102.0
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            1298.0,
+            587.0,
+            1360.9999999999998,
+            676.0000000000001
+          ],
+          "width": 63.0,
+          "height": 89.00000000000001
+        },
+        {
+          "index": 5,
+          "xyxy": [
+            1605.0,
+            660.0,
+            1682.0,
+            755.0000000000001
+          ],
+          "width": 77.0,
+          "height": 95.0
+        }
+      ]
+    },
+    {
+      "id": "cow948",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow948.jpg",
+      "image_sha256": "deb6e5acf221f13e0e3442ae1095313e9e24b8c986892efc2011ba6ef3450404",
+      "shape": [
+        1800,
+        4000
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            869.0,
+            1254.0,
+            917.0000000000001,
+            1331.9999999999998
+          ],
+          "width": 48.0,
+          "height": 78.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            1021.9999999999999,
+            1276.0,
+            1069.0,
+            1371.0000000000002
+          ],
+          "width": 47.0,
+          "height": 95.0
+        }
+      ]
+    },
+    {
+      "id": "cow1035",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1035.jpg",
+      "image_sha256": "1b0e23a34257b290ae628391e68ac085e1077586e164f1a5a781c5e1c63f6d9c",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            2956.0,
+            873.0000000000001,
+            3102.0,
+            1035.0000000000002
+          ],
+          "width": 146.0,
+          "height": 162.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            2306.0,
+            809.9999999999999,
+            2490.0,
+            973.0
+          ],
+          "width": 184.0,
+          "height": 163.0
+        }
+      ]
+    },
+    {
+      "id": "cow1121",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1121.jpg",
+      "image_sha256": "c9115b2b23999f9f27a1a202ca76e9d4702769f7788fe81a4c8df139b6ca7e10",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            2781.0,
+            1035.0,
+            2912.0000000000005,
+            1182.0000000000002
+          ],
+          "width": 131.0,
+          "height": 147.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            2343.0000000000005,
+            1048.0,
+            2496.0,
+            1154.0000000000002
+          ],
+          "width": 153.0,
+          "height": 106.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            1927.0,
+            1038.0,
+            2049.0,
+            1148.0
+          ],
+          "width": 122.0,
+          "height": 110.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            1318.0,
+            791.0,
+            1431.0,
+            926.0000000000001
+          ],
+          "width": 113.0,
+          "height": 135.0
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            952.0,
+            845.0,
+            1046.0,
+            923.0
+          ],
+          "width": 94.0,
+          "height": 78.0
+        }
+      ]
+    },
+    {
+      "id": "cow1207",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1207.jpg",
+      "image_sha256": "698e2e925626c555761501b5eb42aa88e44b4c1fba214826d68f9b7938be8ee9",
+      "shape": [
+        1800,
+        4000
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            1313.0,
+            2897.0,
+            1443.0,
+            3071.0
+          ],
+          "width": 130.0,
+          "height": 174.00000000000003
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            909.0,
+            2867.0,
+            1035.0000000000002,
+            3010.0
+          ],
+          "width": 126.00000000000001,
+          "height": 143.00000000000003
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            152.0,
+            2423.0,
+            339.00000000000006,
+            2532.0
+          ],
+          "width": 187.0,
+          "height": 109.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            421.99999999999994,
+            1454.0,
+            473.99999999999994,
+            1519.0
+          ],
+          "width": 52.0,
+          "height": 65.0
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            282.0,
+            1432.0,
+            351.99999999999994,
+            1515.0000000000002
+          ],
+          "width": 70.0,
+          "height": 83.0
+        },
+        {
+          "index": 5,
+          "xyxy": [
+            229.99999999999997,
+            1523.0000000000002,
+            300.00000000000006,
+            1584.0
+          ],
+          "width": 70.0,
+          "height": 61.0
+        },
+        {
+          "index": 6,
+          "xyxy": [
+            91.00000000000001,
+            1515.0000000000002,
+            191.0,
+            1589.0
+          ],
+          "width": 100.0,
+          "height": 74.0
+        },
+        {
+          "index": 7,
+          "xyxy": [
+            273.99999999999994,
+            1193.0,
+            317.0,
+            1297.0000000000002
+          ],
+          "width": 43.0,
+          "height": 104.00000000000001
+        },
+        {
+          "index": 8,
+          "xyxy": [
+            130.0,
+            1219.0,
+            196.0,
+            1271.0000000000002
+          ],
+          "width": 66.0,
+          "height": 52.00000000000001
+        },
+        {
+          "index": 9,
+          "xyxy": [
+            1100.0,
+            1310.0,
+            1152.0,
+            1367.0
+          ],
+          "width": 52.0,
+          "height": 57.0
+        },
+        {
+          "index": 10,
+          "xyxy": [
+            1661.0,
+            1302.0,
+            1704.0,
+            1376.0
+          ],
+          "width": 43.0,
+          "height": 74.0
+        }
+      ]
+    },
+    {
+      "id": "cow1293",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1293.jpg",
+      "image_sha256": "0263af57f65e03cd41d251079a75ac097478eea3b18574a22f2fcce65ba6082c",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            962.0000000000001,
+            954.0,
+            1093.0,
+            1104.0
+          ],
+          "width": 131.0,
+          "height": 150.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            487.00000000000006,
+            963.0,
+            649.0,
+            1123.0
+          ],
+          "width": 162.0,
+          "height": 160.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            2499.0,
+            604.0,
+            2581.0,
+            732.0
+          ],
+          "width": 82.0,
+          "height": 128.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            2734.0000000000005,
+            620.0,
+            2818.0,
+            748.0
+          ],
+          "width": 84.0,
+          "height": 128.0
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            2965.0,
+            620.0,
+            3021.0,
+            731.9999999999999
+          ],
+          "width": 56.0,
+          "height": 112.0
+        },
+        {
+          "index": 5,
+          "xyxy": [
+            3174.0,
+            623.0,
+            3256.0,
+            738.0
+          ],
+          "width": 82.0,
+          "height": 114.99999999999999
+        },
+        {
+          "index": 6,
+          "xyxy": [
+            3287.0,
+            726.0,
+            3352.0000000000005,
+            835.0
+          ],
+          "width": 65.0,
+          "height": 109.0
+        },
+        {
+          "index": 7,
+          "xyxy": [
+            3518.0000000000005,
+            782.0,
+            3634.0,
+            888.0
+          ],
+          "width": 116.0,
+          "height": 106.0
+        }
+      ]
+    },
+    {
+      "id": "cow1380",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1380.jpg",
+      "image_sha256": "6e2d9abc6a7221a73b5ea14502bd6ea7b14826a467fdf29282ce448f353aeaa8",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            2074.0,
+            835.0,
+            2184.0,
+            938.0
+          ],
+          "width": 110.0,
+          "height": 103.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            2437.0,
+            860.0000000000001,
+            2518.0000000000005,
+            954.0
+          ],
+          "width": 81.0,
+          "height": 94.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            1105.9999999999998,
+            904.0,
+            1246.0,
+            1022.9999999999999
+          ],
+          "width": 140.0,
+          "height": 118.99999999999999
+        }
+      ]
+    },
+    {
+      "id": "cow1466",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1466.jpg",
+      "image_sha256": "87a18c3e811defc26d1ba139bfc6e2d363d8224a0d0c6c2b04cda5e069a0c85f",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            2521.0,
+            760.0,
+            2631.0,
+            894.9999999999999
+          ],
+          "width": 110.0,
+          "height": 135.0
+        }
+      ]
+    },
+    {
+      "id": "cow1552",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1552.jpg",
+      "image_sha256": "3b2556482dac71417939d5e41e074e8c25b99188bbb815283926c37d31303c24",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            1702.0,
+            913.0,
+            1749.0,
+            979.0
+          ],
+          "width": 47.0,
+          "height": 66.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            1524.0,
+            910.0,
+            1581.0,
+            951.0
+          ],
+          "width": 57.0,
+          "height": 41.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            3071.0,
+            985.0000000000001,
+            3137.0,
+            1048.0
+          ],
+          "width": 66.0,
+          "height": 63.00000000000001
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            2549.0,
+            965.9999999999999,
+            2621.0,
+            1041.0
+          ],
+          "width": 72.00000000000001,
+          "height": 75.0
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            3431.0,
+            997.9999999999999,
+            3512.0000000000005,
+            1054.0
+          ],
+          "width": 81.0,
+          "height": 56.0
+        },
+        {
+          "index": 5,
+          "xyxy": [
+            3937.0000000000005,
+            660.0,
+            4000.0,
+            704.0
+          ],
+          "width": 63.0,
+          "height": 44.0
+        }
+      ]
+    },
+    {
+      "id": "cow1638",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1638.jpg",
+      "image_sha256": "cede2e71f5fded01b575903c5ddb75f2dc9ecc9c27eb9985570d431a2141c13f",
+      "shape": [
+        3680,
+        2070
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            422.99999999999994,
+            876.0,
+            520.0,
+            946.9999999999999
+          ],
+          "width": 97.0,
+          "height": 71.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            677.0,
+            838.0,
+            757.0,
+            898.0
+          ],
+          "width": 80.0,
+          "height": 60.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            874.0,
+            1261.0,
+            988.0,
+            1340.9999999999998
+          ],
+          "width": 114.0,
+          "height": 80.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            1263.0,
+            1233.0,
+            1360.0,
+            1381.0
+          ],
+          "width": 97.0,
+          "height": 147.99999999999997
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            1585.0,
+            1147.0,
+            1711.0000000000002,
+            1281.0
+          ],
+          "width": 126.00000000000001,
+          "height": 134.0
+        },
+        {
+          "index": 5,
+          "xyxy": [
+            2020.0,
+            876.0,
+            2103.0,
+            982.0000000000001
+          ],
+          "width": 83.0,
+          "height": 106.0
+        },
+        {
+          "index": 6,
+          "xyxy": [
+            2354.0,
+            841.0,
+            2454.0000000000005,
+            941.0
+          ],
+          "width": 100.0,
+          "height": 100.0
+        },
+        {
+          "index": 7,
+          "xyxy": [
+            2688.0,
+            962.0000000000001,
+            2803.0,
+            1119.0
+          ],
+          "width": 115.0,
+          "height": 157.0
+        },
+        {
+          "index": 8,
+          "xyxy": [
+            3083.0,
+            986.9999999999999,
+            3166.0,
+            1103.9999999999998
+          ],
+          "width": 83.0,
+          "height": 117.0
+        },
+        {
+          "index": 9,
+          "xyxy": [
+            169.00000000000003,
+            1135.9999999999998,
+            234.00000000000003,
+            1233.0
+          ],
+          "width": 65.0,
+          "height": 97.0
+        }
+      ]
+    },
+    {
+      "id": "cow1725",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1725.jpg",
+      "image_sha256": "e150581b0b5e250193946b70a8545bb7579a2140624ccf854f61cdb2e0ed026a",
+      "shape": [
+        1800,
+        4000
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            575.0,
+            2268.0,
+            717.0,
+            2428.0
+          ],
+          "width": 142.0,
+          "height": 160.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            226.0,
+            2076.0,
+            361.0,
+            2244.9999999999995
+          ],
+          "width": 135.0,
+          "height": 169.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            1652.0,
+            2745.0,
+            1800.0,
+            3010.0
+          ],
+          "width": 148.0,
+          "height": 265.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            1652.0,
+            2119.0,
+            1800.0,
+            2293.0
+          ],
+          "width": 148.0,
+          "height": 174.00000000000003
+        }
+      ]
+    },
+    {
+      "id": "cow1811",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1811.jpg",
+      "image_sha256": "06f36d5261ed21bfc27068a30cc082f9729e087506080dbe30c45fc58180cb68",
+      "shape": [
+        1800,
+        4000
+      ],
+      "label_available": false,
+      "tags": []
+    },
+    {
+      "id": "cow1897",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1897.jpg",
+      "image_sha256": "818e400cfdee0ef72fd29f820c294e4485a4b81e7ce131419f0767ba07c91a5a",
+      "shape": [
+        640,
+        368
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            212.00000000000003,
+            297.0,
+            227.00000000000003,
+            310.0
+          ],
+          "width": 15.0,
+          "height": 12.999999999999998
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            153.0,
+            292.0,
+            170.99999999999997,
+            302.0
+          ],
+          "width": 18.0,
+          "height": 10.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            604.0,
+            309.0,
+            618.0,
+            323.99999999999994
+          ],
+          "width": 14.000000000000002,
+          "height": 15.0
+        }
+      ]
+    },
+    {
+      "id": "cow1983",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1983.jpg",
+      "image_sha256": "790670acb0f3e3899f58372f9439b6e992fcfa5990f5c3958d9ac3378e5b1bb0",
+      "shape": [
+        640,
+        368
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            197.0,
+            303.0,
+            219.00000000000003,
+            313.0
+          ],
+          "width": 22.0,
+          "height": 10.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            148.0,
+            300.0,
+            162.0,
+            310.0
+          ],
+          "width": 14.000000000000002,
+          "height": 10.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            59.0,
+            209.0,
+            79.0,
+            220.99999999999997
+          ],
+          "width": 20.0,
+          "height": 12.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            247.00000000000003,
+            292.0,
+            262.0,
+            303.99999999999994
+          ],
+          "width": 15.0,
+          "height": 12.0
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            301.0,
+            305.0,
+            319.0,
+            316.99999999999994
+          ],
+          "width": 18.0,
+          "height": 12.0
+        },
+        {
+          "index": 5,
+          "xyxy": [
+            485.0,
+            303.0,
+            507.0,
+            314.0
+          ],
+          "width": 22.0,
+          "height": 11.0
+        }
+      ]
+    },
+    {
+      "id": "cow2070",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2070.jpg",
+      "image_sha256": "c63a8d4d7630c5d86f8fa2cdbd476c7679d08f771d1ae2945e91f7010e7d0f7e",
+      "shape": [
+        640,
+        368
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            567.0,
+            303.99999999999994,
+            590.0,
+            325.0
+          ],
+          "width": 23.000000000000004,
+          "height": 21.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            391.0,
+            292.0,
+            404.0,
+            303.99999999999994
+          ],
+          "width": 13.0,
+          "height": 12.0
+        }
+      ]
+    },
+    {
+      "id": "cow2156",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2156.jpg",
+      "image_sha256": "06a259a927c4d4b486683a994fc23ae017db0db02431659f7291ea1fdbcadee8",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            2217.0,
+            879.9999999999999,
+            2409.9999999999995,
+            1080.0
+          ],
+          "width": 193.0,
+          "height": 200.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            1545.0,
+            932.0,
+            1721.0,
+            1122.0000000000002
+          ],
+          "width": 176.0,
+          "height": 190.0
+        }
+      ]
+    },
+    {
+      "id": "cow2242",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2242.jpg",
+      "image_sha256": "841b7a5b53d53b59aedaa07707876efb850c0b13fa738c918abdd7dd5867712b",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            2114.0,
+            646.0,
+            2296.0000000000005,
+            839.0
+          ],
+          "width": 182.0,
+          "height": 193.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            1559.0,
+            677.0,
+            1759.0000000000002,
+            856.0
+          ],
+          "width": 200.0,
+          "height": 179.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            562.0,
+            159.99999999999997,
+            696.0,
+            287.0
+          ],
+          "width": 134.0,
+          "height": 127.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            59.0,
+            201.0,
+            193.0,
+            366.99999999999994
+          ],
+          "width": 134.0,
+          "height": 166.0
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            3372.0000000000005,
+            759.9999999999999,
+            3472.0,
+            877.0
+          ],
+          "width": 100.0,
+          "height": 117.0
+        }
+      ]
+    },
+    {
+      "id": "cow2328",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2328.jpg",
+      "image_sha256": "a591c15039ac2b1255759314860f730b2cd44f4b07cf5100300b69a2e06e97a2",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            1734.0,
+            763.0,
+            1851.9999999999998,
+            901.0
+          ],
+          "width": 118.00000000000001,
+          "height": 138.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            2131.0,
+            698.0,
+            2269.0,
+            832.0
+          ],
+          "width": 138.0,
+          "height": 134.0
+        }
+      ]
+    },
+    {
+      "id": "cow2415",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2415.jpg",
+      "image_sha256": "f1de682b06e005fd8e8f7de8f86ac3bd345691c78115f1196d317c2afc421989",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            1972.0,
+            705.0,
+            2079.0,
+            846.0
+          ],
+          "width": 107.0,
+          "height": 141.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            1576.0,
+            739.0,
+            1693.0,
+            877.0
+          ],
+          "width": 117.0,
+          "height": 138.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            127.0,
+            798.0,
+            207.00000000000003,
+            891.0
+          ],
+          "width": 80.0,
+          "height": 93.0
+        }
+      ]
+    },
+    {
+      "id": "cow2501",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2501.jpg",
+      "image_sha256": "86227c47b282a7a8e4302f8963bfa4571a60d2b2157ea1c5e18e838ed44fe56c",
+      "shape": [
+        4000,
+        1800
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            1752.0,
+            1049.0,
+            1890.0,
+            1215.0
+          ],
+          "width": 138.0,
+          "height": 166.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            2723.9999999999995,
+            942.0000000000002,
+            2855.0,
+            1056.0
+          ],
+          "width": 131.0,
+          "height": 114.00000000000001
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            2793.0,
+            763.0,
+            2913.9999999999995,
+            887.0
+          ],
+          "width": 121.0,
+          "height": 124.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            3210.0,
+            905.0,
+            3344.9999999999995,
+            1029.0000000000002
+          ],
+          "width": 135.0,
+          "height": 124.0
+        },
+        {
+          "index": 4,
+          "xyxy": [
+            1255.0000000000002,
+            1045.9999999999998,
+            1393.0,
+            1180.0
+          ],
+          "width": 138.0,
+          "height": 134.0
+        }
+      ]
+    },
+    {
+      "id": "cow2587",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2587.jpg",
+      "image_sha256": "b421fbe03281cf97f89cb016640793ffab92356a51b688524daf97042f6a4745",
+      "shape": [
+        1080,
+        1920
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            767.0000000000001,
+            1031.0,
+            810.0,
+            1098.0
+          ],
+          "width": 43.0,
+          "height": 67.0
+        }
+      ]
+    },
+    {
+      "id": "cow2674",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2674.jpg",
+      "image_sha256": "79f87a3be287a027fb2d2d4b11cf8ca09467a2a889d12c369bf44671f7e85155",
+      "shape": [
+        1080,
+        1920
+      ],
+      "label_available": true,
+      "tags": [
+        {
+          "index": 0,
+          "xyxy": [
+            33.0,
+            1663.0,
+            119.0,
+            1729.0
+          ],
+          "width": 86.0,
+          "height": 66.0
+        },
+        {
+          "index": 1,
+          "xyxy": [
+            267.0,
+            1438.0,
+            325.0,
+            1519.0
+          ],
+          "width": 58.0,
+          "height": 81.0
+        },
+        {
+          "index": 2,
+          "xyxy": [
+            506.00000000000006,
+            1014.9999999999999,
+            581.0,
+            1088.0
+          ],
+          "width": 75.0,
+          "height": 73.0
+        },
+        {
+          "index": 3,
+          "xyxy": [
+            731.0000000000001,
+            1144.0,
+            796.0,
+            1214.9999999999998
+          ],
+          "width": 65.0,
+          "height": 71.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "files": {
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_spatial_tail_review.py": "2e42953b6841ba5c7b23518083b8f156ad0f296a0c54b73590c9d23772cfd0dc",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_temporal_pilot_v2_protocol.json": "1ceccda7ab8ed5a80c994ebad25db667ddc2240fbd6be65120ef7ec4656bef9f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_temporal_review.py": "acfbb9df1339ebf4cc035cafd5a00512d3bccec8cab6c2b8f0e673746d2c988d"
+  },
+  "method": "Exactpreceding4\u00d7105sbin/longest-uninterrupted-quality-run midpoint, tieearliest; newlytrainedslots5/6only0\u2013419; no truth/similarity selection or backfill.",
+  "rows": [
+    {
+      "bin": 0,
+      "box": [
+        529,
+        86,
+        599,
+        198
+      ],
+      "mask_sha256": "cadf3c013ce36fe521f4f24ec84ab9d5b2f3e99cbb794d562aad68af5538a228",
+      "run_start": 57,
+      "second": 78,
+      "source_pixels_sha256": "6cf0603b41ec420d9bf1e7ff9c6d9a282bba2b33f5afddbf37808fad9303c481",
+      "track_id": 4
+    },
+    {
+      "bin": 1,
+      "box": [
+        534,
+        92,
+        603,
+        197
+      ],
+      "mask_sha256": "98958c0d4569a58c17b563fadb6bc8ce9a6dd62ecdf87cd1326ceb42f75a7773",
+      "run_start": 154,
+      "second": 181,
+      "source_pixels_sha256": "e3f399700790a32f46daf0bcd423f095c65ef99bda98e5543570f35dbd710bb4",
+      "track_id": 4
+    },
+    {
+      "bin": 2,
+      "box": [
+        524,
+        86,
+        597,
+        199
+      ],
+      "mask_sha256": "e05d69fa6cdc4e2ddac84785105650736d5a5973ea0645bf36ef5116b70452ce",
+      "run_start": 244,
+      "second": 259,
+      "source_pixels_sha256": "b57e65ffd2040f8974d711509f2da538dd28e638fef1ab4bfd33b2551e93d0f3",
+      "track_id": 4
+    },
+    {
+      "bin": 0,
+      "box": [
+        117,
+        375,
+        242,
+        524
+      ],
+      "mask_sha256": "195209194037fff037fb147f6bbac702c767f1000fa97bfb91f8b7496f9c764b",
+      "run_start": 30,
+      "second": 50,
+      "source_pixels_sha256": "1a9a26e0ac0d2dcd968a04c31601f31115fbfc156877b8b15f821c378a2ef7c6",
+      "track_id": 5
+    },
+    {
+      "bin": 1,
+      "box": [
+        114,
+        350,
+        268,
+        527
+      ],
+      "mask_sha256": "c7550959096c2c935133728856fbd12761b96aaa3bcb68cfe9fa8eb58558992c",
+      "run_start": 156,
+      "second": 172,
+      "source_pixels_sha256": "7257687049ef640c5651d19c9eca20d49135f2eadca8b8f69eb5e94fbd24d42b",
+      "track_id": 5
+    },
+    {
+      "bin": 2,
+      "box": [
+        160,
+        254,
+        252,
+        417
+      ],
+      "mask_sha256": "8f8b0f153ca3863e46bc2064d39148f0fc483726a6e6c808371b90cd3b5b31bc",
+      "run_start": 208,
+      "second": 243,
+      "source_pixels_sha256": "b1de070ded28619fc03e6a674882b51c0d255d1ff1e1fd5136773fadef0180e9",
+      "track_id": 5
+    },
+    {
+      "bin": 3,
+      "box": [
+        190,
+        186,
+        337,
+        292
+      ],
+      "mask_sha256": "9e047b7eaaae3a53181f3469d777fd6b73f1f016a33d2036d9458e7c67593cf3",
+      "run_start": 278,
+      "second": 353,
+      "source_pixels_sha256": "5720a1b0c186ee6343b465ea5c991b22fdab6ac5c76111e5bdaee3170cc54207",
+      "track_id": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "clip_metadata": ".cache/cow-cutie/reserved-2fps-clip/sampled.json",
+  "evaluation": "Selection consumes prediction-only allowed fields; report counts and boundedness first. Future label audit may quantify cross-animal episode contamination, duplicate instance profiles, and same-frame false merges. There are no cross-profile merges in this inventory; zero implemented merges is not proof of biological continuity or recognition coverage.",
+  "files": {
+    ".cache/cow-cutie/reserved-2fps-clip/sampled.json": "fc8aafcd7f05b07081c15a447c6bcf7718c170e97433bc325f55f77322f5389b",
+    ".cache/cow-startup-extended/streaming.json": "1bec4b7970dbcbad43b30be23fbcd92d580207139e5dd1698ca201f7a430694c",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/anonymous_profile_inventory.py": "dce9255e908e574cd8f6e4d1477eb3132ce8cbab2adf63efc3238767d8b648a8",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/startup-extended-independent-audit.json": "9416cca52c4e85539c4e095d163c5fb7ae04d4a9448cacee05fa674c20791b86",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_anonymous_profile_inventory.py": "b4b094580b8c69921c56bbacd4a91e965bda6c363ef90ca61770c141817a254c"
+  },
+  "input_run": ".cache/cow-startup-extended/streaming.json",
+  "range": [
+    0,
+    2999
+  ],
+  "rules": "All original slots, no known/unknown distinction. Existing p10>=.7, reciprocal partner, no quarantine, unclipped>=64px quality; consecutive1Hz episodes break at every quality/missing-frame gap. Three eligible observations before first photo, >=10s between candidates perinstance. At most16 current candidates via Euclidean geometry medoid/farthest-first over current16+new1 (log2aspect,sqrtforegroundfraction,normalizedcenterXY), chronologicalties. No descriptor/identity comparison or transitive links.",
+  "semantics": "The profile key groups one recorded observation instance only. Episodes remain separate provenance; neither common slot nor candidate similarity certifies biological identity. Runtime UUID/epoch/generation are not present in this offline recording; namespace keys are explicit synthetic equivalents bound to exact run+source hashes.",
+  "status": "FROZEN_PREDICTION_ONLY_SELECTION_NO_INFERENCE_OR_LABELS"
+}

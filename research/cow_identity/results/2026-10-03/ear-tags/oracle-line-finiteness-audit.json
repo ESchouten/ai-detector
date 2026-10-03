@@ -1,0 +1,7 @@
+{
+  "raw_sha256": "3ca4e2fb1806d493ffa2a8832467264b9b8abf751d4be7002d78aaabc70aa807",
+  "checked_rows": 157,
+  "all_scores_finite_and_in_unit_interval": true,
+  "missing_score_count": 0,
+  "scope": "Post-inference independent validation; no output or frozen code modified. Completed score is unchanged."
+}

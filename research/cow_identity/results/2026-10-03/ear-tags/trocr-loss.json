@@ -1,0 +1,25 @@
+{
+  "aligned_cross_entropy": 0.00013624693383462727,
+  "conclusion": "Installed default loss penalizes correct aligned teacher-forcing predictions because it shifts labels a second time. Explicit unshifted CE or supplying aligned shift_labels avoids this. No previous training score is overwritten.",
+  "decoder_inputs": [
+    [
+      2,
+      0,
+      3,
+      2
+    ]
+  ],
+  "decoder_inputs_match": true,
+  "default_shifted_loss": 10.000136375427246,
+  "expected_near_zero": true,
+  "explicit_shift_labels_loss": 0.00013624693383462727,
+  "explicit_unshifted_targets_match": true,
+  "padded_position_gradient": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "protocol_sha256": "72933a16dcaca4589ebed0df393c7af55feb459039b6fe7a718fd9d8af5457f0",
+  "wrong_shift_material": true
+}

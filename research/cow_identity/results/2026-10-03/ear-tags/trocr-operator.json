@@ -1,0 +1,453 @@
+{
+  "boundary_comparisons": {
+    "normalization_input": {
+      "exact": false,
+      "l2_difference": 0.0006236373880964438,
+      "left_l2": 69.85085374305386,
+      "maximum_absolute_difference": 8.0108642578125e-05,
+      "relative_l2_difference": 8.928128357464204e-06,
+      "right_l2": 69.85084178564628
+    },
+    "normalization_input_gradient": {
+      "exact": false,
+      "l2_difference": 5.212769896445706,
+      "left_l2": 0.9730233210981812,
+      "maximum_absolute_difference": 1.0442174673080444,
+      "relative_l2_difference": 5.3572918381467245,
+      "right_l2": 5.293620139921601
+    },
+    "normalization_output": {
+      "exact": false,
+      "l2_difference": 0.0017246867678021812,
+      "left_l2": 157.08863158629381,
+      "maximum_absolute_difference": 0.00013637542724609375,
+      "relative_l2_difference": 1.0979067997385638e-05,
+      "right_l2": 157.088565863575
+    },
+    "normalization_output_gradient": {
+      "exact": false,
+      "l2_difference": 1.7806589371414465,
+      "left_l2": 0.3322193764121319,
+      "maximum_absolute_difference": 0.3377697467803955,
+      "relative_l2_difference": 5.359888867326226,
+      "right_l2": 1.8087441102640325
+    },
+    "projection_input": {
+      "exact": false,
+      "l2_difference": 0.0017246867678021812,
+      "left_l2": 157.08863158629381,
+      "maximum_absolute_difference": 0.00013637542724609375,
+      "relative_l2_difference": 1.0979067997385638e-05,
+      "right_l2": 157.088565863575
+    },
+    "projection_input_gradient": {
+      "exact": false,
+      "l2_difference": 1.7806589371414465,
+      "left_l2": 0.3322193764121319,
+      "maximum_absolute_difference": 0.3377697467803955,
+      "relative_l2_difference": 5.359888867326226,
+      "right_l2": 1.8087441102640325
+    },
+    "projection_output": {
+      "exact": false,
+      "l2_difference": 0.03534857863595777,
+      "left_l2": 6995.0594166530445,
+      "maximum_absolute_difference": 0.00026404857635498047,
+      "relative_l2_difference": 5.053363600000864e-06,
+      "right_l2": 6995.055469944962
+    },
+    "projection_output_gradient": {
+      "exact": false,
+      "l2_difference": 5.105372041761625e-06,
+      "left_l2": 0.2771408644985455,
+      "maximum_absolute_difference": 2.8759241104125977e-06,
+      "relative_l2_difference": 1.8421577961803676e-05,
+      "right_l2": 0.2771397797637365
+    },
+    "projection_weight": {
+      "exact": true,
+      "l2_difference": 0.0,
+      "left_l2": 333.80615523684685,
+      "maximum_absolute_difference": 0.0,
+      "relative_l2_difference": 0.0,
+      "right_l2": 333.80615523684685
+    },
+    "projection_weight_gradient": {
+      "exact": false,
+      "l2_difference": 0.0003058800192101955,
+      "left_l2": 10.897680084758303,
+      "maximum_absolute_difference": 4.890561103820801e-05,
+      "relative_l2_difference": 2.8068361048513894e-05,
+      "right_l2": 10.897588441690582
+    }
+  },
+  "complete": true,
+  "elapsed_seconds": 20.873170791659504,
+  "environment": {
+    "deterministic_algorithms": false,
+    "float32_matmul_precision": "highest",
+    "mps_flags": {
+      "PYTORCH_ENABLE_MPS_FALLBACK": null,
+      "PYTORCH_MPS_FAST_MATH": null,
+      "PYTORCH_MPS_PREFER_METAL": null
+    },
+    "torch": "2.12.1",
+    "torch_git": "7269437d655783a26cba32aa88195b741ff496aa"
+  },
+  "error": null,
+  "operators": {
+    "flat2d_explicit_gradient": {
+      "cpu_vs_fp64_input_reference": {
+        "exact": false,
+        "l2_difference": 9.655209250982467e-06,
+        "left_l2": 0.3322160167174152,
+        "maximum_absolute_difference": 2.205371856689453e-06,
+        "relative_l2_difference": 2.9063045624303065e-05,
+        "right_l2": 0.3322193764121319
+      },
+      "cpu_vs_mps": {
+        "input_gradient": {
+          "exact": false,
+          "l2_difference": 0.5646584579466318,
+          "left_l2": 0.3322193764121319,
+          "maximum_absolute_difference": 0.1001482754945755,
+          "relative_l2_difference": 1.6996554025378388,
+          "right_l2": 0.6549371880114291
+        },
+        "output": {
+          "exact": true,
+          "l2_difference": 0.0,
+          "left_l2": 6995.0594166530445,
+          "maximum_absolute_difference": 0.0,
+          "relative_l2_difference": 0.0,
+          "right_l2": 6995.0594166530445
+        },
+        "weight_gradient": {
+          "exact": true,
+          "l2_difference": 0.0,
+          "left_l2": 10.897680084758303,
+          "maximum_absolute_difference": 0.0,
+          "relative_l2_difference": 0.0,
+          "right_l2": 10.897680084758303
+        }
+      },
+      "mps_vs_fp64_input_reference": {
+        "exact": false,
+        "l2_difference": 0.5646584626078619,
+        "left_l2": 0.3322160167174152,
+        "maximum_absolute_difference": 0.1001482754945755,
+        "relative_l2_difference": 1.6996726051536628,
+        "right_l2": 0.6549371880114291
+      }
+    },
+    "manual2d_input_gradient": {
+      "cpu_vs_fp64_input_reference": {
+        "exact": false,
+        "l2_difference": 9.655209250982467e-06,
+        "left_l2": 0.3322160167174152,
+        "maximum_absolute_difference": 2.205371856689453e-06,
+        "relative_l2_difference": 2.9063045624303065e-05,
+        "right_l2": 0.3322193764121319
+      },
+      "cpu_vs_mps": {
+        "input_gradient": {
+          "exact": false,
+          "l2_difference": 0.5646584579466318,
+          "left_l2": 0.3322193764121319,
+          "maximum_absolute_difference": 0.1001482754945755,
+          "relative_l2_difference": 1.6996554025378388,
+          "right_l2": 0.6549371880114291
+        }
+      },
+      "mps_vs_fp64_input_reference": {
+        "exact": false,
+        "l2_difference": 0.5646584626078619,
+        "left_l2": 0.3322160167174152,
+        "maximum_absolute_difference": 0.1001482754945755,
+        "relative_l2_difference": 1.6996726051536628,
+        "right_l2": 0.6549371880114291
+      }
+    },
+    "manual3d_input_gradient": {
+      "cpu_vs_fp64_input_reference": {
+        "exact": false,
+        "l2_difference": 9.655209250982467e-06,
+        "left_l2": 0.3322160167174152,
+        "maximum_absolute_difference": 2.205371856689453e-06,
+        "relative_l2_difference": 2.9063045624303065e-05,
+        "right_l2": 0.3322193764121319
+      },
+      "cpu_vs_mps": {
+        "input_gradient": {
+          "exact": false,
+          "l2_difference": 0.5646584579466318,
+          "left_l2": 0.3322193764121319,
+          "maximum_absolute_difference": 0.1001482754945755,
+          "relative_l2_difference": 1.6996554025378388,
+          "right_l2": 0.6549371880114291
+        }
+      },
+      "mps_vs_fp64_input_reference": {
+        "exact": false,
+        "l2_difference": 0.5646584626078619,
+        "left_l2": 0.3322160167174152,
+        "maximum_absolute_difference": 0.1001482754945755,
+        "relative_l2_difference": 1.6996726051536628,
+        "right_l2": 0.6549371880114291
+      }
+    },
+    "native3d_explicit_gradient": {
+      "cpu_vs_fp64_input_reference": {
+        "exact": false,
+        "l2_difference": 9.655209250982467e-06,
+        "left_l2": 0.3322160167174152,
+        "maximum_absolute_difference": 2.205371856689453e-06,
+        "relative_l2_difference": 2.9063045624303065e-05,
+        "right_l2": 0.3322193764121319
+      },
+      "cpu_vs_mps": {
+        "input_gradient": {
+          "exact": false,
+          "l2_difference": 0.05104713023370097,
+          "left_l2": 0.3322193764121319,
+          "maximum_absolute_difference": 0.007138803135603666,
+          "relative_l2_difference": 0.15365488547054187,
+          "right_l2": 0.33572214048934357
+        },
+        "output": {
+          "exact": true,
+          "l2_difference": 0.0,
+          "left_l2": 6995.0594166530445,
+          "maximum_absolute_difference": 0.0,
+          "relative_l2_difference": 0.0,
+          "right_l2": 6995.0594166530445
+        },
+        "weight_gradient": {
+          "exact": true,
+          "l2_difference": 0.0,
+          "left_l2": 10.897680084758303,
+          "maximum_absolute_difference": 0.0,
+          "relative_l2_difference": 0.0,
+          "right_l2": 10.897680084758303
+        }
+      },
+      "mps_vs_fp64_input_reference": {
+        "exact": false,
+        "l2_difference": 0.05104718179392964,
+        "left_l2": 0.3322160167174152,
+        "maximum_absolute_difference": 0.007138803135603666,
+        "relative_l2_difference": 0.15365659458059983,
+        "right_l2": 0.33572214048934357
+      }
+    },
+    "native3d_scalar_dot": {
+      "cpu_vs_fp64_input_reference": {
+        "exact": false,
+        "l2_difference": 9.655209250982467e-06,
+        "left_l2": 0.3322160167174152,
+        "maximum_absolute_difference": 2.205371856689453e-06,
+        "relative_l2_difference": 2.9063045624303065e-05,
+        "right_l2": 0.3322193764121319
+      },
+      "cpu_vs_mps": {
+        "input_gradient": {
+          "exact": false,
+          "l2_difference": 0.5646584579466318,
+          "left_l2": 0.3322193764121319,
+          "maximum_absolute_difference": 0.1001482754945755,
+          "relative_l2_difference": 1.6996554025378388,
+          "right_l2": 0.6549371880114291
+        },
+        "output": {
+          "exact": true,
+          "l2_difference": 0.0,
+          "left_l2": 6995.0594166530445,
+          "maximum_absolute_difference": 0.0,
+          "relative_l2_difference": 0.0,
+          "right_l2": 6995.0594166530445
+        },
+        "weight_gradient": {
+          "exact": true,
+          "l2_difference": 0.0,
+          "left_l2": 10.897680084758303,
+          "maximum_absolute_difference": 0.0,
+          "relative_l2_difference": 0.0,
+          "right_l2": 10.897680084758303
+        }
+      },
+      "mps_vs_fp64_input_reference": {
+        "exact": false,
+        "l2_difference": 0.5646584626078619,
+        "left_l2": 0.3322160167174152,
+        "maximum_absolute_difference": 0.1001482754945755,
+        "relative_l2_difference": 1.6996726051536628,
+        "right_l2": 0.6549371880114291
+      }
+    }
+  },
+  "protocol_sha256": "5d68a2a01403d956229d138e93bc6e9901d8f4d2f7ebeec0e207eff18399d28f",
+  "traces": [
+    {
+      "arrays_path": ".cache/cow-ear-tags/trocr-operator/cpu-trace.npz",
+      "arrays_sha256": "aab95fa417fc09adc1e87512e3453131e3403b407ab479f018a31dd63c0bbf98",
+      "boundaries": {
+        "normalization_input": {
+          "grad_fn": "AddBackward0",
+          "gradient_stride": [
+            1024,
+            256,
+            1
+          ],
+          "shape": [
+            4,
+            4,
+            256
+          ],
+          "stride": [
+            1024,
+            256,
+            1
+          ]
+        },
+        "normalization_output": {
+          "grad_fn": "NativeLayerNormBackward0",
+          "gradient_stride": [
+            1024,
+            256,
+            1
+          ],
+          "shape": [
+            4,
+            4,
+            256
+          ],
+          "stride": [
+            1024,
+            256,
+            1
+          ]
+        },
+        "projection_input": {
+          "grad_fn": "NativeLayerNormBackward0",
+          "gradient_stride": [
+            1024,
+            256,
+            1
+          ],
+          "shape": [
+            4,
+            4,
+            256
+          ],
+          "stride": [
+            1024,
+            256,
+            1
+          ]
+        },
+        "projection_output": {
+          "grad_fn": "UnsafeViewBackward0",
+          "gradient_stride": [
+            256176,
+            64044,
+            1
+          ],
+          "shape": [
+            4,
+            4,
+            64044
+          ],
+          "stride": [
+            256176,
+            64044,
+            1
+          ]
+        }
+      },
+      "device": "cpu",
+      "driver_bytes": null,
+      "loss": 5.12099552154541
+    },
+    {
+      "arrays_path": ".cache/cow-ear-tags/trocr-operator/mps-trace.npz",
+      "arrays_sha256": "4173d6e2c5d75e26922b1a2bc68b12294fa5607efc66aec15a091b1b69927635",
+      "boundaries": {
+        "normalization_input": {
+          "grad_fn": "AddBackward0",
+          "gradient_stride": [
+            1024,
+            256,
+            1
+          ],
+          "shape": [
+            4,
+            4,
+            256
+          ],
+          "stride": [
+            1024,
+            256,
+            1
+          ]
+        },
+        "normalization_output": {
+          "grad_fn": "NativeLayerNormBackward0",
+          "gradient_stride": [
+            1024,
+            256,
+            1
+          ],
+          "shape": [
+            4,
+            4,
+            256
+          ],
+          "stride": [
+            1024,
+            256,
+            1
+          ]
+        },
+        "projection_input": {
+          "grad_fn": "NativeLayerNormBackward0",
+          "gradient_stride": [
+            1024,
+            256,
+            1
+          ],
+          "shape": [
+            4,
+            4,
+            256
+          ],
+          "stride": [
+            1024,
+            256,
+            1
+          ]
+        },
+        "projection_output": {
+          "grad_fn": "LinearBackward0",
+          "gradient_stride": [
+            256176,
+            64044,
+            1
+          ],
+          "shape": [
+            4,
+            4,
+            64044
+          ],
+          "stride": [
+            256176,
+            64044,
+            1
+          ]
+        }
+      },
+      "device": "mps",
+      "driver_bytes": 2427420672,
+      "loss": 5.121031761169434
+    }
+  ]
+}

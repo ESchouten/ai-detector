@@ -1,0 +1,47 @@
+{
+  "repo": "microsoft/trocr-small-printed",
+  "revision": "04e994ab854b0089d4929f48c2b4dbe2ce78a340",
+  "files": [
+    {
+      "path": ".cache/cow-ear-tags/trocr-small-printed/README.md",
+      "bytes": 2836,
+      "sha256": "bb0a98cf79ef1ad962696654458cbae3b4b87dee1016187797e1cec81bba511e"
+    },
+    {
+      "path": ".cache/cow-ear-tags/trocr-small-printed/config.json",
+      "bytes": 4211,
+      "sha256": "2b6e06edec319984eca99c932d940bfa1f308db3f74d6279440b906c373bf727"
+    },
+    {
+      "path": ".cache/cow-ear-tags/trocr-small-printed/generation_config.json",
+      "bytes": 190,
+      "sha256": "41149cdcffec4d657f32dfcddd9b208037f01286c9e07945c724908c58ed0193"
+    },
+    {
+      "path": ".cache/cow-ear-tags/trocr-small-printed/model.safetensors",
+      "bytes": 245839136,
+      "sha256": "49350a39968df83e5a1adc90fc0ede02ff247671aed70b842af350fd4a7103f3"
+    },
+    {
+      "path": ".cache/cow-ear-tags/trocr-small-printed/preprocessor_config.json",
+      "bytes": 272,
+      "sha256": "eec0c686d2e2ea6d5887f87e1c6a34ef5bf1ba5b2ac98b8675e131da646fa1d2"
+    },
+    {
+      "path": ".cache/cow-ear-tags/trocr-small-printed/sentencepiece.bpe.model",
+      "bytes": 1356293,
+      "sha256": "6f5e2fefcf793761a76a6bfb8ad35489f9c203b25557673284b6d032f41043f4"
+    },
+    {
+      "path": ".cache/cow-ear-tags/trocr-small-printed/special_tokens_map.json",
+      "bytes": 238,
+      "sha256": "58dc0a3d15e3bad4861bcf2dee770ea327344d185182d4c5d2bf253285e53a83"
+    },
+    {
+      "path": ".cache/cow-ear-tags/trocr-small-printed/tokenizer_config.json",
+      "bytes": 327,
+      "sha256": "e098c98c6834fbcd3f3e75215e3e8b8868f0fe5bf07aef93d28e4f7196db293c"
+    }
+  ],
+  "bytes": 247203503
+}

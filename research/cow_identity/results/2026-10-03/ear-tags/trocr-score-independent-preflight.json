@@ -1,0 +1,21 @@
+{
+  "all_files_verified": true,
+  "checked_at": "2026-10-03T13:35:56.248978+00:00",
+  "checks": [
+    "Exact275 ordered crop identity/polygon/hash required before labels",
+    "Original uniqueIoU .5 maximum-cardinality scoring/all64images/all157lines",
+    "Literal leading zeros/punctuation preserved except declared strip",
+    "CER includes unmatched truth and extra prediction characters",
+    "Both frozen unit behaviors reproduced in exact scorer environment",
+    "No TrOCR outputs or model calls inspected"
+  ],
+  "data_protocol_sha256": "3a5957051f030d87bc86abd4d2a60f8ec0014de77e1405902e958b3741df47cc",
+  "limitation": "Current frozen scorer does not recheck nested truth manifest itself; this external pre-score audit and immediate source/hash recheck supply that boundary without changing running recipe.",
+  "nested_source_baseline_bound_files": 162,
+  "protocol_sha256": "1a3850e2095ba117f8e7bb3202706065af3c7a0975266078d8369d8e72388b57",
+  "reviewer": "identity_evaluation independent source review",
+  "score_libraries_exact": true,
+  "status": "PASS",
+  "top_level_bound_files": 3541,
+  "truth_manifest_sha256": "901e26db3f0fc8242607586b6027629f402549eac0d4362d51250efed7463cbf"
+}

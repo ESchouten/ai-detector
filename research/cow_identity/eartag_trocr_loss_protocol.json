@@ -1,0 +1,32 @@
+{
+  "correct_logit": 10.0,
+  "decoder_start_token_id": 2,
+  "expected": "Right-shift decoder inputs once; logits atpositiont target original labelt including BOS/EOS. Ignore padding. DefaultForCausalLMLoss instead shifts labels left, wrongly penalizing an aligned perfect prediction.",
+  "expected_decoder_inputs": [
+    [
+      2,
+      0,
+      3,
+      2
+    ]
+  ],
+  "files": {
+    "/Users/erik/Projects/ESchouten/ai-detector/detector/.venv/lib/python3.12/site-packages/transformers/loss/loss_utils.py": "fa65f18b3167f45989d7a8ba86432a41d322338f9789cc89b08d5d7f20f110b7",
+    "/Users/erik/Projects/ESchouten/ai-detector/detector/.venv/lib/python3.12/site-packages/transformers/models/vision_encoder_decoder/modeling_vision_encoder_decoder.py": "2f752f33397be5f0be9281e3a2cf5b9a79aaee2d7f424edc974205d7d5dce2ca",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/eartag_trocr_loss.py": "45e73feb6883067cd206d758dfd8eda76bc2ff01aea7d026f4ae8ff35cd66770",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_eartag_trocr_loss.py": "2636b323ee59d72f7a89a4cd5e1b1712e9bd15a440a3231dac0972cf56db0bfa"
+  },
+  "incorrect_logit": 0.0,
+  "labels": [
+    [
+      0,
+      3,
+      2,
+      -100
+    ]
+  ],
+  "pad_token_id": 1,
+  "scope": "Fixed CPU handcomputed teacher-forcing sanity check, no images/weights/training. Previous model results remain immutable.",
+  "source": "https://github.com/huggingface/transformers/issues/40111",
+  "vocabulary": 4
+}

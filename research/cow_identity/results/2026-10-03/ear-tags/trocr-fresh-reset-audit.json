@@ -1,0 +1,18 @@
+{
+  "scope": "Fresh reset reproducibility audit. No rerun or checkpoint selection.",
+  "protocol_sha256": "1a3850e2095ba117f8e7bb3202706065af3c7a0975266078d8369d8e72388b57",
+  "preflight_report_sha256": "e891b7b142713dee9165b45fb98b608dbf325ec6a241111a3cb0bb35abccfa24",
+  "training_report_sha256": "628530f075dc1c89738952a0bb6d46ca0faf90f1b3d6361a39f17755a50e482f",
+  "all3541bindings_unchanged": true,
+  "seed": 20261003,
+  "source_model_sha256": "49350a39968df83e5a1adc90fc0ede02ff247671aed70b842af350fd4a7103f3",
+  "same_first20_indices": true,
+  "initial_loss_equal": true,
+  "initial_gradient_norms": [
+    247.8441619873047,
+    8879785.0
+  ],
+  "maximum_first20_loss_difference": 2.570972263813019,
+  "recipe_and_optimizer": "Both launches call same train() in separate processes, torch.manual_seed+numpy seed before fresh local safetensors load and newAdamW, FP32 eager attention, clip1.0. Preflight saves no model. Model local_files_only=True; no download path. Source/data/processor/config/versions match frozenhashes.",
+  "conclusion": "Unexplained cross-process training variability; differences are materially larger than rounding. Do not attribute to MPS kernels or claim bitwise reproducibility without further controlled diagnosis. Both fixed runs finite; final unselected twoepochcheckpoint proceeds to unchanged quality measurement."
+}

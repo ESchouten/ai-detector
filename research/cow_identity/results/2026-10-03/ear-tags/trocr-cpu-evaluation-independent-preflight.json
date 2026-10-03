@@ -1,0 +1,21 @@
+{
+  "bound_files_verified": 3555,
+  "changed_bound_files": [],
+  "checks": [
+    "Complete exact CPUFP32 two-epoch final recipe required before inference and scoring",
+    "Checkpoint report/file hashes rechecked; preflight checkpoint not accepted",
+    "Original reader baseline unchanged;275 exactorderedcrop/polygon hashes and directtruthhash",
+    "All157 truthlines retained; missed/extra line/CER penalties remain"
+  ],
+  "execution_scope": "Training CPUFP32, generation remains FP32 MPS; no all-CPU generation claim",
+  "files": {
+    "research/cow_identity/eartag_trocr_cpu_evaluation.py": "d506b7dbe42e0ea8ad0b018aeabcba6c8039b2df9fbb59a084360a0a3aa10184",
+    "research/cow_identity/eartag_trocr_cpu_evaluation_protocol.json": "e57928cac00a158a408019167e99e087318d56c05b729c7095e9484f3d330676",
+    "research/cow_identity/test_eartag_trocr_cpu_evaluation.py": "461a5718e3f36039fe9ee2fdaca6aeb02800d16fff53150fb7b98f3f737a97de"
+  },
+  "focused_test": "1 passed in0.11s; exactcomplete ordering, missing/repeated steps, nonfinite gradient and wrongmode/protocol refused",
+  "models_or_query_outputs_read": false,
+  "reviewer": "identity_integration_audit",
+  "status": "READ_ONLY_PREFLIGHT_PASS",
+  "training_report_status": "Full corrected training still running at review; final_checkpoint must validate completed report before inference"
+}

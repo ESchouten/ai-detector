@@ -7,6 +7,18 @@ reading and ownership are reliable. Manual correction is optional. This replaces
 the earlier plan to require confirmation of each initial name; it is not a claim
 that automatic enrollment already works.
 
+The requested visible label is the **four-digit work number**, including leading
+zeros such as `0042`. A complete national number, country prefix, checksum, herd
+roster and farmer confirmation are not prerequisites. Each biological identity
+still needs an independent internal ID: equal work numbers alone must never
+merge two animals. A work number is an observed label, not a global unique key.
+
+The research helper `eartag_work_numbers.py` preserves one literal four-digit
+reading. It does not repair letters into digits, extract a substring from a
+longer number, or merge lines. It also cannot distinguish `2026` as a work number
+from `2026` as a year; tag layout, reading acceptance and ownership must establish
+that meaning separately. This helper does not enable automatic assignments.
+
 A local text reader complements appearance and continuous tracking. Reading
 text, interpreting its meaning and associating it with one animal are three
 separate tasks. An anonymous camera track is evidence about a possible animal,
@@ -84,7 +96,30 @@ development panel: 60 of 79 accepted lines were exact, versus 65 of 82 for the
 small model, while total CPU time rose from 12.42 to 60.45 seconds. See the
 [OCR baseline record](EAR_TAG_OCR_BASELINE.md); no model or threshold is promoted.
 
-## Dutch number and barcode checks
+## Four-digit work numbers and front/back views
+
+[MS Schippers' cattle-tag description](https://www.schippers.nl/advies/rundvee-oormerken-bestellen)
+identifies the enlarged four-digit work number separately from the complete
+national number. The enlarged part is our primary reading target. A clipped
+longer line that happens to contain four readable digits must not qualify as a
+complete work-number observation.
+
+Both front and rear views are eligible when the visible tag part is printed.
+For example, [MS Tag Standard](https://www.schippers.nl/ms-tag-standard-set-wit-901-950-0409904WHI901.html)
+prints both male and female parts and places the male part at the back of the ear.
+This management-tag example does not prove that every official tag has identical
+printing on both parts, or that the rear is always easier to read. Prefer actual
+sharp, unobscured source pixels regardless of head direction. Front/back reading
+accuracy still needs measurement; there is no front-facing-head requirement.
+
+The existing all-line OCR experiments retain their original denominators and
+frozen protocols. A four-digit-only diagnostic must be labelled separately and
+must not turn a transcription score into animal identification accuracy.
+
+## Optional national-number and barcode research
+
+The historical nine-digit parser below remains a separate experiment. Its
+full-number checks do not apply to the requested four-digit work-number flow.
 
 The Ministry's [June 2012 reading guide](https://www.veehandel.nu/archief/Runder%20Oormerken%20Nederland%20Juni%202012.pdf)
 distinguishes the complete nine-digit number from its shorter work number and
@@ -117,9 +152,10 @@ distance has been measured, and no barcode dependency was added to the app.
   merge these records. Appearance guesses must not become their own training
   labels; new reference images need independently established continuity or
   number evidence, with their original provenance retained.
-- Read tags from source-resolution pixels. Preserve the literal number and its
-  scheme; dates, herd prefixes, partial digits and farm numbers are not silently
-  interchangeable. Readability determines whether a reading is possible, not
+- Read tags from source-resolution pixels. A complete four-digit work number is
+  sufficient; preserve its leading zeros and keep it separate from an optional
+  national number. Dates, herd prefixes and partial digits are not silently
+  reinterpreted as work numbers. Readability determines whether a reading is possible, not
   whether a cow exists. Unreadable animals remain in the coverage denominator.
 - Keep source-resolution tag input separate from resized tracking input, bound
   to the exact same camera epoch and capture sequence. The current collector

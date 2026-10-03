@@ -2,7 +2,8 @@
 
 This branch develops local, automatic cow identification. The intended workflow
 requires no farmer enrollment: accumulate anonymous observations, attach a
-reliably read ear number to the correct animal, and recognize that animal later.
+reliably read four-digit work number to the correct animal, and recognize that
+animal later. Keep leading zeros; a complete national number is not required.
 Reliable unattended identification is not established yet.
 
 Two experimental paths currently exist. The original **Cow Identity** preset

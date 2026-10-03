@@ -1,0 +1,25 @@
+{
+  "checkpoint_sha256": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+  "checks": {
+    "all_bucket_offsets_removed": true,
+    "all_previous_channels_removed": true,
+    "all_summaries_removed": true,
+    "new_object_has_only_its_bucket_offset": true,
+    "new_object_has_only_its_summary": true,
+    "next_step_reads_survivor_mask": true,
+    "retired_summary_removed": true,
+    "survivor_channel_compacted": true
+  },
+  "device": "cpu",
+  "expected": "fixed",
+  "failure": null,
+  "probe_sha256": "ff318a2bafc4bdb6a46513971e06f46e6a3b617d7c073c6c302e239a40dedd68",
+  "scope": "Real CPU inference with synthetic pixels; tests SDK state ownership, not animal tracking, naming or a retirement policy.",
+  "source_sha256": {
+    "/tmp/cow-cutie-retirement-proof/cutie/inference/inference_core.py": "05d2f38e83fc26b96c11fdf8bb5f159a5d819e34b7d7dd734b5da5e61ac9487e",
+    "/tmp/cow-cutie-retirement-proof/cutie/inference/kv_memory_store.py": "77661ccdb317a1cb19a2655933e8feaf4a72167079ba7c4632109036be54ab06",
+    "/tmp/cow-cutie-retirement-proof/cutie/inference/memory_manager.py": "6d8f98db0ddc4c67587fc0c94fe667b00ae6d8a0e249102634013f23db4baec8",
+    "/tmp/cow-cutie-retirement-proof/cutie/inference/object_manager.py": "968482bcba73283734d1f2328f731f6fba667423e55feb6d4ca34f3b41cbfed4"
+  },
+  "torch": "2.12.1"
+}

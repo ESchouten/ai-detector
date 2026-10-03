@@ -1,0 +1,164 @@
+{
+  "scope": "Uniform20-frame geometry diagnostic; no selection by prediction outcome. Interpretation made after both independent reviews and raw-only adjudication froze. No alternative pass score.",
+  "reviewer": "identity_integration_audit; AI-assisted visual assessment, not external human truth",
+  "reveal_sha256": "b88d9d211ba89b1518d50c0fc950e69950472d85fa1c89cb419931a729300036",
+  "source_frames": {
+    ".cache/cow-cutie/streaming-reserved/streaming.json": "2a39500ee305d3049fdd6aeea0f4cebe626f5b704ec02f5ca2337ab75a6c6fd3",
+    ".cache/cow-geometry-audit/manifest.json": "2a60186a1477f1ade86f4aa999f3d8175deaa9da0a3f45b2e1037e46a68a523f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/annotation_geometry_protocol.json": "748a9ea0f08198229efa813d2374926a768801a09e17c13d713dfb594b2db140",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/geometry-review-adjudication.json": "47417dceddd9ed9791ea13d74bc49d91c58dcc61cb4849402f095daa700e492b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/geometry-review-audit.json": "191c7b73d58f0702cf7394120bb7673b134d1aabdf8f7668bde84919d8867ee7",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/geometry-review-cattle.json": "e1951ca2bed28d881e78e54fabb8cedd83cf88a25d2ca7435b425ee1970b7c80",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/geometry-review-comparison.json": "5045dd8c11dcd8eb58e347e89e0e33001f8ec4495677df2ffc7ff4ea5ad05ed8",
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26"
+  },
+  "summary": {
+    "audit_geometry": {
+      "anonymous_nonzero_overlap_pairs": 154,
+      "median_iou": 0.7538984700858078,
+      "median_publisher_to_review_area_ratio": 0.8979231470349809,
+      "publisher_area_less_than_two_thirds_review": 16,
+      "publisher_area_more_than_one_and_half_review": 2,
+      "note": "Descriptive reviewer/publisher rectangle agreement only, not model precision or a scoring acceptance test. Includes uncertainty and original reviewer errors."
+    },
+    "cattle_geometry": {
+      "anonymous_nonzero_overlap_pairs": 158,
+      "median_iou": 0.7750818895748013,
+      "median_publisher_to_review_area_ratio": 0.9122991854637941,
+      "publisher_area_less_than_two_thirds_review": 16,
+      "publisher_area_more_than_one_and_half_review": 4,
+      "note": "Descriptive reviewer/publisher rectangle agreement only, not model precision or a scoring acceptance test. Includes uncertainty and original reviewer errors."
+    }
+  },
+  "publisher_rectangle_count": 158,
+  "frames": [
+    {
+      "second": 367,
+      "publisher_geometry": "Most publisher extents are close to visible bodies; foreground feet and overlapping bodies explain local differences.",
+      "model_geometry": "Raw detector splits a foreground animal into a body proposal and a smaller lower fragment. Masks and withheld names must remain separate from biological correctness.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 442,
+      "publisher_geometry": "Publisher includes the leftmost calf head outside the rail, supporting the broader independently reviewed extent. Foot/head bounds vary.",
+      "model_geometry": "Crowded foreground masks partition adjacent bodies imperfectly; unnamed slots are present. Raw proposals also contain narrow or overlapping alternatives.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 517,
+      "publisher_geometry": "Publisher has no false top-border object, confirming the acknowledged audit-reviewer error. Upper-middle calf rectangle reaches into overlapping foreground anatomy.",
+      "model_geometry": "Foreground mask/box extents and raw duplicate proposals remain ambiguous; original gate appropriately retains naming abstentions.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 592,
+      "publisher_geometry": "Publisher has no top-border animal. Lower crowded bounds differ in how far visible feet/head extend.",
+      "model_geometry": "Some masks span adjacent lower anatomy; several names are withheld. This is not evidence that all unmatched masks contain one complete animal.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 967,
+      "publisher_geometry": "Publisher is broadly consistent with the independently visible bodies; a few head/foot margins differ.",
+      "model_geometry": "Multiple overlapping raw proposals cover the same foreground central region. Cutie provides mostly separated masks, with unnamed slots retained.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 1042,
+      "publisher_geometry": "Publisher bounds around the upper-left/foreground overlap contain mixed visible and occluded regions. The intended amodal convention is not specified.",
+      "model_geometry": "Mask fragmentation/body ownership remains ambiguous in the left cluster; the right three bodies are more cleanly separated.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 1117,
+      "publisher_geometry": "Publisher calf8 rectangle is considerably taller than the two independent visible-only estimates of the upper-left animal, extending over neighboring foreground anatomy. This is a concrete extent-convention outlier, not proof its biological identity is wrong.",
+      "model_geometry": "Left mask slots have large overlapping-body geometry changes; raw detector has near-duplicate upper-left proposals. Abstentions are visible.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 1192,
+      "publisher_geometry": "Publisher and independent bounds mostly agree; lower legs and turned heads account for smaller differences.",
+      "model_geometry": "Raw proposals split/duplicate the central paired bodies. Clean upper-left mask remains independent of these foreground problems.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 1267,
+      "publisher_geometry": "Large disagreements occur exactly in the left group where both reviewers marked occlusion/part ownership uncertain. Anonymous correspondence cannot settle biological ID.",
+      "model_geometry": "Slot6 includes coat from the adjacent left group and slot5 collapses to a tiny fragment. They are unnamed. This is real segmentation failure, not merely a broad publisher rectangle.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 1342,
+      "publisher_geometry": "Publisher separates two upper-left calves, with overlapping extents. Most other rectangles follow visible foreground bodies.",
+      "model_geometry": "One cyan slot6 mask spans the two distinct upper calves while slot5 is a tiny fragment; both are unnamed. Raw detector proposes the two bodies separately.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 1417,
+      "publisher_geometry": "Publisher lower-right calf6 rectangle is much shorter than the visible-all-parts review, while adjacent calf4 rectangle extends over overlapping anatomy. Exact part ownership is uncertain.",
+      "model_geometry": "Body masks generally separate the visible trunks, but ambiguous lower-right parts and raw partial/duplicate proposals remain.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 1492,
+      "publisher_geometry": "Publisher supports the raw-only adjudication: one bent lower-right animal and an extra foreground-left animal, rather than the audit reviewer original split/omission.",
+      "model_geometry": "Upper-right mask includes the visible body, while raw proposal/rectangle extent differs near the bent lower animal. No biological relabeling is justified.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 1837,
+      "publisher_geometry": "Dense right-side overlap yields differing inferred/visible extents, notably for the upper horizontal calf. Independent reviews marked these outlines uncertain.",
+      "model_geometry": "Many masks are withheld from naming; raw proposals overlap or split the crowded bodies. This is a genuinely hard geometry scene.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 1912,
+      "publisher_geometry": "Most bounds follow bodies; the lower horizontal publisher calf8 rectangle includes a larger region than the visible-only reviewed trunk.",
+      "model_geometry": "Raw lower proposals can cover adjacent bodies. Original masks are tighter but no independent biological ID is assigned by this diagnostic.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 1987,
+      "publisher_geometry": "Publisher extents are broadly plausible in this crowded angled arrangement, with variable lower/head inclusion.",
+      "model_geometry": "The raw detector misses a separate upper-right body proposal and instead includes overlapping lower-body alternatives; the corresponding mask is unnamed.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 2062,
+      "publisher_geometry": "Publisher and independent reviews largely agree on the eight visible bodies, with some shifted/expanded foot margins.",
+      "model_geometry": "A raw right-side proposal covers portions of two neighboring animals; relevant mask names are withheld. A detector rectangle is not always the correct replacement geometry.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 2737,
+      "publisher_geometry": "Most calves are more separated; both reviews and publisher have similar body coverage. Upper-edge body overlap is explicitly uncertain.",
+      "model_geometry": "Masks look more cleanly separated here; original unnamed upper overlapping slots remain visible. Some raw proposals are broader than complete visible masks.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 2812,
+      "publisher_geometry": "Publisher extents generally agree; the foreground-left group remains occluded with variable leg/head limits.",
+      "model_geometry": "Raw detector contains multiple narrow partial and duplicate boxes in the foreground group; these are retained in the panel rather than hidden.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 2887,
+      "publisher_geometry": "Publisher has seven boxes, while both reviews retained an additional tiny top-edge possible fragment with uncertain presence. This cannot be claimed as a confirmed missing animal annotation.",
+      "model_geometry": "Fast moving blurred bodies and top-edge truncation complicate geometry; raw detector omits the top truncated bodies. No identity judgement is made.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    },
+    {
+      "second": 2962,
+      "publisher_geometry": "Publisher has seven boxes, with the same unresolved upper-edge possible extra fragment in both reviews. Most lower animals are separated and well aligned.",
+      "model_geometry": "Lower masks/boxes are visually plausible; top overlapping/cut-off masks remain unnamed. This favorable frame does not erase earlier failures.",
+      "biological_identity": "Not independently certified in this geometry-only review"
+    }
+  ],
+  "conclusions": [
+    "The uniform sample does not support a global claim that publisher boxes are too loose. Their median area is slightly smaller than both visible-all-parts reviewer sets. Some crowded outliers are larger, some smaller.",
+    "Foot/head inclusion and ambiguous occluded-body ownership create real extent disagreements; masks also exhibit actual merges, fragments and detector duplicates. Neither phenomenon excuses every strict failure.",
+    "These labels remain useful for the unchanged conservative joint naming-plus-localization benchmark. Its score is not a separately measured biological-name accuracy. Do not change failed metrics, thresholds or denominators.",
+    "Both AI reviews themselves contain errors/uncertainty. The error-selected earlier35-case review and this uniform diagnostic answer different questions; neither certifies99% biological identity.",
+    "Next independent validation needs pre-prediction visible-instance masks or clearly defined visible boxes, verified animal identities and temporal entry/exit/reconnect coverage in a new recording, with true human/domain review. Preserve this exposed dataset as regression only."
+  ]
+}

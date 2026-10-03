@@ -436,6 +436,166 @@ A [separately frozen conjunction](detection_recovery_consensus_protocol.json) th
 
 For comparison, the [cached five-frame-per-second reciprocal control](results/2026-10-03/detection/cutie-cadence-consensus.json), with original manual seeds and original quarantine, also meets the development gates: coverage/precision are 71.33%/99.227%, 74.04%/99.179% and 82.82%/99.069%. It includes four wrong known names in the middle panel and has not tested actual initialization. The simpler two-frame-per-second candidate therefore warrants the next combined-runtime assessment before adding the denser processing cost. Neither result demonstrates new arrivals, re-identification after leaving the view or unattended restart recovery.
 
+### The combined application runtime reproduces the selected decisions
+
+The [full combined run](results/2026-10-03/detection/cutie-streaming-development.json)
+subsequently processed all 3059 development inputs with application PyTorch
+2.12.1, Cutie FP32 and YOLO FP16 in one MPS process. At all 1530 integer-second
+timestamps, its original masks, detector geometry, largest-component geometry,
+names and quarantine states matched the separate-process reference exactly.
+All three panels therefore retain the counts above. The pooled result is
+3759 correct names over 5394 visible known observations (69.69% coverage),
+99.392% conservative precision, no wrong known names, no unknown animal named,
+and 23 named unmatched boxes. Pooling does not create independent observations.
+
+The complete run took 482.54 seconds, including initialization and report
+writes. Processing averaged 154.8 ms per input, with p95 222.4 ms and p99
+237.8 ms; two of 3059 inputs exceeded the 500 ms interval. The first-frame
+excluded p95/p99 were 222.4/237.6 ms. Peak observed driver allocation was
+7.00 GiB before cache reclamation and 6.00 GiB afterward; peak resident memory
+was 1.695 GiB. Observed working/long-term memory maxima were 10800/9984 tokens.
+These are measured maxima, not a claim that a sampled compaction target is a
+hard maximum. Decode, hashing, synchronized inference, decisions and mask
+caching are included in input timings. This measures one camera on this Mac,
+not concurrent farm deployment capacity.
+
+[Thirty focused tests](results/2026-10-03/detection/cutie-streaming-tests.json)
+and the complete 146-test research suite passed before selecting the next
+experiment. The [reserved selection](detection_reserved_selection.json) fixes
+the same method before additional pixels. Its continuous seeded-tracking scope
+is explicitly different from disconnected-window recognition in the original
+iteration protocol; the original protocol is preserved. This successful
+development replay does not itself establish reserved accuracy, new-animal
+entry, re-entry or name recovery after an application restart.
+
+### The frozen continuous reserved evaluation fails its late precision target
+
+The complete combined application runtime then processed 5999 inputs through
+second 2999 without changing the selected method. The [immutable reserved
+report](results/2026-10-03/detection/cutie-streaming-reserved.json) gives:
+
+| Reserved panel | Correct / known | Coverage | Conservative precision | Wrong known / unknown named / unmatched named | All gates |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 1800–2099 s | 1123 / 1799 | 62.42% | 99.293% | 0 / 0 / 8 | Pass |
+| 2700–2999 s | 1303 / 1781 | 73.16% | 97.970% | 0 / 0 / 27 | Fail |
+| Pooled | 2426 / 3580 | 67.77% | 98.578% | 0 / 0 / 35 | Fail |
+
+These are correlated observations, not independent-animal confidence intervals.
+The strict 99% precision requirement is not met; zero wrong names among matched
+boxes does not remove the 35 unmatched named errors. No threshold or label was
+changed. All 3059 shared source frames and 1530 integer-second outputs reproduce
+the development prefix exactly, including masks, names and conflict states.
+
+The 978.47-second run averages 158.3 ms per input, with p95/p99 226.3/251.3 ms.
+Three of 5999 inputs exceed their 500 ms interval. Peak driver allocation before
+and after reclamation is 6.684/5.999 GiB; peak RSS 1.184 GiB. Working/long-term
+memory maxima are 10800/9984 tokens. Resource completion is not an accuracy pass.
+
+A read-only audit rendered all 35 errors with source pixels, original masks,
+paired raw YOLO proposals and unchanged publisher boxes. Thirty-three have an
+own annotation with IoU 0.288–0.498; none is a duplicate-assignment loss. Twenty-nine
+mask rectangles are smaller than the own publisher extent, and the paired raw
+YOLO rectangle reaches own IoU .5 in 29 cases. Six masks have tiny disconnected
+pieces, retaining at least 97.9% of area. At 2770 and 2790 an animal is visible in
+the named cow-4 region but the publisher has no cow-4 box; both remain errors.
+This suggests a further output-geometry control, not a reason to silently change
+labels or the metric. [RESERVED_RESULT.md](RESERVED_RESULT.md) records exact
+provenance, runtime, per-error review and reproduction caveats.
+
+Both reserved panels are now **exposed**. Seconds **3000 onward remain closed**.
+Historical protocol documents and the failed strict report remain byte-identical;
+a later control is development on exposed data and cannot retroactively turn
+this frozen evaluation into a pass.
+
+### Returning all detector boxes makes the exposed-data result worse
+
+The single [output-geometry control](detection_output_geometry_protocol.json)
+keeps every recorded name, gate and reciprocal pairing fixed, but outputs the
+actual same-frame raw detector proposals. Only a unique originally named partner
+receives its existing identity; every other proposal stays unnamed, without
+asserting a persistent track. Coordinates and confidence remain exactly those
+of the detector. No proposal is discarded because it is inconvenient for the
+metric, and no operating point is searched.
+
+The [CPU replay](results/2026-10-03/detection/cutie-output-geometry.json) first
+reproduces every original baseline naming count and confusion on all five
+**exposed** panels. It then gives:
+
+| Exposed panel | Correct / known | Coverage | Conservative precision | Wrong known / unknown named / unmatched named | Proposals / matched / missed / unmatched |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 330–629 s | 1196 / 1800 | 66.44% | 95.680% | 3 / 0 / 51 | 2640 / 2069 / 331 / 571 |
+| 930–1229 s | 1259 / 1795 | 70.14% | 96.846% | 2 / 2 / 37 | 2747 / 2230 / 163 / 517 |
+| 1230–1529 s | 1195 / 1799 | 66.43% | 96.997% | 1 / 4 / 32 | 2722 / 2283 / 114 / 439 |
+| 1800–2099 s | 1080 / 1799 | 60.03% | 95.491% | 0 / 0 / 51 | 2387 / 1880 / 510 / 507 |
+| 2700–2999 s | 1285 / 1781 | 72.15% | 96.617% | 0 / 1 / 44 | 2214 / 1950 / 343 / 264 |
+
+**Every panel fails precision.** The number of emitted names is identical to its
+baseline, but some now cover the wrong animal or lose their one-to-one truth
+assignment. The detector has more false/duplicate geometry and fewer matched
+animals overall. Its favorable boxes among the selected 35 original errors do
+not represent its behavior on the entire sequence. Four synthetic tests include
+an added unnamed duplicate stealing a truth match, ensuring that such errors
+cannot disappear through filtering. Anonymous stateless proposals deliberately
+have no invented track, so their track-switch counts are not a continuity
+comparison with Cutie's original slots.
+
+This negative control is not promoted. The original reserved failure remains
+immutable, and seconds 3000 through the end stay closed.
+
+### Separating extra proposals from worse geometry does not rescue a union rule
+
+A [global diagnosis](results/2026-10-03/detection/cutie-output-geometry-diagnosis.json)
+examines all 6243 emitted names, not just the original selected errors. Raw output
+loses 215 previously correct names: 133 paired boxes now fall below own-cow
+IoU .5; another 82 have valid own-cow overlap but lose the global assignment.
+In 81 of those cases an additional unpaired raw proposal takes the own-cow match.
+The remaining case (second 1467, slot 3) is instead assigned to unknown cow 7,
+while cow 3 remains unmatched. Raw output fixes 45 original unmatched names but
+creates 202 unmatched, six wrong-known and seven unknown-animal names. Its
+own-cow IoU decreases in 4261 of the 6243 named observations.
+
+This motivated one separately [frozen union control](detection_union_geometry_protocol.json):
+retain the original collection of slots, names and confidence; for every reciprocal
+pair, named or unnamed, return the rectangle containing both the original mask
+box and the current raw detector box. Unpaired slots remain unchanged. No boxes
+are added or removed, and no policy or threshold changes. The union cannot cut
+away an existing extent, but it can include background or a neighboring animal.
+The [single CPU comparison](results/2026-10-03/detection/cutie-union-geometry.json)
+reproduces the baseline exactly and preserves all emitted-name and box counts:
+
+| Exposed panel | Correct / known | Coverage | Conservative precision | Wrong known / unknown named / unmatched named | Proposals / matched / missed / unmatched |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 330–629 s | 1235 / 1800 | 68.61% | 98.800% | 1 / 0 / 14 | 2400 / 2295 / 105 / 105 |
+| 930–1229 s | 1280 / 1795 | 71.31% | 98.462% | 1 / 0 / 19 | 2397 / 2296 / 97 / 101 |
+| 1230–1529 s | 1217 / 1799 | 67.65% | 98.782% | 0 / 0 / 15 | 2344 / 2189 / 208 / 155 |
+| 1800–2099 s | 1095 / 1799 | 60.87% | 96.817% | 0 / 0 / 36 | 2400 / 2246 / 144 / 154 |
+| 2700–2999 s | 1288 / 1781 | 72.32% | 96.842% | 0 / 0 / 42 | 2398 / 2143 / 150 / 255 |
+
+**All five precision gates fail again.** Avoiding additional proposals limits the
+damage compared with all-raw output, but enlarging paired rectangles is still
+worse than the unchanged mask baseline overall. This control is also rejected;
+there is no further geometry sweep. Both new controls are exposed-data research
+and leave the original reserved failure intact. Seconds 3000 onward remain closed.
+
+### Physical review questions annotation extent before another model change
+
+The [clean-source physical review](results/2026-10-03/detection/cutie-reserved-physical-review.json)
+then inspected every one of the 35 selected failures without an opaque mask
+covering the animal. Twenty-five masks appear to retain most visible anatomy
+while the publisher rectangle is loose; five publisher extents appear partial
+or shifted; three occluded cases remain ambiguous; two own annotations are
+missing. These qualitative categories are not replacement ground truth or proof
+that the biological identity is correct. The untouched strict result still fails.
+
+Particularly, isolated calves at 2877 and 2895 seconds have coherent visible
+masks despite low box IoU. The [publisher describes detector-assisted video
+labels](https://arxiv.org/html/2503.13777v2), manual tracking corrections, missing
+boxes and detector bias. Consequently a tight relative rectangle alone is not
+adequate causal evidence for another segmentation network. A separate uniform,
+independently labelled clean-frame diagnostic will examine extent quality across
+both successful and failing examples before further algorithm changes. No new
+held-out video has been opened and no threshold changed.
+
 ## Tools and reproducibility
 
 - `detection_assessment.py prepare` extracts only the fixed training/validation intervals into ordinary Ultralytics YOLO data. Images and checkpoints stay in ignored local storage.

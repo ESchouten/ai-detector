@@ -1,0 +1,20 @@
+{
+  "checkpoint_sha256": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+  "checks": {
+    "next_step_reads_survivor_mask": false,
+    "retired_summary_removed": false,
+    "survivor_channel_compacted": false
+  },
+  "device": "cpu",
+  "expected": "original",
+  "failure": "KeyError: 0",
+  "probe_sha256": "ff318a2bafc4bdb6a46513971e06f46e6a3b617d7c073c6c302e239a40dedd68",
+  "scope": "Real CPU inference with synthetic pixels; tests SDK state ownership, not animal tracking, naming or a retirement policy.",
+  "source_sha256": {
+    "/tmp/cow-identity-cutie/cutie/inference/inference_core.py": "8df9f952195779447baad7087788b071ff48c1f65265c169f1affb9c1d11afdc",
+    "/tmp/cow-identity-cutie/cutie/inference/kv_memory_store.py": "7867920e025d5eec9b54c5779f3405219ad8799fe2e32c75ee6ba137816e9824",
+    "/tmp/cow-identity-cutie/cutie/inference/memory_manager.py": "101485daaa28a94376489889a54ab3482119b4fda10d25fade3dccbc7b07e85e",
+    "/tmp/cow-identity-cutie/cutie/inference/object_manager.py": "968482bcba73283734d1f2328f731f6fba667423e55feb6d4ca34f3b41cbfed4"
+  },
+  "torch": "2.12.1"
+}

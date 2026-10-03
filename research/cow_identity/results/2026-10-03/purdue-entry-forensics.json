@@ -1,0 +1,498 @@
+{
+  "inputs": {
+    ".cache/cow-passage-entry-control/predictions.json": "a563de18e2ba0e2bfd937a8fc870341e3efd4c0057c3943ca1e739bde8e88f48",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/passage_entry_execution.json": "7f750f40392efa57a9bf816e4044c526760069cf2f04b1bc65e2e4877be5fa1c",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/passage_entry_forensics.py": "13de6ae531b98a0ea7de7a014961cd192e0133a0b75778c847b39a22a0efd46f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/purdue-entry-baseline.json": "e07268c3a718f85d456260799497dc4104b0686cd5a65c990a8972c5308d45e5"
+  },
+  "rows": [
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5676": 0.9593521258370971
+      },
+      "mean_probability": 0.997787356376648,
+      "name_displayed": true,
+      "original_slot_area": 229145,
+      "p10": 1.0,
+      "raw_proposal_count": 1,
+      "reciprocal_iou": 0.9004614488598182,
+      "reciprocal_proposal": {
+        "confidence": 0.7202255725860596,
+        "x1": 50,
+        "x2": 1155,
+        "y1": 114,
+        "y2": 720
+      },
+      "reciprocal_proposal_index": 0,
+      "review_image": ".cache/cow-passage-entry-control/forensics/000.jpg",
+      "review_image_sha256": "636378a8bcee938ca4e4987bc4753f8a405956c29d53ef44fcc7df67194cbcba",
+      "second": 0.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5676": 0.9431033974085605
+      },
+      "mean_probability": 0.9779496788978577,
+      "name_displayed": true,
+      "original_slot_area": 225048,
+      "p10": 0.9535992741584778,
+      "raw_proposal_count": 1,
+      "reciprocal_iou": 0.818974623351996,
+      "reciprocal_proposal": {
+        "confidence": 0.7147842049598694,
+        "x1": 265,
+        "x2": 1267,
+        "y1": 148,
+        "y2": 682
+      },
+      "reciprocal_proposal_index": 0,
+      "review_image": ".cache/cow-passage-entry-control/forensics/001.jpg",
+      "review_image_sha256": "545fe3a0592914a70cb79bc87b3dd8d055acc4ce4baf3f9cb09b592535d677f2",
+      "second": 0.5,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5676": 0.7933845798470304
+      },
+      "mean_probability": 0.9844157695770264,
+      "name_displayed": true,
+      "original_slot_area": 214131,
+      "p10": 0.9846531748771667,
+      "raw_proposal_count": 1,
+      "reciprocal_iou": 0.7023536869657683,
+      "reciprocal_proposal": {
+        "confidence": 0.7354828715324402,
+        "x1": 282,
+        "x2": 1280,
+        "y1": 182,
+        "y2": 672
+      },
+      "reciprocal_proposal_index": 0,
+      "review_image": ".cache/cow-passage-entry-control/forensics/002.jpg",
+      "review_image_sha256": "0da9ff79eee058428d18b33896023f7a5496fdd8deeb98bf2bb234866810437e",
+      "second": 1.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5676": 0.8701073738362157,
+        "5953": 0.0
+      },
+      "mean_probability": 0.9798544645309448,
+      "name_displayed": true,
+      "original_slot_area": 185832,
+      "p10": 0.9733784198760986,
+      "raw_proposal_count": 2,
+      "reciprocal_iou": 0.6275252191586327,
+      "reciprocal_proposal": {
+        "confidence": 0.669762372970581,
+        "x1": 411,
+        "x2": 1280,
+        "y1": 130,
+        "y2": 609
+      },
+      "reciprocal_proposal_index": 1,
+      "review_image": ".cache/cow-passage-entry-control/forensics/003.jpg",
+      "review_image_sha256": "09fe937a07645a8374b9709b843f265de13ee259fd2b116b00cca6d8589cc381",
+      "second": 1.5,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5676": 0.649262554223954,
+        "5953": 0.0
+      },
+      "mean_probability": 0.9681260585784912,
+      "name_displayed": true,
+      "original_slot_area": 152506,
+      "p10": 0.9428286552429199,
+      "raw_proposal_count": 2,
+      "reciprocal_iou": 0.6136555528453759,
+      "reciprocal_proposal": {
+        "confidence": 0.7129520773887634,
+        "x1": 611,
+        "x2": 1280,
+        "y1": 106,
+        "y2": 584
+      },
+      "reciprocal_proposal_index": 1,
+      "review_image": ".cache/cow-passage-entry-control/forensics/004.jpg",
+      "review_image_sha256": "7dfccda0f5744ef0b02ec6dd0ab67d31181cdeb79614bd25b7cc1ef0c89d7fb2",
+      "second": 2.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5676": 0.7029640900791236,
+        "5953": 0.0
+      },
+      "mean_probability": 0.9683109521865845,
+      "name_displayed": true,
+      "original_slot_area": 117535,
+      "p10": 0.9359721541404724,
+      "raw_proposal_count": 2,
+      "reciprocal_iou": 0.5490268780593891,
+      "reciprocal_proposal": {
+        "confidence": 0.7195075750350952,
+        "x1": 686,
+        "x2": 1279,
+        "y1": 161,
+        "y2": 634
+      },
+      "reciprocal_proposal_index": 1,
+      "review_image": ".cache/cow-passage-entry-control/forensics/005.jpg",
+      "review_image_sha256": "27488059d28b60300af4d5fa57e757af6e5b7ab8073f2ea1dbb540c0c41287dc",
+      "second": 2.5,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5676": 0.870436649964209,
+        "5953": 0.0
+      },
+      "mean_probability": 0.951480507850647,
+      "name_displayed": true,
+      "original_slot_area": 72951,
+      "p10": 0.8002862930297852,
+      "raw_proposal_count": 3,
+      "reciprocal_iou": 0.8837209302325582,
+      "reciprocal_proposal": {
+        "confidence": 0.7858648896217346,
+        "x1": 850,
+        "x2": 1280,
+        "y1": 212,
+        "y2": 532
+      },
+      "reciprocal_proposal_index": 1,
+      "review_image": ".cache/cow-passage-entry-control/forensics/006.jpg",
+      "review_image_sha256": "27fc2f3e4105cd7198be9a654ba90ca39ba93cc99d2884e0baee801af01e0e36",
+      "second": 3.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5676": 0.7396551724137931,
+        "5953": 0.0
+      },
+      "mean_probability": 0.8403709530830383,
+      "name_displayed": false,
+      "original_slot_area": 34116,
+      "p10": 0.5898023843765259,
+      "raw_proposal_count": 3,
+      "reciprocal_iou": 0.8382804503582395,
+      "reciprocal_proposal": {
+        "confidence": 0.801815927028656,
+        "x1": 964,
+        "x2": 1279,
+        "y1": 227,
+        "y2": 495
+      },
+      "reciprocal_proposal_index": 1,
+      "review_image": ".cache/cow-passage-entry-control/forensics/007.jpg",
+      "review_image_sha256": "b50bc1c87386ee33c24b2a2cc3cc2a026cf94c12b57cdbdb631089c4890c127f",
+      "second": 3.5,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5676": 0.0,
+        "5953": 0.17904363585668479
+      },
+      "mean_probability": 0.7530902624130249,
+      "name_displayed": false,
+      "original_slot_area": 32764,
+      "p10": 0.5838139057159424,
+      "raw_proposal_count": 2,
+      "reciprocal_iou": null,
+      "reciprocal_proposal": null,
+      "reciprocal_proposal_index": null,
+      "review_image": ".cache/cow-passage-entry-control/forensics/008.jpg",
+      "review_image_sha256": "55efba7940d2b35950a2a9cba1afc7e777d2753263d545fff4102541c5807bb0",
+      "second": 4.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5953": 0.3272781964939253
+      },
+      "mean_probability": 0.8434025645256042,
+      "name_displayed": false,
+      "original_slot_area": 89138,
+      "p10": 0.6575693488121033,
+      "raw_proposal_count": 1,
+      "reciprocal_iou": null,
+      "reciprocal_proposal": null,
+      "reciprocal_proposal_index": null,
+      "review_image": ".cache/cow-passage-entry-control/forensics/009.jpg",
+      "review_image_sha256": "1a82c0ccb3a31c261ec02a297c7b7cb68dc52850b3a492cac49289b14354135d",
+      "second": 4.5,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5953": 0.9572186753358662
+      },
+      "mean_probability": 0.8778088092803955,
+      "name_displayed": false,
+      "original_slot_area": 181236,
+      "p10": 0.6636009216308594,
+      "raw_proposal_count": 1,
+      "reciprocal_iou": 0.842452250912969,
+      "reciprocal_proposal": {
+        "confidence": 0.7335689067840576,
+        "x1": 320,
+        "x2": 1277,
+        "y1": 145,
+        "y2": 630
+      },
+      "reciprocal_proposal_index": 0,
+      "review_image": ".cache/cow-passage-entry-control/forensics/010.jpg",
+      "review_image_sha256": "ba76cffb8404417c42be24082186ff459fd0807020d930acac436ba703c82967",
+      "second": 5.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5953": 0.819050683829445
+      },
+      "mean_probability": 0.9660149812698364,
+      "name_displayed": true,
+      "original_slot_area": 168362,
+      "p10": 0.9500417113304138,
+      "raw_proposal_count": 1,
+      "reciprocal_iou": 0.6934383803708452,
+      "reciprocal_proposal": {
+        "confidence": 0.7956171631813049,
+        "x1": 459,
+        "x2": 1280,
+        "y1": 189,
+        "y2": 646
+      },
+      "reciprocal_proposal_index": 0,
+      "review_image": ".cache/cow-passage-entry-control/forensics/011.jpg",
+      "review_image_sha256": "918ea6c8a82106789d0b226195dcc973647201daa4c2cbca280a03af6d00071e",
+      "second": 5.5,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5953": 0.806062432768109
+      },
+      "mean_probability": 0.9584280252456665,
+      "name_displayed": true,
+      "original_slot_area": 140680,
+      "p10": 0.9243654608726501,
+      "raw_proposal_count": 1,
+      "reciprocal_iou": 0.6950546671335746,
+      "reciprocal_proposal": {
+        "confidence": 0.7356491088867188,
+        "x1": 621,
+        "x2": 1280,
+        "y1": 199,
+        "y2": 589
+      },
+      "reciprocal_proposal_index": 0,
+      "review_image": ".cache/cow-passage-entry-control/forensics/012.jpg",
+      "review_image_sha256": "300a2c02d38867ad50414d34d6fd9e25f92be51ddec6b40d46706a87d59d2ddf",
+      "second": 6.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5953": 0.6957302371541503
+      },
+      "mean_probability": 0.9429047107696533,
+      "name_displayed": true,
+      "original_slot_area": 106866,
+      "p10": 0.8445526361465454,
+      "raw_proposal_count": 1,
+      "reciprocal_iou": 0.7718133385951066,
+      "reciprocal_proposal": {
+        "confidence": 0.7452247738838196,
+        "x1": 719,
+        "x2": 1279,
+        "y1": 193,
+        "y2": 555
+      },
+      "reciprocal_proposal_index": 0,
+      "review_image": ".cache/cow-passage-entry-control/forensics/013.jpg",
+      "review_image_sha256": "3f8a99f9cbef5f42bcd526a55e766d9bb9c0a858269386547dcd101aaa84a320",
+      "second": 6.5,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5953": 0.7754584861620543
+      },
+      "mean_probability": 0.909605860710144,
+      "name_displayed": true,
+      "original_slot_area": 64747,
+      "p10": 0.7380821108818054,
+      "raw_proposal_count": 1,
+      "reciprocal_iou": 0.7330595482546202,
+      "reciprocal_proposal": {
+        "confidence": 0.655998945236206,
+        "x1": 792,
+        "x2": 1279,
+        "y1": 217,
+        "y2": 513
+      },
+      "reciprocal_proposal_index": 0,
+      "review_image": ".cache/cow-passage-entry-control/forensics/014.jpg",
+      "review_image_sha256": "34d3097b4a33a44d31c0ef84941074ba8fd728990e5a730d791726e6233e359c",
+      "second": 7.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5953": 0.6093670743391759
+      },
+      "mean_probability": 0.806239128112793,
+      "name_displayed": false,
+      "original_slot_area": 22699,
+      "p10": 0.5713992118835449,
+      "raw_proposal_count": 1,
+      "reciprocal_iou": 0.5210501966227157,
+      "reciprocal_proposal": {
+        "confidence": 0.5950545072555542,
+        "x1": 949,
+        "x2": 1279,
+        "y1": 254,
+        "y2": 516
+      },
+      "reciprocal_proposal_index": 0,
+      "review_image": ".cache/cow-passage-entry-control/forensics/015.jpg",
+      "review_image_sha256": "22ae36858570456674fffd5d27e662ea9a6961b8dd4bb7956aa4546dd063d1bc",
+      "second": 7.5,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {
+        "5953": 0.4139180802647909
+      },
+      "mean_probability": 0.7369462251663208,
+      "name_displayed": false,
+      "original_slot_area": 12001,
+      "p10": 0.6250331401824951,
+      "raw_proposal_count": 0,
+      "reciprocal_iou": null,
+      "reciprocal_proposal": null,
+      "reciprocal_proposal_index": null,
+      "review_image": ".cache/cow-passage-entry-control/forensics/016.jpg",
+      "review_image_sha256": "4a37a22b3bc2037712ee31d7e37e487fc417604434eca9ad60134ce1a11d74eb",
+      "second": 8.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {},
+      "mean_probability": null,
+      "name_displayed": false,
+      "original_slot_area": 0,
+      "p10": null,
+      "raw_proposal_count": 0,
+      "reciprocal_iou": null,
+      "reciprocal_proposal": null,
+      "reciprocal_proposal_index": null,
+      "review_image": ".cache/cow-passage-entry-control/forensics/017.jpg",
+      "review_image_sha256": "de8f8200490af364f9618cdc9873068e098757abfdd7733297bb00c6fff4d5ec",
+      "second": 8.5,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {},
+      "mean_probability": null,
+      "name_displayed": false,
+      "original_slot_area": 0,
+      "p10": null,
+      "raw_proposal_count": 0,
+      "reciprocal_iou": null,
+      "reciprocal_proposal": null,
+      "reciprocal_proposal_index": null,
+      "review_image": ".cache/cow-passage-entry-control/forensics/018.jpg",
+      "review_image_sha256": "b0e76e727a3c3614abd141704333fb6eac1e06e32cb9293f51033ea309ef16f3",
+      "second": 9.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {},
+      "mean_probability": null,
+      "name_displayed": false,
+      "original_slot_area": 0,
+      "p10": null,
+      "raw_proposal_count": 0,
+      "reciprocal_iou": null,
+      "reciprocal_proposal": null,
+      "reciprocal_proposal_index": null,
+      "review_image": ".cache/cow-passage-entry-control/forensics/019.jpg",
+      "review_image_sha256": "84d0f9bff6fbcbd0a69e16e1b743e9c92126b67080308150ec5f7c25a1c2e63b",
+      "second": 9.5,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {},
+      "mean_probability": null,
+      "name_displayed": false,
+      "original_slot_area": 0,
+      "p10": null,
+      "raw_proposal_count": 0,
+      "reciprocal_iou": null,
+      "reciprocal_proposal": null,
+      "reciprocal_proposal_index": null,
+      "review_image": ".cache/cow-passage-entry-control/forensics/020.jpg",
+      "review_image_sha256": "8a2fcdfe1ecd5f2c3536139d719a2a411e0fce828e6161b4cfa3a65eeddd13cf",
+      "second": 10.0,
+      "slot": 1
+    },
+    {
+      "conflicted_ids": [],
+      "lcc_box_iou_with_visible_truth": {},
+      "mean_probability": null,
+      "name_displayed": false,
+      "original_slot_area": 0,
+      "p10": null,
+      "raw_proposal_count": 0,
+      "reciprocal_iou": null,
+      "reciprocal_proposal": null,
+      "reciprocal_proposal_index": null,
+      "review_image": ".cache/cow-passage-entry-control/forensics/021.jpg",
+      "review_image_sha256": "6584dfd78b806720613d91fefd6ac5fc891ff7fcb3fd1d486b0504fd526a9edb",
+      "second": 10.5,
+      "slot": 1
+    }
+  ],
+  "scope": "Posthoc causal diagnostics, no parameter or outcome changes; truth IoU is used only here, never by inference.",
+  "sheets": [
+    {
+      "path": ".cache/cow-passage-entry-control/forensics/sheet-1.jpg",
+      "sha256": "3bfb7dfd9884f28fa8d5c33506cad0704ba371e6952a97f85969eb626f182474"
+    },
+    {
+      "path": ".cache/cow-passage-entry-control/forensics/sheet-2.jpg",
+      "sha256": "3f2cafab2bb59c35b9bb80edc2a32c84cef9fa390ccbc785cae5d2534aff5780"
+    }
+  ],
+  "strict_scoring_completed_before_continuity_integration": true
+}

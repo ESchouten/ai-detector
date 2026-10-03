@@ -1,0 +1,729 @@
+--- a/detector/ARCHITECTURE.md
++++ b/detector/ARCHITECTURE.md
+@@ -15,6 +15,12 @@
+ ## Dependency direction
+ 
+ The optional identity trial adds `ObservationIdentifier` to the pipeline's outgoing ports. It enriches only the newly inferred observation, before live publication and event assembly; retained context cannot advance identity agreement. `domain/identity.py` owns similarity/margin acceptance, conflicts and temporal agreement. The gallery adapter owns crop quality, sampling and I/O. Bootstrap shares one encoder per configured model and a content-addressed embedding cache, and closes the cache with the other resources. MPS encoders share YOLO's synchronization scope in `adapters/inference/device.py`.
++
++Live frames optionally carry a `CaptureStamp`: an opaque capture epoch, a decoded-frame sequence and monotonic read time. A reopened capture or changed native image geometry starts a new epoch. Subscriptions clear only that source's unread frames and sampling delay, and resizing, YOLO mapping and snapshot observations preserve the stamp. Existing positional constructors and metadata-free finite inputs remain supported; this metadata is internal and does not change configuration or archive schemas.
++
++Identity state is scoped by camera. An epoch/geometry change, backward wall clock, or observation gap larger than `max(5 seconds, 3 × identity sampling interval)` clears that camera's agreement and sampled matches. Monotonic capture gaps also detect interruptions when wall time changes. Repeated/out-of-order sequences and repeated wall timestamps provide no new identity evidence or displayed name. Invalid backward capture time is discarded and clears previous agreement; the following valid observations must establish identity again. Metadata-free callers use timestamp continuity: a reversed timestamp clears history but that frame is not evidence. A fresh capture stamp permits a real newly decoded frame after a wall-clock correction to start new agreement. Tracker placeholder images for inactive cameras remain outside the identity pipeline.
++
++These internal epochs do not immediately clear a previously published browser overlay when a camera disconnects. Live confirmation will also need an epoch-bearing source status and preview-freshness checks before it can safely bind a farmer's click to a current object. A decoded image with identical pixels is not automatically stale: a stationary scene is valid. Capture stamps establish local read continuity, not a camera firmware freshness guarantee or persistent animal identity.
+ 
+ The web app alone writes the human-confirmed identity catalog. Python publishes bounded, immutable sightings and reads the catalog by revision. Suggestions never enroll themselves. Encoder download and SQLite opening are deferred until at least two identities have reference photos; an empty or single-animal herd can collect photos without the identity weights. A lock shares the first model load across configured identity rules. One background executor prepares models and complete immutable galleries, with at most one outstanding preparation per identity rule. A catalog edit immediately clears previous names; a completed preparation is published only if its catalog still matches. The next observation schedules the latest revision after obsolete work finishes. The executor is joined before the shared cache closes.
+ 
+--- a/detector/MIGRATION.md
++++ b/detector/MIGRATION.md
+@@ -1,4 +1,8 @@
+ # Detector migration
++
++## Source continuity metadata — proposed isolated patch
++
++`Frame` and `Observation` gain an optional trailing `capture` field; existing positional constructors remain valid. Live streams create a new opaque epoch on camera reopen or native geometry change and preserve it through resizing and inference. The optional identity adapter clears only the affected camera's temporal and sampling state, ignores duplicate/out-of-order evidence, and requires fresh agreement after discontinuities. Snapshot mode preserves the same metadata. JSON configuration, archive files and live-preview files remain unchanged. This patch alone does not invalidate an old browser overlay immediately at disconnection; source-epoch status and live confirmation are separate work.
+ 
+ The rebuild covers the Python detector, its schemas, tests, and distributions. The Python rewrite preserved the web archive contract. The subsequent application setup work adds a combined web/native download and optional parent-controlled shutdown.
+ 
+--- a/detector/src/aidetector/adapters/inference/identity_observations.py
++++ b/detector/src/aidetector/adapters/inference/identity_observations.py
+@@ -28,7 +28,12 @@
+     choose_identity,
+     reject_conflicting_matches,
+ )
+-from aidetector.domain.models import BoundingBox, IdentityMatch, Observation
++from aidetector.domain.models import (
++    BoundingBox,
++    CaptureStamp,
++    IdentityMatch,
++    Observation,
++)
+ 
+ logger = logging.getLogger(__name__)
+ 
+@@ -78,6 +83,13 @@
+         if overlap / min(area, other_area) > max_overlap:
+             return False
+     return True
++
++
++@dataclass
++class _SourceState:
++    at: datetime
++    capture: CaptureStamp | None
++    shape: tuple[int, int]
+ 
+ 
+ @dataclass
+@@ -121,6 +133,40 @@
+         self._gallery = np.empty((0, encoder.dimension), dtype=np.float32)
+         self._owners: tuple[tuple[str, str], ...] = ()
+         self._tracks: dict[tuple[str, int | None], _Track] = {}
++        self._sources: dict[str, _SourceState] = {}
++
++    def _accept_observation(self, source: str, observation: Observation) -> bool:
++        previous = self._sources.get(source)
++        height, width = observation.image.shape[:2]
++        current = _SourceState(observation.date, observation.capture, (height, width))
++        if previous is None:
++            self._sources[source] = current
++            return True
++        old_epoch = previous.capture.epoch if previous.capture else None
++        epoch = current.capture.epoch if current.capture else None
++        elapsed = (current.at - previous.at).total_seconds()
++        captured_elapsed = elapsed
++        if epoch == old_epoch and current.capture and previous.capture:
++            if current.capture.sequence <= previous.capture.sequence:
++                return False
++            captured_elapsed = (
++                current.capture.monotonic_at - previous.capture.monotonic_at
++            )
++        self._sources[source] = current
++        if (
++            epoch != old_epoch
++            or current.shape != previous.shape
++            or min(elapsed, captured_elapsed) < 0
++            or max(elapsed, captured_elapsed) > self.agreement.max_gap
++        ):
++            self._clear_source(source)
++        return epoch != old_epoch or (captured_elapsed > 0 and elapsed != 0)
++
++    def _clear_source(self, source: str) -> None:
++        self.agreement.clear_source(source)
++        self._tracks = {
++            key: track for key, track in self._tracks.items() if key[0] != source
++        }
+ 
+     def _refresh_gallery(self) -> Catalog:
+         catalog = self.catalog.load()
+@@ -209,6 +255,16 @@
+     def identify(self, source: str, observation: Observation) -> Observation:
+         if self._retry_at is not None and self.clock() < self._retry_at:
+             return observation
++        if not self._accept_observation(source, observation):
++            return replace(
++                observation,
++                boxes=tuple(
++                    replace(box, identity=None)
++                    if box.label in self.settings.labels
++                    else box
++                    for box in observation.boxes
++                ),
++            )
+         try:
+             result = self._identify(source, observation)
+         except (OSError, sqlite3.Error, ValidationError):
+@@ -360,7 +416,7 @@
+             expired = same_source and (
+                 track_id not in current
+                 or (observation.date - track.at).total_seconds()
+-                > max(5, self.settings.sample_interval * 3)
++                > self.agreement.max_gap
+                 or observation.date < track.at
+             )
+             if expired:
+--- a/detector/src/aidetector/adapters/inference/yolo.py
++++ b/detector/src/aidetector/adapters/inference/yolo.py
+@@ -79,13 +79,21 @@
+             confidences[name] = max(confidences.get(name, 0), score)
+     detected_boxes = tuple(boxes)
+     context = tuple(
+-        Observation(frame.date, frame.image, {}, boxes=detected_boxes)
++        Observation(
++            frame.date, frame.image, {}, boxes=detected_boxes, capture=frame.capture
++        )
+         for frame in frames[:-1]
+     )
+     latest = frames[-1]
+     return (
+         *context,
+-        Observation(latest.date, latest.image, confidences, boxes=detected_boxes),
++        Observation(
++            latest.date,
++            latest.image,
++            confidences,
++            boxes=detected_boxes,
++            capture=latest.capture,
++        ),
+     )
+ 
+ 
+--- a/detector/src/aidetector/adapters/sources/streams.py
++++ b/detector/src/aidetector/adapters/sources/streams.py
+@@ -2,11 +2,15 @@
+ from collections import deque
+ from collections.abc import Generator, Iterator
+ from contextlib import contextmanager
++from dataclasses import replace
+ from datetime import datetime
+ from threading import Condition, Event, Thread
+ from time import monotonic
++from uuid import uuid4
+ 
+ import cv2
++import numpy as np
++from numpy.typing import NDArray
+ 
+ from aidetector.adapters.diagnostics import resource_label
+ from aidetector.adapters.media.images import even_width, shrink_image
+@@ -17,7 +21,7 @@
+     StatusEvent,
+     ignore_status,
+ )
+-from aidetector.domain.models import Frame
++from aidetector.domain.models import CaptureStamp, Frame
+ 
+ logger = logging.getLogger(__name__)
+ _CAPTURE_TIMEOUT_MS = 10000
+@@ -42,8 +46,25 @@
+         if width not in self._sizes:
+             image = shrink_image(self.original.image, width)
+             image.setflags(write=False)
+-            self._sizes[width] = Frame(self.original.date, image)
++            self._sizes[width] = replace(self.original, image=image)
+         return self._sizes[width]
++
++
++class _CaptureSession:
++    """Stamp frames from one open capture; geometry changes start a new epoch."""
++
++    def __init__(self):
++        self._shape: tuple[int, ...] | None = None
++        self._epoch = ""
++        self._sequence = 0
++
++    def frame(self, image: NDArray[np.uint8], sampled_at: float) -> CapturedFrame:
++        if image.shape != self._shape:
++            self._shape = image.shape
++            self._epoch, self._sequence = uuid4().hex, 0
++        stamp = CaptureStamp(self._epoch, self._sequence, sampled_at)
++        self._sequence += 1
++        return CapturedFrame(Frame(datetime.now(), image, stamp))
+ 
+ 
+ class StreamSource:
+@@ -63,12 +84,20 @@
+         self._condition = Condition()
+         self._frames: dict[str, deque[Frame]] = {}
+         self._next_sample = dict.fromkeys(sources, 0.0)
++        self._epochs: dict[str, str] = {}
+         self._closed = False
+         self._error: Exception | None = None
+ 
+     def publish(self, source: str, frame: CapturedFrame, sampled_at: float) -> None:
+         with self._condition:
+-            if self._closed or sampled_at < self._next_sample[source]:
++            if self._closed:
++                return
++            capture = frame.original.capture
++            if capture is not None and capture.epoch != self._epochs.get(source):
++                self._epochs[source] = capture.epoch
++                self._frames.pop(source, None)
++                self._next_sample[source] = 0.0
++            if sampled_at < self._next_sample[source]:
+                 return
+             self._next_sample[source] = sampled_at + self.interval
+             self._frames.setdefault(source, deque(maxlen=self.retention)).append(
+@@ -215,6 +244,7 @@
+                     )
+                 else:
+                     first_frame = True
++                    session = _CaptureSession()
+                     measured_at = monotonic()
+                     reads = 0
+                     read_seconds = publish_seconds = 0.0
+@@ -248,7 +278,7 @@
+                                 image.dtype,
+                             )
+                             first_frame = False
+-                        frame = CapturedFrame(Frame(datetime.now(), image))
++                        frame = session.frame(image, sampled_at)
+                         self.report_status(StatusEvent("frame", source))
+                         for subscriber in self._subscribers[source]:
+                             subscriber.publish(source, frame, sampled_at)
+--- a/detector/src/aidetector/application/pipeline.py
++++ b/detector/src/aidetector/application/pipeline.py
+@@ -35,7 +35,15 @@
+         if self.detector is None:
+             snapshots = [
+                 DetectionEvent(
+-                    source, (Observation(frames[-1].date, frames[-1].image, {}),)
++                    source,
++                    (
++                        Observation(
++                            frames[-1].date,
++                            frames[-1].image,
++                            {},
++                            capture=frames[-1].capture,
++                        ),
++                    ),
+                 )
+                 for source, frames in batch.frames.items()
+             ]
+--- a/detector/src/aidetector/domain/identity.py
++++ b/detector/src/aidetector/domain/identity.py
+@@ -113,3 +113,9 @@
+     def clear(self) -> None:
+         """Forget decisions after gallery changes; old confirmations must not persist."""
+         self._tracks.clear()
++
++    def clear_source(self, source: str) -> None:
++        """A camera discontinuity invalidates only that camera's track history."""
++        self._tracks = {
++            key: state for key, state in self._tracks.items() if key[0] != source
++        }
+--- a/detector/src/aidetector/domain/models.py
++++ b/detector/src/aidetector/domain/models.py
+@@ -46,11 +46,21 @@
+ 
+ 
+ @dataclass(frozen=True)
++class CaptureStamp:
++    """Live capture epoch, decoded-frame sequence and monotonic read time."""
++
++    epoch: str
++    sequence: int
++    monotonic_at: float
++
++
++@dataclass(frozen=True)
+ class Frame:
+     """Source timestamp and borrowed read-only uint8 H×W×3 BGR pixels."""
+ 
+     date: datetime
+     image: NDArray[np.uint8]
++    capture: CaptureStamp | None = None
+ 
+ 
+ @dataclass(frozen=True)
+@@ -65,6 +75,7 @@
+     image: NDArray[np.uint8]
+     confidence: Mapping[str, float]
+     boxes: tuple[BoundingBox, ...] = ()
++    capture: CaptureStamp | None = None
+ 
+     @property
+     def enclosing_box(self) -> BoundingBox | None:
+--- a/detector/tests/adapters/inference/test_identity_observations.py
++++ b/detector/tests/adapters/inference/test_identity_observations.py
+@@ -1,6 +1,7 @@
+ import json
+ import sqlite3
+ from concurrent.futures import CancelledError, Executor, Future
++from dataclasses import replace
+ from datetime import datetime, timedelta
+ from threading import Event
+ 
+@@ -20,7 +21,12 @@
+     usable_crop,
+ )
+ from aidetector.configuration import IdentityConfig
+-from aidetector.domain.models import BoundingBox, IdentityMatch, Observation
++from aidetector.domain.models import (
++    BoundingBox,
++    CaptureStamp,
++    IdentityMatch,
++    Observation,
++)
+ 
+ START = datetime(2026, 1, 1)
+ BELLA, DAISY = "a" * 32, "b" * 32
+@@ -115,7 +121,7 @@
+         cache.close()
+ 
+ 
+-def observation(second, *subjects):
++def observation(second, *subjects, capture=None):
+     image = np.zeros((200, 240, 3), dtype=np.uint8)
+     boxes = []
+     for track_id, color, coordinates, label in subjects:
+@@ -123,7 +129,11 @@
+         image[max(0, y1) : min(200, y2), max(0, x1) : min(240, x2)] = color
+         boxes.append(BoundingBox(x1, y1, x2, y2, label, 0.95, track_id))
+     return Observation(
+-        START + timedelta(seconds=second), image, {"cow": 0.95}, tuple(boxes)
++        START + timedelta(seconds=second),
++        image,
++        {"cow": 0.95},
++        tuple(boxes),
++        capture=capture,
+     )
+ 
+ 
+@@ -162,6 +172,139 @@
+     assert [item["gallery_revision"] for item in captured if item["track_id"] == 7] == [
+         1
+     ]
++
++
++def test_quick_reconnect_restarts_only_that_cameras_identity_and_sampling(environment):
++    identifier, _, encoder, _ = environment
++    for second in range(3):
++        old = identifier.identify(
++            "camera",
++            observation(second, cow(), capture=CaptureStamp("old", second, second)),
++        )
++        identifier.identify(
++            "other",
++            observation(
++                second, cow(color=GREEN), capture=CaptureStamp("other", second, second)
++            ),
++        )
++    assert old.boxes[0].identity.identity_id == BELLA
++    calls = len(encoder.calls)
++    returned = identifier.identify(
++        "camera", observation(2.1, cow(), capture=CaptureStamp("new", 0, 2.1))
++    )
++    assert returned.boxes[0].identity.identity_id is None
++    assert len(encoder.calls) == calls + 1  # No cached pre-reconnect sample.
++    unaffected = identifier.identify(
++        "other",
++        observation(2.2, cow(color=GREEN), capture=CaptureStamp("other", 3, 2.2)),
++    )
++    assert unaffected.boxes[0].identity.identity_id == DAISY
++    for sequence, second in enumerate((3.2, 4.3), start=1):
++        returned = identifier.identify(
++            "camera",
++            observation(second, cow(), capture=CaptureStamp("new", sequence, second)),
++        )
++        assert (returned.boxes[0].identity.identity_id == BELLA) == (sequence == 2)
++
++
++@pytest.mark.parametrize(
++    "wall,monotonic_at",
++    [(2.1, 20), (20, 3), (-10, 3)],
++    ids=["capture-gap", "wall-gap", "wall-clock-reversal"],
++)
++def test_discontinuous_clock_requires_fresh_identity_agreement(
++    environment, wall, monotonic_at
++):
++    identifier, _, _, _ = environment
++    for second in range(3):
++        identifier.identify(
++            "camera",
++            observation(second, cow(), capture=CaptureStamp("epoch", second, second)),
++        )
++    for offset in range(3):
++        stamp = CaptureStamp("epoch", 3 + offset, monotonic_at + offset)
++        result = identifier.identify(
++            "camera", observation(wall + offset, cow(), capture=stamp)
++        )
++        assert result.capture is stamp
++        assert (result.boxes[0].identity.identity_id == BELLA) == (offset == 2)
++
++
++def test_duplicate_and_delayed_frames_neither_display_names_nor_add_evidence(
++    environment,
++):
++    identifier, catalog, encoder, _ = environment
++    for second in range(3):
++        latest = identifier.identify(
++            "camera",
++            observation(second, cow(), capture=CaptureStamp("epoch", second, second)),
++        )
++    assert latest.boxes[0].identity.identity_id == BELLA
++    calls = len(encoder.calls)
++    files = set((catalog.directory / "sightings").iterdir())
++    delayed = replace(latest, date=START + timedelta(seconds=20))
++    for stale in (
++        latest,
++        delayed,
++        observation(1, cow(), capture=CaptureStamp("epoch", 1, 1)),
++    ):
++        assert identifier.identify("camera", stale).boxes[0].identity is None
++    assert len(encoder.calls) == calls
++    assert set((catalog.directory / "sightings").iterdir()) == files
++    fresh = identifier.identify(
++        "camera", observation(3, cow(), capture=CaptureStamp("epoch", 3, 3))
++    )
++    assert fresh.boxes[0].identity.identity_id == BELLA
++
++
++def test_metadata_free_repeated_timestamps_do_not_reuse_a_displayed_name(environment):
++    identifier, _, encoder, _ = environment
++    for second in range(3):
++        latest = identifier.identify("camera", observation(second, cow()))
++    calls = len(encoder.calls)
++    assert identifier.identify("camera", latest).boxes[0].identity is None
++    assert len(encoder.calls) == calls
++    assert (
++        identifier.identify("camera", observation(-1, cow())).boxes[0].identity is None
++    )
++    assert len(encoder.calls) == calls
++    for second in range(3):
++        result = identifier.identify("camera", observation(second, cow()))
++        assert (result.boxes[0].identity.identity_id == BELLA) == (second == 2)
++
++
++def test_reversed_capture_clock_discards_that_frame_and_clears_prior_names(environment):
++    identifier, _, encoder, _ = environment
++    for second in range(3):
++        identifier.identify(
++            "camera",
++            observation(second, cow(), capture=CaptureStamp("epoch", second, second)),
++        )
++    calls = len(encoder.calls)
++    reversed_clock = observation(3, cow(), capture=CaptureStamp("epoch", 3, 1))
++    assert identifier.identify("camera", reversed_clock).boxes[0].identity is None
++    assert len(encoder.calls) == calls
++    for offset in range(3):
++        result = identifier.identify(
++            "camera",
++            observation(
++                4 + offset, cow(), capture=CaptureStamp("epoch", 4 + offset, 2 + offset)
++            ),
++        )
++        assert (result.boxes[0].identity.identity_id == BELLA) == (offset == 2)
++
++
++def test_geometry_change_clears_identity_even_without_capture_metadata(environment):
++    identifier, _, _, _ = environment
++    for second in range(3):
++        identifier.identify("camera", observation(second, cow()))
++    for offset in range(3):
++        original = observation(2.1 + offset, cow())
++        changed = replace(
++            original, image=np.pad(original.image, ((0, 10), (0, 0), (0, 0)))
++        )
++        result = identifier.identify("camera", changed)
++        assert (result.boxes[0].identity.identity_id == BELLA) == (offset == 2)
+ 
+ 
+ def test_removed_gallery_reference_clears_previously_confirmed_identity(environment):
+--- a/detector/tests/adapters/inference/test_yolo.py
++++ b/detector/tests/adapters/inference/test_yolo.py
+@@ -1,4 +1,5 @@
+ from concurrent.futures import ThreadPoolExecutor
++from dataclasses import replace
+ from datetime import datetime, timedelta
+ from threading import Barrier, Event, get_ident
+ from types import SimpleNamespace
+@@ -19,8 +20,10 @@
+     map_observations,
+     resolve_classes,
+ )
++from aidetector.application.pipeline import DetectionPipeline
++from aidetector.application.ports import SourceBatch
+ from aidetector.configuration import YoloConfig
+-from aidetector.domain.models import Frame
++from aidetector.domain.models import CaptureStamp, Frame
+ 
+ 
+ def result(boxes=(), *, tracking=False):
+@@ -71,15 +74,23 @@
+ 
+ 
+ def test_tracker_ids_are_preserved_without_changing_context_frame_scores():
++    frames = tuple(
++        replace(frame(second), capture=CaptureStamp("epoch", second, float(second)))
++        for second in (0, 1)
++    )
+     observations = map_observations(
+         result([[10, 20, 30, 40, 7, 0.8, 0]], tracking=True),
+-        (frame(0), frame(1)),
++        frames,
+         {0: ("cow", 0.5)},
+     )
+     assert observations[0].confidence == {}
+     assert observations[1].confidence == {"cow": pytest.approx(0.8)}
+     assert observations[0].boxes == observations[1].boxes
+     assert observations[1].boxes[0].track_id == 7
++    assert all(
++        observation.capture is original.capture
++        for observation, original in zip(observations, frames, strict=True)
++    )
+ 
+ 
+ def test_no_boxes_still_produce_unscored_observations_for_trailing_footage():
+@@ -102,6 +113,29 @@
+     def track(self, **kwargs):
+         self.calls.append(kwargs)
+         return [result([[1, 2, 3, 4, 0.9, 0]]) for _ in kwargs["source"].sources]
++
++
++def test_tracker_placeholders_do_not_reach_identity_as_new_camera_evidence():
++    observed = []
++
++    class Identifier:
++        def identify(self, source, observation):
++            observed.append((source, observation.capture))
++            return observation
++
++    detector = YoloDetector(
++        Model(),
++        YoloConfig(model="model.onnx", tracking=True),
++        ("one", "two"),
++        InferenceOptions(),
++    )
++    pipeline = DetectionPipeline(detector, identifier=Identifier())
++    first = replace(frame(0), capture=CaptureStamp("first", 0, 0))
++    second = replace(frame(1), capture=CaptureStamp("second", 0, 1))
++    pipeline.process(SourceBatch({"one": (first,)}))
++    pipeline.process(SourceBatch({"two": (second,)}))
++
++    assert observed == [("one", first.capture), ("two", second.capture)]
+ 
+ 
+ @pytest.mark.parametrize(
+--- a/detector/tests/adapters/sources/test_shared_streams.py
++++ b/detector/tests/adapters/sources/test_shared_streams.py
+@@ -14,7 +14,7 @@
+ from aidetector.adapters.sources.streams import CapturedFrame, StreamPool, StreamSource
+ from aidetector.bootstrap import run_application
+ from aidetector.configuration import Config
+-from aidetector.domain.models import Frame
++from aidetector.domain.models import CaptureStamp, Frame
+ from tests.support.onnx_model import write_detection_model
+ 
+ 
+@@ -204,13 +204,18 @@
+         cameras["0"].flush()
+         frames = [next(batch).frames["0"][0] for batch in batches]
+         assert frames[0] is frames[1]
++        assert all(frame.capture is frames[0].capture for frame in frames)
++        assert frames[0].capture.sequence == 0
+         for frame, width in zip(frames, (32, 33, 16), strict=True):
+             np.testing.assert_array_equal(frame.image, shrink_image(image, width))
+             assert not frame.image.flags.writeable
+-        cameras["0"].send(123)
++        cameras["0"].inputs.put(np.full_like(image, 123))
+         cameras["0"].flush()
+         updated = next(batches[0]).frames["0"][0]
+         assert updated is not frames[0]
++        assert updated.capture.epoch == frames[0].capture.epoch
++        assert updated.capture.sequence == 1
++        assert updated.capture.monotonic_at > frames[0].capture.monotonic_at
+         assert np.all(updated.image == 123)
+         np.testing.assert_array_equal(frames[0].image, shrink_image(image, 32))
+ 
+@@ -265,11 +270,17 @@
+     with running(streams, cameras):
+         camera.send(1)
+         camera.flush()
+-        assert pixels(next(left), "0") == pixels(next(right), "0") == [1]
++        before = next(left).frames["0"][0]
++        assert int(before.image[0, 0, 0]) == pixels(next(right), "0")[0] == 1
+         camera.finish()
+         camera.send(2)
+         camera.flush()
+-        assert pixels(next(left), "0") == pixels(next(right), "0") == [2]
++        after = next(left).frames["0"][0]
++        shared = next(right).frames["0"][0]
++        assert int(after.image[0, 0, 0]) == int(shared.image[0, 0, 0]) == 2
++        assert after.capture is shared.capture
++        assert before.capture.epoch != after.capture.epoch
++        assert before.capture.sequence == after.capture.sequence == 0
+         assert camera.opens == 2
+     assert camera.releases == 2
+     openings = [
+@@ -288,6 +299,55 @@
+         )
+         == 2
+     )
++
++
++def test_new_epoch_drops_only_its_cameras_unread_frames_and_sampling_wait():
++    subscription = StreamSource(("one", "two"), retention=3, interval=10, width=16)
++    started = datetime(2026, 1, 1)
++
++    def publish(source, value, at, epoch):
++        frame = Frame(
++            started + timedelta(seconds=at),
++            np.full((32, 32, 3), value, dtype=np.uint8),
++            CaptureStamp(epoch, 0, at),
++        )
++        subscription.publish(source, CapturedFrame(frame), at)
++        return frame
++
++    publish("one", 1, 0, "before")
++    other = publish("two", 2, 0.1, "other")
++    replacement = publish("one", 3, 0.2, "after")
++    batch = next(subscription.batches())
++
++    assert pixels(batch, "one") == [3]
++    assert pixels(batch, "two") == [2]
++    assert batch.frames["one"][0].capture is replacement.capture
++    assert batch.frames["two"][0].capture is other.capture
++    assert batch.frames["one"][0].image.shape == (16, 16, 3)
++
++
++def test_geometry_change_starts_a_new_epoch_only_for_the_changed_camera(cameras):
++    streams = StreamPool()
++    subscription = streams.subscribe(("0", "1"), width=32)
++    batches = subscription.batches()
++    with running(streams, cameras):
++        for source in ("0", "1"):
++            cameras[source].send(1)
++            cameras[source].flush()
++        first = next(batches)
++        cameras["0"].inputs.put(np.zeros((128, 128, 3), dtype=np.uint8))
++        cameras["0"].flush()
++        cameras["1"].send(2)
++        cameras["1"].flush()
++        following = next(batches)
++
++    before = first.frames["0"][0]
++    changed = following.frames["0"][0]
++    assert before.image.shape == changed.image.shape == (32, 32, 3)
++    assert before.capture.epoch != changed.capture.epoch
++    assert changed.capture.sequence == 0
++    assert first.frames["1"][0].capture.epoch == following.frames["1"][0].capture.epoch
++    assert following.frames["1"][0].capture.sequence == 1
+ 
+ 
+ @pytest.mark.parametrize("use_yolo", [False, True])
+--- a/detector/tests/application/test_pipeline.py
++++ b/detector/tests/application/test_pipeline.py
+@@ -5,7 +5,13 @@
+ 
+ from aidetector.application.pipeline import DetectionPipeline
+ from aidetector.application.ports import SourceBatch
+-from aidetector.domain.models import BoundingBox, Frame, IdentityMatch, Observation
++from aidetector.domain.models import (
++    BoundingBox,
++    CaptureStamp,
++    Frame,
++    IdentityMatch,
++    Observation,
++)
+ from aidetector.domain.policy import EventPolicy
+ 
+ 
+@@ -25,7 +31,9 @@
+     pipeline = DetectionPipeline()
+     image = np.zeros((8, 8, 3), dtype=np.uint8)
+     first = Frame(datetime(2026, 1, 1), image)
+-    latest = Frame(first.date + timedelta(seconds=1), image.copy())
++    latest = Frame(
++        first.date + timedelta(seconds=1), image.copy(), CaptureStamp("camera", 1, 1)
++    )
+ 
+     events = pipeline.process(SourceBatch({"one": (first, latest), "two": (first,)}))
+ 
+@@ -34,6 +42,7 @@
+         assert len(event.observations) == 1
+         assert event.best.date == frame.date
+         assert event.best.image is frame.image
++        assert event.best.capture is frame.capture
+         assert event.best.confidence == {}
+         assert event.best.boxes == ()
+     assert pipeline.finish() == []
+--- a/detector/tests/domain/test_identity.py
++++ b/detector/tests/domain/test_identity.py
+@@ -102,6 +102,17 @@
+     assert agreement.update("camera", 7, at(5), BELLA) == BELLA
+ 
+ 
++def test_camera_reset_does_not_remove_another_cameras_agreement():
++    agreement = TrackAgreement()
++    for second in range(3):
++        agreement.update("camera", 7, at(second), BELLA)
++        agreement.update("other", 7, at(second), DAISY)
++    agreement.clear_source("camera")
++
++    assert agreement.update("camera", 7, at(3), BELLA).identity_id is None
++    assert agreement.update("other", 7, at(3), DAISY) == DAISY
++
++
+ def test_stale_cleanup_only_discards_expired_tracks_for_its_source():
+     agreement = TrackAgreement()
+     for second in range(3):

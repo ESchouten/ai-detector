@@ -1,0 +1,861 @@
+{
+  "configuration": {
+    "amp": false,
+    "chunk_size": -1,
+    "dataset": "d17-val",
+    "datasets": {
+      "burst-test": {
+        "image_directory": "../BURST/frames/test",
+        "json_directory": "../BURST/test/first_frame_annotations.json",
+        "mem_every": 10,
+        "save_all": false,
+        "size": 600,
+        "skip_frames": -1,
+        "use_long_term": true
+      },
+      "burst-val": {
+        "image_directory": "../BURST/frames/val",
+        "json_directory": "../BURST/val/first_frame_annotations.json",
+        "mem_every": 10,
+        "save_all": false,
+        "size": 600,
+        "skip_frames": -1,
+        "use_long_term": true
+      },
+      "d16-val": {
+        "image_directory": "../DAVIS/2016/JPEGImages/480p",
+        "mask_directory": "../DAVIS/2016/Annotations/480p",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "subset": "../DAVIS/2017/trainval/ImageSets/2016/val.txt",
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "d17-test-dev": {
+        "image_directory": "../DAVIS/2017/test-dev/JPEGImages/480p",
+        "mask_directory": "../DAVIS/2017/test-dev/Annotations/480p",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "subset": "../DAVIS/2017/test-dev/ImageSets/2017/test-dev.txt",
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "d17-val": {
+        "image_directory": "../DAVIS/2017/trainval/JPEGImages/480p",
+        "mask_directory": "../DAVIS/2017/trainval/Annotations/480p",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "subset": "../DAVIS/2017/trainval/ImageSets/2017/val.txt",
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "generic": {
+        "image_directory": null,
+        "mask_directory": null,
+        "mem_every": 5,
+        "save_all": true,
+        "size": -1,
+        "use_all_masks": false,
+        "use_long_term": true
+      },
+      "lvos-test": {
+        "image_directory": "../LVOS/test/JPEGImages",
+        "mask_directory": "../LVOS/test/Annotations",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": true
+      },
+      "lvos-val": {
+        "image_directory": "../LVOS/valid/JPEGImages",
+        "mask_directory": "../LVOS/valid/Annotations_first_only",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": true
+      },
+      "mose-val": {
+        "image_directory": "../MOSE/valid/JPEGImages",
+        "mask_directory": "../MOSE/valid/Annotations",
+        "mem_every": 5,
+        "save_all": true,
+        "size": 480,
+        "use_all_masks": false,
+        "use_long_term": false
+      },
+      "y18-val": {
+        "image_directory": "../YouTube2018/all_frames/valid_all_frames/JPEGImages",
+        "json_directory": "../YouTube2018/valid/meta.json",
+        "mask_directory": "../YouTube2018/valid/Annotations",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": false
+      },
+      "y19-val": {
+        "image_directory": "../YouTube/all_frames/valid_all_frames/JPEGImages",
+        "json_directory": "../YouTube/valid/meta.json",
+        "mask_directory": "../YouTube/valid/Annotations",
+        "mem_every": 5,
+        "save_all": false,
+        "size": 480,
+        "use_all_masks": true,
+        "use_long_term": false
+      }
+    },
+    "exp_id": "default",
+    "flip_aug": false,
+    "image_directory": null,
+    "json_directory": null,
+    "long_term": {
+      "buffer_tokens": 2000,
+      "count_usage": true,
+      "max_mem_frames": 10,
+      "max_num_tokens": 10000,
+      "min_mem_frames": 5,
+      "num_prototypes": 128
+    },
+    "mask_directory": null,
+    "max_internal_size": 480,
+    "max_mem_frames": 5,
+    "mem_every": 5,
+    "model": {
+      "aux_loss": {
+        "query": {
+          "enabled": true,
+          "weight": 0.01
+        },
+        "sensory": {
+          "enabled": true,
+          "weight": 0.01
+        }
+      },
+      "embed_dim": 256,
+      "key_dim": 64,
+      "mask_decoder": {
+        "up_dims": [
+          256,
+          128,
+          128
+        ]
+      },
+      "mask_encoder": {
+        "final_dim": 256,
+        "type": "resnet18"
+      },
+      "object_summarizer": {
+        "add_pe": true,
+        "embed_dim": 256,
+        "num_summaries": 16
+      },
+      "object_transformer": {
+        "embed_dim": 256,
+        "ff_dim": 2048,
+        "num_blocks": 3,
+        "num_heads": 8,
+        "num_queries": 16,
+        "pixel_self_attention": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "query_self_attention": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "read_from_memory": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "read_from_past": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ]
+        },
+        "read_from_pixel": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ],
+          "input_add_pe": false,
+          "input_norm": false
+        },
+        "read_from_query": {
+          "add_pe_to_qkv": [
+            true,
+            true,
+            false
+          ],
+          "output_norm": false
+        }
+      },
+      "pixel_dim": 256,
+      "pixel_encoder": {
+        "ms_dims": [
+          1024,
+          512,
+          256
+        ],
+        "type": "resnet50"
+      },
+      "pixel_mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "pixel_pe_scale": 32,
+      "pixel_pe_temperature": 128,
+      "pixel_std": [
+        0.229,
+        0.224,
+        0.225
+      ],
+      "sensory_dim": 256,
+      "value_dim": 256
+    },
+    "output_dir": null,
+    "save_all": null,
+    "save_aux": false,
+    "save_scores": false,
+    "size": null,
+    "stagger_updates": 5,
+    "top_k": 30,
+    "use_all_masks": null,
+    "use_long_term": true,
+    "visualize": false,
+    "weights": "output/cutie-base-mega.pth"
+  },
+  "cycles": [
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 0,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 1.283877084031701
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 1,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.0618475410155952
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 2,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.056645582895725965
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 3,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.052995125064626336
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 4,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05321824993006885
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 5,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.053388334112241864
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 6,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05400966596789658
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 7,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.052237417083233595
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 8,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.052515000104904175
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 9,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05994508299045265
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 10,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.060342957964167
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 11,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.057882375083863735
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 12,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.054441292071715
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 13,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.055700791999697685
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 14,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05417250003665686
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 15,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.0579264999832958
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 16,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05965250008739531
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 17,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05878808302804828
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 18,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.057781416922807693
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 19,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05546579207293689
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 20,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.055209208047017455
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 21,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.054109042044728994
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 22,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.053788833087310195
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 23,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.053410500055179
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 24,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05403920798562467
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 25,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05512666702270508
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 26,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.055146540980786085
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 27,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.059375499840825796
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 28,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05836983397603035
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 29,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.055852292105555534
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 30,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.0555540828499943
+    },
+    {
+      "checks": {
+        "all_bucket_offsets_removed": true,
+        "all_previous_channels_removed": true,
+        "all_summaries_removed": true,
+        "new_object_has_only_its_bucket_offset": true,
+        "new_object_has_only_its_summary": true,
+        "next_step_reads_survivor_mask": true,
+        "retired_summary_removed": true,
+        "survivor_channel_compacted": true
+      },
+      "cycle": 31,
+      "historical_ids_before_core_disposal": 3,
+      "mps_allocated_bytes": 140453120,
+      "mps_driver_before_reclaim_bytes": 192888832,
+      "mps_driver_bytes": 192888832,
+      "new_core_empty": true,
+      "seconds": 0.05525558302178979
+    }
+  ],
+  "device": "mps",
+  "failure": null,
+  "passed": true,
+  "protocol_sha256": "3b0e3d2e301be6a45f27c09e36eb59781d2314545a2cfba2aefc8724111b484c",
+  "scope": "32 independent real FP32 MPS core lifecycles on identical synthetic96x128 pixels. Survivor-channel ownership, full deletion, noncontiguous re-addition, then explicit core disposal/recreation with shared model weights. No animal accuracy, automatic absence policy, persistent nonempty-camera endurance or live performance claim.",
+  "torch": "2.12.1"
+}

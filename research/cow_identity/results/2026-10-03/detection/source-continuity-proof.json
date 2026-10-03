@@ -1,0 +1,97 @@
+{
+  "changed_files": [
+    {
+      "after_sha256": "a63bf13d163b0384059b078dabc9b3754382165d215db5b5a8d134a5eb5858be",
+      "before_sha256": "58986e7d4c782266a862fd5dcec6e88dc0e2fe3c9c64b33bb39d70a75d9fd90c",
+      "path": "detector/ARCHITECTURE.md"
+    },
+    {
+      "after_sha256": "c59e5a8ee03fd417d57aba79ef87d79714339a0ad824d729b67021c3d5a0cf28",
+      "before_sha256": "8e5905c7a5dc9cad68f21fe249274bba7867042d35f35cb22c192c5391ca14af",
+      "path": "detector/MIGRATION.md"
+    },
+    {
+      "after_sha256": "209c3bf59f92baab01388dcb36930e1e2e3d57fdc0227aeef0cadbab8443d9e8",
+      "before_sha256": "937b275e369e414bb0fff7c2630ff3e81e902cde17996a916c5b53aaa6a0d615",
+      "path": "detector/src/aidetector/adapters/inference/identity_observations.py"
+    },
+    {
+      "after_sha256": "f1bd6e4a0d3a53b9d7902604cf7836cfd64ae138728197dd2bfca01b0e3c0ec1",
+      "before_sha256": "91d7dc726ceef45d93dd6d59e94e0c5ed99f694ee4b3bb38db13ced79734e3e5",
+      "path": "detector/src/aidetector/adapters/inference/yolo.py"
+    },
+    {
+      "after_sha256": "9ceff5823d2a493e9c8b727938d3048d9d889ab084f756e5fe12bf662b8b35f4",
+      "before_sha256": "ef2e85bd608180627a68dd6d7f540cfd36af9ec511de3c0c0427eb462a20e6a9",
+      "path": "detector/src/aidetector/adapters/sources/streams.py"
+    },
+    {
+      "after_sha256": "016144b30a4a0602d6dbfefe0423b65e48a67769d2abaebbf2cbdef6ab016127",
+      "before_sha256": "b75ebfa3453c1e1ea325f6e46d230986e994cf611892a7b4eec6c020b6593cb6",
+      "path": "detector/src/aidetector/application/pipeline.py"
+    },
+    {
+      "after_sha256": "de5fcc34f51688ff383e266d12e5bd7a3a27b6ddbce8384e39063a0f37fb3967",
+      "before_sha256": "0c07035535816d507b85631fe7913e36b4c50302503590b7490f0c9f00e686cd",
+      "path": "detector/src/aidetector/domain/identity.py"
+    },
+    {
+      "after_sha256": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0",
+      "before_sha256": "8121c45555913af9962a94d20129816d299b36821242a8a5f17830bf778f5896",
+      "path": "detector/src/aidetector/domain/models.py"
+    },
+    {
+      "after_sha256": "15dc2494830aeb52848abcf1d38be853d55e34ce685fd77c595afbee24cdef3b",
+      "before_sha256": "f8573323969515cc431b8cb9d39de4d134681717c79c22edfd6ec0de49c66b17",
+      "path": "detector/tests/adapters/inference/test_identity_observations.py"
+    },
+    {
+      "after_sha256": "f6b1920ac0a29c3c2040bc85bc1839f6e3dcae4f74cc03ddbba431a55c8670bd",
+      "before_sha256": "c1b08861526afa925cc81fe1ba8f0a15f7c40646e781bc1c4b78ab55ead4b0d5",
+      "path": "detector/tests/adapters/inference/test_yolo.py"
+    },
+    {
+      "after_sha256": "7298046d471c42ee3e1ebbb9fc30fded1699bde4b0a48fc0440cc87aead47ea1",
+      "before_sha256": "5fdfabd799486c4ae170e41877c61d1cdbe6ff7033c696f624f586aad7cffa41",
+      "path": "detector/tests/adapters/sources/test_shared_streams.py"
+    },
+    {
+      "after_sha256": "fd22126c29df019508a59bf5a8374e60c3acb1ecd7c060280c996a46ddb917e3",
+      "before_sha256": "9ba4b6eb09b1debeaa1f6995389226cd48204d7af2703d79ecb5085fa146c4fe",
+      "path": "detector/tests/application/test_pipeline.py"
+    },
+    {
+      "after_sha256": "58080f1db28a8da0b2cd3df2578375bba22f820565bee6aa42bf73b6597bf67a",
+      "before_sha256": "b0c0c3b4f9cd82f12246f173393216d4b72a26b7bbc3a9c47f1dce51b23b01f4",
+      "path": "detector/tests/domain/test_identity.py"
+    }
+  ],
+  "isolated_directory": "/tmp/cow-source-continuity-proof/detector",
+  "limits": [
+    "Does not immediately remove previously published browser overlays on disconnect; future source-epoch status and preview freshness are still required",
+    "No live confirmation command or UI implementation",
+    "Does not reset upstream YOLO trackers; it prevents cached identity transfer and requires new visual evidence",
+    "Cannot distinguish a genuinely stationary image from camera firmware repeating pixels with successful fresh reads",
+    "Full packaging, schema and repository-wide suite not repeated; relevant isolated CPU behavioral and source type checks passed"
+  ],
+  "patch_sha256": "4a67f941d51297716c18f2a592f06647bb4783357b61aedc0206b9312b7ff6dd",
+  "policy": {
+    "clock": "Nonpositive same-epoch capture delta cannot add evidence; backward capture delta resets state. Repeated wall timestamps ignored. With fresh monotonic capture evidence a backward wall clock begins fresh agreement; without capture metadata the reversed-time frame is discarded after reset.",
+    "duplicates": "Same-epoch nonincreasing capture sequence ignored without mutating progress; no identity shown and no encoder/review call",
+    "epoch": "Fresh UUID on capture reopen or changed native shape; shared across subscribers and preserved through resize/snapshot/YOLO",
+    "placeholders": "YOLO placeholders for inactive sources never enter the identifier",
+    "queue": "New epoch clears only that source unread queue and sampling deadline",
+    "reset": "Per-source agreement, sampled candidates/names and saved-photo cadence reset on epoch/geometry change, backward wall clock, or wall/monotonic gap > max(5s,3*identity sample interval)"
+  },
+  "scope": "Isolated proposed source continuity patch only; no production source, tests or frozen evaluator files changed",
+  "validation": {
+    "hardware": "CPU only; Apple MPS case skipped; no real cameras used",
+    "import_probe": "aidetector.domain.models resolved to /tmp/cow-source-continuity-proof/detector/src/aidetector/domain/models.py",
+    "production_source_and_tests_unchanged": true,
+    "pytest": "121 passed, 1 skipped in 4.86s",
+    "pytest_command": "PYTHONPATH=/tmp/cow-source-continuity-proof/detector/src MPLCONFIGDIR=/tmp/cow-identity-matplotlib /Users/erik/Projects/ESchouten/ai-detector/detector/.venv/bin/python -m pytest -q tests/domain/test_identity.py tests/domain/test_models.py tests/adapters/inference/test_identity_observations.py tests/adapters/inference/test_yolo.py tests/application/test_pipeline.py tests/adapters/sources/test_shared_streams.py tests/adapters/sources/test_sources.py",
+    "ruff": "passed: changed Python files; import classification uses repository absolute source roots, preserving existing third-party/first-party groups",
+    "ty": "passed: entire isolated src",
+    "working_directory": "/tmp/cow-source-continuity-proof/detector"
+  }
+}

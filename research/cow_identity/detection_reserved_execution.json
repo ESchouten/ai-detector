@@ -1,0 +1,162 @@
+{
+  "anonymous_cows": [
+    7,
+    8
+  ],
+  "cache_reclaim_bytes": 6442450944,
+  "comparison_windows": [
+    [
+      1800,
+      2099
+    ],
+    [
+      2700,
+      2999
+    ]
+  ],
+  "corroborator": {
+    "minimum_iou": 0.5,
+    "mode": "YOLO.predict independently on each integer-second source frame0\u20132999. No tracker, interpolation, temporal corroborator state, annotations or identity features. Exact selected FP16 settings unchanged.",
+    "model_sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    "preprocessing": "Ultralytics8.4.80 YOLO.predict receives sourceBGRuint8 arrays; its standard letterbox/normalization and resolvedimgsz/rect/batch/quantize/conf/iou/max_det are recorded. FP16MPS matches priorcorroboration cache; CPUFP32appliesonlyinitialSAM.",
+    "runner_sha256": "37670c587178e3d42f17e3cf9e107812a0de4bb2d89257002d4093c0dea49e83",
+    "seconds": {
+      "start": 0,
+      "step": 1,
+      "stop": 2999
+    },
+    "settings": {
+      "classes": [
+        0
+      ],
+      "conf": 0.4,
+      "device": "mps",
+      "imgsz": 640,
+      "iou": 0.7,
+      "quantize": 16
+    }
+  },
+  "execution": "One MPS thread reads each verified frame once. CutieFP32 every0.5s; rawYOLOFP16 and unchanged recorded-name policy at1Hz. No reset, prompt or identity correction after source frame0. Await parent review before GPU launch.",
+  "files": {
+    ".cache/cow-cutie/actual-seed-masks/0-masks.npz": "0301626c21e92d54e2edb17ce397492a72aaa0b0d07ec32ea603c7f51f82151a",
+    ".cache/cow-cutie/actual-seed-masks/manifest.json": "9dc7367648d8f19d6beeec1e252be571d1fb59a0a41df0c5e1d9d7018fefbd4a",
+    ".cache/cow-cutie/cutie-base-mega.pth": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+    ".cache/cow-cutie/reserved-2fps-clip/sampled.avi": "4b7a4ef4f3bae5871e43ab49526419be7fcf2b584cf75304e006f64a6b6cf429",
+    ".cache/cow-cutie/reserved-2fps-clip/sampled.json": "fc8aafcd7f05b07081c15a447c6bcf7718c170e97433bc325f55f77322f5389b",
+    ".cache/cow-cutie/streaming-development/streaming.json": "c4a5a561c9a8d201a8e02e2cc9fe77fe5deacd6bbf7639189c46dde041c431c7",
+    ".cache/cow-detectors/training/mixed-full-backbone/weights/best.pt": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    "detector/src/aidetector/domain/models.py": "8121c45555913af9962a94d20129816d299b36821242a8a5f17830bf778f5896",
+    "research/cow_identity/CONTINUOUS_TRACKING_PROTOCOL.md": "1f60a1ff1959dc7aa3f6f7eb44bc6fc0863843b051f5a15d57782eeac3f7df00",
+    "research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "research/cow_identity/detection_actual_seed_protocol.json": "aaac7595cebc8beacace4260380d6c00b2b1c5eccf39def8cc4d0e6a7b7595d6",
+    "research/cow_identity/detection_assessment.py": "28d19f2ada57ff6e6741cff6a213da6c99ed4c6b83ba036f9804615b7c1a32e9",
+    "research/cow_identity/detection_box_consensus.py": "d81721ec2268225715903a45c2b3c79e7588c6088b09cfc482d291e8430df3cf",
+    "research/cow_identity/detection_corroboration.py": "c381591a6609ff422c4ac784da2c36efb54637440bef49f926b5d3c9942e84b4",
+    "research/cow_identity/detection_cutie.py": "85c163664cdef3d7cef4268ac0970b569f8c7d62f95cc77add9ae6e46f51c9a7",
+    "research/cow_identity/detection_cutie_quarantine.py": "7bbd7e52a16b344a82a8848788e4f78f85bdb60ab43fd1ad08ae04977a213707",
+    "research/cow_identity/detection_cutie_quarantine_v2_protocol.json": "294b16744d0efe7705024edbb465f158f91a4fcad4c1881853e53683ea354165",
+    "research/cow_identity/detection_cutie_variants.py": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+    "research/cow_identity/detection_quarantine_recovery.py": "aca8e85b9f658ec9c183938dc0438614f5362525aca0ca4ee9fae1d050479e81",
+    "research/cow_identity/detection_quarantine_recovery_protocol.json": "4f6768a4d165a964c956741ce6ecbbd434a5559f5b35b4a59c5ef1aa6c658d97",
+    "research/cow_identity/detection_recovery_consensus_protocol.json": "d7136e6710a7a947c0a3a15a4d062a4dc831bf165fbb4f4f8c08ac13025d44f1",
+    "research/cow_identity/detection_reserved_score.py": "bd535d5eb128415a2088d9d269c749bf5e5e0e613a353ca917af27590020ca7c",
+    "research/cow_identity/detection_reserved_selection.json": "d349f8a9d82967f02ee2066c9a09d0a0aad905e15c844c5d009a956e441afb8a",
+    "research/cow_identity/detection_sam_tracking.py": "920c722775042efc3c71e3b7ae3b52473dde2d21facdd4b33bfb5fa297361128",
+    "research/cow_identity/detection_streaming.py": "a33618c315ecff17e8730b7d5ca81a38c9c809e162fad2555e0399feddccabe4",
+    "research/cow_identity/detection_streaming_assessment.py": "ae845d17b98c89ab691e7db46cd81474b09b2702aa4f325d93b05a04ee424e54",
+    "research/cow_identity/detection_streaming_protocol.json": "ba93acb3de65163780fa83d2384c968a491f079dcd55bdf28e61ac82ff227e30",
+    "research/cow_identity/detection_tracking.py": "073a033e5ba99814472b9536cc313675a9fb6db25a8519788d95c4dc8a2b4b75",
+    "research/cow_identity/results/2026-10-03/detection/cutie-streaming-development.json": "a204ef7acdeb279f19476b480b51f90b76129385a1e3aa12646d51b7847508c1",
+    "research/cow_identity/results/2026-10-03/detection/cutie-streaming-tests.json": "c32cc552ca4373d5356ca91c43fa1e3ad7a45e094c1d03aac390433044dce2d1",
+    "research/cow_identity/results/2026-10-03/detection/pre-reserved-research-tests.txt": "07113d660f5dd607d0179424bedd49ae0e1f910d0a43c401692a7882b263d119",
+    "research/cow_identity/scoring.py": "f2bdabc93e47282aa452efa142e4155ec260f1f28d441c57f52b0b5e6219ffee",
+    "research/cow_identity/smoke_runtime.py": "086c8ddf94b2955bf3c91860605db70a181f2d3ea11b9019f336fc2129755fe7",
+    "research/cow_identity/test_detection_assessment.py": "a4634a3a97e0f6a84c26b842de9cf34617dfdb7cd2836f3479d1873113f6be8f",
+    "research/cow_identity/test_detection_box_consensus.py": "36169a16b85b859829375e236a01c1644159b00ee1092c0f92b9f66c4201fb21",
+    "research/cow_identity/test_detection_quarantine_recovery.py": "527d23ba7d61a72ecbf1f5944cd5e4ccf8f10330b9474e33c9f6048c5c08adb5",
+    "research/cow_identity/test_detection_reserved_score.py": "c694c4555fa16b69966881e3e4750d2bd39f5d339cb7c4f7d4f90541b38c0e20",
+    "research/cow_identity/test_detection_sam_tracking.py": "1c59ad8197c7b3fafcb382c015de7da23d63705adc94f230eafff22934e3e87f",
+    "research/cow_identity/test_detection_streaming.py": "dbae443e02679fdd689cd88e30eb6859fc64fdf57a6f889ee4090eda9542fcf7",
+    "research/cow_identity/test_video_assessment.py": "bb85a63666f76bbf34d92e9246f908d2dcfaec9658c5a595ed58add909078dd1",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  },
+  "frozen_at_utc": "2026-10-03T09:41:02.546761+00:00",
+  "inputs": {
+    "clip": ".cache/cow-cutie/reserved-2fps-clip",
+    "cutie_model": ".cache/cow-cutie/cutie-base-mega.pth",
+    "quarantine_protocol": "research/cow_identity/detection_cutie_quarantine_v2_protocol.json",
+    "seed_manifest": ".cache/cow-cutie/actual-seed-masks/manifest.json",
+    "seed_masks": ".cache/cow-cutie/actual-seed-masks/0-masks.npz",
+    "upstream": "/tmp/cow-identity-cutie",
+    "yolo_model": ".cache/cow-detectors/training/mixed-full-backbone/weights/best.pt"
+  },
+  "last_processed_second": 2999,
+  "libraries": {
+    "antlr4-python3-runtime": "4.9.3",
+    "einops": "0.8.2",
+    "hydra-core": "1.3.2",
+    "numpy": "2.5.0",
+    "omegaconf": "2.3.1",
+    "opencv-python": "4.13.0.92",
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "ultralytics": "8.4.80"
+  },
+  "limitations": [
+    "Only reviewed actual first-frame masks, with original names; no later prompts, assignments, truth or resets",
+    "Frame0 appeared in detector training; first-frame confirmation is optimistic.",
+    "Geometry-based recovery does not independently prove identity.",
+    "This is one continuous previously studied recording, not farm/cross-camera/re-entry recognition.",
+    "Reserved truth is loaded only by the separate scorer after complete inference."
+  ],
+  "max_internal_size": 480,
+  "mem_every": 5,
+  "memory": "SDK defaults bound working and long-term memory. Quarantine keeps30past indexed masks plus active anchors. No source RGB frames are retained. Post-reclaimMetaldriver and peakRSS each capped8GiB.",
+  "named_cows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "naming": {
+    "minimum_iou": 0.5,
+    "minimum_p10": 0.7,
+    "pairing": "reciprocal-best same-frame IoU; no coordinate averaging"
+  },
+  "output_contract": "Each1Hz row retains all visible LCC boxes and original zero-based track IDs. named_track_ids includes only original named seeds1-6. Class confidence is actual paired YOLO score or null, never fabricated1.0. Original indexed masks, raw-assigned-pixel probabilities and frame hashes permit independent replay.",
+  "prelaunch_correction": "Accept equivalent torch.device Metal spellings mps and mps:0; reject CPU. Corrected before any joint GPU inference; candidate decisions unchanged.",
+  "processing_fps": 2,
+  "recovery": {
+    "consecutive_frames": 3,
+    "donor_area_ratio": 0.5,
+    "minimum_iou": 0.5,
+    "minimum_p10": 0.7
+  },
+  "resource_limits": {
+    "max_mean_seconds_per_frame": 1.0,
+    "max_mps_driver_bytes": 8589934592,
+    "max_peak_rss_bytes": 8589934592,
+    "timing_window_frames": 30,
+    "warmup_frames": 10
+  },
+  "sampled_manifest_sha256": "fc8aafcd7f05b07081c15a447c6bcf7718c170e97433bc325f55f77322f5389b",
+  "scope": "Continuous same-recording seeded tracking; different from the original disconnected-window re-identification protocol",
+  "seeded_cows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "selection_plan_sha256": "d349f8a9d82967f02ee2066c9a09d0a0aad905e15c844c5d009a956e441afb8a",
+  "source_commit": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
+  "status": "FROZEN_EXECUTION",
+  "timing": "Per-input stage timings include decode/hash, synchronized models, decision/mask cache and Metal reclamation. Overall elapsed additionally includes initialization and report writes. Existing1s sustained-processing stop is a safety cap;2fps throughput requires mean<=0.5s/input and is reported separately.",
+  "use_long_term": true,
+  "video_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825"
+}

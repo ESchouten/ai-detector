@@ -1,0 +1,591 @@
+{
+  "biological_identity_basis": "Publisher CSV associates each principal clip with its cow ID. Separate cross-clip visual continuity links the entering and preceding fragments. No ear tags are legible; visual continuity alone does not read biological IDs.",
+  "coordinate_convention": "Native 1920x1080 whole visible extent xyxy, no hidden extent inferred; uncertain fragments remain in main denominator and can also be reported separately.",
+  "counts": {
+    "empty_frames": 5,
+    "frames": 22,
+    "known_observations": 9,
+    "nameless_observations": 14,
+    "uncertain_observations": 1
+  },
+  "frames": [
+    {
+      "boxes": [
+        {
+          "box": [
+            105,
+            215,
+            1725,
+            1055
+          ],
+          "cow": 5676,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Publisher principal identity and visible sequence continuity",
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 420,
+      "path": ".cache/cow-passage-entry-inventory/000.png",
+      "pixels_sha256": "bb6050f76149559d36ac15a3662a36db7b36dc61483420912bd3b1916eb2147f",
+      "second": 0.0,
+      "sequence_frame": 0,
+      "sha256": "03d9accd1ea3638b11f088a825215a05a997c9f12ba06a8cd0b02d008d543d82",
+      "source_frame": 79962
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            350,
+            275,
+            1920,
+            980
+          ],
+          "cow": 5676,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 435,
+      "path": ".cache/cow-passage-entry-inventory/001.png",
+      "pixels_sha256": "ee10fa0baa87a49390b02c326ae539077c4f2c0a59555a7d9cb9cb96a3100281",
+      "second": 0.5,
+      "sequence_frame": 1,
+      "sha256": "de9ff06f727fc955b740d520f915c1de9645b523fb299e1dc214ef99ee8ea00f",
+      "source_frame": 79977
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            310,
+            330,
+            1920,
+            935
+          ],
+          "cow": 5676,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Publisher principal identity and visible sequence continuity",
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 450,
+      "path": ".cache/cow-passage-entry-inventory/002.png",
+      "pixels_sha256": "a23a5fabbf451125b50fb6b76597fe5fcf3487b1b19efdff6c3eddd207b07d33",
+      "second": 1.0,
+      "sequence_frame": 2,
+      "sha256": "86e50704469a7b5496954ecfe2c11c2df46bfa79740647d7501b225ce2d7e272",
+      "source_frame": 79992
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            710,
+            270,
+            1920,
+            805
+          ],
+          "cow": 5676,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        },
+        {
+          "box": [
+            0,
+            885,
+            380,
+            1080
+          ],
+          "cow": 5953,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 465,
+      "path": ".cache/cow-passage-entry-inventory/003.png",
+      "pixels_sha256": "b37f02673931e591c34c2196dde63a47cd465d4813f7b82ce8b92554544d38a0",
+      "second": 1.5,
+      "sequence_frame": 3,
+      "sha256": "37e76f7fa2c33d9b45d8848a445796c7727aeccb3db5ebf09d5e003ff6fca632",
+      "source_frame": 80007
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            905,
+            220,
+            1920,
+            890
+          ],
+          "cow": 5676,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Publisher principal identity and visible sequence continuity",
+          "note": "Principal passage animal; whole visible extent, including visible head/ears/limbs. Motion blur and image clipping may limit boundary precision.",
+          "uncertain": false
+        },
+        {
+          "box": [
+            0,
+            785,
+            615,
+            1080
+          ],
+          "cow": 5953,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Separate cross-clip continuity review plus adjacent publisher principal identity; old null annotation unchanged",
+          "note": "Historical single-clip annotation note (original source unchanged): Second animal entering at lower-left border; biological identity not established. Coat torso absent or insufficiently clear; no inferred trunk box. The separate lifecycle continuity review now links this fragment as specified in identity_basis.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 480,
+      "path": ".cache/cow-passage-entry-inventory/004.png",
+      "pixels_sha256": "ce21321744f4672df30e7dcf9e1eb4715cd35d865dff9236519c34167fa046ec",
+      "second": 2.0,
+      "sequence_frame": 4,
+      "sha256": "29a68e54c033e89524ad754117b66014cef0bbf9a9472f81988f2f7e07500b4d",
+      "source_frame": 80022
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            990,
+            275,
+            1920,
+            805
+          ],
+          "cow": 5676,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        },
+        {
+          "box": [
+            0,
+            650,
+            800,
+            1080
+          ],
+          "cow": 5953,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 495,
+      "path": ".cache/cow-passage-entry-inventory/005.png",
+      "pixels_sha256": "c6966ba99a534dfef23ff3d8b8054f8eced06ca4332661a9e9a07c4d853290d2",
+      "second": 2.5,
+      "sequence_frame": 5,
+      "sha256": "4252c647b04ec3ecebc4718f181ed5db4073058b03441bfaaaf48fb5119a471e",
+      "source_frame": 80037
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            0,
+            420,
+            1012,
+            1080
+          ],
+          "cow": 5953,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Publisher principal identity and visible sequence continuity",
+          "note": "Principal animal identified by passage sequence and publisher CSV. Box follows visible head, torso and extremities; no hidden extent inferred.",
+          "uncertain": false
+        },
+        {
+          "box": [
+            1285,
+            319,
+            1920,
+            814
+          ],
+          "cow": 5676,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Separate cross-clip continuity review plus adjacent publisher principal identity; old null annotation unchanged",
+          "note": "Historical single-clip annotation note (original source unchanged): Separate preceding animal visibly leaving the right edge; identity not established. The separate lifecycle continuity review now links this fragment as specified in identity_basis.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 0,
+      "path": ".cache/cow-passage-entry-inventory/006.png",
+      "pixels_sha256": "7d3b7bd7e213d844561f79b9566b1981790e1c5fa49cce59645ffba60bf6a936",
+      "second": 3.0,
+      "sequence_frame": 6,
+      "sha256": "8978ee5940c31fa7c2065447ffa39d1225824f3e70062599495cae583f8ee344",
+      "source_frame": 80052
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            1340,
+            350,
+            1920,
+            755
+          ],
+          "cow": 5676,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        },
+        {
+          "box": [
+            0,
+            315,
+            1250,
+            1080
+          ],
+          "cow": 5953,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 15,
+      "path": ".cache/cow-passage-entry-inventory/007.png",
+      "pixels_sha256": "5150477003f39fe9ea12908b9772c396842a5fcab3c0c530b17bedf6b89aaa82",
+      "second": 3.5,
+      "sequence_frame": 7,
+      "sha256": "e01ce648a2e6a81576e132b39412ebec9bc14c8554a8bbd550b1dabbabc398be",
+      "source_frame": 80067
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            0,
+            288,
+            1518,
+            1080
+          ],
+          "cow": 5953,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Publisher principal identity and visible sequence continuity",
+          "note": "Principal animal identified by passage sequence and publisher CSV. Box follows visible head, torso and extremities; no hidden extent inferred.",
+          "uncertain": false
+        },
+        {
+          "box": [
+            1544,
+            404,
+            1920,
+            727
+          ],
+          "cow": 5676,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Separate cross-clip continuity review plus adjacent publisher principal identity; old null annotation unchanged",
+          "note": "Historical single-clip annotation note (original source unchanged): Hind limbs/tail of the same preceding animal leaving the right edge; identity not established. The separate lifecycle continuity review now links this fragment as specified in identity_basis.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 30,
+      "path": ".cache/cow-passage-entry-inventory/008.png",
+      "pixels_sha256": "805bee85fd62364c604dc7ee32325e198ab72eff73bca31ae63f8d0a7da5ad22",
+      "second": 4.0,
+      "sequence_frame": 8,
+      "sha256": "4a54a2a7a17ba0b7f79b521a05d559fc2ac48299bcda9cf358c2c9e1c6936143",
+      "source_frame": 80082
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            170,
+            240,
+            1740,
+            1075
+          ],
+          "cow": 5953,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 45,
+      "path": ".cache/cow-passage-entry-inventory/009.png",
+      "pixels_sha256": "5b58430ca0d8afa8aca9461a7a0a204aa6f128da2e2925afe618058105356dd0",
+      "second": 4.5,
+      "sequence_frame": 9,
+      "sha256": "4dc0364741b9957a2788f85d1593cba3aa25984082ecc65e9a0913d4f494af37",
+      "source_frame": 80097
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            468,
+            248,
+            1920,
+            881
+          ],
+          "cow": 5953,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Publisher principal identity and visible sequence continuity",
+          "note": "Principal animal identified by passage sequence and publisher CSV. Box follows visible head, torso and extremities; no hidden extent inferred.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 60,
+      "path": ".cache/cow-passage-entry-inventory/010.png",
+      "pixels_sha256": "271b114b3580d02ff1a1cd2dc0f042c52a184718367d2237204c4acfdb5cced4",
+      "second": 5.0,
+      "sequence_frame": 10,
+      "sha256": "0be21568ec3b9989efee3e8d0b62d12e5e0224f46211c375b43ca3b84a33c846",
+      "source_frame": 80112
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            655,
+            300,
+            1920,
+            865
+          ],
+          "cow": 5953,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 75,
+      "path": ".cache/cow-passage-entry-inventory/011.png",
+      "pixels_sha256": "ffa1390d1aff3a22440365c48a426acbd1bc3e58784138723ac1020e5406031e",
+      "second": 5.5,
+      "sequence_frame": 11,
+      "sha256": "f8000459814e48c004912f09b35e3c3c526a7e85ade501592e2e57a8b7c18f1b",
+      "source_frame": 80127
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            937,
+            351,
+            1920,
+            826
+          ],
+          "cow": 5953,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Publisher principal identity and visible sequence continuity",
+          "note": "Principal animal identified by passage sequence and publisher CSV. Box follows visible head, torso and extremities; no hidden extent inferred.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 90,
+      "path": ".cache/cow-passage-entry-inventory/012.png",
+      "pixels_sha256": "1fa8bdc24c3c0d8b625d5e2225b3dd2881109aa05004b5ab6f698c2349c1289a",
+      "second": 6.0,
+      "sequence_frame": 12,
+      "sha256": "0fe724e04939b3fae07465fb818c7e01f6da62a244d227150bbfc6fc5f300766",
+      "source_frame": 80142
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            1040,
+            250,
+            1920,
+            825
+          ],
+          "cow": 5953,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 105,
+      "path": ".cache/cow-passage-entry-inventory/013.png",
+      "pixels_sha256": "b29e60acfb29ca7a6737edbe8930eabe690082ca4d7606d51b08e44ea82c0433",
+      "second": 6.5,
+      "sequence_frame": 13,
+      "sha256": "96829ec4b97ca6f65ba2c6b76c9d94f4971bd1d39060448de91fcc4f31fe9995",
+      "source_frame": 80157
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            1214,
+            376,
+            1920,
+            718
+          ],
+          "cow": 5953,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Publisher principal identity and visible sequence continuity",
+          "note": "Principal animal identified by passage sequence and publisher CSV. Box follows visible head, torso and extremities; no hidden extent inferred.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 120,
+      "path": ".cache/cow-passage-entry-inventory/014.png",
+      "pixels_sha256": "37d92d6606101c35e03cac5bcd80df25c265a15ffe2fdb1bf893e4fe38884be1",
+      "second": 7.0,
+      "sequence_frame": 14,
+      "sha256": "697bad35af50b7920fbf911b88507b18071b51e5de87859f04f19d0b76c6228d",
+      "source_frame": 80172
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            1450,
+            435,
+            1920,
+            675
+          ],
+          "cow": 5953,
+          "extent_basis": "New manual native-frame annotation",
+          "identity_basis": "Visible continuity to publisher-labeled adjacent frames, reviewed without predictions",
+          "note": "Visible animal extent only; clipping and motion blur may limit boundary precision.",
+          "uncertain": false
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 135,
+      "path": ".cache/cow-passage-entry-inventory/015.png",
+      "pixels_sha256": "025075054facfd6a8f360c41ea0749254640ae2588cfcf08fda49138dd2b0e7d",
+      "second": 7.5,
+      "sequence_frame": 15,
+      "sha256": "7634bc2095ed444bb6c117a9f103a3fef7b19f67e7a47fbef74af27012c28587",
+      "source_frame": 80187
+    },
+    {
+      "boxes": [
+        {
+          "box": [
+            1824,
+            553,
+            1920,
+            830
+          ],
+          "cow": 5953,
+          "extent_basis": "Existing independently reviewed native-frame extent, inspected again without predictions",
+          "identity_basis": "Publisher principal identity and visible sequence continuity",
+          "note": "Motion-blurred trailing fragment may include shadow; marked uncertain.",
+          "uncertain": true
+        }
+      ],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 150,
+      "path": ".cache/cow-passage-entry-inventory/016.png",
+      "pixels_sha256": "00edae080962fa43113d3918f54f641264da79507f6fe362dc767f04e256b56e",
+      "second": 8.0,
+      "sequence_frame": 16,
+      "sha256": "2f938ce77f7fd560a41be42d3f08c1138e804d4ed69b1dca361d978791768909",
+      "source_frame": 80202
+    },
+    {
+      "boxes": [],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 165,
+      "path": ".cache/cow-passage-entry-inventory/017.png",
+      "pixels_sha256": "a7db6b82638d1b1d89ae80b1fefcb676cf4c28e902dc4aeea9d582d6d3c38bfb",
+      "second": 8.5,
+      "sequence_frame": 17,
+      "sha256": "71422394f7d742dd47af68c2f10b7289cd2c9cd5788b12a35caec168e57690f1",
+      "source_frame": 80217
+    },
+    {
+      "boxes": [],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 180,
+      "path": ".cache/cow-passage-entry-inventory/018.png",
+      "pixels_sha256": "c823c526f67a1fe5631647ad4f3cc39bea5943b1a469b0cd8c7dc6d7a84450f3",
+      "second": 9.0,
+      "sequence_frame": 18,
+      "sha256": "7a679612c2dd1773b09d0aebbc29b619909cd1422a636f42390c18b8453a7850",
+      "source_frame": 80232
+    },
+    {
+      "boxes": [],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 195,
+      "path": ".cache/cow-passage-entry-inventory/019.png",
+      "pixels_sha256": "3fbe9c7a46b7321fc3adc304912861548ca957bfd804105a9daba6bcc779529b",
+      "second": 9.5,
+      "sequence_frame": 19,
+      "sha256": "4a4d1ee862dd2ef63707b168047f263b6c32fb5551fce6eb5755477fb7f6d512",
+      "source_frame": 80247
+    },
+    {
+      "boxes": [],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 210,
+      "path": ".cache/cow-passage-entry-inventory/020.png",
+      "pixels_sha256": "98fa2b87fdee1882210311bc814919a752bbbd15ce3c4c32224491235dfe0b60",
+      "second": 10.0,
+      "sequence_frame": 20,
+      "sha256": "e7828b630aaee0282cc6df7cec93d20858e08306a124d6269c3e6d929401393c",
+      "source_frame": 80262
+    },
+    {
+      "boxes": [],
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 225,
+      "path": ".cache/cow-passage-entry-inventory/021.png",
+      "pixels_sha256": "9736d9d5fec693c5d76326b7f3beb04f73e6939c8eadf8dfa3512ba56a6d9a07",
+      "second": 10.5,
+      "sequence_frame": 21,
+      "sha256": "908cf46cf4a80929b1ab3e2f52f83b48609efc1554bec9ccd622fa726e9065eb",
+      "source_frame": 80277
+    }
+  ],
+  "independent_continuity_review": {
+    "path": "research/cow_identity/results/2026-10-03/purdue-entry-clean-review-cattle.json",
+    "sha256": "142266c246bfb02dc4b065e167e8b7700f16198d42f52131a555057cb3db8512"
+  },
+  "independent_extent_review": {
+    "result": "All22 frames reviewed: extents/completeness support9known plus14nameless observations, one uncertain8.0s fragment and5empty frames; no omitted third animal or inconsistent clip boundary found. Only historical-note clarification and final metadata changed after this review.",
+    "reviewed_draft_sha256": "e021c20b8cd0c214589586210153425753605a04d6c03ecab4cb081cdcd91ec5",
+    "reviewer": "cattle_research"
+  },
+  "initial_named_cows": [
+    5676
+  ],
+  "initially_nameless_cows": [
+    5953
+  ],
+  "original_annotations_unchanged": true,
+  "review": "AI-assisted visual annotation by identity_evaluation; clean native pixels only, no detector/Cutie/identity outputs. Source selection continuity independently reviewed by root and cattle_research before this annotation. Not external human-certified truth.",
+  "selection_sha256": "5ba8ee4e89327698c98eae347c8c0847b475ac3ecc23f972dcccd610e2115c40",
+  "source_manifest_sha256": "f6c9fe1ceebb7938defde151b07ae5926ab6ee660ff4dc783547f4fa4154da4f",
+  "status": "INDEPENDENTLY_AI_REVIEWED_BEFORE_INFERENCE"
+}

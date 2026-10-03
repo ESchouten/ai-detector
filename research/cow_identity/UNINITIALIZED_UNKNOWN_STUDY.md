@@ -1,9 +1,8 @@
 # Unknown animals without initial tracking masks
 
-Status: prepared on CPU; no inference or results yet. This is an exposed-video
-deployment control, not a new blind evaluation or a physical arrival study.
-GPU execution must wait for the parent's current reserved run and an explicit
-slot release.
+Status: completed under the frozen protocol; the control fails. This is an
+exposed-video deployment control, not a new blind evaluation or physical arrival
+study. Removing the two anonymous initial masks materially destabilized names.
 
 ## The smallest credible next experiment
 
@@ -61,6 +60,35 @@ future dynamic runner after deletion. The separate tested
 object-ID-to-current-channel mapping obtained from upstream `find_tmp_by_id`.
 Upstream `output_prob_to_mask` already remaps tensor channels into stable object
 IDs. No frozen inference helper was changed.
+
+## Measured result
+
+All 3,059 input frames completed on the app interpreter's Torch 2.12.1 MPS
+runtime in 415.91 seconds, with no resource stop. Mean per-input time was
+133.48 ms and p95 was 195.35 ms. Peak observed driver allocation was 6.44 GB
+(6.61 GB immediately before cache reclamation), and peak process RSS was 1.20 GB.
+
+The complete report is
+`results/2026-10-03/detection/uninitialized-unknown.json`. The first exposed
+panel passes the existing criterion, but the later two fail. Across the three
+disjoint panels, 3,171/5,394 known observations were correctly named (58.79%
+coverage). Conservative precision was 85.36% after retaining 97 wrong known
+names, 352 unknown names and 95 named unmatched boxes. Unknown false naming was
+352/1,796, or 19.60%. All eight animals remained in the scoring denominator.
+
+| Exposed panel | Conservative precision | Known coverage | Unknown false naming |
+| --- | --- | --- | --- |
+| 330–629 s | 99.07% | 71.28% | 0% |
+| 930–1229 s | 80.00% | 51.92% | 29.26% |
+| 1230–1529 s | 76.18% | 53.14% | 29.60% |
+
+This confirms that the old eight-slot experiment depended on initializing
+anonymous animals too. Geometry corroboration and recovered confidence cannot
+guarantee that a propagated slot still belongs to its original animal. The
+result does not validate dynamic births or justify silently initializing
+objects from truth. The separate physical passage control also exposed an
+actual entrant inheriting the old name; its proposed anonymous-birth test is
+specified in [PASSAGE_ENTRY_BIRTHS.md](PASSAGE_ENTRY_BIRTHS.md).
 
 ## A subsequent dynamic-add experiment, only if needed
 

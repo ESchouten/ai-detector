@@ -1,0 +1,28 @@
+{
+  "scope": "Independent clean-pixel review of already exposed Purdue June8 material; separate from frozen reserved calf evaluation.",
+  "reviewer": "cattle_research",
+  "sources": {
+    "research/cow_identity/passage_entry_selection.json": "5ba8ee4e89327698c98eae347c8c0847b475ac3ecc23f972dcccd610e2115c40",
+    ".cache/cow-passage-entry-inventory/manifest.json": "f6c9fe1ceebb7938defde151b07ae5926ab6ee660ff4dc783547f4fa4154da4f"
+  },
+  "reviewed": [
+    "clean-sheet-1.jpg",
+    "clean-sheet-2.jpg",
+    "002.png",
+    "003.png",
+    "005.png",
+    "006.png",
+    "007.png",
+    "008.png",
+    "016.png"
+  ],
+  "finding": "Two distinct animals are visible together. The broad white-banded initial animal exits right as a mostly-black animal with different white forehead/neck/flank markings enters lower-left. Source80037\u219280052 shows coherent motion of both and unchanged camera/floor/gate geometry.",
+  "transitions": {
+    "initial_animal": "Present initially; last border fragment around4.0s; gone by4.5s.",
+    "entrant": "Clearly entering by1.5s; exits around8.0\u20138.5s.",
+    "empty": "8.5\u201310.5s show empty passage."
+  },
+  "uncertainty": "Exact tiny border-fragment endpoints need explicit annotation policy. Biological IDs5676/5953 come from publisher metadata, not visible ear tags. This review verifies distinct animals and plausible continuity, not independent biological identity.",
+  "no_model_outputs_reviewed": true,
+  "no_reserved_calf_inputs_reviewed": true
+}

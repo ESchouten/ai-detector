@@ -1,0 +1,1377 @@
+{
+  "changes_vs_eight_initial_slots": {
+    "1230": {
+      "1": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 5,
+            "no_reciprocal_detector": 2
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 5,
+            "no_reciprocal_detector": 2
+          },
+          "visible_known": 7
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 46,
+            "no_reciprocal_detector": 2
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 46,
+            "no_reciprocal_detector": 2
+          },
+          "visible_known": 48
+        },
+        "net_correct_change": -41
+      },
+      "2": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 9,
+            "no_reciprocal_detector": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 9,
+            "no_reciprocal_detector": 1
+          },
+          "visible_known": 10
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 32,
+            "no_localization_match": 4,
+            "no_reciprocal_detector": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 32,
+            "no_localization_match": 4,
+            "no_reciprocal_detector": 1
+          },
+          "visible_known": 37
+        },
+        "net_correct_change": -27
+      },
+      "3": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 3,
+            "no_reciprocal_detector": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 3,
+            "no_reciprocal_detector": 1
+          },
+          "visible_known": 4
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 49,
+            "low_p10+no_reciprocal_detector": 1,
+            "no_localization_match": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 50,
+            "no_localization_match": 1,
+            "no_reciprocal_detector": 1
+          },
+          "visible_known": 51
+        },
+        "net_correct_change": -47
+      },
+      "4": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 8,
+            "no_localization_match": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 8,
+            "no_localization_match": 1
+          },
+          "visible_known": 9
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 9,
+            "low_p10+quarantined": 2,
+            "no_localization_match": 1,
+            "quarantined": 22
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 11,
+            "no_localization_match": 1,
+            "quarantined": 24
+          },
+          "visible_known": 34
+        },
+        "net_correct_change": -25
+      },
+      "5": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 4
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 4
+          },
+          "visible_known": 4
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 16
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 16
+          },
+          "visible_known": 16
+        },
+        "net_correct_change": -12
+      },
+      "6": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 7,
+            "no_reciprocal_detector": 2
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 7,
+            "no_reciprocal_detector": 2
+          },
+          "visible_known": 9
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 5,
+            "no_reciprocal_detector": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 5,
+            "no_reciprocal_detector": 1
+          },
+          "visible_known": 6
+        },
+        "net_correct_change": 3
+      }
+    },
+    "330": {
+      "1": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 30,
+            "matched_different_slot": 3,
+            "no_reciprocal_detector": 11
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 30,
+            "matched_different_slot": 3,
+            "no_reciprocal_detector": 11
+          },
+          "visible_known": 44
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 38,
+            "no_localization_match": 2,
+            "no_reciprocal_detector": 3
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 38,
+            "no_localization_match": 2,
+            "no_reciprocal_detector": 3
+          },
+          "visible_known": 43
+        },
+        "net_correct_change": 1
+      },
+      "2": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 7,
+            "no_reciprocal_detector": 5
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 7,
+            "no_reciprocal_detector": 5
+          },
+          "visible_known": 12
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 4,
+            "low_p10+no_reciprocal_detector": 1,
+            "no_reciprocal_detector": 10
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 5,
+            "no_reciprocal_detector": 11
+          },
+          "visible_known": 15
+        },
+        "net_correct_change": -3
+      },
+      "3": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 16,
+            "no_localization_match": 2,
+            "no_reciprocal_detector": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 16,
+            "no_localization_match": 2,
+            "no_reciprocal_detector": 1
+          },
+          "visible_known": 19
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 10,
+            "no_reciprocal_detector": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 10,
+            "no_reciprocal_detector": 1
+          },
+          "visible_known": 11
+        },
+        "net_correct_change": 8
+      },
+      "4": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 10,
+            "low_p10+no_reciprocal_detector": 1,
+            "no_reciprocal_detector": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 11,
+            "no_reciprocal_detector": 2
+          },
+          "visible_known": 12
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 8,
+            "no_reciprocal_detector": 2
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 8,
+            "no_reciprocal_detector": 2
+          },
+          "visible_known": 10
+        },
+        "net_correct_change": 2
+      },
+      "5": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 8,
+            "low_p10+no_reciprocal_detector": 1,
+            "no_localization_match": 3
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 9,
+            "no_localization_match": 3,
+            "no_reciprocal_detector": 1
+          },
+          "visible_known": 12
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0,
+          "exclusive_reasons": {},
+          "overlapping_gate_counts": {},
+          "visible_known": 0
+        },
+        "net_correct_change": 12
+      },
+      "6": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 8,
+            "low_p10+no_reciprocal_detector": 1,
+            "no_localization_match": 2,
+            "no_reciprocal_detector": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 9,
+            "no_localization_match": 2,
+            "no_reciprocal_detector": 2
+          },
+          "visible_known": 12
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 5,
+            "no_reciprocal_detector": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 5,
+            "no_reciprocal_detector": 1
+          },
+          "visible_known": 6
+        },
+        "net_correct_change": 6
+      }
+    },
+    "930": {
+      "1": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 5
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 5
+          },
+          "visible_known": 5
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 4,
+            "no_localization_match": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 4,
+            "no_localization_match": 1
+          },
+          "visible_known": 5
+        },
+        "net_correct_change": 0
+      },
+      "2": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 3,
+            "no_reciprocal_detector": 5
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 3,
+            "no_reciprocal_detector": 5
+          },
+          "visible_known": 8
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 46
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 46
+          },
+          "visible_known": 46
+        },
+        "net_correct_change": -38
+      },
+      "3": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 5
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 5
+          },
+          "visible_known": 5
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 51,
+            "low_p10+no_reciprocal_detector": 4,
+            "low_p10+quarantined": 1,
+            "no_localization_match": 1,
+            "no_reciprocal_detector": 1,
+            "quarantined": 5
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 56,
+            "no_localization_match": 1,
+            "no_reciprocal_detector": 5,
+            "quarantined": 6
+          },
+          "visible_known": 63
+        },
+        "net_correct_change": -58
+      },
+      "4": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 4,
+            "no_reciprocal_detector": 1
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 4,
+            "no_reciprocal_detector": 1
+          },
+          "visible_known": 5
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 17,
+            "low_p10+quarantined": 1,
+            "no_reciprocal_detector": 1,
+            "quarantined": 6
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 18,
+            "no_reciprocal_detector": 1,
+            "quarantined": 7
+          },
+          "visible_known": 25
+        },
+        "net_correct_change": -20
+      },
+      "5": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 5,
+            "no_reciprocal_detector": 2
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 5,
+            "no_reciprocal_detector": 2
+          },
+          "visible_known": 7
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 34,
+            "low_p10+no_reciprocal_detector": 2,
+            "no_reciprocal_detector+quarantined": 1,
+            "quarantined": 5
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 36,
+            "no_reciprocal_detector": 3,
+            "quarantined": 6
+          },
+          "visible_known": 42
+        },
+        "net_correct_change": -35
+      },
+      "6": {
+        "gained": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 1,
+            "no_reciprocal_detector": 3
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 1,
+            "no_reciprocal_detector": 3
+          },
+          "visible_known": 4
+        },
+        "lost": {
+          "correct": 0,
+          "coverage": 0.0,
+          "exclusive_reasons": {
+            "low_p10": 3,
+            "low_p10+quarantined": 13,
+            "no_localization_match": 17,
+            "quarantined": 13
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 16,
+            "no_localization_match": 17,
+            "quarantined": 26
+          },
+          "visible_known": 46
+        },
+        "net_correct_change": -42
+      }
+    }
+  },
+  "panels": {
+    "eight_initial_slots": {
+      "1230": {
+        "all": {
+          "correct": 1226,
+          "coverage": 0.6814897165091718,
+          "exclusive_reasons": {
+            "correct": 1226,
+            "low_p10": 211,
+            "low_p10+no_reciprocal_detector": 29,
+            "low_p10+no_reciprocal_detector+quarantined": 3,
+            "low_p10+quarantined": 32,
+            "matched_different_slot": 37,
+            "no_localization_match": 157,
+            "no_reciprocal_detector": 47,
+            "quarantined": 57
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 275,
+            "matched_different_slot": 37,
+            "no_localization_match": 157,
+            "no_reciprocal_detector": 79,
+            "quarantined": 92
+          },
+          "visible_known": 1799
+        },
+        "per_cow": {
+          "1": {
+            "correct": 243,
+            "coverage": 0.81,
+            "exclusive_reasons": {
+              "correct": 243,
+              "low_p10": 34,
+              "low_p10+no_reciprocal_detector": 1,
+              "no_localization_match": 4,
+              "no_reciprocal_detector": 18
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 35,
+              "no_localization_match": 4,
+              "no_reciprocal_detector": 19
+            },
+            "visible_known": 300
+          },
+          "2": {
+            "correct": 235,
+            "coverage": 0.7833333333333333,
+            "exclusive_reasons": {
+              "correct": 235,
+              "low_p10": 54,
+              "low_p10+no_reciprocal_detector": 6,
+              "no_localization_match": 1,
+              "no_reciprocal_detector": 4
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 60,
+              "no_localization_match": 1,
+              "no_reciprocal_detector": 10
+            },
+            "visible_known": 300
+          },
+          "3": {
+            "correct": 250,
+            "coverage": 0.8333333333333334,
+            "exclusive_reasons": {
+              "correct": 250,
+              "low_p10": 39,
+              "low_p10+no_reciprocal_detector": 1,
+              "matched_different_slot": 1,
+              "no_reciprocal_detector": 9
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 40,
+              "matched_different_slot": 1,
+              "no_reciprocal_detector": 10
+            },
+            "visible_known": 300
+          },
+          "4": {
+            "correct": 270,
+            "coverage": 0.9,
+            "exclusive_reasons": {
+              "correct": 270,
+              "low_p10": 14,
+              "low_p10+no_reciprocal_detector": 1,
+              "no_localization_match": 4,
+              "no_reciprocal_detector": 11
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 15,
+              "no_localization_match": 4,
+              "no_reciprocal_detector": 12
+            },
+            "visible_known": 300
+          },
+          "5": {
+            "correct": 118,
+            "coverage": 0.3933333333333333,
+            "exclusive_reasons": {
+              "correct": 118,
+              "low_p10": 38,
+              "low_p10+no_reciprocal_detector": 8,
+              "low_p10+no_reciprocal_detector+quarantined": 3,
+              "low_p10+quarantined": 5,
+              "matched_different_slot": 36,
+              "no_localization_match": 88,
+              "no_reciprocal_detector": 2,
+              "quarantined": 2
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 54,
+              "matched_different_slot": 36,
+              "no_localization_match": 88,
+              "no_reciprocal_detector": 13,
+              "quarantined": 10
+            },
+            "visible_known": 300
+          },
+          "6": {
+            "correct": 110,
+            "coverage": 0.36789297658862874,
+            "exclusive_reasons": {
+              "correct": 110,
+              "low_p10": 32,
+              "low_p10+no_reciprocal_detector": 12,
+              "low_p10+quarantined": 27,
+              "no_localization_match": 60,
+              "no_reciprocal_detector": 3,
+              "quarantined": 55
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 71,
+              "no_localization_match": 60,
+              "no_reciprocal_detector": 15,
+              "quarantined": 82
+            },
+            "visible_known": 299
+          }
+        }
+      },
+      "330": {
+        "all": {
+          "correct": 1240,
+          "coverage": 0.6888888888888889,
+          "exclusive_reasons": {
+            "correct": 1240,
+            "low_p10": 185,
+            "low_p10+no_reciprocal_detector": 50,
+            "matched_different_slot": 14,
+            "no_localization_match": 45,
+            "no_reciprocal_detector": 266
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 235,
+            "matched_different_slot": 14,
+            "no_localization_match": 45,
+            "no_reciprocal_detector": 316
+          },
+          "visible_known": 1800
+        },
+        "per_cow": {
+          "1": {
+            "correct": 208,
+            "coverage": 0.6933333333333334,
+            "exclusive_reasons": {
+              "correct": 208,
+              "low_p10": 43,
+              "low_p10+no_reciprocal_detector": 2,
+              "matched_different_slot": 14,
+              "no_localization_match": 6,
+              "no_reciprocal_detector": 27
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 45,
+              "matched_different_slot": 14,
+              "no_localization_match": 6,
+              "no_reciprocal_detector": 29
+            },
+            "visible_known": 300
+          },
+          "2": {
+            "correct": 182,
+            "coverage": 0.6066666666666667,
+            "exclusive_reasons": {
+              "correct": 182,
+              "low_p10": 15,
+              "low_p10+no_reciprocal_detector": 14,
+              "no_localization_match": 19,
+              "no_reciprocal_detector": 70
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 29,
+              "no_localization_match": 19,
+              "no_reciprocal_detector": 84
+            },
+            "visible_known": 300
+          },
+          "3": {
+            "correct": 205,
+            "coverage": 0.6833333333333333,
+            "exclusive_reasons": {
+              "correct": 205,
+              "low_p10": 35,
+              "low_p10+no_reciprocal_detector": 8,
+              "no_localization_match": 8,
+              "no_reciprocal_detector": 44
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 43,
+              "no_localization_match": 8,
+              "no_reciprocal_detector": 52
+            },
+            "visible_known": 300
+          },
+          "4": {
+            "correct": 144,
+            "coverage": 0.48,
+            "exclusive_reasons": {
+              "correct": 144,
+              "low_p10": 40,
+              "low_p10+no_reciprocal_detector": 14,
+              "no_localization_match": 1,
+              "no_reciprocal_detector": 101
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 54,
+              "no_localization_match": 1,
+              "no_reciprocal_detector": 115
+            },
+            "visible_known": 300
+          },
+          "5": {
+            "correct": 262,
+            "coverage": 0.8733333333333333,
+            "exclusive_reasons": {
+              "correct": 262,
+              "low_p10": 16,
+              "low_p10+no_reciprocal_detector": 1,
+              "no_localization_match": 7,
+              "no_reciprocal_detector": 14
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 17,
+              "no_localization_match": 7,
+              "no_reciprocal_detector": 15
+            },
+            "visible_known": 300
+          },
+          "6": {
+            "correct": 239,
+            "coverage": 0.7966666666666666,
+            "exclusive_reasons": {
+              "correct": 239,
+              "low_p10": 36,
+              "low_p10+no_reciprocal_detector": 11,
+              "no_localization_match": 4,
+              "no_reciprocal_detector": 10
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 47,
+              "no_localization_match": 4,
+              "no_reciprocal_detector": 21
+            },
+            "visible_known": 300
+          }
+        }
+      },
+      "930": {
+        "all": {
+          "correct": 1293,
+          "coverage": 0.7203342618384401,
+          "exclusive_reasons": {
+            "correct": 1293,
+            "low_p10": 282,
+            "low_p10+no_reciprocal_detector": 55,
+            "matched_different_slot": 5,
+            "no_localization_match": 46,
+            "no_reciprocal_detector": 114
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 337,
+            "matched_different_slot": 5,
+            "no_localization_match": 46,
+            "no_reciprocal_detector": 169
+          },
+          "visible_known": 1795
+        },
+        "per_cow": {
+          "1": {
+            "correct": 270,
+            "coverage": 0.9,
+            "exclusive_reasons": {
+              "correct": 270,
+              "low_p10": 10,
+              "low_p10+no_reciprocal_detector": 1,
+              "no_localization_match": 6,
+              "no_reciprocal_detector": 13
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 11,
+              "no_localization_match": 6,
+              "no_reciprocal_detector": 14
+            },
+            "visible_known": 300
+          },
+          "2": {
+            "correct": 198,
+            "coverage": 0.66,
+            "exclusive_reasons": {
+              "correct": 198,
+              "low_p10": 74,
+              "low_p10+no_reciprocal_detector": 6,
+              "no_localization_match": 5,
+              "no_reciprocal_detector": 17
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 80,
+              "no_localization_match": 5,
+              "no_reciprocal_detector": 23
+            },
+            "visible_known": 300
+          },
+          "3": {
+            "correct": 214,
+            "coverage": 0.7133333333333334,
+            "exclusive_reasons": {
+              "correct": 214,
+              "low_p10": 50,
+              "low_p10+no_reciprocal_detector": 10,
+              "no_localization_match": 10,
+              "no_reciprocal_detector": 16
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 60,
+              "no_localization_match": 10,
+              "no_reciprocal_detector": 26
+            },
+            "visible_known": 300
+          },
+          "4": {
+            "correct": 254,
+            "coverage": 0.8466666666666667,
+            "exclusive_reasons": {
+              "correct": 254,
+              "low_p10": 19,
+              "low_p10+no_reciprocal_detector": 2,
+              "no_reciprocal_detector": 25
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 21,
+              "no_reciprocal_detector": 27
+            },
+            "visible_known": 300
+          },
+          "5": {
+            "correct": 238,
+            "coverage": 0.7933333333333333,
+            "exclusive_reasons": {
+              "correct": 238,
+              "low_p10": 30,
+              "low_p10+no_reciprocal_detector": 18,
+              "matched_different_slot": 1,
+              "no_reciprocal_detector": 13
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 48,
+              "matched_different_slot": 1,
+              "no_reciprocal_detector": 31
+            },
+            "visible_known": 300
+          },
+          "6": {
+            "correct": 119,
+            "coverage": 0.4033898305084746,
+            "exclusive_reasons": {
+              "correct": 119,
+              "low_p10": 99,
+              "low_p10+no_reciprocal_detector": 18,
+              "matched_different_slot": 4,
+              "no_localization_match": 25,
+              "no_reciprocal_detector": 30
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 117,
+              "matched_different_slot": 4,
+              "no_localization_match": 25,
+              "no_reciprocal_detector": 48
+            },
+            "visible_known": 295
+          }
+        }
+      }
+    },
+    "six_plus_births": {
+      "1230": {
+        "all": {
+          "correct": 1077,
+          "coverage": 0.5986659255141745,
+          "exclusive_reasons": {
+            "correct": 1077,
+            "low_p10": 310,
+            "low_p10+no_reciprocal_detector": 31,
+            "low_p10+quarantined": 55,
+            "matched_different_slot": 47,
+            "no_localization_match": 190,
+            "no_reciprocal_detector": 40,
+            "no_reciprocal_detector+quarantined": 1,
+            "quarantined": 48
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 396,
+            "matched_different_slot": 47,
+            "no_localization_match": 190,
+            "no_reciprocal_detector": 72,
+            "quarantined": 104
+          },
+          "visible_known": 1799
+        },
+        "per_cow": {
+          "1": {
+            "correct": 202,
+            "coverage": 0.6733333333333333,
+            "exclusive_reasons": {
+              "correct": 202,
+              "low_p10": 74,
+              "low_p10+no_reciprocal_detector": 8,
+              "no_localization_match": 4,
+              "no_reciprocal_detector": 12
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 82,
+              "no_localization_match": 4,
+              "no_reciprocal_detector": 20
+            },
+            "visible_known": 300
+          },
+          "2": {
+            "correct": 208,
+            "coverage": 0.6933333333333334,
+            "exclusive_reasons": {
+              "correct": 208,
+              "low_p10": 75,
+              "low_p10+no_reciprocal_detector": 2,
+              "no_localization_match": 10,
+              "no_reciprocal_detector": 5
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 77,
+              "no_localization_match": 10,
+              "no_reciprocal_detector": 7
+            },
+            "visible_known": 300
+          },
+          "3": {
+            "correct": 203,
+            "coverage": 0.6766666666666666,
+            "exclusive_reasons": {
+              "correct": 203,
+              "low_p10": 82,
+              "low_p10+no_reciprocal_detector": 7,
+              "no_localization_match": 2,
+              "no_reciprocal_detector": 6
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 89,
+              "no_localization_match": 2,
+              "no_reciprocal_detector": 13
+            },
+            "visible_known": 300
+          },
+          "4": {
+            "correct": 245,
+            "coverage": 0.8166666666666667,
+            "exclusive_reasons": {
+              "correct": 245,
+              "low_p10": 14,
+              "low_p10+no_reciprocal_detector": 2,
+              "low_p10+quarantined": 2,
+              "no_localization_match": 4,
+              "no_reciprocal_detector": 11,
+              "quarantined": 22
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 18,
+              "no_localization_match": 4,
+              "no_reciprocal_detector": 13,
+              "quarantined": 24
+            },
+            "visible_known": 300
+          },
+          "5": {
+            "correct": 106,
+            "coverage": 0.35333333333333333,
+            "exclusive_reasons": {
+              "correct": 106,
+              "low_p10": 42,
+              "low_p10+no_reciprocal_detector": 2,
+              "low_p10+quarantined": 2,
+              "matched_different_slot": 47,
+              "no_localization_match": 96,
+              "no_reciprocal_detector": 3,
+              "quarantined": 2
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 46,
+              "matched_different_slot": 47,
+              "no_localization_match": 96,
+              "no_reciprocal_detector": 5,
+              "quarantined": 4
+            },
+            "visible_known": 300
+          },
+          "6": {
+            "correct": 113,
+            "coverage": 0.3779264214046823,
+            "exclusive_reasons": {
+              "correct": 113,
+              "low_p10": 23,
+              "low_p10+no_reciprocal_detector": 10,
+              "low_p10+quarantined": 51,
+              "no_localization_match": 74,
+              "no_reciprocal_detector": 3,
+              "no_reciprocal_detector+quarantined": 1,
+              "quarantined": 24
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 84,
+              "no_localization_match": 74,
+              "no_reciprocal_detector": 14,
+              "quarantined": 76
+            },
+            "visible_known": 299
+          }
+        }
+      },
+      "330": {
+        "all": {
+          "correct": 1266,
+          "coverage": 0.7033333333333334,
+          "exclusive_reasons": {
+            "correct": 1266,
+            "low_p10": 185,
+            "low_p10+no_reciprocal_detector": 63,
+            "matched_different_slot": 5,
+            "no_localization_match": 33,
+            "no_reciprocal_detector": 248
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 248,
+            "matched_different_slot": 5,
+            "no_localization_match": 33,
+            "no_reciprocal_detector": 311
+          },
+          "visible_known": 1800
+        },
+        "per_cow": {
+          "1": {
+            "correct": 209,
+            "coverage": 0.6966666666666667,
+            "exclusive_reasons": {
+              "correct": 209,
+              "low_p10": 70,
+              "low_p10+no_reciprocal_detector": 6,
+              "matched_different_slot": 5,
+              "no_localization_match": 5,
+              "no_reciprocal_detector": 5
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 76,
+              "matched_different_slot": 5,
+              "no_localization_match": 5,
+              "no_reciprocal_detector": 11
+            },
+            "visible_known": 300
+          },
+          "2": {
+            "correct": 179,
+            "coverage": 0.5966666666666667,
+            "exclusive_reasons": {
+              "correct": 179,
+              "low_p10": 13,
+              "low_p10+no_reciprocal_detector": 11,
+              "no_localization_match": 16,
+              "no_reciprocal_detector": 81
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 24,
+              "no_localization_match": 16,
+              "no_reciprocal_detector": 92
+            },
+            "visible_known": 300
+          },
+          "3": {
+            "correct": 213,
+            "coverage": 0.71,
+            "exclusive_reasons": {
+              "correct": 213,
+              "low_p10": 27,
+              "low_p10+no_reciprocal_detector": 19,
+              "no_localization_match": 6,
+              "no_reciprocal_detector": 35
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 46,
+              "no_localization_match": 6,
+              "no_reciprocal_detector": 54
+            },
+            "visible_known": 300
+          },
+          "4": {
+            "correct": 146,
+            "coverage": 0.4866666666666667,
+            "exclusive_reasons": {
+              "correct": 146,
+              "low_p10": 36,
+              "low_p10+no_reciprocal_detector": 14,
+              "no_localization_match": 2,
+              "no_reciprocal_detector": 102
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 50,
+              "no_localization_match": 2,
+              "no_reciprocal_detector": 116
+            },
+            "visible_known": 300
+          },
+          "5": {
+            "correct": 274,
+            "coverage": 0.9133333333333333,
+            "exclusive_reasons": {
+              "correct": 274,
+              "low_p10": 9,
+              "low_p10+no_reciprocal_detector": 1,
+              "no_localization_match": 2,
+              "no_reciprocal_detector": 14
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 10,
+              "no_localization_match": 2,
+              "no_reciprocal_detector": 15
+            },
+            "visible_known": 300
+          },
+          "6": {
+            "correct": 245,
+            "coverage": 0.8166666666666667,
+            "exclusive_reasons": {
+              "correct": 245,
+              "low_p10": 30,
+              "low_p10+no_reciprocal_detector": 12,
+              "no_localization_match": 2,
+              "no_reciprocal_detector": 11
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 42,
+              "no_localization_match": 2,
+              "no_reciprocal_detector": 23
+            },
+            "visible_known": 300
+          }
+        }
+      },
+      "930": {
+        "all": {
+          "correct": 1100,
+          "coverage": 0.6128133704735376,
+          "exclusive_reasons": {
+            "correct": 1100,
+            "low_p10": 362,
+            "low_p10+no_reciprocal_detector": 54,
+            "low_p10+no_reciprocal_detector+quarantined": 18,
+            "low_p10+quarantined": 48,
+            "matched_different_slot": 10,
+            "no_localization_match": 103,
+            "no_reciprocal_detector": 62,
+            "no_reciprocal_detector+quarantined": 9,
+            "quarantined": 29
+          },
+          "overlapping_gate_counts": {
+            "low_p10": 482,
+            "matched_different_slot": 10,
+            "no_localization_match": 103,
+            "no_reciprocal_detector": 143,
+            "quarantined": 104
+          },
+          "visible_known": 1795
+        },
+        "per_cow": {
+          "1": {
+            "correct": 270,
+            "coverage": 0.9,
+            "exclusive_reasons": {
+              "correct": 270,
+              "low_p10": 9,
+              "low_p10+no_reciprocal_detector": 3,
+              "no_localization_match": 7,
+              "no_reciprocal_detector": 11
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 12,
+              "no_localization_match": 7,
+              "no_reciprocal_detector": 14
+            },
+            "visible_known": 300
+          },
+          "2": {
+            "correct": 160,
+            "coverage": 0.5333333333333333,
+            "exclusive_reasons": {
+              "correct": 160,
+              "low_p10": 119,
+              "low_p10+no_reciprocal_detector": 4,
+              "no_localization_match": 5,
+              "no_reciprocal_detector": 12
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 123,
+              "no_localization_match": 5,
+              "no_reciprocal_detector": 16
+            },
+            "visible_known": 300
+          },
+          "3": {
+            "correct": 156,
+            "coverage": 0.52,
+            "exclusive_reasons": {
+              "correct": 156,
+              "low_p10": 94,
+              "low_p10+no_reciprocal_detector": 17,
+              "low_p10+no_reciprocal_detector+quarantined": 1,
+              "low_p10+quarantined": 2,
+              "matched_different_slot": 1,
+              "no_localization_match": 11,
+              "no_reciprocal_detector": 13,
+              "quarantined": 5
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 114,
+              "matched_different_slot": 1,
+              "no_localization_match": 11,
+              "no_reciprocal_detector": 31,
+              "quarantined": 8
+            },
+            "visible_known": 300
+          },
+          "4": {
+            "correct": 234,
+            "coverage": 0.78,
+            "exclusive_reasons": {
+              "correct": 234,
+              "low_p10": 30,
+              "low_p10+no_reciprocal_detector": 3,
+              "low_p10+no_reciprocal_detector+quarantined": 8,
+              "low_p10+quarantined": 3,
+              "no_reciprocal_detector": 14,
+              "no_reciprocal_detector+quarantined": 2,
+              "quarantined": 6
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 44,
+              "no_reciprocal_detector": 27,
+              "quarantined": 19
+            },
+            "visible_known": 300
+          },
+          "5": {
+            "correct": 203,
+            "coverage": 0.6766666666666666,
+            "exclusive_reasons": {
+              "correct": 203,
+              "low_p10": 56,
+              "low_p10+no_reciprocal_detector": 22,
+              "matched_different_slot": 5,
+              "no_reciprocal_detector": 5,
+              "no_reciprocal_detector+quarantined": 4,
+              "quarantined": 5
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 78,
+              "matched_different_slot": 5,
+              "no_reciprocal_detector": 31,
+              "quarantined": 9
+            },
+            "visible_known": 300
+          },
+          "6": {
+            "correct": 77,
+            "coverage": 0.26101694915254237,
+            "exclusive_reasons": {
+              "correct": 77,
+              "low_p10": 54,
+              "low_p10+no_reciprocal_detector": 5,
+              "low_p10+no_reciprocal_detector+quarantined": 9,
+              "low_p10+quarantined": 43,
+              "matched_different_slot": 4,
+              "no_localization_match": 80,
+              "no_reciprocal_detector": 7,
+              "no_reciprocal_detector+quarantined": 3,
+              "quarantined": 13
+            },
+            "overlapping_gate_counts": {
+              "low_p10": 111,
+              "matched_different_slot": 4,
+              "no_localization_match": 80,
+              "no_reciprocal_detector": 24,
+              "quarantined": 68
+            },
+            "visible_known": 295
+          }
+        }
+      }
+    }
+  },
+  "reason_semantics": "no_localization_match means no propagated LCC box received the truth match, not necessarily a raw YOLO miss. matched_different_slot is a geometrically matched box with no corresponding original name. Low-p10/reciprocal/quarantine counts overlap; exclusive combinations partition observations.",
+  "scope": "Posthoc CPU explanation only; exact original one-to-one IoU .5 assignments, all known truth observations, fixed naming gates, no threshold selection",
+  "sources": {
+    ".cache/cow-cutie/crowded-births/streaming.json": "2647641cdbd770a1d71ed1f28e2f2cf2e196f22e75a7dd908772cda90e40ce47",
+    ".cache/cow-cutie/streaming-development/streaming.json": "c4a5a561c9a8d201a8e02e2cc9fe77fe5deacd6bbf7639189c46dde041c431c7",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_birth_losses.py": "3a9c3bcefe79ad8e351cef4e7c4a18a453293a4a247566b4ee1bddd1f5016bec",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_birth_protocol.json": "2b07540a4796072968518eda6b6bc93fb97cbe17e787092332090eccb8a0a54f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/crowded-births.json": "ab656bc9fd7cf3fab87639437a3075c67faf3f45ceb1229c9934a8902f733207",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-streaming-development.json": "a204ef7acdeb279f19476b480b51f90b76129385a1e3aa12646d51b7847508c1",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6",
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26"
+  }
+}

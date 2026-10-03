@@ -1,0 +1,7 @@
+{
+  "probe_sha256": "74547863a91f5d71753ad13e37668726e32faf3a5eab5660b67f27f7b9ff0506",
+  "outcome": "failed before next-step readout",
+  "error": "selected index k out of range",
+  "cause": "Synthetic64x96input produces24memorykeys, below unchangedSDKtop_k30. Probe will use96x128(48keys); no SDK or animal method changed.",
+  "device": "cpu"
+}

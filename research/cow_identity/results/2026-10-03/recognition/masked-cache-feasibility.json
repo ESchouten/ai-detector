@@ -1,0 +1,68 @@
+{
+  "gallery": {
+    "background": 127,
+    "count": 60,
+    "dimension": 2152,
+    "directory": ".cache/cow-farm-evaluation/step-000/gallery",
+    "encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+    "source": "Original60 references from0\u2013299s publisher-box selection then SAM foreground masking. Reference rectangles retained; no principal-axis rotation for masked variant.",
+    "variant": "masked"
+  },
+  "limits": "Masked availability ignores rectangle overlap only because other-object pixels are removed; production usable_crop still rejects overlap and is unchanged. The proposed isolated masked test is therefore a different crop policy, not exact app success. Three-agreement replay uses perfect known labels with rejection of unmatched/unknown and is not a mathematical maximum. Source labels and manual initial segmentation may already favor the diagnostic.",
+  "panels": {
+    "1230": {
+      "geometry_upper_coverage": 0.9177320733740967,
+      "masked_gate_upper_coverage": 0.7192884936075598,
+      "matched_known": 1651,
+      "original_wholebox_gate_known": 173,
+      "perfect_masked_three_agreement_known": 1042,
+      "perfect_three_replay_coverage": 0.5792106725958867,
+      "predictions": 2344,
+      "size_border_eligible_known": 1591,
+      "size_border_p10_eligible_known": 1294,
+      "unmatched": 100,
+      "visible_known": 1799,
+      "visible_unknown": 598
+    },
+    "930": {
+      "geometry_upper_coverage": 0.9743732590529248,
+      "masked_gate_upper_coverage": 0.7314763231197772,
+      "matched_known": 1749,
+      "original_wholebox_gate_known": 288,
+      "perfect_masked_three_agreement_known": 1063,
+      "perfect_three_replay_coverage": 0.5922005571030641,
+      "predictions": 2397,
+      "size_border_eligible_known": 1615,
+      "size_border_p10_eligible_known": 1313,
+      "unmatched": 62,
+      "visible_known": 1795,
+      "visible_unknown": 598
+    }
+  },
+  "query": {
+    "contract": {
+      "box_convention": "Retain the existing frozen Cutie boxes_from_mask convention",
+      "crop": "Largest8-connected original object component; original mask AABB; other pixels gray127",
+      "encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+      "labels": "No query ground truth read; original anonymous slots only",
+      "protocol_sha256": "5e1f4730c8b1020edcd11a890a5c911b35f9ceac1094c5a856a30c941956a7d2",
+      "runner_sha256": "7f1bb165da9cc60bf8a85a25ed645e47c7d1976ee1db91dcc6f14aac1f84acad"
+    },
+    "count": 7141,
+    "dimension": 2152,
+    "directory": ".cache/cow-cutie/miew-foreground",
+    "initialization": "Historical publisher-box SAM manual-seeded Cutie2Hz; not current actual-detector-proposal-seeded run."
+  },
+  "scope": "Cache compatibility and mathematical crop-availability diagnostic only; no new images, inference, threshold choice, enrollment review or recognition claims. Ignore seed names; only strict geometry matching uses existing exposed truth.",
+  "sources": {
+    ".cache/cow-cutie/miew-foreground/manifest.json": "1a721ae71a6d23d993a2a8e2c924883df58408d0225ffa6f4c456abbad1bb1d5",
+    ".cache/cow-cutie/miew-foreground/vectors.npz": "c8a312f3122871569d7613737ea511dd4eb7ed807d327db860200c6c72810840",
+    ".cache/cow-farm-evaluation/step-000/gallery/manifest.json": "271bbfdd31a24f2e3b8243e6dca19ba1e2a928dd3340a6a577e0c22744ccd4f6",
+    ".cache/cow-farm-evaluation/step-000/gallery/vectors.npz": "0b192c8ba69ea81688d16e51d91d025e9fbcf6fb73e4664c81b0784ee46f0840",
+    ".cache/cow-tracked-features/mixed-1230/manifest.json": "6e2ddc0012060ade513047317930efebdd21b0337e7a3b99cf98d001bba54279",
+    ".cache/cow-tracked-features/mixed-930/manifest.json": "e9f6c29036f905d839b65ea0fe5de9ae00d1c2f27d91fab95a676f11f2ed0595",
+    "research/cow_identity/cutie_appearance_protocol.json": "5e1f4730c8b1020edcd11a890a5c911b35f9ceac1094c5a856a30c941956a7d2",
+    "research/cow_identity/cutie_features.py": "7f1bb165da9cc60bf8a85a25ed645e47c7d1976ee1db91dcc6f14aac1f84acad",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  }
+}

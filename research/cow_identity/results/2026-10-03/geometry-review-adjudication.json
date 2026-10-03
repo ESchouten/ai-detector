@@ -1,0 +1,77 @@
+{
+  "scope": "Symmetric raw-pixel adjudication after both independent geometry reviews froze, before publisher/model reveal. Original files preserved; no replacement ground truth or score.",
+  "frozen_at_utc": "2026-10-03T10:40:03.340634+00:00",
+  "sources": {
+    "research/cow_identity/results/2026-10-03/geometry-review-audit.json": "191c7b73d58f0702cf7394120bb7673b134d1aabdf8f7668bde84919d8867ee7",
+    "research/cow_identity/results/2026-10-03/geometry-review-cattle.json": "e1951ca2bed28d881e78e54fabb8cedd83cf88a25d2ca7435b425ee1970b7c80",
+    "research/cow_identity/results/2026-10-03/geometry-review-comparison.json": "5045dd8c11dcd8eb58e347e89e0e33001f8ec4495677df2ffc7ff4ea5ad05ed8"
+  },
+  "reviewers": [
+    "identity_integration_audit",
+    "cattle_research"
+  ],
+  "biological_identity": "Not assessed in this geometry-only diagnostic. Anonymous local letters carry no persistent identity.",
+  "findings": [
+    {
+      "second": 442,
+      "local_objects": {
+        "audit": "D",
+        "cattle": "D"
+      },
+      "conclusion": "The leftmost calf has a visible head/neck extending down-left through the foreground rail. Audit reviewer omitted these visible parts; cattle reviewer broader bounds are supported. Both original objects were flagged uncertain.",
+      "category": "reviewer omitted visible anatomy",
+      "uncertainty": "Pixel boundary remains approximate."
+    },
+    {
+      "second": 517,
+      "local_objects": {
+        "audit": "A,F",
+        "cattle": "E,F"
+      },
+      "conclusion": "No animal is visible in the audit A top-border rectangle. This is an audit-reviewer false object. A separate narrow dark foreground calf is visible beside the taller calf behind it; audit F conflated their visible extents. Cattle E/F separation is supported, with crowded part ownership uncertain.",
+      "category": "reviewer false object and merge",
+      "uncertainty": "Precise extent of overlapping foreground bodies is unresolved."
+    },
+    {
+      "second": 592,
+      "local_objects": {
+        "audit": "A,F",
+        "cattle": "E,F"
+      },
+      "conclusion": "The top-border audit A rectangle is empty. Five foreground bodies are distinguishable below the three upper/side bodies; audit reviewer merged adjacent foreground extents. Cattle separation is supported but occluded individual boundaries remain uncertain.",
+      "category": "reviewer false object and merge",
+      "uncertainty": "Do not treat approximate crowded rectangles as exact masks."
+    },
+    {
+      "second": 1267,
+      "local_objects": {
+        "audit": "B",
+        "cattle": "B,C"
+      },
+      "conclusion": "Center and fixed +/-1s context support three distinct left-side bodies: the leftmost dark calf with an extended turned head, an adjacent white-backed calf, and a dark calf with a white flank patch and a separate lower head. Audit B merged two; cattle eight-object interpretation is better supported.",
+      "category": "reviewer missed split",
+      "uncertainty": "Hidden anatomy and exact crowded bounds remain unresolved."
+    },
+    {
+      "second": 1492,
+      "local_objects": {
+        "audit": "G,H",
+        "cattle": "C,H"
+      },
+      "conclusion": "Fixed context supports one bent lower-right animal, split into audit G/H, and an additional white-backed foreground-left body omitted by audit review. Cattle separation is better supported.",
+      "category": "reviewer split and omission",
+      "uncertainty": "Head/body ownership in the left crowd is clearer in context but pixel bounds remain approximate."
+    },
+    {
+      "seconds": [
+        2887,
+        2962
+      ],
+      "conclusion": "Both reviewers retained tiny upper-border possible animal fragments and marked presence uncertain. No identity or definite extra-animal count is inferred.",
+      "category": "unresolved fragment",
+      "uncertainty": "Retain both possibilities; do not silently remove uncertain instances."
+    }
+  ],
+  "interpretation": "High median rectangle overlap does not establish accurate instance counts or biological identities. Both reviews are AI-assisted, with prior general scene exposure. Their markedly different uncertainty rates are a policy-interpretation difference, not evidence that one observer is objectively more accurate.",
+  "next": "Reveal publisher geometry and every cached model output only for the fixed 20 centers. Keep all original metrics and acceptance gates unchanged."
+}

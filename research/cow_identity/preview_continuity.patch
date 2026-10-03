@@ -1,0 +1,955 @@
+--- a/detector/LIVE_PREVIEW.md
++++ b/detector/LIVE_PREVIEW.md
+@@ -10,9 +10,9 @@
+ 
+ All paths below are inside `DATA_DIR/live`. Source keys are SHA-256 hashes of the detector's resolved source string; filenames and messages never contain camera URLs or credentials.
+ 
+-* `session.json`: `{version: 1, runId, updatedAt}`. A unique ID identifies each process run. The publisher replaces its heartbeat once per second and removes its own session on orderly shutdown.
++* `session.json`: `{version: 1, runId, updatedAt, sourceEpochs}`. `sourceEpochs` maps configured source keys to the current capture epoch, or `null` while disconnected. It is optional when reading older files. A unique ID identifies each process run. The publisher replaces its heartbeat once per second and removes its own session on orderly shutdown.
+ * `leases/<sourceKey>.json`: `{version: 1, expiresAt}`. Expiry is Unix seconds. The web process shares one lease between viewers of a source, renews it every three seconds, and removes it when the final viewer disconnects. A lease expires after twelve seconds if the web process crashes. Python ignores invalid or expired leases.
+-* `frames/<sourceKey>.detector-<ordinal>.json`: `{version: 1, runId, sourceKey, ruleId, capturedAt, publishedAt, image, boxes}`. The image is `{width, height, jpeg}` with a base64 JPEG. Boxes contain pixel coordinates `x1, y1, x2, y2`, nullable `label`, `confidence`, and `trackId`. Each record is written to a temporary sibling and atomically replaced, keeping image and boxes coherent.
++* `frames/<sourceKey>.detector-<ordinal>.json`: `{version: 1, runId, sourceKey, ruleId, capturedAt, publishedAt, image, boxes}`. The image is `{width, height, jpeg}` with a base64 JPEG. Boxes contain pixel coordinates `x1, y1, x2, y2`, nullable `label`, `confidence`, and `trackId`. Live records also carry `capture: {epoch, sequence}` from the analyzed frame. This field is absent for metadata-free finite sources. Each record is written to a temporary sibling and atomically replaced, keeping image and boxes coherent.
+ 
+ Each rule/source pair has one retained record. Starting a publisher removes previous run records and its known temporary frame files. Preview failures are logged independently of event processing; a failed rule's encoding does not stop other rules from publishing.
+ 
+@@ -24,6 +24,12 @@
+ * `status` contains a waiting or unavailable message, usually with the affected camera ID, rule ID and label. It clears the corresponding boxes; an empty detection result also clears previous boxes for that rule.
+ * `heartbeat` contains `{}` when neither pictures nor statuses changed. The browser can distinguish an unchanged picture from a stalled connection.
+ 
+-The server accepts a frame only for the current session and matching source/rule. A session becomes unavailable after six seconds without a heartbeat. A frame becomes unavailable after the larger of fifteen seconds or three configured inference intervals plus five seconds. Freshness uses publication time; file footage may have historical capture timestamps. A changed run ID closes the stream so reconnecting resolves current configuration and labels. Slow consumers skip intermediate records instead of building an unbounded response queue.
++The server accepts a frame only for the current session and matching source/rule. When the session declares a source epoch, the frame must carry that same epoch. A disconnected source clears its overlays even if an older frame was published recently. Older sessions without epoch metadata retain their existing age-based behavior. A session becomes unavailable after six seconds without a heartbeat. A frame becomes unavailable after the larger of fifteen seconds or three configured inference intervals plus five seconds. Freshness uses publication time; file footage may have historical capture timestamps. A changed run ID closes the stream so reconnecting resolves current configuration and labels. Slow consumers skip intermediate records instead of building an unbounded response queue.
+ 
+ The transport assumes one detector publisher and one web process share the data directory, as in managed installations and the supplied Compose configurations. The preview is an operational view, not a recording archive or proof that recording and alert delivery succeeded.
++
++## Capture continuity — proposed isolated patch
++
++Before publishing the first frame of a reopened camera or changed native geometry, capture reports an unthrottled `source_epoch` event. Disconnect reports are also unthrottled. Bootstrap sends source status synchronously to the preview before forwarding it to the launcher. The preview immediately invalidates that source’s queued observations, keeps other cameras intact, and checks the epoch both before JPEG encoding and after temporary-file writing. Only the final guarded rename holds the state lock; capture never waits for JPEG encoding or file serialization. Late worker output from a previous epoch cannot become a fresh-looking picture. Inference and snapshot-processing status records carry the analyzed capture epoch too. Once the launcher knows a camera epoch, results with a different or missing epoch cannot establish readiness or refresh processing activity. The status limiter retains only the last time/epoch per kind, source and rule, so an old result cannot suppress the first result from a new connection.
++
++The session heartbeat communicates this bounded per-source state using the existing transport. Browser visibility can lag behind capture invalidation until the next heartbeat/poll, and an unusually slow encoder may delay that heartbeat until the existing stale-session limit applies. This patch does not add live confirmation or guarantee synchronization with the separate FFmpeg camera video. Future confirmation must validate current in-memory source state and use the actual analyzed snapshot.
+--- a/detector/MIGRATION.md
++++ b/detector/MIGRATION.md
+@@ -261,3 +261,7 @@
+ Launcher status records now include `backend`, `validation`, `validation_failed`, `delivery` and `delivery_failed`. Delivery records carry the same detector/destination IDs as recording outcomes; disk delivery can emit both recording and delivery records. Consumers should dispatch by event kind, not positional order. Configuration, presets, archive metadata and inference decisions remain unchanged. The desktop supervisor can restart a stalled processing worker while respecting explicit pause and application shutdown.
+ 
+ `waiting_delivery` and `processing_resumed` identify intentional queue backpressure. Queue waits keep emitting a throttled, rule-scoped observation, so healthy slow validation/export does not trigger inference-stall recovery. The launcher retains separate frame/inference timestamps and reports the wait; absent observations still expire. Configuration, event acceptance and queue/drain behavior are unchanged.
++
++## Live preview continuity — proposed isolated follow-up
++
++An additive `source_epoch` operational event carries `sourceEpoch`; it and `offline` events are not rate-limited. Pipeline `inference` and snapshot `processed` records also carry the analyzed epoch, preserved by the rule reporter. The launcher ignores stale/missing epochs after continuity is declared, while metadata-free legacy runs retain their behavior. Version 1 preview files gain optional frame `capture` (epoch/sequence) and session `sourceEpochs` fields. Updated readers still accept legacy records when the session has no epoch for that source. Once an epoch is declared, a missing or mismatched frame epoch is unavailable. No configuration, archive or identity catalog schema changes are required. This follow-up is layered on the proposed source continuity patch and remains isolated pending review.
+--- a/detector/src/aidetector/adapters/live_preview.py
++++ b/detector/src/aidetector/adapters/live_preview.py
+@@ -16,21 +16,28 @@
+ from aidetector.adapters.media import MediaError
+ from aidetector.adapters.media.images import encode_jpeg
+ from aidetector.application.ports import PublishObservation
++from aidetector.application.status import StatusEvent
+ from aidetector.domain.models import Observation
+ 
+ logger = logging.getLogger(__name__)
+ _FRAME_NAME = re.compile(r"[a-f0-9]{64}\.detector-[1-9]\d*\.(?:json|[a-f0-9]{32}\.tmp)")
+ 
+ 
+-def _atomic_json(path: Path, record: dict) -> None:
++@contextmanager
++def _prepared_json(path: Path, record: dict) -> Iterator[Path]:
+     temporary = path.with_suffix(f".{uuid4().hex}.tmp")
+     try:
+         temporary.write_text(
+             json.dumps(record, separators=(",", ":")), encoding="utf-8"
+         )
+-        temporary.replace(path)
++        yield temporary
+     finally:
+         temporary.unlink(missing_ok=True)
++
++
++def _atomic_json(path: Path, record: dict) -> None:
++    with _prepared_json(path, record) as temporary:
++        temporary.replace(path)
+ 
+ 
+ class LivePreview:
+@@ -41,6 +48,7 @@
+         self.interval = interval
+         self.run_id = uuid4().hex
+         self._sources: dict[str, str] = {}
++        self._epochs: dict[str, str | None] = {}
+         self._pending: dict[tuple[str, str], Observation] = {}
+         self._published: dict[tuple[str, str], float] = {}
+         self._active: set[str] = set()
+@@ -59,10 +67,42 @@
+         def publish(source: str, observation: Observation) -> None:
+             source_key = source_keys[source]
+             with self._lock:
+-                if source_key in self._active:
++                if source_key in self._active and self._current(
++                    source_key, observation
++                ):
+                     self._pending[(source_key, rule_id)] = observation
+ 
+         return publish
++
++    def source_status(self, event: StatusEvent) -> None:
++        """Invalidate capture state synchronously; never perform I/O here."""
++        if event.kind not in {"source_epoch", "offline"} or event.source is None:
++            return
++        key = self._sources.get(event.source)
++        if key is None:
++            return
++        with self._lock:
++            self._epochs[key] = (
++                event.source_epoch if event.kind == "source_epoch" else None
++            )
++            self._pending = {
++                k: value for k, value in self._pending.items() if k[0] != key
++            }
++            self._published = {
++                k: value for k, value in self._published.items() if k[0] != key
++            }
++            self._heartbeat = 0
++
++    def _current(self, source_key: str, observation: Observation) -> bool:
++        if source_key not in self._epochs:
++            return (
++                True  # Finite sources and metadata-free callers retain their behavior.
++            )
++        return (
++            self._epochs[source_key] is not None
++            and observation.capture is not None
++            and observation.capture.epoch == self._epochs[source_key]
++        )
+ 
+     @contextmanager
+     def open(self) -> Iterator[None]:
+@@ -120,6 +160,7 @@
+         now = monotonic()
+         with self._lock:
+             self._active = active
++            epochs = self._epochs.copy()
+             ready = {
+                 key: observation
+                 for key, observation in self._pending.items()
+@@ -138,6 +179,7 @@
+                     "version": 1,
+                     "runId": self.run_id,
+                     "updatedAt": datetime.now(UTC).isoformat(),
++                    "sourceEpochs": epochs,
+                 },
+             )
+             self._heartbeat = now
+@@ -146,7 +188,6 @@
+                 break
+             try:
+                 self._write_frame(source_key, rule_id, observation)
+-                self._published[(source_key, rule_id)] = monotonic()
+                 self._failure = None
+             except (OSError, MediaError) as error:
+                 self._report_failure(error)
+@@ -170,6 +211,9 @@
+     def _write_frame(
+         self, source_key: str, rule_id: str, observation: Observation
+     ) -> None:
++        with self._lock:
++            if not self._current(source_key, observation):
++                return
+         height, width = observation.image.shape[:2]
+         record = {
+             "version": 1,
+@@ -209,7 +253,18 @@
+                 for box in observation.boxes
+             ],
+         }
+-        if self._has_viewer(source_key) and not self._stop.is_set():
+-            _atomic_json(
+-                self.directory / "frames" / f"{source_key}.{rule_id}.json", record
+-            )
++        if observation.capture is not None:
++            record["capture"] = {
++                "epoch": observation.capture.epoch,
++                "sequence": observation.capture.sequence,
++            }
++        if not self._has_viewer(source_key) or self._stop.is_set():
++            return
++        path = self.directory / "frames" / f"{source_key}.{rule_id}.json"
++        with _prepared_json(path, record) as temporary:
++            # Encoding/writing can outlast a reconnect. Only the final rename holds
++            # the state lock, so capture invalidation never waits on JPEG encoding.
++            with self._lock:
++                if self._current(source_key, observation) and not self._stop.is_set():
++                    temporary.replace(path)
++                    self._published[(source_key, rule_id)] = monotonic()
+--- a/detector/src/aidetector/adapters/operational_status.py
++++ b/detector/src/aidetector/adapters/operational_status.py
+@@ -21,7 +21,9 @@
+     def __init__(self, output: TextIO):
+         self.output = output
+         self._lock = Lock()
+-        self._last_sent: dict[tuple[str, str | None, str | None], float] = {}
++        self._last_sent: dict[
++            tuple[str, str | None, str | None], tuple[float, str | None]
++        ] = {}
+ 
+     def __call__(self, event: StatusEvent) -> None:
+         # Captures and delivery workers report concurrently. Keep each record
+@@ -33,13 +35,16 @@
+                 "frame",
+                 "inference",
+                 "processed",
+-                "offline",
+                 "waiting_delivery",
+             }:
+                 previous = self._last_sent.get(key)
+-                if previous is not None and now - previous < 1:
++                if (
++                    previous is not None
++                    and now - previous[0] < 1
++                    and previous[1] == event.source_epoch
++                ):
+                     return
+-                self._last_sent[key] = now
++                self._last_sent[key] = (now, event.source_epoch)
+             record: dict[str, str | int] = {
+                 "version": 1,
+                 "event": event.kind,
+@@ -53,5 +58,7 @@
+                 record["ruleId"] = event.rule_id
+             if event.destination_id is not None:
+                 record["destinationId"] = event.destination_id
++            if event.source_epoch is not None:
++                record["sourceEpoch"] = event.source_epoch
+             self.output.write(STATUS_PREFIX + json.dumps(record) + "\n")
+             self.output.flush()
+--- a/detector/src/aidetector/adapters/sources/streams.py
++++ b/detector/src/aidetector/adapters/sources/streams.py
+@@ -53,7 +53,9 @@
+ class _CaptureSession:
+     """Stamp frames from one open capture; geometry changes start a new epoch."""
+ 
+-    def __init__(self):
++    def __init__(self, source: str, report_status: ReportStatus):
++        self.source = source
++        self.report_status = report_status
+         self._shape: tuple[int, ...] | None = None
+         self._epoch = ""
+         self._sequence = 0
+@@ -62,6 +64,9 @@
+         if image.shape != self._shape:
+             self._shape = image.shape
+             self._epoch, self._sequence = uuid4().hex, 0
++            self.report_status(
++                StatusEvent("source_epoch", self.source, source_epoch=self._epoch)
++            )
+         stamp = CaptureStamp(self._epoch, self._sequence, sampled_at)
+         self._sequence += 1
+         return CapturedFrame(Frame(datetime.now(), image, stamp))
+@@ -244,7 +249,7 @@
+                     )
+                 else:
+                     first_frame = True
+-                    session = _CaptureSession()
++                    session = _CaptureSession(source, self.report_status)
+                     measured_at = monotonic()
+                     reads = 0
+                     read_seconds = publish_seconds = 0.0
+--- a/detector/src/aidetector/application/pipeline.py
++++ b/detector/src/aidetector/application/pipeline.py
+@@ -48,18 +48,32 @@
+                 for source, frames in batch.frames.items()
+             ]
+             for event in snapshots:
+-                self.publish_observation(event.source, event.observations[-1])
+-                self.report_status(StatusEvent("processed", event.source))
++                latest = event.observations[-1]
++                self.publish_observation(event.source, latest)
++                self.report_status(
++                    StatusEvent(
++                        "processed",
++                        event.source,
++                        source_epoch=latest.capture.epoch if latest.capture else None,
++                    )
++                )
+             return snapshots
+         completed: list[DetectionEvent] = []
+         if batch.frames:
+             for source, observations in self.detector.detect(batch.frames).items():
++                latest = observations[-1]
+                 if self.identifier is not None:
+                     # Context frames reuse the latest boxes; only this frame was inferred.
+-                    latest = self.identifier.identify(source, observations[-1])
++                    latest = self.identifier.identify(source, latest)
+                     observations = (*observations[:-1], latest)
+-                self.publish_observation(source, observations[-1])
+-                self.report_status(StatusEvent("inference", source))
++                self.publish_observation(source, latest)
++                self.report_status(
++                    StatusEvent(
++                        "inference",
++                        source,
++                        source_epoch=latest.capture.epoch if latest.capture else None,
++                    )
++                )
+                 completed.extend(self.events.observe(source, observations))
+         if batch.advance_to is not None:
+             completed.extend(self.events.advance(batch.advance_to))
+--- a/detector/src/aidetector/application/status.py
++++ b/detector/src/aidetector/application/status.py
+@@ -13,6 +13,7 @@
+         "ready",
+         "models_ready",
+         "frame",
++        "source_epoch",
+         "inference",
+         "processed",
+         "recording",
+@@ -35,6 +36,7 @@
+     message: str | None = None
+     rule_id: str | None = None
+     destination_id: str | None = None
++    source_epoch: str | None = None
+ 
+ 
+ ReportStatus = Callable[[StatusEvent], None]
+--- a/detector/src/aidetector/bootstrap.py
++++ b/detector/src/aidetector/bootstrap.py
+@@ -160,8 +160,14 @@
+             engines = EnginePreparation(
+                 data_directory / "models" / "prepared", stop_requested, report_status
+             )
+-        streams = StreamPool(report_status)
+         preview = LivePreview(data_directory / "live") if live_preview else None
++
++        def source_status(event: StatusEvent) -> None:
++            if preview is not None:
++                preview.source_status(event)
++            report_status(event)
++
++        streams = StreamPool(source_status)
+         workers: list[DetectorWorker] = []
+         identifiers = _identity_resources(
+             config, data_directory, resources, report_status
+--- a/detector/tests/adapters/sources/test_shared_streams.py
++++ b/detector/tests/adapters/sources/test_shared_streams.py
+@@ -99,8 +99,9 @@
+         camera = cameras["0"]
+         camera.send(1)
+         camera.flush()
+-        assert reports[0].kind == "frame"
+-        assert reports[0].source == "0"
++        assert [event.kind for event in reports] == ["source_epoch", "frame"]
++        assert all(event.source == "0" for event in reports)
++        assert reports[0].source_epoch
+         camera.finish()
+         assert offline.wait(3), "A failed capture read did not report disconnection"
+         assert reports[-1].kind == "offline"
+@@ -327,7 +328,8 @@
+ 
+ 
+ def test_geometry_change_starts_a_new_epoch_only_for_the_changed_camera(cameras):
+-    streams = StreamPool()
++    statuses = []
++    streams = StreamPool(statuses.append)
+     subscription = streams.subscribe(("0", "1"), width=32)
+     batches = subscription.batches()
+     with running(streams, cameras):
+@@ -348,6 +350,21 @@
+     assert changed.capture.sequence == 0
+     assert first.frames["1"][0].capture.epoch == following.frames["1"][0].capture.epoch
+     assert following.frames["1"][0].capture.sequence == 1
++    zero = [event for event in statuses if event.source == "0"]
++    assert [event.kind for event in zero[:4]] == [
++        "source_epoch",
++        "frame",
++        "source_epoch",
++        "frame",
++    ]
++    assert [event.source_epoch for event in zero if event.kind == "source_epoch"] == [
++        before.capture.epoch,
++        changed.capture.epoch,
++    ]
++    assert (
++        sum(event.kind == "source_epoch" and event.source == "1" for event in statuses)
++        == 1
++    )
+ 
+ 
+ @pytest.mark.parametrize("use_yolo", [False, True])
+@@ -355,6 +372,7 @@
+     tmp_path, monkeypatch, cameras, use_yolo
+ ):
+     stop = Event()
++    reports = []
+     delivered = {label: Event() for label in ("first", "second")}
+     original_export = DiskExporter.export
+ 
+@@ -388,7 +406,14 @@
+         }
+     )
+     with ThreadPoolExecutor(max_workers=1) as workers:
+-        task = workers.submit(run_application, config, tmp_path, tmp_path, stop)
++        task = workers.submit(
++            run_application,
++            config,
++            tmp_path,
++            tmp_path,
++            stop,
++            report_status=reports.append,
++        )
+         try:
+             # Both real models and first-use SDK imports finish before capture starts.
+             assert cameras["0"].opened.wait(30)
+@@ -399,6 +424,13 @@
+             cameras["0"].finish()
+         stats = task.result(timeout=5)
+     assert [item.events for item in stats] == [1, 1]
++    [epoch] = [event.source_epoch for event in reports if event.kind == "source_epoch"]
++    completed_kind = "inference" if use_yolo else "processed"
++    assert sorted(
++        (event.rule_id, event.source_epoch)
++        for event in reports
++        if event.kind == completed_kind
++    ) == [("detector-1", epoch), ("detector-2", epoch)]
+     assert cameras["0"].opens == cameras["0"].releases == 1
+     for label in delivered:
+         [metadata] = (tmp_path / "detections" / label).glob(
+--- a/detector/tests/adapters/test_live_preview.py
++++ b/detector/tests/adapters/test_live_preview.py
+@@ -12,7 +12,13 @@
+ from aidetector.adapters.live_preview import LivePreview
+ from aidetector.adapters.media import MediaError
+ from aidetector.adapters.media.images import encode_jpeg
+-from aidetector.domain.models import BoundingBox, IdentityMatch, Observation
++from aidetector.application.status import StatusEvent
++from aidetector.domain.models import (
++    BoundingBox,
++    CaptureStamp,
++    IdentityMatch,
++    Observation,
++)
+ 
+ 
+ def wait_for(condition):
+@@ -233,3 +239,106 @@
+         "similarity": 0.3,
+     }
+     assert "identity" not in record["boxes"][2]
++
++
++def captured(value, epoch, sequence=0):
++    return replace(
++        observation(value), capture=CaptureStamp(epoch, sequence, sequence / 10)
++    )
++
++
++def test_reconnect_rejects_queued_and_late_old_frames_without_affecting_other_camera(
++    tmp_path, monkeypatch
++):
++    first = lease(tmp_path, "first")
++    second = lease(tmp_path, "second")
++    entered, release = Event(), Event()
++    encoded = []
++
++    def encode(image, quality):
++        value = int(image[0, 0, 0])
++        encoded.append(value)
++        if value == 1:
++            entered.set()
++            assert release.wait(5)
++        return encode_jpeg(image, quality)
++
++    monkeypatch.setattr("aidetector.adapters.live_preview.encode_jpeg", encode)
++    publisher = LivePreview(tmp_path, interval=0.01)
++    publish = publisher.observer("detector-1", ("first", "second"))
++    publisher.source_status(StatusEvent("source_epoch", "first", source_epoch="old"))
++    publisher.source_status(StatusEvent("source_epoch", "second", source_epoch="other"))
++    publisher.source_status(
++        StatusEvent("source_epoch", "not-configured", source_epoch="ignored")
++    )
++    first_file = tmp_path / "frames" / f"{first}.detector-1.json"
++    second_file = tmp_path / "frames" / f"{second}.detector-1.json"
++    with publisher.open():
++        try:
++            wait_for(lambda: read_record(tmp_path / "session.json"))
++            publish("first", captured(1, "old"))
++            assert entered.wait(3)
++            publish("first", captured(2, "old", 1))  # Pending while JPEG 1 is blocked.
++            publish("second", captured(7, "other"))
++            publisher.source_status(StatusEvent("offline", "first"))
++            publisher.source_status(
++                StatusEvent("source_epoch", "first", source_epoch="new")
++            )
++            publish("first", captured(3, "new"))
++            publish(
++                "first", captured(4, "old", 2)
++            )  # Late old worker result cannot replace it.
++            publish(
++                "first", observation(5)
++            )  # Missing metadata cannot bypass known continuity.
++        finally:
++            release.set()
++        record = wait_for(lambda: read_record(first_file))
++        other = wait_for(lambda: read_record(second_file))
++        assert record["capture"] == {"epoch": "new", "sequence": 0}
++        assert other["capture"] == {"epoch": "other", "sequence": 0}
++        assert encoded == [1, 7, 3]
++        session = wait_for(
++            lambda: (
++                (value := read_record(tmp_path / "session.json"))
++                and value["sourceEpochs"].get(first) == "new"
++                and value
++            )
++        )
++        assert session["sourceEpochs"] == {first: "new", second: "other"}
++
++
++def test_disconnect_during_jpeg_encoding_cannot_publish_a_fresh_looking_old_picture(
++    tmp_path, monkeypatch
++):
++    key = lease(tmp_path, "camera")
++    entered, release = Event(), Event()
++
++    def encode(image, quality):
++        entered.set()
++        assert release.wait(5)
++        return encode_jpeg(image, quality)
++
++    monkeypatch.setattr("aidetector.adapters.live_preview.encode_jpeg", encode)
++    publisher = LivePreview(tmp_path, interval=0.01)
++    publish = publisher.observer("detector-1", ("camera",))
++    publisher.source_status(StatusEvent("source_epoch", "camera", source_epoch="old"))
++    file = tmp_path / "frames" / f"{key}.detector-1.json"
++    with publisher.open():
++        try:
++            wait_for(lambda: read_record(tmp_path / "session.json"))
++            publish("camera", captured(1, "old"))
++            assert entered.wait(3)
++            publisher.source_status(StatusEvent("offline", "camera"))
++            publish("camera", captured(2, "old", 1))
++        finally:
++            release.set()
++        wait_for(
++            lambda: (
++                (value := read_record(tmp_path / "session.json"))
++                and key in value["sourceEpochs"]
++                and value["sourceEpochs"][key] is None
++            )
++        )
++        assert not file.exists()
++        assert not list((tmp_path / "frames").glob("*.tmp"))
+--- a/detector/tests/adapters/test_operational_status.py
++++ b/detector/tests/adapters/test_operational_status.py
+@@ -83,3 +83,51 @@
+         ("waiting_delivery", "detector-2"),
+         ("processing_resumed", "detector-1"),
+     ]
++
++
++def test_quick_capture_epochs_and_disconnects_are_never_throttled():
++    output = StringIO()
++    report = JsonStatusReporter(output)
++    for epoch in ("first", "second"):
++        report(StatusEvent("source_epoch", "camera", source_epoch=epoch))
++        report(StatusEvent("frame", "camera"))
++        report(StatusEvent("offline", "camera", "Disconnected"))
++    records = [
++        json.loads(line.removeprefix(STATUS_PREFIX))
++        for line in output.getvalue().splitlines()
++    ]
++    assert [record["event"] for record in records] == [
++        "source_epoch",
++        "frame",
++        "offline",
++        "source_epoch",
++        "offline",
++    ]
++    assert [record["sourceEpoch"] for record in records if "sourceEpoch" in record] == [
++        "first",
++        "second",
++    ]
++
++
++def test_late_old_epoch_result_cannot_throttle_the_first_result_after_reconnect(
++    monkeypatch,
++):
++    monkeypatch.setattr("aidetector.adapters.operational_status.monotonic", lambda: 10)
++    output = StringIO()
++    report = JsonStatusReporter(output)
++    for kind in ("inference", "processed"):
++        # Every transition occurs within one rate-limit interval, including a
++        # slow old batch that finishes after capture has already reconnected.
++        report(StatusEvent("source_epoch", "camera", source_epoch="new"))
++        for epoch in ("old", "old", "new", "new", "newer", "newer"):
++            report(
++                StatusEvent(kind, "camera", rule_id="detector-1", source_epoch=epoch)
++            )
++    records = [
++        json.loads(line.removeprefix(STATUS_PREFIX))
++        for line in output.getvalue().splitlines()
++    ]
++    for kind in ("inference", "processed"):
++        assert [
++            record["sourceEpoch"] for record in records if record["event"] == kind
++        ] == ["old", "new", "newer"]
+--- a/detector/tests/application/test_pipeline.py
++++ b/detector/tests/application/test_pipeline.py
+@@ -2,6 +2,7 @@
+ from datetime import datetime, timedelta
+ 
+ import numpy as np
++import pytest
+ 
+ from aidetector.application.pipeline import DetectionPipeline
+ from aidetector.application.ports import SourceBatch
+@@ -22,7 +23,14 @@
+     def detect(self, frames):
+         self.calls += 1
+         return {
+-            source: (Observation(batch[-1].date, batch[-1].image, {"cow": 0.9}),)
++            source: (
++                Observation(
++                    batch[-1].date,
++                    batch[-1].image,
++                    {"cow": 0.9},
++                    capture=batch[-1].capture,
++                ),
++            )
+             for source, batch in frames.items()
+         }
+ 
+@@ -182,3 +190,25 @@
+     assert published[1][1] is events[1].best
+     assert pipeline.process(SourceBatch({}, advance_to=other.date)) == []
+     assert len(calls) == 2
++
++
++@pytest.mark.parametrize("detect", [False, True])
++def test_processing_status_uses_latest_analyzed_capture_epoch_and_legacy_sources(
++    detect,
++):
++    reports = []
++    pipeline = DetectionPipeline(
++        ScoringDetector() if detect else None, report_status=reports.append
++    )
++    image = np.zeros((8, 8, 3), dtype=np.uint8)
++    first = Frame(datetime(2026, 1, 1), image, CaptureStamp("old", 4, 4))
++    current = Frame(
++        first.date + timedelta(seconds=1), image, CaptureStamp("current", 0, 5)
++    )
++    legacy = Frame(first.date, image)
++    pipeline.process(SourceBatch({"camera": (first, current), "file": (legacy,)}))
++    kind = "inference" if detect else "processed"
++    assert [(event.kind, event.source, event.source_epoch) for event in reports] == [
++        (kind, "camera", "current"),
++        (kind, "file", None),
++    ]
+--- a/web/src/lib/live-preview.ts
++++ b/web/src/lib/live-preview.ts
+@@ -9,6 +9,12 @@
+ 	ruleId: v.string(),
+ 	capturedAt: v.string(),
+ 	publishedAt: v.pipe(v.string(), v.isoTimestamp()),
++	capture: v.optional(
++		v.object({
++			epoch: v.pipe(v.string(), v.minLength(1)),
++			sequence: v.pipe(v.number(), v.integer(), v.minValue(0))
++		})
++	),
+ 	image: v.object({
+ 		width: v.pipe(v.number(), v.integer(), v.minValue(1)),
+ 		height: v.pipe(v.number(), v.integer(), v.minValue(1)),
+--- a/web/src/lib/server/live-preview.ts
++++ b/web/src/lib/server/live-preview.ts
+@@ -56,7 +56,13 @@
+ const sessionSchema = v.object({
+ 	version: v.literal(1),
+ 	runId: v.string(),
+-	updatedAt: v.pipe(v.string(), v.isoTimestamp())
++	updatedAt: v.pipe(v.string(), v.isoTimestamp()),
++	sourceEpochs: v.optional(
++		v.record(
++			v.pipe(v.string(), v.regex(/^[a-f0-9]{64}$/)),
++			v.nullable(v.pipe(v.string(), v.minLength(1)))
++		)
++	)
+ });
+ 
+ export function liveSourceKey(source: string, configurationDirectory: string): string {
+@@ -203,6 +209,9 @@
+ 		return status(rule, 'waiting', 'Waiting for the detector to publish a live picture.');
+ 	if (Date.now() - Date.parse(session.updatedAt) > 6000)
+ 		return status(rule, 'unavailable', 'The detector is no longer publishing live pictures.');
++	const epoch = session.sourceEpochs?.[sourceKey];
++	if (epoch === null)
++		return status(rule, 'unavailable', 'Camera disconnected. Waiting for a new analyzed picture.');
+ 	try {
+ 		const frame = v.parse(
+ 			frameSchema,
+@@ -212,6 +221,8 @@
+ 			return status(rule, 'waiting', 'Waiting for a picture from the current detector run.');
+ 		if (frame.sourceKey !== sourceKey || frame.ruleId !== rule.id)
+ 			return status(rule, 'unavailable', 'The live picture does not match this camera and rule.');
++		if (epoch !== undefined && frame.capture?.epoch !== epoch)
++			return status(rule, 'waiting', 'Waiting for a picture from the current camera connection.');
+ 		const age = Date.now() - Date.parse(frame.publishedAt);
+ 		if (age < -5000 || age > Math.max(15000, rule.interval * 3000 + 5000))
+ 			return status(
+--- a/web/src/lib/server/runtime-status.ts
++++ b/web/src/lib/server/runtime-status.ts
+@@ -9,41 +9,46 @@
+ } from '../runtime.ts';
+ 
+ export const STATUS_PREFIX = 'AIDETECTOR_STATUS ';
+-const eventSchema = v.object({
+-	version: v.literal(1),
+-	event: v.picklist([
+-		'preparing',
+-		'preparation_failed',
+-		'ready',
+-		'models_ready',
+-		'frame',
+-		'inference',
+-		'processed',
+-		'recording',
+-		'offline',
+-		'recording_failed',
+-		'notice',
+-		'backend',
+-		'validation',
+-		'validation_failed',
+-		'identity_collecting',
+-		'identity_preparing',
+-		'identity_ready',
+-		'identity_failed',
+-		'delivery',
+-		'delivery_failed',
+-		'waiting_delivery',
+-		'processing_resumed'
+-	]),
+-	at: v.pipe(
+-		v.string(),
+-		v.check((value) => Number.isFinite(Date.parse(value)))
+-	),
+-	sourceKey: v.optional(v.pipe(v.string(), v.regex(/^[a-f0-9]{64}$/))),
+-	message: v.optional(v.string()),
+-	ruleId: v.optional(v.pipe(v.string(), v.regex(/^detector-[1-9]\d*$/))),
+-	destinationId: v.optional(v.pipe(v.string(), v.regex(/^(?:disk|telegram|webhook)-[1-9]\d*$/)))
+-});
++const eventSchema = v.pipe(
++	v.object({
++		version: v.literal(1),
++		event: v.picklist([
++			'preparing',
++			'preparation_failed',
++			'ready',
++			'models_ready',
++			'frame',
++			'source_epoch',
++			'inference',
++			'processed',
++			'recording',
++			'offline',
++			'recording_failed',
++			'notice',
++			'backend',
++			'validation',
++			'validation_failed',
++			'identity_collecting',
++			'identity_preparing',
++			'identity_ready',
++			'identity_failed',
++			'delivery',
++			'delivery_failed',
++			'waiting_delivery',
++			'processing_resumed'
++		]),
++		at: v.pipe(
++			v.string(),
++			v.check((value) => Number.isFinite(Date.parse(value)))
++		),
++		sourceKey: v.optional(v.pipe(v.string(), v.regex(/^[a-f0-9]{64}$/))),
++		message: v.optional(v.string()),
++		sourceEpoch: v.optional(v.pipe(v.string(), v.minLength(1))),
++		ruleId: v.optional(v.pipe(v.string(), v.regex(/^detector-[1-9]\d*$/))),
++		destinationId: v.optional(v.pipe(v.string(), v.regex(/^(?:disk|telegram|webhook)-[1-9]\d*$/)))
++	}),
++	v.check((event) => event.event !== 'source_epoch' || event.sourceEpoch !== undefined)
++);
+ 
+ type ProgressEvent = v.InferOutput<typeof eventSchema>;
+ interface RuleProgress {
+@@ -56,6 +61,7 @@
+ 	recordings: Map<string, string | undefined>;
+ }
+ interface CameraProgress {
++	sourceEpoch?: string;
+ 	status: CameraRuntimeStatus;
+ 	source: string;
+ 	connectedAt: string | null;
+@@ -233,9 +239,16 @@
+ 	}
+ 
+ 	private observe(camera: CameraProgress, event: ProgressEvent): void {
++		if (event.event === 'source_epoch') camera.sourceEpoch = event.sourceEpoch;
++		if (
++			(event.event === 'inference' || event.event === 'processed') &&
++			camera.sourceEpoch !== undefined &&
++			event.sourceEpoch !== camera.sourceEpoch
++		)
++			return;
+ 		const status = camera.status;
+-		if (event.event === 'frame') {
+-			if (!camera.connectedAt || status.state === 'offline') {
++		if (event.event === 'frame' || event.event === 'source_epoch') {
++			if (event.event === 'source_epoch' || !camera.connectedAt || status.state === 'offline') {
+ 				camera.connectedAt = event.at;
+ 				for (const rule of camera.rules.values()) rule.lastProcessedAt = null;
+ 			}
+--- a/web/tests/live-preview.test.ts
++++ b/web/tests/live-preview.test.ts
+@@ -26,10 +26,14 @@
+ 		for (const reader of readers) await reader.cancel();
+ 		await rm(directory, { recursive: true, force: true });
+ 	});
+-	const session = async (runId = 'run-1', updatedAt = new Date().toISOString()) => {
++	const session = async (
++		runId = 'run-1',
++		updatedAt = new Date().toISOString(),
++		sourceEpochs?: Record<string, string | null>
++	) => {
+ 		await writeFileAtomic(
+ 			path.join(directory, 'session.json'),
+-			JSON.stringify({ version: 1, runId, updatedAt })
++			JSON.stringify({ version: 1, runId, updatedAt, sourceEpochs })
+ 		);
+ 	};
+ 	const frame = async (ruleId: string, changes = {}, key = sourceKey) => {
+@@ -321,3 +325,50 @@
+ 		'cow · 90% · #17'
+ 	]);
+ });
++
++test(
++	'disconnect and quick reconnect invalidate only that camera despite recent frame publication',
++	{ timeout: 5000 },
++	async (t) => {
++		const { session, frame, open } = await fixture(t);
++		const otherKey = liveSourceKey('rtsp://other-camera/live', '/data');
++		const epochs = { [sourceKey]: 'before', [otherKey]: 'stable' };
++		await session('run-1', new Date().toISOString(), epochs);
++		await frame('detector-1', { capture: { epoch: 'before', sequence: 100 } });
++		await frame('detector-1', { capture: { epoch: 'stable', sequence: 50 } }, otherKey);
++		const { reader } = open([
++			{ id: 'shed', sourceKey, rules: [rules[0]] },
++			{ id: 'pen', sourceKey: otherKey, rules: [rules[0]] }
++		]);
++		assert.match(await chunk(reader), /"epoch":"before"/);
++		await session('run-1', new Date().toISOString(), { ...epochs, [sourceKey]: null });
++		const disconnected = await nextUpdate(reader);
++		assert.match(disconnected, /Camera disconnected/);
++		assert.match(disconnected, /"cameraId":"shed"/);
++		assert.ok(!disconnected.includes('"cameraId":"pen"'));
++		assert.ok(!disconnected.includes('event: frame'));
++		await session('run-1', new Date().toISOString(), { ...epochs, [sourceKey]: 'after' });
++		assert.match(await nextUpdate(reader), /current camera connection/);
++		await frame('detector-1', { capture: { epoch: 'after', sequence: 0 } });
++		const recovered = await nextUpdate(reader);
++		assert.match(recovered, /event: frame/);
++		assert.match(recovered, /"epoch":"after","sequence":0/);
++		assert.ok(!recovered.includes('"cameraId":"pen"'));
++	}
++);
++
++for (const capture of [undefined, { epoch: 'previous', sequence: 2 }]) {
++	test(
++		`known capture epoch refuses ${capture ? 'old-epoch' : 'metadata-free'} fresh frame`,
++		{ timeout: 5000 },
++		async (t) => {
++			const { session, frame, open } = await fixture(t);
++			await session('run-1', new Date().toISOString(), { [sourceKey]: 'current' });
++			await frame('detector-1', { capture });
++			const { reader } = open([{ id: 'shed', sourceKey, rules: [rules[0]] }]);
++			const output = await chunk(reader);
++			assert.match(output, /current camera connection/);
++			assert.ok(!output.includes('event: frame'));
++		}
++	);
++}
+--- a/web/tests/runtime-status.test.ts
++++ b/web/tests/runtime-status.test.ts
+@@ -36,7 +36,7 @@
+ 	event: string,
+ 	message?: string,
+ 	at = now,
+-	identity: { ruleId?: string; destinationId?: string } = {}
++	identity: { ruleId?: string; destinationId?: string; sourceEpoch?: string } = {}
+ ) {
+ 	state.accept(
+ 		STATUS_PREFIX +
+@@ -325,3 +325,68 @@
+ 	record(state, 'recording');
+ 	assert.equal(state.snapshot(now).readiness, 'monitoring');
+ });
++
++test('an unthrottled capture epoch clears previous inference readiness on reconnect or geometry change', () => {
++	const state = progress();
++	record(state, 'frame');
++	record(state, 'inference');
++	assert.equal(state.snapshot(now).cameras[0].state, 'monitoring');
++	const epoch = (at: number, sourceEpoch: string) =>
++		state.accept(
++			STATUS_PREFIX +
++				JSON.stringify({
++					version: 1,
++					event: 'source_epoch',
++					sourceKey,
++					sourceEpoch,
++					at: new Date(at).toISOString()
++				})
++		);
++	assert.equal(epoch(now + 10, 'resized')?.sourceEpoch, 'resized');
++	assert.equal(state.snapshot(now + 10).cameras[0].state, 'receiving');
++	record(state, 'inference', undefined, now + 20);
++	record(state, 'offline', 'Disconnected', now + 30);
++	epoch(now + 40, 'reconnected');
++	assert.equal(state.snapshot(now + 40).cameras[0].state, 'receiving');
++	assert.equal(state.snapshot(now + 40).cameras[0].error, undefined);
++});
++
++for (const kind of ['inference', 'processed']) {
++	test(`late ${kind} cannot mark a reconnected camera as monitored or hide its stall`, () => {
++		const state = progress();
++		record(state, 'frame');
++		record(state, kind); // Legacy runs still become ready without capture metadata.
++		assert.equal(state.snapshot(now).cameras[0].state, 'monitoring');
++		record(state, 'offline', 'Disconnected', now + 1);
++		record(state, 'source_epoch', undefined, now + 2, { sourceEpoch: 'new' });
++		record(state, kind, undefined, now + 3, { sourceEpoch: 'old' });
++		record(state, kind, undefined, now + 4); // Missing metadata is stale once epoch is declared.
++		const pending = state.snapshot(now + 4).cameras[0];
++		assert.equal(pending.state, 'receiving');
++		assert.equal(pending.lastProcessedAt, new Date(now).toISOString());
++		record(state, kind, undefined, now + 5, { sourceEpoch: 'new' });
++		assert.equal(state.snapshot(now + 5).cameras[0].state, 'monitoring');
++		record(state, kind, undefined, now + 6, { sourceEpoch: 'old' });
++		assert.equal(
++			state.snapshot(now + 6).cameras[0].lastProcessedAt,
++			new Date(now + 5).toISOString()
++		);
++		assert.equal(
++			state.accept(
++				STATUS_PREFIX +
++					JSON.stringify({
++						version: 1,
++						event: 'source_epoch',
++						sourceKey,
++						at: new Date(now + 7).toISOString()
++					})
++			),
++			undefined
++		); // A malformed epoch cannot erase the continuity guard.
++		record(state, kind, undefined, now + 8);
++		assert.equal(
++			state.snapshot(now + 8).cameras[0].lastProcessedAt,
++			new Date(now + 5).toISOString()
++		);
++	});
++}

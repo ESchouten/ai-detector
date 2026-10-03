@@ -1,0 +1,46 @@
+{
+  "acceptance": {
+    "maximum_unknown_false_naming_rate": 0.01,
+    "minimum_conservative_precision": 0.99,
+    "minimum_known_coverage": 0.6
+  },
+  "conditions": [
+    "recorded_mask_geometry",
+    "reciprocal_union_original_slots"
+  ],
+  "evaluation": "Use unchanged full-truth one-to-one IoU>=.5 VideoMetrics on all five panels. Demand exact original baseline counts/confusions, retain every wrong-known, unknown-named, unmatched-named, miss and duplicate. Names/box counts must stay identical. No operating-point sweep.",
+  "files": {
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_output_geometry_protocol.json": "7c2a42aac985cc977473f657ab7cfb8c538d8f408b3e6f2167265ac8e914ced1",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_union_geometry.py": "8616cb452a51137e6d980ed576fac9d380ed632fd3d0b2ceea7fdf2fbe382da4",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-output-geometry-diagnosis.json": "9e2e84dd7a283bf15c5e8ac0cd1939683930e333809d1ce5d469eb33756fe770",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-output-geometry.json": "2f75e7a198250978c2f4127be1a2130da52e9ad99c5eaa09261d1ffb458d39a8",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_detection_union_geometry.py": "b927b6328e329cf59932ddd36f53d2b84e7deb38184151b5c1f96f5bba7ae1e8"
+  },
+  "inference": "None; reuse completed recorded outputs only",
+  "inherited_inputs": "All source/implementation/library bindings from detection_output_geometry_protocol.json are also checked",
+  "policy": "Keep original slot collection, order, confidence, named decisions, gates and reciprocal pairs unchanged. For EVERY reciprocal slot (named or unnamed), take the coordinate union of original largest-component box and its current raw detector box. Slots without a reciprocal partner retain original geometry. No new boxes, removed boxes, assigned names, thresholds, smoothing or selection.",
+  "rationale": "The preceding all-raw output loses 215 correct names: 133 from worse own-cow geometry and 82 from global assignment interference (81 extra unpaired proposals). Union cannot shrink the original extent and retaining slots avoids introducing these extra proposals. Enlargement may still add background/neighbor area or alter global matching, so this is a falsifiable control.",
+  "scope": "Single geometry hypothesis on all five exposed panels; not a rescued reserved evaluation. Seconds 3000 onward remain closed.",
+  "windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ],
+    [
+      1230,
+      1529
+    ],
+    [
+      1800,
+      2099
+    ],
+    [
+      2700,
+      2999
+    ]
+  ]
+}

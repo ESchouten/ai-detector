@@ -1,0 +1,840 @@
+{
+  "births": [
+    {
+      "name": null,
+      "second": 2.0,
+      "stable_id": 2
+    }
+  ],
+  "definite_annotation_sensitivity": {
+    "conservative_named_precision": 1.0,
+    "counts": {
+      "correct_names": 7,
+      "frames": 22,
+      "matched": 19,
+      "missed": 3,
+      "nuisance_unknown_named": 0,
+      "predictions": 30,
+      "principal_unknown_named": 0,
+      "uncertain_annotations": 1,
+      "unknown_named": 0,
+      "unmatched_named": 0,
+      "visible_known": 9,
+      "visible_nuisance_unknown": 13,
+      "visible_principal_unknown": 0,
+      "visible_unknown": 13,
+      "wrong_known_names": 0
+    },
+    "known_coverage": 0.7777777777777778,
+    "nuisance_unknown_false_acceptance_rate": 0.0,
+    "principal_unknown_false_acceptance_rate": null,
+    "unknown_false_acceptance_rate": 0.0
+  },
+  "elapsed_seconds": 6.677693417062983,
+  "lifecycle": {
+    "empty_frames_with_any_mask_pixels": 0,
+    "final_mask_pixels": 0,
+    "inherited_name_on_entrant": 0,
+    "last_named_second": 3.0,
+    "last_nonempty_mask_second": 8.0,
+    "named_unmatched": 0,
+    "names_in_empty_frames": 0
+  },
+  "limitation": "Development lifecycle replay, one initial animal and one entrant. AI-reviewed publisher-linked labels; no field reliability or re-identification claim. Main scores retain uncertain fragments, missing predictions and empty frames.",
+  "overall": {
+    "conservative_named_precision": 1.0,
+    "counts": {
+      "correct_names": 7,
+      "frames": 22,
+      "matched": 19,
+      "missed": 4,
+      "nuisance_unknown_named": 0,
+      "predictions": 30,
+      "principal_unknown_named": 0,
+      "uncertain_annotations": 1,
+      "unknown_named": 0,
+      "unmatched_named": 0,
+      "visible_known": 9,
+      "visible_nuisance_unknown": 14,
+      "visible_principal_unknown": 0,
+      "visible_unknown": 14,
+      "wrong_known_names": 0
+    },
+    "known_coverage": 0.7777777777777778,
+    "nuisance_unknown_false_acceptance_rate": 0.0,
+    "principal_unknown_false_acceptance_rate": null,
+    "unknown_false_acceptance_rate": 0.0
+  },
+  "sam_prompt_count": 1,
+  "sources": {
+    ".cache/cow-passage-entry-births/predictions.json": "5ee220f5d32270c4717a4a9170652056bcace0defdc1317aeb16474b46c778ea",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/passage_entry_birth_score.py": "9051d778cbcec1928a1c68d5441cca097fc647bb97d1d6d05c181086b7b75a37",
+    "research/cow_identity/passage_entry_birth_protocol.json": "b75ede34b6cfe3f9266ad92d2b4c2c794c905fa6a0b67481a954613a07dda89a"
+  },
+  "timeline": [
+    {
+      "counts": {
+        "correct_names": 1,
+        "frames": 1,
+        "matched": 1,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 1,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 1,
+        "visible_nuisance_unknown": 0,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 0,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": true,
+          "matched_cow": 5676,
+          "outcome": "correct_names",
+          "predicted": 5676,
+          "track": 0
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 229145,
+      "second": 0.0
+    },
+    {
+      "counts": {
+        "correct_names": 1,
+        "frames": 1,
+        "matched": 1,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 1,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 1,
+        "visible_nuisance_unknown": 0,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 0,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": true,
+          "matched_cow": 5676,
+          "outcome": "correct_names",
+          "predicted": 5676,
+          "track": 0
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 225048,
+      "second": 0.5
+    },
+    {
+      "counts": {
+        "correct_names": 1,
+        "frames": 1,
+        "matched": 1,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 1,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 1,
+        "visible_nuisance_unknown": 0,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 0,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": true,
+          "matched_cow": 5676,
+          "outcome": "correct_names",
+          "predicted": 5676,
+          "track": 0
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 214131,
+      "second": 1.0
+    },
+    {
+      "counts": {
+        "correct_names": 1,
+        "frames": 1,
+        "matched": 1,
+        "missed": 1,
+        "nuisance_unknown_named": 0,
+        "predictions": 1,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 1,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": true,
+          "matched_cow": 5676,
+          "outcome": "correct_names",
+          "predicted": 5676,
+          "track": 0
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 185832,
+      "second": 1.5
+    },
+    {
+      "counts": {
+        "correct_names": 1,
+        "frames": 1,
+        "matched": 2,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 1,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": true,
+          "matched_cow": 5676,
+          "outcome": "correct_names",
+          "predicted": 5676,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 189311,
+      "second": 2.0
+    },
+    {
+      "counts": {
+        "correct_names": 1,
+        "frames": 1,
+        "matched": 2,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 1,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": true,
+          "matched_cow": 5676,
+          "outcome": "correct_names",
+          "predicted": 5676,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 183469,
+      "second": 2.5
+    },
+    {
+      "counts": {
+        "correct_names": 1,
+        "frames": 1,
+        "matched": 2,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 1,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": true,
+          "matched_cow": 5676,
+          "outcome": "correct_names",
+          "predicted": 5676,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 183022,
+      "second": 3.0
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 2,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 1,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": true,
+          "matched_cow": 5676,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 193244,
+      "second": 3.5
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 1,
+        "missed": 1,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 1,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 203751,
+      "second": 4.0
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 1,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 204126,
+      "second": 4.5
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 1,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 192087,
+      "second": 5.0
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 1,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 170788,
+      "second": 5.5
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 1,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 143505,
+      "second": 6.0
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 1,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 108263,
+      "second": 6.5
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 1,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": true,
+          "matched_cow": 5953,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 64798,
+      "second": 7.0
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 0,
+        "missed": 1,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 20340,
+      "second": 7.5
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 0,
+        "missed": 1,
+        "nuisance_unknown_named": 0,
+        "predictions": 2,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 1,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 1,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 1,
+        "wrong_known_names": 0
+      },
+      "decisions": [
+        {
+          "box": 0,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 0
+        },
+        {
+          "box": 1,
+          "matched": false,
+          "matched_cow": null,
+          "outcome": "unnamed",
+          "predicted": null,
+          "track": 1
+        }
+      ],
+      "empty_truth": false,
+      "mask_pixels": 11150,
+      "second": 8.0
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 0,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 0,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 0,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 0,
+        "wrong_known_names": 0
+      },
+      "decisions": [],
+      "empty_truth": true,
+      "mask_pixels": 0,
+      "second": 8.5
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 0,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 0,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 0,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 0,
+        "wrong_known_names": 0
+      },
+      "decisions": [],
+      "empty_truth": true,
+      "mask_pixels": 0,
+      "second": 9.0
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 0,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 0,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 0,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 0,
+        "wrong_known_names": 0
+      },
+      "decisions": [],
+      "empty_truth": true,
+      "mask_pixels": 0,
+      "second": 9.5
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 0,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 0,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 0,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 0,
+        "wrong_known_names": 0
+      },
+      "decisions": [],
+      "empty_truth": true,
+      "mask_pixels": 0,
+      "second": 10.0
+    },
+    {
+      "counts": {
+        "correct_names": 0,
+        "frames": 1,
+        "matched": 0,
+        "missed": 0,
+        "nuisance_unknown_named": 0,
+        "predictions": 0,
+        "principal_unknown_named": 0,
+        "uncertain_annotations": 0,
+        "unknown_named": 0,
+        "unmatched_named": 0,
+        "visible_known": 0,
+        "visible_nuisance_unknown": 0,
+        "visible_principal_unknown": 0,
+        "visible_unknown": 0,
+        "wrong_known_names": 0
+      },
+      "decisions": [],
+      "empty_truth": true,
+      "mask_pixels": 0,
+      "second": 10.5
+    }
+  ],
+  "total_created_slots": 2
+}

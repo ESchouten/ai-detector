@@ -1,0 +1,75 @@
+{
+  "status": "Frozen before clean-frame extraction and both independent geometry reviews",
+  "frozen_at_utc": "2026-10-03T10:26:57.554169+00:00",
+  "purpose": "Blinded visible-instance geometry diagnostic on uniformly sampled exposed frames; no replacement truth, alternative pass score, retuning or new model inference",
+  "video": {
+    "path": "datasets/8-calves/video/pmfeed_4_3_16.mp4",
+    "sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825"
+  },
+  "extractor_sha256": "30b8cfa8e629c0eee5dce84ee86312a77706430039a31ee018438594948229bb",
+  "seconds": [
+    367,
+    442,
+    517,
+    592,
+    967,
+    1042,
+    1117,
+    1192,
+    1267,
+    1342,
+    1417,
+    1492,
+    1837,
+    1912,
+    1987,
+    2062,
+    2737,
+    2812,
+    2887,
+    2962
+  ],
+  "selection": "Four uniformly spaced midpoints per exposed300-second panel; timestamp=start+37+75*k,k=0..3; independent of scores/predictions/publisher boxes",
+  "context_offsets": [
+    -1,
+    0,
+    1
+  ],
+  "closed_seconds": "3000 and later; no extraction or review",
+  "geometry": {
+    "width": 800,
+    "height": 600,
+    "coordinates": "Native source xyxy pixel bounds, x2/y2 exclusive; tight around all visible pixels of ONE animal incl head/feet/tail, never infer hidden extent",
+    "include": "Every visible animal including partial/occluded/edge fragments; local anonymous letters per frame, no fixed-count assumption; uncertain fragments retained and flagged",
+    "occlusion": "Record occluded=true when another animal/fixture hides body; record uncertain=true for questionable presence or inseparable instance extent; explain in note"
+  },
+  "schema": {
+    "reviewer": "agent identifier",
+    "review_kind": "Independent AI-assisted visible geometry review; not external human annotation",
+    "protocol_sha256": "frozen protocol digest",
+    "source_manifest_sha256": "clean image manifest digest",
+    "frames": [
+      {
+        "second": "center timestamp",
+        "objects": [
+          {
+            "local_id": "A,B,etc; no persistent or biological meaning",
+            "box": "[x1,y1,x2,y2]",
+            "occluded": "bool",
+            "uncertain": "bool",
+            "note": "clear reason for ambiguity or truncation"
+          }
+        ]
+      }
+    ]
+  },
+  "blinding": {
+    "phase1": "Both reviewers see only clean source centers and fixed +/-1sec context. No publisher/predicted boxes, masks, names, confidences or outcomes; no sharing labels until both full reviews frozen. Known prior general scene exposure disclosed.",
+    "phase2": "Freeze both annotation files; compare disagreements explicitly, preserve originals; only then show original publisher geometry and all model outputs for these same20frames. No alternate precision/coverage/pass score."
+  },
+  "reviewers": [
+    "identity_integration_audit",
+    "cattle_research"
+  ],
+  "prior_exposure": "Both agents previously reviewed this public scene. Cattle reviewer reports none of these centers coincide with35 reserved-error frames; previous development scene exposure remains a limitation."
+}

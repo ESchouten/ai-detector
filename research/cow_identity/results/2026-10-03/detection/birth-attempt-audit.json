@@ -1,0 +1,1376 @@
+{
+  "attempts": [
+    {
+      "accepted": true,
+      "box": {
+        "confidence": 0.7431640625,
+        "x1": 179,
+        "x2": 349,
+        "y1": 191,
+        "y2": 331
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 5,
+      "reasons": [],
+      "second": 5.0
+    },
+    {
+      "accepted": true,
+      "box": {
+        "confidence": 0.73876953125,
+        "x1": 452,
+        "x2": 573,
+        "y1": 230,
+        "y2": 430
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.0,
+        "7": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 5,
+      "reasons": [],
+      "second": 24.0
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.70263671875,
+        "x1": 182,
+        "x2": 302,
+        "y1": 125,
+        "y2": 316
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.8667180277349769,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 3,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1285.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.73974609375,
+        "x1": 182,
+        "x2": 300,
+        "y1": 128,
+        "y2": 315
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.924402884182064,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 2,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1286.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.7578125,
+        "x1": 179,
+        "x2": 298,
+        "y1": 128,
+        "y2": 323
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.8165529010238908,
+        "7": 0.0074658703071672355,
+        "8": 0.0
+      },
+      "prompt_containment": 0.9974402730375427,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1287.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.82861328125,
+        "x1": 159,
+        "x2": 296,
+        "y1": 120,
+        "y2": 296
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.851242336237496,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1288.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.80615234375,
+        "x1": 147,
+        "x2": 297,
+        "y1": 119,
+        "y2": 293
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.8578325123152709,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1289.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.7900390625,
+        "x1": 157,
+        "x2": 292,
+        "y1": 123,
+        "y2": 292
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.9110151642796968,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1290.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.837890625,
+        "x1": 156,
+        "x2": 298,
+        "y1": 118,
+        "y2": 291
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.943635561438341,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1291.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.80029296875,
+        "x1": 158,
+        "x2": 295,
+        "y1": 121,
+        "y2": 290
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.8535917207792207,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1292.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.77099609375,
+        "x1": 160,
+        "x2": 296,
+        "y1": 118,
+        "y2": 293
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9341970678486191,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1293.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.81884765625,
+        "x1": 160,
+        "x2": 295,
+        "y1": 123,
+        "y2": 294
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.8988909227953052,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1294.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.7958984375,
+        "x1": 158,
+        "x2": 295,
+        "y1": 122,
+        "y2": 296
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9247666117517848,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1295.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.73388671875,
+        "x1": 154,
+        "x2": 298,
+        "y1": 118,
+        "y2": 293
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9458324121158523,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1296.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.77490234375,
+        "x1": 154,
+        "x2": 296,
+        "y1": 123,
+        "y2": 291
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9089854461084159,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1297.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.7958984375,
+        "x1": 159,
+        "x2": 295,
+        "y1": 123,
+        "y2": 290
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.7848747591522158,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1298.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.8662109375,
+        "x1": 159,
+        "x2": 299,
+        "y1": 129,
+        "y2": 327
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.808258735200693,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1299.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.818359375,
+        "x1": 165,
+        "x2": 301,
+        "y1": 124,
+        "y2": 319
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.9276636305867401,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1300.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.7578125,
+        "x1": 178,
+        "x2": 301,
+        "y1": 128,
+        "y2": 308
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.8416666666666667,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 2,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1301.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.74755859375,
+        "x1": 180,
+        "x2": 302,
+        "y1": 133,
+        "y2": 295
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.8756533365746931,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1302.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.767578125,
+        "x1": 176,
+        "x2": 296,
+        "y1": 128,
+        "y2": 292
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.8470923603192703,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1303.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.8125,
+        "x1": 168,
+        "x2": 296,
+        "y1": 130,
+        "y2": 289
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.8825428635047874,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1304.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.787109375,
+        "x1": 174,
+        "x2": 295,
+        "y1": 131,
+        "y2": 287
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9313022700119474,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1305.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.8046875,
+        "x1": 168,
+        "x2": 295,
+        "y1": 130,
+        "y2": 284
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.9344631429248638,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1306.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.78564453125,
+        "x1": 172,
+        "x2": 296,
+        "y1": 130,
+        "y2": 286
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.9399549068470393,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1307.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.830078125,
+        "x1": 165,
+        "x2": 298,
+        "y1": 129,
+        "y2": 289
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.8499565406345068,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1308.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.75244140625,
+        "x1": 176,
+        "x2": 303,
+        "y1": 130,
+        "y2": 310
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.8192602178367303,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1309.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.75390625,
+        "x1": 179,
+        "x2": 304,
+        "y1": 124,
+        "y2": 306
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.7954009433962265,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1310.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.775390625,
+        "x1": 184,
+        "x2": 305,
+        "y1": 129,
+        "y2": 284
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.8439884240989214,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1311.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.7734375,
+        "x1": 183,
+        "x2": 309,
+        "y1": 139,
+        "y2": 285
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.8398138006571741,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 0.9950711938663745,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1312.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.765625,
+        "x1": 183,
+        "x2": 307,
+        "y1": 134,
+        "y2": 285
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.9226884226884227,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 0.994042994042994,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1313.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.76171875,
+        "x1": 185,
+        "x2": 311,
+        "y1": 135,
+        "y2": 290
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.9205882352941176,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 0.9955242966751918,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1314.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.75439453125,
+        "x1": 180,
+        "x2": 309,
+        "y1": 133,
+        "y2": 288
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9194801885590521,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 0.9928653331634603,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1315.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.75,
+        "x1": 179,
+        "x2": 310,
+        "y1": 134,
+        "y2": 288
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.8908626198083067,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 0.9945047923322684,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1316.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.74560546875,
+        "x1": 182,
+        "x2": 305,
+        "y1": 139,
+        "y2": 286
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9129641693811075,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 0.9908794788273616,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1317.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.74853515625,
+        "x1": 179,
+        "x2": 307,
+        "y1": 136,
+        "y2": 286
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.8691415885545141,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 0.9907498766650222,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1318.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.75927734375,
+        "x1": 182,
+        "x2": 305,
+        "y1": 140,
+        "y2": 286
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9541174910489325,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 0.9905848030765151,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1319.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.7568359375,
+        "x1": 181,
+        "x2": 307,
+        "y1": 137,
+        "y2": 286
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9093705935136521,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 0.9924368670683246,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1320.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.79541015625,
+        "x1": 180,
+        "x2": 305,
+        "y1": 134,
+        "y2": 296
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.8312847716392806,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1321.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.77880859375,
+        "x1": 156,
+        "x2": 300,
+        "y1": 147,
+        "y2": 307
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.8890514234274783,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1322.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.75341796875,
+        "x1": 166,
+        "x2": 309,
+        "y1": 139,
+        "y2": 301
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9113220652928918,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1323.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.77734375,
+        "x1": 155,
+        "x2": 305,
+        "y1": 138,
+        "y2": 303
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 0.0,
+        "6": 0.9303477231133599,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 2,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1324.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.75732421875,
+        "x1": 157,
+        "x2": 308,
+        "y1": 142,
+        "y2": 302
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9571364452423698,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1325.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.77685546875,
+        "x1": 158,
+        "x2": 306,
+        "y1": 145,
+        "y2": 303
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9352598566308243,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1326.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.759765625,
+        "x1": 160,
+        "x2": 306,
+        "y1": 138,
+        "y2": 308
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9183719872669395,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1327.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.78271484375,
+        "x1": 170,
+        "x2": 309,
+        "y1": 139,
+        "y2": 315
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9044125945152918,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1328.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.8232421875,
+        "x1": 177,
+        "x2": 311,
+        "y1": 139,
+        "y2": 320
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9025045684187897,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1329.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.82275390625,
+        "x1": 177,
+        "x2": 312,
+        "y1": 140,
+        "y2": 326
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.916456804992883,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1330.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.80029296875,
+        "x1": 176,
+        "x2": 311,
+        "y1": 140,
+        "y2": 331
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.9033551382148133,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1331.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.82275390625,
+        "x1": 179,
+        "x2": 312,
+        "y1": 140,
+        "y2": 327
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.924016134307206,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1332.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.80517578125,
+        "x1": 178,
+        "x2": 316,
+        "y1": 141,
+        "y2": 332
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.8728989416891472,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1333.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.79150390625,
+        "x1": 189,
+        "x2": 315,
+        "y1": 141,
+        "y2": 324
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.821975806451613,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 0,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1334.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.71826171875,
+        "x1": 155,
+        "x2": 308,
+        "y1": 138,
+        "y2": 325
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.7778595458368377,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 2,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1335.5
+    },
+    {
+      "accepted": false,
+      "box": {
+        "confidence": 0.7158203125,
+        "x1": 156,
+        "x2": 310,
+        "y1": 138,
+        "y2": 333
+      },
+      "overlap_by_old_slot": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "6": 0.888069501969896,
+        "7": 0.0,
+        "8": 0.0
+      },
+      "prompt_containment": 1.0,
+      "proposal_index": 1,
+      "reasons": [
+        "existing_foreground_overlap"
+      ],
+      "second": 1336.5
+    }
+  ],
+  "counts": {
+    "accepted": 2,
+    "existing_foreground_overlap": 52
+  },
+  "scope": "Posthoc rejection diagnosis only, unchanged fixed decisions; no truth or model inference",
+  "sources": {
+    ".cache/cow-cutie/crowded-births/streaming.json": "2647641cdbd770a1d71ed1f28e2f2cf2e196f22e75a7dd908772cda90e40ce47",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_birth_attempt_audit.py": "87f156a228e9daf9633313421ae1ba940f4c94d57992d8515b6ddce53b61693f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_birth_protocol.json": "2b07540a4796072968518eda6b6bc93fb97cbe17e787092332090eccb8a0a54f"
+  }
+}

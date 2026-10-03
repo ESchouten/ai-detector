@@ -1,0 +1,91 @@
+{
+  "reviewer": "cattle_research",
+  "scope": "Independent qualitative phase-two review of the twelve later, uniformly frozen exposed frames after both anonymous raw-only annotations were frozen and adjudicated. No new labels, revised boxes, biological identity verification or alternative accuracy score. No source at or beyond 3000 seconds opened.",
+  "sources": {
+    "research/cow_identity/annotation_geometry_protocol.json": "748a9ea0f08198229efa813d2374926a768801a09e17c13d713dfb594b2db140",
+    "research/cow_identity/results/2026-10-03/geometry-review-cattle.json": "e1951ca2bed28d881e78e54fabb8cedd83cf88a25d2ca7435b425ee1970b7c80",
+    "research/cow_identity/results/2026-10-03/geometry-review-audit.json": "191c7b73d58f0702cf7394120bb7673b134d1aabdf8f7668bde84919d8867ee7",
+    "research/cow_identity/results/2026-10-03/geometry-review-adjudication.json": "47417dceddd9ed9791ea13d74bc49d91c58dcc61cb4849402f095daa700e492b",
+    "research/cow_identity/results/2026-10-03/geometry-review-reveal.json": "b88d9d211ba89b1518d50c0fc950e69950472d85fa1c89cb419931a729300036"
+  },
+  "frames": [
+    {
+      "second": 1267,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/1267.jpg",
+      "revealed_image_sha256": "0a1c4d3a7c2da911f4cf5d186a65b157533014283512dfb54d8542a3fdf4760f",
+      "interpretation": "Real segmentation failure: the large left curved animal and a neighbouring visible region occupy one broad slot while another slot collapses to a small head fragment. Publisher and both reviews distinguish more than one animal. Crowded publisher boundaries are also uncertain. Raw detector duplicates do not repair the physical merge."
+    },
+    {
+      "second": 1342,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/1342.jpg",
+      "revealed_image_sha256": "b7468370f08b86917adb00024332988ea2232707d978da1d7db8628a99899bb8",
+      "interpretation": "Real upper-cluster merge/fragment: one mask spans two neighbouring bodies while another is a tiny fragment. Lower bodies are better separated. Publisher and both reviews distinguish the upper animals. Raw detector produces multiple overlapping left-cluster proposals."
+    },
+    {
+      "second": 1417,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/1417.jpg",
+      "revealed_image_sha256": "0934f9fcd8b822fbecb41a1a07e740f0b419759c1fb8769cdba84de5db574188",
+      "interpretation": "Most visible body silhouettes remain separated in the masks. Some publisher rectangles are tighter torso-like extents, for example the lower-right animal whose visible head extends below its rectangle; this is not globally excessive publisher padding. Several raw proposals split or duplicate that curved animal."
+    },
+    {
+      "second": 1492,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/1492.jpg",
+      "revealed_image_sha256": "a6741a6ec1ac5378c4818c8b7a9825768772e9e1d12c4ad98d95c2555aa956aa",
+      "interpretation": "The right curved animal is one visible body, consistent with the raw-only adjudication; the left foreground body is separate. Masks mostly preserve this separation. Some publisher rectangles omit visible nose/leg extent. Raw proposals duplicate crowded left animals and offer partial right-body boxes."
+    },
+    {
+      "second": 1837,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/1837.jpg",
+      "revealed_image_sha256": "f6c71f79d7cf182365147bc1f091cf064948bfa7bf1c0d794ad1e217581d1b16",
+      "interpretation": "The dense centre contains genuinely ambiguous ownership of partly occluded heads. Masks broadly follow distinct visible bodies, but a still image cannot prove identity or exact ownership at shared boundaries. Some publisher rectangles omit protruding visible parts and another includes extra background; no uniform extent convention explains every discrepancy."
+    },
+    {
+      "second": 1912,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/1912.jpg",
+      "revealed_image_sha256": "399f780ebc2970d39dc00aabc41856c07dd93f943f17ddae382b9cb3a59bbc0f",
+      "interpretation": "The separated left animal has a visually complete mask. Several central visible silhouettes are plausible but crowded boundaries remain uncertain. The upper publisher rectangle includes some empty floor; other rectangles are comparatively close. This is a local extent difference, not evidence that all annotations are loose."
+    },
+    {
+      "second": 1987,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/1987.jpg",
+      "revealed_image_sha256": "33b8a216f2949ab0be91b5dbd118c6c5f942c31273db8f49fa98e7bda4f2409c",
+      "interpretation": "The narrow central slot near the upper bodies contains only a small visible fragment while adjacent masks own larger parts of the cluster. Heavy occlusion limits a static geometry diagnosis. Right and left separated body masks are visually plausible. Raw detector omits separate right-body proposals and returns one much broader crowded region; it is not a reliable geometry oracle."
+    },
+    {
+      "second": 2062,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/2062.jpg",
+      "revealed_image_sha256": "ae25b5e72776b7be8e008687cafba02c196a18054f88f0f4a9e04b8fc20a94b4",
+      "interpretation": "Most mask outlines follow visible animals, with several shared boundaries obscured by overlap. Publisher extents vary locally but are broadly near the visible bodies. Raw proposals overlap across several central animals; forcing a box union would include neighbouring bodies rather than establish ownership."
+    },
+    {
+      "second": 2737,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/2737.jpg",
+      "revealed_image_sha256": "ed6b55ced6159baec739d5ef7704ada030aa3e962ca659f683b903ae377bbd02",
+      "interpretation": "Less crowded separated bodies have visually complete masks and broadly matching publisher rectangles. Two animals at the top boundary are partially visible and ambiguous in both independent reviews; no amodal completion is justified. Most raw proposals cover their respective visible bodies, though some include extra floor."
+    },
+    {
+      "second": 2812,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/2812.jpg",
+      "revealed_image_sha256": "721ca99ad7fd14d2911cafaa6a0ee52fd2d387b0711eff54bce67eeb55531f9c",
+      "interpretation": "Upper and right isolated masks fit visible coat/body outlines well. Four foreground animals remain tightly packed with uncertain shared boundaries. Publisher boxes and independent reviews are broadly comparable there; the raw detector emits many duplicates or part boxes in that cluster."
+    },
+    {
+      "second": 2887,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/2887.jpg",
+      "revealed_image_sha256": "6a3249db1bb5d663c9e697b50130600b80a65ed99020b0d045f94f39daf2e16c",
+      "interpretation": "Fast motion creates blur and uncertain hoof/head extent. Most mask silhouettes still follow a visible body; a tiny isolated yellow region beside the right animal is excluded from its largest component. Publisher left-body rectangle is narrower than the visible curved animal, while other rectangles are close. Top clipped animals are difficult to separate from this still; biological names are not independently verified."
+    },
+    {
+      "second": 2962,
+      "revealed_image": ".cache/cow-geometry-audit/revealed/2962.jpg",
+      "revealed_image_sha256": "071292067a7a68574d3859661558f2ef416a15a4e2716b144815c2a48c4f7169",
+      "interpretation": "The separated middle, right and foreground masks broadly cover visible animals. The top border still contains multiple partial animals with uncertain extent and overlapping masks/proposals. Publisher rectangles are mostly near visible extents; some head/foot margins differ. Nothing here establishes a global loose-annotation explanation."
+    }
+  ],
+  "conclusion": [
+    "The uniform sample does not support explaining the frozen failure by globally loose publisher boxes. Some publisher extents are partial, some are larger, and many are close to visible bodies.",
+    "Real mask merges and fragments are present, particularly at1267 and1342. Crowded boundaries are also genuinely ambiguous in the low-resolution source. These are separate issues, and uncertainty does not erase benchmark errors.",
+    "Independent raw YOLO proposals contain missed cows, duplicates, merged boxes and part boxes. Replacing or expanding mask boxes with them is not a physically reliable correction, consistent with the failed geometry controls.",
+    "The earlier35-error review was selected on failures and is not representative evidence of annotation bias across the recording. All original annotations, strict metrics and negative decisions remain unchanged."
+  ]
+}

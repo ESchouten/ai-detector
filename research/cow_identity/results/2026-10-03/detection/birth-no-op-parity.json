@@ -1,0 +1,22 @@
+{
+  "compared_exact_fields": [
+    "boxes",
+    "objects",
+    "raw_detector_boxes",
+    "conflicted_ids",
+    "named_track_ids",
+    "reciprocal_pairs"
+  ],
+  "complete": true,
+  "integer_frames_compared": 1530,
+  "proposal_rows": 3059,
+  "quarantine_events_identical": true,
+  "scope": "CPU-only no-birth plumbing parity; no truth, new source pixels or model inference",
+  "sources": {
+    ".cache/cow-cutie/birth-proposals.json": "7ac8a806e07ed21d0102327d16109fb7006d76c59a018662eedbe4d419bf2004",
+    ".cache/cow-cutie/uninitialized-unknown/streaming.json": "bb5b77fb4e6cb2feb859e75fa58ba3e9e2989d81bf3183a51bc8b9094d68cee8",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_birth_parity.py": "e93e37b48bf156060cb80340f9e406f9f0be871d6bfb276e436f79d73db4f0a2",
+    "research/cow_identity/detection_birth_cache_protocol.json": "4a301ccc48edf17ea15031c9e0ede6fa1554e9324371d3e869be98264b494cf4",
+    "research/cow_identity/detection_uninitialized_protocol.json": "03ca89e9a83c7f834d60ab2408c0a9a3923352cfd1d3ac4b7187a5d32811d16e"
+  }
+}

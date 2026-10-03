@@ -1,0 +1,63 @@
+{
+  "closed_seconds": "3000 to end; no decoding or annotation inspection",
+  "diagnostics": "Original indexed mask, largest component, paired current raw YOLO proposal and unchanged publisher annotations; geometry comparisons are not alternative accuracy estimates",
+  "files": {
+    "annotations": {
+      "path": "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz",
+      "sha256": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26"
+    },
+    "clip": {
+      "path": ".cache/cow-cutie/reserved-2fps-clip/sampled.json",
+      "sha256": "fc8aafcd7f05b07081c15a447c6bcf7718c170e97433bc325f55f77322f5389b"
+    },
+    "evaluation": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_reserved_evaluation.json",
+      "sha256": "192508d4289881c2ed9b6d68eb048ee0e2f1e767c5c441043e3ac6a88a34efbe"
+    },
+    "prefix_parity": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-reserved-prefix-parity.json",
+      "sha256": "83564e73e94b4d08e5bf37a58ea3e5a58549d07db86c5c940a618a8063a5a211"
+    },
+    "source_pickle": {
+      "path": "datasets/8-calves/video/pmfeed_4_3_16.pkl",
+      "sha256": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e"
+    },
+    "streaming": {
+      "path": ".cache/cow-cutie/streaming-reserved/streaming.json",
+      "sha256": "2a39500ee305d3049fdd6aeea0f4cebe626f5b704ec02f5ca2337ab75a6c6fd3"
+    },
+    "strict_report": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-streaming-reserved.json",
+      "sha256": "2b6018a1da00b948e012c4bed76a987d24f91dcacf8190032ac8884084660603"
+    },
+    "video": {
+      "path": "datasets/8-calves/video/pmfeed_4_3_16.mp4",
+      "sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825"
+    }
+  },
+  "implementation": {
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_actual_audit.py": "d034183b89be07c9420d579658e7a5f2d590e375c4eb1f48260a8ed2313aa2e4",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_assessment.py": "28d19f2ada57ff6e6741cff6a213da6c99ed4c6b83ba036f9804615b7c1a32e9",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_cutie.py": "85c163664cdef3d7cef4268ac0970b569f8c7d62f95cc77add9ae6e46f51c9a7",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_cutie_variants.py": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_errors.py": "cc2b8f0aeb88c335f7003db892db0de3c193650053e68acc1aa9e7b70154a0f0",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_reserved_audit.py": "5053eba028963be7b068422a729def45a561b823873e66aab2a1a7636b9f235d",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  },
+  "libraries": {
+    "numpy": "2.5.0",
+    "opencv": "4.13.0"
+  },
+  "scope": "Diagnosis after a failed reserved evaluation; no rescoring, selection, threshold change or exclusion of errors",
+  "selection": "Every emitted name that fails the original one-to-one IoU>=.5 truth assignment; assert original strict count before diagnosis",
+  "windows": [
+    [
+      1800,
+      2099
+    ],
+    [
+      2700,
+      2999
+    ]
+  ]
+}

@@ -106,3 +106,147 @@ detector/.venv/bin/python research/cow_identity/identity_continuity_audit.py
 The ignored `.cache/cow-identity/continuity-audit/` directory contains the source
 context, chronological contact sheets and a manifest of every selected frame,
 box and publisher identity, with original source hashes.
+
+## Blinded extent audit after the continuous-tracking experiments
+
+**Completed on 2026-10-03 after the sampling protocol was frozen.**
+The later continuous-tracking experiments have now exposed the five scored
+panels, including 1800–2099 and 2700–2999. The earlier statements that those
+panels were unopened describe the original audit above. Footage at 3000 seconds
+and later remains closed. This pass reviewed geometry only; independent
+biological identification was deliberately deferred rather than forced from
+ambiguous coat fragments.
+
+### What the publisher actually establishes
+
+The [paper, sections 2–3](https://arxiv.org/html/2503.13777v2#S2), describes 900
+manually boxed frames used to train YOLOv8m, followed by ByteTrack and manual
+correction of false positives, swapped identities and missed tracks in one video.
+The authors acknowledge approximately 3,000 missing boxes and detector-family
+bias from that annotation procedure. It does not specify a reproducible rule
+for visible-only versus inferred occluded body extents, or supply independently
+verified instance masks. These limitations justify auditing geometry separately;
+they do not establish that our unmatched named predictions are biologically
+correct. The original numeric conversion and pixel/frame alignment remain
+verified by the artifact-specific checks above.
+
+The current [frozen metric](ITERATION_PROTOCOL.md) maximizes one-to-one match
+cardinality at IoU ≥0.5 before maximizing IoU. It does not use the proposed name
+to choose an association. Every named unmatched output remains an error. This
+can penalize a tight visible mask against a larger publisher rectangle, but can
+also correctly reject a partial animal, merged body or duplicate. A visual
+impression that one example contains the right calf does not separate those
+causes over the whole recording.
+
+### Fixed, small sample
+
+Use four equally spaced midpoint samples within each already-exposed panel:
+
+| Exposed panel | Frozen seconds |
+|---|---|
+| 330–629 | 367, 442, 517, 592 |
+| 930–1229 | 967, 1042, 1117, 1192 |
+| 1230–1529 | 1267, 1342, 1417, 1492 |
+| 1800–2099 | 1837, 1912, 1987, 2062 |
+| 2700–2999 | 2737, 2812, 2887, 2962 |
+
+The rule is `panel_start + 37 + 75*k` for `k=0..3`, independent of model outputs,
+confidence, error locations or publisher box quality. Review every visible calf
+in all 20 frames, including unknown calves and partly hidden animals. Do not
+replace difficult frames, fill the sample with known failures, or infer eight
+visible bodies just because eight calves exist in the recording. Save source
+hashes, zero-based video frame `20*second`, original pixel hashes and the sample
+rule before review. No model inference is needed.
+
+### Two-stage review with preserved uncertainty
+
+1. Two reviewers independently inspect native source images without prediction
+   overlays, publisher rectangles, confidence values or outcome labels. Draw a
+   tight rectangle around the **visible** animal pixels, including visible head,
+   feet and tail; do not infer hidden body area. Label local objects A, B, etc.,
+   and explicitly record truncation, occlusion, fragmented visibility and
+   inseparable neighboring bodies. Keep uncertain objects rather than dropping
+   them. Fixed source context at `t-1`, `t`, `t+1` is available for every sampled
+   frame; it is only annotation assistance, never model input for this audit.
+2. Freeze both complete reviews and compare anonymous instance geometry before
+   showing publisher labels or any model output. Adjudicate disagreements using
+   only the same clean centers and fixed context, preserving both originals.
+   This pass makes no biological identity claim. The reviewers are AI agents,
+   so the result is **independent AI-assisted review**, not external human truth.
+3. Reveal publisher boxes and identities, then all cached predictions for the
+   same sampled frames, including unnamed predictions and apparent successes.
+   Classify each discrepancy: missing label, suspected biological-ID mismatch,
+   extent-convention mismatch, partial prediction, merged bodies, duplicate,
+   or unresolved. A box containing much background is not automatically a bad
+   annotation: the author may have intended an occluded/amodal extent.
+
+Report reviewer agreement, visibility/ambiguity counts, publisher-versus-visible
+box extent differences, and discrepancy categories on this complete sample.
+An optional mask-contamination judgement should ask whether foreground includes
+another animal, independently of the rectangular extent. Preserve initial
+reviews alongside any adjudication so certainty is not manufactured afterward.
+
+This is a diagnostic audit, **not replacement truth or an alternate passing
+score**. Do not change frozen labels, remove disputed observations, lower IoU,
+or recalculate acceptance against the new rectangles. Twenty correlated frames
+cannot certify 99% naming precision; report counts, not an animal-level or
+cross-farm confidence claim. Existing failed runs remain failed.
+
+If the sample shows substantial extent disagreement, the next validation needs
+a new short recording with an agreed visible/occluded-box convention and actual
+independent animal identities, annotated before viewing model predictions. It
+should include entrants, crowded crossings, exits and reconnection, and report
+both localization and biological naming. A cleaner new test is stronger evidence
+than repeatedly redefining success on this already-studied public video.
+
+### Results and limits
+
+The [frozen sample](annotation_geometry_protocol.json) produced 20 native centers
+plus fixed ±1-second context. Both complete reviews were frozen before sharing
+labels: [audit reviewer](results/2026-10-03/geometry-review-audit.json) and
+[cattle reviewer](results/2026-10-03/geometry-review-cattle.json). Both had prior
+general scene exposure, although the sample was selected independently of
+prediction outcomes. The comparison found 159 versus 160 possible instances,
+156 nonzero-overlap anonymous pairs and median paired IoU 0.858. Uncertainty
+flags differed substantially: 38 versus 113. High rectangle overlap therefore
+does not establish equal interpretation of occlusion or correct instance counts.
+
+The [raw-only adjudication](results/2026-10-03/geometry-review-adjudication.json)
+records actual reviewer mistakes: the audit review invented a top-border object
+at 517/592 seconds, merged foreground bodies, missed a separate crowded body at
+1267, and split one bent animal at 1492. It also omitted a visible head outside
+the rail at 442. The original files remain unchanged. Tiny upper-edge possible
+fragments at 2887/2962 remain uncertain rather than becoming definite extra cows.
+
+Only afterward, [all cached outputs and original publisher boxes were
+revealed](results/2026-10-03/geometry-review-reveal.json) for these same centers.
+No new model inference or alternative accuracy calculation was performed.
+There are 158 publisher boxes. Descriptive anonymous publisher/reviewer matching
+gives median IoU 0.754/0.775 and median publisher-to-review area ratio 0.898/0.912.
+These are geometry-agreement summaries, **not model accuracy or replacement
+truth**; they include uncertain regions and preserved reviewer mistakes.
+
+The sample does **not** support a general claim that publisher boxes are too
+loose. They are typically slightly smaller than the visible-all-parts estimates.
+Some crowded rectangles are larger or smaller, reflecting head/foot inclusion
+and unclear occluded-body ownership. The upper-left calf at 1117 is one concrete
+large-extent outlier; the lower-right calf at 1417 has a smaller publisher extent
+than the visible-all-parts reviews. Both situations remain anatomically uncertain.
+The model has real geometry failures too: at 1267/1342 a mask absorbs neighboring
+body pixels while another slot collapses to a fragment; those names are withheld.
+Raw YOLO outputs also contain partial/duplicate or merged-body proposals.
+
+The [complete frame notes](results/2026-10-03/geometry-review-interpretation-audit.json)
+and [second review of the later 12 centers](results/2026-10-03/geometry-review-interpretation-cattle.json)
+agree on these limits and preserve favorable and difficult cases. This uniform diagnostic is distinct
+from the earlier error-selected 35-case review. Neither establishes biological
+name accuracy. Keep the existing conservative naming-plus-localization gate and
+all failed results unchanged. For a farmer-readiness claim, the next independent
+recording needs verified animal identities and a pre-agreed visible-instance
+annotation convention, with human/domain review before model predictions are
+shown. Relabeling this studied video until an algorithm passes is not validation.
+
+Reproduce the reveal locally with
+`detector/.venv/bin/python research/cow_identity/annotation_geometry_reveal.py`.
+It refuses to overwrite its image output directory; the already rendered native
+panels are under `.cache/cow-geometry-audit/revealed/`.

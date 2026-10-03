@@ -1,0 +1,260 @@
+{
+  "entrant_role": "Initially unrecognized/nameless, biologically5953according to next publisherclip; no appearancegallery in proposedcontrol",
+  "files": {
+    ".cache/cow-passage-torso-enrollment/clips/clip-723ec0dcb96e7c78/source.avi": "723ec0dcb96e7c789f47bd088a6283b829e630216dd490fd507d3d5674b5629e",
+    ".cache/cow-passage-torso-enrollment/clips/clip-a31dfef670eff62f/source.avi": "a31dfef670eff62f2394d4b70964ef05d9f100b553066552d1b2a5782094ae4b",
+    "research/cow_identity/results/2026-10-03/purdue-firstday-annotations-audit.json": "8b2f4df880c6ce3ea58e640b412398d3c39a42faf46440e33324ed47c55620cb",
+    "research/cow_identity/results/2026-10-03/purdue-firstday-annotations-cattle.json": "e2c209aa9be3b6dfaeee9d932ee4f3aec6343cd73a5a4da8af819b066181cb19",
+    "research/cow_identity/results/2026-10-03/purdue-passage-labels.json": "c095e21b36022b05294fd443a4bfd859b48daeea4c8513848d3c8c1b1cfe96d3",
+    "research/cow_identity/results/2026-10-03/purdue-passage-manifest.json": "0200e21caad98df815eb0bab9fec5a3bdb91e82802c52b4d399e858426d716d0"
+  },
+  "frozen_at_utc": "2026-10-03T09:39:45.946734+00:00",
+  "gap_treatment": "These3nativeframes lie between selected2fps timestamps80037 and80052; every required processingframe exists; no duplicated/interpolated frames. Entire original30fpsrecording is not available.",
+  "height": 1080,
+  "initial_known_cow": 5676,
+  "limitations": [
+    "One narrow passage with rapid sequentialmovement, not densemulti-objectbarn",
+    "Bothclips supplied localdetectortraining images, so any localization result is adaptation/replay not unseen-generalization",
+    "22selectedframes/10.5seconds cannotvalidate sustainedmemory or long-termidentity",
+    "Noreserved8calvesframes or additionaldatasets accessed"
+  ],
+  "native_fps": 30,
+  "native_intervals_half_open": [
+    [
+      79542,
+      80049
+    ],
+    [
+      80052,
+      80292
+    ]
+  ],
+  "processing_fps": 2,
+  "review_needed": "Verify cleanpixels preserve camera continuity and preceding/enteringanimals across clipboundary; do not silently relabel existing null annotations. Add separate lifecycle truth after independent review.",
+  "rows": [
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 420,
+      "second": 0.0,
+      "sequence_frame": 0,
+      "source_frame": 79962
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 435,
+      "second": 0.5,
+      "sequence_frame": 1,
+      "source_frame": 79977
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 450,
+      "second": 1.0,
+      "sequence_frame": 2,
+      "source_frame": 79992
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 465,
+      "second": 1.5,
+      "sequence_frame": 3,
+      "source_frame": 80007
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 480,
+      "second": 2.0,
+      "sequence_frame": 4,
+      "source_frame": 80022
+    },
+    {
+      "clip": "clip-723ec0dcb96e7c78",
+      "local_frame": 495,
+      "second": 2.5,
+      "sequence_frame": 5,
+      "source_frame": 80037
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 0,
+      "second": 3.0,
+      "sequence_frame": 6,
+      "source_frame": 80052
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 15,
+      "second": 3.5,
+      "sequence_frame": 7,
+      "source_frame": 80067
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 30,
+      "second": 4.0,
+      "sequence_frame": 8,
+      "source_frame": 80082
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 45,
+      "second": 4.5,
+      "sequence_frame": 9,
+      "source_frame": 80097
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 60,
+      "second": 5.0,
+      "sequence_frame": 10,
+      "source_frame": 80112
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 75,
+      "second": 5.5,
+      "sequence_frame": 11,
+      "source_frame": 80127
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 90,
+      "second": 6.0,
+      "sequence_frame": 12,
+      "source_frame": 80142
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 105,
+      "second": 6.5,
+      "sequence_frame": 13,
+      "source_frame": 80157
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 120,
+      "second": 7.0,
+      "sequence_frame": 14,
+      "source_frame": 80172
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 135,
+      "second": 7.5,
+      "sequence_frame": 15,
+      "source_frame": 80187
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 150,
+      "second": 8.0,
+      "sequence_frame": 16,
+      "source_frame": 80202
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 165,
+      "second": 8.5,
+      "sequence_frame": 17,
+      "source_frame": 80217
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 180,
+      "second": 9.0,
+      "sequence_frame": 18,
+      "source_frame": 80232
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 195,
+      "second": 9.5,
+      "sequence_frame": 19,
+      "source_frame": 80247
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 210,
+      "second": 10.0,
+      "sequence_frame": 20,
+      "source_frame": 80262
+    },
+    {
+      "clip": "clip-a31dfef670eff62f",
+      "local_frame": 225,
+      "second": 10.5,
+      "sequence_frame": 21,
+      "source_frame": 80277
+    }
+  ],
+  "scope": "Already exposed Purdue June8passages; CPUdata inventory, no model results or GPU. Not an accuracy or dynamic policy freeze.",
+  "selected_clips": [
+    {
+      "archive": "datasets/AutoCattlogger/sampleVideos1.tar",
+      "archive_sha256": "0fcf0c7ee97d92d24dffdf2366c07adfc5e300befa68a73d84e890e7709507d4",
+      "clip": "clip-723ec0dcb96e7c78",
+      "date": "2022-06-08",
+      "fps_denominator": 1,
+      "fps_numerator": 30,
+      "frames": 507,
+      "height": 1080,
+      "member": "sampleVideos1/cam24_2022-06-08_08-29-23_5676_79542_80049.avi",
+      "pixels_exposure": "unopened at freeze; AVI headers and file bytes hashed only",
+      "role": "enrollment",
+      "sampled_local_frame_indices": [
+        0,
+        30,
+        60,
+        90,
+        120,
+        150,
+        180,
+        210,
+        240,
+        270,
+        300,
+        330,
+        360,
+        390,
+        420,
+        450,
+        480
+      ],
+      "sha256": "723ec0dcb96e7c789f47bd088a6283b829e630216dd490fd507d3d5674b5629e",
+      "width": 1920
+    },
+    {
+      "archive": "datasets/AutoCattlogger/sampleVideos1.tar",
+      "archive_sha256": "0fcf0c7ee97d92d24dffdf2366c07adfc5e300befa68a73d84e890e7709507d4",
+      "clip": "clip-a31dfef670eff62f",
+      "date": "2022-06-08",
+      "fps_denominator": 1,
+      "fps_numerator": 30,
+      "frames": 240,
+      "height": 1080,
+      "member": "sampleVideos1/cam24_2022-06-08_08-29-23_5953_80052_80292.avi",
+      "pixels_exposure": "unopened at freeze; AVI headers and file bytes hashed only",
+      "role": "enrollment",
+      "sampled_local_frame_indices": [
+        0,
+        30,
+        60,
+        90,
+        120,
+        150,
+        180,
+        210
+      ],
+      "sha256": "a31dfef670eff62f2394d4b70964ef05d9f100b553066552d1b2a5782094ae4b",
+      "width": 1920
+    }
+  ],
+  "source_recording": "cam24_2022-06-08_08-29-23",
+  "status": "FIXED_SEQUENCE_SELECTION_ONLY",
+  "unavailable_native_frames": [
+    80049,
+    80050,
+    80051
+  ],
+  "width": 1920
+}

@@ -1,0 +1,8376 @@
+{
+  "all_errors_remain_counted": true,
+  "contact_sheets": [
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/sheet-1.jpg",
+      "sha256": "4b35b0d0fbbd49f20f65729b8c883821138d25a8d60cbc22d5ab67cc2e1c0d52"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/sheet-2.jpg",
+      "sha256": "821c26db6e11547aa94a256c18697dfc259289d4aa11f431fb5dad58ddaef892"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/sheet-3.jpg",
+      "sha256": "38f652438898b0a34aa2e20172f7e86ca0f33b6f20d00d431518087f2f96ba1e"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/sheet-4.jpg",
+      "sha256": "383011c5848e44f32295fbd4f424c67d16b0ced817e71d1aa7ebd6a752ed2778"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/sheet-5.jpg",
+      "sha256": "3a9d2eda295be152bc1f52bd73850c25a29fca09436e5e9846eb508c1169835d"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/sheet-6.jpg",
+      "sha256": "d6ccac63789119dc97b0e74b6a22e6baea31616117f1a182bd48d4f32f0d2870"
+    }
+  ],
+  "counts_by_named_cow": {
+    "1": 4,
+    "2": 2,
+    "3": 5,
+    "4": 6,
+    "5": 6,
+    "6": 12
+  },
+  "counts_by_window": {
+    "1800": 8,
+    "2700": 27
+  },
+  "errors": [
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.41073873873873873,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.5936458333333333,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.04433887569279493,
+          "relative_area": 1.0338321995464852,
+          "truth_covered": 0.08634920634920636
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.5189164580013658,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.3070581896551724,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.4542483660130719,
+          "relative_area": 0.4542483660130719,
+          "truth_covered": 0.4542483660130719
+        },
+        {
+          "cow": 7,
+          "iou": 0.014269307068527477,
+          "relative_area": 0.6423217807833193,
+          "truth_covered": 0.02310510002817695
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9977240896358543,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.4542483660130719,
+        "relative_area": 0.4542483660130719,
+        "truth_covered": 0.4542483660130719
+      },
+      "box": [
+        222,
+        204,
+        304,
+        343
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 6977,
+        "retained_area": 6977,
+        "track_id": 5
+      },
+      "mask_sha256": "149c3a60dafe8dd960be4d046085679e9a586dd88d91bbb329426348db31246e",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 222,
+        "x2": 304,
+        "y1": 204,
+        "y2": 343
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.4542483660130719,
+        "relative_area": 0.4542483660130719,
+        "truth_covered": 0.4542483660130719
+      },
+      "own_truth": [
+        212,
+        143,
+        335,
+        347
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 6977,
+        "mean_probability": 0.9444549083709717,
+        "p10_probability": 0.8299329876899719,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.67333984375,
+        "x1": 198,
+        "x2": 324,
+        "y1": 170,
+        "y2": 349
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.8127567567567567,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1746875,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.11074724620422745,
+          "relative_area": 2.045714285714286,
+          "truth_covered": 0.3036734693877551
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.0268153881174595,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.6075969827586207,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.7125296527927539,
+          "relative_area": 0.8988522238163558,
+          "truth_covered": 0.790052606408417
+        },
+        {
+          "cow": 7,
+          "iou": 0.057744297750597126,
+          "relative_area": 1.2710059171597634,
+          "truth_covered": 0.12397858551704706
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.974264705882353,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 5,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.7125296527927539,
+        "relative_area": 0.8988522238163558,
+        "truth_covered": 0.790052606408417
+      },
+      "publisher_frame": 36361,
+      "second": 1818,
+      "seed": 6,
+      "source_pixels_sha256": "e9ceea06dbd6b8b947605d33cb2c026a9537f6a8e927a9b0b8796dc65d5cbfb1",
+      "truth": [
+        {
+          "box": [
+            452,
+            419,
+            702,
+            530
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            350,
+            103,
+            500,
+            231
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            270,
+            85,
+            345,
+            232
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            515,
+            190,
+            630,
+            381
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            450,
+            355,
+            770,
+            471
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            212,
+            143,
+            335,
+            347
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            299,
+            261,
+            494,
+            352
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            336,
+            225,
+            504,
+            293
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.4696502057613169,
+          "relative_area": 0.4696502057613169,
+          "truth_covered": 0.4696502057613169
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7861653272101033,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.1847739888977002,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.013902099948781737,
+          "relative_area": 0.6537773003938417,
+          "truth_covered": 0.022675736961451247
+        },
+        {
+          "cow": 5,
+          "iou": 0.031248626554740033,
+          "relative_area": 0.5389256902997311,
+          "truth_covered": 0.046632124352331605
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.1534250421111736,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.3880067567567567,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9895231213872833,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 1,
+        "iou": 0.4696502057613169,
+        "relative_area": 0.4696502057613169,
+        "truth_covered": 0.4696502057613169
+      },
+      "box": [
+        478,
+        363,
+        561,
+        561
+      ],
+      "components": {
+        "component_count": 2,
+        "original_area": 9561,
+        "retained_area": 9544,
+        "track_id": 0
+      },
+      "mask_sha256": "35b44b3f15fc15d7aa5a0b17274ec830f4b9e0c64391b30b56ed9323afbcbdda",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 0,
+        "x1": 478,
+        "x2": 561,
+        "y1": 363,
+        "y2": 561
+      },
+      "own_overlap": {
+        "cow": 1,
+        "iou": 0.4696502057613169,
+        "relative_area": 0.4696502057613169,
+        "truth_covered": 0.4696502057613169
+      },
+      "own_truth": [
+        449,
+        351,
+        611,
+        567
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 9561,
+        "mean_probability": 0.9390061497688293,
+        "p10_probability": 0.7657095789909363,
+        "track_id": 0
+      },
+      "proposal": {
+        "confidence": 0.58056640625,
+        "x1": 459,
+        "x2": 600,
+        "y1": 348,
+        "y2": 581
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.8145711305464174,
+          "relative_area": 0.9388717421124828,
+          "truth_covered": 0.8703703703703703
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.5716130884041333,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 2.36846658496143,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.06477911204142338,
+          "relative_area": 1.3069578708676453,
+          "truth_covered": 0.14035087719298245
+        },
+        {
+          "cow": 5,
+          "iou": 0.13600416046482436,
+          "relative_area": 1.0773594805535516,
+          "truth_covered": 0.24870466321243523
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 2.305797304884896,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.015634586978752415,
+          "relative_area": 2.7747466216216217,
+          "truth_covered": 0.05810810810810811
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.978143063583815,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 7,
+      "proposal_own_overlap": {
+        "cow": 1,
+        "iou": 0.8145711305464174,
+        "relative_area": 0.9388717421124828,
+        "truth_covered": 0.8703703703703703
+      },
+      "publisher_frame": 36401,
+      "second": 1820,
+      "seed": 1,
+      "source_pixels_sha256": "2001d15ebecfd7a2fc214d0b17bc0ca92188813c2dfe4eb7c84bb43ea2e5eed0",
+      "truth": [
+        {
+          "box": [
+            449,
+            351,
+            611,
+            567
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            436,
+            114,
+            592,
+            248
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            325,
+            25,
+            422,
+            168
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            551,
+            231,
+            684,
+            420
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            552,
+            372,
+            745,
+            530
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            269,
+            152,
+            373,
+            289
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            360,
+            292,
+            545,
+            356
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            391,
+            217,
+            564,
+            313
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.122859100251199,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1229232086782757,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.4447258338044093,
+          "relative_area": 0.4447258338044093,
+          "truth_covered": 0.4447258338044093
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.546347983332023,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.1941712204007287,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.7854030501089324,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.04011887072808321,
+          "relative_area": 1.4117140396210164,
+          "truth_covered": 0.09302325581395349
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.6433823529411764,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 3,
+        "iou": 0.4447258338044093,
+        "relative_area": 0.4447258338044093,
+        "truth_covered": 0.4447258338044093
+      },
+      "box": [
+        291,
+        275,
+        440,
+        407
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 7911,
+        "retained_area": 7911,
+        "track_id": 2
+      },
+      "mask_sha256": "7ecca2f3502cf53d8e5d87ed2e106029f92d9ae8160bc11d317f9e75d48a7450",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 2,
+        "x1": 291,
+        "x2": 440,
+        "y1": 275,
+        "y2": 407
+      },
+      "own_overlap": {
+        "cow": 3,
+        "iou": 0.4447258338044093,
+        "relative_area": 0.4447258338044093,
+        "truth_covered": 0.4447258338044093
+      },
+      "own_truth": [
+        208,
+        273,
+        513,
+        418
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 7911,
+        "mean_probability": 0.9610009789466858,
+        "p10_probability": 0.9051138758659363,
+        "track_id": 2
+      },
+      "proposal": {
+        "confidence": 0.755859375,
+        "x1": 279,
+        "x2": 455,
+        "y1": 262,
+        "y2": 432
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.7081525462434346,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.7082500713673994,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.5248329048843188,
+          "relative_area": 0.6765404183154324,
+          "truth_covered": 0.5770491803278689
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 2.352386193883167,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.8166363084395871,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 2.7160493827160495,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.06073873394451029,
+          "relative_area": 2.147573930519667,
+          "truth_covered": 0.18023255813953487
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 2.5,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 1,
+      "proposal_own_overlap": {
+        "cow": 3,
+        "iou": 0.5248329048843188,
+        "relative_area": 0.6765404183154324,
+        "truth_covered": 0.5770491803278689
+      },
+      "publisher_frame": 36801,
+      "second": 1840,
+      "seed": 3,
+      "source_pixels_sha256": "bb2555a66c0b8277cea771bd9a02fcc809330f2c2c7c555d14c51659a096fe57",
+      "truth": [
+        {
+          "box": [
+            510,
+            312,
+            626,
+            463
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            501,
+            150,
+            656,
+            263
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            208,
+            273,
+            513,
+            418
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            645,
+            229,
+            724,
+            390
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            581,
+            339,
+            671,
+            522
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            409,
+            188,
+            562,
+            260
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            424,
+            296,
+            596,
+            377
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            457,
+            254,
+            633,
+            322
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.4797210219088773,
+          "relative_area": 0.8886308659893566,
+          "truth_covered": 0.6122883405902274
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.949250645994832,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.016230253191949793,
+          "relative_area": 0.9566666666666667,
+          "truth_covered": 0.03125
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.9206094627105053,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.24178935447338618,
+          "relative_area": 1.0985645933014354,
+          "truth_covered": 0.40861244019138754
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.054722939994258,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.08777405008972458,
+          "relative_area": 1.930222782681799,
+          "truth_covered": 0.2364438839848676
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.11809106403701,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 1,
+        "iou": 0.4797210219088773,
+        "relative_area": 0.8886308659893566,
+        "truth_covered": 0.6122883405902274
+      },
+      "box": [
+        449,
+        369,
+        613,
+        481
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 8545,
+        "retained_area": 8545,
+        "track_id": 0
+      },
+      "mask_sha256": "854f831639df4814d4cb9388bd2bb3a9a1ae1ccb64003be20abec4450f256bea",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 0,
+        "x1": 449,
+        "x2": 613,
+        "y1": 369,
+        "y2": 481
+      },
+      "own_overlap": {
+        "cow": 1,
+        "iou": 0.4797210219088773,
+        "relative_area": 0.8886308659893566,
+        "truth_covered": 0.6122883405902274
+      },
+      "own_truth": [
+        500,
+        354,
+        659,
+        484
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 8545,
+        "mean_probability": 0.9226467609405518,
+        "p10_probability": 0.7973196506500244,
+        "track_id": 0
+      },
+      "proposal": {
+        "confidence": 0.411376953125,
+        "x1": 441,
+        "x2": 615,
+        "y1": 343,
+        "y2": 498
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.4573263995105537,
+          "relative_area": 1.304789550072569,
+          "truth_covered": 0.7232704402515723
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.3937984496124032,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.03934987168520103,
+          "relative_area": 1.4046875,
+          "truth_covered": 0.09104166666666667
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.3517441860465116,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.2285240277816832,
+          "relative_area": 1.6130382775119618,
+          "truth_covered": 0.4860645933014354
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.5486649440137812,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.20598929067230778,
+          "relative_area": 2.8341740226986127,
+          "truth_covered": 0.6548970155527533
+        },
+        {
+          "cow": 8,
+          "iou": 0.015585509688289806,
+          "relative_area": 1.641709276844412,
+          "truth_covered": 0.04054054054054054
+        }
+      ],
+      "proposal_index": 4,
+      "proposal_own_overlap": {
+        "cow": 1,
+        "iou": 0.4573263995105537,
+        "relative_area": 1.304789550072569,
+        "truth_covered": 0.7232704402515723
+      },
+      "publisher_frame": 36941,
+      "second": 1847,
+      "seed": 1,
+      "source_pixels_sha256": "892f6bdda048c076fda1d2acecabfddf82c0721da7c033aa49359e400cf379b8",
+      "truth": [
+        {
+          "box": [
+            500,
+            354,
+            659,
+            484
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            543,
+            154,
+            693,
+            283
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            351,
+            239,
+            479,
+            389
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            627,
+            313,
+            743,
+            485
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            552,
+            369,
+            662,
+            521
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            439,
+            164,
+            574,
+            293
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            463,
+            332,
+            646,
+            384
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            504,
+            275,
+            726,
+            349
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.030020253260396357,
+          "relative_area": 1.4044273594909862,
+          "truth_covered": 0.07007776599505125
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.3260325406758449,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.4360260233125508,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.41780188988583183,
+          "relative_area": 2.014513880086196,
+          "truth_covered": 0.8883255165420205
+        },
+        {
+          "cow": 5,
+          "iou": 0.25049224415309995,
+          "relative_area": 1.5663036515054451,
+          "truth_covered": 0.5140688907505051
+        },
+        {
+          "cow": 6,
+          "iou": 0.25377229080932784,
+          "relative_area": 1.5647614827942697,
+          "truth_covered": 0.5191256830601093
+        },
+        {
+          "cow": 7,
+          "iou": 0.025926869664925467,
+          "relative_area": 1.9228675136116153,
+          "truth_covered": 0.07386569872958258
+        },
+        {
+          "cow": 8,
+          "iou": 0.39620489134971204,
+          "relative_area": 1.7278212654924983,
+          "truth_covered": 0.7740813220265275
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 4,
+        "iou": 0.41780188988583183,
+        "relative_area": 2.014513880086196,
+        "truth_covered": 0.8883255165420205
+      },
+      "box": [
+        365,
+        367,
+        560,
+        530
+      ],
+      "components": {
+        "component_count": 4,
+        "original_area": 14503,
+        "retained_area": 14446,
+        "track_id": 3
+      },
+      "mask_sha256": "71672cac2731d8391d048d94f670f1886d1f041539b0e86683d25dbcd7ab885e",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 3,
+        "x1": 336,
+        "x2": 560,
+        "y1": 367,
+        "y2": 535
+      },
+      "own_overlap": {
+        "cow": 4,
+        "iou": 0.41780188988583183,
+        "relative_area": 2.014513880086196,
+        "truth_covered": 0.8883255165420205
+      },
+      "own_truth": [
+        414,
+        365,
+        575,
+        463
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 14503,
+        "mean_probability": 0.8879029154777527,
+        "p10_probability": 0.7195188403129578,
+        "track_id": 3
+      },
+      "proposal": {
+        "confidence": 0.5615234375,
+        "x1": 391,
+        "x2": 619,
+        "y1": 321,
+        "y2": 530
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.14863782706041936,
+          "relative_area": 2.105514316012725,
+          "truth_covered": 0.4018646164722517
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.987984981226533,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 2.1528869612361072,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.3311088726601192,
+          "relative_area": 3.020154645709215,
+          "truth_covered": 1.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.13236004866423345,
+          "relative_area": 2.3481988863154784,
+          "truth_covered": 0.3913664810525797
+        },
+        {
+          "cow": 6,
+          "iou": 0.2991742172267462,
+          "relative_area": 2.3458868704770346,
+          "truth_covered": 0.7704918032786885
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 2.882758620689655,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.341130604288499,
+          "relative_area": 2.5903457273320285,
+          "truth_covered": 0.91324200913242
+        }
+      ],
+      "proposal_index": 5,
+      "proposal_own_overlap": {
+        "cow": 4,
+        "iou": 0.3311088726601192,
+        "relative_area": 3.020154645709215,
+        "truth_covered": 1.0
+      },
+      "publisher_frame": 37781,
+      "second": 1889,
+      "seed": 4,
+      "source_pixels_sha256": "103121cfe9a16c183fdd62fb050e116833229fb11a3b5268610d1b46a95a3b74",
+      "truth": [
+        {
+          "box": [
+            534,
+            244,
+            657,
+            428
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            207,
+            302,
+            309,
+            537
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            157,
+            300,
+            259,
+            517
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            414,
+            365,
+            575,
+            463
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            338,
+            311,
+            429,
+            534
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            396,
+            279,
+            507,
+            462
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            289,
+            288,
+            376,
+            478
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            382,
+            450,
+            601,
+            534
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.3636402027027027,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.35015452179570594,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.3284134248665141,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.06256269468349084,
+          "relative_area": 0.2721468980120729,
+          "truth_covered": 0.07490281596662558
+        },
+        {
+          "cow": 5,
+          "iou": 0.008913456555536362,
+          "relative_area": 0.41817210567210567,
+          "truth_covered": 0.01252913752913753
+        },
+        {
+          "cow": 6,
+          "iou": 0.38523065476190477,
+          "relative_area": 0.4066203900458044,
+          "truth_covered": 0.39117910941115364
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.4671766493055556,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.5707184517497349,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.38523065476190477,
+        "relative_area": 0.4066203900458044,
+        "truth_covered": 0.39117910941115364
+      },
+      "box": [
+        415,
+        292,
+        494,
+        401
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 4855,
+        "retained_area": 4855,
+        "track_id": 5
+      },
+      "mask_sha256": "1746f4827184e0d398bef6835e6752d95e1182b9a1183541a22dc225e4a49938",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 415,
+        "x2": 494,
+        "y1": 292,
+        "y2": 401
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.38523065476190477,
+        "relative_area": 0.4066203900458044,
+        "truth_covered": 0.39117910941115364
+      },
+      "own_truth": [
+        374,
+        286,
+        491,
+        467
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 4855,
+        "mean_probability": 0.9339137673377991,
+        "p10_probability": 0.7163754105567932,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.568359375,
+        "x1": 392,
+        "x2": 508,
+        "y1": 279,
+        "y2": 425
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7152027027027027,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.6886792452830188,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.6459191456903127,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.14803960957625317,
+          "relative_area": 0.5352548908062325,
+          "truth_covered": 0.19797098701052432
+        },
+        {
+          "cow": 5,
+          "iou": 0.08249682704511364,
+          "relative_area": 0.8224553224553225,
+          "truth_covered": 0.1388888888888889
+        },
+        {
+          "cow": 6,
+          "iou": 0.5650870565045992,
+          "relative_area": 0.7997355621665014,
+          "truth_covered": 0.6498087547811304
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.9188368055555556,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.1224814422057263,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 5,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.5650870565045992,
+        "relative_area": 0.7997355621665014,
+        "truth_covered": 0.6498087547811304
+      },
+      "publisher_frame": 37801,
+      "second": 1890,
+      "seed": 6,
+      "source_pixels_sha256": "c6d4700611adf9afea04054b30efc012ac877ee3a7f0e4dfe0c05c3f14bba3c1",
+      "truth": [
+        {
+          "box": [
+            525,
+            263,
+            653,
+            448
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            211,
+            303,
+            317,
+            535
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            149,
+            302,
+            263,
+            532
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            360,
+            371,
+            559,
+            530
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            319,
+            315,
+            418,
+            523
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            374,
+            286,
+            491,
+            467
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            279,
+            289,
+            375,
+            481
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            418,
+            450,
+            602,
+            532
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.3286029411764706,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.4523737220366434,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.3814279008236248,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.06785055056966456,
+          "relative_area": 0.36309717257068574,
+          "truth_covered": 0.08661033474163146
+        },
+        {
+          "cow": 5,
+          "iou": 0.054709885386819486,
+          "relative_area": 0.6113543091655267,
+          "truth_covered": 0.08358413132694939
+        },
+        {
+          "cow": 6,
+          "iou": 0.4666388221781351,
+          "relative_area": 0.4666388221781351,
+          "truth_covered": 0.4666388221781351
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.6487153433009145,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.6939979812097212,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.4666388221781351,
+        "relative_area": 0.4666388221781351,
+        "truth_covered": 0.4666388221781351
+      },
+      "box": [
+        415,
+        289,
+        497,
+        398
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 5008,
+        "retained_area": 5008,
+        "track_id": 5
+      },
+      "mask_sha256": "076c845073e551654f5a03d190ef4f34bdae9cb9c72cd31b0bb7deaa19033889",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 415,
+        "x2": 497,
+        "y1": 289,
+        "y2": 398
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.4666388221781351,
+        "relative_area": 0.4666388221781351,
+        "truth_covered": 0.4666388221781351
+      },
+      "own_truth": [
+        379,
+        281,
+        501,
+        438
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5008,
+        "mean_probability": 0.9315050840377808,
+        "p10_probability": 0.7154215574264526,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.73779296875,
+        "x1": 395,
+        "x2": 510,
+        "y1": 274,
+        "y2": 404
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5496323529411765,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7566555319364308,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.637989160585499,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.10254695424399488,
+          "relative_area": 0.6073285667858304,
+          "truth_covered": 0.14949626259343515
+        },
+        {
+          "cow": 5,
+          "iou": 0.12561857632280168,
+          "relative_area": 1.0225718194254445,
+          "truth_covered": 0.22571819425444598
+        },
+        {
+          "cow": 6,
+          "iou": 0.6189119908857875,
+          "relative_area": 0.780515819150047,
+          "truth_covered": 0.6806933277644356
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.0850631441428364,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.1608044102803012,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 1,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.6189119908857875,
+        "relative_area": 0.780515819150047,
+        "truth_covered": 0.6806933277644356
+      },
+      "publisher_frame": 37861,
+      "second": 1893,
+      "seed": 6,
+      "source_pixels_sha256": "4003a4c17eebbcf2d5cfa0f34825b0e653b5633a94be05fb26b4eddbc46df28c",
+      "truth": [
+        {
+          "box": [
+            521,
+            265,
+            657,
+            465
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            234,
+            286,
+            323,
+            508
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            155,
+            300,
+            262,
+            519
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            375,
+            372,
+            556,
+            508
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            343,
+            304,
+            428,
+            476
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            379,
+            281,
+            501,
+            438
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            294,
+            291,
+            377,
+            457
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            423,
+            453,
+            582,
+            534
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.0622228381374723,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.47589874003005433,
+          "relative_area": 1.5020576131687242,
+          "truth_covered": 0.8067803252988438
+        },
+        {
+          "cow": 3,
+          "iou": 0.006958499147242752,
+          "relative_area": 0.5295153880694967,
+          "truth_covered": 0.010569583088667059
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.5667701863354038,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.1239002932551319,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.7286814335963495,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.3303710632990334,
+          "relative_area": 1.492842535787321,
+          "truth_covered": 0.6190476190476191
+        },
+        {
+          "cow": 8,
+          "iou": 0.007597932365946317,
+          "relative_area": 0.9002818886539817,
+          "truth_covered": 0.01432933991073526
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 2,
+        "iou": 0.47589874003005433,
+        "relative_area": 1.5020576131687242,
+        "truth_covered": 0.8067803252988438
+      },
+      "box": [
+        253,
+        190,
+        326,
+        400
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 7352,
+        "retained_area": 7352,
+        "track_id": 1
+      },
+      "mask_sha256": "f63161a52c54531851e53f8c61ea6245b8b3ee78d018d91354592920575a13c2",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 1,
+        "x1": 253,
+        "x2": 326,
+        "y1": 190,
+        "y2": 400
+      },
+      "own_overlap": {
+        "cow": 2,
+        "iou": 0.47589874003005433,
+        "relative_area": 1.5020576131687242,
+        "truth_covered": 0.8067803252988438
+      },
+      "own_truth": [
+        245,
+        180,
+        299,
+        369
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 7352,
+        "mean_probability": 0.9096410274505615,
+        "p10_probability": 0.7093204855918884,
+        "track_id": 1
+      },
+      "proposal": {
+        "confidence": 0.5,
+        "x1": 233,
+        "x2": 330,
+        "y1": 186,
+        "y2": 360
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.1694844789356984,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.5312075983717774,
+          "relative_area": 1.6537330981775427,
+          "truth_covered": 0.9206349206349206
+        },
+        {
+          "cow": 3,
+          "iou": 0.03211494718825304,
+          "relative_area": 0.5829850436945183,
+          "truth_covered": 0.049255638838036686
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.6240017746228926,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.2373900293255131,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.802262572487879,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.2797341253005233,
+          "relative_area": 1.6435874963482326,
+          "truth_covered": 0.5778556821501607
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9911909795630726,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 6,
+      "proposal_own_overlap": {
+        "cow": 2,
+        "iou": 0.5312075983717774,
+        "relative_area": 1.6537330981775427,
+        "truth_covered": 0.9206349206349206
+      },
+      "publisher_frame": 38641,
+      "second": 1932,
+      "seed": 2,
+      "source_pixels_sha256": "238be052b0a3ebec2cd03872fcd7c28b322e36421b5b96d966fa452c82b80366",
+      "truth": [
+        {
+          "box": [
+            336,
+            364,
+            500,
+            452
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            245,
+            180,
+            299,
+            369
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            125,
+            298,
+            256,
+            519
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            344,
+            255,
+            528,
+            402
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            348,
+            183,
+            503,
+            271
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            475,
+            216,
+            632,
+            350
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            287,
+            222,
+            350,
+            385
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            265,
+            396,
+            463,
+            482
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.8864591055102545,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1537843053173242,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.05164846381545371,
+          "relative_area": 2.2937979539641944,
+          "truth_covered": 0.16176470588235295
+        },
+        {
+          "cow": 4,
+          "iou": 0.4539300318037256,
+          "relative_area": 2.0546964490263457,
+          "truth_covered": 0.9537037037037037
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 3.3372093023255816,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.06336805555555555,
+          "relative_area": 1.6849315068493151,
+          "truth_covered": 0.16
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.5375,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9195574162679426,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 4,
+        "iou": 0.4539300318037256,
+        "relative_area": 2.0546964490263457,
+        "truth_covered": 0.9537037037037037
+      },
+      "box": [
+        420,
+        125,
+        543,
+        300
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 6933,
+        "retained_area": 6933,
+        "track_id": 3
+      },
+      "mask_sha256": "b7c20c0484b59dda46ad29c4ee96528627a041918e9e82cafc5f5a79e574eae1",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 3,
+        "x1": 420,
+        "x2": 543,
+        "y1": 125,
+        "y2": 300
+      },
+      "own_overlap": {
+        "cow": 4,
+        "iou": 0.4539300318037256,
+        "relative_area": 2.0546964490263457,
+        "truth_covered": 0.9537037037037037
+      },
+      "own_truth": [
+        433,
+        120,
+        530,
+        228
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 6933,
+        "mean_probability": 0.9518879652023315,
+        "p10_probability": 0.8027831315994263,
+        "track_id": 3
+      },
+      "proposal": {
+        "confidence": 0.7421875,
+        "x1": 408,
+        "x2": 550,
+        "y1": 110,
+        "y2": 242
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7719298245614035,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.0047169811320755,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.09982404692082111,
+          "relative_area": 1.9974424552429668,
+          "truth_covered": 0.27205882352941174
+        },
+        {
+          "cow": 4,
+          "iou": 0.558898847631242,
+          "relative_area": 1.7892325315005728,
+          "truth_covered": 1.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 2.906046511627907,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.020726059781728683,
+          "relative_area": 1.4672407045009785,
+          "truth_covered": 0.05009784735812133
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.338857142857143,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.8007518796992481,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 4,
+      "proposal_own_overlap": {
+        "cow": 4,
+        "iou": 0.558898847631242,
+        "relative_area": 1.7892325315005728,
+        "truth_covered": 1.0
+      },
+      "publisher_frame": 54181,
+      "second": 2709,
+      "seed": 4,
+      "source_pixels_sha256": "92324e8636ca1be305d59b25af321f1c4a7031b77c51d0185ccadc42acade070",
+      "truth": [
+        {
+          "box": [
+            223,
+            333,
+            365,
+            504
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            154,
+            288,
+            260,
+            464
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            422,
+            11,
+            491,
+            147
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            433,
+            120,
+            530,
+            228
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            238,
+            0,
+            367,
+            50
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            273,
+            226,
+            448,
+            299
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            246,
+            8,
+            346,
+            148
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            195,
+            79,
+            328,
+            255
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.4392674077060417,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 2.65625,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 2.0659722222222223,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 5.348314606741573,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 2.2072072072072073,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 3.3926147162639153,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 2.8290032263542195,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 1,
+        "iou": 0.0,
+        "relative_area": 1.4392674077060417,
+        "truth_covered": 0.0
+      },
+      "box": [
+        589,
+        339,
+        799,
+        577
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 20108,
+        "retained_area": 20108,
+        "track_id": 3
+      },
+      "mask_sha256": "488e356e752e7ae5e981f46a757ddc7aa851ebc3476283e1dca371b331b7471a",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 3,
+        "x1": 589,
+        "x2": 799,
+        "y1": 339,
+        "y2": 577
+      },
+      "own_overlap": null,
+      "own_truth": null,
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 20108,
+        "mean_probability": 0.9667831063270569,
+        "p10_probability": 0.9328473806381226,
+        "track_id": 3
+      },
+      "proposal": {
+        "confidence": 0.7158203125,
+        "x1": 566,
+        "x2": 800,
+        "y1": 325,
+        "y2": 562
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.5970166445890688,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 2.9473852040816326,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.009224297407566966,
+          "relative_area": 2.2924107142857144,
+          "truth_covered": 0.03009259259259259
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 5.934510433386838,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 2.4491255961844196,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 3.7644583220200922,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 3.1390728476821192,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 4,
+      "proposal_own_overlap": null,
+      "publisher_frame": 55401,
+      "second": 2770,
+      "seed": 4,
+      "source_pixels_sha256": "2e7595371f7dd2f0d44a3022138515df774903c9e7ad745f6f680f9efd350da3",
+      "truth": [
+        {
+          "box": [
+            170,
+            355,
+            349,
+            549
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            162,
+            292,
+            274,
+            460
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            478,
+            170,
+            622,
+            338
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            237,
+            0,
+            342,
+            89
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            281,
+            332,
+            434,
+            480
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            217,
+            52,
+            333,
+            179
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            204,
+            179,
+            355,
+            296
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.48330740164480995,
+          "relative_area": 0.6743777599357688,
+          "truth_covered": 0.5455640305098354
+        },
+        {
+          "cow": 2,
+          "iou": 0.01451466586029634,
+          "relative_area": 0.802041059918835,
+          "truth_covered": 0.02578180950107424
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.7398293421414809,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.6639494096141495,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.2766220195687281,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.05612338017886476,
+          "relative_area": 0.631531954887218,
+          "truth_covered": 0.08670112781954888
+        },
+        {
+          "cow": 7,
+          "iou": 0.09460041505148988,
+          "relative_area": 0.9258060071645081,
+          "truth_covered": 0.16643703499586662
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.5725057510437079,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 1,
+        "iou": 0.48330740164480995,
+        "relative_area": 0.6743777599357688,
+        "truth_covered": 0.5455640305098354
+      },
+      "box": [
+        249,
+        345,
+        338,
+        496
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 8401,
+        "retained_area": 8401,
+        "track_id": 0
+      },
+      "mask_sha256": "8ec74ad452d2fb1e37e7ed65bf1a394e0a7fbf504563ade822827d8a7527a6a9",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 0,
+        "x1": 249,
+        "x2": 338,
+        "y1": 345,
+        "y2": 496
+      },
+      "own_overlap": {
+        "cow": 1,
+        "iou": 0.48330740164480995,
+        "relative_area": 0.6743777599357688,
+        "truth_covered": 0.5455640305098354
+      },
+      "own_truth": [
+        266,
+        337,
+        372,
+        525
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 8401,
+        "mean_probability": 0.9509887099266052,
+        "p10_probability": 0.8471382856369019,
+        "track_id": 0
+      },
+      "proposal": {
+        "confidence": 0.62841796875,
+        "x1": 236,
+        "x2": 368,
+        "y1": 335,
+        "y2": 529
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.7274658573596358,
+          "relative_area": 1.2850260939381775,
+          "truth_covered": 0.9622641509433962
+        },
+        {
+          "cow": 2,
+          "iou": 0.04970513900589722,
+          "relative_area": 1.5282883743136786,
+          "truth_covered": 0.11971830985915492
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.4097440132122212,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.2651548836519935,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 2.4326018808777428,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.14632178568809134,
+          "relative_area": 1.2033834586466166,
+          "truth_covered": 0.28125
+        },
+        {
+          "cow": 7,
+          "iou": 0.15531241002015547,
+          "relative_area": 1.7641223477542023,
+          "truth_covered": 0.37158996968861946
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.0909090909090908,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 5,
+      "proposal_own_overlap": {
+        "cow": 1,
+        "iou": 0.7274658573596358,
+        "relative_area": 1.2850260939381775,
+        "truth_covered": 0.9622641509433962
+      },
+      "publisher_frame": 55681,
+      "second": 2784,
+      "seed": 1,
+      "source_pixels_sha256": "afaf2695209c0484c4fd5205cce1e8ebb19bcbb69a61e04e23329ee9bf1b7177",
+      "truth": [
+        {
+          "box": [
+            266,
+            337,
+            372,
+            525
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            135,
+            311,
+            253,
+            453
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            454,
+            130,
+            627,
+            235
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            311,
+            85,
+            484,
+            202
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            249,
+            0,
+            336,
+            121
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            323,
+            308,
+            456,
+            468
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            189,
+            343,
+            265,
+            534
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            183,
+            214,
+            377,
+            335
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7322251566464709,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.6537216828478964,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.4660821412090448,
+          "relative_area": 0.4660821412090448,
+          "truth_covered": 0.4660821412090448
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.02020202020202,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.5560799119081328,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.2200172562553926,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9531513313110886,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 3,
+        "iou": 0.4660821412090448,
+        "relative_area": 0.4660821412090448,
+        "truth_covered": 0.4660821412090448
+      },
+      "box": [
+        503,
+        45,
+        604,
+        185
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 5566,
+        "retained_area": 5566,
+        "track_id": 2
+      },
+      "mask_sha256": "5f8f4673c36ad4b33dfed6f1cd667c7caf92731443cf6e06f91844af282e69ef",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 2,
+        "x1": 503,
+        "x2": 604,
+        "y1": 45,
+        "y2": 185
+      },
+      "own_overlap": {
+        "cow": 3,
+        "iou": 0.4660821412090448,
+        "relative_area": 0.4660821412090448,
+        "truth_covered": 0.4660821412090448
+      },
+      "own_truth": [
+        457,
+        33,
+        654,
+        187
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5566,
+        "mean_probability": 0.947456419467926,
+        "p10_probability": 0.8061646223068237,
+        "track_id": 2
+      },
+      "proposal": {
+        "confidence": 0.79931640625,
+        "x1": 499,
+        "x2": 617,
+        "y1": 34,
+        "y2": 181
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.8982445238465123,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.8019417475728156,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.5717581910475311,
+          "relative_area": 0.5717581910475311,
+          "truth_covered": 0.5717581910475311
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.2515151515151515,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.6821613968853233,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.496635030198447,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.1692618806875632,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 1,
+      "proposal_own_overlap": {
+        "cow": 3,
+        "iou": 0.5717581910475311,
+        "relative_area": 0.5717581910475311,
+        "truth_covered": 0.5717581910475311
+      },
+      "publisher_frame": 55801,
+      "second": 2790,
+      "seed": 3,
+      "source_pixels_sha256": "c948425ffb595874dc2e7dc0c0550231a4e7bfe33ef7bbc68e7db72776a4e00c",
+      "truth": [
+        {
+          "box": [
+            247,
+            342,
+            370,
+            499
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            142,
+            318,
+            247,
+            524
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            457,
+            33,
+            654,
+            187
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            234,
+            1,
+            339,
+            133
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            313,
+            293,
+            469,
+            456
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            183,
+            341,
+            244,
+            531
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            263,
+            202,
+            378,
+            331
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5785303712909741,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.516504854368932,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.05168482391689891,
+          "relative_area": 0.3682510383017997,
+          "truth_covered": 0.06724240226778298
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.806060606060606,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.006047278724573941,
+          "relative_area": 0.43935818782444547,
+          "truth_covered": 0.008651879817523989
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.9639344262295082,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.7530839231547017,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 3,
+        "iou": 0.05168482391689891,
+        "relative_area": 0.3682510383017997,
+        "truth_covered": 0.06724240226778298
+      },
+      "box": [
+        449,
+        157,
+        525,
+        304
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 5571,
+        "retained_area": 5571,
+        "track_id": 3
+      },
+      "mask_sha256": "5f8f4673c36ad4b33dfed6f1cd667c7caf92731443cf6e06f91844af282e69ef",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 3,
+        "x1": 449,
+        "x2": 525,
+        "y1": 157,
+        "y2": 304
+      },
+      "own_overlap": null,
+      "own_truth": null,
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5571,
+        "mean_probability": 0.9491006135940552,
+        "p10_probability": 0.8079804182052612,
+        "track_id": 3
+      },
+      "proposal": {
+        "confidence": 0.72412109375,
+        "x1": 441,
+        "x2": 549,
+        "y1": 159,
+        "y2": 287
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7158614261301849,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.6391123439667129,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.06194392343577165,
+          "relative_area": 0.4556661612499176,
+          "truth_covered": 0.084910013844024
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.9974025974025974,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.5436526663520529,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.1927523727351166,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.931850353892821,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 6,
+      "proposal_own_overlap": null,
+      "publisher_frame": 55801,
+      "second": 2790,
+      "seed": 4,
+      "source_pixels_sha256": "c948425ffb595874dc2e7dc0c0550231a4e7bfe33ef7bbc68e7db72776a4e00c",
+      "truth": [
+        {
+          "box": [
+            247,
+            342,
+            370,
+            499
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            142,
+            318,
+            247,
+            524
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            457,
+            33,
+            654,
+            187
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            234,
+            1,
+            339,
+            133
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            313,
+            293,
+            469,
+            456
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            183,
+            341,
+            244,
+            531
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            263,
+            202,
+            378,
+            331
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.12427071178529756,
+          "relative_area": 1.0241596638655461,
+          "truth_covered": 0.22373949579831934
+        },
+        {
+          "cow": 3,
+          "iou": 0.4981122981765604,
+          "relative_area": 0.5771670190274841,
+          "truth_covered": 0.5243974630021142
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.5461747759282971,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.7066766691672919,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.26979199907168344,
+          "relative_area": 0.87890625,
+          "truth_covered": 0.39921016483516486
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.969965417594391,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.3065413510200233,
+          "relative_area": 0.9708392603129445,
+          "truth_covered": 0.46239924134660976
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 3,
+        "iou": 0.4981122981765604,
+        "relative_area": 0.5771670190274841,
+        "truth_covered": 0.5243974630021142
+      },
+      "box": [
+        298,
+        238,
+        415,
+        413
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 7298,
+        "retained_area": 7298,
+        "track_id": 2
+      },
+      "mask_sha256": "7d1a88c174d8a2ac7f0ad2da884b7adb7bd8c38568939349c56b06c9c98a061c",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 2,
+        "x1": 298,
+        "x2": 415,
+        "y1": 238,
+        "y2": 413
+      },
+      "own_overlap": {
+        "cow": 3,
+        "iou": 0.4981122981765604,
+        "relative_area": 0.5771670190274841,
+        "truth_covered": 0.5243974630021142
+      },
+      "own_truth": [
+        245,
+        232,
+        460,
+        397
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 7298,
+        "mean_probability": 0.9345991015434265,
+        "p10_probability": 0.7823193073272705,
+        "track_id": 2
+      },
+      "proposal": {
+        "confidence": 0.404052734375,
+        "x1": 283,
+        "x2": 435,
+        "y1": 220,
+        "y2": 435
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.15971641199524417,
+          "relative_area": 1.6346538615446178,
+          "truth_covered": 0.3628451380552221
+        },
+        {
+          "cow": 3,
+          "iou": 0.5822402785838654,
+          "relative_area": 0.9212121212121213,
+          "truth_covered": 0.7069767441860465
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.871745625266752,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 2.7240143369175627,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.27752419207595397,
+          "relative_area": 1.402815934065934,
+          "truth_covered": 0.521978021978022
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.548154815481548,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.31873252562907733,
+          "relative_area": 1.5495495495495495,
+          "truth_covered": 0.6162162162162163
+        }
+      ],
+      "proposal_index": 6,
+      "proposal_own_overlap": {
+        "cow": 3,
+        "iou": 0.5822402785838654,
+        "relative_area": 0.9212121212121213,
+        "truth_covered": 0.7069767441860465
+      },
+      "publisher_frame": 56001,
+      "second": 2800,
+      "seed": 3,
+      "source_pixels_sha256": "48d4df4b849707a128fd50909dd54c91719d088a8977e6adba73b04f57b5de24",
+      "truth": [
+        {
+          "box": [
+            242,
+            342,
+            361,
+            510
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            245,
+            232,
+            460,
+            397
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            525,
+            190,
+            701,
+            403
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            248,
+            0,
+            341,
+            129
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            340,
+            234,
+            522,
+            362
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            152,
+            315,
+            253,
+            524
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            290,
+            321,
+            404,
+            506
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9079939668174962,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.5933425921777699,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.035231521426517115,
+          "relative_area": 0.35651026945543624,
+          "truth_covered": 0.04616544186922932
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7984084880636605,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.5842105263157895,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.4682837140230535,
+          "relative_area": 0.4682837140230535,
+          "truth_covered": 0.4682837140230535
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.8349514563106796,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.7494341330918968,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.4682837140230535,
+        "relative_area": 0.4682837140230535,
+        "truth_covered": 0.4682837140230535
+      },
+      "box": [
+        475,
+        35,
+        561,
+        189
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 5837,
+        "retained_area": 5837,
+        "track_id": 5
+      },
+      "mask_sha256": "5324b0a24d44097cbb1a0c7e211fa864fcbfb21021639b54caf23ea93e7684bd",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 475,
+        "x2": 561,
+        "y1": 35,
+        "y2": 189
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.4682837140230535,
+        "relative_area": 0.4682837140230535,
+        "truth_covered": 0.4682837140230535
+      },
+      "own_truth": [
+        434,
+        33,
+        613,
+        191
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5837,
+        "mean_probability": 0.8801434636116028,
+        "p10_probability": 0.7951701879501343,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.59521484375,
+        "x1": 457,
+        "x2": 588,
+        "y1": 26,
+        "y2": 195
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.517825311942959,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.9918462434478742,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.04858421322580075,
+          "relative_area": 0.595951438800506,
+          "truth_covered": 0.07394546286575682
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.334639498432602,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 2.648205741626794,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.6963630858257914,
+          "relative_area": 0.7827947104165194,
+          "truth_covered": 0.7318435754189944
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.3957256335897112,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.2527727478497057,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 2,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.6963630858257914,
+        "relative_area": 0.7827947104165194,
+        "truth_covered": 0.7318435754189944
+      },
+      "publisher_frame": 56061,
+      "second": 2803,
+      "seed": 6,
+      "source_pixels_sha256": "74d733026455dae6821d84084e51cee7bcb4274943f6b63385bdf4205df3b036",
+      "truth": [
+        {
+          "box": [
+            236,
+            335,
+            314,
+            522
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            123,
+            298,
+            224,
+            519
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            341,
+            154,
+            524,
+            357
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            189,
+            100,
+            305,
+            243
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            290,
+            0,
+            366,
+            110
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            434,
+            33,
+            613,
+            191
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            180,
+            313,
+            257,
+            519
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            279,
+            334,
+            373,
+            522
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.039787798408488,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.5245316681534344,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.0113022113022112,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7376344086021506,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.47347079630747996,
+          "relative_area": 0.47347079630747996,
+          "truth_covered": 0.47347079630747996
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.6065428824049514,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.1095087270031674,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.106674732809034,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 5,
+        "iou": 0.47347079630747996,
+        "relative_area": 0.47347079630747996,
+        "truth_covered": 0.47347079630747996
+      },
+      "box": [
+        560,
+        65,
+        658,
+        233
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 8487,
+        "retained_area": 8487,
+        "track_id": 4
+      },
+      "mask_sha256": "e6848837699bc22f5949fc591d1e131bcfcf5f5f5bb76792ffb10b7edd5bd6f4",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 4,
+        "x1": 560,
+        "x2": 658,
+        "y1": 65,
+        "y2": 233
+      },
+      "own_overlap": {
+        "cow": 5,
+        "iou": 0.47347079630747996,
+        "relative_area": 0.47347079630747996,
+        "truth_covered": 0.47347079630747996
+      },
+      "own_truth": [
+        505,
+        60,
+        706,
+        233
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 8487,
+        "mean_probability": 0.9510475993156433,
+        "p10_probability": 0.8669597506523132,
+        "track_id": 4
+      },
+      "proposal": {
+        "confidence": 0.47412109375,
+        "x1": 544,
+        "x2": 672,
+        "y1": 57,
+        "y2": 233
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.422761146899078,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7177265196890531,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.3837837837837839,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.0093189964157707,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.629860340757175,
+          "relative_area": 0.64785897104075,
+          "truth_covered": 0.6368159203980099
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.8299440023577954,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.5181616011860637,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.5142837937756268,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 6,
+      "proposal_own_overlap": {
+        "cow": 5,
+        "iou": 0.629860340757175,
+        "relative_area": 0.64785897104075,
+        "truth_covered": 0.6368159203980099
+      },
+      "publisher_frame": 56101,
+      "second": 2805,
+      "seed": 5,
+      "source_pixels_sha256": "5123cac1279d3acec1603780fb036072772833d74119242a50d5fbf7efeb5337",
+      "truth": [
+        {
+          "box": [
+            242,
+            337,
+            329,
+            519
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            91,
+            300,
+            224,
+            536
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            445,
+            235,
+            593,
+            345
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            237,
+            82,
+            423,
+            202
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            505,
+            60,
+            706,
+            233
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            198,
+            124,
+            354,
+            298
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            187,
+            317,
+            258,
+            526
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            288,
+            336,
+            375,
+            507
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.175215845606907,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.6686411904933902,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.20769510358793292,
+          "relative_area": 0.661001214025566,
+          "truth_covered": 0.2856530743412126
+        },
+        {
+          "cow": 4,
+          "iou": 0.023393984404010398,
+          "relative_area": 0.5468509984639017,
+          "truth_covered": 0.03535980148883375
+        },
+        {
+          "cow": 5,
+          "iou": 0.46278843028924277,
+          "relative_area": 0.46278843028924277,
+          "truth_covered": 0.46278843028924277
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.2299514982393196,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.027930479204842,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.04177392932366019,
+          "relative_area": 1.0825730994152047,
+          "truth_covered": 0.08350877192982456
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 5,
+        "iou": 0.46278843028924277,
+        "relative_area": 0.46278843028924277,
+        "truth_covered": 0.46278843028924277
+      },
+      "box": [
+        356,
+        223,
+        460,
+        401
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 7137,
+        "retained_area": 7137,
+        "track_id": 4
+      },
+      "mask_sha256": "62861fe4677d07a48e14a3f9fb172cec038a2a086d82ab1f9e07198dfa3761bf",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 4,
+        "x1": 356,
+        "x2": 460,
+        "y1": 223,
+        "y2": 401
+      },
+      "own_overlap": {
+        "cow": 5,
+        "iou": 0.46278843028924277,
+        "relative_area": 0.46278843028924277,
+        "truth_covered": 0.46278843028924277
+      },
+      "own_truth": [
+        295,
+        222,
+        516,
+        403
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 7137,
+        "mean_probability": 0.9472100734710693,
+        "p10_probability": 0.8073912858963013,
+        "track_id": 4
+      },
+      "proposal": {
+        "confidence": 0.69287109375,
+        "x1": 339,
+        "x2": 478,
+        "y1": 214,
+        "y2": 403
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.667788217369223,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.9488911363143827,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.2538289172769064,
+          "relative_area": 0.9380489895022495,
+          "truth_covered": 0.3923444976076555
+        },
+        {
+          "cow": 4,
+          "iou": 0.04636349396961312,
+          "relative_area": 0.7760545905707196,
+          "truth_covered": 0.07869549805033677
+        },
+        {
+          "cow": 5,
+          "iou": 0.6119475591662005,
+          "relative_area": 0.6567585810354741,
+          "truth_covered": 0.6289592760180995
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.7454654175802273,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.4587706146926536,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.06533860627348874,
+          "relative_area": 1.5363157894736843,
+          "truth_covered": 0.15555555555555556
+        }
+      ],
+      "proposal_index": 2,
+      "proposal_own_overlap": {
+        "cow": 5,
+        "iou": 0.6119475591662005,
+        "relative_area": 0.6567585810354741,
+        "truth_covered": 0.6289592760180995
+      },
+      "publisher_frame": 56141,
+      "second": 2807,
+      "seed": 5,
+      "source_pixels_sha256": "9742d7e279ee6bd7acedbcb4687e172c1681689ebca823fc3b255a7484569c14",
+      "truth": [
+        {
+          "box": [
+            242,
+            339,
+            330,
+            518
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            109,
+            262,
+            236,
+            480
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            396,
+            214,
+            605,
+            348
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            441,
+            130,
+            658,
+            286
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            295,
+            222,
+            516,
+            403
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            245,
+            131,
+            332,
+            304
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            174,
+            320,
+            261,
+            527
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            282,
+            333,
+            377,
+            513
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.0526315789473684,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.4044908084727434,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.156505342551854,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.6055619549119632,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.9126984126984127,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.4358683314415437,
+          "relative_area": 0.5203252032520326,
+          "truth_covered": 0.46150583244962884
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.7537122375832054,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.04903817402571514,
+          "relative_area": 1.1028971028971029,
+          "truth_covered": 0.0983016983016983
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.4358683314415437,
+        "relative_area": 0.5203252032520326,
+        "truth_covered": 0.46150583244962884
+      },
+      "box": [
+        438,
+        194,
+        534,
+        424
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 9714,
+        "retained_area": 9714,
+        "track_id": 5
+      },
+      "mask_sha256": "ca34d4f9b79ff4a2c3a338c6d3d7fcbecf79e417c1ea9276be79f2e141d112c8",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 438,
+        "x2": 534,
+        "y1": 194,
+        "y2": 424
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.4358683314415437,
+        "relative_area": 0.5203252032520326,
+        "truth_covered": 0.46150583244962884
+      },
+      "own_truth": [
+        378,
+        193,
+        585,
+        398
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 9714,
+        "mean_probability": 0.957215428352356,
+        "p10_probability": 0.8581451773643494,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.7431640625,
+        "x1": 414,
+        "x2": 551,
+        "y1": 189,
+        "y2": 403
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.3976926010678872,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.864894090706698,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.5356170123611983,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.004995951293294425,
+          "relative_area": 0.8040699906752236,
+          "truth_covered": 0.008968240908342933
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.2118882275132274,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.6431483008152423,
+          "relative_area": 0.6908919523977849,
+          "truth_covered": 0.6618357487922706
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.000785116914149,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.03006388575723412,
+          "relative_area": 1.4644355644355644,
+          "truth_covered": 0.07192807192807193
+        }
+      ],
+      "proposal_index": 1,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.6431483008152423,
+        "relative_area": 0.6908919523977849,
+        "truth_covered": 0.6618357487922706
+      },
+      "publisher_frame": 56501,
+      "second": 2825,
+      "seed": 6,
+      "source_pixels_sha256": "2064fe41514cb4e6eb7b804103248a53ea2eaaf64ff6208e8909298e34512594",
+      "truth": [
+        {
+          "box": [
+            250,
+            358,
+            364,
+            542
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            126,
+            281,
+            325,
+            360
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            254,
+            84,
+            402,
+            213
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            442,
+            15,
+            648,
+            192
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            180,
+            191,
+            404,
+            299
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            378,
+            193,
+            585,
+            398
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            96,
+            364,
+            251,
+            553
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            332,
+            383,
+            486,
+            513
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.40657865294249274,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.562190594059406,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.10194126431060228,
+          "relative_area": 0.9702741189035244,
+          "truth_covered": 0.18227127091491635
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.655329486790161,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.6774373951407444,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.42390543588148377,
+          "relative_area": 0.42390543588148377,
+          "truth_covered": 0.42390543588148377
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.39574560766661826,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.42390543588148377,
+        "relative_area": 0.42390543588148377,
+        "truth_covered": 0.42390543588148377
+      },
+      "box": [
+        420,
+        118,
+        499,
+        256
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 6353,
+        "retained_area": 6353,
+        "track_id": 5
+      },
+      "mask_sha256": "a96b0a08ea5294af43ac977f69b25567fe838aa3b06974ce6273990525af9d23",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 420,
+        "x2": 499,
+        "y1": 118,
+        "y2": 256
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.42390543588148377,
+        "relative_area": 0.42390543588148377,
+        "truth_covered": 0.42390543588148377
+      },
+      "own_truth": [
+        380,
+        112,
+        547,
+        266
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 6353,
+        "mean_probability": 0.9576786756515503,
+        "p10_probability": 0.8695068955421448,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.6630859375,
+        "x1": 400,
+        "x2": 525,
+        "y1": 89,
+        "y2": 262
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.8064816886700977,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1151505775577557,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.18473519126077081,
+          "relative_area": 1.924617301530794,
+          "truth_covered": 0.45603417586329653
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 3.283480109322806,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.3437519418380663,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.6557549050466898,
+          "relative_area": 0.8408507660004666,
+          "truth_covered": 0.7290613578038728
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.7849934659503413,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 3,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.6557549050466898,
+        "relative_area": 0.8408507660004666,
+        "truth_covered": 0.7290613578038728
+      },
+      "publisher_frame": 56581,
+      "second": 2829,
+      "seed": 6,
+      "source_pixels_sha256": "06a26a53bbb5584ff0d2a00b4feed041835589dad4a7e60334b7e7a3ea9b91aa",
+      "truth": [
+        {
+          "box": [
+            234,
+            334,
+            357,
+            552
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            193,
+            57,
+            294,
+            249
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            378,
+            44,
+            484,
+            150
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            377,
+            0,
+            466,
+            74
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            539,
+            237,
+            660,
+            370
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            380,
+            112,
+            547,
+            266
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            125,
+            233,
+            267,
+            427
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5984309354368516,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.9031444099378882,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.4693047337278107,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.764625328659071,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.44700268989368513,
+          "relative_area": 0.44700268989368513,
+          "truth_covered": 0.44700268989368513
+        },
+        {
+          "cow": 6,
+          "iou": 0.22509448762746917,
+          "relative_area": 0.6842647058823529,
+          "truth_covered": 0.3094607843137255
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.5668629441624365,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.8735294117647059,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 5,
+        "iou": 0.44700268989368513,
+        "relative_area": 0.44700268989368513,
+        "truth_covered": 0.44700268989368513
+      },
+      "box": [
+        446,
+        77,
+        545,
+        218
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 5992,
+        "retained_area": 5992,
+        "track_id": 4
+      },
+      "mask_sha256": "221e38c0c4eb7e8a1457c1f6dd1ada9f16cd7001b7b2dda2871828ed3cbcb7db",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 4,
+        "x1": 446,
+        "x2": 545,
+        "y1": 77,
+        "y2": 218
+      },
+      "own_overlap": {
+        "cow": 5,
+        "iou": 0.44700268989368513,
+        "relative_area": 0.44700268989368513,
+        "truth_covered": 0.44700268989368513
+      },
+      "own_truth": [
+        389,
+        73,
+        600,
+        221
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5992,
+        "mean_probability": 0.945868968963623,
+        "p10_probability": 0.853141188621521,
+        "track_id": 4
+      },
+      "proposal": {
+        "confidence": 0.74072265625,
+        "x1": 425,
+        "x2": 559,
+        "y1": 65,
+        "y2": 226
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9248906799279774,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.3958333333333333,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.725322754168908,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.1817484662576687,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.6015165301789506,
+          "relative_area": 0.6908543614704752,
+          "truth_covered": 0.6350710900473934
+        },
+        {
+          "cow": 6,
+          "iou": 0.2807103191554281,
+          "relative_area": 1.0575490196078432,
+          "truth_covered": 0.45098039215686275
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.8761015228426396,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.3500625782227784,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 3,
+      "proposal_own_overlap": {
+        "cow": 5,
+        "iou": 0.6015165301789506,
+        "relative_area": 0.6908543614704752,
+        "truth_covered": 0.6350710900473934
+      },
+      "publisher_frame": 56641,
+      "second": 2832,
+      "seed": 5,
+      "source_pixels_sha256": "a3649c9b613563650007e821abcf3899669ce53716b4619b9dd583bbfd03b0eb",
+      "truth": [
+        {
+          "box": [
+            239,
+            335,
+            346,
+            553
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            193,
+            53,
+            277,
+            237
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            205,
+            142,
+            374,
+            318
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            399,
+            339,
+            562,
+            451
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            389,
+            73,
+            600,
+            221
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            355,
+            111,
+            505,
+            247
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            115,
+            229,
+            240,
+            426
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            315,
+            118,
+            400,
+            306
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.38892606222816994,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.5835843373493976,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.043555555555555556,
+          "relative_area": 0.4926891290527654,
+          "truth_covered": 0.062301335028607754
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.34807994610375026,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0021960986952590106,
+          "relative_area": 0.6655216831258051,
+          "truth_covered": 0.0036496350364963502
+        },
+        {
+          "cow": 6,
+          "iou": 0.46962581427056505,
+          "relative_area": 0.46962581427056505,
+          "truth_covered": 0.46962581427056505
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.3642630527593905,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.7380952380952381,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.46962581427056505,
+        "relative_area": 0.46962581427056505,
+        "truth_covered": 0.46962581427056505
+      },
+      "box": [
+        400,
+        104,
+        462,
+        254
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 5408,
+        "retained_area": 5408,
+        "track_id": 5
+      },
+      "mask_sha256": "782acf0356d91aab43873b5eba6a37d2d847a9606213da4fc21d922cf0faf1c6",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 400,
+        "x2": 462,
+        "y1": 104,
+        "y2": 254
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.46962581427056505,
+        "relative_area": 0.46962581427056505,
+        "truth_covered": 0.46962581427056505
+      },
+      "own_truth": [
+        376,
+        98,
+        499,
+        259
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5408,
+        "mean_probability": 0.9492312073707581,
+        "p10_probability": 0.8101069927215576,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.70751953125,
+        "x1": 382,
+        "x2": 489,
+        "y1": 97,
+        "y2": 254
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7025342924054868,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.0541541164658634,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.06254653760238273,
+          "relative_area": 0.8899660945115491,
+          "truth_covered": 0.11125238397965671
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.6287521521071937,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.004307953395776901,
+          "relative_area": 1.2021611564333763,
+          "truth_covered": 0.009446114212108201
+        },
+        {
+          "cow": 6,
+          "iou": 0.8383726770467101,
+          "relative_area": 0.8483058122506691,
+          "truth_covered": 0.8429025905165884
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.6579844111080647,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.024034274966038525,
+          "relative_area": 1.3332539682539684,
+          "truth_covered": 0.05476190476190476
+        }
+      ],
+      "proposal_index": 4,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.8383726770467101,
+        "relative_area": 0.8483058122506691,
+        "truth_covered": 0.8429025905165884
+      },
+      "publisher_frame": 56661,
+      "second": 2833,
+      "seed": 6,
+      "source_pixels_sha256": "016b4c40c8568059bb3b84f7d52bc1b321424984ddc342b2e99bd8e1dbcd66cb",
+      "truth": [
+        {
+          "box": [
+            243,
+            344,
+            365,
+            540
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            198,
+            46,
+            281,
+            238
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            299,
+            0,
+            442,
+            132
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            219,
+            192,
+            365,
+            375
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            445,
+            251,
+            582,
+            353
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            376,
+            98,
+            499,
+            259
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            118,
+            213,
+            239,
+            424
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            317,
+            116,
+            387,
+            296
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.026838167089233814,
+          "relative_area": 1.4932432432432432,
+          "truth_covered": 0.06516516516516517
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.9482265446224256,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.6684815486993345,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.6208058928181279,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.007561436672967864,
+          "relative_area": 0.6583476764199656,
+          "truth_covered": 0.012445385939361843
+        },
+        {
+          "cow": 6,
+          "iou": 0.4513127124569059,
+          "relative_area": 0.4934381899823861,
+          "truth_covered": 0.46441241410106926
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.9169701719607211,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.2483720930232558,
+          "relative_area": 0.6129807692307693,
+          "truth_covered": 0.32091346153846156
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.4513127124569059,
+        "relative_area": 0.4934381899823861,
+        "truth_covered": 0.46441241410106926
+      },
+      "box": [
+        350,
+        290,
+        467,
+        460
+      ],
+      "components": {
+        "component_count": 2,
+        "original_area": 8380,
+        "retained_area": 8378,
+        "track_id": 5
+      },
+      "mask_sha256": "e9a70a31abb073b856e5dade4e712b989045c35d3049e93f64cc789589291eed",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 350,
+        "x2": 631,
+        "y1": 274,
+        "y2": 460
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.4513127124569059,
+        "relative_area": 0.4934381899823861,
+        "truth_covered": 0.46441241410106926
+      },
+      "own_truth": [
+        291,
+        300,
+        524,
+        473
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 8380,
+        "mean_probability": 0.9465387463569641,
+        "p10_probability": 0.8678587675094604,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.71533203125,
+        "x1": 326,
+        "x2": 491,
+        "y1": 277,
+        "y2": 478
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0643876079041971,
+          "relative_area": 2.489864864864865,
+          "truth_covered": 0.2111111111111111
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.5810926773455378,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.1146400483968542,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.0351446674365616,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.04961825739885063,
+          "relative_area": 1.0977426188269561,
+          "truth_covered": 0.09916589434661724
+        },
+        {
+          "cow": 6,
+          "iou": 0.6353357519642102,
+          "relative_area": 0.8227691086357886,
+          "truth_covered": 0.7081545064377682
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.5289751509842793,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.3255954906357961,
+          "relative_area": 1.0220968934911243,
+          "truth_covered": 0.4966715976331361
+        }
+      ],
+      "proposal_index": 2,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.6353357519642102,
+        "relative_area": 0.8227691086357886,
+        "truth_covered": 0.7081545064377682
+      },
+      "publisher_frame": 57121,
+      "second": 2856,
+      "seed": 6,
+      "source_pixels_sha256": "7a59a70fb672c54e32cd862eff9269a5898097b97ab61f8eee19d5a1625bc271",
+      "truth": [
+        {
+          "box": [
+            184,
+            398,
+            364,
+            472
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            209,
+            75,
+            323,
+            259
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            114,
+            199,
+            285,
+            373
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            552,
+            113,
+            713,
+            312
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            172,
+            218,
+            354,
+            384
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            291,
+            300,
+            524,
+            473
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            83,
+            254,
+            192,
+            453
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            333,
+            223,
+            541,
+            379
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7757201646090535,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.0599812558575445,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.6197260273972602,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.07096021561607466,
+          "relative_area": 0.423233187212659,
+          "truth_covered": 0.09430129370255533
+        },
+        {
+          "cow": 5,
+          "iou": 0.4157706093189964,
+          "relative_area": 0.4665841584158416,
+          "truth_covered": 0.4306930693069307
+        },
+        {
+          "cow": 6,
+          "iou": 0.009844419565301316,
+          "relative_area": 1.5337078651685394,
+          "truth_covered": 0.024699728787291746
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.224025974025974,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 5,
+        "iou": 0.4157706093189964,
+        "relative_area": 0.4665841584158416,
+        "truth_covered": 0.4306930693069307
+      },
+      "box": [
+        336,
+        155,
+        423,
+        337
+      ],
+      "components": {
+        "component_count": 8,
+        "original_area": 7146,
+        "retained_area": 7090,
+        "track_id": 4
+      },
+      "mask_sha256": "cf384c0682fb8bedc9084f45cfef4bfb069f9cf1b45aa12c89a1a57b34195214",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 4,
+        "x1": 336,
+        "x2": 611,
+        "y1": 75,
+        "y2": 337
+      },
+      "own_overlap": {
+        "cow": 5,
+        "iou": 0.4157706093189964,
+        "relative_area": 0.4665841584158416,
+        "truth_covered": 0.4306930693069307
+      },
+      "own_truth": [
+        278,
+        157,
+        480,
+        325
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 7146,
+        "mean_probability": 0.9129540324211121,
+        "p10_probability": 0.754103422164917,
+        "track_id": 4
+      },
+      "proposal": {
+        "confidence": 0.783203125,
+        "x1": 307,
+        "x2": 449,
+        "y1": 147,
+        "y2": 329
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.2661179698216736,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.7300843486410498,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.010320627494151644,
+          "relative_area": 1.0115068493150685,
+          "truth_covered": 0.02054794520547945
+        },
+        {
+          "cow": 4,
+          "iou": 0.10190572414033376,
+          "relative_area": 0.6907943975195124,
+          "truth_covered": 0.15636694108842084
+        },
+        {
+          "cow": 5,
+          "iou": 0.6640685892439595,
+          "relative_area": 0.7615511551155115,
+          "truth_covered": 0.7029702970297029
+        },
+        {
+          "cow": 6,
+          "iou": 0.02846418517360025,
+          "relative_area": 2.503293297171639,
+          "truth_covered": 0.09695854320030996
+        },
+        {
+          "cow": 7,
+          "iou": 0.01702027221945399,
+          "relative_area": 1.9978354978354977,
+          "truth_covered": 0.050170068027210885
+        }
+      ],
+      "proposal_index": 0,
+      "proposal_own_overlap": {
+        "cow": 5,
+        "iou": 0.6640685892439595,
+        "relative_area": 0.7615511551155115,
+        "truth_covered": 0.7029702970297029
+      },
+      "publisher_frame": 57241,
+      "second": 2862,
+      "seed": 5,
+      "source_pixels_sha256": "1dc3d40926f223172ab76dfa08a1dc8b9e7334d85535a76ac2656ee88fa1cac2",
+      "truth": [
+        {
+          "box": [
+            457,
+            3,
+            646,
+            111
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            296,
+            402,
+            490,
+            479
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            444,
+            106,
+            619,
+            252
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            173,
+            239,
+            372,
+            427
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            278,
+            157,
+            480,
+            325
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            372,
+            71,
+            488,
+            160
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            234,
+            52,
+            318,
+            206
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.08407021248515244,
+          "relative_area": 0.44155844155844154,
+          "truth_covered": 0.11179361179361179
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.29324009324009326,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.8103059581320451,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.44594115561857495,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.020724911343434807,
+          "relative_area": 0.8318042813455657,
+          "truth_covered": 0.03719315645921151
+        },
+        {
+          "cow": 6,
+          "iou": 0.4641210108836008,
+          "relative_area": 0.4641210108836008,
+          "truth_covered": 0.4641210108836008
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.673853364579846,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.5300189593427428,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.4641210108836008,
+        "relative_area": 0.4641210108836008,
+        "truth_covered": 0.4641210108836008
+      },
+      "box": [
+        476,
+        85,
+        544,
+        233
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 5221,
+        "retained_area": 5221,
+        "track_id": 5
+      },
+      "mask_sha256": "c34819669a35791640b88977b79ea79a0184ea563b2f457d596a39cabecbef93",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 476,
+        "x2": 544,
+        "y1": 85,
+        "y2": 233
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.4641210108836008,
+        "relative_area": 0.4641210108836008,
+        "truth_covered": 0.4641210108836008
+      },
+      "own_truth": [
+        441,
+        81,
+        580,
+        237
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5221,
+        "mean_probability": 0.9302321672439575,
+        "p10_probability": 0.8230562210083008,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.7265625,
+        "x1": 461,
+        "x2": 562,
+        "y1": 76,
+        "y2": 238
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.1331249638247381,
+          "relative_area": 0.7178834678834679,
+          "truth_covered": 0.20182520182520183
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.47674825174825175,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.317391304347826,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7250088621056363,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.05235718247365502,
+          "relative_area": 1.3523431688569303,
+          "truth_covered": 0.11703446565831888
+        },
+        {
+          "cow": 6,
+          "iou": 0.7068640646029609,
+          "relative_area": 0.7545655783065855,
+          "truth_covered": 0.7266187050359713
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.0955473719450954,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.8617021276595744,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 1,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.7068640646029609,
+        "relative_area": 0.7545655783065855,
+        "truth_covered": 0.7266187050359713
+      },
+      "publisher_frame": 57261,
+      "second": 2863,
+      "seed": 6,
+      "source_pixels_sha256": "62297e5b38ae801ecac73643cec3287a109d56b6e03c4aaad15196b0e5d46edb",
+      "truth": [
+        {
+          "box": [
+            516,
+            28,
+            670,
+            176
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            126,
+            347,
+            412,
+            467
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            437,
+            269,
+            572,
+            361
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            216,
+            214,
+            340,
+            396
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            376,
+            24,
+            485,
+            135
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            441,
+            81,
+            580,
+            237
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            282,
+            4,
+            385,
+            149
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            570,
+            197,
+            664,
+            399
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.4458725211683261,
+          "relative_area": 1.9209895804312698,
+          "truth_covered": 0.9007633587786259
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.5154285714285713,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.006959338862808033,
+          "relative_area": 1.0555708643336088,
+          "truth_covered": 0.014206546033495606
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 2.431654676258993,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.026251995506415184,
+          "relative_area": 1.9594202898550726,
+          "truth_covered": 0.07570332480818415
+        },
+        {
+          "cow": 6,
+          "iou": 0.029643303110918073,
+          "relative_area": 1.537802756590392,
+          "truth_covered": 0.07306302689682859
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.8954313046346694,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.8844081883946436,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 1,
+        "iou": 0.4458725211683261,
+        "relative_area": 1.9209895804312698,
+        "truth_covered": 0.9007633587786259
+      },
+      "box": [
+        439,
+        245,
+        643,
+        414
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 9099,
+        "retained_area": 9099,
+        "track_id": 0
+      },
+      "mask_sha256": "95207664a84af1308548702bd0ba3b928699ebd397cf2fe991ee4f468c5d9abb",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 0,
+        "x1": 439,
+        "x2": 643,
+        "y1": 245,
+        "y2": 414
+      },
+      "own_overlap": {
+        "cow": 1,
+        "iou": 0.4458725211683261,
+        "relative_area": 1.9209895804312698,
+        "truth_covered": 0.9007633587786259
+      },
+      "own_truth": [
+        473,
+        296,
+        610,
+        427
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 9099,
+        "mean_probability": 0.9445515275001526,
+        "p10_probability": 0.8525439500808716,
+        "track_id": 0
+      },
+      "proposal": {
+        "confidence": 0.720703125,
+        "x1": 435,
+        "x2": 650,
+        "y1": 269,
+        "y2": 443
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.4797380379577653,
+          "relative_area": 2.084470942218755,
+          "truth_covered": 1.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.6443956043956045,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.01061512944400375,
+          "relative_area": 1.1454027739505832,
+          "truth_covered": 0.022534521294510272
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 2.6385950063478627,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 2.12617220801364,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0022447441159226065,
+          "relative_area": 1.6686738926803157,
+          "truth_covered": 0.0059770730184218746
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 2.0567375886524824,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9596736955517932,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 5,
+      "proposal_own_overlap": {
+        "cow": 1,
+        "iou": 0.4797380379577653,
+        "relative_area": 2.084470942218755,
+        "truth_covered": 1.0
+      },
+      "publisher_frame": 57301,
+      "second": 2865,
+      "seed": 1,
+      "source_pixels_sha256": "fddb73a5444c1e76bda63752505708a6fcd31cb96b93042f58ea3f2e91cd4daa",
+      "truth": [
+        {
+          "box": [
+            473,
+            296,
+            610,
+            427
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            167,
+            126,
+            297,
+            301
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            272,
+            170,
+            443,
+            361
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            256,
+            8,
+            358,
+            147
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            532,
+            104,
+            647,
+            257
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            343,
+            130,
+            502,
+            271
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            410,
+            29,
+            551,
+            158
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            177,
+            306,
+            396,
+            484
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.530754183873071,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.4079449961802903,
+          "relative_area": 0.4309006211180124,
+          "truth_covered": 0.41459627329192544
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.25,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.5505952380952381,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0009336704921221553,
+          "relative_area": 0.31109865470852016,
+          "truth_covered": 0.0012229922543823889
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.0690832676648279,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.5652777777777778,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 2,
+        "iou": 0.4079449961802903,
+        "relative_area": 0.4309006211180124,
+        "truth_covered": 0.41459627329192544
+      },
+      "box": [
+        270,
+        26,
+        336,
+        211
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 6335,
+        "retained_area": 6335,
+        "track_id": 1
+      },
+      "mask_sha256": "04be87bf70b478bbb7a65bcaaa2657b66ec052974cc50a7adc1d9991d40a7502",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 1,
+        "x1": 270,
+        "x2": 336,
+        "y1": 26,
+        "y2": 211
+      },
+      "own_overlap": {
+        "cow": 2,
+        "iou": 0.4079449961802903,
+        "relative_area": 0.4309006211180124,
+        "truth_covered": 0.41459627329192544
+      },
+      "own_truth": [
+        215,
+        20,
+        369,
+        204
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 6335,
+        "mean_probability": 0.9586506485939026,
+        "p10_probability": 0.8704591393470764,
+        "track_id": 1
+      },
+      "proposal": {
+        "confidence": 0.7177734375,
+        "x1": 249,
+        "x2": 345,
+        "y1": 16,
+        "y2": 184
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7010649858726364,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.5481894150417828,
+          "relative_area": 0.5691699604743083,
+          "truth_covered": 0.5556182947487295
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.651105651105651,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7272727272727273,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.4109253974724827,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.4121355397951143,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.7466666666666667,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 5,
+      "proposal_own_overlap": {
+        "cow": 2,
+        "iou": 0.5481894150417828,
+        "relative_area": 0.5691699604743083,
+        "truth_covered": 0.5556182947487295
+      },
+      "publisher_frame": 57361,
+      "second": 2868,
+      "seed": 2,
+      "source_pixels_sha256": "10897cc8691dab57a2091dd791349bdc232007507e9088219b839c78013f511f",
+      "truth": [
+        {
+          "box": [
+            258,
+            376,
+            473,
+            483
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            215,
+            20,
+            369,
+            204
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            347,
+            110,
+            458,
+            198
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            495,
+            82,
+            671,
+            208
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            142,
+            210,
+            318,
+            433
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            362,
+            205,
+            503,
+            286
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            232,
+            265,
+            448,
+            365
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7733974358974359,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.6671643441716434,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0025516361504775696,
+          "relative_area": 0.7092886537330981,
+          "truth_covered": 0.004350382128159906
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.760718789407314,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.7104162986515927,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.38081560507543716,
+          "relative_area": 0.38081560507543716,
+          "truth_covered": 0.38081560507543716
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.1339285714285714,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.737379293484904,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.38081560507543716,
+        "relative_area": 0.38081560507543716,
+        "truth_covered": 0.38081560507543716
+      },
+      "box": [
+        384,
+        159,
+        479,
+        286
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 5614,
+        "retained_area": 5614,
+        "track_id": 5
+      },
+      "mask_sha256": "1480ac1798fd2541acebbe654b75f2f255e0af88181160aad20109674960d275",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 384,
+        "x2": 479,
+        "y1": 159,
+        "y2": 286
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.38081560507543716,
+        "relative_area": 0.38081560507543716,
+        "truth_covered": 0.38081560507543716
+      },
+      "own_truth": [
+        335,
+        151,
+        552,
+        297
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5614,
+        "mean_probability": 0.9656407237052917,
+        "p10_probability": 0.8933324813842773,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.7958984375,
+        "x1": 381,
+        "x2": 503,
+        "y1": 149,
+        "y2": 301
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.1887179487179487,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.0254368502543685,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.010114211034717881,
+          "relative_area": 1.0901822457378012,
+          "truth_covered": 0.02092886537330982
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.1692307692307693,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.0919154448566213,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.549515641389523,
+          "relative_area": 0.5853165835490184,
+          "truth_covered": 0.5622119815668203
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.7428571428571429,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.1333577802224666,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 0,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.549515641389523,
+        "relative_area": 0.5853165835490184,
+        "truth_covered": 0.5622119815668203
+      },
+      "publisher_frame": 57461,
+      "second": 2873,
+      "seed": 6,
+      "source_pixels_sha256": "b1ac4bec0022ea48ca65298d510e481508041b7cefcd86d450ceb483124c4b55",
+      "truth": [
+        {
+          "box": [
+            254,
+            385,
+            454,
+            463
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            218,
+            8,
+            350,
+            145
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            223,
+            212,
+            385,
+            317
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            357,
+            0,
+            487,
+            122
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            197,
+            144,
+            350,
+            255
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            335,
+            151,
+            552,
+            297
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            217,
+            309,
+            369,
+            379
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            219,
+            0,
+            381,
+            101
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5480769230769231,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7158957106812447,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.36723423838011965,
+          "relative_area": 0.36723423838011965,
+          "truth_covered": 0.36723423838011965
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.4789915966386555,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.7207044479566493,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.8941176470588236,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.9702127659574468,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.0368686048400195,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 3,
+        "iou": 0.36723423838011965,
+        "relative_area": 0.36723423838011965,
+        "truth_covered": 0.36723423838011965
+      },
+      "box": [
+        468,
+        96,
+        552,
+        248
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 7290,
+        "retained_area": 7290,
+        "track_id": 2
+      },
+      "mask_sha256": "55a1d9c5b1e77ac6f17aad57722d9f76e0f5a5bd7e4a1342993ab9b4fb843454",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 2,
+        "x1": 468,
+        "x2": 552,
+        "y1": 96,
+        "y2": 248
+      },
+      "own_overlap": {
+        "cow": 3,
+        "iou": 0.36723423838011965,
+        "relative_area": 0.36723423838011965,
+        "truth_covered": 0.36723423838011965
+      },
+      "own_truth": [
+        400,
+        86,
+        612,
+        250
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 7290,
+        "mean_probability": 0.9568871855735779,
+        "p10_probability": 0.8793428540229797,
+        "track_id": 2
+      },
+      "proposal": {
+        "confidence": 0.685546875,
+        "x1": 443,
+        "x2": 562,
+        "y1": 81,
+        "y2": 258
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9041466346153846,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1809924306139614,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.5374087842489329,
+          "relative_area": 0.6058156925908882,
+          "truth_covered": 0.5613207547169812
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.7901785714285714,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.1889252652969067,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.475,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.600531914893617,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.7104921227870715,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 5,
+      "proposal_own_overlap": {
+        "cow": 3,
+        "iou": 0.5374087842489329,
+        "relative_area": 0.6058156925908882,
+        "truth_covered": 0.5613207547169812
+      },
+      "publisher_frame": 57541,
+      "second": 2877,
+      "seed": 3,
+      "source_pixels_sha256": "df6891d07083f6e3c1aa10e6a13dfef28ef32e52692266a0fadbd13082a62ff4",
+      "truth": [
+        {
+          "box": [
+            180,
+            392,
+            404,
+            496
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            236,
+            2,
+            359,
+            147
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            400,
+            86,
+            612,
+            250
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            393,
+            391,
+            631,
+            503
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            188,
+            140,
+            360,
+            243
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            133,
+            237,
+            337,
+            307
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            206,
+            313,
+            394,
+            383
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            251,
+            0,
+            382,
+            94
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5362962962962963,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.8424983762719204,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.7974793790665505,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.4650315179398321,
+          "relative_area": 0.4650315179398321,
+          "truth_covered": 0.4650315179398321
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.024820593850813,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.6708037060978237,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.11590211435292767,
+          "relative_area": 0.6671810038146672,
+          "truth_covered": 0.17316017316017315
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.0075080906148868,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 4,
+        "iou": 0.4650315179398321,
+        "relative_area": 0.4650315179398321,
+        "truth_covered": 0.4650315179398321
+      },
+      "box": [
+        425,
+        221,
+        511,
+        402
+      ],
+      "components": {
+        "component_count": 2,
+        "original_area": 8061,
+        "retained_area": 7890,
+        "track_id": 3
+      },
+      "mask_sha256": "7b33d3d6e9396ad200960805323e282b5f4cb63a28108dd5024058e4ad043e1e",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 3,
+        "x1": 425,
+        "x2": 511,
+        "y1": 221,
+        "y2": 418
+      },
+      "own_overlap": {
+        "cow": 4,
+        "iou": 0.4650315179398321,
+        "relative_area": 0.4650315179398321,
+        "truth_covered": 0.4650315179398321
+      },
+      "own_truth": [
+        385,
+        215,
+        564,
+        402
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 8061,
+        "mean_probability": 0.9457297325134277,
+        "p10_probability": 0.795638382434845,
+        "track_id": 3
+      },
+      "proposal": {
+        "confidence": 0.70263671875,
+        "x1": 400,
+        "x2": 541,
+        "y1": 215,
+        "y2": 404
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9181395348837209,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.4423576531716822,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.3652851068189968,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.7811287216708636,
+          "relative_area": 0.7961341977115884,
+          "truth_covered": 0.7877094972067039
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.7544933833695437,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 1.14841628959276,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.15121501785097316,
+          "relative_area": 1.1422142214221422,
+          "truth_covered": 0.2813852813852814
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.7248543689320388,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 4,
+      "proposal_own_overlap": {
+        "cow": 4,
+        "iou": 0.7811287216708636,
+        "relative_area": 0.7961341977115884,
+        "truth_covered": 0.7877094972067039
+      },
+      "publisher_frame": 57561,
+      "second": 2878,
+      "seed": 4,
+      "source_pixels_sha256": "213ade98b564a7cef3b310262f2524589f0dd2e11c56c4768c6c2eb77e506215",
+      "truth": [
+        {
+          "box": [
+            139,
+            384,
+            364,
+            513
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            239,
+            5,
+            363,
+            154
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            491,
+            64,
+            622,
+            213
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            385,
+            215,
+            564,
+            402
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            188,
+            161,
+            371,
+            244
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            82,
+            244,
+            337,
+            335
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            234,
+            298,
+            465,
+            399
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            231,
+            0,
+            381,
+            103
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.32923161060978945,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.39928698752228164,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.2756252503863103,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.2351063829787234,
+          "relative_area": 0.7088607594936709,
+          "truth_covered": 0.3252870179570209
+        },
+        {
+          "cow": 5,
+          "iou": 0.17954232147780536,
+          "relative_area": 0.2905580693815988,
+          "truth_covered": 0.19644042232277525
+        },
+        {
+          "cow": 6,
+          "iou": 0.4811188811188811,
+          "relative_area": 0.4811188811188811,
+          "truth_covered": 0.4811188811188811
+        },
+        {
+          "cow": 7,
+          "iou": 0.03290758827948911,
+          "relative_area": 0.5391849529780565,
+          "truth_covered": 0.0490371697268249
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.4811188811188811,
+        "relative_area": 0.4811188811188811,
+        "truth_covered": 0.4811188811188811
+      },
+      "box": [
+        475,
+        66,
+        531,
+        238
+      ],
+      "components": {
+        "component_count": 2,
+        "original_area": 5969,
+        "retained_area": 5967,
+        "track_id": 5
+      },
+      "mask_sha256": "c719070ba5098a021c197f9c8896f1d6080e313892e033212313f7cc1cbcfbc9",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 475,
+        "x2": 579,
+        "y1": 66,
+        "y2": 238
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.4811188811188811,
+        "relative_area": 0.4811188811188811,
+        "truth_covered": 0.4811188811188811
+      },
+      "own_truth": [
+        449,
+        58,
+        559,
+        240
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5969,
+        "mean_probability": 0.8936768174171448,
+        "p10_probability": 0.7400521636009216,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.69140625,
+        "x1": 453,
+        "x2": 555,
+        "y1": 60,
+        "y2": 239
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.6240771123872026,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7568710359408034,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.5224632289818577,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.3670157967032967,
+          "relative_area": 1.3436856049455401,
+          "truth_covered": 0.6292316750073594
+        },
+        {
+          "cow": 5,
+          "iou": 0.2558139534883721,
+          "relative_area": 0.5507692307692308,
+          "truth_covered": 0.3158974358974359
+        },
+        {
+          "cow": 6,
+          "iou": 0.9119880119880119,
+          "relative_area": 0.9119880119880119,
+          "truth_covered": 0.9119880119880119
+        },
+        {
+          "cow": 7,
+          "iou": 0.13355927948283436,
+          "relative_area": 1.0220555306762202,
+          "truth_covered": 0.23824451410658307
+        }
+      ],
+      "proposal_index": 3,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.9119880119880119,
+        "relative_area": 0.9119880119880119,
+        "truth_covered": 0.9119880119880119
+      },
+      "publisher_frame": 57701,
+      "second": 2885,
+      "seed": 6,
+      "source_pixels_sha256": "259a2b118d9b61828be2ea22045b752000a3f013d8d8c7fbb53adfe6747f8c4b",
+      "truth": [
+        {
+          "box": [
+            185,
+            335,
+            344,
+            519
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            211,
+            2,
+            398,
+            131
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            133,
+            163,
+            306,
+            365
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            505,
+            68,
+            584,
+            240
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            487,
+            44,
+            682,
+            214
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            449,
+            58,
+            559,
+            240
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            365,
+            58,
+            481,
+            212
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.607520325203252,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.1743059193294918,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.08490065444254466,
+          "relative_area": 0.4812042179827739,
+          "truth_covered": 0.11591403042743299
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.4608993157380255,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.4185492905153099,
+          "relative_area": 0.4185492905153099,
+          "truth_covered": 0.4185492905153099
+        },
+        {
+          "cow": 6,
+          "iou": 0.19279028082055366,
+          "relative_area": 0.9963333333333333,
+          "truth_covered": 0.32266666666666666
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.991157289709296,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 5,
+        "iou": 0.4185492905153099,
+        "relative_area": 0.4185492905153099,
+        "truth_covered": 0.4185492905153099
+      },
+      "box": [
+        192,
+        110,
+        290,
+        293
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 7392,
+        "retained_area": 7392,
+        "track_id": 4
+      },
+      "mask_sha256": "34b70354f27bea6e74b2bedbc1df7ab6c9b1fd9a714360a6533abc1cd827b1ff",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 4,
+        "x1": 192,
+        "x2": 290,
+        "y1": 110,
+        "y2": 293
+      },
+      "own_overlap": {
+        "cow": 5,
+        "iou": 0.4185492905153099,
+        "relative_area": 0.4185492905153099,
+        "truth_covered": 0.4185492905153099
+      },
+      "own_truth": [
+        131,
+        95,
+        337,
+        303
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 7392,
+        "mean_probability": 0.9261406660079956,
+        "p10_probability": 0.7195658683776855,
+        "track_id": 4
+      },
+      "proposal": {
+        "confidence": 0.8154296875,
+        "x1": 179,
+        "x2": 299,
+        "y1": 106,
+        "y2": 299
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.7845528455284553,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.5165007857517026,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.09777099569458826,
+          "relative_area": 0.6214279964581824,
+          "truth_covered": 0.14440956290751025
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 1.8866080156402738,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.5405153099327856,
+          "relative_area": 0.5405153099327856,
+          "truth_covered": 0.5405153099327856
+        },
+        {
+          "cow": 6,
+          "iou": 0.20140105078809106,
+          "relative_area": 1.2866666666666666,
+          "truth_covered": 0.38333333333333336
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.2799823145794187,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 0,
+      "proposal_own_overlap": {
+        "cow": 5,
+        "iou": 0.5405153099327856,
+        "relative_area": 0.5405153099327856,
+        "truth_covered": 0.5405153099327856
+      },
+      "publisher_frame": 57761,
+      "second": 2888,
+      "seed": 5,
+      "source_pixels_sha256": "6f15133802ac40c09863d9b5128c29172c4c8552160298299b27f6a9f5be6ded",
+      "truth": [
+        {
+          "box": [
+            185,
+            337,
+            349,
+            517
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            225,
+            5,
+            391,
+            97
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            230,
+            221,
+            533,
+            344
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            485,
+            302,
+            609,
+            401
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            131,
+            95,
+            337,
+            303
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            224,
+            78,
+            374,
+            198
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            304,
+            96,
+            470,
+            205
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.30357142857142855,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.42072896355182243,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.37010159651669083,
+          "relative_area": 0.37010159651669083,
+          "truth_covered": 0.37010159651669083
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.1637414383561644,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.4007142857142857,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.4714813984760197,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.44326801517067005,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 3,
+        "iou": 0.37010159651669083,
+        "relative_area": 0.37010159651669083,
+        "truth_covered": 0.37010159651669083
+      },
+      "box": [
+        455,
+        77,
+        510,
+        230
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 5158,
+        "retained_area": 5158,
+        "track_id": 2
+      },
+      "mask_sha256": "1282e48d861b84d9598ee0e165c6537d9edaf6a278743493cdce7af84a31f8c5",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 2,
+        "x1": 455,
+        "x2": 510,
+        "y1": 77,
+        "y2": 230
+      },
+      "own_overlap": {
+        "cow": 3,
+        "iou": 0.37010159651669083,
+        "relative_area": 0.37010159651669083,
+        "truth_covered": 0.37010159651669083
+      },
+      "own_truth": [
+        405,
+        72,
+        548,
+        231
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5158,
+        "mean_probability": 0.9490663409233093,
+        "p10_probability": 0.816643476486206,
+        "track_id": 2
+      },
+      "proposal": {
+        "confidence": 0.60009765625,
+        "x1": 430,
+        "x2": 530,
+        "y1": 70,
+        "y2": 229
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.5735930735930735,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7949602519874006,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.6844835854732528,
+          "relative_area": 0.6993006993006993,
+          "truth_covered": 0.6905044640893697
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.30938667496886674,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.7571428571428571,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.8908561183325863,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0031921318264170476,
+          "relative_area": 0.8375474083438685,
+          "truth_covered": 0.005847029077117573
+        }
+      ],
+      "proposal_index": 3,
+      "proposal_own_overlap": {
+        "cow": 3,
+        "iou": 0.6844835854732528,
+        "relative_area": 0.6993006993006993,
+        "truth_covered": 0.6905044640893697
+      },
+      "publisher_frame": 57781,
+      "second": 2889,
+      "seed": 3,
+      "source_pixels_sha256": "3ce0e995218e81211c968c9487fc8ca2ea8e7d614c6e1857cf100904fd8eecf5",
+      "truth": [
+        {
+          "box": [
+            188,
+            339,
+            342,
+            519
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            221,
+            11,
+            398,
+            124
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            405,
+            72,
+            548,
+            231
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            359,
+            279,
+            651,
+            455
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            161,
+            115,
+            281,
+            290
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            269,
+            137,
+            366,
+            321
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            318,
+            118,
+            431,
+            286
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.355713828425096,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.4148002986188876,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.7761480705430417,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.2879581151832461,
+          "relative_area": 0.306615161757605,
+          "truth_covered": 0.2921294060840174
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 0.5479536489151874,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.4492621790984435,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.4951267056530214,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 0.9957437275985663,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 4,
+        "iou": 0.2879581151832461,
+        "relative_area": 0.306615161757605,
+        "truth_covered": 0.2921294060840174
+      },
+      "box": [
+        531,
+        140,
+        601,
+        267
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 5275,
+        "retained_area": 5275,
+        "track_id": 3
+      },
+      "mask_sha256": "ec58b150cb16c8177e970199437ed99b64d88bd5366f0a477c0014a51ec432a0",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 3,
+        "x1": 531,
+        "x2": 601,
+        "y1": 140,
+        "y2": 267
+      },
+      "own_overlap": {
+        "cow": 4,
+        "iou": 0.2879581151832461,
+        "relative_area": 0.306615161757605,
+        "truth_covered": 0.2921294060840174
+      },
+      "own_truth": [
+        464,
+        146,
+        682,
+        279
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 5275,
+        "mean_probability": 0.936196506023407,
+        "p10_probability": 0.8000916242599487,
+        "track_id": 3
+      },
+      "proposal": {
+        "confidence": 0.60546875,
+        "x1": 506,
+        "x2": 623,
+        "y1": 135,
+        "y2": 284
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.6975432138284251,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.8134098544232923,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.5220010476689365,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.5041469578176635,
+          "relative_area": 0.6012623301372698,
+          "truth_covered": 0.536697247706422
+        },
+        {
+          "cow": 5,
+          "iou": 0.0,
+          "relative_area": 1.0745192307692308,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 6,
+          "iou": 0.0,
+          "relative_area": 0.8809884778653729,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 0.9709273182957393,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 8,
+          "iou": 0.0,
+          "relative_area": 1.9526209677419355,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 6,
+      "proposal_own_overlap": {
+        "cow": 4,
+        "iou": 0.5041469578176635,
+        "relative_area": 0.6012623301372698,
+        "truth_covered": 0.536697247706422
+      },
+      "publisher_frame": 57901,
+      "second": 2895,
+      "seed": 4,
+      "source_pixels_sha256": "8233222faf9ac4d761cc8e8049ae58ff5585c5ea9028de960b8f56b18fa2252e",
+      "truth": [
+        {
+          "box": [
+            190,
+            341,
+            332,
+            517
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            188,
+            23,
+            340,
+            164
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            374,
+            70,
+            443,
+            236
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            464,
+            146,
+            682,
+            279
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            236,
+            164,
+            340,
+            320
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            301,
+            315,
+            403,
+            509
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            416,
+            301,
+            511,
+            490
+          ],
+          "cow": 7
+        },
+        {
+          "box": [
+            248,
+            0,
+            372,
+            72
+          ],
+          "cow": 8
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.9355847404627893,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.8725575969670458,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.04234683219433585,
+          "relative_area": 0.749198717948718,
+          "truth_covered": 0.07106370192307693
+        },
+        {
+          "cow": 4,
+          "iou": 0.025240697371844912,
+          "relative_area": 0.5271317829457365,
+          "truth_covered": 0.037596899224806204
+        },
+        {
+          "cow": 5,
+          "iou": 0.3955160744500846,
+          "relative_area": 0.3955160744500846,
+          "truth_covered": 0.3955160744500846
+        },
+        {
+          "cow": 6,
+          "iou": 0.25984072338130987,
+          "relative_area": 0.32673029462511194,
+          "truth_covered": 0.27363662174853126
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.237386269644334,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 5,
+        "iou": 0.3955160744500846,
+        "relative_area": 0.3955160744500846,
+        "truth_covered": 0.3955160744500846
+      },
+      "box": [
+        432,
+        262,
+        512,
+        449
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 8488,
+        "retained_area": 8488,
+        "track_id": 4
+      },
+      "mask_sha256": "829ab1b1abd44b0fe3b85ff01e1fa83ddd3fd7415914267f2b57c5eb25a1b0d4",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 4,
+        "x1": 432,
+        "x2": 512,
+        "y1": 262,
+        "y2": 449
+      },
+      "own_overlap": {
+        "cow": 5,
+        "iou": 0.3955160744500846,
+        "relative_area": 0.3955160744500846,
+        "truth_covered": 0.3955160744500846
+      },
+      "own_truth": [
+        383,
+        259,
+        575,
+        456
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 8488,
+        "mean_probability": 0.9439237713813782,
+        "p10_probability": 0.8589491844177246,
+        "track_id": 4
+      },
+      "proposal": {
+        "confidence": 0.66748046875,
+        "x1": 408,
+        "x2": 543,
+        "y1": 253,
+        "y2": 458
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 1.7307692307692308,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.6141732283464567,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.06978780734253957,
+          "relative_area": 1.3859675480769231,
+          "truth_covered": 0.15564903846153846
+        },
+        {
+          "cow": 4,
+          "iou": 0.08627405383407942,
+          "relative_area": 0.9751585623678647,
+          "truth_covered": 0.15687103594080337
+        },
+        {
+          "cow": 5,
+          "iou": 0.6836057988895743,
+          "relative_area": 0.7316782994923858,
+          "truth_covered": 0.703125
+        },
+        {
+          "cow": 6,
+          "iou": 0.32934023379537475,
+          "relative_area": 0.6044292047961212,
+          "truth_covered": 0.3974927381134383
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 2.2890818858560795,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 4,
+      "proposal_own_overlap": {
+        "cow": 5,
+        "iou": 0.6836057988895743,
+        "relative_area": 0.7316782994923858,
+        "truth_covered": 0.703125
+      },
+      "publisher_frame": 58701,
+      "second": 2935,
+      "seed": 5,
+      "source_pixels_sha256": "048c632c61148328f755a17b9289dc490ad7256dbdbf3f0bbafda4e8bd8df414",
+      "truth": [
+        {
+          "box": [
+            274,
+            207,
+            356,
+            402
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            224,
+            0,
+            351,
+            135
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            469,
+            191,
+            661,
+            295
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            501,
+            352,
+            666,
+            524
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            383,
+            259,
+            575,
+            456
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            282,
+            258,
+            499,
+            469
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            412,
+            83,
+            490,
+            238
+          ],
+          "cow": 7
+        }
+      ]
+    },
+    {
+      "all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0,
+          "relative_area": 0.8547842401500938,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 0.7972003499562554,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 0.6844951923076923,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.4816067653276956,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.2054217290540066,
+          "relative_area": 0.36135786802030456,
+          "truth_covered": 0.23199555837563451
+        },
+        {
+          "cow": 6,
+          "iou": 0.298512678271125,
+          "relative_area": 0.298512678271125,
+          "truth_covered": 0.298512678271125
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.1305210918114144,
+          "truth_covered": 0.0
+        }
+      ],
+      "assigned_cow": null,
+      "best_overlap": {
+        "cow": 6,
+        "iou": 0.298512678271125,
+        "relative_area": 0.298512678271125,
+        "truth_covered": 0.298512678271125
+      },
+      "box": [
+        361,
+        261,
+        428,
+        465
+      ],
+      "components": {
+        "component_count": 1,
+        "original_area": 7544,
+        "retained_area": 7544,
+        "track_id": 5
+      },
+      "mask_sha256": "829ab1b1abd44b0fe3b85ff01e1fa83ddd3fd7415914267f2b57c5eb25a1b0d4",
+      "original_mask_box": {
+        "confidence": 1.0,
+        "label": "cow",
+        "track_id": 5,
+        "x1": 361,
+        "x2": 428,
+        "y1": 261,
+        "y2": 465
+      },
+      "own_overlap": {
+        "cow": 6,
+        "iou": 0.298512678271125,
+        "relative_area": 0.298512678271125,
+        "truth_covered": 0.298512678271125
+      },
+      "own_truth": [
+        282,
+        258,
+        499,
+        469
+      ],
+      "own_truth_assigned_to_track": null,
+      "probabilities": {
+        "area": 7544,
+        "mean_probability": 0.9516596794128418,
+        "p10_probability": 0.8478783369064331,
+        "track_id": 5
+      },
+      "proposal": {
+        "confidence": 0.65673828125,
+        "x1": 345,
+        "x2": 450,
+        "y1": 262,
+        "y2": 479
+      },
+      "proposal_all_overlaps": [
+        {
+          "cow": 1,
+          "iou": 0.0413589364844904,
+          "relative_area": 1.424953095684803,
+          "truth_covered": 0.09631019387116949
+        },
+        {
+          "cow": 2,
+          "iou": 0.0,
+          "relative_area": 1.3289588801399825,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 3,
+          "iou": 0.0,
+          "relative_area": 1.1410757211538463,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 4,
+          "iou": 0.0,
+          "relative_area": 0.8028541226215645,
+          "truth_covered": 0.0
+        },
+        {
+          "cow": 5,
+          "iou": 0.2730041376992712,
+          "relative_area": 0.602395304568528,
+          "truth_covered": 0.3436442470389171
+        },
+        {
+          "cow": 6,
+          "iou": 0.4640561948886564,
+          "relative_area": 0.4976303317535545,
+          "truth_covered": 0.47469805840085616
+        },
+        {
+          "cow": 7,
+          "iou": 0.0,
+          "relative_area": 1.8846153846153846,
+          "truth_covered": 0.0
+        }
+      ],
+      "proposal_index": 5,
+      "proposal_own_overlap": {
+        "cow": 6,
+        "iou": 0.4640561948886564,
+        "relative_area": 0.4976303317535545,
+        "truth_covered": 0.47469805840085616
+      },
+      "publisher_frame": 58701,
+      "second": 2935,
+      "seed": 6,
+      "source_pixels_sha256": "048c632c61148328f755a17b9289dc490ad7256dbdbf3f0bbafda4e8bd8df414",
+      "truth": [
+        {
+          "box": [
+            274,
+            207,
+            356,
+            402
+          ],
+          "cow": 1
+        },
+        {
+          "box": [
+            224,
+            0,
+            351,
+            135
+          ],
+          "cow": 2
+        },
+        {
+          "box": [
+            469,
+            191,
+            661,
+            295
+          ],
+          "cow": 3
+        },
+        {
+          "box": [
+            501,
+            352,
+            666,
+            524
+          ],
+          "cow": 4
+        },
+        {
+          "box": [
+            383,
+            259,
+            575,
+            456
+          ],
+          "cow": 5
+        },
+        {
+          "box": [
+            282,
+            258,
+            499,
+            469
+          ],
+          "cow": 6
+        },
+        {
+          "box": [
+            412,
+            83,
+            490,
+            238
+          ],
+          "cow": 7
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/01-1818-cow-6.jpg",
+      "sha256": "31139e8c4c984ca0d7e4f61bb5ada1062003bc89d1411f1a4e8d71ee15785b35"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/02-1820-cow-1.jpg",
+      "sha256": "117f5c351ed36aa6322b4357b66bcf619196a61cc3d085b97720f1166ff98cc8"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/03-1840-cow-3.jpg",
+      "sha256": "46887f33d7501f5e1efbaedcfb3bc4fb8fc37ab9b202141f91c488bd70a9b82b"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/04-1847-cow-1.jpg",
+      "sha256": "0bc57665b86ea9fbe8e815fd125b8d79817a1f00f5a90c41319acfc7626fbbb9"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/05-1889-cow-4.jpg",
+      "sha256": "75373e649a9558a7e9cf539bfb43916eb7530d4d7b1f929625c7a29f781b485c"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/06-1890-cow-6.jpg",
+      "sha256": "0b8368a150c023df91b586d64f4be3cee9553dcb33aa0da72df779ebf87a190e"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/07-1893-cow-6.jpg",
+      "sha256": "d85f4c70bf3b056c40ceebc1ed7a2fd2e4e6210b8b7e7feb3540cccb75bc6852"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/08-1932-cow-2.jpg",
+      "sha256": "261bc2f82a35d9085648062b8d4e1947275878ce9aa0888a8418471dcd51d2c2"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/09-2709-cow-4.jpg",
+      "sha256": "509712d820ae11b76bbfb996946b53c568d0eaaf330746d61a02146a75fd33e9"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/10-2770-cow-4.jpg",
+      "sha256": "7ae9f4ee9b239f1a2b29c37431f680b7483ef9f48469c4e7d6a9916de1787b16"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/11-2784-cow-1.jpg",
+      "sha256": "990fb783f03a0fdaccd1aa4f0714d4c59c5aa700108ef620ab2244e5047a9141"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/12-2790-cow-3.jpg",
+      "sha256": "8d95a86b22e51ac4f44a47413c3d5169199880926feb2bd8abdfd86f590747eb"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/13-2790-cow-4.jpg",
+      "sha256": "a33af3b79eab8f3d75d21955f4ac1ee4e2fc8144dc9643935c2c5cb6cf7250e3"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/14-2800-cow-3.jpg",
+      "sha256": "4e9e9ed34d3de3855ee539c2f26dd72d9fb4772d7e84b454596bd5c9bb539d07"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/15-2803-cow-6.jpg",
+      "sha256": "bb9205eed4e36dd538945c7a100b873e96aa57de5907c935e32612070fc332c3"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/16-2805-cow-5.jpg",
+      "sha256": "f001a0879cdc5a1f8d11db67f714f0a056f7104ba4dc29679601d49d326fb435"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/17-2807-cow-5.jpg",
+      "sha256": "7ef938d9adf931310fbf57f161f6d6972ee652f99c589de5a53e341906186197"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/18-2825-cow-6.jpg",
+      "sha256": "7a398b648b522890807f6ae0934411c7f1c01eb2bc0967fb7768eca251ac4125"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/19-2829-cow-6.jpg",
+      "sha256": "1399b2031826afc47ea3f8c00a64837159b705190aac1415a2f607791e46bfb4"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/20-2832-cow-5.jpg",
+      "sha256": "327b1e0065cee79cf2f04ca701cd4541249271265139723674a7a726003c5cb9"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/21-2833-cow-6.jpg",
+      "sha256": "a6dce2a349b6ad9f9f2241d9d5a043759207181b1b03f626194019ca85efd753"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/22-2856-cow-6.jpg",
+      "sha256": "1fae5da2ca0a92cbf2ad25f34842dc6a7d1d9e1413149f2479791cb70f9b40e8"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/23-2862-cow-5.jpg",
+      "sha256": "8157ae2b2e4a98187db8cc2015086a25e3aa2ea9373d8578fad0546b26eb888e"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/24-2863-cow-6.jpg",
+      "sha256": "16e43335148fa5f7b43f22ce614631f8c496011f91dd5634cf7817bec5c7c62d"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/25-2865-cow-1.jpg",
+      "sha256": "5c6d8211fad9402f5fbc4f26b272103eabcb20410ab92122bb8c8e786301cad4"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/26-2868-cow-2.jpg",
+      "sha256": "2dedfe9d1aa4064ddc3d9853fdcc0c76d841139d82101f26e41e6af4c5962504"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/27-2873-cow-6.jpg",
+      "sha256": "af1ac90c753a1153b401dcf4fe02390858a281902799b3f5a1af3afe65e7126c"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/28-2877-cow-3.jpg",
+      "sha256": "88d141a1171ac5235aab36828b337eba2fa81ec14ead4fcc74f2b4ce94fbb74c"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/29-2878-cow-4.jpg",
+      "sha256": "92fea2522a3757aeec4d9c16ed42ba6a3790caf2a701a73aa1c056cc231183d8"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/30-2885-cow-6.jpg",
+      "sha256": "c0a2c4ca2756c05003659088680910983053d7e75be41ee5a317bfcb3e141a62"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/31-2888-cow-5.jpg",
+      "sha256": "e97ceea7c9f11409101162d5fd8a023e23842c57cb9a1f800ff72ac7e3fee4c8"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/32-2889-cow-3.jpg",
+      "sha256": "ed608ecaea3529148699149c12649a8de26edfb62150873937b9269d43c608a3"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/33-2895-cow-4.jpg",
+      "sha256": "e5ae739ff9e887c89072cccc1f51bf79c1402ca78c1af9d80d8bdde50e7257f0"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/34-2935-cow-5.jpg",
+      "sha256": "f710273050293e7093e9895d978296cf8020f4ae205ec80603f7f11aa971a0d7"
+    },
+    {
+      "path": ".cache/cow-cutie/reserved-error-audit/35-2935-cow-6.jpg",
+      "sha256": "6eea9ead84606e43a0d058ba430f10bb328237c540c7cd9a9aafce16170b2609"
+    }
+  ],
+  "protocol_sha256": "cb903687db0ba68c471869940d0b26367b7b31c0191a4213ddb62c614ccf1e24",
+  "scope": "Diagnosis after a failed reserved evaluation; no rescoring, selection, threshold change or exclusion of errors",
+  "strict_report_sha256": "2b6018a1da00b948e012c4bed76a987d24f91dcacf8190032ac8884084660603"
+}

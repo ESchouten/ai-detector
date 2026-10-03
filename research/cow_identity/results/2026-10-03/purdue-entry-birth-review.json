@@ -1,0 +1,120 @@
+{
+  "rows": [
+    {
+      "path": ".cache/cow-passage-entry-births/review/000.jpg",
+      "second": 0.0,
+      "sha256": "955906c7a987bcc8ccc44541c65b9024b2353291088d512809c2de7e5db0f4a0"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/001.jpg",
+      "second": 0.5,
+      "sha256": "ce42c74956894276b843ae2b8819c005086a3f74cbac409b59c9b48a0394270c"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/002.jpg",
+      "second": 1.0,
+      "sha256": "73b005d436b2dbecc1ff4310b03e09b6031b8b7925bb0b1a6b553dc661ce1b0e"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/003.jpg",
+      "second": 1.5,
+      "sha256": "b2bcf139aa466bef4e30c190e70839483cc5b01ef7fbc05a097795077d4d7856"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/004.jpg",
+      "second": 2.0,
+      "sha256": "0fe844c5fa705dfed4d08325f70cdc7f0fb875897776b2e8289be3a215dc1ee1"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/005.jpg",
+      "second": 2.5,
+      "sha256": "3dd0522e854bc60576e22967462efc2f7ff8e634db242dc83e13cca0f0912bf7"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/006.jpg",
+      "second": 3.0,
+      "sha256": "3dc45e65a17296094ea59e2e7e3679e9b0a5faa887f430cf0c9cc46491e14690"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/007.jpg",
+      "second": 3.5,
+      "sha256": "299bc83193f5fdadc868410533367af4a6f554aa911f11d25f0b1280d116e404"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/008.jpg",
+      "second": 4.0,
+      "sha256": "d0ed1578bce4627ffcab263c036ddf78d3d01faf5ca410adbb940c1004ec74f3"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/009.jpg",
+      "second": 4.5,
+      "sha256": "40225926842bbebd79fba8a07f241ad081106fb2d0863b3a4b8a546628ee0be7"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/010.jpg",
+      "second": 5.0,
+      "sha256": "80bb9877dd1d4e20269c75094dece76bc9a1362afd899865f89d364c6d62d5d6"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/011.jpg",
+      "second": 5.5,
+      "sha256": "4a61871cf69f12693f493f038f99ac5a5b5305dd08ab6063de4a966625f7cd76"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/012.jpg",
+      "second": 6.0,
+      "sha256": "c7d2bfc7d750f1b193a474b5393a3f5d477fd30716837ee153b2af4c200ed4fa"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/013.jpg",
+      "second": 6.5,
+      "sha256": "f6b6dbd55aa698b0771433c6845909bd1cd4092b61681e2abf326376cabe3e56"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/014.jpg",
+      "second": 7.0,
+      "sha256": "414588a0dec62a69a92a9d830ed4205cc11612eb7b3c8152cb6d8893e3d74793"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/015.jpg",
+      "second": 7.5,
+      "sha256": "71bf3f4961e1e6472dc8e3d388532faf6d3839c9a0ab54f6c98f218d37f2b023"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/016.jpg",
+      "second": 8.0,
+      "sha256": "f7dc67477613648d4c5f7ae700d85d05f0b96dddeedc9a89fe7f63680001d26e"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/017.jpg",
+      "second": 8.5,
+      "sha256": "88090e2008f1f25d06c966149b4f7514bd44aa5cd4ba5474f8b1b293162ecfdb"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/018.jpg",
+      "second": 9.0,
+      "sha256": "e4e3bb9898501bb33546a3cc5dd458453b47677894f02b0cd6c98dedc7e191fd"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/019.jpg",
+      "second": 9.5,
+      "sha256": "84d56b511c74b6ec860065f4ae8844a85ba62804a76d44247543f84c053010dd"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/020.jpg",
+      "second": 10.0,
+      "sha256": "1226f22026bf46ea007602ba36c239ac9b6ca5fccdd1d07986adf85c0bebf446"
+    },
+    {
+      "path": ".cache/cow-passage-entry-births/review/021.jpg",
+      "second": 10.5,
+      "sha256": "464ec8500930beb4b69b8dcbd0ee7dff72b2cf8eca78d05410379670a27a347f"
+    }
+  ],
+  "scope": "Posthoc complete evidence rendering, not parameter selection",
+  "sources": {
+    ".cache/cow-passage-entry-births/predictions.json": "5ee220f5d32270c4717a4a9170652056bcace0defdc1317aeb16474b46c778ea",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/passage_entry_birth_protocol.json": "b75ede34b6cfe3f9266ad92d2b4c2c794c905fa6a0b67481a954613a07dda89a",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/passage_entry_birth_review.py": "724e5df1518f142291eb3e0e1c39ce7baa58bbb6f7e678b14842f0be46f8726f"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "interpretation": "The hard eligible-known ceiling is independent of embeddings and already bounds all named coverage. Oracle replay executes actual sampling/conflict/agreement, but rejecting unmatched boxes may reset a physically correct track: it is an idealized labeled replay, not a tighter mathematical maximum. Gallery preparation is immediate; real initialization can only add delay.",
+  "panels": {
+    "1230": {
+      "counts": {
+        "eligible_boxes": 204,
+        "eligible_known": 150,
+        "matched_known": 1673,
+        "oracle_confirmed_known": 107,
+        "predicted_boxes": 2526,
+        "visible_known": 1799
+      },
+      "hard_coverage_ceiling": 0.08337965536409116,
+      "oracle_replay_coverage": 0.05947748749305169,
+      "per_cow": {
+        "1": {
+          "eligible_known": 0,
+          "oracle_confirmed_known": 0,
+          "visible_known": 300
+        },
+        "2": {
+          "eligible_known": 14,
+          "oracle_confirmed_known": 7,
+          "visible_known": 300
+        },
+        "3": {
+          "eligible_known": 3,
+          "oracle_confirmed_known": 0,
+          "visible_known": 300
+        },
+        "4": {
+          "eligible_known": 44,
+          "oracle_confirmed_known": 31,
+          "visible_known": 300
+        },
+        "5": {
+          "eligible_known": 58,
+          "oracle_confirmed_known": 54,
+          "visible_known": 300
+        },
+        "6": {
+          "eligible_known": 31,
+          "oracle_confirmed_known": 15,
+          "visible_known": 299
+        }
+      }
+    },
+    "930": {
+      "counts": {
+        "eligible_boxes": 171,
+        "eligible_known": 131,
+        "matched_known": 1597,
+        "oracle_confirmed_known": 71,
+        "predicted_boxes": 2545,
+        "visible_known": 1795
+      },
+      "hard_coverage_ceiling": 0.07298050139275766,
+      "oracle_replay_coverage": 0.03955431754874652,
+      "per_cow": {
+        "1": {
+          "eligible_known": 8,
+          "oracle_confirmed_known": 3,
+          "visible_known": 300
+        },
+        "2": {
+          "eligible_known": 2,
+          "oracle_confirmed_known": 0,
+          "visible_known": 300
+        },
+        "3": {
+          "eligible_known": 19,
+          "oracle_confirmed_known": 9,
+          "visible_known": 300
+        },
+        "4": {
+          "eligible_known": 17,
+          "oracle_confirmed_known": 2,
+          "visible_known": 300
+        },
+        "5": {
+          "eligible_known": 28,
+          "oracle_confirmed_known": 20,
+          "visible_known": 300
+        },
+        "6": {
+          "eligible_known": 57,
+          "oracle_confirmed_known": 37,
+          "visible_known": 295
+        }
+      }
+    }
+  },
+  "scope": "Exposed 8-Calves actual mixed detector/ByteTrack queries at 1 Hz; CPU metadata only, no model inference or new pixels",
+  "settings": {
+    "labels": [
+      "cow"
+    ],
+    "max_overlap": 0.2,
+    "min_crop_size": 64,
+    "min_margin": 0.1,
+    "min_observations": 3,
+    "min_similarity": 0.65,
+    "model": "miewid-msv3",
+    "review_interval": 30.0,
+    "sample_interval": 1.0
+  },
+  "source_dimensions": [
+    800,
+    600
+  ],
+  "sources": {
+    ".cache/cow-tracked-features/mixed-1230/manifest.json": "6e2ddc0012060ade513047317930efebdd21b0337e7a3b99cf98d001bba54279",
+    ".cache/cow-tracked-features/mixed-930/manifest.json": "e9f6c29036f905d839b65ea0fe5de9ae00d1c2f27d91fab95a676f11f2ed0595",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/recognition_policy_ceiling.py": "93dafca8098f0c29784df532de68874de8d5902ee76561741d9bc6dbd9cb86cd",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_recognition_policy_ceiling.py": "9c4ab8aeeb9d514cf68ddb76f7c84d3359923dca1900dde816cbcf471092c230",
+    "detector/src/aidetector/adapters/inference/identity_observations.py": "209c3bf59f92baab01388dcb36930e1e2e3d57fdc0227aeef0cadbab8443d9e8",
+    "detector/src/aidetector/configuration.py": "93badd58fb63f8bb8bd6f5d2f2f0026b472a9f7a34901f582529dcbd0a0dcbd3",
+    "detector/src/aidetector/domain/identity.py": "de5fcc34f51688ff383e266d12e5bd7a3a27b6ddbce8384e39063a0f37fb3967",
+    "detector/src/aidetector/domain/models.py": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0"
+  }
+}

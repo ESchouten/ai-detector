@@ -1,0 +1,230 @@
+{
+  "baseline_execution_sha256": "7f750f40392efa57a9bf816e4044c526760069cf2f04b1bc65e2e4877be5fa1c",
+  "births": {
+    "candidate_disappearance": "Drop pending evidence on absence or nonunique association; mature candidates consumed even if SAM rejects",
+    "confirmation_frames": 2,
+    "confirmation_step_seconds": 0.5,
+    "duplicate_overlap": 0.5,
+    "history": "Add new stable IDs with zero area/probability in existing historical rows; retain old masks/history/conflicts/counters",
+    "insertion": "One indexed core.step per timestamp. On birth pass only new foreground IDs and objects=new_ids, idx_mask=True",
+    "mask_prompt": "Current whole-class detector proposals only; no annotation or future image",
+    "maximum_mask_overlap": 0.1,
+    "maximum_objects": 8,
+    "maximum_occupied_overlap": 0.1,
+    "minimum_prompt_support": 0.9,
+    "name_acquisition": false,
+    "new_masks_overlap": "Any shared foreground rejects both",
+    "pair_iou": 0.5,
+    "precision": "SAM2.1tiny CPU FP32 at1024; preserve current whole-cow YOLO FP32 MPS and Cutie FP32 MPS",
+    "temporal_overlap": 0.5
+  },
+  "cache_reclaim_bytes": 6442450944,
+  "cadence": "Cutie propagation and fresh p10/reciprocal naming at2Hz; existing quarantine observes only exact integer seconds, preserving its1Hz/history semantics. Single slot cannot form donor/receiver pairs; quarantine is consequently inert here. No previous detector evidence is reused to name a half-second frame.",
+  "corroborator": {
+    "class_names": {
+      "0": "whole_visible_cow",
+      "1": "coat_torso"
+    },
+    "execution": "Fresh YOLO.predict for every selected half-second input. Whole-animal class only, no ByteTrack state, no torso association, no biological labels or future inputs.",
+    "precision_reason": "Preserve prior frozen Purdue FP32 MPS inference contract after the separate YOLO11 FP16 MPS native failure; FP32 is not a universal hardware requirement.",
+    "settings": {
+      "classes": [
+        0
+      ],
+      "conf": 0.25,
+      "device": "mps",
+      "imgsz": 640,
+      "iou": 0.7,
+      "quantize": 32
+    }
+  },
+  "deletion": false,
+  "dynamic_additions": true,
+  "files": {
+    ".cache/cow-cutie/cutie-base-mega.pth": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+    ".cache/cow-passage-adaptation/training/weights/best.pt": "b62eee7455e5b771045392fec2a8aa9cb165a46b0148c8b417e65824b7354567",
+    ".cache/cow-passage-entry-inventory/000.png": "03d9accd1ea3638b11f088a825215a05a997c9f12ba06a8cd0b02d008d543d82",
+    ".cache/cow-passage-entry-inventory/001.png": "de9ff06f727fc955b740d520f915c1de9645b523fb299e1dc214ef99ee8ea00f",
+    ".cache/cow-passage-entry-inventory/002.png": "86e50704469a7b5496954ecfe2c11c2df46bfa79740647d7501b225ce2d7e272",
+    ".cache/cow-passage-entry-inventory/003.png": "37e76f7fa2c33d9b45d8848a445796c7727aeccb3db5ebf09d5e003ff6fca632",
+    ".cache/cow-passage-entry-inventory/004.png": "29a68e54c033e89524ad754117b66014cef0bbf9a9472f81988f2f7e07500b4d",
+    ".cache/cow-passage-entry-inventory/005.png": "4252c647b04ec3ecebc4718f181ed5db4073058b03441bfaaaf48fb5119a471e",
+    ".cache/cow-passage-entry-inventory/006.png": "8978ee5940c31fa7c2065447ffa39d1225824f3e70062599495cae583f8ee344",
+    ".cache/cow-passage-entry-inventory/007.png": "e01ce648a2e6a81576e132b39412ebec9bc14c8554a8bbd550b1dabbabc398be",
+    ".cache/cow-passage-entry-inventory/008.png": "4a54a2a7a17ba0b7f79b521a05d559fc2ac48299bcda9cf358c2c9e1c6936143",
+    ".cache/cow-passage-entry-inventory/009.png": "4dc0364741b9957a2788f85d1593cba3aa25984082ecc65e9a0913d4f494af37",
+    ".cache/cow-passage-entry-inventory/010.png": "0be21568ec3b9989efee3e8d0b62d12e5e0224f46211c375b43ca3b84a33c846",
+    ".cache/cow-passage-entry-inventory/011.png": "f8000459814e48c004912f09b35e3c3c526a7e85ade501592e2e57a8b7c18f1b",
+    ".cache/cow-passage-entry-inventory/012.png": "0fe724e04939b3fae07465fb818c7e01f6da62a244d227150bbfc6fc5f300766",
+    ".cache/cow-passage-entry-inventory/013.png": "96829ec4b97ca6f65ba2c6b76c9d94f4971bd1d39060448de91fcc4f31fe9995",
+    ".cache/cow-passage-entry-inventory/014.png": "697bad35af50b7920fbf911b88507b18071b51e5de87859f04f19d0b76c6228d",
+    ".cache/cow-passage-entry-inventory/015.png": "7634bc2095ed444bb6c117a9f103a3fef7b19f67e7a47fbef74af27012c28587",
+    ".cache/cow-passage-entry-inventory/016.png": "2f938ce77f7fd560a41be42d3f08c1138e804d4ed69b1dca361d978791768909",
+    ".cache/cow-passage-entry-inventory/017.png": "71422394f7d742dd47af68c2f10b7289cd2c9cd5788b12a35caec168e57690f1",
+    ".cache/cow-passage-entry-inventory/018.png": "7a679612c2dd1773b09d0aebbc29b619909cd1422a636f42390c18b8453a7850",
+    ".cache/cow-passage-entry-inventory/019.png": "4a4d1ee862dd2ef63707b168047f263b6c32fb5551fce6eb5755477fb7f6d512",
+    ".cache/cow-passage-entry-inventory/020.png": "e7828b630aaee0282cc6df7cec93d20858e08306a124d6269c3e6d929401393c",
+    ".cache/cow-passage-entry-inventory/021.png": "908cf46cf4a80929b1ab3e2f52f83b48609efc1554bec9ccd622fa726e9065eb",
+    ".cache/cow-passage-entry-inventory/manifest.json": "f6c9fe1ceebb7938defde151b07ae5926ab6ee660ff4dc783547f4fa4154da4f",
+    ".cache/cow-passage-entry-seed/mask-manifest.json": "79490d4116013f0e358bc27691c7db9690fae699f3adddf52e19e58df4df65d2",
+    ".cache/cow-passage-entry-seed/masks.npz": "168e81feadab31e8081d032a00e44bafe2e40b6941b32c297b14ff2717dd33f0",
+    ".cache/cow-passage-entry-seed/proposal-review.jpg": "af1aef9b64b2d1caa1ce3750092ffd0965a33a4ee49124cbd255defe54b98326",
+    ".cache/cow-passage-entry-seed/proposal.json": "417d3f421e69073e1db48c0818f35473ef071a59565a922f1b99f3e4808be44f",
+    ".cache/cow-passage-torso-enrollment/clips/clip-723ec0dcb96e7c78/frame-000420.png": "dc82c8d4d0a4dc05a4dd1ce096777e39611306bf490d147c7184c0bb3bb766ec",
+    ".cache/cow-passage-torso-enrollment/proposals.json": "62c2f5627522e5f020ed351962f76c440d1e1be1a1c9efbb4086936309f0298d",
+    ".cache/cow-segmentation/sam2.1_t.pt": "3c1e81ca9b037dd39d70a014ddb9a813d6c4c4e12555420db7eaff31689bd4e3",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/passage_entry_protocol.json": "c936a108e9ba17674c29d42fa5de5292772acb42621850ac72e762705fa0c16e",
+    "detector/src/aidetector/adapters/media/images.py": "2d73e9970e0df6126a565f1bf0bc60224f3e2f42ef987247df4a2ad88c899595",
+    "detector/src/aidetector/domain/models.py": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0",
+    "research/cow_identity/PASSAGE_ENTRY_BIRTHS.md": "ce853448b0d07dcdd63876a463e8f22ff53f8179adb624ff61e0447e14609eda",
+    "research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "research/cow_identity/cutie_object_state.py": "b08bbed613874a15fd71740785cd674c9507bc9e15732e8ed7670653c277f1df",
+    "research/cow_identity/detection_box_consensus.py": "d81721ec2268225715903a45c2b3c79e7588c6088b09cfc482d291e8430df3cf",
+    "research/cow_identity/detection_corroboration.py": "c381591a6609ff422c4ac784da2c36efb54637440bef49f926b5d3c9942e84b4",
+    "research/cow_identity/detection_cutie.py": "85c163664cdef3d7cef4268ac0970b569f8c7d62f95cc77add9ae6e46f51c9a7",
+    "research/cow_identity/detection_cutie_quarantine.py": "7bbd7e52a16b344a82a8848788e4f78f85bdb60ab43fd1ad08ae04977a213707",
+    "research/cow_identity/detection_cutie_quarantine_v2_protocol.json": "294b16744d0efe7705024edbb465f158f91a4fcad4c1881853e53683ea354165",
+    "research/cow_identity/detection_cutie_variants.py": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+    "research/cow_identity/detection_quarantine_recovery.py": "aca8e85b9f658ec9c183938dc0438614f5362525aca0ca4ee9fae1d050479e81",
+    "research/cow_identity/detection_streaming.py": "a33618c315ecff17e8730b7d5ca81a38c9c809e162fad2555e0399feddccabe4",
+    "research/cow_identity/detection_streaming_protocol.json": "ba93acb3de65163780fa83d2384c968a491f079dcd55bdf28e61ac82ff227e30",
+    "research/cow_identity/passage_entry_birth_run.py": "06935106491ad23d45daeeb1177ae7612e5e9cd165e84e630124d00a18b1c700",
+    "research/cow_identity/passage_entry_birth_score.py": "9051d778cbcec1928a1c68d5441cca097fc647bb97d1d6d05c181086b7b75a37",
+    "research/cow_identity/passage_entry_births.py": "41a4d006887524796e712d412d2adf34cd47d91a4bdc6f09f67494bc9867d57a",
+    "research/cow_identity/passage_entry_control.py": "34c4c8db6694aa36615672fc665dd0702f67ac3a3902570d36c68f6d0f03f532",
+    "research/cow_identity/passage_entry_execution.json": "7f750f40392efa57a9bf816e4044c526760069cf2f04b1bc65e2e4877be5fa1c",
+    "research/cow_identity/passage_entry_score.py": "3fc3772a27108f16f7e5f37455bcc63bfdc50e6d493b76d35b2da99fb6f3eb1d",
+    "research/cow_identity/passage_entry_selection.json": "5ba8ee4e89327698c98eae347c8c0847b475ac3ecc23f972dcccd610e2115c40",
+    "research/cow_identity/passage_metrics.py": "c2581b5e3f7db8aeb04b1c093766bea9f083ca7177367d4f39b361c545e66843",
+    "research/cow_identity/passage_torso_protocol.json": "1928204aba5f60fc4a528307313ced923ad80d43783ba213af2d53c2bb3a1f36",
+    "research/cow_identity/results/2026-10-03/purdue-entry-annotations.json": "e087ea0891e49ac63f9cfdb2cce21df0c5363ce1fa654c877ecfea31f085d191",
+    "research/cow_identity/results/2026-10-03/purdue-entry-proposal-review.json": "f20ba10682b3f674774a5302801f34c4e76f66acf942763ee8b3a4be92bc3b05",
+    "research/cow_identity/results/2026-10-03/purdue-entry-seed-review.json": "18e68ca6182033701dc2cbad9885e86e0e4c958994e1bf0d874ebc7071ccb7a3",
+    "research/cow_identity/test_passage_birth_quarantine.py": "1955ee1f9adda27a8e03973885850f7dbedd1a4ca46cf6701d6dbcabb9485109",
+    "research/cow_identity/test_passage_entry.py": "22523311255bc02c90c08f843324e2e0f261b8e2b67443fd3ec71881d7a9d8de",
+    "research/cow_identity/test_passage_entry_births.py": "725dfd2923f414e1d02683aa7d9bc96b6351eb21977ba2dd928d3479515110e8",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  },
+  "frozen_at_utc": "2026-10-03T10:18:09.838506+00:00",
+  "initialization": "One unchanged cached actual whole-animal detector proposal0 from first image, independently AI-reviewed as simulated farmer5676 confirmation. SAM2.1tiny1024 CPU FP32 sees only that box and first image. Save mask once; independent mask review and execution freeze required before any continuation. No annotation coordinates, later prompts or seed replacement based on outcomes.",
+  "inputs": {
+    "annotations": "research/cow_identity/results/2026-10-03/purdue-entry-annotations.json",
+    "cutie_model": ".cache/cow-cutie/cutie-base-mega.pth",
+    "frames": ".cache/cow-passage-entry-inventory/manifest.json",
+    "proposal": ".cache/cow-passage-entry-seed/proposal.json",
+    "proposal_review": "research/cow_identity/results/2026-10-03/purdue-entry-proposal-review.json",
+    "quarantine_protocol": "research/cow_identity/detection_cutie_quarantine_v2_protocol.json",
+    "sam_model": ".cache/cow-segmentation/sam2.1_t.pt",
+    "seed_masks": ".cache/cow-passage-entry-seed/masks.npz",
+    "upstream": "/tmp/cow-identity-cutie",
+    "yolo_model": ".cache/cow-passage-adaptation/training/weights/best.pt"
+  },
+  "last_processed_second": 10.5,
+  "libraries": {
+    "antlr4-python3-runtime": "4.9.3",
+    "einops": "0.8.2",
+    "hydra-core": "1.3.2",
+    "numpy": "2.5.0",
+    "omegaconf": "2.3.1",
+    "opencv-python": "4.13.0.92",
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "ultralytics": "8.4.80"
+  },
+  "limitations": [
+    "Already exposed June8 detector training/adaptation data, not held-out performance.",
+    "Biological IDs are publisher-linked AI-reviewed continuity, not external human field truth.",
+    "One narrow passage with brief overlap; no crowded-barn, reconnect, reentry, memory endurance or dynamic-entrant support claims.",
+    "Three missing native30fps frames fall strictly between available2fps samples; every selected timestamp exists with no interpolation.",
+    "The inherited30+10frame sustained-time guard cannot trigger on only22frames; memory caps still apply and full timing is reported."
+  ],
+  "max_internal_size": 480,
+  "mem_every": 5,
+  "method_sha256": "c936a108e9ba17674c29d42fa5de5292772acb42621850ac72e762705fa0c16e",
+  "named_cows": [
+    5676
+  ],
+  "naming": {
+    "minimum_iou": 0.5,
+    "minimum_p10": 0.7,
+    "pairing": "reciprocal-best same-frame IoU; no coordinate averaging"
+  },
+  "pre_run_amendment": {
+    "archive": "research/cow_identity/results/2026-10-03/purdue-entry-birth-protocol-preflight.json",
+    "previous_protocol_sha256": "48e2f5df672d7f304b1210edb272f7b0bf566400f16e25b1673ce91248a4298c",
+    "reason": "Assert and record upstream curr_ti equals source index; no model calls or policy changes"
+  },
+  "processing_fps": 2,
+  "recovery": {
+    "consecutive_frames": 3,
+    "donor_area_ratio": 0.5,
+    "minimum_iou": 0.5,
+    "minimum_p10": 0.7
+  },
+  "resource_limits": {
+    "max_mean_seconds_per_frame": 1.0,
+    "max_mps_driver_bytes": 8589934592,
+    "max_peak_rss_bytes": 8589934592,
+    "timing_window_frames": 30,
+    "warmup_frames": 10
+  },
+  "reviewed_seed": {
+    "decision": "accepted",
+    "finding": "Continuous visible torso, neck, head and ears of sole cow. Minor rump fringe, no second subject. Preserve all original mask pixels; no adjustment or later prompt.",
+    "masks_sha256": "168e81feadab31e8081d032a00e44bafe2e40b6941b32c297b14ff2717dd33f0",
+    "method_sha256": "c936a108e9ba17674c29d42fa5de5292772acb42621850ac72e762705fa0c16e",
+    "review_image_sha256": "e24ec3778d393a64f1096f7f94f7323084862553e9c7282f254ba8eaefdc9eae",
+    "review_kind": "Independent AI visual review, not external human labeling",
+    "reviewer": "root"
+  },
+  "scope": "Already exposed22-frame entry development replay. Anonymous births only; unchanged reviewed named seed and full scoring. No unseen-field accuracy, automatic identity acquisition, deletion or reentry claims.",
+  "score_seconds": [
+    0.0,
+    0.5,
+    1.0,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    4.0,
+    4.5,
+    5.0,
+    5.5,
+    6.0,
+    6.5,
+    7.0,
+    7.5,
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    10.0,
+    10.5
+  ],
+  "scoring": "All22 frames, nine initial-known observations,14 entrant observations including one uncertain8.0s fragment and five empty frames. Existing strict whole-box one-to-one IoU>=.5; any named unmatched box is an error. Report full denominators first, definite-only diagnostic separately, inherited5676 names on entrant/empty background and raw mask disappearance.",
+  "seeded_cows": [
+    5676
+  ],
+  "source_commit": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
+  "source_preprocessing": "Verified native PNG, shared production shrink_image INTER_AREA to1280x720; exact first input equals previous cached detector pixels. Cutie and YOLO receive same resized frame, mask and prediction coordinates remain1280x720; scorer scales predictions to native1920x1080 truth.",
+  "stages": [
+    "Freeze current method and source inputs",
+    "Independent CPU source and policy review",
+    "Parent schedules one bounded model run",
+    "Strict unchanged22-frame scoring without retuning"
+  ],
+  "status": "Fixed births-only protocol before model inference; independent source audit and parent execution authorization required",
+  "uninitialized_entrant_cows": [
+    5953
+  ],
+  "updated_source_bindings": [
+    {
+      "current_sha256": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0",
+      "historical_sha256": "8121c45555913af9962a94d20129816d299b36821242a8a5f17830bf778f5896",
+      "path": "detector/src/aidetector/domain/models.py",
+      "reason": "Independent production source-epoch field integration, authorized only after baseline scoring completed; no research crop/score/model behavior changed"
+    }
+  ],
+  "use_long_term": true
+}

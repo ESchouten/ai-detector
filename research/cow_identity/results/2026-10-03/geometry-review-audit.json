@@ -1,0 +1,2029 @@
+{
+  "reviewer": "identity_integration_audit",
+  "review_kind": "Independent AI-assisted visible geometry review; not external human annotation",
+  "frozen_at_utc": "2026-10-03T10:34:19.990991+00:00",
+  "protocol_sha256": "748a9ea0f08198229efa813d2374926a768801a09e17c13d713dfb594b2db140",
+  "source_manifest_sha256": "2a60186a1477f1ade86f4aa999f3d8175deaa9da0a3f45b2e1037e46a68a523f",
+  "blinding": "Reviewed clean native800x600 frames only, fixed context when needed and unmarked nearest-neighbor enlargements; no publisher or prediction overlays/labels/confidences shown during review. Previously familiar with general scene/development examples; not a newly blinded annotator. Biological IDs deliberately not assigned.",
+  "context_viewed": [
+    1266,
+    1268,
+    1416,
+    1491,
+    2886,
+    2888,
+    2961
+  ],
+  "uncertainty": "Some dense shared boundaries and two top-edge fragments cannot be resolved confidently. All explicitly flagged; missing hidden bodies were not manufactured to reach herd count. Coordinates are manual approximate visible extents, not pixel segmentation truth.",
+  "frames": [
+    {
+      "second": 367,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            202,
+            0,
+            351,
+            104
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Truncated by top border."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            231,
+            88,
+            386,
+            207
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Feet partly hidden by neighboring calf."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            379,
+            111,
+            501,
+            258
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": ""
+        },
+        {
+          "local_id": "D",
+          "box": [
+            211,
+            178,
+            350,
+            280
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Resting body partly overlapped at shoulder."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            94,
+            323,
+            229,
+            518
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Lower-left animal partly hidden by adjacent bodies and rail."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            176,
+            295,
+            295,
+            531
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Dark central animal; shoulder and right outline difficult to separate from neighbors."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            195,
+            348,
+            339,
+            519
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Diagonal white-backed animal overlaps dark neighbor."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            344,
+            302,
+            453,
+            516
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Feet partly hidden by front rail."
+        }
+      ]
+    },
+    {
+      "second": 442,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            254,
+            0,
+            374,
+            99
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Top border truncation."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            214,
+            62,
+            382,
+            184
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Hind legs partly obscured."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            192,
+            109,
+            356,
+            276
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Head partly hidden at feeding rail."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            124,
+            342,
+            233,
+            526
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Leftmost foreground animal; adjacent outlines touch."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            169,
+            338,
+            279,
+            527
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Second foreground animal; head and feet partly occluded."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            221,
+            307,
+            320,
+            534
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Tall white-backed foreground animal."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            267,
+            319,
+            362,
+            564
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark foreground animal; head remains visible below adjacent body."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            371,
+            277,
+            449,
+            482
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": ""
+        }
+      ]
+    },
+    {
+      "second": 517,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            253,
+            0,
+            373,
+            80
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Top border truncation."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            168,
+            54,
+            331,
+            237
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Feeding rail overlaps muzzle."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            100,
+            328,
+            216,
+            527
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Leftmost foreground animal; small visible head under adjacent animals."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            150,
+            331,
+            269,
+            527
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Second foreground animal; limb attribution uncertain."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            228,
+            332,
+            305,
+            561
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "White-backed foreground animal, head extends downward."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            290,
+            270,
+            386,
+            529
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark middle animal; legs partially hidden."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            384,
+            303,
+            449,
+            541
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Narrow dark animal beside vertical foreground post."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            447,
+            341,
+            525,
+            565
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Rightmost animal; lower legs overlap rail."
+        }
+      ]
+    },
+    {
+      "second": 592,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            252,
+            0,
+            371,
+            84
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Top border truncation."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            198,
+            154,
+            352,
+            277
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Head partly hidden behind feeding structure."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            102,
+            238,
+            342,
+            335
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upper horizontal animal."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            97,
+            286,
+            363,
+            365
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Lower horizontal animal; head against feeding rail."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            132,
+            348,
+            298,
+            501
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Left foreground animal, neighboring outline obscures its head/legs."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            185,
+            352,
+            371,
+            507
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Diagonal foreground animal; shared edge with adjacent dark body uncertain."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            305,
+            352,
+            419,
+            521
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark foreground animal near vertical post."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            388,
+            350,
+            517,
+            523
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Right foreground animal, feet behind rail."
+        }
+      ]
+    },
+    {
+      "second": 967,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            166,
+            219,
+            330,
+            326
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Feeding rail overlaps head."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            85,
+            322,
+            176,
+            503
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Dark leftmost foreground animal, head partly hidden by rail and neighboring body."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            140,
+            324,
+            241,
+            524
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "White-backed animal close to left rail."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            209,
+            301,
+            294,
+            538
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Tall white shoulder patch; head/feet partly occluded."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            262,
+            312,
+            343,
+            533
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Middle white-backed animal."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            326,
+            312,
+            394,
+            521
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Narrow dark animal with white shoulder."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            386,
+            332,
+            470,
+            528
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Angled dark animal; foreground post obscures part."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            453,
+            311,
+            568,
+            564
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Rightmost animal; clear head extends below rail."
+        }
+      ]
+    },
+    {
+      "second": 1042,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            78,
+            344,
+            181,
+            571
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Dark leftmost body with head below rail; overlaps neighbor."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            143,
+            323,
+            249,
+            565
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Adjacent dark body and white shoulder, shared edge uncertain."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            197,
+            246,
+            288,
+            440
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upper white-backed animal, lower body hidden by foreground animals."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            215,
+            324,
+            338,
+            488
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Curved dark-backed animal immediately beside upper white animal."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            328,
+            326,
+            386,
+            526
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Narrow middle animal, feet obscured by rail."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            390,
+            321,
+            481,
+            539
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Diagonal dark animal to right of middle."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            466,
+            368,
+            554,
+            583
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Left of rightmost white pair, front rail obscures muzzle."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            505,
+            351,
+            603,
+            583
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Rightmost white animal overlaps neighboring shoulder."
+        }
+      ]
+    },
+    {
+      "second": 1117,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            329,
+            208,
+            437,
+            339
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Separate curled animal in upper middle."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            140,
+            249,
+            255,
+            398
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upper-left animal extends head right, body partly hidden."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            74,
+            323,
+            203,
+            507
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Leftmost dark foreground animal, neighboring outline unclear."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            150,
+            326,
+            285,
+            495
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Dark central-left animal with white patches, partly hidden by white neighbor."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            235,
+            331,
+            348,
+            529
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "White-backed diagonal central animal."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            307,
+            351,
+            444,
+            547
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark diagonal animal to right, head/feet below rail."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            418,
+            349,
+            514,
+            553
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upright white animal left of far-right neighbor."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            474,
+            382,
+            560,
+            582
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Rightmost foreground animal."
+        }
+      ]
+    },
+    {
+      "second": 1192,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            206,
+            151,
+            350,
+            299
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upper animal muzzle against feeder."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            144,
+            326,
+            254,
+            490
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Left foreground animal with white rump."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            222,
+            307,
+            328,
+            564
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark upright foreground animal, head below rail."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            308,
+            334,
+            375,
+            538
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Narrow white-backed animal in middle."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            382,
+            313,
+            468,
+            550
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "White-backed animal beside middle post."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            412,
+            351,
+            506,
+            556
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Dark animal between two white bodies; shoulder/head edge partly obscured."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            465,
+            282,
+            574,
+            529
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Tall right animal angled up and right."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            514,
+            387,
+            646,
+            578
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Rightmost animal, head/feet behind front rail."
+        }
+      ]
+    },
+    {
+      "second": 1267,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            8,
+            292,
+            264,
+            505
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Leftmost dark animal turns head toward left; inner body outline overlaps several neighbors."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            144,
+            320,
+            272,
+            535
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "White-backed neighbor with dark foreground body, outline heavily obscured."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            263,
+            301,
+            328,
+            522
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark upright middle-left animal."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            310,
+            328,
+            389,
+            528
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "White-backed middle animal."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            390,
+            328,
+            456,
+            532
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Narrow central-right animal, head overlaps foreground post."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            423,
+            332,
+            551,
+            528
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Left of right-hand pair; muzzle angled left below body."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            497,
+            340,
+            629,
+            562
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Rightmost animal with head below body."
+        }
+      ],
+      "note": "Only seven independently distinguishable visible bodies were recorded. A white flank fragment originally considered an extra animal is compatible with an existing body after raw-pixel enlargement; no eighth body inferred from herd size."
+    },
+    {
+      "second": 1342,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            179,
+            151,
+            293,
+            320
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upper feeder animal, lower body obscured by foreground neighbor."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            177,
+            209,
+            305,
+            407
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Animal immediately below upper feeder animal, partly covered by next row."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            108,
+            326,
+            224,
+            544
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Leftmost foreground animal."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            226,
+            314,
+            324,
+            546
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark central-left animal."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            307,
+            320,
+            377,
+            570
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Tall white-backed animal with muzzle below rail."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            352,
+            341,
+            443,
+            568
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Middle animal leaning toward left."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            406,
+            334,
+            511,
+            560
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Diagonal white-backed animal beside foreground post."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            479,
+            317,
+            572,
+            559
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Far-right animal."
+        }
+      ]
+    },
+    {
+      "second": 1417,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            373,
+            237,
+            548,
+            326
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Upper horizontal animal."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            32,
+            255,
+            258,
+            462
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Left animal, head extends far left of body."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            145,
+            311,
+            318,
+            576
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Left diagonal white-backed animal, feet/head overlap rail and next body."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            215,
+            340,
+            341,
+            540
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Adjacent white-backed animal, partially concealed behind neighbor."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            297,
+            321,
+            387,
+            562
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Central dark animal, lower head overlaps other heads."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            369,
+            363,
+            479,
+            573
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "White-backed animal beside foreground post."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            451,
+            313,
+            571,
+            519
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Tall right animal, lower body overlaps horizontal foreground animal."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            423,
+            441,
+            600,
+            538
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Horizontal right foreground animal partly hidden under taller neighbor."
+        }
+      ]
+    },
+    {
+      "second": 1492,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            144,
+            246,
+            293,
+            426
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upper-left feeder animal."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            143,
+            309,
+            290,
+            488
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Left diagonal white-backed animal."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            197,
+            314,
+            340,
+            530
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Dark/white body between neighboring animals; lower-head ownership difficult."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            284,
+            305,
+            390,
+            534
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark central upright animal."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            322,
+            344,
+            425,
+            560
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "White-backed animal at center foreground."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            497,
+            276,
+            620,
+            449
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upper-right animal with shoulder partly behind horizontal neighbor."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            489,
+            386,
+            735,
+            491
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Horizontal right animal, head points left."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            537,
+            438,
+            650,
+            561
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Lower-right dark body is partly covered by horizontal neighbor; visible extent only."
+        }
+      ]
+    },
+    {
+      "second": 1837,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            483,
+            152,
+            668,
+            280
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Uppermost animal, lower neck partly hidden by neighbor."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            417,
+            195,
+            656,
+            282
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Upper horizontal animal; right head/neck overlaps top neighbor."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            434,
+            254,
+            650,
+            335
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Dark horizontal middle animal; much of shoulder concealed in cluster."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            416,
+            302,
+            600,
+            389
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Middle white shoulder/flank body, legs overlap lower animals."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            618,
+            242,
+            734,
+            390
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Far-right white-backed animal against wall."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            326,
+            345,
+            527,
+            434
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Leftmost horizontal white-backed animal, head partly hidden in cluster."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            483,
+            329,
+            628,
+            466
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Lower white-backed diagonal animal, upper outline partly hidden."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            540,
+            339,
+            670,
+            519
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Lower-right dark animal, head extends toward front, crowded shared boundaries."
+        }
+      ]
+    },
+    {
+      "second": 1912,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            248,
+            181,
+            324,
+            401
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Tall left-middle animal, head partly obscured below."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            288,
+            212,
+            376,
+            426
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Tall central white-backed animal."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            366,
+            175,
+            502,
+            308
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Curved upper-right animal, neck crosses central white animal."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            449,
+            227,
+            638,
+            347
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Rightmost diagonal dark animal."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            369,
+            274,
+            573,
+            399
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "White horizontal animal with left neck partially hidden."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            294,
+            368,
+            498,
+            444
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Upper of two horizontal foreground bodies; visible white back and rump."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            259,
+            388,
+            435,
+            476
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Lower dark foreground animal, much of top outline hidden."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            144,
+            316,
+            287,
+            520
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Leftmost white-backed animal."
+        }
+      ]
+    },
+    {
+      "second": 1987,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            257,
+            109,
+            354,
+            284
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Uppermost upright animal, legs partly hidden."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            199,
+            183,
+            291,
+            318
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark animal against feeder, partly behind upper neighbor."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            246,
+            256,
+            330,
+            448
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Tall white-backed central-left animal."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            286,
+            305,
+            381,
+            478
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Dark central animal, head obscured by lower cluster."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            139,
+            331,
+            287,
+            535
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Leftmost white-backed foreground animal."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            463,
+            254,
+            595,
+            382
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Rightmost diagonal animal."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            350,
+            295,
+            514,
+            426
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Diagonal middle-right white-backed animal, overlaps right animal."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            282,
+            382,
+            473,
+            518
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Horizontal foreground animal, neck/head partly hidden by cluster and rail."
+        }
+      ]
+    },
+    {
+      "second": 2062,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            183,
+            156,
+            338,
+            285
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Back-left dark animal, head at feeder."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            264,
+            120,
+            394,
+            271
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upper-center animal; legs partly behind left neighbor."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            259,
+            254,
+            448,
+            342
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Horizontal white-backed middle animal."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            137,
+            337,
+            287,
+            536
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Leftmost foreground white-backed animal."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            206,
+            310,
+            329,
+            482
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Central-left animal; lower neck overlaps neighboring dark body."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            312,
+            304,
+            384,
+            524
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Narrow central dark animal, head below rail."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            378,
+            288,
+            541,
+            418
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Right diagonal dark animal."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            345,
+            349,
+            492,
+            526
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Lower-right white-backed animal, foreground post hides part of muzzle."
+        }
+      ]
+    },
+    {
+      "second": 2737,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            214,
+            0,
+            339,
+            87
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Back animal partly outside top frame, foreground feeder animal obscures lower body."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            200,
+            15,
+            355,
+            164
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upper feeding animal, legs visible below white body."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            197,
+            174,
+            359,
+            309
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark animal bends at feeder, muzzle obscured by structure."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            419,
+            117,
+            495,
+            282
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Central upright animal."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            500,
+            148,
+            664,
+            314
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Upper-right diagonal animal."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            135,
+            288,
+            265,
+            466
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Lower-left dark animal beside trough."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            228,
+            337,
+            362,
+            491
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Lower white-backed animal, front rail obscures one extremity."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            395,
+            289,
+            535,
+            430
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Diagonal lower-right animal."
+        }
+      ]
+    },
+    {
+      "second": 2812,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            316,
+            115,
+            475,
+            227
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Upper animal, head partly overlapped by central neighbor."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            309,
+            163,
+            466,
+            280
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Middle-upper animal angled toward right."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            449,
+            201,
+            616,
+            343
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Curved right-side animal."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            442,
+            319,
+            662,
+            479
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Lower-right long body."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            105,
+            263,
+            256,
+            493
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Leftmost vertical animal partly behind lower neighbors."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            163,
+            320,
+            269,
+            555
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "White-backed animal near left rail, head overlaps neighboring bodies."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            230,
+            333,
+            326,
+            545
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Central white-backed animal."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            276,
+            327,
+            381,
+            539
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Dark foreground animal, limbs overlap rail."
+        }
+      ]
+    },
+    {
+      "second": 2887,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            213,
+            0,
+            341,
+            27
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Thin top-border fragment of additional animal; exact hidden separation unclear in fixed +/-1s context."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            218,
+            0,
+            381,
+            130
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Top feeding animal, body partly hidden by adjacent fast-moving calf."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            333,
+            14,
+            459,
+            124
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Motion-blurred upper diagonal animal."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            289,
+            99,
+            455,
+            200
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Horizontal upper-middle animal."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            481,
+            128,
+            639,
+            280
+          ],
+          "occluded": false,
+          "uncertain": true,
+          "note": "Right-side turning animal, motion blur obscures exact extremities."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            303,
+            223,
+            481,
+            329
+          ],
+          "occluded": false,
+          "uncertain": true,
+          "note": "Fast horizontal middle animal; blurred legs included only where visible."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            125,
+            275,
+            305,
+            404
+          ],
+          "occluded": false,
+          "uncertain": true,
+          "note": "Lower-left moving animal, blurred head and tail."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            202,
+            335,
+            358,
+            496
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Lower central white-backed animal."
+        }
+      ]
+    },
+    {
+      "second": 2962,
+      "objects": [
+        {
+          "local_id": "A",
+          "box": [
+            216,
+            0,
+            294,
+            27
+          ],
+          "occluded": true,
+          "uncertain": true,
+          "note": "Possible additional top-edge animal fragment behind front feeder head; presence and extent uncertain, not a forced hidden-body box."
+        },
+        {
+          "local_id": "B",
+          "box": [
+            235,
+            0,
+            385,
+            109
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Rear feeding animal truncated by top border."
+        },
+        {
+          "local_id": "C",
+          "box": [
+            218,
+            7,
+            361,
+            177
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Front feeder animal, head partly against fixture."
+        },
+        {
+          "local_id": "D",
+          "box": [
+            420,
+            85,
+            502,
+            224
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Upper-middle dark animal."
+        },
+        {
+          "local_id": "E",
+          "box": [
+            365,
+            192,
+            546,
+            276
+          ],
+          "occluded": true,
+          "uncertain": false,
+          "note": "Horizontal middle animal, head touches right-side neighbor."
+        },
+        {
+          "local_id": "F",
+          "box": [
+            519,
+            237,
+            721,
+            375
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Right-side diagonal animal."
+        },
+        {
+          "local_id": "G",
+          "box": [
+            280,
+            282,
+            430,
+            407
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Lower-middle curved animal."
+        },
+        {
+          "local_id": "H",
+          "box": [
+            103,
+            315,
+            291,
+            475
+          ],
+          "occluded": false,
+          "uncertain": false,
+          "note": "Lower-left diagonal animal."
+        }
+      ]
+    }
+  ]
+}

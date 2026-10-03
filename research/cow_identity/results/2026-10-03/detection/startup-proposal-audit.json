@@ -1,0 +1,251 @@
+{
+  "assessment": [
+    "Eight actual reviewed masks already support an all-anonymous startup followed by six explicit human confirmations in principle; labels need not control object initialization.",
+    "This is not fully automatic: twelve raw proposals contain duplicate body boxes, and the existing conservative birth rule also suppresses the real adjacent foreground animals at proposals0/4. Only four proposals survive that rule in an empty scene.",
+    "Do not seed all twelve or silently use the expected animal count. A reviewed single-animal mask list and explicit duplicate rejection remain necessary unless a separate automatic initializer is validated.",
+    "All eight reviewed masks are disjoint, but no SAM results for rejected duplicate proposals exist here. This inventory cannot prove an automatic mask-overlap deduplicator works.",
+    "Original reviewed prompts came from CPU FP32; current online corroboration is MPS FP16 and has slightly different coordinates. Reusing the old masks does not prove a fresh online initializer reproduces them.",
+    "Frame zero was included in detector training. The eight-slot run uses one simultaneous insertion cohort; the dynamic run inserts six plus one at5s and one at24s, creating three cohorts. Timing, mask content and SDK cross-cohort competition are confounded until a controlled follow-up."
+  ],
+  "current_box_conflicts_at_existing_birth_duplicate_threshold": [
+    {
+      "intersection_over_smaller": 0.5588235294117647,
+      "proposals": [
+        0,
+        4
+      ]
+    },
+    {
+      "intersection_over_smaller": 0.9263953844136544,
+      "proposals": [
+        5,
+        11
+      ]
+    },
+    {
+      "intersection_over_smaller": 0.8454545454545455,
+      "proposals": [
+        6,
+        7
+      ]
+    },
+    {
+      "intersection_over_smaller": 0.5903307888040712,
+      "proposals": [
+        6,
+        8
+      ]
+    },
+    {
+      "intersection_over_smaller": 0.552253689668927,
+      "proposals": [
+        6,
+        9
+      ]
+    },
+    {
+      "intersection_over_smaller": 0.9847328244274809,
+      "proposals": [
+        7,
+        8
+      ]
+    },
+    {
+      "intersection_over_smaller": 0.9891304347826086,
+      "proposals": [
+        7,
+        9
+      ]
+    },
+    {
+      "intersection_over_smaller": 0.9908256880733946,
+      "proposals": [
+        8,
+        9
+      ]
+    }
+  ],
+  "current_mps_fp16_proposals": [
+    {
+      "confidence": 0.86279296875,
+      "x1": 124,
+      "x2": 300,
+      "y1": 346,
+      "y2": 530
+    },
+    {
+      "confidence": 0.82080078125,
+      "x1": 518,
+      "x2": 611,
+      "y1": 87,
+      "y2": 206
+    },
+    {
+      "confidence": 0.8017578125,
+      "x1": 248,
+      "x2": 428,
+      "y1": 144,
+      "y2": 299
+    },
+    {
+      "confidence": 0.796875,
+      "x1": 563,
+      "x2": 687,
+      "y1": 304,
+      "y2": 441
+    },
+    {
+      "confidence": 0.7744140625,
+      "x1": 205,
+      "x2": 375,
+      "y1": 347,
+      "y2": 526
+    },
+    {
+      "confidence": 0.6884765625,
+      "x1": 520,
+      "x2": 750,
+      "y1": 412,
+      "y2": 562
+    },
+    {
+      "confidence": 0.6240234375,
+      "x1": 235,
+      "x2": 345,
+      "y1": 8,
+      "y2": 151
+    },
+    {
+      "confidence": 0.60205078125,
+      "x1": 196,
+      "x2": 328,
+      "y1": 7,
+      "y2": 164
+    },
+    {
+      "confidence": 0.58154296875,
+      "x1": 198,
+      "x2": 309,
+      "y1": 35,
+      "y2": 166
+    },
+    {
+      "confidence": 0.51513671875,
+      "x1": 197,
+      "x2": 306,
+      "y1": 73,
+      "y2": 165
+    },
+    {
+      "confidence": 0.48681640625,
+      "x1": 381,
+      "x2": 496,
+      "y1": 0,
+      "y2": 107
+    },
+    {
+      "confidence": 0.423828125,
+      "x1": 510,
+      "x2": 677,
+      "y1": 410,
+      "y2": 547
+    }
+  ],
+  "empty_scene_birth_rule_pending_proposals": [
+    1,
+    2,
+    3,
+    10
+  ],
+  "existing_reviewed_masks": {
+    "areas": [
+      7250,
+      9078,
+      8659,
+      7257,
+      5109,
+      9441,
+      11081,
+      6424
+    ],
+    "count": 8,
+    "overlap_pixels": 0
+  },
+  "historical_cpu_fp32_proposal_count": 12,
+  "review_rejected_duplicates": [
+    6,
+    8,
+    9,
+    11
+  ],
+  "reviewed_selections": [
+    {
+      "cow": 1,
+      "named": true,
+      "proposal": 4,
+      "reason": "The right foreground calf has one complete proposal; overlapping neighbor remains a separate animal."
+    },
+    {
+      "cow": 2,
+      "named": true,
+      "proposal": 7,
+      "reason": "P7 covers more of the visible upper-left animal than P6/P8/P9; retain original bounds without edits."
+    },
+    {
+      "cow": 3,
+      "named": true,
+      "proposal": 2,
+      "reason": "Single clear central animal proposal."
+    },
+    {
+      "cow": 4,
+      "named": true,
+      "proposal": 3,
+      "reason": "Single right-middle animal proposal."
+    },
+    {
+      "cow": 5,
+      "named": true,
+      "proposal": 1,
+      "reason": "Single upper-right animal proposal."
+    },
+    {
+      "cow": 6,
+      "named": true,
+      "proposal": 0,
+      "reason": "The left foreground calf has one complete proposal; adjacent calf remains separately seeded."
+    },
+    {
+      "cow": 7,
+      "named": false,
+      "proposal": 5,
+      "reason": "P5 covers the lower-right animal more completely than the truncated P11; keep anonymous."
+    },
+    {
+      "cow": 8,
+      "named": false,
+      "proposal": 10,
+      "reason": "Single upper-center animal proposal; keep anonymous."
+    }
+  ],
+  "reviewed_to_current_reciprocal_proposals": {
+    "0": 4,
+    "1": 7,
+    "2": 2,
+    "3": 3,
+    "4": 1,
+    "5": 0,
+    "6": 5,
+    "7": 10
+  },
+  "scope": "CPU inventory of existing frame-zero evidence only, not a new automatic initialization experiment or farmer-effort measurement",
+  "source_pixels_sha256": "52909f3311a8860533070433b10a46f74a3f2138b04da04774d91412f25a5a10",
+  "sources": {
+    ".cache/cow-cutie/actual-seed-masks/0-masks.npz": "0301626c21e92d54e2edb17ce397492a72aaa0b0d07ec32ea603c7f51f82151a",
+    ".cache/cow-cutie/actual-seed-masks/manifest.json": "9dc7367648d8f19d6beeec1e252be571d1fb59a0a41df0c5e1d9d7018fefbd4a",
+    ".cache/cow-cutie/birth-proposals.json": "7ac8a806e07ed21d0102327d16109fb7006d76c59a018662eedbe4d419bf2004",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_birth_protocol.json": "2b07540a4796072968518eda6b6bc93fb97cbe17e787092332090eccb8a0a54f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_startup_audit.py": "cd9690660bddb21e36fd243a37f694e98846bd70a449fc6093ed7c83d1fb2975",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-actual-initialization.json": "52d50c9543b27fc228b965d3d595ce6d2a7ff54288d5ca0291ce2ed3a7ccf741"
+  }
+}

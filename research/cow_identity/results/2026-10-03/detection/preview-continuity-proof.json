@@ -1,0 +1,138 @@
+{
+  "base_patch_sha256": "4a67f941d51297716c18f2a592f06647bb4783357b61aedc0206b9312b7ff6dd",
+  "behavior": [
+    "source_epoch emitted before first frame of capture/geometry epoch; source_epoch and offline never throttled",
+    "Bootstrap synchronously updates preview source state before external status callback",
+    "Per-configured-source state clears only its pending/sampling state; no source URLs in files",
+    "Reject old or unstamped observations for known epoch before queuing and before encoding; guarded final atomic rename rechecks after JPEG and JSON write",
+    "session.sourceEpochs declares current epoch or null offline; frame.capture preserves epoch/sequence",
+    "Web refuses offline, missing-epoch or mismatched-epoch frames; old sessions without metadata retain age checks",
+    "Pipeline inference and snapshot processed statuses preserve analyzed capture epoch through rule reporter",
+    "RuntimeProgress ignores stale or missing processing epochs once source_epoch declared, including fast reconnect late completions",
+    "Status limiter stores only last (time,epoch) per kind/source/rule; first new-epoch result is not hidden by a recent old-epoch result"
+  ],
+  "changed_files": [
+    {
+      "actual_source_before_sha256": "7d999b8950ba8e99e8df72c181ba2a48cbfa54a5e0768f808b5d14113d36a031",
+      "after_sha256": "4dc41cc8b845c87ee7ce937fe9678be897d17615705786d3caa7b7ff649c775c",
+      "before_sha256": "7d999b8950ba8e99e8df72c181ba2a48cbfa54a5e0768f808b5d14113d36a031",
+      "path": "detector/LIVE_PREVIEW.md"
+    },
+    {
+      "actual_source_before_sha256": "c59e5a8ee03fd417d57aba79ef87d79714339a0ad824d729b67021c3d5a0cf28",
+      "after_sha256": "8873d7300045de9b6b17f4fddb8949264bb474b6793a02878c58ea2bbcc83393",
+      "before_sha256": "c59e5a8ee03fd417d57aba79ef87d79714339a0ad824d729b67021c3d5a0cf28",
+      "path": "detector/MIGRATION.md"
+    },
+    {
+      "actual_source_before_sha256": "5328c5ffa773dfd455e66a2f174d546285070e7c7fdbf9fe6c80725e83607669",
+      "after_sha256": "f2e7895cdb967595baa9938b2cb2b78b40cba5208f53b802f2a471aec351afcb",
+      "before_sha256": "5328c5ffa773dfd455e66a2f174d546285070e7c7fdbf9fe6c80725e83607669",
+      "path": "detector/src/aidetector/adapters/live_preview.py"
+    },
+    {
+      "actual_source_before_sha256": "984066ac0f69ce5b62a22bd96518d383841703a4aac97550df7b74ee5d8b31de",
+      "after_sha256": "9f87d6f62164e429d88fa9bda7544e8e1d3a3e2ffe2deb222bdd3dd8a6afbff4",
+      "before_sha256": "984066ac0f69ce5b62a22bd96518d383841703a4aac97550df7b74ee5d8b31de",
+      "path": "detector/src/aidetector/adapters/operational_status.py"
+    },
+    {
+      "actual_source_before_sha256": "9ceff5823d2a493e9c8b727938d3048d9d889ab084f756e5fe12bf662b8b35f4",
+      "after_sha256": "d23a9e1a18f4f1a33013c66d45f33ee7fcfda052b4ae816c3a0f4ef7dd573db3",
+      "before_sha256": "9ceff5823d2a493e9c8b727938d3048d9d889ab084f756e5fe12bf662b8b35f4",
+      "path": "detector/src/aidetector/adapters/sources/streams.py"
+    },
+    {
+      "actual_source_before_sha256": "016144b30a4a0602d6dbfefe0423b65e48a67769d2abaebbf2cbdef6ab016127",
+      "after_sha256": "7f3cf816a27ec17e6e537468c6e1f7181a44f72f6e001e5059bff481c2f0fad8",
+      "before_sha256": "016144b30a4a0602d6dbfefe0423b65e48a67769d2abaebbf2cbdef6ab016127",
+      "path": "detector/src/aidetector/application/pipeline.py"
+    },
+    {
+      "actual_source_before_sha256": "02a361093dac741389510f7bf752d38965e692243b1369fdb2855a44d148f5cd",
+      "after_sha256": "dcfd8a7de5116946e060049f6f81a579a8165a673bda5faf4cbb1f6dc53103e1",
+      "before_sha256": "02a361093dac741389510f7bf752d38965e692243b1369fdb2855a44d148f5cd",
+      "path": "detector/src/aidetector/application/status.py"
+    },
+    {
+      "actual_source_before_sha256": "4fd778da7a3879aec3edf200a876ca74228248f44f902ccdede045d701389213",
+      "after_sha256": "1f88c7aee4592c04bcba5ddab3c8145406e805958f257dc82ef2ff28ce162226",
+      "before_sha256": "4fd778da7a3879aec3edf200a876ca74228248f44f902ccdede045d701389213",
+      "path": "detector/src/aidetector/bootstrap.py"
+    },
+    {
+      "actual_source_before_sha256": "7298046d471c42ee3e1ebbb9fc30fded1699bde4b0a48fc0440cc87aead47ea1",
+      "after_sha256": "f656e4bf6a5c9ecf2d122d369eb3be86ba636c7920262a4b9356911ceb3a87e4",
+      "before_sha256": "7298046d471c42ee3e1ebbb9fc30fded1699bde4b0a48fc0440cc87aead47ea1",
+      "path": "detector/tests/adapters/sources/test_shared_streams.py"
+    },
+    {
+      "actual_source_before_sha256": "fd1de8924e10c20f9f20edda5d22b3f9fff341fc540b8e804f3f5e07c1ca0091",
+      "after_sha256": "1ae9fab193998c1050a0237107507ab1bd48a21a3a0ac0dc5a1bd9642570c090",
+      "before_sha256": "fd1de8924e10c20f9f20edda5d22b3f9fff341fc540b8e804f3f5e07c1ca0091",
+      "path": "detector/tests/adapters/test_live_preview.py"
+    },
+    {
+      "actual_source_before_sha256": "60c74c558e8df69b46d4209dcc430cf008089e7f12056924c0f0f19edbaa8ac5",
+      "after_sha256": "4ab7a4504d534a8372d56b97f2d42920670b6118f7d20c3fad1105e74acc31a8",
+      "before_sha256": "60c74c558e8df69b46d4209dcc430cf008089e7f12056924c0f0f19edbaa8ac5",
+      "path": "detector/tests/adapters/test_operational_status.py"
+    },
+    {
+      "actual_source_before_sha256": "fd22126c29df019508a59bf5a8374e60c3acb1ecd7c060280c996a46ddb917e3",
+      "after_sha256": "15685d7571940933deb5ae16bf0e158e185c0c3d5237b4bd405c15457380668c",
+      "before_sha256": "fd22126c29df019508a59bf5a8374e60c3acb1ecd7c060280c996a46ddb917e3",
+      "path": "detector/tests/application/test_pipeline.py"
+    },
+    {
+      "actual_source_before_sha256": "3f51132cfab17d7a9f8b23275b64963072b66eeb50df82250b66f14df9322955",
+      "after_sha256": "f495e47c5abf594adf66b60828214af303ebf97646f10e1d77a8280f8a42f70d",
+      "before_sha256": "3f51132cfab17d7a9f8b23275b64963072b66eeb50df82250b66f14df9322955",
+      "path": "web/src/lib/live-preview.ts"
+    },
+    {
+      "actual_source_before_sha256": "2e6d79a47ac99a6239505dd0fe2bffd23ce1f802f77f9e19ef9fa9790bd6c035",
+      "after_sha256": "b0b00d6586e55c0a6253eb13cbfc67ea4739b6c5860215636b74cf1bc54b62c5",
+      "before_sha256": "2e6d79a47ac99a6239505dd0fe2bffd23ce1f802f77f9e19ef9fa9790bd6c035",
+      "path": "web/src/lib/server/live-preview.ts"
+    },
+    {
+      "actual_source_before_sha256": "27a347d9c4d9a5d2cbe4fda40f6182b94930f97687ee204925b2e8d6ce9b3ab9",
+      "after_sha256": "eaecba8f7a63a28ea2bcaa7b63fd6b4f282614485d24332d3bd7af84865bc5c8",
+      "before_sha256": "27a347d9c4d9a5d2cbe4fda40f6182b94930f97687ee204925b2e8d6ce9b3ab9",
+      "path": "web/src/lib/server/runtime-status.ts"
+    },
+    {
+      "actual_source_before_sha256": "dfa2a8d41f8cc1699d5aaf972e57e56e49a401d3c2d233be9cf4b42886588ed0",
+      "after_sha256": "097dd076ce50bcdb9a28261523d44b1464714745046e760dc55f2a18efb6f382",
+      "before_sha256": "dfa2a8d41f8cc1699d5aaf972e57e56e49a401d3c2d233be9cf4b42886588ed0",
+      "path": "web/tests/live-preview.test.ts"
+    },
+    {
+      "actual_source_before_sha256": "ac8821b15c77079d57ccd741d7f0ff8dc245e2c6a7c66e672c69d4eba035ee25",
+      "after_sha256": "1f8e2e04b5e25b29679427d8ee12063f136a4bcae5ce9a2bce817fc2ffc26b7f",
+      "before_sha256": "ac8821b15c77079d57ccd741d7f0ff8dc245e2c6a7c66e672c69d4eba035ee25",
+      "path": "web/tests/runtime-status.test.ts"
+    }
+  ],
+  "isolated_directory": "/tmp/cow-preview-continuity-proof",
+  "limits": [
+    "Browser visibility can lag source invalidation until heartbeat/poll; unusually slow encoding can delay heartbeat until existing six-second stale-session limit",
+    "No live confirmation commands, object-generation tokens, or acknowledgement implementation",
+    "Separate FFmpeg video remains asynchronous relative to detection geometry",
+    "Live capture invalidation occurs on read failure/reopen/geometry; cannot detect a camera firmware replaying old pixels"
+  ],
+  "patch_sha256": "336373e96c89008924ecd870532c12a5b405e04a74a438029a25cd5221a29d39",
+  "scope": "Proposed isolated follow-up layered on source_continuity.patch; no actual source files applied by this task",
+  "validation": {
+    "actual_source_hashes": "Every before_sha256 independently verified equal to actual repository source after parent applied first continuity patch; second patch not applied",
+    "apply_check": "git apply --check passes against actual repository with first continuity patch applied",
+    "hardware": "CPU only; Apple MPS case skipped; no actual cameras",
+    "python": "137 passed, 1 skipped in 7.34s",
+    "python_types": "whole isolated src passed after readiness fix using actual app venv and isolated cwd",
+    "rendered_ui": "No UI code changed; real file-transport/SSE behavioral tests cover client payloads",
+    "ruff": "whole isolated src and changed Python tests passed with repository absolute first-party source roots",
+    "web": "31 passed; live-preview and runtime-status tests",
+    "web_types": "changed transport/status TypeScript passed strict tsc with nodenext after readiness fix"
+  }
+}

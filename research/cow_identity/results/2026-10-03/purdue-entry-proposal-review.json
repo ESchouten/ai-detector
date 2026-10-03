@@ -1,0 +1,18 @@
+{
+  "actual_box_unchanged": [
+    50,
+    114,
+    1155,
+    720
+  ],
+  "cow": 5676,
+  "decision": "accepted",
+  "finding": "One clear principal animal; box contains visible head, neck, body and bottom-clipped hindquarter, with no second animal. Some floor/fence padding is present. Publisher metadata supplies biological ID. No annotation box substitutes. Future SAM mask requires separate review.",
+  "image_sha256": "dc82c8d4d0a4dc05a4dd1ce096777e39611306bf490d147c7184c0bb3bb766ec",
+  "proposal_sha256": "417d3f421e69073e1db48c0818f35473ef071a59565a922f1b99f3e4808be44f",
+  "review_kind": "Independent AI visual reviews, not external human identification",
+  "reviewers": [
+    "cattle_research",
+    "root"
+  ]
+}

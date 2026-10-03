@@ -1,0 +1,59 @@
+{
+  "commit": "0de302967b4e31ba5207427bc78bf4126d0f09fc",
+  "scope": "Source identity and preview continuity on the actual application branch; not animal recognition accuracy.",
+  "files": {
+    "detector/ARCHITECTURE.md": "dede7b191d4e71916a02429923fc11ced8e564284f6723803b99235c8bafc617",
+    "detector/LIVE_PREVIEW.md": "dff7ec6cff29a59a4d400b14e184a8e840e3a6002f13fbab48225109a72681b7",
+    "detector/MIGRATION.md": "a434fe2432c9702d862744ff051fa970a63cb58d78f20efd354010b73f1b98fd",
+    "detector/src/aidetector/adapters/inference/identity_observations.py": "209c3bf59f92baab01388dcb36930e1e2e3d57fdc0227aeef0cadbab8443d9e8",
+    "detector/src/aidetector/adapters/inference/yolo.py": "f1bd6e4a0d3a53b9d7902604cf7836cfd64ae138728197dd2bfca01b0e3c0ec1",
+    "detector/src/aidetector/adapters/live_preview.py": "707ffb354eaa581bcd360027f19d371d6a39ae741bc55383d52e63695e7d7e44",
+    "detector/src/aidetector/adapters/operational_status.py": "9f87d6f62164e429d88fa9bda7544e8e1d3a3e2ffe2deb222bdd3dd8a6afbff4",
+    "detector/src/aidetector/adapters/sources/streams.py": "9187643e799ae44e98ee8204c588aa0da54b3dee30dcd449da1c73138001ff9e",
+    "detector/src/aidetector/application/pipeline.py": "7f3cf816a27ec17e6e537468c6e1f7181a44f72f6e001e5059bff481c2f0fad8",
+    "detector/src/aidetector/application/status.py": "dcfd8a7de5116946e060049f6f81a579a8165a673bda5faf4cbb1f6dc53103e1",
+    "detector/src/aidetector/bootstrap.py": "1f88c7aee4592c04bcba5ddab3c8145406e805958f257dc82ef2ff28ce162226",
+    "detector/src/aidetector/domain/identity.py": "de5fcc34f51688ff383e266d12e5bd7a3a27b6ddbce8384e39063a0f37fb3967",
+    "detector/src/aidetector/domain/models.py": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0",
+    "detector/tests/adapters/inference/test_identity_observations.py": "15dc2494830aeb52848abcf1d38be853d55e34ce685fd77c595afbee24cdef3b",
+    "detector/tests/adapters/inference/test_yolo.py": "f6b1920ac0a29c3c2040bc85bc1839f6e3dcae4f74cc03ddbba431a55c8670bd",
+    "detector/tests/adapters/sources/test_shared_streams.py": "8e8453727c523979ef3abc8ef12303ae3b78cb2b3417ddac8be0df59b81a910b",
+    "detector/tests/adapters/test_live_preview.py": "1ae9fab193998c1050a0237107507ab1bd48a21a3a0ac0dc5a1bd9642570c090",
+    "detector/tests/adapters/test_operational_status.py": "4ab7a4504d534a8372d56b97f2d42920670b6118f7d20c3fad1105e74acc31a8",
+    "detector/tests/application/test_pipeline.py": "15685d7571940933deb5ae16bf0e158e185c0c3d5237b4bd405c15457380668c",
+    "detector/tests/domain/test_identity.py": "58080f1db28a8da0b2cd3df2578375bba22f820565bee6aa42bf73b6597bf67a",
+    "web/src/lib/live-preview.ts": "f495e47c5abf594adf66b60828214af303ebf97646f10e1d77a8280f8a42f70d",
+    "web/src/lib/server/live-preview.ts": "b0b00d6586e55c0a6253eb13cbfc67ea4739b6c5860215636b74cf1bc54b62c5",
+    "web/src/lib/server/runtime-status.ts": "eaecba8f7a63a28ea2bcaa7b63fd6b4f282614485d24332d3bd7af84865bc5c8",
+    "web/tests/live-preview.test.ts": "097dd076ce50bcdb9a28261523d44b1464714745046e760dc55f2a18efb6f382",
+    "web/tests/runtime-status.test.ts": "1f8e2e04b5e25b29679427d8ee12063f136a4bcae5ce9a2bce817fc2ffc26b7f"
+  },
+  "checks": {
+    "python_behavior": {
+      "passed": 702,
+      "skipped": 4,
+      "warnings": 7,
+      "seconds": 71.49,
+      "log": "/tmp/cow-continuity-final-detector-tests.txt"
+    },
+    "python_ruff": "src tests tools: passed; formatting118files passed",
+    "python_types": "Documented ty check src/aidetector tools: passed",
+    "architecture": "5 contracts kept,0broken",
+    "schemas": "generate-schema --check: passed",
+    "web_behavior": {
+      "passed": 381,
+      "skipped": 1,
+      "total": 382
+    },
+    "web_types": "svelte-check:0errors,0warnings",
+    "web_changed_file_lint": "Prettier and ESLint passed",
+    "whitespace": "git diff --check passed",
+    "independent_review": "Capture timing:6 public StreamPool boundary cases passed; both prior continuity patches independently exercised before application."
+  },
+  "limitations": [
+    "No physical camera sleep/wake trial or Windows camera test performed.",
+    "Clock/read continuity cannot establish whether camera firmware supplies stale pixels.",
+    "Live confirmation and Cutie integration remain research; software contract tests do not establish cow identity reliability."
+  ],
+  "additional_diagnostic": "An unconstrained ty check also traversed untyped test fixtures and reported98diagnostics; this is outside the documented source/tools type-check scope. The prescribed source/tools command passed."
+}

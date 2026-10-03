@@ -1,0 +1,9 @@
+{
+  "decision": "accepted",
+  "finding": "Continuous visible torso, neck, head and ears of sole cow. Minor rump fringe, no second subject. Preserve all original mask pixels; no adjustment or later prompt.",
+  "masks_sha256": "168e81feadab31e8081d032a00e44bafe2e40b6941b32c297b14ff2717dd33f0",
+  "method_sha256": "c936a108e9ba17674c29d42fa5de5292772acb42621850ac72e762705fa0c16e",
+  "review_image_sha256": "e24ec3778d393a64f1096f7f94f7323084862553e9c7282f254ba8eaefdc9eae",
+  "review_kind": "Independent AI visual review, not external human labeling",
+  "reviewer": "root"
+}

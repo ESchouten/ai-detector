@@ -43,9 +43,10 @@ Only confirmed-gallery embeddings are cached by the running application. New cam
 
 See [the actual-policy video assessment](VIDEO_ASSESSMENT.md), [cropped-image benchmark](BENCHMARK.md), [detection training](DETECTION_STUDY.md), [foreground/local-pattern controls](SEGMENTATION_STUDY.md), [research review](RESEARCH.md), and [source revisions](sources.json).
 
-One continuous-tracking candidate now meets the numerical targets on exposed
-development footage in the combined application Python runtime. Reserved
-evaluation and application integration remain outstanding. These controls measure different
+The continuous-tracking candidate passed exposed development in the combined
+application Python runtime, but its [frozen reserved evaluation failed](RESERVED_RESULT.md):
+late-panel precision was 97.97%, below the required 99%. Application integration
+and reliable unattended operation remain outstanding. These controls measure different
 things and are not interchangeable accuracy estimates:
 
 | Control | Measured outcome | Decision |
@@ -58,7 +59,11 @@ things and are not interchangeable accuracy estimates:
 | Cutie plus a separate detector's geometry confirmation | A predefined IoU 0.5 condition reaches 63.34–68.65% coverage and 99.13–99.36% precision across the exposed panels | Promising development choice. The earlier calibration-only selector chose the failing baseline; actual initialization and continuous execution still require verification. |
 | Same policy with reviewed detector proposals as initial masks and stateless detector confirmation | 54.71–70.28% coverage and 98.91–99.52% precision across the exposed panels | Fails: the initial-mask change alters later conflicts, and one segment loses too much coverage. The earlier favorable result is insufficient for integration. |
 | Reciprocal geometry confirmation on that actual-seed run | 53.54–68.89% coverage and 99.20–99.51% precision | Preventing one proposal from confirming two identities improves precision; the middle segment still fails coverage. Averaging box coordinates adds no useful improvement. |
-| Reciprocal confirmation plus current-evidence recovery after a conflict | 68.15–72.03% coverage and 99.20–99.51% precision; no withheld cow named | Combined app-runtime execution reproduces every mask, detector box and naming decision. Reserved evaluation and integration remain. |
+| Reciprocal confirmation plus current-evidence recovery after a conflict | 68.15–72.03% coverage and 99.20–99.51% precision; no withheld cow named | Combined app-runtime execution reproduces every mask, detector box and naming decision. Passed development only; the later reserved result below fails. |
+| Same combined runtime on the separately reserved continuous sequence | 62.42% / 73.16% coverage and 99.29% / 97.97% precision; pooled 35 unmatched named errors | Failed frozen evaluation. The late and pooled precision gates fail; all errors remain counted. |
+| Replace mask geometry with raw detector proposals, or union each reciprocal pair while retaining original slots | Raw-output precision is 95.49–97.00%; union precision is 96.82–98.80% across five exposed panels | Both fail every panel. Extra proposals and worse individual extents are separate problems; reject both global geometry changes. |
+| Initialize only six named cows, then add separated anonymous animals automatically | Across the three exposed panels: 63.83% correct naming coverage, 99.34% conservative precision, zero unknown-animal names; two anonymous objects added | The first two panels pass. The third has 1077/1799 correct names, 59.8666%, and fails the 60% coverage gate. No rounding or retuning; see [the births control](CROWDED_BIRTHS.md). |
+| Give the existing box-crop application perfect appearance matches on cached crowded detections | Crop eligibility alone caps coverage at 7.30% / 8.34%; actual temporal policy yields 3.96% / 5.95% in the idealized replay | Better gallery photos alone cannot fix this crowded-camera path; [the ceiling record](results/2026-10-03/recognition/production-policy-ceiling.json) isolates the geometry and temporal limits. |
 | Additional MIEW appearance on those masks | Its selected combination with quarantine adds no benefit over quarantine alone | Do not add an extra live encoder for this purpose without new evidence. |
 | Temporal pooling of MIEW mask features | The calibration selector prefers the unsmoothed baseline; it still misses the coverage target | No improvement demonstrated; pooling combined with quarantine has not been tested. |
 | [Next-day passage test](CONTROLLED_PASSAGE.md) using the application | Two correct names among 46 visible known-cow observations; most visible animals are clipped at the frame boundary | Test separate whole-animal tracking and visible-torso crops. |
@@ -82,11 +87,13 @@ that interval. Peak observed process RSS was 1.70 GiB; Metal driver allocation
 reached 7.00 GiB before cache reclamation and 6.00 GiB afterward. This proves
 neither packaged-app operation nor multi-camera capacity. The
 [continuous tracking protocol](CONTINUOUS_TRACKING_PROTOCOL.md) separates the
-forthcoming reserved test from disconnected-window recognition, and the
+historical reserved test from disconnected-window recognition, and the
 [farmer workflow assessment](CONTINUOUS_IDENTITY_WORKFLOW.md) records the live
 confirmation, reconnect and new-animal work still required.
 
-Reserved video windows remain closed while these controls are developed. The
+The reserved windows at 1800–2099 and 2700–2999 seconds have now been opened and
+are exposed; the immutable failed outcome is recorded in [RESERVED_RESULT.md](RESERVED_RESULT.md).
+Seconds 3000 through the end remain closed. The
 earlier Cutie results use precise initial masks and names supplied by an idealized
 farmer. Later controls use reviewed detector proposals; their successful
 development candidate still assumes correct initial names. None establishes
@@ -141,15 +148,27 @@ Run the normal detector and web quality commands. Focused contracts are in `test
 
 ## Current research priorities
 
-1. Improve actual track continuity and crop quality under the [frozen video protocol](ITERATION_PROTOCOL.md). The mixed detector substantially improves localization, but confirmed naming coverage remains too low. Foreground cleanup, local matching and external training have not solved this.
+1. Resolve the remaining crowded-tracking coverage loss and validate animal departures. Anonymous births improve the six-seed control substantially, but one exposed panel still fails. The completed [uniform geometry audit](ANNOTATION_AUDIT.md#results-and-limits) found both annotation disagreements and real mask failures; it does not justify dismissing the original failed scores or repeatedly changing box coordinates.
 2. Measure the value and effort of additional farmer confirmations. The separate enrollment arm uses a fixed question budget and tests only later footage; repeated or unknown answers count as work too.
 3. Test only materially different adaptation hypotheses. The original 60-photo partial-backbone fine-tune, public metric head and external full-backbone adaptation are documented negative controls, not production features.
-4. Open the reserved windows only after a complete method has shown useful development performance and its settings are frozen. Then perform a small independently labelled multi-day farm trial, including night and camera changes.
+4. Keep seconds 3000 through the end closed until a new complete method is frozen. The earlier reserved panels are now exposed. Then perform a small independently labelled multi-day farm trial, including night, camera changes, arrivals, departures and restarts.
 5. Verify complete installer behaviour and camera throughput on each supported platform before wider deployment. Confirmed-herd backup/restore and background preparation already use the normal application flows.
 6. Associate reliably identified individual animals with behaviour events and add per-cow history only after identity reliability is established. Never treat predicted names as confirmed training labels.
 
 ## Verification on 3 October 2026
 
-The latest completed detector suite passed 678 tests with four skips. Web checks passed 373 tests with one platform skip, 15 desktop tests and 12 production HTTP tests; the production web build, lint, types, schema generation and dependency checks passed. The latest complete research suite passed 133 tests, with Ruff and formatting checks also passing. Later experiments have additional focused checks. Browser checks covered enrollment, correction, background preparation, recovery, confirmed-herd backup and responsive layouts using real public cow photos. Source and frozen encoder inference ran on MPS; Windows/Jetson execution and the complete installer remain untested for this feature. Research and the active acceptance goal continue; these software checks do not establish identification accuracy.
+At application checkpoint `0de302967b`, the detector suite passed 702 tests with
+four skips and the web suite passed 381 tests with one platform skip. Ruff,
+formatting, source/tool type checks, all five import contracts, schema generation,
+Svelte checks and changed-web-file linting passed. The current research suite
+passed 184 tests, including the isolated SDK retirement contracts. Earlier
+desktop, production HTTP/build and browser checks covered enrollment, correction,
+background preparation, recovery, confirmed-herd backup and responsive layouts
+using real public cow photos; these were not repeated for the research-only
+changes. Source and frozen encoder inference ran on MPS. Windows/Jetson execution
+and the complete installer remain untested for this feature. Research and the
+active acceptance goal continue; software checks do not establish identification
+accuracy. The [continuity check record](results/2026-10-03/detection/application-continuity-checks.json)
+binds the application source and lists verification limits.
 
 An earlier concurrent build/test run had one existing CLI signal-shutdown timeout. All six shutdown variants, 20 focused pytest repeats, 100 diagnostic subprocess repeats and the final full suite subsequently passed. No timeout was increased and no speculative shutdown fix was made; the isolated failure remains unexplained.

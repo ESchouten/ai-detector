@@ -1,0 +1,303 @@
+{
+  "scope": "Independent post-result audit of the single frozen crowded anonymous-birth control. No changed labels, gates, policy, accuracy score or model inference.",
+  "sources": {
+    "research/cow_identity/results/2026-10-03/detection/crowded-births-audit-selection.json": "7a5855bf5e949e4c327f6cec013f9127ee610d4e63c061d1d38d700a6cb739f1",
+    "research/cow_identity/results/2026-10-03/detection/crowded-births.json": "ab656bc9fd7cf3fab87639437a3075c67faf3f45ceb1229c9934a8902f733207",
+    ".cache/cow-cutie/uninitialized-unknown/streaming.json": "bb5b77fb4e6cb2feb859e75fa58ba3e9e2989d81bf3183a51bc8b9094d68cee8",
+    ".cache/cow-cutie/streaming-development/streaming.json": "c4a5a561c9a8d201a8e02e2cc9fe77fe5deacd6bbf7639189c46dde041c431c7",
+    ".cache/cow-cutie/crowded-births/streaming.json": "2647641cdbd770a1d71ed1f28e2f2cf2e196f22e75a7dd908772cda90e40ce47"
+  },
+  "all_original_truth_and_panel_counts_equal": true,
+  "independent_decision_recount_matches_official": true,
+  "truth_domain": "All eight publisher IDs retained. Known1\u20136, unknown7/8; born IDs are anonymous None and cannot acquire a truth name.",
+  "panel_counts": {
+    "1230": {
+      "correct_name": 1077,
+      "frames": 300,
+      "unknown_named": 0,
+      "unmatched_named": 7,
+      "visible_annotations": 2397,
+      "visible_known": 1799,
+      "visible_unknown": 598,
+      "wrong_name": 0
+    },
+    "330": {
+      "correct_name": 1266,
+      "frames": 300,
+      "unknown_named": 0,
+      "unmatched_named": 10,
+      "visible_annotations": 2400,
+      "visible_known": 1800,
+      "visible_unknown": 600,
+      "wrong_name": 0
+    },
+    "930": {
+      "correct_name": 1100,
+      "frames": 300,
+      "unknown_named": 0,
+      "unmatched_named": 6,
+      "visible_annotations": 2393,
+      "visible_known": 1795,
+      "visible_unknown": 598,
+      "wrong_name": 0
+    }
+  },
+  "acceptance_unchanged": {
+    "1230": false,
+    "330": true,
+    "930": true
+  },
+  "first_error_selection": "First chronological wrong-known, unknown-named, unmatched-named perpanel; stable track ID breaks ties. All wrong-known/unknown selections are null because those counted outcomes do not occur.",
+  "cases": [
+    {
+      "second": 471,
+      "named_cow": 5,
+      "category": "partial visible extent / localization",
+      "interpretation": "The mask occupies the upper calf body but omits the lower-right visible legs/part of its outline behind the foreground calf. Its box is inside the publisher rectangle and covers40.8% of that rectangle. This is a legitimate strict localization failure; the small still-image sample gives no evidence of a biological name switch.",
+      "initialization": "The original cow5 seed isolates a lying animal on the right without an obvious second animal in the mask; no initial contamination is demonstrated.",
+      "baseline_comparison": {
+        "six": {
+          "box": {
+            "confidence": 0.4560546875,
+            "label": "cow",
+            "track_id": 4,
+            "x1": 261,
+            "x2": 330,
+            "y1": 17,
+            "y2": 129
+          },
+          "named": true,
+          "quality": {
+            "area": 4850,
+            "mean_probability": 0.9496241807937622,
+            "p10_probability": 0.8332361578941345,
+            "track_id": 4
+          },
+          "conflicted": false
+        },
+        "eight": {
+          "box": {
+            "confidence": 0.4560546875,
+            "label": "cow",
+            "track_id": 4,
+            "x1": 261,
+            "x2": 330,
+            "y1": 17,
+            "y2": 129
+          },
+          "named": true,
+          "quality": {
+            "area": 4868,
+            "mean_probability": 0.9566910266876221,
+            "p10_probability": 0.8664121627807617,
+            "track_id": 4
+          },
+          "conflicted": false
+        },
+        "births": {
+          "box": {
+            "confidence": 0.4560546875,
+            "label": "cow",
+            "track_id": 4,
+            "x1": 261,
+            "x2": 329,
+            "y1": 17,
+            "y2": 129
+          },
+          "named": true,
+          "quality": {
+            "area": 4891,
+            "mean_probability": 0.9444868564605713,
+            "p10_probability": 0.811092734336853,
+            "track_id": 4
+          },
+          "conflicted": false
+        }
+      }
+    },
+    {
+      "second": 996,
+      "named_cow": 3,
+      "category": "unresolved crowded anatomy / localization",
+      "interpretation": "The mask covers the white-backed upper-left calf and extends into the crowded lower head/neck area. Its box is2.61times the own publisher rectangle and intersects several adjacent publisher rectangles. Fixed995/997 raw context shows that body moving upward, so rectangle overlap alone cannot establish absorption of another animal. Exact visible ownership remains unresolved; do not relabel this as correct biological naming or claim a proven identity switch.",
+      "initialization": "The original cow3 seed is a relatively isolated side-view animal in the middle; no initial second-body contamination is apparent. The large later mask is not explained by a clear initialization error.",
+      "baseline_comparison": {
+        "six": {
+          "box": {
+            "confidence": 0.5966796875,
+            "label": "cow",
+            "track_id": 2,
+            "x1": 121,
+            "x2": 261,
+            "y1": 277,
+            "y2": 552
+          },
+          "named": false,
+          "quality": {
+            "area": 22125,
+            "mean_probability": 0.8268688321113586,
+            "p10_probability": 0.5138526558876038,
+            "track_id": 2
+          },
+          "conflicted": false
+        },
+        "eight": {
+          "box": {
+            "confidence": 0.5966796875,
+            "label": "cow",
+            "track_id": 2,
+            "x1": 121,
+            "x2": 264,
+            "y1": 277,
+            "y2": 543
+          },
+          "named": false,
+          "quality": {
+            "area": 19849,
+            "mean_probability": 0.8977439999580383,
+            "p10_probability": 0.654815673828125,
+            "track_id": 2
+          },
+          "conflicted": false
+        },
+        "births": {
+          "box": {
+            "confidence": 0.5966796875,
+            "label": "cow",
+            "track_id": 2,
+            "x1": 121,
+            "x2": 266,
+            "y1": 276,
+            "y2": 528
+          },
+          "named": true,
+          "quality": {
+            "area": 19929,
+            "mean_probability": 0.9108015298843384,
+            "p10_probability": 0.7148436307907104,
+            "track_id": 2
+          },
+          "conflicted": false
+        }
+      }
+    },
+    {
+      "second": 1230,
+      "named_cow": 1,
+      "category": "partial visible extent / convention mismatch",
+      "interpretation": "The mask follows the horizontally bent foreground-right visible body, while the publisher rectangle extends farther left/right and downward. Its own IoU is.460. Crowded legs/head ownership remains uncertain. This is a strict localization error, not independently proven wrong biological naming.",
+      "initialization": "The original cow1 mask is the narrow foreground animal beside another calf; no obvious second-body inclusion is seen in its highlighted mask, but this still-image check does not certify all seed pixels.",
+      "baseline_comparison": {
+        "six": {
+          "box": {
+            "confidence": 0.681640625,
+            "label": "cow",
+            "track_id": 0,
+            "x1": 430,
+            "x2": 595,
+            "y1": 441,
+            "y2": 518
+          },
+          "named": true,
+          "quality": {
+            "area": 8850,
+            "mean_probability": 0.9508557319641113,
+            "p10_probability": 0.8620527982711792,
+            "track_id": 0
+          },
+          "conflicted": false
+        },
+        "eight": {
+          "box": {
+            "confidence": 0.681640625,
+            "label": "cow",
+            "track_id": 0,
+            "x1": 430,
+            "x2": 595,
+            "y1": 440,
+            "y2": 518
+          },
+          "named": true,
+          "quality": {
+            "area": 8854,
+            "mean_probability": 0.9549548029899597,
+            "p10_probability": 0.8722324967384338,
+            "track_id": 0
+          },
+          "conflicted": false
+        },
+        "births": {
+          "box": {
+            "confidence": 0.681640625,
+            "label": "cow",
+            "track_id": 0,
+            "x1": 430,
+            "x2": 595,
+            "y1": 440,
+            "y2": 518
+          },
+          "named": true,
+          "quality": {
+            "area": 8761,
+            "mean_probability": 0.9484099745750427,
+            "p10_probability": 0.8579475283622742,
+            "track_id": 0
+          },
+          "conflicted": false
+        }
+      }
+    }
+  ],
+  "review_evidence": {
+    ".cache/cow-cutie/crowded-birth-audit/1230.0-0-detector.png": "75a6febefbc29b51574b15d5efea286f1b212b0e80ad6852ef36dc8670e95f7b",
+    ".cache/cow-cutie/crowded-birth-audit/1230.0-0-mask.png": "014dbfde1cd9f178e9803d2781bc0b140868dd27f08200643a44397b7e194b90",
+    ".cache/cow-cutie/crowded-birth-audit/1230.0-0-raw.png": "b06f6706c09d252d5005e07ba2233836acb5734e3270527e5ef9b97e49e13ee5",
+    ".cache/cow-cutie/crowded-birth-audit/1230.0-0-truth.png": "93bd80992784754b7eef19570743e2ac4603a895e77a62b4b9c872221bd044fd",
+    ".cache/cow-cutie/crowded-birth-audit/471.0-4-detector.png": "f04488fa481fdddb0b40b684fb339e95eab2450059852e8d62432cb6c4d3f799",
+    ".cache/cow-cutie/crowded-birth-audit/471.0-4-mask.png": "0c1be8ed12ab3cd590b10611eb8969eec08c9aae3c39e44f9fecf7e91f0cf4b9",
+    ".cache/cow-cutie/crowded-birth-audit/471.0-4-raw.png": "8892d935a6e930700607b2f9d6718de8f6e38940964b8714196c955189d700ae",
+    ".cache/cow-cutie/crowded-birth-audit/471.0-4-truth.png": "e1613a55939153b7488f5f4efcfc59e51b739d1fed05a0951c955b228f0d4398",
+    ".cache/cow-cutie/crowded-birth-audit/996.0-2-detector.png": "98e7000bef05552a3a4e3e67bc4908a795704c6f7f5d5bf1142f5a2af5271b92",
+    ".cache/cow-cutie/crowded-birth-audit/996.0-2-mask.png": "01b5fcb66b5fb7e89ace41a1e35c1beaec7976595b689b7036888ce0c103eca7",
+    ".cache/cow-cutie/crowded-birth-audit/996.0-2-raw.png": "5bef4bcea5d10d477e13fedf1073d1ad96c47a40052da331d98a9b9300a1509d",
+    ".cache/cow-cutie/crowded-birth-audit/996.0-2-truth.png": "80dedfbbb2bd9239cce7ba1b4e4e550c8d5824aa0a3bfa5b75f60abdefa61bf4",
+    ".cache/cow-cutie/crowded-birth-audit/context-1229.png": "ec65dcc7b2aaa513e06322242e31f41317d21abe98d63a0b35f7c6463bd1f928",
+    ".cache/cow-cutie/crowded-birth-audit/context-1231.png": "f5b096a456735e954553fce49450575c1718b288ab412ea1e6c9fc99e80f29ce",
+    ".cache/cow-cutie/crowded-birth-audit/context-470.png": "2ce597fb477c4cab0d9332d6e810a44cf772cfe91abd36f92217b132bc82bd07",
+    ".cache/cow-cutie/crowded-birth-audit/context-472.png": "2d73e3f63adab7d1cd0ce5b83ce0263049a8d9b8afc4d7bbbf0e60a70438172b",
+    ".cache/cow-cutie/crowded-birth-audit/context-995.png": "97d192d8a33f1577cc819b00c743a9ef3d79146d45d03f8b29bf7999236d4201",
+    ".cache/cow-cutie/crowded-birth-audit/context-997.png": "5e0e1dfe8368b1624bc9e5c7ccba0f9d982035201b031f96ff2fa33c611fe259",
+    ".cache/cow-cutie/crowded-birth-audit/seed-1.png": "22ffbeb410c525785707a37e6a9f44271a32b2024a82372f08adea3adeb6a23e",
+    ".cache/cow-cutie/crowded-birth-audit/seed-2.png": "6101520cbd2bbc10dacf495a50608a26a3bb85e92a2e1dfd53263b0c83cfe3f8",
+    ".cache/cow-cutie/crowded-birth-audit/seed-3.png": "62da5f0b3c6ef458f804f7394949effbe1ce1ba16f600f34b4c54b3fdcea1734",
+    ".cache/cow-cutie/crowded-birth-audit/seed-4.png": "8464bb4bd7c6158ae1b177db3e2c1924893e62e38cd305f2411ad488ba5af077",
+    ".cache/cow-cutie/crowded-birth-audit/seed-5.png": "46dec8218ec6034e0ac8621d01c826e459881ddfd217511558f8643835e222f5",
+    ".cache/cow-cutie/crowded-birth-audit/seed-6.png": "e4af09be78bf0978ce36216b36b1fc15bec79977578b946395288042b5116ba4"
+  },
+  "fixed_raw_context": {
+    "selection": {
+      "scope": "Fixed +/-1second raw-only context around each preselected first error, declared before extraction. Diagnostic assistance only, no new inference or score.",
+      "centers": [
+        471,
+        996,
+        1230
+      ],
+      "offsets": [
+        -1,
+        1
+      ],
+      "source_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825",
+      "selection_sha256": "7a5855bf5e949e4c327f6cec013f9127ee610d4e63c061d1d38d700a6cb739f1"
+    },
+    "manifest_sha256": "82b6fd816833498af1a316e3510b16f30f90374d5fd33667e3101075bdff79f9"
+  },
+  "conclusions": [
+    "Anonymous births remove the severe counted name inheritance observed with only six initial masks in the two later exposed panels; this is a meaningful causal control, not a held-out result.",
+    "The full criterion still fails: final coverage1077/1799=.5986659 is below.60. Pooled coverage does not replace the perpanel criterion.",
+    "The optimistic eight-seed initialization has substantially higher middle/final coverage; automatic discovery does not yet reproduce its performance.",
+    "First errors471 and1230 have essentially the same geometry and accepted name in allthree arms, so they are not newly caused by birth insertion.",
+    "At996 the three arms produce broadly similar large geometry but only births crosses the fixed.7qualitygate (p10.7148 versus.5139six/.6548eight). Its strict error cannot be excused from the visual diagnostic.",
+    "The three selected examples show localization/extent ambiguity and no established initial seed contamination or biological swap. They do not establish that all23unmatched names are semantically correct.",
+    "These unknown calves were already visible at startup. Keep the separate physical-entrant failure/control, deletion/reentry limitations and all previous failed results."
+  ]
+}

@@ -1,0 +1,547 @@
+{
+  "all35_clean_source_triptychs_reviewed": true,
+  "audit_sha256": "aea26c18ebb2762c2581a0b88724ebebebfb11dab8ec1f13782e1d7a14a5e0b5",
+  "categories_are_qualitative_not_ground_truth": true,
+  "closed_interval": "3000 seconds onward remains unopened",
+  "counts": {
+    "near_complete_visible_mask_with_loose_publisher_box": 25,
+    "occlusion_extent_ambiguous": 3,
+    "publisher_partial_or_shifted_extent": 5,
+    "visible_animal_without_own_publisher_annotation": 2
+  },
+  "interpretation": "A small box relative to publisher truth is not proof of a bad partial mask. Representative isolated animals at2877/2895 have near-complete visible masks yet low rectangle IoU due loose publisher extent. No obvious sustained identity misbinding is established by these selected stills. This does not remove any strict error or prove >99% naming quality.",
+  "next_step_proposal": "Before another mask model or geometry transform, independently annotate a frozen balanced sample from clean images without predictions, including correctly scored and failed cases, using an explicit whole-visible-body rule. Keep current publisher scores and separately report any manual-diagnostic findings; do not repair only failures. Mask refinement is justified only if this review identifies omitted visible anatomy rather than mere label-shape mismatch. No model run proposed yet.",
+  "physical_manifest_sha256": "cc5c597392870779d4d47bea4efd75f3f7a416820d11adbdb229afcfaab46d7e",
+  "prior_overlay_review_sha256": "0b4a12ec961d36a156d3e2a413feb9deea212657389f4dd57cb82835302f51e8",
+  "publisher_method": "Video labels originated from a fine-tuned YOLOv8m plus ByteTrack and manual tracking/error corrections. The paper discloses missing boxes and detector bias; it does not specify these labels as consistent manually drawn modal or amodal masks.",
+  "publisher_source": "https://arxiv.org/html/2503.13777v2",
+  "reviewer": "cattle_research AI agent",
+  "rows": [
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/1818-cow-6.jpg",
+        "mask_sha256": "149c3a60dafe8dd960be4d046085679e9a586dd88d91bbb329426348db31246e",
+        "named_cow": 6,
+        "second": 1818,
+        "sha256": "28ecbf681b04cde8e1bfe294c07857cfb638c970b372c7977568c016667cd2e2",
+        "source_pixels_sha256": "e9ceea06dbd6b8b947605d33cb2c026a9537f6a8e927a9b0b8796dc65d5cbfb1"
+      },
+      "named_cow": 6,
+      "note": "Indexed foreground covers a coherent visible body portion; neighboring animals obscure whether further publisher extent represents the same animal. Cannot distinguish omitted visible anatomy from assumed hidden extent by this still.",
+      "qualitative_category": "occlusion_extent_ambiguous",
+      "second": 1818,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/1820-cow-1.jpg",
+        "mask_sha256": "35b44b3f15fc15d7aa5a0b17274ec830f4b9e0c64391b30b56ed9323afbcbdda",
+        "named_cow": 1,
+        "second": 1820,
+        "sha256": "8053c023e91b85cd9e7cd3b923f80b66de60f92c049b56123f9693da381a8349",
+        "source_pixels_sha256": "2001d15ebecfd7a2fc214d0b17bc0ca92188813c2dfe4eb7c84bb43ea2e5eed0"
+      },
+      "named_cow": 1,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 1820,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/1840-cow-3.jpg",
+        "mask_sha256": "7ecca2f3502cf53d8e5d87ed2e106029f92d9ae8160bc11d317f9e75d48a7450",
+        "named_cow": 3,
+        "second": 1840,
+        "sha256": "e30f90160d97dac2e45a3d1f70b85b13f832f1e4e9e47e49c5fdb9b3f4e27e9e",
+        "source_pixels_sha256": "bb2555a66c0b8277cea771bd9a02fcc809330f2c2c7c555d14c51659a096fe57"
+      },
+      "named_cow": 3,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 1840,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/1847-cow-1.jpg",
+        "mask_sha256": "854f831639df4814d4cb9388bd2bb3a9a1ae1ccb64003be20abec4450f256bea",
+        "named_cow": 1,
+        "second": 1847,
+        "sha256": "6a9cff6dde33f8c52ebeeab48b4be71743a430470f96da2c44543d258bb6264a",
+        "source_pixels_sha256": "892f6bdda048c076fda1d2acecabfddf82c0721da7c033aa49359e400cf379b8"
+      },
+      "named_cow": 1,
+      "note": "The indexed foreground forms a coherent visible animal; the publisher box clips or shifts part of head/body/limbs, while predictor bounds extend beyond it. Crowding and pose make precise silhouette/identity verification uncertain.",
+      "qualitative_category": "publisher_partial_or_shifted_extent",
+      "second": 1847,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/1889-cow-4.jpg",
+        "mask_sha256": "71672cac2731d8391d048d94f670f1886d1f041539b0e86683d25dbcd7ab885e",
+        "named_cow": 4,
+        "second": 1889,
+        "sha256": "4b6dd52f97c3a744827e0ebce8dca58138843d95942fd37f7b2bf4303b386500",
+        "source_pixels_sha256": "103121cfe9a16c183fdd62fb050e116833229fb11a3b5268610d1b46a95a3b74"
+      },
+      "named_cow": 4,
+      "note": "The indexed foreground forms a coherent visible animal; the publisher box clips or shifts part of head/body/limbs, while predictor bounds extend beyond it. Crowding and pose make precise silhouette/identity verification uncertain.",
+      "qualitative_category": "publisher_partial_or_shifted_extent",
+      "second": 1889,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/1890-cow-6.jpg",
+        "mask_sha256": "1746f4827184e0d398bef6835e6752d95e1182b9a1183541a22dc225e4a49938",
+        "named_cow": 6,
+        "second": 1890,
+        "sha256": "c02ef90a5adaed615868d2c2139df02e003d9b4baff263d03ac0c5039d86e4b9",
+        "source_pixels_sha256": "c6d4700611adf9afea04054b30efc012ac877ee3a7f0e4dfe0c05c3f14bba3c1"
+      },
+      "named_cow": 6,
+      "note": "Indexed foreground covers a coherent visible body portion; neighboring animals obscure whether further publisher extent represents the same animal. Cannot distinguish omitted visible anatomy from assumed hidden extent by this still.",
+      "qualitative_category": "occlusion_extent_ambiguous",
+      "second": 1890,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/1893-cow-6.jpg",
+        "mask_sha256": "076c845073e551654f5a03d190ef4f34bdae9cb9c72cd31b0bb7deaa19033889",
+        "named_cow": 6,
+        "second": 1893,
+        "sha256": "ec32dddf13a7f7ad503c557eccb5d4270968e7e8231da008630eadc62b4411b8",
+        "source_pixels_sha256": "4003a4c17eebbcf2d5cfa0f34825b0e653b5633a94be05fb26b4eddbc46df28c"
+      },
+      "named_cow": 6,
+      "note": "Indexed foreground covers a coherent visible body portion; neighboring animals obscure whether further publisher extent represents the same animal. Cannot distinguish omitted visible anatomy from assumed hidden extent by this still.",
+      "qualitative_category": "occlusion_extent_ambiguous",
+      "second": 1893,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/1932-cow-2.jpg",
+        "mask_sha256": "f63161a52c54531851e53f8c61ea6245b8b3ee78d018d91354592920575a13c2",
+        "named_cow": 2,
+        "second": 1932,
+        "sha256": "4c18d39af2561020938b96a552bb7477ddff3facc2d5ac354e01ad2e9b98a470",
+        "source_pixels_sha256": "238be052b0a3ebec2cd03872fcd7c28b322e36421b5b96d966fa452c82b80366"
+      },
+      "named_cow": 2,
+      "note": "The indexed foreground forms a coherent visible animal; the publisher box clips or shifts part of head/body/limbs, while predictor bounds extend beyond it. Crowding and pose make precise silhouette/identity verification uncertain.",
+      "qualitative_category": "publisher_partial_or_shifted_extent",
+      "second": 1932,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2709-cow-4.jpg",
+        "mask_sha256": "b7c20c0484b59dda46ad29c4ee96528627a041918e9e82cafc5f5a79e574eae1",
+        "named_cow": 4,
+        "second": 2709,
+        "sha256": "a56622b70e545237605842ab503d8801dd1b013e7b9109f793f960a7996130af",
+        "source_pixels_sha256": "92324e8636ca1be305d59b25af321f1c4a7031b77c51d0185ccadc42acade070"
+      },
+      "named_cow": 4,
+      "note": "The indexed foreground forms a coherent visible animal; the publisher box clips or shifts part of head/body/limbs, while predictor bounds extend beyond it. Crowding and pose make precise silhouette/identity verification uncertain.",
+      "qualitative_category": "publisher_partial_or_shifted_extent",
+      "second": 2709,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2770-cow-4.jpg",
+        "mask_sha256": "488e356e752e7ae5e981f46a757ddc7aa851ebc3476283e1dca371b331b7471a",
+        "named_cow": 4,
+        "second": 2770,
+        "sha256": "1737bd382aa7f4f955ed7ae89be391fe5d390afdaefe547403e1ce28c016469c",
+        "source_pixels_sha256": "2e7595371f7dd2f0d44a3022138515df774903c9e7ad745f6f680f9efd350da3"
+      },
+      "named_cow": 4,
+      "note": "A coherent visible animal is segmented, but no own publisher annotation exists. This is not sufficient to independently certify the emitted biological identity.",
+      "qualitative_category": "visible_animal_without_own_publisher_annotation",
+      "second": 2770,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2784-cow-1.jpg",
+        "mask_sha256": "8ec74ad452d2fb1e37e7ed65bf1a394e0a7fbf504563ade822827d8a7527a6a9",
+        "named_cow": 1,
+        "second": 2784,
+        "sha256": "c96c8a1055911fb6e951bd0901d131372d6db611759fa275fe5c961b9dec4ffb",
+        "source_pixels_sha256": "afaf2695209c0484c4fd5205cce1e8ebb19bcbb69a61e04e23329ee9bf1b7177"
+      },
+      "named_cow": 1,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2784,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2790-cow-3.jpg",
+        "mask_sha256": "5f8f4673c36ad4b33dfed6f1cd667c7caf92731443cf6e06f91844af282e69ef",
+        "named_cow": 3,
+        "second": 2790,
+        "sha256": "52fca30c75957feca81dff1378fd47aa6f5c4987a718396379d93048b396bbd9",
+        "source_pixels_sha256": "c948425ffb595874dc2e7dc0c0550231a4e7bfe33ef7bbc68e7db72776a4e00c"
+      },
+      "named_cow": 3,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2790,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2790-cow-4.jpg",
+        "mask_sha256": "5f8f4673c36ad4b33dfed6f1cd667c7caf92731443cf6e06f91844af282e69ef",
+        "named_cow": 4,
+        "second": 2790,
+        "sha256": "b51db1d1073ca89a5ae77e716e010ee2f6d330e2201b089878f85d5ad1a5e808",
+        "source_pixels_sha256": "c948425ffb595874dc2e7dc0c0550231a4e7bfe33ef7bbc68e7db72776a4e00c"
+      },
+      "named_cow": 4,
+      "note": "A coherent visible animal is segmented, but no own publisher annotation exists. This is not sufficient to independently certify the emitted biological identity.",
+      "qualitative_category": "visible_animal_without_own_publisher_annotation",
+      "second": 2790,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2800-cow-3.jpg",
+        "mask_sha256": "7d1a88c174d8a2ac7f0ad2da884b7adb7bd8c38568939349c56b06c9c98a061c",
+        "named_cow": 3,
+        "second": 2800,
+        "sha256": "901006edf7a885fec335bd3365f78585cbf8ea591deba0b848f7ac89bbe0a11a",
+        "source_pixels_sha256": "48d4df4b849707a128fd50909dd54c91719d088a8977e6adba73b04f57b5de24"
+      },
+      "named_cow": 3,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2800,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2803-cow-6.jpg",
+        "mask_sha256": "5324b0a24d44097cbb1a0c7e211fa864fcbfb21021639b54caf23ea93e7684bd",
+        "named_cow": 6,
+        "second": 2803,
+        "sha256": "3176a138faba6db93a5a1e10d3ace1838ab167d62ea8e993196cdc6a95b7d302",
+        "source_pixels_sha256": "74d733026455dae6821d84084e51cee7bcb4274943f6b63385bdf4205df3b036"
+      },
+      "named_cow": 6,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2803,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2805-cow-5.jpg",
+        "mask_sha256": "e6848837699bc22f5949fc591d1e131bcfcf5f5f5bb76792ffb10b7edd5bd6f4",
+        "named_cow": 5,
+        "second": 2805,
+        "sha256": "026e23f18bec94a8b8e8fe5cbdb64bf10e35f91871fd5805e2dcb2516bdf7a22",
+        "source_pixels_sha256": "5123cac1279d3acec1603780fb036072772833d74119242a50d5fbf7efeb5337"
+      },
+      "named_cow": 5,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2805,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2807-cow-5.jpg",
+        "mask_sha256": "62861fe4677d07a48e14a3f9fb172cec038a2a086d82ab1f9e07198dfa3761bf",
+        "named_cow": 5,
+        "second": 2807,
+        "sha256": "d2bb7813efd8393a6e54ebffb26a7265685c2eeaa382baa182162339cb89c08e",
+        "source_pixels_sha256": "9742d7e279ee6bd7acedbcb4687e172c1681689ebca823fc3b255a7484569c14"
+      },
+      "named_cow": 5,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2807,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2825-cow-6.jpg",
+        "mask_sha256": "ca34d4f9b79ff4a2c3a338c6d3d7fcbecf79e417c1ea9276be79f2e141d112c8",
+        "named_cow": 6,
+        "second": 2825,
+        "sha256": "4bb8b945f414c118bca98a67d717e64cf036cea604a77b9cd7490078caa93d83",
+        "source_pixels_sha256": "2064fe41514cb4e6eb7b804103248a53ea2eaaf64ff6208e8909298e34512594"
+      },
+      "named_cow": 6,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2825,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2829-cow-6.jpg",
+        "mask_sha256": "a96b0a08ea5294af43ac977f69b25567fe838aa3b06974ce6273990525af9d23",
+        "named_cow": 6,
+        "second": 2829,
+        "sha256": "f4d0ce10bfec7b3ae0ed032466d8e716f55c6c79f103737a24e510b8e27c22aa",
+        "source_pixels_sha256": "06a26a53bbb5584ff0d2a00b4feed041835589dad4a7e60334b7e7a3ea9b91aa"
+      },
+      "named_cow": 6,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2829,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2832-cow-5.jpg",
+        "mask_sha256": "221e38c0c4eb7e8a1457c1f6dd1ada9f16cd7001b7b2dda2871828ed3cbcb7db",
+        "named_cow": 5,
+        "second": 2832,
+        "sha256": "afba1f333d2dd925b6ab92f4916414180f7475675e0a758d1a07238308969a5a",
+        "source_pixels_sha256": "a3649c9b613563650007e821abcf3899669ce53716b4619b9dd583bbfd03b0eb"
+      },
+      "named_cow": 5,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2832,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2833-cow-6.jpg",
+        "mask_sha256": "782acf0356d91aab43873b5eba6a37d2d847a9606213da4fc21d922cf0faf1c6",
+        "named_cow": 6,
+        "second": 2833,
+        "sha256": "d1f4e1e1223044e4ae6df698e73797a9955e6fe87c513a5aa51d32607bfc5c92",
+        "source_pixels_sha256": "016b4c40c8568059bb3b84f7d52bc1b321424984ddc342b2e99bd8e1dbcd66cb"
+      },
+      "named_cow": 6,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2833,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2856-cow-6.jpg",
+        "mask_sha256": "e9a70a31abb073b856e5dade4e712b989045c35d3049e93f64cc789589291eed",
+        "named_cow": 6,
+        "second": 2856,
+        "sha256": "a46df87ccff25018cd74124bed32b3a33ef007aaae0b5a44ff2fd2c0f59df5e9",
+        "source_pixels_sha256": "7a59a70fb672c54e32cd862eff9269a5898097b97ab61f8eee19d5a1625bc271"
+      },
+      "named_cow": 6,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2856,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2862-cow-5.jpg",
+        "mask_sha256": "cf384c0682fb8bedc9084f45cfef4bfb069f9cf1b45aa12c89a1a57b34195214",
+        "named_cow": 5,
+        "second": 2862,
+        "sha256": "6ed106da488fa1d3b1ee28c9442fbebc43442dcdf9d28de1ecf8a267f4feeb3a",
+        "source_pixels_sha256": "1dc3d40926f223172ab76dfa08a1dc8b9e7334d85535a76ac2656ee88fa1cac2"
+      },
+      "named_cow": 5,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2862,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2863-cow-6.jpg",
+        "mask_sha256": "c34819669a35791640b88977b79ea79a0184ea563b2f457d596a39cabecbef93",
+        "named_cow": 6,
+        "second": 2863,
+        "sha256": "d3d612e8a472ee955b8c5a171e264a5252511b43a22c0ec9e30a4cfddb8e9768",
+        "source_pixels_sha256": "62297e5b38ae801ecac73643cec3287a109d56b6e03c4aaad15196b0e5d46edb"
+      },
+      "named_cow": 6,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2863,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2865-cow-1.jpg",
+        "mask_sha256": "95207664a84af1308548702bd0ba3b928699ebd397cf2fe991ee4f468c5d9abb",
+        "named_cow": 1,
+        "second": 2865,
+        "sha256": "150c83da8b015732d2b48ff396889073e34343b487ec07c36f6cbfb6cd1c4d75",
+        "source_pixels_sha256": "fddb73a5444c1e76bda63752505708a6fcd31cb96b93042f58ea3f2e91cd4daa"
+      },
+      "named_cow": 1,
+      "note": "The indexed foreground forms a coherent visible animal; the publisher box clips or shifts part of head/body/limbs, while predictor bounds extend beyond it. Crowding and pose make precise silhouette/identity verification uncertain.",
+      "qualitative_category": "publisher_partial_or_shifted_extent",
+      "second": 2865,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2868-cow-2.jpg",
+        "mask_sha256": "04be87bf70b478bbb7a65bcaaa2657b66ec052974cc50a7adc1d9991d40a7502",
+        "named_cow": 2,
+        "second": 2868,
+        "sha256": "032cfcf2a134683757cf2875271ac66a3ae5dd06b346968f1ebebe09ac7e5a8e",
+        "source_pixels_sha256": "10897cc8691dab57a2091dd791349bdc232007507e9088219b839c78013f511f"
+      },
+      "named_cow": 2,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2868,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2873-cow-6.jpg",
+        "mask_sha256": "1480ac1798fd2541acebbe654b75f2f255e0af88181160aad20109674960d275",
+        "named_cow": 6,
+        "second": 2873,
+        "sha256": "873283bf8f09c99b89d829f63e622c5f9ab8a8a96d78e54911758f0909ed44b3",
+        "source_pixels_sha256": "b1ac4bec0022ea48ca65298d510e481508041b7cefcd86d450ceb483124c4b55"
+      },
+      "named_cow": 6,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2873,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2877-cow-3.jpg",
+        "mask_sha256": "55a1d9c5b1e77ac6f17aad57722d9f76e0f5a5bd7e4a1342993ab9b4fb843454",
+        "named_cow": 3,
+        "second": 2877,
+        "sha256": "116d0a3eca4c8eadda8b15887706cd1e1105ac0d75c9f4093eac94b71eb2a423",
+        "source_pixels_sha256": "df6891d07083f6e3c1aa10e6a13dfef28ef32e52692266a0fadbd13082a62ff4"
+      },
+      "named_cow": 3,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2877,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2878-cow-4.jpg",
+        "mask_sha256": "7b33d3d6e9396ad200960805323e282b5f4cb63a28108dd5024058e4ad043e1e",
+        "named_cow": 4,
+        "second": 2878,
+        "sha256": "80b711b3a4bd4fd6060c3653dc573fc97724003f12da7d69df9527d5a796348c",
+        "source_pixels_sha256": "213ade98b564a7cef3b310262f2524589f0dd2e11c56c4768c6c2eb77e506215"
+      },
+      "named_cow": 4,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2878,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2885-cow-6.jpg",
+        "mask_sha256": "c719070ba5098a021c197f9c8896f1d6080e313892e033212313f7cc1cbcfbc9",
+        "named_cow": 6,
+        "second": 2885,
+        "sha256": "04fdc6b7d62d144853a0c6e9c938616ff3c6679296f1f84369f71b43c2a8fc46",
+        "source_pixels_sha256": "259a2b118d9b61828be2ea22045b752000a3f013d8d8c7fbb53adfe6747f8c4b"
+      },
+      "named_cow": 6,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2885,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2888-cow-5.jpg",
+        "mask_sha256": "34b70354f27bea6e74b2bedbc1df7ab6c9b1fd9a714360a6533abc1cd827b1ff",
+        "named_cow": 5,
+        "second": 2888,
+        "sha256": "852d139423b123a98a8817a4c90d16e0416f565190077f0a3eb2226282c44721",
+        "source_pixels_sha256": "6f15133802ac40c09863d9b5128c29172c4c8552160298299b27f6a9f5be6ded"
+      },
+      "named_cow": 5,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2888,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2889-cow-3.jpg",
+        "mask_sha256": "1282e48d861b84d9598ee0e165c6537d9edaf6a278743493cdce7af84a31f8c5",
+        "named_cow": 3,
+        "second": 2889,
+        "sha256": "35f6ff9075a3660b150bcad679f722600eae79e8f80af8899022e0c6870308f5",
+        "source_pixels_sha256": "3ce0e995218e81211c968c9487fc8ca2ea8e7d614c6e1857cf100904fd8eecf5"
+      },
+      "named_cow": 3,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2889,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2895-cow-4.jpg",
+        "mask_sha256": "ec58b150cb16c8177e970199437ed99b64d88bd5366f0a477c0014a51ec432a0",
+        "named_cow": 4,
+        "second": 2895,
+        "sha256": "40d3febd35b8e40f459e66cb833add97fbaa46a292cedc66f9224940947e4604",
+        "source_pixels_sha256": "8233222faf9ac4d761cc8e8049ae58ff5585c5ea9028de960b8f56b18fa2252e"
+      },
+      "named_cow": 4,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2895,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2935-cow-5.jpg",
+        "mask_sha256": "829ab1b1abd44b0fe3b85ff01e1fa83ddd3fd7415914267f2b57c5eb25a1b0d4",
+        "named_cow": 5,
+        "second": 2935,
+        "sha256": "1e5c71d04a61412a7330d47e06adf32cd8fe14457b8134459a942a4964277653",
+        "source_pixels_sha256": "048c632c61148328f755a17b9289dc490ad7256dbdbf3f0bbafda4e8bd8df414"
+      },
+      "named_cow": 5,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2935,
+      "strict_error_retained": true
+    },
+    {
+      "image": {
+        "image": ".cache/cow-cutie/reserved-error-audit/physical/2935-cow-6.jpg",
+        "mask_sha256": "829ab1b1abd44b0fe3b85ff01e1fa83ddd3fd7415914267f2b57c5eb25a1b0d4",
+        "named_cow": 6,
+        "second": 2935,
+        "sha256": "b31e4c5cc416b4c552925e6ce3111f12244885c9c455960d86720d9b56b0485a",
+        "source_pixels_sha256": "048c632c61148328f755a17b9289dc490ad7256dbdbf3f0bbafda4e8bd8df414"
+      },
+      "named_cow": 6,
+      "note": "Foreground follows a coherent visible body and often head/legs. Publisher rectangle includes visibly larger floor/neighbor extent. This selected still does not show an obvious half-body loss or permanent identity swap; fine contours are uncertain under blur.",
+      "qualitative_category": "near_complete_visible_mask_with_loose_publisher_box",
+      "second": 2935,
+      "strict_error_retained": true
+    }
+  ],
+  "scope": "Second physical interpretation after inspecting clean source alongside all35 masks/boxes; not independent blind annotation, not relabeling or a new accuracy estimate"
+}

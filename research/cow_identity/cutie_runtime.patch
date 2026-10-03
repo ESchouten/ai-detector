@@ -1,0 +1,72 @@
+--- a/cutie/model/big_modules.py
++++ b/cutie/model/big_modules.py
+@@ -26,9 +26,9 @@
+         resnet_model_path = model_cfg.get('resnet_model_path')
+         if self.is_resnet:
+             if model_cfg.pixel_encoder.type == 'resnet18':
+-                network = resnet.resnet18(pretrained=True, model_dir=resnet_model_path)
++                network = resnet.resnet18(pretrained=model_cfg.get('pretrained_backbone', True), model_dir=resnet_model_path)
+             elif model_cfg.pixel_encoder.type == 'resnet50':
+-                network = resnet.resnet50(pretrained=True, model_dir=resnet_model_path)
++                network = resnet.resnet50(pretrained=model_cfg.get('pretrained_backbone', True), model_dir=resnet_model_path)
+             else:
+                 raise NotImplementedError
+             self.conv1 = network.conv1
+@@ -100,9 +100,9 @@
+ 
+         resnet_model_path = model_cfg.get('resnet_model_path')
+         if model_cfg.mask_encoder.type == 'resnet18':
+-            network = resnet.resnet18(pretrained=True, extra_dim=extra_dim, model_dir=resnet_model_path)
++            network = resnet.resnet18(pretrained=model_cfg.get('pretrained_backbone', True), extra_dim=extra_dim, model_dir=resnet_model_path)
+         elif model_cfg.mask_encoder.type == 'resnet50':
+-            network = resnet.resnet50(pretrained=True, extra_dim=extra_dim, model_dir=resnet_model_path)
++            network = resnet.resnet50(pretrained=model_cfg.get('pretrained_backbone', True), extra_dim=extra_dim, model_dir=resnet_model_path)
+         else:
+             raise NotImplementedError
+         self.conv1 = network.conv1
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -12,39 +12,20 @@
+ 
+ [project]
+ name = "cutie"
+-version = "1.0.0"
++version = "1.0.0+aidetector.1"
+ authors = [{ name = "Rex Cheng", email = "hkchengrex@gmail.com" }]
+-description = ""
++description = "Cutie inference package; pinned upstream with optional backbone initialization"
+ readme = "README.md"
++license = { file = "LICENSE" }
+ requires-python = ">=3.8"
+ classifiers = [
+   "Programming Language :: Python :: 3",
+   "Operating System :: OS Independent",
+ ]
+ dependencies = [
+-  'cython',
+-  'gitpython >= 3.1',
+-  'thinplate@git+https://github.com/cheind/py-thin-plate-spline',
+-  'hickle >= 5.0',
+-  'tensorboard >= 2.11',
++  'torch >= 2.0',
+   'numpy >= 1.21',
+-  'Pillow >= 9.5',
+-  'opencv-python >= 4.8',
+-  'scipy >= 1.7',
+-  'pycocotools >= 2.0.7',
+-  'tqdm >= 4.66.1',
+-  'gradio >= 3.34',
+-  'gdown >= 4.7.1',
+-  'einops >= 0.6',
+   'hydra-core >= 1.3.2',
+-  'PySide6 >= 6.2.0',
+-  'charset-normalizer >= 3.1.0',
+-  'netifaces >= 0.11.0',
+-  'cchardet >= 2.1.7',
+-  'easydict',
+-  'av >= 0.5.2',
+-  'requests',
+-  'pyqtdarktheme',
+ ]
+ 
+ [tool.hatch.build.targets.wheel]

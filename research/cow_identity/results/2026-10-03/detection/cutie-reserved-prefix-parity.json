@@ -1,0 +1,22 @@
+{
+  "scope": "Independent full development-prefix equality after complete reserved inference and saved strict scoring; no predictions or scoring rules changed.",
+  "source_input_frames": 3059,
+  "integer_prediction_frames": 1530,
+  "source_differences": [],
+  "prediction_differences": [],
+  "invalid_mask_hashes": [],
+  "all_source_frames_equal": true,
+  "all_prediction_rows_equal": true,
+  "all_3060_mask_files_match_recorded_hashes": true,
+  "comparison": "Every complete integer prediction row, including raw detector boxes, mask hashes, LCC boxes, p10 statistics, reciprocal pairs, emitted names and conflict IDs. Timing/memory telemetry intentionally differs.",
+  "files": {
+    ".cache/cow-cutie/streaming-development/streaming.json": "c4a5a561c9a8d201a8e02e2cc9fe77fe5deacd6bbf7639189c46dde041c431c7",
+    ".cache/cow-cutie/streaming-reserved/streaming.json": "2a39500ee305d3049fdd6aeea0f4cebe626f5b704ec02f5ca2337ab75a6c6fd3",
+    "research/cow_identity/results/2026-10-03/detection/cutie-streaming-reserved.json": "2b6018a1da00b948e012c4bed76a987d24f91dcacf8190032ac8884084660603"
+  },
+  "environment_only_failed_launch": {
+    "path": "/tmp/cow-streaming-reserved-mps-unavailable.log",
+    "sha256": "808aefd24895dfa1e3ce8a2670586428fd54e9f3fa3bdff4d775cdaa45e188dc",
+    "outcome": "Sandbox MPS unavailable before model loading/output creation; exact frozen command rerun with GPU access. Not an accuracy trial."
+  }
+}

@@ -1,0 +1,646 @@
+{
+  "all_original_truth_counts_equal": true,
+  "files": {
+    ".cache/cow-cutie/calibration-clip/sampled.json": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d",
+    ".cache/cow-cutie/crowded-births/streaming.json": "2647641cdbd770a1d71ed1f28e2f2cf2e196f22e75a7dd908772cda90e40ce47",
+    ".cache/cow-cutie/uninitialized-seeds/0-masks.npz": "ed321f669febdce1bf64f94e9d612d77e203add5583721e4070ad570cdf253da",
+    ".cache/cow-cutie/uninitialized-seeds/manifest.json": "81067ebb13ef7fdd2e60d9f6be9abe802d82c9022aa401b4e07657bb10516699",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_birth_protocol.json": "2b07540a4796072968518eda6b6bc93fb97cbe17e787092332090eccb8a0a54f",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/crowded-births.json": "ab656bc9fd7cf3fab87639437a3075c67faf3f45ceb1229c9934a8902f733207",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-streaming-development.json": "a204ef7acdeb279f19476b480b51f90b76129385a1e3aa12646d51b7847508c1",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/uninitialized-unknown.json": "232bd5afa1d59b2fc25094ac91c5d641eedd6e62a1b487b8060373a65abf1938",
+    "datasets/8-calves/video/pmfeed_4_3_16.mp4": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825",
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26"
+  },
+  "implementation_sha256": "d10e0339a7b5a27a42d1525dfddee86940d2cba8daad30b02153134c16399b46",
+  "panels": {
+    "1230": {
+      "comparisons": {
+        "eight_seed_baseline": {
+          "conservative_precision": 0.9951298701298701,
+          "known_coverage": 0.6814897165091718,
+          "naming_counts": {
+            "correct_name": 1226,
+            "cow_name_switches": 0,
+            "cow_track_switches": 11,
+            "detector_boxes": 2344,
+            "eligible_boxes": 2344,
+            "eligible_matched": 2234,
+            "frames": 300,
+            "known_unnamed": 416,
+            "matched_boxes": 2234,
+            "missed_annotations": 163,
+            "track_cow_switches": 19,
+            "unknown_named": 0,
+            "unknown_rejected": 592,
+            "unmatched_boxes": 110,
+            "unmatched_named": 6,
+            "unmatched_unnamed": 104,
+            "visible_annotations": 2397,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_name": 0
+          }
+        },
+        "six_seed_baseline": {
+          "conservative_precision": 0.7617529880478088,
+          "known_coverage": 0.5314063368538077,
+          "naming_counts": {
+            "correct_name": 956,
+            "cow_name_switches": 0,
+            "cow_track_switches": 10,
+            "detector_boxes": 1800,
+            "eligible_boxes": 1800,
+            "eligible_matched": 1708,
+            "frames": 300,
+            "known_unnamed": 354,
+            "matched_boxes": 1708,
+            "missed_annotations": 689,
+            "track_cow_switches": 60,
+            "unknown_named": 177,
+            "unknown_rejected": 137,
+            "unmatched_boxes": 92,
+            "unmatched_named": 38,
+            "unmatched_unnamed": 54,
+            "visible_annotations": 2397,
+            "visible_known": 1799,
+            "visible_unknown": 598,
+            "wrong_name": 84
+          }
+        }
+      },
+      "first_errors": {
+        "unknown_named": null,
+        "unmatched_named": {
+          "all_overlaps": [
+            {
+              "cow": 1,
+              "iou": 0.4598166127292341,
+              "relative_area": 0.6563647490820074,
+              "truth_covered": 0.5217258261933905
+            },
+            {
+              "cow": 2,
+              "iou": 0.0,
+              "relative_area": 0.7732516222062005,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 3,
+              "iou": 0.0,
+              "relative_area": 1.2103827706197687,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 4,
+              "iou": 0.011838284565557293,
+              "relative_area": 0.89937106918239,
+              "truth_covered": 0.022222222222222223
+            },
+            {
+              "cow": 5,
+              "iou": 0.0,
+              "relative_area": 0.5380434782608695,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 6,
+              "iou": 0.0,
+              "relative_area": 1.0265613783201724,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 7,
+              "iou": 0.05702796563699507,
+              "relative_area": 0.5896096756459593,
+              "truth_covered": 0.08576140736668499
+            },
+            {
+              "cow": 8,
+              "iou": 0.1887281364716044,
+              "relative_area": 0.6383928571428571,
+              "truth_covered": 0.26011904761904764
+            }
+          ],
+          "assigned_cow": null,
+          "box": [
+            430,
+            440,
+            595,
+            518
+          ],
+          "mask_sha256": "69a452690959dade3660c5f01c4cde164a405e4adc639d41bfd62913e83f9251",
+          "named_cow": 1,
+          "outcome": "unmatched_named",
+          "second": 1230.0,
+          "source_pixels_sha256": "e67aee5a06a5289315690d43f2c128d33a1235c389328f07a4f07732f084a32f",
+          "track_id": 0,
+          "truth": [
+            {
+              "box": [
+                396,
+                456,
+                624,
+                542
+              ],
+              "cow": 1
+            },
+            {
+              "box": [
+                241,
+                308,
+                314,
+                536
+              ],
+              "cow": 2
+            },
+            {
+              "box": [
+                305,
+                310,
+                354,
+                527
+              ],
+              "cow": 3
+            },
+            {
+              "box": [
+                477,
+                308,
+                583,
+                443
+              ],
+              "cow": 4
+            },
+            {
+              "box": [
+                103,
+                316,
+                207,
+                546
+              ],
+              "cow": 5
+            },
+            {
+              "box": [
+                196,
+                326,
+                259,
+                525
+              ],
+              "cow": 6
+            },
+            {
+              "box": [
+                352,
+                318,
+                454,
+                532
+              ],
+              "cow": 7
+            },
+            {
+              "box": [
+                387,
+                336,
+                499,
+                516
+              ],
+              "cow": 8
+            }
+          ]
+        },
+        "wrong_name": null
+      },
+      "independent_counts": {
+        "correct_name": 1077,
+        "frames": 300,
+        "unknown_named": 0,
+        "unmatched_named": 7,
+        "visible_annotations": 2397,
+        "visible_known": 1799,
+        "visible_unknown": 598,
+        "wrong_name": 0
+      }
+    },
+    "330": {
+      "comparisons": {
+        "eight_seed_baseline": {
+          "conservative_precision": 0.992,
+          "known_coverage": 0.6888888888888889,
+          "naming_counts": {
+            "correct_name": 1240,
+            "cow_name_switches": 0,
+            "cow_track_switches": 10,
+            "detector_boxes": 2400,
+            "eligible_boxes": 2400,
+            "eligible_matched": 2314,
+            "frames": 300,
+            "known_unnamed": 515,
+            "matched_boxes": 2314,
+            "missed_annotations": 86,
+            "track_cow_switches": 7,
+            "unknown_named": 0,
+            "unknown_rejected": 559,
+            "unmatched_boxes": 86,
+            "unmatched_named": 10,
+            "unmatched_unnamed": 76,
+            "visible_annotations": 2400,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_name": 0
+          }
+        },
+        "six_seed_baseline": {
+          "conservative_precision": 0.9907335907335907,
+          "known_coverage": 0.7127777777777777,
+          "naming_counts": {
+            "correct_name": 1283,
+            "cow_name_switches": 0,
+            "cow_track_switches": 4,
+            "detector_boxes": 1800,
+            "eligible_boxes": 1800,
+            "eligible_matched": 1756,
+            "frames": 300,
+            "known_unnamed": 473,
+            "matched_boxes": 1756,
+            "missed_annotations": 644,
+            "track_cow_switches": 1,
+            "unknown_named": 0,
+            "unmatched_boxes": 44,
+            "unmatched_named": 12,
+            "unmatched_unnamed": 32,
+            "visible_annotations": 2400,
+            "visible_known": 1800,
+            "visible_unknown": 600,
+            "wrong_name": 0
+          }
+        }
+      },
+      "first_errors": {
+        "unknown_named": null,
+        "unmatched_named": {
+          "all_overlaps": [
+            {
+              "cow": 1,
+              "iou": 0.0,
+              "relative_area": 0.46436192915066155,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 2,
+              "iou": 0.0,
+              "relative_area": 0.348558352402746,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 3,
+              "iou": 0.0,
+              "relative_area": 0.49719284501893196,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 4,
+              "iou": 0.05396825396825397,
+              "relative_area": 0.5586854460093896,
+              "truth_covered": 0.07981220657276995
+            },
+            {
+              "cow": 5,
+              "iou": 0.4077961019490255,
+              "relative_area": 0.4077961019490255,
+              "truth_covered": 0.4077961019490255
+            },
+            {
+              "cow": 6,
+              "iou": 0.0,
+              "relative_area": 0.31712191872085277,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 7,
+              "iou": 0.0,
+              "relative_area": 0.5807091117041555,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 8,
+              "iou": 0.0,
+              "relative_area": 0.5306577480490524,
+              "truth_covered": 0.0
+            }
+          ],
+          "assigned_cow": null,
+          "box": [
+            261,
+            17,
+            329,
+            129
+          ],
+          "mask_sha256": "e700f360dd6b1c57cd465ffaf189804c410bb8780522ad842a0c1ceac98a5f1e",
+          "named_cow": 5,
+          "outcome": "unmatched_named",
+          "second": 471.0,
+          "source_pixels_sha256": "a753ce2f401d28f9b23c8d8c4fe518bbd659a8da2868e95a43a01deff3be06c4",
+          "track_id": 4,
+          "truth": [
+            {
+              "box": [
+                252,
+                331,
+                323,
+                562
+              ],
+              "cow": 1
+            },
+            {
+              "box": [
+                359,
+                288,
+                454,
+                518
+              ],
+              "cow": 2
+            },
+            {
+              "box": [
+                173,
+                331,
+                247,
+                538
+              ],
+              "cow": 3
+            },
+            {
+              "box": [
+                160,
+                113,
+                352,
+                184
+              ],
+              "cow": 4
+            },
+            {
+              "box": [
+                261,
+                11,
+                377,
+                172
+              ],
+              "cow": 5
+            },
+            {
+              "box": [
+                172,
+                158,
+                324,
+                316
+              ],
+              "cow": 6
+            },
+            {
+              "box": [
+                137,
+                321,
+                198,
+                536
+              ],
+              "cow": 7
+            },
+            {
+              "box": [
+                305,
+                322,
+                374,
+                530
+              ],
+              "cow": 8
+            }
+          ]
+        },
+        "wrong_name": null
+      },
+      "independent_counts": {
+        "correct_name": 1266,
+        "frames": 300,
+        "unknown_named": 0,
+        "unmatched_named": 10,
+        "visible_annotations": 2400,
+        "visible_known": 1800,
+        "visible_unknown": 600,
+        "wrong_name": 0
+      }
+    },
+    "930": {
+      "comparisons": {
+        "eight_seed_baseline": {
+          "conservative_precision": 0.9946153846153846,
+          "known_coverage": 0.7203342618384401,
+          "naming_counts": {
+            "correct_name": 1293,
+            "cow_name_switches": 0,
+            "cow_track_switches": 6,
+            "detector_boxes": 2397,
+            "eligible_boxes": 2397,
+            "eligible_matched": 2335,
+            "frames": 300,
+            "known_unnamed": 456,
+            "matched_boxes": 2335,
+            "missed_annotations": 58,
+            "track_cow_switches": 6,
+            "unknown_named": 0,
+            "unknown_rejected": 586,
+            "unmatched_boxes": 62,
+            "unmatched_named": 7,
+            "unmatched_unnamed": 55,
+            "visible_annotations": 2393,
+            "visible_known": 1795,
+            "visible_unknown": 598,
+            "wrong_name": 0
+          }
+        },
+        "six_seed_baseline": {
+          "conservative_precision": 0.8,
+          "known_coverage": 0.5192200557103064,
+          "naming_counts": {
+            "correct_name": 932,
+            "cow_name_switches": 0,
+            "cow_track_switches": 4,
+            "detector_boxes": 1800,
+            "eligible_boxes": 1800,
+            "eligible_matched": 1685,
+            "frames": 300,
+            "known_unnamed": 442,
+            "matched_boxes": 1685,
+            "missed_annotations": 708,
+            "track_cow_switches": 54,
+            "unknown_named": 175,
+            "unknown_rejected": 123,
+            "unmatched_boxes": 115,
+            "unmatched_named": 45,
+            "unmatched_unnamed": 70,
+            "visible_annotations": 2393,
+            "visible_known": 1795,
+            "visible_unknown": 598,
+            "wrong_name": 13
+          }
+        }
+      },
+      "first_errors": {
+        "unknown_named": null,
+        "unmatched_named": {
+          "all_overlaps": [
+            {
+              "cow": 1,
+              "iou": 0.0,
+              "relative_area": 1.636730123180291,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 2,
+              "iou": 0.0,
+              "relative_area": 2.5338048679009777,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 3,
+              "iou": 0.36234305113973164,
+              "relative_area": 2.605905006418485,
+              "truth_covered": 0.9590643274853801
+            },
+            {
+              "cow": 4,
+              "iou": 0.18776721257855758,
+              "relative_area": 2.5552447552447553,
+              "truth_covered": 0.5620279720279721
+            },
+            {
+              "cow": 5,
+              "iou": 0.0,
+              "relative_area": 2.501369112814896,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 6,
+              "iou": 0.22192118226600985,
+              "relative_area": 4.506104328523862,
+              "truth_covered": 1.0
+            },
+            {
+              "cow": 7,
+              "iou": 0.0,
+              "relative_area": 2.8524590163934427,
+              "truth_covered": 0.0
+            },
+            {
+              "cow": 8,
+              "iou": 0.29610750695088045,
+              "relative_area": 1.8835051546391752,
+              "truth_covered": 0.6587628865979381
+            }
+          ],
+          "assigned_cow": null,
+          "box": [
+            121,
+            276,
+            266,
+            528
+          ],
+          "mask_sha256": "4b40154579a4dfc8ee2e3ab4dd566cc2138195ac088f922be64aab248793f068",
+          "named_cow": 3,
+          "outcome": "unmatched_named",
+          "second": 996.0,
+          "source_pixels_sha256": "835c25a016f4c9c3e41351112c1c323ef44b8af00866c0fdf9e27d47e7b70c32",
+          "track_id": 2,
+          "truth": [
+            {
+              "box": [
+                473,
+                319,
+                568,
+                554
+              ],
+              "cow": 1
+            },
+            {
+              "box": [
+                320,
+                311,
+                389,
+                520
+              ],
+              "cow": 2
+            },
+            {
+              "box": [
+                128,
+                269,
+                210,
+                440
+              ],
+              "cow": 3
+            },
+            {
+              "box": [
+                219,
+                227,
+                284,
+                447
+              ],
+              "cow": 4
+            },
+            {
+              "box": [
+                394,
+                278,
+                477,
+                454
+              ],
+              "cow": 5
+            },
+            {
+              "box": [
+                197,
+                301,
+                250,
+                454
+              ],
+              "cow": 6
+            },
+            {
+              "box": [
+                270,
+                318,
+                331,
+                528
+              ],
+              "cow": 7
+            },
+            {
+              "box": [
+                95,
+                348,
+                192,
+                548
+              ],
+              "cow": 8
+            }
+          ]
+        },
+        "wrong_name": null
+      },
+      "independent_counts": {
+        "correct_name": 1100,
+        "frames": 300,
+        "unknown_named": 0,
+        "unmatched_named": 6,
+        "visible_annotations": 2393,
+        "visible_known": 1795,
+        "visible_unknown": 598,
+        "wrong_name": 0
+      }
+    }
+  },
+  "scope": "Post-result diagnostic. First chronological error of each named type per original panel; tie uses smallest stable track ID. Absent error categories remain null. Freeze before error pixels or masks are viewed. No alternate score or retuning."
+}

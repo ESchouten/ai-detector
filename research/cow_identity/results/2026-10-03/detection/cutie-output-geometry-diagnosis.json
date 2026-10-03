@@ -1,0 +1,6623 @@
+{
+  "all_panels": {
+    "assignment_loss_winners": {
+      "own_truth_unmatched": 1,
+      "unpaired_raw_proposal": 81
+    },
+    "geometry_own_iou_decreased": 4261,
+    "loss_causes": {
+      "raw_box_below_own_iou_threshold": 133,
+      "valid_raw_box_loses_global_assignment": 82
+    },
+    "named_observations": 6243,
+    "transitions": {
+      "correct_name->correct_name": 5970,
+      "correct_name->unknown_named": 7,
+      "correct_name->unmatched_named": 202,
+      "correct_name->wrong_name": 6,
+      "unmatched_named->correct_name": 45,
+      "unmatched_named->unmatched_named": 13
+    }
+  },
+  "changed_outcomes": [
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7789377967871215,
+        "relative_area": 0.929923273657289,
+        "truth_covered": 0.845049324077457
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4944554051296007,
+        "relative_area": 0.6051881622214103,
+        "truth_covered": 0.5310924369747899
+      },
+      "second": 364,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7737621397866582,
+        "relative_area": 0.8083103392306443,
+        "truth_covered": 0.7888329816588217
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.46574909033380796,
+        "relative_area": 0.5038143158578153,
+        "truth_covered": 0.4778445057620516
+      },
+      "second": 366,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.8099115044247788,
+        "relative_area": 0.8099115044247788,
+        "truth_covered": 0.8099115044247788
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4720232333010649,
+        "relative_area": 0.6147964601769912,
+        "truth_covered": 0.5178053097345132
+      },
+      "second": 369,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.8119241192411925,
+        "relative_area": 0.8119241192411925,
+        "truth_covered": 0.8119241192411925
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4708054696077453,
+        "relative_area": 0.5973983739837398,
+        "truth_covered": 0.5113279132791327
+      },
+      "second": 371,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6808673825128991,
+        "relative_area": 0.8716614906832298,
+        "truth_covered": 0.7581521739130435
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.41534077416290666,
+        "relative_area": 0.6195652173913043,
+        "truth_covered": 0.4752717391304348
+      },
+      "second": 372,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6270156058864959,
+        "relative_area": 0.8447442525112429,
+        "truth_covered": 0.7109233808262935
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.43231441048034935,
+        "relative_area": 0.736981465136805,
+        "truth_covered": 0.5242718446601942
+      },
+      "second": 373,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6457357075913777,
+        "relative_area": 0.933920704845815,
+        "truth_covered": 0.7588105726872246
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4298357897816626,
+        "relative_area": 0.7940528634361234,
+        "truth_covered": 0.5393263582966226
+      },
+      "second": 374,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.684896389660329,
+        "relative_area": 1.0427350427350428,
+        "truth_covered": 0.8303548303548304
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4366784894638014,
+        "relative_area": 0.7834757834757835,
+        "truth_covered": 0.5420875420875421
+      },
+      "second": 375,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6646187602852441,
+        "relative_area": 0.996885281860057,
+        "truth_covered": 0.7972801052862469
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4270852345318489,
+        "relative_area": 0.7150690940995832,
+        "truth_covered": 0.5132704540469402
+      },
+      "second": 376,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6548507462686567,
+        "relative_area": 1.0791561485755499,
+        "truth_covered": 0.8227551388388027
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4155434470891884,
+        "relative_area": 0.7800216372160116,
+        "truth_covered": 0.5225387666786874
+      },
+      "second": 377,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7065044388639338,
+        "relative_area": 1.1116946778711485,
+        "truth_covered": 0.8742559523809523
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4395190496885412,
+        "relative_area": 0.739670868347339,
+        "truth_covered": 0.5311624649859944
+      },
+      "second": 379,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6698738507590336,
+        "relative_area": 1.0685088726052794,
+        "truth_covered": 0.8297872340425532
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.43426962015680903,
+        "relative_area": 0.6634589917895295,
+        "truth_covered": 0.5036638121303081
+      },
+      "second": 380,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6496473699676756,
+        "relative_area": 1.0120967741935485,
+        "truth_covered": 0.7923835125448029
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.39001673579276724,
+        "relative_area": 0.7117383512544803,
+        "truth_covered": 0.48028673835125446
+      },
+      "second": 382,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7290913117295342,
+        "relative_area": 1.0165289256198347,
+        "truth_covered": 0.8502926997245179
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4678234628442097,
+        "relative_area": 0.6749311294765841,
+        "truth_covered": 0.5338326446280992
+      },
+      "second": 385,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7075248111390905,
+        "relative_area": 1.0142407828062205,
+        "truth_covered": 0.8346147125633409
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4637664479993862,
+        "relative_area": 0.6667831556875764,
+        "truth_covered": 0.5280884151668706
+      },
+      "second": 386,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7214285714285714,
+        "relative_area": 0.8538461538461538,
+        "truth_covered": 0.7769230769230769
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.49270191372040223,
+        "relative_area": 0.5391304347826087,
+        "truth_covered": 0.5080267558528428
+      },
+      "second": 387,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.78092477934396,
+        "relative_area": 0.8360722531576803,
+        "truth_covered": 0.8051066141518403
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4626767076231999,
+        "relative_area": 0.5035990764633981,
+        "truth_covered": 0.47562134999320926
+      },
+      "second": 395,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.8248979591836735,
+        "relative_area": 0.8248979591836735,
+        "truth_covered": 0.8248979591836735
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.6602967625899281,
+        "relative_area": 0.8839285714285714,
+        "truth_covered": 0.749234693877551
+      },
+      "second": 397,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.6688118811881189,
+        "relative_area": 1.0630354957160342,
+        "truth_covered": 0.8268053855569155
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.7747413793103448,
+        "relative_area": 1.2907533103371536,
+        "truth_covered": 1.0
+      },
+      "second": 398,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.5689655172413793,
+        "relative_area": 0.5689655172413793,
+        "truth_covered": 0.5689655172413793
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.7392438070404173,
+        "relative_area": 0.8668831168831169,
+        "truth_covered": 0.7934952978056427
+      },
+      "second": 426,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.8668809576590556,
+        "relative_area": 1.0902208984859767,
+        "truth_covered": 0.9705882352941176
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.4879952426967962,
+        "relative_area": 0.6561595102175891,
+        "truth_covered": 0.5431455282534955
+      },
+      "second": 428,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.8202247191011236,
+        "relative_area": 1.2191780821917808,
+        "truth_covered": 1.0
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.4193160566390596,
+        "relative_area": 2.38483593501115,
+        "truth_covered": 1.0
+      },
+      "second": 457,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.8677468906397107,
+        "relative_area": 1.1282253966461522,
+        "truth_covered": 0.9887640449438202
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.47213657908057616,
+        "relative_area": 0.8062785839308904,
+        "truth_covered": 0.5793009993789171
+      },
+      "second": 473,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.8550557477893118,
+        "relative_area": 1.0261190896111532,
+        "truth_covered": 0.933904425967918
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.4551931248202933,
+        "relative_area": 0.9126984126984127,
+        "truth_covered": 0.5983035189384396
+      },
+      "second": 492,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.5133102230361698,
+        "relative_area": 0.5959853762847486,
+        "truth_covered": 0.5413533834586466
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.49866565001906216,
+        "relative_area": 0.8981168517624336,
+        "truth_covered": 0.631578947368421
+      },
+      "second": 504,
+      "slot": 4
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.4695238095238095,
+        "relative_area": 0.4695238095238095,
+        "truth_covered": 0.4695238095238095
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 3,
+      "raw_assigned_cow": 5,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6508823764273737,
+        "relative_area": 0.6876734693877551,
+        "truth_covered": 0.6653877551020408
+      },
+      "second": 505,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.9175758158312106,
+        "relative_area": 0.9973468161794153,
+        "truth_covered": 0.9557468962755307
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.4941063156446361,
+        "relative_area": 0.6307569082899479,
+        "truth_covered": 0.5392971565879054
+      },
+      "second": 519,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.5619047619047619,
+        "relative_area": 0.7083333333333334,
+        "truth_covered": 0.6145833333333334
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6821412595059396,
+        "relative_area": 1.0260416666666667,
+        "truth_covered": 0.8215996168582376
+      },
+      "second": 531,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.5368589743589743,
+        "relative_area": 0.6144781144781145,
+        "truth_covered": 0.563973063973064
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6192899271423615,
+        "relative_area": 1.0204906204906206,
+        "truth_covered": 0.7727272727272727
+      },
+      "second": 532,
+      "slot": 3
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.4543585623478816,
+        "relative_area": 2.1705645992169793,
+        "truth_covered": 0.990521327014218
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 4,
+      "raw_assigned_cow": 3,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.7173191771731918,
+        "relative_area": 1.133113538017721,
+        "truth_covered": 0.8909952606635071
+      },
+      "second": 536,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.8434235517568851,
+        "relative_area": 0.8434235517568851,
+        "truth_covered": 0.8434235517568851
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.7780540174030964,
+        "relative_area": 0.8677587844254511,
+        "truth_covered": 0.8173076923076923
+      },
+      "second": 543,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.7491937484495163,
+        "relative_area": 1.3347682119205297,
+        "truth_covered": 1.0
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.48161521333574053,
+        "relative_area": 1.0380794701986755,
+        "truth_covered": 0.6625
+      },
+      "second": 547,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.7573267718265302,
+        "relative_area": 1.3018705035971223,
+        "truth_covered": 0.992
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.5058969870082005,
+        "relative_area": 0.8812661870503598,
+        "truth_covered": 0.632
+      },
+      "second": 548,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.8323699421965318,
+        "relative_area": 1.2013888888888888,
+        "truth_covered": 1.0
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.5506362210214398,
+        "relative_area": 0.8103378103378104,
+        "truth_covered": 0.6428571428571429
+      },
+      "second": 549,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.7417970294233919,
+        "relative_area": 0.8221670802315963,
+        "truth_covered": 0.7760250502185986
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.7974609829955742,
+        "relative_area": 0.8235850171334043,
+        "truth_covered": 0.8090511638898735
+      },
+      "second": 554,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.821256038647343,
+        "relative_area": 0.821256038647343,
+        "truth_covered": 0.821256038647343
+      },
+      "own_truth_winning_proposal": 10,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.5657398010960016,
+        "relative_area": 0.9410225442834138,
+        "truth_covered": 0.7013385668276972
+      },
+      "second": 557,
+      "slot": 3
+    },
+    {
+      "after": "wrong_name",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.5048141629568278,
+        "relative_area": 1.7006688963210703,
+        "truth_covered": 0.905982905982906
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": 4,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.3691776883266245,
+        "relative_area": 1.6544035674470456,
+        "truth_covered": 0.7157190635451505
+      },
+      "second": 562,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.7543965068301086,
+        "relative_area": 1.078547698149027,
+        "truth_covered": 0.8937826293308021
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.708433734939759,
+        "relative_area": 1.3554817275747508,
+        "truth_covered": 0.9767441860465116
+      },
+      "second": 562,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6068951612903226,
+        "relative_area": 0.6068951612903226,
+        "truth_covered": 0.6068951612903226
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.7907551982685321,
+        "relative_area": 0.8683064516129032,
+        "truth_covered": 0.825
+      },
+      "second": 568,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.8081705150976909,
+        "relative_area": 0.8232835820895522,
+        "truth_covered": 0.8149253731343283
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6748874821618062,
+        "relative_area": 0.8218109452736319,
+        "truth_covered": 0.734089552238806
+      },
+      "second": 569,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.5690962099125364,
+        "relative_area": 1.4308943089430894,
+        "truth_covered": 0.8816621499548328
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.3645545052654279,
+        "relative_area": 1.4497354497354498,
+        "truth_covered": 0.6544715447154471
+      },
+      "second": 574,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.5754251012145749,
+        "relative_area": 1.4805890227576974,
+        "truth_covered": 0.906036845795882
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.41198767077640785,
+        "relative_area": 1.1609613055396188,
+        "truth_covered": 0.6305220883534136
+      },
+      "second": 575,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.5854126679462572,
+        "relative_area": 1.5049683830171634,
+        "truth_covered": 0.9249580591044005
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.3522791619479049,
+        "relative_area": 1.465479416698929,
+        "truth_covered": 0.6422764227642277
+      },
+      "second": 576,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.568116888417272,
+        "relative_area": 1.4494453652938926,
+        "truth_covered": 0.887415529771771
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.3513494368491889,
+        "relative_area": 1.4323600663011602,
+        "truth_covered": 0.6324110671936759
+      },
+      "second": 577,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.5556828305969199,
+        "relative_area": 1.496017970185828,
+        "truth_covered": 0.891566265060241
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.3580517599154301,
+        "relative_area": 1.361037369818256,
+        "truth_covered": 0.6224899598393574
+      },
+      "second": 578,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.5318062445287424,
+        "relative_area": 1.7383933229003652,
+        "truth_covered": 0.9507042253521126
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.46065459610027853,
+        "relative_area": 1.1883150756390193,
+        "truth_covered": 0.6901408450704225
+      },
+      "second": 581,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.5770046669495121,
+        "relative_area": 1.4384430352066477,
+        "truth_covered": 0.8921933085501859
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.3873836320689176,
+        "relative_area": 1.1834681828121583,
+        "truth_covered": 0.6096654275092936
+      },
+      "second": 592,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.4776409591704472,
+        "relative_area": 0.602760736196319,
+        "truth_covered": 0.5180853783231084
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 4,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.7337823260153358,
+        "relative_area": 0.9001469836400818,
+        "truth_covered": 0.8041922290388548
+      },
+      "second": 596,
+      "slot": 0
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.49647116086639087,
+        "relative_area": 0.6081072245831971,
+        "truth_covered": 0.5335076822491011
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 3,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.7994987468671679,
+        "relative_area": 0.9716247139588101,
+        "truth_covered": 0.8759725400457666
+      },
+      "second": 597,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.539200399176698,
+        "relative_area": 0.6822085889570552,
+        "truth_covered": 0.5892978868438992
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.5335659840205712,
+        "relative_area": 0.7074642126789366,
+        "truth_covered": 0.5940695296523517
+      },
+      "second": 600,
+      "slot": 0
+    },
+    {
+      "after": "wrong_name",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6722142764269926,
+        "relative_area": 1.2132163138874548,
+        "truth_covered": 0.8896919635174668
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": 2,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.46109171362394996,
+        "relative_area": 1.4244249412034646,
+        "truth_covered": 0.7651006711409396
+      },
+      "second": 602,
+      "slot": 3
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.4801259346713892,
+        "relative_area": 0.6371337686254813,
+        "truth_covered": 0.531056420559183
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 4,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.7880017263703064,
+        "relative_area": 1.080763435459568,
+        "truth_covered": 0.9170266197890508
+      },
+      "second": 603,
+      "slot": 0
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.48816066567363503,
+        "relative_area": 0.6206857973932987,
+        "truth_covered": 0.5316328242993791
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 6,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.5231297004881911,
+        "relative_area": 0.614336857414555,
+        "truth_covered": 0.5544554455445545
+      },
+      "second": 604,
+      "slot": 0
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.46924951136576615,
+        "relative_area": 0.7089691684833386,
+        "truth_covered": 0.5458112737464964
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 4,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6397325160211759,
+        "relative_area": 0.8327623793210838,
+        "truth_covered": 0.7150420429772657
+      },
+      "second": 605,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.5467786776260123,
+        "relative_area": 0.7787739783152627,
+        "truth_covered": 0.6287878787878788
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6615069615069615,
+        "relative_area": 1.1149916597164304,
+        "truth_covered": 0.8420558798999166
+      },
+      "second": 616,
+      "slot": 0
+    },
+    {
+      "after": "wrong_name",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7036828108630833,
+        "relative_area": 0.8913043478260869,
+        "truth_covered": 0.7811773125782787
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 4,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.43961958124447065,
+        "relative_area": 0.7469135802469136,
+        "truth_covered": 0.5334585793522991
+      },
+      "second": 624,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.648293089092423,
+        "relative_area": 1.4881850175967823,
+        "truth_covered": 0.9786324786324786
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.39457090470014755,
+        "relative_area": 1.61303837774426,
+        "truth_covered": 0.7393162393162394
+      },
+      "second": 628,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.6132025167964168,
+        "relative_area": 1.5107053941908715,
+        "truth_covered": 0.9543568464730291
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.41416033921703976,
+        "relative_area": 1.3802489626556016,
+        "truth_covered": 0.6970954356846473
+      },
+      "second": 629,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6652429764616553,
+        "relative_area": 1.3722282314764738,
+        "truth_covered": 0.9476744186046512
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.47048346055979645,
+        "relative_area": 2.1254732287723095,
+        "truth_covered": 1.0
+      },
+      "second": 934,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.7623737282305659,
+        "relative_area": 0.9523885925153424,
+        "truth_covered": 0.8445710160041715
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6951094088023548,
+        "relative_area": 0.9171713930448037,
+        "truth_covered": 0.7861698287272874
+      },
+      "second": 965,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.7328990228013029,
+        "relative_area": 0.8865248226950354,
+        "truth_covered": 0.7978723404255319
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.7046341027017355,
+        "relative_area": 0.8769109535066982,
+        "truth_covered": 0.7758471237194642
+      },
+      "second": 966,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.7637889688249401,
+        "relative_area": 0.9777949804432855,
+        "truth_covered": 0.8564618644067796
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.7100420228952325,
+        "relative_area": 0.9232398956975228,
+        "truth_covered": 0.7985658409387223
+      },
+      "second": 967,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6320119670905011,
+        "relative_area": 1.5139952558454761,
+        "truth_covered": 0.973568281938326
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.5864053507543942,
+        "relative_area": 1.0736699423924094,
+        "truth_covered": 0.7665198237885462
+      },
+      "second": 967,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.7302823758519961,
+        "relative_area": 0.9343251088534107,
+        "truth_covered": 0.816400580551524
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.704840613931523,
+        "relative_area": 0.9211417513304305,
+        "truth_covered": 0.7942670537010159
+      },
+      "second": 968,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6529965329370976,
+        "relative_area": 1.2190159574468085,
+        "truth_covered": 0.8765957446808511
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.5758452574418328,
+        "relative_area": 1.6434175531914894,
+        "truth_covered": 0.9659574468085106
+      },
+      "second": 969,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.5812336387434555,
+        "relative_area": 1.6660689655172414,
+        "truth_covered": 0.98
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 10,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.5044763083193827,
+        "relative_area": 1.8510344827586207,
+        "truth_covered": 0.956
+      },
+      "second": 980,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6158836249262827,
+        "relative_area": 1.6020892687559354,
+        "truth_covered": 0.9917695473251029
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.49694828140057823,
+        "relative_area": 1.9503007280785059,
+        "truth_covered": 0.9794238683127572
+      },
+      "second": 982,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.694954128440367,
+        "relative_area": 0.694954128440367,
+        "truth_covered": 0.694954128440367
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 10,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.5725446428571429,
+        "relative_area": 0.6158256880733946,
+        "truth_covered": 0.588302752293578
+      },
+      "second": 983,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.671482917550662,
+        "relative_area": 0.7814814814814814,
+        "truth_covered": 0.715672514619883
+      },
+      "own_truth_winning_proposal": 2,
+      "proposal_index": 10,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6837483755400232,
+        "relative_area": 0.8689278752436648,
+        "truth_covered": 0.7589473684210526
+      },
+      "second": 984,
+      "slot": 0
+    },
+    {
+      "after": "wrong_name",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.6697674418604651,
+        "relative_area": 1.3814262023217247,
+        "truth_covered": 0.9552238805970149
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.48850632911392405,
+        "relative_area": 2.0470563847429517,
+        "truth_covered": 1.0
+      },
+      "second": 990,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.5662843037607086,
+        "relative_area": 1.6595167652859961,
+        "truth_covered": 0.9615384615384616
+      },
+      "own_truth_winning_proposal": 0,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.48904309715120525,
+        "relative_area": 2.0155325443786984,
+        "truth_covered": 0.9903846153846154
+      },
+      "second": 993,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.5866467634685846,
+        "relative_area": 1.3716024340770792,
+        "truth_covered": 0.8768762677484787
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.36220472440944884,
+        "relative_area": 2.158215010141988,
+        "truth_covered": 0.8397565922920892
+      },
+      "second": 1003,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.7190842156177782,
+        "relative_area": 1.0363509039979628,
+        "truth_covered": 0.8517952635599695
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.49854980079681277,
+        "relative_area": 1.993188184364655,
+        "truth_covered": 0.9957983193277311
+      },
+      "second": 1008,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.5076908255996917,
+        "relative_area": 1.4063861411511456,
+        "truth_covered": 0.8103121316180616
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.3674799258801729,
+        "relative_area": 1.269437753062375,
+        "truth_covered": 0.6098611039926195
+      },
+      "second": 1008,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6198659289210471,
+        "relative_area": 1.1549295774647887,
+        "truth_covered": 0.8246160379361597
+      },
+      "own_truth_winning_proposal": 2,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6182268849435093,
+        "relative_area": 0.9869063627999151,
+        "truth_covered": 0.7590770755184373
+      },
+      "second": 1018,
+      "slot": 3
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.4525502946555578,
+        "relative_area": 0.7852147852147852,
+        "truth_covered": 0.5561938061938062
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 3,
+      "raw_assigned_cow": 3,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.8479524496306979,
+        "relative_area": 1.1120379620379621,
+        "truth_covered": 0.9691308691308691
+      },
+      "second": 1019,
+      "slot": 2
+    },
+    {
+      "after": "unknown_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.8076031525266574,
+        "relative_area": 1.1851298337380909,
+        "truth_covered": 0.976274985989165
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 2,
+      "raw_assigned_cow": 7,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.45402174695758624,
+        "relative_area": 0.8860452082944144,
+        "truth_covered": 0.5889220997571455
+      },
+      "second": 1021,
+      "slot": 1
+    },
+    {
+      "after": "unknown_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7915820491378968,
+        "relative_area": 1.2516264638174357,
+        "truth_covered": 0.9948453608247423
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 5,
+      "raw_assigned_cow": 7,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4228727326353045,
+        "relative_area": 0.9314382944650185,
+        "truth_covered": 0.5740166149534581
+      },
+      "second": 1022,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.7111111111111111,
+        "relative_area": 0.7111111111111111,
+        "truth_covered": 0.7111111111111111
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6714897950524038,
+        "relative_area": 1.0842328042328042,
+        "truth_covered": 0.8373015873015873
+      },
+      "second": 1047,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.807733619763695,
+        "relative_area": 0.807733619763695,
+        "truth_covered": 0.807733619763695
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6365521447448669,
+        "relative_area": 1.1617078410311492,
+        "truth_covered": 0.8408163265306122
+      },
+      "second": 1049,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7972508591065293,
+        "relative_area": 1.2067510548523206,
+        "truth_covered": 0.9789029535864979
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4982114583944174,
+        "relative_area": 1.994491326769808,
+        "truth_covered": 0.9957805907172996
+      },
+      "second": 1052,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7438457736035591,
+        "relative_area": 1.3443646996278575,
+        "truth_covered": 1.0
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.46936656282450673,
+        "relative_area": 2.1030701754385963,
+        "truth_covered": 0.9912280701754386
+      },
+      "second": 1074,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.8343496345353956,
+        "relative_area": 0.9747848013216243,
+        "truth_covered": 0.8982262411964177
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.7368612607366429,
+        "relative_area": 1.0746891574645683,
+        "truth_covered": 0.880184331797235
+      },
+      "second": 1090,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.7954104600519709,
+        "relative_area": 1.0460460460460461,
+        "truth_covered": 0.9064481147814482
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6662749706227967,
+        "relative_area": 1.0699866533199867,
+        "truth_covered": 0.8277027027027027
+      },
+      "second": 1091,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.8747993579454254,
+        "relative_area": 1.0857142857142856,
+        "truth_covered": 0.9732142857142857
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.7020072053525476,
+        "relative_area": 1.1090561224489797,
+        "truth_covered": 0.8698979591836735
+      },
+      "second": 1098,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.4884896125772038,
+        "relative_area": 0.4884896125772038,
+        "truth_covered": 0.4884896125772038
+      },
+      "own_truth_winning_proposal": 2,
+      "proposal_index": 2,
+      "raw_assigned_cow": 3,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.6105424599073117,
+        "relative_area": 0.8081602096200636,
+        "truth_covered": 0.6854576080853453
+      },
+      "second": 1110,
+      "slot": 2
+    },
+    {
+      "after": "wrong_name",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.817611967416649,
+        "relative_area": 1.0864502224694104,
+        "truth_covered": 0.9385428253615128
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 4,
+      "raw_assigned_cow": 3,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.6696326650080492,
+        "relative_area": 0.9828629032258065,
+        "truth_covered": 0.7952586206896551
+      },
+      "second": 1140,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.7350427350427351,
+        "relative_area": 1.1353352529823117,
+        "truth_covered": 0.9046247869777282
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.4564890820322979,
+        "relative_area": 2.1906328965152495,
+        "truth_covered": 1.0
+      },
+      "second": 1145,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.8057195196417667,
+        "relative_area": 1.1198327359617681,
+        "truth_covered": 0.9458781362007168
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.4478330658105939,
+        "relative_area": 2.2329749103942653,
+        "truth_covered": 1.0
+      },
+      "second": 1147,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.7481203007518797,
+        "relative_area": 0.8493427704752275,
+        "truth_covered": 0.7914391641388608
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.44798755590122497,
+        "relative_area": 1.5099427030670711,
+        "truth_covered": 0.7765419615773509
+      },
+      "second": 1147,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.6574494428394552,
+        "relative_area": 1.1048218029350105,
+        "truth_covered": 0.8349056603773585
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.46774256574577,
+        "relative_area": 1.812294100029949,
+        "truth_covered": 0.8962264150943396
+      },
+      "second": 1153,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.5338832130471459,
+        "relative_area": 1.8118556701030928,
+        "truth_covered": 0.9786941580756013
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.4264777723497802,
+        "relative_area": 2.3447880870561284,
+        "truth_covered": 1.0
+      },
+      "second": 1155,
+      "slot": 0
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.49744271988174427,
+        "relative_area": 1.8582472772416907,
+        "truth_covered": 0.9494949494949495
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 5,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.5170693277310925,
+        "relative_area": 1.9339766378872525,
+        "truth_covered": 1.0
+      },
+      "second": 1156,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7813552796226778,
+        "relative_area": 1.1345444059976932,
+        "truth_covered": 0.9362745098039216
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.5031483039781794,
+        "relative_area": 1.9874855824682813,
+        "truth_covered": 1.0
+      },
+      "second": 1156,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.5393405267743449,
+        "relative_area": 1.6802613921465663,
+        "truth_covered": 0.9390862944162437
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4709163346613546,
+        "relative_area": 2.1235194585448394,
+        "truth_covered": 1.0
+      },
+      "second": 1159,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6863382899628253,
+        "relative_area": 1.3144132653061225,
+        "truth_covered": 0.9419642857142857
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4224188183657374,
+        "relative_area": 0.8896683673469388,
+        "truth_covered": 0.5611789358600583
+      },
+      "second": 1161,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7806252693697576,
+        "relative_area": 1.2810243778136414,
+        "truth_covered": 1.0
+      },
+      "own_truth_winning_proposal": 2,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6899742930591259,
+        "relative_area": 1.3731844049944788,
+        "truth_covered": 0.9689119170984456
+      },
+      "second": 1171,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.8394171273752425,
+        "relative_area": 0.9602028872415138,
+        "truth_covered": 0.8945376511900117
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.7989614970118546,
+        "relative_area": 1.1492781896215372,
+        "truth_covered": 0.9545454545454546
+      },
+      "second": 1176,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.8337130993974379,
+        "relative_area": 1.1643557255558212,
+        "truth_covered": 0.9840425531914894
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.6745414231001814,
+        "relative_area": 1.482488644513507,
+        "truth_covered": 1.0
+      },
+      "second": 1180,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.795380238631056,
+        "relative_area": 0.8125428669410151,
+        "truth_covered": 0.8029835390946503
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6811267605633803,
+        "relative_area": 1.046639231824417,
+        "truth_covered": 0.8292181069958847
+      },
+      "second": 1200,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6643172592229112,
+        "relative_area": 1.4714493905670376,
+        "truth_covered": 0.9864864864864865
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4281238103604791,
+        "relative_area": 2.2305908850026497,
+        "truth_covered": 0.9684684684684685
+      },
+      "second": 1203,
+      "slot": 1
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.47867420349434736,
+        "relative_area": 0.7308270676691729,
+        "truth_covered": 0.5603007518796993
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 7,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6287284144427001,
+        "relative_area": 1.1842105263157894,
+        "truth_covered": 0.8431578947368421
+      },
+      "second": 1225,
+      "slot": 0
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.4592004991309773,
+        "relative_area": 0.6895252837977296,
+        "truth_covered": 0.5316821465428276
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 6,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.583710407239819,
+        "relative_area": 1.0588235294117647,
+        "truth_covered": 0.7588235294117647
+      },
+      "second": 1226,
+      "slot": 0
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.4462633451957295,
+        "relative_area": 0.6683087027914614,
+        "truth_covered": 0.5147783251231527
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 6,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6469555035128806,
+        "relative_area": 1.1555555555555554,
+        "truth_covered": 0.8467432950191571
+      },
+      "second": 1227,
+      "slot": 0
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.4598166127292341,
+        "relative_area": 0.6563647490820074,
+        "truth_covered": 0.5217258261933905
+      },
+      "own_truth_winning_proposal": 0,
+      "proposal_index": 0,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.5851949871565346,
+        "relative_area": 1.0772133822929417,
+        "truth_covered": 0.7668298653610771
+      },
+      "second": 1230,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.7219866312082225,
+        "relative_area": 1.2531740806921847,
+        "truth_covered": 0.9447004608294931
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.4996040388041972,
+        "relative_area": 1.84943101664629,
+        "truth_covered": 0.9493087557603687
+      },
+      "second": 1230,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.4799225931301403,
+        "relative_area": 0.6743295019157088,
+        "truth_covered": 0.5429666119321291
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 4,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6025824964131994,
+        "relative_area": 1.1398467432950192,
+        "truth_covered": 0.8045977011494253
+      },
+      "second": 1231,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.6505769772023642,
+        "relative_area": 0.6505769772023642,
+        "truth_covered": 0.6505769772023642
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.49728854714690407,
+        "relative_area": 0.7355286612252556,
+        "truth_covered": 0.5764142977765269
+      },
+      "second": 1237,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7148961374116851,
+        "relative_area": 1.0442281506883857,
+        "truth_covered": 0.8521861919410963
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4728129377308035,
+        "relative_area": 1.9164355237278734,
+        "truth_covered": 0.9362549800796812
+      },
+      "second": 1241,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7317438896386265,
+        "relative_area": 1.1486511627906977,
+        "truth_covered": 0.9079069767441861
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4949081951392945,
+        "relative_area": 1.7379069767441861,
+        "truth_covered": 0.9064186046511628
+      },
+      "second": 1242,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.8492063492063492,
+        "relative_area": 1.1574074074074074,
+        "truth_covered": 0.9907407407407407
+      },
+      "own_truth_winning_proposal": 1,
+      "proposal_index": 10,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.6942035152030898,
+        "relative_area": 1.2823192239858907,
+        "truth_covered": 0.9351851851851852
+      },
+      "second": 1244,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.7848309975267931,
+        "relative_area": 1.1585244267198405,
+        "truth_covered": 0.9491525423728814
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.4419661883790311,
+        "relative_area": 1.5299102691924227,
+        "truth_covered": 0.7754237288135594
+      },
+      "second": 1246,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.8020092983487415,
+        "relative_area": 1.1341054363647871,
+        "truth_covered": 0.9498133029555091
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.4920663219825281,
+        "relative_area": 1.1186000886019871,
+        "truth_covered": 0.6986899563318777
+      },
+      "second": 1247,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7509975745246851,
+        "relative_area": 1.1669813604454127,
+        "truth_covered": 0.9294117647058824
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.49497552177273896,
+        "relative_area": 1.8090050835148874,
+        "truth_covered": 0.9300411522633745
+      },
+      "second": 1249,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7047113163972286,
+        "relative_area": 1.362501600307259,
+        "truth_covered": 0.9766355140186916
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.6181354817494246,
+        "relative_area": 1.519907822301882,
+        "truth_covered": 0.9626168224299065
+      },
+      "second": 1255,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7331759829601059,
+        "relative_area": 1.2471264367816093,
+        "truth_covered": 0.9505896402448126
+      },
+      "own_truth_winning_proposal": 1,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.6294093519278097,
+        "relative_area": 1.3719958202716824,
+        "truth_covered": 0.916256157635468
+      },
+      "second": 1260,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.6642250901058017,
+        "relative_area": 1.2851213282247764,
+        "truth_covered": 0.9120370370370371
+      },
+      "own_truth_winning_proposal": 2,
+      "proposal_index": 10,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6621564482029598,
+        "relative_area": 1.5102171136653895,
+        "truth_covered": 1.0
+      },
+      "second": 1272,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.686411149825784,
+        "relative_area": 1.2616822429906542,
+        "truth_covered": 0.9205607476635514
+      },
+      "own_truth_winning_proposal": 9,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6152434611806058,
+        "relative_area": 1.539496139780577,
+        "truth_covered": 0.9672897196261683
+      },
+      "second": 1282,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.8224634169977711,
+        "relative_area": 0.9610010427528676,
+        "truth_covered": 0.8849843587069864
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.7954985345351988,
+        "relative_area": 1.2570733402850192,
+        "truth_covered": 1.0
+      },
+      "second": 1300,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6782925765922873,
+        "relative_area": 1.4619186046511627,
+        "truth_covered": 0.995
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.5926366738078236,
+        "relative_area": 1.333953488372093,
+        "truth_covered": 0.8684883720930232
+      },
+      "second": 1345,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.8106489184692179,
+        "relative_area": 0.8506802721088436,
+        "truth_covered": 0.8285714285714286
+      },
+      "own_truth_winning_proposal": 1,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.7073170731707317,
+        "relative_area": 0.8571428571428571,
+        "truth_covered": 0.7693877551020408
+      },
+      "second": 1353,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6754229579770784,
+        "relative_area": 0.9065540512565727,
+        "truth_covered": 0.7686001738914421
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6802763601013784,
+        "relative_area": 1.0037676479112325,
+        "truth_covered": 0.8112449799196787
+      },
+      "second": 1354,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.684251968503937,
+        "relative_area": 1.3057851239669422,
+        "truth_covered": 0.9367588932806324
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.49935703818894106,
+        "relative_area": 2.002575158701641,
+        "truth_covered": 1.0
+      },
+      "second": 1366,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.8253844958831754,
+        "relative_area": 1.094847566411125,
+        "truth_covered": 0.9472276698163665
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6255529762165477,
+        "relative_area": 1.2055624888571939,
+        "truth_covered": 0.8487549771201046
+      },
+      "second": 1375,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7398469129554656,
+        "relative_area": 1.3070502872960617,
+        "truth_covered": 0.981042654028436
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.785199738048461,
+        "relative_area": 1.1722937549804975,
+        "truth_covered": 0.9554586251730067
+      },
+      "second": 1376,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7146446879083325,
+        "relative_area": 1.2745333333333333,
+        "truth_covered": 0.948
+      },
+      "own_truth_winning_proposal": 9,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6531773449066682,
+        "relative_area": 1.5309777777777778,
+        "truth_covered": 1.0
+      },
+      "second": 1379,
+      "slot": 3
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.4728592162554427,
+        "relative_area": 1.9363425925925926,
+        "truth_covered": 0.9427083333333334
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 6,
+      "raw_assigned_cow": 4,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.5024299065420561,
+        "relative_area": 1.990327380952381,
+        "truth_covered": 1.0
+      },
+      "second": 1385,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.5974025974025974,
+        "relative_area": 1.5759162303664922,
+        "truth_covered": 0.9633507853403142
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4980443285528031,
+        "relative_area": 2.007853403141361,
+        "truth_covered": 1.0
+      },
+      "second": 1386,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7511778983438036,
+        "relative_area": 1.0281521289789168,
+        "truth_covered": 0.8699875981810665
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6549166125189517,
+        "relative_area": 1.5269119470855725,
+        "truth_covered": 1.0
+      },
+      "second": 1410,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.5886501736111112,
+        "relative_area": 0.5886501736111112,
+        "truth_covered": 0.5886501736111112
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4627524075799938,
+        "relative_area": 0.5327473958333333,
+        "truth_covered": 0.48489583333333336
+      },
+      "second": 1419,
+      "slot": 3
+    },
+    {
+      "after": "unknown_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.7992355507509362,
+        "relative_area": 1.1671316964285714,
+        "truth_covered": 0.9626581101190477
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 8,
+      "raw_assigned_cow": 7,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.6356300434512725,
+        "relative_area": 1.5732421875,
+        "truth_covered": 1.0
+      },
+      "second": 1434,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.7795831658724235,
+        "relative_area": 1.1273164035689773,
+        "truth_covered": 0.9319148936170213
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.623649010165864,
+        "relative_area": 1.6034660260809883,
+        "truth_covered": 1.0
+      },
+      "second": 1444,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.7370242214532872,
+        "relative_area": 0.7815338345864662,
+        "truth_covered": 0.7559097744360902
+      },
+      "own_truth_winning_proposal": 2,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.5702772985916218,
+        "relative_area": 0.8342255639097744,
+        "truth_covered": 0.6661353383458647
+      },
+      "second": 1458,
+      "slot": 5
+    },
+    {
+      "after": "unknown_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.658191539725417,
+        "relative_area": 1.2775397796817625,
+        "truth_covered": 0.9040315177478581
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 6,
+      "raw_assigned_cow": 7,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.5511207350617429,
+        "relative_area": 1.0275397796817625,
+        "truth_covered": 0.7203947368421053
+      },
+      "second": 1463,
+      "slot": 2
+    },
+    {
+      "after": "unknown_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.6549905838041431,
+        "relative_area": 1.2684563758389262,
+        "truth_covered": 0.8977800722767165
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 3,
+      "raw_assigned_cow": 7,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.5203661608404497,
+        "relative_area": 1.1293236964377904,
+        "truth_covered": 0.7287902254345208
+      },
+      "second": 1466,
+      "slot": 2
+    },
+    {
+      "after": "unknown_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.6510826771653543,
+        "relative_area": 1.4206349206349207,
+        "truth_covered": 0.9545454545454546
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": 7,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.5492345163535143,
+        "relative_area": 1.56998556998557,
+        "truth_covered": 0.9111111111111111
+      },
+      "second": 1467,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.8388592626941804,
+        "relative_area": 1.103713527851459,
+        "truth_covered": 0.9596816976127321
+      },
+      "own_truth_winning_proposal": 1,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.7621365020600704,
+        "relative_area": 1.2364910951117847,
+        "truth_covered": 0.9672982190223569
+      },
+      "second": 1471,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.9296588842100018,
+        "relative_area": 1.0655873252960633,
+        "truth_covered": 0.9951456310679612
+      },
+      "own_truth_winning_proposal": 10,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6860401459854014,
+        "relative_area": 0.9715139229702336,
+        "truth_covered": 0.8021978021978022
+      },
+      "second": 1475,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.6827698933658511,
+        "relative_area": 0.918905325443787,
+        "truth_covered": 0.7785798816568047
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.4986687477047374,
+        "relative_area": 0.9317751479289941,
+        "truth_covered": 0.6427810650887574
+      },
+      "second": 1482,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.8648784641585384,
+        "relative_area": 0.9260073552926127,
+        "truth_covered": 0.8932283338663255
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.6299026835741669,
+        "relative_area": 0.7675087943716021,
+        "truth_covered": 0.683082826990726
+      },
+      "second": 1494,
+      "slot": 0
+    },
+    {
+      "after": "wrong_name",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.8714303926568078,
+        "relative_area": 0.9748427672955975,
+        "truth_covered": 0.9195843002724245
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 6,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6488911039122851,
+        "relative_area": 1.0029260417717687,
+        "truth_covered": 0.7882151145192211
+      },
+      "second": 1525,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.7611873508353222,
+        "relative_area": 1.2657839186336595,
+        "truth_covered": 0.9792746113989638
+      },
+      "own_truth_winning_proposal": 9,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.6827830188679245,
+        "relative_area": 1.464594127806563,
+        "truth_covered": 1.0
+      },
+      "second": 1801,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.6173209926769732,
+        "relative_area": 1.194824016563147,
+        "truth_covered": 0.8377501725327813
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.4872351982618142,
+        "relative_area": 2.0233264320220843,
+        "truth_covered": 0.9904761904761905
+      },
+      "second": 1813,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.4542483660130719,
+        "relative_area": 0.4542483660130719,
+        "truth_covered": 0.4542483660130719
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 5,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.7125296527927539,
+        "relative_area": 0.8988522238163558,
+        "truth_covered": 0.790052606408417
+      },
+      "second": 1818,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.775802752293578,
+        "relative_area": 1.1154371584699454,
+        "truth_covered": 0.9241803278688525
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.7093452849615408,
+        "relative_area": 1.4097506830601092,
+        "truth_covered": 1.0
+      },
+      "second": 1819,
+      "slot": 3
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.4696502057613169,
+        "relative_area": 0.4696502057613169,
+        "truth_covered": 0.4696502057613169
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 7,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.8145711305464174,
+        "relative_area": 0.9388717421124828,
+        "truth_covered": 0.8703703703703703
+      },
+      "second": 1820,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6658197083517454,
+        "relative_area": 1.2843508559309196,
+        "truth_covered": 0.9130434782608695
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4993018926466025,
+        "relative_area": 1.928192698076049,
+        "truth_covered": 0.9751552795031055
+      },
+      "second": 1828,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6726714061935173,
+        "relative_area": 1.2676631544556072,
+        "truth_covered": 0.9119496855345912
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.39519867549668874,
+        "relative_area": 2.4415584415584415,
+        "truth_covered": 0.9748427672955975
+      },
+      "second": 1829,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7583603020496225,
+        "relative_area": 1.077922077922078,
+        "truth_covered": 0.8961835710301967
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4701553876864065,
+        "relative_area": 1.9926699067803362,
+        "truth_covered": 0.9570552147239264
+      },
+      "second": 1830,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7448923246824959,
+        "relative_area": 1.1186724773717733,
+        "truth_covered": 0.9044585987261147
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4752931495577042,
+        "relative_area": 2.00511230305062,
+        "truth_covered": 0.9681528662420382
+      },
+      "second": 1834,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6787397668072439,
+        "relative_area": 1.2121608368747956,
+        "truth_covered": 0.8944099378881988
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4283013379872019,
+        "relative_area": 2.210526315789474,
+        "truth_covered": 0.9627329192546584
+      },
+      "second": 1835,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6286441462285979,
+        "relative_area": 1.3597049949715052,
+        "truth_covered": 0.910828025477707
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.3810391978122151,
+        "relative_area": 2.555145826349313,
+        "truth_covered": 0.9808917197452229
+      },
+      "second": 1837,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7658760520275439,
+        "relative_area": 1.100090991810737,
+        "truth_covered": 0.910828025477707
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.46358516216741114,
+        "relative_area": 2.116883116883117,
+        "truth_covered": 0.9872611464968153
+      },
+      "second": 1839,
+      "slot": 3
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.4447258338044093,
+        "relative_area": 0.4447258338044093,
+        "truth_covered": 0.4447258338044093
+      },
+      "own_truth_winning_proposal": 1,
+      "proposal_index": 1,
+      "raw_assigned_cow": 3,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.5248329048843188,
+        "relative_area": 0.6765404183154324,
+        "truth_covered": 0.5770491803278689
+      },
+      "second": 1840,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7950842119676845,
+        "relative_area": 1.0614041984432738,
+        "truth_covered": 0.9130434782608695
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.474193301728093,
+        "relative_area": 2.0316062583536443,
+        "truth_covered": 0.9751552795031055
+      },
+      "second": 1840,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6417352281226627,
+        "relative_area": 1.3602150537634408,
+        "truth_covered": 0.9225806451612903
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.39948453608247425,
+        "relative_area": 2.503225806451613,
+        "truth_covered": 1.0
+      },
+      "second": 1841,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.740895772289661,
+        "relative_area": 1.1493540051679587,
+        "truth_covered": 0.9147286821705426
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.7238515636690109,
+        "relative_area": 1.3814987080103358,
+        "truth_covered": 1.0
+      },
+      "second": 1847,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7941836543856368,
+        "relative_area": 1.2202036565609813,
+        "truth_covered": 0.9827586206896551
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.7002484874675886,
+        "relative_area": 1.4280644912443108,
+        "truth_covered": 1.0
+      },
+      "second": 1856,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7060711113657852,
+        "relative_area": 1.2807951585720851,
+        "truth_covered": 0.9439252336448598
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.46107329084588644,
+        "relative_area": 2.0909299831469284,
+        "truth_covered": 0.9754098360655737
+      },
+      "second": 1867,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.6910074374577417,
+        "relative_area": 0.6990489130434783,
+        "truth_covered": 0.6942934782608695
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.4806756369882622,
+        "relative_area": 1.3423913043478262,
+        "truth_covered": 0.7604166666666666
+      },
+      "second": 1869,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7093987157034443,
+        "relative_area": 1.2926714688380834,
+        "truth_covered": 0.9514563106796117
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4778989173810933,
+        "relative_area": 2.0301440651424993,
+        "truth_covered": 0.9798387096774194
+      },
+      "second": 1873,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.8200062497829936,
+        "relative_area": 1.0129800307219663,
+        "truth_covered": 0.9069508448540706
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.6720278560769358,
+        "relative_area": 0.9362519201228878,
+        "truth_covered": 0.7782258064516129
+      },
+      "second": 1884,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7022508885086218,
+        "relative_area": 1.3807069219440353,
+        "truth_covered": 0.9821428571428571
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.6700481206918976,
+        "relative_area": 1.3639543446244478,
+        "truth_covered": 0.9484536082474226
+      },
+      "second": 1888,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7473982388078083,
+        "relative_area": 1.3077423552374756,
+        "truth_covered": 0.9870689655172413
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4191708321082035,
+        "relative_area": 0.9626707872478855,
+        "truth_covered": 0.5797007156798959
+      },
+      "second": 1890,
+      "slot": 1
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.38523065476190477,
+        "relative_area": 0.4066203900458044,
+        "truth_covered": 0.39117910941115364
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 5,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.5650870565045992,
+        "relative_area": 0.7997355621665014,
+        "truth_covered": 0.6498087547811304
+      },
+      "second": 1890,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7307740285660824,
+        "relative_area": 1.2950541725250186,
+        "truth_covered": 0.9690265486725663
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.6709481975159043,
+        "relative_area": 1.280952774791167,
+        "truth_covered": 0.9158878504672897
+      },
+      "second": 1891,
+      "slot": 1
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.4666388221781351,
+        "relative_area": 0.4666388221781351,
+        "truth_covered": 0.4666388221781351
+      },
+      "own_truth_winning_proposal": 1,
+      "proposal_index": 1,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.6189119908857875,
+        "relative_area": 0.780515819150047,
+        "truth_covered": 0.6806933277644356
+      },
+      "second": 1893,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.7280475894521886,
+        "relative_area": 1.3442336645588677,
+        "truth_covered": 0.9876543209876543
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.4252894170679234,
+        "relative_area": 2.351339957844023,
+        "truth_covered": 1.0
+      },
+      "second": 1899,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.5618301533137886,
+        "relative_area": 1.4055814642090458,
+        "truth_covered": 0.865349026574876
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.39674008810572686,
+        "relative_area": 2.520541860981568,
+        "truth_covered": 1.0
+      },
+      "second": 1899,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.5831416365428853,
+        "relative_area": 1.3161057692307692,
+        "truth_covered": 0.853125
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.47220723151645977,
+        "relative_area": 1.8416666666666666,
+        "truth_covered": 0.9114583333333334
+      },
+      "second": 1915,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6941819423887055,
+        "relative_area": 1.188235294117647,
+        "truth_covered": 0.8966176470588235
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.5935590572885561,
+        "relative_area": 1.550514705882353,
+        "truth_covered": 0.95
+      },
+      "second": 1916,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.6168229578578691,
+        "relative_area": 1.5361984935755428,
+        "truth_covered": 0.9675675675675676
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.45419785881027125,
+        "relative_area": 2.2016836508639788,
+        "truth_covered": 1.0
+      },
+      "second": 1924,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.5019342359767892,
+        "relative_area": 1.8134057971014492,
+        "truth_covered": 0.9402173913043478
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.44641691685158597,
+        "relative_area": 2.1696224256292904,
+        "truth_covered": 0.9782608695652174
+      },
+      "second": 1925,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.5918030706763101,
+        "relative_area": 1.4714342001576044,
+        "truth_covered": 0.9188337273443656
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.48602937540181,
+        "relative_area": 1.9599093774625689,
+        "truth_covered": 0.9680851063829787
+      },
+      "second": 1928,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.5569540591567024,
+        "relative_area": 1.3926499032882012,
+        "truth_covered": 0.8558994197292069
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.48287506029908345,
+        "relative_area": 1.9729206963249517,
+        "truth_covered": 0.9680851063829787
+      },
+      "second": 1929,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.5434494927216585,
+        "relative_area": 1.6170531039640987,
+        "truth_covered": 0.9214659685863874
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.47271709728570094,
+        "relative_area": 1.9523186237845924,
+        "truth_covered": 0.9476439790575916
+      },
+      "second": 1930,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.5871419199650121,
+        "relative_area": 1.5333333333333334,
+        "truth_covered": 0.93717277486911
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.49728260869565216,
+        "relative_area": 1.8848167539267016,
+        "truth_covered": 0.9581151832460733
+      },
+      "second": 1931,
+      "slot": 1
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.47589874003005433,
+        "relative_area": 1.5020576131687242,
+        "truth_covered": 0.8067803252988438
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 6,
+      "raw_assigned_cow": 2,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.5312075983717774,
+        "relative_area": 1.6537330981775427,
+        "truth_covered": 0.9206349206349206
+      },
+      "second": 1932,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.5790506080816006,
+        "relative_area": 1.4845679012345678,
+        "truth_covered": 0.9111111111111111
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.4561737804878049,
+        "relative_area": 2.0325396825396824,
+        "truth_covered": 0.95
+      },
+      "second": 1936,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.8762011415360161,
+        "relative_area": 0.95200511143684,
+        "truth_covered": 0.9116022099447514
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4989714050606871,
+        "relative_area": 1.7385650392753786,
+        "truth_covered": 0.9116022099447514
+      },
+      "second": 1942,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7981618309605334,
+        "relative_area": 1.013317191283293,
+        "truth_covered": 0.8936642453591606
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.6328693653428681,
+        "relative_area": 1.5801049233252622,
+        "truth_covered": 1.0
+      },
+      "second": 1958,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.676496401614885,
+        "relative_area": 1.04913108774941,
+        "truth_covered": 0.8268611885861403
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.6935843257779485,
+        "relative_area": 1.3645140527783737,
+        "truth_covered": 0.9683544303797469
+      },
+      "second": 1960,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.7374106191997566,
+        "relative_area": 0.7584380389258438,
+        "truth_covered": 0.7463353042621336
+      },
+      "own_truth_winning_proposal": 2,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.7064007001237288,
+        "relative_area": 0.7413463907366347,
+        "truth_covered": 0.7208672086720868
+      },
+      "second": 1971,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7999532601075018,
+        "relative_area": 1.0544145105361429,
+        "truth_covered": 0.9130434782608695
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.47666878575969485,
+        "relative_area": 2.097892771405708,
+        "truth_covered": 1.0
+      },
+      "second": 2026,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.6384467618002195,
+        "relative_area": 1.3963475817780453,
+        "truth_covered": 0.9337748344370861
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.36532258064516127,
+        "relative_area": 2.7373068432671084,
+        "truth_covered": 1.0
+      },
+      "second": 2029,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6831422169500462,
+        "relative_area": 0.8911514253980007,
+        "truth_covered": 0.7675675675675676
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.46439193654990085,
+        "relative_area": 1.6249537208441318,
+        "truth_covered": 0.8324324324324325
+      },
+      "second": 2030,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7018859987379934,
+        "relative_area": 0.8480395888846594,
+        "truth_covered": 0.7621621621621621
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4818699572852397,
+        "relative_area": 1.377084126379901,
+        "truth_covered": 0.772972972972973
+      },
+      "second": 2031,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7150244964616222,
+        "relative_area": 0.9188427864484202,
+        "truth_covered": 0.8
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4800787435271965,
+        "relative_area": 1.6330414921964218,
+        "truth_covered": 0.8540540540540541
+      },
+      "second": 2032,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.7577702392958651,
+        "relative_area": 0.9404858299595141,
+        "truth_covered": 0.8365384615384616
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6887657290250618,
+        "relative_area": 1.4518724696356275,
+        "truth_covered": 1.0
+      },
+      "second": 2032,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.8674882304070894,
+        "relative_area": 1.0175018698578908,
+        "truth_covered": 0.93717277486911
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.48846675712347354,
+        "relative_area": 1.2973821989528795,
+        "truth_covered": 0.7539267015706806
+      },
+      "second": 2034,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.5931051680069821,
+        "relative_area": 1.3690553443960323,
+        "truth_covered": 0.8819875776397516
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.39090766700603025,
+        "relative_area": 2.2929452118290534,
+        "truth_covered": 0.9254658385093167
+      },
+      "second": 2034,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6502356902356903,
+        "relative_area": 0.8166048925129725,
+        "truth_covered": 0.7157894736842105
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4909219190968956,
+        "relative_area": 1.3496664195700518,
+        "truth_covered": 0.7736842105263158
+      },
+      "second": 2037,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.8102179774253987,
+        "relative_area": 0.9150592216582064,
+        "truth_covered": 0.8571428571428571
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6491337404960738,
+        "relative_area": 0.9189267585206672,
+        "truth_covered": 0.7553299492385787
+      },
+      "second": 2037,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.7976928873688481,
+        "relative_area": 1.008029008029008,
+        "truth_covered": 0.8910256410256411
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.48745910577971646,
+        "relative_area": 1.9145299145299146,
+        "truth_covered": 0.9551282051282052
+      },
+      "second": 2061,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.6911344137273594,
+        "relative_area": 0.7254011995461177,
+        "truth_covered": 0.7051385962068406
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.4969836124617324,
+        "relative_area": 0.796671529691468,
+        "truth_covered": 0.596477008699411
+      },
+      "second": 2078,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.8184915132679895,
+        "relative_area": 0.8184915132679895,
+        "truth_covered": 0.8184915132679895
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.700516693163752,
+        "relative_area": 1.0456610088453264,
+        "truth_covered": 0.8426966292134831
+      },
+      "second": 2098,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.6003875391265464,
+        "relative_area": 1.383351831298557,
+        "truth_covered": 0.8941176470588236
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.383763523298407,
+        "relative_area": 2.6057713651498333,
+        "truth_covered": 1.0
+      },
+      "second": 2703,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.7037399309551208,
+        "relative_area": 1.280224857538888,
+        "truth_covered": 0.9418604651162791
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.46809891139788046,
+        "relative_area": 2.136300631449253,
+        "truth_covered": 1.0
+      },
+      "second": 2704,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7479085331846068,
+        "relative_area": 1.3061074319352466,
+        "truth_covered": 0.9867549668874173
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4312460334250053,
+        "relative_area": 2.3188619082658817,
+        "truth_covered": 1.0
+      },
+      "second": 2707,
+      "slot": 3
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.4539300318037256,
+        "relative_area": 2.0546964490263457,
+        "truth_covered": 0.9537037037037037
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 4,
+      "raw_assigned_cow": 4,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.558898847631242,
+        "relative_area": 1.7892325315005728,
+        "truth_covered": 1.0
+      },
+      "second": 2709,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.7619952019192323,
+        "relative_area": 0.9089235434264674,
+        "truth_covered": 0.8255360623781677
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.4984025559105431,
+        "relative_area": 1.7426900584795322,
+        "truth_covered": 0.9122807017543859
+      },
+      "second": 2750,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.7153990332445497,
+        "relative_area": 0.8217915138816134,
+        "truth_covered": 0.7597695128339444
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.498335513018666,
+        "relative_area": 1.6406495547407018,
+        "truth_covered": 0.8782608695652174
+      },
+      "second": 2759,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.7160098214657289,
+        "relative_area": 1.0930964467005075,
+        "truth_covered": 0.8733502538071066
+      },
+      "own_truth_winning_proposal": 9,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6870330012453301,
+        "relative_area": 1.200507614213198,
+        "truth_covered": 0.8961421319796954
+      },
+      "second": 2779,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.5946789149839674,
+        "relative_area": 1.230694629652079,
+        "truth_covered": 0.831858407079646
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.43317754555479704,
+        "relative_area": 2.3085222451206207,
+        "truth_covered": 1.0
+      },
+      "second": 2782,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.5798378926038501,
+        "relative_area": 1.5659042290603917,
+        "truth_covered": 0.941747572815534
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.45280481050716037,
+        "relative_area": 2.0215566891558336,
+        "truth_covered": 0.941747572815534
+      },
+      "second": 2783,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.48330740164480995,
+        "relative_area": 0.6743777599357688,
+        "truth_covered": 0.5455640305098354
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 5,
+      "raw_assigned_cow": 1,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.7274658573596358,
+        "relative_area": 1.2850260939381775,
+        "truth_covered": 0.9622641509433962
+      },
+      "second": 2784,
+      "slot": 0
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.4660821412090448,
+        "relative_area": 0.4660821412090448,
+        "truth_covered": 0.4660821412090448
+      },
+      "own_truth_winning_proposal": 1,
+      "proposal_index": 1,
+      "raw_assigned_cow": 3,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.5717581910475311,
+        "relative_area": 0.5717581910475311,
+        "truth_covered": 0.5717581910475311
+      },
+      "second": 2790,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.4981122981765604,
+        "relative_area": 0.5771670190274841,
+        "truth_covered": 0.5243974630021142
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 6,
+      "raw_assigned_cow": 3,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.5822402785838654,
+        "relative_area": 0.9212121212121213,
+        "truth_covered": 0.7069767441860465
+      },
+      "second": 2800,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.4682837140230535,
+        "relative_area": 0.4682837140230535,
+        "truth_covered": 0.4682837140230535
+      },
+      "own_truth_winning_proposal": 2,
+      "proposal_index": 2,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.6963630858257914,
+        "relative_area": 0.7827947104165194,
+        "truth_covered": 0.7318435754189944
+      },
+      "second": 2803,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.7324876940552821,
+        "relative_area": 1.27920298879203,
+        "truth_covered": 0.9636363636363636
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.4713962840118583,
+        "relative_area": 2.121357409713574,
+        "truth_covered": 1.0
+      },
+      "second": 2804,
+      "slot": 5
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.47347079630747996,
+        "relative_area": 0.47347079630747996,
+        "truth_covered": 0.47347079630747996
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 6,
+      "raw_assigned_cow": 5,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.629860340757175,
+        "relative_area": 0.64785897104075,
+        "truth_covered": 0.6368159203980099
+      },
+      "second": 2805,
+      "slot": 4
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.46278843028924277,
+        "relative_area": 0.46278843028924277,
+        "truth_covered": 0.46278843028924277
+      },
+      "own_truth_winning_proposal": 2,
+      "proposal_index": 2,
+      "raw_assigned_cow": 5,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6119475591662005,
+        "relative_area": 0.6567585810354741,
+        "truth_covered": 0.6289592760180995
+      },
+      "second": 2807,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.505504381037969,
+        "relative_area": 1.6538613861386138,
+        "truth_covered": 0.8910891089108911
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.33717017412669587,
+        "relative_area": 2.965861386138614,
+        "truth_covered": 1.0
+      },
+      "second": 2808,
+      "slot": 3
+    },
+    {
+      "after": "unknown_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.8904454022988506,
+        "relative_area": 1.09181240063593,
+        "truth_covered": 0.9852941176470589
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 4,
+      "raw_assigned_cow": 7,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.5572154493708155,
+        "relative_area": 1.3649642289348172,
+        "truth_covered": 0.846250662427133
+      },
+      "second": 2811,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.5654952076677316,
+        "relative_area": 1.7222222222222223,
+        "truth_covered": 0.9833333333333333
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.3798118049615056,
+        "relative_area": 2.6328828828828827,
+        "truth_covered": 1.0
+      },
+      "second": 2811,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.5700437563110063,
+        "relative_area": 1.3580022242442624,
+        "truth_covered": 0.8561318370235568
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.37153482082488165,
+        "relative_area": 2.691537761601456,
+        "truth_covered": 1.0
+      },
+      "second": 2812,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.6513038204972711,
+        "relative_area": 1.5353817504655494,
+        "truth_covered": 1.0
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.3954708644020989,
+        "relative_area": 2.528631284916201,
+        "truth_covered": 1.0
+      },
+      "second": 2815,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.7244635193133048,
+        "relative_area": 1.3252314814814814,
+        "truth_covered": 0.9768518518518519
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 9,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.5867126833477135,
+        "relative_area": 1.5040849673202614,
+        "truth_covered": 0.9259259259259259
+      },
+      "second": 2819,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.6043811165762385,
+        "relative_area": 1.6244193762441939,
+        "truth_covered": 0.9886363636363636
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.44675016675313123,
+        "relative_area": 2.2383875248838754,
+        "truth_covered": 1.0
+      },
+      "second": 2824,
+      "slot": 4
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.4358683314415437,
+        "relative_area": 0.5203252032520326,
+        "truth_covered": 0.46150583244962884
+      },
+      "own_truth_winning_proposal": 1,
+      "proposal_index": 1,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.6431483008152423,
+        "relative_area": 0.6908919523977849,
+        "truth_covered": 0.6618357487922706
+      },
+      "second": 2825,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.6765546971701737,
+        "relative_area": 1.4408127757410054,
+        "truth_covered": 0.9849624060150376
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.4401564465838849,
+        "relative_area": 2.271919468091717,
+        "truth_covered": 1.0
+      },
+      "second": 2829,
+      "slot": 4
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.42390543588148377,
+        "relative_area": 0.42390543588148377,
+        "truth_covered": 0.42390543588148377
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 3,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.6557549050466898,
+        "relative_area": 0.8408507660004666,
+        "truth_covered": 0.7290613578038728
+      },
+      "second": 2829,
+      "slot": 5
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.44700268989368513,
+        "relative_area": 0.44700268989368513,
+        "truth_covered": 0.44700268989368513
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 3,
+      "raw_assigned_cow": 5,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6015165301789506,
+        "relative_area": 0.6908543614704752,
+        "truth_covered": 0.6350710900473934
+      },
+      "second": 2832,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.658998222315173,
+        "relative_area": 1.2706454844711608,
+        "truth_covered": 0.9019607843137255
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.4668894086201136,
+        "relative_area": 2.1418348361242305,
+        "truth_covered": 1.0
+      },
+      "second": 2833,
+      "slot": 4
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.46962581427056505,
+        "relative_area": 0.46962581427056505,
+        "truth_covered": 0.46962581427056505
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 4,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.8383726770467101,
+        "relative_area": 0.8483058122506691,
+        "truth_covered": 0.8429025905165884
+      },
+      "second": 2833,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.6504424778761062,
+        "relative_area": 1.1073446327683616,
+        "truth_covered": 0.8305084745762712
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.49104149809270603,
+        "relative_area": 2.0364877589453863,
+        "truth_covered": 1.0
+      },
+      "second": 2834,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.7378538812785388,
+        "relative_area": 1.3552818862553375,
+        "truth_covered": 1.0
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.4114112584973394,
+        "relative_area": 2.430657837737484,
+        "truth_covered": 1.0
+      },
+      "second": 2836,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.8290026635099141,
+        "relative_area": 0.9866915262954867,
+        "truth_covered": 0.9004757618619005
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.684836209933075,
+        "relative_area": 1.4602031631734602,
+        "truth_covered": 1.0
+      },
+      "second": 2838,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.7409527015653931,
+        "relative_area": 0.9081852284607342,
+        "truth_covered": 0.8121271754504643
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.7008036537701462,
+        "relative_area": 1.3817108418916426,
+        "truth_covered": 0.9813664596273292
+      },
+      "second": 2842,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.6443670150987224,
+        "relative_area": 1.2444514901712111,
+        "truth_covered": 0.8795180722891566
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.4624633431085044,
+        "relative_area": 2.1623335447051364,
+        "truth_covered": 1.0
+      },
+      "second": 2850,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.6970108695652174,
+        "relative_area": 1.4346978557504872,
+        "truth_covered": 1.0
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.5392053815429892,
+        "relative_area": 1.8545808966861599,
+        "truth_covered": 1.0
+      },
+      "second": 2853,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.5324329290701948,
+        "relative_area": 1.7618811061434012,
+        "truth_covered": 0.9595959595959596
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 4,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.38209427396393547,
+        "relative_area": 2.6171551581387646,
+        "truth_covered": 1.0
+      },
+      "second": 2854,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.4513127124569059,
+        "relative_area": 0.4934381899823861,
+        "truth_covered": 0.46441241410106926
+      },
+      "own_truth_winning_proposal": 2,
+      "proposal_index": 2,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.6353357519642102,
+        "relative_area": 0.8227691086357886,
+        "truth_covered": 0.7081545064377682
+      },
+      "second": 2856,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.6990434142752023,
+        "relative_area": 1.1701127819548873,
+        "truth_covered": 0.8928571428571429
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4883197943916655,
+        "relative_area": 2.047838345864662,
+        "truth_covered": 1.0
+      },
+      "second": 2857,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.6704968944099379,
+        "relative_area": 1.117716535433071,
+        "truth_covered": 0.85
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.49082125603864735,
+        "relative_area": 2.0374015748031495,
+        "truth_covered": 1.0
+      },
+      "second": 2858,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 1,
+      "original_assigned_cow": 1,
+      "original_own_overlap": {
+        "cow": 1,
+        "iou": 0.5823552683634445,
+        "relative_area": 1.4036458333333333,
+        "truth_covered": 0.8846153846153846
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 1,
+        "iou": 0.4202020202020202,
+        "relative_area": 2.3798076923076925,
+        "truth_covered": 1.0
+      },
+      "second": 2860,
+      "slot": 0
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.596049896049896,
+        "relative_area": 1.677711893965818,
+        "truth_covered": 1.0
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.4578043912175649,
+        "relative_area": 2.1843390303453085,
+        "truth_covered": 1.0
+      },
+      "second": 2861,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.4157706093189964,
+        "relative_area": 0.4665841584158416,
+        "truth_covered": 0.4306930693069307
+      },
+      "own_truth_winning_proposal": 0,
+      "proposal_index": 0,
+      "raw_assigned_cow": 5,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6640685892439595,
+        "relative_area": 0.7615511551155115,
+        "truth_covered": 0.7029702970297029
+      },
+      "second": 2862,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.6653102746693794,
+        "relative_area": 1.3001074468964378,
+        "truth_covered": 0.918918918918919
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.42339725643896975,
+        "relative_area": 2.361848086618729,
+        "truth_covered": 1.0
+      },
+      "second": 2863,
+      "slot": 4
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.4641210108836008,
+        "relative_area": 0.4641210108836008,
+        "truth_covered": 0.4641210108836008
+      },
+      "own_truth_winning_proposal": 1,
+      "proposal_index": 1,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.7068640646029609,
+        "relative_area": 0.7545655783065855,
+        "truth_covered": 0.7266187050359713
+      },
+      "second": 2863,
+      "slot": 5
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 2,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.4079449961802903,
+        "relative_area": 0.4309006211180124,
+        "truth_covered": 0.41459627329192544
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 5,
+      "raw_assigned_cow": 2,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.5481894150417828,
+        "relative_area": 0.5691699604743083,
+        "truth_covered": 0.5556182947487295
+      },
+      "second": 2868,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.5871250826471118,
+        "relative_area": 1.7032145782145782,
+        "truth_covered": 1.0
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 3,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.48481238832638474,
+        "relative_area": 2.0626535626535625,
+        "truth_covered": 1.0
+      },
+      "second": 2868,
+      "slot": 2
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.5545001914975105,
+        "relative_area": 1.4968011811023623,
+        "truth_covered": 0.890625
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.33559042113955406,
+        "relative_area": 2.9798228346456694,
+        "truth_covered": 1.0
+      },
+      "second": 2869,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.38081560507543716,
+        "relative_area": 0.38081560507543716,
+        "truth_covered": 0.38081560507543716
+      },
+      "own_truth_winning_proposal": 0,
+      "proposal_index": 0,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.549515641389523,
+        "relative_area": 0.5853165835490184,
+        "truth_covered": 0.5622119815668203
+      },
+      "second": 2873,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.5963568020818274,
+        "relative_area": 1.245678259101078,
+        "truth_covered": 0.8389261744966443
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.4734599552249585,
+        "relative_area": 2.112111043319097,
+        "truth_covered": 1.0
+      },
+      "second": 2876,
+      "slot": 3
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.36723423838011965,
+        "relative_area": 0.36723423838011965,
+        "truth_covered": 0.36723423838011965
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 5,
+      "raw_assigned_cow": 3,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.5374087842489329,
+        "relative_area": 0.6058156925908882,
+        "truth_covered": 0.5613207547169812
+      },
+      "second": 2877,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.4650315179398321,
+        "relative_area": 0.4650315179398321,
+        "truth_covered": 0.4650315179398321
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 4,
+      "raw_assigned_cow": 4,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.7811287216708636,
+        "relative_area": 0.7961341977115884,
+        "truth_covered": 0.7877094972067039
+      },
+      "second": 2878,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.5686111111111111,
+        "relative_area": 1.6687145557655954,
+        "truth_covered": 0.967391304347826
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.45213675213675214,
+        "relative_area": 2.2117202268431,
+        "truth_covered": 1.0
+      },
+      "second": 2879,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.5658697444352844,
+        "relative_area": 1.196854036548693,
+        "truth_covered": 0.7938931297709924
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 0,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.4868243243243243,
+        "relative_area": 2.0541290770298404,
+        "truth_covered": 1.0
+      },
+      "second": 2880,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.4811188811188811,
+        "relative_area": 0.4811188811188811,
+        "truth_covered": 0.4811188811188811
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 3,
+      "raw_assigned_cow": 6,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.9119880119880119,
+        "relative_area": 0.9119880119880119,
+        "truth_covered": 0.9119880119880119
+      },
+      "second": 2885,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.50891593546561,
+        "relative_area": 1.6055718475073313,
+        "truth_covered": 0.8787878787878788
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 2,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.3519394512771996,
+        "relative_area": 2.8413978494623655,
+        "truth_covered": 1.0
+      },
+      "second": 2888,
+      "slot": 3
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.4185492905153099,
+        "relative_area": 0.4185492905153099,
+        "truth_covered": 0.4185492905153099
+      },
+      "own_truth_winning_proposal": 0,
+      "proposal_index": 0,
+      "raw_assigned_cow": 5,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.5405153099327856,
+        "relative_area": 0.5405153099327856,
+        "truth_covered": 0.5405153099327856
+      },
+      "second": 2888,
+      "slot": 4
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 3,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.37010159651669083,
+        "relative_area": 0.37010159651669083,
+        "truth_covered": 0.37010159651669083
+      },
+      "own_truth_winning_proposal": 3,
+      "proposal_index": 3,
+      "raw_assigned_cow": 3,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.6844835854732528,
+        "relative_area": 0.6993006993006993,
+        "truth_covered": 0.6905044640893697
+      },
+      "second": 2889,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 4,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.2879581151832461,
+        "relative_area": 0.306615161757605,
+        "truth_covered": 0.2921294060840174
+      },
+      "own_truth_winning_proposal": 6,
+      "proposal_index": 6,
+      "raw_assigned_cow": 4,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.5041469578176635,
+        "relative_area": 0.6012623301372698,
+        "truth_covered": 0.536697247706422
+      },
+      "second": 2895,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 2,
+      "original_assigned_cow": 2,
+      "original_own_overlap": {
+        "cow": 2,
+        "iou": 0.8489208633093526,
+        "relative_area": 1.0580870742161064,
+        "truth_covered": 0.9449582675389127
+      },
+      "own_truth_winning_proposal": 7,
+      "proposal_index": 8,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 2,
+        "iou": 0.7190154796682449,
+        "relative_area": 0.9247311827956989,
+        "truth_covered": 0.8050605308669825
+      },
+      "second": 2902,
+      "slot": 1
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 4,
+      "original_assigned_cow": 4,
+      "original_own_overlap": {
+        "cow": 4,
+        "iou": 0.9083233570663475,
+        "relative_area": 1.0027111022945183,
+        "truth_covered": 0.9532500165311115
+      },
+      "own_truth_winning_proposal": 5,
+      "proposal_index": 7,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 4,
+        "iou": 0.6618611457373584,
+        "relative_area": 1.0275738940686372,
+        "truth_covered": 0.8075117370892019
+      },
+      "second": 2903,
+      "slot": 3
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "valid_raw_box_loses_global_assignment",
+      "competing_proposal_kind": "unpaired_raw_proposal",
+      "name": 3,
+      "original_assigned_cow": 3,
+      "original_own_overlap": {
+        "cow": 3,
+        "iou": 0.7696728971962616,
+        "relative_area": 1.0313790698921848,
+        "truth_covered": 0.883495145631068
+      },
+      "own_truth_winning_proposal": 8,
+      "proposal_index": 1,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 3,
+        "iou": 0.6312813219558445,
+        "relative_area": 1.584079815480341,
+        "truth_covered": 1.0
+      },
+      "second": 2914,
+      "slot": 2
+    },
+    {
+      "after": "correct_name",
+      "before": "unmatched_named",
+      "cause": null,
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": null,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.3955160744500846,
+        "relative_area": 0.3955160744500846,
+        "truth_covered": 0.3955160744500846
+      },
+      "own_truth_winning_proposal": 4,
+      "proposal_index": 4,
+      "raw_assigned_cow": 5,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.6836057988895743,
+        "relative_area": 0.7316782994923858,
+        "truth_covered": 0.703125
+      },
+      "second": 2935,
+      "slot": 4
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 6,
+      "original_assigned_cow": 6,
+      "original_own_overlap": {
+        "cow": 6,
+        "iou": 0.5501774766053565,
+        "relative_area": 1.7672811059907834,
+        "truth_covered": 0.9821428571428571
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 5,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 6,
+        "iou": 0.37440690150970524,
+        "relative_area": 2.670890937019969,
+        "truth_covered": 1.0
+      },
+      "second": 2941,
+      "slot": 5
+    },
+    {
+      "after": "unmatched_named",
+      "before": "correct_name",
+      "cause": "raw_box_below_own_iou_threshold",
+      "competing_proposal_kind": null,
+      "name": 5,
+      "original_assigned_cow": 5,
+      "original_own_overlap": {
+        "cow": 5,
+        "iou": 0.6043578660666706,
+        "relative_area": 1.6104046242774566,
+        "truth_covered": 0.9833333333333333
+      },
+      "own_truth_winning_proposal": null,
+      "proposal_index": 6,
+      "raw_assigned_cow": null,
+      "raw_own_overlap": {
+        "cow": 5,
+        "iou": 0.44358974358974357,
+        "relative_area": 2.254335260115607,
+        "truth_covered": 1.0
+      },
+      "second": 2945,
+      "slot": 4
+    }
+  ],
+  "panels": {
+    "1230": {
+      "assignment_loss_winners": {
+        "own_truth_unmatched": 1,
+        "unpaired_raw_proposal": 22
+      },
+      "geometry_own_iou_decreased": 857,
+      "loss_causes": {
+        "raw_box_below_own_iou_threshold": 11,
+        "valid_raw_box_loses_global_assignment": 23
+      },
+      "named_observations": 1232,
+      "transitions": {
+        "correct_name->correct_name": 1192,
+        "correct_name->unknown_named": 4,
+        "correct_name->unmatched_named": 29,
+        "correct_name->wrong_name": 1,
+        "unmatched_named->correct_name": 3,
+        "unmatched_named->unmatched_named": 3
+      }
+    },
+    "1800": {
+      "assignment_loss_winners": {
+        "unpaired_raw_proposal": 14
+      },
+      "geometry_own_iou_decreased": 769,
+      "loss_causes": {
+        "raw_box_below_own_iou_threshold": 35,
+        "valid_raw_box_loses_global_assignment": 14
+      },
+      "named_observations": 1131,
+      "transitions": {
+        "correct_name->correct_name": 1074,
+        "correct_name->unmatched_named": 49,
+        "unmatched_named->correct_name": 6,
+        "unmatched_named->unmatched_named": 2
+      }
+    },
+    "2700": {
+      "assignment_loss_winners": {
+        "unpaired_raw_proposal": 9
+      },
+      "geometry_own_iou_decreased": 900,
+      "loss_causes": {
+        "raw_box_below_own_iou_threshold": 32,
+        "valid_raw_box_loses_global_assignment": 9
+      },
+      "named_observations": 1330,
+      "transitions": {
+        "correct_name->correct_name": 1262,
+        "correct_name->unknown_named": 1,
+        "correct_name->unmatched_named": 40,
+        "unmatched_named->correct_name": 23,
+        "unmatched_named->unmatched_named": 4
+      }
+    },
+    "330": {
+      "assignment_loss_winners": {
+        "unpaired_raw_proposal": 15
+      },
+      "geometry_own_iou_decreased": 783,
+      "loss_causes": {
+        "raw_box_below_own_iou_threshold": 36,
+        "valid_raw_box_loses_global_assignment": 15
+      },
+      "named_observations": 1250,
+      "transitions": {
+        "correct_name->correct_name": 1189,
+        "correct_name->unmatched_named": 48,
+        "correct_name->wrong_name": 3,
+        "unmatched_named->correct_name": 7,
+        "unmatched_named->unmatched_named": 3
+      }
+    },
+    "930": {
+      "assignment_loss_winners": {
+        "unpaired_raw_proposal": 21
+      },
+      "geometry_own_iou_decreased": 952,
+      "loss_causes": {
+        "raw_box_below_own_iou_threshold": 19,
+        "valid_raw_box_loses_global_assignment": 21
+      },
+      "named_observations": 1300,
+      "transitions": {
+        "correct_name->correct_name": 1253,
+        "correct_name->unknown_named": 2,
+        "correct_name->unmatched_named": 36,
+        "correct_name->wrong_name": 2,
+        "unmatched_named->correct_name": 6,
+        "unmatched_named->unmatched_named": 1
+      }
+    }
+  },
+  "runner_sha256": "2b432d1e0695bcf8c2d5d5e58dab6ac3b0f654b02b2d4b155b908c11cd13762a",
+  "scope": "Post-result diagnosis across all named observations in all five exposed panels; no alternative policy is scored or selected",
+  "source_report_sha256": "2f75e7a198250978c2f4127be1a2130da52e9ad99c5eaa09261d1ffb458d39a8",
+  "source_streaming_sha256": "2a39500ee305d3049fdd6aeea0f4cebe626f5b704ec02f5ca2337ab75a6c6fd3",
+  "strict_outcome_parity": true
+}

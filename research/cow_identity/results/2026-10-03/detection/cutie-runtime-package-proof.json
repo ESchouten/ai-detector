@@ -1,0 +1,80 @@
+{
+  "actual_device": "cpu",
+  "application_lock_sha256": "d85c1fa8e37c918cced58f8d05e5a08fa3f0b2cf67a6fdaaacbc5e94b7cd44eb",
+  "build_backend": "hatchling 1.32.4",
+  "build_command": "UV_CACHE_DIR=/tmp/cow-cutie-runtime-package-proof/uv-cache uv build --wheel --out-dir /tmp/cow-cutie-runtime-package-proof/dist /tmp/cow-cutie-runtime-package-proof/source",
+  "build_tool": "uv 0.12.5 (Homebrew 2026-08-14 aarch64-apple-darwin)",
+  "changed_package_files": [
+    "cutie/model/big_modules.py"
+  ],
+  "checkpoint_sha256": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+  "checkpoint_tensors": 527,
+  "construction_and_load_seconds": 0.7381607920397073,
+  "constructor_cache_was_empty": true,
+  "constructor_network_attempts": [],
+  "default_flag_network_request_blocked": [
+    "urllib.Request"
+  ],
+  "inference_core_constructed": true,
+  "isolated_wheel": "/tmp/cow-cutie-runtime-package-proof/dist/cutie-1.0.0+aidetector.1-py3-none-any.whl",
+  "libraries": {
+    "PyYAML": "6.0.3",
+    "antlr4-python3-runtime": "4.9.3",
+    "cutie": "1.0.0+aidetector.1",
+    "hydra-core": "1.3.2",
+    "numpy": "2.5.0",
+    "omegaconf": "2.3.1",
+    "packaging": "26.2",
+    "torch": "2.12.1"
+  },
+  "license_sha256": "8cffbcfb631bbe76caa147bc2515ea47c81042a5dedaeaadce6652bbbbaf7f71",
+  "parameter_count": 35024186,
+  "patch_sha256": "f2af15c3d4b4ea8cc2e4ee75a2eb523d15d5d5322cf361a4c8cd26e0f5e851e8",
+  "production_and_frozen_files_unchanged": true,
+  "proof_script_sha256": "836875dc32824fdbfaeabf94bddaa25bd1ea4c2e305be73254fc9c7377cedbfc",
+  "reproduction": {
+    "construction_and_load_seconds": 0.6621865839697421,
+    "constructor_network_attempts": [],
+    "cpu_proof_sha256": "2a3d01e053179c93fb35faf9368cbf15d380faa1695795c793672cbd4ec14779",
+    "fresh_target_installed_only": [
+      "cutie",
+      "hydra-core",
+      "omegaconf",
+      "antlr4-python3-runtime"
+    ],
+    "strict_checkpoint_equality": true,
+    "wheel_identical": true
+  },
+  "requires_dist": [
+    "hydra-core>=1.3.2",
+    "numpy>=1.21",
+    "torch>=2.0"
+  ],
+  "scope": "Isolated wheel constructor/checkpoint proof only. No GPU, camera input, production install, publication or inference-equivalence claim.",
+  "strict_state_dict_and_tensor_equality": true,
+  "unchanged_yaml_files": [
+    "cutie/config/data/base.yaml",
+    "cutie/config/data/datasets.yaml",
+    "cutie/config/data/mega.yaml",
+    "cutie/config/data/with-mose.yaml",
+    "cutie/config/eval_config.yaml",
+    "cutie/config/eval_plus_config.yaml",
+    "cutie/config/gui_config.yaml",
+    "cutie/config/hydra/job_logging/custom-no-rank.yaml",
+    "cutie/config/hydra/job_logging/custom.yaml",
+    "cutie/config/model/base.yaml",
+    "cutie/config/model/small.yaml",
+    "cutie/config/train_config.yaml",
+    "cutie/config/video_config.yaml"
+  ],
+  "unused_optional_imports": {
+    "PySide6": false,
+    "einops": false,
+    "gradio": false,
+    "tensorboard": false,
+    "thinplate": false
+  },
+  "upstream_commit": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
+  "wheel_bytes": 171739,
+  "wheel_sha256": "495ab3ee13780146c1f10279cfbd20b595c45ba9d8fa3903b090b9696f4a1304"
+}

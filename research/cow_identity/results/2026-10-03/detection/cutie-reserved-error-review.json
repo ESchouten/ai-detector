@@ -1,0 +1,310 @@
+{
+  "audit_launches": [
+    {
+      "protocol": "detection_reserved_audit_protocol.json",
+      "runner_snapshot": "results/2026-10-03/detection/reserved-audit-v1.py.txt",
+      "status": "Stopped before rendering: geometry validation incorrectly also compared the copied YOLO confidence against the mask helper confidence=1.0. No inference or metric changed."
+    },
+    {
+      "protocol": "detection_reserved_audit_protocol_v2.json",
+      "status": "Complete: geometry check compares original slot plus four coordinates only; copied confidence is not geometry. Three regression tests pass."
+    }
+  ],
+  "audit_sha256": "aea26c18ebb2762c2581a0b88724ebebebfb11dab8ec1f13782e1d7a14a5e0b5",
+  "counts": {
+    "mask_area_smaller_than_own_rectangle": 29,
+    "mask_box_fully_within_own_rectangle": 20,
+    "multiple_mask_components": 6,
+    "own_annotation_absent": 2,
+    "own_annotation_present": 33,
+    "own_iou_in_045_to_05": 17,
+    "own_truth_assigned_to_other_slot": 0,
+    "paired_detector_own_iou_at_least_05": 29
+  },
+  "images": "All six retained contact sheets and four full-resolution ambiguous examples reviewed; no new source interval beyond 2999 accessed.",
+  "interpretation": "Most selected failures concern body extent rather than an obvious persistent name swap. Still images cannot prove lifetime identity or exclude brief ownership errors. Every original strict error remains counted.",
+  "reviewed_all_35": true,
+  "rows": [
+    {
+      "error_retained": true,
+      "index": 1,
+      "named_cow": 6,
+      "note": "Tight torso mask excludes much of the visible upper outline; detector better covers the publisher box.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 1818
+    },
+    {
+      "error_retained": true,
+      "index": 2,
+      "named_cow": 1,
+      "note": "Correct-looking foreground torso is narrower than the publisher extent; detector covers the broad extent.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 1820
+    },
+    {
+      "error_retained": true,
+      "index": 3,
+      "named_cow": 3,
+      "note": "Diagonal body mask is much tighter than the loose publisher rectangle.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 1840
+    },
+    {
+      "error_retained": true,
+      "index": 4,
+      "named_cow": 1,
+      "note": "Bent/occluded animal; mask and detector are offset left relative to the publisher extent. Neither reaches IoU .5.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 1847
+    },
+    {
+      "error_retained": true,
+      "index": 5,
+      "named_cow": 4,
+      "note": "Crowded overlapping heads/backs; mask extends below the own publisher rectangle into overlapping cow-8 territory. Possible extent/ownership ambiguity; do not declare correct identity from this still.",
+      "review_hint": "loose_or_extended_extent",
+      "second": 1889
+    },
+    {
+      "error_retained": true,
+      "index": 6,
+      "named_cow": 6,
+      "note": "Partial upper-body mask omits the lower publisher extent under occlusion.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 1890
+    },
+    {
+      "error_retained": true,
+      "index": 7,
+      "named_cow": 6,
+      "note": "Tight partial-body extent in crowded line; raw detector is larger and better aligned.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 1893
+    },
+    {
+      "error_retained": true,
+      "index": 8,
+      "named_cow": 2,
+      "note": "Narrow mask includes a lower extension past the own rectangle near another animal. Own detector rectangle reaches .5.",
+      "review_hint": "loose_or_extended_extent",
+      "second": 1932
+    },
+    {
+      "error_retained": true,
+      "index": 9,
+      "named_cow": 4,
+      "note": "Mask has a long lower extension beyond own publisher rectangle; paired detector is more compact.",
+      "review_hint": "loose_or_extended_extent",
+      "second": 2709
+    },
+    {
+      "error_retained": true,
+      "index": 10,
+      "named_cow": 4,
+      "note": "A large animal is plainly visible at the right edge, but publisher cow-4 annotation is absent. This is an annotation-presence concern only; label unchanged and the name remains an error.",
+      "review_hint": "no_own_publisher_annotation",
+      "second": 2770
+    },
+    {
+      "error_retained": true,
+      "index": 11,
+      "named_cow": 1,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2784
+    },
+    {
+      "error_retained": true,
+      "index": 12,
+      "named_cow": 3,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2790
+    },
+    {
+      "error_retained": true,
+      "index": 13,
+      "named_cow": 4,
+      "note": "A separate animal is visible below cow 3, but publisher cow-4 annotation is absent. Identity is not independently established from this still; retain unmatched error.",
+      "review_hint": "no_own_publisher_annotation",
+      "second": 2790
+    },
+    {
+      "error_retained": true,
+      "index": 14,
+      "named_cow": 3,
+      "note": "Tight body rectangle narrowly misses IoU threshold (.498); frozen .5 criterion remains unchanged.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2800
+    },
+    {
+      "error_retained": true,
+      "index": 15,
+      "named_cow": 6,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2803
+    },
+    {
+      "error_retained": true,
+      "index": 16,
+      "named_cow": 5,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2805
+    },
+    {
+      "error_retained": true,
+      "index": 17,
+      "named_cow": 5,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2807
+    },
+    {
+      "error_retained": true,
+      "index": 18,
+      "named_cow": 6,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2825
+    },
+    {
+      "error_retained": true,
+      "index": 19,
+      "named_cow": 6,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2829
+    },
+    {
+      "error_retained": true,
+      "index": 20,
+      "named_cow": 5,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2832
+    },
+    {
+      "error_retained": true,
+      "index": 21,
+      "named_cow": 6,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2833
+    },
+    {
+      "error_retained": true,
+      "index": 22,
+      "named_cow": 6,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2856
+    },
+    {
+      "error_retained": true,
+      "index": 23,
+      "named_cow": 5,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2862
+    },
+    {
+      "error_retained": true,
+      "index": 24,
+      "named_cow": 6,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2863
+    },
+    {
+      "error_retained": true,
+      "index": 25,
+      "named_cow": 1,
+      "note": "Animal is near the right wall; both mask and detector extend beyond the smaller publisher box. Neither reaches .5.",
+      "review_hint": "loose_or_extended_extent",
+      "second": 2865
+    },
+    {
+      "error_retained": true,
+      "index": 26,
+      "named_cow": 2,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2868
+    },
+    {
+      "error_retained": true,
+      "index": 27,
+      "named_cow": 6,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2873
+    },
+    {
+      "error_retained": true,
+      "index": 28,
+      "named_cow": 3,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2877
+    },
+    {
+      "error_retained": true,
+      "index": 29,
+      "named_cow": 4,
+      "note": "Several small disconnected pieces exist, but largest component retains 97.9% of mask area; tight body extent is still the principal geometry difference.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2878
+    },
+    {
+      "error_retained": true,
+      "index": 30,
+      "named_cow": 6,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2885
+    },
+    {
+      "error_retained": true,
+      "index": 31,
+      "named_cow": 5,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2888
+    },
+    {
+      "error_retained": true,
+      "index": 32,
+      "named_cow": 3,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2889
+    },
+    {
+      "error_retained": true,
+      "index": 33,
+      "named_cow": 4,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2895
+    },
+    {
+      "error_retained": true,
+      "index": 34,
+      "named_cow": 5,
+      "note": "Tight foreground body rectangle omits part of the broader publisher extent. Paired raw detector better covers that extent; no threshold or label change.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2935
+    },
+    {
+      "error_retained": true,
+      "index": 35,
+      "named_cow": 6,
+      "note": "Narrow body mask versus broad crowded publisher extent encompassing neighboring bodies. Paired detector is broader but still below .5; no label exclusion.",
+      "review_hint": "tight_or_partial_extent",
+      "second": 2935
+    }
+  ],
+  "scope": "AI-assisted visual diagnosis after a failed frozen evaluation; not independent ground-truth relabeling or a new accuracy estimate"
+}

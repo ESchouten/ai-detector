@@ -1,0 +1,1307 @@
+{
+  "scope": "Inter-reviewer geometry agreement only; no publisher/model inputs or alternative pass score",
+  "protocol_sha256": "748a9ea0f08198229efa813d2374926a768801a09e17c13d713dfb594b2db140",
+  "sources": {
+    "research/cow_identity/results/2026-10-03/geometry-review-audit.json": "191c7b73d58f0702cf7394120bb7673b134d1aabdf8f7668bde84919d8867ee7",
+    "research/cow_identity/results/2026-10-03/geometry-review-cattle.json": "e1951ca2bed28d881e78e54fabb8cedd83cf88a25d2ca7435b425ee1970b7c80"
+  },
+  "association": "Maximum summed rectangle IoU, zero-overlap assignments omitted; anonymous local letters never matched semantically",
+  "frames": [
+    {
+      "second": 367,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.9371069182389937,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.9451219512195121,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.8312783906554185,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.8137052341597796,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.8432338452622429,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.7796976900103614,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.8511066398390342,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.7518695203713254,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 442,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.8839285714285714,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.882687338501292,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.8835673283076285,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.4678111587982833,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.7731277533039648,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.8365103289298697,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.9529817980306066,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.8474666101335595,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 517,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "B",
+          "cattle": "A",
+          "iou": 0.8942974957256361,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "C",
+          "cattle": "B",
+          "iou": 0.7196155561863823,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "C",
+          "iou": 0.8562725450901804,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "D",
+          "iou": 0.6463081559615746,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.6554054054054054,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.7501432664756447,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.9081081081081082,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        }
+      ],
+      "unpaired_audit": [
+        "A"
+      ],
+      "unpaired_cattle": [
+        "E"
+      ]
+    },
+    {
+      "second": 592,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "B",
+          "cattle": "A",
+          "iou": 0.8905346454296439,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "C",
+          "cattle": "B",
+          "iou": 0.7442010309278351,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "C",
+          "iou": 0.829696394686907,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "D",
+          "iou": 0.7868985585707519,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "E",
+          "iou": 0.642755462028842,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.7857204153436883,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.9133210558624923,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        }
+      ],
+      "unpaired_audit": [
+        "A"
+      ],
+      "unpaired_cattle": [
+        "F"
+      ]
+    },
+    {
+      "second": 967,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.9640038067513855,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.8183033089217939,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.8197262859839547,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.8501608334533582,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.8203472840605521,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.8477938199973013,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.7960808328230251,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.884530853761623,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 1042,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "B",
+          "iou": 0.8823822991182831,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "B",
+          "cattle": "C",
+          "iou": 0.7656768192734342,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "A",
+          "iou": 0.9218590672462835,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.7197452229299363,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.9133858267716536,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.95352078827205,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.8593668915412558,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.7522000926354794,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 1117,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.9043743641912513,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.8206011088415524,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.673702616623993,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.6648501362397821,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.8355825281482073,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.9652912259794428,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.7790454764582998,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.8181190851735016,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 1192,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.9401630233419785,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.8299673650853711,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.9324756606397775,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.8506189994946943,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.9550561797752809,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.9410918063123265,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.919404973357016,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.9136485906982184,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 1267,
+      "audit_count": 7,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.9606250342271956,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "B",
+          "cattle": "C",
+          "iou": 0.7002075783696302,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "D",
+          "iou": 0.8051348460109228,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "E",
+          "iou": 0.8902411539328375,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "E",
+          "cattle": "F",
+          "iou": 0.808585889383499,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "G",
+          "iou": 0.6422295837534208,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "H",
+          "iou": 0.938677993097956,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": [
+        "B"
+      ]
+    },
+    {
+      "second": 1342,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.9209207260693951,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.7511201949532269,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.795020120724346,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.9040526498094908,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.8266874148998249,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.845555237276807,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.882,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.9395924923909368,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 1417,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.9288450668843811,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.9638746462991724,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.7936146831440745,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.8923766816143498,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.8899044453676777,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.7602832097100471,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.8053324767105686,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.6054019154202087,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 1492,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.8711819389110226,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.8465397332117205,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "D",
+          "iou": 0.6046361046361046,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "E",
+          "iou": 0.844156862745098,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "F",
+          "iou": 0.8504983388704319,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "G",
+          "iou": 0.8029079778075378,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "H",
+          "iou": 0.5106116728401241,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [
+        "H"
+      ],
+      "unpaired_cattle": [
+        "C"
+      ]
+    },
+    {
+      "second": 1837,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.7583892617449665,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.9330922242314648,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.9190751445086706,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "E",
+          "iou": 0.720353982300885,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "D",
+          "iou": 0.8663455132475786,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.8471562833058812,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.8433039932368591,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.8574358974358974,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 1912,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.8082319925163705,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.7974243663123467,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.8981578032672923,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.8309146792203245,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.8756597002322145,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.8432044379180943,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.7256851806936696,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.9383440986494421,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 1987,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.9061891786687427,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.8854583266677332,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.8876949527201278,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.9221532333645736,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.9346328017326245,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "F",
+          "cattle": "G",
+          "iou": 0.731525036268519,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "F",
+          "iou": 0.9062352080554241,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.7807206652294426,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 2062,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.757007959657883,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.7174264850996644,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.6787803732331212,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.9348776931799774,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.9037935748462064,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.7469659542476641,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.9404402627374401,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.8964937743487893,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 2737,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.871448275862069,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.9429041650841878,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.9803383630544125,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.9457784663051898,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.8400460299194477,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "F",
+          "cattle": "G",
+          "iou": 0.8889635477910297,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "G",
+          "cattle": "H",
+          "iou": 0.8870658055507069,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "H",
+          "cattle": "F",
+          "iou": 0.9013735215566577,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 2812,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.8022798742138365,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.9036692340607616,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.9180712788259958,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.9589488636363637,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.8940891772217073,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.9355333844973139,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.7452300304420529,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.8849102592510525,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 2887,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.9042245370370371,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.8760736196319019,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.7909772309432895,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.8999239378463545,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.9625,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.938347223616829,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.945219638242894,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.7916116684266103,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    },
+    {
+      "second": 2962,
+      "audit_count": 8,
+      "cattle_count": 8,
+      "pairs": [
+        {
+          "audit": "A",
+          "cattle": "A",
+          "iou": 0.8856181665264928,
+          "audit_uncertain": true,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "B",
+          "cattle": "B",
+          "iou": 0.8483983507770377,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "C",
+          "cattle": "C",
+          "iou": 0.665021641519356,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "D",
+          "cattle": "D",
+          "iou": 0.9140336808340016,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "E",
+          "cattle": "E",
+          "iou": 0.9655172413793104,
+          "audit_uncertain": false,
+          "cattle_uncertain": true
+        },
+        {
+          "audit": "F",
+          "cattle": "F",
+          "iou": 0.9195144478163346,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "G",
+          "cattle": "G",
+          "iou": 0.9256995656126882,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        },
+        {
+          "audit": "H",
+          "cattle": "H",
+          "iou": 0.9218553062767835,
+          "audit_uncertain": false,
+          "cattle_uncertain": false
+        }
+      ],
+      "unpaired_audit": [],
+      "unpaired_cattle": []
+    }
+  ],
+  "summary": {
+    "paired_regions": 156,
+    "median_pair_iou": 0.8584013944885767,
+    "minimum_pair_iou": 0.4678111587982833,
+    "pairs_below_0_5": 1,
+    "audit_objects": 159,
+    "cattle_objects": 160,
+    "audit_uncertain": 38,
+    "cattle_uncertain": 113
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "acceptance": {
+    "maximum_unknown_false_naming_rate": 0.01,
+    "minimum_conservative_precision": 0.99,
+    "minimum_known_coverage": 0.6
+  },
+  "conditions": [
+    "recorded_mask_geometry",
+    "all_actual_detector_proposals"
+  ],
+  "evaluation": "Existing maximum-cardinality then IoU one-to-one assignment and VideoMetrics; preserve all annotations and all added/missed/unmatched/unknown predictions. Reproduce every baseline naming count and confusion on all five panels before accepting control results.",
+  "files": {
+    "annotations": {
+      "path": "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz",
+      "sha256": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26"
+    },
+    "clip": {
+      "path": ".cache/cow-cutie/reserved-2fps-clip/sampled.json",
+      "sha256": "fc8aafcd7f05b07081c15a447c6bcf7718c170e97433bc325f55f77322f5389b"
+    },
+    "development_report": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-streaming-development.json",
+      "sha256": "a204ef7acdeb279f19476b480b51f90b76129385a1e3aa12646d51b7847508c1"
+    },
+    "execution": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_reserved_execution.json",
+      "sha256": "423255817381b1350a777f5f9e302676c39f4bacdb55c776ff5a7ccba1504aae"
+    },
+    "prefix_parity": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-reserved-prefix-parity.json",
+      "sha256": "83564e73e94b4d08e5bf37a58ea3e5a58549d07db86c5c940a618a8063a5a211"
+    },
+    "reserved_report": {
+      "path": "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/results/2026-10-03/detection/cutie-streaming-reserved.json",
+      "sha256": "2b6018a1da00b948e012c4bed76a987d24f91dcacf8190032ac8884084660603"
+    },
+    "source_pickle": {
+      "path": "datasets/8-calves/video/pmfeed_4_3_16.pkl",
+      "sha256": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e"
+    },
+    "streaming": {
+      "path": ".cache/cow-cutie/streaming-reserved/streaming.json",
+      "sha256": "2a39500ee305d3049fdd6aeea0f4cebe626f5b704ec02f5ca2337ab75a6c6fd3"
+    }
+  },
+  "implementation": {
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_assessment.py": "28d19f2ada57ff6e6741cff6a213da6c99ed4c6b83ba036f9804615b7c1a32e9",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_output_geometry.py": "1f75ed86ae53b80ca69189c1ac647b5d44812ecbcc3c1682fee5e8fee55b62a0",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_reserved_score.py": "bd535d5eb128415a2088d9d269c749bf5e5e0e613a353ca917af27590020ca7c",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_sam_tracking.py": "920c722775042efc3c71e3b7ae3b52473dde2d21facdd4b33bfb5fa297361128",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_detection_output_geometry.py": "96c3ab8130126e5c1d0d71f10e3b7378990f84a19380a60e251c909583bb0d66",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6",
+    "detector/src/aidetector/domain/models.py": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0"
+  },
+  "input_pixels": "Reuse the completed 5999-input MPS run and exact development prefix; no decoding, models or new source access",
+  "policy": "Names, gates, reciprocal pairs, mask history and original slots are unchanged. Replace the output collection with every actual same-frame raw detector proposal. Attach a name only from its unique recorded reciprocal named slot; all other proposals have identity=None and track_id=None. Keep detector coordinates/confidence exactly. No extra filtering, selection, coordinate averaging or threshold search.",
+  "scope": "One geometry control on five exposed panels; the previous reserved failure remains immutable. Seconds 3000 onward remain closed.",
+  "scoring_libraries": {
+    "lap": "0.5.13",
+    "numpy": "2.5.0"
+  },
+  "tracking_caveat": "Unnamed stateless proposals have no asserted persistent track. Their track-switch counts are not comparable with Cutie's eight persistent slots; naming/localization counts remain comparable. No global ID-F1 claim.",
+  "windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ],
+    [
+      1230,
+      1529
+    ],
+    [
+      1800,
+      2099
+    ],
+    [
+      2700,
+      2999
+    ]
+  ]
+}

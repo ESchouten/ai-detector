@@ -1,0 +1,39 @@
+{
+  "checked_inputs": "passed without model loading or GPU",
+  "environment": "app Python plus unchanged isolated /tmp/cow-cutie-app-deps and upstream on PYTHONPATH",
+  "evaluation_file_bindings": 42,
+  "evaluation_sha256": "192508d4289881c2ed9b6d68eb048ee0e2f1e767c5c441043e3ac6a88a34efbe",
+  "execution_file_bindings": 41,
+  "execution_sha256": "423255817381b1350a777f5f9e302676c39f4bacdb55c776ff5a7ccba1504aae",
+  "frames": 5999,
+  "gpu_launched": false,
+  "initial_masks_shape": [
+    8,
+    600,
+    800
+  ],
+  "initial_names": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "libraries": {
+    "antlr4-python3-runtime": "4.9.3",
+    "einops": "0.8.2",
+    "hydra-core": "1.3.2",
+    "numpy": "2.5.0",
+    "omegaconf": "2.3.1",
+    "opencv-python": "4.13.0.92",
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "ultralytics": "8.4.80"
+  },
+  "selection_sha256": "d349f8a9d82967f02ee2066c9a09d0a0aad905e15c844c5d009a956e441afb8a",
+  "source_annotations_opened": false,
+  "validate_freeze": "passed"
+}

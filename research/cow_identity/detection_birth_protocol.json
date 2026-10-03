@@ -1,0 +1,232 @@
+{
+  "anonymous_cows": [],
+  "base_protocol_sha256": "ba93acb3de65163780fa83d2384c968a491f079dcd55bdf28e61ac82ff227e30",
+  "baseline_protocol_sha256": "03ca89e9a83c7f834d60ab2408c0a9a3923352cfd1d3ac4b7187a5d32811d16e",
+  "births": {
+    "candidate_disappearance": "Drop pending evidence on absence or nonunique association; mature candidates consumed even if SAM rejects",
+    "confirmation_frames": 2,
+    "confirmation_step_seconds": 0.5,
+    "duplicate_overlap": 0.5,
+    "history": "Add new stable IDs with zero area/probability in existing historical rows; retain old masks/history/conflicts/counters",
+    "insertion": "One indexed core.step per timestamp. On birth pass only new foreground IDs and objects=new_ids, idx_mask=True",
+    "mask_prompt": "Current whole-class detector proposals only; no annotation or future image",
+    "maximum_mask_overlap": 0.1,
+    "maximum_objects": 8,
+    "maximum_occupied_overlap": 0.1,
+    "minimum_prompt_support": 0.9,
+    "name_acquisition": false,
+    "new_masks_overlap": "Any shared foreground rejects both",
+    "pair_iou": 0.5,
+    "precision": "Existing mixed adult/calves detector FP16 MPS in completed cache, Cutie FP32 MPS, SAM2.1tiny CPU FP32 at1024",
+    "temporal_overlap": 0.5
+  },
+  "cache_reclaim_bytes": 6442450944,
+  "comparison_windows": [
+    [
+      330,
+      629
+    ],
+    [
+      930,
+      1229
+    ],
+    [
+      1230,
+      1529
+    ]
+  ],
+  "control": "Independent no-birth parity verified all 3059 source rows and exactly replayed all 1530 integer decisions and quarantine events from the original six-seed masks. This proves logical policy parity; it is not a second GPU execution.",
+  "corroborator": {
+    "execution": "Complete source-bound 2 Hz cache: original integer arrays copied verbatim, missing half seconds inferred using the original YOLO FP16 MPS settings. Geometry evidence only, without identity truth. Naming and quarantine observations remain at the original 1 Hz cadence.",
+    "minimum_iou": 0.5,
+    "mode": "YOLO.predict independentlyperframe, no tracker, no temporalstate or windowresets. Cacheall1530frames beforelabels/scoring; integertruncatebounds likeapp. Geometryveto only; no identityfeatures or annotationinput.",
+    "model_sha256": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    "preprocessing": "Ultralytics8.4.80 YOLO.predict receives sourceBGRuint8 arrays; its standard letterbox/normalization and resolvedimgsz/rect/batch/quantize/conf/iou/max_det are recorded. FP16MPS matches priorcorroboration cache; CPUFP32appliesonlyinitialSAM.",
+    "runner_sha256": "37670c587178e3d42f17e3cf9e107812a0de4bb2d89257002d4093c0dea49e83",
+    "seconds": {
+      "start": 0,
+      "step": 1,
+      "stop": 1529
+    },
+    "settings": {
+      "classes": [
+        0
+      ],
+      "conf": 0.4,
+      "device": "mps",
+      "imgsz": 640,
+      "iou": 0.7,
+      "quantize": 16
+    }
+  },
+  "deletion": false,
+  "dynamic_additions": true,
+  "execution": "Read the complete frozen 2 Hz proposal cache before exactly one Cutie FP32 MPS step per timestamp. SAM tiny CPU at 1024 receives only mature current proposals. OneHertzQuarantine retains the original integer history; only integer decisions enter the three score panels. Exceeding eight live objects immediately stops the control and saves the attempt.",
+  "experiment": {
+    "anonymous_births": true,
+    "deletion": false,
+    "initial_anonymous_slots": [],
+    "initial_names": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "maximum_objects": 8,
+    "name_acquisition": false,
+    "processing_and_proposal_fps": 2,
+    "scoring_fps": 1,
+    "truth_domain": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "files": {
+    ".cache/cow-cutie/actual-seed-masks/0-masks.npz": "0301626c21e92d54e2edb17ce397492a72aaa0b0d07ec32ea603c7f51f82151a",
+    ".cache/cow-cutie/actual-seed-masks/manifest.json": "9dc7367648d8f19d6beeec1e252be571d1fb59a0a41df0c5e1d9d7018fefbd4a",
+    ".cache/cow-cutie/birth-proposals.json": "7ac8a806e07ed21d0102327d16109fb7006d76c59a018662eedbe4d419bf2004",
+    ".cache/cow-cutie/calibration-clip/sampled.avi": "11bff035d63f5e6399ada2ee82ebac05b242071b299b3c3ea023b4399972a8cf",
+    ".cache/cow-cutie/calibration-clip/sampled.json": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d",
+    ".cache/cow-cutie/cutie-base-mega.pth": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+    ".cache/cow-cutie/uninitialized-seeds/0-masks.npz": "ed321f669febdce1bf64f94e9d612d77e203add5583721e4070ad570cdf253da",
+    ".cache/cow-cutie/uninitialized-seeds/manifest.json": "81067ebb13ef7fdd2e60d9f6be9abe802d82c9022aa401b4e07657bb10516699",
+    ".cache/cow-cutie/uninitialized-unknown/streaming.json": "bb5b77fb4e6cb2feb859e75fa58ba3e9e2989d81bf3183a51bc8b9094d68cee8",
+    ".cache/cow-detectors/training/mixed-full-backbone/weights/best.pt": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    ".cache/cow-segmentation/sam2.1_t.pt": "3c1e81ca9b037dd39d70a014ddb9a813d6c4c4e12555420db7eaff31689bd4e3",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/cutie_object_state.py": "b08bbed613874a15fd71740785cd674c9507bc9e15732e8ed7670653c277f1df",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_streaming_protocol.json": "ba93acb3de65163780fa83d2384c968a491f079dcd55bdf28e61ac82ff227e30",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_uninitialized.py": "ffd6a31b7808de2cdf826fd18ac84665fa82abb0d9e9a710295f32ec14597f37",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/detection_uninitialized_score.py": "86a50d3e23e858d5d74ae4a98af7fc9e52295b54bb9647b05e992dc72750ee2e",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_detection_uninitialized.py": "468ee9fdc821088189d8d03ccc4d4e57778263a75367b2f9d11f489b1a75e735",
+    "datasets/8-calves/video/pmfeed_4_3_16.pkl": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e",
+    "datasets/8-calves/video/pmfeed_4_3_16.safe-v1.npz": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "detector/src/aidetector/domain/models.py": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0",
+    "research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "research/cow_identity/cutie_object_state.py": "b08bbed613874a15fd71740785cd674c9507bc9e15732e8ed7670653c277f1df",
+    "research/cow_identity/detection_actual_seed_protocol.json": "aaac7595cebc8beacace4260380d6c00b2b1c5eccf39def8cc4d0e6a7b7595d6",
+    "research/cow_identity/detection_birth_cache.py": "5eb44d63d9764271f56684f3a511f5093b98641f2c9d5245e38de86b332680a8",
+    "research/cow_identity/detection_birth_cache_protocol.json": "4a301ccc48edf17ea15031c9e0ede6fa1554e9324371d3e869be98264b494cf4",
+    "research/cow_identity/detection_birth_parity.py": "e93e37b48bf156060cb80340f9e406f9f0be871d6bfb276e436f79d73db4f0a2",
+    "research/cow_identity/detection_birth_run.py": "fa2c6a526b568b35ba8cb29280fdc80371d64b312f1b5250d512d956d0cfb29d",
+    "research/cow_identity/detection_birth_score.py": "6018e5debe34f8dc318d92ac5840d2b7a42e66c0fc5e5d068086699d32bd6a4a",
+    "research/cow_identity/detection_box_consensus.py": "d81721ec2268225715903a45c2b3c79e7588c6088b09cfc482d291e8430df3cf",
+    "research/cow_identity/detection_corroboration.py": "c381591a6609ff422c4ac784da2c36efb54637440bef49f926b5d3c9942e84b4",
+    "research/cow_identity/detection_cutie.py": "85c163664cdef3d7cef4268ac0970b569f8c7d62f95cc77add9ae6e46f51c9a7",
+    "research/cow_identity/detection_cutie_quarantine.py": "7bbd7e52a16b344a82a8848788e4f78f85bdb60ab43fd1ad08ae04977a213707",
+    "research/cow_identity/detection_cutie_quarantine_v2_protocol.json": "294b16744d0efe7705024edbb465f158f91a4fcad4c1881853e53683ea354165",
+    "research/cow_identity/detection_cutie_variants.py": "99ce480dcdaab4a624f5683e841ea520eb5793dc556f62ec1b294f8e44950080",
+    "research/cow_identity/detection_quarantine_recovery.py": "aca8e85b9f658ec9c183938dc0438614f5362525aca0ca4ee9fae1d050479e81",
+    "research/cow_identity/detection_quarantine_recovery_protocol.json": "4f6768a4d165a964c956741ce6ecbbd434a5559f5b35b4a59c5ef1aa6c658d97",
+    "research/cow_identity/detection_recovery_consensus_protocol.json": "d7136e6710a7a947c0a3a15a4d062a4dc831bf165fbb4f4f8c08ac13025d44f1",
+    "research/cow_identity/detection_streaming.py": "a33618c315ecff17e8730b7d5ca81a38c9c809e162fad2555e0399feddccabe4",
+    "research/cow_identity/detection_uninitialized_protocol.json": "03ca89e9a83c7f834d60ab2408c0a9a3923352cfd1d3ac4b7187a5d32811d16e",
+    "research/cow_identity/passage_entry_birth_protocol.json": "b75ede34b6cfe3f9266ad92d2b4c2c794c905fa6a0b67481a954613a07dda89a",
+    "research/cow_identity/passage_entry_birth_run.py": "06935106491ad23d45daeeb1177ae7612e5e9cd165e84e630124d00a18b1c700",
+    "research/cow_identity/passage_entry_births.py": "41a4d006887524796e712d412d2adf34cd47d91a4bdc6f09f67494bc9867d57a",
+    "research/cow_identity/passage_entry_control.py": "34c4c8db6694aa36615672fc665dd0702f67ac3a3902570d36c68f6d0f03f532",
+    "research/cow_identity/results/2026-10-03/detection/birth-no-op-parity.json": "38dbe063d78db284a38ea19096c008b24e4e39c8a98a20aa5321c16394abcb11",
+    "research/cow_identity/test_detection_birth_parity.py": "9a9c4bc2ea183d78596bc7cc42a4c9f0ae8774ac0b19c7ad2cb328fc6d5d6ee9",
+    "research/cow_identity/test_detection_birth_score.py": "a71d693ebcb2d9ed2c4119fbd3a4cbf2161f1ae3b223a6f3228fad629971b9ca",
+    "research/cow_identity/test_detection_streaming.py": "dbae443e02679fdd689cd88e30eb6859fc64fdf57a6f889ee4090eda9542fcf7",
+    "research/cow_identity/test_passage_birth_quarantine.py": "1955ee1f9adda27a8e03973885850f7dbedd1a4ca46cf6701d6dbcabb9485109",
+    "research/cow_identity/test_passage_entry_births.py": "725dfd2923f414e1d02683aa7d9bc96b6351eb21977ba2dd928d3479515110e8",
+    "research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6"
+  },
+  "frozen_at_utc": "2026-10-03T10:31:21.902555+00:00",
+  "inputs": {
+    "baseline_predictions": ".cache/cow-cutie/uninitialized-unknown/streaming.json",
+    "cache_protocol": "research/cow_identity/detection_birth_cache_protocol.json",
+    "clip": ".cache/cow-cutie/calibration-clip",
+    "cutie_model": ".cache/cow-cutie/cutie-base-mega.pth",
+    "no_birth_parity": "research/cow_identity/results/2026-10-03/detection/birth-no-op-parity.json",
+    "proposals": ".cache/cow-cutie/birth-proposals.json",
+    "quarantine_protocol": "research/cow_identity/detection_cutie_quarantine_v2_protocol.json",
+    "sam_model": ".cache/cow-segmentation/sam2.1_t.pt",
+    "seed_manifest": ".cache/cow-cutie/uninitialized-seeds/manifest.json",
+    "seed_masks": ".cache/cow-cutie/uninitialized-seeds/0-masks.npz",
+    "upstream": "/tmp/cow-identity-cutie",
+    "yolo_model": ".cache/cow-detectors/training/mixed-full-backbone/weights/best.pt"
+  },
+  "last_processed_second": 1529,
+  "libraries": {
+    "antlr4-python3-runtime": "4.9.3",
+    "einops": "0.8.2",
+    "hydra-core": "1.3.2",
+    "numpy": "2.5.0",
+    "omegaconf": "2.3.1",
+    "opencv-python": "4.13.0.92",
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "ultralytics": "8.4.80"
+  },
+  "limitations": [
+    "Unknown7/8are present initially, so this evaluates uninitialized-unknown exclusion, not physical entry.",
+    "Cutie must be rerun from t0; deleting7/8from old outputs is not equivalent.",
+    "All three panels are exposed development. All8truth animals and original known/unknown denominators remain; missing predictions count.",
+    "No source pixels beyond1529s; no reserved input files. GPU scheduling still controlled by parent."
+  ],
+  "max_internal_size": 480,
+  "mem_every": 5,
+  "memory": "SDK defaults bound working and long-term memory. Quarantine keeps30past indexed masks plus active anchors. No source RGB frames are retained. Post-reclaimMetaldriver and peakRSS each capped8GiB.",
+  "named_cows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "naming": {
+    "minimum_iou": 0.5,
+    "minimum_p10": 0.7,
+    "pairing": "reciprocal-best same-frame IoU; no coordinate averaging"
+  },
+  "output_contract": "Each1Hz row retains all visible LCC boxes and original zero-based track IDs. named_track_ids includes only original named seeds1-6. Class confidence is actual paired YOLO score or null, never fabricated1.0. Original indexed masks, raw-assigned-pixel probabilities and frame hashes permit independent replay.",
+  "performance": "Detector evidence is cached. Report the 26.598-second half-second detector fill separately from propagation plus SAM. Do not present these as measured joint live performance.",
+  "pre_run_amendment": {
+    "archive": "research/cow_identity/results/2026-10-03/detection/crowded-birth-protocol-preflight.json",
+    "previous_protocol_sha256": "ad1ad402257841088839dd121872e24514268314dd93d014826c56fd34fed9a9",
+    "reason": "Correct inherited timing description to actual timer boundaries; no model calls, source, parameter or safety-cap changes."
+  },
+  "prelaunch_correction": "Accept equivalent torch.device Metal spellings mps and mps:0; reject CPU. Corrected before any joint GPU inference; candidate decisions unchanged.",
+  "processing_fps": 2,
+  "recovery": {
+    "consecutive_frames": 3,
+    "donor_area_ratio": 0.5,
+    "minimum_iou": 0.5,
+    "minimum_p10": 0.7
+  },
+  "resource_limits": {
+    "max_mean_seconds_per_frame": 1.0,
+    "max_mps_driver_bytes": 8589934592,
+    "max_peak_rss_bytes": 8589934592,
+    "timing_window_frames": 30,
+    "warmup_frames": 10
+  },
+  "scope": "One exposed crowded anonymous-birth control: six named initial masks, all eight truth animals, and seconds 0\u20131529 only. No reserved pixels, name acquisition, threshold fitting or retirement.",
+  "scoring": "Retain all eight animals in the full panels 330\u2013629, 930\u20131229 and 1230\u20131529. New slots use cow=None bookkeeping, never a guessed publisher identity. Count every named unmatched box as an error. An incomplete control is reported as failed, without misleading full-panel rates.",
+  "seeded_cows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "source_commit": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
+  "timing": "frame_seconds measures propagation, same-frame SAM, naming decisions and mask writes. It excludes source decode/hash before the loop body and Metal cache reclamation after the timer. Overall elapsed includes initialization, source decode/hash and reclamation, but is set before the final report write. Detector cache fill is separately measured. The unchanged one-second sustained frame_seconds cap is a safety guard, not a claim of complete live 2 fps throughput.",
+  "uninitialized_unknown_cows": [
+    7,
+    8
+  ],
+  "use_long_term": true,
+  "video_sha256": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825"
+}

@@ -1,0 +1,2865 @@
+{
+  "annotation_batch_closed_at_utc": "2026-10-03T14:10:19.812714+00:00",
+  "definition": {
+    "additive_tags": "Separate draft boxes for clearly visible tags missing from publisher annotations; never modify publisher boxes.",
+    "body": "All visible same-animal pixels including head/legs, no inferred hidden extent.",
+    "head": "Visible head including ears, exclude neck; clipped/blurred boundaries explicitly uncertain.",
+    "unresolved_regions": "Cannot serve as negative supervision. Frame ineligible for ordinary fullframe three-class training until resolved."
+  },
+  "reviewer": "identity_evaluation",
+  "revision": "Only cow603 H2 and B2 left bound expanded to575 native, after clean native review of omitted ear. No tag/source/split changes. Earlier files preserved.",
+  "revision_at_utc": "2026-10-03T14:15:04.176943+00:00",
+  "rows": [
+    {
+      "additive_tags": [
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "A1",
+          "note": "Clear hanging yellow tag on small background head; native crop inspected.",
+          "ownership_status": "unknown_or_unreviewed",
+          "source": "draft_additive_AI_visual_annotation",
+          "xyxy": [
+            199,
+            69,
+            213,
+            95
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "A2",
+          "note": "Small yellow tag attached to background black head; native crop inspected.",
+          "ownership_status": "unknown_or_unreviewed",
+          "source": "draft_additive_AI_visual_annotation",
+          "xyxy": [
+            292,
+            66,
+            304,
+            82
+          ]
+        }
+      ],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Left foreground visible body/head; upper body truncated.",
+          "uncertain": false,
+          "xyxy": [
+            81.0,
+            0,
+            716.625,
+            947.25
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "Center-right principal; top body/rails clipped.",
+          "uncertain": false,
+          "xyxy": [
+            833.625,
+            0,
+            1361.25,
+            1004.625
+          ]
+        },
+        {
+          "id": "B3",
+          "note": "Right edge principal; narrow visible head/neck/side fragment.",
+          "uncertain": true,
+          "xyxy": [
+            1318.5,
+            0,
+            1440,
+            1080
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Left feeding head including ears.",
+          "uncertain": false,
+          "xyxy": [
+            83.25,
+            515.25,
+            351.0,
+            947.25
+          ]
+        },
+        {
+          "body_id": "B2",
+          "id": "H2",
+          "note": "Both ears and white-forehead head.",
+          "uncertain": false,
+          "xyxy": [
+            833.625,
+            540.0,
+            1234.125,
+            1004.625
+          ]
+        },
+        {
+          "body_id": "B3",
+          "id": "H3",
+          "note": "Right border head/ear, clipped muzzle.",
+          "uncertain": false,
+          "xyxy": [
+            1318.5,
+            553.5,
+            1440,
+            1080
+          ]
+        }
+      ],
+      "height": 1080,
+      "id": "cow0",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow0.jpg",
+      "image_sha256": "6e342d42a5f263b85551f767ea89667f223816507b8a1647948321a286ae95c9",
+      "publisher_tags": [
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            291.0,
+            623.0000000000001,
+            328.00000000000006,
+            707.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "P2",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            878.9999999999999,
+            610.0000000000001,
+            945.0,
+            681.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "P3",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1143.0,
+            624.0000000000001,
+            1194.0,
+            706.0000000000001
+          ]
+        },
+        {
+          "body_id": "B3",
+          "head_id": "H3",
+          "id": "P4",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 3,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1358.0,
+            646.0000000000001,
+            1416.0,
+            720.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Multiple background heads/bodies require separate native annotation. Two further yellow regions near native(765,110)/(820,95) remain uncertain, not positive tags.",
+          "xyxy": [
+            0,
+            0,
+            984.375,
+            330.75
+          ]
+        }
+      ],
+      "width": 1440
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Visible foreground black cow fragments; severely blurred, original body connectivity not fully certain.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            0,
+            1058.625,
+            1080
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": null,
+          "id": "H1",
+          "note": "Very large clipped head, both ear-tag fragments at top, muzzle below; severe motion blur.",
+          "uncertain": true,
+          "xyxy": [
+            159.75,
+            0,
+            1028.25,
+            864.0
+          ]
+        }
+      ],
+      "height": 1080,
+      "id": "cow86",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow86.jpg",
+      "image_sha256": "e7bec8345fd05f2b8c269f258f1eab835f3ed65bb10f0210cea5731198e2cf35",
+      "publisher_tags": [
+        {
+          "body_id": null,
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            171.0,
+            5.0,
+            345.0,
+            101.00000000000001
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H1",
+          "id": "P2",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            853.0,
+            0.9999999999999996,
+            1015.0000000000001,
+            29.000000000000004
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Other white/black body fragments may be a separate cow; attachment cannot be certified.",
+          "xyxy": [
+            860.625,
+            0,
+            1440,
+            392.625
+          ]
+        },
+        {
+          "note": "Lower white/black leg/body fragment attribution unresolved.",
+          "xyxy": [
+            0,
+            784.125,
+            582.75,
+            1080
+          ]
+        }
+      ],
+      "width": 1440
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "complete_AI_reviewed_candidate",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Only visible cow, upper body and muzzle cut by source edges; visible neck/foreleg/head retained.",
+          "uncertain": false,
+          "xyxy": [
+            229.5,
+            0,
+            937.125,
+            1080
+          ]
+        }
+      ],
+      "eligibility_note": "Root independently inspected all head/tag and whole-body overlays: one visible animal, no obvious omitted head/tag; clipped visible extent retained. cow345 blur/rail uncertainty remains. This is annotation eligibility only; no training authorized.",
+      "full_frame_training_eligible": true,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Both ears and white forehead/muzzle; lower muzzle clipped.",
+          "uncertain": false,
+          "xyxy": [
+            229.5,
+            402.75,
+            914.625,
+            1080
+          ]
+        }
+      ],
+      "height": 1080,
+      "id": "cow258",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow258.jpg",
+      "image_sha256": "7cf75da872b680e425cc343cb048687027dace29accbfe453bd9521d871fe6b7",
+      "independent_review": "Parent root AI visual review; not independent human-certified field annotation.",
+      "publisher_tags": [
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            749.0,
+            524.0000000000001,
+            837.0000000000001,
+            646.0000000000001
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P2",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            339.0,
+            493.00000000000006,
+            435.99999999999994,
+            595.0000000000001
+          ]
+        }
+      ],
+      "unresolved_regions": [],
+      "width": 1440
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "complete_AI_reviewed_candidate",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "One side-facing cow; all visible body/head and lower-left limb fragment. Rail occlusion and blur retained.",
+          "uncertain": false,
+          "xyxy": [
+            0,
+            0,
+            722.25,
+            1080
+          ]
+        }
+      ],
+      "eligibility_note": "Root independently inspected all head/tag and whole-body overlays: one visible animal, no obvious omitted head/tag; clipped visible extent retained. cow345 blur/rail uncertainty remains. This is annotation eligibility only; no training authorized.",
+      "full_frame_training_eligible": true,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Side-facing black head with white muzzle; left ear/base partly behind rails. Approximate blurred visible boundary.",
+          "uncertain": true,
+          "xyxy": [
+            271.125,
+            234.0,
+            722.25,
+            741.375
+          ]
+        }
+      ],
+      "height": 1080,
+      "id": "cow345",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow345.jpg",
+      "image_sha256": "8747161305a0956da5f919d35035930ec24c5fc23567ef93525510c04ee4276e",
+      "independent_review": "Parent root AI visual review; not independent human-certified field annotation.",
+      "publisher_tags": [
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            311.0,
+            352.0,
+            369.00000000000006,
+            460.0
+          ]
+        }
+      ],
+      "unresolved_regions": [],
+      "width": 1440
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Main cow neck/head and right visible flank fragment, severe interlacing makes full torso ownership uncertain.",
+          "uncertain": true,
+          "xyxy": [
+            633.375,
+            0,
+            1301.625,
+            905.625
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "Upper-left partial neighbor, exact body/head extent unresolved.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            0,
+            228.375,
+            195.75
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Main feeding head and both ears, severe motion blur.",
+          "uncertain": true,
+          "xyxy": [
+            633.375,
+            390.375,
+            1051.875,
+            905.625
+          ]
+        }
+      ],
+      "height": 1080,
+      "id": "cow517",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow517.jpg",
+      "image_sha256": "e42112413dabc31f867ee725bdab6da4566b0fbda00118fa8ceeec51cc6e9ea5",
+      "publisher_tags": [
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            910.0000000000001,
+            451.00000000000006,
+            985.0,
+            539.0
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P2",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            675.0,
+            418.00000000000006,
+            753.0,
+            532.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Partial neighbor head/tag requires native confirmation; yellow blur not labeled positive.",
+          "xyxy": [
+            0,
+            0,
+            231.75,
+            196.875
+          ]
+        },
+        {
+          "note": "Right flank connection to main cow versus neighbor uncertain.",
+          "xyxy": [
+            992.25,
+            0,
+            1378.125,
+            248.625
+          ]
+        }
+      ],
+      "width": 1440
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Left-front cow; visible head/body/legs, background cow overlaps upper outline.",
+          "uncertain": false,
+          "xyxy": [
+            162.0,
+            355.5,
+            631.125,
+            1009.125
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "Middle foreground cow; visible head/body/legs.",
+          "uncertain": false,
+          "xyxy": [
+            575.0,
+            379.125,
+            1000.125,
+            1068.75
+          ]
+        },
+        {
+          "id": "B3",
+          "note": "Right foreground cow, partly hidden by column.",
+          "uncertain": false,
+          "xyxy": [
+            969.75,
+            392.625,
+            1438.875,
+            1080
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Left front head plus both ears.",
+          "uncertain": false,
+          "xyxy": [
+            238.5,
+            382.5,
+            501.75,
+            711.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "id": "H2",
+          "note": "Middle front head and ears. Version2: left ear visible from native x575; previous x627.75 omitted its tip/side. Unchanged ROI begins579, so visible part is clipped consistently.",
+          "uncertain": false,
+          "xyxy": [
+            575.0,
+            441.0,
+            929.25,
+            927.0
+          ]
+        },
+        {
+          "body_id": "B3",
+          "id": "H3",
+          "note": "Right front white head, ears partly hidden by rail/column.",
+          "uncertain": false,
+          "xyxy": [
+            991.125,
+            445.5,
+            1226.25,
+            901.125
+          ]
+        }
+      ],
+      "height": 1080,
+      "id": "cow603",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow603.jpg",
+      "image_sha256": "6a2a4a034a95708cd67f576c077ff5dad876fb9996e55e8636649272af98d29f",
+      "publisher_tags": [
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            821.0000000000001,
+            565.0,
+            876.0000000000001,
+            664.0000000000001
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P2",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            473.0,
+            522.0000000000001,
+            500.00000000000006,
+            581.0
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P3",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            265.0,
+            460.00000000000006,
+            316.0,
+            530.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Several background/edge cows, heads and lying bodies unresolved. Upper-right yellow patches may be rail hardware, not guessed as tags.",
+          "xyxy": [
+            0,
+            246.375,
+            1440,
+            470.25
+          ]
+        },
+        {
+          "note": "Partly hidden head/body left of foreground H1 requires individual outline.",
+          "xyxy": [
+            0,
+            447.75,
+            304.875,
+            750.375
+          ]
+        }
+      ],
+      "width": 1440
+    },
+    {
+      "additive_tags": [
+        {
+          "body_id": null,
+          "head_id": "H8",
+          "id": "A1",
+          "note": "Side-on yellow tag on near ear of H8, verified on native right-side crop.",
+          "ownership_status": "unknown_or_unreviewed",
+          "source": "draft_additive_AI_visual_annotation",
+          "xyxy": [
+            1680,
+            502,
+            1694,
+            540
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H8",
+          "id": "A2",
+          "note": "Yellow tag on far ear of H8, verified on native right-side crop.",
+          "ownership_status": "unknown_or_unreviewed",
+          "source": "draft_additive_AI_visual_annotation",
+          "xyxy": [
+            1771,
+            504,
+            1789,
+            537
+          ]
+        }
+      ],
+      "annotation_status": "partial_ineligible",
+      "bodies": [],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": null,
+          "id": "H1",
+          "note": "Left clipped white-forehead head with ear.",
+          "uncertain": false,
+          "xyxy": [
+            0,
+            420.0,
+            382.5,
+            762.0
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H2",
+          "note": "Low foreground head and ears.",
+          "uncertain": false,
+          "xyxy": [
+            264.0,
+            757.5,
+            598.5,
+            996.0
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H3",
+          "note": "Middle white-stripe black head, both ears.",
+          "uncertain": false,
+          "xyxy": [
+            774.0,
+            451.5,
+            1042.5,
+            702.0
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H4",
+          "note": "Black white-forehead head with broad ears.",
+          "uncertain": false,
+          "xyxy": [
+            1021.5,
+            426.0,
+            1272.0,
+            658.5
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H5",
+          "note": "Upper white face and ears, partly behind other heads.",
+          "uncertain": false,
+          "xyxy": [
+            1216.5,
+            315.0,
+            1447.5,
+            502.5
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H6",
+          "note": "Lower white-face head and ears.",
+          "uncertain": false,
+          "xyxy": [
+            1305.0,
+            481.5,
+            1527.0,
+            666.0
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H7",
+          "note": "Sideways downward black head, ear tagged.",
+          "uncertain": false,
+          "xyxy": [
+            1522.5,
+            528.0,
+            1707.0,
+            688.5
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H8",
+          "note": "Dark head behind H7 and ahead of partial white H9; both yellow tags absent from publisher list.",
+          "uncertain": false,
+          "xyxy": [
+            1642.5,
+            444.0,
+            1822.5,
+            618.0
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H9",
+          "note": "Partly hidden white-forehead head below H8; lower muzzle extends left.",
+          "uncertain": true,
+          "xyxy": [
+            1726.5,
+            526.5,
+            1864.5,
+            652.5
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H10",
+          "note": "Far white face behind rail and neighboring head.",
+          "uncertain": false,
+          "xyxy": [
+            1753.5,
+            366.0,
+            1902.0,
+            519.0
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H11",
+          "note": "Extreme-right black head/green tag, clipped at image border.",
+          "uncertain": true,
+          "xyxy": [
+            1834.5,
+            387.0,
+            1920,
+            561.0
+          ]
+        }
+      ],
+      "height": 1080,
+      "id": "cow690",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow690.jpg",
+      "image_sha256": "f809f297cb16006e35858399849e01fae62ee4b86bdfab3c569c9ca11eca8c9f",
+      "publisher_tags": [
+        {
+          "body_id": null,
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            30.000000000000007,
+            544.0,
+            110.00000000000001,
+            639.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H2",
+          "id": "P2",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            279.0,
+            782.0,
+            338.0,
+            852.0000000000001
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H2",
+          "id": "P3",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            506.99999999999994,
+            801.0,
+            571.0,
+            869.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H3",
+          "id": "P4",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 3,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            972.9999999999999,
+            516.0,
+            1015.0000000000001,
+            567.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H5",
+          "id": "P5",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 4,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1228.9999999999998,
+            360.00000000000006,
+            1263.0,
+            408.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H4",
+          "id": "P6",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 5,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1038.0,
+            489.0,
+            1074.0000000000002,
+            544.0000000000001
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H5",
+          "id": "P7",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 6,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1374.0,
+            372.0,
+            1423.0,
+            426.00000000000006
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H6",
+          "id": "P8",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 7,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1336.0,
+            526.0,
+            1374.0,
+            573.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H6",
+          "id": "P9",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 8,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1467.0,
+            546.9999999999999,
+            1506.9999999999998,
+            592.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H7",
+          "id": "P10",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 9,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1589.0,
+            555.0000000000001,
+            1620.0,
+            601.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H10",
+          "id": "P11",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 10,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1779.0,
+            383.0,
+            1817.9999999999998,
+            422.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H9",
+          "id": "P12",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 11,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1798.9999999999998,
+            570.0,
+            1833.0,
+            608.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Foreground body attachments and receding background cow fragments not separately annotated.",
+          "xyxy": [
+            0,
+            243.0,
+            1920,
+            796.5
+          ]
+        },
+        {
+          "note": "Green/yellow tag fragments near extreme-right H11 have ambiguous complete extent; not guessed.",
+          "xyxy": [
+            1842.0,
+            456.0,
+            1884.0,
+            505.5
+          ]
+        },
+        {
+          "note": "Possible additional narrow turquoise hanging tag on H3 near ear, native confirmation needed.",
+          "xyxy": [
+            790.5,
+            487.5,
+            834.0,
+            604.5
+          ]
+        }
+      ],
+      "width": 1920
+    },
+    {
+      "additive_tags": [
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "A1",
+          "note": "Near side-on yellow hanging ear tag, native 2x crop reviewed; thin terminal strap excluded.",
+          "ownership_status": "draft_visible_attachment",
+          "source": "draft_additive_AI_visual_annotation",
+          "xyxy": [
+            552,
+            239,
+            566,
+            276
+          ]
+        },
+        {
+          "body_id": "B5",
+          "head_id": "H5",
+          "id": "A2",
+          "note": "Edge-on yellow ear tag on downwards H5, native 2x crop reviewed.",
+          "ownership_status": "draft_visible_attachment",
+          "source": "draft_additive_AI_visual_annotation",
+          "xyxy": [
+            1461,
+            793,
+            1475,
+            877
+          ]
+        }
+      ],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Extreme-left clipped cow; head/tag partly visible, torso beyond left edge.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            174.0,
+            103.5,
+            729.0
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "Left rear black/white cow behind principal B3; rail/foreground occlusion.",
+          "uncertain": false,
+          "xyxy": [
+            216.0,
+            88.5,
+            604.5,
+            709.5
+          ]
+        },
+        {
+          "id": "B3",
+          "note": "Front left black cow with both ears/tag.",
+          "uncertain": false,
+          "xyxy": [
+            324.0,
+            178.5,
+            832.5,
+            724.5
+          ]
+        },
+        {
+          "id": "B4",
+          "note": "Center white-forehead cow, whole visible extent.",
+          "uncertain": false,
+          "xyxy": [
+            810.0,
+            210.0,
+            1222.5,
+            877.5
+          ]
+        },
+        {
+          "id": "B5",
+          "note": "Long-neck right cow with head down near bottom.",
+          "uncertain": false,
+          "xyxy": [
+            1204.5,
+            216.0,
+            1759.5,
+            1078.5
+          ]
+        },
+        {
+          "id": "B6",
+          "note": "Right edge cow, head/muzzle partly clipped.",
+          "uncertain": false,
+          "xyxy": [
+            1591.5,
+            214.5,
+            1920,
+            937.5
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Left-edge partial head/ear with green tag, anatomical extent uncertain.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            256.5,
+            88.5,
+            507.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "id": "H2",
+          "note": "Black/white rear cow head partly occluded by foreground black head; both ears near upper rail.",
+          "uncertain": true,
+          "xyxy": [
+            241.5,
+            163.5,
+            595.5,
+            556.5
+          ]
+        },
+        {
+          "body_id": "B3",
+          "id": "H3",
+          "note": "Front black face plus ears.",
+          "uncertain": false,
+          "xyxy": [
+            324.0,
+            337.5,
+            726.0,
+            720.0
+          ]
+        },
+        {
+          "body_id": "B4",
+          "id": "H4",
+          "note": "Center white face with two tags.",
+          "uncertain": false,
+          "xyxy": [
+            810.0,
+            502.5,
+            1222.5,
+            877.5
+          ]
+        },
+        {
+          "body_id": "B5",
+          "id": "H5",
+          "note": "Downward right white-forehead head with ears.",
+          "uncertain": false,
+          "xyxy": [
+            1438.5,
+            748.5,
+            1759.5,
+            1078.5
+          ]
+        },
+        {
+          "body_id": "B6",
+          "id": "H6",
+          "note": "Right clipped head and near ear.",
+          "uncertain": false,
+          "xyxy": [
+            1717.5,
+            603.0,
+            1920,
+            937.5
+          ]
+        }
+      ],
+      "height": 1080,
+      "id": "cow776",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow776.jpg",
+      "image_sha256": "75d46d431ff585a26a1af62b1d3ad3b68d3dfa7dc0a823893687fc897ee978e8",
+      "publisher_tags": [
+        {
+          "body_id": "B3",
+          "head_id": "H3",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            643.0,
+            420.00000000000006,
+            711.0,
+            523.0
+          ]
+        },
+        {
+          "body_id": "B4",
+          "head_id": "H4",
+          "id": "P2",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            841.0,
+            596.0000000000001,
+            910.0,
+            687.0000000000001
+          ]
+        },
+        {
+          "body_id": "B4",
+          "head_id": "H4",
+          "id": "P3",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1130.0,
+            617.0,
+            1196.0,
+            714.0
+          ]
+        },
+        {
+          "body_id": "B5",
+          "head_id": "H5",
+          "id": "P4",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 3,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1677.0,
+            790.0,
+            1743.0,
+            873.0000000000001
+          ]
+        },
+        {
+          "body_id": "B6",
+          "head_id": "H6",
+          "id": "P5",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 4,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1734.9999999999998,
+            642.0,
+            1793.0,
+            724.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "P6",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 5,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            280.0,
+            223.0,
+            338.99999999999994,
+            311.0
+          ]
+        },
+        {
+          "body_id": "B3",
+          "head_id": "H3",
+          "id": "P7",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 6,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            361.0,
+            433.0,
+            413.0,
+            529.0
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P8",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 7,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            4.999999999999999,
+            300.99999999999994,
+            42.0,
+            399.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Visible background backs/fragments behind rails not yet separately outlined.",
+          "xyxy": [
+            0,
+            58.5,
+            1920,
+            223.5
+          ]
+        }
+      ],
+      "width": 1920
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": null,
+          "id": "H1",
+          "note": "Left background-facing black head with white forehead and both ears; muzzle partly hidden by post.",
+          "uncertain": true,
+          "xyxy": [
+            193.5,
+            427.5,
+            537.0,
+            762.0
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H2",
+          "note": "Center main white-forehead head with both ears.",
+          "uncertain": false,
+          "xyxy": [
+            799.5,
+            544.5,
+            1278.0,
+            1047.0
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H3",
+          "note": "Right large white face and both ears.",
+          "uncertain": false,
+          "xyxy": [
+            1275.0,
+            499.5,
+            1749.0,
+            912.0
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H4",
+          "note": "Bottom-right very clipped downward head, ears not clearly separated from neck.",
+          "uncertain": true,
+          "xyxy": [
+            1623.0,
+            814.5,
+            1920,
+            1080
+          ]
+        }
+      ],
+      "height": 1080,
+      "id": "cow862",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow862.jpg",
+      "image_sha256": "ea49ff4d7e5e014eb1e2b679a38fc1131eb87879412d32f5e87a527eec8328be",
+      "publisher_tags": [
+        {
+          "body_id": null,
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            210.0,
+            462.00000000000006,
+            270.0,
+            524.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H1",
+          "id": "P2",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            459.99999999999994,
+            480.0,
+            512.9999999999999,
+            564.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H2",
+          "id": "P3",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            835.0,
+            662.0,
+            913.0,
+            782.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H2",
+          "id": "P4",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 3,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1123.9999999999998,
+            702.0000000000001,
+            1218.0,
+            804.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H3",
+          "id": "P5",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 4,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1298.0,
+            587.0,
+            1360.9999999999998,
+            676.0000000000001
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H3",
+          "id": "P6",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 5,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1605.0,
+            660.0,
+            1682.0,
+            755.0000000000001
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Distant herd and rear/edge bodies, heads and tiny tags remain incomplete.",
+          "xyxy": [
+            0,
+            187.5,
+            1920,
+            493.5
+          ]
+        },
+        {
+          "note": "Head/body attachments and overlapped whole extents unresolved. Existing head boxes do not claim biological body ownership.",
+          "xyxy": [
+            0,
+            406.5,
+            1920,
+            1080
+          ]
+        }
+      ],
+      "width": 1920
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [],
+      "height": 4000,
+      "id": "cow948",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow948.jpg",
+      "image_sha256": "deb6e5acf221f13e0e3442ae1095313e9e24b8c986892efc2011ba6ef3450404",
+      "publisher_tags": [
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "P1",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            869.0,
+            1254.0,
+            917.0000000000001,
+            1331.9999999999998
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "P2",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1021.9999999999999,
+            1276.0,
+            1069.0,
+            1371.0000000000002
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Rotated wide feeding row with many small receding animals. Complete native annotation exceeds this bounded batch, so frame is not negative supervision.",
+          "xyxy": [
+            0,
+            0,
+            1800,
+            4000
+          ]
+        }
+      ],
+      "width": 1800
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Front cow visible white body, head, forelegs and clipped lower legs.",
+          "uncertain": false,
+          "xyxy": [
+            2237.5,
+            440.625,
+            3346.875,
+            1800
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Front white-forehead head and both ears.",
+          "uncertain": false,
+          "xyxy": [
+            2256.25,
+            628.125,
+            3253.125,
+            1584.375
+          ]
+        }
+      ],
+      "height": 1800,
+      "id": "cow1035",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1035.jpg",
+      "image_sha256": "1b0e23a34257b290ae628391e68ac085e1077586e164f1a5a781c5e1c63f6d9c",
+      "publisher_tags": [
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2956.0,
+            873.0000000000001,
+            3102.0,
+            1035.0000000000002
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P2",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2306.0,
+            809.9999999999999,
+            2490.0,
+            973.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Many receding and lying background cows/heads; not fully annotated. Tiny tags cannot be treated as absent.",
+          "xyxy": [
+            0,
+            390.625,
+            3653.125,
+            921.875
+          ]
+        }
+      ],
+      "width": 4000
+    },
+    {
+      "additive_tags": [
+        {
+          "body_id": "B4",
+          "head_id": "H4",
+          "id": "A1",
+          "note": "Yellow side-profile ear tag attached to H4, partially occluded by rail; visible fragments bounded without filling occluded shape.",
+          "ownership_status": "draft_visible_attachment",
+          "source": "draft_additive_AI_visual_annotation",
+          "xyxy": [
+            3395,
+            79,
+            3448,
+            137
+          ]
+        },
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "A2",
+          "note": "Visible yellow tag fragment attached to H2 far ear, lower part occluded by H3 ear. Native 3x crop independently of model outputs confirms extra tag missed by publisher.",
+          "ownership_status": "draft_visible_attachment",
+          "source": "draft_additive_AI_visual_annotation",
+          "xyxy": [
+            2337,
+            970,
+            2379,
+            1014
+          ]
+        }
+      ],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Left principal feeding cow body/head and visible front limbs.",
+          "uncertain": false,
+          "xyxy": [
+            912.5,
+            103.125,
+            1818.75,
+            1165.625
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "Middle black principal feeding cow, all visible neck/head.",
+          "uncertain": false,
+          "xyxy": [
+            1871.875,
+            140.625,
+            2500.0,
+            1440.625
+          ]
+        },
+        {
+          "id": "B3",
+          "note": "Right white-face principal cow, visible body and feeding head.",
+          "uncertain": false,
+          "xyxy": [
+            2315.625,
+            50.0,
+            3240.625,
+            1575.0
+          ]
+        },
+        {
+          "id": "B4",
+          "note": "Right neighboring cow side/head, clipped by top/right border; rail occlusion.",
+          "uncertain": true,
+          "xyxy": [
+            3293.75,
+            0,
+            4000,
+            1115.625
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Left principal with two tags.",
+          "uncertain": false,
+          "xyxy": [
+            912.5,
+            706.25,
+            1437.5,
+            1165.625
+          ]
+        },
+        {
+          "body_id": "B2",
+          "id": "H2",
+          "note": "Middle principal with one visible tag, ear overlaps adjacent head.",
+          "uncertain": false,
+          "xyxy": [
+            1881.25,
+            921.875,
+            2456.25,
+            1440.625
+          ]
+        },
+        {
+          "body_id": "B3",
+          "id": "H3",
+          "note": "White front head with both tagged ears.",
+          "uncertain": false,
+          "xyxy": [
+            2315.625,
+            953.125,
+            2971.875,
+            1575.0
+          ]
+        },
+        {
+          "body_id": "B4",
+          "id": "H4",
+          "note": "Right neighbor head profile above rail, partly clipped.",
+          "uncertain": true,
+          "xyxy": [
+            3293.75,
+            0,
+            3718.75,
+            287.5
+          ]
+        }
+      ],
+      "height": 1800,
+      "id": "cow1121",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1121.jpg",
+      "image_sha256": "c9115b2b23999f9f27a1a202ca76e9d4702769f7788fe81a4c8df139b6ca7e10",
+      "publisher_tags": [
+        {
+          "body_id": "B3",
+          "head_id": "H3",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2781.0,
+            1035.0,
+            2912.0000000000005,
+            1182.0000000000002
+          ]
+        },
+        {
+          "body_id": "B3",
+          "head_id": "H3",
+          "id": "P2",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2343.0000000000005,
+            1048.0,
+            2496.0,
+            1154.0000000000002
+          ]
+        },
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "P3",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1927.0,
+            1038.0,
+            2049.0,
+            1148.0
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P4",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 3,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1318.0,
+            791.0,
+            1431.0,
+            926.0000000000001
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P5",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 4,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            952.0,
+            845.0,
+            1046.0,
+            923.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Left-side and rear animals require individual head/body boxes.",
+          "xyxy": [
+            0,
+            40.625,
+            812.5,
+            803.125
+          ]
+        },
+        {
+          "note": "Additional head/body fragments behind principal cows remain unassigned.",
+          "xyxy": [
+            1509.375,
+            46.875,
+            2025.0,
+            553.125
+          ]
+        }
+      ],
+      "width": 4000
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Left main cow, body/feeding head behind headlock.",
+          "uncertain": false,
+          "xyxy": [
+            421.875,
+            284.375,
+            1121.875,
+            1409.375
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "First right-cluster cow, white body behind column and white face.",
+          "uncertain": false,
+          "xyxy": [
+            2106.25,
+            318.75,
+            2868.75,
+            956.25
+          ]
+        },
+        {
+          "id": "B3",
+          "note": "Middle-right white-forehead cow; side/neck and head.",
+          "uncertain": false,
+          "xyxy": [
+            2728.125,
+            400.0,
+            3293.75,
+            903.125
+          ]
+        },
+        {
+          "id": "B4",
+          "note": "Rightmost cow, black neck and visible head, behind neighboring head.",
+          "uncertain": true,
+          "xyxy": [
+            3209.375,
+            546.875,
+            3650.0,
+            1015.625
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Left head with ears and two tags.",
+          "uncertain": false,
+          "xyxy": [
+            418.75,
+            862.5,
+            1121.875,
+            1409.375
+          ]
+        },
+        {
+          "body_id": "B2",
+          "id": "H2",
+          "note": "First right-cluster white-face head, both ears.",
+          "uncertain": false,
+          "xyxy": [
+            2450.0,
+            550.0,
+            2868.75,
+            940.625
+          ]
+        },
+        {
+          "body_id": "B3",
+          "id": "H3",
+          "note": "Second right-cluster head with both ears.",
+          "uncertain": false,
+          "xyxy": [
+            2925.0,
+            556.25,
+            3293.75,
+            875.0
+          ]
+        },
+        {
+          "body_id": "B4",
+          "id": "H4",
+          "note": "Rightmost head/ears.",
+          "uncertain": false,
+          "xyxy": [
+            3268.75,
+            712.5,
+            3650.0,
+            1015.625
+          ]
+        }
+      ],
+      "height": 1800,
+      "id": "cow1293",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1293.jpg",
+      "image_sha256": "0263af57f65e03cd41d251079a75ac097478eea3b18574a22f2fcce65ba6082c",
+      "publisher_tags": [
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            962.0000000000001,
+            954.0,
+            1093.0,
+            1104.0
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P2",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            487.00000000000006,
+            963.0,
+            649.0,
+            1123.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "P3",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2499.0,
+            604.0,
+            2581.0,
+            732.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "P4",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 3,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2734.0000000000005,
+            620.0,
+            2818.0,
+            748.0
+          ]
+        },
+        {
+          "body_id": "B3",
+          "head_id": "H3",
+          "id": "P5",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 4,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2965.0,
+            620.0,
+            3021.0,
+            731.9999999999999
+          ]
+        },
+        {
+          "body_id": "B3",
+          "head_id": "H3",
+          "id": "P6",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 5,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            3174.0,
+            623.0,
+            3256.0,
+            738.0
+          ]
+        },
+        {
+          "body_id": "B4",
+          "head_id": "H4",
+          "id": "P7",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 6,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            3287.0,
+            726.0,
+            3352.0000000000005,
+            835.0
+          ]
+        },
+        {
+          "body_id": "B4",
+          "head_id": "H4",
+          "id": "P8",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 7,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            3518.0000000000005,
+            782.0,
+            3634.0,
+            888.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Far upper-left body/legs visible behind rails; number and complete attachments unresolved.",
+          "xyxy": [
+            0,
+            137.5,
+            471.875,
+            425.0
+          ]
+        },
+        {
+          "note": "Small rear body fragments behind rails need separate native inspection, not negatives.",
+          "xyxy": [
+            2896.875,
+            256.25,
+            4000,
+            568.75
+          ]
+        }
+      ],
+      "width": 4000
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Nearest left cow visible head/body and forelegs.",
+          "uncertain": false,
+          "xyxy": [
+            546.875,
+            634.375,
+            1381.25,
+            1600.0
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "Nearest center cow, white-underbody/forelegs behind column; exact rear extent occluded.",
+          "uncertain": true,
+          "xyxy": [
+            1343.75,
+            681.25,
+            2578.125,
+            1459.375
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Left main head with ear and one visible tag.",
+          "uncertain": false,
+          "xyxy": [
+            631.25,
+            737.5,
+            1309.375,
+            1375.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "id": "H2",
+          "note": "Center black head/white forehead and two ears.",
+          "uncertain": false,
+          "xyxy": [
+            2025.0,
+            728.125,
+            2578.125,
+            1240.625
+          ]
+        }
+      ],
+      "height": 1800,
+      "id": "cow1380",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1380.jpg",
+      "image_sha256": "6e2d9abc6a7221a73b5ea14502bd6ea7b14826a467fdf29282ce448f353aeaa8",
+      "publisher_tags": [
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2074.0,
+            835.0,
+            2184.0,
+            938.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "P2",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2437.0,
+            860.0000000000001,
+            2518.0000000000005,
+            954.0
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P3",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1105.9999999999998,
+            904.0,
+            1246.0,
+            1022.9999999999999
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Numerous untagged/rear animals and overlapped bodies require individual outlines; this broad region marks missing work, not an animal box.",
+          "xyxy": [
+            0,
+            450.0,
+            4000,
+            1165.625
+          ]
+        }
+      ],
+      "width": 4000
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Nearest white-faced cow, body, head and all visible limbs.",
+          "uncertain": false,
+          "xyxy": [
+            1868.75,
+            559.375,
+            2993.75,
+            1428.125
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Side/front-facing white head with near ear.",
+          "uncertain": false,
+          "xyxy": [
+            2446.875,
+            565.625,
+            2993.75,
+            1162.5
+          ]
+        }
+      ],
+      "height": 1800,
+      "id": "cow1466",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1466.jpg",
+      "image_sha256": "87a18c3e811defc26d1ba139bfc6e2d363d8224a0d0c6c2b04cda5e069a0c85f",
+      "publisher_tags": [
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2521.0,
+            760.0,
+            2631.0,
+            894.9999999999999
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Many rear cows plus edge fragments, incomplete individual annotation.",
+          "xyxy": [
+            0,
+            387.5,
+            2443.75,
+            1059.375
+          ]
+        },
+        {
+          "note": "Right-side/edge cows not completely annotated.",
+          "xyxy": [
+            2896.875,
+            381.25,
+            4000,
+            1128.125
+          ]
+        }
+      ],
+      "width": 4000
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [],
+      "height": 1800,
+      "id": "cow1552",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1552.jpg",
+      "image_sha256": "3b2556482dac71417939d5e41e074e8c25b99188bbb815283926c37d31303c24",
+      "publisher_tags": [
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "P1",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1702.0,
+            913.0,
+            1749.0,
+            979.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "P2",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1524.0,
+            910.0,
+            1581.0,
+            951.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "P3",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            3071.0,
+            985.0000000000001,
+            3137.0,
+            1048.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "P4",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 3,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2549.0,
+            965.9999999999999,
+            2621.0,
+            1041.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "P5",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 4,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            3431.0,
+            997.9999999999999,
+            3512.0000000000005,
+            1054.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "P6",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 5,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            3937.0000000000005,
+            660.0,
+            4000.0,
+            704.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Roughly ten standing/lying animals with partially hidden heads. Complete source-resolution instance annotation deferred rather than merge distant cows.",
+          "xyxy": [
+            0,
+            621.875,
+            4000,
+            1584.375
+          ]
+        }
+      ],
+      "width": 4000
+    },
+    {
+      "additive_tags": [
+        {
+          "body_id": null,
+          "head_id": "H7",
+          "id": "A1",
+          "note": "Clearly yellow tag on extreme-right H7; native 2x crop reviewed. Boundary soft due motion blur.",
+          "ownership_status": "unknown_or_unreviewed",
+          "source": "draft_additive_AI_visual_annotation",
+          "xyxy": [
+            3495,
+            806,
+            3574,
+            909
+          ]
+        }
+      ],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Far-left foreground head/neck clipped by border.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            557.75,
+            442.75,
+            1483.5
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "Upper-left head and connected visible body behind rail.",
+          "uncertain": true,
+          "xyxy": [
+            212.75,
+            465.75,
+            1055.125,
+            1118.375
+          ]
+        },
+        {
+          "id": "B3",
+          "note": "White downward-head cow; visible neck/body; rear extent overlaps neighboring back.",
+          "uncertain": true,
+          "xyxy": [
+            623.875,
+            543.375,
+            1564.0,
+            1673.25
+          ]
+        },
+        {
+          "id": "B4",
+          "note": "Central low-head cow; connected black/white neck under rail.",
+          "uncertain": true,
+          "xyxy": [
+            1190.25,
+            566.375,
+            2009.625,
+            1552.5
+          ]
+        },
+        {
+          "id": "B5",
+          "note": "Central-right head with visible body/forelegs behind rails.",
+          "uncertain": true,
+          "xyxy": [
+            1756.625,
+            583.625,
+            2613.375,
+            1423.125
+          ]
+        },
+        {
+          "id": "B6",
+          "note": "Right upright head and visible neck/body, overlap with next cow.",
+          "uncertain": true,
+          "xyxy": [
+            2320.125,
+            603.75,
+            3395.375,
+            1489.25
+          ]
+        },
+        {
+          "id": "B7",
+          "note": "Extreme-right cow clipped by border; uncertain rear extent.",
+          "uncertain": true,
+          "xyxy": [
+            3041.75,
+            523.25,
+            3680,
+            1500.75
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": null,
+          "id": "H1",
+          "note": "Left edge clipped feeding head with yellow ear tag.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            1069.5,
+            345.0,
+            1480.625
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H2",
+          "note": "Upper-left white-forehead feeding head with ears.",
+          "uncertain": false,
+          "xyxy": [
+            342.125,
+            695.75,
+            813.625,
+            1115.5
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H3",
+          "note": "Large white head with near ear; neck extends upper-right but body boundary unresolved.",
+          "uncertain": false,
+          "xyxy": [
+            623.875,
+            1173.0,
+            1029.25,
+            1670.375
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H4",
+          "note": "Center low feeding white-forehead head, both ears.",
+          "uncertain": false,
+          "xyxy": [
+            1190.25,
+            1052.25,
+            1753.75,
+            1552.5
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H5",
+          "note": "Center-right upright white-forehead head, both ears.",
+          "uncertain": false,
+          "xyxy": [
+            1978.0,
+            707.25,
+            2555.875,
+            1273.625
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H6",
+          "note": "Right upright white-face head, both ears.",
+          "uncertain": false,
+          "xyxy": [
+            2627.75,
+            802.125,
+            3283.25,
+            1397.25
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H7",
+          "note": "Extreme-right clipped head with a visible large yellow tag not in publisher list.",
+          "uncertain": true,
+          "xyxy": [
+            3415.5,
+            692.875,
+            3680,
+            1112.625
+          ]
+        }
+      ],
+      "height": 2070,
+      "id": "cow1638",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1638.jpg",
+      "image_sha256": "cede2e71f5fded01b575903c5ddb75f2dc9ecc9c27eb9985570d431a2141c13f",
+      "publisher_tags": [
+        {
+          "body_id": null,
+          "head_id": "H2",
+          "id": "P1",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            422.99999999999994,
+            876.0,
+            520.0,
+            946.9999999999999
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H2",
+          "id": "P2",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            677.0,
+            838.0,
+            757.0,
+            898.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H3",
+          "id": "P3",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            874.0,
+            1261.0,
+            988.0,
+            1340.9999999999998
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H4",
+          "id": "P4",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 3,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1263.0,
+            1233.0,
+            1360.0,
+            1381.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H4",
+          "id": "P5",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 4,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1585.0,
+            1147.0,
+            1711.0000000000002,
+            1281.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H5",
+          "id": "P6",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 5,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2020.0,
+            876.0,
+            2103.0,
+            982.0000000000001
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H5",
+          "id": "P7",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 6,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2354.0,
+            841.0,
+            2454.0000000000005,
+            941.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H6",
+          "id": "P8",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 7,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            2688.0,
+            962.0000000000001,
+            2803.0,
+            1119.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H6",
+          "id": "P9",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 8,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            3083.0,
+            986.9999999999999,
+            3166.0,
+            1103.9999999999998
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": "H1",
+          "id": "P10",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 9,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            169.00000000000003,
+            1135.9999999999998,
+            234.00000000000003,
+            1233.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Highly overlapping body contours and background backs require individual native review. No guessed head-to-body attachment.",
+          "xyxy": [
+            0,
+            434.125,
+            3680,
+            1483.5
+          ]
+        }
+      ],
+      "width": 3680
+    },
+    {
+      "additive_tags": [],
+      "annotation_status": "partial_ineligible",
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Nearest tilted-view principal cow and downwards head; visible body behind rails.",
+          "uncertain": false,
+          "xyxy": [
+            229.16666666666669,
+            1395.8333333333335,
+            1520.8333333333335,
+            2583.3333333333335
+          ]
+        }
+      ],
+      "eligibility_note": "Requires independent complete annotation review before any training. Partial/unreviewed frames are ineligible.",
+      "full_frame_training_eligible": false,
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Nearest white-forehead feeding head and both ears.",
+          "uncertain": false,
+          "xyxy": [
+            216.66666666666669,
+            2025.0,
+            745.8333333333334,
+            2583.3333333333335
+          ]
+        }
+      ],
+      "height": 4000,
+      "id": "cow1725",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1725.jpg",
+      "image_sha256": "e150581b0b5e250193946b70a8545bb7579a2140624ccf854f61cdb2e0ed026a",
+      "publisher_tags": [
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P1",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 0,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            575.0,
+            2268.0,
+            717.0,
+            2428.0
+          ]
+        },
+        {
+          "body_id": "B1",
+          "head_id": "H1",
+          "id": "P2",
+          "ownership_status": "draft_visible_attachment",
+          "publisher_index": 1,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            226.0,
+            2076.0,
+            361.0,
+            2244.9999999999995
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "P3",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 2,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1652.0,
+            2745.0,
+            1800.0,
+            3010.0
+          ]
+        },
+        {
+          "body_id": null,
+          "head_id": null,
+          "id": "P4",
+          "ownership_status": "unknown_or_unreviewed",
+          "publisher_index": 3,
+          "source": "publisher_unchanged",
+          "xyxy": [
+            1652.0,
+            2119.0,
+            1800.0,
+            2293.0
+          ]
+        }
+      ],
+      "unresolved_regions": [
+        {
+          "note": "Other partly cropped and overlapping cows around principal, and background rows, not completely annotated.",
+          "xyxy": [
+            0,
+            750.0,
+            1800,
+            3341.666666666667
+          ]
+        }
+      ],
+      "width": 1800
+    }
+  ],
+  "scene_inventory_sha256": "181df0df874131b214b3c224bb3c4180587dc7ff57f947edd3c75790043cc00f",
+  "scope": "Only the 18 proposed training images; all 81 original tag rectangles remain unchanged. No evaluation head/body annotations or model outputs used. Native image context and clean full-image previews inspected; coordinates restored from the displayed preview scale. Small background instances and ambiguous attachments remain explicitly unresolved rather than invented. Two full frames independently AI-reviewed; all other full frames ineligible.",
+  "source_inventory_sha256": "9aab8579ef83cbe5e241d803f8a76d48935ab9f55dd89faf8e2df3516bbecf71",
+  "started_at_utc": "2026-10-03T13:57:32Z",
+  "status": "DRAFT_PARTIAL_ANNOTATIONS_NO_TRAINING",
+  "supersedes_sha256": "14365b06b06f5558883008f1220470167dd3c0506b41bb1b9b4f39acaa59394e"
+}

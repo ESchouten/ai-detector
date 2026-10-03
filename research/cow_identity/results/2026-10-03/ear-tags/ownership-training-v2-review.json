@@ -1,0 +1,73 @@
+{
+  "annotation_sha256": "03f0b809d6b51d83c947e30157cb44b60272463fe9cc2908f3faed2f1872cd6c",
+  "files": {
+    ".cache/cow-ear-tags/ownership-training-v2/cow0-clean.png": "18cd7bf1e8464bfe246ddf7c24ec3b7fe31deb93fc5b7d3abb9ad9f6b2a68808",
+    ".cache/cow-ear-tags/ownership-training-v2/cow0-overlay.png": "2b37d0be62e5e43daa6eca4f04446a9cdf6f01cb5a7c5c8060ed7b540b92b824",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1121-clean.png": "6afd854fae0cc61d62945ada8127e500dad9d6e0c9b953eeaa4df3b63d9906ac",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1121-overlay.png": "90177c181990df0984b7e5c05803d3c6872cd85309da0a78fd905936f0259f11",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1293-clean.png": "382480d5be3c292242e216b9a5451eb0688aa35eddd39692f09bceb023a4cc21",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1293-overlay.png": "09d5ba031fc7686b20583b57724f6ce19568c699a5228d58c5b922b271b6631c",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1380-clean.png": "ffa11339db4c68a648238d65c3bb4992aec7eb3aeb297bc30c46af923956922b",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1380-overlay.png": "384985bdce0010a227bce6af335e68f023ae3db2a76ccd1bd9ee372abe9199bf",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1466-clean.png": "c3cec878573a23c5af2e2fdf89078202ed2de4dd5a0f57645eb962a3dbd5f03e",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1466-overlay.png": "98dd3bcd6d8e1e08f4b872a60debe4f45f0984d1336980569a66019ea7250d79",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1638-clean.png": "4c2286b41dcd33cd320a3db6fab73ca932cd2d0afe1d807d0749f6149ae85b42",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1638-overlay.png": "be6f346a4393016dc8773bf71eba1a8af23744d983180fb9d78de59cf5c0386b",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1725-clean.png": "0e0143a5d5e53e0579aa891f35f45b6fb7617dd92c47b470af7ff82391aa1fee",
+    ".cache/cow-ear-tags/ownership-training-v2/cow1725-overlay.png": "590813b374a774837fabf8cd9305a4a1b5cf98b71f3e8e52d0fbc201ad01791b",
+    ".cache/cow-ear-tags/ownership-training-v2/cow258-clean.png": "95db456538a75a4ef51b799f58aab68497d7c96f338ebcd1e9006d3b6a2c6e8a",
+    ".cache/cow-ear-tags/ownership-training-v2/cow258-overlay.png": "c87043d2e6144d5d639eae352e00afcbb3a4dfdcd490a343efc010bdff2f1a8b",
+    ".cache/cow-ear-tags/ownership-training-v2/cow345-clean.png": "0ee78d2b485ebef409c324e191d49a6b9ce92208f141f2d6070c047b861489af",
+    ".cache/cow-ear-tags/ownership-training-v2/cow345-overlay.png": "27ecb546b381a584b7081323b1a7dd196429a7243a04faf1c19ef57d16e6aec7",
+    ".cache/cow-ear-tags/ownership-training-v2/cow603-clean.png": "4ffa1824f46c229564f0fa72a18703add1ff7348858509ddbae9ec277de74c86",
+    ".cache/cow-ear-tags/ownership-training-v2/cow603-overlay.png": "b3752f0ac76083d013cc7126046aca2788fd378d3ef99423edfba175c0afdf2c",
+    ".cache/cow-ear-tags/ownership-training-v2/cow690-clean.png": "ea097ca00f8a71b2e4827e352d6499a1861fe90dc9e448aea6d11d12a33ce3fd",
+    ".cache/cow-ear-tags/ownership-training-v2/cow690-overlay.png": "7c7ea927cae5a3b817bece9c6720e9dc9b692f192adb3fcaae7c3bafc408f006",
+    ".cache/cow-ear-tags/ownership-training-v2/cow776-clean.png": "08699367e8165f4c7afd0c9c62fa68ed60f895d206c061032793969ddfd2a994",
+    ".cache/cow-ear-tags/ownership-training-v2/cow776-overlay.png": "045d31765249871db007fc67e8e42fd501010e3acc5f46b3abab0527103b3c0b",
+    ".cache/cow-ear-tags/ownership-training-v2/cow862-clean.png": "5dd50c7dcd75dfc778679b5549cbd5c1df3003fd3b5becf8dbbe215697db770d",
+    ".cache/cow-ear-tags/ownership-training-v2/cow862-overlay.png": "dab9c5f48727fad4e65e03eb3c4cd37248d4e1b2cb8b03bddfda0dcccb0f74ce"
+  },
+  "new_cow603_head": {
+    "body_id": "B2",
+    "id": "H2",
+    "note": "Middle front head and ears. Version2: left ear visible from native x575; previous x627.75 omitted its tip/side. Unchanged ROI begins579, so visible part is clipped consistently.",
+    "uncertain": false,
+    "xyxy": [
+      575.0,
+      441.0,
+      929.25,
+      927.0
+    ]
+  },
+  "note": "Only cow603 H2 and B2 left bound expanded to575 native, after clean native review of omitted ear. No tag/source/split changes. Earlier files preserved.",
+  "original_annotation_sha256": "14365b06b06f5558883008f1220470167dd3c0506b41bb1b9b4f39acaa59394e",
+  "original_roi_sha256": "5d46f8e5ab2a1d9473e82ae67ab698c8e244de625adecf400a57a96b5c961368",
+  "previous_cow603": {
+    "body": {
+      "id": "B2",
+      "note": "Middle foreground cow; visible head/body/legs.",
+      "uncertain": false,
+      "xyxy": [
+        581.625,
+        379.125,
+        1000.125,
+        1068.75
+      ]
+    },
+    "head": {
+      "body_id": "B2",
+      "id": "H2",
+      "note": "Middle front head and ears.",
+      "uncertain": false,
+      "xyxy": [
+        627.75,
+        441.0,
+        929.25,
+        927.0
+      ]
+    }
+  },
+  "roi_sha256": "731d0ab42dba1a7bea78abbbbf3bb97f681b9d76db38aa85857b30e93a228905",
+  "status": "V2_LEFT_EAR_REVIEW_PENDING"
+}

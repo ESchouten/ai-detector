@@ -1,0 +1,22 @@
+{
+  "annotation": "research/cow_identity/results/2026-10-03/ear-tags/ownership-oracle-draft.json",
+  "files": {
+    ".cache/cow-ear-tags/ownership-oracle/cow1897-bodies-overlay.png": "725738069d19a49e6b95b711ca8e09a57829078900dd7c46bfb87915ccde1ab9",
+    ".cache/cow-ear-tags/ownership-oracle/cow1897-heads-tags-overlay.png": "c043cddba5d9d9fdfed99fc9325f8c9add9aed2ae4fb59c669b6e553a2e37a88",
+    ".cache/cow-ear-tags/ownership-oracle/cow1983-bodies-overlay.png": "608b34de3bdc3cd571c939dc712517b0df9a7360b05fdfdd5d798f77ea1e928c",
+    ".cache/cow-ear-tags/ownership-oracle/cow1983-heads-tags-overlay.png": "ddd53db79c61b91283a8932bf0d4a504c5e7c3cbb5b0c92d05619d8e74501160",
+    ".cache/cow-ear-tags/ownership-oracle/cow2070-bodies-overlay.png": "dfafeb5300dc72ad246ad0a8acc0a225cc8e2e71897159c50b059ebe321b18d0",
+    ".cache/cow-ear-tags/ownership-oracle/cow2070-heads-tags-overlay.png": "0a704742ff6c61fb7531454d5612cb3a1e04ff0a82b75df6cc56ff6869798e63",
+    "datasets/cow-eartag-detection/subset-v1/cow1897.jpg": "818e400cfdee0ef72fd29f820c294e4485a4b81e7ce131419f0767ba07c91a5a",
+    "datasets/cow-eartag-detection/subset-v1/cow1983.jpg": "790670acb0f3e3899f58372f9439b6e992fcfa5990f5c3958d9ac3378e5b1bb0",
+    "datasets/cow-eartag-detection/subset-v1/cow2070.jpg": "c63a8d4d7630c5d86f8fa2cdbd476c7679d08f771d1ae2945e91f7010e7d0f7e",
+    "research/cow_identity/eartag_ownership_oracle.py": "8db807c30c2a0c2c02fdcfe7423074d74c39ba72638d751180c81f41a01f2192",
+    "research/cow_identity/results/2026-10-03/ear-tags/ownership-oracle-draft.json": "210a0f13b8b9e95d10cfbd672e51eb18645945ce47f8dbbba2cb8453afcc28be",
+    "research/cow_identity/test_eartag_ownership_oracle.py": "13518c7e58f867082311a85e091baef36862c6bf31fce8fc0f71806b90460aa3"
+  },
+  "frozen_at_utc": "2026-10-03T13:55:38.695492+00:00",
+  "python": "3.12.14 (main, Aug 14 2026, 15:24:41) [Clang 22.1.3 ]",
+  "review": "Root independently inspected all six overlays and clean pixels: tagged head links visibly plausible; white cow1983H1 follows B3, but B2 overlapping fragment must compete. H6 ownership unknown appropriate. Visible body extents approximate AI annotations with rails/occlusion, no inferred hidden extent; not independently human-certified field truth.",
+  "rule": "Fixed >=90% tag area in exactly one head, then >=90% head area in exactly one body. All12 heads/all20 bodies compete, including uncertain fragments. No closest-owner fallback or uncertainty filtering. All11 published tags retained, multiple tags per head allowed.",
+  "scope": "Three exposed low-resolution development stills; oracle annotation rectangles only, not learned localization, OCR, independent cow identities, temporal evidence or deployment performance."
+}

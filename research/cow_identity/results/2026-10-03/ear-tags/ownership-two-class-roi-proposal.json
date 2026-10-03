@@ -1,0 +1,1456 @@
+{
+  "annotation_sha256": "14365b06b06f5558883008f1220470167dd3c0506b41bb1b9b4f39acaa59394e",
+  "clipping_rule": "Include every positive-area intersection of a reviewed head/tag with the fixed ROI; clip xyxy to the ROI, no area-based fragment removal. No tag text or model scores used for selection. Reject any ROI with unannotated/ambiguous visible head/tag fragments before training.",
+  "created_at_utc": "2026-10-03T14:10:20.805643+00:00",
+  "excluded_sources": {
+    "cow1035": "Background head overlaps principal ears; clean ROI completeness unresolved",
+    "cow1552": "Lying-cow head overlap/occlusion; annotation incomplete",
+    "cow517": "Severe motion/interlace blur and unresolved background fragment",
+    "cow86": "Severe blur and unresolved fragments",
+    "cow948": "Tilted wide scene; complete foreground selection deferred"
+  },
+  "rows": [
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H1",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            83.25,
+            515.25,
+            351.0,
+            947.25
+          ],
+          "uncertain": false,
+          "xyxy": [
+            15.25,
+            9.25,
+            283.0,
+            441.25
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H2",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            833.625,
+            540.0,
+            1234.125,
+            1004.625
+          ],
+          "uncertain": false,
+          "xyxy": [
+            765.625,
+            34.0,
+            1166.125,
+            498.625
+          ]
+        }
+      ],
+      "id": "cow0",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow0.jpg",
+      "image_sha256": "6e342d42a5f263b85551f767ea89667f223816507b8a1647948321a286ae95c9",
+      "native_xyxy": [
+        68,
+        506,
+        1249,
+        1080
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P1",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            291.0,
+            623.0000000000001,
+            328.00000000000006,
+            707.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            223.0,
+            117.00000000000011,
+            260.00000000000006,
+            201.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P2",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            878.9999999999999,
+            610.0000000000001,
+            945.0,
+            681.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            810.9999999999999,
+            104.00000000000011,
+            877.0,
+            175.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P3",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            1143.0,
+            624.0000000000001,
+            1194.0,
+            706.0000000000001
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1075.0,
+            118.00000000000011,
+            1126.0,
+            200.0000000000001
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H1",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            229.5,
+            402.75,
+            914.625,
+            1080
+          ],
+          "uncertain": false,
+          "xyxy": [
+            229.5,
+            402.75,
+            914.625,
+            1080
+          ]
+        }
+      ],
+      "id": "cow258",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow258.jpg",
+      "image_sha256": "7cf75da872b680e425cc343cb048687027dace29accbfe453bd9521d871fe6b7",
+      "native_xyxy": [
+        0,
+        0,
+        1440,
+        1080
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P1",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            749.0,
+            524.0000000000001,
+            837.0000000000001,
+            646.0000000000001
+          ],
+          "uncertain": false,
+          "xyxy": [
+            749.0,
+            524.0000000000001,
+            837.0000000000001,
+            646.0000000000001
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P2",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            339.0,
+            493.00000000000006,
+            435.99999999999994,
+            595.0000000000001
+          ],
+          "uncertain": false,
+          "xyxy": [
+            339.0,
+            493.00000000000006,
+            435.99999999999994,
+            595.0000000000001
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H1",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            271.125,
+            234.0,
+            722.25,
+            741.375
+          ],
+          "uncertain": true,
+          "xyxy": [
+            271.125,
+            234.0,
+            722.25,
+            741.375
+          ]
+        }
+      ],
+      "id": "cow345",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow345.jpg",
+      "image_sha256": "8747161305a0956da5f919d35035930ec24c5fc23567ef93525510c04ee4276e",
+      "native_xyxy": [
+        0,
+        0,
+        1440,
+        1080
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P1",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            311.0,
+            352.0,
+            369.00000000000006,
+            460.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            311.0,
+            352.0,
+            369.00000000000006,
+            460.0
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H2",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            627.75,
+            441.0,
+            929.25,
+            927.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            48.75,
+            3.0,
+            350.25,
+            489.0
+          ]
+        }
+      ],
+      "id": "cow603",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow603.jpg",
+      "image_sha256": "6a2a4a034a95708cd67f576c077ff5dad876fb9996e55e8636649272af98d29f",
+      "native_xyxy": [
+        579,
+        438,
+        956,
+        962
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P1",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            821.0000000000001,
+            565.0,
+            876.0000000000001,
+            664.0000000000001
+          ],
+          "uncertain": false,
+          "xyxy": [
+            242.0000000000001,
+            127.0,
+            297.0000000000001,
+            226.0000000000001
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H1",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            0,
+            420.0,
+            382.5,
+            762.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            0,
+            8.0,
+            382.5,
+            350.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H2",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            264.0,
+            757.5,
+            598.5,
+            996.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            264.0,
+            345.5,
+            598.5,
+            584.0
+          ]
+        }
+      ],
+      "id": "cow690",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow690.jpg",
+      "image_sha256": "f809f297cb16006e35858399849e01fae62ee4b86bdfab3c569c9ca11eca8c9f",
+      "native_xyxy": [
+        0,
+        412,
+        612,
+        1035
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P1",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            30.000000000000007,
+            544.0,
+            110.00000000000001,
+            639.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            30.000000000000007,
+            132.0,
+            110.00000000000001,
+            227.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P2",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            279.0,
+            782.0,
+            338.0,
+            852.0000000000001
+          ],
+          "uncertain": false,
+          "xyxy": [
+            279.0,
+            370.0,
+            338.0,
+            440.0000000000001
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P3",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            506.99999999999994,
+            801.0,
+            571.0,
+            869.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            506.99999999999994,
+            389.0,
+            571.0,
+            457.0
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H4",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            810.0,
+            502.5,
+            1222.5,
+            877.5
+          ],
+          "uncertain": false,
+          "xyxy": [
+            8.0,
+            14.5,
+            420.5,
+            389.5
+          ]
+        }
+      ],
+      "id": "cow776",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow776.jpg",
+      "image_sha256": "75d46d431ff585a26a1af62b1d3ad3b68d3dfa7dc0a823893687fc897ee978e8",
+      "native_xyxy": [
+        802,
+        488,
+        1230,
+        908
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P2",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            841.0,
+            596.0000000000001,
+            910.0,
+            687.0000000000001
+          ],
+          "uncertain": false,
+          "xyxy": [
+            39.0,
+            108.00000000000011,
+            108.0,
+            199.0000000000001
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P3",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            1130.0,
+            617.0,
+            1196.0,
+            714.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            328.0,
+            129.0,
+            394.0,
+            226.0
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": true,
+          "source_id": "H2",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            799.5,
+            544.5,
+            1278.0,
+            1047.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            17.5,
+            6.5,
+            486,
+            509.0
+          ]
+        }
+      ],
+      "id": "cow862",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow862.jpg",
+      "image_sha256": "ea49ff4d7e5e014eb1e2b679a38fc1131eb87879412d32f5e87a527eec8328be",
+      "native_xyxy": [
+        782,
+        538,
+        1268,
+        1065
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P3",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            835.0,
+            662.0,
+            913.0,
+            782.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            53.0,
+            124.0,
+            131.0,
+            244.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P4",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            1123.9999999999998,
+            702.0000000000001,
+            1218.0,
+            804.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            341.9999999999998,
+            164.0000000000001,
+            436.0,
+            266.0
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H1",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            912.5,
+            706.25,
+            1437.5,
+            1165.625
+          ],
+          "uncertain": false,
+          "xyxy": [
+            12.5,
+            25.25,
+            537.5,
+            484.625
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H2",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            1881.25,
+            921.875,
+            2456.25,
+            1440.625
+          ],
+          "uncertain": false,
+          "xyxy": [
+            981.25,
+            240.875,
+            1556.25,
+            759.625
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H3",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            2315.625,
+            953.125,
+            2971.875,
+            1575.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1415.625,
+            272.125,
+            2071.875,
+            894.0
+          ]
+        }
+      ],
+      "id": "cow1121",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1121.jpg",
+      "image_sha256": "c9115b2b23999f9f27a1a202ca76e9d4702769f7788fe81a4c8df139b6ca7e10",
+      "native_xyxy": [
+        900,
+        681,
+        2988,
+        1616
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P1",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2781.0,
+            1035.0,
+            2912.0000000000005,
+            1182.0000000000002
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1881.0,
+            354.0,
+            2012.0000000000005,
+            501.0000000000002
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P2",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2343.0000000000005,
+            1048.0,
+            2496.0,
+            1154.0000000000002
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1443.0000000000005,
+            367.0,
+            1596.0,
+            473.0000000000002
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P3",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            1927.0,
+            1038.0,
+            2049.0,
+            1148.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1027.0,
+            357.0,
+            1149.0,
+            467.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P4",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            1318.0,
+            791.0,
+            1431.0,
+            926.0000000000001
+          ],
+          "uncertain": false,
+          "xyxy": [
+            418.0,
+            110.0,
+            531.0,
+            245.0000000000001
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P5",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            952.0,
+            845.0,
+            1046.0,
+            923.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            52.0,
+            164.0,
+            146.0,
+            242.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "A2",
+          "source_kind": "draft_additive_AI_visual_annotation",
+          "source_xyxy": [
+            2337,
+            970,
+            2379,
+            1014
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1437,
+            289,
+            1479,
+            333
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H1",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            418.75,
+            862.5,
+            1121.875,
+            1409.375
+          ],
+          "uncertain": false,
+          "xyxy": [
+            12.75,
+            324.5,
+            715.875,
+            871.375
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H2",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            2450.0,
+            550.0,
+            2868.75,
+            940.625
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2044.0,
+            12.0,
+            2462.75,
+            402.625
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H3",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            2925.0,
+            556.25,
+            3293.75,
+            875.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2519.0,
+            18.25,
+            2887.75,
+            337.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H4",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            3268.75,
+            712.5,
+            3650.0,
+            1015.625
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2862.75,
+            174.5,
+            3244.0,
+            477.625
+          ]
+        }
+      ],
+      "id": "cow1293",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1293.jpg",
+      "image_sha256": "0263af57f65e03cd41d251079a75ac097478eea3b18574a22f2fcce65ba6082c",
+      "native_xyxy": [
+        406,
+        538,
+        3662,
+        1438
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P1",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            962.0000000000001,
+            954.0,
+            1093.0,
+            1104.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            556.0000000000001,
+            416.0,
+            687.0,
+            566.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P2",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            487.00000000000006,
+            963.0,
+            649.0,
+            1123.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            81.00000000000006,
+            425.0,
+            243.0,
+            585.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P3",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2499.0,
+            604.0,
+            2581.0,
+            732.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2093.0,
+            66.0,
+            2175.0,
+            194.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P4",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2734.0000000000005,
+            620.0,
+            2818.0,
+            748.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2328.0000000000005,
+            82.0,
+            2412.0,
+            210.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P5",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2965.0,
+            620.0,
+            3021.0,
+            731.9999999999999
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2559.0,
+            82.0,
+            2615.0,
+            193.9999999999999
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P6",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            3174.0,
+            623.0,
+            3256.0,
+            738.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2768.0,
+            85.0,
+            2850.0,
+            200.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P7",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            3287.0,
+            726.0,
+            3352.0000000000005,
+            835.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2881.0,
+            188.0,
+            2946.0000000000005,
+            297.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P8",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            3518.0000000000005,
+            782.0,
+            3634.0,
+            888.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            3112.0000000000005,
+            244.0,
+            3228.0,
+            350.0
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H1",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            631.25,
+            737.5,
+            1309.375,
+            1375.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            25.25,
+            28.5,
+            703.375,
+            666.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H2",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            2025.0,
+            728.125,
+            2578.125,
+            1240.625
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1419.0,
+            19.125,
+            1972.125,
+            531.625
+          ]
+        }
+      ],
+      "id": "cow1380",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1380.jpg",
+      "image_sha256": "6e2d9abc6a7221a73b5ea14502bd6ea7b14826a467fdf29282ce448f353aeaa8",
+      "native_xyxy": [
+        606,
+        709,
+        2603,
+        1441
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P1",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2074.0,
+            835.0,
+            2184.0,
+            938.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1468.0,
+            126.0,
+            1578.0,
+            229.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P2",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2437.0,
+            860.0000000000001,
+            2518.0000000000005,
+            954.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1831.0,
+            151.0000000000001,
+            1912.0000000000005,
+            245.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P3",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            1105.9999999999998,
+            904.0,
+            1246.0,
+            1022.9999999999999
+          ],
+          "uncertain": false,
+          "xyxy": [
+            499.9999999999998,
+            195.0,
+            640.0,
+            313.9999999999999
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H1",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            2446.875,
+            565.625,
+            2993.75,
+            1162.5
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2.875,
+            6.625,
+            549.75,
+            603.5
+          ]
+        }
+      ],
+      "id": "cow1466",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1466.jpg",
+      "image_sha256": "87a18c3e811defc26d1ba139bfc6e2d363d8224a0d0c6c2b04cda5e069a0c85f",
+      "native_xyxy": [
+        2444,
+        559,
+        3038,
+        1197
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P1",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2521.0,
+            760.0,
+            2631.0,
+            894.9999999999999
+          ],
+          "uncertain": false,
+          "xyxy": [
+            77.0,
+            201.0,
+            187.0,
+            335.9999999999999
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": true,
+          "source_id": "H2",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            342.125,
+            695.75,
+            813.625,
+            1115.5
+          ],
+          "uncertain": false,
+          "xyxy": [
+            0,
+            2.75,
+            209.625,
+            422.5
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H3",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            623.875,
+            1173.0,
+            1029.25,
+            1670.375
+          ],
+          "uncertain": false,
+          "xyxy": [
+            19.875,
+            480.0,
+            425.25,
+            977.375
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H4",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            1190.25,
+            1052.25,
+            1753.75,
+            1552.5
+          ],
+          "uncertain": false,
+          "xyxy": [
+            586.25,
+            359.25,
+            1149.75,
+            859.5
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H5",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            1978.0,
+            707.25,
+            2555.875,
+            1273.625
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1374.0,
+            14.25,
+            1951.875,
+            580.625
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "H6",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            2627.75,
+            802.125,
+            3283.25,
+            1397.25
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2023.75,
+            109.125,
+            2679.25,
+            704.25
+          ]
+        }
+      ],
+      "id": "cow1638",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1638.jpg",
+      "image_sha256": "cede2e71f5fded01b575903c5ddb75f2dc9ecc9c27eb9985570d431a2141c13f",
+      "native_xyxy": [
+        604,
+        693,
+        3398,
+        1690
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P2",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            677.0,
+            838.0,
+            757.0,
+            898.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            73.0,
+            145.0,
+            153.0,
+            205.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P3",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            874.0,
+            1261.0,
+            988.0,
+            1340.9999999999998
+          ],
+          "uncertain": false,
+          "xyxy": [
+            270.0,
+            568.0,
+            384.0,
+            647.9999999999998
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P4",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            1263.0,
+            1233.0,
+            1360.0,
+            1381.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            659.0,
+            540.0,
+            756.0,
+            688.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P5",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            1585.0,
+            1147.0,
+            1711.0000000000002,
+            1281.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            981.0,
+            454.0,
+            1107.0000000000002,
+            588.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P6",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2020.0,
+            876.0,
+            2103.0,
+            982.0000000000001
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1416.0,
+            183.0,
+            1499.0,
+            289.0000000000001
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P7",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2354.0,
+            841.0,
+            2454.0000000000005,
+            941.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            1750.0,
+            148.0,
+            1850.0000000000005,
+            248.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P8",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            2688.0,
+            962.0000000000001,
+            2803.0,
+            1119.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2084.0,
+            269.0000000000001,
+            2199.0,
+            426.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P9",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            3083.0,
+            986.9999999999999,
+            3166.0,
+            1103.9999999999998
+          ],
+          "uncertain": false,
+          "xyxy": [
+            2479.0,
+            293.9999999999999,
+            2562.0,
+            410.9999999999998
+          ]
+        }
+      ],
+      "training_eligible": false
+    },
+    {
+      "heads": [
+        {
+          "clipped": false,
+          "source_id": "H1",
+          "source_kind": "head_draft",
+          "source_xyxy": [
+            216.66666666666669,
+            2025.0,
+            745.8333333333334,
+            2583.3333333333335
+          ],
+          "uncertain": false,
+          "xyxy": [
+            12.666666666666686,
+            17.0,
+            541.8333333333334,
+            575.3333333333335
+          ]
+        }
+      ],
+      "id": "cow1725",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1725.jpg",
+      "image_sha256": "e150581b0b5e250193946b70a8545bb7579a2140624ccf854f61cdb2e0ed026a",
+      "native_xyxy": [
+        204,
+        2008,
+        771,
+        2642
+      ],
+      "reason": "Foreground ROI excludes unresolved distant/background instances by image geometry, before any learned outputs. Verify every visible head/tag fragment inside; reject or revise BEFORE training if incomplete.",
+      "status": "PROPOSED_NEEDS_INDEPENDENT_COMPLETENESS_REVIEW",
+      "tags": [
+        {
+          "clipped": false,
+          "source_id": "P1",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            575.0,
+            2268.0,
+            717.0,
+            2428.0
+          ],
+          "uncertain": false,
+          "xyxy": [
+            371.0,
+            260.0,
+            513.0,
+            420.0
+          ]
+        },
+        {
+          "clipped": false,
+          "source_id": "P2",
+          "source_kind": "publisher_unchanged",
+          "source_xyxy": [
+            226.0,
+            2076.0,
+            361.0,
+            2244.9999999999995
+          ],
+          "uncertain": false,
+          "xyxy": [
+            22.0,
+            68.0,
+            157.0,
+            236.99999999999955
+          ]
+        }
+      ],
+      "training_eligible": false
+    }
+  ],
+  "scope": "One foreground ROI per training source only; two classes (visible head including ears, ear tag). Existing cow detector/continuous tracker supplies body candidates later; ownership is still independently gated, never nearest-cow assignment. Original full-frame three-class proposal remains not run. This is a tiny feasibility pilot, not independent farm validation.",
+  "status": "PROPOSED_NOT_TRAINED_NOT_APPROVED"
+}

@@ -1,0 +1,556 @@
+{
+  "bodies": 20,
+  "details": [
+    {
+      "annotated_head_body": [
+        "H2",
+        "B2"
+      ],
+      "image": "cow1897",
+      "outcome": "correct",
+      "predicted_head_body": [
+        "H2",
+        "B2"
+      ],
+      "tag": "T1"
+    },
+    {
+      "annotated_head_body": [
+        "H2",
+        "B2"
+      ],
+      "image": "cow1897",
+      "outcome": "correct",
+      "predicted_head_body": [
+        "H2",
+        "B2"
+      ],
+      "tag": "T2"
+    },
+    {
+      "annotated_head_body": [
+        "H4",
+        "B4"
+      ],
+      "image": "cow1897",
+      "outcome": "correct",
+      "predicted_head_body": [
+        "H4",
+        "B4"
+      ],
+      "tag": "T3"
+    },
+    {
+      "annotated_head_body": [
+        "H2",
+        "B4"
+      ],
+      "image": "cow1983",
+      "outcome": "correct",
+      "predicted_head_body": [
+        "H2",
+        "B4"
+      ],
+      "tag": "T1"
+    },
+    {
+      "annotated_head_body": [
+        "H2",
+        "B4"
+      ],
+      "image": "cow1983",
+      "outcome": "correct",
+      "predicted_head_body": [
+        "H2",
+        "B4"
+      ],
+      "tag": "T2"
+    },
+    {
+      "annotated_head_body": [
+        "H1",
+        "B3"
+      ],
+      "image": "cow1983",
+      "outcome": "abstained",
+      "predicted_head_body": [
+        "H1",
+        null
+      ],
+      "tag": "T3"
+    },
+    {
+      "annotated_head_body": [
+        "H3",
+        "B5"
+      ],
+      "image": "cow1983",
+      "outcome": "correct",
+      "predicted_head_body": [
+        "H3",
+        "B5"
+      ],
+      "tag": "T4"
+    },
+    {
+      "annotated_head_body": [
+        "H3",
+        "B5"
+      ],
+      "image": "cow1983",
+      "outcome": "correct",
+      "predicted_head_body": [
+        "H3",
+        "B5"
+      ],
+      "tag": "T5"
+    },
+    {
+      "annotated_head_body": [
+        "H5",
+        "B7"
+      ],
+      "image": "cow1983",
+      "outcome": "correct",
+      "predicted_head_body": [
+        "H5",
+        "B7"
+      ],
+      "tag": "T6"
+    },
+    {
+      "annotated_head_body": [
+        "H2",
+        "B3"
+      ],
+      "image": "cow2070",
+      "outcome": "correct",
+      "predicted_head_body": [
+        "H2",
+        "B3"
+      ],
+      "tag": "T1"
+    },
+    {
+      "annotated_head_body": [
+        "H1",
+        "B2"
+      ],
+      "image": "cow2070",
+      "outcome": "correct",
+      "predicted_head_body": [
+        "H1",
+        "B2"
+      ],
+      "tag": "T2"
+    }
+  ],
+  "head_counts": {
+    "abstained": 1,
+    "accepted_unverified": 1,
+    "correct": 10
+  },
+  "heads": 12,
+  "predictions": [
+    {
+      "heads": {
+        "H1": {
+          "candidates": [
+            "B1"
+          ],
+          "fractions": {
+            "B1": 1.0,
+            "B2": 0.0,
+            "B3": 0.0,
+            "B4": 0.0,
+            "B5": 0.0,
+            "B6": 0.0,
+            "B7": 0.01282051282051282
+          },
+          "selected": "B1"
+        },
+        "H2": {
+          "candidates": [
+            "B2"
+          ],
+          "fractions": {
+            "B1": 0.15923113431419078,
+            "B2": 1.0,
+            "B3": 0.0,
+            "B4": 0.0,
+            "B5": 0.0,
+            "B6": 0.0,
+            "B7": 0.0
+          },
+          "selected": "B2"
+        },
+        "H3": {
+          "candidates": [
+            "B3"
+          ],
+          "fractions": {
+            "B1": 0.0,
+            "B2": 0.0,
+            "B3": 1.0,
+            "B4": 0.0,
+            "B5": 0.0,
+            "B6": 0.0,
+            "B7": 0.0
+          },
+          "selected": "B3"
+        },
+        "H4": {
+          "candidates": [
+            "B4"
+          ],
+          "fractions": {
+            "B1": 0.0,
+            "B2": 0.0,
+            "B3": 0.0,
+            "B4": 1.0,
+            "B5": 0.0,
+            "B6": 0.0,
+            "B7": 0.0
+          },
+          "selected": "B4"
+        }
+      },
+      "id": "cow1897",
+      "tags": [
+        {
+          "body_id": "B2",
+          "head": {
+            "candidates": [
+              "H2"
+            ],
+            "fractions": {
+              "H1": 0.0,
+              "H2": 1.0,
+              "H3": 0.0,
+              "H4": 0.0
+            },
+            "selected": "H2"
+          },
+          "id": "T1"
+        },
+        {
+          "body_id": "B2",
+          "head": {
+            "candidates": [
+              "H2"
+            ],
+            "fractions": {
+              "H1": 0.0,
+              "H2": 1.0,
+              "H3": 0.0,
+              "H4": 0.0
+            },
+            "selected": "H2"
+          },
+          "id": "T2"
+        },
+        {
+          "body_id": "B4",
+          "head": {
+            "candidates": [
+              "H4"
+            ],
+            "fractions": {
+              "H1": 0.0,
+              "H2": 0.0,
+              "H3": 0.0,
+              "H4": 1.0
+            },
+            "selected": "H4"
+          },
+          "id": "T3"
+        }
+      ]
+    },
+    {
+      "heads": {
+        "H1": {
+          "candidates": [
+            "B2",
+            "B3"
+          ],
+          "fractions": {
+            "B1": 0.0,
+            "B2": 1.0,
+            "B3": 1.0,
+            "B4": 0.0,
+            "B5": 0.0,
+            "B6": 0.0,
+            "B7": 0.0,
+            "B8": 0.0,
+            "B9": 0.0
+          },
+          "selected": null
+        },
+        "H2": {
+          "candidates": [
+            "B4"
+          ],
+          "fractions": {
+            "B1": 0.0,
+            "B2": 0.0,
+            "B3": 0.0,
+            "B4": 1.0,
+            "B5": 0.0,
+            "B6": 0.0,
+            "B7": 0.0,
+            "B8": 0.0,
+            "B9": 0.0
+          },
+          "selected": "B4"
+        },
+        "H3": {
+          "candidates": [
+            "B5"
+          ],
+          "fractions": {
+            "B1": 0.0,
+            "B2": 0.0,
+            "B3": 0.0,
+            "B4": 0.2289156626506024,
+            "B5": 1.0,
+            "B6": 0.0,
+            "B7": 0.0,
+            "B8": 0.0,
+            "B9": 0.0
+          },
+          "selected": "B5"
+        },
+        "H4": {
+          "candidates": [
+            "B6"
+          ],
+          "fractions": {
+            "B1": 0.0,
+            "B2": 0.0,
+            "B3": 0.0,
+            "B4": 0.0,
+            "B5": 0.0,
+            "B6": 0.96875,
+            "B7": 0.6875,
+            "B8": 0.0,
+            "B9": 0.0
+          },
+          "selected": "B6"
+        },
+        "H5": {
+          "candidates": [
+            "B7"
+          ],
+          "fractions": {
+            "B1": 0.0,
+            "B2": 0.0,
+            "B3": 0.0,
+            "B4": 0.0,
+            "B5": 0.0,
+            "B6": 0.21354688021354687,
+            "B7": 1.0,
+            "B8": 0.0,
+            "B9": 0.0
+          },
+          "selected": "B7"
+        },
+        "H6": {
+          "candidates": [
+            "B8"
+          ],
+          "fractions": {
+            "B1": 0.0,
+            "B2": 0.0,
+            "B3": 0.0,
+            "B4": 0.0,
+            "B5": 0.0,
+            "B6": 0.0,
+            "B7": 0.0,
+            "B8": 1.0,
+            "B9": 0.84375
+          },
+          "selected": "B8"
+        }
+      },
+      "id": "cow1983",
+      "tags": [
+        {
+          "body_id": "B4",
+          "head": {
+            "candidates": [
+              "H2"
+            ],
+            "fractions": {
+              "H1": 0.0,
+              "H2": 1.0,
+              "H3": 0.0,
+              "H4": 0.0,
+              "H5": 0.0,
+              "H6": 0.0
+            },
+            "selected": "H2"
+          },
+          "id": "T1"
+        },
+        {
+          "body_id": "B4",
+          "head": {
+            "candidates": [
+              "H2"
+            ],
+            "fractions": {
+              "H1": 0.0,
+              "H2": 1.0,
+              "H3": 0.0,
+              "H4": 0.0,
+              "H5": 0.0,
+              "H6": 0.0
+            },
+            "selected": "H2"
+          },
+          "id": "T2"
+        },
+        {
+          "body_id": null,
+          "head": {
+            "candidates": [
+              "H1"
+            ],
+            "fractions": {
+              "H1": 1.0,
+              "H2": 0.0,
+              "H3": 0.0,
+              "H4": 0.0,
+              "H5": 0.0,
+              "H6": 0.0
+            },
+            "selected": "H1"
+          },
+          "id": "T3"
+        },
+        {
+          "body_id": "B5",
+          "head": {
+            "candidates": [
+              "H3"
+            ],
+            "fractions": {
+              "H1": 0.0,
+              "H2": 0.0,
+              "H3": 1.0,
+              "H4": 0.0,
+              "H5": 0.0,
+              "H6": 0.0
+            },
+            "selected": "H3"
+          },
+          "id": "T4"
+        },
+        {
+          "body_id": "B5",
+          "head": {
+            "candidates": [
+              "H3"
+            ],
+            "fractions": {
+              "H1": 0.0,
+              "H2": 0.0,
+              "H3": 1.0,
+              "H4": 0.0,
+              "H5": 0.0,
+              "H6": 0.0
+            },
+            "selected": "H3"
+          },
+          "id": "T5"
+        },
+        {
+          "body_id": "B7",
+          "head": {
+            "candidates": [
+              "H5"
+            ],
+            "fractions": {
+              "H1": 0.0,
+              "H2": 0.0,
+              "H3": 0.0,
+              "H4": 0.0,
+              "H5": 1.0,
+              "H6": 0.0
+            },
+            "selected": "H5"
+          },
+          "id": "T6"
+        }
+      ]
+    },
+    {
+      "heads": {
+        "H1": {
+          "candidates": [
+            "B2"
+          ],
+          "fractions": {
+            "B1": 0.0,
+            "B2": 0.9814814814814815,
+            "B3": 0.0,
+            "B4": 0.0
+          },
+          "selected": "B2"
+        },
+        "H2": {
+          "candidates": [
+            "B3"
+          ],
+          "fractions": {
+            "B1": 0.0,
+            "B2": 0.0,
+            "B3": 1.0,
+            "B4": 0.030829199149539334
+          },
+          "selected": "B3"
+        }
+      },
+      "id": "cow2070",
+      "tags": [
+        {
+          "body_id": "B3",
+          "head": {
+            "candidates": [
+              "H2"
+            ],
+            "fractions": {
+              "H1": 0.0,
+              "H2": 1.0
+            },
+            "selected": "H2"
+          },
+          "id": "T1"
+        },
+        {
+          "body_id": "B2",
+          "head": {
+            "candidates": [
+              "H1"
+            ],
+            "fractions": {
+              "H1": 1.0,
+              "H2": 0.0
+            },
+            "selected": "H1"
+          },
+          "id": "T2"
+        }
+      ]
+    }
+  ],
+  "protocol_sha256": "b49d1fa03d43b96917eba1d5f6b46be7428d1331e040ad039360d6ebe7540af0",
+  "scope": "Three exposed low-resolution development stills; oracle annotation rectangles only, not learned localization, OCR, independent cow identities, temporal evidence or deployment performance.",
+  "status": "COMPLETE_FIXED_ORACLE_RULE",
+  "tag_counts": {
+    "abstained": 1,
+    "correct": 10
+  },
+  "tags": 11
+}

@@ -1,0 +1,292 @@
+{
+  "actual_precision": [
+    {
+      "device": "mps",
+      "quantize": null
+    }
+  ],
+  "batches": 140,
+  "elapsed_seconds": 125.04669562494382,
+  "history": [
+    {
+      "ema_updates": 7,
+      "epoch": 1,
+      "loss": [
+        2.1921093463897705,
+        5.425003528594971,
+        2.4683470726013184
+      ]
+    },
+    {
+      "ema_updates": 14,
+      "epoch": 2,
+      "loss": [
+        1.7467176914215088,
+        3.2625277042388916,
+        1.9875068664550781
+      ]
+    },
+    {
+      "ema_updates": 21,
+      "epoch": 3,
+      "loss": [
+        1.5294183492660522,
+        2.860036849975586,
+        1.7030494213104248
+      ]
+    },
+    {
+      "ema_updates": 28,
+      "epoch": 4,
+      "loss": [
+        1.195572018623352,
+        1.9971821308135986,
+        1.4124985933303833
+      ]
+    },
+    {
+      "ema_updates": 35,
+      "epoch": 5,
+      "loss": [
+        1.0622694492340088,
+        1.8953239917755127,
+        1.3005247116088867
+      ]
+    },
+    {
+      "ema_updates": 42,
+      "epoch": 6,
+      "loss": [
+        1.18978750705719,
+        1.742034673690796,
+        1.4502990245819092
+      ]
+    },
+    {
+      "ema_updates": 49,
+      "epoch": 7,
+      "loss": [
+        0.9716050028800964,
+        1.3892239332199097,
+        1.2028226852416992
+      ]
+    },
+    {
+      "ema_updates": 56,
+      "epoch": 8,
+      "loss": [
+        0.7656055092811584,
+        1.221110224723816,
+        1.1069339513778687
+      ]
+    },
+    {
+      "ema_updates": 63,
+      "epoch": 9,
+      "loss": [
+        0.7358750700950623,
+        1.017403483390808,
+        1.0471596717834473
+      ]
+    },
+    {
+      "ema_updates": 70,
+      "epoch": 10,
+      "loss": [
+        0.7983940839767456,
+        1.0373419523239136,
+        1.0520362854003906
+      ]
+    },
+    {
+      "ema_updates": 77,
+      "epoch": 11,
+      "loss": [
+        0.643193244934082,
+        0.8707942962646484,
+        0.9832301735877991
+      ]
+    },
+    {
+      "ema_updates": 84,
+      "epoch": 12,
+      "loss": [
+        0.6043992638587952,
+        0.8432022929191589,
+        0.8955605626106262
+      ]
+    },
+    {
+      "ema_updates": 91,
+      "epoch": 13,
+      "loss": [
+        0.5468794703483582,
+        0.6990483403205872,
+        0.8523762822151184
+      ]
+    },
+    {
+      "ema_updates": 98,
+      "epoch": 14,
+      "loss": [
+        0.5852423906326294,
+        0.7218896150588989,
+        0.8809723854064941
+      ]
+    },
+    {
+      "ema_updates": 105,
+      "epoch": 15,
+      "loss": [
+        0.46966275572776794,
+        0.6050921082496643,
+        0.818229079246521
+      ]
+    },
+    {
+      "ema_updates": 112,
+      "epoch": 16,
+      "loss": [
+        0.4429568648338318,
+        0.5484341382980347,
+        0.8146432042121887
+      ]
+    },
+    {
+      "ema_updates": 119,
+      "epoch": 17,
+      "loss": [
+        0.47592252492904663,
+        0.5779128074645996,
+        0.7928053736686707
+      ]
+    },
+    {
+      "ema_updates": 126,
+      "epoch": 18,
+      "loss": [
+        0.47241368889808655,
+        0.5319876074790955,
+        0.7818115949630737
+      ]
+    },
+    {
+      "ema_updates": 133,
+      "epoch": 19,
+      "loss": [
+        0.3766293525695801,
+        0.43552452325820923,
+        0.7932671308517456
+      ]
+    },
+    {
+      "ema_updates": 140,
+      "epoch": 20,
+      "loss": [
+        0.38684505224227905,
+        0.41096609830856323,
+        0.7793322801589966
+      ]
+    }
+  ],
+  "peak_mps_driver_bytes": 4897849344,
+  "peak_rss_bytes": 2527969280,
+  "protocol_sha256": "e7b46eda03561eb9e29518cf51064005f2fc37604e9254605ca8c77e1a731747",
+  "saved": [
+    {
+      "epoch": 1,
+      "sha256": "1086855d3e621d961013787ed7f270d8c3b6ac1edb394c1322d7ebc436a7d081"
+    },
+    {
+      "epoch": 2,
+      "sha256": "f00c74aeceaf9cdb37ec299e54dfd2fb93cd058499713cb213314704e174cd8a"
+    },
+    {
+      "epoch": 3,
+      "sha256": "0f29de16434bc1741e35e98bda9ad027397cc693e6d8ba4dc2b753c3e51cb435"
+    },
+    {
+      "epoch": 4,
+      "sha256": "9708f2961944fea55e4fd5168bde521b8cd828ef6e5a5096cbe6f913c8ec3ebd"
+    },
+    {
+      "epoch": 5,
+      "sha256": "c1ddced8dc539a856571cfab6ff1710c0547e1ed6f9ff2350246d01e8b04fea0"
+    },
+    {
+      "epoch": 6,
+      "sha256": "a57a33baf9eeec2e75518b2a5823d46dac60e9904d386fde6335075f96d91775"
+    },
+    {
+      "epoch": 7,
+      "sha256": "1b301b46a96af1e5e2187c85cf93432f3d56c5aafa130d0b7abade90773014c8"
+    },
+    {
+      "epoch": 8,
+      "sha256": "2651147ac12a0f5c22aac5c2080630d2921d33005019be5c65b4265123340119"
+    },
+    {
+      "epoch": 9,
+      "sha256": "4e9710992cc39ce08c887452f0e0c41430e314d0786a4f1fd2255afa4042a13f"
+    },
+    {
+      "epoch": 10,
+      "sha256": "b203b7d7cc8604ebe154ad98d5009c379812157ee67dca9b81f0d81f8f2001d7"
+    },
+    {
+      "epoch": 11,
+      "sha256": "9a59d7c0ba08dbcb10f19bbd83d427d8df98864517d198c5797121b6fa663c23"
+    },
+    {
+      "epoch": 12,
+      "sha256": "6f486980ee0eb3e140c1beae4b3a2c847ca5158b21307501060780b2d879ff26"
+    },
+    {
+      "epoch": 13,
+      "sha256": "c6d2641a45710a863663316d7bb20bcd0efcbdbe0bd77b16859f2c7b890ec3ec"
+    },
+    {
+      "epoch": 14,
+      "sha256": "a31b17bb8f9b3283e5d09966ef8279fb762709c75e5c963e9eb7a8a401243176"
+    },
+    {
+      "epoch": 15,
+      "sha256": "52ff7a66b7ad477a1b1e023276484359c2c7ed3c0a35bd00acc0d5407a2ff1b6"
+    },
+    {
+      "epoch": 16,
+      "sha256": "8a7ed8ab0fa6473f211274da662abc98c77bde58b493861cbf27d964d7ebf611"
+    },
+    {
+      "epoch": 17,
+      "sha256": "615d1dc59fcd9552290e1c64b9a0123110ecb655c1783bd751f264535894384b"
+    },
+    {
+      "epoch": 18,
+      "sha256": "44dac988c4f544192ddb7a94144daa4e53b161c621c8bec26aba8bc15354a02e"
+    },
+    {
+      "epoch": 19,
+      "sha256": "6ea0f90dae06b936f45836758dfcb11d28cca14e278bdb529b815b5b56de03b4"
+    },
+    {
+      "epoch": 20,
+      "sha256": "4ed110e1ae7f3c0fe2142c4e03698d860c6b12d3ea639ae783f13249abb41bf8"
+    }
+  ],
+  "scope": "13 AI-reviewed training-source ROIs only,25 heads/42 tags; no lowres development or outdoor inputs. No OCR or body ownership evaluation. Training re-use validation is not held-out accuracy. Three-class18wholeframe proposal never run.",
+  "selected_checkpoint": "/Users/erik/Projects/ESchouten/ai-detector/.cache/cow-eartag-localization-training/run/weights/last.pt",
+  "selected_sha256": "5e4eedf093e222aaa20ad18e2b0540d9302d1cad3db7ee0fe602e38d55bfaf3c",
+  "selection": "Exactly epoch20 final EMA via native last.pt, never best.pt. Native training/EMA/validation FP32 with AMP disabled; native checkpoint serialization and stripping use FP16. Subsequent inference explicitly FP32 cannot restore serialization precision. Native best revalidation uses only identical training13crops and is not selection evidence.",
+  "status": "COMPLETE_FIXED_TRAINING_ONLY",
+  "stored_float_dtypes": [
+    "torch.float16"
+  ],
+  "training_only_metrics": {
+    "fitness": 0.8571982018545766,
+    "metrics/mAP50(B)": 0.995,
+    "metrics/mAP50-95(B)": 0.8571982018545766,
+    "metrics/precision(B)": 0.9935305141696997,
+    "metrics/recall(B)": 0.9985322097228473
+  }
+}

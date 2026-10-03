@@ -1,0 +1,591 @@
+{
+  "annotation_definition": {
+    "body": "Whole visible animal extent including head/ears/legs; bounding rectangle spans only observed pixels, not extrapolated hidden body. Uncertain partial body fragments retained explicitly.",
+    "coordinate_order": "native pixel xyxy, width640,height368; overlay upscaling is nearest-neighbor2x only.",
+    "head": "Visible head including ears; exclude neck, do not infer occluded anatomy. Plastic tag boxes retain publisher coordinates.",
+    "links": "Only visually followable physical tag-ear-head and head-neck-body connections. No nearest-body guess."
+  },
+  "proposed_rule": {
+    "head_inside_body_fraction": 0.9,
+    "metric": "Not yet scored; independent annotation/source review then freeze first.",
+    "tag_inside_head_fraction": 0.9,
+    "uniqueness": "Exactly one containing head per tag and exactly one containing body per head. Multiple tags may share head. No tie-breaking."
+  },
+  "reviewer": "identity_evaluation",
+  "rows": [
+    {
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "White spotted principal at left; full visible extent including head/ears.",
+          "uncertain": false,
+          "xyxy": [
+            8,
+            87,
+            163,
+            343
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "Center-left black cow; muzzle clipped by bottom edge.",
+          "uncertain": false,
+          "xyxy": [
+            141,
+            99,
+            269,
+            368
+          ]
+        },
+        {
+          "id": "B3",
+          "note": "Center-right white-forehead cow.",
+          "uncertain": false,
+          "xyxy": [
+            267,
+            94,
+            362,
+            345
+          ]
+        },
+        {
+          "id": "B4",
+          "note": "Front-right cow follows visible black neck to cropped head; column/rails occlude body.",
+          "uncertain": false,
+          "xyxy": [
+            491,
+            121,
+            640,
+            368
+          ]
+        },
+        {
+          "id": "B5",
+          "note": "Right rear neighbor: only visible back/neck fragment; head outside/occluded.",
+          "uncertain": true,
+          "xyxy": [
+            574,
+            109,
+            640,
+            278
+          ]
+        },
+        {
+          "id": "B6",
+          "note": "Far-left rear black/white body fragment; no visible head.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            35,
+            111,
+            162
+          ]
+        },
+        {
+          "id": "B7",
+          "note": "Nearer left-edge black/white body and leg fragments, much occluded by B1; no clear head.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            75,
+            91,
+            266
+          ]
+        }
+      ],
+      "heads": [
+        {
+          "body_id": "B1",
+          "id": "H1",
+          "note": "Head plus ears, excludes long neck.",
+          "uncertain": false,
+          "xyxy": [
+            12,
+            265,
+            79,
+            343
+          ]
+        },
+        {
+          "body_id": "B2",
+          "id": "H2",
+          "note": "Both ears and muzzle; lower muzzle touches frame boundary.",
+          "uncertain": false,
+          "xyxy": [
+            141,
+            282,
+            239,
+            368
+          ]
+        },
+        {
+          "body_id": "B3",
+          "id": "H3",
+          "note": "Both ears plus white forehead and muzzle.",
+          "uncertain": false,
+          "xyxy": [
+            278,
+            274,
+            344,
+            345
+          ]
+        },
+        {
+          "body_id": "B4",
+          "id": "H4",
+          "note": "Left ear/tag and cropped right-side face; black neck visibly joins B4.",
+          "uncertain": false,
+          "xyxy": [
+            594,
+            293,
+            640,
+            368
+          ]
+        }
+      ],
+      "height": 368,
+      "id": "cow1897",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1897.jpg",
+      "image_sha256": "818e400cfdee0ef72fd29f820c294e4485a4b81e7ce131419f0767ba07c91a5a",
+      "note": "No ear number was read. Bodies B5-B7 are uncertain isolated partial extents, not extrapolated hidden animals.",
+      "tags": [
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "T1",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 0,
+          "uncertain": false,
+          "xyxy": [
+            212.00000000000003,
+            297.0,
+            227.00000000000003,
+            310.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "head_id": "H2",
+          "id": "T2",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 1,
+          "uncertain": false,
+          "xyxy": [
+            153.0,
+            292.0,
+            170.99999999999997,
+            302.0
+          ]
+        },
+        {
+          "body_id": "B4",
+          "head_id": "H4",
+          "id": "T3",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 2,
+          "uncertain": false,
+          "xyxy": [
+            604.0,
+            309.0,
+            618.0,
+            323.99999999999994
+          ]
+        }
+      ],
+      "width": 640
+    },
+    {
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Far-left white/black rear fragment only; no head visible.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            83,
+            31,
+            130
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "Left black/white neighbor partly behind principal white cow; head outside left boundary.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            87,
+            106,
+            281
+          ]
+        },
+        {
+          "id": "B3",
+          "note": "White spotted cow with head turned left; legs/body partly hidden by rails.",
+          "uncertain": false,
+          "xyxy": [
+            7,
+            84,
+            183,
+            286
+          ]
+        },
+        {
+          "id": "B4",
+          "note": "Front center-left black cow; muzzle clipped at bottom.",
+          "uncertain": false,
+          "xyxy": [
+            137,
+            99,
+            261,
+            368
+          ]
+        },
+        {
+          "id": "B5",
+          "note": "Middle white-forehead cow with two visible tags.",
+          "uncertain": false,
+          "xyxy": [
+            239,
+            101,
+            334,
+            359
+          ]
+        },
+        {
+          "id": "B6",
+          "note": "Middle-right black cow leaning right; face partly behind B7 head.",
+          "uncertain": false,
+          "xyxy": [
+            327,
+            100,
+            451,
+            350
+          ]
+        },
+        {
+          "id": "B7",
+          "note": "Right front white-faced cow; column obscures right body.",
+          "uncertain": false,
+          "xyxy": [
+            409,
+            99,
+            517,
+            360
+          ]
+        },
+        {
+          "id": "B8",
+          "note": "Behind/right cow with white back and curved black neck/body; partial head attachment at right cannot be certified.",
+          "uncertain": true,
+          "xyxy": [
+            459,
+            79,
+            640,
+            271
+          ]
+        },
+        {
+          "id": "B9",
+          "note": "Right-border white body/leg fragments overlap B8; hidden head attachment unknown.",
+          "uncertain": true,
+          "xyxy": [
+            613,
+            91,
+            640,
+            278
+          ]
+        }
+      ],
+      "heads": [
+        {
+          "body_id": "B3",
+          "id": "H1",
+          "note": "Turned white head including visible ears; physically joined to white spotted B3.",
+          "uncertain": false,
+          "xyxy": [
+            7,
+            180,
+            106,
+            267
+          ]
+        },
+        {
+          "body_id": "B4",
+          "id": "H2",
+          "note": "Both ears and dark muzzle of B4.",
+          "uncertain": false,
+          "xyxy": [
+            137,
+            289,
+            230,
+            368
+          ]
+        },
+        {
+          "body_id": "B5",
+          "id": "H3",
+          "note": "Both ears, white forehead and muzzle of B5.",
+          "uncertain": false,
+          "xyxy": [
+            242,
+            282,
+            325,
+            359
+          ]
+        },
+        {
+          "body_id": "B6",
+          "id": "H4",
+          "note": "Dark tilted head; right edge is partially occluded by H5.",
+          "uncertain": false,
+          "xyxy": [
+            389,
+            252,
+            453,
+            350
+          ]
+        },
+        {
+          "body_id": "B7",
+          "id": "H5",
+          "note": "White forehead/muzzle and ears; right yellow tag visible.",
+          "uncertain": false,
+          "xyxy": [
+            431,
+            286,
+            512,
+            360
+          ]
+        },
+        {
+          "body_id": null,
+          "id": "H6",
+          "note": "Small right-border black head/muzzle fragment; neck/body attachment ambiguous between B8/B9. Retained with unknown ownership.",
+          "uncertain": true,
+          "xyxy": [
+            608,
+            207,
+            640,
+            271
+          ]
+        }
+      ],
+      "height": 368,
+      "id": "cow1983",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow1983.jpg",
+      "image_sha256": "790670acb0f3e3899f58372f9439b6e992fcfa5990f5c3958d9ac3378e5b1bb0",
+      "note": "H6 is not assigned by nearest box. No tag is published on this ambiguous fragment; it remains in head inventory.",
+      "tags": [
+        {
+          "body_id": "B4",
+          "head_id": "H2",
+          "id": "T1",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 0,
+          "uncertain": false,
+          "xyxy": [
+            197.0,
+            303.0,
+            219.00000000000003,
+            313.0
+          ]
+        },
+        {
+          "body_id": "B4",
+          "head_id": "H2",
+          "id": "T2",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 1,
+          "uncertain": false,
+          "xyxy": [
+            148.0,
+            300.0,
+            162.0,
+            310.0
+          ]
+        },
+        {
+          "body_id": "B3",
+          "head_id": "H1",
+          "id": "T3",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 2,
+          "uncertain": false,
+          "xyxy": [
+            59.0,
+            209.0,
+            79.0,
+            220.99999999999997
+          ]
+        },
+        {
+          "body_id": "B5",
+          "head_id": "H3",
+          "id": "T4",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 3,
+          "uncertain": false,
+          "xyxy": [
+            247.00000000000003,
+            292.0,
+            262.0,
+            303.99999999999994
+          ]
+        },
+        {
+          "body_id": "B5",
+          "head_id": "H3",
+          "id": "T5",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 4,
+          "uncertain": false,
+          "xyxy": [
+            301.0,
+            305.0,
+            319.0,
+            316.99999999999994
+          ]
+        },
+        {
+          "body_id": "B7",
+          "head_id": "H5",
+          "id": "T6",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 5,
+          "uncertain": false,
+          "xyxy": [
+            485.0,
+            303.0,
+            507.0,
+            314.0
+          ]
+        }
+      ],
+      "width": 640
+    },
+    {
+      "bodies": [
+        {
+          "id": "B1",
+          "note": "Left-border back/neck/legs only; head out of frame.",
+          "uncertain": true,
+          "xyxy": [
+            0,
+            97,
+            58,
+            284
+          ]
+        },
+        {
+          "id": "B2",
+          "note": "Principal central cow extends diagonally left from back to visible head.",
+          "uncertain": false,
+          "xyxy": [
+            363,
+            116,
+            510,
+            356
+          ]
+        },
+        {
+          "id": "B3",
+          "note": "Right front cow; body partly hidden by column, head clipped at bottom/right.",
+          "uncertain": false,
+          "xyxy": [
+            508,
+            127,
+            640,
+            368
+          ]
+        },
+        {
+          "id": "B4",
+          "note": "Right rear neighbor, visible back/neck fragment only; head not separately identifiable.",
+          "uncertain": true,
+          "xyxy": [
+            582,
+            115,
+            640,
+            303
+          ]
+        }
+      ],
+      "heads": [
+        {
+          "body_id": "B2",
+          "id": "H1",
+          "note": "Head including ear on right, white facial edge and muzzle; neck excluded.",
+          "uncertain": false,
+          "xyxy": [
+            362,
+            278,
+            416,
+            356
+          ]
+        },
+        {
+          "body_id": "B3",
+          "id": "H2",
+          "note": "Both visible ears/white forehead and clipped muzzle.",
+          "uncertain": false,
+          "xyxy": [
+            557,
+            300,
+            640,
+            368
+          ]
+        }
+      ],
+      "height": 368,
+      "id": "cow2070",
+      "image": "datasets/cow-eartag-detection/subset-v1/cow2070.jpg",
+      "image_sha256": "c63a8d4d7630c5d86f8fa2cdbd476c7679d08f771d1ae2945e91f7010e7d0f7e",
+      "note": "Body fragments without identifiable head remain explicit and are not joined to the nearest head.",
+      "tags": [
+        {
+          "body_id": "B3",
+          "head_id": "H2",
+          "id": "T1",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 0,
+          "uncertain": false,
+          "xyxy": [
+            567.0,
+            303.99999999999994,
+            590.0,
+            325.0
+          ]
+        },
+        {
+          "body_id": "B2",
+          "head_id": "H1",
+          "id": "T2",
+          "note": "Published tag rectangle unchanged; attachment judged on native image/nearest-neighbor zoom, no OCR or model output.",
+          "ownership": "visible_attachment",
+          "publisher_index": 1,
+          "uncertain": false,
+          "xyxy": [
+            391.0,
+            292.0,
+            404.0,
+            303.99999999999994
+          ]
+        }
+      ],
+      "width": 640
+    }
+  ],
+  "scope": "Fixed three already-exposed low-resolution development frames. No model predictions/training, no biological identities, no digit reading. Bounding boxes describe only visible animal extent; uncertain partial attachments stay unknown. Same-animal links are an AI visual annotation draft, not certified field ground truth.",
+  "source_inventory_sha256": "9aab8579ef83cbe5e241d803f8a76d48935ab9f55dd89faf8e2df3516bbecf71",
+  "status": "DRAFT_AI_ANNOTATIONS_AWAITING_INDEPENDENT_REVIEW_NO_SCORING"
+}

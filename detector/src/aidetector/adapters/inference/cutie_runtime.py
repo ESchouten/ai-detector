@@ -78,12 +78,16 @@ def mask_evidence(
     return tuple(result)
 
 
-def _require_sdk() -> None:
+def require_cutie_runtime() -> None:
+    """Check the optional source-install extra before downloading model assets."""
     try:
         installed = version("cutie")
     except PackageNotFoundError as error:
         raise CutieUnavailable(
-            f"Continuous tracking requires the optional Cutie {SDK_VERSION} runtime"
+            "Continuous identity is a source-install-only experiment requiring "
+            f"Cutie {SDK_VERSION}. Install "
+            "the identity-continuous extra with uv sync --extra default "
+            "--extra identity-continuous from the detector directory."
         ) from error
     if installed != SDK_VERSION:
         raise CutieUnavailable(f"Continuous tracking requires Cutie {SDK_VERSION}")
@@ -265,7 +269,7 @@ def open_cutie(weights: Path, device: Literal["cpu", "mps"]) -> Iterator[CutieRu
     """Strict local loading; no model download, CUDA fallback or SDK patching."""
     if device not in ("cpu", "mps"):
         raise ValueError("This experimental Cutie runtime supports CPU and MPS only")
-    _require_sdk()
+    require_cutie_runtime()
     scope = mps_inference if device == "mps" else nullcontext
     model = None
     with scope():

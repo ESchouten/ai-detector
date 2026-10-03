@@ -8,16 +8,25 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 
 ## Optional identity trial — 2026-10-03
 
-`DetectorConfig.identity` is an additive, optional configuration object. It requires a YOLO model with tracking enabled and explicit class labels. Existing detectors retain their behaviour when it is absent. The Cow Identity preset and Herd screen provide enrollment without editing JSON. Install the updated locked dependencies when running from source; identity weights download in the background when at least two animals have reference photos. Photo collection works before that download. Expected identity storage/download failures report a rule-scoped state and retry after 60 seconds without stopping other detection; accelerator/runtime errors still reach supervision. The web app and detector must include the four additive `identity_*` status kinds together to display preparation and failures correctly.
+`DetectorConfig.identity` is an additive, optional configuration object. Its default `mode="appearance"` requires a YOLO model with tracking enabled and explicit class labels. Existing identity configurations without `mode` retain that behaviour, and detectors without identity remain unchanged. The Cow Identity preset and Herd screen provide enrollment without editing JSON. Install the updated locked dependencies when running from source; identity weights download in the background when at least two animals have reference photos. Photo collection works before that download. Expected identity storage/download failures report a rule-scoped state and retry after 60 seconds without stopping other detection; accelerator/runtime errors still reach supervision. The web app and detector must include the four additive `identity_*` status kinds together to display preparation and failures correctly.
 
 Confirmed names/examples and review crops live under `<data directory>/identities/`, separately from `config.json`, `app.json` and recordings. The web app is the sole catalog writer; gallery changes take effect on subsequent observations. Live box records may carry `identity`, and archive metadata may contain `identities`; older files remain valid. These fields describe suggestions at inference time, not human identity verification. Reverting to an older detector requires removing the new identity detector/configuration first. Settings backup now includes the confirmed herd, its reference photos and their evidence metadata; fresh-setup import restores them without overwriting an existing herd. Unconfirmed photos and embedding caches are excluded. No existing files are migrated or deleted.
 
+## Experimental anonymous continuous mode — 2026-10-03
+
+An advanced source-install trial can explicitly set `"identity": {"mode": "continuous", "labels": ["cow"]}` on one live-camera rule with a native `.pt` YOLO detection model, `tracking:false`, and no YOLO tracker. The label must match that model's individual-object class; it is not hardcoded to cattle. Only one such rule per process is supported. This does not change or add a default preset. The trial requires native MPS and the optional SDK installed from `detector/` with `uv sync --locked --extra default --extra identity-continuous`; packaged desktop applications and other execution providers are not supported by this opt-in. Missing dependencies or unsupported hardware produce a startup error.
+
+The mode owns effective capture sampling of 0.5 seconds and retention of four frames, logged at startup without rewriting `detection.interval` or `frame_retention`. Pinned Cutie and SAM startup checkpoints download once into `<data directory>/models/continuous`; their hashes are checked before loading. Camera reconnection, stale frames and missed cadence clear temporary track state. It collects bounded anonymous evidence in `<data directory>/identities/automatic/profiles.sqlite` without asking the user to name animals or prepare a gallery. This evidence is disposable, excluded from confirmed-herd backup, and does not constitute reliable biological identity. There is no automatic ear-number reading or identity merge across visits. The existing confirmed gallery and recordings are not migrated or modified.
+
+The actual MPS wrapper passed exact 241-input model/qualification parity and a paced 60-second local-source reconnect check. This checks mechanics, not general camera accuracy: the longer exposed-scene control still failed its final precision window. The existing appearance mode and all ordinary detector settings retain their previous execution paths.
+
 ## Compatibility commitments
 
-The new live-confirmation domain and transport components currently have no
-startup or browser hook. They change no saved configuration, catalog, archive,
-CLI protocol or existing identity behavior. Continuous-camera confirmation
-remains experimental work, distinct from the existing gallery-photo action.
+The live-confirmation domain and control boundary are used for temporary
+instance ownership by the explicit continuous mode; they currently have no
+browser or CLI command hook. No manual confirmation is required. Existing
+catalog, archive, CLI protocol and appearance behavior are unchanged.
+Continuous-camera confirmation remains separate from the gallery-photo action.
 Review snapshots now have an explicit worker-owned invalidation operation for
 temporary ambiguity, without clearing a confirmed name. A recovered instance
 requires a fresh review photo. The detector port also documents its existing
@@ -26,8 +35,8 @@ YOLO and snapshot behavior is unchanged.
 
 The optional `identity-continuous` source-install extra now provides the pinned
 Cutie SDK for its tested CPU/MPS adapter. Development installs include the SDK
-for type checking; normal runtime installs do not. This changes no configuration
-or monitoring behavior, and model weights remain external. Plain pip needs the
+for type checking; normal runtime installs do not. The extra alone does not enable
+monitoring behavior, and model weights remain external. Plain pip needs the
 explicit vendored-wheel location described in [the installation note](vendor/cutie/README.md).
 
 - Existing top-level `detectors`, `onnx`, and `health` configuration remains supported.

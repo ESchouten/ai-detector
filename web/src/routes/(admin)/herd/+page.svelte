@@ -23,7 +23,10 @@
 	const monitor = useRuntimeStatus();
 	const initialRuntime = monitor.query.current ?? (await monitor.query);
 	const runtime = $derived(monitor.query.current ?? initialRuntime);
-	const emptyState = $derived(herdEmptyState(data.identityConfigured, runtime, monitor.stale));
+	const emptyState = $derived(herdEmptyState(data.identityModes, runtime, monitor.stale));
+	const automaticOnly = $derived(
+		data.identityModes.includes('continuous') && !data.identityModes.includes('appearance')
+	);
 	let selectedPhoto = $state<string | null>(null);
 	let selectedCow = $state<string | null>(null);
 	let dialog = $state<'identify' | 'examples' | null>(null);
@@ -116,15 +119,22 @@
 				<h1 class="settings-heading">Herd</h1>
 				<Badge variant="secondary">Experimental</Badge>
 			</div>
-			<Button variant="outline" onclick={() => invalidateAll()} disabled={busy}>
-				<RefreshCw data-icon="inline-start" />{data.catalog ? 'Refresh photos' : 'Try again'}
-			</Button>
+			{#if !automaticOnly || !data.catalog || review.length || identities.length}
+				<Button variant="outline" onclick={() => invalidateAll()} disabled={busy}>
+					<RefreshCw data-icon="inline-start" />{data.catalog ? 'Refresh photos' : 'Try again'}
+				</Button>
+			{/if}
 		</div>
 		<p class="settings-description">
-			Name your cows and confirm clear photos. Suggested matches always need your confirmation.
+			{#if data.identityModes.includes('continuous')}
+				Automatic camera tracking runs without naming photos. Ear-number recognition is still being
+				developed.
+			{:else}
+				Name your cows and confirm clear photos. Suggested matches always need your confirmation.
+			{/if}
 		</p>
 	</header>
-	{#if data.identityConfigured}
+	{#if data.identityModes.length}
 		<DetectorRuntime configured compact />
 	{/if}
 
@@ -162,14 +172,14 @@
 				<Empty.Title>{emptyState.title}</Empty.Title>
 				<Empty.Description>{emptyState.description}</Empty.Description>
 			</Empty.Header>
-			{#if !data.identityConfigured}
+			{#if !data.identityModes.length}
 				<Empty.Content>
 					<Button href={resolve('/setup?step=detectors&add=detector')}>Set up cow identity</Button>
 				</Empty.Content>
 			{/if}
 		</Empty.Root>
 	{:else}
-		{#if confirmedCows < 2}
+		{#if !automaticOnly && confirmedCows < 2}
 			<p class="text-sm text-muted-foreground">
 				Add examples for at least two cows to start suggesting matches.
 			</p>

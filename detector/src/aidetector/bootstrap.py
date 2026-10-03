@@ -1,11 +1,14 @@
 import logging
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import ExitStack
 from dataclasses import replace
 from functools import partial
 from pathlib import Path
 from threading import Event
+from typing import TYPE_CHECKING
 from urllib.parse import urlsplit
+from uuid import uuid4
 
 from aidetector.adapters.diagnostics import log_detector_configuration
 from aidetector.adapters.exporters.disk import DiskExporter
@@ -13,7 +16,11 @@ from aidetector.adapters.exporters.telegram import TelegramExporter
 from aidetector.adapters.exporters.webhook import WebhookExporter
 from aidetector.adapters.health import Healthcheck
 from aidetector.adapters.inference.model_assets import resolve_model_path
-from aidetector.adapters.inference.onnx import ModelRequirements, inference_runtime
+from aidetector.adapters.inference.onnx import (
+    InferenceOptions,
+    ModelRequirements,
+    inference_runtime,
+)
 from aidetector.adapters.live_preview import LivePreview
 from aidetector.adapters.media.event_media import EventMedia
 from aidetector.adapters.sources.files import FileSource
@@ -27,10 +34,20 @@ from aidetector.application.ports import (
     ignore_observation,
 )
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
-from aidetector.configuration import Config, ExportersConfig, SourceConfig, source_kind
+from aidetector.configuration import (
+    Config,
+    ContinuousIdentityConfig,
+    ExportersConfig,
+    IdentityConfig,
+    SourceConfig,
+    source_kind,
+)
 from aidetector.domain.policy import Cooldown, EventPolicy, ExportPolicy
 from aidetector.runtime import DetectorWorker, RunStats, run_detectors
 from aidetector.version import TYPE
+
+if TYPE_CHECKING:
+    from aidetector.adapters.inference.yolo import YoloDetector
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +71,15 @@ def build_source(
     directory: Path,
     streams: StreamPool,
     report_status: ReportStatus = ignore_status,
+    *,
+    continuous: bool = False,
 ) -> FileSource | StreamSource:
+    if continuous:
+        logger.info(
+            "Continuous identity: effective capture interval=0.5s, retention=4; "
+            "one camera, up to eight anonymous tracks"
+        )
+        settings = settings.model_copy(update={"interval": 0.5, "frame_retention": 4})
     if source_kind(settings.source[0]) != "stream":
         return FileSource(
             _resolved_sources(settings, directory),
@@ -153,6 +178,7 @@ def run_application(
         options = resources.enter_context(
             inference_runtime(config.onnx, models, TYPE, report_status)
         )
+        _check_continuous_support(config, options)
         engines = None
         if prefer_tensorrt and TYPE == "cuda":
             from aidetector.adapters.inference.prepared_engines import EnginePreparation
@@ -161,13 +187,9 @@ def run_application(
                 data_directory / "models" / "prepared", stop_requested, report_status
             )
         preview = LivePreview(data_directory / "live") if live_preview else None
+        source_listeners: dict[str, tuple[Callable[[str | None], None], ...]] = {}
 
-        def source_status(event: StatusEvent) -> None:
-            if preview is not None:
-                preview.source_status(event)
-            report_status(event)
-
-        streams = StreamPool(source_status)
+        streams = StreamPool(_source_reporter(source_listeners, preview, report_status))
         workers: list[DetectorWorker] = []
         identifiers = _identity_resources(
             config, data_directory, resources, report_status
@@ -182,10 +204,15 @@ def run_application(
             )
             rule_status = _rule_reporter(report_status, f"detector-{index}")
             source = build_source(
-                settings.detection, config_directory, streams, report_status
+                settings.detection,
+                config_directory,
+                streams,
+                report_status,
+                continuous=isinstance(settings.identity, ContinuousIdentityConfig),
             )
             resources.callback(source.close)
             detector: ObjectDetector | None = None
+            maintain: Callable[[], None] | None = None
             event_policy = EventPolicy()
             if settings.yolo is not None:
                 from aidetector.adapters.inference.yolo import open_detector
@@ -224,6 +251,16 @@ def run_application(
                     inactivity_timeout=settings.yolo.timeout,
                     trailing_time=settings.yolo.include_trailing_time,
                 )
+                if isinstance(settings.identity, ContinuousIdentityConfig):
+                    detector, maintain, listeners = _continuous_detector(
+                        detector,
+                        source.sources[0],
+                        settings.identity.labels[0],
+                        data_directory,
+                        resources,
+                        rule_status,
+                    )
+                    source_listeners[source.sources[0]] = listeners
             media = EventMedia()
             validator: EventValidator | None = None
             if settings.active_vlm:
@@ -268,6 +305,7 @@ def run_application(
                     pending_events=settings.pending_events,
                     name=f"detector-{index}",
                     report_status=rule_status,
+                    maintain=maintain,
                 )
             )
         health = Healthcheck(config.health) if config.health is not None else None
@@ -280,6 +318,42 @@ def run_application(
         return run_detectors(tuple(workers), health, stop_requested)
 
 
+def _source_reporter(
+    listeners: dict[str, tuple[Callable[[str | None], None], ...]],
+    preview: LivePreview | None,
+    report_status: ReportStatus,
+) -> ReportStatus:
+    # Bootstrap finishes this bounded registry before starting capture threads.
+    def report(event: StatusEvent) -> None:
+        if event.kind in {"source_epoch", "offline"} and event.source is not None:
+            epoch = event.source_epoch if event.kind == "source_epoch" else None
+            for listener in listeners.get(event.source, ()):
+                listener(epoch)
+        if preview is not None:
+            preview.source_status(event)
+        report_status(event)
+
+    return report
+
+
+def _check_continuous_support(config: Config, options: InferenceOptions) -> None:
+    for settings in config.detectors:
+        if not isinstance(settings.identity, ContinuousIdentityConfig):
+            continue
+        if (
+            not options.native_mps
+            or settings.yolo is None
+            or not urlsplit(settings.yolo.model).path.lower().endswith(".pt")
+        ):
+            raise RuntimeError(
+                "Experimental continuous identity requires an Apple Silicon Mac "
+                "with native MPS, a .pt detection model and no explicit ONNX provider."
+            )
+        from aidetector.adapters.inference.cutie_runtime import require_cutie_runtime
+
+        require_cutie_runtime()
+
+
 def _identity_resources(
     config: Config,
     directory: Path,
@@ -289,7 +363,7 @@ def _identity_resources(
     configured = [
         (index, settings.identity)
         for index, settings in enumerate(config.detectors, 1)
-        if settings.identity is not None
+        if isinstance(settings.identity, IdentityConfig)
     ]
     if not configured:
         return {}
@@ -341,3 +415,69 @@ def _identity_resources(
         )
         for index, settings in configured
     }
+
+
+def _continuous_detector(
+    raw: "YoloDetector",
+    source: str,
+    label: str,
+    directory: Path,
+    resources: ExitStack,
+    report_status: ReportStatus,
+) -> tuple[
+    ObjectDetector,
+    Callable[[], None],
+    tuple[Callable[[str | None], None], ...],
+]:
+    from aidetector.adapters.identity_catalog import IdentityCatalog
+    from aidetector.adapters.identity_control import LiveIdentityControl
+    from aidetector.adapters.identity_profile_collector import IdentityProfileCollector
+    from aidetector.adapters.inference.continuous_identity import (
+        ContinuousIdentityDetector,
+    )
+    from aidetector.adapters.inference.continuous_models import (
+        prepare_continuous_models,
+    )
+    from aidetector.adapters.inference.cutie_runtime import open_cutie
+    from aidetector.adapters.operational_status import source_key
+    from aidetector.domain.live_identity import LiveIdentityState
+
+    if label not in dict(raw.classes.values()):
+        raise ValueError(
+            "The continuous identity label is not among this detection "
+            "model's configured classes. Choose an available model label "
+            "and include it in yolo.confidence when using class thresholds."
+        )
+    models = prepare_continuous_models(
+        directory / "models" / "continuous", report_status
+    )
+    tracker = resources.enter_context(open_cutie(models.cutie, "mps"))
+    run_id = uuid4().hex
+    collector = IdentityProfileCollector(
+        directory / "identities", run_id, source, report_status=report_status
+    )
+    resources.callback(collector.close)
+    control = LiveIdentityControl(
+        run_id,
+        source_key(source),
+        LiveIdentityState(),
+        IdentityCatalog(directory / "identities"),
+        lambda acknowledgement: None,
+    )
+    detector = ContinuousIdentityDetector(
+        source,
+        raw,
+        tracker,
+        control,
+        startup_weights=models.startup,
+        label=label,
+        publish_evidence=collector,
+        report_status=report_status,
+    )
+    resources.callback(detector.close)
+
+    def maintain() -> None:
+        detector.maintain()
+        collector.maintain()
+
+    return detector, maintain, (detector.source_changed, collector.source_changed)

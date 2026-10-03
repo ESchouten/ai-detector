@@ -1,15 +1,24 @@
 # Cow identity trial
 
-This branch adds a local identity assistant: it collects individual cow photos, lets a farmer name them, and suggests those names on later camera observations. It is an experimental tool for building and checking a herd gallery, not a reliable unattended animal-identification system yet.
+This branch develops local, automatic cow identification. The intended workflow
+requires no farmer enrollment: accumulate anonymous observations, attach a
+reliably read ear number to the correct animal, and recognize that animal later.
+Reliable unattended identification is not established yet.
 
-The requested next product flow is automatic: accumulate anonymous animal
-profiles and attach reliably read ear numbers, without mandatory farmer
-enrollment. The existing manual gallery below describes current behavior, not
-that completed flow. [Automatic enrollment requirements](EAR_TAG_IDENTITY.md)
-keep number reading, animal ownership and cross-visit association separate and
-require evaluation from an empty catalog.
+Two experimental paths currently exist. The original **Cow Identity** preset
+collects photographs for a manually confirmed appearance gallery. The explicit
+source-install `identity.mode="continuous"` path follows anonymous animals on
+one MPS camera and automatically retains bounded observations without a gallery.
+It does not yet read ear numbers, join separate visits or create permanent cow
+identities. The [application integration](CONTINUOUS_APP_INTEGRATION.md) and
+[automatic collection](AUTOMATIC_PROFILES.md) describe its supported boundaries.
 
-## Try it
+[Automatic enrollment requirements](EAR_TAG_IDENTITY.md) keep number reading,
+animal ownership and cross-visit association separate. The final evaluation must
+start with an empty catalog. Supplied names in earlier tracking controls and
+software integration tests cannot satisfy that requirement.
+
+## Try the existing appearance-gallery preset
 
 Use the detector and web app from this branch together. Follow the normal [source setup](../../detector/README.md#run-from-source) and [web development instructions](../../web/README.md), including a fresh locked dependency sync. Existing camera settings do not need migration.
 

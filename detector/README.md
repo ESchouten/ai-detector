@@ -10,8 +10,11 @@ The `codex/cow-identity` branch also has an optional, noncommercial **cow identi
 
 The separate experimental continuous-camera adapter can be installed from
 `detector/` with `uv sync --locked --no-dev --extra default --extra identity-continuous`.
-It uses the [vendored Cutie SDK](vendor/cutie/README.md), keeps model weights
-external and is not yet connected to setup or monitoring. The normal runtime
+It uses the [vendored Cutie SDK](vendor/cutie/README.md) and pinned downloaded model
+weights. Explicit `identity.mode="continuous"` enables anonymous collection on one
+live camera using native MPS, with no enrollment requirement. See the
+[experimental configuration and limits](MIGRATION.md#experimental-anonymous-continuous-mode--2026-10-03).
+No default setup preset enables it. The normal runtime
 installation does not include it. Development installs include the small SDK
 for type checking; the real CPU contract test requires an explicit local
 `AIDETECTOR_TEST_CUTIE_WEIGHTS` path and otherwise skips.
@@ -57,6 +60,7 @@ Tests mirror the `domain`, `application`, and `adapters` packages; tests spannin
 | Optional identity recognition | [identity policy](src/aidetector/domain/identity.py), [gallery matcher](src/aidetector/adapters/inference/identity_observations.py), [catalog](src/aidetector/adapters/identity_catalog.py) | [matching policy](tests/domain/test_identity.py), [gallery and cache](tests/adapters/inference/test_identity_observations.py), [shared files](tests/adapters/test_identity_catalog.py) |
 | Experimental live-name confirmation building blocks | [instance assignments](src/aidetector/domain/live_identity.py), [exact-photo command boundary](src/aidetector/adapters/identity_control.py) | [stale and conflicting names](tests/domain/test_live_identity.py), [worker queue and catalog contract](tests/adapters/test_identity_control.py) |
 | Optional continuous-camera SDK boundary | [Cutie runtime](src/aidetector/adapters/inference/cutie_runtime.py), [vendored SDK](vendor/cutie/README.md) | [CPU lifecycle](tests/adapters/inference/test_cutie_runtime.py), [package integrity](tests/test_optional_sdk_package.py) |
+| Experimental anonymous continuous mode | [wrapper](src/aidetector/adapters/inference/continuous_identity.py), [bootstrap](src/aidetector/bootstrap.py), [bounded collection](src/aidetector/adapters/identity_profile_collector.py) | [configuration and startup](tests/test_continuous_application.py), [worker timing](tests/adapters/inference/test_continuous_identity.py), [collection episodes](tests/adapters/test_identity_profile_collector.py) |
 | Experimental anonymous mask selection and geometry | [mask policy](src/aidetector/adapters/inference/identity_masks.py), [CPU startup segmentation](src/aidetector/adapters/inference/identity_startup.py) | [overlap and stable-ID boundaries](tests/adapters/inference/test_identity_masks.py), [cached research parity](../research/cow_identity/application_mask_parity.py), [actual startup parity](../research/cow_identity/application_startup_parity.py) |
 | Experimental continuous identity quality gates | [continuity policy](src/aidetector/domain/identity_continuity.py) | [absorption, recovery and bounded history](tests/domain/test_identity_continuity.py), [recorded video replay](../research/cow_identity/application_continuity_parity.py) |
 | YOLO, model assets, or ONNX providers | [inference adapters](src/aidetector/adapters/inference/) | [YOLO](tests/adapters/inference/test_yolo.py), [ONNX](tests/adapters/inference/test_onnx.py), [model assets](tests/adapters/inference/test_model_assets.py), [model loading](tests/adapters/inference/test_model_loading.py), [SDK lifetime](tests/adapters/inference/test_yolo_runtime.py) |

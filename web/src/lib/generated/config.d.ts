@@ -117,6 +117,8 @@ export type Token1 = string | null;
 export type DataType = 'binary' | 'base64' | 'none';
 export type DataMax = number | null;
 export type PendingEvents = number;
+export type Identity = IdentityConfig | ContinuousIdentityConfig | null;
+export type Mode = 'appearance';
 /**
  * @minItems 1
  */
@@ -129,6 +131,12 @@ export type SampleInterval = number;
 export type MinCropSize = number;
 export type MaxOverlap = number;
 export type ReviewInterval = number;
+export type Mode1 = 'continuous';
+/**
+ * @minItems 1
+ * @maxItems 1
+ */
+export type Labels1 = [string];
 export type Provider = string | null;
 export type Winml = boolean;
 export type Opset = number;
@@ -153,7 +161,7 @@ export interface DetectorConfig {
 	vlm?: Vlm;
 	exporters?: ExportersConfig | null;
 	pending_events?: PendingEvents;
-	identity?: IdentityConfig | null;
+	identity?: Identity;
 }
 export interface SourceConfig {
 	source: Source;
@@ -239,6 +247,7 @@ export interface WebhookConfig {
  * Recognition applies only to explicitly named individual-object classes.
  */
 export interface IdentityConfig {
+	mode?: Mode;
 	labels: Labels;
 	model?: Model2;
 	min_similarity?: MinSimilarity;
@@ -248,6 +257,13 @@ export interface IdentityConfig {
 	min_crop_size?: MinCropSize;
 	max_overlap?: MaxOverlap;
 	review_interval?: ReviewInterval;
+}
+/**
+ * Experimental anonymous continuity; no enrolled herd or appearance model.
+ */
+export interface ContinuousIdentityConfig {
+	mode: Mode1;
+	labels: Labels1;
 }
 export interface OnnxConfig {
 	provider?: Provider;

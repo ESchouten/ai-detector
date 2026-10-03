@@ -1,10 +1,15 @@
 import type { RuntimeStatus } from './runtime.ts';
 
 type Monitoring = Pick<RuntimeStatus, 'managed' | 'phase' | 'readiness' | 'identification'>;
+export type IdentityMode = 'appearance' | 'continuous';
 
 /** Explain the next useful action without mistaking missing photos for missing setup. */
-export function herdEmptyState(configured: boolean, runtime: Monitoring, stale: boolean) {
-	if (!configured)
+export function herdEmptyState(
+	modes: readonly IdentityMode[],
+	runtime: Monitoring,
+	stale: boolean
+) {
+	if (!modes.length)
 		return {
 			title: 'Start recognizing your cows',
 			description:
@@ -54,11 +59,25 @@ export function herdEmptyState(configured: boolean, runtime: Monitoring, stale: 
 			description:
 				'Monitoring is starting. Preparation and camera connection progress appear above; the first start can take longer.'
 		};
+	return collectionState(modes, identification);
+}
+
+function collectionState(
+	modes: readonly IdentityMode[],
+	identification: NonNullable<Monitoring['identification']>
+) {
 	if (identification.some((identity) => identity.state === 'preparing'))
 		return {
 			title: 'Preparing cow identification',
+			description: 'Each identity detector shows its preparation progress above.'
+		};
+	if (modes.includes('continuous') && !modes.includes('appearance'))
+		return {
+			title: identification.some((identity) => identity.state === 'ready')
+				? 'Following cows automatically'
+				: 'Waiting for a clear camera view',
 			description:
-				'Photos can still be collected while the model and confirmed examples are prepared. Each identity detector shows its progress above.'
+				'Camera tracking collects usable observations automatically. You do not need to name photos. Automatic ear-number recognition is still being developed.'
 		};
 	if (identification.length && identification.every((identity) => identity.state === 'collecting'))
 		return {

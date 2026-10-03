@@ -294,6 +294,7 @@ class HealthcheckConfig(HttpConfig):
 class IdentityConfig(_ConfigModel):
     """Recognition applies only to explicitly named individual-object classes."""
 
+    mode: Literal["appearance"] = "appearance"
     labels: Annotated[tuple[NonEmptyString, ...], Field(min_length=1)]
     model: Literal["miewid-msv3", "dinov2-small-224", "dinov2-small-336"] = (
         "miewid-msv3"
@@ -307,6 +308,13 @@ class IdentityConfig(_ConfigModel):
     review_interval: PositiveDuration = 30
 
 
+class ContinuousIdentityConfig(_ConfigModel):
+    """Experimental anonymous continuity; no enrolled herd or appearance model."""
+
+    mode: Literal["continuous"]
+    labels: Annotated[tuple[NonEmptyString, ...], Field(min_length=1, max_length=1)]
+
+
 class DetectorConfig(_ConfigModel):
     model_config = ConfigDict(
         json_schema_extra={
@@ -316,11 +324,33 @@ class DetectorConfig(_ConfigModel):
             },
             "then": {
                 "required": ["yolo"],
-                "properties": {
-                    "yolo": {
-                        "type": "object",
-                        "required": ["tracking"],
-                        "properties": {"tracking": {"const": True}},
+                "properties": {"yolo": {"type": "object"}},
+                "if": {
+                    "properties": {
+                        "identity": {
+                            "properties": {"mode": {"const": "continuous"}},
+                            "required": ["mode"],
+                        }
+                    }
+                },
+                "then": {
+                    "properties": {
+                        "detection": {"properties": {"source": {"maxItems": 1}}},
+                        "yolo": {
+                            "properties": {
+                                "tracking": {"const": False},
+                                "task": {"const": "detect"},
+                                "tracker": {"type": "null"},
+                            }
+                        },
+                    }
+                },
+                "else": {
+                    "properties": {
+                        "yolo": {
+                            "required": ["tracking"],
+                            "properties": {"tracking": {"const": True}},
+                        }
                     }
                 },
             },
@@ -331,11 +361,28 @@ class DetectorConfig(_ConfigModel):
     vlm: tuple[VLMConfig, ...] = ()
     exporters: ExportersConfig = Field(default_factory=ExportersConfig)
     pending_events: PositiveInt = 8
-    identity: IdentityConfig | None = None
+    identity: IdentityConfig | ContinuousIdentityConfig | None = None
 
     @model_validator(mode="after")
     def validate_identity_detector(self) -> DetectorConfig:
-        if self.identity is not None and (self.yolo is None or not self.yolo.tracking):
+        if isinstance(self.identity, ContinuousIdentityConfig):
+            if (
+                len(self.detection.source) != 1
+                or source_kind(self.detection.source[0]) != "stream"
+            ):
+                raise ValueError("Continuous identity requires exactly one live camera")
+            if (
+                self.yolo is None
+                or self.yolo.tracking
+                or self.yolo.tracker is not None
+                or self.yolo.task != "detect"
+            ):
+                raise ValueError(
+                    "Continuous identity requires YOLO detect with tracking disabled and no tracker"
+                )
+        elif self.identity is not None and (
+            self.yolo is None or not self.yolo.tracking
+        ):
             raise ValueError("Identity recognition requires YOLO with tracking enabled")
         return self
 
@@ -369,6 +416,20 @@ class Config(_ConfigModel):
     detectors: Annotated[tuple[DetectorConfig, ...], Field(min_length=1)]
     onnx: OnnxConfig = Field(default_factory=OnnxConfig)
     health: HealthcheckConfig | None = None
+
+    @model_validator(mode="after")
+    def validate_continuous_capacity(self) -> Config:
+        if (
+            sum(
+                isinstance(detector.identity, ContinuousIdentityConfig)
+                for detector in self.detectors
+            )
+            > 1
+        ):
+            raise ValueError(
+                "Only one experimental continuous identity camera is supported"
+            )
+        return self
 
 
 class ConfigurationError(ValueError):

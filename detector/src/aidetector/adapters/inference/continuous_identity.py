@@ -160,7 +160,7 @@ class ContinuousIdentityDetector:
         self._status("waiting", message)
 
     def maintain(self) -> None:
-        """Called on idle source batches; stale pixels cannot accept a click."""
+        """After a processed or idle batch, discard expired current camera state."""
         if self._closed:
             return
         if self._epoch is not None and not self._control.source_is_current(self._epoch):

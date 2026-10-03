@@ -1,3 +1,4 @@
+import hashlib
 import io
 import json
 import logging
@@ -93,6 +94,12 @@ def test_model_paths_are_relative_to_config_and_stock_downloads_have_a_managed_d
     assert resolve_model_path("yolo11n.pt", tmp_path, cache) == str(
         cache / "yolo11n.pt"
     )
+    assert resolve_model_path(
+        "custom.onnx", tmp_path, cache, sha256=hashlib.sha256(b"existing").hexdigest()
+    ) == str(model)
+    with pytest.raises(OSError, match="SHA-256"):
+        resolve_model_path("custom.onnx", tmp_path, cache, sha256="0" * 64)
+    assert model.read_bytes() == b"existing"  # never delete a caller's local checkpoint
 
 
 def test_stock_model_path_keeps_ultralytics_automatic_asset_download(
@@ -131,6 +138,37 @@ def test_sdk_download_reuses_cache_and_separates_urls_with_the_same_filename(
     assert requests == [first, second]
     assert set(cache.rglob("*.onnx")) == {model, other}
     assert not list(cache.rglob("download-*"))
+
+
+def test_pinned_checkpoint_verifies_before_publication_and_repairs_corrupt_cache(
+    tmp_path, asset_server
+):
+    base, assets, requests = asset_server
+    body = b"pinned checkpoint"
+    assets["/model.pth"] = Asset(body)
+    digest = hashlib.sha256(body).hexdigest()
+    path = Path(
+        resolve_model_path(base + "/model.pth", tmp_path, tmp_path, sha256=digest)
+    )
+    assert path.read_bytes() == body
+    assert resolve_model_path(
+        base + "/model.pth", tmp_path, tmp_path, sha256=digest
+    ) == str(path)
+    assert len(requests) == 1
+    path.write_bytes(b"corrupted")
+    assert (
+        Path(
+            resolve_model_path(base + "/model.pth", tmp_path, tmp_path, sha256=digest)
+        ).read_bytes()
+        == body
+    )
+    assert len(requests) == 2
+    path.unlink()
+    assets["/model.pth"] = Asset(b"different checkpoint")
+    with pytest.raises(OSError, match="SHA-256"):
+        resolve_model_path(base + "/model.pth", tmp_path, tmp_path, sha256=digest)
+    assert not path.exists()
+    assert not list(tmp_path.rglob("download-*"))
 
 
 @pytest.mark.parametrize("asset", [Asset(b""), Asset(b"partial", declared_size=100)])

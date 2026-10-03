@@ -21,7 +21,13 @@ export const load: PageServerLoad = async () => {
 				camera.label || `Camera ${index + 1}`
 			])
 		),
-		identityConfigured: config.detectors.some((detector) => detector.identity != null)
+		identityModes: Array.from(
+			new Set(
+				config.detectors.flatMap((detector) =>
+					detector.identity ? [detector.identity.mode ?? 'appearance'] : []
+				)
+			)
+		)
 	};
 };
 

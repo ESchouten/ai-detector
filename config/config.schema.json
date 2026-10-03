@@ -1,5 +1,33 @@
 {
   "$defs": {
+    "ContinuousIdentityConfig": {
+      "additionalProperties": false,
+      "description": "Experimental anonymous continuity; no enrolled herd or appearance model.",
+      "properties": {
+        "mode": {
+          "const": "continuous",
+          "title": "Mode",
+          "type": "string"
+        },
+        "labels": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "maxItems": 1,
+          "minItems": 1,
+          "title": "Labels",
+          "type": "array"
+        }
+      },
+      "required": [
+        "mode",
+        "labels"
+      ],
+      "title": "ContinuousIdentityConfig",
+      "type": "object"
+    },
     "DetectorConfig": {
       "additionalProperties": false,
       "if": {
@@ -67,32 +95,80 @@
               "$ref": "#/$defs/IdentityConfig"
             },
             {
+              "$ref": "#/$defs/ContinuousIdentityConfig"
+            },
+            {
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "title": "Identity"
         }
       },
       "required": [
         "detection"
       ],
       "then": {
+        "else": {
+          "properties": {
+            "yolo": {
+              "properties": {
+                "tracking": {
+                  "const": true
+                }
+              },
+              "required": [
+                "tracking"
+              ]
+            }
+          }
+        },
+        "if": {
+          "properties": {
+            "identity": {
+              "properties": {
+                "mode": {
+                  "const": "continuous"
+                }
+              },
+              "required": [
+                "mode"
+              ]
+            }
+          }
+        },
         "properties": {
           "yolo": {
-            "properties": {
-              "tracking": {
-                "const": true
-              }
-            },
-            "required": [
-              "tracking"
-            ],
             "type": "object"
           }
         },
         "required": [
           "yolo"
-        ]
+        ],
+        "then": {
+          "properties": {
+            "detection": {
+              "properties": {
+                "source": {
+                  "maxItems": 1
+                }
+              }
+            },
+            "yolo": {
+              "properties": {
+                "tracking": {
+                  "const": false
+                },
+                "task": {
+                  "const": "detect"
+                },
+                "tracker": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        }
       },
       "title": "DetectorConfig",
       "type": "object"
@@ -299,6 +375,12 @@
       "additionalProperties": false,
       "description": "Recognition applies only to explicitly named individual-object classes.",
       "properties": {
+        "mode": {
+          "const": "appearance",
+          "default": "appearance",
+          "title": "Mode",
+          "type": "string"
+        },
         "labels": {
           "items": {
             "minLength": 1,

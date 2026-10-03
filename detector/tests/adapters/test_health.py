@@ -83,7 +83,7 @@ def test_health_failure_stops_all_sources_even_if_one_cannot_close(
     second = WaitingSource("1")
     sources = iter((first, second))
     monkeypatch.setattr(
-        "aidetector.bootstrap.build_source", lambda *args: next(sources)
+        "aidetector.bootstrap.build_source", lambda *args, **kwargs: next(sources)
     )
 
     def fail_health(*args, **kwargs):

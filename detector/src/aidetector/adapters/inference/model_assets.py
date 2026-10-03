@@ -79,10 +79,16 @@ def resolve_model_path(
     directory: Path,
     cache: Path,
     report_status: ReportStatus = ignore_status,
+    *,
+    sha256: str | None = None,
 ) -> str:
     url = urlsplit(value)
     if url.scheme not in {"http", "https"}:
         requested = (directory / Path(value).expanduser()).resolve()
+        if sha256 is not None:
+            if not _matches_hash(requested, sha256):
+                raise OSError("Local model failed its SHA-256 verification")
+            return str(requested)
         if requested.exists() or Path(value).parent != Path("."):
             return str(requested)
         # Ultralytics recognizes stock weight names and downloads missing assets.
@@ -90,11 +96,14 @@ def resolve_model_path(
         cache.mkdir(parents=True, exist_ok=True)
         return str(cache / Path(value).name)
     name = PurePosixPath(url.path).name
-    if not name.endswith((".pt", ".onnx", ".engine")):
-        raise ValueError("Model URLs must identify a .pt, .onnx, or .engine file")
+    if not name.endswith((".pt", ".pth", ".onnx", ".engine")):
+        raise ValueError("Model URLs must identify a .pt, .pth, .onnx, or .engine file")
     cache = cache / hashlib.sha256(value.encode()).hexdigest()[:16]
     cache.mkdir(parents=True, exist_ok=True)
     target = cache / name
+    if target.exists() and sha256 is not None and not _matches_hash(target, sha256):
+        logger.warning("Discarding corrupt cached model: %s", target)
+        target.unlink()
     if target.exists():
         logger.info("Model cache hit: %s (%d bytes)", target, target.stat().st_size)
         return str(target)
@@ -120,6 +129,8 @@ def resolve_model_path(
                 )
             )
             raise RuntimeError("Model download did not produce a complete file")
+        if sha256 is not None and not _matches_hash(pending, sha256):
+            raise OSError("Downloaded model failed its SHA-256 verification")
         pending.replace(target)
         logger.info(
             "Model download complete: %s; %d bytes in %.2fs",
@@ -128,3 +139,8 @@ def resolve_model_path(
             perf_counter() - started,
         )
     return str(target)
+
+
+def _matches_hash(path: Path, expected: str) -> bool:
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest() == expected

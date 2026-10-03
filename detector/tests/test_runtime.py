@@ -96,6 +96,49 @@ def test_worker_drains_all_events_and_closes_source():
     assert [event.start.second for event in exporter.events] == list(range(5))
 
 
+def test_idle_maintenance_runs_on_the_camera_worker_and_failure_stops_cleanly():
+    class IdleSource(FiniteSource):
+        def batches(self):
+            yield SourceBatch({})
+
+    source = IdleSource()
+    calls = []
+
+    def maintain():
+        calls.append(current_thread().name)
+        raise OSError("maintenance failed")
+
+    instance = DetectorWorker(
+        source,
+        DetectionPipeline(),
+        EventDelivery((), Cooldown()),
+        name="camera",
+        maintain=maintain,
+    )
+    with pytest.raises(OSError, match="maintenance failed"):
+        instance.run()
+    assert calls == ["camera-processing"]
+    assert source.closed
+
+
+def test_maintenance_also_runs_after_active_batches_without_observations():
+    inferred, maintained = [], []
+
+    class QuietDetector:
+        def detect(self, frames):
+            inferred.append(frames["camera"][-1].date)
+            return {}
+
+    instance = DetectorWorker(
+        FiniteSource(3),
+        DetectionPipeline(QuietDetector()),
+        EventDelivery((), Cooldown()),
+        maintain=lambda: maintained.append(len(inferred)),
+    )
+    assert instance.run().events == 0
+    assert maintained == [1, 2, 3]
+
+
 def test_supervisor_stops_and_joins_health_monitor_after_finite_inputs_end():
     class Health:
         def __init__(self):

@@ -286,3 +286,59 @@ def test_invalid_file_encoding_is_a_config_error_without_exposing_contents(tmp_p
         load_config(path)
     assert "private-secret" not in str(error.value)
     assert path.read_bytes() == original
+
+
+def continuous_rule():
+    return {
+        "detection": {"source": "0"},
+        "yolo": {"model": "model.pt"},
+        "identity": {"mode": "continuous", "labels": ["cow"]},
+    }
+
+
+def test_identity_modes_preserve_appearance_defaults_and_allow_unenrolled_continuity():
+    from jsonschema import Draft7Validator
+
+    appearance = continuous_rule()
+    appearance["identity"] = {"labels": ["cow"]}
+    appearance["yolo"]["tracking"] = True
+    config = Config.model_validate({"detectors": [appearance, continuous_rule()]})
+    assert config.detectors[0].identity.mode == "appearance"
+    assert config.detectors[0].identity.model == "miewid-msv3"
+    assert config.detectors[1].identity.mode == "continuous"
+    assert config.detectors[1].detection.interval == 0
+    assert config.detectors[1].detection.frame_retention == 15
+    Draft7Validator(Config.model_json_schema()).validate(
+        {"detectors": [appearance, continuous_rule()]}
+    )
+
+
+@pytest.mark.parametrize(
+    "section, change",
+    [
+        ("identity", {"labels": ["cow", "horse"]}),
+        ("identity", {"min_similarity": 0.7}),
+        ("yolo", {"tracking": True}),
+        ("yolo", {"tracker": "bytetrack.yaml"}),
+        ("yolo", {"task": "segment"}),
+        ("detection", {"source": ["0", "1"]}),
+    ],
+)
+def test_continuous_constraints_are_in_the_input_model_and_json_schema(section, change):
+    from jsonschema import Draft7Validator
+
+    rule = continuous_rule()
+    rule[section].update(change)
+    value = {"detectors": [rule]}
+    with pytest.raises(ValidationError):
+        Config.model_validate(value)
+    assert not Draft7Validator(Config.model_json_schema()).is_valid(value)
+
+
+def test_continuous_mode_requires_live_camera_and_limits_process_capacity():
+    finite = continuous_rule()
+    finite["detection"]["source"] = "video.mp4"
+    with pytest.raises(ValidationError, match="one live camera"):
+        Config.model_validate({"detectors": [finite]})
+    with pytest.raises(ValidationError, match="Only one"):
+        Config.model_validate({"detectors": [continuous_rule(), continuous_rule()]})

@@ -1,6 +1,7 @@
 import hashlib
 import json
 import logging
+from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from contextlib import ExitStack, closing
 from dataclasses import dataclass
@@ -68,9 +69,11 @@ class DetectorWorker:
         *,
         name: str = "detector",
         report_status: ReportStatus = ignore_status,
+        maintain: Callable[[], None] | None = None,
     ):
         self.name = name
         self.report_status = report_status
+        self._maintain = maintain
         self.source = source
         self.pipeline = pipeline
         self.delivery = delivery
@@ -103,6 +106,8 @@ class DetectorWorker:
                         self._enqueue(event)
                         # The queue owns this event while the producer waits for input.
                         del event
+                    if self._maintain is not None:
+                        self._maintain()
                     batch = None
         except Exception:
             # The supervisor propagates the first failure; concurrent failures

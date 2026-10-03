@@ -2,11 +2,22 @@
 
 Integration plan; the camera wrapper and browser confirmation are not connected yet. The continuous0–2999 joint-readout control is complete: exact development-prefix parity,63.09%coverage/99.56%precision at1800–2099, and74.73%/97.87% at2700–2999. The latter fails the unchanged precision requirement. Current studies support investigating explicit within-camera confirmation, not promising durable appearance recognition after departure, restart or camera change. See [JOINT_READOUT.md](JOINT_READOUT.md) and the immutable [extended report](results/2026-10-03/detection/crowded-joint-extended.json).
 
+The user now requires automatic identity accumulation and ear-number assignment
+without mandatory farmer input. The wrapper therefore first supplies bounded,
+anonymous track evidence; the confirmation transport described below becomes an
+optional correction path. A correctly supplied initial name in a tracking
+control is not evidence of automatic enrollment. See the updated
+[automatic flow](EAR_TAG_IDENTITY.md#intended-automatic-flow-and-acceptance-requirements).
+
 The reviewed-reference control has now been encoded. Its fixed appearance comparison remains weak: the original60 versus reviewed39 references produced58 versus26 correct names out of1795 visible known observations, and24 versus42 out of1799. Neither reaches useful coverage. More variants of these same photos or another small fine-tune are not the next integration task.
 
 ## Use the existing detector pipeline
 
-Add one concrete `ContinuousIdentityDetector` in `detector/src/aidetector/adapters/inference/continuous_identity.py`, implementing the existing `ObjectDetector.detect(frames)` interface. It composes the raw detector, SAM initialization and Cutie state. Return normal `Observation` objects with stable object IDs and optional identity evidence. Keep their `CaptureStamp`, source date and pixels intact.
+`ContinuousIdentityDetector` now exists in `detector/src/aidetector/adapters/inference/continuous_identity.py`, implementing the existing `ObjectDetector.detect(frames)` interface. It composes the raw detector, SAM initialization and Cutie state. Its normal `Observation` objects preserve `CaptureStamp`, source date and pixels. Bootstrap and application configuration are not connected yet; actual-model wrapper parity and paced capture validation are the next checks.
+
+The constructor receives one source, the existing raw detector, one Cutie runtime, the camera's `LiveIdentityControl`, local startup weights and an object label. Optional callbacks receive bounded current track evidence or requested review photos. `source_changed` only updates the capture latch; `detect`, idle `maintain` and `close` are worker-owned. The evidence payload contains capture epoch, a new opaque instance and generation after every reset, box, segmentation p10 and borrowed read-only source pixels. It neither writes the catalog nor assigns a biological identity. A downstream collector must bound its copies and key them by the full source/epoch/target generation; an old callback is not permission to modify a future track.
+
+The initial deployment cadence is explicit: subscribe at 0.5 seconds with retention four. A saturated queue, ordinary backlog, nonincreasing capture stamp, geometry change or gap of at least one second resets all names, snapshots, policy and masks. Small 0.51/0.53-second jitter is accepted operationally, without claiming measured tracking accuracy at that cadence. SAM startup alone may replay at most eight retained chronological samples anonymously until a single-current-frame batch is reached; no names, review photos or automatic enrollment evidence escape this catch-up. Half-steps omit the source instead of republishing stale observations. Clicks wait for the next analyzed frame, whose sub-second evidence deadline is rechecked after catalog I/O. Actual live inference still needs the paced-camera proof.
 
 Do **not** insert Cutie into `GalleryIdentifier` or silently expand `ObservationIdentifier`: that existing port explicitly preserves box geometry, while Cutie generates new mask-derived boxes and must process every tracking frame. The current `DetectionPipeline` already publishes returned observations and sends them through the normal event/status lifecycle; it should not need a second processing loop.
 
@@ -48,7 +59,7 @@ Keep evidence explicit: a human-confirmed continuous name has `similarity=None`,
 
 The original two-frame admission kept only4/8 animals. The separately frozen single-frame containment policy instead retained all eight anonymous first-frame masks. Its241-input0–120s control produced952 correct initial associations out of959 visible annotations, eight unmatched anchored predictions, zero wrong associations and zero switches. Every inference name was empty; frame0 geometry established scoring anchors only after inference. Independent all20proposal reviews and exact policy replay precede this result. See the [startup report](results/2026-10-03/detection/startup-propagation.json) and [independent recount](results/2026-10-03/detection/startup-propagation-independent-audit.json).
 
-This supports one bounded longer control with the same automatically selected eight initial masks, fixed original naming/quarantine gates, all five exposed panels, and exact241-input prefix checks. It does not establish general startup quality: the localization model saw early frames from this recording. No threshold change, output-geometry substitution, unseen-arrival claim or automatic biological naming follows from the short result. Births, retirement, repeated entry/exit and actual farmer commands remain separate acceptance checks.
+The [completed longer control](AUTOMATIC_STARTUP_EXTENDED.md) preserves that exact prefix and all five exposed panels. Four windows pass, while the last still fails conservative precision (97.968%); every named-unmatched prediction remains an error. It does not establish general startup quality: the localization model saw early frames from this recording. No threshold change, output-geometry substitution, unseen-arrival claim or automatic biological naming follows. Births, retirement, repeated entry/exit and actual farmer commands remain separate acceptance checks.
 
 ## Minimal existing hooks and acceptance checks
 

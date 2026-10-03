@@ -1,0 +1,475 @@
+{
+  "backend": {
+    "cutie_device": "mps",
+    "cutie_dtype": "float32",
+    "yolo_device": "mps",
+    "yolo_fp16": true
+  },
+  "durations": [
+    1.2440825002267957,
+    0.29546291707083583,
+    0.09228183282539248,
+    0.17000270821154118,
+    0.16203062469139695,
+    0.17282600002363324,
+    0.11279254080727696,
+    0.17044654116034508,
+    0.10926537495106459,
+    0.19844083301723003,
+    0.11495737498626113,
+    0.16275549959391356,
+    0.11195920826867223,
+    0.17534516705200076,
+    0.15837158309295774,
+    0.17448008293285966,
+    0.12205266719684005,
+    0.18685808405280113,
+    0.11843845900148153,
+    0.2313390001654625,
+    0.11833533318713307,
+    0.2027787920087576,
+    0.11934379115700722,
+    0.15102099999785423,
+    0.15680749993771315,
+    0.17329404223710299,
+    0.1207807082682848,
+    0.17067466722801328,
+    0.12267437530681491,
+    0.20937608275562525,
+    0.12282929196953773,
+    0.16907037515193224,
+    0.12298929132521152,
+    0.1900965003296733,
+    0.16881533386185765,
+    0.17539679212495685,
+    0.11939391633495688,
+    0.18587708286941051,
+    0.1202435833401978,
+    0.22767254197970033,
+    0.11486354097723961,
+    0.17769841710105538,
+    0.12632116628810763,
+    0.17949958331882954,
+    0.17026637494564056,
+    0.16490874998271465,
+    0.11804108321666718,
+    0.16720875026658177,
+    0.11663808394223452,
+    0.21043712506070733,
+    0.12437579175457358,
+    0.17433999991044402,
+    0.12188329081982374,
+    0.17068441631272435,
+    0.16768600000068545,
+    0.1669002086855471,
+    0.12187699973583221,
+    0.16122029209509492,
+    0.1247288747690618,
+    0.0011330419220030308,
+    2.0499806851148605e-05,
+    1.4124903827905655e-05,
+    9.041279554367065e-06,
+    0.8342347079887986,
+    0.12532154191285372,
+    0.15222625015303493,
+    0.10609733313322067,
+    0.17019250011071563,
+    0.14899241598322988,
+    0.16880587488412857,
+    0.10384604195132852,
+    0.16669120825827122,
+    0.1033097910694778,
+    0.18713033385574818,
+    0.09301154222339392,
+    0.15331504167988896,
+    0.1014157091267407,
+    0.16208066698163748,
+    0.14152449974790215,
+    0.14946008287370205,
+    0.10729562491178513,
+    0.17348270770162344,
+    0.10608020797371864,
+    0.19157487526535988,
+    0.10860291682183743,
+    0.14632458379492164,
+    0.1062547080218792,
+    0.15836441610008478,
+    0.14624541718512774,
+    0.15843566693365574,
+    0.10990058397874236,
+    0.1631073751486838,
+    0.10876258322969079,
+    0.21498599974438548,
+    0.11663566716015339,
+    0.15305245807394385,
+    0.11533450009301305,
+    0.16192191699519753,
+    0.15300062485039234,
+    0.1622296660207212,
+    0.1167893330566585,
+    0.16674183309078217,
+    0.11579162487760186,
+    0.20322966622188687,
+    0.11455979198217392,
+    0.16107991710305214,
+    0.11639108275994658,
+    0.15921266563236713,
+    0.15303554106503725,
+    0.14851874997839332,
+    0.11327904183417559,
+    0.18128762487322092,
+    0.10647329175844789,
+    0.21060533309355378,
+    0.11391358310356736,
+    0.17395033407956362,
+    0.1085527092218399,
+    0.1699137920513749,
+    0.1513822921551764,
+    0.16099437465891242
+  ],
+  "elapsed_seconds": 61.603037250228226,
+  "error": null,
+  "generation_sets": {
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": [
+      [
+        "411c9f4f83104cafa5d505ceedecb977",
+        4
+      ],
+      [
+        "518d3742a7cd4b16a0a0114eb3a16bbd",
+        6
+      ],
+      [
+        "5885019c25a344fe8a2f4b5911a87f77",
+        2
+      ],
+      [
+        "6ff836cb6bda47d9b7002df5a2b9b9bc",
+        8
+      ],
+      [
+        "7e3eef261c5f4f1cbe01d53e9f930c46",
+        5
+      ],
+      [
+        "81ff6f1cb5464539bbc468d27616bf22",
+        1
+      ],
+      [
+        "c0c67d5c4d624c918ccb512e4280a857",
+        3
+      ],
+      [
+        "eb44d6b1a7b6476ba5961d8713fa849c",
+        7
+      ]
+    ],
+    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": [
+      [
+        "56e24c4c4dc84163823bcc6119e1108b",
+        11
+      ],
+      [
+        "85fe614cc313423aab1c54fbd2781a8b",
+        12
+      ],
+      [
+        "8d2a9e8f836742f9aa0d534af367fca7",
+        15
+      ],
+      [
+        "b7b492e15362497e9c8be0b01b3994bb",
+        14
+      ],
+      [
+        "ca3d3774571d4e35adea2a0767103a53",
+        13
+      ],
+      [
+        "d1ab48c5fa9d48299bc5c56991c90b69",
+        9
+      ],
+      [
+        "d6449ab93bb84dcc83f9d0734ecf6348",
+        10
+      ]
+    ]
+  },
+  "integer_masks_equal": 0,
+  "mode": "paced",
+  "observations": [
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 4
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 6
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 8
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 10
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 12
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 14
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 16
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 18
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 20
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 22
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 24
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 26
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 28
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 30
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 32
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 34
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 36
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 38
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 40
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 42
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 44
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 46
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 48
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 50
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 52
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 54
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 56
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sequence": 58
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 66
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 68
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 70
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 72
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 74
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 76
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 78
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 80
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 82
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 84
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 86
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 88
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 90
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 92
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 94
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 96
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 98
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 100
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 102
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 104
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 106
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 108
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 110
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 112
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 114
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 116
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 118
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sequence": 120
+    }
+  ],
+  "passed": true,
+  "peak_driver_bytes": 2957508608,
+  "peak_rss_bytes": 2224357376,
+  "protocol_sha256": "ec7189df60281887866e819d494e331b9135d3fb88772dabfe870f670f2cc76d",
+  "raw_calls": 59,
+  "seeds": 2,
+  "statuses": [
+    {
+      "epoch": null,
+      "kind": "identity_collecting",
+      "message": "Preparing anonymous camera tracks"
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "identity_collecting",
+      "message": "Anonymous tracks prepared; catching up with the camera"
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "identity_ready",
+      "message": "Following 8 camera tracks"
+    },
+    {
+      "epoch": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "identity_collecting",
+      "message": "Camera disconnected; waiting for a fresh image"
+    },
+    {
+      "epoch": null,
+      "kind": "identity_collecting",
+      "message": "Preparing anonymous camera tracks"
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "kind": "identity_collecting",
+      "message": "Anonymous tracks prepared; catching up with the camera"
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "kind": "identity_ready",
+      "message": "Following 7 camera tracks"
+    },
+    {
+      "epoch": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "kind": "identity_collecting",
+      "message": "Anonymous camera tracking stopped"
+    }
+  ],
+  "steps": 117
+}

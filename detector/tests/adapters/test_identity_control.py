@@ -166,6 +166,50 @@ def test_recovery_needs_a_fresh_photo_without_forgetting_the_confirmed_name(came
     assert replies[-1].status == "confirmed"
 
 
+def test_same_epoch_reset_rejects_pending_photo_and_preserves_retry_receipt(camera):
+    control, state, _, replies, initial = camera
+    request = command(initial)
+    control.submit(request)
+    control.drain({"animal-a"})
+    old_target = state.target("animal-a")
+    pending = control.publish_review("animal-a", initial.capture, b"before backlog")
+    control.submit(command(pending, request_id="6" * 32))
+
+    control.reset_tracking()
+    assert replies[-1].status == "stale"
+    assert control.source_is_current(EPOCH)
+    new_target = state.add("animal-a")
+    assert new_target.generation > old_target.generation
+    assert state.identity("animal-a") is None
+    control.submit(request)
+    assert replies[-1].status == "confirmed"  # Receipt, not a second mutation.
+    assert state.identity("animal-a") is None
+
+
+def test_catalog_io_cannot_outlive_current_analyzed_evidence(tmp_path):
+    write_catalog(tmp_path)
+    clock = Clock()
+
+    class DelayedCatalog(IdentityCatalog):
+        def load(self):
+            value = super().load()
+            clock.now += 1.1
+            return value
+
+    state, replies = LiveIdentityState(), []
+    control = LiveIdentityControl(
+        RUN, SOURCE, state, DelayedCatalog(tmp_path), replies.append, clock=clock
+    )
+    control.source_changed(EPOCH)
+    control.change_epoch(EPOCH)
+    state.add("animal-a")
+    photo = control.publish_review("animal-a", CaptureStamp(EPOCH, 10, 10), b"review")
+    control.submit(command(photo))
+    control.drain({"animal-a"}, evidence_deadline=11)
+    assert replies[-1].status == "unavailable"
+    assert state.identity("animal-a") is None
+
+
 def test_name_comes_from_current_catalog_and_revision_is_checked(camera, tmp_path):
     control, state, _, replies, review = camera
     write_catalog(tmp_path, revision=2, name="Bella renamed")

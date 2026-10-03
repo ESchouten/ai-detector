@@ -172,13 +172,31 @@ class LiveIdentityControl:
             if review.target.instance_id not in instance_ids
         )
 
-    def drain(self, reviewable: Set[str]) -> None:
-        """Apply clicks only to currently unambiguous instances, between frames."""
+    def reset_tracking(self) -> None:
+        """The worker discards a same-camera tracking session, including photos.
+
+        Capture epoch and completed request receipts survive. New instances
+        receive fresh generations; pending clicks cannot name their replacements.
+        """
+        self._snapshots.clear()
+        self.state.reset()
+        self.drain(set())
+
+    def drain(
+        self, reviewable: Set[str], *, evidence_deadline: float | None = None
+    ) -> None:
+        """Apply clicks using current evidence, rechecked after catalog I/O.
+
+        A camera worker can supply an earlier monotonic evidence deadline than
+        the command's queue TTL. No expired analyzed frame can assign a name.
+        """
         self._expire_reviews(self._clock())
         with self._lock:
             pending = tuple(self._pending)
             self._pending.clear()
         for command, deadline in pending:
+            if evidence_deadline is not None:
+                deadline = min(deadline, evidence_deadline)
             reply = (
                 IdentityAcknowledgement(command.request_id, "unavailable")
                 if self._clock() >= deadline

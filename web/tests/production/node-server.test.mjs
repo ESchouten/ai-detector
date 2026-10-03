@@ -181,8 +181,44 @@ async function connectBrowser(base, origin, code) {
 		body: new URLSearchParams({ code, name: 'Farm tablet' }).toString()
 	});
 	assert.equal(response.status, 303, await response.clone().text());
+	assert.match(response.headers.get('set-cookie'), /; SameSite=Lax/i);
+	assert.match(response.headers.get('set-cookie'), /; HttpOnly/i);
 	return response.headers.get('set-cookie').split(';')[0];
 }
+
+test('remembered devices renew their cookie on the pairing page and revoked devices stay blocked', async (t) => {
+	const { directory, base, logs } = await startServer(t);
+	const origin = 'http://barn.local';
+	const cookie = await connectBrowser(
+		base,
+		origin,
+		logs().match(/initial pairing code: (\d{6})/)[1]
+	);
+	const headers = { Host: 'barn.local', Cookie: cookie, Accept: 'text/html' };
+	const remembered = await send(`${base}/pair`, { headers });
+	assert.equal(remembered.status, 303);
+	assert.equal(remembered.headers.get('location'), '/');
+	assert.equal(remembered.headers.get('set-cookie').split(';')[0], cookie);
+	assert.match(remembered.headers.get('set-cookie'), /; SameSite=Lax/i);
+	assert.match(remembered.headers.get('set-cookie'), /; HttpOnly/i);
+	const externalPost = await send(`${base}/pair`, {
+		method: 'POST',
+		headers: {
+			...headers,
+			Origin: 'http://other.example.test',
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: 'code=123456'
+	});
+	assert.equal(externalPost.status, 403);
+	const appPath = path.join(directory, 'app.json');
+	const app = JSON.parse(await readFile(appPath, 'utf8'));
+	await writeFile(appPath, JSON.stringify({ ...app, devices: [] }));
+	const revoked = await send(`${base}/pair`, { headers });
+	assert.equal(revoked.status, 200);
+	assert.match(await revoked.text(), /Connect to AI Detector/);
+	assert.equal(revoked.headers.get('set-cookie'), null);
+});
 
 async function startServer(t, origin, prepare) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-node-production-'));

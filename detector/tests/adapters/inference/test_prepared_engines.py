@@ -418,19 +418,29 @@ def test_builder_parent_pipe_closes_without_leaving_an_orphan():
                 process.kill()
 
 
-def test_helper_startup_failure_is_saved_and_forwarded_to_detector_logs(
-    tmp_path, caplog
+@pytest.mark.parametrize(
+    ("request_text", "error"),
+    [("invalid JSON", "JSONDecodeError"), ("{}", "KeyError: 'export'")],
+)
+def test_helper_imports_with_parent_pipe_open_and_reports_startup_failures(
+    tmp_path, caplog, monkeypatch, request_text, error
 ):
+    # A valid JSON object reaches real cold native imports without a GPU/model.
+    # The parent pipe stays open: blocking reads previously deadlocked NumPy
+    # on Windows. Bound this regression independently of the engine deadline.
+    monkeypatch.setattr(prepared_engines, "BUILD_TIMEOUT", 60)
     request = tmp_path / "request.json"
-    request.write_text("invalid JSON", encoding="utf-8")
+    request.write_text(request_text, encoding="utf-8")
     log = tmp_path / "build.log"
     with caplog.at_level("INFO"), pytest.raises(RuntimeError, match="status 1"):
         run_preparation(request, log, lambda _: None)
     diagnostic = log.read_text()
     assert "Starting TensorRT helper:" in diagnostic
     assert "TensorRT helper started; pid=" in diagnostic
-    assert "JSONDecodeError" in diagnostic
-    assert "JSONDecodeError" in caplog.text
+    assert error in diagnostic
+    assert error in caplog.text
+    if request_text == "{}":
+        assert "TensorRT preparation: inference libraries ready" in diagnostic
 
 
 def test_helper_dumps_repeated_stacks_during_a_blocked_inference_import(tmp_path):
@@ -457,7 +467,7 @@ def test_helper_dumps_repeated_stacks_during_a_blocked_inference_import(tmp_path
                 assert process.poll() is None, diagnostic
                 Event().wait(0.01)
             assert diagnostic.count("Timeout (") >= 2, diagnostic
-            assert "TensorRT preparation: importing inference libraries" in diagnostic
+            assert "TensorRT preparation: importing NumPy" in diagnostic
             assert "tensorrt_stalled_import.py" in diagnostic
             assert "in find_spec" in diagnostic
             assert "in build_and_test" in diagnostic

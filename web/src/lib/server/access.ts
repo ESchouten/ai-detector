@@ -7,7 +7,7 @@ export const ACCESS_COOKIE = 'ai-detector-device';
 export const sessionCookie = (secure: boolean) => ({
 	path: '/',
 	httpOnly: true,
-	sameSite: 'strict' as const,
+	sameSite: 'lax' as const,
 	secure,
 	maxAge: 365 * 24 * 60 * 60
 });

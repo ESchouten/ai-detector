@@ -12,6 +12,10 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
 
+## TensorRT helper startup on Windows — 2026-10-03
+
+The helper's parent-pipe watcher now uses non-blocking reads, avoiding the Windows NumPy import hang caused by reading stdin concurrently during native library loading. It continues watching for parent exit during imports and engine building. Logs distinguish NumPy import from subsequent inference-library imports. GPU settings, dependency downloads and engine compatibility are unchanged; existing failure markers still defer retries for 24 hours, with the next attempt occurring on a subsequent monitoring start. No configuration or data migration is required.
+
 ## Release build and container caching — 2026-10-01
 
 Native build and installer jobs now progress independently per OS, with publication gated on all checks. The NVIDIA bootstrap installation test runs in parallel using the same staging function as the Windows payload. PyInstaller delegates ImageIO FFmpeg and ONNX Runtime library collection to their upstream hooks; model and provider support is unchanged. Linux installers use Zstandard level 9, Windows deltas use Velopack's BestSpeed strategy, and Sparkle deltas use LZFSE compression.

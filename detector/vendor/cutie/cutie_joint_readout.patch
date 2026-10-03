@@ -1,0 +1,80 @@
+--- a/cutie/inference/memory_manager.py
++++ b/cutie/inference/memory_manager.py
+@@ -131,7 +131,9 @@
+         """
+         Compute affinity and perform readout
+         """
+-        all_readout_mem = {}
++        if self.chunk_size > 0:
++            raise ValueError("Joint readout control requires chunk_size <= 0")
++        all_visual_values = {}
+         buckets = self.work_mem.buckets
+         for bucket_id, bucket in buckets.items():
+             if self.use_long_term and self.long_mem.engaged(bucket_id):
+@@ -173,39 +175,33 @@
+                 else:
+                     affinity = do_softmax(similarity, top_k=self.top_k, inplace=True)
+ 
+-            if self.chunk_size < 1:
+-                object_chunks = [bucket]
+-            else:
+-                object_chunks = [
+-                    bucket[i:i + self.chunk_size] for i in range(0, len(bucket), self.chunk_size)
+-                ]
+-
+-            for objects in object_chunks:
+-                this_sensory = self._get_sensory_by_ids(objects)
+-                this_last_mask = self._get_mask_by_ids(last_mask, objects)
+-                this_msk_value = self._get_visual_values_by_ids(objects)  # (1/2)*num_objects*C*N
+-                visual_readout = self._readout(affinity,
+-                                               this_msk_value).view(bs, len(objects), self.CV, h, w)
+-                pixel_readout = network.pixel_fusion(pix_feat, visual_readout, this_sensory,
+-                                                     this_last_mask)
+-                this_obj_mem = self._get_object_mem_by_ids(objects)
+-                this_obj_mem = this_obj_mem.unsqueeze(2) if this_obj_mem is not None else None
+-                readout_memory, aux_features = network.readout_query(pixel_readout, this_obj_mem)
+-                for i, obj in enumerate(objects):
+-                    all_readout_mem[obj] = readout_memory[:, i]
+-
+-                if self.save_aux:
+-                    aux_output = {
+-                        'sensory': this_sensory,
+-                        'pixel_readout': pixel_readout,
+-                        'q_logits': aux_features['logits'] if aux_features else None,
+-                        'q_weights': aux_features['q_weights'] if aux_features else None,
+-                        'p_weights': aux_features['p_weights'] if aux_features else None,
+-                        'attn_mask': aux_features['attn_mask'].float() if aux_features else None,
+-                    }
+-                    self.aux = aux_output
+-
+-        return all_readout_mem
++            # Memory keys differ by insertion time. Preserve each bucket's
++            # affinity and values, then combine object features before fusion.
++            value = self._get_visual_values_by_ids(bucket)
++            visual = self._readout(affinity, value).view(bs, len(bucket), self.CV, h, w)
++            for i, obj in enumerate(bucket):
++                all_visual_values[obj] = visual[:, i]
++
++        # The model's "other objects" masks and foreground competition should
++        # see every live object, including objects inserted at later times.
++        objects = self.object_manager.all_obj_ids
++        visual = torch.stack([all_visual_values[obj] for obj in objects], dim=1)
++        sensory = self._get_sensory_by_ids(objects)
++        mask = self._get_mask_by_ids(last_mask, objects)
++        pixel = network.pixel_fusion(pix_feat, visual, sensory, mask)
++        object_memory = self._get_object_mem_by_ids(objects)
++        object_memory = object_memory.unsqueeze(2) if object_memory is not None else None
++        readout, aux = network.readout_query(pixel, object_memory)
++        if self.save_aux:
++            self.aux = {
++                'sensory': sensory,
++                'pixel_readout': pixel,
++                'q_logits': aux['logits'] if aux else None,
++                'q_weights': aux['q_weights'] if aux else None,
++                'p_weights': aux['p_weights'] if aux else None,
++                'attn_mask': aux['attn_mask'].float() if aux else None,
++            }
++        return {obj: readout[:, i] for i, obj in enumerate(objects)}
+ 
+     def add_memory(self,
+                    key: torch.Tensor,

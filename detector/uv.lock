@@ -65,6 +65,11 @@ default = [
     { name = "torchvision", version = "0.27.1", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and extra == 'extra-10-aidetector-default') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
     { name = "torchvision", version = "0.27.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-10-aidetector-default') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
 ]
+identity-continuous = [
+    { name = "cutie" },
+    { name = "hydra-core" },
+    { name = "omegaconf" },
+]
 nvidia = [
     { name = "filelock" },
     { name = "onnx" },
@@ -87,6 +92,7 @@ windowsml = [
 [package.dev-dependencies]
 dev = [
     { name = "coverage" },
+    { name = "cutie" },
     { name = "grimp" },
     { name = "import-linter" },
     { name = "jsonschema" },
@@ -108,11 +114,14 @@ tensorrt = [
 [package.metadata]
 requires-dist = [
     { name = "certifi", specifier = ">=2026.6.17" },
+    { name = "cutie", marker = "extra == 'identity-continuous'", path = "vendor/cutie/cutie-1.0.0+aidetector.2-py3-none-any.whl" },
     { name = "filelock", marker = "extra == 'nvidia'", specifier = ">=3.29.4" },
+    { name = "hydra-core", marker = "extra == 'identity-continuous'", specifier = "==1.3.2" },
     { name = "imageio-ffmpeg", specifier = ">=0.6.0" },
     { name = "lap", specifier = ">=0.5.12" },
     { name = "litellm", specifier = ">=1.81.6" },
     { name = "numpy", specifier = ">=1.26" },
+    { name = "omegaconf", marker = "extra == 'identity-continuous'", specifier = "==2.3.1" },
     { name = "onnx", marker = "extra == 'default'", specifier = ">=1.20.1" },
     { name = "onnx", marker = "extra == 'nvidia'", specifier = ">=1.20.1" },
     { name = "onnx", marker = "extra == 'windowsml'", specifier = ">=1.20.1" },
@@ -142,11 +151,12 @@ requires-dist = [
     { name = "wasdk-microsoft-windows-ai-machinelearning", extras = ["all"], marker = "extra == 'windowsml'", specifier = ">=1.8.260209005" },
     { name = "wasdk-microsoft-windows-applicationmodel-dynamicdependency-bootstrap", marker = "extra == 'windowsml'", specifier = ">=1.8.260209005" },
 ]
-provides-extras = ["default", "nvidia", "windowsml"]
+provides-extras = ["identity-continuous", "default", "nvidia", "windowsml"]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "coverage", extras = ["toml"], specifier = ">=7.10.6,<8" },
+    { name = "cutie", path = "vendor/cutie/cutie-1.0.0+aidetector.2-py3-none-any.whl" },
     { name = "grimp", specifier = ">=3.17,<4" },
     { name = "import-linter", specifier = ">=2.15,<3" },
     { name = "jsonschema", specifier = ">=4.23" },
@@ -304,6 +314,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/ee/67/531ea369ba64dcff5
 wheels = [
     { url = "https://files.pythonhosted.org/packages/78/b6/6307fbef88d9b5ee7421e68d78a9f162e0da4900bc5f5793f6d3d0e34fb8/annotated_types-0.7.0-py3-none-any.whl", hash = "sha256:1f02e8b43a8fbbc3f3e0d4f0f4bfc8131bcb4eebe8849b8e5c773f3a1c582a53", size = 13643, upload-time = "2024-05-20T21:33:24.1Z" },
 ]
+
+[[package]]
+name = "antlr4-python3-runtime"
+version = "4.9.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/3e/38/7859ff46355f76f8d19459005ca000b6e7012f2f1ca597746cbcd1fbfe5e/antlr4-python3-runtime-4.9.3.tar.gz", hash = "sha256:f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b", size = 117034, upload-time = "2021-11-06T17:52:23.524Z" }
 
 [[package]]
 name = "anyio"
@@ -801,6 +817,28 @@ nvtx = [
 ]
 
 [[package]]
+name = "cutie"
+version = "1.0.0+aidetector.2"
+source = { path = "vendor/cutie/cutie-1.0.0+aidetector.2-py3-none-any.whl" }
+dependencies = [
+    { name = "hydra-core" },
+    { name = "numpy" },
+    { name = "torch", version = "2.11.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "(sys_platform == 'win32' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "torch", version = "2.12.1", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform != 'linux' and sys_platform != 'win32') or (sys_platform == 'linux' and extra == 'extra-10-aidetector-nvidia') or (sys_platform == 'linux' and extra == 'extra-10-aidetector-windowsml') or (sys_platform == 'linux' and extra != 'extra-10-aidetector-default') or (sys_platform == 'win32' and extra == 'extra-10-aidetector-default') or (sys_platform == 'win32' and extra != 'extra-10-aidetector-nvidia') or (sys_platform == 'win32' and extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+    { name = "torch", version = "2.12.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'linux' and extra == 'extra-10-aidetector-default') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-nvidia') or (extra == 'extra-10-aidetector-default' and extra == 'extra-10-aidetector-windowsml') or (extra == 'extra-10-aidetector-nvidia' and extra == 'extra-10-aidetector-windowsml')" },
+]
+wheels = [
+    { filename = "cutie-1.0.0+aidetector.2-py3-none-any.whl", hash = "sha256:27d824c0d53c54b9af5a53d972f50a12639696f6ef0066ba468f274add109b32" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "hydra-core", specifier = ">=1.3.2" },
+    { name = "numpy", specifier = ">=1.21" },
+    { name = "torch", specifier = ">=2.0" },
+]
+
+[[package]]
 name = "cycler"
 version = "0.12.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1181,6 +1219,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7c/b7/8cb61d2eece5fb05a83271da168186721c450eb74e3c31f7ef3169fa475b/huggingface_hub-0.36.2.tar.gz", hash = "sha256:1934304d2fb224f8afa3b87007d58501acfda9215b334eed53072dd5e815ff7a", size = 649782, upload-time = "2026-02-06T09:24:13.098Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a8/af/48ac8483240de756d2438c380746e7130d1c6f75802ef22f3c6d49982787/huggingface_hub-0.36.2-py3-none-any.whl", hash = "sha256:48f0c8eac16145dfce371e9d2d7772854a4f591bcb56c9cf548accf531d54270", size = 566395, upload-time = "2026-02-06T09:24:11.133Z" },
+]
+
+[[package]]
+name = "hydra-core"
+version = "1.3.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "antlr4-python3-runtime" },
+    { name = "omegaconf" },
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6d/8e/07e42bc434a847154083b315779b0a81d567154504624e181caf2c71cd98/hydra-core-1.3.2.tar.gz", hash = "sha256:8a878ed67216997c3e9d88a8e72e7b4767e81af37afb4ea3334b269a4390a824", size = 3263494, upload-time = "2023-02-23T18:33:43.03Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c6/50/e0edd38dcd63fb26a8547f13d28f7a008bc4a3fd4eb4ff030673f22ad41a/hydra_core-1.3.2-py3-none-any.whl", hash = "sha256:fa0238a9e31df3373b35b0bfb672c34cc92718d21f81311d8996a16de1141d8b", size = 154547, upload-time = "2023-02-23T18:33:40.801Z" },
 ]
 
 [[package]]
@@ -2131,6 +2183,19 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/c2/f3/d86c845465a2723ad7e1e5c36dcd75ddb82898b3f53be47ebd429fb2fa5d/nvidia_nvtx-13.0.85-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:4936d1d6780fbe68db454f5e72a42ff64d1fd6397df9f363ae786930fd5c1cd4", size = 148047, upload-time = "2025-09-04T08:29:01.761Z" },
     { url = "https://files.pythonhosted.org/packages/a8/64/3708a90d1ebe202ffdeb7185f878a3c84d15c2b2c31858da2ce0583e2def/nvidia_nvtx-13.0.85-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:cb7780edb6b14107373c835bf8b72e7a178bac7367e23da7acb108f973f157a6", size = 148878, upload-time = "2025-09-04T08:28:53.627Z" },
     { url = "https://files.pythonhosted.org/packages/d2/50/0e2220f8620a177de994211186ffc5bfa9f2ce1e1282797f8f90096f9f88/nvidia_nvtx-13.0.85-py3-none-win_amd64.whl", hash = "sha256:d66ea44254dd3c6eacc300047af6e1288d2269dd072b417e0adffbf479e18519", size = 137066, upload-time = "2025-09-04T08:39:25.649Z" },
+]
+
+[[package]]
+name = "omegaconf"
+version = "2.3.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "antlr4-python3-runtime" },
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ce/3d/e4b57b8d9008c6ebe0d5eff901f91d5700cf7bdb8c8863df817463a7fd5e/omegaconf-2.3.1.tar.gz", hash = "sha256:e5e7de64aeebeddaf8e6d3f7a783b32ac2a01c0fbd9c878012caecb891a1f42a", size = 3298472, upload-time = "2026-06-11T05:05:12.885Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a4/0e/152509871bf30df6fc38569f52a2db9b55dd41aae957adae50a053ac7778/omegaconf-2.3.1-py3-none-any.whl", hash = "sha256:3d701d14e9a8828f1edd28bb70b725908b34277cdd72cf7d6a83f94dadc6b6a0", size = 79502, upload-time = "2026-06-11T05:05:09.954Z" },
 ]
 
 [[package]]

@@ -21,6 +21,7 @@ RUN pip freeze | grep -E "^(torch|torchvision|torchaudio)" > constraints.txt
 # keep the ONNX runtime stack provided by the Ultralytics base image.
 # --break-system-packages is needed because Debian marks system Python as externally managed
 COPY pyproject.toml /app/
+COPY vendor/cutie/ /app/vendor/cutie/
 RUN --mount=type=cache,target=/root/.cache/uv \
     if [ "$TARGETARCH" = "amd64" ]; then \
         uv pip install --system --break-system-packages --constraint constraints.txt -r pyproject.toml --extra nvidia; \

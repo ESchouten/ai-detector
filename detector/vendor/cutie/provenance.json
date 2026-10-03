@@ -1,0 +1,27 @@
+{
+  "name": "cutie",
+  "version": "1.0.0+aidetector.2",
+  "upstream": "https://github.com/hkchengrex/Cutie",
+  "revision": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
+  "license": "MIT",
+  "builder": "hatchling==1.32.4",
+  "wheel": "cutie-1.0.0+aidetector.2-py3-none-any.whl",
+  "wheel_sha256": "27d824c0d53c54b9af5a53d972f50a12639696f6ef0066ba468f274add109b32",
+  "patch_order": [
+    "cutie_runtime.patch",
+    "cutie_joint_readout.patch",
+    "cutie_retirement.patch"
+  ],
+  "files": {
+    "LICENSE": "8cffbcfb631bbe76caa147bc2515ea47c81042a5dedaeaadce6652bbbbaf7f71",
+    "cutie_runtime.patch": "f2af15c3d4b4ea8cc2e4ee75a2eb523d15d5d5322cf361a4c8cd26e0f5e851e8",
+    "cutie_joint_readout.patch": "fae5cec51533a059e13163effa6fd9ae9e31cdc4c092fc6ce0aed695f86befee",
+    "cutie_retirement.patch": "824ffd5152b142ef534bac33593fe7ecbd01b3fe1f5eb974c7397d9334e2e152"
+  },
+  "packaging_change": "After patches, replace pyproject.toml version 1.0.0+aidetector.1 with 1.0.0+aidetector.2.",
+  "external_weights": {
+    "name": "cutie-base-mega.pth",
+    "sha256": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+    "included": false
+  }
+}

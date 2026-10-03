@@ -45,6 +45,7 @@ class NvidiaRuntimeTest(unittest.TestCase):
             )
             lock = folder / "pylock.toml"
             packages = tomllib.loads(lock.read_text())["packages"]
+            self.assertNotIn("cutie", {package["name"] for package in packages})
             torch = next(item for item in packages if item["version"] == "2.11.0+cu128")
             self.assertEqual(torch["name"], "torch")
             wheels = [

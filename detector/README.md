@@ -8,6 +8,14 @@ The web application reads the event archive through its documented directory and
 
 The `codex/cow-identity` branch also has an optional, noncommercial **cow identity trial**. Select the Cow identity preset in Settings, then open Herd to confirm clear photographs with a name or tag number. Multiple views of at least two cows are needed before matching starts. Live labels are suggestions; the system never adds its own predictions to the confirmed gallery. See [the trial guide and measured research](../research/cow_identity/README.md).
 
+The separate experimental continuous-camera adapter can be installed from
+`detector/` with `uv sync --locked --no-dev --extra default --extra identity-continuous`.
+It uses the [vendored Cutie SDK](vendor/cutie/README.md), keeps model weights
+external and is not yet connected to setup or monitoring. The normal runtime
+installation does not include it. Development installs include the small SDK
+for type checking; the real CPU contract test requires an explicit local
+`AIDETECTOR_TEST_CUTIE_WEIGHTS` path and otherwise skips.
+
 ## Start contributing
 
 Use Python 3.12 or newer and [uv](https://docs.astral.sh/uv/). In this checkout, uv selects the version pinned in [`.python-version`](.python-version). From the repository root:
@@ -48,6 +56,8 @@ Tests mirror the `domain`, `application`, and `adapters` packages; tests spannin
 | Camera sharing or file sampling | [streams](src/aidetector/adapters/sources/streams.py), [files](src/aidetector/adapters/sources/files.py) | [shared streams](tests/adapters/sources/test_shared_streams.py), [sources](tests/adapters/sources/test_sources.py), [file sampling](tests/adapters/sources/test_files.py) |
 | Optional identity recognition | [identity policy](src/aidetector/domain/identity.py), [gallery matcher](src/aidetector/adapters/inference/identity_observations.py), [catalog](src/aidetector/adapters/identity_catalog.py) | [matching policy](tests/domain/test_identity.py), [gallery and cache](tests/adapters/inference/test_identity_observations.py), [shared files](tests/adapters/test_identity_catalog.py) |
 | Experimental live-name confirmation building blocks | [instance assignments](src/aidetector/domain/live_identity.py), [exact-photo command boundary](src/aidetector/adapters/identity_control.py) | [stale and conflicting names](tests/domain/test_live_identity.py), [worker queue and catalog contract](tests/adapters/test_identity_control.py) |
+| Optional continuous-camera SDK boundary | [Cutie runtime](src/aidetector/adapters/inference/cutie_runtime.py), [vendored SDK](vendor/cutie/README.md) | [CPU lifecycle](tests/adapters/inference/test_cutie_runtime.py), [package integrity](tests/test_optional_sdk_package.py) |
+| Experimental anonymous mask selection and geometry | [mask policy](src/aidetector/adapters/inference/identity_masks.py) | [overlap and stable-ID boundaries](tests/adapters/inference/test_identity_masks.py), [cached research parity](../research/cow_identity/application_mask_parity.py) |
 | YOLO, model assets, or ONNX providers | [inference adapters](src/aidetector/adapters/inference/) | [YOLO](tests/adapters/inference/test_yolo.py), [ONNX](tests/adapters/inference/test_onnx.py), [model assets](tests/adapters/inference/test_model_assets.py), [model loading](tests/adapters/inference/test_model_loading.py), [SDK lifetime](tests/adapters/inference/test_yolo_runtime.py) |
 | Inference performance comparisons | [benchmark](tools/benchmark_inference.py), [measurement guide](PERFORMANCE.md) | [benchmark integration](tests/test_benchmark_inference.py), [shared resize](tests/adapters/sources/test_shared_streams.py) |
 | Windows ML startup or provider downloads | [Windows ML helper](src/aidetector/adapters/inference/windows_ml.py), [ONNX registration](src/aidetector/adapters/inference/onnx.py) | [process isolation and timeouts](tests/adapters/inference/test_windows_ml.py), [provider selection and lifetime](tests/adapters/inference/test_onnx.py) |

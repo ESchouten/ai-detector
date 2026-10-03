@@ -124,9 +124,22 @@ and applies assignments on the camera worker. Snapshot expiry, run/source/epoch
 scope, current reviewability and command deadlines are checked before mutation;
 bounded receipts make retries idempotent. A temporary tracking-quality gate can
 hide a name without declaring continuity lost. The caller explicitly owns that
-decision and must deliver source resets before processing confirmations.
+decision. Capture notifications update a small locked epoch value without
+mutating tracking state. The worker checks it again after catalog I/O, with the
+same lock held only around the final assignment. A disconnect or reconnect can
+therefore invalidate an old click while inference or a catalog read is running;
+an old frame cannot reopen a superseded epoch. Core and name resets remain
+worker-owned.
 These components are tested integration building blocks; the CLI, live tracking
 adapter and Herd confirmation screen are not connected to them yet.
+
+`adapters/inference/identity_masks.py` holds the corresponding pixel policy:
+anonymous startup mask selection and deterministic largest-component bounds.
+It preserves the measured containment/rejection rules without importing research
+scripts. Stable object IDs remain separate from SDK channel positions. Geometry
+alone supplies neither class confidence nor an identity score. Cached parity
+covers all twenty original startup candidates and 121 propagated mask frames;
+this is implementation equivalence, not a new recognition-quality result.
 
 The Python detector has one event-processing model: turn footage from a source into a completed event, obtain its verification outcome, and apply cooldown and export policies. Treat this as one bounded context. The domain, application and adapter packages are layers within that context. Capture, inference and delivery are integrations with different technical responsibilities; they do not each need another domain model or service.
 
@@ -264,6 +277,18 @@ Ultralytics also handles cross-platform paths inside Torch checkpoints. The adap
 `inference_runtime` temporarily wraps the ONNX session factory because Ultralytics does not expose the required Windows ML device/session options. Its cleanup scope restores the factory and environment on normal exit and startup failure. Model predictors are released before execution-provider libraries are unregistered. CUDA DLL preloading stays in this boundary. Windows SDK discovery and preparation live in `adapters/inference/windows_ml.py`, which runs them in a short-lived subprocess before ONNX registers the returned libraries.
 
 The runtime lockfile is authoritative for development/test environments. Direct application dependencies are declared explicitly; platform extras provide one ONNX implementation each. The source distribution has an explicit file list to prevent local research data, recordings, model weights, and virtual environments from entering packages.
+
+The experimental `cutie_runtime` adapter owns one model and one camera's bounded
+segmentation core, with CPU/MPS FP32 execution and at most eight active objects.
+It maps current SDK tensor channels back to stable caller-owned IDs, returns
+native-sized masks and mask-quality evidence, and explicitly retires or resets
+SDK memory. It owns no animal names, enrollment, continuity policy or file
+transport. Optional imports and strict local checkpoint loading are deferred
+until its context opens; MPS operations use the shared inference scope.
+`identity-continuous` installs the audited local SDK wheel from `vendor/cutie`;
+the SDK is also available to development type checks. Ordinary runtime and
+NVIDIA bootstrap dependencies do not include it. This adapter is not wired into
+bootstrap or configuration yet.
 
 The historical maintainability review and its design decisions are in [REVIEW.md](../docs/history/detector/REVIEW.md). Enforced limits, measurement commands and a dated baseline are in [QUALITY.md](QUALITY.md).
 

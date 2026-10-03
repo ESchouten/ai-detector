@@ -19,6 +19,12 @@ startup or browser hook. They change no saved configuration, catalog, archive,
 CLI protocol or existing identity behavior. Continuous-camera confirmation
 remains experimental work, distinct from the existing gallery-photo action.
 
+The optional `identity-continuous` source-install extra now provides the pinned
+Cutie SDK for its tested CPU/MPS adapter. Development installs include the SDK
+for type checking; normal runtime installs do not. This changes no configuration
+or monitoring behavior, and model weights remain external. Plain pip needs the
+explicit vendored-wheel location described in [the installation note](vendor/cutie/README.md).
+
 - Existing top-level `detectors`, `onnx`, and `health` configuration remains supported.
 - Single values and lists remain accepted for sources, VLM configurations/models, and exporters.
 - VLM verification is controlled by `key`: null or omitted means disabled, while a string requires a provider model. An explicit empty string supports unauthenticated local services without environment-key lookup. The web app expands shared connections into `config.json`; Python never reads `app.json`. The web app upgrades former preview enable flags on loading saved settings, before managed monitoring starts. Standalone configurations must remove `enabled` / `vlm_enabled` and clear keys on disabled entries. `--test-vlm FILE` checks a connected model with synthetic media without starting detection.

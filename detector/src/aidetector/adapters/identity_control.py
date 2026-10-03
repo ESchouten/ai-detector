@@ -85,6 +85,7 @@ class LiveIdentityControl:
         self._report = report
         self._clock = clock
         self._epoch: str | None = None
+        self._source_epoch: str | None = None
         self._snapshots: OrderedDict[str, IdentityReview] = OrderedDict()
         self._pending: deque[tuple[ConfirmLiveIdentity, float]] = deque()
         self._requests: dict[str, ConfirmLiveIdentity] = {}
@@ -92,18 +93,39 @@ class LiveIdentityControl:
         self._lock = Lock()
         self._closed = False
 
-    def change_epoch(self, epoch: str) -> None:
-        """The owner also discards its tracking core at this boundary."""
-        if self._epoch != epoch:
-            self.state.reset()
-            self._snapshots.clear()
-            self._epoch = epoch
+    def source_changed(self, epoch: str | None) -> None:
+        """Capture thread announces reconnect/offline without mutating tracking."""
+        with self._lock:
+            self._source_epoch = epoch
+
+    def source_is_current(self, epoch: str) -> bool:
+        with self._lock:
+            return not self._closed and epoch == self._source_epoch
+
+    def change_epoch(self, epoch: str) -> bool:
+        """The worker begins a current epoch and also resets its tracking core.
+
+        False means this frame was superseded while waiting for inference. The
+        capture notification is authoritative; old frames cannot reopen it.
+        """
+        with self._lock:
+            if self._closed or epoch != self._source_epoch:
+                return False
+            if self._epoch != epoch:
+                self.state.reset()
+                self._snapshots.clear()
+                self._epoch = epoch
+            return True
 
     def publish_review(
         self, instance_id: str, capture: CaptureStamp, jpeg: bytes
     ) -> IdentityReview:
         target = self.state.target(instance_id)
-        if target is None or capture.epoch != self._epoch:
+        if (
+            target is None
+            or capture.epoch != self._epoch
+            or not self.source_is_current(capture.epoch)
+        ):
             raise ValueError("A review needs an active instance in the current epoch")
         now = self._clock()
         self._expire_reviews(now)
@@ -155,6 +177,7 @@ class LiveIdentityControl:
         """Fail waiting clicks on shutdown; an input thread cannot reopen this run."""
         with self._lock:
             self._closed = True
+            self._source_epoch = None
             pending = tuple(self._pending)
             self._pending.clear()
         for command, _ in pending:
@@ -169,6 +192,7 @@ class LiveIdentityControl:
         if (
             review is None
             or command.epoch != self._epoch
+            or not self.source_is_current(command.epoch)
             or review.capture.epoch != command.epoch
             or review.target.instance_id not in reviewable
             or self.state.target(review.target.instance_id) != review.target
@@ -185,11 +209,18 @@ class LiveIdentityControl:
         )
         if catalog.revision != command.catalog_revision or identity is None:
             return IdentityAcknowledgement(command.request_id, "catalog_changed")
-        if self._clock() >= deadline:
-            return IdentityAcknowledgement(command.request_id, "unavailable")
-        if self._clock() >= review.expires_at:
-            return IdentityAcknowledgement(command.request_id, "stale")
-        result = self.state.confirm(review.target, identity.id, identity.name)
+        # Catalog I/O and inference can outlast the camera connection. Order the
+        # final mutation against capture notifications without holding this lock
+        # over I/O or GPU work. Only the worker touches domain state.
+        with self._lock:
+            if self._closed or command.epoch != self._source_epoch:
+                return IdentityAcknowledgement(command.request_id, "stale")
+            now = self._clock()
+            if now >= deadline:
+                return IdentityAcknowledgement(command.request_id, "unavailable")
+            if now >= review.expires_at:
+                return IdentityAcknowledgement(command.request_id, "stale")
+            result = self.state.confirm(review.target, identity.id, identity.name)
         return IdentityAcknowledgement(
             command.request_id,
             result.status,

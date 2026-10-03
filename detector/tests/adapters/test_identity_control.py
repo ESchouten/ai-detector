@@ -3,7 +3,7 @@
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from threading import Thread
+from threading import Event, Thread
 
 import pytest
 from pydantic import ValidationError
@@ -53,7 +53,8 @@ def camera(tmp_path):
     control = LiveIdentityControl(
         RUN, SOURCE, state, IdentityCatalog(tmp_path), replies.append, clock=clock
     )
-    control.change_epoch(EPOCH)
+    control.source_changed(EPOCH)
+    assert control.change_epoch(EPOCH)
     state.add("animal-a")
     review = control.publish_review(
         "animal-a", CaptureStamp(EPOCH, 100, 10), b"exact analyzed JPEG"
@@ -108,7 +109,8 @@ def test_input_thread_only_queues_and_retry_has_one_effect(camera):
 def test_old_photo_cannot_name_another_or_unreviewable_animal(camera, reason):
     control, state, clock, replies, review = camera
     if reason == "epoch":
-        control.change_epoch("6" * 32)
+        control.source_changed("6" * 32)
+        assert control.change_epoch("6" * 32)
         state.add("animal-a")
     elif reason == "retired":
         state.retire("animal-a")
@@ -223,7 +225,8 @@ def test_catalog_io_cannot_extend_snapshot_or_command_deadline(
     control = LiveIdentityControl(
         RUN, SOURCE, state, SlowCatalog(tmp_path), replies.append, clock=clock
     )
-    control.change_epoch(EPOCH)
+    control.source_changed(EPOCH)
+    assert control.change_epoch(EPOCH)
     state.add("animal-a")
     review = control.publish_review(
         "animal-a", CaptureStamp(EPOCH, 1, 10), b"exact JPEG"
@@ -249,3 +252,48 @@ def test_retry_after_receipt_eviction_cannot_apply_a_second_time(camera):
     assert replies[-1].status == "stale"
     assert state.target("animal-a") == confirmed_target
     assert sum(reply.status == "confirmed" for reply in replies) == 1
+
+
+@pytest.mark.parametrize("replacement_epoch", [None, "6" * 32])
+def test_capture_change_during_catalog_read_rejects_old_frame(
+    tmp_path, replacement_epoch
+):
+    reading, resume = Event(), Event()
+
+    class PausedCatalog(IdentityCatalog):
+        def load(self):
+            reading.set()
+            assert resume.wait(2), "Test did not release catalog I/O"
+            return super().load()
+
+    write_catalog(tmp_path)
+    state = LiveIdentityState()
+    replies = []
+    control = LiveIdentityControl(
+        RUN, SOURCE, state, PausedCatalog(tmp_path), replies.append
+    )
+    control.source_changed(EPOCH)
+    assert control.change_epoch(EPOCH)
+    state.add("animal-a")
+    review = control.publish_review(
+        "animal-a", CaptureStamp(EPOCH, 1, 10), b"exact JPEG"
+    )
+    control.submit(command(review))
+    worker = Thread(target=control.drain, args=({"animal-a"},))
+    worker.start()
+    try:
+        assert reading.wait(2), "Worker did not reach catalog I/O"
+        control.source_changed(replacement_epoch)
+        assert not control.source_is_current(EPOCH)
+    finally:
+        resume.set()
+        worker.join(2)
+    assert not worker.is_alive()
+    assert replies[-1].status == "stale"
+    assert state.identity("animal-a") is None
+    assert not control.change_epoch(EPOCH)
+    with pytest.raises(ValueError, match="current epoch"):
+        control.publish_review("animal-a", review.capture, b"late old frame")
+    if replacement_epoch is not None:
+        assert control.change_epoch(replacement_epoch)
+        assert state.target("animal-a") is None

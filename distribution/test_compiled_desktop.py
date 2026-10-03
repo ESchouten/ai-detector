@@ -157,7 +157,12 @@ class CompiledDesktopTest(unittest.TestCase):
                         self.assertNotIn("LAN URL:", self.log.read_text())
                     process.stdin.write(b"quit\n")
                     process.stdin.flush()
-                    self.assertEqual(process.wait(timeout=15), 0, self.log.read_text())
+                    wait_for(
+                        process,
+                        lambda child=process: child.poll() is not None,
+                        self.log,
+                    )
+                    self.assertEqual(process.returncode, 0, self.log.read_text())
                 finally:
                     cleanup_process(process)
 

@@ -18,10 +18,17 @@ export function advertiseDashboard(port: number): () => Promise<void> {
 	const logAddress = () =>
 		console.info(`LAN name: http://${service.getHostname().replace(/\.$/, '')}${suffix}`);
 	service.on('hostname-change', logAddress);
-	service
+	const advertisement = service
 		.advertise()
 		.then(logAddress)
 		.catch((error) => console.warn('LAN discovery unavailable:', error));
-	return () =>
-		responder.shutdown().catch((error) => console.warn('LAN discovery shutdown failed:', error));
+	return async () => {
+		// Cancel pending probes/retries, then let socket initialization finish
+		// before closing the responder. Otherwise it can bind again after shutdown.
+		await service.destroy().catch((error) => console.warn('LAN discovery shutdown failed:', error));
+		await advertisement;
+		await responder
+			.shutdown()
+			.catch((error) => console.warn('LAN discovery shutdown failed:', error));
+	};
 }

@@ -1,0 +1,164 @@
+{
+  "acceptance": "Automatic saved anonymous observations for both source0 epochs; no names/manual catalog or embedding DB; disjoint full instance generations across reconnect; source1 one epoch and processed before/after reconnect; onlysource0 profile facts; all published/evidence capture ages<1s; cleanup closes model contexts/captures/worker threads and SQLite write lock available.",
+  "configuration": {
+    "$schema": null,
+    "detectors": [
+      {
+        "detection": {
+          "frame_retention": 1,
+          "frames_width": 1280,
+          "interval": 9.0,
+          "source": [
+            "0"
+          ]
+        },
+        "exporters": {
+          "disk": [],
+          "telegram": [],
+          "webhook": []
+        },
+        "identity": {
+          "labels": [
+            "item"
+          ],
+          "mode": "continuous"
+        },
+        "pending_events": 8,
+        "vlm": [],
+        "yolo": {
+          "confidence": {
+            "item": 0.4
+          },
+          "cooldown": 0.0,
+          "frames_min": 1,
+          "imgsz": 640,
+          "include_trailing_time": 1.0,
+          "iou": 0.7,
+          "model": "/Users/erik/Projects/ESchouten/ai-detector/.cache/cow-detectors/training/mixed-full-backbone/weights/best.pt",
+          "task": "detect",
+          "time_max": 60.0,
+          "timeout": 5.0,
+          "tracker": null,
+          "tracking": false
+        }
+      },
+      {
+        "detection": {
+          "frame_retention": 1,
+          "frames_width": 128,
+          "interval": 0.5,
+          "source": [
+            "1"
+          ]
+        },
+        "exporters": {
+          "disk": [],
+          "telegram": [],
+          "webhook": []
+        },
+        "identity": null,
+        "pending_events": 8,
+        "vlm": [],
+        "yolo": null
+      }
+    ],
+    "health": null,
+    "onnx": {
+      "opset": 20,
+      "provider": null,
+      "winml": true
+    }
+  },
+  "files": {
+    ".cache/cow-cutie/calibration-clip/sampled.avi": "11bff035d63f5e6399ada2ee82ebac05b242071b299b3c3ea023b4399972a8cf",
+    ".cache/cow-cutie/calibration-clip/sampled.json": "bc65676d356cb5a5c058ea5cf06659b11e6b5c1532e89762f059a7efa647f80d",
+    ".cache/cow-cutie/cutie-base-mega.pth": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
+    ".cache/cow-detectors/training/mixed-full-backbone/weights/best.pt": "151ed24e759bc83e656294b108f6df457034fc526fc3e283b9530c5a7fcb7d6d",
+    ".cache/cow-segmentation/sam2.1_t.pt": "3c1e81ca9b037dd39d70a014ddb9a813d6c4c4e12555420db7eaff31689bd4e3",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/application_bootstrap_proof.py": "52aa31dfe82aa1c88dd62276dc21d5800243cef661fb872bc7669e2cb7902a62",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/test_application_bootstrap_proof.py": "937c808246cf9a3bc719112d3da91d41113eac4245dea9a76cf7d7ee9fb73705",
+    "/Users/erik/Projects/ESchouten/ai-detector/research/cow_identity/video_assessment.py": "befd499809d4b6f0c716d09f35f0667e46ed2c32ea9789b200c59f057254bbb6",
+    "config/config.schema.json": "ad50bbc02bbfd13e6b69a0c133d8e3873e4b2e8633a74dd277582c70c2b99b37",
+    "detector/src/aidetector/__init__.py": "ff4a682382b5aa6309844b03ba4a5eb0dc1f71eac0975592e226c09ad83ec0da",
+    "detector/src/aidetector/adapters/__init__.py": "5596ac2da950e1f7916c5f44a5aa940a7ef317997ab587c76573d53201f63dd3",
+    "detector/src/aidetector/adapters/diagnostics.py": "7b50033c1c03b31e24ee8c48fbf2104da9ede0c1b5821ceac4dcc67be7c18018",
+    "detector/src/aidetector/adapters/exporters/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "detector/src/aidetector/adapters/exporters/archive_metadata.py": "b46359c5c20b39f2622a173cec5d9ccad1d7d6e2a7dcaea0450d616eab6e6d48",
+    "detector/src/aidetector/adapters/exporters/disk.py": "7c656f8407c536cf5be6834742d738cc0a95f12e8a4b5ec6712c06767c2ffe7c",
+    "detector/src/aidetector/adapters/exporters/telegram.py": "04a81cbf63758dd40691aba3546f59870995fca35b6cc0f9dc74e0a71b13fee5",
+    "detector/src/aidetector/adapters/exporters/webhook.py": "df2b3ba26be945deb144000f5f26ef16e10cee761f8b5de9fc6db0c5e769105f",
+    "detector/src/aidetector/adapters/health.py": "1c345d39ae675e0547b56ed73f3771281786d9bc021d643a0eb8f6fd8f16e093",
+    "detector/src/aidetector/adapters/http.py": "aecfcdf0c64f5dd3a67c610f710e22029b6627b92e37ca4d4fbf092a7bcc2177",
+    "detector/src/aidetector/adapters/identity_catalog.py": "9a5ab675862540311e3e6d41b84e12d210713106db25779b8b82dbec34b5f079",
+    "detector/src/aidetector/adapters/identity_control.py": "7edf9187c3bac8e5575ccdbf2d37458d162caa6392f7a3f2375c2ca10b0ff82f",
+    "detector/src/aidetector/adapters/identity_profile_collector.py": "ac939ba2cd72b482a215d5ec6e69d8ab1b567bcffc950b0b71fe604058f8473d",
+    "detector/src/aidetector/adapters/identity_profiles.py": "8d1401ab4125d1fc224db0537f9249ed56c5b0ac6dc23986e6a969a9e7254ab0",
+    "detector/src/aidetector/adapters/inference/__init__.py": "4fe1095a503307bba665c422d166e175706f527d35f12499740e05368e3f7415",
+    "detector/src/aidetector/adapters/inference/continuous_identity.py": "b270aeae82dea82f7296c1d13a44becd0e24ce33d586d887074d27e8058838cc",
+    "detector/src/aidetector/adapters/inference/continuous_models.py": "5cbb5d930d24fcbb68038c9684d5f80312df339cf6a322086117caf2aca7e32f",
+    "detector/src/aidetector/adapters/inference/cutie_runtime.py": "3dccfc8917dc36a459c0fdb70ffbbe59ac60362f18581ffb258af958b1999b90",
+    "detector/src/aidetector/adapters/inference/device.py": "695e9326aec56640512f672b5836a3294283677005b9b0c10349e70ff4b4d5f7",
+    "detector/src/aidetector/adapters/inference/export_settings.py": "b439a34eb3d367eb15c5d843f249d28b2aeaef2667ac7a86ce639b6a383c92b7",
+    "detector/src/aidetector/adapters/inference/identity.py": "953f80f29d15a7b4c9bb41f58b0388faaffb0643445605166bd20b6ccc386bef",
+    "detector/src/aidetector/adapters/inference/identity_gallery.py": "e6de362d378f93b51fb77dd272da6191d55f0539fe153872e73c1a0b8eff6c45",
+    "detector/src/aidetector/adapters/inference/identity_masks.py": "76c7f446ceba576356dd3809388755f82c325928f17cdfd18ca651234a67dbe3",
+    "detector/src/aidetector/adapters/inference/identity_observations.py": "209c3bf59f92baab01388dcb36930e1e2e3d57fdc0227aeef0cadbab8443d9e8",
+    "detector/src/aidetector/adapters/inference/identity_startup.py": "6a0e6682d3707ed1be774948e957ce848806fb1ceeddb6ad59f633a8270eea81",
+    "detector/src/aidetector/adapters/inference/miewid.py": "1dbbb9259b64a95aff9f6da872c3ee81966d0afaa04db1ea7cad3eb8f080a134",
+    "detector/src/aidetector/adapters/inference/model_assets.py": "35439cda75c27938b12193ee6f1830e7cfb06bf6814d6f1a7805de6622db8cde",
+    "detector/src/aidetector/adapters/inference/onnx.py": "33c262809a00fe7470b2c20b51fd3cdcf41014bdefa617129c7248e8c890e1f8",
+    "detector/src/aidetector/adapters/inference/prepared_engines.py": "b76d1b37da663e0465b2124220959cd597362cecf52a606d123874dc8bd5865b",
+    "detector/src/aidetector/adapters/inference/prepared_models.py": "f782a88f3e9b9bcd800f5ea311aacc1948536ff7ca069a3fd70a015790c0f7f4",
+    "detector/src/aidetector/adapters/inference/windows_ml.py": "3cc22af670d1d6d5ac8bef405d4ada0f799c76ee77151384f27627da015e4500",
+    "detector/src/aidetector/adapters/inference/yolo.py": "f1bd6e4a0d3a53b9d7902604cf7836cfd64ae138728197dd2bfca01b0e3c0ec1",
+    "detector/src/aidetector/adapters/live_preview.py": "707ffb354eaa581bcd360027f19d371d6a39ae741bc55383d52e63695e7d7e44",
+    "detector/src/aidetector/adapters/media/__init__.py": "dbcf10cffd44603587bae6440afffad1ac6c6cdea6f4f2a4486aab9ad566f70d",
+    "detector/src/aidetector/adapters/media/event_media.py": "0488a11c34a749e8d80490a69488dad6c53c44ce0642bbeadd9f74a220a75cee",
+    "detector/src/aidetector/adapters/media/images.py": "2d73e9970e0df6126a565f1bf0bc60224f3e2f42ef987247df4a2ad88c899595",
+    "detector/src/aidetector/adapters/media/video.py": "a51813d5b021ff2ac850bd30d1eff6ac39eea595a1779171939ca2e05882b528",
+    "detector/src/aidetector/adapters/operational_status.py": "9f87d6f62164e429d88fa9bda7544e8e1d3a3e2ffe2deb222bdd3dd8a6afbff4",
+    "detector/src/aidetector/adapters/sources/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "detector/src/aidetector/adapters/sources/files.py": "4550c8c5eeaea676634312603f0deceb1a521c6085a1ee100c2c13f72701ddf6",
+    "detector/src/aidetector/adapters/sources/streams.py": "9187643e799ae44e98ee8204c588aa0da54b3dee30dcd449da1c73138001ff9e",
+    "detector/src/aidetector/adapters/vlm.py": "9dc4f5f5ae39aaa3eb765a41af02a55fccac4d856d45f45cf865aa315dc23ccd",
+    "detector/src/aidetector/application/__init__.py": "36f9d429af02049bd3fb3abb4ff3e017cb6ef5d1a2fc6ae966be91c2ae5a8de0",
+    "detector/src/aidetector/application/delivery.py": "9e14ee5e2f4de75a86ffa3e903bee483ae494a77b2b3b89e0d430f8392c41ae0",
+    "detector/src/aidetector/application/pipeline.py": "7f3cf816a27ec17e6e537468c6e1f7181a44f72f6e001e5059bff481c2f0fad8",
+    "detector/src/aidetector/application/ports.py": "e0f02d4ef9c99c6850d4388124f344a858bc3c581dbaa2d1521b5acea9b44180",
+    "detector/src/aidetector/application/status.py": "dcfd8a7de5116946e060049f6f81a579a8165a673bda5faf4cbb1f6dc53103e1",
+    "detector/src/aidetector/bootstrap.py": "50855a83b4f82351124720c0918f852e14bff02a6e7b51f613654b9625c6c0ee",
+    "detector/src/aidetector/configuration.py": "a248cc091ab0f6590de0bc921d1fb5d3a74b9fd97d325f52a00284be8532836c",
+    "detector/src/aidetector/domain/__init__.py": "9973109e2b0d48b03b4264d14bcfd12a36f45077eaec8b0c16728d4759869107",
+    "detector/src/aidetector/domain/events.py": "8d8761f477683332894ea6de470ea29ec6db886c1874725e469458ae8bf4db1a",
+    "detector/src/aidetector/domain/identity.py": "de5fcc34f51688ff383e266d12e5bd7a3a27b6ddbce8384e39063a0f37fb3967",
+    "detector/src/aidetector/domain/identity_continuity.py": "55259fa0a9f97c39a02dd4f35f821c76f98355c0ade6e78513937a70bf6991ea",
+    "detector/src/aidetector/domain/live_identity.py": "e0ca481072bedc16eb3d5fccba88ee4459dc5d85fc2646bc6b98cbfa92e3a200",
+    "detector/src/aidetector/domain/models.py": "77139c81107b76de594034bdcbd983449f485c5985f0c2b7a54554b8332c17d0",
+    "detector/src/aidetector/domain/policy.py": "afdb479cac40864e19b6f344fe75a5692d43cbeff52bc56b4d8f921b77f542a7",
+    "detector/src/aidetector/runtime.py": "ec6c0551e683841c2ca4d5fce00770778f97e28fc134a477d76ca5f385dce72d",
+    "detector/src/aidetector/version.py": "809bd2ddd077ccf9e2360aabcb1de2b7ac954c62381ef9eb86d19f62e7f6bf31",
+    "detector/tests/adapters/test_identity_profile_collector.py": "bb6bb0af47dc123564384b261bebb68d5345ee05719944ce25da96a5e06853be",
+    "detector/tests/adapters/test_identity_profiles.py": "b5a8c8aea5b06776e8a5ff10ecf1029d3f2b00773484f590f5c3c5e597aa5dce",
+    "detector/tests/test_continuous_application.py": "47ab2ab2d0ea756f54ffafaa092a0a378d5fd8c8e7d0f18a57d9cc1003d90984",
+    "detector/vendor/cutie/cutie-1.0.0+aidetector.2-py3-none-any.whl": "27d824c0d53c54b9af5a53d972f50a12639696f6ef0066ba468f274add109b32"
+  },
+  "instrumentation": "Forwarding observers at public LivePreview.observer and collector.__call__, plus public model context managers recording backend/cleanup. No policy/state/matching/private-method replacement. Pinned local model assets copied to empty data folder cache; normal bootstrap verifies pins.",
+  "libraries": {
+    "cutie": "1.0.0+aidetector.2",
+    "hydra-core": "1.3.2",
+    "numpy": "2.5.0",
+    "omegaconf": "2.3.1",
+    "opencv-python": "4.13.0.92",
+    "pydantic": "2.13.4",
+    "torch": "2.12.1",
+    "ultralytics": "8.4.80"
+  },
+  "limitations": "Mechanics proof, not biological identity accuracy, unseenfarm, entrance/reentry, network/RTSP stability, installation or long-term mask accuracy. Synthetic second camera cannot validate multi-camera inference performance. Existing late-panel failures remain.",
+  "limits": {
+    "driver_bytes": 8589934592,
+    "rss_bytes": 8589934592
+  },
+  "procedure": "Real run_application, real shared StreamPool/StreamSource and effective .5s retention4, YOLO/SAM/Cutie MPS/CPU, real profile SQLite. Only cv2.VideoCapture hardware replaced: source0 reads hash-bound exposed 0\u201360s pixels at synthetic10Hz by holding the2Hz samples; disconnect30s, reopen32s. Source1 is synthetic128x128 constant pixels at10Hz, ordinary snapshot rule. Real monotonic capture clock,60s after models open; subprocess total hardcap180s. No network/realcamera performance claim.",
+  "status": "FROZEN_BEFORE_APPLICATION_RUN"
+}

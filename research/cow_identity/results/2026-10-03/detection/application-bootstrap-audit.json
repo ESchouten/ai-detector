@@ -1,0 +1,27 @@
+{
+  "candidates": 43,
+  "cleanup_note": "Recorded all three captures released and both real model contexts exited; runtime assertion found no capture/worker/preview threads remaining, SQLite exclusive write lock was acquired afterward. Idle SQLite handles are not individually inspected.",
+  "eligible_evidence_callbacks": 369,
+  "event_note": "The pipeline still assembled2continuous detector events and112ordinary snapshots; no exporters configured and no event archive written. These are not cow names.",
+  "maximum_observation_age_seconds": 0.4657798749394715,
+  "native_image_shape": [
+    600,
+    800,
+    3
+  ],
+  "no_catalog_or_biological_labels": true,
+  "no_event_archives_or_external_deliveries": true,
+  "profiles": 15,
+  "protocol_sha256": "04343c684886c630594bc212d3e6b9f258dad9a19305635083ff2f633e84c1e6",
+  "qualified_episodes": 18,
+  "report_sha256": "94a50b3a9988e79803b8539a2937180ea259ffc354834233e035314052143a77",
+  "saved_by_epoch": {
+    "4ef7de91575f4e16bc328ac12d23c653": 19,
+    "a3eafaa6a25d4205838e320f91115fcb": 24
+  },
+  "shared_jpeg_images": 11,
+  "source0_observations": 50,
+  "source_bindings_rechecked_after_run": 72,
+  "status": "PASS",
+  "synthetic_source1_observations": 112
+}

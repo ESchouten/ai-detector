@@ -1,0 +1,159 @@
+{
+  "checkpoint_files": {
+    ".cache/cow-ear-tags/trocr-cpu-training/checkpoint/config.json": "2464ee17f01103d673335828070911f488bdc722c4ff25f90682b01c0440cec5",
+    ".cache/cow-ear-tags/trocr-cpu-training/checkpoint/generation_config.json": "84a04b6c15dbcc67e1f503d94f877f0419de217fbc68fbd8b1b1b40fb800b9a0",
+    ".cache/cow-ear-tags/trocr-cpu-training/checkpoint/model.safetensors": "a8dbcad3c8f2f05586690e24f4e87cd9d34090215b807a6738bcbbcc0af4858a"
+  },
+  "complete": true,
+  "elapsed_seconds": 1170.6337376250885,
+  "examples": 6486,
+  "first20": [
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 1
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 2
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 3
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 4
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 5
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 6
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 7
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 8
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 9
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 10
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 11
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 12
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 13
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 14
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 15
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 16
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 17
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 18
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 19
+    },
+    {
+      "epoch": true,
+      "gradient_norm": true,
+      "indices": true,
+      "loss": true,
+      "step": 20
+    }
+  ],
+  "first20_all_identical": true,
+  "inference_not_started": true,
+  "maximum_gradient_norm": 321.3825988769531,
+  "preflight_sha256": "8e8b7bbf41ca4aa191fcb0e7f889ee9e4da1466a56c6e976b58aea1772f513d1",
+  "protocol_sha256": "e57928cac00a158a408019167e99e087318d56c05b729c7095e9484f3d330676",
+  "steps": 812,
+  "training_report_sha256": "8111417192fb4040d70b09969ffb35423d7a923a3e00dc761524304f3e5cccca"
+}

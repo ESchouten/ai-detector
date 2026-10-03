@@ -33,6 +33,22 @@ The application never teaches itself from an unconfirmed prediction. The gallery
 
 ## What runs
 
+The automatic path currently stops at evidence collection:
+
+```mermaid
+flowchart LR
+    Camera[Analyzed camera image] --> Track[Anonymous animal tracking]
+    Track --> Evidence[Bounded photographs with camera and track provenance]
+    Evidence -. under development .-> Tag[Read a visible ear number]
+    Tag -. verify ownership .-> Animal[Number-backed animal profile]
+    Animal -. under development .-> Return[Recognize the animal on a later visit]
+```
+
+The real application has verified automatic collection from an empty data
+directory, including separate evidence after a camera reconnect. Reading,
+ownership and recognition across visits have not passed their acceptance tests.
+The following diagram describes the separate, existing manual-gallery path:
+
 ```mermaid
 flowchart LR
     Camera --> YOLO[Individual cow detector and tracker]
@@ -137,7 +153,11 @@ Known limitations:
 - Cross-camera, opposite-side, night/IR, solid-coated breeds, heavy occlusion and new farms need separate evaluation. Unknown is an expected and useful outcome.
 - Identity shares the detector process and GPU. Background preparation and expected file/download failures allow detection to continue; unexpected runtime/accelerator faults use the existing process recovery policy. Shutdown cancels queued preparation and checks between batches, but an already-running native inference/download call cannot be interrupted by the Python worker.
 - The preset samples at one-second intervals. Tracker continuity and the rate of useful crops need tuning on real camera footage, without weakening identity rejection to manufacture coverage.
-- No training, automatic enrollment, farm-management import, historical identity search, behaviour-to-cow association or Telegram identity confirmation is included.
+- The manual-gallery path does not train or enroll itself from predictions.
+  Continuous mode collects anonymous evidence automatically, but permanent
+  identity enrollment, farm-management import, historical identity search,
+  behaviour-to-cow association and Telegram identity confirmation remain
+  unfinished.
 - The source application and a frozen macOS encoder executable have been verified on MPS. The complete installer and Windows CUDA execution have not been validated for this feature.
 
 ## Files and maintenance
@@ -150,9 +170,17 @@ All identity data lives below the existing application data directory:
 | `identities/images/` | Detector; JPEG crops referenced by sightings and confirmed examples |
 | `identities/sightings/` | Detector; immutable observation records with hashed camera sources |
 | `identities/embeddings.sqlite` | Detector; disposable, versioned embedding cache |
+| `identities/automatic/profiles.sqlite` | Continuous mode; bounded anonymous observations and analyzed-resolution images, separate from confirmed identities |
 | `models/identity/` | Pinned downloaded model weights |
 
-New photo collection stops at 200 pending photos; recognition continues. Confirm or discard photos to make room. Removing confirmed examples can return additional existing photos to review. A cow has up to 32 confirmed examples; the gallery allows up to 500 cows. Those are storage bounds, not verified accuracy or performance at that herd size. Small inference batches limit image memory during gallery loading. The embedding cache currently keeps prior model/example entries; it can be removed while monitoring is stopped. Settings backup includes confirmed names, reference photos and their evidence metadata. Fresh-setup import restores them without replacing an existing herd; unconfirmed photos and disposable caches are excluded.
+In the manual-gallery path, new photo collection stops at 200 pending photos;
+recognition continues. Confirm or discard photos to make room. Removing confirmed examples can return additional existing photos to review. A cow has up to 32 confirmed examples; the gallery allows up to 500 cows. Those are storage bounds, not verified accuracy or performance at that herd size. Small inference batches limit image memory during gallery loading. The embedding cache currently keeps prior model/example entries; it can be removed while monitoring is stopped. Settings backup includes confirmed names, reference photos and their evidence metadata. Fresh-setup import restores them without replacing an existing herd; unconfirmed photos and disposable caches are excluded.
+
+Continuous collection instead expires old observations automatically; it does
+not create a review queue the farmer must clear. Its current seven-day,
+500-profile and 256 MiB database limits are detailed in
+[Automatic profiles](AUTOMATIC_PROFILES.md). These profiles are camera-scoped
+evidence, not a count of distinct cows.
 
 Photo collection starts without downloading the identity model. Matching prepares it and the reference gallery in the background after at least two animals have photos. Herd changes immediately clear old names; obsolete preparation cannot restore them. Expected file, gallery, cache and download errors suspend identity enrichment with a diagnostic and rule-scoped status, then retry after 60 seconds of monotonic wall time. Other detection continues. Runtime/accelerator errors remain process-supervised; this is not separate process isolation.
 
@@ -165,14 +193,17 @@ Photo collection starts without downloading the identity model. Matching prepare
 - `detector/src/aidetector/application/pipeline.py`: optional enrichment of the newly inferred observation only.
 - `web/src/lib/server/identity-catalog.ts` and `web/src/routes/(admin)/herd/`: atomic, revision-checked human review.
 
-The identity configuration is optional and generic; cow labels and detector choices live in the preset. Existing detectors import no identity models unless the feature is configured. The JSON schema requires tracking when identity is present. Existing event files remain readable; new event metadata may contain an additive list of identity suggestions.
+The identity configuration is optional and generic; cow labels and detector choices live in the preset. Existing detectors import no identity models unless the feature is configured. The schema distinguishes the two modes: appearance matching requires the ordinary YOLO tracker, while continuous mode owns its separate tracking state and requires raw detections. Existing event files remain readable; new event metadata may contain an additive list of identity suggestions.
 
 Run the normal detector and web quality commands. Focused contracts are in `tests/domain/test_identity.py`, `tests/adapters/test_identity_catalog.py`, `tests/adapters/inference/test_identity_observations.py`, and `web/tests/identity-catalog.test.ts`. The [benchmark guide](BENCHMARK.md#reproduce) explains the pinned research environment and inference-free replay.
 
 ## Current research priorities
 
 1. Validate actual anonymous tracking, lost tracks and departures. The [completed automatic eight-object startup control](AUTOMATIC_STARTUP_EXTENDED.md) preserves its exact short prefix but still fails late precision, as does the [joint-readout extension](EXTENDED_JOINT_READOUT.md); [replacing reciprocal geometry](RECIPROCAL_GEOMETRY.md) also failed. None is a passed system. Annotation disagreements remain counted and do not justify further geometry tuning.
-2. Measure the value and effort of additional farmer confirmations. The separate enrollment arm uses a fixed question budget and tests only later footage; repeated or unknown answers count as work too.
+2. Build and evaluate identities without required farmer input. Automatic
+   collection must start with an empty catalog. Test ear-number transcription,
+   same-frame animal ownership and later appearance association separately;
+   supplied names or a manual confirmation budget cannot satisfy this workflow.
 3. Test only materially different adaptation hypotheses. The original 60-photo partial-backbone fine-tune, public metric head and external full-backbone adaptation are documented negative controls. The [dense temporal projection pilot](TEMPORAL_PROJECTION_PILOT.md) also fails: its fixed residual head achieves 5.09% early coverage at 91.67% precision; the fixed 96-view untrained bank achieves 1.20% at 72.22%. Better raw retrieval alone is insufficient. Spatial feature adaptation and readable ear numbers are separate pending hypotheses, not production features.
 4. Keep seconds 3000 through the end closed until a new complete method is frozen. The earlier reserved panels are now exposed. Then perform a small independently labelled multi-day farm trial, including night, camera changes, arrivals, departures and restarts.
 5. Verify complete installer behaviour and camera throughput on each supported platform before wider deployment. Confirmed-herd backup/restore and background preparation already use the normal application flows.

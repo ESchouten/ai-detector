@@ -36,6 +36,13 @@ was fetched individually (roughly 94 MB), avoiding its roughly 8 GB archive.
 Three selected images have no published labels and remain explicitly unannotated.
 These still images contain no certified animal identities or temporal tracks.
 
+The Dutch [Bastiaansen et al. field study](https://www.frontiersin.org/journals/animal-science/articles/10.3389/fanim.2022.846893/full)
+also illustrates why per-digit accuracy is insufficient. Its reported visit
+precision was 65% and sensitivity 41%, despite filtering recognized four-digit
+numbers against a known cow list. That roster is an extra input our automatic
+workflow cannot assume. Its public article offers data through the authors,
+rather than a directly downloadable annotated video. No data request was sent.
+
 The existing 800×600 crowded-calves starting image has no clearly readable
 ear-number text on visual inspection. That observation applies to the inspected
 frame, not every future frame or all farm cameras. OCR cannot recover digits
@@ -114,6 +121,12 @@ distance has been measured, and no barcode dependency was added to the app.
   scheme; dates, herd prefixes, partial digits and farm numbers are not silently
   interchangeable. Readability determines whether a reading is possible, not
   whether a cow exists. Unreadable animals remain in the coverage denominator.
+- Keep source-resolution tag input separate from resized tracking input, bound
+  to the exact same camera epoch and capture sequence. The current collector
+  saves analyzed-resolution JPEGs; those are useful context but cannot stand in
+  for a native-resolution OCR path. Reuse the existing shared capture rather
+  than opening another camera stream. A newer high-resolution frame must not
+  inherit an older frame's ownership without tracking evidence.
 - Automatically attach a number only after calibrated reading acceptance and
   unambiguous same-frame tag-to-animal ownership. Independent chronological
   observations can strengthen evidence; repeated frames and repeated cached

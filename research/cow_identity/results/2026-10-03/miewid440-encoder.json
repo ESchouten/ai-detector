@@ -1,0 +1,13 @@
+{
+  "device": "mps",
+  "dtype": "float32",
+  "fingerprint": "7512e58f154bb5e1e6b6b5fefad2e4060c0d61f4ad38a2b55e7d0729b8497fe2",
+  "image_size": 440,
+  "name": "miewid",
+  "packages": {
+    "numpy": "2.5.3",
+    "pillow": "12.1.1",
+    "torch": "2.11.0",
+    "transformers": "4.57.6"
+  }
+}

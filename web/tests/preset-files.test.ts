@@ -37,12 +37,16 @@ test('bundled preset files preserve their models, options and recording destinat
 	const presets = await loadPresets(directory);
 	assert.deepEqual(
 		presets.map(({ id }) => id),
-		['calving-catcher-tailup', 'calving-catcher', 'cow-catcher', 'general']
+		['calving-catcher-tailup', 'calving-catcher', 'cow-catcher', 'cow-identity', 'general']
 	);
 	for (const preset of presets) {
 		const raw = JSON.parse(await readFile(path.join(directory, `${preset.id}.json`), 'utf8'));
 		assert.deepEqual(preset.detector.yolo, raw.yolo);
-		assert.deepEqual(preset.detector.exporters?.disk, [raw.exporters.disk]);
+		assert.deepEqual(
+			preset.detector.exporters?.disk,
+			raw.exporters.disk ? [raw.exporters.disk] : undefined
+		);
+		assert.deepEqual(preset.detector.identity, raw.identity);
 		assert.deepEqual(preset.detector.detection, { ...raw.detection, source: [] });
 	}
 	assert.equal(

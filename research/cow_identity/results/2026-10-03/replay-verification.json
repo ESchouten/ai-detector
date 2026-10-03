@@ -1,0 +1,30 @@
+{
+  "dino224": {
+    "inference_seconds": 8.962894666008651,
+    "warm_replay_seconds": 0.204809291055426,
+    "fresh_inferences_on_replay": 0,
+    "identical_results": true,
+    "manifest_sha256": "86a97da7304bae469445e4ca9a79a007c517ea70a8f6b166bc0c5c6b8b12e8a1"
+  },
+  "dino336": {
+    "inference_seconds": 16.041808125097305,
+    "warm_replay_seconds": 0.19494324992410839,
+    "fresh_inferences_on_replay": 0,
+    "identical_results": true,
+    "manifest_sha256": "86a97da7304bae469445e4ca9a79a007c517ea70a8f6b166bc0c5c6b8b12e8a1"
+  },
+  "miewid440": {
+    "inference_seconds": 27.20770450006239,
+    "warm_replay_seconds": 0.27121108304709196,
+    "fresh_inferences_on_replay": 0,
+    "identical_results": true,
+    "manifest_sha256": "86a97da7304bae469445e4ca9a79a007c517ea70a8f6b166bc0c5c6b8b12e8a1"
+  },
+  "mega224": {
+    "inference_seconds": 11.703913541976362,
+    "warm_replay_seconds": 0.19597429200075567,
+    "fresh_inferences_on_replay": 0,
+    "identical_results": true,
+    "manifest_sha256": "86a97da7304bae469445e4ca9a79a007c517ea70a8f6b166bc0c5c6b8b12e8a1"
+  }
+}

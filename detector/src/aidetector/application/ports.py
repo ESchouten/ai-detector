@@ -84,6 +84,17 @@ class EventValidator(Protocol):
     def validate(self, event: DetectionEvent) -> ValidationResult: ...
 
 
+class ObservationIdentifier(Protocol):
+    """Identify individual subjects in a newly analyzed frame.
+
+    Return a new observation with identity evidence on its individual-object
+    boxes. Preserve source time, borrowed pixels, class scores and box geometry.
+    Event regions containing multiple subjects are not identity evidence.
+    """
+
+    def identify(self, source: str, observation: Observation) -> Observation: ...
+
+
 class EventExporter(Protocol):
     """Deliver a result without changing the event or its borrowed data.
 

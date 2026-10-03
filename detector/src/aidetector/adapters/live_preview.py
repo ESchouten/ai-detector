@@ -194,6 +194,17 @@ class LivePreview:
                     "label": box.label,
                     "confidence": box.confidence,
                     "trackId": box.track_id,
+                    **(
+                        {
+                            "identity": {
+                                "id": box.identity.identity_id,
+                                "name": box.identity.name,
+                                "similarity": box.identity.similarity,
+                            }
+                        }
+                        if box.identity is not None
+                        else {}
+                    ),
                 }
                 for box in observation.boxes
             ],

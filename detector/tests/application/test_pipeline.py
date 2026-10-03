@@ -1,10 +1,11 @@
+from dataclasses import replace
 from datetime import datetime, timedelta
 
 import numpy as np
 
 from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import SourceBatch
-from aidetector.domain.models import Frame, Observation
+from aidetector.domain.models import BoundingBox, Frame, IdentityMatch, Observation
 from aidetector.domain.policy import EventPolicy
 
 
@@ -107,3 +108,68 @@ def test_snapshot_pipeline_publishes_without_fabricating_detections():
     assert result.image is frame.image
     assert result.confidence == {}
     assert result.boxes == ()
+
+
+def test_identity_uses_only_new_inference_and_preserves_source_and_context():
+    box = BoundingBox(0, 0, 4, 4, "cow", 0.9, 7)
+
+    class ContextDetector:
+        def detect(self, frames):
+            return {
+                source: tuple(
+                    Observation(
+                        frame.date,
+                        frame.image,
+                        {"cow": 0.9} if index == len(batch) - 1 else {},
+                        (box,),
+                    )
+                    for index, frame in enumerate(batch)
+                )
+                for source, batch in frames.items()
+            }
+
+    calls, published = [], []
+
+    class Identifier:
+        def identify(self, source, observation):
+            calls.append((source, observation))
+            return replace(
+                observation,
+                boxes=(replace(box, identity=IdentityMatch(source, "Bella", 0.95)),),
+            )
+
+    pipeline = DetectionPipeline(
+        ContextDetector(),
+        EventPolicy(min_frames=1),
+        publish_observation=lambda source, result: published.append((source, result)),
+        identifier=Identifier(),
+    )
+    first = Frame(datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8))
+    latest = Frame(first.date + timedelta(seconds=1), first.image.copy())
+    other = Frame(first.date + timedelta(seconds=2), first.image.copy())
+
+    events = pipeline.process(
+        SourceBatch(
+            {"one": (first, latest), "two": (other,)},
+            finished_sources=("one", "two"),
+        )
+    )
+    assert [(source, observation.date) for source, observation in calls] == [
+        ("one", latest.date),
+        ("two", other.date),
+    ]
+    assert [event.source for event in events] == ["one", "two"]
+    [context, recognized] = events[0].observations
+    assert context.date == first.date
+    assert context.image is first.image
+    assert context.confidence == {}
+    assert context.boxes[0].identity is None
+    assert recognized.image is latest.image
+    assert recognized.confidence == {"cow": 0.9}
+    assert recognized.boxes[0].track_id == 7
+    assert recognized.boxes[0].identity == IdentityMatch("one", "Bella", 0.95)
+    assert events[1].best.boxes[0].identity == IdentityMatch("two", "Bella", 0.95)
+    assert published[0][1] is recognized
+    assert published[1][1] is events[1].best
+    assert pipeline.process(SourceBatch({}, advance_to=other.date)) == []
+    assert len(calls) == 2

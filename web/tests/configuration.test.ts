@@ -128,7 +128,7 @@ test('invalid local configuration identifies the file and options without exposi
 	await assert.rejects(store.read(), (error: unknown) => {
 		assert.ok(error instanceof ConfigurationError);
 		assert.ok(error.message.includes(files.config));
-		assert.match(error.message, /detectors\/0 has unsupported property "identity"/);
+		assert.match(error.message, /detectors\/0\/identity has unsupported property "key"/);
 		assert.match(error.message, /exporters has unsupported property "sse"/);
 		assert.match(error.message, /yolo\/tracker must be one of "botsort.yaml", "bytetrack.yaml"/);
 		assert.doesNotMatch(

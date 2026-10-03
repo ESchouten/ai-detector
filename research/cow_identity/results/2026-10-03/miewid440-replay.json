@@ -1,0 +1,264 @@
+{
+  "elapsed_seconds": 0.27121108304709196,
+  "execution": {
+    "cache_hits": 1251,
+    "device": "mps",
+    "embedding_total_seconds": 0.15832312521524727,
+    "encoder": {
+      "device": "mps",
+      "dtype": "float32",
+      "fingerprint": "7512e58f154bb5e1e6b6b5fefad2e4060c0d61f4ad38a2b55e7d0729b8497fe2",
+      "image_size": 440,
+      "name": "miewid",
+      "packages": {
+        "numpy": "2.5.3",
+        "pillow": "12.1.1",
+        "torch": "2.11.0",
+        "transformers": "4.57.6"
+      }
+    },
+    "fresh_inferences": 0,
+    "images": 1251,
+    "inference_seconds": 0.002176084090024233
+  },
+  "identity_counts": {
+    "calibration": {
+      "known": 20,
+      "unknown": 5
+    },
+    "test": {
+      "known": 42,
+      "unknown": 10
+    }
+  },
+  "limitations": [
+    "Pre-cropped dataset images: detection, occlusion and tracking are not evaluated.",
+    "Three crop embeddings are pooled per cow/day/camera; cameras are correlated.",
+    "Calibration and test cows are disjoint; gallery and query dates are disjoint.",
+    "Historical public data, repeatedly explored in this project; not fresh field validation.",
+    "Foundation pretraining overlap is not completely auditable.",
+    "Zero observed false accepts does not establish a low population error rate."
+  ],
+  "manifest_sha256": "86a97da7304bae469445e4ca9a79a007c517ea70a8f6b166bc0c5c6b8b12e8a1",
+  "protocol": {
+    "acceptance": "similarity and distinct-identity margin; zero observed calibration false accepts",
+    "calibration_identity_fraction": 0.3333333333333333,
+    "conditions": [
+      "chronological_all_cameras",
+      "chronological_cross_camera"
+    ],
+    "cross_camera": "enroll camera 1 only; query cameras 2 and 3 six days later",
+    "gallery_aggregation": "maximum cosine similarity over all enrolled reference crops",
+    "gallery_day": "2023Aug14",
+    "identity_order": "sha256('cow-identity-v1:' + identity)",
+    "query_aggregation": "L2-normalized mean of three evenly spaced crop embeddings",
+    "query_day": "2023Aug20",
+    "samples_per_camera": 3,
+    "unknown_identity_fraction": 0.2,
+    "version": 1
+  },
+  "results": {
+    "chronological_all_cameras": {
+      "calibration": {
+        "abstentions": 30,
+        "accepted_precision": 1.0,
+        "correct_accepts": 45,
+        "known": 60,
+        "known_coverage": 0.75,
+        "known_rank1": 1.0,
+        "observations": 75,
+        "per_camera": {
+          "1": {
+            "abstentions": 9,
+            "accepted_precision": 1.0,
+            "correct_accepts": 16,
+            "known": 20,
+            "known_coverage": 0.8,
+            "known_rank1": 1.0,
+            "observations": 25,
+            "unknown": 5,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "2": {
+            "abstentions": 11,
+            "accepted_precision": 1.0,
+            "correct_accepts": 14,
+            "known": 20,
+            "known_coverage": 0.7,
+            "known_rank1": 1.0,
+            "observations": 25,
+            "unknown": 5,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "3": {
+            "abstentions": 10,
+            "accepted_precision": 1.0,
+            "correct_accepts": 15,
+            "known": 20,
+            "known_coverage": 0.75,
+            "known_rank1": 1.0,
+            "observations": 25,
+            "unknown": 5,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "unknown": 15,
+        "unknown_false_acceptance_rate": 0.0,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      },
+      "margin": 0.06,
+      "test": {
+        "abstentions": 67,
+        "accepted_precision": 0.9887640449438202,
+        "correct_accepts": 88,
+        "known": 126,
+        "known_coverage": 0.6984126984126984,
+        "known_rank1": 0.9206349206349206,
+        "observations": 156,
+        "per_camera": {
+          "1": {
+            "abstentions": 20,
+            "accepted_precision": 0.96875,
+            "correct_accepts": 31,
+            "known": 42,
+            "known_coverage": 0.7380952380952381,
+            "known_rank1": 0.9285714285714286,
+            "observations": 52,
+            "unknown": 10,
+            "unknown_false_acceptance_rate": 0.1,
+            "unknown_false_accepts": 1,
+            "wrong_known_accepts": 0
+          },
+          "2": {
+            "abstentions": 23,
+            "accepted_precision": 1.0,
+            "correct_accepts": 29,
+            "known": 42,
+            "known_coverage": 0.6904761904761905,
+            "known_rank1": 0.9523809523809523,
+            "observations": 52,
+            "unknown": 10,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "3": {
+            "abstentions": 24,
+            "accepted_precision": 1.0,
+            "correct_accepts": 28,
+            "known": 42,
+            "known_coverage": 0.6666666666666666,
+            "known_rank1": 0.8809523809523809,
+            "observations": 52,
+            "unknown": 10,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "unknown": 30,
+        "unknown_false_acceptance_rate": 0.03333333333333333,
+        "unknown_false_accepts": 1,
+        "wrong_known_accepts": 0
+      },
+      "threshold": 0.59
+    },
+    "chronological_cross_camera": {
+      "calibration": {
+        "abstentions": 26,
+        "accepted_precision": 1.0,
+        "correct_accepts": 24,
+        "known": 40,
+        "known_coverage": 0.6,
+        "known_rank1": 0.9,
+        "observations": 50,
+        "per_camera": {
+          "2": {
+            "abstentions": 14,
+            "accepted_precision": 1.0,
+            "correct_accepts": 11,
+            "known": 20,
+            "known_coverage": 0.55,
+            "known_rank1": 0.9,
+            "observations": 25,
+            "unknown": 5,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          },
+          "3": {
+            "abstentions": 12,
+            "accepted_precision": 1.0,
+            "correct_accepts": 13,
+            "known": 20,
+            "known_coverage": 0.65,
+            "known_rank1": 0.9,
+            "observations": 25,
+            "unknown": 5,
+            "unknown_false_acceptance_rate": 0.0,
+            "unknown_false_accepts": 0,
+            "wrong_known_accepts": 0
+          }
+        },
+        "unknown": 10,
+        "unknown_false_acceptance_rate": 0.0,
+        "unknown_false_accepts": 0,
+        "wrong_known_accepts": 0
+      },
+      "margin": 0.03,
+      "test": {
+        "abstentions": 60,
+        "accepted_precision": 0.8409090909090909,
+        "correct_accepts": 37,
+        "known": 84,
+        "known_coverage": 0.44047619047619047,
+        "known_rank1": 0.7261904761904762,
+        "observations": 104,
+        "per_camera": {
+          "2": {
+            "abstentions": 30,
+            "accepted_precision": 0.8181818181818182,
+            "correct_accepts": 18,
+            "known": 42,
+            "known_coverage": 0.42857142857142855,
+            "known_rank1": 0.6666666666666666,
+            "observations": 52,
+            "unknown": 10,
+            "unknown_false_acceptance_rate": 0.2,
+            "unknown_false_accepts": 2,
+            "wrong_known_accepts": 2
+          },
+          "3": {
+            "abstentions": 30,
+            "accepted_precision": 0.8636363636363636,
+            "correct_accepts": 19,
+            "known": 42,
+            "known_coverage": 0.4523809523809524,
+            "known_rank1": 0.7857142857142857,
+            "observations": 52,
+            "unknown": 10,
+            "unknown_false_acceptance_rate": 0.2,
+            "unknown_false_accepts": 2,
+            "wrong_known_accepts": 1
+          }
+        },
+        "unknown": 20,
+        "unknown_false_acceptance_rate": 0.2,
+        "unknown_false_accepts": 4,
+        "wrong_known_accepts": 3
+      },
+      "threshold": 0.53
+    }
+  },
+  "script_sha256": {
+    "benchmark.py": "f09f373da7c6b38df9d6eccf82fe4df6967dd80ab826e5da7509815bb5f7a97b",
+    "scoring.py": "f2bdabc93e47282aa452efa142e4155ec260f1f28d441c57f52b0b5e6219ffee"
+  }
+}

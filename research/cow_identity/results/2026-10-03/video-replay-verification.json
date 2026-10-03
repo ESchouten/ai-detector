@@ -1,0 +1,20 @@
+{
+  "annotation_frames_compared": 603,
+  "annotation_boxes_compared": 4817,
+  "json_npz_box_parity": true,
+  "baseline_replay_fields_equal": [
+    "counts",
+    "confusion_counts",
+    "rates"
+  ],
+  "baseline_timeline_equal": true,
+  "replay_new_encoded_images": 0,
+  "replay_detector_cache_reused": true,
+  "source_sha256": {
+    "detector/src/aidetector/adapters/inference/identity_observations.py": "6e1b61b0c185ca4995451ff63b9b9300b62d2c98c087b6ae7802912b06e1cbf8",
+    "detector/src/aidetector/adapters/inference/miewid.py": "d6ec6fe019cdc85cb939f00e8302ca66bf235d9ad22c60d86506c2543e821cef",
+    "detector/src/aidetector/domain/identity.py": "0c07035535816d507b85631fe7913e36b4c50302503590b7490f0c9f00e686cd",
+    "research/cow_identity/video_assessment.py": "90a95f4085f06b08256a4ca7e890d6460b7d4af31807047a01bd2fd3b45dcb71"
+  },
+  "note": "JSON reader and metric tests were added after original measurements. JSON replay reproduced all baseline decisions. Raw initial runs used the numeric NPZ; its exact selected numeric data is redistributed as JSON."
+}

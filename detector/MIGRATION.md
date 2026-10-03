@@ -2,6 +2,12 @@
 
 The rebuild covers the Python detector, its schemas, tests, and distributions. The Python rewrite preserved the web archive contract. The subsequent application setup work adds a combined web/native download and optional parent-controlled shutdown.
 
+## Optional identity trial — 2026-10-03
+
+`DetectorConfig.identity` is an additive, optional configuration object. It requires a YOLO model with tracking enabled and explicit class labels. Existing detectors retain their behaviour when it is absent. The Cow Identity preset and Herd screen provide enrollment without editing JSON. Install the updated locked dependencies when running from source; weights download only when identity is configured.
+
+Confirmed names/examples and review crops live under `<data directory>/identities/`, separately from `config.json`, `app.json` and recordings. The web app is the sole catalog writer; gallery changes take effect on subsequent observations. Live box records may carry `identity`, and archive metadata may contain `identities`; older files remain valid. These fields describe suggestions at inference time, not human identity verification. Reverting to an older detector requires removing the new identity detector/configuration first. The current settings-only backup does not preserve the herd directory; copy it separately while monitoring is stopped. No existing files are migrated or deleted.
+
 ## Compatibility commitments
 
 - Existing top-level `detectors`, `onnx`, and `health` configuration remains supported.

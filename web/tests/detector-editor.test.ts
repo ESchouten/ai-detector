@@ -143,6 +143,26 @@ test('new preset detectors use preset recording defaults and keep the selected c
 	assert.equal(preset.exporters!.disk![0].directory, 'events');
 });
 
+test('identity presets retain recognition settings and switching to a behaviour preset removes them', () => {
+	const draft = createDetectorDraft();
+	draft.detection.source = ['camera.mp4'];
+	const identity: DetectorConfig = {
+		detection: { source: [] },
+		yolo: { model: 'yolo11s.pt', tracking: true },
+		identity: { labels: ['cow'] },
+		exporters: {}
+	};
+	const selected = applyDetectorPreset(draft, identity, { keepDelivery: false });
+	assert.deepEqual(selected.identity, identity.identity);
+	assert.deepEqual(selected.detection.source, ['camera.mp4']);
+	const switched = applyDetectorPreset(selected, {
+		detection: { source: [] },
+		yolo: { model: 'behaviour.pt' },
+		exporters: {}
+	});
+	assert.equal(switched.identity, undefined);
+});
+
 test('changing presets keeps an explicitly paused validator paused when connections are edited later', () => {
 	const current = {
 		detection: { source: ['video.mp4'] },

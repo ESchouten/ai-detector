@@ -5,6 +5,7 @@ import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
 import writeFileAtomic from 'write-file-atomic';
+import { detectionBoxLabel } from '../src/lib/live-preview.ts';
 import {
 	createCameraOverlayStream,
 	liveSourceKey,
@@ -299,3 +300,24 @@ test(
 		await until(async () => (await readdir(path.join(directory, 'leases'))).length === 0);
 	}
 );
+
+test('identity suggestions survive the camera stream without changing coordinates or ordinary labels', async (t) => {
+	const { session, frame, open } = await fixture(t);
+	await session();
+	const geometry = { x1: 1, y1: 2, x2: 10, y2: 12, label: 'cow', confidence: 0.9, trackId: 17 };
+	const boxes = [
+		{ ...geometry, identity: { id: 'cow-1', name: '274', similarity: 0.72 } },
+		{ ...geometry, identity: { id: null, name: null, similarity: 0.4 } },
+		geometry
+	];
+	await frame('detector-1', { boxes });
+	const { reader } = open();
+	const data = (await chunk(reader)).split('\n').find((line) => line.startsWith('data: '))!;
+	const delivered = JSON.parse(data.slice(6));
+	assert.deepEqual(delivered.boxes, boxes);
+	assert.deepEqual(delivered.boxes.map(detectionBoxLabel), [
+		'Possible 274',
+		'Unknown',
+		'cow · 90% · #17'
+	]);
+});

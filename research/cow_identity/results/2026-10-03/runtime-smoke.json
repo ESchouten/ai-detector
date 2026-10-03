@@ -1,0 +1,239 @@
+{
+  "annotation_source": {
+    "coordinate_convention": "normalized-center-width-height",
+    "cow_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "maximum_frame_id": 67760,
+    "minimum_frame_id": 1,
+    "row_count": 537910,
+    "schema_version": "8-calves-temporal-annotations.v1",
+    "source_filename": "pmfeed_4_3_16.pkl",
+    "source_licence": "CC-BY-4.0",
+    "source_sha256": "2c5dbf9c7856bfb15fe38b99487ff576f1b281fcf70af84cc0ac982af1ef203e"
+  },
+  "checks": {
+    "box_coordinates_preserved": true,
+    "empty_gallery_collection": true,
+    "explicit_publisher_label_enrollment": true,
+    "gallery_unchanged_by_predictions": true,
+    "live_identity_fields_published": true,
+    "repeat_gallery_zero_inference": true
+  },
+  "counts": {
+    "boxes": 153,
+    "empty_gallery_sightings": 5,
+    "encoded_images": 123,
+    "encoder_calls": 27,
+    "frames": 30,
+    "identified_boxes": 4,
+    "retained_sightings": 33,
+    "tracked_boxes": 153,
+    "unknown_boxes": 149
+  },
+  "device": "mps",
+  "elapsed_processing_seconds": 4.84721983387135,
+  "encoder_fingerprint": "af1f90d85f31b9e5721a3606eb990adcb3807626aab573dbe202b51260533d0a",
+  "inputs_sha256": {
+    "annotations": "c249968529b58987f54ff6a4fad5d566be67caa348a1ed70a489842c3f636a26",
+    "detector_weights": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+    "identity_weights": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
+    "video": "475824794af23d28d9d92039eb893d73ab0374c8b3272d42c176b5f363cd9825"
+  },
+  "limitations": [
+    "Only 30 seconds of one public scene, sampled at 1 fps.",
+    "Two first-frame publisher examples; subsequent same-clip predictions are not independent validation.",
+    "No accuracy/identity-switch metric claimed; localization and tracking are not scored against labels.",
+    "Live JSON publication is tested; browser rendering is tested separately."
+  ],
+  "packages": {
+    "numpy": "2.5.0",
+    "pillow": "12.2.0",
+    "timm": "1.0.30",
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "ultralytics": "8.4.80"
+  },
+  "production_encoder_parity": {
+    "crops": 2,
+    "dimension": 2152,
+    "maximum_absolute_difference": 0.0,
+    "minimum_cosine": 0.9999998807907104
+  },
+  "purpose": "Same-clip production integration smoke; not independent identity accuracy",
+  "sample_fps": 1,
+  "script_sha256": "be17c735ea41b4e3c61f07c7067d9c6169c5ef9f7d11aff21cbd672c0558c58e",
+  "settings": {
+    "labels": [
+      "cow"
+    ],
+    "max_overlap": 0.2,
+    "min_crop_size": 64,
+    "min_margin": 0.1,
+    "min_observations": 3,
+    "min_similarity": 0.65,
+    "model": "miewid-msv3",
+    "review_interval": 30.0,
+    "sample_interval": 1.0
+  },
+  "timeline": [
+    {
+      "boxes": 4,
+      "named": 0,
+      "second": 0
+    },
+    {
+      "boxes": 3,
+      "named": 0,
+      "second": 1
+    },
+    {
+      "boxes": 5,
+      "named": 0,
+      "second": 2
+    },
+    {
+      "boxes": 4,
+      "named": 0,
+      "second": 3
+    },
+    {
+      "boxes": 0,
+      "named": 0,
+      "second": 4
+    },
+    {
+      "boxes": 3,
+      "named": 0,
+      "second": 5
+    },
+    {
+      "boxes": 5,
+      "named": 0,
+      "second": 6
+    },
+    {
+      "boxes": 6,
+      "named": 0,
+      "second": 7
+    },
+    {
+      "boxes": 6,
+      "named": 1,
+      "second": 8
+    },
+    {
+      "boxes": 6,
+      "named": 1,
+      "second": 9
+    },
+    {
+      "boxes": 5,
+      "named": 0,
+      "second": 10
+    },
+    {
+      "boxes": 6,
+      "named": 0,
+      "second": 11
+    },
+    {
+      "boxes": 5,
+      "named": 0,
+      "second": 12
+    },
+    {
+      "boxes": 6,
+      "named": 0,
+      "second": 13
+    },
+    {
+      "boxes": 7,
+      "named": 0,
+      "second": 14
+    },
+    {
+      "boxes": 6,
+      "named": 0,
+      "second": 15
+    },
+    {
+      "boxes": 7,
+      "named": 0,
+      "second": 16
+    },
+    {
+      "boxes": 4,
+      "named": 0,
+      "second": 17
+    },
+    {
+      "boxes": 6,
+      "named": 0,
+      "second": 18
+    },
+    {
+      "boxes": 7,
+      "named": 0,
+      "second": 19
+    },
+    {
+      "boxes": 6,
+      "named": 1,
+      "second": 20
+    },
+    {
+      "boxes": 7,
+      "named": 1,
+      "second": 21
+    },
+    {
+      "boxes": 5,
+      "named": 0,
+      "second": 22
+    },
+    {
+      "boxes": 6,
+      "named": 0,
+      "second": 23
+    },
+    {
+      "boxes": 1,
+      "named": 0,
+      "second": 24
+    },
+    {
+      "boxes": 4,
+      "named": 0,
+      "second": 25
+    },
+    {
+      "boxes": 6,
+      "named": 0,
+      "second": 26
+    },
+    {
+      "boxes": 5,
+      "named": 0,
+      "second": 27
+    },
+    {
+      "boxes": 7,
+      "named": 0,
+      "second": 28
+    },
+    {
+      "boxes": 5,
+      "named": 0,
+      "second": 29
+    }
+  ],
+  "video_seconds": 30
+}

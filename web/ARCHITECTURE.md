@@ -107,6 +107,10 @@ After both replacements succeed, the saved configuration remains authoritative. 
 
 `configuration.test.ts` covers validation and staging failures, replacement rollback with existing or missing metadata, rollback and cleanup failures, queue recovery, concurrent camera additions, metadata-only edits, and an actual managed-runtime settings-write failure after a completed save.
 
+## Identity trial
+
+The experimental `/herd` route manages human-confirmed identity examples through `server/identity-catalog.ts`. It serializes atomic catalog updates, checks the submitted revision, and uses immutable detector sighting IDs instead of client-supplied paths. Removing an example returns it to review; only unreferenced sightings can be discarded. The image endpoint reuses authenticated `fileMedia` handling. Live camera boxes retain optional identity suggestions through the existing overlay stream. `identity-catalog.test.ts` covers real files, stale edits, correction and bounds; the detector owns inference and never edits confirmed enrollment. See the [trial guide](../research/cow_identity/README.md) for the shared data contract and limits.
+
 ## Quality commands
 
 `pnpm quality` checks generated schema declarations, formatting, ESLint, strict Svelte/TypeScript checking, dependency rules and behavioral tests. Run `pnpm schema:generate` after regenerating the Python JSON schemas; `pnpm schema:check` reports drift without rewriting files. Application functions have an ESLint cyclomatic complexity ceiling of 15 and nesting ceiling of 4. Those limits prompt review; they do not prove readability or justify splitting a coherent function just to lower a number. The preserved shadcn library is excluded from the complexity ceiling, not from type or formatting checks.

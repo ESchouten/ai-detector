@@ -10,6 +10,14 @@ class CropMetadata(BaseModel):
     y2: int
 
 
+class IdentityMetadata(BaseModel):
+    """Matched individual visible in the event's best observation."""
+
+    id: str
+    name: str | None = None
+    similarity: float | None = Field(default=None, ge=-1, le=1)
+
+
 class EventMetadata(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -24,6 +32,7 @@ class EventMetadata(BaseModel):
     duration: float = Field(ge=0)
     crop: CropMetadata | None = None
     validation_error: str | None = None
+    identities: list[IdentityMetadata] = Field(default_factory=list)
 
     @classmethod
     def from_result(cls, result: EventResult, timestamp: str) -> "EventMetadata":
@@ -44,4 +53,13 @@ class EventMetadata(BaseModel):
             if box
             else None,
             validation_error=result.validation.error,
+            identities=[
+                IdentityMetadata(
+                    id=box.identity.identity_id,
+                    name=box.identity.name,
+                    similarity=box.identity.similarity,
+                )
+                for box in best.boxes
+                if box.identity is not None and box.identity.identity_id is not None
+            ],
         )

@@ -82,6 +82,8 @@ def build_detector(args) -> Path:
     flags += [
         "--collect-data=onnx",
         "--copy-metadata=onnx",
+        "--copy-metadata=timm",
+        "--copy-metadata=transformers",
         "--exclude-module=onnx.reference",
         "--exclude-module=onnxruntime.quantization",
     ]

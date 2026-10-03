@@ -1,0 +1,19 @@
+{
+    "detection": {
+        "interval": 1,
+        "frame_retention": 1
+    },
+    "yolo": {
+        "model": "yolo26m-seg.pt",
+        "confidence": { "cow": 0.25 },
+        "tracking": true,
+        "tracker": "bytetrack.yaml",
+        "frames_min": 3,
+        "time_max": 30,
+        "imgsz": 640
+    },
+    "identity": {
+        "labels": ["cow"]
+    },
+    "exporters": {}
+}

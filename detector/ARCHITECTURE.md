@@ -14,6 +14,10 @@ Image fields use `NDArray[np.uint8]` annotations under `TYPE_CHECKING`. This is 
 
 ## Dependency direction
 
+The optional identity trial adds `ObservationIdentifier` to the pipeline's outgoing ports. It enriches only the newly inferred observation, before live publication and event assembly; retained context cannot advance identity agreement. `domain/identity.py` owns similarity/margin acceptance, conflicts and temporal agreement. The gallery adapter owns crop quality, sampling and I/O. Bootstrap shares one encoder per configured model and a content-addressed embedding cache, and closes the cache with the other resources. MPS encoders share YOLO's synchronization scope in `adapters/inference/device.py`.
+
+The web app alone writes the human-confirmed identity catalog. Python publishes bounded, immutable sightings and reads the catalog by revision. Suggestions never enroll themselves. Model/gallery errors remain observable worker failures; optional configuration does not yet provide separate process fault isolation. The [identity trial guide](../research/cow_identity/README.md) records the file contract, measured limitations and next validation gates.
+
 ```text
 cli -> bootstrap -> runtime + concrete adapters
                        |
@@ -48,7 +52,8 @@ adapters/
 ├── sources/               # Frame acquisition
 │   ├── files.py
 │   └── streams.py
-├── inference/             # Model assets, ONNX providers and YOLO
+├── inference/             # Model assets, providers, YOLO and optional identity encoders
+├── identity_catalog.py    # Confirmed-gallery reads and bounded review sightings
 ├── media/                 # Images, video and event attachments
 ├── health.py              # Periodic monitoring, supervised by runtime
 ├── diagnostics.py         # Safe startup context and rotating Python logs

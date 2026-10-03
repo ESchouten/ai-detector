@@ -9,6 +9,7 @@ import torch
 from ultralytics.engine.results import Results
 
 from aidetector.adapters.inference import MpsInferenceError
+from aidetector.adapters.inference.device import mps_inference
 from aidetector.adapters.inference.onnx import (
     InferenceOptions,
 )
@@ -252,6 +253,51 @@ def test_only_mps_accelerator_errors_request_recovery(
         with pytest.raises(error_type) as raised:
             detector.detect({"camera": (frame(),)})
         assert raised.value is error
+
+
+def test_yolo_waits_for_other_models_using_the_shared_mps_scope(monkeypatch):
+    entered, release, yolo_started, yolo_entered = (Event() for _ in range(4))
+    calls = []
+    monkeypatch.setattr(torch.mps, "synchronize", lambda: calls.append("synchronize"))
+
+    def identify():
+        with mps_inference():
+            entered.set()
+            assert release.wait(5)
+            calls.append("identity transfer")
+
+    class GpuModel(Model):
+        def predict(self, **kwargs):
+            yolo_entered.set()
+            calls.append("yolo")
+            return super().predict(**kwargs)
+
+    detector = YoloDetector(
+        GpuModel(),
+        YoloConfig(model="model.pt"),
+        ("camera",),
+        InferenceOptions(native_mps=True),
+    )
+
+    def detect():
+        yolo_started.set()
+        return detector.detect({"camera": (frame(),)})
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        identity = pool.submit(identify)
+        try:
+            assert entered.wait(5)
+            detection = pool.submit(detect)
+            assert yolo_started.wait(5)
+            assert not yolo_entered.wait(0.1), (
+                "Identity and YOLO GPU dispatch overlapped"
+            )
+        finally:
+            release.set()
+        identity.result(timeout=5)
+        assert detection.result(timeout=5)["camera"][-1].date == frame().date
+
+    assert calls == ["identity transfer", "synchronize", "yolo", "synchronize"]
 
 
 @pytest.mark.parametrize("tracking", [False, True])

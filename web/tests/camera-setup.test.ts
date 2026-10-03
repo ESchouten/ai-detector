@@ -1,5 +1,6 @@
 import { addMonitoredCamera } from './support/configuration.ts';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { promisify } from 'node:util';
@@ -9,6 +10,13 @@ import { test, type TestContext } from 'node:test';
 import * as v from 'valibot';
 import { cameraInput, streamInput } from '../src/lib/configuration.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
+import {
+	applyDetectorPreset,
+	createDetectorDraft,
+	parseDetectorDraft
+} from '../src/lib/detector-editor.ts';
+import { RuntimeProgress, STATUS_PREFIX } from '../src/lib/server/runtime-status.ts';
+import { readTestPresets } from './support/presets.ts';
 import {
 	cameraArchiveSelection,
 	cameraSetupStatus
@@ -82,6 +90,44 @@ test('view-only setup can finish after picture confirmation without monitoring, 
 	assert.equal(progress.monitored, false);
 	assert.equal(progress.archiveDestinations, 0);
 	assert.ok(progress.completedAt);
+});
+
+test('identity preset saves and finishes after real processing without adding recording or alert destinations', async (t) => {
+	const { files, store } = await fixture(t);
+	const camera = await store.saveCamera({ label: 'Yard', source, mode: 'view-only' }, verifiedAt);
+	const preset = (await readTestPresets()).find((item) => item.id === 'cow-identity')!;
+	const draft = createDetectorDraft();
+	draft.detection.source = [source];
+	const detector = parseDetectorDraft(
+		JSON.stringify(applyDetectorPreset(draft, preset.detector, { keepDelivery: false }))
+	);
+	await store.saveDetector({ detector, meta: { label: 'Cow identity', preset: preset.id } });
+	const document = await new ConfigurationStore(files).read();
+	assert.deepEqual(document.config.detectors[0].exporters, {});
+	assert.deepEqual(document.config.detectors[0].identity, preset.detector.identity);
+	assert.equal(document.config.detectors[0].vlm, undefined);
+	const setup = cameraSetupStatus(document, camera.id);
+	assert.equal(setup.monitored, true);
+	assert.equal(setup.archiveDestinations, 0);
+	assert.equal(setup.archiveVerifiedAt, undefined);
+	assert.equal(setup.readyToFinish, true);
+	await assert.rejects(
+		store.finishSetup(async () => new Set()),
+		/Monitoring has not been verified/
+	);
+	const runtime = new RuntimeProgress();
+	runtime.configure(document.config, document.app, path.dirname(files.config));
+	const sourceKey = createHash('sha256').update(source).digest('hex');
+	for (const event of ['ready', 'frame', 'inference', 'processed'])
+		runtime.accept(
+			STATUS_PREFIX +
+				JSON.stringify({ version: 1, event, at: verifiedAt, sourceKey, ruleId: 'detector-1' })
+		);
+	const status = runtime.snapshot(Date.parse(verifiedAt));
+	assert.equal(status.readiness, 'monitoring');
+	assert.equal(status.cameras[0].lastRecordingAt, null);
+	await store.finishSetup(async () => new Set(status.cameras.map((item) => item.id)));
+	assert.ok(cameraSetupStatus(await store.read(), camera.id).completedAt);
 });
 
 test('finishing all cameras is atomic and still requires every camera check and current monitoring', async (t) => {

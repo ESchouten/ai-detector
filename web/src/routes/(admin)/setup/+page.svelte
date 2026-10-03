@@ -191,7 +191,7 @@
 		<header class="flex flex-col gap-2">
 			<h1 class="settings-heading">Finish setup</h1>
 			<p class="settings-description">
-				Start monitoring, check recordings, and choose whether to connect phone alerts.
+				Start monitoring and check your setup. Phone alerts are optional.
 			</p>
 		</header>
 		<SetupReview configured={detectors.length > 0} />

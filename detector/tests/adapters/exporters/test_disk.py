@@ -1,4 +1,5 @@
 import errno
+from dataclasses import replace
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -13,12 +14,49 @@ from aidetector.adapters.media.event_media import EventMedia
 from aidetector.application.ports import DeliveryError
 from aidetector.configuration import DiskConfig
 from aidetector.domain.models import (
+    BoundingBox,
     DetectionEvent,
     EventResult,
+    IdentityMatch,
     Observation,
     ValidationResult,
     ValidationStatus,
 )
+
+
+def test_archive_retains_only_matched_individuals_from_the_best_observation(tmp_path):
+    box = BoundingBox(0, 0, 4, 4, "cow", 0.9, 1)
+    earlier = Observation(
+        datetime(2026, 1, 1),
+        np.zeros((8, 8, 3), dtype=np.uint8),
+        {"cow": 0.8},
+        (replace(box, identity=IdentityMatch("cow-1", "Earlier", 0.9)),),
+    )
+    best = replace(
+        earlier,
+        date=earlier.date + timedelta(seconds=1),
+        confidence={"cow": 0.95},
+        boxes=(
+            replace(box, identity=IdentityMatch("cow-42", "Bella", 0.94)),
+            replace(box, identity=IdentityMatch(similarity=0.3)),
+            box,
+        ),
+    )
+    result = EventResult(
+        DetectionEvent("camera", (earlier, best)),
+        ValidationResult(ValidationStatus.UNVALIDATED),
+        id="a" * 32,
+    )
+    DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(result)
+    [metadata_path] = list(tmp_path.glob("cow/unvalidated/*/metadata.json"))
+    metadata = EventMetadata.model_validate_json(metadata_path.read_text())
+
+    assert [identity.model_dump() for identity in metadata.identities] == [
+        {"id": "cow-42", "name": "Bella", "similarity": 0.94}
+    ]
+    assert metadata.crop.model_dump() == {"x1": 0, "y1": 0, "x2": 4, "y2": 4}
+    legacy = metadata.model_dump(exclude={"identities"})
+    assert EventMetadata.model_validate(legacy).identities == []
 
 
 def test_failed_archive_does_not_publish_partial_files(tmp_path, monkeypatch):

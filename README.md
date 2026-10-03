@@ -4,6 +4,8 @@ Watch cameras, detect configured events locally, and review recordings in your b
 
 For a visual explanation of how the application works, see the [system overview and diagrams](SYSTEM_OVERVIEW.md) (Dutch), from the web app and detector to the event-processing flow and domain model.
 
+This branch includes an experimental **Cow Identity** preset and **Herd** screen for confirming cow photographs and reviewing suggested names. See the [trial guide, measured results and limitations](research/cow_identity/README.md) before using it. Existing behaviour detectors remain separately configurable.
+
 ## Install, open, set up
 
 1. Download the complete application for your computer from an **AI Detector app/** [release](https://github.com/ESchouten/ai-detector/releases).

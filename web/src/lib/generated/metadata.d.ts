@@ -13,6 +13,10 @@ export type Y1 = number;
 export type X2 = number;
 export type Y2 = number;
 export type ValidationError = string | null;
+export type Id = string;
+export type Name = string | null;
+export type Similarity = number | null;
+export type Identities = IdentityMetadata[];
 
 export interface EventMetadata {
 	timestamp: Timestamp;
@@ -26,6 +30,7 @@ export interface EventMetadata {
 	duration: Duration;
 	crop?: CropMetadata | null;
 	validation_error?: ValidationError;
+	identities?: Identities;
 }
 export interface Confidences {
 	[k: string]: number;
@@ -35,5 +40,14 @@ export interface CropMetadata {
 	y1: Y1;
 	x2: X2;
 	y2: Y2;
+	[k: string]: unknown;
+}
+/**
+ * Matched individual visible in the event's best observation.
+ */
+export interface IdentityMetadata {
+	id: Id;
+	name?: Name;
+	similarity?: Similarity;
 	[k: string]: unknown;
 }

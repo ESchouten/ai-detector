@@ -1,0 +1,51 @@
+{
+  "purpose": "Local noncommercial cow identity experiments; datasets and weights are not redistributed",
+  "dataset": {
+    "name": "MultiCamCows2024",
+    "source": "https://data.bris.ac.uk/data/dataset/2inu67jru7a6821kkgehxg3cv2",
+    "license": "Non-Commercial Government Licence for public sector information",
+    "selection": "Original cropped images, 2023Aug14 enrollment and 2023Aug20 query; deterministic identity-disjoint calibration/test split",
+    "fingerprints": "Every selected file SHA256 and split assignment recorded in run manifest.json",
+    "limitations": "Existing public benchmark, repeatedly explored locally; not independently held-out farm footage"
+  },
+  "models": [
+    {
+      "name": "DINOv2-small",
+      "source": "https://huggingface.co/facebook/dinov2-small",
+      "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/facebookresearch/dinov2/blob/main/MODEL_CARD.md",
+      "preprocessing": "Application DinoEncoder: full RGB crop, bicubic square padding, ImageNet normalization, FP32 normalized CLS embedding",
+      "overlap": "LVD-142M source images not completely auditable"
+    },
+    {
+      "name": "MIEWid msv3",
+      "source": "https://huggingface.co/conservationxlabs/miewid-msv3",
+      "revision": "4f1d7f2b521149e5fe34bb85f377248ce9971a7d",
+      "weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
+      "license": "Local noncommercial experiment with existing official checkpoint; no redistribution",
+      "preprocessing": "RGB bilinear square stretch 440, ImageNet normalization, EfficientNetV2 rw_m + learned GeM + BatchNorm, FP32 normalized embedding",
+      "overlap": "Publisher describes wildlife training, complete identity-level overlap unknown"
+    },
+    {
+      "name": "MegaDescriptor-S-224",
+      "source": "https://huggingface.co/BVRA/MegaDescriptor-S-224",
+      "revision": "f2a06cb0d093c49ed5fb2640cdf7279e10530ef2",
+      "weights_sha256": "8ffde82d9d58066bf124d03b938b6e7bf2e278c8fd4201710bf78a3ceb6029ef",
+      "license": "CC BY-NC 4.0 model card; local noncommercial experiment",
+      "preprocessing": "Pinned timm config: bicubic short-side resize, center crop 224 with crop_pct0.9, ImageNet normalization, FP32 normalized Swin embedding",
+      "overlap": "Trained on WildlifeDatasets collection including cattle datasets; exact identity overlap unknown"
+    }
+  ],
+  "video_smoke": {
+    "name": "8-calves",
+    "source": "https://huggingface.co/datasets/tonyFang04/8-calves",
+    "license": "CC BY 4.0",
+    "selection": "First 30 seconds of pmfeed_4_3_16.mp4 at 1 fps; first-frame publisher IDs 1 and 3 for enrollment only",
+    "annotations": "Existing numeric NPZ conversion, allow_pickle=False; source pickle is SHA256-verified, never loaded or executed",
+    "detector": "Cached standard Ultralytics YOLO26m-seg, COCO cow class only, FP32 on MPS",
+    "detector_source": "https://github.com/ultralytics/assets",
+    "fingerprints": "Full source-video, source-pickle, annotation NPZ and both model hashes recorded in runtime-smoke.json",
+    "limitation": "Same-clip integration evidence only, not independent recognition accuracy"
+  }
+}

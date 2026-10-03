@@ -4,7 +4,6 @@ import logging
 import pathlib
 from collections.abc import Iterator
 from contextlib import contextmanager, nullcontext
-from threading import Lock
 from time import perf_counter
 from typing import TYPE_CHECKING, Any, Literal, cast
 
@@ -14,7 +13,7 @@ from ultralytics import YOLO
 from ultralytics.data.loaders import LoadStreams, SourceTypes
 from ultralytics.engine.results import Results
 
-from aidetector.adapters.inference import MpsInferenceError
+from aidetector.adapters.inference.device import mps_inference
 from aidetector.adapters.inference.export_settings import export_arguments
 from aidetector.adapters.inference.model_assets import MODEL_DOWNLOAD_HELP
 from aidetector.adapters.inference.onnx import InferenceOptions
@@ -24,26 +23,9 @@ from aidetector.configuration import OnnxConfig, YoloConfig
 from aidetector.domain.models import BoundingBox, Frame, Observation
 
 logger = logging.getLogger(__name__)
-_MPS_LOCK = Lock()
 
 if TYPE_CHECKING:
     from aidetector.adapters.inference.prepared_engines import EnginePreparation
-
-
-@contextmanager
-def _mps_inference() -> Iterator[None]:
-    # PyTorch's MPS command encoders are shared across models and are not safe
-    # under concurrent dispatch: https://github.com/pytorch/pytorch/issues/197805
-    import torch
-
-    with _MPS_LOCK:
-        try:
-            yield
-            torch.mps.synchronize()
-        except torch.AcceleratorError as error:
-            raise MpsInferenceError(
-                "Apple GPU inference failed; a fresh detector process is required."
-            ) from error
 
 
 class InMemoryStreamBatch(LoadStreams):
@@ -117,7 +99,7 @@ class YoloDetector:
     ):
         self.model = model
         self._inference_scope = (
-            _mps_inference
+            mps_inference
             if options.native_mps and config.model.endswith(".pt")
             else nullcontext
         )

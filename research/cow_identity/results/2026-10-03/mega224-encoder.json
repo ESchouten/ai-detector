@@ -1,0 +1,13 @@
+{
+  "device": "mps",
+  "dtype": "float32",
+  "fingerprint": "4671ce58c02186974ac009349f4e78fce914b4fbe89bdae2ea4f98d54254705e",
+  "image_size": 224,
+  "name": "megadescriptor",
+  "packages": {
+    "numpy": "2.5.3",
+    "pillow": "12.1.1",
+    "torch": "2.11.0",
+    "transformers": "4.57.6"
+  }
+}

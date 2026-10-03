@@ -167,6 +167,9 @@ def log_detector_configuration(
             include={"interval", "frames_width", "frame_retention"}
         ),
         "pending_events": settings.pending_events,
+        "identity": settings.identity.model_dump()
+        if settings.identity is not None
+        else None,
         "yolo": None
         if settings.yolo is None
         else {

@@ -2,6 +2,16 @@
   "$defs": {
     "DetectorConfig": {
       "additionalProperties": false,
+      "if": {
+        "properties": {
+          "identity": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "identity"
+        ]
+      },
       "properties": {
         "detection": {
           "$ref": "#/$defs/SourceConfig"
@@ -50,11 +60,40 @@
           "exclusiveMinimum": 0,
           "title": "Pending Events",
           "type": "integer"
+        },
+        "identity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IdentityConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
         "detection"
       ],
+      "then": {
+        "properties": {
+          "yolo": {
+            "properties": {
+              "tracking": {
+                "const": true
+              }
+            },
+            "required": [
+              "tracking"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "yolo"
+        ]
+      },
       "title": "DetectorConfig",
       "type": "object"
     },
@@ -254,6 +293,82 @@
         "url"
       ],
       "title": "HealthcheckConfig",
+      "type": "object"
+    },
+    "IdentityConfig": {
+      "additionalProperties": false,
+      "description": "Recognition applies only to explicitly named individual-object classes.",
+      "properties": {
+        "labels": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Labels",
+          "type": "array"
+        },
+        "model": {
+          "default": "miewid-msv3",
+          "enum": [
+            "miewid-msv3",
+            "dinov2-small-224",
+            "dinov2-small-336"
+          ],
+          "title": "Model",
+          "type": "string"
+        },
+        "min_similarity": {
+          "default": 0.65,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Min Similarity",
+          "type": "number"
+        },
+        "min_margin": {
+          "default": 0.1,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Min Margin",
+          "type": "number"
+        },
+        "min_observations": {
+          "default": 3,
+          "exclusiveMinimum": 0,
+          "title": "Min Observations",
+          "type": "integer"
+        },
+        "sample_interval": {
+          "default": 1,
+          "exclusiveMinimum": 0,
+          "title": "Sample Interval",
+          "type": "number"
+        },
+        "min_crop_size": {
+          "default": 64,
+          "minimum": 32,
+          "title": "Min Crop Size",
+          "type": "integer"
+        },
+        "max_overlap": {
+          "default": 0.2,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Max Overlap",
+          "type": "number"
+        },
+        "review_interval": {
+          "default": 30,
+          "exclusiveMinimum": 0,
+          "title": "Review Interval",
+          "type": "number"
+        }
+      },
+      "required": [
+        "labels"
+      ],
+      "title": "IdentityConfig",
       "type": "object"
     },
     "OnnxConfig": {

@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import json
+from dataclasses import replace
 from datetime import datetime
 from threading import Event
 from time import monotonic, time
@@ -11,7 +12,7 @@ import numpy as np
 from aidetector.adapters.live_preview import LivePreview
 from aidetector.adapters.media import MediaError
 from aidetector.adapters.media.images import encode_jpeg
-from aidetector.domain.models import BoundingBox, Observation
+from aidetector.domain.models import BoundingBox, IdentityMatch, Observation
 
 
 def wait_for(condition):
@@ -197,3 +198,38 @@ def test_new_run_removes_old_frames_and_owned_temporary_files(tmp_path):
     with LivePreview(tmp_path).open():
         wait_for(lambda: read_record(tmp_path / "session.json"))
         assert [file.name for file in frames.iterdir()] == ["unrelated.txt"]
+
+
+def test_preview_distinguishes_matched_unknown_and_unanalyzed_individuals(tmp_path):
+    key = lease(tmp_path, "camera")
+    publisher = LivePreview(tmp_path, interval=0.01)
+    publish = publisher.observer("detector-1", ("camera",))
+    original = observation()
+    box = original.boxes[0]
+    identified = replace(
+        original,
+        boxes=(
+            replace(box, identity=IdentityMatch("cow-42", "Bella", 0.94)),
+            replace(box, identity=IdentityMatch(similarity=0.3)),
+            box,
+        ),
+    )
+    with publisher.open():
+        wait_for(lambda: read_record(tmp_path / "session.json"))
+        publish("camera", identified)
+        record = wait_for(
+            lambda: read_record(tmp_path / "frames" / f"{key}.detector-1.json")
+        )
+
+    assert record["capturedAt"] == original.date.isoformat()
+    assert record["boxes"][0]["identity"] == {
+        "id": "cow-42",
+        "name": "Bella",
+        "similarity": 0.94,
+    }
+    assert record["boxes"][1]["identity"] == {
+        "id": None,
+        "name": None,
+        "similarity": 0.3,
+    }
+    assert "identity" not in record["boxes"][2]

@@ -28,6 +28,8 @@
 	let controller: AbortController;
 	const stale = $derived(connectionLost || now - lastCheckedAt > 10000);
 	const busy = $derived(saving || Boolean(checkingId));
+	const hasRecordings = $derived(cameras.some((camera) => camera.archiveDestinations > 0));
+	const destination = $derived(hasRecordings ? '/detections' : '/streams');
 	const finished = $derived(cameras.length > 0 && cameras.every((camera) => camera.completedAt));
 	const ready = $derived(
 		cameras.length > 0 &&
@@ -115,7 +117,7 @@
 		try {
 			await finishSetup().updates(getSetupStatus(), getCameras());
 			cameras = await getSetupStatus();
-			if (!controller.signal.aborted) await goto(resolve(configured ? '/detections' : '/streams'));
+			if (!controller.signal.aborted) await goto(resolve(destination));
 		} catch (cause) {
 			finishing = false;
 			message = errorMessage(cause, 'Your progress could not be saved. Try again.');
@@ -157,7 +159,9 @@
 		<Card.Description
 			>{finished
 				? 'Your cameras and detectors are saved.'
-				: 'Recording locations are checked automatically. Your progress is saved as you go.'}</Card.Description
+				: hasRecordings
+					? 'Recording locations are checked automatically. Your progress is saved as you go.'
+					: 'Your progress is saved as you go.'}</Card.Description
 		>
 	</Card.Header>
 	<Card.Content class="flex flex-col gap-5">
@@ -231,8 +235,8 @@
 			>{/if}
 	</Card.Content>
 	<Card.Footer>
-		{#if finished}<Button href={resolve(configured ? '/detections' : '/streams')}
-				>{configured ? 'Open recordings' : 'Open cameras'}</Button
+		{#if finished}<Button href={resolve(destination)}
+				>{hasRecordings ? 'Open recordings' : 'Open cameras'}</Button
 			>
 		{:else}<Button
 				disabled={saving ||
@@ -246,7 +250,7 @@
 						: 'Checking setup…'
 					: configured && runtime.managed && runtime.phase !== 'running'
 						? 'Start monitoring'
-						: configured
+						: hasRecordings
 							? 'Finish and open recordings'
 							: 'Finish and open cameras'}</Button
 			>{/if}

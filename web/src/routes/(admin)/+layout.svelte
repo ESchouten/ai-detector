@@ -15,6 +15,7 @@
 	import SettingsIcon from '@lucide/svelte/icons/settings';
 	import CodeIcon from '@lucide/svelte/icons/code';
 	import LogsIcon from '@lucide/svelte/icons/logs';
+	import FingerprintIcon from '@lucide/svelte/icons/fingerprint';
 	import { createRuntimeStatus, provideRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 
 	let { children } = $props();
@@ -33,6 +34,11 @@
 					title: 'Cameras',
 					url: resolve('/streams'),
 					icon: TVIcon
+				},
+				{
+					title: 'Herd',
+					url: resolve('/herd'),
+					icon: FingerprintIcon
 				}
 			]
 		},
@@ -61,6 +67,7 @@
 	const pageNames: Record<string, string> = {
 		detections: 'Recordings',
 		streams: 'Cameras',
+		herd: 'Herd',
 		notifications: 'Alerts',
 		validator: 'Validator',
 		advanced: 'Advanced',

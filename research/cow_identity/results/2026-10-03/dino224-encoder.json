@@ -1,0 +1,13 @@
+{
+  "device": "mps",
+  "dtype": "float32",
+  "fingerprint": "f352404b205850e6d735c11c50103d7f2870e927d4c7acf98ee4b2562ad767fa",
+  "image_size": 224,
+  "name": "dino",
+  "packages": {
+    "numpy": "2.5.3",
+    "pillow": "12.1.1",
+    "torch": "2.11.0",
+    "transformers": "4.57.6"
+  }
+}

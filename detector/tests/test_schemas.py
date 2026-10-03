@@ -11,6 +11,31 @@ from aidetector.schema import schemas
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.mark.parametrize("tracking", [None, False, True])
+def test_identity_requires_a_tracking_detector_in_schema_and_runtime(tracking):
+    document = {
+        "detectors": [
+            {
+                "detection": {"source": "video.mp4"},
+                "identity": {"labels": ["cow"]},
+                "yolo": {
+                    "model": "yolo11s.pt",
+                    **({"tracking": tracking} if tracking is not None else {}),
+                },
+            }
+        ]
+    }
+    validator = Draft202012Validator(schemas()["config.schema.json"])
+    if tracking is True:
+        validator.validate(document)
+        assert Config.model_validate(document).detectors[0].identity is not None
+    else:
+        with pytest.raises(ValidationError):
+            validator.validate(document)
+        with pytest.raises(ValueError, match="tracking enabled"):
+            Config.model_validate(document)
+
+
 def test_schema_validates_example_and_offline_template():
     schema = schemas()["config.schema.json"]
     Draft202012Validator.check_schema(schema)

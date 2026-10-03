@@ -27,6 +27,46 @@
       ],
       "title": "CropMetadata",
       "type": "object"
+    },
+    "IdentityMetadata": {
+      "description": "Matched individual visible in the event's best observation.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "similarity": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": -1,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Similarity"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "IdentityMetadata",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -112,6 +152,13 @@
       ],
       "default": null,
       "title": "Validation Error"
+    },
+    "identities": {
+      "items": {
+        "$ref": "#/$defs/IdentityMetadata"
+      },
+      "title": "Identities",
+      "type": "array"
     }
   },
   "required": [

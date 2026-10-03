@@ -12,6 +12,15 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
+class IdentityMatch:
+    """Visual identity evidence; a missing ID means the subject is unknown."""
+
+    identity_id: str | None = None
+    name: str | None = None
+    similarity: float | None = None
+
+
+@dataclass(frozen=True)
 class BoundingBox:
     """Image-space bounds, optionally labeled by object detection."""
 
@@ -22,6 +31,7 @@ class BoundingBox:
     label: str | None = None
     confidence: float | None = None
     track_id: int | None = None
+    identity: IdentityMatch | None = None
 
     @classmethod
     def enclosing(cls, boxes: Sequence[BoundingBox]) -> BoundingBox | None:

@@ -291,12 +291,53 @@ class HealthcheckConfig(HttpConfig):
     timeout: PositiveDuration = 5
 
 
+class IdentityConfig(_ConfigModel):
+    """Recognition applies only to explicitly named individual-object classes."""
+
+    labels: Annotated[tuple[NonEmptyString, ...], Field(min_length=1)]
+    model: Literal["miewid-msv3", "dinov2-small-224", "dinov2-small-336"] = (
+        "miewid-msv3"
+    )
+    min_similarity: Probability = 0.65
+    min_margin: Probability = 0.1
+    min_observations: PositiveInt = 3
+    sample_interval: PositiveDuration = 1
+    min_crop_size: Annotated[int, Field(ge=32)] = 64
+    max_overlap: Probability = 0.2
+    review_interval: PositiveDuration = 30
+
+
 class DetectorConfig(_ConfigModel):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "if": {
+                "properties": {"identity": {"type": "object"}},
+                "required": ["identity"],
+            },
+            "then": {
+                "required": ["yolo"],
+                "properties": {
+                    "yolo": {
+                        "type": "object",
+                        "required": ["tracking"],
+                        "properties": {"tracking": {"const": True}},
+                    }
+                },
+            },
+        }
+    )
     detection: SourceConfig
     yolo: YoloConfig | None = None
     vlm: tuple[VLMConfig, ...] = ()
     exporters: ExportersConfig = Field(default_factory=ExportersConfig)
     pending_events: PositiveInt = 8
+    identity: IdentityConfig | None = None
+
+    @model_validator(mode="after")
+    def validate_identity_detector(self) -> DetectorConfig:
+        if self.identity is not None and (self.yolo is None or not self.yolo.tracking):
+            raise ValueError("Identity recognition requires YOLO with tracking enabled")
+        return self
 
     @property
     def active_vlm(self) -> tuple[VLMConfig, ...]:

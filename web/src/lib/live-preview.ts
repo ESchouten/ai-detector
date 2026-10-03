@@ -22,7 +22,14 @@ export const frameSchema = v.object({
 			y2: coordinate,
 			label: v.nullable(v.string()),
 			confidence: v.nullable(coordinate),
-			trackId: v.nullable(v.pipe(v.number(), v.integer()))
+			trackId: v.nullable(v.pipe(v.number(), v.integer())),
+			identity: v.optional(
+				v.object({
+					id: v.nullable(v.string()),
+					name: v.nullable(v.string()),
+					similarity: v.nullable(coordinate)
+				})
+			)
 		})
 	)
 });
@@ -40,6 +47,9 @@ export type CameraOverlayFrame = Omit<LivePreviewFrame, 'image'> & {
 };
 
 export function detectionBoxLabel(box: LivePreviewFrame['boxes'][number]): string {
+	if (box.identity) {
+		return box.identity.id && box.identity.name ? `Possible ${box.identity.name}` : 'Unknown';
+	}
 	return [
 		box.label,
 		box.confidence === null ? null : `${Math.round(box.confidence * 100)}%`,

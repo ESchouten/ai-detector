@@ -21,6 +21,7 @@ from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import (
     EventValidator,
     ObjectDetector,
+    ObservationIdentifier,
     ignore_observation,
 )
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
@@ -160,6 +161,9 @@ def run_application(
         streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None
         workers: list[DetectorWorker] = []
+        identifiers = _identity_resources(
+            config, data_directory, resources, report_status
+        )
         for index, settings in enumerate(config.detectors, start=1):
             logger.info(
                 "Preparing detector-%d: %d source(s), %.2fs sampling interval, object detection %s",
@@ -226,7 +230,13 @@ def run_application(
                 if preview is not None
                 else ignore_observation
             )
-            pipeline = DetectionPipeline(detector, event_policy, rule_status, publish)
+            pipeline = DetectionPipeline(
+                detector,
+                event_policy,
+                rule_status,
+                publish,
+                identifier=identifiers.get(index),
+            )
             delivery = EventDelivery(
                 build_destinations(
                     settings.exporters, data_directory, media, rule_status
@@ -260,3 +270,51 @@ def run_application(
         if engines is not None:
             resources.enter_context(engines.running())
         return run_detectors(tuple(workers), health, stop_requested)
+
+
+def _identity_resources(
+    config: Config,
+    directory: Path,
+    resources: ExitStack,
+    report_status: ReportStatus,
+) -> dict[int, ObservationIdentifier]:
+    configured = [
+        (index, settings.identity)
+        for index, settings in enumerate(config.detectors, 1)
+        if settings.identity is not None
+    ]
+    if not configured:
+        return {}
+    from aidetector.adapters.identity_catalog import IdentityCatalog
+    from aidetector.adapters.inference.identity import (
+        DinoEncoder,
+        EmbeddingCache,
+        ImageEncoder,
+    )
+    from aidetector.adapters.inference.identity_observations import GalleryIdentifier
+    from aidetector.adapters.inference.miewid import MiewidEncoder
+
+    catalog = IdentityCatalog(directory / "identities")
+    cache = EmbeddingCache(directory / "identities" / "embeddings.sqlite")
+    resources.callback(cache.close)
+    encoders: dict[str, ImageEncoder] = {}
+    for model in sorted({settings.model for _, settings in configured}):
+        report_status(
+            StatusEvent(
+                "preparing",
+                message="Preparing identification. The first start downloads its model…",
+            )
+        )
+        logger.info("Loading identity encoder %s (downloaded once, then cached)", model)
+        encoders[model] = (
+            MiewidEncoder(directory / "models" / "identity")
+            if model == "miewid-msv3"
+            else DinoEncoder(
+                directory / "models" / "identity",
+                image_size=int(model.rsplit("-", 1)[1]),
+            )
+        )
+    return {
+        index: GalleryIdentifier(settings, catalog, encoders[settings.model], cache)
+        for index, settings in configured
+    }

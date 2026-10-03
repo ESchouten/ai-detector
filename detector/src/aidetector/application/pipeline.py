@@ -1,5 +1,6 @@
 from aidetector.application.ports import (
     ObjectDetector,
+    ObservationIdentifier,
     PublishObservation,
     SourceBatch,
     ignore_observation,
@@ -21,11 +22,14 @@ class DetectionPipeline:
         policy: EventPolicy = _DEFAULT_POLICY,
         report_status: ReportStatus = ignore_status,
         publish_observation: PublishObservation = ignore_observation,
+        *,
+        identifier: ObservationIdentifier | None = None,
     ):
         self.detector = detector
         self.events = EventAssembler(policy)
         self.report_status = report_status
         self.publish_observation = publish_observation
+        self.identifier = identifier
 
     def process(self, batch: SourceBatch) -> list[DetectionEvent]:
         if self.detector is None:
@@ -42,6 +46,10 @@ class DetectionPipeline:
         completed: list[DetectionEvent] = []
         if batch.frames:
             for source, observations in self.detector.detect(batch.frames).items():
+                if self.identifier is not None:
+                    # Context frames reuse the latest boxes; only this frame was inferred.
+                    latest = self.identifier.identify(source, observations[-1])
+                    observations = (*observations[:-1], latest)
                 self.publish_observation(source, observations[-1])
                 self.report_status(StatusEvent("inference", source))
                 completed.extend(self.events.observe(source, observations))

@@ -117,6 +117,18 @@ export type Token1 = string | null;
 export type DataType = 'binary' | 'base64' | 'none';
 export type DataMax = number | null;
 export type PendingEvents = number;
+/**
+ * @minItems 1
+ */
+export type Labels = [string, ...string[]];
+export type Model2 = 'miewid-msv3' | 'dinov2-small-224' | 'dinov2-small-336';
+export type MinSimilarity = number;
+export type MinMargin = number;
+export type MinObservations = number;
+export type SampleInterval = number;
+export type MinCropSize = number;
+export type MaxOverlap = number;
+export type ReviewInterval = number;
 export type Provider = string | null;
 export type Winml = boolean;
 export type Opset = number;
@@ -141,6 +153,7 @@ export interface DetectorConfig {
 	vlm?: Vlm;
 	exporters?: ExportersConfig | null;
 	pending_events?: PendingEvents;
+	identity?: IdentityConfig | null;
 }
 export interface SourceConfig {
 	source: Source;
@@ -221,6 +234,20 @@ export interface WebhookConfig {
 	token?: Token1;
 	data_type?: DataType;
 	data_max?: DataMax;
+}
+/**
+ * Recognition applies only to explicitly named individual-object classes.
+ */
+export interface IdentityConfig {
+	labels: Labels;
+	model?: Model2;
+	min_similarity?: MinSimilarity;
+	min_margin?: MinMargin;
+	min_observations?: MinObservations;
+	sample_interval?: SampleInterval;
+	min_crop_size?: MinCropSize;
+	max_overlap?: MaxOverlap;
+	review_interval?: ReviewInterval;
 }
 export interface OnnxConfig {
 	provider?: Provider;

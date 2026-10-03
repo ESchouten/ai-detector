@@ -13,6 +13,8 @@
 	import * as Empty from '$lib/components/ui/empty';
 	import * as Field from '$lib/components/ui/field';
 	import * as NativeSelect from '$lib/components/ui/native-select';
+	import * as Pagination from '$lib/components/ui/pagination';
+	import * as Tabs from '$lib/components/ui/tabs';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { PageData, ActionData } from './$types';
 
@@ -28,6 +30,9 @@
 	let choice = $state('');
 	let label = $state('');
 	let busy = $state(false);
+	const pageSize = 12;
+	let reviewPage = $state(1);
+	let cowsPage = $state(1);
 	const review = $derived(data.catalog?.review ?? []);
 	const identities = $derived(data.catalog?.identities ?? []);
 	const photo = $derived(review.find((item) => item.id === selectedPhoto));
@@ -36,6 +41,8 @@
 	const message = $derived(form && 'message' in form ? form.message : null);
 
 	$effect(() => {
+		reviewPage = Math.min(reviewPage, Math.max(1, Math.ceil(review.length / pageSize)));
+		cowsPage = Math.min(cowsPage, Math.max(1, Math.ceil(identities.length / pageSize)));
 		if (!data.catalog) {
 			assignOpen = false;
 			editOpen = false;
@@ -44,6 +51,10 @@
 
 	function image(id: string) {
 		return resolve(`/herd/images/${id}`);
+	}
+
+	function capturedAt(value: string) {
+		return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 	}
 
 	function identify(item: NonNullable<PageData['catalog']>['review'][number]) {
@@ -148,100 +159,140 @@
 				Add examples for at least two cows to start suggesting matches.
 			</p>
 		{/if}
-		<section class="space-y-4" aria-labelledby="review-heading">
-			<h2 id="review-heading" class="text-lg font-semibold">
-				Photos to review ({review.length})
-			</h2>
-			{#if review.length}
-				<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-					{#each review as item (item.id)}
-						{@const suggestion = identities.find((entry) => entry.id === item.identity.id)}
-						<div class="space-y-2">
-							<div class="relative overflow-hidden rounded-lg bg-muted">
-								<img
-									src={image(item.image)}
-									alt="Cow photographed by a camera"
-									class="aspect-[4/3] w-full object-contain"
-									loading="lazy"
-								/>
-								{#if suggestion && confirmedCows >= 2}
-									<Badge
-										class="absolute top-2 left-2 max-w-[calc(100%-1rem)] truncate"
-										variant="secondary">Possible match: {suggestion.name}</Badge
+		<Tabs.Root value="review" class="gap-4">
+			<Tabs.List aria-label="Herd views">
+				<Tabs.Trigger value="review">Photos to review ({review.length})</Tabs.Trigger>
+				<Tabs.Trigger value="cows">Your cows ({identities.length})</Tabs.Trigger>
+			</Tabs.List>
+			<Tabs.Content value="review" class="flex flex-col gap-4">
+				{#if review.length}
+					<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+						{#each review.slice((reviewPage - 1) * pageSize, reviewPage * pageSize) as item (item.id)}
+							{@const suggestion = identities.find((entry) => entry.id === item.identity.id)}
+							<div class="space-y-2">
+								<div class="relative overflow-hidden rounded-lg bg-muted">
+									<img
+										src={image(item.image)}
+										alt="Cow photographed by a camera"
+										class="aspect-[4/3] w-full object-contain"
+										loading="lazy"
+									/>
+									{#if suggestion && confirmedCows >= 2}
+										<Badge
+											class="absolute top-2 left-2 max-w-[calc(100%-1rem)] truncate"
+											variant="secondary">Possible match: {suggestion.name}</Badge
+										>
+									{/if}
+								</div>
+								<p class="flex flex-wrap justify-between gap-x-2 text-xs text-muted-foreground">
+									<span>{data.cameras[item.source] ?? 'Saved camera'}</span>
+									<time datetime={item.captured_at}>{capturedAt(item.captured_at)}</time>
+								</p>
+								<div class="flex items-center gap-2">
+									<Button
+										variant="outline"
+										class="flex-1"
+										onclick={() => identify(item)}
+										disabled={busy}>Identify cow</Button
 									>
-								{/if}
+									<form method="POST" use:enhance={submit}>
+										<input type="hidden" name="revision" value={data.catalog.revision} />
+										<input type="hidden" name="photo" value={item.id} />
+										<Button
+											type="submit"
+											name="operation"
+											value="discard"
+											variant="ghost"
+											size="icon"
+											aria-label="Discard photo"
+											disabled={busy}><Trash2 /></Button
+										>
+									</form>
+								</div>
 							</div>
-							<div class="flex items-center gap-2">
+						{/each}
+					</div>
+					{#if review.length > pageSize}
+						<Pagination.Root
+							count={review.length}
+							perPage={pageSize}
+							bind:page={reviewPage}
+							aria-label="Review photos pages"
+						>
+							<Pagination.Content>
+								<Pagination.Item><Pagination.Previous /></Pagination.Item>
+								<li class="px-3 text-sm text-muted-foreground" aria-live="polite">
+									{reviewPage} / {Math.ceil(review.length / pageSize)}
+								</li>
+								<Pagination.Item><Pagination.Next /></Pagination.Item>
+							</Pagination.Content>
+						</Pagination.Root>
+					{/if}
+				{:else}
+					<p class="text-sm text-muted-foreground">
+						All photos reviewed. More will appear while monitoring is running. Refresh to check.
+					</p>
+				{/if}
+			</Tabs.Content>
+
+			<Tabs.Content value="cows" class="flex flex-col gap-4">
+				{#if identities.length}
+					<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+						{#each identities.slice((cowsPage - 1) * pageSize, cowsPage * pageSize) as item (item.id)}
+							<div>
+								{#if item.samples.length}
+									<img
+										src={image(item.samples[0])}
+										alt={`Confirmed example of ${item.name}`}
+										class="aspect-[4/3] w-full rounded-lg bg-muted object-contain"
+										loading="lazy"
+									/>
+								{:else}
+									<div
+										class="flex aspect-[4/3] items-center justify-center rounded-lg bg-muted text-sm text-muted-foreground"
+									>
+										No examples yet
+									</div>
+								{/if}
+								<div class="flex items-baseline justify-between gap-3 py-2">
+									<span class="truncate font-medium">{item.name}</span><span
+										class="shrink-0 text-sm text-muted-foreground"
+										>{item.samples.length} example{item.samples.length === 1 ? '' : 's'}</span
+									>
+								</div>
 								<Button
 									variant="outline"
-									class="flex-1"
-									onclick={() => identify(item)}
-									disabled={busy}>Identify cow</Button
-								>
-								<form method="POST" use:enhance={submit}>
-									<input type="hidden" name="revision" value={data.catalog.revision} />
-									<input type="hidden" name="photo" value={item.id} />
-									<Button
-										type="submit"
-										name="operation"
-										value="discard"
-										variant="ghost"
-										size="icon"
-										aria-label="Discard photo"
-										disabled={busy}><Trash2 /></Button
-									>
-								</form>
-							</div>
-						</div>
-					{/each}
-				</div>
-			{:else}
-				<p class="text-sm text-muted-foreground">
-					All photos reviewed. More will appear while monitoring is running. Refresh to check.
-				</p>
-			{/if}
-		</section>
-
-		<section class="space-y-4" aria-labelledby="cows-heading">
-			<h2 id="cows-heading" class="text-lg font-semibold">Your cows ({identities.length})</h2>
-			{#if identities.length}
-				<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-					{#each identities as item (item.id)}
-						<div>
-							{#if item.samples.length}
-								<img
-									src={image(item.samples[0])}
-									alt={`Confirmed example of ${item.name}`}
-									class="aspect-[4/3] w-full rounded-lg bg-muted object-contain"
-									loading="lazy"
-								/>
-							{:else}
-								<div
-									class="flex aspect-[4/3] items-center justify-center rounded-lg bg-muted text-sm text-muted-foreground"
-								>
-									No examples yet
-								</div>
-							{/if}
-							<div class="flex items-baseline justify-between gap-3 py-2">
-								<span class="truncate font-medium">{item.name}</span><span
-									class="shrink-0 text-sm text-muted-foreground"
-									>{item.samples.length} example{item.samples.length === 1 ? '' : 's'}</span
+									class="w-full"
+									onclick={() => edit(item)}
+									aria-label={`Edit ${item.name} and its examples`}
+									disabled={busy}>Edit examples</Button
 								>
 							</div>
-							<Button
-								variant="outline"
-								class="w-full"
-								onclick={() => edit(item)}
-								aria-label={`Edit ${item.name} and its examples`}
-								disabled={busy}>Edit examples</Button
-							>
-						</div>
-					{/each}
-				</div>
-			{:else}
-				<p class="text-sm text-muted-foreground">Choose a photo above to name your first cow.</p>
-			{/if}
-		</section>
+						{/each}
+					</div>
+					{#if identities.length > pageSize}
+						<Pagination.Root
+							count={identities.length}
+							perPage={pageSize}
+							bind:page={cowsPage}
+							aria-label="Your cows pages"
+						>
+							<Pagination.Content>
+								<Pagination.Item><Pagination.Previous /></Pagination.Item>
+								<li class="px-3 text-sm text-muted-foreground" aria-live="polite">
+									{cowsPage} / {Math.ceil(identities.length / pageSize)}
+								</li>
+								<Pagination.Item><Pagination.Next /></Pagination.Item>
+							</Pagination.Content>
+						</Pagination.Root>
+					{/if}
+				{:else}
+					<p class="text-sm text-muted-foreground">
+						Choose a photo in “Photos to review” to name your first cow.
+					</p>
+				{/if}
+			</Tabs.Content>
+		</Tabs.Root>
 	{/if}
 </section>
 
@@ -259,6 +310,10 @@
 					alt="Cow to identify"
 					class="max-h-64 w-full rounded-lg bg-muted object-contain"
 				/>
+				<p class="flex flex-wrap justify-between gap-x-2 text-sm text-muted-foreground">
+					<span>{data.cameras[photo.source] ?? 'Saved camera'}</span>
+					<time datetime={photo.captured_at}>{capturedAt(photo.captured_at)}</time>
+				</p>
 				<form method="POST" use:enhance={submit} class="space-y-5">
 					<input type="hidden" name="operation" value="assign" />
 					<input type="hidden" name="revision" value={data.catalog.revision} />

@@ -3,12 +3,20 @@ import { herd } from '$lib/server/herd';
 import { configuration } from '$lib/server/configuration';
 import { HerdError } from '$lib/server/identity-catalog';
 import { readHerdPage } from '$lib/server/herd-page';
+import { liveSourceKey } from '$lib/server/live-preview';
+import { DATA_DIRECTORY } from '$lib/server/application-paths';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	const [catalog, { config }] = await Promise.all([readHerdPage(herd), configuration.read()]);
+	const [catalog, { config, app }] = await Promise.all([readHerdPage(herd), configuration.read()]);
 	return {
 		catalog,
+		cameras: Object.fromEntries(
+			(app.streams ?? []).map((camera, index) => [
+				liveSourceKey(camera.source, DATA_DIRECTORY),
+				camera.label || `Camera ${index + 1}`
+			])
+		),
 		identityConfigured: config.detectors.some((detector) => detector.identity != null)
 	};
 };

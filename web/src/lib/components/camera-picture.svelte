@@ -1,6 +1,11 @@
+<script lang="ts" module>
+	import { resolve } from '$app/paths';
+	import { CameraPictures } from '$lib/camera-pictures';
+	const pictures = new CameraPictures(() => resolve('/cameras/pictures'));
+</script>
+
 <script lang="ts">
 	import { onMount, type Snippet } from 'svelte';
-	import { resolve } from '$app/paths';
 	import { Button } from '$lib/components/ui/button';
 	import CameraDetections from './camera-detections.svelte';
 	import { cameraPreviewSlots } from '$lib/preview-slots';
@@ -23,7 +28,7 @@
 		class?: string;
 	} = $props();
 	let failed = $state(false);
-	let loaded = $state(false);
+	let picture = $state<string>();
 	let version = $state(0);
 	let container: HTMLDivElement;
 	let visible = $state(false);
@@ -48,13 +53,22 @@
 		return () => {
 			release();
 			active = false;
-			loaded = false;
 		};
 	});
 
-	function releaseImage(node: HTMLImageElement) {
-		return { destroy: () => (node.src = 'data:,') };
-	}
+	$effect(() => {
+		// Asking again after a failure is a new subscription.
+		void version;
+		if (!active) return;
+		const release = pictures.subscribe(id, (url) => {
+			if (url) picture = url;
+			else failed = true;
+		});
+		return () => {
+			release();
+			picture = undefined;
+		};
+	});
 </script>
 
 <div
@@ -64,26 +78,11 @@
 		className
 	)}
 >
-	{#if active}
-		{#key version}
-			<img
-				use:releaseImage
-				src={resolve(`/cameras/${id}/preview`)}
-				alt={`${label} live picture`}
-				onload={() => {
-					failed = false;
-					loaded = true;
-				}}
-				onerror={({ currentTarget }) => {
-					// Releasing a picture that left the page also ends in an error event; that is not a failure.
-					if (currentTarget.isConnected) failed = true;
-				}}
-				class="size-full object-contain"
-			/>
-		{/key}
+	{#if active && picture && !failed}
+		<img src={picture} alt={`${label} live picture`} class="size-full object-contain" />
 	{/if}
 	{#if active && !failed && monitored}<CameraDetections {id} {label} />{/if}
-	{#if active && !failed && !loaded}
+	{#if active && !failed && !picture}
 		<p
 			role="status"
 			class="absolute inset-0 flex items-center justify-center pb-6 text-sm text-media-foreground/70"
@@ -104,7 +103,6 @@
 					class="relative z-20"
 					onclick={() => {
 						failed = false;
-						loaded = false;
 						version += 1;
 					}}>{active ? 'Try again' : 'Show live picture'}</Button
 				>

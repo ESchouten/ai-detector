@@ -10,11 +10,22 @@ interface Viewer {
 interface Preview {
 	viewers: Set<Viewer>;
 	reader: ReadableStreamDefaultReader<Uint8Array>;
+	/** Ends the capture when nobody came back for it. */
+	idle?: ReturnType<typeof setTimeout>;
 }
 
-/** Share capture/encoding; each browser retains only its latest undelivered picture. */
+/**
+ * Share capture/encoding; each browser retains only its latest undelivered picture. A capture
+ * stays for a while after its last viewer left: a camera only shows a picture from its next
+ * keyframe, which takes seconds, so someone who scrolls back or opens the camera sees it at once.
+ */
 export class PreviewPool {
 	private previews = new Map<string, Preview>();
+	private readonly lingerMs: number;
+
+	constructor(lingerMs = 20_000) {
+		this.lingerMs = lingerMs;
+	}
 
 	open(source: string, executable: string, signal: AbortSignal): ReadableStream<Uint8Array> {
 		if (signal.aborted) return new ReadableStream({ start: (controller) => controller.close() });
@@ -29,15 +40,18 @@ export class PreviewPool {
 			void this.broadcast(key, preview);
 		}
 		const shared = preview;
+		clearTimeout(shared.idle);
 		let viewer: Viewer;
 		const detach = () => {
 			signal.removeEventListener('abort', abort);
 			shared.viewers.delete(viewer);
 			viewer.latest = undefined;
-			if (!shared.viewers.size && this.previews.get(key) === shared) {
-				this.previews.delete(key);
-				return shared.reader.cancel().catch(() => undefined);
-			}
+			if (shared.viewers.size || this.previews.get(key) !== shared) return;
+			shared.idle = setTimeout(() => {
+				if (this.previews.get(key) === shared) this.previews.delete(key);
+				void shared.reader.cancel().catch(() => undefined);
+			}, this.lingerMs);
+			shared.idle.unref();
 		};
 		const abort = () => viewer.close();
 		let closed = false;
@@ -85,6 +99,7 @@ export class PreviewPool {
 		} catch (error) {
 			for (const viewer of preview.viewers) viewer.close(error);
 		} finally {
+			clearTimeout(preview.idle);
 			if (this.previews.get(key) === preview) this.previews.delete(key);
 			preview.reader.releaseLock();
 		}
@@ -95,6 +110,7 @@ export class PreviewPool {
 		this.previews.clear();
 		await Promise.all(
 			active.map(async (preview) => {
+				clearTimeout(preview.idle);
 				for (const viewer of preview.viewers) viewer.close();
 				await preview.reader.cancel().catch(() => undefined);
 			})

@@ -2,12 +2,15 @@ import { spawn } from 'node:child_process';
 import { MultipartParser, type MultipartPart } from '@remix-run/multipart-parser';
 import { getCameraInputArgs, sanitizeSourceForLogs, sanitizeTextForLogs } from './ffmpeg.ts';
 
-export const MJPEG_BOUNDARY = 'frame';
+const MJPEG_BOUNDARY = 'frame';
 const FIRST_FRAME_TIMEOUT_MS = 20_000;
 const NO_FRAME_TIMEOUT_MS = 8_000;
 const FORCE_KILL_DELAY_MS = 2_000;
 
-/** Own one preview process until it exits, including when the response is cancelled. */
+/**
+ * The camera's pictures as JPEG files, about eight a second. Owns one preview process until it
+ * exits, including when the reader cancels.
+ */
 export function createPreviewStream(source: string, executable: string, signal: AbortSignal) {
 	if (signal.aborted)
 		return new ReadableStream<Uint8Array>({
@@ -150,15 +153,7 @@ export function createPreviewStream(source: string, executable: string, signal: 
 		const picture = latest.bytes;
 		latest = undefined;
 		waiting = false;
-		controller.enqueue(
-			Buffer.concat([
-				Buffer.from(
-					`--${MJPEG_BOUNDARY}\r\nContent-Type: image/jpeg\r\nContent-Length: ${picture.byteLength}\r\n\r\n`
-				),
-				picture,
-				Buffer.from('\r\n')
-			])
-		);
+		controller.enqueue(picture);
 	}
 
 	return new ReadableStream<Uint8Array>(

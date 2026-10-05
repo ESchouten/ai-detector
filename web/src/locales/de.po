@@ -1016,8 +1016,8 @@ msgstr "Vorbereitete Modelle und ungenutzte Modell-Downloads wurden entfernt. Di
 msgid "The cache could not be cleared."
 msgstr "Der Cache konnte nicht geleert werden."
 
-#: src/routes/(admin)/cameras/[id]/preview/+server.ts
 #: src/routes/(admin)/cameras/live/+server.ts
+#: src/routes/(admin)/cameras/pictures/+server.ts
 msgid "Camera not found."
 msgstr "Kamera nicht gefunden."
 
@@ -1042,7 +1042,7 @@ msgstr "Die Kamerasoftware fehlt. Reparieren Sie AI Detector oder installieren S
 msgid "Check the camera picture again. The test recording has expired."
 msgstr "Prüfen Sie das Kamerabild erneut. Die Testaufnahme ist abgelaufen."
 
-#: src/routes/(admin)/cameras/[id]/preview/+server.ts
+#: src/routes/(admin)/cameras/pictures/+server.ts
 msgid "Camera preview software is unavailable. Repair or reinstall AI Detector."
 msgstr "Die Software für die Kameravorschau ist nicht verfügbar. Reparieren Sie AI Detector oder installieren Sie es neu."
 

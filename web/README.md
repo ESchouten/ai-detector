@@ -8,7 +8,7 @@ After setup there are three main pages, **Recordings**, **Cameras** and **Detect
 
 The web process owns one detector process. A started process is not proof of monitoring: a camera counts as monitored only when fresh frames are being processed by every detector assigned to it. Closing the browser leaves monitoring running. **Pause monitoring** also keeps it paused at the next launch; quitting the application keeps the choice it had.
 
-Camera pictures show the latest detection boxes over live video. The video runs independently of inference, so boxes can lag behind moving objects. At most four previews run per browser tab, and hidden ones are released.
+Camera pictures show the latest detection boxes over live video. The video runs independently of inference, so boxes can lag behind moving objects. At most four previews run per browser tab, and hidden ones are released. A camera shows its first picture at its next keyframe, which can take a few seconds; after that the picture stays ready for twenty seconds, so returning to a camera shows it at once.
 
 ### Presets and new models
 

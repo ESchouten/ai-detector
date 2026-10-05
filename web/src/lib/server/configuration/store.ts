@@ -263,8 +263,9 @@ export class ConfigurationStore {
 	followPresets(presets: DetectorPreset[]): Promise<string[]> {
 		return this.enqueue(async () => {
 			const document = await this.load();
+			const before = structuredClone(document.app.detectors);
 			const updated = followPresets(document, presets);
-			if (updated.length) await this.persist(document);
+			if (!isDeepStrictEqual(document.app.detectors, before)) await this.persist(document);
 			return updated;
 		});
 	}

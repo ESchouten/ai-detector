@@ -23,14 +23,14 @@ export async function fileMedia(
 	try {
 		file = await open(filename);
 	} catch (error) {
-		if (isMissingFile(error)) return new Response('Not found', { status: 404 });
+		if (isMissingFile(error)) return new Response(/* @wc-ignore */ 'Not found', { status: 404 });
 		throw error;
 	}
 	try {
 		const stats = await file.stat();
 		if (!stats.isFile()) {
 			await file.close();
-			return new Response('Not found', { status: 404 });
+			return new Response(/* @wc-ignore */ 'Not found', { status: 404 });
 		}
 		const range =
 			request.method === 'HEAD' || request.headers.has('if-range')

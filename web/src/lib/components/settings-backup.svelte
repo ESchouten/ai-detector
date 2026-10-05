@@ -6,15 +6,15 @@
 </script>
 
 <Dialog.Root>
-	<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
-		<Download data-icon="inline-start" aria-hidden="true" />Back up settings
+	<Dialog.Trigger class={buttonVariants({ variant: 'outline', size: 'sm' })}>
+		<Download data-icon="inline-start" aria-hidden="true" />Back up
 	</Dialog.Trigger>
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title>Back up settings</Dialog.Title>
-			<Dialog.Description
-				>Save your cameras, detectors and alert settings in one ZIP.</Dialog.Description
-			>
+			<Dialog.Description>
+				Save your cameras, detectors and alert settings in one ZIP.
+			</Dialog.Description>
 		</Dialog.Header>
 		<p class="text-sm">Includes saved passwords and tokens. Keep this backup private.</p>
 		<p class="text-sm text-muted-foreground">

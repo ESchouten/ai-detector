@@ -11,7 +11,7 @@ class WebLog {
 		try {
 			await this.output.restore();
 		} catch (error) {
-			this.warn('Could not read the previous web log', error);
+			this.warn(/* @wc-ignore */ 'Could not read the previous web log', error);
 		}
 		this.output.append(`${new Date().toISOString()} Web application started\n`);
 	}

@@ -4,6 +4,8 @@ import { ConfigurationError } from '../configuration.ts';
 
 const execute = promisify(execFile);
 function folderPickerCommand(platform: NodeJS.Platform): [string, string[]] {
+	// The title sits inside a quoted string in each script; a translation must not end it.
+	const title = 'Choose your previous AI Detector folder'.replaceAll(/["`$\\]/g, '');
 	if (platform === 'darwin')
 		return [
 			'osascript',
@@ -11,7 +13,7 @@ function folderPickerCommand(platform: NodeJS.Platform): [string, string[]] {
 				'-e',
 				'try',
 				'-e',
-				'POSIX path of (choose folder with prompt "Choose your previous AI Detector folder")',
+				/* @wc-ignore */ `POSIX path of (choose folder with prompt "${title}")`,
 				'-e',
 				'on error number -128',
 				'-e',
@@ -27,13 +29,10 @@ function folderPickerCommand(platform: NodeJS.Platform): [string, string[]] {
 				'-NoProfile',
 				'-STA',
 				'-Command',
-				'Add-Type -AssemblyName System.Windows.Forms; $picker = New-Object System.Windows.Forms.FolderBrowserDialog; $picker.Description = "Choose your previous AI Detector folder"; $picker.ShowNewFolderButton = $false; if ($picker.ShowDialog() -eq "OK") { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8; [Console]::WriteLine($picker.SelectedPath) }; $picker.Dispose()'
+				/* @wc-ignore */ `Add-Type -AssemblyName System.Windows.Forms; $picker = New-Object System.Windows.Forms.FolderBrowserDialog; $picker.Description = "${title}"; $picker.ShowNewFolderButton = $false; if ($picker.ShowDialog() -eq "OK") { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8; [Console]::WriteLine($picker.SelectedPath) }; $picker.Dispose()`
 			]
 		];
-	return [
-		'zenity',
-		['--file-selection', '--directory', '--title=Choose your previous AI Detector folder']
-	];
+	return ['zenity', ['--file-selection', '--directory', `--title=${title}`]];
 }
 
 export async function chooseImportFolder(): Promise<string | null> {

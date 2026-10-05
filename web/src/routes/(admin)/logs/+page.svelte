@@ -3,9 +3,10 @@
 	import { resolve } from '$app/paths';
 	import { ArrowDown, Download } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
+	import { Search } from '@lucide/svelte';
+	import * as InputGroup from '$lib/components/ui/input-group';
 	import { Textarea } from '$lib/components/ui/textarea';
-	import * as Field from '$lib/components/ui/field';
+	import PageHeader from '$lib/components/page-header.svelte';
 	import * as Alert from '$lib/components/ui/alert';
 	import { searchLog } from '$lib/log-search';
 
@@ -58,34 +59,37 @@
 
 <svelte:head><title>Logs · AI Detector</title></svelte:head>
 
-<div class="flex min-w-0 flex-col gap-4">
-	<div class="flex flex-wrap items-start justify-between gap-3">
-		<div class="flex flex-col gap-1">
-			<h1 class="text-2xl font-semibold tracking-tight">Logs</h1>
-			<p class="text-sm text-muted-foreground">
-				Startup and recent activity to help find what went wrong.
-			</p>
-		</div>
-		<Button
-			href={resolve('/logs/diagnostics')}
-			download="AI-Detector-diagnostics.zip"
-			variant="outline"
-		>
-			<Download data-icon="inline-start" aria-hidden="true" />Download diagnostics
-		</Button>
-	</div>
-	<Field.Group>
-		<Field.Field>
-			<Field.Label for="log-search" class="sr-only">Search logs</Field.Label>
-			<Input id="log-search" type="search" placeholder="Search logs…" bind:value={search} />
-		</Field.Field>
-	</Field.Group>
+<section class="page">
+	<PageHeader
+		back={{ href: resolve('/settings'), label: 'Settings' }}
+		title="Logs"
+		description="Startup and recent activity, to help find what went wrong. The diagnostics download bundles this with system details for support."
+	>
+		{#snippet actions()}
+			<Button
+				href={resolve('/logs/diagnostics')}
+				download="AI-Detector-diagnostics.zip"
+				variant="outline"
+			>
+				<Download data-icon="inline-start" aria-hidden="true" />Download diagnostics
+			</Button>
+		{/snippet}
+	</PageHeader>
+	<InputGroup.Root class="max-w-md">
+		<InputGroup.Addon><Search aria-hidden="true" /></InputGroup.Addon>
+		<InputGroup.Input
+			type="search"
+			placeholder="Search logs…"
+			aria-label="Search logs"
+			bind:value={search}
+		/>
+	</InputGroup.Root>
 	{#if error}
 		<Alert.Root variant="destructive">
 			<Alert.Title>Logs could not be refreshed</Alert.Title>
-			<Alert.Description
-				>Check that AI Detector is still open. Retrying automatically.</Alert.Description
-			>
+			<Alert.Description>
+				Check that AI Detector is still open. Retrying automatically.
+			</Alert.Description>
 		</Alert.Root>
 	{/if}
 	<Textarea
@@ -95,7 +99,7 @@
 		onscroll={({ currentTarget }) =>
 			(following =
 				currentTarget.scrollHeight - currentTarget.scrollTop - currentTarget.clientHeight < 32)}
-		class="h-[60vh] min-h-64 resize-none font-mono"
+		class="h-[62dvh] min-h-64 resize-none bg-card font-mono text-xs leading-relaxed md:text-xs"
 		value={visible ||
 			(loading
 				? 'Loading logs…'
@@ -115,4 +119,4 @@
 			</Button>
 		{/if}
 	</div>
-</div>
+</section>

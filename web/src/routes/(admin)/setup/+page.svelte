@@ -2,162 +2,166 @@
 	import { resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { Button } from '$lib/components/ui/button';
-	import { Badge } from '$lib/components/ui/badge';
-	import * as Alert from '$lib/components/ui/alert';
+	import { untrack } from 'svelte';
 	import { ArrowRight, Plus } from '@lucide/svelte';
+	import { Button } from '$lib/components/ui/button';
+	import CameraAdd from '$lib/components/camera-add.svelte';
 	import CameraPicture from '$lib/components/camera-picture.svelte';
-	import CameraEditor from '$lib/components/camera-editor.svelte';
+	import CategoryDot from '$lib/components/category-dot.svelte';
 	import DetectorEditor from '$lib/components/detector-editor.svelte';
-	import SetupReview from '$lib/components/setup-review.svelte';
-	import SetupSteps from '$lib/components/setup-steps.svelte';
 	import ImportInstallation from '$lib/components/import-installation.svelte';
-	import SettingsBackup from '$lib/components/settings-backup.svelte';
-	import { Separator } from '$lib/components/ui/separator';
+	import SetupFinish from '$lib/components/setup-finish.svelte';
+	import SetupSteps from '$lib/components/setup-steps.svelte';
+	import { plural } from '$lib/format';
 	import { getCameras } from '$lib/remote/stream.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { setupStep } from '$lib/setup';
 
 	const choices = $derived(await Promise.all([getCameras(), getDetectors()]));
-	let importing = $state(false);
-	let savingDetector = $state(false);
 	const cameras = $derived(choices[0]);
 	const detectors = $derived(choices[1]);
 	const step = $derived(
 		setupStep(page.url.searchParams.get('step'), cameras.length, detectors.length)
 	);
-	const cameraId = $derived(page.url.searchParams.get('camera'));
-	const detectorLabel = $derived(page.url.searchParams.get('detector'));
-	const adding = $derived(page.url.searchParams.get('add'));
-	const camera = $derived(cameras.find((item) => item.id === cameraId));
-	const detector = $derived(detectors.find((item) => item.meta.label === detectorLabel));
-	const editing = $derived(
-		step === 'cameras'
-			? cameraId !== null || adding === 'camera'
-			: step === 'detectors' && (detectorLabel !== null || adding === 'detector')
-	);
+	// The first camera and detector open their form directly; later visits show what is saved.
+	let addingCamera = $state(untrack(() => cameras.length === 0));
+	let addingDetector = $state(untrack(() => detectors.length === 0));
+	let editingDetector = $state<string>();
+	let importing = $state(false);
+	let savingDetector = $state(false);
+	const edited = $derived(detectors.find((item) => item.meta.label === editingDetector));
 
-	async function showCameras() {
-		await goto(resolve('/setup?step=cameras'));
+	const headings = {
+		cameras: {
+			title: 'Connect your cameras',
+			description:
+				'AI Detector looks for cameras on your network. Keep this computer on the same network as the cameras.'
+		},
+		detectors: {
+			title: 'Choose what to detect',
+			description:
+				'Pick a preset and the cameras it should watch. You can add more detectors later.'
+		},
+		finish: {
+			title: 'Start monitoring',
+			description:
+				'Each camera is checked once. Monitoring then keeps running in the background, also when this page is closed.'
+		}
+	};
+
+	async function show(next: 'detectors' | 'finish') {
+		await goto(resolve(`/setup?step=${next}`));
 	}
-	async function showDetectors() {
-		await goto(resolve('/setup?step=detectors'));
+	// Navigate first: the editors finish updating before they are taken off the page.
+	async function camerasAdded() {
+		await show('detectors');
+		addingCamera = false;
+	}
+	async function detectorSaved() {
+		await show('finish');
+		addingDetector = false;
+		editingDetector = undefined;
 	}
 	async function imported() {
 		importing = false;
+		addingCamera = false;
+		addingDetector = false;
 		await Promise.all([getCameras().refresh(), getDetectors().refresh()]);
 		await goto(resolve('/setup?step=cameras&imported=1'));
 	}
 </script>
 
-<svelte:head><title>Settings · AI Detector</title></svelte:head>
-<section class="settings-page">
+<svelte:head><title>Set up · AI Detector</title></svelte:head>
+
+<section class="mx-auto flex w-full max-w-3xl flex-col gap-8">
 	<SetupSteps
 		current={step}
 		hasCameras={cameras.length > 0}
 		disabled={importing || savingDetector}
 	/>
+
+	{#if !importing}
+		<header class="flex flex-col gap-2">
+			<h1 class="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
+				{headings[step].title}
+			</h1>
+			<p class="max-w-prose leading-relaxed text-pretty text-muted-foreground">
+				{headings[step].description}
+			</p>
+		</header>
+	{/if}
+
 	{#if page.url.searchParams.has('imported')}
-		<p role="status" class="text-sm text-muted-foreground">
-			Your existing setup is ready to review. Previous recordings are available in Recordings.
-			Monitoring is stopped until you start it.
+		<p role="status" class="rounded-xl border bg-card px-4 py-3 text-sm">
+			Your existing setup is here to review. Previous recordings are in Recordings. Monitoring is
+			stopped until you start it in the last step.
 		</p>
 	{/if}
+
 	{#if step === 'cameras'}
-		{#if cameraId && !camera}
-			<Alert.Root variant="destructive">
-				<Alert.Title>Camera not found</Alert.Title>
-				<Alert.Description>This camera may have been removed.</Alert.Description>
-			</Alert.Root>
-			<div><Button onclick={showCameras} variant="outline">Back to cameras</Button></div>
-		{:else if editing}
+		{#if addingCamera}
 			{#if !importing}
-				{#key cameraId}
-					<CameraEditor
-						initial={camera}
-						onDone={showCameras}
-						onCancel={cameras.length ? showCameras : undefined}
-					/>
-				{/key}
+				<CameraAdd
+					onDone={camerasAdded}
+					onCancel={cameras.length ? () => void (addingCamera = false) : undefined}
+				/>
+			{/if}
+			{#if !cameras.length}
+				<div class={importing ? '' : 'border-t pt-6'}>
+					<ImportInstallation bind:opened={importing} oncomplete={imported} />
+				</div>
 			{/if}
 		{:else}
-			<header class="flex flex-wrap items-start justify-between gap-4">
-				<div class="flex flex-col gap-2">
-					<h1 class="settings-heading">Your cameras</h1>
-					<p class="settings-description">
-						Connect your cameras. You’ll choose what to detect in the next step.
-					</p>
-				</div>
-				<Button href={resolve('/setup?step=cameras&add=camera')} variant="outline"
-					><Plus data-icon="inline-start" />Add camera</Button
-				>
-			</header>
-			<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+			<ul class="grid gap-4 sm:grid-cols-2">
 				{#each cameras as camera (camera.id)}
-					<CameraPicture id={camera.id} label={camera.label} monitored={camera.monitored}>
-						{#snippet overlay()}
-							<div class="flex items-start justify-between gap-3">
-								<Badge variant="secondary" class="min-w-0 shrink text-left whitespace-normal"
-									>{camera.label}</Badge
-								>
-								<Button
-									href={resolve(`/setup?step=cameras&camera=${encodeURIComponent(camera.id)}`)}
-									variant="secondary"
-									class="pointer-events-auto shrink-0"
-									size="sm"
-									aria-label={`Edit ${camera.label}`}>Edit</Button
-								>
-							</div>
-						{/snippet}
-					</CameraPicture>
+					<li>
+						<CameraPicture id={camera.id} label={camera.label} monitored={camera.monitored} />
+					</li>
 				{/each}
+			</ul>
+			<div class="flex flex-wrap gap-3">
+				<Button size="lg" href={resolve('/setup?step=detectors')}>
+					Continue<ArrowRight data-icon="inline-end" aria-hidden="true" />
+				</Button>
+				<Button size="lg" variant="outline" onclick={() => (addingCamera = true)}>
+					<Plus data-icon="inline-start" aria-hidden="true" />Add more cameras
+				</Button>
 			</div>
-			<div>
-				<Button href={resolve('/setup?step=detectors')}
-					>Continue to detectors <ArrowRight data-icon="inline-end" /></Button
-				>
-			</div>
-		{/if}
-		{#if !cameras.length}
-			<ImportInstallation bind:opened={importing} oncomplete={imported} />
 		{/if}
 	{:else if step === 'detectors'}
-		{#if detectorLabel && !detector}
-			<Alert.Root variant="destructive">
-				<Alert.Title>Detector not found</Alert.Title>
-				<Alert.Description>This detector may have been removed.</Alert.Description>
-			</Alert.Root>
-			<div><Button onclick={showDetectors} variant="outline">Back to detectors</Button></div>
-		{:else if editing}
-			{#key detectorLabel}
+		{#if addingDetector || edited}
+			{#key editingDetector}
 				<DetectorEditor
 					bind:pending={savingDetector}
-					originalLabel={detectorLabel ?? ''}
-					initial={detector?.detector}
-					initialPreset={detector?.meta.preset}
-					initialConnection={detector?.meta.llmConnection}
-					onDone={showDetectors}
-					onCancel={detectors.length ? showDetectors : undefined}
+					originalLabel={edited?.meta.label ?? ''}
+					initial={edited?.detector}
+					initialPreset={edited?.meta.preset}
+					initialConnection={edited?.meta.llmConnection}
+					onDone={detectorSaved}
+					onCancel={detectors.length
+						? async () => {
+								addingDetector = false;
+								editingDetector = undefined;
+							}
+						: undefined}
 				/>
 			{/key}
-		{:else}
-			<header class="flex flex-wrap items-start justify-between gap-4">
-				<div class="flex flex-col gap-2">
-					<h1 class="settings-heading">Your detectors</h1>
-					<p class="settings-description">
-						Each detector watches the cameras you select. Cameras can use several detectors.
-					</p>
+			{#if !detectors.length}
+				<div class="border-t pt-6">
+					<Button variant="ghost" disabled={savingDetector} href={resolve('/setup?step=finish')}>
+						Skip — use the cameras for live viewing only
+					</Button>
 				</div>
-				<Button href={resolve('/setup?step=detectors&add=detector')} variant="outline"
-					><Plus data-icon="inline-start" />Add detector</Button
-				>
-			</header>
-			<ul class="divide-y">
+			{/if}
+		{:else}
+			<ul class="panel divide-y">
 				{#each detectors as { detector, meta } (meta.label)}
-					<li class="flex items-start justify-between gap-4 py-4 first:pt-0">
-						<div class="flex min-w-0 flex-col gap-1">
-							<h2 class="font-medium">{meta.label}</h2>
+					<li class="flex items-center gap-3 px-4 py-3.5">
+						<CategoryDot seed={meta.preset ?? meta.label} />
+						<div class="flex min-w-0 flex-1 flex-col">
+							<p class="text-sm font-medium">{meta.label}</p>
 							<p class="text-sm text-muted-foreground">
+								{plural(detector.detection.source.length, ['# camera', '# cameras'])} ·
 								{detector.detection.source
 									.map(
 										(source) =>
@@ -167,42 +171,24 @@
 							</p>
 						</div>
 						<Button
-							href={resolve(`/setup?step=detectors&detector=${encodeURIComponent(meta.label)}`)}
 							variant="outline"
 							size="sm"
-							aria-label={`Edit ${meta.label}`}>Edit</Button
+							aria-label={`Edit ${meta.label}`}
+							onclick={() => (editingDetector = meta.label)}>Edit</Button
 						>
 					</li>
 				{/each}
 			</ul>
-		{/if}
-		{#if !editing || !detectors.length}
-			<div>
-				<Button
-					href={resolve('/setup?step=finish')}
-					variant={detectors.length ? 'default' : 'outline'}
-					>{detectors.length
-						? 'Continue to finish setup'
-						: 'Use cameras for viewing only'}<ArrowRight data-icon="inline-end" /></Button
-				>
+			<div class="flex flex-wrap gap-3">
+				<Button size="lg" href={resolve('/setup?step=finish')}>
+					Continue<ArrowRight data-icon="inline-end" aria-hidden="true" />
+				</Button>
+				<Button size="lg" variant="outline" onclick={() => (addingDetector = true)}>
+					<Plus data-icon="inline-start" aria-hidden="true" />Add another detector
+				</Button>
 			</div>
 		{/if}
 	{:else}
-		<header class="flex flex-col gap-2">
-			<h1 class="settings-heading">Finish setup</h1>
-			<p class="settings-description">
-				Start monitoring, check recordings, and choose whether to connect phone alerts.
-			</p>
-		</header>
-		<SetupReview configured={detectors.length > 0} />
-	{/if}
-	{#if !importing && !editing}
-		<Separator />
-		<div class="flex flex-wrap gap-3">
-			{#if cameras.length || detectors.length}<SettingsBackup />{/if}<Button
-				href={resolve('/devices')}
-				variant="outline">Connected devices</Button
-			><Button href={resolve('/storage')} variant="outline">Storage</Button>
-		</div>
+		<SetupFinish configured={detectors.length > 0} />
 	{/if}
 </section>

@@ -8,6 +8,7 @@ import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { DetectionArchive, archivePath } from '../src/lib/server/archive.ts';
 import { availableSpace, exists } from '../src/lib/server/installation-import/files.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
+import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import type { Configuration } from '../src/lib/schema.ts';
 
 const camera = 'rtsp://farmer:private-password@camera.example.test/live';
@@ -155,7 +156,7 @@ test('imports legacy settings and original recordings into setup without startin
 	assert.deepEqual(await readFile(path.join(source, 'config.json')), original);
 	assert.equal(await readFile(path.join(source, event, 'video.mp4'), 'utf8'), 'original recording');
 	assert.equal(await exists(path.join(destination, '.installation-import')), false);
-	assert.equal(await exists(path.join(destination, 'runtime.json')), false);
+	assert.equal(await monitoringEnabled(path.join(destination, 'app.json')), false);
 });
 
 test('relocates shared local camera files and ONNX tensors and preserves standalone camera names', async (t) => {

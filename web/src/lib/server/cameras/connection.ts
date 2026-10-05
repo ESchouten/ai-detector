@@ -72,7 +72,9 @@ export function connectionFailure(cause: unknown): CameraConnectionError {
 
 export function cameraStorageFailure(cause: unknown): CameraConnectionError | undefined {
 	const code = (cause as NodeJS.ErrnoException).code;
-	if (code === 'ENOSPC' || code === 'EDQUOT') return connectionFailure('No space left on device');
+	// Matched by connectionFailure as the system's own wording, so it is not translated.
+	if (code === 'ENOSPC' || code === 'EDQUOT')
+		return connectionFailure(/* @wc-ignore */ 'No space left on device');
 	if (['EACCES', 'EPERM', 'ENOTDIR', 'EROFS'].includes(code ?? ''))
 		return new CameraConnectionError(
 			'The test recording could not be saved. Check that AI Detector’s data folder is writable, or repair the installation.'

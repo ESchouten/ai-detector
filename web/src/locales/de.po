@@ -1,0 +1,3767 @@
+msgid ""
+msgstr ""
+"Source-Language: en\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2\n"
+"X-Plurals-Order: one, other\n"
+
+#: src/lib/camera-batch.ts
+msgid "Could not connect. Check this camera’s login and network."
+msgstr "Verbindung fehlgeschlagen. Prüfen Sie die Zugangsdaten und das Netzwerk dieser Kamera."
+
+#: src/lib/camera-check.ts
+msgid "The camera check could not finish. Please try again."
+msgstr "Die Kameraprüfung konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut."
+
+#: src/lib/detections.ts
+msgid "AI check failed"
+msgstr "KI-Prüfung fehlgeschlagen"
+
+#: src/lib/detections.ts
+msgid "Not checked"
+msgstr "Nicht geprüft"
+
+#: src/lib/detections.ts
+msgid "Checked by AI"
+msgstr "Von KI geprüft"
+
+#: src/lib/detections.ts
+msgid "Reviewed in Telegram"
+msgstr "In Telegram bewertet"
+
+#: src/lib/detections.ts
+msgid "Reviewed by you"
+msgstr "Von Ihnen bewertet"
+
+#: src/lib/camera-status.ts
+#: src/lib/components/setup-finish.svelte
+msgid "Status unavailable"
+msgstr "Status nicht verfügbar"
+
+#: src/lib/camera-status.ts
+#: src/lib/camera-status.ts
+#: src/lib/monitoring.ts
+msgid "Paused"
+msgstr "Pausiert"
+
+#: src/lib/camera-status.ts
+#: src/lib/camera-status.ts
+msgid "Detection stopped"
+msgstr "Erkennung gestoppt"
+
+#: src/lib/camera-status.ts
+#: src/lib/camera-status.ts
+msgid "Preparing"
+msgstr "Wird vorbereitet"
+
+#: src/lib/camera-status.ts
+msgid "Camera offline"
+msgstr "Kamera offline"
+
+#: src/lib/camera-status.ts
+msgid "Recording failed"
+msgstr "Aufnahme fehlgeschlagen"
+
+#: src/lib/camera-status.ts
+msgid "Detection delayed"
+msgstr "Erkennung verzögert"
+
+#: src/lib/camera-status.ts
+#: src/lib/components/setup-finish.svelte
+#: src/lib/monitoring.ts
+msgid "Monitoring"
+msgstr "Überwachung aktiv"
+
+#: src/lib/camera-status.ts
+msgid "Connecting"
+msgstr "Verbindung wird hergestellt"
+
+#: src/lib/format.ts
+msgid "Today"
+msgstr "Heute"
+
+#: src/lib/format.ts
+msgid "Yesterday"
+msgstr "Gestern"
+
+#. 0: ajv.errorsText(errors)
+#: src/lib/configuration.ts
+msgid "Invalid detector configuration: {0}"
+msgstr "Ungültige Detektorkonfiguration: {0}"
+
+#: src/lib/configuration.ts
+msgid "A detector cannot use the same source more than once."
+msgstr "Ein Detektor kann dieselbe Quelle nur einmal verwenden."
+
+#. 0: index + 1
+#. 0: index + 1
+#. 0: index + 1
+#: src/lib/configuration.ts
+#: src/lib/server/configuration/advanced.ts
+#: src/lib/server/runtime-status.ts
+msgid "Detector {0}"
+msgstr "Detektor {0}"
+
+#. 0: streams.size + 1
+#. 0: parsed.output.$.token
+#. 0: this.cameras.size + 1
+#: src/lib/configuration.ts
+#: src/lib/server/cameras/discovery.ts
+#: src/lib/server/runtime-status.ts
+msgid "Camera {0}"
+msgstr "Kamera {0}"
+
+#: src/lib/telegram-pairing.ts
+msgid "This connection link expired. Choose Connect Telegram to try again."
+msgstr "Dieser Verbindungslink ist abgelaufen. Wählen Sie Telegram verbinden, um es erneut zu versuchen."
+
+#: src/lib/telegram-pairing.ts
+msgid "Telegram could not connect. Try again."
+msgstr "Telegram konnte nicht verbunden werden. Versuchen Sie es erneut."
+
+#: src/lib/monitoring.ts
+msgid "Connection lost"
+msgstr "Verbindung unterbrochen"
+
+#: src/lib/monitoring.ts
+msgid "This page has not heard from AI Detector. Reopen the app if it does not reconnect."
+msgstr "Diese Seite erhält keine Daten mehr von AI Detector. Öffnen Sie die App erneut, wenn die Verbindung nicht zurückkommt."
+
+#: src/lib/monitoring.ts
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Live view only"
+msgstr "Nur Livebild"
+
+#: src/lib/monitoring.ts
+msgid "Add a detector to start monitoring your cameras."
+msgstr "Fügen Sie einen Detektor hinzu, um Ihre Kameras zu überwachen."
+
+#: src/lib/monitoring.ts
+msgid "Runs separately"
+msgstr "Läuft separat"
+
+#: src/lib/monitoring.ts
+msgid "Detection is started and stopped outside this app, so its status is not shown here."
+msgstr "Die Erkennung wird außerhalb dieser App gestartet und gestoppt, daher wird ihr Status hier nicht angezeigt."
+
+#: src/lib/monitoring.ts
+msgid "Stopping…"
+msgstr "Wird gestoppt…"
+
+#: src/lib/monitoring.ts
+msgid "Monitoring stopped"
+msgstr "Überwachung gestoppt"
+
+#: src/lib/monitoring.ts
+msgid "Starting…"
+msgstr "Wird gestartet…"
+
+#: src/lib/monitoring.ts
+msgid "Nothing is detected or recorded while monitoring is paused."
+msgstr "Solange die Überwachung pausiert ist, wird nichts erkannt oder aufgenommen."
+
+#: src/lib/monitoring.ts
+#: src/routes/(admin)/+error.svelte
+msgid "Needs attention"
+msgstr "Aufmerksamkeit nötig"
+
+#: src/lib/monitoring.ts
+msgid "Connecting cameras…"
+msgstr "Kameras werden verbunden…"
+
+#: src/lib/monitoring.ts
+msgid "Preparing…"
+msgstr "Wird vorbereitet…"
+
+#: src/lib/remote/llm.remote.ts
+msgid "Connection testing requires the desktop application. You can still save this connection."
+msgstr "Der Verbindungstest ist nur in der Desktop-App möglich. Sie können diese Verbindung trotzdem speichern."
+
+#: src/lib/remote/installation-import.remote.ts
+msgid "Open the localhost dashboard on the computer running AI Detector to import its files."
+msgstr "Öffnen Sie das Dashboard über localhost auf dem Computer, auf dem AI Detector läuft, um dessen Dateien zu importieren."
+
+#: src/lib/remote/exporter.remote.ts
+msgid "Setup test sent."
+msgstr "Testnachricht gesendet."
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/remote/stream.remote.ts
+#: src/lib/server/configuration/camera-setup.ts
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Camera"
+msgstr "Kamera"
+
+#: src/lib/remote/detector.remote.ts
+msgid "This preset is no longer available. Choose another preset."
+msgstr "Diese Voreinstellung ist nicht mehr verfügbar. Wählen Sie eine andere Voreinstellung."
+
+#: src/lib/remote/runtime.remote.ts
+msgid "Use the complete application download to start detection here."
+msgstr "Laden Sie die vollständige Anwendung herunter, um die Erkennung hier zu starten."
+
+#: src/lib/remote/settings.remote.ts
+msgid "Invalid JSON."
+msgstr "Ungültiges JSON."
+
+#: src/lib/server/access.ts
+msgid "Open the dashboard directly to make changes."
+msgstr "Öffnen Sie das Dashboard direkt, um Änderungen vorzunehmen."
+
+#: src/lib/server/access.ts
+msgid "Connect this device to AI Detector first."
+msgstr "Verbinden Sie dieses Gerät zuerst mit AI Detector."
+
+#. 0: address.type; 1: address.archiveStage; 2: address.timestamp
+#: src/lib/server/archive.ts
+msgid "Could not read recording {0}/{1}/{2}. Other recordings remain available."
+msgstr "Aufnahme {0}/{1}/{2} konnte nicht gelesen werden. Die anderen Aufnahmen bleiben verfügbar."
+
+#: src/lib/detections.ts
+#: src/lib/server/archive.ts
+msgid "Invalid category."
+msgstr "Ungültige Kategorie."
+
+#: src/lib/server/folder-picker.ts
+msgid "The folder chooser could not open. Use “Enter folder path” instead."
+msgstr "Die Ordnerauswahl konnte nicht geöffnet werden. Verwenden Sie stattdessen „Ordnerpfad eingeben“."
+
+#: src/lib/server/device-access.ts
+msgid "This code has expired. Create a new code on a connected device."
+msgstr "Dieser Code ist abgelaufen. Erstellen Sie auf einem verbundenen Gerät einen neuen Code."
+
+#: src/lib/server/device-access.ts
+msgid "The code did not match. Check the six digits and try again."
+msgstr "Der Code stimmt nicht. Prüfen Sie die sechs Ziffern und versuchen Sie es erneut."
+
+#: src/lib/server/device-access.ts
+msgid "Remove an old connected device before adding another."
+msgstr "Entfernen Sie zuerst ein altes verbundenes Gerät, bevor Sie ein weiteres hinzufügen."
+
+#: src/lib/server/device-access.ts
+msgid "Browser"
+msgstr "Browser"
+
+#: src/lib/server/detector-preparation.ts
+msgid "This download does not include a Docker image reference. Choose “On this computer” or download a complete application release."
+msgstr "Dieser Download enthält keinen Verweis auf ein Docker-Image. Wählen Sie „Auf diesem Computer“ oder laden Sie eine vollständige Version der Anwendung herunter."
+
+#: src/lib/server/detector-preparation.ts
+msgid "Downloading and checking GPU support. The first download can take several minutes."
+msgstr "GPU-Unterstützung wird heruntergeladen und geprüft. Der erste Download kann einige Minuten dauern."
+
+#: src/lib/server/detector-preparation.ts
+msgid "Docker could not run the NVIDIA GPU check. Check your internet connection, NVIDIA driver and Docker GPU support, then try again. You can also choose “On this computer”."
+msgstr "Docker konnte die NVIDIA-GPU-Prüfung nicht ausführen. Prüfen Sie Ihre Internetverbindung, den NVIDIA-Treiber und die GPU-Unterstützung von Docker und versuchen Sie es erneut. Sie können auch „Auf diesem Computer“ wählen."
+
+#: src/lib/server/detector-preparation.ts
+msgid "NVIDIA acceleration could not be prepared. Check your internet connection and graphics driver, then try again. Details are available below."
+msgstr "Die NVIDIA-Beschleunigung konnte nicht vorbereitet werden. Prüfen Sie Ihre Internetverbindung und den Grafiktreiber und versuchen Sie es erneut. Details finden Sie unten."
+
+#: src/lib/server/detector-preparation.ts
+msgid "Could not open the detector. Extract the complete download and keep its files together."
+msgstr "Der Detektor konnte nicht geöffnet werden. Entpacken Sie den vollständigen Download und lassen Sie die Dateien zusammen."
+
+#: src/lib/server/detector-preparation.ts
+msgid "The detector check did not finish. Please try again."
+msgstr "Die Prüfung des Detektors wurde nicht abgeschlossen. Bitte versuchen Sie es erneut."
+
+#: src/lib/server/diagnostics.ts
+msgid ""
+"AI Detector diagnostics\n"
+"\n"
+"Includes available rotated logs, the eight latest TensorRT build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n"
+""
+msgstr ""
+"Diagnosedaten von AI Detector\n"
+"\n"
+"Enthält die verfügbaren Protokolldateien, die acht neuesten TensorRT-Build-Protokolle, Laufzeitdetails und Einstellungen ohne Passwörter. Aufnahmen sind nicht enthalten. Prüfen Sie die Dateien, bevor Sie sie weitergeben: Protokolle können lokale Pfade und Kameraadressen enthalten.\n"
+""
+
+#. 0: (space.available / 1024 ** 3).toFixed(1)
+#: src/lib/server/detector-service.ts
+msgid "Storage is almost full ({0} GB free). Free space in Settings → Storage so recordings can continue."
+msgstr "Der Speicher ist fast voll ({0} GB frei). Geben Sie unter Einstellungen → Speicher Platz frei, damit weiter aufgenommen werden kann."
+
+#: src/lib/server/detector-service.ts
+msgid "This web server uses a separately managed detector. Download the complete application to start and stop it here."
+msgstr "Dieser Webserver verwendet einen separat verwalteten Detektor. Laden Sie die vollständige Anwendung herunter, um ihn hier zu starten und zu stoppen."
+
+#: src/lib/server/live-preview.ts
+msgid "Waiting for the detector to publish a live picture."
+msgstr "Warten, bis der Detektor ein Livebild liefert."
+
+#: src/lib/server/live-preview.ts
+#: src/lib/server/live-preview.ts
+msgid "The detector is no longer publishing live pictures."
+msgstr "Der Detektor liefert keine Livebilder mehr."
+
+#: src/lib/server/live-preview.ts
+msgid "Waiting for a picture from the current detector run."
+msgstr "Warten auf ein Bild aus dem aktuellen Detektorlauf."
+
+#: src/lib/server/live-preview.ts
+msgid "The live picture does not match this camera and rule."
+msgstr "Das Livebild passt nicht zu dieser Kamera und diesem Detektor."
+
+#: src/lib/server/live-preview.ts
+msgid "No recent analyzed picture. Check the camera and monitoring status."
+msgstr "Kein aktuell analysiertes Bild. Prüfen Sie die Kamera und den Status der Überwachung."
+
+#: src/lib/server/live-preview.ts
+msgid "Waiting for this rule to analyze a picture."
+msgstr "Warten, bis dieser Detektor ein Bild analysiert."
+
+#: src/lib/server/live-preview.ts
+msgid "The live picture could not be read."
+msgstr "Das Livebild konnte nicht gelesen werden."
+
+#: src/lib/server/live-preview.ts
+msgid "Live detection preview is unavailable. Close it and try again."
+msgstr "Die Live-Vorschau der Erkennung ist nicht verfügbar. Schließen Sie sie und versuchen Sie es erneut."
+
+#: src/lib/server/managed-detector.ts
+msgid "Ready to set up your camera."
+msgstr "Bereit, Ihre Kamera einzurichten."
+
+#: src/lib/server/managed-detector.ts
+msgid "Monitoring needs attention."
+msgstr "Die Überwachung braucht Ihre Aufmerksamkeit."
+
+#: src/lib/server/managed-detector.ts
+msgid "Pause monitoring before clearing the model cache."
+msgstr "Pausieren Sie die Überwachung, bevor Sie den Modell-Cache leeren."
+
+#: src/lib/server/managed-detector.ts
+msgid "Checking this computer…"
+msgstr "Dieser Computer wird geprüft…"
+
+#: src/lib/server/managed-detector.ts
+msgid "Add a camera and choose what to detect first."
+msgstr "Fügen Sie zuerst eine Kamera hinzu und wählen Sie, was erkannt werden soll."
+
+#: src/lib/server/managed-detector.ts
+msgid "Start cancelled."
+msgstr "Start abgebrochen."
+
+#: src/lib/server/managed-detector.ts
+msgid "Starting the detector…"
+msgstr "Detektor wird gestartet…"
+
+#: src/lib/server/managed-detector.ts
+msgid "Preparing detection and connecting cameras. Monitoring will be confirmed after frames are processed."
+msgstr "Erkennung wird vorbereitet und Kameras werden verbunden. Die Überwachung wird bestätigt, sobald Bilder verarbeitet wurden."
+
+#. 0: exitSignal ?? code
+#: src/lib/server/managed-detector.ts
+msgid "The detector stopped unexpectedly ({0})."
+msgstr "Der Detektor wurde unerwartet beendet ({0})."
+
+#: src/lib/server/managed-detector.ts
+msgid "Detector stopped."
+msgstr "Detektor gestoppt."
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector stopped unexpectedly. Check the details below, then try again."
+msgstr "Der Detektor wurde unerwartet beendet. Sehen Sie sich die Details unten an und versuchen Sie es erneut."
+
+#: src/lib/server/managed-detector.ts
+msgid "Restart cancelled."
+msgstr "Neustart abgebrochen."
+
+#: src/lib/server/managed-detector.ts
+msgid "Finishing detections and stopping…"
+msgstr "Erkennungen werden abgeschlossen, dann wird gestoppt…"
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector did not finish shutting down within 30 seconds. It was forced to stop; the last detection may be incomplete."
+msgstr "Der Detektor wurde nicht innerhalb von 30 Sekunden beendet. Er wurde zwangsweise gestoppt; die letzte Erkennung ist möglicherweise unvollständig."
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector could not start."
+msgstr "Der Detektor konnte nicht gestartet werden."
+
+#. 0: locations.length
+#: src/lib/server/recording-export.ts
+msgid ""
+"AI Detector recordings\n"
+"\n"
+"{0} recorded events.\n"
+"\n"
+"Files are grouped by category, stage and recording timestamp under detections/.\n"
+"clean.jpg is the original image when available; best.jpg includes annotations.\n"
+"Other saved images, video clips and metadata.json are included unchanged.\n"
+"Manual reviews override the original stage. review.json records the manual\n"
+"decision and its origin; metadata.json preserves the original validator result.\n"
+"Dates follow the recording dates shown in AI Detector.\n"
+"\n"
+"An accepted event is not a verified bounding-box annotation. Review and annotate\n"
+"the original images or video frames before using them to train a model.\n"
+"\n"
+"This export does not include application settings or camera login details.\n"
+""
+msgstr ""
+"Aufnahmen von AI Detector\n"
+"\n"
+"{0} aufgezeichnete Ereignisse.\n"
+"\n"
+"Die Dateien sind unter detections/ nach Kategorie, Status und Aufnahmezeitpunkt geordnet.\n"
+"clean.jpg ist das Originalbild, sofern vorhanden; best.jpg enthält Markierungen.\n"
+"Weitere gespeicherte Bilder, Videoclips und metadata.json sind unverändert enthalten.\n"
+"Manuelle Bewertungen ersetzen den ursprünglichen Status. review.json hält die manuelle\n"
+"Entscheidung und ihre Herkunft fest; metadata.json bewahrt das ursprüngliche Ergebnis der KI-Prüfung.\n"
+"Die Daten entsprechen den in AI Detector angezeigten Aufnahmedaten.\n"
+"\n"
+"Ein bestätigtes Ereignis ist keine geprüfte Annotation mit Rahmen. Prüfen und annotieren\n"
+"Sie die Originalbilder oder Videoframes, bevor Sie damit ein Modell trainieren.\n"
+"\n"
+"Dieser Export enthält weder Einstellungen der Anwendung noch Zugangsdaten von Kameras.\n"
+""
+
+#: src/lib/components/export-recordings.svelte
+#: src/lib/server/recording-export.ts
+msgid "No recordings match these filters."
+msgstr "Keine Aufnahmen für diese Filter."
+
+#: src/lib/server/runtime-platform.ts
+msgid "Install or open Docker, then try again. Docker must be running on this computer."
+msgstr "Installieren oder öffnen Sie Docker und versuchen Sie es erneut. Docker muss auf diesem Computer laufen."
+
+#: src/lib/server/runtime-platform.ts
+msgid "Switch Docker to Linux containers, then try again."
+msgstr "Stellen Sie Docker auf Linux-Container um und versuchen Sie es erneut."
+
+#: src/lib/server/settings-backup.ts
+msgid ""
+"AI Detector settings backup\n"
+"\n"
+"Includes cameras, detectors and alert settings, including saved passwords and\n"
+"tokens. Keep this ZIP private.\n"
+"\n"
+"To restore into a new installation, extract the ZIP, open Settings, choose\n"
+"Use existing setup and select the extracted folder. Review the imported setup\n"
+"before starting monitoring. Existing setups are never overwritten by import.\n"
+"\n"
+"Recordings, downloaded models, local video sources, custom preset files and\n"
+"computer startup preferences and connected-device access are not included. Keep any local model or video\n"
+"files referenced by config.json alongside this backup, at their original\n"
+"relative paths, or update those paths before importing on another computer.\n"
+""
+msgstr ""
+"Sicherung der Einstellungen von AI Detector\n"
+"\n"
+"Enthält Kameras, Detektoren und Einstellungen für Benachrichtigungen, einschließlich gespeicherter Passwörter und\n"
+"Tokens. Halten Sie diese ZIP-Datei privat.\n"
+"\n"
+"Zum Wiederherstellen in einer neuen Installation: ZIP-Datei entpacken, Einstellungen öffnen,\n"
+"Vorhandene Einrichtung verwenden wählen und den entpackten Ordner auswählen. Prüfen Sie die importierte Einrichtung,\n"
+"bevor Sie die Überwachung starten. Vorhandene Einrichtungen werden beim Import nie überschrieben.\n"
+"\n"
+"Aufnahmen, heruntergeladene Modelle, lokale Videoquellen, eigene Voreinstellungen,\n"
+"Autostart-Einstellungen des Computers und der Zugriff verbundener Geräte sind nicht enthalten. Bewahren Sie lokale Modell- oder\n"
+"Videodateien, auf die config.json verweist, zusammen mit dieser Sicherung an ihren ursprünglichen\n"
+"relativen Pfaden auf, oder passen Sie die Pfade an, bevor Sie auf einem anderen Computer importieren.\n"
+""
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Update the NVIDIA graphics driver, then try again to enable GPU acceleration."
+msgstr "Aktualisieren Sie den NVIDIA-Grafiktreiber und versuchen Sie es erneut, um die GPU-Beschleunigung zu nutzen."
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "The NVIDIA runtime files are missing. Reinstall AI Detector."
+msgstr "Die NVIDIA-Laufzeitdateien fehlen. Installieren Sie AI Detector neu."
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Preparing NVIDIA acceleration. The first download may take several minutes…"
+msgstr "NVIDIA-Beschleunigung wird vorbereitet. Der erste Download kann einige Minuten dauern…"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Downloading and installing NVIDIA acceleration…"
+msgstr "NVIDIA-Beschleunigung wird heruntergeladen und installiert…"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Checking NVIDIA acceleration…"
+msgstr "NVIDIA-Beschleunigung wird geprüft…"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "TensorRT preparation is deferred after an earlier failure. Using PyTorch/CUDA."
+msgstr "Die TensorRT-Vorbereitung wurde nach einem früheren Fehler verschoben. PyTorch/CUDA wird verwendet."
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Preparing faster NVIDIA detection. Downloading TensorRT once for this computer…"
+msgstr "Schnellere NVIDIA-Erkennung wird vorbereitet. TensorRT wird einmalig für diesen Computer heruntergeladen…"
+
+#. 0: String(error)
+#: src/lib/server/nvidia-runtime.ts
+msgid "TensorRT could not be prepared. Using PyTorch/CUDA. {0}"
+msgstr "TensorRT konnte nicht vorbereitet werden. PyTorch/CUDA wird verwendet. {0}"
+
+#. 0: String(error)
+#: src/lib/server/nvidia-runtime.ts
+msgid "Could not save the TensorRT retry time: {0}"
+msgstr "Der Zeitpunkt für den nächsten TensorRT-Versuch konnte nicht gespeichert werden: {0}"
+
+#: src/lib/server/storage.ts
+msgid "The recordings changed. Check the number of recordings and confirm again."
+msgstr "Die Aufnahmen haben sich geändert. Prüfen Sie die Anzahl der Aufnahmen und bestätigen Sie erneut."
+
+#: src/lib/server/runtime-status.ts
+msgid "Telegram alert"
+msgstr "Telegram-Benachrichtigung"
+
+#: src/lib/server/runtime-status.ts
+msgid "Webhook"
+msgstr "Webhook"
+
+#: src/lib/server/runtime-status.ts
+msgid "Model preparation failed. Check the details and try again."
+msgstr "Die Vorbereitung des Modells ist fehlgeschlagen. Sehen Sie sich die Details an und versuchen Sie es erneut."
+
+#: src/lib/navigation.ts
+#: src/lib/server/runtime-status.ts
+#: src/routes/(admin)/validator/+page.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Validator"
+msgstr "KI-Prüfung"
+
+#: src/lib/server/runtime-status.ts
+msgid "Connection failed."
+msgstr "Verbindung fehlgeschlagen."
+
+#: src/lib/server/runtime-status.ts
+msgid "A recording could not be saved."
+msgstr "Eine Aufnahme konnte nicht gespeichert werden."
+
+#: src/lib/server/runtime-status.ts
+msgid "No recent camera frames. Waiting for the connection to recover."
+msgstr "Keine aktuellen Kamerabilder. Warten, bis die Verbindung wieder steht."
+
+#. 0: stale.label
+#: src/lib/server/runtime-status.ts
+msgid "{0}: waiting for AI validation or delivery to finish."
+msgstr "{0}: Warten, bis KI-Prüfung oder Versand abgeschlossen sind."
+
+#. 0: stale.label
+#: src/lib/server/runtime-status.ts
+msgid "{0}: processing has not completed recently."
+msgstr "{0}: Die Verarbeitung wurde seit Längerem nicht abgeschlossen."
+
+#: src/lib/server/telegram-pairing.ts
+msgid "Finish or cancel another Telegram connection before starting a new one."
+msgstr "Schließen Sie eine andere Telegram-Verbindung ab oder brechen Sie sie ab, bevor Sie eine neue starten."
+
+#: src/lib/server/telegram-pairing.ts
+msgid "My Telegram"
+msgstr "Mein Telegram"
+
+#: src/lib/server/telegram-pairing.ts
+msgid "This bot already has a connection in progress. Finish or cancel it before starting another."
+msgstr "Für diesen Bot läuft bereits eine Verbindung. Schließen Sie sie ab oder brechen Sie sie ab, bevor Sie eine weitere starten."
+
+#: src/lib/server/stream-preview.ts
+msgid "Invalid live picture received."
+msgstr "Ungültiges Livebild empfangen."
+
+#: src/lib/server/stream-preview.ts
+msgid "Live stream ended."
+msgstr "Livestream beendet."
+
+#: src/lib/server/stream-preview.ts
+#: src/lib/server/stream-preview.ts
+#: src/lib/server/stream-preview.ts
+msgid "Live stream unavailable."
+msgstr "Livestream nicht verfügbar."
+
+#: src/lib/server/stream-preview.ts
+msgid "Live stream stopped receiving frames."
+msgstr "Der Livestream empfängt keine Bilder mehr."
+
+#: src/lib/server/telegram.ts
+#: src/lib/server/telegram.ts
+msgid "Telegram returned an unexpected reply. Please try again later."
+msgstr "Telegram hat unerwartet geantwortet. Bitte versuchen Sie es später erneut."
+
+#: src/lib/server/telegram.ts
+msgid "Telegram could not be reached. Check this computer’s internet connection, then try again. Local monitoring can continue without alerts."
+msgstr "Telegram ist nicht erreichbar. Prüfen Sie die Internetverbindung dieses Computers und versuchen Sie es erneut. Die Überwachung kann ohne Benachrichtigungen weiterlaufen."
+
+#: src/lib/server/telegram.ts
+msgid "This bot token is not valid. Copy the current token from BotFather."
+msgstr "Dieses Bot-Token ist ungültig. Kopieren Sie das aktuelle Token aus BotFather."
+
+#: src/lib/server/telegram.ts
+msgid "This bot is receiving messages in another application or has a webhook. Use a dedicated bot for AI Detector, or enter its chat ID manually."
+msgstr "Dieser Bot empfängt Nachrichten in einer anderen Anwendung oder hat einen Webhook. Verwenden Sie einen eigenen Bot für AI Detector oder geben Sie die Chat-ID manuell ein."
+
+#: src/lib/server/telegram.ts
+msgid "Telegram could not complete this request. Check your bot token and try again."
+msgstr "Telegram konnte diese Anfrage nicht ausführen. Prüfen Sie Ihr Bot-Token und versuchen Sie es erneut."
+
+#: src/lib/server/telegram.ts
+msgid "This bot is connected to another application through a webhook. Its connection has not been changed. Use a dedicated bot for AI Detector, or enter its chat ID manually."
+msgstr "Dieser Bot ist über einen Webhook mit einer anderen Anwendung verbunden. Diese Verbindung wurde nicht geändert. Verwenden Sie einen eigenen Bot für AI Detector oder geben Sie die Chat-ID manuell ein."
+
+#: src/lib/server/telegram.ts
+msgid "AI Detector setup test. If you received this message on the intended device, confirm receipt in AI Detector to enable alerts."
+msgstr "Test von AI Detector. Wenn Sie diese Nachricht auf dem gewünschten Gerät erhalten haben, bestätigen Sie den Empfang in AI Detector, um Benachrichtigungen zu aktivieren."
+
+#: src/lib/server/telegram.ts
+msgid "Choose a group for AI Detector alerts. Add this bot to your group first if it is not listed."
+msgstr "Wählen Sie eine Gruppe für die Benachrichtigungen von AI Detector. Fügen Sie diesen Bot zuerst Ihrer Gruppe hinzu, wenn sie nicht aufgeführt ist."
+
+#: src/lib/server/telegram.ts
+msgid "Choose a channel for AI Detector alerts. Telegram will ask for permission to post there."
+msgstr "Wählen Sie einen Kanal für die Benachrichtigungen von AI Detector. Telegram fragt nach der Erlaubnis, dort zu posten."
+
+#: src/lib/server/telegram.ts
+msgid "Choose group"
+msgstr "Gruppe wählen"
+
+#: src/lib/server/telegram.ts
+msgid "Choose channel"
+msgstr "Kanal wählen"
+
+#: src/lib/server/telegram.ts
+msgid "AI Detector test alert. Choose Confirm connection to receive detector alerts in this chat."
+msgstr "Testbenachrichtigung von AI Detector. Wählen Sie Verbindung bestätigen, um Benachrichtigungen der Detektoren in diesem Chat zu erhalten."
+
+#: src/lib/server/telegram.ts
+msgid "Confirm connection"
+msgstr "Verbindung bestätigen"
+
+#: src/lib/server/telegram.ts
+msgid "Connected. Return to AI Detector to save your settings."
+msgstr "Verbunden. Kehren Sie zu AI Detector zurück, um Ihre Einstellungen zu speichern."
+
+#: src/lib/server/telegram-reviews.ts
+msgid "This chat is not connected to AI Detector."
+msgstr "Dieser Chat ist nicht mit AI Detector verbunden."
+
+#: src/lib/server/telegram-reviews.ts
+msgid "Could not save this review. Please try again."
+msgstr "Diese Bewertung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut."
+
+#: src/lib/detections.ts
+#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "Confirmed"
+msgstr "Bestätigt"
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "Marked as a false alarm"
+msgstr "Als Fehlalarm markiert"
+
+#: src/lib/server/telegram-reviews.ts
+msgid "This recording is no longer available in AI Detector."
+msgstr "Diese Aufnahme ist in AI Detector nicht mehr verfügbar."
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The recording location contains a file or linked folder. Choose a regular recording folder before testing it."
+msgstr "Der Aufnahmeort enthält eine Datei oder einen verknüpften Ordner. Wählen Sie einen normalen Aufnahmeordner, bevor Sie ihn testen."
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The recording location is invalid. Check the camera settings."
+msgstr "Der Aufnahmeort ist ungültig. Prüfen Sie die Kameraeinstellungen."
+
+#: src/lib/server/cameras/archive-check.ts
+#: src/lib/server/cameras/checks.ts
+msgid "The camera software is missing. Repair or reinstall AI Detector and try again."
+msgstr "Die Kamerasoftware fehlt. Reparieren Sie AI Detector oder installieren Sie es neu und versuchen Sie es erneut."
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The test recording was saved but could not be played. Check the camera picture and try again."
+msgstr "Die Testaufnahme wurde gespeichert, konnte aber nicht abgespielt werden. Prüfen Sie das Kamerabild und versuchen Sie es erneut."
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The camera test recording is no longer available. Check its picture again."
+msgstr "Die Testaufnahme der Kamera ist nicht mehr verfügbar. Prüfen Sie das Bild erneut."
+
+#: src/routes/recovery/+page.server.ts
+msgid "The saved settings could not be restored. Download diagnostics for help."
+msgstr "Die gespeicherten Einstellungen konnten nicht wiederhergestellt werden. Laden Sie die Diagnosedaten herunter, um Hilfe zu erhalten."
+
+#: src/lib/server/cameras/connection.ts
+msgid "Enter the camera username and password in their separate fields."
+msgstr "Geben Sie Benutzername und Passwort der Kamera in die dafür vorgesehenen Felder ein."
+
+#: src/lib/server/cameras/connection.ts
+msgid "Enter the camera’s address, for example 192.168.1.50."
+msgstr "Geben Sie die Adresse der Kamera ein, zum Beispiel 192.168.1.50."
+
+#: src/lib/server/cameras/connection.ts
+msgid "Enter a complete camera stream address starting with rtsp:// or http://."
+msgstr "Geben Sie eine vollständige Stream-Adresse der Kamera ein, die mit rtsp:// oder http:// beginnt."
+
+#: src/lib/server/cameras/connection.ts
+msgid "There is not enough space to save the test recording. Free some space on this computer and try again."
+msgstr "Es ist nicht genug Platz, um die Testaufnahme zu speichern. Geben Sie auf diesem Computer Platz frei und versuchen Sie es erneut."
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera rejected the login. Check its username and password, then try again."
+msgstr "Die Kamera hat die Zugangsdaten abgelehnt. Prüfen Sie Benutzername und Passwort und versuchen Sie es erneut."
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera did not respond. Check its power, network connection and address, then try again."
+msgstr "Die Kamera hat nicht geantwortet. Prüfen Sie Stromversorgung, Netzwerkverbindung und Adresse und versuchen Sie es erneut."
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera did not provide a supported video stream. Try another channel or ask your camera installer for its stream address."
+msgstr "Die Kamera hat keinen unterstützten Videostream geliefert. Versuchen Sie einen anderen Kanal oder fragen Sie Ihren Kamera-Installateur nach der Stream-Adresse."
+
+#: src/lib/server/cameras/connection.ts
+msgid "Could not connect to this camera. Check that local camera access is enabled, or enter its stream URL manually."
+msgstr "Verbindung zu dieser Kamera fehlgeschlagen. Prüfen Sie, ob der lokale Kamerazugriff aktiviert ist, oder geben Sie die Stream-URL manuell ein."
+
+#: src/lib/server/cameras/connection.ts
+msgid "The test recording could not be saved. Check that AI Detector’s data folder is writable, or repair the installation."
+msgstr "Die Testaufnahme konnte nicht gespeichert werden. Prüfen Sie, ob der Datenordner von AI Detector beschreibbar ist, oder reparieren Sie die Installation."
+
+#: src/routes/pair/+page.server.ts
+msgid "Phone or computer"
+msgstr "Handy oder Computer"
+
+#: src/lib/server/cameras/index.ts
+msgid "The camera software could not be found. Repair or reinstall AI Detector, then try again."
+msgstr "Die Kamerasoftware wurde nicht gefunden. Reparieren Sie AI Detector oder installieren Sie es neu und versuchen Sie es erneut."
+
+#: src/lib/server/configuration/advanced.ts
+msgid "Each AI connection needs a unique name."
+msgstr "Jede KI-Verbindung braucht einen eindeutigen Namen."
+
+#: src/lib/server/configuration/camera-setup.ts
+#: src/lib/server/configuration/cameras.ts
+#: src/lib/server/configuration/cameras.ts
+msgid "This camera no longer exists."
+msgstr "Diese Kamera existiert nicht mehr."
+
+#: src/lib/server/configuration/camera-setup.ts
+msgid "Camera settings changed during the recording check. Check the recording location again."
+msgstr "Die Kameraeinstellungen wurden während der Aufnahmeprüfung geändert. Prüfen Sie den Aufnahmeort erneut."
+
+#: src/lib/server/configuration/camera-setup.ts
+msgid "Confirm the picture and check the recording location before finishing."
+msgstr "Bestätigen Sie das Bild und prüfen Sie den Aufnahmeort, bevor Sie abschließen."
+
+#: src/lib/server/configuration/camera-setup.ts
+msgid "Monitoring has not been verified yet. Start monitoring and wait for the camera to process pictures before finishing."
+msgstr "Die Überwachung wurde noch nicht überprüft. Starten Sie die Überwachung und warten Sie, bis die Kamera Bilder verarbeitet, bevor Sie abschließen."
+
+#: src/lib/server/configuration/cameras.ts
+msgid "Camera identities are duplicated. Restore your camera settings from a backup."
+msgstr "Kamera-Identitäten sind doppelt vorhanden. Stellen Sie Ihre Kameraeinstellungen aus einer Sicherung wieder her."
+
+#: src/lib/server/configuration/cameras.ts
+msgid "This camera is already saved. Edit it from Cameras."
+msgstr "Diese Kamera ist bereits gespeichert. Bearbeiten Sie sie unter Kameras."
+
+#: src/lib/server/configuration/cameras.ts
+msgid "A camera with this name already exists. Choose another name."
+msgstr "Es gibt bereits eine Kamera mit diesem Namen. Wählen Sie einen anderen Namen."
+
+#: src/lib/server/configuration/cameras.ts
+msgid "Choose an existing camera to edit."
+msgstr "Wählen Sie eine vorhandene Kamera zum Bearbeiten."
+
+#: src/lib/server/cameras/checks.ts
+msgid "The camera check took too long. Try again or choose another camera channel."
+msgstr "Die Kameraprüfung hat zu lange gedauert. Versuchen Sie es erneut oder wählen Sie einen anderen Kamerakanal."
+
+#: src/lib/server/cameras/checks.ts
+msgid "Camera check failed"
+msgstr "Kameraprüfung fehlgeschlagen"
+
+#: src/lib/server/cameras/checks.ts
+msgid "Another camera check is still running. Please wait a moment and try again."
+msgstr "Es läuft noch eine andere Kameraprüfung. Bitte warten Sie einen Moment und versuchen Sie es erneut."
+
+#: src/lib/server/cameras/checks.ts
+msgid "Check the camera picture again before saving. The previous check has expired or the camera address changed."
+msgstr "Prüfen Sie das Kamerabild erneut, bevor Sie speichern. Die vorherige Prüfung ist abgelaufen oder die Kameraadresse hat sich geändert."
+
+#. 0: hadApp ? `restore ${files.app} from ${previousApp}` \\: `remove the newly created ${files.app}`
+#: src/lib/server/configuration/files.ts
+msgid "Settings could not be saved or restored. Recovery is required: {0}."
+msgstr "Die Einstellungen konnten weder gespeichert noch wiederhergestellt werden. Eine Wiederherstellung ist nötig: {0}."
+
+#: src/lib/server/configuration/llms.ts
+#: src/lib/server/configuration/llms.ts
+msgid "This AI connection no longer exists."
+msgstr "Diese KI-Verbindung existiert nicht mehr."
+
+#: src/lib/server/configuration/llms.ts
+msgid "An AI connection with this name already exists."
+msgstr "Es gibt bereits eine KI-Verbindung mit diesem Namen."
+
+#: src/lib/server/configuration/llms.ts
+msgid "This connection is in use. Change its detectors before removing it."
+msgstr "Diese Verbindung wird verwendet. Ändern Sie zuerst die zugehörigen Detektoren, bevor Sie sie entfernen."
+
+#: src/lib/server/configuration/detectors.ts
+#: src/lib/server/configuration/detectors.ts
+msgid "This detector no longer exists."
+msgstr "Dieser Detektor existiert nicht mehr."
+
+#: src/lib/server/configuration/detectors.ts
+msgid "A detector with this name already exists."
+msgstr "Es gibt bereits einen Detektor mit diesem Namen."
+
+#: src/lib/server/configuration/detectors.ts
+msgid "Choose an existing AI connection."
+msgstr "Wählen Sie eine vorhandene KI-Verbindung."
+
+#: src/lib/server/configuration/detectors.ts
+msgid "Enter a question for AI verification."
+msgstr "Geben Sie eine Frage für die KI-Prüfung ein."
+
+#: src/lib/server/configuration/preset-files.ts
+msgid "A preset must contain a detector configuration."
+msgstr "Eine Voreinstellung muss eine Detektorkonfiguration enthalten."
+
+#. 0: file; 1: cause.message
+#: src/lib/server/configuration/preset-files.ts
+msgid "Invalid preset \"{0}\": {1}"
+msgstr "Ungültige Voreinstellung \"{0}\": {1}"
+
+#. 0: file
+#: src/lib/server/configuration/preset-files.ts
+msgid "Could not read preset file \"{0}\"."
+msgstr "Die Voreinstellungsdatei \"{0}\" konnte nicht gelesen werden."
+
+#. 0: file
+#: src/lib/server/configuration/preset-files.ts
+msgid "Preset file \"{0}\" is not valid JSON."
+msgstr "Die Voreinstellungsdatei \"{0}\" ist kein gültiges JSON."
+
+#. 0: directory
+#: src/lib/server/configuration/preset-files.ts
+msgid "Could not read preset folder \"{0}\"."
+msgstr "Der Ordner mit Voreinstellungen \"{0}\" konnte nicht gelesen werden."
+
+#: src/lib/server/cameras/discovery.ts
+msgid "Camera search was incomplete. Check local network access, or enter a stream URL manually."
+msgstr "Die Kamerasuche war unvollständig. Prüfen Sie den Zugriff auf das lokale Netzwerk oder geben Sie eine Stream-URL manuell ein."
+
+#: src/lib/server/cameras/discovery.ts
+msgid "No cameras found. Check that this computer and camera use the same network and allow local network access, or enter its stream URL manually."
+msgstr "Keine Kameras gefunden. Prüfen Sie, ob dieser Computer und die Kamera im selben Netzwerk sind und der Zugriff auf das lokale Netzwerk erlaubt ist, oder geben Sie die Stream-URL manuell ein."
+
+#: src/lib/server/cameras/discovery.ts
+msgid "This device did not provide a video stream. Check that camera streaming is enabled or enter its stream URL manually."
+msgstr "Dieses Gerät hat keinen Videostream geliefert. Prüfen Sie, ob das Streaming der Kamera aktiviert ist, oder geben Sie die Stream-URL manuell ein."
+
+#: src/lib/server/cameras/discovery.ts
+msgid "That camera channel is no longer available. Connect again and choose a channel."
+msgstr "Dieser Kamerakanal ist nicht mehr verfügbar. Verbinden Sie erneut und wählen Sie einen Kanal."
+
+#: src/lib/server/cameras/discovery.ts
+msgid "The camera did not return a stream address."
+msgstr "Die Kamera hat keine Stream-Adresse geliefert."
+
+#: src/lib/server/configuration/streams.ts
+#: src/lib/server/configuration/streams.ts
+msgid "This camera source no longer exists."
+msgstr "Diese Kameraquelle existiert nicht mehr."
+
+#: src/lib/server/configuration/streams.ts
+msgid "This camera source already exists."
+msgstr "Diese Kameraquelle existiert bereits."
+
+#: src/lib/server/configuration/streams.ts
+msgid "This camera is a detector’s only source. Update or remove that detector first."
+msgstr "Diese Kamera ist die einzige Quelle eines Detektors. Ändern oder entfernen Sie zuerst diesen Detektor."
+
+#: src/lib/server/configuration/streams.ts
+msgid "The camera order changed. Reload and try again."
+msgstr "Die Reihenfolge der Kameras hat sich geändert. Laden Sie die Seite neu und versuchen Sie es erneut."
+
+#: src/lib/server/configuration/telegrams.ts
+#: src/lib/server/configuration/telegrams.ts
+msgid "This notification channel no longer exists."
+msgstr "Dieser Empfänger existiert nicht mehr."
+
+#: src/lib/server/configuration/telegrams.ts
+msgid "This notification channel or name already exists."
+msgstr "Dieser Empfänger oder Name existiert bereits."
+
+#: src/lib/server/configuration/telegrams.ts
+msgid "Confirm that you received the test alert before enabling new or changed connection details."
+msgstr "Bestätigen Sie, dass Sie die Testbenachrichtigung erhalten haben, bevor Sie neue oder geänderte Verbindungsdaten aktivieren."
+
+#: src/lib/server/configuration/telegrams.ts
+msgid "A selected detector no longer exists."
+msgstr "Ein ausgewählter Detektor existiert nicht mehr."
+
+#: src/lib/server/configuration/store.ts
+msgid "A settings file is missing. Restore the last valid settings to continue."
+msgstr "Eine Einstellungsdatei fehlt. Stellen Sie die letzten gültigen Einstellungen wieder her, um fortzufahren."
+
+#: src/lib/server/configuration/store.ts
+msgid "No previous valid settings are available."
+msgstr "Es sind keine früheren gültigen Einstellungen verfügbar."
+
+#: src/lib/server/configuration/store.ts
+msgid "This application already has a setup. Import into a new installation to avoid replacing your settings."
+msgstr "Diese Anwendung ist bereits eingerichtet. Importieren Sie in eine neue Installation, damit Ihre Einstellungen nicht ersetzt werden."
+
+#: src/lib/server/configuration/store.ts
+msgid "Add a camera before finishing setup."
+msgstr "Fügen Sie eine Kamera hinzu, bevor Sie die Einrichtung abschließen."
+
+#: src/lib/server/configuration/store.ts
+msgid "Settings changed since you opened the editor. Reload the saved settings before applying your changes."
+msgstr "Die Einstellungen wurden geändert, seit Sie den Editor geöffnet haben. Laden Sie die gespeicherten Einstellungen neu, bevor Sie Ihre Änderungen anwenden."
+
+#. 0: file.source
+#: src/lib/server/installation-import/files.ts
+msgid "Expected a file: {0}"
+msgstr "Datei erwartet: {0}"
+
+#. 0: relative
+#. 0: next
+#: src/lib/server/installation-import/files.ts
+#: src/lib/server/installation-import/files.ts
+msgid "The old folder contains a symbolic link at {0}. Select a folder with the original files."
+msgstr "Der alte Ordner enthält unter {0} eine symbolische Verknüpfung. Wählen Sie einen Ordner mit den Originaldateien."
+
+#: src/lib/server/installation-import/files.ts
+msgid "There is not enough free space. Free some space or keep recordings in their current folder."
+msgstr "Es ist nicht genug freier Speicherplatz vorhanden. Geben Sie Platz frei oder lassen Sie die Aufnahmen in ihrem aktuellen Ordner."
+
+#: src/lib/server/installation-import/files.ts
+msgid "The old installation changed during import. Stop the old detector and choose its folder again."
+msgstr "Die alte Installation hat sich während des Imports geändert. Stoppen Sie den alten Detektor und wählen Sie den Ordner erneut."
+
+#: src/lib/server/installation-import/files.ts
+msgid "An incomplete import file has changed. Choose the old folder again to restart the import."
+msgstr "Eine unvollständig importierte Datei hat sich geändert. Wählen Sie den alten Ordner erneut, um den Import neu zu starten."
+
+#: src/lib/server/installation-import/files.ts
+msgid "Choose the folder containing config.json, rather than the file itself."
+msgstr "Wählen Sie den Ordner, der config.json enthält, nicht die Datei selbst."
+
+#: src/lib/server/installation-import/files.ts
+msgid "Choose the old installation, outside the new application data folder."
+msgstr "Wählen Sie die alte Installation außerhalb des Datenordners der neuen Anwendung."
+
+#: src/lib/server/installation-import/configuration.ts
+msgid "Choose the old application folder containing config.json."
+msgstr "Wählen Sie den Ordner der alten Anwendung, der config.json enthält."
+
+#. 0: path.basename(file)
+#: src/lib/server/installation-import/configuration.ts
+msgid "{0} is not valid JSON. The original file has not been changed."
+msgstr "{0} ist kein gültiges JSON. Die Originaldatei wurde nicht geändert."
+
+#: src/lib/server/installation-import/configuration.ts
+msgid "Removed the old strategy option, which the previous detector did not use."
+msgstr "Die alte Option strategy wurde entfernt; der vorherige Detektor hat sie nicht verwendet."
+
+#. 0: value
+#: src/lib/server/installation-import/configuration.ts
+msgid "The model {0} is not in the old folder. Ultralytics will try to download it when monitoring starts."
+msgstr "Das Modell {0} befindet sich nicht im alten Ordner. Ultralytics versucht, es herunterzuladen, wenn die Überwachung startet."
+
+#. 0: model ? 'model' \\: 'video'; 1: value
+#: src/lib/server/installation-import/configuration.ts
+msgid "A local {0} file is missing: {1}. Restore it before importing."
+msgstr "Eine lokale {0}-Datei fehlt: {1}. Stellen Sie sie wieder her, bevor Sie importieren."
+
+#: src/routes/(admin)/camera-checks/+server.ts
+msgid "Open AI Detector again before checking the camera."
+msgstr "Öffnen Sie AI Detector erneut, bevor Sie die Kamera prüfen."
+
+#: src/routes/(admin)/camera-checks/+server.ts
+msgid "Choose a camera stream before checking its picture."
+msgstr "Wählen Sie einen Kamerastream, bevor Sie das Bild prüfen."
+
+#: src/routes/(admin)/camera-checks/+server.ts
+msgid "The camera check request was not valid. Please try again."
+msgstr "Die Anfrage zur Kameraprüfung war ungültig. Bitte versuchen Sie es erneut."
+
+#: src/routes/(admin)/+error.svelte
+#: src/routes/(admin)/+error.svelte
+#: src/routes/(admin)/[...catchall]/+page.ts
+msgid "Page not found"
+msgstr "Seite nicht gefunden"
+
+#: src/routes/(admin)/devices/+page.server.ts
+msgid "Connect this computer to your local network and try again."
+msgstr "Verbinden Sie diesen Computer mit Ihrem lokalen Netzwerk und versuchen Sie es erneut."
+
+#: src/routes/(admin)/devices/+page.server.ts
+msgid "Use another connected device to remove this browser."
+msgstr "Verwenden Sie ein anderes verbundenes Gerät, um diesen Browser zu entfernen."
+
+#: src/lib/server/installation-import/service.ts
+msgid "An unfinished import is ready to resume."
+msgstr "Ein unvollständiger Import kann fortgesetzt werden."
+
+#: src/lib/server/installation-import/service.ts
+msgid "Finish the current import before leaving setup."
+msgstr "Schließen Sie den aktuellen Import ab, bevor Sie die Einrichtung verlassen."
+
+#: src/lib/server/installation-import/service.ts
+msgid "Finish the current import before choosing another folder."
+msgstr "Schließen Sie den aktuellen Import ab, bevor Sie einen anderen Ordner wählen."
+
+#: src/lib/server/installation-import/service.ts
+msgid "Choose the previous installation again."
+msgstr "Wählen Sie die vorherige Installation erneut."
+
+#: src/lib/server/installation-import/service.ts
+msgid "Resume with the same recording option, or choose the folder again."
+msgstr "Fahren Sie mit derselben Aufnahmeoption fort oder wählen Sie den Ordner erneut."
+
+#: src/lib/server/installation-import/service.ts
+msgid "This application already has a setup. Import is available before adding cameras or detectors."
+msgstr "Diese Anwendung ist bereits eingerichtet. Der Import ist nur möglich, bevor Kameras oder Detektoren hinzugefügt werden."
+
+#. 0: folder
+#: src/lib/server/installation-import/service.ts
+msgid "The new application already has a {0} folder. Import will not overwrite existing data."
+msgstr "Die neue Anwendung hat bereits einen Ordner {0}. Der Import überschreibt keine vorhandenen Daten."
+
+#: src/lib/server/installation-import/service.ts
+msgid "Saving your setup…"
+msgstr "Ihre Einrichtung wird gespeichert…"
+
+#: src/lib/server/installation-import/service.ts
+msgid "An imported folder is missing. Restore the drive before resuming the import."
+msgstr "Ein importierter Ordner fehlt. Stellen Sie das Laufwerk wieder bereit, bevor Sie den Import fortsetzen."
+
+#: src/lib/server/installation-import/service.ts
+msgid "The old folder or a file could not be found. Connect the drive and choose the folder again."
+msgstr "Der alte Ordner oder eine Datei wurde nicht gefunden. Schließen Sie das Laufwerk an und wählen Sie den Ordner erneut."
+
+#: src/lib/server/installation-import/service.ts
+msgid "There is not enough free space. Free some space and resume the import."
+msgstr "Es ist nicht genug freier Speicherplatz vorhanden. Geben Sie Platz frei und setzen Sie den Import fort."
+
+#: src/lib/server/installation-import/service.ts
+msgid "AI Detector cannot access this folder. Check its permissions and try again."
+msgstr "AI Detector kann nicht auf diesen Ordner zugreifen. Prüfen Sie die Berechtigungen und versuchen Sie es erneut."
+
+#: src/lib/server/installation-import/service.ts
+msgid "The import could not finish. Your original files are unchanged. Check the drive and try again."
+msgstr "Der Import konnte nicht abgeschlossen werden. Ihre Originaldateien sind unverändert. Prüfen Sie das Laufwerk und versuchen Sie es erneut."
+
+#: src/routes/(admin)/storage/+page.server.ts
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Choose a valid date, today or earlier."
+msgstr "Wählen Sie ein gültiges Datum, heute oder früher."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Recordings could not be removed."
+msgstr "Die Aufnahmen konnten nicht entfernt werden."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Cache cleanup requires the desktop application so monitoring can be checked."
+msgstr "Das Leeren des Caches ist nur in der Desktop-App möglich, damit die Überwachung geprüft werden kann."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Prepared models and unused model downloads removed. Current source models were kept."
+msgstr "Vorbereitete Modelle und ungenutzte Modell-Downloads wurden entfernt. Die aktuellen Quellmodelle wurden behalten."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "The cache could not be cleared."
+msgstr "Der Cache konnte nicht geleert werden."
+
+#: src/routes/(admin)/cameras/[id]/preview/+server.ts
+#: src/routes/(admin)/cameras/live/+server.ts
+msgid "Camera not found."
+msgstr "Kamera nicht gefunden."
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "Open AI Detector again before checking the recording location."
+msgstr "Öffnen Sie AI Detector erneut, bevor Sie den Aufnahmeort prüfen."
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "The recording check request was not valid."
+msgstr "Die Anfrage zur Aufnahmeprüfung war ungültig."
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "This camera has no local recording destination to check."
+msgstr "Diese Kamera hat keinen lokalen Aufnahmeort, der geprüft werden kann."
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "Camera software is missing. Repair or reinstall AI Detector."
+msgstr "Die Kamerasoftware fehlt. Reparieren Sie AI Detector oder installieren Sie es neu."
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "Check the camera picture again. The test recording has expired."
+msgstr "Prüfen Sie das Kamerabild erneut. Die Testaufnahme ist abgelaufen."
+
+#: src/routes/(admin)/cameras/[id]/preview/+server.ts
+msgid "Camera preview software is unavailable. Repair or reinstall AI Detector."
+msgstr "Die Software für die Kameravorschau ist nicht verfügbar. Reparieren Sie AI Detector oder installieren Sie es neu."
+
+#: src/routes/(admin)/camera-checks/[id]/[resource]/+server.ts
+msgid "This camera check has expired. Check the camera again."
+msgstr "Diese Kameraprüfung ist abgelaufen. Prüfen Sie die Kamera erneut."
+
+#: src/routes/recovery/+page.svelte
+msgid "Recover settings · AI Detector"
+msgstr "Einstellungen wiederherstellen · AI Detector"
+
+#: src/routes/recovery/+page.svelte
+msgid "Recover settings"
+msgstr "Einstellungen wiederherstellen"
+
+#: src/routes/recovery/+page.svelte
+msgid "Restore the last settings AI Detector could read. The current files are kept as copies for troubleshooting. Recordings are kept."
+msgstr "Stellen Sie die letzten Einstellungen wieder her, die AI Detector lesen konnte. Die aktuellen Dateien bleiben als Kopien zur Fehlersuche erhalten. Aufnahmen bleiben erhalten."
+
+#: src/routes/recovery/+page.svelte
+msgid "Recovery did not finish"
+msgstr "Wiederherstellung nicht abgeschlossen"
+
+#: src/routes/recovery/+page.svelte
+msgid "Restore saved settings"
+msgstr "Gespeicherte Einstellungen wiederherstellen"
+
+#: src/routes/recovery/+page.svelte
+msgid "No valid recovery snapshot is available. Restore config.json and app.json from your settings backup, or ask for help using the diagnostics download."
+msgstr "Es ist keine gültige Wiederherstellungskopie verfügbar. Stellen Sie config.json und app.json aus Ihrer Sicherung der Einstellungen wieder her, oder bitten Sie mithilfe der Diagnosedaten um Hilfe."
+
+#: src/routes/(admin)/+error.svelte
+#: src/routes/(admin)/logs/+page.svelte
+#: src/routes/(admin)/status/+page.svelte
+#: src/routes/recovery/+page.svelte
+msgid "<0/>Download diagnostics"
+msgstr "<0/>Diagnosedaten herunterladen"
+
+#: src/routes/recovery/+page.svelte
+msgid "Back to the app"
+msgstr "Zurück zur App"
+
+#: src/routes/pair/+page.svelte
+msgid "Connect device · AI Detector"
+msgstr "Gerät verbinden · AI Detector"
+
+#: src/routes/pair/+page.svelte
+msgid "Your code is filled in. Tap Connect device to open the dashboard here."
+msgstr "Ihr Code ist eingetragen. Tippen Sie auf Gerät verbinden, um das Dashboard hier zu öffnen."
+
+#: src/routes/pair/+page.svelte
+msgid "On the computer running AI Detector, open Settings → Devices and choose Connect a device. Enter the code it shows."
+msgstr "Öffnen Sie auf dem Computer, auf dem AI Detector läuft, Einstellungen → Geräte und wählen Sie Gerät verbinden. Geben Sie den angezeigten Code ein."
+
+#: src/routes/pair/+page.svelte
+msgid "Connect to AI Detector"
+msgstr "Mit AI Detector verbinden"
+
+#: src/routes/pair/+page.svelte
+msgid "Six-digit code"
+msgstr "Sechsstelliger Code"
+
+#: src/routes/pair/+page.svelte
+msgid "Name for this device <0>(optional)</0>"
+msgstr "Name für dieses Gerät <0>(optional)</0>"
+
+#: src/lib/components/camera-add.svelte
+#: src/routes/pair/+page.svelte
+msgid "Could not connect"
+msgstr "Verbindung fehlgeschlagen"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-picture.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/llm-connection-editor.svelte
+#: src/routes/pair/+page.svelte
+msgid "Connecting…"
+msgstr "Verbindung wird hergestellt…"
+
+#: src/routes/pair/+page.svelte
+msgid "Connect device"
+msgstr "Gerät verbinden"
+
+#. 0: missing ? 'Page not found' \\: 'Needs attention'
+#. 0: saved?.meta.label ?? 'Detector'
+#. 0: saved?.label ?? 'Add recipient'
+#. 0: camera?.label ?? 'Camera'
+#. 0: initial?.label ?? 'Connect validator'
+#: src/routes/(admin)/+error.svelte
+#: src/routes/(admin)/detectors/edit/+page.svelte
+#: src/routes/(admin)/notifications/add/+page.svelte
+#: src/routes/(admin)/streams/[id]/+page.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "{0} · AI Detector"
+msgstr "{0} · AI Detector"
+
+#: src/routes/(admin)/+error.svelte
+msgid "This page needs attention"
+msgstr "Diese Seite braucht Ihre Aufmerksamkeit"
+
+#: src/routes/(admin)/+error.svelte
+msgid "Go to the start"
+msgstr "Zur Startseite"
+
+#: src/routes/(admin)/+error.svelte
+msgid "<0/>Recover settings"
+msgstr "<0/>Einstellungen wiederherstellen"
+
+#: src/lib/hooks/runtime-status.svelte.ts
+msgid "Status is unavailable."
+msgstr "Status nicht verfügbar."
+
+#: src/lib/hooks/setup-verifier.svelte.ts
+msgid "This camera could not be checked. Try again."
+msgstr "Diese Kamera konnte nicht geprüft werden. Versuchen Sie es erneut."
+
+#: src/lib/hooks/setup-verifier.svelte.ts
+msgid "The recording check could not finish. Try again."
+msgstr "Die Aufnahmeprüfung konnte nicht abgeschlossen werden. Versuchen Sie es erneut."
+
+#: src/lib/components/app-sidebar.svelte
+#: src/lib/components/guided-header.svelte
+#: src/lib/components/mobile-header.svelte
+msgid "AI Detector"
+msgstr "AI Detector"
+
+#: src/lib/components/app-sidebar.svelte
+msgid "View monitoring status"
+msgstr "Status der Überwachung ansehen"
+
+#: src/lib/components/app-sidebar.svelte
+#: src/lib/components/guided-header.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Help on GitHub"
+msgstr "Hilfe auf GitHub"
+
+#. 0: version
+#: src/lib/components/app-sidebar.svelte
+msgid "Version {0}"
+msgstr "Version {0}"
+
+#: src/lib/components/camera-add.svelte
+msgid "Waiting"
+msgstr "Wartet"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Connected"
+msgstr "Verbunden"
+
+#: src/lib/components/camera-add.svelte
+msgid "Added"
+msgstr "Hinzugefügt"
+
+#: src/lib/components/camera-add.svelte
+msgid "No cameras were found. Check that the camera and this computer use the same network, or enter its stream URL."
+msgstr "Es wurden keine Kameras gefunden. Prüfen Sie, ob die Kamera und dieser Computer im selben Netzwerk sind, oder geben Sie die Stream-URL ein."
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera search failed. Check the network and try again."
+msgstr "Die Kamerasuche ist fehlgeschlagen. Prüfen Sie das Netzwerk und versuchen Sie es erneut."
+
+#: src/lib/components/camera-add.svelte
+msgid "Could not connect to the camera. Check the stream URL and try again."
+msgstr "Verbindung zur Kamera fehlgeschlagen. Prüfen Sie die Stream-URL und versuchen Sie es erneut."
+
+#: src/lib/components/camera-add.svelte
+msgid "Could not check this picture. Try again."
+msgstr "Dieses Bild konnte nicht geprüft werden. Versuchen Sie es erneut."
+
+#: src/lib/components/camera-add.svelte
+msgid "Could not add this camera. Try again."
+msgstr "Diese Kamera konnte nicht hinzugefügt werden. Versuchen Sie es erneut."
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Searching…"
+msgstr "Suche läuft…"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Search again"
+msgstr "Erneut suchen"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Cameras on your network"
+msgstr "Kameras in Ihrem Netzwerk"
+
+#: src/lib/components/camera-add.svelte
+msgid "Looking for cameras…"
+msgstr "Kameras werden gesucht…"
+
+#: src/lib/components/camera-add.svelte
+msgid "Already added"
+msgstr "Bereits hinzugefügt"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera username"
+msgstr "Benutzername der Kamera"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera password"
+msgstr "Passwort der Kamera"
+
+#: src/lib/components/camera-add.svelte
+msgid "Select cameras that share this login."
+msgstr "Wählen Sie Kameras mit denselben Zugangsdaten."
+
+#. 0: selected.length > 1 ? 'Select cameras that share this login.' \\: ''
+#: src/lib/components/camera-add.svelte
+msgid "The camera’s own login, which may differ from its phone app. {0}"
+msgstr "Die eigenen Zugangsdaten der Kamera; sie können sich von denen der Handy-App unterscheiden. {0}"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-picture.svelte
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Try again"
+msgstr "Erneut versuchen"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Enter a stream URL instead"
+msgstr "Stattdessen eine Stream-URL eingeben"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "RTSP URL"
+msgstr "RTSP-URL"
+
+#: src/lib/components/camera-add.svelte
+msgid "Paste the full stream URL, including the username and password if the camera needs them."
+msgstr "Fügen Sie die vollständige Stream-URL ein, einschließlich Benutzername und Passwort, falls die Kamera sie benötigt."
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera needs attention"
+msgstr "Kamera braucht Ihre Aufmerksamkeit"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Connect camera"
+msgstr "Kamera verbinden"
+
+#: src/lib/components/camera-add.svelte
+msgid "Enter a stream URL"
+msgstr "Stream-URL eingeben"
+
+#: src/lib/components/camera-add.svelte
+msgid "Check the picture"
+msgstr "Bild prüfen"
+
+#: src/lib/components/camera-add.svelte
+msgid "Check the pictures"
+msgstr "Bilder prüfen"
+
+#: src/lib/components/camera-add.svelte
+msgid "Give each camera a name you’ll recognize. A short test recording is checked for you."
+msgstr "Geben Sie jeder Kamera einen Namen, den Sie wiedererkennen. Eine kurze Testaufnahme wird für Sie geprüft."
+
+#. 0: camera.name
+#. 0: label || 'Camera'
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "{0} connection preview"
+msgstr "Verbindungsvorschau {0}"
+
+#. 0: camera.name
+#: src/lib/components/camera-add.svelte
+msgid "Leave out {0}"
+msgstr "{0} weglassen"
+
+#: src/lib/components/camera-add.svelte
+msgid "Leave out"
+msgstr "Weglassen"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera name"
+msgstr "Name der Kamera"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera channel or stream"
+msgstr "Kamerakanal oder Stream"
+
+#: src/lib/components/camera-add.svelte
+msgid "Refresh picture"
+msgstr "Bild aktualisieren"
+
+#: src/lib/components/camera-add.svelte
+msgid "Adding…"
+msgstr "Wird hinzugefügt…"
+
+#: src/lib/components/camera-add.svelte
+msgid "Change login and retry"
+msgstr "Zugangsdaten ändern und erneut versuchen"
+
+#: src/lib/components/camera-add.svelte
+msgid "Add more cameras"
+msgstr "Weitere Kameras hinzufügen"
+
+#: src/lib/components/camera-add.svelte
+msgid "Done"
+msgstr "Fertig"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/heartbeat-settings.svelte
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/setup-finish.svelte
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. 0: label
+#: src/lib/components/camera-picture.svelte
+msgid "{0} live picture"
+msgstr "Livebild {0}"
+
+#: src/lib/components/camera-picture.svelte
+msgid "The live picture is unavailable."
+msgstr "Das Livebild ist nicht verfügbar."
+
+#: src/lib/components/camera-picture.svelte
+msgid "Preview paused"
+msgstr "Vorschau pausiert"
+
+#: src/lib/components/camera-picture.svelte
+msgid "Show live picture"
+msgstr "Livebild anzeigen"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Custom settings from JSON"
+msgstr "Eigene Einstellungen aus JSON"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Off — alert on every detection"
+msgstr "Aus — Benachrichtigung bei jeder Erkennung"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Check detections with"
+msgstr "Erkennungen prüfen mit"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Add another connection"
+msgstr "Weitere Verbindung hinzufügen"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-verification.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Connect validator"
+msgstr "KI-Prüfung verbinden"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Validator <0>(optional)</0>"
+msgstr "KI-Prüfung <0>(optional)</0>"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Let AI look at each clip before an alert is sent, to filter out false alarms. The preset supplies the question."
+msgstr "Lassen Sie eine KI jeden Clip ansehen, bevor eine Benachrichtigung gesendet wird, um Fehlalarme herauszufiltern. Die Voreinstellung liefert die Frage."
+
+#: src/lib/components/camera-discovery.svelte
+msgid "Discovered cameras"
+msgstr "Gefundene Kameras"
+
+#: src/lib/components/camera-discovery.svelte
+msgid "Choose from the list instead"
+msgstr "Stattdessen aus der Liste wählen"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Which cameras should it watch?"
+msgstr "Welche Kameras soll er überwachen?"
+
+#: src/lib/components/camera-selection.svelte
+msgid "A camera can be watched by several detectors."
+msgstr "Eine Kamera kann von mehreren Detektoren überwacht werden."
+
+#: src/lib/components/camera-selection.svelte
+msgid "Clear selection"
+msgstr "Auswahl aufheben"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Select all cameras"
+msgstr "Alle Kameras auswählen"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Choose at least one camera to continue."
+msgstr "Wählen Sie mindestens eine Kamera, um fortzufahren."
+
+#: src/lib/components/camera-settings.svelte
+msgid "No cameras were found. Enter the stream URL, or check that the camera and this computer use the same network."
+msgstr "Es wurden keine Kameras gefunden. Geben Sie die Stream-URL ein oder prüfen Sie, ob die Kamera und dieser Computer im selben Netzwerk sind."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Could not connect to the camera. Check its connection details."
+msgstr "Verbindung zur Kamera fehlgeschlagen. Prüfen Sie die Verbindungsdaten."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Camera saved."
+msgstr "Kamera gespeichert."
+
+#: src/lib/components/camera-settings.svelte
+msgid "The camera could not be saved. Your choices are still here."
+msgstr "Die Kamera konnte nicht gespeichert werden. Ihre Angaben sind noch vorhanden."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Camera removed."
+msgstr "Kamera entfernt."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Could not remove this camera."
+msgstr "Diese Kamera konnte nicht entfernt werden."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Connect to see the new picture."
+msgstr "Verbinden Sie, um das neue Bild zu sehen."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Camera settings"
+msgstr "Kameraeinstellungen"
+
+#. 0: address
+#: src/lib/components/camera-settings.svelte
+msgid "Camera selected: {0}"
+msgstr "Kamera ausgewählt: {0}"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Paste the full stream URL, including the username and password if required."
+msgstr "Fügen Sie die vollständige Stream-URL ein, bei Bedarf mit Benutzername und Passwort."
+
+#: src/lib/components/camera-settings.svelte
+msgid "The camera’s own login, which may differ from its phone app."
+msgstr "Die eigenen Zugangsdaten der Kamera; sie können sich von denen der Handy-App unterscheiden."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Choose camera channel again"
+msgstr "Kamerakanal erneut wählen"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Reconnect camera"
+msgstr "Kamera erneut verbinden"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Keep current connection"
+msgstr "Aktuelle Verbindung behalten"
+
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/heartbeat-settings.svelte
+#: src/lib/components/notification-editor.svelte
+msgid "Saving…"
+msgstr "Wird gespeichert…"
+
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/notification-editor.svelte
+msgid "Save changes"
+msgstr "Änderungen speichern"
+
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Change connection"
+msgstr "Verbindung ändern"
+
+#. 0: initial.label
+#. 0: originalLabel
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/notification-editor.svelte
+msgid "Remove “{0}”?"
+msgstr "„{0}“ entfernen?"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Monitoring and alerts for this camera will stop. Its existing recordings stay on this computer."
+msgstr "Überwachung und Benachrichtigungen für diese Kamera werden beendet. Die vorhandenen Aufnahmen bleiben auf diesem Computer."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Keep camera"
+msgstr "Kamera behalten"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Remove camera"
+msgstr "Kamera entfernen"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Remove this camera…"
+msgstr "Diese Kamera entfernen…"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Export recordings"
+msgstr "Aufnahmen exportieren"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Download images, videos and detection details in one ZIP to share for model improvement."
+msgstr "Laden Sie Bilder, Videos und Erkennungsdetails in einer ZIP-Datei herunter, um sie zur Verbesserung des Modells zu teilen."
+
+#: src/lib/components/export-recordings.svelte
+msgid "All categories"
+msgstr "Alle Kategorien"
+
+#: src/lib/components/export-recordings.svelte
+#: src/routes/(admin)/detections/+page.svelte
+msgid "All results"
+msgstr "Alle Ergebnisse"
+
+#: src/lib/components/export-recordings.svelte
+msgid "From date"
+msgstr "Von Datum"
+
+#: src/lib/components/export-recordings.svelte
+msgid "To date"
+msgstr "Bis Datum"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Optional. Leave both empty to include all dates."
+msgstr "Optional. Lassen Sie beide leer, um alle Daten einzuschließen."
+
+#: src/lib/components/export-recordings.svelte
+msgid "<0/>Download ZIP"
+msgstr "<0/>ZIP herunterladen"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Counting recordings…"
+msgstr "Aufnahmen werden gezählt…"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Could not read the recordings. Close this window and try again."
+msgstr "Die Aufnahmen konnten nicht gelesen werden. Schließen Sie dieses Fenster und versuchen Sie es erneut."
+
+#: src/lib/components/export-recordings.svelte
+msgid "<0/>Export"
+msgstr "<0/>Exportieren"
+
+#: src/lib/components/detector-editor.svelte
+msgid "The preset could not be loaded."
+msgstr "Die Voreinstellung konnte nicht geladen werden."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset to use its AI verification question."
+msgstr "Wählen Sie eine Voreinstellung, um deren Frage für die KI-Prüfung zu verwenden."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Could not load the preset question."
+msgstr "Die Frage der Voreinstellung konnte nicht geladen werden."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose at least one camera for this detector."
+msgstr "Wählen Sie mindestens eine Kamera für diesen Detektor."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset for this detector."
+msgstr "Wählen Sie eine Voreinstellung für diesen Detektor."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset that supplies an AI verification question."
+msgstr "Wählen Sie eine Voreinstellung, die eine Frage für die KI-Prüfung enthält."
+
+#. 0: savedLabel
+#: src/lib/components/detector-editor.svelte
+msgid "Detector '{0}' saved."
+msgstr "Detektor „{0}“ gespeichert."
+
+#: src/lib/components/detector-editor.svelte
+msgid "The detector could not be saved."
+msgstr "Der Detektor konnte nicht gespeichert werden."
+
+#: src/lib/components/detector-editor.svelte
+msgid "The detector could not be deleted."
+msgstr "Der Detektor konnte nicht gelöscht werden."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Your unsaved choices were restored. Review them before saving."
+msgstr "Ihre nicht gespeicherten Angaben wurden wiederhergestellt. Prüfen Sie sie vor dem Speichern."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Monitoring presets are unavailable"
+msgstr "Voreinstellungen sind nicht verfügbar"
+
+#. 0: presetWarning
+#: src/lib/components/detector-editor.svelte
+msgid "{0} You can still edit and save the current configuration."
+msgstr "{0} Sie können die aktuelle Konfiguration weiterhin bearbeiten und speichern."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Preset"
+msgstr "Voreinstellung"
+
+#: src/lib/components/detector-editor.svelte
+msgid "This detector uses its own settings, changed in Advanced. Choosing a preset replaces them."
+msgstr "Dieser Detektor verwendet eigene Einstellungen, die unter Erweitert geändert wurden. Wenn Sie eine Voreinstellung wählen, werden sie ersetzt."
+
+#: src/lib/components/detector-editor.svelte
+msgid "What do you want to detect?"
+msgstr "Was möchten Sie erkennen?"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
+msgstr "Wählen Sie eine Voreinstellung. Sie enthält alles, was nötig ist, um diese Art von Ereignis zu erkennen."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Detector name"
+msgstr "Name des Detektors"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Add a camera first"
+msgstr "Fügen Sie zuerst eine Kamera hinzu"
+
+#: src/lib/components/detector-editor.svelte
+msgid "A detector watches cameras you have connected. <0><0/>Add cameras</0>"
+msgstr "Ein Detektor überwacht Kameras, die Sie verbunden haben. <0><0/>Kameras hinzufügen</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Connect another phone or group"
+msgstr "Weiteres Handy oder weitere Gruppe verbinden"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Connect Telegram"
+msgstr "Telegram verbinden"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Phone alerts <0>(optional)</0>"
+msgstr "Benachrichtigungen aufs Handy <0>(optional)</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Send a Telegram message with the clip when this detector sees something."
+msgstr "Senden Sie eine Telegram-Nachricht mit dem Clip, wenn dieser Detektor etwas erkennt."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Could not update detector"
+msgstr "Detektor konnte nicht aktualisiert werden"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Save detector"
+msgstr "Detektor speichern"
+
+#. 0: originalLabel
+#: src/lib/components/detector-editor.svelte
+msgid "Delete “{0}”?"
+msgstr "„{0}“ löschen?"
+
+#: src/lib/components/detector-editor.svelte
+msgid "This stops this detector on all of its cameras. Other detectors, camera connections and saved recordings are kept. This cannot be undone."
+msgstr "Damit wird dieser Detektor auf allen seinen Kameras beendet. Andere Detektoren, Kameraverbindungen und gespeicherte Aufnahmen bleiben erhalten. Dies kann nicht rückgängig gemacht werden."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Keep detector"
+msgstr "Detektor behalten"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Delete detector"
+msgstr "Detektor löschen"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Delete this detector…"
+msgstr "Diesen Detektor löschen…"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-editor.svelte
+msgid "Your detector changes stay here until you save the detector."
+msgstr "Ihre Änderungen am Detektor bleiben hier erhalten, bis Sie den Detektor speichern."
+
+#: src/lib/components/guided-header.svelte
+msgid "<0/>Help"
+msgstr "<0/>Hilfe"
+
+#: src/lib/components/guided-header.svelte
+msgid "Open on a phone or other computer"
+msgstr "Auf einem Handy oder anderen Computer öffnen"
+
+#: src/lib/components/guided-header.svelte
+msgid "Logs and diagnostics"
+msgstr "Protokolle und Diagnosedaten"
+
+#: src/lib/components/import-installation.svelte
+msgid "Could not read the import progress. Reopen setup to try again."
+msgstr "Der Importfortschritt konnte nicht gelesen werden. Öffnen Sie die Einrichtung erneut, um es noch einmal zu versuchen."
+
+#: src/lib/components/import-installation.svelte
+msgid "Import could not finish. Try again."
+msgstr "Der Import konnte nicht abgeschlossen werden. Versuchen Sie es erneut."
+
+#: src/lib/components/import-installation.svelte
+msgid "Reconnecting to the import…"
+msgstr "Verbindung zum Import wird wiederhergestellt…"
+
+#: src/lib/components/import-installation.svelte
+msgid "Moving from an earlier AI Detector?"
+msgstr "Wechseln Sie von einem früheren AI Detector?"
+
+#: src/lib/components/import-installation.svelte
+msgid "Bring its cameras, detectors, alerts and recordings along."
+msgstr "Übernehmen Sie dessen Kameras, Detektoren, Benachrichtigungen und Aufnahmen."
+
+#: src/lib/components/import-installation.svelte
+msgid "Use existing setup"
+msgstr "Vorhandene Einrichtung verwenden"
+
+#: src/lib/components/import-installation.svelte
+msgid "Import previous installation"
+msgstr "Vorherige Installation importieren"
+
+#: src/lib/components/import-installation.svelte
+msgid "Use your existing setup"
+msgstr "Ihre vorhandene Einrichtung verwenden"
+
+#: src/lib/components/import-installation.svelte
+msgid "Bring your cameras, detectors, alerts and recordings from your previous AI Detector folder."
+msgstr "Übernehmen Sie Ihre Kameras, Detektoren, Benachrichtigungen und Aufnahmen aus dem Ordner Ihres vorherigen AI Detector."
+
+#: src/lib/components/import-installation.svelte
+msgid "Open the localhost dashboard on the computer running AI Detector to choose its old folder."
+msgstr "Öffnen Sie das Dashboard über localhost auf dem Computer, auf dem AI Detector läuft, um den alten Ordner zu wählen."
+
+#: src/lib/components/import-installation.svelte
+msgid "<0/>Choose old folder"
+msgstr "<0/>Alten Ordner wählen"
+
+#: src/lib/components/import-installation.svelte
+msgid "Enter folder path"
+msgstr "Ordnerpfad eingeben"
+
+#: src/lib/components/import-installation.svelte
+msgid "Choose the folder containing your old config.json, usually next to the old application."
+msgstr "Wählen Sie den Ordner mit Ihrer alten config.json, meist neben der alten Anwendung."
+
+#. 0: summary.source
+#: src/lib/components/import-installation.svelte
+msgid "From: {0}"
+msgstr "Von: {0}"
+
+#. 0: summary.destination
+#: src/lib/components/import-installation.svelte
+msgid "To: {0}"
+msgstr "Nach: {0}"
+
+#: src/lib/components/import-installation.svelte
+msgid "Copying your files…"
+msgstr "Ihre Dateien werden kopiert…"
+
+#: src/lib/components/import-installation.svelte
+msgid "Import progress"
+msgstr "Importfortschritt"
+
+#: src/lib/components/import-installation.svelte
+msgid "Keep AI Detector open. You can close this browser tab."
+msgstr "Lassen Sie AI Detector geöffnet. Sie können diesen Browser-Tab schließen."
+
+#: src/lib/components/import-installation.svelte
+msgid "<0/>Keep recordings in their current folder"
+msgstr "<0/>Aufnahmen in ihrem aktuellen Ordner belassen"
+
+#. 0: size(summary.recordingBytes)
+#: src/lib/components/import-installation.svelte
+msgid "Saves {0} of copying. Keep the old folder and drive connected; new recordings will also be saved there."
+msgstr "Spart das Kopieren von {0}. Lassen Sie den alten Ordner und das Laufwerk verbunden; neue Aufnahmen werden ebenfalls dort gespeichert."
+
+#: src/lib/components/import-installation.svelte
+msgid "Recording storage"
+msgstr "Speicherort der Aufnahmen"
+
+#: src/lib/components/import-installation.svelte
+msgid "Resume import"
+msgstr "Import fortsetzen"
+
+#: src/lib/components/import-installation.svelte
+msgid "Import and review setup"
+msgstr "Importieren und Einrichtung prüfen"
+
+#: src/lib/components/import-installation.svelte
+msgid "Choose another folder"
+msgstr "Anderen Ordner wählen"
+
+#: src/lib/components/import-installation.svelte
+msgid "Your original files will stay in place. Monitoring starts when you’re ready in the final setup step."
+msgstr "Ihre Originaldateien bleiben an ihrem Platz. Die Überwachung startet, wenn Sie im letzten Schritt der Einrichtung bereit sind."
+
+#: src/lib/components/import-installation.svelte
+msgid "<0/>I’ve closed the previous AI Detector"
+msgstr "<0/>Ich habe den vorherigen AI Detector geschlossen"
+
+#: src/lib/components/import-installation.svelte
+msgid "Old application folder"
+msgstr "Ordner der alten Anwendung"
+
+#: src/lib/components/import-installation.svelte
+msgid "Find existing setup"
+msgstr "Vorhandene Einrichtung suchen"
+
+#: src/lib/components/import-installation.svelte
+msgid "Cancel import"
+msgstr "Import abbrechen"
+
+#: src/lib/components/import-installation.svelte
+msgid "Back"
+msgstr "Zurück"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat saved."
+msgstr "Heartbeat gespeichert."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat turned off."
+msgstr "Heartbeat ausgeschaltet."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "The heartbeat could not be saved. Your changes are still here."
+msgstr "Der Heartbeat konnte nicht gespeichert werden. Ihre Änderungen sind noch vorhanden."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat"
+msgstr "Heartbeat"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Get warned when this computer or AI Detector stops. While monitoring runs, the detector calls an address you choose; a service such as Healthchecks.io or Uptime Kuma alerts you when the calls stop coming."
+msgstr "Lassen Sie sich warnen, wenn dieser Computer oder AI Detector ausfällt. Solange die Überwachung läuft, ruft der Detektor eine von Ihnen gewählte Adresse auf; ein Dienst wie Healthchecks.io oder Uptime Kuma benachrichtigt Sie, wenn die Aufrufe ausbleiben."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Address to call"
+msgstr "Aufzurufende Adresse"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "The ping or push address your monitoring service gives you."
+msgstr "Die Ping- oder Push-Adresse, die Sie von Ihrem Monitoring-Dienst erhalten."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Call every (seconds)"
+msgstr "Aufruf alle (Sekunden)"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat needs attention"
+msgstr "Heartbeat braucht Ihre Aufmerksamkeit"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Saving restarts monitoring for a moment so the detector picks up the change."
+msgstr "Beim Speichern wird die Überwachung kurz neu gestartet, damit der Detektor die Änderung übernimmt."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Restart your detector after saving so it picks up the change."
+msgstr "Starten Sie Ihren Detektor nach dem Speichern neu, damit er die Änderung übernimmt."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Save heartbeat"
+msgstr "Heartbeat speichern"
+
+#. 0: host
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Calling {0}"
+msgstr "Ruft {0} auf"
+
+#. 0: saved.interval
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Every {0} seconds while monitoring runs"
+msgstr "Alle {0} Sekunden, solange die Überwachung läuft"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Off"
+msgstr "Aus"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Nothing is called."
+msgstr "Es wird nichts aufgerufen."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Change"
+msgstr "Ändern"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Set up"
+msgstr "Einrichten"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Turn off"
+msgstr "Ausschalten"
+
+#: src/lib/components/json-editor.svelte
+msgid "JSON configuration"
+msgstr "JSON-Konfiguration"
+
+#: src/lib/components/json-editor.svelte
+msgid "The editor could not load. Reload this page to try again."
+msgstr "Der Editor konnte nicht geladen werden. Laden Sie diese Seite neu, um es erneut zu versuchen."
+
+#: src/lib/components/json-editor.svelte
+msgid "Editor unavailable"
+msgstr "Editor nicht verfügbar"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Google Gemini"
+msgstr "Google Gemini"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Enter your Google AI Studio API key."
+msgstr "Geben Sie Ihren API-Schlüssel von Google AI Studio ein."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Could not save this connection."
+msgstr "Diese Verbindung konnte nicht gespeichert werden."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Could not remove this connection."
+msgstr "Diese Verbindung konnte nicht entfernt werden."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Connection name"
+msgstr "Name der Verbindung"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Open Google AI Studio and copy or create an API key. <0>Open Google AI Studio<0/></0>"
+msgstr "Öffnen Sie Google AI Studio und kopieren oder erstellen Sie einen API-Schlüssel. <0>Google AI Studio öffnen<0/></0>"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Paste the key below."
+msgstr "Fügen Sie den Schlüssel unten ein."
+
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/llm-connection-editor.svelte
+msgid "API key"
+msgstr "API-Schlüssel"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Kept on this computer. Clips of detected events are sent to Google to be checked."
+msgstr "Bleibt auf diesem Computer. Clips erkannter Ereignisse werden zur Prüfung an Google gesendet."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Google offers a limited free tier. Quotas and billing depend on your project. <0>Google’s pricing and data-use terms</0>."
+msgstr "Google bietet ein begrenztes kostenloses Kontingent. Limits und Kosten hängen von Ihrem Projekt ab. <0>Preise und Datennutzungsbedingungen von Google</0>."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "This connection uses custom settings. You can edit these in Advanced."
+msgstr "Diese Verbindung verwendet eigene Einstellungen. Sie können diese unter Erweitert bearbeiten."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Open Advanced"
+msgstr "Erweitert öffnen"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "The key is checked with a test image before it is saved."
+msgstr "Der Schlüssel wird mit einem Testbild geprüft, bevor er gespeichert wird."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Connection testing is available in the desktop application. Save settings here for your separate detector."
+msgstr "Der Verbindungstest ist in der Desktop-App verfügbar. Speichern Sie hier die Einstellungen für Ihren separaten Detektor."
+
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Connection needs attention"
+msgstr "Verbindung braucht Ihre Aufmerksamkeit"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Connect"
+msgstr "Verbinden"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Save connection"
+msgstr "Verbindung speichern"
+
+#. 0: canTest ? 'The key is checked with a test image before it is saved.' \\: 'Connection testing is available in the desktop application. Save settings here for your separate detector.'
+#: src/lib/components/llm-connection-editor.svelte
+msgid "{0} Detectors waiting for a validator start using this connection. You can turn it off for each detector."
+msgstr "{0} Detektoren, die auf eine KI-Prüfung warten, verwenden dann diese Verbindung. Sie können das für jeden Detektor ausschalten."
+
+#. 0: initial.label
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Remove {0}?"
+msgstr "{0} entfernen?"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Connections assigned to detectors must be unassigned first."
+msgstr "Verbindungen, die Detektoren zugewiesen sind, müssen zuerst gelöst werden."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Remove connection"
+msgstr "Verbindung entfernen"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Remove this connection…"
+msgstr "Diese Verbindung entfernen…"
+
+#: src/lib/components/mobile-nav.svelte
+msgid "Main"
+msgstr "Hauptmenü"
+
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Start monitoring"
+msgstr "Überwachung starten"
+
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/setup-finish.svelte
+msgid "Pause monitoring"
+msgstr "Überwachung pausieren"
+
+#: src/lib/components/monitoring-control.svelte
+msgid "The request could not be completed. Check that AI Detector is still open."
+msgstr "Die Anfrage konnte nicht ausgeführt werden. Prüfen Sie, ob AI Detector noch geöffnet ist."
+
+#: src/lib/components/monitoring-banner.svelte
+msgid "Details"
+msgstr "Details"
+
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "My phone"
+msgstr "Mein Handy"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Alert settings saved."
+msgstr "Einstellungen für Benachrichtigungen gespeichert."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Could not save alerts. Your choices are still here."
+msgstr "Die Benachrichtigungen konnten nicht gespeichert werden. Ihre Angaben sind noch vorhanden."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Could not remove this recipient."
+msgstr "Dieser Empfänger konnte nicht entfernt werden."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Already connected as <0/>. We’ll reuse this recipient."
+msgstr "Bereits verbunden als <0/>. Dieser Empfänger wird wiederverwendet."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Recipient name"
+msgstr "Name des Empfängers"
+
+#: src/lib/components/notification-editor.svelte
+msgid "You can connect now and choose this recipient when you add a detector."
+msgstr "Sie können jetzt verbinden und diesen Empfänger wählen, wenn Sie einen Detektor hinzufügen."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Which detectors alert this recipient?"
+msgstr "Welche Detektoren benachrichtigen diesen Empfänger?"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Each detector alerts for all of its cameras."
+msgstr "Jeder Detektor benachrichtigt für alle seine Kameras."
+
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Alerts need attention"
+msgstr "Benachrichtigungen brauchen Ihre Aufmerksamkeit"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Use this recipient"
+msgstr "Diesen Empfänger verwenden"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Save recipient"
+msgstr "Empfänger speichern"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Every detector will stop sending alerts to this recipient. Monitoring and saved recordings are kept. You can reconnect the recipient later."
+msgstr "Kein Detektor sendet mehr Benachrichtigungen an diesen Empfänger. Überwachung und gespeicherte Aufnahmen bleiben erhalten. Sie können den Empfänger später erneut verbinden."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Keep recipient"
+msgstr "Empfänger behalten"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Remove recipient"
+msgstr "Empfänger entfernen"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Remove this recipient…"
+msgstr "Diesen Empfänger entfernen…"
+
+#. 0: name
+#. 0: name
+#: src/lib/components/secret-input.svelte
+#: src/lib/components/secret-input.svelte
+msgid "Hide {0}"
+msgstr "{0} verbergen"
+
+#. 0: name
+#. 0: name
+#: src/lib/components/secret-input.svelte
+#: src/lib/components/secret-input.svelte
+msgid "Show {0}"
+msgstr "{0} anzeigen"
+
+#: src/lib/components/settings-backup.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Back up settings"
+msgstr "Einstellungen sichern"
+
+#: src/lib/components/settings-backup.svelte
+msgid "Save your cameras, detectors and alert settings in one ZIP."
+msgstr "Speichern Sie Ihre Kameras, Detektoren und Einstellungen für Benachrichtigungen in einer ZIP-Datei."
+
+#: src/lib/components/settings-backup.svelte
+msgid "<0/>Download backup"
+msgstr "<0/>Sicherung herunterladen"
+
+#: src/lib/components/settings-backup.svelte
+msgid "Includes saved passwords and tokens. Keep this backup private."
+msgstr "Enthält gespeicherte Passwörter und Tokens. Halten Sie diese Sicherung privat."
+
+#: src/lib/components/settings-backup.svelte
+msgid "Recordings and model files are not included. To restore, extract the ZIP and choose Use existing setup in a new installation."
+msgstr "Aufnahmen und Modelldateien sind nicht enthalten. Zum Wiederherstellen entpacken Sie die ZIP-Datei und wählen in einer neuen Installation Vorhandene Einrichtung verwenden."
+
+#: src/lib/components/settings-backup.svelte
+msgid "<0/>Back up"
+msgstr "<0/>Sichern"
+
+#: src/lib/components/setup-steps.svelte
+#: src/lib/navigation.ts
+#: src/routes/(admin)/status/+page.svelte
+#: src/routes/(admin)/streams/+page.svelte
+#: src/routes/(admin)/streams/[id]/+page.svelte
+#: src/routes/(admin)/streams/add/+page.svelte
+msgid "Cameras"
+msgstr "Kameras"
+
+#: src/lib/components/setup-steps.svelte
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Detection"
+msgstr "Erkennung"
+
+#: src/lib/components/setup-steps.svelte
+msgid "Start"
+msgstr "Starten"
+
+#: src/lib/components/setup-steps.svelte
+msgid "Setup progress"
+msgstr "Fortschritt der Einrichtung"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Copied. Paste /newbot into BotFather."
+msgstr "Kopiert. Fügen Sie /newbot in BotFather ein."
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Type /newbot into BotFather."
+msgstr "Geben Sie /newbot in BotFather ein."
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Open BotFather below, send <0/> and follow its instructions for a name and username."
+msgstr "Öffnen Sie unten BotFather, senden Sie <0/> und folgen Sie den Anweisungen für Name und Benutzername."
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Copy the bot token from BotFather into AI Detector. Keep this token private."
+msgstr "Kopieren Sie das Bot-Token aus BotFather in AI Detector. Halten Sie dieses Token privat."
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Choose Connect Telegram below. Open the link or scan the code with your phone."
+msgstr "Wählen Sie unten Telegram verbinden. Öffnen Sie den Link oder scannen Sie den Code mit Ihrem Handy."
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Open BotFather"
+msgstr "BotFather öffnen"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Copy /newbot"
+msgstr "/newbot kopieren"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "How to create your Telegram bot"
+msgstr "So erstellen Sie Ihren Telegram-Bot"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Your progress could not be saved. Try again."
+msgstr "Ihr Fortschritt konnte nicht gespeichert werden. Versuchen Sie es erneut."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Could not start monitoring. Try again."
+msgstr "Die Überwachung konnte nicht gestartet werden. Versuchen Sie es erneut."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Could not pause monitoring. Try again."
+msgstr "Die Überwachung konnte nicht pausiert werden. Versuchen Sie es erneut."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Connection to the app was lost. Reconnecting…"
+msgstr "Die Verbindung zur App wurde unterbrochen. Verbindung wird wiederhergestellt…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Checking the recording location…"
+msgstr "Aufnahmeort wird geprüft…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Checking the picture…"
+msgstr "Bild wird geprüft…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Waiting to be checked…"
+msgstr "Wartet auf die Prüfung…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Waiting for the first analysed picture…"
+msgstr "Warten auf das erste analysierte Bild…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Open camera"
+msgstr "Kamera öffnen"
+
+#. 0: alerts.join(', ')
+#: src/lib/components/setup-finish.svelte
+msgid "Alerts go to {0}"
+msgstr "Benachrichtigungen gehen an {0}"
+
+#: src/lib/components/setup-finish.svelte
+msgid "No phone alerts. Recordings still appear in this app."
+msgstr "Keine Benachrichtigungen aufs Handy. Aufnahmen erscheinen trotzdem in dieser App."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Add phone alerts"
+msgstr "Benachrichtigungen aufs Handy hinzufügen"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Detection runs separately from this app. Restart your detector so it uses these settings."
+msgstr "Die Erkennung läuft getrennt von dieser App. Starten Sie Ihren Detektor neu, damit er diese Einstellungen verwendet."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Setup needs attention"
+msgstr "Die Einrichtung braucht Ihre Aufmerksamkeit"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Open recordings"
+msgstr "Aufnahmen öffnen"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Open cameras"
+msgstr "Kameras öffnen"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Starting monitoring…"
+msgstr "Überwachung wird gestartet…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Finishing…"
+msgstr "Wird abgeschlossen…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Finish setup"
+msgstr "Einrichtung abschließen"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Open Telegram"
+msgstr "Telegram öffnen"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose your recipient below."
+msgstr "Wählen Sie unten Ihren Empfänger."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Send a message to your bot, then try again. In a group, mention the bot in your message."
+msgstr "Senden Sie eine Nachricht an Ihren Bot und versuchen Sie es erneut. Erwähnen Sie den Bot in einer Gruppe in Ihrer Nachricht."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Could not find Telegram chats."
+msgstr "Es konnten keine Telegram-Chats gefunden werden."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "The test could not be sent. Check your bot and recipient."
+msgstr "Der Test konnte nicht gesendet werden. Prüfen Sie Ihren Bot und den Empfänger."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "<0/> Connected in Telegram."
+msgstr "<0/> In Telegram verbunden."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Connect again"
+msgstr "Erneut verbinden"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "<0/> Telegram connected and test alert confirmed."
+msgstr "<0/> Telegram verbunden und Testbenachrichtigung bestätigt."
+
+#. 0: pairingState.session.bot.name
+#: src/lib/components/telegram-connection.svelte
+msgid "Scan to connect to {0} in Telegram"
+msgstr "Scannen, um sich in Telegram mit {0} zu verbinden"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose your group or channel in Telegram."
+msgstr "Wählen Sie Ihre Gruppe oder Ihren Kanal in Telegram."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose Confirm connection on the test alert in Telegram."
+msgstr "Wählen Sie bei der Testbenachrichtigung in Telegram Verbindung bestätigen."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Waiting for Telegram…"
+msgstr "Warten auf Telegram…"
+
+#. 0: pairingState.state === 'choosing' ? 'Choose your group or channel in Telegram.' \\: pairingState.state === 'confirming' ? 'Choose Confirm connection on the test alert in Telegram.' \\: 'Waiting for Telegram…'
+#: src/lib/components/telegram-connection.svelte
+msgid "{0} Keep this page open. The link expires in five minutes."
+msgstr "{0} Lassen Sie diese Seite geöffnet. Der Link läuft in fünf Minuten ab."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Scan with your phone, or open Telegram on this device. Choose <0>Start</0>, then follow the message to confirm your connection."
+msgstr "Scannen Sie mit Ihrem Handy oder öffnen Sie Telegram auf diesem Gerät. Wählen Sie <0>Start</0> und folgen Sie dann der Nachricht, um Ihre Verbindung zu bestätigen."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Cancel connection"
+msgstr "Verbindung abbrechen"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Use bot from"
+msgstr "Bot verwenden von"
+
+#. 0: bots[0].label
+#: src/lib/components/telegram-connection.svelte
+msgid "Using the Telegram bot you set up for {0}."
+msgstr "Es wird der Telegram-Bot verwendet, den Sie für {0} eingerichtet haben."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Bot token from BotFather"
+msgstr "Bot-Token von BotFather"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Paste the token here. If you already have a bot, use its token."
+msgstr "Fügen Sie das Token hier ein. Wenn Sie bereits einen Bot haben, verwenden Sie dessen Token."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "A group"
+msgstr "Eine Gruppe"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "A channel"
+msgstr "Ein Kanal"
+
+#: src/lib/components/telegram-connection.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Send alerts to"
+msgstr "Benachrichtigungen senden an"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Finding chats…"
+msgstr "Chats werden gesucht…"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Find chats"
+msgstr "Chats suchen"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose a recipient"
+msgstr "Empfänger wählen"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Telegram chat ID"
+msgstr "Telegram-Chat-ID"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "For a group, add your bot and send a message mentioning it. Find the chat below, or enter its chat ID."
+msgstr "Für eine Gruppe: Fügen Sie Ihren Bot hinzu und senden Sie eine Nachricht, in der Sie ihn erwähnen. Suchen Sie unten den Chat oder geben Sie die Chat-ID ein."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Checking your bot…"
+msgstr "Ihr Bot wird geprüft…"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Use another bot"
+msgstr "Anderen Bot verwenden"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Use saved bot"
+msgstr "Gespeicherten Bot verwenden"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose in Telegram"
+msgstr "In Telegram wählen"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Enter chat ID manually"
+msgstr "Chat-ID manuell eingeben"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Sending test…"
+msgstr "Test wird gesendet…"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Send test alert"
+msgstr "Testbenachrichtigung senden"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Test alert sent."
+msgstr "Testbenachrichtigung gesendet."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "<0/> I received the test on the intended phone or chat"
+msgstr "<0/> Ich habe den Test auf dem gewünschten Handy oder im gewünschten Chat erhalten"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Send test again"
+msgstr "Test erneut senden"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Advanced · AI Detector"
+msgstr "Erweitert · AI Detector"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/devices/+page.svelte
+#: src/routes/(admin)/logs/+page.svelte
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/settings/+page.svelte
+#: src/routes/(admin)/storage/+page.svelte
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Advanced"
+msgstr "Erweitert"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Everything the presets decide for you, as JSON: thresholds, prompts, delivery and the detection engine. Changes are checked before they are saved."
+msgstr "Alles, was die Voreinstellungen für Sie festlegen, als JSON: Schwellenwerte, Prompts, Zustellung und die Erkennungs-Engine. Änderungen werden geprüft, bevor sie gespeichert werden."
+
+#: src/lib/components/theme-toggle.svelte
+msgid "Switch light or dark theme"
+msgstr "Zwischen hell und dunkel wechseln"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Enter valid JSON."
+msgstr "Geben Sie gültiges JSON ein."
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "AI connections"
+msgstr "KI-Verbindungen"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus runtime (auto, native or docker), health and onnx for the whole installation. Saving applies the changes to active monitoring."
+msgstr "Alles in config.json: Modell, Prompts, Schwellenwerte und Aufnahmeoptionen jedes Detektors sowie runtime (auto, native oder docker), health und onnx für die gesamte Installation. Beim Speichern werden die Änderungen auf die laufende Überwachung angewendet."
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Shared AI connections in app.json. Use a LiteLLM model name, API key, optional URL and headers. Changes apply to assigned detectors. Unassign a connection before removing or renaming it here."
+msgstr "Gemeinsame KI-Verbindungen in app.json. Verwenden Sie einen LiteLLM-Modellnamen, einen API-Schlüssel sowie optional URL und Header. Änderungen gelten für die zugewiesenen Detektoren. Lösen Sie eine Verbindung, bevor Sie sie hier entfernen oder umbenennen."
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Discard unsaved JSON changes?"
+msgstr "Nicht gespeicherte JSON-Änderungen verwerfen?"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Could not load settings."
+msgstr "Die Einstellungen konnten nicht geladen werden."
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Settings saved."
+msgstr "Einstellungen gespeichert."
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Could not save settings."
+msgstr "Die Einstellungen konnten nicht gespeichert werden."
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Settings file"
+msgstr "Einstellungsdatei"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Advanced settings JSON"
+msgstr "JSON der erweiterten Einstellungen"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Correct the JSON before saving"
+msgstr "Korrigieren Sie das JSON vor dem Speichern"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Settings need attention"
+msgstr "Einstellungen brauchen Ihre Aufmerksamkeit"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Please wait…"
+msgstr "Bitte warten…"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Save"
+msgstr "Speichern"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Invalid JSON"
+msgstr "Ungültiges JSON"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Valid · Unsaved changes"
+msgstr "Gültig · Nicht gespeicherte Änderungen"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Valid JSON"
+msgstr "Gültiges JSON"
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "<0/>Discard changes"
+msgstr "<0/>Änderungen verwerfen"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Devices · AI Detector"
+msgstr "Geräte · AI Detector"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Devices"
+msgstr "Geräte"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Open this dashboard on a phone or another computer on the same network. Each browser is remembered until you remove it."
+msgstr "Öffnen Sie dieses Dashboard auf einem Handy oder einem anderen Computer im selben Netzwerk. Jeder Browser bleibt gespeichert, bis Sie ihn entfernen."
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Scan to connect to AI Detector"
+msgstr "Scannen, um sich mit AI Detector zu verbinden"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Scan this code with your phone’s camera, then tap <0>Connect device</0>."
+msgstr "Scannen Sie diesen Code mit der Kamera Ihres Handys und tippen Sie dann auf <0>Gerät verbinden</0>."
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Or open the pairing page and enter"
+msgstr "Oder öffnen Sie die Kopplungsseite und geben Sie ein"
+
+#. 0: clockTime(form.expires!)
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Valid until {0}. Keep this code private."
+msgstr "Gültig bis {0}. Halten Sie diesen Code privat."
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Open pairing page"
+msgstr "Kopplungsseite öffnen"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Network"
+msgstr "Netzwerk"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Choose the network your phone is connected to."
+msgstr "Wählen Sie das Netzwerk, mit dem Ihr Handy verbunden ist."
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Creating code…"
+msgstr "Code wird erstellt…"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Create a new code"
+msgstr "Neuen Code erstellen"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Connect a device"
+msgstr "Gerät verbinden"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Could not connect device"
+msgstr "Gerät konnte nicht verbunden werden"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "This browser"
+msgstr "Dieser Browser"
+
+#. 0: calendarDate(device.created)
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Connected {0}"
+msgstr "Verbunden am {0}"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Remove access"
+msgstr "Zugriff entfernen"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "No other devices yet. The computer running AI Detector always has access."
+msgstr "Noch keine anderen Geräte. Der Computer, auf dem AI Detector läuft, hat immer Zugriff."
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Connected devices"
+msgstr "Verbundene Geräte"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "This dashboard uses HTTP, so use it on a network you trust. Pairing limits who can open it; HTTPS or a secure tunnel is needed to encrypt the traffic."
+msgstr "Dieses Dashboard verwendet HTTP; nutzen Sie es daher in einem Netzwerk, dem Sie vertrauen. Die Kopplung begrenzt, wer es öffnen kann; für verschlüsselten Datenverkehr ist HTTPS oder ein sicherer Tunnel nötig."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Failed to load recordings."
+msgstr "Die Aufnahmen konnten nicht geladen werden."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Recordings · AI Detector"
+msgstr "Aufnahmen · AI Detector"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Recordings"
+msgstr "Aufnahmen"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Category"
+msgstr "Kategorie"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Everything"
+msgstr "Alles"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Review result"
+msgstr "Bewertung"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "<0/>Show new recordings"
+msgstr "<0/>Neue Aufnahmen anzeigen"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Could not check for new recordings. Retrying automatically."
+msgstr "Es konnte nicht nach neuen Aufnahmen gesucht werden. Es wird automatisch erneut versucht."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Loading recordings"
+msgstr "Aufnahmen werden geladen"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Nothing matches these filters"
+msgstr "Nichts entspricht diesen Filtern"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "No recordings yet"
+msgstr "Noch keine Aufnahmen"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Try another category or result."
+msgstr "Versuchen Sie eine andere Kategorie oder Bewertung."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "When a detector sees something, the clip appears here and stays until you remove it."
+msgstr "Wenn ein Detektor etwas erkennt, erscheint der Clip hier und bleibt, bis Sie ihn entfernen."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Show everything"
+msgstr "Alles anzeigen"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Loading more…"
+msgstr "Weitere werden geladen…"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "That’s everything."
+msgstr "Das ist alles."
+
+#. 0: categoryName(entry.type); 1: time
+#: src/routes/(admin)/detections/recording-card.svelte
+msgid "Play {0} recording from {1}"
+msgstr "Aufnahme {0} von {1} abspielen"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Light"
+msgstr "Hell"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Dark"
+msgstr "Dunkel"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Automatic"
+msgstr "Automatisch"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Settings · AI Detector"
+msgstr "Einstellungen · AI Detector"
+
+#: src/routes/(admin)/settings/+page.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Appearance"
+msgstr "Darstellung"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Automatic follows this device."
+msgstr "Automatisch richtet sich nach diesem Gerät."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Download cameras, detectors and alert settings to keep them safe."
+msgstr "Laden Sie Kameras, Detektoren und Einstellungen für Benachrichtigungen herunter, um sie sicher aufzubewahren."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "This installation"
+msgstr "Diese Installation"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Monitoring status"
+msgstr "Status der Überwachung"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "What each camera is doing right now."
+msgstr "Was jede Kamera gerade tut."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Guides, questions and bug reports."
+msgstr "Anleitungen, Fragen und Fehlerberichte."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Support"
+msgstr "Support"
+
+#. 0: version
+#: src/routes/(admin)/settings/+page.svelte
+msgid "AI Detector version {0}"
+msgstr "AI Detector Version {0}"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Monitoring · AI Detector"
+msgstr "Überwachung · AI Detector"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Whether your cameras are being watched right now, and what needs attention if they are not."
+msgstr "Ob Ihre Kameras gerade überwacht werden und was zu tun ist, wenn nicht."
+
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/detectors/add/+page.svelte
+#: src/routes/(admin)/status/+page.svelte
+msgid "Add a detector"
+msgstr "Detektor hinzufügen"
+
+#. 0: clockTime(monitor.lastCheckedAt)
+#: src/routes/(admin)/status/+page.svelte
+msgid "Last heard from the app at {0}."
+msgstr "Letzte Rückmeldung der App um {0}."
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Picture received; waiting for detection."
+msgstr "Bild empfangen; warten auf die Erkennung."
+
+#. 0: camera.recordingError
+#. 0: status.recordingError
+#: src/routes/(admin)/status/+page.svelte
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Recording: {0}"
+msgstr "Aufnahme: {0}"
+
+#. 0: clockTime(camera.lastFrameAt)
+#: src/routes/(admin)/status/+page.svelte
+msgid "Last picture {0}"
+msgstr "Letztes Bild {0}"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Technical details <0>For troubleshooting</0>"
+msgstr "Technische Details <0>Zur Fehlersuche</0>"
+
+#. 0: backend.label
+#: src/routes/(admin)/status/+page.svelte
+msgid "{0} runs on"
+msgstr "{0} läuft auf"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Detection engine"
+msgstr "Erkennungs-Engine"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Settings and recordings folder"
+msgstr "Ordner für Einstellungen und Aufnahmen"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Setup instructions<0/>"
+msgstr "Einrichtungsanleitung<0/>"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "<0/>View logs"
+msgstr "<0/>Protokolle ansehen"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Monitoring keeps running when you close this page. If AI Detector opens when you log in, it resumes by itself — unless you paused it here."
+msgstr "Die Überwachung läuft weiter, wenn Sie diese Seite schließen. Wenn AI Detector beim Anmelden geöffnet wird, wird sie von selbst fortgesetzt — es sei denn, Sie haben sie hier pausiert."
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Connect your cameras"
+msgstr "Kameras verbinden"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "AI Detector looks for cameras on your network. Keep this computer on the same network as the cameras."
+msgstr "AI Detector sucht nach Kameras in Ihrem Netzwerk. Lassen Sie diesen Computer im selben Netzwerk wie die Kameras."
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Choose what to detect"
+msgstr "Wählen Sie, was erkannt werden soll"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Pick a preset and the cameras it should watch. You can add more detectors later."
+msgstr "Wählen Sie eine Voreinstellung und die Kameras, die überwacht werden sollen. Weitere Detektoren können Sie später hinzufügen."
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Each camera is checked once. Monitoring then keeps running in the background, also when this page is closed."
+msgstr "Jede Kamera wird einmal geprüft. Danach läuft die Überwachung im Hintergrund weiter, auch wenn diese Seite geschlossen ist."
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Set up · AI Detector"
+msgstr "Einrichtung · AI Detector"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Your existing setup is here to review. Previous recordings are in Recordings. Monitoring is stopped until you start it in the last step."
+msgstr "Ihre vorhandene Einrichtung steht hier zur Prüfung bereit. Frühere Aufnahmen finden Sie unter Aufnahmen. Die Überwachung ist gestoppt, bis Sie sie im letzten Schritt starten."
+
+#: src/routes/(admin)/setup/+page.svelte
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Continue<0/>"
+msgstr "Weiter<0/>"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "<0/>Add more cameras"
+msgstr "<0/>Weitere Kameras hinzufügen"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Skip — use the cameras for live viewing only"
+msgstr "Überspringen — Kameras nur für das Livebild nutzen"
+
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Custom source"
+msgstr "Eigene Quelle"
+
+#. 0: meta.label
+#. 0: meta.label
+#. 0: connection.label
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/setup/+page.svelte
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Edit {0}"
+msgstr "{0} bearbeiten"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "<0/>Add another detector"
+msgstr "<0/>Weiteren Detektor hinzufügen"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Alerts · AI Detector"
+msgstr "Benachrichtigungen · AI Detector"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Alerts"
+msgstr "Benachrichtigungen"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "When a detector sees something, the clip is sent to these people in Telegram. They can confirm it or mark it as a false alarm right there."
+msgstr "Wenn ein Detektor etwas erkennt, wird der Clip in Telegram an diese Personen gesendet. Sie können ihn dort direkt bestätigen oder als Fehlalarm markieren."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "<0/>Add recipient"
+msgstr "<0/>Empfänger hinzufügen"
+
+#. 0: telegram.label
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Edit recipient {0}"
+msgstr "Empfänger {0} bearbeiten"
+
+#. 0: assigned.join(', ')
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Alerts from {0}"
+msgstr "Benachrichtigungen von {0}"
+
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Not used by a detector yet"
+msgstr "Noch von keinem Detektor verwendet"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "No phone alerts yet"
+msgstr "Noch keine Benachrichtigungen aufs Handy"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect Telegram to get each event on your phone. Monitoring and recording also work without alerts."
+msgstr "Verbinden Sie Telegram, um jedes Ereignis aufs Handy zu bekommen. Überwachung und Aufnahme funktionieren auch ohne Benachrichtigungen."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect your phone"
+msgstr "Handy verbinden"
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "Review removed"
+msgstr "Bewertung entfernt"
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "Could not save the review. Please try again."
+msgstr "Die Bewertung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut."
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Review"
+msgstr "Bewerten"
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "Confirmed. Remove your review"
+msgstr "Bestätigt. Ihre Bewertung entfernen"
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "Confirmed by AI. Confirm it yourself"
+msgstr "Von KI bestätigt. Selbst bestätigen"
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "Confirm: this is real"
+msgstr "Bestätigen: Das stimmt"
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "Remove your review"
+msgstr "Ihre Bewertung entfernen"
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "False alarm. Remove your review"
+msgstr "Fehlalarm. Ihre Bewertung entfernen"
+
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "False alarm according to AI. Mark it yourself"
+msgstr "Fehlalarm laut KI. Selbst markieren"
+
+#: src/lib/detections.ts
+#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/routes/(admin)/detections/review-buttons.svelte
+msgid "False alarm"
+msgstr "Fehlalarm"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Detectors · AI Detector"
+msgstr "Detektoren · AI Detector"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/detectors/add/+page.svelte
+#: src/routes/(admin)/detectors/edit/+page.svelte
+msgid "Detectors"
+msgstr "Detektoren"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "A detector watches the cameras you choose, records what it sees and alerts the people you pick."
+msgstr "Ein Detektor überwacht die Kameras, die Sie auswählen, nimmt auf, was er erkennt, und benachrichtigt die Personen, die Sie festlegen."
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "<0/>Add detector"
+msgstr "<0/>Detektor hinzufügen"
+
+#. 0: recipients.map(({ label }) => label).join(', ')
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "<0/> Alerts to {0}"
+msgstr "<0/> Benachrichtigungen an {0}"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "No phone alerts"
+msgstr "Keine Benachrichtigungen aufs Handy"
+
+#. 0: unwatched[0].label
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "{0} is not watched by a detector, so it is for live viewing only."
+msgstr "{0} wird von keinem Detektor überwacht und dient daher nur dem Livebild."
+
+#. 0: unwatched.map((camera) => camera.label).join(', ')
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "{0} are not watched by a detector, so they are for live viewing only."
+msgstr "{0} werden von keinem Detektor überwacht und dienen daher nur dem Livebild."
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Your cameras show a live picture. Add a detector to record events and get alerts."
+msgstr "Ihre Kameras zeigen ein Livebild. Fügen Sie einen Detektor hinzu, um Ereignisse aufzunehmen und Benachrichtigungen zu erhalten."
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Connect a camera first, then choose what to detect on it."
+msgstr "Verbinden Sie zuerst eine Kamera und wählen Sie dann, was darauf erkannt werden soll."
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "No detectors yet"
+msgstr "Noch keine Detektoren"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Add a camera"
+msgstr "Kamera hinzufügen"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Log unavailable"
+msgstr "Protokoll nicht verfügbar"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Logs · AI Detector"
+msgstr "Protokolle · AI Detector"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Logs"
+msgstr "Protokolle"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Startup and recent activity, to help find what went wrong. The diagnostics download bundles this with system details for support."
+msgstr "Start und letzte Aktivität, um herauszufinden, was schiefgelaufen ist. Der Download der Diagnosedaten bündelt dies mit Systemdetails für den Support."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Search logs…"
+msgstr "Protokolle durchsuchen…"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Search logs"
+msgstr "Protokolle durchsuchen"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Logs could not be refreshed"
+msgstr "Protokolle konnten nicht aktualisiert werden"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Check that AI Detector is still open. Retrying automatically."
+msgstr "Prüfen Sie, ob AI Detector noch geöffnet ist. Es wird automatisch erneut versucht."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Detector logs"
+msgstr "Detektor-Protokolle"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Loading logs…"
+msgstr "Protokolle werden geladen…"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "No matching log entries."
+msgstr "Keine passenden Protokolleinträge."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "No diagnostic output yet. Logs appear when monitoring starts."
+msgstr "Noch keine Diagnoseausgabe. Protokolle erscheinen, wenn die Überwachung startet."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Matching messages include their error details."
+msgstr "Gefundene Meldungen werden mit ihren Fehlerdetails angezeigt."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Updates automatically. Scroll up to read earlier output."
+msgstr "Wird automatisch aktualisiert. Scrollen Sie nach oben, um frühere Ausgaben zu lesen."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "<0/>Latest"
+msgstr "<0/>Neueste"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Validator · AI Detector"
+msgstr "KI-Prüfung · AI Detector"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "An AI model looks at each clip before an alert is sent and filters out false alarms. Your presets supply the question it answers."
+msgstr "Ein KI-Modell sieht sich jeden Clip an, bevor eine Benachrichtigung gesendet wird, und filtert Fehlalarme heraus. Ihre Voreinstellungen liefern die Frage, die es beantwortet."
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "<0/>Add connection"
+msgstr "<0/>Verbindung hinzufügen"
+
+#. 0: assigned.map(({ meta }) => meta.label).join(', ')
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Checks {0}"
+msgstr "Prüft {0}"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Turn the validator on or off for each detector under <0>Detectors</0>."
+msgstr "Schalten Sie die KI-Prüfung für jeden Detektor unter <0>Detektoren</0> ein oder aus."
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "No validator connected"
+msgstr "Keine KI-Prüfung verbunden"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Optional. Without it, every detection is recorded and alerted as it is."
+msgstr "Optional. Ohne sie wird jede Erkennung unverändert aufgenommen und gemeldet."
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Connect Google Gemini"
+msgstr "Google Gemini verbinden"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Storage · AI Detector"
+msgstr "Speicher · AI Detector"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Storage"
+msgstr "Speicher"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Recordings are kept until you remove them. Nothing is deleted automatically."
+msgstr "Aufnahmen bleiben erhalten, bis Sie sie entfernen. Nichts wird automatisch gelöscht."
+
+#. 0: gigabytes(data.space.available)
+#: src/routes/(admin)/storage/+page.svelte
+msgid "{0} free"
+msgstr "{0} frei"
+
+#. 0: gigabytes(used); 1: gigabytes(data.space.total)
+#: src/routes/(admin)/storage/+page.svelte
+msgid "{0} used of {1}"
+msgstr "{0} von {1} belegt"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Storage used"
+msgstr "Belegter Speicher"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Storage is almost full"
+msgstr "Der Speicher ist fast voll"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Free some space so new recordings can be saved."
+msgstr "Geben Sie Platz frei, damit neue Aufnahmen gespeichert werden können."
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Remove old recordings"
+msgstr "Alte Aufnahmen entfernen"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Choose a date to see how many recordings would be removed. Export the ones you want to keep first from <0>Recordings</0>."
+msgstr "Wählen Sie ein Datum, um zu sehen, wie viele Aufnahmen entfernt würden. Exportieren Sie zuerst unter <0>Aufnahmen</0> diejenigen, die Sie behalten möchten."
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Recordings before"
+msgstr "Aufnahmen vor dem"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Removing them cannot be undone. Settings and newer recordings are kept."
+msgstr "Das Entfernen kann nicht rückgängig gemacht werden. Einstellungen und neuere Aufnahmen bleiben erhalten."
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "There is nothing to remove before this date."
+msgstr "Vor diesem Datum gibt es nichts zu entfernen."
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Model cache"
+msgstr "Modell-Cache"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Prepared models and unused downloads. Pause monitoring before clearing them; the next start prepares models again, which can take several minutes on NVIDIA hardware."
+msgstr "Vorbereitete Modelle und ungenutzte Downloads. Pausieren Sie die Überwachung, bevor Sie sie löschen; beim nächsten Start werden die Modelle erneut vorbereitet, was auf NVIDIA-Hardware einige Minuten dauern kann."
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Clear model cache"
+msgstr "Modell-Cache leeren"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Cameras · AI Detector"
+msgstr "Kameras · AI Detector"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "<0/>Add camera"
+msgstr "<0/>Kamera hinzufügen"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Monitoring preset names are unavailable"
+msgstr "Namen der Voreinstellungen sind nicht verfügbar"
+
+#. 0: presetWarning
+#: src/routes/(admin)/streams/+page.svelte
+msgid "{0} Cameras below show their saved detector names. Their settings are unchanged."
+msgstr "{0} Die Kameras unten zeigen die gespeicherten Namen ihrer Detektoren. Ihre Einstellungen sind unverändert."
+
+#. 0: camera.label
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Open {0}"
+msgstr "{0} öffnen"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "No cameras yet"
+msgstr "Noch keine Kameras"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Connect a camera to see its live picture and choose what to detect."
+msgstr "Verbinden Sie eine Kamera, um ihr Livebild zu sehen und zu wählen, was erkannt werden soll."
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Add your first camera"
+msgstr "Erste Kamera hinzufügen"
+
+#: src/routes/(admin)/detectors/add/+page.svelte
+msgid "Add detector · AI Detector"
+msgstr "Detektor hinzufügen · AI Detector"
+
+#: src/routes/(admin)/detectors/edit/+page.svelte
+msgid "Detector"
+msgstr "Detektor"
+
+#: src/routes/(admin)/detectors/edit/+page.svelte
+#: src/routes/(admin)/detectors/edit/+page.svelte
+msgid "Detector not found"
+msgstr "Detektor nicht gefunden"
+
+#: src/routes/(admin)/detectors/edit/+page.svelte
+msgid "This detector may have been removed or renamed."
+msgstr "Dieser Detektor wurde möglicherweise entfernt oder umbenannt."
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Add recipient"
+msgstr "Empfänger hinzufügen"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Recipient not found"
+msgstr "Empfänger nicht gefunden"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Alert recipient not found"
+msgstr "Empfänger der Benachrichtigungen nicht gefunden"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Return to Alerts to select a saved recipient."
+msgstr "Kehren Sie zu Benachrichtigungen zurück, um einen gespeicherten Empfänger auszuwählen."
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Connect alerts"
+msgstr "Benachrichtigungen verbinden"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Choose which detectors send alerts here, or connect it again."
+msgstr "Wählen Sie, welche Detektoren hierhin Benachrichtigungen senden, oder verbinden Sie erneut."
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Connect a phone, group or channel in Telegram, then choose which detectors alert it."
+msgstr "Verbinden Sie ein Handy, eine Gruppe oder einen Kanal in Telegram und wählen Sie dann, welche Detektoren dorthin benachrichtigen."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Camera not found"
+msgstr "Kamera nicht gefunden"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "This camera may have been removed."
+msgstr "Diese Kamera wurde möglicherweise entfernt."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "A detector decides what is recorded and who is alerted."
+msgstr "Ein Detektor legt fest, was aufgenommen und wer benachrichtigt wird."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "This camera is for live viewing only. Add it to a detector to record and alert."
+msgstr "Diese Kamera dient nur dem Livebild. Fügen Sie sie einem Detektor hinzu, um aufzunehmen und zu benachrichtigen."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Detectors on this camera"
+msgstr "Detektoren auf dieser Kamera"
+
+#. 0: camera.alerts.join(', ')
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Alerts go to {0}."
+msgstr "Benachrichtigungen gehen an {0}."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Manage detectors"
+msgstr "Detektoren verwalten"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Choose a detector"
+msgstr "Detektor wählen"
+
+#: src/routes/(admin)/validator/add/+page.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Connection not found"
+msgstr "Verbindung nicht gefunden"
+
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Return to Validator and select an existing connection."
+msgstr "Kehren Sie zu KI-Prüfung zurück und wählen Sie eine vorhandene Verbindung."
+
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Connect Google Gemini to check detections before alerts are sent."
+msgstr "Verbinden Sie Google Gemini, um Erkennungen zu prüfen, bevor Benachrichtigungen gesendet werden."
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "<0/> Your browser cannot play this video."
+msgstr "<0/> Ihr Browser kann dieses Video nicht abspielen."
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Newer recording"
+msgstr "Neuere Aufnahme"
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Newer (←)"
+msgstr "Neuer (←)"
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Older recording"
+msgstr "Ältere Aufnahme"
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Older (→)"
+msgstr "Älter (→)"
+
+#. 0: index + 1; 1: entries.length
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "{0} of {1}"
+msgstr "{0} von {1}"
+
+#: src/routes/(admin)/streams/add/+page.svelte
+msgid "Add camera · AI Detector"
+msgstr "Kamera hinzufügen · AI Detector"
+
+#: src/routes/(admin)/streams/add/+page.svelte
+msgid "Add cameras"
+msgstr "Kameras hinzufügen"
+
+#: src/routes/(admin)/streams/add/+page.svelte
+msgid "Choose the cameras to connect, or enter a stream URL. Keep them on the same network as this computer."
+msgstr "Wählen Sie die Kameras, die Sie verbinden möchten, oder geben Sie eine Stream-URL ein. Lassen Sie sie im selben Netzwerk wie diesen Computer."
+
+#: src/lib/components/ui/breadcrumb/breadcrumb-ellipsis.svelte
+msgid "More"
+msgstr "Mehr"
+
+#: src/lib/components/ui/carousel/carousel-next.svelte
+msgid "Next slide"
+msgstr "Nächste Folie"
+
+#: src/lib/components/ui/carousel/carousel-previous.svelte
+msgid "Previous slide"
+msgstr "Vorherige Folie"
+
+#: src/lib/components/ui/command/command-dialog.svelte
+msgid "Command Palette"
+msgstr "Befehlspalette"
+
+#: src/lib/components/ui/command/command-dialog.svelte
+msgid "Search for a command to run"
+msgstr "Befehl zum Ausführen suchen"
+
+#: src/lib/components/ui/dialog/dialog-content.svelte
+#: src/lib/components/ui/sheet/sheet-content.svelte
+msgid "Close"
+msgstr "Schließen"
+
+#: src/lib/components/ui/pagination/pagination-ellipsis.svelte
+msgid "More pages"
+msgstr "Weitere Seiten"
+
+#: src/lib/components/ui/pagination/pagination-next-button.svelte
+#: src/lib/components/ui/pagination/pagination-next.svelte
+msgid "Next"
+msgstr "Weiter"
+
+#: src/lib/components/ui/pagination/pagination-next-button.svelte
+#: src/lib/components/ui/pagination/pagination-next.svelte
+msgid "Go to next page"
+msgstr "Zur nächsten Seite"
+
+#: src/lib/components/ui/pagination/pagination-prev-button.svelte
+#: src/lib/components/ui/pagination/pagination-previous.svelte
+msgid "Previous"
+msgstr "Zurück"
+
+#: src/lib/components/ui/pagination/pagination-prev-button.svelte
+#: src/lib/components/ui/pagination/pagination-previous.svelte
+msgid "Go to previous page"
+msgstr "Zur vorherigen Seite"
+
+#: src/lib/components/ui/sidebar/sidebar-rail.svelte
+#: src/lib/components/ui/sidebar/sidebar-rail.svelte
+#: src/lib/components/ui/sidebar/sidebar-trigger.svelte
+msgid "Toggle Sidebar"
+msgstr "Seitenleiste ein- oder ausblenden"
+
+#: src/lib/components/ui/sidebar/sidebar.svelte
+msgid "Sidebar"
+msgstr "Seitenleiste"
+
+#: src/lib/components/ui/sidebar/sidebar.svelte
+msgid "Displays the mobile sidebar."
+msgstr "Zeigt die mobile Seitenleiste an."
+
+#: src/lib/components/ui/spinner/spinner.svelte
+msgid "Loading"
+msgstr "Wird geladen"
+
+#: src/lib/monitoring.ts
+msgid "# camera offline."
+msgid_plural "# cameras offline."
+msgstr[0] "# Kamera offline."
+msgstr[1] "# Kameras offline."
+
+#: src/lib/monitoring.ts
+msgid "Watching # camera."
+msgid_plural "Watching # cameras."
+msgstr[0] "# Kamera überwacht."
+msgstr[1] "# Kameras überwacht."
+
+#: src/lib/server/managed-detector.ts
+msgid "Monitoring # camera."
+msgid_plural "Monitoring # cameras."
+msgstr[0] "# Kamera überwacht."
+msgstr[1] "# Kameras überwacht."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Removed # recording."
+msgid_plural "Removed # recordings."
+msgstr[0] "# Aufnahme entfernt."
+msgstr[1] "# Aufnahmen entfernt."
+
+#: src/lib/components/camera-add.svelte
+msgid "Connect # camera"
+msgid_plural "Connect # cameras"
+msgstr[0] "# Kamera verbinden"
+msgstr[1] "# Kameras verbinden"
+
+#: src/lib/components/camera-add.svelte
+msgid "Add # camera"
+msgid_plural "Add # cameras"
+msgstr[0] "# Kamera hinzufügen"
+msgstr[1] "# Kameras hinzufügen"
+
+#: src/lib/components/camera-selection.svelte
+msgid "# camera selected"
+msgid_plural "# cameras selected"
+msgstr[0] "# Kamera ausgewählt"
+msgstr[1] "# Kameras ausgewählt"
+
+#: src/lib/components/export-recordings.svelte
+msgid "# recording selected, including all pages."
+msgid_plural "# recordings selected, including all pages."
+msgstr[0] "# Aufnahme ausgewählt, einschließlich aller Seiten."
+msgstr[1] "# Aufnahmen ausgewählt, einschließlich aller Seiten."
+
+#: src/lib/components/language-menu.svelte
+msgid "The language could not be changed. Try again."
+msgstr "Die Sprache konnte nicht geändert werden. Versuchen Sie es erneut."
+
+#: src/lib/components/language-menu.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Language"
+msgstr "Sprache"
+
+#: src/lib/components/import-installation.svelte
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/setup/+page.svelte
+msgid "# camera"
+msgid_plural "# cameras"
+msgstr[0] "# Kamera"
+msgstr[1] "# Kameras"
+
+#. 0: calendarDate(form.before); 0: calendarDate(form.before)
+#: src/routes/(admin)/storage/+page.svelte
+msgid "# recording before {0}"
+msgid_plural "# recordings before {0}"
+msgstr[0] "# Aufnahme vor dem {0}"
+msgstr[1] "# Aufnahmen vor dem {0}"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Remove # recording"
+msgid_plural "Remove # recordings"
+msgstr[0] "# Aufnahme entfernen"
+msgstr[1] "# Aufnahmen entfernen"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Used on every device and for replies in Telegram."
+msgstr "Gilt auf jedem Gerät und für Antworten in Telegram."
+
+#: src/lib/detections.ts
+msgid "Unreviewed"
+msgstr "Nicht bewertet"
+
+#: src/lib/detections.ts
+msgid "Enter a date in YYYY-MM-DD format."
+msgstr "Geben Sie ein Datum im Format JJJJ-MM-TT ein."
+
+#: src/lib/detections.ts
+msgid "Enter a valid date."
+msgstr "Geben Sie ein gültiges Datum ein."
+
+#: src/lib/detections.ts
+msgid "The end date must be on or after the start date."
+msgstr "Das Enddatum darf nicht vor dem Startdatum liegen."
+
+#: src/lib/configuration.ts
+msgid "Enter the complete address, starting with https://."
+msgstr "Geben Sie die vollständige Adresse ein, beginnend mit https://."
+
+#: src/lib/configuration.ts
+msgid "Use an address that starts with http:// or https://."
+msgstr "Verwenden Sie eine Adresse, die mit http:// oder https:// beginnt."
+
+#: src/lib/configuration.ts
+msgid "Use an interval of at least 5 seconds."
+msgstr "Verwenden Sie ein Intervall von mindestens 5 Sekunden."
+
+#: src/lib/configuration.ts
+msgid "Use an interval of at most one day."
+msgstr "Verwenden Sie ein Intervall von höchstens einem Tag."
+
+#: src/lib/navigation.ts
+msgid "Who gets a Telegram message when something is detected."
+msgstr "Wer eine Telegram-Nachricht bekommt, wenn etwas erkannt wird."
+
+#: src/lib/navigation.ts
+msgid "Let AI double-check detections before an alert is sent."
+msgstr "Lassen Sie Erkennungen von einer KI gegenprüfen, bevor eine Benachrichtigung gesendet wird."
+
+#: src/lib/navigation.ts
+msgid "Phones and computers that can open this dashboard."
+msgstr "Handys und Computer, die dieses Dashboard öffnen können."
+
+#: src/lib/navigation.ts
+msgid "Free space and old recordings."
+msgstr "Freier Speicherplatz und alte Aufnahmen."
+
+#: src/lib/navigation.ts
+msgid "Edit thresholds, prompts and the detection engine as JSON."
+msgstr "Schwellenwerte, Prompts und die Erkennungs-Engine als JSON bearbeiten."
+
+#: src/lib/navigation.ts
+msgid "Recent activity and a diagnostics download for support."
+msgstr "Letzte Aktivität und ein Download der Diagnosedaten für den Support."
+
+#: src/lib/schema.ts
+msgid "Camera connection details must not contain login details or access tokens."
+msgstr "Die Verbindungsdaten einer Kamera dürfen keine Zugangsdaten oder Zugriffstoken enthalten."
+
+#: src/lib/schema.ts
+msgid "Enter a valid header name."
+msgstr "Geben Sie einen gültigen Header-Namen ein."
+
+#: src/lib/schema.ts
+msgid "Use a single-line header value."
+msgstr "Verwenden Sie einen einzeiligen Header-Wert."
+
+#: src/lib/schema.ts
+msgid "Enter a model name."
+msgstr "Geben Sie einen Modellnamen ein."
+
+#: src/lib/schema.ts
+msgid "Enter a model name, without spaces or a trailing slash."
+msgstr "Geben Sie einen Modellnamen ohne Leerzeichen und ohne Schrägstrich am Ende ein."
+
+#: src/lib/schema.ts
+msgid "Enter a connection name."
+msgstr "Geben Sie einen Namen für die Verbindung ein."
+
+#: src/lib/schema.ts
+msgid "Enter at least one model."
+msgstr "Geben Sie mindestens ein Modell ein."
+
+#: src/lib/schema.ts
+msgid "Use an HTTP or HTTPS API URL."
+msgstr "Verwenden Sie eine API-URL mit HTTP oder HTTPS."
+
+#: src/lib/schema.ts
+msgid "Each header name must be unique."
+msgstr "Jeder Header-Name darf nur einmal vorkommen."
+
+#: src/lib/server/telegram-pairing.ts
+msgid "This Telegram connection link expired. Create a new link and open it in Telegram."
+msgstr "Dieser Telegram-Verbindungslink ist abgelaufen. Erstellen Sie einen neuen Link und öffnen Sie ihn in Telegram."
+
+#: src/lib/server/telegram-pairing.ts
+msgid "This Telegram connection was cancelled. Create a new link to try again."
+msgstr "Diese Telegram-Verbindung wurde abgebrochen. Erstellen Sie einen neuen Link, um es erneut zu versuchen."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Choose today or an earlier date."
+msgstr "Wählen Sie heute oder ein früheres Datum."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "One recording could not be read. The others are shown below."
+msgid_plural "# recordings could not be read. The others are shown below."
+msgstr[0] "Eine Aufnahme konnte nicht gelesen werden. Die anderen werden unten angezeigt."
+msgstr[1] "# Aufnahmen konnten nicht gelesen werden. Die anderen werden unten angezeigt."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Download diagnostics"
+msgstr "Diagnosedaten herunterladen"
+
+#. 0: wait / 1000
+#: src/lib/server/managed-detector.ts
+msgid "Restarting monitoring in {0} seconds…"
+msgstr "Die Überwachung wird in {0} Sekunden neu gestartet…"
+
+#: src/lib/server/telegram-reviews.ts
+msgid "Confirmed. Saved in AI Detector."
+msgstr "Bestätigt. In AI Detector gespeichert."
+
+#: src/lib/server/telegram-reviews.ts
+msgid "Marked as a false alarm. Saved in AI Detector."
+msgstr "Als Fehlalarm markiert. In AI Detector gespeichert."
+
+#: src/lib/server/telegram-pairing.ts
+msgid "My Telegram group"
+msgstr "Meine Telegram-Gruppe"
+
+#: src/lib/server/telegram-pairing.ts
+msgid "My Telegram channel"
+msgstr "Mein Telegram-Kanal"
+
+#: src/lib/server/folder-picker.ts
+msgid "Choose your previous AI Detector folder"
+msgstr "Wählen Sie den Ordner Ihres vorherigen AI Detector"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Example: Calving pen"
+msgstr "Beispiel: Abkalbebox"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Example: Calving pen watch"
+msgstr "Beispiel: Überwachung Abkalbebox"
+
+#: src/lib/components/import-installation.svelte
+msgid "# detector"
+msgid_plural "# detectors"
+msgstr[0] "# Detektor"
+msgstr[1] "# Detektoren"
+
+#: src/lib/components/import-installation.svelte
+msgid "# recording"
+msgid_plural "# recordings"
+msgstr[0] "# Aufnahme"
+msgstr[1] "# Aufnahmen"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Calling the saved address"
+msgstr "Ruft die gespeicherte Adresse auf"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Example: My phone"
+msgstr "Beispiel: Mein Handy"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Picture and recording location checked"
+msgstr "Bild und Aufnahmeort geprüft"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Picture checked"
+msgstr "Bild geprüft"
+
+#: src/lib/components/setup-finish.svelte
+msgid "· Live viewing only"
+msgstr "· Nur Livebild"
+
+#. 0: meta.llmConnection
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Checked by {0}"
+msgstr "Geprüft von {0}"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Checked by a custom validator"
+msgstr "Geprüft von einer eigenen KI-Prüfung"
+
+#. 0: index + 1
+#: src/lib/remote/stream.remote.ts
+msgid "Stream {0}"
+msgstr "Stream {0}"
+
+#. 0: amount
+#: src/lib/format.ts
+msgid "{0} GB"
+msgstr "{0} GB"
+
+#: src/routes/(admin)/status/+page.svelte
+msgctxt "page name"
+msgid "Monitoring"
+msgstr "Überwachung"
+
+#. 0: percent(entry.confidence)
+#. 0: percent(entry.confidence)
+#: src/routes/(admin)/detections/recording-card.svelte
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "{0} confidence"
+msgstr "{0} Sicherheit"

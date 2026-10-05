@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import CategoryDot from '$lib/components/category-dot.svelte';
 	import { onMount, untrack } from 'svelte';
 	import {
 		readDetectorChoices,
@@ -7,7 +8,7 @@
 		type DetectorChoices
 	} from '$lib/detector-draft-storage';
 	import { toast } from 'svelte-sonner';
-	import { Plus } from '@lucide/svelte';
+	import { Bell, Plus } from '@lucide/svelte';
 	import CameraSelection from '$lib/components/camera-selection.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import NotificationEditor from '$lib/components/notification-editor.svelte';
@@ -19,7 +20,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Field from '$lib/components/ui/field';
-	import * as Select from '$lib/components/ui/select';
+	import * as RadioGroup from '$lib/components/ui/radio-group';
 	import * as Alert from '$lib/components/ui/alert';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import {
@@ -283,188 +284,196 @@
 	}
 </script>
 
-<section class="settings-page">
-	<header class="flex flex-col items-start gap-3">
-		<div class="flex flex-col gap-2">
-			<h1 class="settings-heading">
-				{originalLabel ? 'Edit detector' : 'Add detector'}
-			</h1>
-			<p class="settings-description">
-				Choose a preset and select the cameras this detector should watch.
-			</p>
-		</div>
-	</header>
-	{#if restoredDraft}<p role="status" class="text-sm text-muted-foreground">
-			Your unsaved detector choices were restored. Review them before saving.
-		</p>{/if}
+<div class="flex flex-col gap-6">
+	{#if restoredDraft}
+		<p role="status" class="text-sm text-muted-foreground">
+			Your unsaved choices were restored. Review them before saving.
+		</p>
+	{/if}
 	{#if presetWarning}
 		<Alert.Root variant="destructive">
 			<Alert.Title>Monitoring presets are unavailable</Alert.Title>
-			<Alert.Description
-				>{presetWarning} You can still edit and save the current configuration.</Alert.Description
-			>
+			<Alert.Description>
+				{presetWarning} You can still edit and save the current configuration.
+			</Alert.Description>
 		</Alert.Root>
 	{/if}
 	<form
-		class="flex flex-col gap-6"
+		class="flex flex-col gap-8"
 		onsubmit={(event) => {
 			event.preventDefault();
 			void save();
 		}}
 	>
-		<div class="flex min-w-0 flex-col gap-6">
-			<div class="flex flex-col gap-6">
-				<Field.Group class="grid gap-6 sm:grid-cols-2">
-					<Field.Field>
-						<Field.Label for="detector-preset">What do you want to detect?</Field.Label>
-						<Select.Root
-							type="single"
-							value={matchesPreset ? preset : ''}
-							onValueChange={loadPreset}
-							disabled={pending || Boolean(presetWarning)}
+		<Field.Set>
+			<Field.Legend>What do you want to detect?</Field.Legend>
+			<Field.Description>
+				Choose a preset. It supplies everything needed to recognise that kind of event.
+			</Field.Description>
+			{#if presets.length}
+				<RadioGroup.Root
+					value={matchesPreset ? preset : ''}
+					onValueChange={loadPreset}
+					disabled={pending || Boolean(presetWarning)}
+					aria-label="Preset"
+					class="grid gap-3 sm:grid-cols-2"
+				>
+					{#each presets as item (item.id)}
+						<label
+							for={`preset-${item.id}`}
+							class="flex cursor-pointer items-center gap-3 rounded-xl border bg-card px-4 py-3.5 transition-colors hover:bg-accent has-disabled:cursor-default has-disabled:opacity-60 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary/5"
 						>
-							<Select.Trigger id="detector-preset" class="w-full"
-								>{selectedPreset?.name ??
-									(initial || preset ? 'Current settings' : 'Choose a preset')}</Select.Trigger
-							>
-							<Select.Content
-								><Select.Group>
-									{#each presets as item (item.id)}<Select.Item
-											value={item.id}
-											label={item.name}
-										/>{/each}
-								</Select.Group></Select.Content
-							>
-						</Select.Root>
-					</Field.Field>
-					<Field.Field>
-						<Field.Label for="detector-label">Detector name</Field.Label>
-						<Input
-							id="detector-label"
-							bind:value={label}
-							required
-							disabled={pending}
-							placeholder="e.g. Entrance activity"
-						/>
-					</Field.Field>
-				</Field.Group>
-			</div>
+							<RadioGroup.Item id={`preset-${item.id}`} value={item.id} />
+							<span class="min-w-0 flex-1 text-sm font-medium">{item.name}</span>
+							<CategoryDot seed={item.id} />
+						</label>
+					{/each}
+				</RadioGroup.Root>
+			{/if}
+			{#if !selectedPreset && (initial || preset)}
+				<p class="text-sm text-muted-foreground">
+					This detector uses its own settings, changed in Advanced. Choosing a preset replaces them.
+				</p>
+			{/if}
+		</Field.Set>
 
-			{#if cameras.length}
-				<CameraSelection {cameras} bind:selected={detector.detection.source} disabled={pending} />
-			{:else}
-				<Alert.Root
-					><Alert.Title>Add a camera first</Alert.Title><Alert.Description
-						>Add and check a camera before selecting it for this detector.</Alert.Description
-					></Alert.Root
+		<!-- A new detector is named after its preset; ask only once there is a name to change. -->
+		{#if originalLabel || preset || label || presetWarning}
+			<Field.Field class="max-w-md">
+				<Field.Label for="detector-label">Detector name</Field.Label>
+				<Input
+					id="detector-label"
+					bind:value={label}
+					required
+					disabled={pending}
+					placeholder="Example: Calving pen watch"
+				/>
+			</Field.Field>
+		{/if}
+
+		{#if cameras.length}
+			<CameraSelection {cameras} bind:selected={detector.detection.source} disabled={pending} />
+		{:else}
+			<Alert.Root>
+				<Alert.Title>Add a camera first</Alert.Title>
+				<Alert.Description>
+					A detector watches cameras you have connected.
+					<Button href={resolve('/streams/add')} variant="outline" size="sm" class="mt-2">
+						<Plus data-icon="inline-start" aria-hidden="true" />Add cameras
+					</Button>
+				</Alert.Description>
+			</Alert.Root>
+		{/if}
+
+		<Field.Set>
+			<Field.Legend>
+				Phone alerts <span class="font-normal text-muted-foreground">(optional)</span>
+			</Field.Legend>
+			<Field.Description>
+				Send a Telegram message with the clip when this detector sees something.
+			</Field.Description>
+			<Field.Group class="gap-1">
+				{#each telegrams as channel, index (channel.label)}
+					<label
+						for={`channel-${index}`}
+						class="-mx-2 flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 hover:bg-accent"
+					>
+						<Checkbox
+							id={`channel-${index}`}
+							disabled={pending}
+							checked={selectedChannels.some((item) => sameTelegram(item, channel))}
+							onCheckedChange={(checked) => {
+								detector.exporters.telegram = selectTelegram(selectedChannels, channel, checked);
+								keepDelivery = true;
+							}}
+						/>
+						<span class="text-sm font-medium">{channel.label}</span>
+					</label>
+				{/each}
+			</Field.Group>
+			<Button
+				variant="outline"
+				class="self-start"
+				disabled={pending}
+				onclick={() => (addingRecipient = true)}
+			>
+				<Bell data-icon="inline-start" aria-hidden="true" />{telegrams.length
+					? 'Connect another phone or group'
+					: 'Connect Telegram'}
+			</Button>
+		</Field.Set>
+
+		<DetectorVerification
+			bind:detector
+			bind:connectionLabel={llmLabel}
+			connections={llms}
+			disabled={pending}
+			addConnection={() => (addingConnection = true)}
+			{selectConnection}
+			onChoose={() => (suggestValidator = false)}
+		/>
+
+		{#if error}
+			<Alert.Root variant="destructive">
+				<Alert.Title>Could not update detector</Alert.Title>
+				<Alert.Description>{error}</Alert.Description>
+			</Alert.Root>
+		{/if}
+		<div class="flex flex-wrap gap-3">
+			<Button type="submit" disabled={pending || !detector.detection.source.length}>
+				{pending ? 'Saving…' : 'Save detector'}
+			</Button>
+			{#if onCancel}
+				<Button
+					onclick={async () => {
+						forgetDraft();
+						await onCancel?.();
+					}}
+					disabled={pending}
+					variant="outline">Cancel</Button
 				>
 			{/if}
-			{#if !cameras.length}
-				<Button href={resolve('/setup?step=cameras')} variant="outline" class="self-start"
-					><Plus data-icon="inline-start" />Add cameras</Button
-				>{/if}
-			<DetectorVerification
-				bind:detector
-				bind:connectionLabel={llmLabel}
-				connections={llms}
-				disabled={pending}
-				addConnection={() => (addingConnection = true)}
-				{selectConnection}
-				onChoose={() => (suggestValidator = false)}
-			/>
-			<Field.Set>
-				<Field.Legend
-					>Phone alerts <span class="font-normal text-muted-foreground">(optional)</span
-					></Field.Legend
-				>
-				<Field.Group class="gap-3">
-					{#each telegrams as channel, index (channel.label)}
-						<Field.Field orientation="horizontal">
-							<Checkbox
-								id={`channel-${index}`}
-								disabled={pending}
-								checked={selectedChannels.some((item) => sameTelegram(item, channel))}
-								onCheckedChange={(checked) => {
-									detector.exporters.telegram = selectTelegram(selectedChannels, channel, checked);
-									keepDelivery = true;
-								}}
-							/>
-							<Field.Label for={`channel-${index}`}>{channel.label}</Field.Label>
-						</Field.Field>
-					{/each}
-					<Button
-						type="button"
-						variant="outline"
-						class="self-start"
-						disabled={pending}
-						onclick={() => (addingRecipient = true)}
-						><Plus data-icon="inline-start" />Connect Telegram</Button
-					>
-				</Field.Group>
-			</Field.Set>
-			{#if error}<Alert.Root variant="destructive"
-					><Alert.Title>Could not update detector</Alert.Title><Alert.Description
-						>{error}</Alert.Description
-					></Alert.Root
-				>{/if}
-			<div class="flex flex-wrap gap-3">
-				<Button type="submit" disabled={pending || !detector.detection.source.length}
-					>{pending ? 'Saving detector…' : 'Save detector'}</Button
-				>
-				{#if onCancel}<Button
-						type="button"
-						onclick={async () => {
-							forgetDraft();
-							await onCancel?.();
-						}}
-						disabled={pending}
-						variant="outline">Cancel</Button
-					>{/if}
-			</div>
 		</div>
-		{#if originalLabel}<details>
-				<summary class="cursor-pointer text-sm text-muted-foreground">Remove detector</summary>
 
-				<div class="flex flex-col items-start gap-3">
-					<p class="text-sm text-muted-foreground">
-						Cameras, saved recordings and other detectors are kept.
-					</p>
-					<AlertDialog.Root>
-						<AlertDialog.Trigger
-							type="button"
-							class={buttonVariants({ variant: 'outline', size: 'sm' })}
-							disabled={pending}>Delete detector</AlertDialog.Trigger
-						>
-						<AlertDialog.Content>
-							<AlertDialog.Header
-								><AlertDialog.Title>Delete “{originalLabel}”?</AlertDialog.Title
-								><AlertDialog.Description
-									>This stops this detector on all of its cameras. Other detectors, camera
-									connections and saved recordings are kept. This cannot be undone.</AlertDialog.Description
-								></AlertDialog.Header
+		{#if originalLabel}
+			<div class="border-t pt-5">
+				<AlertDialog.Root>
+					<AlertDialog.Trigger
+						type="button"
+						class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
+							' -ml-2.5 text-danger-foreground hover:text-danger-foreground'}
+						disabled={pending}>Delete this detector…</AlertDialog.Trigger
+					>
+					<AlertDialog.Content>
+						<AlertDialog.Header>
+							<AlertDialog.Title>Delete “{originalLabel}”?</AlertDialog.Title>
+							<AlertDialog.Description>
+								This stops this detector on all of its cameras. Other detectors, camera connections
+								and saved recordings are kept. This cannot be undone.
+							</AlertDialog.Description>
+						</AlertDialog.Header>
+						<AlertDialog.Footer>
+							<AlertDialog.Cancel type="button">Keep detector</AlertDialog.Cancel>
+							<AlertDialog.Action
+								type="button"
+								class={buttonVariants({ variant: 'destructive' })}
+								onclick={remove}>Delete detector</AlertDialog.Action
 							>
-							<AlertDialog.Footer
-								><AlertDialog.Cancel type="button">Keep detector</AlertDialog.Cancel
-								><AlertDialog.Action
-									type="button"
-									class={buttonVariants({ variant: 'destructive' })}
-									onclick={remove}>Delete detector</AlertDialog.Action
-								></AlertDialog.Footer
-							>
-						</AlertDialog.Content>
-					</AlertDialog.Root>
-				</div>
-			</details>{/if}
+						</AlertDialog.Footer>
+					</AlertDialog.Content>
+				</AlertDialog.Root>
+			</div>
+		{/if}
 	</form>
-</section>
+</div>
 
 <Dialog.Root bind:open={addingConnection}>
 	<Dialog.Content class="max-h-[90dvh] overflow-y-auto sm:max-w-xl">
 		<Dialog.Header>
 			<Dialog.Title>Connect validator</Dialog.Title>
-			<Dialog.Description
-				>Your detector changes stay here until you save the detector.</Dialog.Description
-			>
+			<Dialog.Description>
+				Your detector changes stay here until you save the detector.
+			</Dialog.Description>
 		</Dialog.Header>
 		<LlmConnectionEditor
 			{canTest}
@@ -479,11 +488,12 @@
 
 <Dialog.Root bind:open={addingRecipient}>
 	<Dialog.Content class="max-h-[90dvh] overflow-y-auto sm:max-w-xl">
-		<Dialog.Header
-			><Dialog.Title>Connect Telegram</Dialog.Title><Dialog.Description
-				>Your detector changes stay here until you save the detector.</Dialog.Description
-			></Dialog.Header
-		>
+		<Dialog.Header>
+			<Dialog.Title>Connect Telegram</Dialog.Title>
+			<Dialog.Description>
+				Your detector changes stay here until you save the detector.
+			</Dialog.Description>
+		</Dialog.Header>
 		<NotificationEditor
 			inline
 			onSaved={(recipient) => {

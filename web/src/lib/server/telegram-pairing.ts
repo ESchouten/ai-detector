@@ -20,8 +20,15 @@ import { TelegramInbox } from './telegram-inbox.ts';
 
 const LIFETIME_MS = 5 * 60 * 1000;
 const MAX_SESSIONS = 16;
-const EXPIRED = 'This Telegram connection link expired. Create a new link and open it in Telegram.';
-const CANCELLED = 'This Telegram connection was cancelled. Create a new link to try again.';
+const expired = () =>
+	'This Telegram connection link expired. Create a new link and open it in Telegram.';
+const cancelled = () => 'This Telegram connection was cancelled. Create a new link to try again.';
+
+/** A name for a chat that Telegram shares without a title. */
+function defaultChatName(destination: TelegramDestination): string {
+	if (destination === 'group') return 'My Telegram group';
+	return destination === 'channel' ? 'My Telegram channel' : 'My Telegram';
+}
 
 interface Session {
 	id: string;
@@ -102,7 +109,7 @@ export class TelegramPairings {
 		};
 		// Reserve the token before the first network wait, including concurrent starts.
 		this.sessions.set(session.id, session);
-		session.timer = setTimeout(() => this.end(session, EXPIRED), LIFETIME_MS);
+		session.timer = setTimeout(() => this.end(session, expired()), LIFETIME_MS);
 		session.timer.unref();
 		try {
 			const background = this.background.get(token);
@@ -115,7 +122,7 @@ export class TelegramPairings {
 			this.assertActive(session);
 			return { id: session.id, bot, url, expiresAt: session.expiresAt, qrDataUrl };
 		} catch (error) {
-			this.end(session, CANCELLED);
+			this.end(session, cancelled());
 			throw error;
 		} finally {
 			session.starting = false;
@@ -125,7 +132,7 @@ export class TelegramPairings {
 
 	async poll(id: string): Promise<TelegramPairingState> {
 		const session = this.sessions.get(id);
-		if (!session) throw new ConfigurationError(EXPIRED);
+		if (!session) throw new ConfigurationError(expired());
 		this.assertActive(session);
 		if (session.confirmed) return this.state(session);
 		session.polling ??= this.receive(session).finally(() => {
@@ -138,7 +145,7 @@ export class TelegramPairings {
 	async cancel(id: string): Promise<void> {
 		const session = this.sessions.get(id);
 		if (!session) return;
-		this.end(session, CANCELLED);
+		this.end(session, cancelled());
 		await session.polling?.catch(() => undefined);
 	}
 
@@ -210,7 +217,7 @@ export class TelegramPairings {
 		) {
 			await this.confirm(session, {
 				id: String(shared.chat_id),
-				name: shared.title ?? 'My Telegram ' + session.destination
+				name: shared.title ?? defaultChatName(session.destination)
 			});
 		}
 	}
@@ -249,13 +256,13 @@ export class TelegramPairings {
 	}
 
 	private assertActive(session: Session): void {
-		if (session.expiresAt <= this.now()) this.end(session, EXPIRED);
+		if (session.expiresAt <= this.now()) this.end(session, expired());
 		session.controller.signal.throwIfAborted();
 	}
 
 	private expire(): void {
 		for (const session of this.sessions.values()) {
-			if (session.expiresAt <= this.now()) this.end(session, EXPIRED);
+			if (session.expiresAt <= this.now()) this.end(session, expired());
 		}
 	}
 

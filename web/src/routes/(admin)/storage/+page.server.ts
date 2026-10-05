@@ -1,4 +1,5 @@
 import { fail } from '@sveltejs/kit';
+import { plural } from '$lib/format';
 import * as v from 'valibot';
 import { DATA_DIRECTORY } from '$lib/server/application-paths';
 import { recordings } from '$lib/server/recordings';
@@ -19,7 +20,7 @@ const beforeDate = v.pipe(
 		(value) =>
 			new Date(value).toJSON()?.slice(0, 10) === value &&
 			value <= new Date().toISOString().slice(0, 10),
-		'Choose today or an earlier date.'
+		() => 'Choose today or an earlier date.'
 	)
 );
 export const load: PageServerLoad = async () => ({
@@ -45,7 +46,7 @@ export const actions: Actions = {
 				parsed.output,
 				String(form.get('revision') ?? '')
 			);
-			return { message: `Removed ${count} recordings.` };
+			return { message: plural(count, ['Removed # recording.', 'Removed # recordings.']) };
 		} catch (error) {
 			return fail(400, {
 				message: error instanceof Error ? error.message : 'Recordings could not be removed.'

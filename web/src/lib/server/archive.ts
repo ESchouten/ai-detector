@@ -28,14 +28,15 @@ export function isMissingFile(error: unknown): boolean {
 
 /** Keep decoded URL segments and symbolic links inside the recording directory. */
 export async function archivePath(root: string, ...segments: string[]): Promise<string> {
-	if (!segments.every(isArchiveSegment)) throw new ArchivePathError('Invalid archive path.');
+	if (!segments.every(isArchiveSegment))
+		throw new ArchivePathError(/* @wc-ignore */ 'Invalid archive path.');
 	const [directory, file] = await Promise.all([
 		realpath(root),
 		realpath(path.join(root, ...segments))
 	]);
 	const relative = path.relative(directory, file);
 	if (relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
-		throw new ArchivePathError('Invalid archive path.');
+		throw new ArchivePathError(/* @wc-ignore */ 'Invalid archive path.');
 	}
 	return file;
 }
@@ -196,7 +197,7 @@ export class DetectionArchive {
 		const metadata: unknown = JSON.parse(await readFile(file, 'utf8'));
 		if (!validateMetadata(metadata))
 			throw new ArchiveDataError(
-				`Invalid archive metadata: ${location.type}/${location.stage}/${location.timestamp}`
+				/* @wc-ignore */ `Invalid archive metadata: ${location.type}/${location.stage}/${location.timestamp}`
 			);
 		this.eventIds.set(this.addressKey(location), metadata.event_id ?? undefined);
 		this.warnings.delete(`metadata:${this.addressKey(location)}`);

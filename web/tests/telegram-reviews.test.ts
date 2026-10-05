@@ -90,13 +90,13 @@ test('private and channel callbacks from the same bot override each other and th
 	const f = await fixture(t);
 	await f.receive('fixture-token', callback());
 	assert.equal((await f.archive.readReview(address))?.validated, true);
-	assert.match(String(f.calls.at(-1)?.body.text), /Accepted.*Saved/);
+	assert.match(String(f.calls.at(-1)?.body.text), /Confirmed.*Saved/);
 	await f.receive('fixture-token', callback(11, 'rejected', -456));
 	const recording = (await f.archive.page({ offset: 0, limit: 24 })).items[0];
 	assert.equal(recording.stage, 'rejected');
 	assert.equal(recording.validated, null);
 	assert.equal(recording.review?.source, 'telegram');
-	assert.match(String(f.calls.at(-1)?.body.text), /Rejected.*Saved/);
+	assert.match(String(f.calls.at(-1)?.body.text), /false alarm.*Saved/);
 });
 
 test('unconnected chats, another bot and bot users cannot review local recordings', async (t) => {

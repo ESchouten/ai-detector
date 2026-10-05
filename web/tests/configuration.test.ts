@@ -469,11 +469,13 @@ test('a committed detector save succeeds while an apply failure is reported to r
 
 test('failed managed stop settings remain visible without rejecting the saved empty setup', async (t) => {
 	const { files } = await fixture(t);
-	const directory = path.dirname(files.app);
-	const runtime = new ManagedDetector({ executable: 'unused', dataDirectory: directory });
-	// An occupied path reproduces an actual filesystem rejection in stop(), without
-	// launching a child process or depending on platform-specific permission behavior.
-	await mkdir(path.join(directory, 'runtime.json'));
+	// The launcher keeps its resume flag in its own app.json. An occupied path there reproduces
+	// an actual filesystem rejection in stop(), without launching a child process or depending on
+	// platform-specific permission behavior.
+	const launcherData = await mkdtemp(path.join(tmpdir(), 'detector-launcher-'));
+	t.after(() => rm(launcherData, { recursive: true, force: true }));
+	await mkdir(path.join(launcherData, 'app.json'));
+	const runtime = new ManagedDetector({ executable: 'unused', dataDirectory: launcherData });
 	const store = new ConfigurationStore(files, () => runtime);
 	try {
 		await store.deleteDetector('Detector 1');
@@ -481,7 +483,7 @@ test('failed managed stop settings remain visible without rejecting the saved em
 		assert.deepEqual((await store.read()).app.detectors, []);
 		assert.equal(runtime.status().phase, 'failed');
 		assert.equal(runtime.status().readiness, 'failed');
-		assert.match(runtime.status().message, /runtime\.json/);
+		assert.match(runtime.status().message, /EISDIR|directory/);
 	} finally {
 		// Drain logging without rewriting the deliberately blocked settings path.
 		await runtime.stop(false);

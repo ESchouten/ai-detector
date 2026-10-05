@@ -9,6 +9,11 @@ node_modules
 /build
 /dist
 
+# Translation catalogs compiled by Wuchale; the .po files and loaders beside them are sources
+/src/locales/.wuchale/
+/src/locales/data.js
+/src/locales/plural.js
+
 # OS
 .DS_Store
 Thumbs.db

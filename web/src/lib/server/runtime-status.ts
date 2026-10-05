@@ -68,6 +68,13 @@ function ruleProgress(detector: DetectorConfig, index: number, app: AppConfig): 
 	};
 }
 
+/** "telegram-2" is the detector's second Telegram destination; say that in words. */
+function destinationName(id: string): string {
+	const [kind, ordinal] = id.split('-');
+	const name = kind === 'telegram' ? 'Telegram alert' : kind === 'webhook' ? 'Webhook' : id;
+	return ordinal && ordinal !== '1' ? `${name} ${ordinal}` : name;
+}
+
 /** Only these structured observations can establish camera readiness. */
 export class RuntimeProgress {
 	private prepared = false;
@@ -279,7 +286,7 @@ export class RuntimeProgress {
 	get issues(): string[] {
 		return Array.from(this.failures, ([key, message]) => {
 			const [rule, destination] = key.split('/');
-			return `${this.ruleLabel(rule)} · ${destination}: ${message}`;
+			return `${this.ruleLabel(rule)} · ${destinationName(destination)}: ${message}`;
 		});
 	}
 

@@ -6,11 +6,18 @@ import { configuration } from '$lib/server/configuration';
 import { previews } from '$lib/server/preview-pool';
 import { access, authorizeRequest } from '$lib/server/access';
 import { webLog } from '$lib/server/web-log';
-import { DATA_DIRECTORY } from '$lib/server/application-paths';
+import { APP_CONFIG_PATH, DATA_DIRECTORY } from '$lib/server/application-paths';
+import { negotiateLocale, SOURCE_LOCALE } from '$lib/locales';
+import {
+	installationLanguage,
+	loadInstallationLanguage,
+	runInLanguage
+} from '$lib/server/request-language';
 
 export const init: ServerInit = async () => {
 	if (!building) {
 		await webLog.initialize(DATA_DIRECTORY);
+		await loadInstallationLanguage(APP_CONFIG_PATH);
 		try {
 			if (!(await access.list()).length) {
 				const pairing = access.createPairing();
@@ -38,15 +45,22 @@ export const handleError: HandleServerError = ({ error, event }) => {
 	);
 };
 
-export const handle: Handle = async ({ event, resolve }) => {
-	const disconnectSignal = event.platform?.req?.disconnectSignal;
-	if (disconnectSignal)
-		event.request = new Request(event.request, {
-			signal: AbortSignal.any([event.request.signal, disconnectSignal])
+export const handle: Handle = ({ event, resolve }) => {
+	// An installation has one language once set up; until then each browser gets its own.
+	const requested = negotiateLocale(event.request.headers.get('accept-language'));
+	const language = installationLanguage() ?? requested ?? SOURCE_LOCALE;
+	return runInLanguage({ language, requested }, async () => {
+		const disconnectSignal = event.platform?.req?.disconnectSignal;
+		if (disconnectSignal)
+			event.request = new Request(event.request, {
+				signal: AbortSignal.any([event.request.signal, disconnectSignal])
+			});
+		await authorizeRequest(event);
+		const response = await resolve(event, {
+			transformPageChunk: ({ html }) => html.replace('%lang%', language)
 		});
-	await authorizeRequest(event);
-	const response = await resolve(event);
-	response.headers.set('X-Frame-Options', 'DENY');
-	response.headers.set('Referrer-Policy', 'same-origin');
-	return response;
+		response.headers.set('X-Frame-Options', 'DENY');
+		response.headers.set('Referrer-Policy', 'same-origin');
+		return response;
+	});
 };

@@ -1,17 +1,15 @@
 <script lang="ts">
-	import { getRuntime } from '$lib/remote/runtime.remote';
+	import { resolve } from '$app/paths';
+	import PageHeader from '$lib/components/page-header.svelte';
 	import SettingsEditor from './settings-editor.svelte';
-	const runtime = await getRuntime();
 </script>
 
 <svelte:head><title>Advanced · AI Detector</title></svelte:head>
-<section class="settings-page max-w-6xl">
-	<header class="flex flex-col gap-2">
-		<h1 class="settings-heading">Advanced</h1>
-		<p class="settings-description">
-			Edit settings beyond the presets. JSON is checked against the application’s schema before
-			saving.
-		</p>
-	</header>
-	<SettingsEditor managed={runtime.managed} />
+<section class="page max-w-6xl">
+	<PageHeader
+		back={{ href: resolve('/settings'), label: 'Settings' }}
+		title="Advanced"
+		description="Everything the presets decide for you, as JSON: thresholds, prompts, delivery and the detection engine. Changes are checked before they are saved."
+	/>
+	<SettingsEditor />
 </section>

@@ -2,9 +2,11 @@ import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import path from 'node:path';
 import { createInterface } from 'node:readline';
 import { setTimeout as delay } from 'node:timers/promises';
+import { plural } from '../format.ts';
 import type { RuntimeMode, RuntimeStatus } from '../runtime.ts';
 import type { AppConfig, Config, LlmConnection } from '../schema.ts';
-import { readJson, writeJson } from './json-file.ts';
+import { readJson } from './json-file.ts';
+import { monitoringEnabled, setMonitoringEnabled } from './monitoring-flag.ts';
 import { DetectorLog } from './detector-log.ts';
 import type { DetectorCommand } from './nvidia-runtime.ts';
 import { DetectorPreparation, type DetectorOptions } from './detector-preparation.ts';
@@ -12,8 +14,8 @@ import { sanitizeTextForLogs as redact } from './runtime-logs.ts';
 import { RuntimeProgress, STATUS_PREFIX } from './runtime-status.ts';
 import { chooseRuntime, SetupError } from './runtime-platform.ts';
 
+/** Whether monitoring resumes with the application: `monitoring` in app.json. */
 interface Settings {
-	mode: RuntimeMode;
 	enabled: boolean;
 }
 
@@ -30,9 +32,9 @@ export class ManagedDetector {
 	private operation: Promise<unknown> = Promise.resolve();
 	private startup = new AbortController();
 	private restartDelay = INITIAL_RESTART_DELAY_MS;
-	private settings: Settings = { mode: 'auto', enabled: false };
+	private settings: Settings = { enabled: false };
 	private state: RuntimeStatus;
-	private readonly settingsPath: string;
+	private readonly appPath: string;
 	private readonly preparation: DetectorPreparation;
 	private readonly options: DetectorOptions;
 	private progress = new RuntimeProgress();
@@ -40,7 +42,7 @@ export class ManagedDetector {
 	constructor(options: DetectorOptions) {
 		this.options = options;
 		this.log = new DetectorLog(options.dataDirectory);
-		this.settingsPath = path.join(options.dataDirectory, 'runtime.json');
+		this.appPath = path.join(options.dataDirectory, 'app.json');
 		this.preparation = new DetectorPreparation(options, this.log, (message) => {
 			this.state.message = message;
 		});
@@ -71,7 +73,7 @@ export class ManagedDetector {
 		}));
 		const message =
 			readiness === 'monitoring'
-				? `Monitoring ${cameras.length} camera${cameras.length === 1 ? '' : 's'}.`
+				? plural(cameras.length, ['Monitoring # camera.', 'Monitoring # cameras.'])
 				: readiness === 'degraded'
 					? 'Monitoring needs attention.'
 					: readiness === 'failed'
@@ -96,29 +98,18 @@ export class ManagedDetector {
 	}
 
 	async refreshMetadata(): Promise<void> {
-		const app = await readJson<AppConfig>(path.join(this.options.dataDirectory, 'app.json'));
+		const app = await readJson<AppConfig>(this.appPath);
 		if (app) this.progress.updateMetadata(app);
 	}
 
 	initialize(): Promise<void> {
 		const signal = this.startup.signal;
 		return this.enqueue(async () => {
-			const saved = await readJson<Settings>(this.settingsPath);
-			if (saved) {
-				if (
-					!['auto', 'native', 'docker'].includes(saved.mode) ||
-					typeof saved.enabled !== 'boolean'
-				) {
-					throw new SetupError(
-						'Saved startup settings are invalid. Restore runtime.json from a backup.'
-					);
-				}
-				this.settings = saved;
-				this.state.mode = saved.mode;
-			}
+			this.settings = { enabled: await monitoringEnabled(this.appPath) };
+			this.state.mode = await this.configuredMode();
 			if (this.settings.enabled) {
 				await this.log.resume();
-				await this.startChild(this.settings.mode, signal, true);
+				await this.startChild(signal, true);
 			}
 		});
 	}
@@ -130,25 +121,23 @@ export class ManagedDetector {
 		return this.preparation.testLlm(connection, signal);
 	}
 
-	start(mode: RuntimeMode): Promise<void> {
+	start(): Promise<void> {
 		const signal = this.startup.signal;
 		return this.enqueue(() => {
 			if (!this.child) this.restartDelay = INITIAL_RESTART_DELAY_MS;
-			return this.startChild(mode, signal);
+			return this.startChild(signal);
 		});
 	}
 
-	setMode(mode: RuntimeMode, previous: string): Promise<void> {
-		return this.enqueue(async () => {
-			if (this.state.mode !== previous)
-				throw new SetupError('The detection engine changed. Reload the saved settings.');
-			if (this.child || ['checking', 'starting', 'stopping'].includes(this.state.phase))
-				throw new SetupError('Pause monitoring before changing the detection engine.');
-			const settings = { ...this.settings, mode };
-			await writeJson(this.settingsPath, settings);
-			this.settings = settings;
-			this.state.mode = mode;
-		});
+	/** config.json's `runtime`; a missing file or setting means automatic. */
+	private async configuredMode(): Promise<RuntimeMode> {
+		try {
+			const config = await readJson<Config>(path.join(this.options.dataDirectory, 'config.json'));
+			return config?.runtime ?? 'auto';
+		} catch {
+			// Unreadable settings are reported where they are loaded; keep showing the last choice.
+			return this.state.mode;
+		}
 	}
 
 	whileStopped<T>(operation: () => Promise<T>): Promise<T> {
@@ -159,18 +148,13 @@ export class ManagedDetector {
 		});
 	}
 
-	private async startChild(
-		mode: RuntimeMode,
-		signal: AbortSignal,
-		preserveLog = false
-	): Promise<void> {
+	private async startChild(signal: AbortSignal, preserveLog = false): Promise<void> {
 		if (this.child || signal.aborted) return;
 		if (!preserveLog) this.log.begin();
 		this.progress = new RuntimeProgress();
 		this.state = {
 			...this.state,
 			phase: 'checking',
-			mode,
 			selected: null,
 			helpUrl: undefined,
 			message: 'Checking this computer…'
@@ -178,8 +162,10 @@ export class ManagedDetector {
 		try {
 			const config = await readJson<Config>(path.join(this.options.dataDirectory, 'config.json'));
 			if (!config) throw new SetupError('Add a camera and choose what to detect first.');
+			const mode = config.runtime ?? 'auto';
+			this.state.mode = mode;
 			await this.validate(config, signal);
-			const app = await readJson<AppConfig>(path.join(this.options.dataDirectory, 'app.json'));
+			const app = await readJson<AppConfig>(this.appPath);
 			this.progress.configure(
 				config,
 				app ?? { streams: [], telegrams: [], llms: [], detectors: [] },
@@ -191,8 +177,8 @@ export class ManagedDetector {
 			signal.throwIfAborted();
 			const command = await this.preparation.command(selected, config, signal);
 			signal.throwIfAborted();
-			this.settings = { mode, enabled: true };
-			await writeJson(this.settingsPath, this.settings);
+			this.settings = { enabled: true };
+			await setMonitoringEnabled(this.appPath, true);
 			signal.throwIfAborted();
 			this.launch(command, signal);
 		} catch (error) {
@@ -232,7 +218,11 @@ export class ManagedDetector {
 			recovering = true;
 			void this.enqueue(async () => {
 				if (this.child === child && !this.stoppingChild)
-					await this.restartChild(signal, `${stalled} stopped processing fresh camera frames`);
+					// The reason is written to the log, which stays in English.
+					await this.restartChild(
+						signal,
+						/* @wc-ignore */ `${stalled} stopped processing fresh camera frames`
+					);
 			}).catch((error) => this.fail(error));
 		}, 5000);
 		watchdog.unref();
@@ -250,7 +240,7 @@ export class ManagedDetector {
 				void this.enqueue(async () => {
 					// Ignore duplicate/stale requests from a process already being replaced.
 					if (this.child !== child || this.stoppingChild) return;
-					await this.restartChild(signal, 'TensorRT models are ready');
+					await this.restartChild(signal, /* @wc-ignore */ 'TensorRT models are ready');
 				}).catch((error) => this.fail(error));
 		});
 		createInterface({ input: child.stderr, crlfDelay: Infinity }).on('line', (line) =>
@@ -299,14 +289,15 @@ export class ManagedDetector {
 		this.restartDelay = Math.min(wait * 2, MAX_RESTART_DELAY_MS);
 		this.progress = new RuntimeProgress();
 		this.state.phase = 'starting';
-		this.state.message += ` Restarting monitoring in ${wait / 1000} seconds…`;
+		const restarting = `Restarting monitoring in ${wait / 1000} seconds…`;
+		this.state.message = `${this.state.message} ${restarting}`;
 		this.log.append(
 			`${new Date().toISOString()} Restarting the detector in ${wait / 1000} seconds.\n`
 		);
 		void this.enqueue(async () => {
 			try {
 				await delay(wait, undefined, { signal });
-				await this.startChild(this.settings.mode, signal, true);
+				await this.startChild(signal, true);
 			} catch (error) {
 				if (signal.aborted) {
 					this.state.phase = 'stopped';
@@ -327,7 +318,7 @@ export class ManagedDetector {
 			this.log.append(`${new Date().toISOString()} Stop requested: ${reason}\n`);
 			if (disable) this.settings.enabled = false;
 			try {
-				if (disable) await writeJson(this.settingsPath, this.settings);
+				if (disable) await setMonitoringEnabled(this.appPath, false);
 			} finally {
 				try {
 					await this.stopChild();
@@ -373,7 +364,11 @@ export class ManagedDetector {
 
 	apply(): Promise<void> {
 		const signal = this.startup.signal;
-		return this.enqueue(() => this.restartChild(signal, 'detector settings changed'));
+		return this.enqueue(async () => {
+			// Show a changed engine choice while paused too; a running detector restarts with it.
+			if (!this.settings.enabled) this.state.mode = await this.configuredMode();
+			await this.restartChild(signal, 'detector settings changed');
+		});
 	}
 
 	private async restartChild(signal: AbortSignal, reason: string): Promise<void> {
@@ -384,7 +379,7 @@ export class ManagedDetector {
 		} catch (error) {
 			this.fail(error);
 		}
-		await this.startChild(this.settings.mode, signal, true);
+		await this.startChild(signal, true);
 	}
 
 	fail(error: unknown): void {

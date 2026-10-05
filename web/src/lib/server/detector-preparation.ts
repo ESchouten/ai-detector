@@ -64,7 +64,7 @@ export class DetectorPreparation {
 				key,
 				url,
 				headers,
-				prompt: 'Connection test',
+				prompt: /* @wc-ignore */ 'Connection test',
 				strategy: 'IMAGE'
 			});
 			await this.runCheck(this.options.executable, ['--test-vlm', file], 45000, signal);

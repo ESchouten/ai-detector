@@ -56,12 +56,15 @@ class CompiledDesktopTest(unittest.TestCase):
 
     def launch(self, open_browser=False, host="127.0.0.1", **fixture_options):
         (self.data / "config.json").write_text(
-            json.dumps({"detectors": [{"detection": {"source": "input.bmp"}}]})
+            json.dumps(
+                {
+                    "detectors": [{"detection": {"source": "input.bmp"}}],
+                    "runtime": "native",
+                }
+            )
         )
         (self.data / "fixture-options.json").write_text(json.dumps(fixture_options))
-        (self.data / "runtime.json").write_text(
-            json.dumps({"enabled": True, "mode": "native"})
-        )
+        (self.data / "app.json").write_text(json.dumps({"monitoring": True}))
         log = self.log.open("w")
         self.addCleanup(log.close)
         env = {
@@ -180,7 +183,7 @@ class CompiledDesktopTest(unittest.TestCase):
         process.stdin.flush()
         self.assertEqual(process.wait(timeout=45), expected, self.log.read_text())
         self.assertFalse((self.data / "desktop-instance.json").exists())
-        self.assertTrue(json.loads((self.data / "runtime.json").read_text())["enabled"])
+        self.assertTrue(json.loads((self.data / "app.json").read_text())["monitoring"])
         messages = [
             line
             for line in self.log.read_text().splitlines()

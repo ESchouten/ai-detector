@@ -189,6 +189,16 @@ def test_valid_http_destination_urls_are_preserved(url):
     assert HealthcheckConfig(url=url).url == url
 
 
+def test_launcher_runtime_choice_is_accepted_and_defaults_to_automatic():
+    detectors = [{"detection": {"source": "0"}}]
+    assert Config.model_validate({"detectors": detectors}).runtime == "auto"
+    for runtime in ("auto", "native", "docker"):
+        config = Config.model_validate({"detectors": detectors, "runtime": runtime})
+        assert config.runtime == runtime
+    with pytest.raises(ValidationError):
+        Config.model_validate({"detectors": detectors, "runtime": "cpu"})
+
+
 def test_malformed_http_url_error_does_not_echo_url_contents(tmp_path):
     path = tmp_path / "config.json"
     path.write_text(

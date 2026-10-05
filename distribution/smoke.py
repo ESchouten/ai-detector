@@ -87,13 +87,14 @@ def smoke(folder: Path) -> None:
                             "detection": {"source": "input.bmp"},
                             "exporters": {"disk": {}},
                         }
-                    ]
+                    ],
+                    "runtime": "native",
                 }
             ),
             encoding="utf-8",
         )
-        (data / "runtime.json").write_text(
-            json.dumps({"enabled": True, "mode": "native"}), encoding="utf-8"
+        (data / "app.json").write_text(
+            json.dumps({"monitoring": True}), encoding="utf-8"
         )
         with socket.socket() as listener:
             listener.bind(("127.0.0.1", 0))

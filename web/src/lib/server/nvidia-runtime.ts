@@ -101,7 +101,7 @@ export async function prepareNvidiaRuntime(options: Preparation): Promise<Detect
 		.digest('hex')
 		.slice(0, 20);
 	const directory = path.join(dataDirectory, 'runtimes', 'nvidia', identity);
-	const python = path.join(directory, 'Scripts', 'python.exe');
+	const python = path.join(directory, /* @wc-ignore */ 'Scripts', 'python.exe');
 	const ready = path.join(directory, 'ready.json');
 	const prepared = existsSync(ready);
 	const uv = path.join(bundleDirectory, 'uv.exe');

@@ -30,6 +30,16 @@ export const getSetupStatus = query(() =>
 	)
 );
 
+/** Counts for navigation; unreadable settings are reported by the page that needs them. */
+export const getInstallation = query(async () => {
+	try {
+		const { app, config } = await configuration.read();
+		return { cameras: app.streams.length, detectors: config.detectors.length };
+	} catch {
+		return { cameras: 0, detectors: 0 };
+	}
+});
+
 export const finishSetup = command(() =>
 	configurationAction(
 		configuration.finishSetup(async () => monitoringCameras(await detectorStatus()))

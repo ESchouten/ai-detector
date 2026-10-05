@@ -8,24 +8,26 @@ For a visual explanation of how the application works, see the [system overview 
 
 1. Download the complete application for your computer from an **AI Detector app/** [release](https://github.com/ESchouten/ai-detector/releases).
 2. Run the Windows installer, drag the macOS app from its disk image into Applications, or install the Ubuntu `.deb` with the desktop package manager.
-3. Open **AI Detector**. Its browser setup guides you through cameras, detectors and final checks. Python, the web server and FFmpeg are included.
-4. In **Cameras**, choose a discovered camera and enter its login, or select **Enter camera manually** and paste its full RTSP URL. Connect, then save. Its preview appears in the same form; recording checks run automatically. In **Detectors**, choose a preset and select its cameras using their live previews. A camera can be used by several detectors. In **Finish setup**, start monitoring while recording locations are checked automatically, then connect Telegram alerts or choose **Skip for now**. Finish all cameras together once the checks pass. Saved cameras and detectors remain available when you return to an earlier step.
+3. Open **AI Detector**. Its browser setup guides you through cameras, detectors and final checks, in English, Dutch, German or French: it follows your browser's language, and the menu at the top of setup changes it. Python, the web server and FFmpeg are included.
+4. Setup has three steps. In **Cameras**, select the cameras found on your network and enter their login, or choose **Enter a stream URL instead** and paste a full RTSP URL. Connect, check each picture, name the cameras and add them; recording compatibility is checked automatically. In **Detection**, choose a preset and select its cameras using their live pictures. A camera can be used by several detectors. Phone alerts and the Validator are optional parts of the same form. In **Start**, every camera is checked, and **Start monitoring** opens Recordings once the cameras are really being analysed. Saved cameras and detectors remain available when you return to an earlier step.
 
-Telegram setup opens BotFather with the creation command prepared. After pasting its token once, open the verified bot link or scan its QR code, choose Start in Telegram, and confirm a test alert. Adding another camera offers your existing recipients; changing a recipient name or camera assignment does not require another connection test. **Finish setup** resumes an incomplete camera setup after reopening the application.
+Telegram setup opens BotFather with the creation command prepared. After pasting its token once, open the verified bot link or scan its QR code, choose Start in Telegram, and confirm a test alert. Other detectors reuse your saved recipients; changing a recipient's name or detectors does not require another connection test. Reopening the application before monitoring was started resumes setup where you left off.
+
+Afterwards the app has three main pages: **Recordings**, **Cameras** and **Detectors**, with everything else under **Settings**. On a phone they are tabs along the bottom. The monitoring status is always visible and opens a page showing what each camera is doing; a banner appears on the main pages when cameras are not being watched.
 
 Setup choices come directly from [preset JSON files](config/README.md). The filename supplies the name: `cow-catcher.json` appears as **Cow Catcher**. Add a file to add a choice; no separate list or descriptions are required. Installations can supply their own preset folder without rebuilding, and saved detectors retain their settings when preset files change.
 
-For several cameras, choose **Set up several cameras** in Add camera. Select discovered devices that share a login, then preview, name and save each camera. Connections and recording compatibility are checked automatically. Successful connections stay ready if another camera fails. After adding the cameras, continue to **Detectors** to choose what each should watch for. Recording and alert checks follow in **Finish setup**.
+Several cameras can be added at once. Select every discovered device that shares a login, then check, name and add them together. Connections and recording compatibility are checked automatically. Successful connections stay ready if another camera fails. Add more cameras later with **Add camera** on Cameras, and choose what each should watch for on **Detectors**.
 
 Camera previews automatically show detection boxes, confidence and temporary tracking numbers when tracking is enabled. Every detector assigned to a camera can appear together, with colors matching its preset badge. Video runs independently of inference; boxes show the latest result and can briefly lag behind moving objects. Automatic previews pause outside the visible page, and at most four run per browser tab. Monitoring continues when previews are closed.
 
 Closing the browser leaves monitoring active. Open **AI Detector** again to return to its dashboard; a verified second launch reuses the existing application. **Pause monitoring** keeps monitoring paused on future launches. Quitting the application stops it for the current session and preserves the enabled choice for next launch. Keep the computer awake while monitoring is needed.
 
-| Packaging target         | Normal installer                            | Automatic runtime                                                                   |
-| ------------------------ | ------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Packaging target                  | Normal installer                            | Automatic runtime                                                                                                   |
+| --------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | Windows 10 22H2+ / Windows 11 x64 | `AI-Detector-VERSION-windows-x64-setup.zip` | Automatic CUDA download, plus direct TensorRT on RTX 3000+ when preparation succeeds; Windows ML for other hardware |
-| macOS 14+ Apple Silicon  | `AI-Detector-VERSION-macos-arm64.dmg`       | Native PyTorch MPS for `.pt` models; ONNX/Core ML and CPU fallback when unavailable |
-| Ubuntu 22.04/24.04 amd64 | `AI-Detector-VERSION-linux-amd64.deb`       | Bundled native CPU baseline                                                         |
+| macOS 14+ Apple Silicon           | `AI-Detector-VERSION-macos-arm64.dmg`       | Native PyTorch MPS for `.pt` models; ONNX/Core ML and CPU fallback when unavailable                                 |
+| Ubuntu 22.04/24.04 amd64          | `AI-Detector-VERSION-linux-amd64.deb`       | Bundled native CPU baseline                                                                                         |
 
 The [Application download workflow](.github/workflows/application.yml) builds these formats for `app/v*` release tags and `app/test-*` preview tags. Release publication authenticates updates with our own Ed25519 signing key; no Apple developer account or Windows signing subscription is required. Downloads have no OS-trusted publisher signature or Apple notarization, so macOS/Windows may warn or block execution. See [packaging, update verification and installation limitations](distribution/README.md). Test tags and manual branch runs publish signed previews to a separate update channel. Install its first preview once; later previews arrive through **Check for Updates** on Mac and installed Windows applications. See [building a preview in GitHub Actions](distribution/README.md#github-actions-previews).
 
@@ -35,9 +37,9 @@ Choose the single installer for your operating system from the release. On Windo
 
 ## Your settings and recordings
 
-Use **Export recordings** on Recordings to share a ZIP, optionally limited by date and the current filters. **Back up settings** on Settings saves cameras, detectors and alerts separately; this backup includes passwords and tokens and should stay private. See the [export and backup guide](web/README.md#export-recordings-and-back-up-settings).
+Use **Export** on Recordings to share a ZIP, optionally limited by date and the current filters. **Back up** under Settings saves cameras, detectors and alerts separately; this backup includes passwords and tokens and should stay private. See the [export and backup guide](web/README.md#export-recordings-and-back-up-settings).
 
-The monitoring controls show the storage folder under **Advanced and troubleshooting**:
+The monitoring status page shows the storage folder under **Technical details**:
 
 - Windows: `%LOCALAPPDATA%\AI Detector`
 - macOS: `~/Library/Application Support/AI Detector`
@@ -47,7 +49,7 @@ For troubleshooting, open `logs/detector.log` inside that folder. It keeps detec
 
 Existing portable installations with `config.json` beside the executable continue using that directory. `AIDETECTOR_DATA_DIR` explicitly selects another location. Back up the whole data folder. Updater-enabled Mac and Windows installations offer **Check for Updates** in the AI Detector menu. Download while monitoring continues, then restart to install. The first updater-enabled version still needs a manual installation; see the [migration and update guide](distribution/README.md#installation-and-data). To move from an older portable release, choose **Use existing setup** in the new installation and select the old folder. Linux upgrades use the new package. Uninstalling a normal desktop package preserves settings and recordings.
 
-The bundled web app is available on the same network at `http://ai-detector.local/` or `http://<computer-IP>/`, while the installed computer opens its own localhost URL. It listens on `0.0.0.0` by default. If the mDNS name is already in use, the discovery library automatically adds a number and logs the selected address. The operating system keeps its own computer hostname. Other devices connect using the pairing code or QR code in **Settings → Connected devices**. `HOST=127.0.0.1` restricts access to the installed computer. HTTP traffic is not encrypted, so use a trusted local network or an HTTPS reverse proxy.
+The bundled web app is available on the same network at `http://ai-detector.local/` or `http://<computer-IP>/`, while the installed computer opens its own localhost URL. It listens on `0.0.0.0` by default. If the mDNS name is already in use, the discovery library automatically adds a number and logs the selected address. The operating system keeps its own computer hostname. Other devices connect using the pairing code or QR code in **Settings → Devices**. `HOST=127.0.0.1` restricts access to the installed computer. HTTP traffic is not encrypted, so use a trusted local network or an HTTPS reverse proxy.
 
 ## Existing Docker and source installations
 

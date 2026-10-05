@@ -12,6 +12,8 @@ const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
 
 export default defineConfig(
 	includeIgnoreFile(gitignorePath),
+	// The shadcn components stay as published so they can be updated; Prettier and type checks still cover them.
+	{ ignores: ['src/lib/components/ui/**'] },
 	js.configs.recommended,
 	...ts.configs.recommended,
 	...svelte.configs.recommended,
@@ -40,16 +42,17 @@ export default defineConfig(
 	},
 	{
 		files: [
-			'src/lib/components/ui/button/button.svelte',
+			'src/lib/components/guided-header.svelte',
+			'src/lib/components/link-rows.svelte',
+			'src/lib/components/mobile-nav.svelte',
 			'src/lib/components/nav-main.svelte',
-			'src/lib/components/nav-user.svelte'
+			'src/lib/components/page-header.svelte'
 		],
 		// Reusable link components receive already resolved hrefs from their callers.
 		rules: { 'svelte/no-navigation-without-resolve': ['error', { ignoreLinks: true }] }
 	},
 	{
 		files: ['src/**/*.{ts,svelte}', 'desktop/**/*.ts'],
-		ignores: ['src/lib/components/ui/**'],
 		rules: {
 			complexity: ['error', 15],
 			'max-depth': ['error', 4]

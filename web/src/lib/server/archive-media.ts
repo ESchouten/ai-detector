@@ -24,7 +24,7 @@ export async function archiveMedia(
 	const { category, stage, timestamp, resource } = location;
 	const contentType = CONTENT_TYPES[path.extname(resource).toLowerCase()];
 	if (!STAGES.some((value) => value === stage) || !contentType)
-		return new Response('Not found', { status: 404 });
+		return new Response(/* @wc-ignore */ 'Not found', { status: 404 });
 	try {
 		return await fileMedia(
 			await archivePath(directory, category, stage, timestamp, resource),
@@ -33,7 +33,7 @@ export async function archiveMedia(
 		);
 	} catch (error) {
 		if (error instanceof ArchivePathError || isMissingFile(error))
-			return new Response('Not found', { status: 404 });
+			return new Response(/* @wc-ignore */ 'Not found', { status: 404 });
 		throw error;
 	}
 }

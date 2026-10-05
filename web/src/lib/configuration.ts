@@ -55,6 +55,23 @@ export const cameraInput = v.object({
 	mode: v.picklist(['view-only', 'keep'])
 });
 
+/** The part of `health` shown on the Monitoring page; other options stay as set in Advanced. */
+export const heartbeatInput = v.nullable(
+	v.object({
+		url: v.pipe(
+			v.string(),
+			v.trim(),
+			v.url(() => 'Enter the complete address, starting with https://.'),
+			v.regex(/^https?:\/\//i, () => 'Use an address that starts with http:// or https://.')
+		),
+		interval: v.pipe(
+			v.number(),
+			v.minValue(5, () => 'Use an interval of at least 5 seconds.'),
+			v.maxValue(86400, () => 'Use an interval of at most one day.')
+		)
+	})
+);
+
 export const alertsInput = v.object({
 	...telegramInput.entries,
 	detectorLabels: v.array(text),

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onDestroy, untrack } from 'svelte';
+	import { CircleCheck, LoaderCircle } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -18,8 +19,6 @@
 	import type { TelegramDestination, TelegramRecipient } from '$lib/telegram';
 	import { errorMessage } from '$lib/remote-errors';
 	import type { TelegramMeta } from '$lib/schema';
-	import TelegramBotCreate from './telegram-bot-create.svelte';
-	import { canCreateTelegramBot } from '$lib/remote/telegram-manager.remote';
 	import TelegramBotHelp from './telegram-bot-help.svelte';
 
 	let {
@@ -40,8 +39,6 @@
 		onRecipient?: (name: string) => void;
 	} = $props();
 	const recipients = await getTelegrams();
-	const canCreate = await canCreateTelegramBot();
-	let manualBot = $state(false);
 	const bots = [...new Map(recipients.map((recipient) => [recipient.token, recipient])).values()];
 	let savedBot = $state(untrack(() => (!initial && bots.length ? 0 : -1)));
 	untrack(() => {
@@ -149,46 +146,60 @@
 
 <div class="flex flex-col gap-4">
 	{#if !editing && initial}
-		<div class="flex flex-wrap items-center justify-between gap-2">
-			<p class="text-sm">Connected to <strong>{initial.label}</strong>.</p>
-			<Button type="button" variant="outline" size="sm" disabled={busy} onclick={changeConnection}
-				>Change connection</Button
+		<div class="flex flex-wrap items-center justify-between gap-3">
+			<p class="flex items-center gap-2 text-sm">
+				<CircleCheck class="size-5 shrink-0 text-status-ok" aria-hidden="true" />
+				Connected in Telegram.
+			</p>
+			<Button variant="outline" size="sm" disabled={busy} onclick={changeConnection}
+				>Connect again</Button
 			>
 		</div>
 	{:else if received}
-		<div class="flex flex-wrap items-center justify-between gap-2">
-			<p role="status" class="text-sm">Telegram connected and test alert confirmed.</p>
-			<Button type="button" variant="outline" size="sm" disabled={busy} onclick={changeConnection}
+		<div class="flex flex-wrap items-center justify-between gap-3">
+			<p role="status" class="flex items-center gap-2 text-sm">
+				<CircleCheck class="size-5 shrink-0 text-status-ok" aria-hidden="true" />
+				Telegram connected and test alert confirmed.
+			</p>
+			<Button variant="outline" size="sm" disabled={busy} onclick={changeConnection}
 				>Change connection</Button
 			>
 		</div>
 	{:else if !manual && (pairingState.state === 'waiting' || pairingState.state === 'choosing' || pairingState.state === 'confirming')}
-		<p class="text-sm">
-			Scan with your phone, or open Telegram. Choose <strong>Start</strong>, then follow the message
-			to confirm your connection.
-		</p>
-		<img
-			src={pairingState.session.qrDataUrl}
-			alt={`Scan to connect to ${pairingState.session.bot.name} in Telegram`}
-			class="size-48 rounded-md"
-		/>
-		<Button href={pairingState.session.url} target="_blank" rel="noreferrer" class="self-start"
-			>Open Telegram</Button
-		>
-		<p class="text-sm text-muted-foreground" role="status">
-			{pairingState.state === 'choosing'
-				? 'Choose your group or channel in Telegram.'
-				: pairingState.state === 'confirming'
-					? 'Choose Confirm connection on the test alert in Telegram.'
-					: 'Waiting for Telegram…'} Keep this page open. The link expires in five minutes.
-		</p>
-		<Button type="button" variant="outline" class="self-start" onclick={() => pairing.cancel()}
-			>Cancel connection</Button
-		>
+		<div class="flex flex-col gap-5 sm:flex-row sm:items-start">
+			<img
+				src={pairingState.session.qrDataUrl}
+				alt={`Scan to connect to ${pairingState.session.bot.name} in Telegram`}
+				class="size-44 shrink-0 rounded-xl border bg-white p-2"
+			/>
+			<div class="flex min-w-0 flex-col items-start gap-3">
+				<p class="text-sm leading-relaxed">
+					Scan with your phone, or open Telegram on this device. Choose <strong>Start</strong>, then
+					follow the message to confirm your connection.
+				</p>
+				<Button href={pairingState.session.url} target="_blank" rel="noreferrer"
+					>Open Telegram</Button
+				>
+				<p class="flex items-start gap-2 text-sm text-muted-foreground" role="status">
+					<LoaderCircle class="mt-0.5 size-4 shrink-0 animate-spin" aria-hidden="true" />
+					<span>
+						{pairingState.state === 'choosing'
+							? 'Choose your group or channel in Telegram.'
+							: pairingState.state === 'confirming'
+								? 'Choose Confirm connection on the test alert in Telegram.'
+								: 'Waiting for Telegram…'} Keep this page open. The link expires in five minutes.
+					</span>
+				</p>
+				<Button variant="ghost" size="sm" class="-ml-2.5" onclick={() => pairing.cancel()}
+					>Cancel connection</Button
+				>
+			</div>
+		</div>
 	{:else}
 		{#if savedBot >= 0}
-			{#if bots.length > 1}<Field.Field
-					><Field.Label for="saved-bot">Use bot from</Field.Label>
+			{#if bots.length > 1}
+				<Field.Field class="max-w-md">
+					<Field.Label for="saved-bot">Use bot from</Field.Label>
 					<NativeSelect.Root
 						id="saved-bot"
 						value={String(savedBot)}
@@ -199,88 +210,58 @@
 							tokenChanged();
 						}}
 					>
-						{#each bots as bot, index (bot.token)}<NativeSelect.Option value={String(index)}
-								>{bot.label}</NativeSelect.Option
-							>{/each}
-					</NativeSelect.Root></Field.Field
-				>
-			{:else}<p class="text-sm text-muted-foreground">
-					Using the bot saved with {bots[0].label}.
-				</p>{/if}
-			<Button
-				type="button"
-				variant="outline"
-				class="self-start"
-				disabled={busy}
-				onclick={() => {
-					savedBot = -1;
-					token = '';
-					tokenChanged();
-				}}>Use another bot</Button
-			>
-		{:else}
-			{#if canCreate && !manualBot && !token.trim()}
-				<TelegramBotCreate
-					onManual={() => (manualBot = true)}
-					onCreated={(created) => {
-						token = created;
-						manualBot = true;
-						tokenChanged();
-						connect();
-					}}
-				/>
-			{:else}
-				<TelegramBotHelp initiallyOpen={!token.trim()} />
-				<Field.Field>
-					<Field.Label for="notification-token">Bot token from BotFather</Field.Label>
-					<Input
-						id="notification-token"
-						type="password"
-						bind:value={token}
-						oninput={tokenChanged}
-						disabled={busy}
-						autocomplete="off"
-						required
-					/>
-					<Field.Description
-						>Paste the token here. If you already have a bot, use its token.</Field.Description
-					>
+						{#each bots as bot, index (bot.token)}
+							<NativeSelect.Option value={String(index)}>{bot.label}</NativeSelect.Option>
+						{/each}
+					</NativeSelect.Root>
 				</Field.Field>
+			{:else}
+				<p class="text-sm text-muted-foreground">
+					Using the Telegram bot you set up for {bots[0].label}.
+				</p>
 			{/if}
-			{#if bots.length}<Button
-					type="button"
-					variant="outline"
-					class="self-start"
+		{:else}
+			<TelegramBotHelp initiallyOpen={!token.trim()} />
+			<Field.Field>
+				<Field.Label for="notification-token">Bot token from BotFather</Field.Label>
+				<Input
+					id="notification-token"
+					type="password"
+					bind:value={token}
+					oninput={tokenChanged}
 					disabled={busy}
-					onclick={() => {
-						savedBot = 0;
-						token = bots[0].token;
-						tokenChanged();
-					}}>Use saved bot</Button
-				>{/if}
+					autocomplete="off"
+					required
+				/>
+				<Field.Description>
+					Paste the token here. If you already have a bot, use its token.
+				</Field.Description>
+			</Field.Field>
 		{/if}
-		{#if !manual}<Field.Field
-				><Field.Label for="telegram-destination">Send alerts to</Field.Label>
+		{#if !manual}
+			<Field.Field class="max-w-md">
+				<Field.Label for="telegram-destination">Send alerts to</Field.Label>
 				<NativeSelect.Root id="telegram-destination" bind:value={destination} disabled={busy}>
-					<NativeSelect.Option value="private">My phone</NativeSelect.Option><NativeSelect.Option
-						value="group">A group</NativeSelect.Option
-					><NativeSelect.Option value="channel">A channel</NativeSelect.Option>
+					<NativeSelect.Option value="private">My phone</NativeSelect.Option>
+					<NativeSelect.Option value="group">A group</NativeSelect.Option>
+					<NativeSelect.Option value="channel">A channel</NativeSelect.Option>
 				</NativeSelect.Root>
-			</Field.Field>{/if}
+			</Field.Field>
+		{/if}
 		{#if manual}
 			<p class="text-sm text-muted-foreground">
 				For a group, add your bot and send a message mentioning it. Find the chat below, or enter
 				its chat ID.
 			</p>
 			<Button
-				type="button"
 				variant="outline"
 				class="self-start"
 				disabled={busy || !token.trim()}
 				onclick={findChats}>{finding ? 'Finding chats…' : 'Find chats'}</Button
 			>
 			{#if message}<p class="text-sm text-muted-foreground" role="status">{message}</p>{/if}
-			{#if chats.length}<Field.Field>
+			{#if chats.length}
+				<Field.Field class="max-w-md">
 					<Field.Label for="recipient-chat">Send alerts to</Field.Label>
 					<NativeSelect.Root
 						id="recipient-chat"
@@ -289,42 +270,66 @@
 						disabled={busy}
 					>
 						<NativeSelect.Option value="">Choose a recipient</NativeSelect.Option>
-						{#each chats as choice (choice.id)}<NativeSelect.Option value={choice.id}
-								>{choice.name}</NativeSelect.Option
-							>{/each}
+						{#each chats as choice (choice.id)}
+							<NativeSelect.Option value={choice.id}>{choice.name}</NativeSelect.Option>
+						{/each}
 					</NativeSelect.Root>
-				</Field.Field>{/if}
-			<Field.Field
-				><Field.Label for="notification-chat">Telegram chat ID</Field.Label><Input
-					id="notification-chat"
-					bind:value={chat}
-					oninput={clearTest}
-					disabled={busy}
-				/></Field.Field
-			>
+				</Field.Field>
+			{/if}
+			<Field.Field class="max-w-md">
+				<Field.Label for="notification-chat">Telegram chat ID</Field.Label>
+				<Input id="notification-chat" bind:value={chat} oninput={clearTest} disabled={busy} />
+			</Field.Field>
 		{:else if token.trim()}
-			<Button type="button" class="self-start" disabled={busy || !token.trim()} onclick={connect}
-				>{pairingState.state === 'starting' ? 'Checking your bot…' : 'Connect Telegram'}</Button
-			>
-			{#if pairingState.state === 'failed'}<Alert.Root variant="destructive"
-					><Alert.Title>Connection needs attention</Alert.Title><Alert.Description
-						>{pairingState.message}</Alert.Description
-					></Alert.Root
-				>{/if}
+			<Button class="self-start" disabled={busy || !token.trim()} onclick={connect}>
+				{pairingState.state === 'starting' ? 'Checking your bot…' : 'Connect Telegram'}
+			</Button>
+			{#if pairingState.state === 'failed'}
+				<Alert.Root variant="destructive">
+					<Alert.Title>Connection needs attention</Alert.Title>
+					<Alert.Description>{pairingState.message}</Alert.Description>
+				</Alert.Root>
+			{/if}
 		{/if}
-		{#if token.trim()}
-			<Button
-				type="button"
-				variant="outline"
-				class="h-auto min-h-9 max-w-full self-start text-left whitespace-normal"
-				disabled={busy}
-				onclick={changeMethod}>{manual ? 'Choose in Telegram' : 'Enter chat ID manually'}</Button
-			>
-		{/if}
+		<div class="flex flex-wrap gap-x-1 gap-y-1">
+			{#if savedBot >= 0}
+				<Button
+					variant="ghost"
+					size="sm"
+					class="-ml-2.5"
+					disabled={busy}
+					onclick={() => {
+						savedBot = -1;
+						token = '';
+						tokenChanged();
+					}}>Use another bot</Button
+				>
+			{:else if bots.length}
+				<Button
+					variant="ghost"
+					size="sm"
+					class="-ml-2.5"
+					disabled={busy}
+					onclick={() => {
+						savedBot = 0;
+						token = bots[0].token;
+						tokenChanged();
+					}}>Use saved bot</Button
+				>
+			{/if}
+			{#if token.trim()}
+				<Button
+					variant="ghost"
+					size="sm"
+					class={savedBot >= 0 || bots.length ? '' : '-ml-2.5'}
+					disabled={busy}
+					onclick={changeMethod}>{manual ? 'Choose in Telegram' : 'Enter chat ID manually'}</Button
+				>
+			{/if}
+		</div>
 	{/if}
 	{#if (manual || !editing) && chat && token && !received && !testSent}
 		<Button
-			type="button"
 			variant={!editing && initial ? 'outline' : 'default'}
 			class="self-start"
 			disabled={busy}
@@ -332,18 +337,22 @@
 		>
 	{/if}
 	{#if testSent && !received}
-		{#if !editing && initial}<p role="status" class="text-sm">Test alert sent.</p>
-		{:else}<Field.Field orientation="horizontal"
-				><Checkbox id="alert-received" bind:checked={received} disabled={busy} /><Field.Label
-					for="alert-received">I received the test on the intended phone or chat</Field.Label
-				></Field.Field
-			>{/if}
-		<Button type="button" variant="outline" class="self-start" disabled={busy} onclick={sendTest}
+		{#if !editing && initial}
+			<p role="status" class="text-sm">Test alert sent.</p>
+		{:else}
+			<label for="alert-received" class="flex cursor-pointer items-center gap-3 text-sm">
+				<Checkbox id="alert-received" bind:checked={received} disabled={busy} />
+				I received the test on the intended phone or chat
+			</label>
+		{/if}
+		<Button variant="outline" size="sm" class="self-start" disabled={busy} onclick={sendTest}
 			>Send test again</Button
 		>
 	{/if}
-	{#if error}<Alert.Root variant="destructive"
-			><Alert.Title>Alerts need attention</Alert.Title><Alert.Description>{error}</Alert.Description
-			></Alert.Root
-		>{/if}
+	{#if error}
+		<Alert.Root variant="destructive">
+			<Alert.Title>Alerts need attention</Alert.Title>
+			<Alert.Description>{error}</Alert.Description>
+		</Alert.Root>
+	{/if}
 </div>

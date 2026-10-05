@@ -1,70 +1,81 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Plus } from '@lucide/svelte';
+	import { ChevronRight, Plus, Sparkles } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Empty from '$lib/components/ui/empty';
-	import * as Table from '$lib/components/ui/table';
+	import PageHeader from '$lib/components/page-header.svelte';
 	import { getLlmConnections } from '$lib/remote/llm.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
-	const [connections, detectors] = await Promise.all([getLlmConnections(), getDetectors()]);
+	const [connections, detectors] = $derived(
+		await Promise.all([getLlmConnections(), getDetectors()])
+	);
 </script>
 
 <svelte:head><title>Validator · AI Detector</title></svelte:head>
-<section class="settings-page max-w-4xl">
-	<header class="flex flex-col gap-2">
-		<div class="flex flex-wrap items-center justify-between gap-3">
-			<h1 class="settings-heading">Validator</h1>
-			{#if connections.length}<Button href={resolve('/validator/add')}
-					><Plus data-icon="inline-start" />Add connection</Button
-				>{/if}
-		</div>
-		<p class="settings-description">
-			Check detections with AI before sending alerts. Your presets supply the questions.
-		</p>
-	</header>
+<section class="page-narrow">
+	<PageHeader
+		back={{ href: resolve('/settings'), label: 'Settings' }}
+		title="Validator"
+		description="An AI model looks at each clip before an alert is sent and filters out false alarms. Your presets supply the question it answers."
+	>
+		{#snippet actions()}
+			{#if connections.length}
+				<Button href={resolve('/validator/add')}>
+					<Plus data-icon="inline-start" aria-hidden="true" />Add connection
+				</Button>
+			{/if}
+		{/snippet}
+	</PageHeader>
 	{#if connections.length}
-		<Table.Root>
-			<Table.Header
-				><Table.Row
-					><Table.Head>Connection</Table.Head><Table.Head>Used by</Table.Head><Table.Head
-						><span class="sr-only">Actions</span></Table.Head
-					></Table.Row
-				></Table.Header
-			>
-			<Table.Body>
-				{#each connections as connection (connection.label)}
-					{@const assigned = detectors.filter(
-						({ meta }) => meta.llmConnection === connection.label
-					)}
-					<Table.Row>
-						<Table.Cell class="whitespace-normal"
-							><p class="font-medium">{connection.label}</p>
-						</Table.Cell>
-						<Table.Cell class="whitespace-normal"
-							>{assigned.map(({ meta }) => meta.label).join(', ') || 'Not assigned yet'}</Table.Cell
+		<ul class="panel divide-y overflow-hidden">
+			{#each connections as connection (connection.label)}
+				{@const assigned = detectors.filter(({ meta }) => meta.llmConnection === connection.label)}
+				<li>
+					<a
+						href={resolve(`/validator/add?label=${encodeURIComponent(connection.label)}`)}
+						aria-label={`Edit ${connection.label}`}
+						class="group flex items-center gap-4 px-4 py-3.5 transition-colors outline-none hover:bg-accent/60 focus-visible:bg-accent"
+					>
+						<span
+							class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-secondary-foreground"
 						>
-						<Table.Cell class="text-right"
-							><Button
-								variant="outline"
-								size="sm"
-								href={resolve(`/validator/add?label=${encodeURIComponent(connection.label)}`)}
-								aria-label={`Edit ${connection.label}`}>Edit</Button
-							></Table.Cell
-						>
-					</Table.Row>
-				{/each}
-			</Table.Body>
-		</Table.Root>
+							<Sparkles class="size-[1.125rem]" aria-hidden="true" />
+						</span>
+						<span class="flex min-w-0 flex-1 flex-col">
+							<span class="text-sm font-medium">{connection.label}</span>
+							<span class="text-sm text-muted-foreground">
+								{assigned.length
+									? `Checks ${assigned.map(({ meta }) => meta.label).join(', ')}`
+									: 'Not used by a detector yet'}
+							</span>
+						</span>
+						<ChevronRight
+							class="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
+							aria-hidden="true"
+						/>
+					</a>
+				</li>
+			{/each}
+		</ul>
+		<p class="text-sm text-muted-foreground">
+			Turn the validator on or off for each detector under
+			<a
+				href={resolve('/detectors')}
+				class="font-medium text-foreground underline underline-offset-4">Detectors</a
+			>.
+		</p>
 	{:else}
-		<Empty.Root
-			><Empty.Header
-				><Empty.Title>No AI connections</Empty.Title><Empty.Description
-					>Optionally ask an AI model to check detections before alerts are sent. Monitoring also
-					works without this.</Empty.Description
-				></Empty.Header
-			><Empty.Content
-				><Button href={resolve('/validator/add')}>Add AI connection</Button></Empty.Content
-			></Empty.Root
-		>
+		<Empty.Root class="border border-dashed">
+			<Empty.Header>
+				<Empty.Media variant="icon"><Sparkles aria-hidden="true" /></Empty.Media>
+				<Empty.Title>No validator connected</Empty.Title>
+				<Empty.Description>
+					Optional. Without it, every detection is recorded and alerted as it is.
+				</Empty.Description>
+			</Empty.Header>
+			<Empty.Content>
+				<Button href={resolve('/validator/add')}>Connect Google Gemini</Button>
+			</Empty.Content>
+		</Empty.Root>
 	{/if}
 </section>

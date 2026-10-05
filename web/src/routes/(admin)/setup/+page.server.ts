@@ -5,17 +5,15 @@ import { setupStep } from '$lib/setup';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ url }) => {
+	// The earlier settings layout opened one camera or detector through this page.
+	const camera = url.searchParams.get('camera');
+	if (camera) redirect(302, resolve(`/streams/${encodeURIComponent(camera)}`));
+	const detector = url.searchParams.get('detector');
+	if (detector) redirect(302, resolve(`/detectors/edit?label=${encodeURIComponent(detector)}`));
 	const { app, config } = await configuration.read();
-	const step = setupStep(url.searchParams.get('step'), app.streams.length, config.detectors.length);
-	const item = step === 'cameras' ? 'camera' : 'detector';
-	const empty = step === 'cameras' ? !app.streams.length : !config.detectors.length;
-	// Make the first editor explicit so saving one camera in a batch keeps the rest open.
-	if (
-		step !== 'finish' &&
-		empty &&
-		!url.searchParams.has(item) &&
-		url.searchParams.get('add') !== item
-	) {
-		redirect(302, resolve(`/setup?step=${step}&add=${item}`));
-	}
+	const requested = url.searchParams.get('step');
+	const step = setupStep(requested, app.streams.length, config.detectors.length);
+	// Keep the step in the address: saving the first camera or detector must not change the page
+	// under someone who is still adding more.
+	if (requested !== step) redirect(302, resolve(`/setup?step=${step}`));
 };

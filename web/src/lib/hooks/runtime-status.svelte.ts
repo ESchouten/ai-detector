@@ -12,6 +12,26 @@ interface RuntimeMonitor {
 
 export const [useRuntimeStatus, provideRuntimeStatus] = createContext<RuntimeMonitor>();
 
+const UNAVAILABLE: RuntimeStatus = {
+	managed: false,
+	mode: 'auto',
+	selected: null,
+	phase: 'stopped',
+	message: 'Status is unavailable.',
+	dataDirectory: '',
+	readiness: 'idle',
+	cameras: []
+};
+
+/** Navigation must render even when status cannot be read; pages report that failure themselves. */
+export async function readRuntime(query: RemoteQuery<RuntimeStatus>): Promise<RuntimeStatus> {
+	try {
+		return query.current ?? (await query);
+	} catch {
+		return UNAVAILABLE;
+	}
+}
+
 /** One query per layout; Svelte starts polling for the first viewer and stops after the last. */
 export function createRuntimeStatus(): RuntimeMonitor {
 	const query = getRuntime();

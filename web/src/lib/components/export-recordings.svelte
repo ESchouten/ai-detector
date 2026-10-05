@@ -7,7 +7,8 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Field from '$lib/components/ui/field';
-	import { recordingExportInput, STAGE_LABELS } from '$lib/detections';
+	import { recordingExportInput, stageLabel } from '$lib/detections';
+	import { plural } from '$lib/format';
 	import { getExportCount } from '$lib/remote/detections.remote';
 	import type { Stage } from '$lib/schema';
 
@@ -30,7 +31,7 @@
 
 <Dialog.Root bind:open>
 	<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
-		<Download data-icon="inline-start" aria-hidden="true" />Export recordings
+		<Download data-icon="inline-start" aria-hidden="true" />Export
 	</Dialog.Trigger>
 	<Dialog.Content>
 		<Dialog.Header>
@@ -40,7 +41,7 @@
 			</Dialog.Description>
 		</Dialog.Header>
 		<p class="text-sm">
-			{type ?? 'All categories'} · {stage ? STAGE_LABELS[stage] : 'All stages'}
+			{type ?? 'All categories'} · {stage ? stageLabel(stage) : 'All results'}
 		</p>
 		<Field.Group>
 			<Field.Group class="sm:flex-row">
@@ -72,7 +73,7 @@
 			>
 		</Field.Group>
 		{#if !selection.success}
-			<p id="export-dates-error" role="alert" class="text-sm text-destructive">
+			<p id="export-dates-error" role="alert" class="text-sm text-danger-foreground">
 				{selection.issues[0].message}
 			</p>
 		{:else if count}
@@ -82,7 +83,10 @@
 				<p role="status" class="text-sm text-muted-foreground">
 					{total === 0
 						? 'No recordings match these filters.'
-						: `${total} ${total === 1 ? 'recording' : 'recordings'} selected, including all pages.`}
+						: plural(total, [
+								'# recording selected, including all pages.',
+								'# recordings selected, including all pages.'
+							])}
 				</p>
 				<Dialog.Footer>
 					<Button
@@ -95,7 +99,7 @@
 					</Button>
 				</Dialog.Footer>
 			{:catch}
-				<p role="alert" class="text-sm text-destructive">
+				<p role="alert" class="text-sm text-danger-foreground">
 					Could not read the recordings. Close this window and try again.
 				</p>
 			{/await}

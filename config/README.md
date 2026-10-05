@@ -4,12 +4,11 @@
 
 User settings live in the application's data directory, outside the installed binaries. The [application guide](../distribution/README.md#installation-and-data) lists its location on each platform.
 
-| File or folder | Purpose | Code owner |
-| --- | --- | --- |
-| `config.json` | Sources, models, event rules, verification and delivery | Python [configuration models](../detector/src/aidetector/configuration.py); the web app validates with their generated schema |
-| `app.json` | Camera identities, labels, setup progress, connection metadata and paired devices | Web [configuration validation](../web/src/lib/configuration.ts) and [configuration store](../web/src/lib/server/configuration/store.ts) |
-| `runtime.json` | Monitoring resume preference and native/Docker selection | Web [managed detector](../web/src/lib/server/managed-detector.ts) |
-| `presets/` | Optional installation-specific detector presets | Web [preset files](../web/src/lib/server/configuration/preset-files.ts) |
+| File or folder | Purpose                                                                                                                                                                                                                                                                                                                                             | Code owner                                                                                                                              |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `config.json`  | Sources, models, event rules, verification and delivery                                                                                                                                                                                                                                                                                             | Python [configuration models](../detector/src/aidetector/configuration.py); the web app validates with their generated schema           |
+| `app.json`     | Camera identities, labels, setup progress, connection metadata and `language`, the interface language of this installation (`en`, `nl`, `de` or `fr`). Also two things that stay with this installation and are never exported or recovered: paired devices, and `monitoring`, which records whether monitoring resumes when the application starts | Web [configuration validation](../web/src/lib/configuration.ts) and [configuration store](../web/src/lib/server/configuration/store.ts) |
+| `presets/`     | Optional installation-specific detector presets                                                                                                                                                                                                                                                                                                     | Web [preset files](../web/src/lib/server/configuration/preset-files.ts)                                                                 |
 
 The `application.json` shipped beside the executable is build metadata, not user settings. Build dependencies and tool versions belong in the component manifests and `distribution/toolchain.json`, not in these runtime files.
 
@@ -25,7 +24,7 @@ Model support follows the detector's supported YOLO detection/segmentation adapt
 
 ## Add a preset to an installed application
 
-Create a `presets/` folder in the application's data directory, alongside `config.json` and `app.json`. The data directory is shown under **Advanced and troubleshooting**. Put detector JSON files directly in that folder, then reload the editor. Subfolders and files without the `.json` extension are ignored. No application rebuild is required.
+Create a `presets/` folder in the application's data directory, alongside `config.json` and `app.json`. The data directory is shown on the monitoring status page under **Technical details**. Put detector JSON files directly in that folder, then reload the editor. Subfolders and files without the `.json` extension are ignored. No application rebuild is required.
 
 A local preset folder replaces the bundled choices. Copy the bundled JSON files into it if you want to retain those choices alongside your own. An empty folder gives an empty list; an absent folder uses the bundled presets. Alternatively, set `AIDETECTOR_PRESETS` to a preset directory. An explicit directory must exist, and invalid files are reported rather than replaced with a different model.
 

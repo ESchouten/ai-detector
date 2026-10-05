@@ -14,6 +14,7 @@
 		cancelInstallationImport
 	} from '$lib/remote/installation-import.remote';
 	import type { ImportStatus } from '$lib/installation-import';
+	import { plural } from '$lib/format';
 	import { errorMessage } from '$lib/remote-errors';
 
 	let {
@@ -111,21 +112,25 @@
 </script>
 
 {#if !opened}
-	<Button
-		class="self-start"
-		variant="outline"
-		onclick={() => {
-			opened = true;
-		}}>Use existing setup</Button
-	>
-{:else}
-	<section
-		aria-label="Import previous installation"
-		class="flex w-full max-w-xl flex-col gap-5 text-left"
-	>
-		<div class="space-y-2">
-			<h1 class="settings-heading">Use your existing setup</h1>
+	<div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+		<div class="flex min-w-0 flex-col">
+			<p class="text-sm font-medium">Moving from an earlier AI Detector?</p>
 			<p class="text-sm text-muted-foreground">
+				Bring its cameras, detectors, alerts and recordings along.
+			</p>
+		</div>
+		<Button
+			variant="outline"
+			onclick={() => {
+				opened = true;
+			}}>Use existing setup</Button
+		>
+	</div>
+{:else}
+	<section aria-label="Import previous installation" class="flex w-full flex-col gap-5 text-left">
+		<div class="flex flex-col gap-2">
+			<h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">Use your existing setup</h1>
+			<p class="leading-relaxed text-muted-foreground">
 				Bring your cameras, detectors, alerts and recordings from your previous AI Detector folder.
 			</p>
 		</div>
@@ -152,7 +157,10 @@
 		{:else}
 			<div class="space-y-2 text-sm">
 				<p class="font-medium">
-					{summary.cameras} cameras · {summary.detectors} detectors · {summary.recordings} recordings
+					{plural(summary.cameras, ['# camera', '# cameras'])} · {plural(summary.detectors, [
+						'# detector',
+						'# detectors'
+					])} · {plural(summary.recordings, ['# recording', '# recordings'])}
 				</p>
 				<p class="break-all text-muted-foreground">From: {summary.source}</p>
 				<p class="break-all text-muted-foreground">To: {summary.destination}</p>
@@ -236,7 +244,7 @@
 		{#if message || (status.message && !copying)}<p
 				role={message || status.phase === 'failed' ? 'alert' : 'status'}
 				class="text-sm"
-				class:text-destructive={Boolean(message) || status.phase === 'failed'}
+				class:text-danger-foreground={Boolean(message) || status.phase === 'failed'}
 			>
 				{message || status.message}
 			</p>{/if}

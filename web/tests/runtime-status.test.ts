@@ -147,7 +147,7 @@ test('validator and delivery failures remain visible until that connection succe
 	assert.equal(state.issues.length, 2);
 	assert.deepEqual(state.backends, [{ label: 'Detector 1', engine: 'ENGINE on cuda:0' }]);
 	record(state, 'validation');
-	assert.equal(state.issues.length, 1);
+	assert.deepEqual(state.issues, ['Detector 1 · Telegram alert: Delivery unavailable']);
 	record(state, 'delivery', undefined, now, { destinationId: 'telegram-1' });
 	assert.equal(state.snapshot(now).readiness, 'monitoring');
 });

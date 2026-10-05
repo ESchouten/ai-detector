@@ -48,9 +48,12 @@ export async function reviewTelegramDetection(
 			);
 			throw error;
 		}
-		answer = saved
-			? `${match[2] === 'approved' ? 'Accepted' : 'Rejected'}. Saved in AI Detector.`
-			: 'This recording is no longer available in AI Detector.';
+		if (!saved) answer = 'This recording is no longer available in AI Detector.';
+		else
+			answer =
+				match[2] === 'approved'
+					? 'Confirmed. Saved in AI Detector.'
+					: 'Marked as a false alarm. Saved in AI Detector.';
 	}
 	await confirmReview(token, callback.id, answer, signal);
 }

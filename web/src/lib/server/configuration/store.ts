@@ -1,6 +1,6 @@
 import * as v from 'valibot';
 import { isDeepStrictEqual } from 'node:util';
-import { chmod, copyFile } from 'node:fs/promises';
+import { chmod, copyFile, rm } from 'node:fs/promises';
 import {
 	DEFAULT_SCHEMA_URL,
 	appSchema,
@@ -9,8 +9,10 @@ import {
 	type LlmConnection,
 	type PairedDevice
 } from '../../schema.ts';
+import type { Locale } from '../../locales.ts';
 import { readJson, writeJson } from '../json-file.ts';
 import { webLog } from '../web-log.ts';
+import { exclusiveWrite, monitoringEnabled, setMonitoringEnabled } from '../monitoring-flag.ts';
 import {
 	alertsInput,
 	ConfigurationError,
@@ -19,11 +21,12 @@ import {
 	normalizeConfig,
 	normalizeConfiguration,
 	streamInput,
-	telegramInput
+	telegramInput,
+	heartbeatInput
 } from '../../configuration.ts';
 import { identifyCameras, saveCamera, removeCamera } from './cameras.ts';
 import { writeConfiguration } from './files.ts';
-import { upgradeVerificationKeys } from './upgrade.ts';
+import { upgradeLauncherSettings, upgradeVerificationKeys } from './upgrade.ts';
 import { saveDetector, deleteDetector } from './detectors.ts';
 import { saveStream, deleteStream, reorderStream } from './streams.ts';
 import { saveTelegram, deleteTelegram, saveAlerts } from './telegrams.ts';
@@ -38,18 +41,34 @@ interface Runtime {
 	fail(error: unknown): void;
 }
 
+/** Where the store learns the interface language, and who it tells about the saved one. */
+export interface LanguageSource {
+	/** The language the browser being answered asked for, when it stated one we have. */
+	requested(): Locale | undefined;
+	/** Told whenever settings are read or written, so work outside a request uses it too. */
+	saved(language: Locale | undefined): void;
+}
+
 const missingFile = Symbol('missing settings file');
 type RecoverySettings = { config: Config; app?: Configuration['app'] };
 
 export class ConfigurationStore {
 	private pending: Promise<unknown> = Promise.resolve();
-	private files: { config: string; app: string };
+	private files: { config: string; app: string; runtime?: string };
 	private runtime: () => Runtime | null;
 	private recoveryRevision = '';
+	private launcherSettingsUpgraded = false;
+	private language?: LanguageSource;
 
-	constructor(files: { config: string; app: string }, runtime: () => Runtime | null = () => null) {
+	/** `files.runtime` is the runtime.json of earlier versions, read once to move its settings. */
+	constructor(
+		files: { config: string; app: string; runtime?: string },
+		runtime: () => Runtime | null = () => null,
+		language?: LanguageSource
+	) {
 		this.files = files;
 		this.runtime = runtime;
+		this.language = language;
 	}
 
 	private enqueue<T>(operation: () => Promise<T>): Promise<T> {
@@ -73,19 +92,66 @@ export class ConfigurationStore {
 		try {
 			const input =
 				config === missingFile ? { $schema: DEFAULT_SCHEMA_URL, detectors: [] } : config;
-			const upgraded = upgradeVerificationKeys(input);
+			const legacy = await this.legacyLauncherSettings(config);
+			const upgraded = upgradeVerificationKeys(legacy ? legacy.config : input);
 			const document = identifyCameras(
 				normalizeConfiguration(upgraded, app === missingFile ? {} : app)
 			);
-			if (upgraded !== input) await writeConfiguration(this.files, document);
+			if (upgraded !== input) await this.write(document);
+			await this.retireLauncherSettings(legacy);
 			if (config !== missingFile)
 				await this.remember(document, app !== missingFile || upgraded !== input);
+			this.language?.saved(document.app.language);
 			return document;
 		} catch (error) {
 			if (error instanceof ConfigurationError)
 				throw new ConfigurationError(`${this.files.config}: ${error.message}`, { cause: error });
 			throw error;
 		}
+	}
+
+	/**
+	 * Settings an earlier version kept in runtime.json. Looked for once per process, and never
+	 * for a new installation: reading settings must not create them.
+	 */
+	private async legacyLauncherSettings(config: unknown) {
+		if (config === missingFile || this.launcherSettingsUpgraded || !this.files.runtime) return;
+		// A damaged leftover must not make the real settings unreadable.
+		const saved = await readJson<unknown>(this.files.runtime).catch(() => null);
+		return upgradeLauncherSettings(config, saved);
+	}
+
+	/** Remove runtime.json only after its values are safely in the two settings files. */
+	private async retireLauncherSettings(legacy?: { enabled: boolean }): Promise<void> {
+		if (legacy) {
+			if (legacy.enabled) await setMonitoringEnabled(this.files.app, true);
+			await rm(this.files.runtime!, { force: true });
+		}
+		this.launcherSettingsUpgraded = true;
+	}
+
+	/**
+	 * Replace app.json, and config.json unless only metadata changed. The launcher's `monitoring`
+	 * flag is not part of these documents; whatever app.json holds at this moment is kept.
+	 */
+	private write(document: Configuration, config = true): Promise<void> {
+		return exclusiveWrite(this.files.app, async () => {
+			// Unreadable settings are being replaced; a running launcher writes its flag again.
+			const resumes = await monitoringEnabled(this.files.app).catch(() => false);
+			const app = resumes ? { ...document.app, monitoring: true } : document.app;
+			if (config) await writeConfiguration(this.files, { config: document.config, app });
+			else await writeJson(this.files.app, app);
+			this.language?.saved(document.app.language);
+		});
+	}
+
+	/**
+	 * An installation takes the language of the browser that first saves settings in it, so
+	 * setup needs no language question; `saveLanguage` changes it afterwards.
+	 */
+	private keepLanguage(app: Configuration['app'], current?: Locale): void {
+		const language = app.language ?? current ?? this.language?.requested();
+		if (language) app.language = language;
 	}
 
 	private async remember(document: Configuration, appPresent = true): Promise<void> {
@@ -136,7 +202,7 @@ export class ConfigurationStore {
 					if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
 				}
 			}
-			await writeConfiguration(this.files, document);
+			await this.write(document);
 			await this.applySaved(document.config);
 		});
 	}
@@ -159,11 +225,13 @@ export class ConfigurationStore {
 	}
 
 	updateDevices(change: (devices: PairedDevice[]) => PairedDevice[]): Promise<void> {
-		return this.enqueue(async () => {
-			const app = await this.loadDeviceSettings();
-			app.devices = change(app.devices ?? []);
-			await writeJson(this.files.app, app);
-		});
+		return this.enqueue(() =>
+			exclusiveWrite(this.files.app, async () => {
+				const app = await this.loadDeviceSettings();
+				app.devices = change(app.devices ?? []);
+				await writeJson(this.files.app, app);
+			})
+		);
 	}
 
 	/** Seed onboarding without starting monitoring or sending alerts. */
@@ -177,6 +245,7 @@ export class ConfigurationStore {
 			const current = await this.load();
 			if (current.app.devices) next.app.devices = current.app.devices;
 			else delete next.app.devices;
+			this.keepLanguage(next.app, current.app.language);
 			if (resuming && isDeepStrictEqual(current, next)) return;
 			const recoveringApp = resuming && isDeepStrictEqual(await readJson(this.files.app), next.app);
 			if (
@@ -189,7 +258,7 @@ export class ConfigurationStore {
 				);
 			if (next.config.detectors.length) await this.runtime()?.validate(next.config);
 			await publishFiles();
-			await writeConfiguration(this.files, next);
+			await this.write(next);
 			await this.remember(next);
 		});
 	}
@@ -197,17 +266,18 @@ export class ConfigurationStore {
 	private async persist(input: { config: unknown; app: unknown }): Promise<void> {
 		const { config, app } = identifyCameras(normalizeConfiguration(input.config, input.app));
 		app.devices = (await this.loadDeviceSettings()).devices;
+		this.keepLanguage(app);
 		const previous = await readJson<unknown>(this.files.config);
 		const configChanged =
 			previous === null || !isDeepStrictEqual(normalizeConfig(previous), config);
 		const runtime = this.runtime();
 		if (configChanged && config.detectors.length) await runtime?.validate(config);
 		if (!configChanged) {
-			await writeJson(this.files.app, app);
+			await this.write({ config, app }, false);
 			await this.remember({ config, app });
 			return;
 		}
-		await writeConfiguration(this.files, { config, app });
+		await this.write({ config, app });
 		await this.remember({ config, app });
 		await this.applySaved(config);
 	}
@@ -281,6 +351,20 @@ export class ConfigurationStore {
 				);
 			if (target === 'config') replaceDetectorConfig(document, value);
 			else replaceConnections(document, value);
+		});
+	}
+
+	saveLanguage(language: Locale): Promise<void> {
+		return this.update((document) => {
+			document.app.language = language;
+		});
+	}
+
+	/** Turn the detector's heartbeat on, change it, or turn it off with `null`. */
+	saveHeartbeat(input: v.InferOutput<typeof heartbeatInput>): Promise<void> {
+		return this.update((document) => {
+			if (input) document.config.health = { ...document.config.health, ...input };
+			else delete document.config.health;
 		});
 	}
 

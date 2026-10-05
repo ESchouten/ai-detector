@@ -1,7 +1,7 @@
 import Ajv from 'ajv';
 import { configurationSchema, webConfigurationSchema } from './configuration.ts';
 
-export type SettingsDocument = 'config' | 'connections' | 'runtime';
+export type SettingsDocument = 'config' | 'connections';
 
 const { model, key, url, headers } = configurationSchema.$defs.VLMConfig.properties;
 export const settingsSchemas: Record<SettingsDocument, Record<string, unknown>> = {
@@ -27,20 +27,6 @@ export const settingsSchemas: Record<SettingsDocument, Record<string, unknown>> 
 				key,
 				url,
 				headers
-			}
-		}
-	},
-	runtime: {
-		type: 'object',
-		additionalProperties: false,
-		required: ['mode'],
-		properties: {
-			mode: {
-				type: 'string',
-				enum: ['auto', 'native', 'docker'],
-				default: 'auto',
-				description:
-					'auto chooses the detection engine for this computer. Pause monitoring before changing it.'
 			}
 		}
 	}

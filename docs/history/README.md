@@ -9,3 +9,4 @@ For current guidance, start with [Contributing](../../CONTRIBUTING.md), the [sys
 - [Detector SDK reuse review](detector/SDK_REUSE_REVIEW.md): libraries evaluated against custom code.
 - [Onboarding plan](onboarding/PLAN.md): the original installation and setup assessment.
 - [Onboarding reassessment](onboarding/REASSESSMENT.md): later findings and implementation notes.
+- [Onboarding flow review](onboarding/REVIEW.md): the three-step Settings wizard reviewed on 30 September 2026, before setup, cameras and detectors became separate pages.

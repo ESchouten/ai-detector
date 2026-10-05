@@ -62,7 +62,7 @@ export const getStreams = query(async () => {
 	const { app } = await configuration.read();
 	return app.streams.map((stream, index) => ({
 		...stream,
-		label: stream.label ?? 'Stream ' + (index + 1)
+		label: stream.label ?? `Stream ${index + 1}`
 	}));
 });
 

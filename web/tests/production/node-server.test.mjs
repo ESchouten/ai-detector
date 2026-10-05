@@ -27,7 +27,8 @@ for (const [id, load] of Object.entries(manifest._.remotes)) {
 		'saveDetector',
 		'finishSetup',
 		'inspectInstallation',
-		'importInstallation'
+		'importInstallation',
+		'setLanguage'
 	]) {
 		if (name in remote) commands[name] = `/${manifest.appPath}/remote/${id}/${name}`;
 	}
@@ -48,7 +49,7 @@ function commandBody(input) {
 		refreshes: []
 	});
 }
-const startBody = commandBody('native');
+const startBody = commandBody(undefined);
 
 test('saved logs are searchable in the page and downloadable with conditional refreshes', async (t) => {
 	const { directory, base } = await startServer(t);
@@ -407,13 +408,75 @@ test(
 			path.join(directory, 'app.json'),
 			JSON.stringify({ streams: [{ label: 'Barn', source: 'rtsp://camera.example.test/live' }] })
 		);
-		const response = await send(`${base}/setup?step=detectors&add=detector`);
+		const response = await send(`${base}/setup?step=detectors`);
 		assert.equal(response.status, 200);
 		const html = await response.text();
 		for (const name of ['Calving Catcher', 'Cow Catcher', 'General'])
 			assert.ok(html.includes(name), `Bundled preset ${name} should be available`);
 		assert.ok(html.includes('Choose a preset'));
 		assert.ok(!html.includes('Cow mounting behaviour'));
+	}
+);
+
+test(
+	'pages follow each browser until the installation has a language of its own',
+	{ timeout: 20000 },
+	async (t) => {
+		const { directory, base } = await startServer(t);
+		const open = async (language) => {
+			const response = await send(`${base}/setup?step=cameras`, {
+				headers: language ? { 'Accept-Language': language } : {}
+			});
+			assert.equal(response.status, 200);
+			return response.text();
+		};
+		const english = await open();
+		assert.match(english, /<html lang="en"/);
+		assert.match(english, /<title>Set up · AI Detector<\/title>/);
+		const dutch = await open('nl-NL,nl;q=0.9,en;q=0.8');
+		assert.match(dutch, /<html lang="nl"/);
+		assert.match(dutch, /<title>Instellen · AI Detector<\/title>/);
+		assert.doesNotMatch(dutch, /Connect your cameras/);
+		// A language without a catalog is served in English rather than refused.
+		assert.match(await open('pl-PL,pl;q=0.9'), /<html lang="en"/);
+
+		// Messages raised on the server follow the request too, not only the pages.
+		const refused = await send(`${base}/pair`, {
+			method: 'POST',
+			headers: {
+				Host: 'barn.local',
+				Origin: 'http://barn.local',
+				Accept: 'text/html',
+				'Accept-Language': 'de-DE,de;q=0.9',
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: 'code=000000&name=Tablet'
+		});
+		assert.equal(refused.status, 400);
+		const refusal = await refused.text();
+		assert.match(refusal, /<html lang="de"/);
+		assert.doesNotMatch(refusal, /The code did not match/);
+
+		// Nothing was saved by looking; choosing a language is what records it.
+		await assert.rejects(readFile(path.join(directory, 'app.json')), { code: 'ENOENT' });
+		const chosen = await send(base + commands.setLanguage, {
+			method: 'POST',
+			headers: {
+				Origin: base,
+				'Content-Type': 'application/json',
+				'x-sveltekit-pathname': '/setup',
+				'x-sveltekit-search': '?step=cameras'
+			},
+			body: commandBody('fr')
+		});
+		assert.equal(chosen.status, 200, await chosen.clone().text());
+		assert.equal(
+			JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8')).language,
+			'fr'
+		);
+		// From then on every browser sees the installation's language.
+		assert.match(await open('nl-NL,nl;q=0.9'), /<html lang="fr"/);
+		assert.match(await open(), /<html lang="fr"/);
 	}
 );
 
@@ -452,7 +515,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			assert.equal(firstVisit.status, 302);
 			assert.equal(
 				new URL(firstVisit.headers.get('location'), base + '/setup').href,
-				base + '/setup?step=cameras&add=camera'
+				base + '/setup?step=cameras'
 			);
 			const page = await send(new URL(firstVisit.headers.get('location'), base + '/setup'), {
 				headers: browserHeaders
@@ -464,8 +527,8 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 				assert.equal(page.headers.get('set-cookie'), null);
 				await assert.rejects(readFile(path.join(directory, 'app.json')), { code: 'ENOENT' });
 			}
-			assert.ok(html.includes('<title>Settings · AI Detector</title>'));
-			assert.ok(html.includes('Add your camera'));
+			assert.ok(html.includes('<title>Set up · AI Detector</title>'));
+			assert.ok(html.includes('Connect your cameras'));
 			assert.ok(!html.includes('Calving Catcher'));
 			const headers = {
 				...browserHeaders,
@@ -506,7 +569,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			});
 			assert.equal(saved.status, 200, await saved.clone().text());
 			assert.equal((await saved.json()).type, 'result');
-			const detectorPage = await send(`${base}/setup?step=detectors&add=detector`, {
+			const detectorPage = await send(`${base}/setup?step=detectors`, {
 				headers: browserHeaders
 			});
 			assert.equal(detectorPage.status, 200);
@@ -647,10 +710,12 @@ test(
 			[]
 		);
 		assert.equal((await send(base + '/')).headers.get('location'), '/setup');
-		const detectorStep = await send(base + '/setup?step=detectors');
+		// The step stays in the address, so the first detector form opens without another redirect.
+		assert.equal((await send(base + '/setup?step=detectors')).status, 200);
 		assert.equal(
-			new URL(detectorStep.headers.get('location'), base + '/setup').href,
-			base + '/setup?step=detectors&add=detector'
+			(await send(base + '/setup?step=finish')).headers.get('location'),
+			null,
+			'Cameras without a detector can finish for live viewing'
 		);
 		assert.equal((await command('finishSetup')).type, 'result');
 		assert.equal((await send(base + '/')).headers.get('location'), '/streams');
@@ -745,16 +810,13 @@ test(
 		await writeFile(templatePath, '{"yolo":');
 		for (const [route, savedValue, expectedContent] of [
 			['/streams', 'Workshop camera', /Monitoring preset names are unavailable/],
+			[`/streams/${cameraId}`, 'Workshop camera', /Camera name[\s\S]*Save changes/],
 			[
-				`/setup?step=cameras&camera=${cameraId}`,
-				'Workshop camera',
-				/Camera name[\s\S]*Save changes/
-			],
-			[
-				'/setup?step=detectors&detector=Workshop%20rule',
+				'/detectors/edit?label=Workshop%20rule',
 				'workshop-safety.onnx',
 				/Monitoring presets are unavailable/
-			]
+			],
+			['/detectors', 'Workshop rule', /Workshop camera/]
 		]) {
 			const response = await send(base + route);
 			const html = await response.text();
@@ -762,13 +824,13 @@ test(
 			assert.match(html, expectedContent, route);
 			assert.ok(html.includes(savedValue), `${route} must retain ${savedValue}`);
 		}
+		// Bookmarks from both earlier layouts open the page that now owns the camera or detector.
 		for (const [oldPath, destination] of [
-			['/streams/add', '/setup?step=cameras&add=camera'],
-			[`/streams/add?id=${cameraId}`, `/setup?step=cameras&camera=${cameraId}`],
-			['/detectors', '/setup?step=detectors'],
-			['/detectors/add?setup=1', '/setup?step=detectors&add=detector'],
-			['/detectors/add?label=Workshop%20rule', '/setup?step=detectors&detector=Workshop%20rule'],
-			['/detectors/add?label=Pen%20%26%20yard', '/setup?step=detectors&detector=Pen%20%26%20yard']
+			[`/streams/add?id=${cameraId}`, `/streams/${cameraId}`],
+			[`/setup?step=cameras&camera=${cameraId}`, `/streams/${cameraId}`],
+			['/detectors/add?label=Workshop%20rule', '/detectors/edit?label=Workshop%20rule'],
+			['/detectors/add?label=Pen%20%26%20yard', '/detectors/edit?label=Pen%20%26%20yard'],
+			['/setup?step=detectors&detector=Pen%20%26%20yard', '/detectors/edit?label=Pen%20%26%20yard']
 		]) {
 			const response = await send(base + oldPath);
 			assert.equal(response.status, 302, oldPath);
@@ -777,22 +839,23 @@ test(
 				base + destination
 			);
 		}
-		for (const [selection, message] of [
-			['camera=missing', 'Camera not found'],
-			['detector=missing', 'Detector not found']
+		for (const [route, title] of [
+			['/streams/add', 'Add cameras'],
+			['/detectors/add', 'Add a detector'],
+			['/streams/missing', 'Camera not found'],
+			['/detectors/edit?label=missing', 'Detector not found']
 		]) {
-			const step = selection.startsWith('camera') ? 'cameras' : 'detectors';
-			const response = await send(`${base}/setup?step=${step}&${selection}`);
-			assert.equal(response.status, 200);
-			assert.ok((await response.text()).includes(message));
+			const response = await send(base + route);
+			assert.equal(response.status, 200, route);
+			assert.ok((await response.text()).includes(title), route);
 		}
 		const renamed = await send(base + commands.saveCamera, {
 			method: 'POST',
 			headers: {
 				Origin: base,
 				'Content-Type': 'application/json',
-				'x-sveltekit-pathname': '/setup',
-				'x-sveltekit-search': `?step=cameras&camera=${cameraId}`
+				'x-sveltekit-pathname': `/streams/${cameraId}`,
+				'x-sveltekit-search': ''
 			},
 			body: commandBody({ id: cameraId, label: 'Main workshop', source, mode: 'keep' })
 		});

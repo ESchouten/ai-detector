@@ -1,36 +1,33 @@
-# AI Detector
+# AI Detector: the detector
 
-For the combined download with browser-based setup and automatic detector startup, see the [application quick start](../README.md). The instructions below also support separately managed detector installations.
+The Python detector reads cameras or recorded media, groups YOLO observations into events, optionally verifies them with a vision language model, and delivers them to disk, Telegram or HTTP endpoints. Most people use it through the [complete application](../README.md); this guide is for running it separately and for working on it.
 
-The Python detector reads cameras or recorded media, groups YOLO observations into events, optionally verifies those events with a vision language model, and delivers them to disk, Telegram, or HTTP endpoints.
-
-The web application reads the event archive through its documented directory and metadata contract. See [MIGRATION.md](MIGRATION.md) before replacing an existing installation and [ARCHITECTURE.md](ARCHITECTURE.md) for the code structure and ownership rules.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for structure and ownership rules, and [MIGRATION.md](MIGRATION.md) before replacing an existing installation.
 
 ## Start contributing
 
-Use Python 3.12 or newer and [uv](https://docs.astral.sh/uv/). In this checkout, uv selects the version pinned in [`.python-version`](.python-version). From the repository root:
+Use [uv](https://docs.astral.sh/uv/); it selects the Python version pinned in [`.python-version`](.python-version). All commands in this guide run from `detector/`.
 
 ```sh
-cd detector
 uv sync --locked --extra default
 uv run --no-sync pytest tests/test_reference_flow.py::test_video_to_validated_archive_uses_real_media_and_flushes_at_eof
 ```
 
-This reference flow creates a temporary video, supplies deterministic inference and verification results, and checks the real JPEG/MP4 archive and its metadata. It needs no camera, model download, credentials, or external service. The development sync includes the test and quality tools; the [runtime installation](#run-from-source) below omits them. All subsequent Python commands in this guide run from `detector/`.
+That test creates a temporary video, supplies deterministic inference and verification results, and checks the real JPEG and MP4 archive and its metadata. It needs no camera, model download, credentials or network.
 
-Read the application in this order, following one event:
+Read the code in this order, following one event:
 
-1. [CLI](src/aidetector/cli.py): parse arguments, load configuration, and report the outcome.
-2. [Bootstrap](src/aidetector/bootstrap.py): construct sources, models, policies, and destinations, and own their cleanup scopes.
-3. [Runtime](src/aidetector/runtime.py): supervise processing and delivery, including failure and shutdown.
-4. [Pipeline](src/aidetector/application/pipeline.py): turn source batches into observations and completed events.
-5. [Event assembler](src/aidetector/domain/events.py): apply the event-window rules using source timestamps.
-6. [Delivery](src/aidetector/application/delivery.py): apply cooldown, verify the event, and attempt eligible destinations.
-7. [Disk archive](src/aidetector/adapters/exporters/disk.py) and [metadata](src/aidetector/adapters/exporters/archive_metadata.py): publish the files consumed by the web app.
+1. [CLI](src/aidetector/cli.py): arguments, configuration, exit status.
+2. [Bootstrap](src/aidetector/bootstrap.py): constructs sources, models, policies and destinations, and owns their cleanup.
+3. [Runtime](src/aidetector/runtime.py): supervises processing and delivery, including failure and shutdown.
+4. [Pipeline](src/aidetector/application/pipeline.py): turns source batches into observations and completed events.
+5. [Event assembler](src/aidetector/domain/events.py): the event-window rules.
+6. [Delivery](src/aidetector/application/delivery.py): cooldown, verification, and the eligible destinations.
+7. [Disk archive](src/aidetector/adapters/exporters/disk.py) and [metadata](src/aidetector/adapters/exporters/archive_metadata.py): the files the web application reads.
 
-Each configured detector has one processing thread that owns inference and event assembly, and one delivery thread that owns cooldown, verification, and exports. A bounded queue connects them. Live camera acquisition runs separately: one shared capture thread per exact source string, with independent sampling and bounded buffers for each detector. File readers remain independent. See [resource ownership](ARCHITECTURE.md#resource-ownership) for shutdown and lifetime details.
+Each detector has one processing thread for inference and event assembly and one delivery thread for cooldown, verification and exports, joined by a bounded queue. Live cameras are read by one shared capture thread per source string. See [resource ownership](ARCHITECTURE.md#resource-ownership).
 
-Tests mirror the `domain`, `application`, and `adapters` packages; tests spanning the application stay at the test root. Use this map to locate a change and its existing tests:
+Tests mirror the `domain`, `application` and `adapters` packages. To find the code and tests for a change:
 
 | Change | Implementation | Tests to start with |
 | --- | --- | --- |
@@ -55,31 +52,21 @@ Tests mirror the `domain`, `application`, and `adapters` packages; tests spannin
 | Archive format or publication | [disk](src/aidetector/adapters/exporters/disk.py), [metadata](src/aidetector/adapters/exporters/archive_metadata.py) | [disk](tests/adapters/exporters/test_disk.py), [reference flow](tests/test_reference_flow.py), [schemas](tests/test_schemas.py) |
 | Telegram, webhooks, or health requests | [Telegram](src/aidetector/adapters/exporters/telegram.py), [webhook](src/aidetector/adapters/exporters/webhook.py), [health](src/aidetector/adapters/health.py) | [exporters](tests/adapters/exporters/test_exporters.py), [HTTP](tests/adapters/test_http.py), [health](tests/adapters/test_health.py) |
 
-Read [AGENTS.md](AGENTS.md) before editing and [ARCHITECTURE.md](ARCHITECTURE.md) before changing a boundary. Follow the existing tests for the behavior you are changing, then run the [development checks](#development-checks). Public configuration or archive changes also require schema regeneration and a compatibility review in [MIGRATION.md](MIGRATION.md).
+Read [AGENTS.md](AGENTS.md) before editing. A change to configuration or archive metadata also needs regenerated schemas (`uv run --no-sync generate-schema`) and, when someone upgrading must act, a note in [MIGRATION.md](MIGRATION.md).
 
 ### Test feedback while editing
-
-From `detector/`, run the domain, application and configuration tests without importing model runtimes:
 
 ```sh
 uv run --no-sync pytest -q tests/domain tests/application tests/test_configuration.py tests/test_schemas.py
 ```
 
-VS Code exposes the same selection as **Detector: core tests (fast)**. For adapter changes, use the focused tests in the table above. `uv run --no-sync pytest --ignore=tests/integration` skips the expensive real model exports and cold font-cache scan; `uv run --no-sync pytest tests/integration` runs those contracts explicitly. Run `uv run --no-sync pytest` before submitting: this includes real model export, media, HTTP and subprocess contracts. Native installers and compiled application lifecycle checks run separately in the distribution workflows. CI runs the full detector suite on Linux, Windows and macOS; branch coverage is collected on Linux only.
+This selection imports no model runtime; VS Code offers it as **Detector: core tests (fast)**. `pytest --ignore=tests/integration` skips the expensive real model exports. Run plain `uv run --no-sync pytest` before submitting. CI runs the full suite on Linux, Windows and macOS.
 
-Test input variants belong at the cheapest layer that owns their behavior. Keep a real integration check for each distinct boundary, without repeating a full model export or process startup for every parameter. Fake only external SDK/I/O boundaries; preserve cleanup, failure and cancellation assertions.
+Tests use temporary media, local stand-ins for external services and a generated ONNX graph, so they exercise real OpenCV, FFmpeg, Ultralytics and ONNX behavior without downloading weights or contacting anyone. Fake only external SDK and I/O boundaries, and keep the assertions about cleanup, failure and cancellation.
 
-### Debugging in VS Code
-
-Open the repository root so VS Code loads the shared `.vscode` configuration. Install the recommended Python, Python Debugger, Ruff and ty extensions, then run **Tasks: Run Task → Detector: install dependencies** once. Use **Python: Select Interpreter** to select `detector/.venv`; a previously selected interpreter can override the workspace default.
-
-Set a breakpoint in `DetectionPipeline.process` or `EventDelivery.deliver`, choose **Detector: debug reference flow** in Run and Debug, and press F5. The test generates its own video and runs two archive-category cases, so a breakpoint can be reached more than once. Step from a source batch through event assembly and delivery without cameras, downloaded weights or external services. See the [debug configuration](../.vscode/launch.json) and [VS Code Python debugging guide](https://code.visualstudio.com/docs/python/debugging).
-
-**Tasks: Run Task → Detector: check** runs lint, formatting, types, schemas and the full test suite, which includes architecture checks. Individual tasks run one check or the reference flow. The Testing sidebar uses the same detector environment and `tests/` directory. Coverage, mutation runs and distribution builds remain separate [development checks](#development-checks).
+To step through an event in VS Code, open the repository root, run **Detector: install dependencies** once, select `detector/.venv` as interpreter, set a breakpoint in `DetectionPipeline.process` or `EventDelivery.deliver` and start **Detector: debug reference flow**.
 
 ## Run from source
-
-Use Python 3.12 or newer and [uv](https://docs.astral.sh/uv/). In this checkout, uv selects the version pinned in [`.python-version`](.python-version). From `detector/`:
 
 ```sh
 uv sync --locked --no-dev --extra default
@@ -89,33 +76,18 @@ uv run --no-sync aidetector --check-config
 uv run --no-sync aidetector
 ```
 
-`main` remains an alias for `aidetector`. `python -m aidetector` uses the same entrypoint.
+`python -m aidetector` and the `main` alias use the same entry point.
 
-The detector never creates or repairs configuration during a normal run. `--init-config` explicitly writes an offline template and refuses to overwrite an existing file. `--check-config` validates JSON, fields, bounds, supported source syntax, and compatible source groups without loading models, opening sources, or making requests. Source availability, model class names, and provider compatibility are checked when starting detection.
+- A normal run never creates or repairs configuration. `--init-config` writes a template and refuses to overwrite a file. `--check-config` validates fields, bounds and source syntax without loading models, opening sources or making requests.
+- `--config FILE --data-dir FOLDER` keeps installed code apart from runtime data. Relative input and model paths resolve against the configuration's folder. The data folder defaults to that folder and holds `detections/`, `models/` and `logs/`.
+- `--live-preview` publishes analyzed pictures for the web application, which must share the data folder. See the [protocol](LIVE_PREVIEW.md).
+- `--test-vlm FILE` checks a verifier connection with generated media, without starting detection.
+- `--control-stdin` stops gracefully on a line `stop` or on EOF from the parent; the complete application uses it on every OS.
+- `--log-level WARNING` hides routine activity; `DEBUG` adds per-batch details.
 
-Use explicit locations to keep installed code separate from runtime data:
+Standard names such as `yolo11n.pt` are downloaded by Ultralytics; HTTP(S) model URLs are downloaded once per URL into the cache. Which backend runs a model, and how prepared ONNX models and TensorRT engines are cached under `models/prepared/`, is described under [inference backends](ARCHITECTURE.md#inference-backends). That cache can be deleted while detection is stopped.
 
-```sh
-uv run --no-sync aidetector --config /path/to/config.json --data-dir /path/to/runtime
-```
-
-Relative input and model paths resolve against the configuration directory. The data directory defaults to that directory and contains `detections/` and downloaded `models/`. No process-wide working-directory change is required.
-
-Add `--live-preview` to publish live analyzed pictures for the web application. The combined application supplies this flag automatically. Standalone detector and web processes must share the data directory; pictures are encoded only while someone is viewing that camera. The [live preview protocol](LIVE_PREVIEW.md) explains freshness, resource limits and troubleshooting. Preview pictures do not imply that a recording or alert was delivered.
-
-Standard names such as `yolo11n.pt` use Ultralytics' automatic model download. HTTP(S) model URLs also use Ultralytics' downloader, with separate cache directories for distinct URLs. Completed downloads are reused; failed or partial downloads are not published into the cache. The application has no custom HTTP transfer loop. URL downloads use one SDK attempt and its network timeout behavior; restart after correcting an unavailable URL or connection.
-
-On macOS, `.pt` models use native PyTorch MPS with FP16 when Torch reports an available MPS device. No ONNX conversion is needed for that route. MPS batches take turns across detectors to avoid concurrent access to PyTorch's shared Metal backend; camera capture and event delivery continue independently. If MPS is unavailable, the existing ONNX route remains available. Set `onnx.provider` explicitly to select an ONNX provider instead; `.onnx` and `.engine` files keep their respective backends. Model loading or inference failures remain visible rather than silently switching backends.
-
-Native ONNX conversions are reused from `models/prepared/` when the checkpoint contents, conversion settings and SDK versions are unchanged. Changing an image size, camera batch, precision, model or relevant library version produces a separate prepared model. Only successfully exported and checked graphs are published. This cache can be removed while detection is stopped; the next ONNX start prepares the models again.
-
-The Windows application's automatic NVIDIA route first prepares working PyTorch/CUDA. On compute capability 8.0 and newer (including RTX 3000 and newer), it additionally downloads a pinned TensorRT runtime. These dependencies are installed before the detector process starts. Monitoring then uses cached engines or starts with CUDA while Ultralytics prepares missing FP16 engines one at a time in the background. After all build attempts finish, the desktop briefly pauses monitoring, drains accepted events and restarts once if any new engines are available. The restart loads those engines directly, without ONNX Runtime or Windows ML. Pause/quit cancels this restart. Failed-only or cached-only preparation does not restart monitoring; standalone runs use new engines on their next start. ONNX is an intermediate export format only. Existing `.onnx`/`.engine` files and explicit provider choices keep their configured route.
-
-GPU-specific engines live in `models/prepared/tensorrt/`, separate from portable ONNX models. Their cache identity includes checkpoint contents, export settings, GPU, driver, CUDA and library versions. A separate process builds and checks dynamic batch/shape inference before publishing the engine. Each build has a thirty-minute limit and stops with monitoring; a failed optimization leaves CUDA running. The builder shares the GPU and can affect inference speed. Its scratch workspace is limited to 2 GiB, not its total memory use. Failed downloads/builds are deferred for 24 hours across restarts and retried on a subsequent start, not by a background scheduler. Changed dependencies/hardware select a new cache identity. No configuration migration or new setup option is required. FP16 conversion still needs representative GPU speed and detection-quality validation; see [PERFORMANCE.md](PERFORMANCE.md).
-
-To diagnose preparation, open the web app's **Logs** tab and search for `TensorRT`. Each attempt also saves `models/prepared/tensorrt/<identity>/build.log`, with a launch marker, helper PID, import/export/test phases and SDK output; `failure.txt` holds the failure reason. The downloaded runtime enters the lightweight helper directly, enabling Python's fault handler before inference imports. While preparation runs, it records all Python thread stacks every 60 seconds and forwards them to the detector log. These periodic snapshots are diagnostic samples, not proof that compilation is stuck, and do not stop the build. They identify Python call sites but do not expose the internal state of a blocked GPU driver. On Windows these files are under `%LOCALAPPDATA%\AI Detector`, separate from the installation folder.
-
-Select **one** runtime extra per environment:
+Install exactly one runtime extra per environment:
 
 | Extra | Intended runtime |
 | --- | --- |
@@ -123,25 +95,23 @@ Select **one** runtime extra per environment:
 | `nvidia` | Native PyTorch/CUDA and ONNX Runtime GPU; requires compatible NVIDIA drivers/libraries |
 | `windowsml` | Windows ML runtime and Windows App SDK bindings |
 
-These packages share the `onnxruntime` import namespace. Do not combine the extras or use `--all-extras`. Native CUDA/TensorRT dependencies must match the target machine; the published platform builds configure their build type explicitly.
+They share the `onnxruntime` import name, so never combine them or use `--all-extras`.
 
 ## Executables and Docker
 
-[Releases](https://github.com/ESchouten/ai-detector/releases) contain the platform distributions. Run an executable from a terminal with the same flags shown above. Its default `config.json` location is beside the executable. `--version` reports the build reference and runtime type.
+[Releases](https://github.com/ESchouten/ai-detector/releases) carry the platform builds. An executable takes the same flags; its default `config.json` is beside it, and `--version` reports the build and runtime type.
 
-Docker runs the same module from `/data`. Mount your configuration and event data there. The repository's `example/compose.yml` demonstrates the detector and web UI together; replace the example's model/provider/notification settings before starting it. For a local image build, use `detector/` as the build context. The context excludes local recordings, weights, environments, and research outputs.
+Docker runs the same module from `/data`; mount configuration and recordings there. [`example/compose.yml`](../example/compose.yml) runs the detector and the web interface together; replace its model, provider and notification settings first. For a local image, use `detector/` as build context.
 
-The release workflow builds Linux CUDA images, Windows ML/CUDA executables, and a macOS executable. Executable builds use the Python 3.12 patch release in [`.python-version`](.python-version) and run local ONNX and Torch-checkpoint smoke tests through inference, verification, and delivery. A successful package build does not establish that every GPU provider works on every target machine.
+A package that builds and passes its smoke test has not shown that every GPU provider works on every machine.
 
 ### Jetson installations
 
-New detector versions require Python 3.12 and no longer publish JetPack 6 images. Existing JetPack 6 deployments can keep their previously published image and Compose configuration; those images receive no further updates. See [migration guidance](MIGRATION.md#python-312-and-jetpack-6-retirement--2026-09-28).
-
-JetPack 7.2 provides a Python 3.12 environment, but the current generic NVIDIA ARM64 container is **not qualified for Orin / JetPack 7.2**. Ultralytics documents separate container validation and a TensorRT incompatibility in its current ARM64 image. Follow the [upstream Jetson guide](https://docs.ultralytics.com/guides/nvidia-jetson/) for platform requirements. A container build on an ARM64 CI runner does not establish Jetson GPU compatibility.
+JetPack 6 images are no longer built, and the generic ARM64 image is not qualified for Orin and JetPack 7.2. See [Jetson](MIGRATION.md#jetson).
 
 ## Configuration
 
-A minimal local detection/archive configuration:
+A minimal configuration that archives detections from a local file:
 
 ```json
 {
@@ -155,11 +125,9 @@ A minimal local detection/archive configuration:
 }
 ```
 
-Sources, VLM configurations/model names, and individual exporter definitions accept either a single value or a list. The boundary normalizes them once. Unknown fields, empty required lists, duplicate sources, negative durations, non-finite numbers, and invalid confidence ranges fail validation. Keep API keys and source URLs private.
+Sources, verifier entries, model names and exporter definitions accept one value or a list. Unknown fields, empty required lists, duplicate sources, negative durations and invalid confidence ranges fail validation. All options are in [`config.schema.json`](../config/config.schema.json); the [template](../config/config.template.json) is what `--init-config` writes.
 
-Detectors using the **same live source string** in one application share a single camera connection and decoded frames. Matching requested widths also share resized pixels. They keep independent sampling intervals, frame sizes, retention limits, tracking and event rules. A slow detector cannot consume another detector's frames or create an unbounded backlog. Separate application processes still open separate connections; finite files retain independent readers. See [PERFORMANCE.md](PERFORMANCE.md) for interpreting timing logs and comparing inference engines without changing detection settings.
-
-The complete machine-readable options are in [`config.schema.json`](../config/config.schema.json). The checked-in [template](../config/config.template.json) is valid and can also be generated with `--init-config`.
+Detectors that name the **same live source string** share one camera connection and its decoded frames within a process. They keep their own sampling, frame size, retention, tracking and event rules.
 
 ### Input and event collection
 
@@ -171,7 +139,7 @@ The complete machine-readable options are in [`config.schema.json`](../config/co
 | `detection.frames_width` | `1280` | Maximum input width; aspect ratio is preserved and smaller frames are not upscaled |
 | `pending_events` | `8` | Completed events waiting for ordered verification/delivery per detector; a full queue applies backpressure |
 
-Use separate detector definitions for finite files and live streams. Unsupported URL schemes, missing stream hosts, and HTTP image URLs fail configuration validation; images must be local files. Files in one definition are processed sequentially; each file's EOF closes its own event. Live captures reconnect after expected input failures. A programming error is surfaced to the supervisor.
+Use separate detector definitions for finite files and live streams. Files in one definition are processed in order, and each file's end closes its own event. Live captures reconnect after expected input failures. Images must be local files.
 
 | `yolo` setting | Default | Meaning |
 | --- | --- | --- |
@@ -188,17 +156,13 @@ Use separate detector definitions for finite files and live streams. Unsupported
 | `cooldown` | `0` | Per-source cooldown after acceptance, in seconds or a class map |
 | `imgsz` | `640` | Inference input size |
 
-An observation at the maximum-duration or inactivity boundary begins a new window. Buffered observations are processed in timestamp order, so eligible trailing frames before a boundary stay with the closing event. EOF and graceful shutdown flush eligible windows. File timestamps follow video position, so inference speed does not change grouping. The event's best frame is the one with the highest score.
+An observation at the duration or inactivity boundary starts a new window. EOF and graceful shutdown flush eligible windows. An event may proceed when at least one detected class is outside its cooldown; classes omitted from a cooldown map are unrestricted. Approved and deliberately unvalidated events consume cooldown; rejection and failed verification do not.
 
-Cooldown uses the best observation's source timestamp and class. An event may proceed when at least one detected class is eligible; omitted classes in a cooldown map are unrestricted. Accepted and deliberately unvalidated events consume cooldown. Rejection or unavailable validation does not. Cooldown is independent of an individual destination's delivery success.
-
-Omit `yolo` to process each sampled frame directly through the optional verifier and exporters. Such frames have no object confidence; disk uses the `unclassified` category unless `directory` is configured.
+Omit `yolo` to send each sampled frame straight to the optional verifier and the exporters. Such frames have no confidence; disk files them under `unclassified` unless `directory` is set.
 
 ### Optional verification
 
-In the web app, add a named **AI connection** once, then select it in each detector. Connection credentials and model are shared; each detector keeps its own question and IMAGE/VIDEO choice. Presets provide optional starting questions and leave verification off until a connection is chosen. Existing manually configured verifiers keep working. For a standalone connection check, `ai-detector --test-vlm connection.json` uses generated media and the normal adapter, never camera footage.
-
-`vlm` accepts one configuration or an ordered list. Only entries with a non-null `key` run. Clear keys to disable verification while retaining prompts, models and media settings. Python reads these values only from `config.json`, never `app.json`. Each configuration has:
+`vlm` accepts one entry or an ordered list. Only entries with a non-null `key` run; clear the keys to switch verification off while keeping prompts and models. In the web application an **AI connection** is saved once and copied into each detector that uses it.
 
 | Field | Default | Meaning |
 | --- | --- | --- |
@@ -212,26 +176,24 @@ In the web app, add a named **AI connection** once, then select it in each detec
 | `timeout` | `30` | Provider request timeout in seconds |
 | `attempts` | `3` | Maximum attempts per model for transient provider failures |
 
-Choose a provider/model that supports the selected media and structured JSON responses. Verification media contains no detection overlays. The answer requires exactly one real Boolean field, `detected`. A valid negative answer is final. Transient failures retry with bounded backoff; invalid answers and permanent provider errors move to the next configured model. If media encoding fails, the next verifier configuration is tried, allowing an IMAGE verifier to follow an unavailable VIDEO verifier.
+Choose a model that supports the selected media and structured JSON answers. The answer must be exactly one Boolean field, `detected`; a valid negative answer is final. Transient failures retry with bounded backoff, invalid answers and permanent provider errors move to the next model, and a media encoding failure moves to the next entry, so an IMAGE verifier can follow a VIDEO one. Media sent for verification has no overlays.
 
-Outcomes are **approved**, **rejected**, **unvalidated** (no verifier), and **failed** (configured verifiers could not answer). A failed verification can be archived under `unvalidated` with `validation_error`; it does not send ordinary Telegram/webhook notifications.
+The outcomes are **approved**, **rejected**, **unvalidated** (no verifier) and **failed** (no verifier could answer). A failed verification sends no ordinary notification; disk can keep it under `unvalidated` with `validation_error`.
 
 ### Delivery
 
-All exporters support `confidence` (number or class map), `crop_padding` (`0.1`), and `export_rejected`. Disk defaults to exporting rejected events; Telegram and webhooks do not. Each destination is attempted independently. Expected delivery failures are logged and counted; unexpected failures stop the detector after other destinations are attempted.
+Every exporter accepts `confidence` (a number or class map), `crop_padding` (`0.1`) and `export_rejected`, which defaults to true for disk and false for Telegram and webhooks. Destinations are attempted independently, without hidden retries.
 
-Disk settings:
+Disk:
 
 | Field | Default | Meaning |
 | --- | --- | --- |
 | `directory` | best class | Single category directory name inside `detections/`, such as `mounts`; paths, blank names, and dot-only names are rejected |
 | `strategy` | `"BEST"` | `"BEST"` writes the best images and clip; `"ALL"` additionally writes every event frame |
 
-An archive contains `best.jpg`, `clean.jpg`, `video.mp4`, and `metadata.json` under `detections/<category>/<approved|rejected|unvalidated>/<timestamp>/`. Metadata describes the complete event, including context. When someone reviews a recording, the web application adds that verdict to `metadata.json` as `review`; the detector never writes it. New folders use microseconds and collision handling; existing events are never overwritten. Files are prepared in the category's `.pending/` directory and published together. Existing archives remain readable; no data migration is needed.
+An archive is `best.jpg`, `clean.jpg`, `video.mp4` and `metadata.json` under `detections/<category>/<approved|rejected|unvalidated>/<timestamp>/`. Files are prepared in the category's `.pending/` folder and published together, and an existing event is never overwritten. The web application adds a person's review to `metadata.json` as `review`; the detector never writes it.
 
-Telegram requires `token` and `chat`. `alert_every` defaults to `1` and controls the notification sound every Nth attempted alert. `timeout` defaults to `30` seconds. The adapter sends text when no media is selected, the appropriate single-media method for one attachment, and an album for multiple attachments. The detector's encoder limits photos to 10 MB and videos to 12 MB. Alerts include 👍/👎 buttons linked by the same `event_id` saved on disk. Albums get a silent reply containing the buttons. The web application receives and saves reviews; standalone Python only sends alerts. See [recording review](../web/README.md) and the exporter tests for this contract.
-
-Telegram and webhook media settings:
+Telegram needs `token` and `chat`. `alert_every` (`1`) plays the notification sound on every Nth alert; `timeout` is `30` seconds. Photos are limited to 10 MB and videos to 12 MB. Alerts carry 👍 and 👎 buttons tied to the event's `event_id`; the web application receives the reviews.
 
 | Field | Telegram default | Webhook default |
 | --- | --- | --- |
@@ -242,37 +204,19 @@ Telegram and webhook media settings:
 | `video_width` | `1280` | `1280` |
 | `video_crf` | `28` | `28` |
 
-`video_width: null` retains source width. CRF accepts 0–51; lower values produce larger, higher-quality files. Identical requested video variants are reused across destinations when their size limits permit.
+`video_width: null` keeps the source width. CRF runs from 0 to 51; lower is larger and sharper.
 
-Webhooks require `url` and default to `method: "POST"`, `timeout: 30`, and `data_type: "binary"`. Methods also support GET, PUT, PATCH, DELETE, and HEAD. `headers` adds request headers; `token` sets the `Authorization` value exactly as supplied. An explicit `body` overrides generated content.
-
-Generated payloads include `confidence`, `timestamp`, `duration`, and `validated`. `binary` sends form fields and media files; `base64` sends JSON with encoded attachments; `none` sends no generated body. `data_max` limits each encoded attachment, not the total request or base64 expansion. An impossible limit is a delivery error. Requests have no hidden application-level delivery retry.
+Webhooks need `url` and default to `method: "POST"`, `timeout: 30` and `data_type: "binary"`. `headers` adds request headers; `token` becomes the `Authorization` value as given; an explicit `body` replaces the generated content. Generated payloads carry `confidence`, `timestamp`, `duration` and `validated`: `binary` sends form fields and files, `base64` sends JSON with encoded attachments, `none` sends no body. `data_max` limits each encoded attachment.
 
 ### Runtime and health
 
-`onnx.provider` optionally requests a specific installed execution provider. `onnx.winml` defaults to `true` for provider registration in Windows ML builds; it is ignored for other builds. `onnx.opset` defaults to `20` for model export. Provider setup and compatibility hooks are scoped to the application lifetime. Installed SDK files are never deleted or modified.
+- `onnx.provider` requests a specific installed execution provider; `onnx.winml` (`true`) registers Windows ML providers in Windows ML builds; `onnx.opset` (`20`) is used for model export.
+- `runtime` (`auto`, `native` or `docker`) tells the complete application how to start this detector. The detector accepts the setting and does not read it.
+- `health` takes an HTTP `url`, `method` (`GET`), `interval` (`60` seconds), `timeout` (`5` seconds), optional `headers` and `body`. Failed pings are warnings.
 
-Windows ML startup runs without installation dialogs. SDK discovery and downloads use a short-lived helper so PyWinRT cannot interfere with TensorRT RTX registration. Logs and dashboard status identify hardware preparation; each provider has up to two minutes to become ready, with a 150-second deadline for the complete helper. A stalled helper is stopped and its diagnostics are retained. In automatic mode, an unavailable provider is logged and skipped so other providers can still run. If none can be prepared, detection continues on the CPU with a notice. An explicitly selected provider remains a visible failure when unavailable. CI exercises the same startup path as installed applications.
+Ctrl+C or SIGTERM stops acquisition, flushes eligible events and drains accepted deliveries. Exit codes: `0` for success or a graceful stop, `1` for an application, verification or delivery failure, `2` for a configuration error, and `75` after an Apple GPU error, which a supervisor may answer with a restart. The detector does not restart itself.
 
-`runtime` (`auto`, `native` or `docker`; default `auto`) tells the AI Detector application how to start this detector: its bundled program, or the release's Docker image for `docker`. The application applies a change by restarting monitoring. The detector itself accepts the setting and does not read it.
-
-`health` accepts an HTTP `url`, `method` (`GET`), `interval` (`60` seconds), `timeout` (`5` seconds), optional `headers`, and optional raw `body`. Expected request failures are warnings. An unexpected health-worker error stops processing and reaches the caller. Health pings stop when finite inputs end.
-
-Ctrl+C or SIGTERM stops acquisition, flushes eligible events, and drains accepted delivery work. Shutdown can wait for in-flight requests and the bounded delivery queue. CLI exit codes: `0` for success/graceful shutdown, `1` for application or event-delivery/verification failure, and `2` for configuration errors. The application does not conceal failures with an endless restart loop; use a service manager if automatic process restart is desired.
-
-Processing and delivery logs identify detectors by their one-based configuration order: `[detector-2-processing]` and `[detector-2-delivery]` refer to the second entry in `detectors`. Destination names such as `webhook-1` are local to that detector. Startup, shared capture and health logs retain their own thread identities; camera URLs are not used as detector labels.
-
-The default `INFO` level includes the app, Python, OS and installed library versions, selected inference settings and HTTPS certificate location. Before hardware setup, each detector logs an explicit configuration summary: source IDs and hosts, sampling and frame retention, model identity, class thresholds, tracking, event rules, verification models, and destination policies. It also records model downloads and cache hits, conversion settings and timing, camera connections and reconnect attempts, inference timing, completed events, validation outcomes and exports. Camera IDs are the first 12 characters of the launcher's `sourceKey`, so shared captures, detector configuration and events can be matched without credentials.
-
-Python logs are written both to the console and to `logs/detector.log` under the runtime data directory. The file persists across starts and rotates at 2 MiB with five backups (about 12 MiB total for ordinary log records). This preserves diagnostics after the web dashboard's short in-memory log tail has rolled over. If a log file cannot be opened, the console reports that failure and monitoring can still start. `--help`, `--version`, `--init-config` and `--check-config` do not create log files. Native library writes directly to stdout/stderr remain in the launcher/terminal output rather than the Python log file.
-
-`--log-level WARNING` hides routine activity; `--log-level DEBUG` also records batch source IDs, retained-frame counts, timestamps, shapes and dtypes. A failed processing batch records that metadata at `ERROR` even at the default log level, followed by the traceback. Images, raw configuration, verification prompts, request bodies and headers are not included in configuration summaries. Console and file formatters remove URL credentials, paths and query strings and mask configured API keys, bot tokens and authorization header values, including in tracebacks. Human logs remain independent of the `--status-json` protocol.
-
-## Comparing CPU and GPU load
-
-For a useful Windows ML versus CUDA comparison, use the same model, camera streams, `detection.interval`, `imgsz` and open live previews. Compare steady-state detector process CPU usage and processed frames per second after model preparation. Total system CPU and allocated GPU memory alone do not measure inference efficiency.
-
-ONNX startup logs report the actual session providers, the image tensor processing device and I/O binding. Windows ML can execute the model on NVIDIA while Ultralytics prepares tensors and processes results on the CPU. ONNX worker spinning is disabled so waiting workers can sleep. A listed CPU fallback provider does not by itself prove expensive model operations run on the CPU; use ONNX Runtime profiling to check their placement. Native CUDA keeps tensor operations on the GPU, while camera decoding/resizing still involves CPU work.
+Logs go to the console and to `logs/detector.log` in the data folder, rotating at 2 MiB with five backups. Lines name detectors by their position in the configuration (`[detector-2-delivery]`) and cameras by a 12-character ID, never by address. Credentials in URLs, keys, tokens and authorization headers are masked, also in tracebacks. At startup each detector logs a summary of its settings; images, prompts and request bodies are never logged.
 
 ## Development checks
 
@@ -282,30 +226,15 @@ uv run --no-sync ruff check src/aidetector tests tools
 uv run --no-sync ruff format --check src/aidetector tests tools
 uv run --no-sync ty check src/aidetector tools
 uv run --no-sync lint-imports --no-cache
-uv run --no-sync coverage erase
-uv run --no-sync coverage run -m pytest
-uv run --no-sync coverage combine
-uv run --no-sync coverage report
+uv run --no-sync pytest
 uv run --no-sync generate-schema --check
 uv build
 ```
 
-For a quick test run without measurement, use `uv run --no-sync pytest`. From a Git checkout, compare the working tree with a revision using `uv run --no-sync python tools/quality_report.py --base HEAD`. This writes `.reports/quality.md` and `.reports/quality.json`, including untracked Python source. Use a branch or commit instead of `HEAD` to compare a larger change.
+VS Code's **Detector: check** runs the same. [QUALITY.md](QUALITY.md) covers coverage, the change report and mutation testing, and what each can and cannot tell you.
 
-On Linux/macOS, run targeted domain mutation tests with `uv run --no-sync mutmut run --max-children 4`, inspect `uv run --no-sync mutmut results`, and export JSON with `uv run --no-sync mutmut export-cicd-stats`. Windows users can run these in WSL. Mutation testing creates its working copies under ignored `mutants/`.
-
-See [QUALITY.md](QUALITY.md) for report interpretation, architectural constraints and mutation-test limits. CI enforces lint/type/import contracts, publishes complexity/dependency changes and coverage as `detector-quality`, and runs domain mutation tests in a separate Ubuntu job with a `detector-mutations` artifact. Survivors are reported for review; failed or incomplete mutation runs fail the job.
-
-Regenerate committed schemas with `uv run --no-sync generate-schema` when changing their models. Tests use temporary local media, fake external transports, and a generated ONNX graph. They exercise real OpenCV/FFmpeg/Ultralytics/ONNX behavior without downloading model weights or contacting notification/AI services. Import-safety probes install their guards inside isolated subprocesses; separate negative cases verify that the guards detect prohibited behavior.
-
-After building an executable, run `uv run --no-sync python -m tests.support.smoke_package /path/to/executable`. This checks a generated ONNX model downloaded from a local HTTPS server through Ultralytics, two-source tracking, structured verification through a local fake API, JPEG/MP4 archives, HTTPS delivery, and EOF shutdown. Repeat with `--model-format pt` to check a generated, untrained Torch checkpoint through download, loading and export. Both checks use temporary local assets and a test CA passed only to the child process; no external weights are downloaded or system certificates installed. A `--version` check alone does not load the inference or provider libraries.
-
-Native application builds, development and CI use the Python version in [`.python-version`](.python-version). The Windows CUDA payload receives that same version during staging. Use this pin when reproducing executable builds; support for newer Python versions in source installations does not establish compatibility with every frozen build. The [combined application workflow](../.github/workflows/application.yml) calls [distribution/build.py](../distribution/build.py) for packaging. Individual detector executables can still be built locally with its `detector` command. The [container workflow](../.github/workflows/containers.yml) publishes amd64/arm64 images; `detector/v*` tags no longer publish separate native downloads.
+After building an executable, `uv run --no-sync python -m tests.support.smoke_package /path/to/executable` runs it through a generated ONNX model served over local HTTPS, two-source tracking, verification against a local stand-in, real archives, delivery and shutdown at EOF. Add `--model-format pt` to check loading and exporting a Torch checkpoint. Executables are built with [distribution/build.py](../distribution/build.py); see the [distribution guide](../distribution/README.md).
 
 ## License
 
 AGPL; see [LICENSE](LICENSE).
-
-## Managed application shutdown
-
-The bundled web application starts the detector with `--control-stdin`. A line containing `stop`, or EOF when the parent closes its pipe, requests graceful shutdown on every supported OS. Accepted events drain before exit, and export/validation failures retain their nonzero exit status. Ordinary CLI runs do not monitor stdin. Configuration checking remains offline and does not start the control thread.

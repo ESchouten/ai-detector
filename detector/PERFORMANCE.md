@@ -1,58 +1,48 @@
 # Measuring inference without trading away detection quality
 
-Native NVIDIA inference uses PyTorch/CUDA FP16, Ultralytics preprocessing and fused model layers. The Windows application uses cached direct TensorRT FP16 engines on compute capability 8.0+ after preparing CUDA. Missing engines are built serially in the background while CUDA monitors. After all attempts finish, the desktop drains and restarts monitoring once to load any newly available engines. This automatic route has functional checks, but has not yet been benchmarked or qualified for detection quality on the target GPU. Live capture reads continuously; each inference batch scores only the latest retained frame from each active camera. Older frames provide event context. Increasing `detection.interval`, lowering `imgsz`, selecting a smaller model or changing `frames_min` can change event sensitivity. Keep those settings fixed when comparing implementation changes.
+Speed comparisons are only meaningful when detection settings stay fixed. Raising `detection.interval`, lowering `imgsz`, choosing a smaller model or changing `frames_min` all change which events are found. Live capture reads continuously, and each inference batch scores only the newest retained frame of each camera; older frames are event context.
 
-Background compilation shares the GPU with monitoring and can affect inference latency and builder timing measurements. Its 2 GiB workspace limit excludes weights and other allocations. Measure startup, peak memory and detection throughput both during compilation and after it finishes. Compare cached TensorRT inference after restarting monitoring. The subprocess tests cover ongoing monitoring, serial builds, failure isolation and cancellation; they do not establish GPU performance or sufficient memory on the target hardware.
+The automatic TensorRT route on Windows NVIDIA systems has functional checks but has not been benchmarked or qualified for detection quality. Background engine building shares the GPU with monitoring and affects timings, so measure both during and after it.
 
-## Read the running application's timings
+## Timings in the running application
 
-At the default INFO level, each prediction includes total wall time, time waiting for the shared MPS lock, Ultralytics preprocessing/inference/postprocessing milliseconds per image, result mapping time, and input shapes in height/width order. Mapping includes moving bounding boxes to CPU memory. Total wall time includes SDK overhead and, on MPS, final synchronization; it need not equal the stage totals. CUDA does not use the MPS lock.
+At the default `INFO` level each prediction logs total wall time, time spent waiting for the shared MPS lock, Ultralytics' preprocessing, inference and postprocessing per image, result mapping (which includes moving boxes to CPU memory) and the input shapes. Wall time includes SDK overhead and need not equal the sum of the stages.
 
-Every thirty seconds, each camera reports decoded frames/second, average read time, and average resize/publication time. Read time includes waiting for the camera or network; it is not a measurement of CPU decoding time. Neither log measures the age of an image inside the camera/RTSP buffer or browser latency. Use these measurements to locate work before replacing a backend.
+Every thirty seconds each camera logs decoded frames per second, average read time and average resize and publication time. Read time includes waiting for the camera or network; it is not CPU decoding time. Neither log measures how old an image was inside the camera's buffer, or delay in the browser.
 
-Live detectors sharing a source and effective frame width now reuse the same resized pixels. Sampling is checked first, and variants are discarded with their decoded frame rather than accumulated in a global cache. Tests compare pixels exactly with the previous resize operation and exercise independent sampling, retention, disconnection and application-level delivery.
+Detectors that share a source and a frame width share one resize per decoded frame, with identical pixels.
 
-A local microbenchmark on Apple M2 Max, OpenCV with 12 threads, resizing a synthetic 2560×1440 frame to width 1280 measured these median times. There were 10 warm-up rounds and 200 measured rounds, alternating comparison order and releasing outputs between rounds:
+To compare Windows ML with CUDA, use the same model, cameras, `detection.interval`, `imgsz` and open previews, and compare the detector process's steady-state CPU use and processed frames per second after preparation. The ONNX startup log lists the session's providers, the device that prepares image tensors and whether I/O binding is active. A CPU provider in that list does not prove the model runs on the CPU, and a GPU provider does not prove every operation runs on the GPU; use ONNX Runtime profiling for that.
 
-| Detectors sharing the width | Separate resizes | Shared resize |
-| --- | --- | --- |
-| 1 | 0.163 ms | 0.164 ms |
-| 2 | 0.327 ms | 0.165 ms |
-| 4 | 0.649 ms | 0.166 ms |
+## Compare CUDA, shape grouping and TensorRT offline
 
-These are resize timings, not full-application FPS or NVIDIA measurements. The durable result is one resize per width instead of one per detector, with unchanged pixels.
+`tools/benchmark_inference.py` uses the production YOLO adapter and its predictor setup. It opens no cameras, changes no settings and sends nothing. Models and images must be local files. Run it on the target GPU with the same pinned dependencies as the application's NVIDIA runtime.
 
-## Compare native CUDA, shape grouping and direct TensorRT
-
-Use a development environment on the target GPU, with the same pinned dependencies as the application's NVIDIA runtime. The tool uses the production YOLO adapter and its predictor initialization. It does not start monitoring, edit settings, open cameras or send notifications. Models and benchmark images must be local files. Package auto-installation is disabled. Optional validation uses the normal Ultralytics dataset loader; supply an existing, trusted, fully downloaded YOLO dataset.
-
-From `detector/`, run a baseline using saved camera images. Keep their order representative of simultaneously active cameras. The optional preset supplies model settings, class thresholds and capture width; `--models` selects the local weight files instead of downloading the preset's model URL:
+From `detector/`, with saved camera images in an order that represents cameras active together. The preset supplies model settings, class thresholds and capture width; `--models` selects local weights instead of the preset's download URL:
 
 ```sh
 python -m tools.benchmark_inference --models /models/detector.pt --images /samples/camera-1.jpg /samples/camera-2.jpg /samples/camera-3.jpg --preset ../config/detector/cow-catcher.json --device 0 --batch 3 --output .reports/cuda-baseline
 ```
 
-Each model runs the current arrival-order batches and experimental batches grouped by identical image dimensions. Grouping only splits the already-available batch; it never waits for another camera. Ultralytics can use rectangular padding for matching shapes, but extra model calls can erase that saving. Grouping also changes padding and can change predictions. It remains an offline experiment. Tracking is deliberately excluded because it requires a sequential video replay with stable camera slots.
+Each model runs the current arrival-order batches and an experimental variant that groups images of identical dimensions. Grouping changes padding and can change predictions, and its extra model calls can cancel the saving; it is an offline experiment and is not used in monitoring. Tracking is excluded because it needs a sequential replay.
 
-For a direct TensorRT comparison, install a compatible TensorRT runtime in the isolated benchmark environment, following [Ultralytics' integration guide](https://docs.ultralytics.com/integrations/tensorrt). Export a **copy** of the checkpoint on the target GPU with the SDK, using the same `imgsz` as the preset and a batch limit covering the test:
+For TensorRT, install a compatible runtime in the benchmark environment following [Ultralytics' guide](https://docs.ultralytics.com/integrations/tensorrt), then export a copy of the checkpoint on the target GPU with the preset's `imgsz` and a batch limit that covers the test:
 
 ```sh
 yolo export model=/benchmark-models/detector.pt format=engine device=0 quantize=16 dynamic=True batch=3 imgsz=640 simplify=True opset=20 workspace=2
 python -m tools.benchmark_inference --models /benchmark-models/detector.pt /benchmark-models/detector.engine --images /samples/camera-1.jpg /samples/camera-2.jpg /samples/camera-3.jpg --preset ../config/detector/cow-catcher.json --device 0 --batch 3 --data /validation/data.yaml --output .reports/cuda-tensorrt
 ```
 
-The export command is the library's existing workflow, not another application installer or downloader. It may require additional export dependencies. This route loads `.engine` directly through Ultralytics; it does not use Windows ML. TensorRT engines depend on the GPU and runtime used to build them, so do not copy them into the portable model cache or distribute one engine to arbitrary PCs. Export/build time is separate from steady-state inference. See also [NVIDIA's performance guidance](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/best-practices.html).
+An engine belongs to the GPU and runtime that built it; do not copy it to another machine. The application's own cached engines are in `models/prepared/tensorrt/` and can be benchmarked the same way. Run the comparison again with the models in reverse order to rule out thermal and ordering effects.
 
-`report.json` contains model/image hashes, versions, requested settings, actual backend/device/precision, initialization and first-pass times, warmed-up p50/p95 pass times, throughput, process CPU consumption, SDK stage timings and the final mapped boxes for every image. A pass processes the entire supplied image set; its duration is not per-camera latency. `cpu_percent_one_core=100` means one occupied CPU core and may exceed 100 on a multicore machine. Image loading/resizing is reported separately and excluded from inference throughput. Run the comparison again with reversed model order to check for thermal/order effects. Reports are developer artifacts, not a live camera benchmark or a measure of concurrent detectors, video decoding, notifications or browser rendering.
+`report.json` holds model and image hashes, versions, the actual backend, device and precision, initialization and first-pass times, warmed-up p50 and p95 pass times, throughput, process CPU use, SDK stage timings and the mapped boxes of every image. A pass is the whole image set, not per-camera latency. `cpu_percent_one_core=100` is one busy core. Image loading is reported separately.
 
-With `--data`, [Ultralytics validation](https://docs.ultralytics.com/modes/val) reports precision, recall and mAP, including per-class results. It uses the same square validation size for both backends and the SDK's validation thresholds, not the application's event thresholds or capture-width preprocessing. This checks model conversion; it does not validate the experimental live batch policy. Without labeled data, the report contains predictions and timings only and cannot establish quality preservation.
+With `--data`, [Ultralytics validation](https://docs.ultralytics.com/modes/val) adds precision, recall and mAP per class on a labeled dataset you supply. That checks the model conversion with the SDK's validation thresholds, not the application's event thresholds. Without labeled data the report cannot say whether quality was preserved.
 
-Before rolling out the TensorRT optimization beyond testing:
+## Before relying on TensorRT
 
-1. Compare the same model and settings on representative daytime, nighttime, crowded and partially occluded footage; include difficult positives and empty/negative scenes.
-2. Check recall per relevant class, inspect differences in saved boxes/confidence near configured thresholds, and replay labeled events at the original sampling rate. Detection mAP alone does not prove mounting/calving alert sensitivity.
-3. Require a useful speed/CPU improvement on the target machine and an explicitly accepted quality result. TensorRT preparation success alone is not that evidence. Shape grouping remains an offline experiment and is not enabled in monitoring.
+1. Compare the same model and settings on representative footage: day, night, crowded, partly hidden, difficult positives and empty scenes.
+2. Check recall per relevant class, look at boxes and confidences near the configured thresholds, and replay labeled events at the original sampling rate. Detection mAP alone does not show that mounting or calving alerts are still raised.
+3. Require a real improvement in speed or CPU use on the target machine and an explicitly accepted quality result. A successful engine build is neither.
 
-The automatic route logs `Inference backend ready: engine` when it loads TensorRT, and records preparation/fallback reasons. Use the cached engine and original checkpoint with the benchmark above. Cached engines are specific to model settings, GPU, driver and runtime versions; do not copy them between arbitrary machines. Preparation tests run blank square/rectangular images at batch one and the configured camera limit. They detect broken exports and execution failures; they cannot measure recall or alert quality.
-
-Local verification covers exact resize parity, a real ONNX benchmark through the adapter and SDK validation on a tiny synthetic dataset, plus engine cache/publication, process failure, timeout and cancellation contracts. It proves the measurement and supervision workflows execute; it does not establish farm-model accuracy. CUDA/TensorRT performance and representative event-level quality have not been measured on this development machine.
+The automated tests show that the benchmark and the engine preparation run, with a synthetic dataset and blank images. They say nothing about a farm model's accuracy or a GPU's speed.

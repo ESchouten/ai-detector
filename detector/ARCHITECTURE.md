@@ -1,16 +1,8 @@
 # Detector architecture
 
-## Scope and purpose
+The detector watches video sources, groups object observations into events, optionally verifies an event with a vision language model, and archives or delivers the result.
 
-The current rebuild covers the Python application only. It watches video sources, groups object observations into events, optionally verifies an event with a vision language model, and archives or delivers the result. Python, Ultralytics, LiteLLM, OpenCV, Pydantic, and the existing distribution targets remain appropriate tools.
-
-The architecture isolates event decisions from I/O. Its dependency direction follows Robert Martin's [Clean Architecture dependency rule](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). Protocols correspond to current I/O boundaries; ordinary functions and dataclasses implement the event rules.
-
-This is a small hexagonal architecture: application use cases define the operations and the ports they need; adapters provide the concrete I/O. `DetectionPipeline.process` and `EventDelivery.deliver` are use-case entrypoints called by the runtime. Outgoing ports live in `application/ports.py`, close to their consumers. Dependency inversion comes from those contracts and explicit construction, rather than an injection framework or an interface for every class.
-
-Domain decisions perform no I/O and receive time from their caller. `EventAssembler` and `Cooldown` own deterministic state transitions, so the domain is not entirely stateless. Borrowed image arrays are data, not an invitation to run inference or rendering in this layer. Keeping these responsibilities visible matters more than adding packages named after every architectural term.
-
-Image fields use `NDArray[np.uint8]` annotations under `TYPE_CHECKING`. This is a deliberate static dependency on the image representation, allowed only from `domain.models` by the core dependency check. The domain loads no NumPy and never operates on pixels. Retaining useful type information is preferable here to untyped payloads or a generic image abstraction.
+It is a small hexagonal application. Event decisions are isolated from I/O, and dependencies point inward, following the [Clean Architecture dependency rule](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). Application use cases (`DetectionPipeline.process`, `EventDelivery.deliver`) define the ports they need in `application/ports.py`; adapters implement them; bootstrap constructs everything explicitly. There is no injection framework and no interface per class: a protocol exists where there is a real I/O boundary, and event rules are ordinary functions and dataclasses.
 
 ## Dependency direction
 
@@ -24,248 +16,126 @@ cli -> bootstrap -> runtime + concrete adapters
                     adapters -------+
 ```
 
-- `domain`: frozen observation/event records, confidence rules, event windows, cooldown decisions, and validation outcomes. An observation carries its timestamp, image reference, bounding boxes, and class scores. Arrays and score mappings are treated as read-only; freezing a record does not deep-copy them. Importing this package must not load NumPy, Torch, OpenCV, or an inference runtime.
-- `application`: coordinates inference, event aggregation, validation, and exports through narrow protocols. `DetectionPipeline` owns its assembler; `EventDelivery` applies verification and delivery rules in order.
-- `adapters`: video input, YOLO, VLM requests, image/video encoding, event files, HTTP/Telegram, health pings, and platform inference setup.
-- `configuration`: Pydantic input models, normalization, file loading, and schema production. These are boundary concerns. Models do not inspect hardware or load a local file at import time.
-- `runtime`: owns execution and supervision of detectors and the optional health monitor; one aggregation owner per detector and one ordered delivery worker per detector.
-- `bootstrap`: translates validated configuration into domain policies and constructs integrations. No container or automatic registration.
-- `cli`: argument parsing, logging, config errors, signal handling, and exit status. Importing it is safe.
+| Package | Owns |
+| --- | --- |
+| `domain` | Frozen observation and event records, confidence rules, event windows, cooldown, verification outcomes. No I/O; time comes from the caller. |
+| `application` | The order of inference, event assembly, verification and export, through narrow protocols. |
+| `adapters` | Video input, YOLO, VLM requests, image and video encoding, event files, HTTP and Telegram, health pings, platform inference setup. |
+| `configuration` | Pydantic input models, normalization, file loading and schema production. Models do not inspect hardware or read files at import. |
+| `runtime` | Execution and supervision: one aggregation owner and one ordered delivery worker per detector, plus the optional health monitor. |
+| `bootstrap` | Turning validated configuration into policies and concrete integrations, and their cleanup scopes. |
+| `cli` | Arguments, logging scope, configuration errors, signals and exit status. Importing it is safe. |
 
-At frozen-executable startup, the CLI selects the bundled certifi roots for Python's default TLS context, unless `SSL_CERT_FILE` is explicitly configured. HTTPS model downloads therefore do not depend on the build machine's OpenSSL certificate path. Ultralytics still owns transfers and completeness checks; the model-assets adapter reports safe HTTP, certificate, DNS and timeout diagnostics without printing credential-bearing transport exceptions.
+`EventAssembler` and `Cooldown` hold deterministic state, so the domain is not stateless; it still performs no I/O. Image fields are annotated `NDArray[np.uint8]` under `TYPE_CHECKING`: the domain keeps useful types without loading NumPy or touching pixels. That annotation in `domain.models` is the only third-party dependency the core is allowed.
 
-The diagnostics adapter owns console/file formatting, credential redaction, bounded file rotation and explicit configuration summaries. The CLI opens that logging scope only for a normal run and restores its handlers and logging level on exit. Bootstrap logs detector settings before provider initialization; no raw configuration dump is used. Camera identities use the launcher's existing SHA-256 source keys, abbreviated to 12 characters in logs. The runtime describes failed input batches by identity, shape, dtype and timestamp without writing pixels. Domain rules and frame-processing behavior do not depend on logging.
-
-Within `adapters`, folders group integrations by responsibility:
+Adapters are grouped by responsibility:
 
 ```text
 adapters/
-├── exporters/             # Detection-event destinations
-│   ├── disk.py
-│   ├── archive_metadata.py
-│   ├── telegram.py
-│   └── webhook.py
-├── sources/               # Frame acquisition
-│   ├── files.py
-│   └── streams.py
-├── inference/             # Model assets, ONNX providers and YOLO
-├── media/                 # Images, video and event attachments
-├── health.py              # Periodic monitoring, supervised by runtime
-├── diagnostics.py         # Safe startup context and rotating Python logs
-├── http.py                # Transport shared by exporters and health
-├── vlm.py                 # Event verification
-└── vlm_check.py           # Synthetic connection check through the same adapter
+├── exporters/     disk, archive_metadata, telegram, webhook
+├── sources/       files, streams
+├── inference/     model assets, ONNX providers, YOLO, prepared models and engines
+├── media/         images, video, event attachments
+├── health.py      periodic pings, supervised by runtime
+├── diagnostics.py log formatting, redaction, rotation, configuration summaries
+├── http.py        transport shared by exporters and health
+├── live_preview.py, operational_status.py   desktop integration
+└── vlm.py, vlm_check.py                     event verification and its connection check
 ```
 
-Exporters, sources and inference do not import one another, directly or indirectly. Bootstrap connects them through application ports. Media operations and HTTP transport are shared where needed; health monitoring has a separate lifecycle from event delivery. Archive metadata belongs beside the disk exporter because it defines the web application's public archive format.
+Exporters, sources and inference never import one another, directly or indirectly; bootstrap connects them through application ports. Media and HTTP are shared. Archive metadata sits beside the disk exporter because it defines the public archive format. Package initializers do not re-export their children: import the module that owns an operation.
 
-This diagram shows the internal imports shared by adapter groups; it omits their inward dependencies on application/domain types and configuration:
+[`.importlinter`](.importlinter) declares the layers, the forbidden imports, adapter-group independence and acyclic siblings, including imports inside functions and type-checking-only imports. Two test files add what the contracts cannot see. `tests/test_architecture.py` checks that every source file is in the import graph; a folder without `__init__.py` would otherwise escape the rules. `tests/test_import_safety.py` imports the core in a child process and fails if that reads configuration, writes files, opens sockets, starts threads or processes, or loads an inference library. These checks establish structure, not that every responsibility is well placed; see [QUALITY.md](QUALITY.md).
 
-```mermaid
-flowchart LR
-    Sources["sources/"] --> Media["media/"]
-    Exporters["exporters/"] --> Media
-    Exporters --> HTTP["http.py"]
-    Health["health.py"] --> HTTP
-    VLM["vlm.py"] --> Media
-    Inference["inference/"]
-```
+## Vocabulary
 
-Package initializers do not import their children or expose alternate import paths; callers import the module that owns an operation. `media.MediaError` is the shared encoding failure contract.
+The detector has one model: turn footage from a source into a completed event, obtain its verification outcome, and apply cooldown and export policies. Domain, application and adapters are layers of that one model, not separate bounded contexts. There is no repository, aggregate base class or event bus, because nothing here needs one.
 
-An architecture test compares every source module on disk with the import graph. A missing `__init__.py` cannot silently exclude a new directory from the dependency checks. A copied-source regression verifies that restoring the initializer exposes a previously hidden forbidden import.
-
-Provider setup receives `OnnxConfig` and immutable `ModelRequirements(path, image_size, batch_size)` inputs projected by bootstrap. ONNX code does not traverse application-wide detector, event or exporter configuration. Provider-specific TensorRT profiles remain inside the adapter. ONNX session construction also disables worker spinning, allowing idle CPU workers to sleep while capture, other detectors or GPU inference are active. It preserves caller session settings unrelated to spinning and uses the same policy for registered Windows ML devices and built-in providers. The YOLO adapter logs the loaded session's providers separately from its image tensor device and I/O-binding mode.
-
-The inference setup boundary also selects native MPS for `.pt` checkpoints when running on macOS with an available Torch MPS device and no explicit ONNX provider. It skips ONNX setup when every model takes this route; mixed checkpoint/ONNX configurations retain provider setup for the exported models. The YOLO adapter applies `device="mps"` and `quantize=16` only to native checkpoints. Unavailable MPS retains ONNX preparation; model errors do not cause a fallback. CUDA/TensorRT distributions and existing exported-model routes are unchanged.
-
-The desktop web process manager prepares a separate CUDA Python environment for supported NVIDIA hardware on Windows 10 and Windows 11 when no explicit ONNX provider is configured. Distribution staging copies this same source with `TYPE = 'cuda'`; dependencies come from the canonical `nvidia` extra and lockfile, downloaded by a pinned uv executable. Preparation, cache identity and cancellation belong to `web/src/lib/server/nvidia-runtime.ts`, not the detector's domain or inference adapters. The managed environment runs the existing CLI and stdin/status protocols. See [distribution details](../distribution/README.md) for selection, compatibility and validation.
-
-On compute capability 8.0+, the desktop manager installs the optional pinned `tensorrt` dependency group after CUDA passes its kernel check. It adds the internal `--prefer-tensorrt` flag only after TensorRT loads successfully. Dependency installation still precedes the detector process. Python owns model preparation: `prepared_engines.py` keys each engine by checkpoint, settings and hardware/runtime compatibility. `EnginePreparation` returns cached engines immediately and queues missing engines while detectors load their CUDA checkpoints. Bootstrap starts its single background worker after opening models and sources. Builds run serially. After all queued attempts finish, at least one newly available engine produces one `models_ready` status record. The desktop owner uses its existing serialized stop/start flow to drain accepted events and relaunch once with the cached engines. Failed-only, cached-only and cancelled preparation do not request a restart. Pause/quit cancels a queued or in-progress relaunch; duplicate records from a replaced child are ignored. Standalone runs without a controlling desktop use the engines on their next start. Predictors are never replaced in a running process. Background progress goes to logs without changing detector readiness.
-
-`tensorrt_worker.py` uses Ultralytics export and inference in a short-lived process. The helper receives a local checkpoint path and export arguments, not application configuration or credentials. A parent-owned stdin pipe terminates it if the parent disappears. Its watcher uses non-blocking reads with a short wait while the pipe is empty: a blocking stdin read can deadlock native NumPy imports on Windows. Explicit cancellation and the thirty-minute build deadline kill and reap it; bootstrap joins the worker before releasing model resources. The SDK's builder workspace is limited to 2 GiB because it shares the GPU with monitoring; weights and other allocations are additional, and concurrent compilation can affect inference speed. Phase diagnostics stream to the ordinary log and remain in the engine cache's `build.log`; failures retain their cause and report that path.
-
-The downloaded runtime invokes this standard-library-only helper directly instead of importing the CLI first. The parent records a launch marker before spawning; the helper enables Python fault reporting and a 60-second repeating thread-stack dump before importing inference libraries. Stack samples remain available during blocked imports or native calls and stream through the same log path. The timer is cancelled when the helper returns; snapshots do not interrupt preparation or classify a slow build as failed.
-
-The cache uses FileLock for exclusive publication and atomic file replacement after SDK GPU checks. A preparation marker defers failed or interrupted optimizations for 24 hours across automatic restarts. Explicit cancellation clears that marker. A rejected cached engine is likewise deferred. These are next-start decisions; the background worker only drains the current startup's queued models and does not schedule retries. Preparation failures preserve the original CUDA checkpoint path, while invalid source models/configuration and inference worker failures remain visible to normal supervision. Only this automatic optimization may fall back; an explicitly supplied engine remains the user's selected model.
-
-Native MPS batches share one process-wide lock in the YOLO adapter. A detector holds it through prediction/tracking, result transfer and `torch.mps.synchronize()` before another detector enters the shared GPU backend. This avoids concurrent command submission affected by [PyTorch's MPS threading races](https://github.com/pytorch/pytorch/issues/197805). Capture and delivery remain independent; CPU, ONNX and CUDA inference are not serialized by this lock. Hardware failures still propagate to supervision rather than being ignored or retried with potentially corrupted GPU state.
-
-The declarative [.importlinter](.importlinter) contracts enforce exhaustive layers, forbidden dependencies, adapter-group independence and sibling acyclicity. Grimp supplies the import graph, including function-local imports; additional tests retain the domain/application dependency allowlists and check cycles involving package initializers. These structural checks include type-checking-only imports, so annotations cannot bypass dependency direction. The sole external core type allowance is NumPy in `domain.models`; the isolated runtime import probe still requires the domain to load without any third-party package. These rules establish structural conformance, not the suitability of every responsibility boundary.
-
-Child-process probes verify selected domain, application, runtime and CLI imports without creating application files, reading configuration, using sockets, spawning processes or starting threads. They also detect logging changes and unintended inference imports. The child installs its own guards and retains evidence when a module swallows a guard exception. Interpreter code and package metadata reads remain allowed. This is a regression check for observed Python operations, not a sandbox for arbitrary native code. Negative probes exercise the prohibited operations; see [QUALITY.md](QUALITY.md) for scope and interpretation.
-
-Model paths and the application cache belong to `adapters/inference/model_assets.py`. Stock model names retain Ultralytics' automatic asset download; explicit model URLs use its `safe_download` utility. The SDK import is deferred until a URL actually needs downloading, keeping module imports and offline path resolution free of inference setup. `adapters/media/images.py` contains image operations, while `adapters/media/video.py` owns raw-video staging, encoding attempts, FFmpeg execution, and temporary-file cleanup. ONNX provider selection is a deterministic operation; SDK registration and session construction remain in the lifetime-managed adapter.
-
-`adapters/inference/prepared_models.py` owns reusable native `.pt` to ONNX conversion. Its key includes checkpoint contents, task, batch/image dimensions, precision, opset and conversion-library versions. It exports a temporary checkpoint copy through Ultralytics, checks the graph with ONNX and publishes the complete graph directory atomically. Cache hits open ONNX directly without loading Torch weights or re-exporting. The original checkpoint and its directory are not modified. TensorRT engines have their own hardware-specific cache under `models/prepared/tensorrt/`. Failed exports leave no published model.
-
-## Domain boundary and language
-
-The Python detector has one event-processing model: turn footage from a source into a completed event, obtain its verification outcome, and apply cooldown and export policies. Treat this as one bounded context. The domain, application and adapter packages are layers within that context. Capture, inference and delivery are integrations with different technical responsibilities; they do not each need another domain model or service.
-
-This vocabulary describes the implemented behavior and is used in code and tests. It is a working model to refine with farmers as their use cases develop; it has not been validated as their preferred terminology.
-
-| Term | Meaning in this detector |
+| Term | Meaning |
 | --- | --- |
-| Source | The configured identity of a camera, stream or file. Event windows and cooldown entries stay separate by source. |
+| Source | The configured identity of a camera, stream or file. Event windows and cooldowns are kept per source. |
 | `Frame` | An acquired image and its source timestamp, before inference. |
 | `Observation` | A frame with matching class scores and optional display boxes. It may be an unscored context frame. |
-| Qualifying observation | An observation with a nonempty confidence map after the detector's class thresholds have been applied. Only these count toward `EventPolicy.min_frames` (`frames_min` in configuration). |
-| `BoundingBox` | Image coordinates with an optional label and score. `Observation.enclosing_box` encloses its boxes. A cropped image is a separate media result produced by an adapter. |
-| Event window | The assembler's mutable, per-source collection of observations and match timing while an event is active. |
-| `DetectionEvent` | A completed, nonempty sequence of observations from one source, ordered by source time. Its best observation has the highest matching class score; ties keep the first. |
-| `ValidationResult` | The explicit approved, rejected, unvalidated or failed verification outcome. |
-| `EventResult` | A completed event paired with its verification outcome. Delivery successes and failures belong to the application's `DeliveryReport`. |
-| Cooldown | The interval since an accepted event's best observation, tracked per source and class within one detector. |
+| Qualifying observation | An observation with a nonempty confidence map after class thresholds. Only these count toward `frames_min`. |
+| `BoundingBox` | Image coordinates with an optional label, score and tracker ID. A cropped image is a media result, produced by an adapter. |
+| Event window | The assembler's mutable, per-source collection while an event is active. |
+| `DetectionEvent` | A completed, nonempty sequence of observations from one source in source-time order. Its best observation has the highest score; ties keep the first. |
+| `ValidationResult` | Approved, rejected, unvalidated (no verifier) or failed (verifiers could not answer). |
+| `EventResult` | An event, its verification outcome and its ID. Delivery outcomes belong to the application's `DeliveryReport`. |
+| Cooldown | The interval since an accepted event's best observation, per source and class within one detector. |
 
-Context observations may carry display boxes propagated from a scored frame. Boxes alone do not make a frame qualify. Without object detection, `DetectionPipeline` directly emits one unscored event containing the latest frame of each source batch. No separate passthrough detector or nullable event policy is needed.
+Producers establish invariants once and consumers rely on them: sources and inference supply nonempty, ordered batches; images are `uint8` H×W×3 in BGR order; frozen records borrow arrays and score maps as read-only values. Consumers do not re-validate or copy.
 
-`DetectionPipeline` creates an `EventAssembler` from an immutable `EventPolicy`. The assembler owns changes to active windows and emits completed records; it always has a real policy. `Cooldown` owns whether a verification outcome consumes the interval, and `ExportPolicy` owns eligibility for an individual destination. The application invokes these rules in order; adapters translate SDK responses and perform I/O. These responsibilities fit ordinary records and policy objects. There is no current need for a repository, aggregate base class or domain-event bus.
+The archive is a public projection for the web application. `EventMetadata` keeps its field names (`detections` is the number of observations including context; `crop` is the best observation's enclosing box) so that internal names can improve without migrating archives.
 
-Source and inference adapters supply nonempty, ordered per-source batches. The assembler establishes completed-event invariants. Domain consumers rely on those producer contracts rather than repeatedly validating or copying internal data. Frozen records borrow image arrays and confidence mappings as read-only values; adapters must preserve that ownership contract.
+## Event rules
 
-Images are `uint8` H×W×3 arrays in BGR channel order. `Frame` and `Observation` document this representation, and `DetectionEvent` documents its nonempty, chronological observations. These are producer obligations, not additional validation at every consumer.
+- An event begins with a qualifying observation and may include context that preceded it in the same batch. Boxes alone do not make a frame qualify.
+- It closes at its maximum duration, after its inactivity timeout, at EOF, or when shutdown drains the detector. Trailing frames are kept only within the configured trailing time after the last qualifying observation.
+- Buffered observations are consumed in timestamp order. Eligible trailing frames before a boundary stay with the closing event; the observation at the boundary starts the next window.
+- State never crosses sources. Finite files use media time, so grouping does not depend on machine speed, and each file's EOF closes its own event. Live sources use capture time. `SourceBatch.advance_to` lets an idle live source expire its window; finite sources omit it.
+- Without a YOLO model the pipeline emits one unscored event per source batch, holding its latest frame.
+- Cooldown is checked before verification, on the delivery worker, so two events cannot both pass. At least one class of the best observation must be outside its cooldown. Approved and deliberately unvalidated results consume it for every class of that observation; rejection and failed verification do not.
+- Consuming cooldown, a destination's eligibility and a successful delivery are three separate decisions. A failed exporter does not undo acceptance, which keeps the alert cadence when a destination is down.
 
-The archive is a public projection consumed by the web app. `EventMetadata.from_result` deliberately retains the legacy `detections` field as the number of observations, including context, and `crop` as the best observation's enclosing box. Archive timestamps, directory stages and transport field names remain adapter concerns. Internal terminology can improve without requiring existing archives or web readers to migrate.
+## Verification and delivery
 
-## Event semantics
+The four verification outcomes stay distinct everywhere. A configured verifier that fails must never turn into an ordinary unvalidated notification; disk may archive such an event under `unvalidated` with the error recorded. The disk adapter, not the domain, maps outcomes onto the public `approved`, `rejected` and `unvalidated` folders.
 
-Each observation has its source timestamp, image, boxes, and matching class scores. A batch may include context frames without scores. Inference scores only the latest frame in an ordinary source batch; tracking keeps stable source slots when a camera is temporarily absent.
+A verifier entry runs only when its `key` is not null; a non-null key requires a model. Python reads everything from `config.json` and never resolves the web application's shared connections: the web copies a connection into the detector's `vlm` settings when it saves. An explicitly empty key means an unauthenticated service and prevents environment-key lookup.
 
-An event begins with a qualifying observation and can include preceding context from that batch. `frames_min` counts observations with scores, not context frames. This preserves the implemented meaning rather than the old README's inaccurate claim that they must be consecutive.
+Fallback is finite and specific. Provider errors and invalid answers move to the next model; a media encoding failure skips that verifier entry so another strategy can run; exhausting all entries is failed verification. A valid negative answer is final. An unexpected `IndexError` or `ValueError` from the SDK reaches supervision rather than being reported as an unavailable verifier. The answer model has one Boolean field, `detected`, and is both the schema sent to the provider and the validator of its reply.
 
-An event closes when its maximum duration is reached, its inactivity timeout expires, the source reaches EOF, or shutdown drains the detector. Finite sources explicitly report completion. An eligible event is completed and queued for delivery before reading the next file; the separate delivery worker may finish exporting it later. Trailing frames are included only within the configured trailing duration after the last qualifying observation. Timestamp boundaries use an explicit, documented comparison and can be tested without sleeping.
+`EventDelivery` applies each destination's `ExportPolicy` before calling its exporter, so calling an adapter directly would bypass confidence and rejection filtering. Destinations are attempted independently. Expected failures are recorded; an unexpected one stops the worker after the others have been attempted.
 
-Buffered observations are consumed in timestamp order. Eligible trailing frames before a boundary stay with the closing event, and the observation at the boundary is processed after that event closes. A batch can refresh the inactivity deadline or span multiple event windows.
+Media is encoded once per requested variant and shared between destinations; the cache weakly references its event and is dropped with it. Video is written incrementally to temporary input rather than held as a second clip in memory. Disk events get unique directories and become visible only when media and metadata are complete. Raw pixels are never modified by overlays.
 
-Source state never crosses source identities. Finite video timestamps follow video position, so grouping is independent of machine/inference speed. Live source timestamps follow capture time. Files and live streams belong in separate detector definitions when their scheduling requirements differ.
+## Configuration boundary
 
-`SourceBatch.advance_to` optionally advances the event clock after the batch's frames are processed. Live subscriptions supply their newest retained frame time, or wall time for an empty heartbeat, so idle events can expire. Finite files omit it and advance through media timestamps. The field is not the acquisition timestamp of every image or a guarantee about future frame ordering.
+`config.json` accepts a single value or a list for sources, verifiers and exporters, and the boundary normalizes them once. Reading or checking configuration never rewrites the file. Defaults are deterministic and do not depend on hardware.
 
-Cooldowns are per source and class. The ordered delivery worker evaluates cooldown before validation and passes every `EventResult` to `Cooldown.record`. The domain records approval or intentionally unvalidated processing; rejection and validation failure leave the previous acceptance time unchanged. At least one class on the best observation must be outside its cooldown for an event to proceed; acceptance then records every class on that observation. Unscored events have no class cooldown. Checking and recording in the same worker prevents concurrent events from both bypassing it.
-
-Cooldown consumption, destination eligibility and successful delivery are separate decisions. An exporter failure or a destination's confidence filter does not undo acceptance. This preserves the configured alert cadence even when an external destination is unavailable.
-
-## Validation and delivery
-
-Validation has four explicit outcomes: approved, rejected, not configured, and failed. The disk adapter owns the projection onto the public `approved`, `rejected`, and `unvalidated` directories; the domain does not choose archive paths. Failed validation can be archived as `unvalidated` with an explicit error field. A configured verifier failing must not produce an ordinary unvalidated external notification.
-
-Shared AI connections belong to the web application's `app.json`. The web configuration store copies a selected connection's model, endpoint, key and headers into the detector's existing `vlm` configuration at save time. Its question and media settings stay with the detector. Python receives one self-contained `config.json`; it never loads web metadata or resolves connection references. Presets retain a question and media strategy with `key: null`, without choosing a provider model. A missing or null key disables that verifier; a non-null key requires a model. There are no separate enable flags. Selecting Off in the web app clears the keys throughout the verification list while retaining questions and models. Bootstrap creates verifiers only from active entries, preserving the distinction between optional and failed verification.
-
-Saving a shared connection also assigns it to saved, unassigned detectors with a VLM question, no key and no model. This happens in the same configuration transaction; explicitly paused detectors and configured models are not reassigned. Bundled Cow Catcher and Calving Catcher questions use video. No connection lookup or automatic enabling runs inside Python. The web store converts the former preview enable flags when loading saved files and writes the canonical configuration before automatic monitoring starts. Disabled entries lose their keys, active keys remain unchanged, and new editor input uses only the strict current schema.
-
-The VLM adapter reports explicit, safe failure codes on `VlmUnavailable`; the connection check selects guidance from these codes instead of parsing exception prose. The CLI's `--test-vlm FILE` action builds synthetic media and invokes the same VLM adapter without loading an inference model, opening cameras or starting monitoring. It tries each model once, sharing a 20-second request timeout budget, and exposes safe error classifications; provider diagnostics cannot echo credentials into the browser. Explicit extra headers pass through LiteLLM. An explicitly empty key uses a non-secret placeholder required by its OpenAI client and prevents environment-key lookup; an omitted or null key never enables verification through environment variables.
-
-Provider fallback is finite and applies to documented provider errors or invalid provider output. Media preparation belongs to each verifier configuration: an encoding failure skips that configuration and allows the next strategy to run. Exhausting all configurations remains failed validation. A successful negative answer is a rejection, not a reason to ask the next model. Provider requests have a timeout. No real provider is contacted by the automated test suite.
-
-The response parser translates empty choices, missing answer text, and invalid structured content into `InvalidAnswer`. Only provider errors and that explicit parsing failure participate in model fallback. An unexpected `IndexError` or `ValueError` from the SDK is allowed to reach supervision; a programming defect must not be misreported as unavailable verification.
-
-The requested provider response contains exactly one required Boolean field, `detected`. The Pydantic answer model is passed directly to LiteLLM, which constructs the provider's structured-response schema. The same model validates the returned JSON. Boolean strings, numbers, missing fields and additional properties are invalid answers. Real model accuracy under the smaller response schema must be evaluated with the selected provider and labeled footage; local contract tests establish parsing and fallback behavior.
-
-`EventDelivery` evaluates each destination's `ExportPolicy` before calling its exporter. Confidence/rejection filtering belongs to that policy; calling an adapter directly bypasses those decisions. One destination failing does not prevent independent destinations from being attempted. Delivery failures are recorded in the worker result/log and are not reported as successful delivery. Telegram composes the same rendered media as webhook delivery without inheriting an unrelated transport's behavior.
-
-Media is encoded once per requested variant. Separate image/video caches use named, immutable keys. Image keys include crop padding and crop annotation only for cropped images, so those options do not trigger re-encoding of original or annotated images. Internal variants are `original`, `annotated` and `crop`; attachments retain the public `image`, `photo` and `crop` names. Compatible video variants are reused when a destination's size cap permits. Both caches are cleared when their event is released or delivery moves to another event. Video encoding handles equal timestamps, subprocess failures, and output limits explicitly. It writes processed frames incrementally to temporary input rather than keeping another full clip of plotted arrays in memory. Disk events have unique directories and become visible to readers only after their metadata and media are complete.
-
-Cropping prefers the requested aspect ratio while preserving the detected region. If the source image cannot contain both that region and the preferred ratio, its bounds take precedence. Ultralytics' OpenCV `Annotator` draws boxes and labels on a copy; the adapter supplies clipped coordinates and label text. Raw input pixels are never modified by overlays.
-
-Missing FFmpeg and OpenCV JPEG codec failures are media failures at their encoding boundaries; verification and delivery translate it into their existing failure outcomes. Telegram caps photos at 10 MB and videos at 12 MB. Webhooks apply their configured attachment limit to both media types.
-
-## Configuration and ownership
-
-`config.json` remains the public entrypoint and accepts existing scalar-or-list source, verifier, and exporter fields. The boundary normalizes these representations once. Reading or validating config never rewrites the user's file. Bootstrap owns the resolved data directory; adapters do not depend on changing the process working directory.
-
-`SourceConfig` describes acquisition and sampling; `DetectorConfig` composes those settings with inference, verification and exporters. `TelegramConfig` describes the Telegram destination. These Python names appear in the generated schema's definitions; the public `detection` and `telegram` configuration keys retain their existing spelling.
-
-Bootstrap passes only `SourceConfig` to `build_source` and `ExportersConfig` to `build_destinations`. Those helpers do not need access to the rest of the detector settings.
-
-Defaults are deterministic. Invalid bounds, empty source/model lists, misspelled options, and invalid class maps are configuration errors. Configuration also owns source syntax and the finite/live distinction. The shared classifier is pure; bootstrap selects the appropriate source adapter from already-validated groups. Unsupported protocols, missing hosts, HTTP images, and mixed finite/live groups fail the offline config check. File existence and camera availability remain runtime concerns. Secrets are excluded from configuration reprs and logs. Schema generation uses the actual detector metadata model, not a provider SDK's unrelated Metadata type.
-
-Health and webhook destinations use Pydantic's strict `AnyHttpUrl` validation at this boundary. Malformed schemes, hosts, ports and URLs that need repair are rejected with a static diagnostic. The validated input string is retained, including credentials, IPv6 literals, encoded queries and fragments; URL normalization does not rewrite it.
-
-Source URLs use the same strict Pydantic boundary with `AnyUrl` constrained to the supported camera/media protocols and a required host. Invalid ports, hostnames and embedded control characters fail before capture starts. The classifier still owns camera indices, local media extensions, HTTP image rejection and finite/live grouping; accepted source strings retain their original representation.
-
-Disk categories are single directory names, validated by the same constraint in Python and the generated JSON schema. This preserves the web reader's `detections/<category>/<stage>/<timestamp>/` layout.
+Configuration owns source syntax and the finite-or-live distinction through a pure classifier; file existence and camera availability are runtime concerns. URLs for sources, webhooks and health use strict Pydantic validation and keep the validated string as written, including credentials. Disk categories are single directory names, enforced by the same constraint in Python and in the generated schema, which preserves the `detections/<category>/<stage>/<timestamp>/` layout the web reader depends on. Secrets are excluded from reprs and logs.
 
 ## Resource ownership
 
-The runtime owns detector workers and their shutdown signal. Bootstrap owns one `StreamPool` per application run. It registers every detector's live-source subscription before opening any captures, then opens one acquisition thread and capture handle per distinct source string. The pool closes before model/provider teardown, including when runtime startup fails. Finite file readers remain independent because they advance according to each detector's processing and media time.
+- **Runtime** owns the workers and their stop signal. Each detector has a processing thread (inference and event assembly) and a delivery thread (cooldown, verification, exports) joined by a bounded queue, which applies backpressure instead of retaining image sequences. Workers release a completed event before blocking for more work.
+- **Bootstrap** owns one `StreamPool` per run. Every live subscription is registered before any capture opens; there is one capture thread per distinct source string. The pool closes before model teardown, also when startup fails part-way.
+- **A `StreamSource`** is one detector's subscription, with its own sampling interval, width and bounded unread buffer. Subscribers that want the same width share one resized frame. A slow detector drops its own oldest frames; it cannot block acquisition or consume another detector's frames. Sharing is by exact source string within one process. File readers stay independent because they advance with each detector's media time.
+- **Inference**: bootstrap enters `inference_runtime` once per run and `open_detector` once per YOLO model. Each context releases what it opened, including after a failure during startup. A detector's YOLO adapter owns its tracking state.
+- **Health**: the adapter performs timed requests behind the `HealthMonitor` port and starts no thread of its own. Runtime runs it beside the workers and stops it when the last finite detector ends.
 
-Each live `StreamSource` is a detector's subscription. It owns its sampling interval, size limit, and bounded unread frame buffers, independently for each camera. A `CapturedFrame` lazily caches each requested width while the capture thread publishes one decoded frame. Sampling is checked before resizing. Subscribers with the same effective width share the same immutable frame; different widths resize directly from the original pixels. Subscribers retain frames, not the cache. Reading one subscription never consumes another's frames. A slow detector drops its oldest unread frames instead of blocking acquisition on inference or delivery. Closing a subscription wakes its reader and clears its buffers without closing other subscriptions' cameras. The pool releases all captures when the application run ends. Expected disconnections reconnect once per camera; an unexpected capture failure reaches every affected subscription and the runtime supervisor. Sharing is within one process and uses exact configured source strings; URL aliases and separate processes are not coalesced.
+Shutdown attempts every registered stop before joining, so one failed stop cannot block the others, and each worker logs its own unexpected failure before it propagates. Expected live-source failures reconnect with an interruptible delay; invalid configuration and programming errors do not loop.
 
-A detector's pipeline owns event assembly; its YOLO adapter owns tracking state. A bounded delivery queue applies backpressure instead of retaining an unbounded number of image sequences. The delivery worker owns cooldown state and outbound sequencing. Workers release completed event references before blocking for more work. The shared media cache weakly references its event and drops encodings when that event is released. Encoding owns its subprocess and temporary files.
+A `torch.AcceleratorError` during native MPS inference becomes `MpsInferenceError`, and the CLI exits with code 75 after draining. It never retries inside the damaged GPU context or switches to CPU; restarting belongs to whoever supervises the process (see [desktop integration](#desktop-integration)).
 
-Bootstrap gives workers a diagnostic name from configuration order (`detector-1`, `detector-2`, and so on). Processing and delivery threads carry that name, and the CLI includes the thread name in each log line. A worker restores its caller's thread name on exit, including failure. Shared capture/health work retains a separate identity because it does not belong to one detector.
+## Inference backends
 
-Bootstrap enters `inference_runtime` once per application run, then `open_detector` for each configured YOLO model. These context functions own resources in lexical cleanup scopes. `open_detector` yields a ready `YoloDetector` and releases both its predictor and tracking-frame cache; bootstrap never constructs or separately closes the raw SDK model. Class-validation and later startup failures release the predictor before `inference_runtime` restores session hooks, environment and provider libraries. Export-only Torch weights are released when the exported model replaces them, before inference starts. Selected precision applies to export and predictor construction through the SDK's `quantize` option.
+Backend selection lives in the inference adapters; the domain and application never see it.
 
-Within the YOLO adapter, conversion selection, SDK model loading and predictor initialization are explicit functions. `export_settings.py` defines the conversion arguments used by both direct exports and `prepared_models.py`'s cache; the same settings participate in the cache identity. `open_detector` retains the complete resource lifetime, including cleanup after a helper fails. This separation does not change provider selection, precision, cache keys or inference behavior.
+- **macOS**: `.pt` checkpoints run on native PyTorch MPS with FP16 when the device is available and no ONNX provider is configured. MPS batches from all detectors share one process-wide lock through prediction, result transfer and synchronization, because of [PyTorch's MPS threading races](https://github.com/pytorch/pytorch/issues/197805). CPU, ONNX and CUDA are not serialized by it.
+- **Prepared ONNX models** (`prepared_models.py`): a `.pt` checkpoint is exported once into `models/prepared/`, keyed by checkpoint contents, task, dimensions, precision, opset and library versions, checked, and published atomically. The original checkpoint is never modified, and a failed export publishes nothing.
+- **Windows NVIDIA**: the web application's process manager prepares a separate CUDA Python environment and starts the same CLI in it (see [distribution](../distribution/README.md#windows-nvidia-runtime)). On compute capability 8.0+ it adds `--prefer-tensorrt`.
+- **TensorRT engines** (`prepared_engines.py`, `tensorrt_worker.py`): monitoring starts with a cached engine or with CUDA, and missing engines are built one at a time in the background by a short-lived helper process. The engine key includes checkpoint, settings, GPU, driver and runtime versions. When the queue finishes with at least one new engine, one `models_ready` status record asks the desktop to restart monitoring once. Predictors are never swapped in a running process. A failed or interrupted build is deferred for 24 hours and leaves CUDA running; only this automatic optimization may fall back, an engine the user supplied may not. The helper watches a parent-owned stdin pipe with non-blocking reads, because a blocking read deadlocks native NumPy imports on Windows, and has a thirty-minute deadline.
+- **Windows ML** (`windows_ml.py`): provider discovery and preparation run in a short-lived helper process, which keeps PyWinRT out of the inference process (a [documented conflict](https://ryzenai.docs.amd.com/en/latest/winml/troubleshooting.html) with TensorRT RTX registration). The helper has a 150-second deadline. Automatic selection skips providers that cannot be prepared and ends on CPU with a notice; an explicitly requested provider stays a visible failure.
 
-Inference diagnostics include SDK preprocessing/inference/postprocessing time, result mapping (including GPU-to-CPU boxes), and waiting for the shared MPS lock. Capture diagnostics summarize decoded throughput, read time including camera/network wait, and resize/publication time every thirty seconds. These measurements do not claim camera-to-browser latency. `tools/benchmark_inference.py` reuses predictor initialization and the YOLO adapter to compare local models and batch policies, with SDK callbacks for timings and SDK validation for accuracy. Grouping by frame shape remains an offline experiment; it does not change production batching or tracking slots. See [PERFORMANCE.md](PERFORMANCE.md).
+Decisions about the libraries, with their reasons:
 
-Expected live-source failures reconnect with an interruptible delay. Invalid config and programming errors do not enter an endless restart loop. Source failure, delivery failure, and intentional user shutdown are distinguishable. The supervisor observes delivery results during signal-driven draining as well. Health pings stop with the detector, including when finite inputs end normally; unexpected health-worker errors reach the supervisor.
+- Model downloads use Ultralytics' own downloader, with one attempt, because its curl fallback would expose URLs through subprocess output.
+- The predictor is prepared once: asking an exported model for its class names otherwise creates a second, disposable ONNX session.
+- Result mapping moves boxes to the CPU once (`Boxes.cpu()`); reading GPU scalars one by one synchronizes the device each time.
+- `inference_runtime` temporarily wraps the ONNX session factory, because Ultralytics does not expose the Windows ML device and session options, and restores it on exit. Worker spinning is disabled so idle ONNX workers sleep.
+- The adapter restores `pathlib.WindowsPath` and `PosixPath` after loading a checkpoint, because the SDK can leave them patched.
+- After an FP16 export the graph is topologically sorted before validation: the CPU conversion can append casts after their consumers.
 
-A `torch.AcceleratorError` during native MPS prediction, tracking, result transfer or synchronization becomes `MpsInferenceError`. Supervision still stops and drains the run; the CLI logs the original traceback and exits with code **75**. It never retries within the damaged GPU context or silently switches to CPU. The web application's existing `ManagedDetector` owns recovery for all unexpected exits, including exit zero and termination signals, including other backends and hard process crashes. It starts a fresh process after two seconds, doubling the delay to a maximum of thirty seconds for repeated failures without an attempt limit. Ten minutes of running resets that delay. Failed recovery attempts also retry; the failure remains visible until monitoring is re-established. Pause and application shutdown cancel pending recovery. Managed monitoring remains enabled and restarts even at normal EOF; standalone CLI callers still finish once and receive the exit status without an automatic restart. Mac and Windows native launchers also supervise the background web process.
+## Desktop integration
 
-The health adapter performs timed HTTP requests and supports a stop signal through the small `HealthMonitor` port. It does not create a thread or call back into detector shutdown. The runtime executes it alongside the detector workers, observes its future, and stops it after the last finite detector finishes. A shared cleanup scope attempts every registered stop operation before joining the executor, including on signals and failures. One failed stop cannot prevent stop requests to the other tasks. Bootstrap only constructs the monitor and supplies it to the runtime.
+The web application starts the detector and talks to it through four optional, separate channels. None of them reaches the domain.
 
-Capture startup is inside the pool's cleanup scope: if starting a later thread fails, the already-started threads are stopped and joined. Each capture and detector worker logs its unexpected failure before propagating it. The supervisor still stops on the first failure, while diagnostics from concurrently failing workers remain available.
+- `--control-stdin`: a line `stop`, or EOF on the parent's pipe, requests the normal stop-and-drain path on every OS. Ordinary runs do not read stdin.
+- `--status-json`: versioned records on stdout, prefixed `AIDETECTOR_STATUS `, carrying an event kind, a UTC time, a SHA-256 source key and the run-local `detector-N` and `disk-N` identities. They contain no camera address. `application/status.py` defines the kinds; `adapters/operational_status.py` writes them, at most one per kind, source and rule per second. The web application derives readiness from these records and their freshness, never from log text or from the process having started.
+- `--live-preview`: the latest analyzed frame per rule, published only while someone is watching. See [LIVE_PREVIEW.md](LIVE_PREVIEW.md).
+- Reviews: the delivery use case gives each `EventResult` a UUID shared by all destinations. Disk stores it as `event_id`; Telegram puts it in the review buttons. Receiving reviews and writing them into `metadata.json` belongs to the web application.
 
-## Verification
+Managed monitoring is continuous: the web application restarts the detector after any unexpected exit. A standalone CLI run finishes at EOF and reports its exit status.
 
-1. Unit tests for domain boundaries, per-source isolation, confidence maps, cooldowns, EOF, and validation outcomes.
-2. Contract tests for legacy config representations, generated schemas, disk metadata/stages, webhook bodies, Telegram methods/media, and provider parsing.
-3. Runtime tests for bounded queues, failure propagation, draining, resource cleanup, health monitoring through EOF/signals, and continued shutdown when a source cannot close. An unhandled thread exception fails the test suite.
-4. A local reference flow that reads a generated video, runs deterministic inference/verification, writes real JPEG/MP4 files, and validates their metadata. A generated ONNX graph exercises real Ultralytics tracking and session lifecycle without downloading weights.
-5. Ruff, format, ty, import architecture checks, package build, CLI smoke checks, and distribution configuration review.
-6. Baseline and replacement measurements using the same local input; distinguish inference startup from steady-state processing. Hardware-specific providers require the corresponding platform and must not be described as locally verified on macOS.
-7. Built-executable smoke tests with a generated ONNX graph and an untrained Torch checkpoint, two sources, a local fake AI/HTTPS server, real encoders, archives, health monitoring, and normal EOF shutdown. A temporary test CA exercises verified HTTPS without external services. The ONNX variant checks tracking; the checkpoint variant checks the distribution's load/export path. Release builds run both before artifact publication.
-
-## Third-party integration decisions
-
-After an FP16 export, `prepared_models` uses ONNX Runtime's `OnnxModel.topological_sort()` to order the graph before ONNX validation and atomic cache publication. Ultralytics' CPU FP16 conversion can append input casts after their consumers. This step reorders nodes without changing precision, metadata or external tensor files; it does not bypass validation or replace the SDK exporter.
-
-Model URL transfers use Ultralytics' downloader, including its transfer/completeness checks, rather than an application HTTP read loop. The application retains URL-specific cache directories and promotes a completed temporary file atomically. URL transfers make one SDK attempt with progress disabled; disabling retries prevents its curl fallback from exposing URLs through subprocess stderr. SDK log output is suppressed only on the downloading thread and failures become credential-free application errors; unrelated threads keep their diagnostics. A missing output after the SDK rejects an empty or partial response is a failed download. Transfer timeouts follow the installed SDK; its helper does not expose the previous custom downloader's 30-second timeout parameter.
-
-Ultralytics inference setup is confined to the YOLO adapter. The predictor is prepared once because querying exported model names otherwise creates a disposable second ONNX session. A real ONNX integration test detects this duplicate-loading regression. Tracking uses the library's in-memory stream loader contract and a fixed source order. Result mapping is a plain function of the SDK response, frames and resolved class thresholds; the detector alone owns that configuration and its tracking state. The SDK's minimum inference threshold is derived from the resolved classes inside this adapter.
-
-Result mapping calls the SDK's `Boxes.cpu()` once before reading individual coordinates, labels, scores and tracking IDs. GPU scalar reads otherwise synchronize MPS/CUDA repeatedly, making postprocessing dominate inference. Only the box tensor is transferred; masks and source images are not copied. Startup logging reports the initialized backend's actual device and precision, and the default `INFO` level includes SDK detection summaries and total prediction/tracking time.
-
-Optional IoU and bundled-tracker settings are validated at the configuration boundary and passed through only when specified. They do not replace SDK defaults. The mapper retains an optional SDK track ID on each box; IDs describe per-source tracking continuity, not persistent real-world identity. Context observations continue to borrow the latest display boxes without gaining detection scores. Archive metadata remains unchanged.
-
-Ultralytics also handles cross-platform paths inside Torch checkpoints. The adapter restores both `pathlib.WindowsPath` and `pathlib.PosixPath` after model preparation because the SDK can leave those globals patched. It does not duplicate the SDK's conversion.
-
-`inference_runtime` temporarily wraps the ONNX session factory because Ultralytics does not expose the required Windows ML device/session options. Its cleanup scope restores the factory and environment on normal exit and startup failure. Model predictors are released before execution-provider libraries are unregistered. CUDA DLL preloading stays in this boundary. Windows SDK discovery and preparation live in `adapters/inference/windows_ml.py`, which runs them in a short-lived subprocess before ONNX registers the returned libraries.
-
-The runtime lockfile is authoritative for development/test environments. Direct application dependencies are declared explicitly; platform extras provide one ONNX implementation each. The source distribution has an explicit file list to prevent local research data, recordings, model weights, and virtual environments from entering packages.
-
-Enforced limits, measurement commands and a dated baseline are in [QUALITY.md](QUALITY.md).
-
-## Desktop application integration
-
-The optional `--live-preview` adapter uses a separate `PublishObservation` callback from the pipeline, after inference and before event aggregation. Bootstrap binds each rule to a bounded latest-frame publisher and owns its encoder thread. The callback performs no filesystem or encoding work. Short-lived viewer leases enable publishing only for cameras being viewed; atomic image/box records and a run heartbeat let the web application reject stale results. Preview failures are observable without changing event processing or archive outcomes. The [versioned protocol](LIVE_PREVIEW.md) documents its files, SSE bridge, lifecycle and tests.
-
-Model setup reports its actual download, conversion and loading stages through the same status channel. Expected download failures emit a credential-free `preparation_failed` record so the launcher can retain an actionable retry message after the process exits. Cached conversion does not report a new export, and an invalid model or unrelated startup error is not relabeled as an internet failure. Ultralytics still owns transfer and conversion.
-
-The web application can now launch the native detector or a matching NVIDIA container. This integration remains outside the detector's domain and application layers. The CLI's optional `--control-stdin` reader translates `stop` or EOF into a threading event, passed explicitly through bootstrap to runtime. Runtime observes it alongside the detector/health futures, then uses the existing stop-and-drain path. The daemon input reader cannot keep a completed finite job alive. Signals and ordinary standalone execution retain their behavior. The configuration and archive formats are unchanged.
-
-The optional `--status-json` channel reports operational evidence to the launcher. `application/status.py` defines its small observation contract; the JSON writer lives in `adapters/operational_status.py`. Bootstrap supplies one reporter to source adapters, pipelines and disk exporters. Captures report actual decoded frames and expected disconnections; the pipeline reports only after successful inference, or separately after snapshot processing; disk export reports only after atomic publication or an expected archive failure. Domain rules do not know about operational status. Normal CLI use has no machine-readable output unless requested.
-
-Version 1 records begin with `AIDETECTOR_STATUS ` and contain an event, UTC observation time and, for camera events, a SHA-256 source key. Processing and recording records also identify the run-local `detector-N` rule; recording records identify their `disk-N` destination. Shared captures remain independent of any one rule. The records contain no camera URL or credentials. The writer serializes concurrent records and limits high-frequency observations to one per kind, source and rule per second. Human logs remain separate. Web readiness comes from these records and freshness, never from text matching or the process spawn event. Every configured rule must process a camera before it is reported as monitored. A successful inference does not prove a recording was saved, and one rule or destination succeeding cannot clear another destination's archive failure. Unknown protocol versions and records missing the required rule/destination identity cannot establish readiness. Web and detector must come from the same complete release.
-
-Automatic desktop startup uses the bundled native detector. Docker remains an explicit deployment option. Windows ML discovery and preparation run through the internal `--prepare-windows-ml` action of the same executable (or `python -m aidetector` in source installs). It reads no detector configuration, opens no installation dialogs and imports neither ONNX Runtime nor Torch. This isolates PyWinRT from TensorRT RTX registration, following the [documented Windows ML workaround](https://ryzenai.docs.amd.com/en/latest/winml/troubleshooting.html). The helper returns provider names and DLL paths as JSON; its stderr diagnostics are retained in the detector log on completion or timeout. The parent registers those libraries only after the helper exits, and owns them until model teardown.
-
-Already-ready providers skip preparation. Pending operations use the SDK's two-minute wait and cancellation API, followed by `get_results` without another wait. A separate 150-second deadline bounds the entire helper, including native SDK entry and cleanup; the parent kills and reaps a stalled helper. DLL registration remains in the inference process and has no cancellation API. Its fault-handler timer writes a one-off Python stack trace after 150 seconds, diagnosing rather than terminating a blocked DLL load.
-
-Automatic discovery logs and skips individual preparation and ONNX registration failures, retaining other usable providers. If preparation fails entirely, it selects the available CPU provider before model loading and reports a notice. An explicit provider request prepares only that provider and remains a visible failure; explicit CPU selection skips the Windows catalog. Invalid model/configuration errors and inference failures are not retried as hardware discovery failures. Configuration, device selection and model execution do not change with process isolation.
-
-## Manual review integration
-
-The delivery use case assigns each `EventResult` a UUID once, shared by all destinations. Domain records only carry that identity. Disk includes it in optional `event_id` metadata; Telegram embeds it in inline review buttons (or a silent reply for albums). Incoming reviews belong to the web archive service, not the inference/event pipeline. The web stores a review as `review` in the event's published `metadata.json` without changing original validator output or media. `EventMetadata` describes that field for the shared schema and never writes it. See `MIGRATION.md` for the archive and callback contract.
-
-Native packaging uses PyInstaller's upstream hooks for ONNX Runtime provider libraries and ImageIO FFmpeg assets. Explicit full collection remains for dynamic Ultralytics and LiteLLM loading, and for Windows ML's ONNX Runtime helpers, which import sibling Python files through runtime path changes. Package smoke tests exercise inference, media, HTTPS and validation against local fixtures on each target OS. Container dependencies are installed before the application layer, with the upstream GPU runtime pinned by digest.
-
-### Desktop operational status
-
-The existing status callback also reports the initialized inference backend and per-rule validator/delivery outcomes. `EventDelivery` reports failure separately from rejected or unvalidated events and reports recovery only after a later successful operation. Safe status messages omit transport exceptions and credentials; full diagnostics stay in the log. Bootstrap scopes these records by detector; Python still reads only `config.json`. The web supervisor uses fresh capture plus missing completed processing after readiness to detect stalls, with sampling-aware deadlines and suspend grace. Its normal serialized stop/start path owns recovery; no browser request or extra Python restart loop is involved.
-
-While a bounded delivery queue is full, `DetectorWorker` reports `waiting_delivery`; the JSON adapter limits it to one record per rule per second. Successful enqueue after that wait reports `processing_resumed`. These observations renew the processing watchdog's deadline without claiming inference succeeded. Slow verification/export remains visible as waiting; stale wait signals do not disable recovery indefinitely. Existing integration timeouts and delivery failure supervision still own failed deliveries.
+Logs are for people and are a separate concern: the diagnostics adapter writes the console and a rotating `logs/detector.log`, redacts credentials in messages and tracebacks, and names cameras by the first 12 characters of the same source key.

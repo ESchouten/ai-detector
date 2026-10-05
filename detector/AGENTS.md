@@ -2,7 +2,7 @@
 
 Scope: the Python detector, its schemas, tests, packaging, and documentation. The web application is outside the current rewrite. Preserve its on-disk event contract.
 
-- Read ARCHITECTURE.md and MIGRATION.md before changing module boundaries or public behavior. Record intentional behavior changes there.
+- Read ARCHITECTURE.md before changing module boundaries or public behavior, and keep it describing the code as it is. When a change requires action from someone upgrading or reading the detector's files, say so in MIGRATION.md. The history of a change belongs in its commit message, not in the documents.
 - Domain code owns event rules and data. It must not import configuration models, adapters, application services, network libraries, or inference frameworks.
 - Application code depends on domain types and narrow ports. Bootstrap constructs concrete integrations. Imports never read configuration, create directories, configure logging, start threads, or make network requests.
 - Validate external configuration once. Internal functions accept precise types and established invariants. Do not add speculative guards, generic factories, service locators, or wrappers that only forward calls.

@@ -1,34 +1,37 @@
 # Configuration and presets
 
-## Settings ownership
+## Who owns which file
 
-User settings live in the application's data directory, outside the installed binaries. The [application guide](../distribution/README.md#installation-and-data) lists its location on each platform.
+Settings live in the application's data folder, outside the installed program. The [distribution guide](../distribution/README.md#installation-and-data) lists its location per system.
 
-| File or folder | Purpose                                                                                                                                                                                                                                                                                                                                             | Code owner                                                                                                                              |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `config.json`  | Sources, models, event rules, verification and delivery                                                                                                                                                                                                                                                                                             | Python [configuration models](../detector/src/aidetector/configuration.py); the web app validates with their generated schema           |
-| `app.json`     | Camera identities, labels, setup progress, connection metadata and `language`, the interface language of this installation (`en`, `nl`, `de` or `fr`). Also two things that stay with this installation and are never exported or recovered: paired devices, and `monitoring`, which records whether monitoring resumes when the application starts | Web [configuration validation](../web/src/lib/configuration.ts) and [configuration store](../web/src/lib/server/configuration/store.ts) |
-| `presets/`     | Optional installation-specific detector presets                                                                                                                                                                                                                                                                                                     | Web [preset files](../web/src/lib/server/configuration/preset-files.ts)                                                                 |
+| File or folder | Holds | Owner |
+| --- | --- | --- |
+| `config.json` | Sources, models, event rules, verification and delivery | Python [configuration models](../detector/src/aidetector/configuration.py); the web application validates with their generated schema |
+| `app.json` | Camera identities and names, setup progress, saved recipients and AI connections, and `language`. Also paired devices and `monitoring` (whether monitoring resumes at start), which stay with the installation and are never exported or recovered | Web [schema](../web/src/lib/schema.ts) and [settings store](../web/src/lib/server/configuration/store.ts) |
+| `presets/` | Optional presets of this installation | Web [preset files](../web/src/lib/server/configuration/preset-files.ts) |
 
-The `application.json` shipped beside the executable is build metadata, not user settings. Build dependencies and tool versions belong in the component manifests and `distribution/toolchain.json`, not in these runtime files.
+`config.schema.json` and `metadata.schema.json` in this folder are generated. Change the Python models, then from the repository root:
 
-`config.schema.json` and `metadata.schema.json` are generated contracts. Edit their Python models, then run `uv run --project detector --no-sync generate-schema --output-directory config` from the repository root. Verify with the same command plus `--check`. Run `pnpm --dir web schema:generate` afterward to update the web's TypeScript declarations; `pnpm --dir web schema:check` verifies them without writing. Both checks run in CI. Do not maintain another detector schema in the web application.
+```sh
+uv run --project detector --no-sync generate-schema --output-directory config
+pnpm --dir web schema:generate
+```
+
+Add `--check` to the first command, or run `pnpm --dir web schema:check`, to verify without writing; CI runs both checks. The web application never keeps a second detector schema.
 
 ## Presets
 
-Each JSON file in [detector/](detector/) is a preset. The application discovers the files automatically and lists them alphabetically. The filename without `.json` is its ID; dashes, underscores and spaces separate words in the displayed name. For example, `cow-catcher.json` becomes **Cow Catcher**, and `calving-catcher.json` becomes **Calving Catcher**.
+Each JSON file in [detector/](detector/) is a preset. The filename without `.json` is its ID, and dashes, underscores and spaces separate the words of its name: `cow-catcher.json` appears as **Cow Catcher**. There is no catalogue, description or default; adding a bundled preset means adding a file.
 
-The file contains only detector settings: model, watched classes, event rules and delivery defaults. No catalogue entry, description or setup guidance is required. Users choose their preset explicitly. Adding a bundled preset requires only a new JSON file in `config/detector/`; the build embeds it automatically.
+A preset contains only detector settings: model, watched classes, event rules and delivery defaults. Cameras are added first, and selecting them in the detector step supplies `detection.source`. Everything else follows the [configuration schema](config.schema.json).
 
-Model support follows the detector's supported YOLO detection/segmentation adapters and compatible exports. Adding another inference framework still requires an adapter.
+### Presets of one installation
 
-## Add a preset to an installed application
+Create a `presets/` folder in the data folder, beside `config.json`, and put detector JSON files directly in it; then reload the editor. The data folder is shown on the monitoring status page under **Technical details**.
 
-Create a `presets/` folder in the application's data directory, alongside `config.json` and `app.json`. The data directory is shown on the monitoring status page under **Technical details**. Put detector JSON files directly in that folder, then reload the editor. Subfolders and files without the `.json` extension are ignored. No application rebuild is required.
+A local folder replaces the bundled choices: copy the bundled files into it to keep them. An empty folder gives an empty list, and no folder gives the bundled presets. `AIDETECTOR_PRESETS` names another folder, which must exist. An invalid file is reported by name; it is never replaced by something else.
 
-A local preset folder replaces the bundled choices. Copy the bundled JSON files into it if you want to retain those choices alongside your own. An empty folder gives an empty list; an absent folder uses the bundled presets. Alternatively, set `AIDETECTOR_PRESETS` to a preset directory. An explicit directory must exist, and invalid files are reported rather than replaced with a different model.
-
-For example, create `presets/entrance-activity.json` to add **Entrance Activity**:
+For example, `presets/entrance-activity.json` adds **Entrance Activity**:
 
 ```json
 {
@@ -41,21 +44,7 @@ For example, create `presets/entrance-activity.json` to add **Entrance Activity*
 }
 ```
 
-Cameras are added first; selecting them in the detector step supplies `detection.source`. Model identifiers, download URLs and local model paths retain the detector's normal interpretation. Relative model paths are relative to the detector's working data directory. Other detector fields, including class names, thresholds, timing, optional VLM configuration and exporters, use the canonical [configuration schema](config.schema.json).
-
-YOLO presets can optionally set `iou` (0–1), `tracking: true` and `tracker` (`botsort.yaml` or `bytetrack.yaml`). Omitting `iou` and `tracker` preserves Ultralytics defaults. Tracking supplies temporary IDs for objects between frames; it does not recognise individuals across sessions. On macOS, native `.pt` models use available PyTorch MPS automatically; exported ONNX models and explicit ONNX provider choices retain their configured path.
-
-Older installations that used a `presets.json` catalogue should move its referenced detector files into `presets/`. The catalogue is no longer read, and `AIDETECTOR_PRESETS` now takes a directory rather than a catalogue filename.
-
-## Saved detectors
-
-Applying a preset copies its detector settings into the saved configuration. Editing, renaming or removing a preset file does not change saved detectors. Editing a camera preserves its detector assignments. A detector can watch several cameras, and a camera can be selected by several detectors. New detectors use the preset's recording and delivery defaults; existing detectors preserve their delivery settings when switching presets. Choosing **Advanced settings** also preserves those choices when loading another preset into the draft.
-
-Preset names remain attached when changing a detector's name, cameras or delivery settings. Changing its detection settings makes it a custom configuration. Previously saved preset IDs remain valid even if the file is renamed or removed; the interface falls back to the saved detector label. Applying an unknown preset to a new configuration is rejected before saving.
-
-Telegram recipients are assigned to detectors, and apply to every camera selected by that detector. Saving alert settings never splits detector definitions or changes their source lists, model settings, recording destinations or webhook settings. Multiple detectors watching the same camera can use different recipients.
-
-A preset can prefill verification without choosing an AI provider:
+A preset can prepare verification without choosing a provider. The question waits until an AI connection is saved:
 
 ```json
 {
@@ -67,8 +56,11 @@ A preset can prefill verification without choosing an AI provider:
 }
 ```
 
-Adding or editing an AI connection enables these saved validators and supplies their model and credentials. Their preset question and media strategy stay with the detector. Detectors already configured with a model or shared connection are not automatically reassigned. Setting `key` to `null` or omitting it disables that verifier. Selecting **Off** clears every key in the detector’s verification list while retaining its models and questions. Cow Catcher, Calving Catcher and Tailup use video by default. Existing saved settings keep their strategy; reapply the preset or edit Advanced JSON to change it.
+## Saved detectors
 
-## Verification
+Applying a preset copies its settings into the saved detector. Editing, renaming or removing the preset file afterwards changes nothing that is saved.
 
-Python schema tests validate every bundled detector fragment. Web tests cover directory discovery, filename labels, runtime file changes, validation, configuration preservation and source binding. Production HTTP checks exercise bundled and local presets, including a filename that matches an application action. Preset files use the same validation as detector settings; malformed JSON and invalid model options identify the file that needs correction.
+- A detector keeps its preset name when its own name, cameras or delivery settings change. Changing its detection settings makes it a custom detector.
+- A new detector takes the preset's recording and delivery defaults. An existing detector keeps its delivery settings when another preset is applied.
+- A detector can watch several cameras, and a camera can be watched by several detectors. Telegram recipients are assigned to detectors and apply to every camera of that detector.
+- Saving an AI connection fills in the detectors whose preset question was waiting for one. Detectors that already have a model or connection are not reassigned. Turning verification off clears the keys and keeps questions and models.

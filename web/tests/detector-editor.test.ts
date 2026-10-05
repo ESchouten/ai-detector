@@ -4,7 +4,7 @@ import {
 	applyDetectorPreset,
 	cameraRuleNames,
 	createDetectorDraft,
-	parseDetectorDraft,
+	validDetectorDraft,
 	selectTelegram
 } from '../src/lib/detector-editor.ts';
 import type { DetectorConfig, TelegramConfig } from '../src/lib/schema.ts';
@@ -39,14 +39,18 @@ for (const yolo of [undefined, null]) {
 }
 
 test('advanced configuration normalizes scalar inputs without inventing detection or losing options', () => {
-	const draft = parseDetectorDraft(
-		JSON.stringify({
-			detection: { source: 'camera.mp4' },
-			exporters: {
-				telegram: { token: 'private-token', chat: 'alerts', include_video: false, alert_every: 4 }
-			}
-		})
-	);
+	const input = {
+		detection: { source: 'camera.mp4' },
+		// The editor leaves this key behind when verification is switched off.
+		vlm: undefined,
+		exporters: {
+			telegram: { token: 'private-token', chat: 'alerts', include_video: false, alert_every: 4 }
+		}
+	};
+	const before = structuredClone(input);
+	const draft = validDetectorDraft(input);
+	assert.deepEqual(input, before);
+	assert.equal('vlm' in draft, false);
 	assert.deepEqual(draft.detection.source, ['camera.mp4']);
 	assert.equal('yolo' in draft, false);
 	assert.deepEqual(draft.exporters.telegram, [
@@ -54,17 +58,16 @@ test('advanced configuration normalizes scalar inputs without inventing detectio
 	]);
 });
 
-test('invalid JSON and incompatible form shapes are rejected before editing', () => {
-	for (const text of [
-		'{',
-		'null',
-		'[]',
-		'{}',
-		'{"detection":null}',
-		'{"detection":{"source":[]}}',
-		'{"detection":{"source":"camera.mp4"},"yolo":{"model":7}}'
+test('incompatible shapes are rejected before saving', () => {
+	for (const input of [
+		null,
+		[],
+		{},
+		{ detection: null },
+		{ detection: { source: [] } },
+		{ detection: { source: 'camera.mp4' }, yolo: { model: 7 } }
 	]) {
-		assert.throws(() => parseDetectorDraft(text));
+		assert.throws(() => validDetectorDraft(input));
 	}
 });
 
@@ -100,9 +103,11 @@ test('new detectors receive their own source and archive settings', () => {
 test('new custom detectors require an explicit model and do not invent model thresholds', () => {
 	const draft = createDetectorDraft();
 	draft.detection.source.push('rtsp://camera.example/entrance');
-	assert.throws(() => parseDetectorDraft(JSON.stringify(draft)));
+	assert.throws(() => validDetectorDraft(draft));
 	draft.yolo!.model = 'custom-entrance-model.pt';
-	const valid = parseDetectorDraft(JSON.stringify(draft));
+	const valid = validDetectorDraft(draft);
+	// The saved copy is its own; later edits to the draft do not reach it.
+	draft.detection.source.push('rtsp://camera.example/yard');
 	assert.deepEqual(valid.yolo, { model: 'custom-entrance-model.pt' });
 	assert.deepEqual(valid.detection.source, ['rtsp://camera.example/entrance']);
 });

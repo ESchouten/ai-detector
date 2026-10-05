@@ -53,9 +53,9 @@ export function createDetectorDraft(saved?: DetectorConfig): DetectorDraft {
 	return { ...detector, exporters: detector.exporters ?? {} };
 }
 
-export function parseDetectorDraft(text: string): DetectorDraft {
-	const config = normalizeConfig({ detectors: [JSON.parse(text)] });
-	return createDetectorDraft(config.detectors[0]);
+/** The draft as it will be saved: checked against the detector's schema, in its list form. */
+export function validDetectorDraft(detector: unknown): DetectorDraft {
+	return createDetectorDraft(normalizeConfig({ detectors: [detector] }).detectors[0]);
 }
 
 /** Keep camera choices; existing detectors also keep their delivery destinations. */

@@ -27,7 +27,7 @@
 		applyDetectorPreset,
 		createDetectorDraft,
 		detectorDraftMeta,
-		parseDetectorDraft,
+		validDetectorDraft,
 		selectTelegram
 	} from '$lib/detector-editor';
 	import { detectorSettings, sameTelegram, uniqueLabel } from '$lib/configuration';
@@ -246,7 +246,7 @@
 		error = '';
 		try {
 			validateSetup();
-			const valid = parseDetectorDraft(JSON.stringify(detector));
+			const valid = validDetectorDraft($state.snapshot(detector));
 			const savedLabel = label.trim();
 			const connection = llms.find(({ label }) => label === llmLabel);
 			await saveDetector({

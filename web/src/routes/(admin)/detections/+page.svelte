@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ArrowUp, Film } from '@lucide/svelte';
+	import { ArrowUp, CircleDashed, Film, ThumbsDown, ThumbsUp } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Empty from '$lib/components/ui/empty';
 	import { Skeleton } from '$lib/components/ui/skeleton';
@@ -34,6 +34,12 @@
 	import { SvelteMap, SvelteURLSearchParams } from 'svelte/reactivity';
 
 	const PAGE_SIZE = 24;
+	// The thumbs a recording shows for the same result.
+	const stageIcons = {
+		approved: { icon: ThumbsUp, iconClass: 'fill-current text-success-foreground' },
+		rejected: { icon: ThumbsDown, iconClass: 'fill-current text-danger-foreground' },
+		unvalidated: { icon: CircleDashed }
+	};
 
 	const type = $derived(page.url.searchParams.get('type') || undefined);
 	const stage = $derived(STAGES.find((value) => value === page.url.searchParams.get('stage')));
@@ -281,25 +287,19 @@
 		</p>
 	{/if}
 
-	<div class="flex flex-col gap-2.5">
+	<div class="flex flex-col gap-2.5 md:flex-row md:flex-wrap md:items-center md:justify-between">
 		{#if types.length > 1}
 			<FilterChips
 				label="Category"
 				value={type}
-				options={[
-					{ value: undefined, label: 'Everything' },
-					...types.map((value) => ({ value, label: categoryName(value) }))
-				]}
+				options={types.map((value) => ({ value, label: categoryName(value) }))}
 				onchange={(value) => updateSearchParams(value, stage)}
 			/>
 		{/if}
 		<FilterChips
 			label="Review result"
 			value={stage}
-			options={[
-				{ value: undefined, label: 'All results' },
-				...STAGES.map((value) => ({ value, label: stageLabel(value) }))
-			]}
+			options={STAGES.map((value) => ({ value, label: stageLabel(value), ...stageIcons[value] }))}
 			onchange={(value) => updateSearchParams(type, value)}
 		/>
 	</div>

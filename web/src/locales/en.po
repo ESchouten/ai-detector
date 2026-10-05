@@ -1555,7 +1555,6 @@ msgid "All categories"
 msgstr "All categories"
 
 #: src/lib/components/export-recordings.svelte
-#: src/routes/(admin)/detections/+page.svelte
 msgid "All results"
 msgstr "All results"
 
@@ -2645,10 +2644,6 @@ msgstr "Recordings"
 #: src/routes/(admin)/detections/+page.svelte
 msgid "Category"
 msgstr "Category"
-
-#: src/routes/(admin)/detections/+page.svelte
-msgid "Everything"
-msgstr "Everything"
 
 #: src/routes/(admin)/detections/+page.svelte
 msgid "Review result"

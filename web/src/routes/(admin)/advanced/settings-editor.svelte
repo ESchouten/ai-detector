@@ -86,6 +86,7 @@
 		label="Settings file"
 		options={documents}
 		value={selected}
+		required
 		onchange={(next) => {
 			if (!next || busy) return;
 			selected = next;

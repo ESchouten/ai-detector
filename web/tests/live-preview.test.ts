@@ -23,7 +23,9 @@ async function fixture(t: TestContext) {
 	const readers: ReadableStreamDefaultReader<Uint8Array>[] = [];
 	t.after(async () => {
 		for (const reader of readers) await reader.cancel();
-		await rm(directory, { recursive: true, force: true });
+		// A stream that closed by itself may still be removing its lease; Windows refuses
+		// a second removal of that file until the first has finished.
+		await rm(directory, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
 	});
 	const session = async (runId = 'run-1', updatedAt = new Date().toISOString()) => {
 		await writeFileAtomic(

@@ -112,15 +112,6 @@ jobs:
       ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS: '1'
     steps: &native-steps
       - uses: actions/checkout@v6
-      - name: Keep virus scanning out of the build folders
-        # Freezing reads and copies tens of thousands of files. An experiment: the
-        # status line shows whether real-time scanning was on for this runner at all.
-        if: runner.os == 'Windows'
-        continue-on-error: true
-        shell: pwsh
-        run: |
-          Get-MpComputerStatus | Select-Object RealTimeProtectionEnabled | Format-List
-          Add-MpPreference -ExclusionPath $env:GITHUB_WORKSPACE, $env:RUNNER_TEMP
       - uses: ./.github/actions/setup-distribution
         with:
           dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
@@ -166,7 +157,9 @@ jobs:
           executable="detector/dist/${{ env.DETECTOR_FOLDER }}/aidetector${{ env.EXE_SUFFIX }}"
           if [ '${{ runner.os }}' = macOS ]; then executable="detector/dist/${{ env.DETECTOR_FOLDER }}/Contents/MacOS/aidetector"; fi
           # The detector must start and report this build, or it is frozen again below.
-          "$executable" --version | tee /dev/stderr | grep -F "$GITHUB_REF_NAME"
+          reported=$("$executable" --version)
+          echo "$reported"
+          [[ "$reported" == *"$GITHUB_REF_NAME"* ]]
           echo "reused=true" >> "$GITHUB_OUTPUT"
       - name: Build detector
         if: steps.reuse.outputs.reused != 'true'

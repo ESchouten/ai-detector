@@ -227,8 +227,11 @@ test('remembered devices renew their cookie on the pairing page and revoked devi
 		headers: { ...form, Origin: base, Accept: 'text/html' }
 	});
 	const localPage = await local.text();
-	if (local.status === 200) assert.notEqual(localPage.match(invitationLink)?.[1], '127.0.0.1');
-	else assert.match(localPage, /Connect this computer to your local network/);
+	if (local.status === 200) {
+		const host = localPage.match(invitationLink)?.[1];
+		assert.ok(host, 'The invitation has no pairing link.');
+		assert.notEqual(host, '127.0.0.1');
+	} else assert.match(localPage, /Connect this computer to your local network/);
 	const appPath = path.join(directory, 'app.json');
 	const app = JSON.parse(await readFile(appPath, 'utf8'));
 	await writeFile(appPath, JSON.stringify({ ...app, devices: [] }));

@@ -214,6 +214,8 @@ test(
 		await writeJson(path.join(bundle, 'fixture.json'), { holdInstall: true });
 		const starting = detector.start();
 		await waitFor(async () => (await detector.log.read()).includes('Downloading GPU packages'));
+		// The installer announces itself before it has written its process id.
+		await waitFor(async () => (await readJson(path.join(bundle, 'install-pid.txt'))) !== null);
 		const pid = Number(await readFile(path.join(bundle, 'install-pid.txt'), 'utf8'));
 		await detector.stop();
 		await starting;

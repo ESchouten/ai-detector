@@ -3,7 +3,7 @@ import { building } from '$app/environment';
 import { initializeDetector } from '$lib/server/detector-service';
 import { startTelegramReviews } from '$lib/server/telegram-service';
 import { configuration } from '$lib/server/configuration';
-import { updateFollowedPresets } from '$lib/server/configuration/presets';
+import { followPresets } from '$lib/server/configuration/presets';
 import { previews } from '$lib/server/preview-pool';
 import { access, authorizeRequest } from '$lib/server/access';
 import { webLog } from '$lib/server/web-log';
@@ -32,7 +32,7 @@ export const init: ServerInit = async () => {
 				error
 			);
 		}
-		await updateFollowedPresets();
+		await followPresets();
 		await initializeDetector(() => configuration.read());
 		startTelegramReviews();
 		process.once('sveltekit:shutdown', () => previews.close());

@@ -46,6 +46,37 @@ class BuildTest(unittest.TestCase):
             build.build_web(args)
         self.assertEqual(self.version.read_bytes(), b"original version\r\n")
 
+    def test_the_web_build_knows_its_version_and_whether_it_is_a_test_build(self):
+        args = argparse.Namespace(
+            platform="linux-x64",
+            standalone_web=False,
+            skip_dependencies=True,
+            version="1.2.3",
+        )
+        built = []
+        for channel in ("stable", "preview"):
+            with (
+                patch.dict(
+                    os.environ,
+                    {"GITHUB_REF_NAME": "app/v1.2.3", "UPDATE_CHANNEL": channel},
+                ),
+                patch.object(
+                    build,
+                    "run",
+                    side_effect=lambda *_a, **_k: built.append(
+                        self.version.read_text()
+                    ),
+                ),
+            ):
+                build.build_web(args)
+        self.assertEqual(
+            built,
+            [
+                'export const version = "app/v1.2.3";\nexport const preview = false;\n',
+                'export const version = "app/v1.2.3";\nexport const preview = true;\n',
+            ],
+        )
+
     def test_failure_restores_existing_assets_and_source_metadata(self):
         self.assets.mkdir(parents=True)
         original = self.assets / "ffmpeg"

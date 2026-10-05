@@ -247,7 +247,7 @@ test('remembered devices renew their cookie on the pairing page and revoked devi
 	assert.equal(revoked.headers.get('set-cookie'), null);
 });
 
-async function startServer(t, origin, prepare) {
+async function startServer(t, origin, prepare, presetsUrl = '') {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-node-production-'));
 	await prepare?.(directory);
 	const env = {
@@ -256,6 +256,8 @@ async function startServer(t, origin, prepare) {
 		PORT: '0',
 		AIDETECTOR_DATA_DIR: directory,
 		AIDETECTOR_EXECUTABLE: executable,
+		// No test asks the published presets on GitHub; one names a stand-in for them.
+		AIDETECTOR_PRESETS_URL: presetsUrl,
 		SHUTDOWN_TIMEOUT: '2'
 	};
 	for (const name of [
@@ -857,6 +859,71 @@ test(
 		const app = JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8'));
 		assert.equal(app.detectors[0].preset, 'workshop');
 		assert.match(logs(), /Detector "Workshop rule" now has the current settings of its preset/);
+	}
+);
+
+test(
+	'a detector that follows a published preset takes its new model once that can be downloaded',
+	{ skip: process.platform === 'win32', timeout: 30000 },
+	async (t) => {
+		const source = 'rtsp://camera.example.test/workshop';
+		let modelPublished = false;
+		const github = createServer((request, response) => {
+			const origin = `http://${request.headers.host}`;
+			if (request.url === '/folder')
+				return response.end(
+					JSON.stringify([{ name: 'workshop.json', download_url: `${origin}/workshop.json` }])
+				);
+			if (request.url === '/workshop.json')
+				return response.end(
+					JSON.stringify({ detection: { interval: 2 }, yolo: { model: `${origin}/v2.pt` } })
+				);
+			response.statusCode = request.url === '/v2.pt' && modelPublished ? 200 : 404;
+			response.end();
+		});
+		github.listen(0, '127.0.0.1');
+		await once(github, 'listening');
+		t.after(() => github.close());
+		const published = `http://127.0.0.1:${github.address().port}`;
+		const saved = {
+			detection: { source: [source], interval: 2 },
+			yolo: { model: 'workshop-v1.onnx' },
+			exporters: { disk: [{ directory: 'workshop' }] }
+		};
+		const prepare = (directory) =>
+			Promise.all([
+				writeFile(path.join(directory, 'config.json'), JSON.stringify({ detectors: [saved] })),
+				writeFile(
+					path.join(directory, 'app.json'),
+					JSON.stringify({
+						streams: [{ id: 'workshop-camera', label: 'Workshop camera', source }],
+						detectors: [
+							{
+								label: 'Workshop rule',
+								preset: 'workshop',
+								presetVersion: presetVersion(
+									'{"detection":{"interval":2},"yolo":{"model":"workshop-v1.onnx"}}'
+								)
+							}
+						],
+						telegrams: []
+					})
+				)
+			]);
+		const detectors = async ({ directory, base }) => {
+			assert.equal((await send(`${base}/detectors`)).status, 200);
+			return JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8')).detectors;
+		};
+
+		// The preset names a model that is not there yet: the detector keeps what works.
+		const early = await startServer(t, undefined, prepare, `${published}/folder`);
+		assert.deepEqual(await detectors(early), [saved]);
+		assert.match(early.logs(), /The model of preset "Workshop" cannot be downloaded now/);
+
+		modelPublished = true;
+		const later = await startServer(t, undefined, prepare, `${published}/folder`);
+		assert.deepEqual(await detectors(later), [{ ...saved, yolo: { model: `${published}/v2.pt` } }]);
+		assert.match(later.logs(), /Detector "Workshop rule" now has the current settings/);
 	}
 );
 

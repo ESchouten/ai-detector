@@ -226,7 +226,8 @@ def build_web(args) -> Path:
         staged_ffmpeg(args.standalone_web, target.suffix),
         build_metadata(
             ROOT / "web/src/lib/version.ts",
-            f"export const version = {json.dumps(os.environ.get('GITHUB_REF_NAME', args.version))};\n",
+            f"export const version = {json.dumps(os.environ.get('GITHUB_REF_NAME', args.version))};\n"
+            f"export const preview = {json.dumps(os.environ.get('UPDATE_CHANNEL') == 'preview')};\n",
         ),
     ):
         run("pnpm", "build", cwd=ROOT / "web", env=env)

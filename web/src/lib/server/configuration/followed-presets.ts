@@ -34,6 +34,15 @@ export function forgetChangedPresets(document: Configuration): Configuration {
 	return document;
 }
 
+/** The presets that would change a detector that follows them. */
+export function newerPresets({ app }: Configuration, presets: DetectorPreset[]): DetectorPreset[] {
+	return presets.filter((preset) =>
+		app.detectors.some(
+			(meta) => meta.preset === preset.id && meta.presetVersion !== presetVersion(preset.detector)
+		)
+	);
+}
+
 /**
  * Give each detector that follows a preset the preset's current detection settings. Its cameras,
  * delivery and verification stay as saved. Returns the names of the detectors that changed.

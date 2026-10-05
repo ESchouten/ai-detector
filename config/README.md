@@ -29,7 +29,7 @@ A preset contains only detector settings: model, watched classes, event rules an
 
 Create a `presets/` folder in the data folder, beside `config.json`, and put detector JSON files directly in it; then reload the editor. The data folder is shown on the monitoring status page under **Technical details**.
 
-A local folder replaces the bundled choices: copy the bundled files into it to keep them. Such copies are yours, and a release no longer updates them. An empty folder gives an empty list, and no folder gives the bundled presets. `AIDETECTOR_PRESETS` names another folder, which must exist. An invalid file is reported by name; it is never replaced by something else.
+A local folder replaces the bundled and the published choices: copy the bundled files into it to keep them. Such copies are yours, and nothing published updates them. An empty folder gives an empty list, and no folder gives the bundled presets. `AIDETECTOR_PRESETS` names another folder, which must exist. An invalid file is reported by name; it is never replaced by something else.
 
 For example, `presets/entrance-activity.json` adds **Entrance Activity**:
 
@@ -58,7 +58,9 @@ A preset can prepare verification without choosing a provider. The question wait
 
 ## Saved detectors
 
-Applying a preset copies its settings into the saved detector, which then follows that preset. When the application starts and the preset's detection settings have changed, as after an update that brings a newer model, the detector takes them before monitoring starts. Its cameras, delivery settings, AI connection and question stay as saved. Renaming or removing the preset file changes nothing that is saved.
+Applying a preset copies its settings into the saved detector, which then follows that preset. Before monitoring starts, and once a day while the application runs, the application looks for the preset's newest version: in the installation's own `presets/` folder when it has one, otherwise in [`config/detector/` on the `main` branch](https://github.com/ESchouten/ai-detector/tree/main/config/detector). When its detection settings have changed, as when it names a newer model, and that model can be downloaded, the detector takes them and monitoring restarts with them. Its cameras, delivery settings, AI connection and question stay as saved. Without an internet connection nothing changes, and renaming or removing a preset file changes nothing that is saved.
+
+Publishing is therefore a change to a file in `config/detector/` on `main`: every installation that follows that preset has it within a day, without a new release. A preset that some version of the application cannot use is ignored by that version, and the released application reads the same folder when a detector is added. Test builds and development keep the presets they were built with. `AIDETECTOR_PRESETS_URL` names another folder listing in GitHub's format, or nothing to switch this off.
 
 - A detector keeps following its preset when its own name, cameras or delivery settings change. Changing its detection settings, in the editor, under Advanced or in `config.json` itself, makes it a custom detector: it keeps its settings and no preset updates it. Choosing the preset again makes it follow once more.
 - `presetVersion` in `app.json` records which detection settings the preset gave. It is how the application tells a detector that still follows from one that was changed.

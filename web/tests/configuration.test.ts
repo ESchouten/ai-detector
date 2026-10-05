@@ -10,7 +10,7 @@ import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { normalizeConfiguration, ConfigurationError } from '../src/lib/configuration.ts';
 import { DEFAULT_SCHEMA_URL, type DetectorConfig, type StreamMeta } from '../src/lib/schema.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
-import { presetVersion } from '../src/lib/server/configuration/followed-presets.ts';
+import { newerPresets, presetVersion } from '../src/lib/server/configuration/followed-presets.ts';
 import { configurationAction } from '../src/lib/server/configuration/request.ts';
 import { isHttpError } from '@sveltejs/kit';
 
@@ -734,9 +734,14 @@ test('a detector that follows a preset takes its new model and keeps what the pe
 	await store.saveDetector({ original: 'Barn', detector: chosen, meta: { label: 'Barn' } });
 	const before = await store.read();
 	const { presets, preset } = await presetsWithNewModel();
+	assert.deepEqual(
+		newerPresets(before, presets).map(({ id }) => id),
+		['cow-catcher']
+	);
 
 	assert.deepEqual(await store.followPresets(presets), ['Barn']);
 	const after = await store.read();
+	assert.deepEqual(newerPresets(after, presets), []);
 	assert.deepEqual(after.config.detectors[0], {
 		...before.config.detectors[0],
 		yolo: preset.yolo

@@ -12,7 +12,7 @@ Camera pictures show the latest detection boxes over live video. The video runs 
 
 ### Presets and new models
 
-A detector made from a preset follows it. When an update of AI Detector brings a newer model for that preset, the detector takes it at the next start, before monitoring begins; the first start downloads the model and may take longer. Its cameras, alerts and Validator stay as you set them. A detector whose detection settings you changed keeps them and is not updated; choose the preset again to follow it.
+A detector made from a preset follows it. When a newer model is published for that preset, the detector takes it within a day, or at the next start: monitoring restarts by itself, and is interrupted while the model is downloaded and prepared. Its cameras, alerts and Validator stay as you set them. For this the application asks GitHub once a day for the presets; without an internet connection nothing changes. A detector whose detection settings you changed keeps them and is not updated; choose the preset again to follow it.
 
 ### Other devices on the network
 
@@ -81,6 +81,7 @@ pnpm test:production
 | `AIDETECTOR_EXECUTABLE`        | Detector to start and supervise. Without it, a development server is only an interface to a separately managed detector. |
 | `AIDETECTOR_DOCKER_IMAGE`      | Image used by the optional Docker engine.                                                                                |
 | `AIDETECTOR_PRESETS`           | Folder of preset files, instead of `presets/` in the data folder or the bundled ones.                                    |
+| `AIDETECTOR_PRESETS_URL`       | Where newer presets are published, as a folder listing in GitHub's format. Empty switches following them off.            |
 | `FFMPEG_PATH`                  | FFmpeg executable for camera checks and previews.                                                                        |
 | `HOST`, `PORT`, `OPEN_BROWSER` | Listening interface and port, and whether a browser opens.                                                               |
 | `ORIGIN`                       | The public origin behind an HTTPS reverse proxy, for example `https://detector.example.com`.                             |

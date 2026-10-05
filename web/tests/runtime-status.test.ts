@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import path from 'node:path';
 import { test } from 'node:test';
 import { RuntimeProgress, STATUS_PREFIX } from '../src/lib/server/runtime-status.ts';
+import { sourceKey as keyOf } from '../src/lib/server/source-key.ts';
 
 const source = 'rtsp://farmer:secret@camera.example.test/live';
 const sourceKey = createHash('sha256').update(source).digest('hex');
@@ -51,6 +53,24 @@ function record(
 			})
 	);
 }
+
+test('status names each camera by the key the detector reports for its source', () => {
+	const state = new RuntimeProgress();
+	const sources = ['clips/yard.mp4', '0', source];
+	state.configure(
+		{ detectors: [{ detection: { source: sources } }] },
+		{ streams: [], telegrams: [], llms: [], detectors: [] },
+		'/data'
+	);
+	const hash = (value: string) => createHash('sha256').update(value).digest('hex');
+	const keys = state.snapshot(now).cameras.map((camera) => camera.sourceKey);
+	// The detector hashes the source it opens: a local file by its full path.
+	assert.deepEqual(keys, [hash(path.resolve('/data', 'clips/yard.mp4')), hash('0'), hash(source)]);
+	assert.deepEqual(
+		keys,
+		sources.map((item) => keyOf(item, '/data'))
+	);
+});
 
 test('camera readiness requires actual frames and processing; recordings remain separately observed', () => {
 	const state = progress();

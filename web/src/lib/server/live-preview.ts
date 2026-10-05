@@ -1,4 +1,3 @@
-import { createHash } from 'node:crypto';
 import { mkdir, readFile, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import * as v from 'valibot';
@@ -58,13 +57,6 @@ const sessionSchema = v.object({
 	runId: v.string(),
 	updatedAt: v.pipe(v.string(), v.isoTimestamp())
 });
-
-export function liveSourceKey(source: string, configurationDirectory: string): string {
-	const resolved = /^(?:[a-z]+:\/\/|\d+$)/i.test(source)
-		? source
-		: path.resolve(configurationDirectory, source);
-	return createHash('sha256').update(resolved).digest('hex');
-}
 
 async function json(file: string): Promise<unknown> {
 	return JSON.parse(await readFile(file, 'utf8'));

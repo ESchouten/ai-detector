@@ -7,15 +7,15 @@ import { setTimeout as delay } from 'node:timers/promises';
 import writeFileAtomic from 'write-file-atomic';
 import {
 	createCameraOverlayStream,
-	liveSourceKey,
 	type LivePreviewCamera
 } from '../src/lib/server/live-preview.ts';
+import { sourceKey as keyOf } from '../src/lib/server/source-key.ts';
 
 const rules = [
 	{ id: 'detector-1', label: 'People', preset: 'people', interval: 1 },
 	{ id: 'detector-2', label: 'Vehicles', interval: 1 }
 ];
-const sourceKey = liveSourceKey('rtsp://user:secret@camera/live', '/data');
+const sourceKey = keyOf('rtsp://user:secret@camera/live', '/data');
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-live-'));
@@ -234,12 +234,9 @@ test(
 );
 
 test('local paths share the detector source hash while camera URLs and numeric sources stay literal', () => {
-	assert.equal(liveSourceKey('video.mp4', '/data'), liveSourceKey('/data/video.mp4', '/elsewhere'));
-	assert.equal(liveSourceKey('0', '/data'), liveSourceKey('0', '/elsewhere'));
-	assert.equal(
-		liveSourceKey('rtsp://camera/live', '/data'),
-		liveSourceKey('rtsp://camera/live', '/elsewhere')
-	);
+	assert.equal(keyOf('video.mp4', '/data'), keyOf('/data/video.mp4', '/elsewhere'));
+	assert.equal(keyOf('0', '/data'), keyOf('0', '/elsewhere'));
+	assert.equal(keyOf('rtsp://camera/live', '/data'), keyOf('rtsp://camera/live', '/elsewhere'));
 });
 
 test(
@@ -261,7 +258,7 @@ test(
 	{ timeout: 5000 },
 	async (t) => {
 		const { directory, session, frame, open } = await fixture(t);
-		const otherKey = liveSourceKey('rtsp://other-camera/live', '/data');
+		const otherKey = keyOf('rtsp://other-camera/live', '/data');
 		const cameras = [
 			{ id: 'shed', sourceKey, rules },
 			{ id: 'pen', sourceKey: otherKey, rules: [rules[0]] }

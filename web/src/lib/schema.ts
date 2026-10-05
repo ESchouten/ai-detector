@@ -41,6 +41,8 @@ const text = v.pipe(v.string(), v.trim(), v.minLength(1));
 export const detectorMeta = v.object({
 	label: text,
 	preset: v.optional(text),
+	/** Which settings the preset gave, to tell whether the detector still follows it. */
+	presetVersion: v.optional(text),
 	llmConnection: v.optional(text)
 });
 export const cameraConnectionMeta = v.object({

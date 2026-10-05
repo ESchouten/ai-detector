@@ -1,6 +1,12 @@
 import type * as v from 'valibot';
 import { isDeepStrictEqual } from 'node:util';
-import type { Config, Configuration, LlmConnection, PairedDevice } from '../../schema.ts';
+import type {
+	Config,
+	Configuration,
+	DetectorPreset,
+	LlmConnection,
+	PairedDevice
+} from '../../schema.ts';
 import type { Locale } from '../../locales.ts';
 import { serialQueue } from '../serial.ts';
 import {
@@ -20,6 +26,7 @@ import { saveTelegram, deleteTelegram, saveAlerts } from './telegrams.ts';
 import { saveLlm, deleteLlm } from './llms.ts';
 import { replaceConnections, replaceDetectorConfig, settingsRevision } from './advanced.ts';
 import { recordArchiveCheck, finishCameraSetup } from './camera-setup.ts';
+import { followPresets, forgetChangedPresets } from './followed-presets.ts';
 
 interface Runtime {
 	validate(config: Config): Promise<void>;
@@ -116,7 +123,9 @@ export class ConfigurationStore {
 		resuming = false
 	): Promise<void> {
 		return this.enqueue(async () => {
-			const next = identifyCameras(normalizeConfiguration(document.config, document.app));
+			const next = forgetChangedPresets(
+				identifyCameras(normalizeConfiguration(document.config, document.app))
+			);
 			const current = await this.load();
 			if (current.app.devices) next.app.devices = current.app.devices;
 			else delete next.app.devices;
@@ -245,6 +254,19 @@ export class ConfigurationStore {
 
 	saveDetector(input: v.InferOutput<typeof detectorInput>): Promise<void> {
 		return this.update((document) => saveDetector(document, input));
+	}
+
+	/**
+	 * Bring detectors that follow a preset up to date with it, and name the ones that changed.
+	 * Nothing is written when all of them already are.
+	 */
+	followPresets(presets: DetectorPreset[]): Promise<string[]> {
+		return this.enqueue(async () => {
+			const document = await this.load();
+			const updated = followPresets(document, presets);
+			if (updated.length) await this.persist(document);
+			return updated;
+		});
 	}
 
 	deleteDetector(label: string): Promise<void> {

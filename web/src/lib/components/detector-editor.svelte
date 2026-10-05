@@ -298,7 +298,8 @@
 		<Field.Set>
 			<Field.Legend>What do you want to detect?</Field.Legend>
 			<Field.Description>
-				Choose a preset. It supplies everything needed to recognise that kind of event.
+				Choose a preset. It supplies everything needed to recognise that kind of event, and keeps
+				this detector up to date with new models.
 			</Field.Description>
 			{#if presets.length}
 				<RadioGroup.Root
@@ -322,7 +323,8 @@
 			{/if}
 			{#if !selectedPreset && (initial || preset)}
 				<p class="text-sm text-muted-foreground">
-					This detector uses its own settings, changed in Advanced. Choosing a preset replaces them.
+					This detector uses its own settings and does not get new models automatically. Choosing a
+					preset replaces them.
 				</p>
 			{/if}
 		</Field.Set>

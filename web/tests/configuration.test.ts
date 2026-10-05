@@ -10,6 +10,7 @@ import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { normalizeConfiguration, ConfigurationError } from '../src/lib/configuration.ts';
 import { DEFAULT_SCHEMA_URL, type DetectorConfig, type StreamMeta } from '../src/lib/schema.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
+import { presetVersion } from '../src/lib/server/configuration/followed-presets.ts';
 import { configurationAction } from '../src/lib/server/configuration/request.ts';
 import { isHttpError } from '@sveltejs/kit';
 
@@ -643,7 +644,11 @@ test('renaming or changing delivery settings keeps the monitoring preset and cam
 		detector: original,
 		meta: { label: 'Calving pen' }
 	});
-	const meta = { label: 'Calving pen', preset: 'calving-catcher' };
+	const meta = {
+		label: 'Calving pen',
+		preset: 'calving-catcher',
+		presetVersion: presetVersion(original)
+	};
 	assert.equal((await store.read()).app.streams[0].id, camera.id);
 	assert.deepEqual((await store.read()).app.detectors[0], meta);
 	const changed = structuredClone(original);
@@ -697,6 +702,110 @@ test('preset identity survives camera changes and follows an explicitly selected
 		meta: { label: 'Entrances', preset: 'calving-catcher' }
 	});
 	assert.equal((await store.read()).app.detectors[0].preset, 'calving-catcher');
+});
+
+/** The bundled presets after a release that brought a newer Cow Catcher model. */
+async function presetsWithNewModel() {
+	const presets = await readTestPresets();
+	const preset = presets.find(({ id }) => id === 'cow-catcher')!.detector;
+	preset.yolo = {
+		...preset.yolo,
+		model: 'https://models.example.test/cowcatcherV18.pt',
+		imgsz: 800
+	};
+	return { presets, preset };
+}
+
+test('a detector that follows a preset takes its new model and keeps what the person chose', async (t) => {
+	const { files, store } = await fixture(t, { detectors: [] });
+	await addPresetDetector(store, { label: 'Barn', source }, 'cow-catcher');
+	await addPresetDetector(store, { label: 'Calving pen', source: other }, 'calving-catcher');
+	const chosen = (await store.read()).config.detectors[0];
+	chosen.detection.source = [source, other];
+	chosen.exporters = { telegram: [{ token: 'fixture-token', chat: '123' }] };
+	chosen.vlm = [
+		{
+			prompt: 'Is a cow mounting?',
+			strategy: 'VIDEO',
+			key: 'fixture-key',
+			model: ['gemini/gemini-3.5-flash']
+		}
+	];
+	await store.saveDetector({ original: 'Barn', detector: chosen, meta: { label: 'Barn' } });
+	const before = await store.read();
+	const { presets, preset } = await presetsWithNewModel();
+
+	assert.deepEqual(await store.followPresets(presets), ['Barn']);
+	const after = await store.read();
+	assert.deepEqual(after.config.detectors[0], {
+		...before.config.detectors[0],
+		yolo: preset.yolo
+	});
+	assert.deepEqual(after.config.detectors[1], before.config.detectors[1]);
+	assert.equal(after.app.detectors[0].preset, 'cow-catcher');
+
+	// The next start finds nothing to do and replaces neither file.
+	const written = async () =>
+		(await Promise.all([fs.stat(files.config), fs.stat(files.app)])).map(({ ino }) => ino);
+	const saved = await written();
+	assert.deepEqual(await new ConfigurationStore(files).followPresets(presets), []);
+	assert.deepEqual(await written(), saved);
+});
+
+test('detectors with their own settings, or a preset that is gone, are not changed by a new preset', async (t) => {
+	const { store } = await fixture(t, { detectors: [] });
+	await addPresetDetector(store, { label: 'Barn', source }, 'cow-catcher');
+	await addPresetDetector(store, { label: 'Yard', source: other }, 'general');
+	const own = (await store.read()).config.detectors[0];
+	own.yolo = { ...own.yolo!, confidence: 0.7 };
+	await store.saveDetector({ original: 'Barn', detector: own, meta: { label: 'Barn' } });
+	const before = await store.read();
+	assert.deepEqual(before.app.detectors[0], { label: 'Barn' });
+	const { presets } = await presetsWithNewModel();
+	assert.deepEqual(await store.followPresets(presets.filter(({ id }) => id !== 'general')), []);
+	assert.deepEqual(await store.read(), before);
+});
+
+test('settings changed or moved in config.json itself stop following a preset', async (t) => {
+	const { presets } = await presetsWithNewModel();
+	// Someone tunes the followed detector in the file.
+	const tuned = await fixture(t, { detectors: [] });
+	await addPresetDetector(tuned.store, { label: 'Barn', source }, 'cow-catcher');
+	const config = JSON.parse(await readFile(tuned.files.config, 'utf8'));
+	config.detectors[0].yolo.confidence = 0.7;
+	await writeJson(tuned.files.config, config);
+	assert.deepEqual((await tuned.store.read()).app.detectors[0], { label: 'Barn' });
+	assert.deepEqual(await tuned.store.followPresets(presets), []);
+	assert.equal((await tuned.store.read()).config.detectors[0].yolo?.confidence, 0.7);
+
+	// Someone removes the followed detector in the file, so the next one takes its place.
+	const moved = await fixture(t, { detectors: [] });
+	await addPresetDetector(moved.store, { label: 'Barn', source }, 'cow-catcher');
+	await moved.store.saveDetector({
+		detector: { detection: { source: [other] }, yolo: { model: 'own-model.pt' } },
+		meta: { label: 'Yard' }
+	});
+	const both = JSON.parse(await readFile(moved.files.config, 'utf8'));
+	await writeJson(moved.files.config, { ...both, detectors: [both.detectors[1]] });
+	assert.deepEqual(await moved.store.followPresets(presets), []);
+	assert.equal((await moved.store.read()).config.detectors[0].yolo?.model, 'own-model.pt');
+});
+
+test('the recorded preset version does not depend on how the settings are written down', () => {
+	// app.json holds this value from earlier releases. Computing it differently would make every
+	// detector stop following its preset at the next update.
+	const settings = { yolo: { model: 'yolo11n.pt', confidence: 0.5 }, detection: { interval: 1 } };
+	const version = presetVersion({ ...settings, detection: { ...settings.detection, source: [] } });
+	assert.equal(version, '708de73ca71ea031e1d8231926fd04f8ee4e690b8ff75f85f944227793b982bd');
+	assert.equal(
+		presetVersion({
+			detection: { source: [source], interval: 1 },
+			exporters: { disk: [{ directory: 'general' }] },
+			vlm: [{ prompt: 'Is it there?', strategy: 'VIDEO', key: null }],
+			yolo: { confidence: 0.5, model: 'yolo11n.pt' }
+		}),
+		version
+	);
 });
 
 test('deleting the last detector saves the empty setup and stops managed detection', async (t) => {

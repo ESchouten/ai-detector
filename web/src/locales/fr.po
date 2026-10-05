@@ -1641,16 +1641,8 @@ msgid "Preset"
 msgstr "Préréglage"
 
 #: src/lib/components/detector-editor.svelte
-msgid "This detector uses its own settings, changed in Advanced. Choosing a preset replaces them."
-msgstr "Ce détecteur utilise ses propres paramètres, modifiés dans Avancé. Choisir un préréglage les remplace."
-
-#: src/lib/components/detector-editor.svelte
 msgid "What do you want to detect?"
 msgstr "Que voulez-vous détecter ?"
-
-#: src/lib/components/detector-editor.svelte
-msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
-msgstr "Choisissez un préréglage. Il fournit tout ce qu’il faut pour reconnaître ce type d’événement."
 
 #: src/lib/components/detector-editor.svelte
 msgid "Detector name"
@@ -3757,3 +3749,11 @@ msgstr ""
 #: src/lib/server/configuration/settings-files.ts
 msgid "The settings file {0} is damaged and cannot be read."
 msgstr "Le fichier de paramètres {0} est endommagé et ne peut pas être lu."
+
+#: src/lib/components/detector-editor.svelte
+msgid "This detector uses its own settings and does not get new models automatically. Choosing a preset replaces them."
+msgstr "Ce détecteur utilise ses propres paramètres et ne reçoit pas automatiquement les nouveaux modèles. Choisir un préréglage les remplace."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset. It supplies everything needed to recognise that kind of event, and keeps this detector up to date with new models."
+msgstr "Choisissez un préréglage. Il fournit tout ce qu’il faut pour reconnaître ce type d’événement et tient ce détecteur à jour avec les nouveaux modèles."

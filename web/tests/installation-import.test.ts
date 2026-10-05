@@ -51,7 +51,7 @@ async function fixture(t: TestContext) {
 	};
 	const app = {
 		streams: [{ label: 'Barn', source: camera }],
-		detectors: [{ label: 'Cow catcher', preset: 'cow-catcher' }],
+		detectors: [{ label: 'Cow catcher' }],
 		telegrams: [{ label: 'My phone', token: 'private-token', chat: '1234' }]
 	};
 	await writeJson(path.join(source, 'config.json'), config);

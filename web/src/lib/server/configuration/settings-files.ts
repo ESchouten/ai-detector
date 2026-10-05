@@ -14,6 +14,7 @@ import { webLog } from '../web-log.ts';
 import { settingsRevision } from './advanced.ts';
 import { identifyCameras } from './cameras.ts';
 import { writeConfiguration } from './files.ts';
+import { forgetChangedPresets } from './followed-presets.ts';
 
 export interface SettingsPaths {
 	config: string;
@@ -54,8 +55,8 @@ export class SettingsFiles {
 		try {
 			const input =
 				config === missingFile ? { $schema: DEFAULT_SCHEMA_URL, detectors: [] } : config;
-			const document = identifyCameras(
-				normalizeConfiguration(input, app === missingFile ? {} : app)
+			const document = forgetChangedPresets(
+				identifyCameras(normalizeConfiguration(input, app === missingFile ? {} : app))
 			);
 			if (config !== missingFile) await this.remember(document, app !== missingFile);
 			return document;

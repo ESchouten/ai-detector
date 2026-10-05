@@ -10,6 +10,10 @@ The web process owns one detector process. A started process is not proof of mon
 
 Camera pictures show the latest detection boxes over live video. The video runs independently of inference, so boxes can lag behind moving objects. At most four previews run per browser tab, and hidden ones are released.
 
+### Presets and new models
+
+A detector made from a preset follows it. When an update of AI Detector brings a newer model for that preset, the detector takes it at the next start, before monitoring begins; the first start downloads the model and may take longer. Its cameras, alerts and Validator stay as you set them. A detector whose detection settings you changed keeps them and is not updated; choose the preset again to follow it.
+
 ### Other devices on the network
 
 The application listens on `0.0.0.0:80`, so other devices can open `http://ai-detector.local/` or `http://<computer-IP>/`. The computer it runs on is trusted; every other browser needs a one-use pairing code from **Settings → Devices** (scan the QR code, then tap Connect). Codes expire after five minutes or ten wrong attempts; a connected browser is remembered for a year and can be removed there. A headless first start prints a code on the console.

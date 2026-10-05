@@ -29,7 +29,7 @@ A preset contains only detector settings: model, watched classes, event rules an
 
 Create a `presets/` folder in the data folder, beside `config.json`, and put detector JSON files directly in it; then reload the editor. The data folder is shown on the monitoring status page under **Technical details**.
 
-A local folder replaces the bundled choices: copy the bundled files into it to keep them. An empty folder gives an empty list, and no folder gives the bundled presets. `AIDETECTOR_PRESETS` names another folder, which must exist. An invalid file is reported by name; it is never replaced by something else.
+A local folder replaces the bundled choices: copy the bundled files into it to keep them. Such copies are yours, and a release no longer updates them. An empty folder gives an empty list, and no folder gives the bundled presets. `AIDETECTOR_PRESETS` names another folder, which must exist. An invalid file is reported by name; it is never replaced by something else.
 
 For example, `presets/entrance-activity.json` adds **Entrance Activity**:
 
@@ -58,9 +58,10 @@ A preset can prepare verification without choosing a provider. The question wait
 
 ## Saved detectors
 
-Applying a preset copies its settings into the saved detector. Editing, renaming or removing the preset file afterwards changes nothing that is saved.
+Applying a preset copies its settings into the saved detector, which then follows that preset. When the application starts and the preset's detection settings have changed, as after an update that brings a newer model, the detector takes them before monitoring starts. Its cameras, delivery settings, AI connection and question stay as saved. Renaming or removing the preset file changes nothing that is saved.
 
-- A detector keeps its preset name when its own name, cameras or delivery settings change. Changing its detection settings makes it a custom detector.
+- A detector keeps following its preset when its own name, cameras or delivery settings change. Changing its detection settings, in the editor, under Advanced or in `config.json` itself, makes it a custom detector: it keeps its settings and no preset updates it. Choosing the preset again makes it follow once more.
+- `presetVersion` in `app.json` records which detection settings the preset gave. It is how the application tells a detector that still follows from one that was changed.
 - A new detector takes the preset's recording and delivery defaults. An existing detector keeps its delivery settings when another preset is applied.
 - A detector can watch several cameras, and a camera can be watched by several detectors. Telegram recipients are assigned to detectors and apply to every camera of that detector.
 - Saving an AI connection fills in the detectors whose preset question was waiting for one. Detectors that already have a model or connection are not reassigned. Turning verification off clears the keys and keeps questions and models.

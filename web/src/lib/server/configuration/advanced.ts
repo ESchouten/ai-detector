@@ -33,8 +33,10 @@ export function replaceDetectorConfig(document: Configuration, input: unknown): 
 		if (match < 0) return { label: `Detector ${index + 1}` };
 		used.add(match);
 		const meta = { ...document.app.detectors[match] };
-		if (!isDeepStrictEqual(detectorSettings(previous[match]), detectorSettings(detector)))
+		if (!isDeepStrictEqual(detectorSettings(previous[match]), detectorSettings(detector))) {
 			delete meta.preset;
+			delete meta.presetVersion;
+		}
 		return meta;
 	});
 	document.config = next;

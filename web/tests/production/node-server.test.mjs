@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFile, spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { once } from 'node:events';
 import { createServer, request } from 'node:http';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
@@ -50,6 +51,11 @@ function commandBody(input) {
 	});
 }
 const startBody = commandBody(undefined);
+
+/** What app.json records for a detector that follows a preset; takes its detection settings as ordered JSON. */
+function presetVersion(settings) {
+	return createHash('sha256').update(settings).digest('hex');
+}
 
 test('saved logs are searchable in the page and downloadable with conditional refreshes', async (t) => {
 	const { directory, base } = await startServer(t);
@@ -796,6 +802,65 @@ test(
 );
 
 test(
+	'a detector that follows a preset takes the new model of that preset when the server starts',
+	{ skip: process.platform === 'win32', timeout: 20000 },
+	async (t) => {
+		const source = 'rtsp://camera.example.test/workshop';
+		const { directory, base, logs } = await startServer(t, undefined, async (directory) => {
+			await mkdir(path.join(directory, 'presets'));
+			await Promise.all([
+				// The preset as a new release brings it, with the second model.
+				writeFile(
+					path.join(directory, 'presets', 'workshop.json'),
+					JSON.stringify({ detection: { interval: 2 }, yolo: { model: 'workshop-v2.onnx' } })
+				),
+				writeFile(
+					path.join(directory, 'config.json'),
+					JSON.stringify({
+						detectors: [
+							{
+								detection: { source: [source], interval: 2 },
+								yolo: { model: 'workshop-v1.onnx' },
+								exporters: { disk: [{ directory: 'workshop' }] }
+							}
+						]
+					})
+				),
+				writeFile(
+					path.join(directory, 'app.json'),
+					JSON.stringify({
+						streams: [{ id: 'workshop-camera', label: 'Workshop camera', source }],
+						detectors: [
+							{
+								label: 'Workshop rule',
+								preset: 'workshop',
+								// As recorded when the preset still gave the first model.
+								presetVersion: presetVersion(
+									'{"detection":{"interval":2},"yolo":{"model":"workshop-v1.onnx"}}'
+								)
+							}
+						],
+						telegrams: []
+					})
+				)
+			]);
+		});
+		assert.equal((await send(`${base}/detectors`)).status, 200);
+		const config = JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8'));
+		assert.deepEqual(config.detectors, [
+			{
+				detection: { source: [source], interval: 2 },
+				yolo: { model: 'workshop-v2.onnx' },
+				exporters: { disk: [{ directory: 'workshop' }] }
+			}
+		]);
+		const app = JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8'));
+		assert.equal(app.detectors[0].preset, 'workshop');
+		assert.match(logs(), /Detector "Workshop rule" now has the current settings of its preset/);
+	}
+);
+
+test(
 	'production saved cameras remain editable when a preset file becomes invalid',
 	{ skip: process.platform === 'win32', timeout: 20000 },
 	async (t) => {
@@ -807,7 +872,13 @@ test(
 			yolo: { model: 'workshop-safety.onnx', confidence: { helmet: 0.75 } },
 			exporters: { disk: [{ directory: 'workshop-recordings' }] }
 		};
-		const detectorMeta = { label: 'Workshop rule', preset: 'workshop' };
+		const detectorMeta = {
+			label: 'Workshop rule',
+			preset: 'workshop',
+			presetVersion: presetVersion(
+				'{"detection":{"interval":2},"yolo":{"confidence":{"helmet":0.75},"model":"workshop-safety.onnx"}}'
+			)
+		};
 		const configPath = path.join(directory, 'config.json');
 		const configText = JSON.stringify({ detectors: [detector] });
 		await mkdir(path.join(directory, 'presets'));

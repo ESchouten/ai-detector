@@ -1641,16 +1641,8 @@ msgid "Preset"
 msgstr "Voorinstelling"
 
 #: src/lib/components/detector-editor.svelte
-msgid "This detector uses its own settings, changed in Advanced. Choosing a preset replaces them."
-msgstr "Deze detector gebruikt eigen instellingen, aangepast in Geavanceerd. Als je een voorinstelling kiest, worden die vervangen."
-
-#: src/lib/components/detector-editor.svelte
 msgid "What do you want to detect?"
 msgstr "Wat wil je detecteren?"
-
-#: src/lib/components/detector-editor.svelte
-msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
-msgstr "Kies een voorinstelling. Die bevat alles wat nodig is om dat soort gebeurtenissen te herkennen."
 
 #: src/lib/components/detector-editor.svelte
 msgid "Detector name"
@@ -3743,3 +3735,11 @@ msgstr ""
 #: src/lib/server/configuration/settings-files.ts
 msgid "The settings file {0} is damaged and cannot be read."
 msgstr "Het instellingenbestand {0} is beschadigd en kan niet worden gelezen."
+
+#: src/lib/components/detector-editor.svelte
+msgid "This detector uses its own settings and does not get new models automatically. Choosing a preset replaces them."
+msgstr "Deze detector gebruikt eigen instellingen en krijgt nieuwe modellen niet vanzelf. Als je een voorinstelling kiest, worden die vervangen."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset. It supplies everything needed to recognise that kind of event, and keeps this detector up to date with new models."
+msgstr "Kies een voorinstelling. Die bevat alles wat nodig is om dat soort gebeurtenissen te herkennen, en zorgt dat deze detector nieuwe modellen vanzelf krijgt."

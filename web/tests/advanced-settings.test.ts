@@ -72,8 +72,7 @@ test('advanced edits preserve names, camera identities and delivery; tuning clea
 	draft.detectors[0].detection.interval = 17;
 	await store.saveAdvanced('config', draft, settingsRevision(saved));
 	saved = await store.read();
-	assert.equal(saved.app.detectors[0].preset, undefined);
-	assert.equal(saved.app.detectors[0].label, 'Barn');
+	assert.deepEqual(saved.app.detectors[0], { label: 'Barn' });
 	assert.equal(saved.app.streams[0].id, camera.id);
 	assert.equal(saved.config.detectors[0].detection.interval, 17);
 	assert.deepEqual(saved.config.detectors[0].exporters, { disk: [{ strategy: 'ALL' }] });

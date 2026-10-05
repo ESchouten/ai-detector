@@ -82,7 +82,7 @@ Services take their dependencies as constructor arguments and are tested with No
 
 **Exports and backups** stream through `zip-download.ts` with bounded buffers and cancellation; the browser's download manager receives them.
 
-**Telegram.** One consumer per bot token: `telegram-service.ts` polls for reviews while the server runs, and pairing reserves the bot for its five-minute session. `telegram-inbox.ts` remembers how far each bot was read only while the server runs; Telegram keeps that position itself and delivers again only what was never confirmed. Neither holds the settings queue.
+**Telegram.** One consumer per bot token: `telegram-service.ts` polls for reviews while the server runs, and pairing reserves the bot for its five-minute session. `telegram-inbox.ts` remembers how far each bot was read only while the server runs; Telegram keeps that position itself and delivers again only what was never confirmed. After saving a review, `telegram-reviews.ts` redraws the buttons of the pressed alert with the choice coloured; their format is the one the detector sends in `adapters/exporters/telegram.py`. Neither holds the settings queue.
 
 **Access.** `authorizeRequest` runs before every dynamic route, remote command and media request. The dashboard on this computer is trusted when the peer and the URL host are both loopback and the request is not cross-site; that decision is recorded in `locals.deviceId` and asked for with `isLocalDashboard`. Other browsers pair with a one-use code and receive a revocable cookie; only its hash is stored. Reading the paired devices looks at no other setting and does not wait for the settings queue, so access and recovery keep working with broken settings or a slow detector.
 

@@ -26,7 +26,7 @@ The interface is available in English, Nederlands, Deutsch and Français. An ins
 
 **Enter chat ID manually** is for a bot that another application polls or that has a webhook; it sends a test and asks you to confirm receipt. Setup never removes another application's webhook.
 
-Alerts carry 👍 and 👎 buttons that save a review. For that the application must be running (monitoring may be paused) and the bot must be dedicated to this installation.
+Alerts carry 👍 and 👎 buttons that save a review, and the thumb you press stays coloured on that alert. For that the application must be running (monitoring may be paused) and the bot must be dedicated to this installation. The colour shows what was pressed on that message: a review changed in the web interface, or on a copy of the alert in another chat, does not recolour it.
 
 ### Validator
 

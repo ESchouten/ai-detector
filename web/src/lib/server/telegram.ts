@@ -1,5 +1,5 @@
 import { Api, GrammyError, HttpError } from 'grammy/web';
-import type { ChatAdministratorRights, Update } from 'grammy/types';
+import type { ChatAdministratorRights, InlineKeyboardMarkup, Update } from 'grammy/types';
 import * as v from 'valibot';
 import { ConfigurationError } from '../configuration.ts';
 import type { TelegramDestination, TelegramRecipient } from '../telegram.ts';
@@ -28,6 +28,18 @@ const messageSchema = v.object({
 	text: v.optional(v.string()),
 	from: v.optional(userSchema)
 });
+/** The message a pressed button belongs to, with the buttons as they are shown now. */
+const pressedMessageSchema = v.object({
+	message_id: v.number(),
+	chat: chatSchema,
+	reply_markup: v.optional(
+		v.object({
+			inline_keyboard: v.array(
+				v.array(v.object({ callback_data: v.optional(v.string()), style: v.optional(v.string()) }))
+			)
+		})
+	)
+});
 const updatesSchema = v.array(
 	v.object({
 		update_id: v.pipe(v.number(), v.integer()),
@@ -36,7 +48,7 @@ const updatesSchema = v.array(
 				id: v.string(),
 				from: userSchema,
 				data: v.optional(v.string()),
-				message: v.optional(messageSchema)
+				message: v.optional(pressedMessageSchema)
 			})
 		),
 		message: v.optional(messageSchema),
@@ -158,6 +170,7 @@ export function telegramRecipient(chat: v.InferOutput<typeof chatSchema>): Teleg
 }
 
 export type TelegramUpdate = Awaited<ReturnType<typeof getTelegramUpdates>>[number];
+export type PressedMessage = v.InferOutput<typeof pressedMessageSchema>;
 
 export function telegramChats(updates: TelegramUpdate[]) {
 	const chats = new Map<string, TelegramRecipient>();
@@ -179,6 +192,19 @@ export async function answerTelegramReview(
 	signal?: AbortSignal
 ): Promise<void> {
 	await request(api(token, signal).answerCallbackQuery(callbackId, { text }), signal);
+}
+
+export async function showTelegramButtons(
+	token: string,
+	chat: number,
+	message: number,
+	buttons: InlineKeyboardMarkup,
+	signal?: AbortSignal
+): Promise<void> {
+	await request(
+		api(token, signal).editMessageReplyMarkup(chat, message, { reply_markup: buttons }),
+		signal
+	);
 }
 
 export async function sendTelegramTest(token: string, chat: string): Promise<void> {

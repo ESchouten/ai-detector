@@ -20,14 +20,43 @@ const connections = [
 	{ token: 'fixture-token', chat: '-456' }
 ];
 
-function callback(update_id = 10, stage = 'approved', chat = 123): TelegramUpdate {
+/** The alert's buttons, with the thumb that Telegram shows as chosen. */
+function thumbs(chosen?: 'approved' | 'rejected') {
+	return {
+		inline_keyboard: [
+			[
+				{
+					text: '👍',
+					callback_data: `review:${eventId}:approved`,
+					...(chosen === 'approved' && { style: 'success' })
+				},
+				{
+					text: '👎',
+					callback_data: `review:${eventId}:rejected`,
+					...(chosen === 'rejected' && { style: 'danger' })
+				}
+			]
+		]
+	};
+}
+
+function callback(
+	update_id = 10,
+	stage = 'approved',
+	chat = 123,
+	shown?: 'approved' | 'rejected'
+): TelegramUpdate {
 	return {
 		update_id,
 		callback_query: {
 			id: 'callback-' + update_id,
 			data: `review:${eventId}:${stage}`,
 			from: { id: 123, is_bot: false },
-			message: { message_id: 42, chat: { id: chat, type: chat > 0 ? 'private' : 'channel' } }
+			message: {
+				message_id: 42,
+				chat: { id: chat, type: chat > 0 ? 'private' : 'channel' },
+				reply_markup: thumbs(shown)
+			}
 		}
 	};
 }
@@ -63,6 +92,7 @@ async function fixture(t: TestContext) {
 		const replies: Record<string, unknown> = {
 			getUpdates: updates,
 			answerCallbackQuery: true,
+			editMessageReplyMarkup: true,
 			getMe: { is_bot: true, first_name: 'Alerts', username: 'FixtureBot' },
 			getWebhookInfo: { url: '' },
 			sendMessage: { message_id: 50 }
@@ -76,6 +106,8 @@ async function fixture(t: TestContext) {
 		archive,
 		calls,
 		receive,
+		sent: (method: string) =>
+			calls.filter((call) => call.method === method).map((call) => call.body),
 		inbox: new TelegramInbox(receive),
 		setUpdates(value: TelegramUpdate[]) {
 			updates = value;
@@ -87,13 +119,39 @@ test('private and channel callbacks from the same bot override each other and th
 	const f = await fixture(t);
 	await f.receive('fixture-token', callback());
 	assert.equal((await f.archive.readReview(address))?.validated, true);
-	assert.match(String(f.calls.at(-1)?.body.text), /Confirmed.*Saved/);
+	assert.match(String(f.sent('answerCallbackQuery').at(-1)?.text), /Confirmed.*Saved/);
 	await f.receive('fixture-token', callback(11, 'rejected', -456));
 	const recording = (await f.archive.page({ offset: 0, limit: 24 })).items[0];
 	assert.equal(recording.stage, 'rejected');
 	assert.equal(recording.validated, null);
 	assert.equal(recording.review?.source, 'telegram');
-	assert.match(String(f.calls.at(-1)?.body.text), /false alarm.*Saved/);
+	assert.match(String(f.sent('answerCallbackQuery').at(-1)?.text), /false alarm.*Saved/);
+});
+
+test('the pressed thumb stays coloured on that alert, and pressing it again changes nothing', async (t) => {
+	const f = await fixture(t);
+	await f.receive('fixture-token', callback());
+	await f.receive('fixture-token', callback(11, 'approved', 123, 'approved'));
+	await f.receive('fixture-token', callback(12, 'rejected', -456, 'approved'));
+	assert.deepEqual(f.sent('editMessageReplyMarkup'), [
+		{ chat_id: 123, message_id: 42, reply_markup: thumbs('approved') },
+		{ chat_id: -456, message_id: 42, reply_markup: thumbs('rejected') }
+	]);
+});
+
+test('a review is saved and answered even when its alert cannot be redrawn', async (t) => {
+	const f = await fixture(t);
+	const transport = globalThis.fetch;
+	t.mock.method(globalThis, 'fetch', async (url: string, init: RequestInit) =>
+		String(url).endsWith('/editMessageReplyMarkup')
+			? Response.json({ ok: false, error_code: 400, description: 'Bad Request: message not found' })
+			: transport(url, init)
+	);
+	const warn = t.mock.method(console, 'warn', () => undefined);
+	await f.receive('fixture-token', callback());
+	assert.equal((await f.archive.readReview(address))?.validated, true);
+	assert.match(String(f.sent('answerCallbackQuery').at(-1)?.text), /Confirmed.*Saved/);
+	assert.equal(warn.mock.callCount(), 1);
 });
 
 test('unconnected chats, another bot and bot users cannot review local recordings', async (t) => {
@@ -105,6 +163,7 @@ test('unconnected chats, another bot and bot users cannot review local recording
 	bot.callback_query!.from.is_bot = true;
 	await f.receive('fixture-token', bot);
 	assert.equal(await f.archive.readReview(address), null);
+	assert.deepEqual(f.sent('editMessageReplyMarkup'), []);
 });
 
 test('missing recordings and unrelated callbacks never claim a successful saved review', async (t) => {
@@ -113,6 +172,7 @@ test('missing recordings and unrelated callbacks never claim a successful saved 
 	missing.callback_query!.data = `review:${'b'.repeat(32)}:approved`;
 	await f.receive('fixture-token', missing);
 	assert.match(String(f.calls.at(-1)?.body.text), /no longer available/);
+	assert.deepEqual(f.sent('editMessageReplyMarkup'), []);
 	const count = f.calls.length;
 	const unrelated = callback();
 	unrelated.callback_query!.data = 'pairing-secret';

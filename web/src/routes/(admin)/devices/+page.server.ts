@@ -1,22 +1,21 @@
 import { lanAddresses } from '../../../../desktop/network-addresses.ts';
 import QRCode from 'qrcode';
 import { fail } from '@sveltejs/kit';
-import { access } from '$lib/server/access';
+import { access, isLocalDashboard } from '$lib/server/access';
 import type { Actions, PageServerLoad } from './$types';
-
-const isLocal = (url: URL) => ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
 
 export const load: PageServerLoad = async ({ locals, url }) => ({
 	devices: await access.list(),
 	current: locals.deviceId,
-	networks: isLocal(url) ? lanAddresses() : [],
+	networks: isLocalDashboard(locals) ? lanAddresses() : [],
 	encrypted: url.protocol === 'https:'
 });
 
 export const actions: Actions = {
-	connect: async ({ url, request }) => {
+	connect: async ({ url, request, locals }) => {
 		const destination = new URL('/pair', url);
-		if (isLocal(url)) {
+		// This computer shares an address others can reach; a paired device shares the one it used.
+		if (isLocalDashboard(locals)) {
 			const form = await request.formData();
 			const networks = lanAddresses();
 			const selected = form.get('address');

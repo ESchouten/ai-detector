@@ -12,6 +12,14 @@ export const sessionCookie = (secure: boolean) => ({
 	maxAge: 365 * 24 * 60 * 60
 });
 
+/** `locals.deviceId` of a browser on this computer; a paired device carries its own id. */
+export const LOCAL_DEVICE = 'local';
+
+/** Whether the request being answered comes from the dashboard on this computer. */
+export function isLocalDashboard(locals: App.Locals): boolean {
+	return locals.deviceId === LOCAL_DEVICE;
+}
+
 /** The local dashboard is trusted; other browsers must be paired. */
 export async function authorizeRequest(event: RequestEvent): Promise<void> {
 	const { request, url, cookies } = event;
@@ -27,7 +35,7 @@ export async function authorizeRequest(event: RequestEvent): Promise<void> {
 			request
 		)
 	) {
-		event.locals.deviceId = 'local';
+		event.locals.deviceId = LOCAL_DEVICE;
 		return;
 	}
 	const device = await access.identify(cookies.get(ACCESS_COOKIE));

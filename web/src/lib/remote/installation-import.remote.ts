@@ -4,13 +4,11 @@ import * as v from 'valibot';
 import { installationImport } from '$lib/server/installation-import';
 import { importError } from '$lib/server/installation-import/service';
 import { chooseImportFolder } from '$lib/server/folder-picker';
+import { isLocalDashboard } from '$lib/server/access';
 
+/** Folders on this computer are offered only to the dashboard opened on this computer. */
 function isLocal(): boolean {
-	const event = getRequestEvent();
-	return (
-		['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(event.getClientAddress()) &&
-		['localhost', '127.0.0.1', '[::1]'].includes(event.url.hostname)
-	);
+	return isLocalDashboard(getRequestEvent().locals);
 }
 
 async function locally<T>(operation: () => Promise<T>): Promise<T> {

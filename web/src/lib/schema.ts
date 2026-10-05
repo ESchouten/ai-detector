@@ -85,7 +85,17 @@ export const streamMeta = v.object({
 	setup: v.optional(cameraSetup)
 });
 const identity = v.pipe(v.string(), v.minLength(1));
-export const telegramMeta = v.object({ label: text, token: identity, chat: identity });
+const clockTime = v.pipe(
+	v.string(),
+	v.regex(/^([01]\d|2[0-3]):[0-5]\d$/, () => 'Enter a time such as 22:00.')
+);
+export const telegramMeta = v.object({
+	label: text,
+	token: identity,
+	chat: identity,
+	/** Alerts between these times of day arrive without sound. */
+	quiet: v.optional(v.object({ start: clockTime, end: clockTime }))
+});
 const headerName = v.pipe(
 	text,
 	v.regex(/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/, () => 'Enter a valid header name.')

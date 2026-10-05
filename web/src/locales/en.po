@@ -1366,6 +1366,7 @@ msgstr "Done"
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -3764,3 +3765,61 @@ msgstr "Home screen"
 #: src/routes/(admin)/settings/+page.svelte
 msgid "Open AI Detector with one tap from this device’s home screen."
 msgstr "Open AI Detector with one tap from this device’s home screen."
+
+#: src/lib/schema.ts
+msgid "Enter a time such as 22:00."
+msgstr "Enter a time such as 22:00."
+
+#: src/lib/server/recording-export.ts
+msgid ""
+"This export holds the original photos only: pictures with boxes and video clips were left out.\n"
+""
+msgstr ""
+"This export holds the original photos only: pictures with boxes and video clips were left out.\n"
+""
+
+#: src/lib/components/export-recordings.svelte
+msgid "Only the original photos"
+msgstr "Only the original photos"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Leaves out videos and pictures with boxes: a much smaller ZIP to share for model improvement."
+msgstr "Leaves out videos and pictures with boxes: a much smaller ZIP to share for model improvement."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Quiet from"
+msgstr "Quiet from"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Until"
+msgstr "Until"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Quiet hours"
+msgstr "Quiet hours"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Alerts between these times still arrive, but without sound. Leave both empty for sound at any hour."
+msgstr "Alerts between these times still arrive, but without sound. Leave both empty for sound at any hour."
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Recording deleted"
+msgstr "Recording deleted"
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Could not delete the recording. Please try again."
+msgstr "Could not delete the recording. Please try again."
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Delete recording"
+msgstr "Delete recording"
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Delete this recording?"
+msgstr "Delete this recording?"
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Its pictures and video are removed from this computer and cannot be brought back."
+msgstr "Its pictures and video are removed from this computer and cannot be brought back."

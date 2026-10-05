@@ -4,6 +4,7 @@
 	import * as v from 'valibot';
 	import { SvelteURLSearchParams } from 'svelte/reactivity';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Input } from '$lib/components/ui/input';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Field from '$lib/components/ui/field';
@@ -16,13 +17,15 @@
 	let open = $state(false);
 	let from = $state('');
 	let to = $state('');
+	let photosOnly = $state(false);
 	const selection = $derived(
 		v.safeParse(recordingExportInput, { type, stage, from: from || undefined, to: to || undefined })
 	);
 	const count = $derived(open && selection.success ? getExportCount(selection.output) : null);
 	const search = $derived.by(() => {
 		const params = new SvelteURLSearchParams();
-		for (const [key, value] of Object.entries({ type, stage, from, to })) {
+		const content = photosOnly ? 'photos' : '';
+		for (const [key, value] of Object.entries({ type, stage, from, to, content })) {
 			if (value) params.set(key, value);
 		}
 		return params.toString();
@@ -71,6 +74,16 @@
 			<Field.Description id="export-dates-help"
 				>Optional. Leave both empty to include all dates.</Field.Description
 			>
+			<Field.Field orientation="horizontal">
+				<Checkbox id="export-photos" bind:checked={photosOnly} />
+				<Field.Content>
+					<Field.Label for="export-photos">Only the original photos</Field.Label>
+					<Field.Description>
+						Leaves out videos and pictures with boxes: a much smaller ZIP to share for model
+						improvement.
+					</Field.Description>
+				</Field.Content>
+			</Field.Field>
 		</Field.Group>
 		{#if !selection.success}
 			<p id="export-dates-error" role="alert" class="text-sm text-danger-foreground">

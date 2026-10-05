@@ -1,10 +1,13 @@
 <script lang="ts">
-	import { ChevronLeft, ChevronRight } from '@lucide/svelte';
-	import { Button } from '$lib/components/ui/button';
+	import { ChevronLeft, ChevronRight, Trash2 } from '@lucide/svelte';
+	import { toast } from 'svelte-sonner';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Pill from '$lib/components/pill.svelte';
 	import { detectionKey, recordingVerdict, type Detection } from '$lib/detections';
 	import { clipLength, dayHeading, percent, timeOfDay } from '$lib/format';
+	import { removeDetection } from '$lib/remote/detections.remote';
 	import ReviewButtons from './review-buttons.svelte';
 	import { categoryName, recordingMedia } from './media';
 
@@ -13,14 +16,32 @@
 		entries,
 		selected = $bindable(),
 		colorSeeds,
-		onreview
+		onreview,
+		onremove
 	}: {
 		entries: Detection[];
 		/** Key of the open recording, or null when closed. */
 		selected: string | null;
 		colorSeeds: Record<string, string>;
 		onreview: (entry: Detection) => void;
+		onremove: (entry: Detection) => void;
 	} = $props();
+	let confirmRemove = $state(false);
+	let removing = $state(false);
+
+	async function remove(entry: Detection) {
+		removing = true;
+		try {
+			const { type, archiveStage, timestamp } = entry;
+			await removeDetection({ type, archiveStage, timestamp });
+			onremove(entry);
+			toast.success('Recording deleted');
+		} catch {
+			toast.error('Could not delete the recording. Please try again.');
+		} finally {
+			removing = false;
+		}
+	}
 	const index = $derived(entries.findIndex((entry) => detectionKey(entry) === selected));
 	const entry = $derived(index >= 0 ? entries[index] : undefined);
 	const verdict = $derived(entry ? recordingVerdict(entry) : null);
@@ -112,7 +133,32 @@
 						{index + 1} of {entries.length}
 					</span>
 				</div>
-				<ReviewButtons {entry} {onreview} labels />
+				<div class="flex items-center gap-2">
+					<ReviewButtons {entry} {onreview} labels />
+					<AlertDialog.Root bind:open={confirmRemove}>
+						<AlertDialog.Trigger
+							class={buttonVariants({ variant: 'ghost', size: 'icon-sm' })}
+							disabled={removing}
+							aria-label="Delete recording"
+							title="Delete recording"><Trash2 aria-hidden="true" /></AlertDialog.Trigger
+						>
+						<AlertDialog.Content>
+							<AlertDialog.Header>
+								<AlertDialog.Title>Delete this recording?</AlertDialog.Title>
+								<AlertDialog.Description>
+									Its pictures and video are removed from this computer and cannot be brought back.
+								</AlertDialog.Description>
+							</AlertDialog.Header>
+							<AlertDialog.Footer>
+								<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+								<AlertDialog.Action
+									class={buttonVariants({ variant: 'destructive' })}
+									onclick={() => remove(entry)}>Delete recording</AlertDialog.Action
+								>
+							</AlertDialog.Footer>
+						</AlertDialog.Content>
+					</AlertDialog.Root>
+				</div>
 			</div>
 		{/if}
 	</Dialog.Content>

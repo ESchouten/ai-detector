@@ -31,7 +31,9 @@ export const recordingExportInput = v.pipe(
 		),
 		stage: v.optional(v.picklist(STAGES)),
 		from: v.optional(calendarDate),
-		to: v.optional(calendarDate)
+		to: v.optional(calendarDate),
+		/** Only the picture without boxes and the event's details, to share for training a model. */
+		content: v.optional(v.literal('photos'))
 	}),
 	v.check(
 		({ from, to }) => !from || !to || from <= to,

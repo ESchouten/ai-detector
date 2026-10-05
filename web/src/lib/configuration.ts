@@ -11,7 +11,8 @@ import {
 	type Config,
 	type Configuration,
 	type DetectorConfig,
-	type TelegramConfig
+	type TelegramConfig,
+	type TelegramMeta
 } from './schema.ts';
 
 export { cameraConnectionMeta, detectorMeta, telegramMeta } from './schema.ts';
@@ -128,6 +129,11 @@ export function uniqueLabel(label: string, used: Set<string>): string {
 
 export function sameTelegram(left: TelegramConfig, right: TelegramConfig): boolean {
 	return left.token === right.token && left.chat === right.chat;
+}
+
+/** What a detector needs to alert a recipient; quiet hours belong to the recipient. */
+export function telegramExporter({ token, chat, quiet }: TelegramMeta): TelegramConfig {
+	return quiet ? { token, chat, quiet } : { token, chat };
 }
 
 /** Preset identity follows detection settings, independently of connections and delivery. */

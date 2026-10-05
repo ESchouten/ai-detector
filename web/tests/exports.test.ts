@@ -181,6 +181,25 @@ test('ZIP includes original media and metadata across all pages, but no configur
 	);
 });
 
+test('an export of photos only holds the picture without boxes and the details of each event', async (t) => {
+	const { root, archive } = await fixture(t);
+	const timestamp = '2026-09-22T12-00-00';
+	await event(root, 'activity', 'approved', timestamp);
+	const folder = path.join(root, 'activity', 'approved', timestamp);
+	for (const name of ['clean.jpg', 'best.jpg', `${timestamp}_0.jpg`])
+		await writeFile(path.join(folder, name), `image ${name}`);
+	const files = await unzip(
+		await exportRecordings(archive, { content: 'photos' }, new Request('http://localhost/export'))
+	);
+	assert.deepEqual(Object.keys(files).sort(), [
+		'PHOTOS-ONLY.txt',
+		'README.txt',
+		`detections/activity/approved/${timestamp}/clean.jpg`,
+		`detections/activity/approved/${timestamp}/metadata.json`
+	]);
+	assert.match(Buffer.from(files['PHOTOS-ONLY.txt']).toString(), /original photos only/);
+});
+
 test(
 	'export ignores linked media and rejects a category link outside the archive',
 	{ skip: process.platform === 'win32' },

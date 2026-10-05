@@ -3,6 +3,7 @@ import {
 	alertsInput,
 	ConfigurationError,
 	sameTelegram,
+	telegramExporter,
 	telegramInput
 } from '../../configuration.ts';
 import type { Configuration } from '../../schema.ts';
@@ -24,14 +25,16 @@ export function saveTelegram(
 		throw new ConfigurationError('This notification channel or name already exists.');
 	}
 	const previous = app.telegrams[index];
-	const telegram = { label: input.label, token: input.token, chat: input.chat };
+	const telegram = { label: input.label, token: input.token, chat: input.chat, quiet: input.quiet };
+	if (!telegram.quiet) delete telegram.quiet;
 	if (index < 0) app.telegrams.push(telegram);
 	else app.telegrams[index] = telegram;
 	if (!previous) return;
 	for (const detector of config.detectors) {
 		for (const exporter of detector.exporters?.telegram ?? []) {
-			if (sameTelegram(exporter, previous))
-				Object.assign(exporter, { token: input.token, chat: input.chat });
+			if (!sameTelegram(exporter, previous)) continue;
+			delete exporter.quiet;
+			Object.assign(exporter, telegramExporter(telegram));
 		}
 	}
 }
@@ -68,7 +71,7 @@ export function saveAlerts(
 		if (selected.has(document.app.detectors[index].label)) {
 			if (!assigned) {
 				detector.exporters ??= {};
-				detector.exporters.telegram = [...channels, { token: input.token, chat: input.chat }];
+				detector.exporters.telegram = [...channels, telegramExporter(input)];
 			}
 		} else if (assigned) {
 			detector.exporters!.telegram = channels.filter((channel) => !sameTelegram(channel, input));

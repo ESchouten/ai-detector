@@ -92,6 +92,17 @@ test('reviewing refuses traversal and missing recordings without creating archiv
 	assert.deepEqual(await archive.types(), ['cow']);
 });
 
+test('deleting a recording removes its files and it from the list, and nothing outside the archive', async (t) => {
+	const { archive, event } = await fixture(t);
+	const address = { type: 'cow', archiveStage: 'approved' as const, timestamp };
+	assert.equal((await archive.page({ offset: 0, limit: 24 })).items.length, 1);
+	await assert.rejects(archive.remove({ ...address, type: '..' }), ArchivePathError);
+	await archive.remove(address);
+	await assert.rejects(readFile(path.join(event, 'metadata.json')), { code: 'ENOENT' });
+	assert.equal((await archive.page({ offset: 0, limit: 24 })).items.length, 0);
+	await assert.rejects(archive.remove(address), { code: 'ENOENT' });
+});
+
 test('an unreadable review excludes that recording with a warning instead of losing the decision', async (t) => {
 	const { archive, event } = await fixture(t);
 	const address = { type: 'cow', archiveStage: 'approved' as const, timestamp };

@@ -91,6 +91,12 @@
 		nextOffset -= before - entries.length;
 	}
 
+	function removed(gone: Detection) {
+		reviewVersion += 1;
+		entries = entries.filter((entry) => detectionKey(entry) !== detectionKey(gone));
+		nextOffset -= 1;
+	}
+
 	async function loadNextPage(reset = false, filters = { type, stage }) {
 		if (!reset && (isLoading || !hasMore)) {
 			return;
@@ -397,4 +403,5 @@
 	bind:selected={viewing}
 	colorSeeds={recordingPresets}
 	onreview={reviewed}
+	onremove={removed}
 />

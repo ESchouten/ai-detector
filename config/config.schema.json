@@ -288,6 +288,28 @@
       "title": "OnnxConfig",
       "type": "object"
     },
+    "QuietHours": {
+      "additionalProperties": false,
+      "description": "A daily period, in this computer's local time; it may run past midnight.",
+      "properties": {
+        "start": {
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "End",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "QuietHours",
+      "type": "object"
+    },
     "SourceConfig": {
       "additionalProperties": false,
       "properties": {
@@ -435,6 +457,18 @@
           "exclusiveMinimum": 0,
           "title": "Alert Every",
           "type": "integer"
+        },
+        "quiet": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QuietHours"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Alerts in this period arrive without sound."
         },
         "timeout": {
           "default": 30,

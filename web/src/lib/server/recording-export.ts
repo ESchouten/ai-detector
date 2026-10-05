@@ -16,10 +16,18 @@ const MEDIA_EXTENSIONS = new Set([
 	'.mov'
 ]);
 
+const PHOTO_FILES = new Set(['clean.jpg', 'metadata.json']);
+
+function photosNotice(): string {
+	return 'This export holds the original photos only: pictures with boxes and video clips were left out.\n';
+}
+
 async function* recordingFiles(
 	directory: string,
-	locations: ArchiveLocation[]
+	locations: ArchiveLocation[],
+	photosOnly: boolean
 ): AsyncGenerator<ZipEntry> {
+	if (photosOnly) yield { name: 'PHOTOS-ONLY.txt', content: photosNotice() };
 	yield {
 		name: 'README.txt',
 		content: `AI Detector recordings
@@ -54,7 +62,7 @@ This export does not include application settings or camera login details.
 		const target = path.posix.join('detections', type, stage, uniqueTimestamp);
 		const entries = await readdir(folder, { withFileTypes: true });
 		for (const entry of entries) {
-			if (!entry.isFile()) continue;
+			if (!entry.isFile() || (photosOnly && !PHOTO_FILES.has(entry.name))) continue;
 			if (
 				entry.name !== 'metadata.json' &&
 				!MEDIA_EXTENSIONS.has(path.extname(entry.name).toLowerCase())
@@ -73,11 +81,12 @@ export async function exportRecordings(
 	filter: RecordingExportFilter,
 	request: Request
 ): Promise<Response> {
-	const locations = await archive.locations(filter);
+	const { content, ...selection } = filter;
+	const locations = await archive.locations(selection);
 	if (!locations.length) return new Response('No recordings match these filters.', { status: 404 });
 	return zipDownload(
 		`AI-Detector-recordings-${new Date().toISOString().slice(0, 10)}.zip`,
-		recordingFiles(archive.directory, locations),
+		recordingFiles(archive.directory, locations, content === 'photos'),
 		request
 	);
 }

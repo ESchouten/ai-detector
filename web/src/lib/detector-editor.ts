@@ -1,4 +1,10 @@
-import { detectorSettings, normalizeConfig, sameTelegram, uniqueLabel } from './configuration.ts';
+import {
+	detectorSettings,
+	normalizeConfig,
+	sameTelegram,
+	telegramExporter,
+	uniqueLabel
+} from './configuration.ts';
 import type { DetectorChoices } from './detector-draft-storage.ts';
 import { assignConnection, connectionMatches, suggestedConnection } from './llm.ts';
 import type {
@@ -86,7 +92,7 @@ export function selectTelegram(
 ): TelegramConfig[] {
 	if (!selected) return current.filter((exporter) => !sameTelegram(exporter, channel));
 	if (current.some((exporter) => sameTelegram(exporter, channel))) return current;
-	return [...current, { token: channel.token, chat: channel.chat }];
+	return [...current, telegramExporter(channel)];
 }
 
 /** What the detector editor is working on: the rule, and the choices saved beside it. */

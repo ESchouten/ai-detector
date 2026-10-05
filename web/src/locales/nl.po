@@ -1366,6 +1366,7 @@ msgstr "Klaar"
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -3764,3 +3765,61 @@ msgstr "Beginscherm"
 #: src/routes/(admin)/settings/+page.svelte
 msgid "Open AI Detector with one tap from this device’s home screen."
 msgstr "Open AI Detector met één tik vanaf het beginscherm van dit apparaat."
+
+#: src/lib/schema.ts
+msgid "Enter a time such as 22:00."
+msgstr "Voer een tijd in, zoals 22:00."
+
+#: src/lib/server/recording-export.ts
+msgid ""
+"This export holds the original photos only: pictures with boxes and video clips were left out.\n"
+""
+msgstr ""
+"Deze export bevat alleen de originele foto’s: foto’s met kaders en videoclips zijn weggelaten.\n"
+""
+
+#: src/lib/components/export-recordings.svelte
+msgid "Only the original photos"
+msgstr "Alleen de originele foto’s"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Leaves out videos and pictures with boxes: a much smaller ZIP to share for model improvement."
+msgstr "Laat video’s en foto’s met kaders weg: een veel kleinere zip om te delen voor het verbeteren van het model."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Quiet from"
+msgstr "Stil vanaf"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Until"
+msgstr "Tot"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Quiet hours"
+msgstr "Stille uren"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Alerts between these times still arrive, but without sound. Leave both empty for sound at any hour."
+msgstr "Meldingen tussen deze tijden komen nog steeds binnen, maar zonder geluid. Laat beide leeg voor geluid op elk uur."
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Recording deleted"
+msgstr "Opname verwijderd"
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Could not delete the recording. Please try again."
+msgstr "De opname kon niet worden verwijderd. Probeer het opnieuw."
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Delete recording"
+msgstr "Opname verwijderen"
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Delete this recording?"
+msgstr "Deze opname verwijderen?"
+
+#: src/routes/(admin)/detections/recording-viewer.svelte
+msgid "Its pictures and video are removed from this computer and cannot be brought back."
+msgstr "De foto’s en de video worden van deze computer verwijderd en zijn niet terug te halen."

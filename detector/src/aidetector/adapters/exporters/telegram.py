@@ -1,10 +1,12 @@
 import json
+from collections.abc import Callable
+from datetime import datetime, time
 
 from aidetector.adapters.http import Files, send_request
 from aidetector.adapters.media import MediaError
 from aidetector.adapters.media.event_media import EventMedia
 from aidetector.application.ports import DeliveryError
-from aidetector.configuration import TelegramConfig
+from aidetector.configuration import QuietHours, TelegramConfig
 from aidetector.domain.models import EventResult
 
 
@@ -33,10 +35,25 @@ def _review_buttons(result: EventResult) -> str:
     )
 
 
+def _is_quiet(hours: QuietHours | None, now: time) -> bool:
+    if hours is None:
+        return False
+    start, end = time.fromisoformat(hours.start), time.fromisoformat(hours.end)
+    if start <= end:
+        return start <= now < end
+    return now >= start or now < end
+
+
 class TelegramExporter:
-    def __init__(self, config: TelegramConfig, media: EventMedia):
+    def __init__(
+        self,
+        config: TelegramConfig,
+        media: EventMedia,
+        now: Callable[[], datetime] = datetime.now,
+    ):
         self.config = config
         self.media = media
+        self._now = now
         self._attempted_alerts = 0
 
     def export(self, result: EventResult) -> None:
@@ -47,11 +64,13 @@ class TelegramExporter:
         except MediaError as error:
             raise DeliveryError(str(error)) from error
         self._attempted_alerts += 1
+        silent = (
+            _is_quiet(self.config.quiet, self._now().time())
+            or self._attempted_alerts % self.config.alert_every != 0
+        )
         fields: dict[str, object] = {
             "chat_id": self.config.chat,
-            "disable_notification": "true"
-            if self._attempted_alerts % self.config.alert_every != 0
-            else "false",
+            "disable_notification": "true" if silent else "false",
         }
         caption = _caption(result)
         files = {}

@@ -208,6 +208,7 @@ def log_detector_configuration(
                         "export_rejected",
                         "strategy",
                         "alert_every",
+                        "quiet",
                         "timeout",
                         "include_image",
                         "include_video",

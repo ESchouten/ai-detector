@@ -1,4 +1,4 @@
-import { readdir, readFile, realpath, stat } from 'node:fs/promises';
+import { readdir, readFile, realpath, rm, stat } from 'node:fs/promises';
 import path from 'node:path';
 import Ajv from 'ajv';
 import * as v from 'valibot';
@@ -285,6 +285,19 @@ export class DetectionArchive {
 				review,
 				stage: reviewedStage(address.archiveStage, review)
 			};
+		});
+	}
+
+	/** Remove one recording with its pictures and clip. A copy in another category stays. */
+	remove({ type, archiveStage, timestamp }: RecordingAddress): Promise<void> {
+		return this.enqueueReview(async () => {
+			try {
+				await rm(await archivePath(this.directory, type, archiveStage, timestamp), {
+					recursive: true
+				});
+			} finally {
+				this.invalidate();
+			}
 		});
 	}
 

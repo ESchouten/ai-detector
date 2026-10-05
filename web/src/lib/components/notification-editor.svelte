@@ -40,6 +40,8 @@
 	let label = $state(untrack(() => initial?.label ?? 'My phone'));
 	let token = $state(untrack(() => initial?.token ?? ''));
 	let chat = $state(untrack(() => initial?.chat ?? ''));
+	let quietStart = $state(untrack(() => initial?.quiet?.start ?? ''));
+	let quietEnd = $state(untrack(() => initial?.quiet?.end ?? ''));
 	let detectorLabels = $state(
 		untrack(() =>
 			!initial && detectors.length === 1
@@ -53,6 +55,10 @@
 	let error = $state('');
 	const existing = $derived(
 		!initial ? recipients.find((recipient) => sameTelegram(recipient, { token, chat })) : undefined
+	);
+	// Both times, or none: half a period says nothing.
+	const quiet = $derived(
+		quietStart && quietEnd ? { start: quietStart, end: quietEnd } : existing?.quiet
 	);
 	const connectionUnchanged = $derived(initial && token === initial.token && chat === initial.chat);
 	const readyForDetectors = $derived(Boolean(connectionUnchanged || received));
@@ -76,6 +82,7 @@
 							label: existing?.label ?? label,
 							token,
 							chat,
+							quiet,
 							detectorLabels: existing
 								? [...new Set([...recipientDetectorLabels(detectors, existing), ...detectorLabels])]
 								: detectorLabels,
@@ -164,6 +171,23 @@
 							You can connect now and choose this recipient when you add a detector.
 						</Field.Description>
 					{/each}
+				</Field.Group>
+			</Field.Set>
+			<Field.Set>
+				<Field.Legend>Quiet hours</Field.Legend>
+				<Field.Description>
+					Alerts between these times still arrive, but without sound. Leave both empty for sound at
+					any hour.
+				</Field.Description>
+				<Field.Group class="max-w-md sm:flex-row">
+					<Field.Field>
+						<Field.Label for="quiet-start">Quiet from</Field.Label>
+						<Input id="quiet-start" type="time" bind:value={quietStart} disabled={pending} />
+					</Field.Field>
+					<Field.Field>
+						<Field.Label for="quiet-end">Until</Field.Label>
+						<Input id="quiet-end" type="time" bind:value={quietEnd} disabled={pending} />
+					</Field.Field>
 				</Field.Group>
 			</Field.Set>
 		{/if}

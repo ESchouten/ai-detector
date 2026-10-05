@@ -193,6 +193,30 @@ test('unconfirmed connections and missing detectors cannot change settings', asy
 	);
 });
 
+test('quiet hours belong to a recipient and reach every detector that alerts it', async (t) => {
+	const { store } = await fixture(t);
+	await addMonitoredCamera(store, { label: 'Pen', source: first }, 'calving-catcher');
+	const channel = { label: 'Phone', token: 'token', chat: 'chat', detectorLabels: ['Pen'] };
+	const quiet = { start: '22:00', end: '06:00' };
+	await store.saveAlerts({ ...channel, quiet, received: true });
+	let saved = await store.read();
+	assert.deepEqual(saved.app.telegrams[0].quiet, quiet);
+	assert.deepEqual(saved.config.detectors[0].exporters?.telegram, [
+		{ token: 'token', chat: 'chat', quiet }
+	]);
+
+	// Clearing the times gives sound at any hour again.
+	await store.saveAlerts({ ...channel, original: 'Phone', received: false });
+	saved = await store.read();
+	assert.equal(saved.app.telegrams[0].quiet, undefined);
+	assert.deepEqual(saved.config.detectors[0].exporters?.telegram, [
+		{ token: 'token', chat: 'chat' }
+	]);
+	assert.throws(() =>
+		v.parse(alertsInput, { ...channel, quiet: { start: '25:00', end: '06:00' } })
+	);
+});
+
 test('removing a camera removes its rules but preserves other cameras and archived data', async (t) => {
 	const { files, store } = await fixture(t);
 	const one = await addMonitoredCamera(store, { label: 'One', source: first }, 'general');

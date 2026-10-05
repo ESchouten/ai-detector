@@ -131,7 +131,7 @@ These packages share the `onnxruntime` import namespace. Do not combine the extr
 
 Docker runs the same module from `/data`. Mount your configuration and event data there. The repository's `example/compose.yml` demonstrates the detector and web UI together; replace the example's model/provider/notification settings before starting it. For a local image build, use `detector/` as the build context. The context excludes local recordings, weights, environments, and research outputs.
 
-The release workflow builds Linux CUDA images, Windows ML/CUDA executables, and a macOS executable. Executable builds use the Python 3.12 patch release in [`.python-version`](.python-version) and run local ONNX and Torch-checkpoint smoke tests through inference, verification, and delivery. Local verification and hardware limitations are recorded in [AUDIT.md](../docs/history/detector/AUDIT.md). A successful package build does not establish that every GPU provider works on every target machine.
+The release workflow builds Linux CUDA images, Windows ML/CUDA executables, and a macOS executable. Executable builds use the Python 3.12 patch release in [`.python-version`](.python-version) and run local ONNX and Torch-checkpoint smoke tests through inference, verification, and delivery. A successful package build does not establish that every GPU provider works on every target machine.
 
 ### Jetson installations
 
@@ -294,7 +294,7 @@ For a quick test run without measurement, use `uv run --no-sync pytest`. From a 
 
 On Linux/macOS, run targeted domain mutation tests with `uv run --no-sync mutmut run --max-children 4`, inspect `uv run --no-sync mutmut results`, and export JSON with `uv run --no-sync mutmut export-cicd-stats`. Windows users can run these in WSL. Mutation testing creates its working copies under ignored `mutants/`.
 
-See [QUALITY.md](QUALITY.md) for report interpretation, architectural constraints and mutation-test limits. CI enforces lint/type/import contracts, publishes complexity/dependency changes and coverage as `detector-quality`, and runs domain mutation tests in a separate Ubuntu job with a `detector-mutations` artifact. Survivors are reported for review; failed or incomplete mutation runs fail the job. [REVIEW.md](../docs/history/detector/REVIEW.md) records the maintainability review and the resulting changes.
+See [QUALITY.md](QUALITY.md) for report interpretation, architectural constraints and mutation-test limits. CI enforces lint/type/import contracts, publishes complexity/dependency changes and coverage as `detector-quality`, and runs domain mutation tests in a separate Ubuntu job with a `detector-mutations` artifact. Survivors are reported for review; failed or incomplete mutation runs fail the job.
 
 Regenerate committed schemas with `uv run --no-sync generate-schema` when changing their models. Tests use temporary local media, fake external transports, and a generated ONNX graph. They exercise real OpenCV/FFmpeg/Ultralytics/ONNX behavior without downloading model weights or contacting notification/AI services. Import-safety probes install their guards inside isolated subprocesses; separate negative cases verify that the guards detect prohibited behavior.
 

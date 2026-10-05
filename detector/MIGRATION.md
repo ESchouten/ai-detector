@@ -226,7 +226,7 @@ The canonical schema no longer accepts `vlm.enabled` or detector-level `vlm_enab
 
 ## Verification limits
 
-See [AUDIT.md](../docs/history/detector/AUDIT.md) for the exact local checks and results. Automated tests and distribution checks use local fake services; they do not establish model quality or production provider accuracy. Windows ML registration and NVIDIA/Jetson hardware execution require those target systems. Existing archives, live configuration, and research/model assets are not migrated or deleted.
+Automated tests and distribution checks use local fake services; they do not establish model quality or production provider accuracy. Windows ML registration and NVIDIA/Jetson hardware execution require those target systems. Existing archives, live configuration, and research/model assets are not migrated or deleted.
 
 ## Combined application setup
 

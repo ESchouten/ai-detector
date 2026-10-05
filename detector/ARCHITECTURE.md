@@ -238,7 +238,7 @@ Ultralytics also handles cross-platform paths inside Torch checkpoints. The adap
 
 The runtime lockfile is authoritative for development/test environments. Direct application dependencies are declared explicitly; platform extras provide one ONNX implementation each. The source distribution has an explicit file list to prevent local research data, recordings, model weights, and virtual environments from entering packages.
 
-The historical maintainability review and its design decisions are in [REVIEW.md](../docs/history/detector/REVIEW.md). Enforced limits, measurement commands and a dated baseline are in [QUALITY.md](QUALITY.md).
+Enforced limits, measurement commands and a dated baseline are in [QUALITY.md](QUALITY.md).
 
 ## Desktop application integration
 

@@ -28,7 +28,7 @@ AIDETECTOR_DATA_DIR=/tmp/ai-detector-development pnpm --dir web dev
 
 Without a configured detector executable the web app is a frontend for separately managed detection. To exercise managed startup, set `AIDETECTOR_EXECUTABLE` to a built detector. Never use real notification destinations in automated tests.
 
-To build a complete desktop preview with the same stages used in CI, follow the [single-command build](distribution/README.md#local-builds-and-tests). The current contributor guides are authoritative; [historical assessments](docs/history/README.md) preserve earlier evidence and decisions.
+To build a complete desktop preview with the same stages used in CI, follow the [single-command build](distribution/README.md#local-builds-and-tests).
 
 ## Repository map
 
@@ -41,7 +41,6 @@ To build a complete desktop preview with the same stages used in CI, follow the 
 | `ruff.toml` | Shared Python formatting, import and complexity rules |
 | `.github/` | CI orchestration using those same build stages and quality tools |
 | `.vscode/` | Editor tasks and debug entry points into the existing commands |
-| `docs/history/` | Dated assessments; not current setup instructions or pending work |
 
 Python tools discover the root `ruff.toml` from either the repository or component directory. Do not copy its rules into another project file. The [configuration guide](config/README.md) identifies each settings file's owner; the [distribution guide](distribution/README.md) identifies build outputs and tool versions.
 

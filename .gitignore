@@ -11,6 +11,7 @@ web/static/_internal/
 
 # Local tooling and download caches
 .DS_Store
+.mcp.json
 .cache/
 .pytest_cache/
 .ruff_cache/
@@ -44,4 +45,3 @@ __pycache__/
 /detector/examples/
 /detector/fixtures/
 /docs/*
-!/docs/history/

@@ -14,7 +14,7 @@ import { configurationAction } from '$lib/server/configuration/request';
 export const discoverCameras = command(() => discover());
 
 export const getCameraConnection = command(cameraConnectionInput, (input) =>
-	configurationAction(resolveConnection(input))
+	configurationAction(() => resolveConnection(input))
 );
 
 export const getCameras = query(async () => {
@@ -43,21 +43,19 @@ export const getCameras = query(async () => {
 	});
 });
 
-export const saveCamera = command(cameraInput, async (input) => {
-	return configurationAction(
-		(async () => {
-			const existing = input.id
-				? (await configuration.read()).app.streams.find((camera) => camera.id === input.id)
+export const saveCamera = command(cameraInput, (input) =>
+	configurationAction(async () => {
+		const existing = input.id
+			? (await configuration.read()).app.streams.find((camera) => camera.id === input.id)
+			: undefined;
+		const verifiedAt =
+			input.checkId || !existing || existing.source !== input.source
+				? assertCameraCheck(input.checkId, input.source)
 				: undefined;
-			const verifiedAt =
-				input.checkId || !existing || existing.source !== input.source
-					? assertCameraCheck(input.checkId, input.source)
-					: undefined;
-			return configuration.saveCamera(input, verifiedAt);
-		})()
-	);
-});
+		return configuration.saveCamera(input, verifiedAt);
+	})
+);
 
 export const removeCamera = command(v.string(), (id) =>
-	configurationAction(configuration.removeCamera(id))
+	configurationAction(() => configuration.removeCamera(id))
 );

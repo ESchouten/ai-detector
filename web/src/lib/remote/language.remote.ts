@@ -6,5 +6,5 @@ import { configurationAction } from '$lib/server/configuration/request';
 
 /** The language of this installation: every device, and the replies sent to Telegram. */
 export const setLanguage = command(v.picklist(LOCALES), (language) =>
-	configurationAction(configuration.saveLanguage(language))
+	configurationAction(() => configuration.saveLanguage(language))
 );

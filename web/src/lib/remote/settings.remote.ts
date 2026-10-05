@@ -26,7 +26,7 @@ export const saveSettings = command(
 		} catch (cause) {
 			error(400, cause instanceof Error ? cause.message : 'Invalid JSON.');
 		}
-		await configurationAction(configuration.saveAdvanced(target, value, revision));
+		await configurationAction(() => configuration.saveAdvanced(target, value, revision));
 	}
 );
 
@@ -36,5 +36,5 @@ export const getHeartbeat = query(async () => {
 });
 
 export const saveHeartbeat = command(heartbeatInput, (input) =>
-	configurationAction(configuration.saveHeartbeat(input))
+	configurationAction(() => configuration.saveHeartbeat(input))
 );

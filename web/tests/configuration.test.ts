@@ -170,16 +170,32 @@ test('loaded notification identities match their exporters without silently chan
 
 test('expected configuration failures reach the UI as actionable client errors', async () => {
 	await assert.rejects(
-		configurationAction(Promise.reject(new ConfigurationError('This detector no longer exists.'))),
+		configurationAction(() =>
+			Promise.reject(new ConfigurationError('This detector no longer exists.'))
+		),
 		(failure) => {
 			assert.ok(isHttpError(failure, 400));
 			assert.equal(failure.body.message, 'This detector no longer exists.');
 			return true;
 		}
 	);
+	// A check that fails before anything is awaited is the same kind of answer.
+	await assert.rejects(
+		configurationAction(() => {
+			throw new ConfigurationError('Add a camera before finishing setup.');
+		}),
+		(failure) => isHttpError(failure, 400)
+	);
+	assert.equal(await configurationAction(() => 'saved'), 'saved');
 	const defect = new Error('Unexpected implementation defect');
 	await assert.rejects(
-		configurationAction(Promise.reject(defect)),
+		configurationAction(() => Promise.reject(defect)),
+		(failure) => failure === defect
+	);
+	await assert.rejects(
+		configurationAction(() => {
+			throw defect;
+		}),
 		(failure) => failure === defect
 	);
 });

@@ -18,16 +18,14 @@ function monitoringCameras(runtime: RuntimeStatus) {
 }
 
 export const getSetupStatus = query(() =>
-	configurationAction(
-		(async () => {
-			const [document, runtime] = await Promise.all([configuration.read(), detectorStatus()]);
-			const monitoring = monitoringCameras(runtime);
-			return document.app.streams.map((camera) => ({
-				...cameraSetupStatus(document, camera.id!),
-				monitoring: monitoring.has(camera.id!)
-			}));
-		})()
-	)
+	configurationAction(async () => {
+		const [document, runtime] = await Promise.all([configuration.read(), detectorStatus()]);
+		const monitoring = monitoringCameras(runtime);
+		return document.app.streams.map((camera) => ({
+			...cameraSetupStatus(document, camera.id!),
+			monitoring: monitoring.has(camera.id!)
+		}));
+	})
 );
 
 /** Counts for navigation; unreadable settings are reported by the page that needs them. */
@@ -41,7 +39,7 @@ export const getInstallation = query(async () => {
 });
 
 export const finishSetup = command(() =>
-	configurationAction(
+	configurationAction(() =>
 		configuration.finishSetup(async () => monitoringCameras(await detectorStatus()))
 	)
 );

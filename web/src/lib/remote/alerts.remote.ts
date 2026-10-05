@@ -14,37 +14,37 @@ export const beginTelegramPairing = command(
 		...tokenInput.entries,
 		destination: v.optional(v.picklist(['private', 'group', 'channel']), 'private')
 	}),
-	({ token, destination }) => configurationAction(pairings.begin(token, destination))
+	({ token, destination }) => configurationAction(() => pairings.begin(token, destination))
 );
 export const pollTelegramPairing = command(pairingInput, ({ id }) =>
-	configurationAction(pairings.poll(id))
+	configurationAction(() => pairings.poll(id))
 );
 export const cancelTelegramPairing = command(pairingInput, ({ id }) =>
-	configurationAction(pairings.cancel(id))
+	configurationAction(() => pairings.cancel(id))
 );
 
 export const saveAlerts = command(alertsInput, (input) =>
-	configurationAction(configuration.saveAlerts(input))
+	configurationAction(() => configuration.saveAlerts(input))
 );
 export const discoverTelegramChats = command(tokenInput, ({ token }) =>
-	configurationAction(pairings.discoverChats(token))
+	configurationAction(() => pairings.discoverChats(token))
 );
 
 export const getTelegrams = query(async () => (await configuration.read()).app.telegrams);
 
 export const connectTelegram = command(
 	v.object({ ...telegramInput.entries, received: v.literal(true) }),
-	(input) => configurationAction(configuration.saveTelegram(input))
+	(input) => configurationAction(() => configuration.saveTelegram(input))
 );
 
 export const deleteTelegram = command(v.pick(telegramMeta, ['label']), ({ label }) =>
-	configurationAction(configuration.deleteTelegram(label))
+	configurationAction(() => configuration.deleteTelegram(label))
 );
 
 export const testTelegram = command(
 	v.pick(telegramMeta, ['token', 'chat']),
 	async ({ token, chat }) => {
-		await configurationAction(sendTelegramTest(token, chat));
+		await configurationAction(() => sendTelegramTest(token, chat));
 		return { ok: true, description: 'Setup test sent.' };
 	}
 );

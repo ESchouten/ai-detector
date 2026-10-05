@@ -10,14 +10,12 @@ import { readPresetChoices } from '$lib/server/configuration/preset-files';
 export const getDetectorPresets = query(() => readPresetChoices(readPresets));
 
 export const getDetectorPreset = query(v.object({ id: v.string() }), ({ id }) =>
-	configurationAction(
-		(async () => {
-			const presets = await readPresets();
-			const preset = presets.find((preset) => preset.id === id);
-			if (!preset) error(404, 'This preset is no longer available. Choose another preset.');
-			return structuredClone(preset.detector);
-		})()
-	)
+	configurationAction(async () => {
+		const presets = await readPresets();
+		const preset = presets.find((preset) => preset.id === id);
+		if (!preset) error(404, 'This preset is no longer available. Choose another preset.');
+		return structuredClone(preset.detector);
+	})
 );
 
 export const getDetectors = query(async () => {
@@ -26,8 +24,8 @@ export const getDetectors = query(async () => {
 });
 
 export const saveDetector = command(detectorInput, (input) =>
-	configurationAction(configuration.saveDetector(input))
+	configurationAction(() => configuration.saveDetector(input))
 );
 export const deleteDetector = command(detectorMeta, ({ label }) =>
-	configurationAction(configuration.deleteDetector(label))
+	configurationAction(() => configuration.deleteDetector(label))
 );

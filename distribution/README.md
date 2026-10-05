@@ -124,7 +124,7 @@ Some tests need a built artifact and are skipped without it: set `SPARKLE_SDK` t
 
 What no test here establishes: installing a downloaded application on a clean machine, the update and relaunch dialogs, login startup, and inference on real hardware.
 
-Regenerate the artwork with `swift distribution/macos/render-artwork.swift` and `python distribution/windows/render-artwork.py`.
+Regenerate the artwork with `swift distribution/macos/render-artwork.swift` and `python distribution/windows/render-artwork.py`. The first also renders the home screen icons in `web/static/`, from the web application's favicon and `macos/home-screen-icon.svg`.
 
 ## GitHub Actions previews
 

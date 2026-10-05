@@ -3743,3 +3743,24 @@ msgstr "Dieser Detektor verwendet eigene Einstellungen und erhält neue Modelle 
 #: src/lib/components/detector-editor.svelte
 msgid "Choose a preset. It supplies everything needed to recognise that kind of event, and keeps this detector up to date with new models."
 msgstr "Wählen Sie eine Voreinstellung. Sie enthält alles, was nötig ist, um diese Art von Ereignis zu erkennen, und hält diesen Detektor mit neuen Modellen aktuell."
+
+#: src/lib/components/home-screen-hint.svelte
+msgid "Not now"
+msgstr "Nicht jetzt"
+
+#: src/lib/components/home-screen-hint.svelte
+msgid "Put AI Detector on your home screen"
+msgstr "AI Detector auf den Home-Bildschirm legen"
+
+#: src/lib/components/home-screen-hint.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Show me how"
+msgstr "Zeigen, wie es geht"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Home screen"
+msgstr "Home-Bildschirm"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Open AI Detector with one tap from this device’s home screen."
+msgstr "Öffnen Sie AI Detector mit einem Tipp vom Home-Bildschirm dieses Geräts."

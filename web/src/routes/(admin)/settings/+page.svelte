@@ -1,12 +1,16 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { Activity, Archive, Monitor, Moon, Sun } from '@lucide/svelte';
 	import GithubIcon from '@lucide/svelte/icons/github';
 	import { setMode, userPrefersMode } from 'mode-watcher';
+	import { Button } from '$lib/components/ui/button';
+	import HomeScreenGuide from '$lib/components/home-screen-guide.svelte';
 	import LanguageMenu from '$lib/components/language-menu.svelte';
 	import LinkRows from '$lib/components/link-rows.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import SettingsBackup from '$lib/components/settings-backup.svelte';
+	import { deviceLacksHomeScreenIcon } from '$lib/home-screen';
 	import { logsNavigation, settingsNavigation, REPOSITORY_URL } from '$lib/navigation';
 	import { version } from '$lib/version';
 
@@ -15,6 +19,12 @@
 		{ value: 'dark', label: 'Dark', icon: Moon },
 		{ value: 'system', label: 'Automatic', icon: Monitor }
 	] as const;
+	// Only a phone or tablet that does not have the application on its home screen yet.
+	let homeScreen = $state(false);
+	let homeScreenGuide = $state<HomeScreenGuide>();
+	onMount(() => {
+		homeScreen = deviceLacksHomeScreenIcon();
+	});
 </script>
 
 <svelte:head><title>Settings · AI Detector</title></svelte:head>
@@ -53,6 +63,18 @@
 					{/each}
 				</div>
 			</div>
+			{#if homeScreen}
+				<div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3.5">
+					<div class="flex min-w-0 flex-col">
+						<p class="text-sm font-medium">Home screen</p>
+						<p class="text-sm text-muted-foreground">
+							Open AI Detector with one tap from this device’s home screen.
+						</p>
+					</div>
+					<Button variant="outline" onclick={() => homeScreenGuide?.show()}>Show me how</Button>
+				</div>
+				<HomeScreenGuide bind:this={homeScreenGuide} />
+			{/if}
 			<div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3.5">
 				<div class="flex min-w-0 items-center gap-4">
 					<span

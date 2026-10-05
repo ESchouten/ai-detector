@@ -121,6 +121,11 @@ class CompiledDesktopTest(unittest.TestCase):
                         with self.assertRaises(urllib.error.HTTPError) as denied:
                             opener.open(url + "logs/output", timeout=5)
                         self.assertEqual(denied.exception.code, 401)
+                        # A phone fetches these without its pairing cookie, to keep
+                        # the application on its home screen.
+                        for name in ("manifest.webmanifest", "apple-touch-icon.png"):
+                            with opener.open(url + name, timeout=5) as response:
+                                self.assertEqual(response.status, 200)
                         browser = urllib.request.build_opener(
                             urllib.request.ProxyHandler({}),
                             urllib.request.HTTPCookieProcessor(

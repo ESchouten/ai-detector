@@ -57,6 +57,23 @@ function presetVersion(settings) {
 	return createHash('sha256').update(settings).digest('hex');
 }
 
+test('a phone finds what it needs to put the application on its home screen', async (t) => {
+	const { base } = await startServer(t);
+	const page = await (await send(`${base}/streams`)).text();
+	assert.match(page, /<link rel="manifest" href="[^"]*\/manifest\.webmanifest"/);
+	assert.match(page, /<link rel="apple-touch-icon" href="[^"]*\/apple-touch-icon\.png"/);
+	const response = await send(`${base}/manifest.webmanifest`);
+	assert.equal(response.status, 200);
+	const manifest = await response.json();
+	assert.equal(manifest.display, 'standalone');
+	assert.equal(manifest.icons.length, 3);
+	for (const src of [...manifest.icons.map((icon) => icon.src), 'apple-touch-icon.png']) {
+		const icon = await send(`${base}/${src}`);
+		assert.equal(icon.status, 200, src);
+		assert.equal(icon.headers.get('content-type'), 'image/png', src);
+	}
+});
+
 test('saved logs are searchable in the page and downloadable with conditional refreshes', async (t) => {
 	const { directory, base } = await startServer(t);
 	await mkdir(path.join(directory, 'logs'), { recursive: true });

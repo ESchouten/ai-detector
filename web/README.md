@@ -18,6 +18,8 @@ A detector made from a preset follows it. When a newer model is published for th
 
 The application listens on `0.0.0.0:80`, so other devices can open `http://ai-detector.local/` or `http://<computer-IP>/`. The computer it runs on is trusted; every other browser needs a one-use pairing code from **Settings → Devices** (scan the QR code, then tap Connect). Codes expire after five minutes or ten wrong attempts; a connected browser is remembered for a year and can be removed there. A headless first start prints a code on the console.
 
+On a phone or tablet the application offers once to be put on the home screen and shows the steps for that device and browser, in the phone's own language; **Settings → Home screen** shows them again. On an iPhone or iPad it then opens like an app, without the browser's bars. An iPhone older than iOS 17.2 does not carry the connection over from Safari, so connect once more from the icon. Android installs web apps only from HTTPS: over plain HTTP the icon opens the dashboard in the browser.
+
 `HOST`, `PORT` and `OPEN_BROWSER=false` change how it serves; `HOST=127.0.0.1` restricts it to this computer and turns network discovery off. Plain HTTP is not encrypted: use a trusted network or an HTTPS reverse proxy.
 
 ### Language

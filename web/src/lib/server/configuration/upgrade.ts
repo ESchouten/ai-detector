@@ -31,27 +31,3 @@ export function upgradeVerificationKeys(input: unknown): unknown {
 	});
 	return changed ? { ...parsed.output, detectors } : input;
 }
-
-const legacyLauncher = v.looseObject({
-	mode: v.optional(v.string()),
-	enabled: v.optional(v.boolean())
-});
-
-/**
- * Earlier versions kept the launcher's two settings in runtime.json. An explicit engine choice
- * now belongs to config.json, and the resume preference to app.json.
- */
-export function upgradeLauncherSettings(
-	config: unknown,
-	saved: unknown
-): { config: unknown; enabled: boolean } | undefined {
-	const parsed = v.safeParse(legacyLauncher, saved);
-	if (!parsed.success) return;
-	const { mode, enabled } = parsed.output;
-	const explicit = mode === 'native' || mode === 'docker';
-	const unset = typeof config === 'object' && config !== null && !('runtime' in config);
-	return {
-		config: explicit && unset ? { ...config, runtime: mode } : config,
-		enabled: enabled === true
-	};
-}

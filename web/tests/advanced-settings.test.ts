@@ -1,7 +1,7 @@
 import { addMonitoredCamera } from './support/configuration.ts';
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import * as v from 'valibot';
@@ -10,7 +10,6 @@ import { heartbeatInput } from '../src/lib/configuration.ts';
 import { settingsRevision } from '../src/lib/server/configuration/advanced.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
-import { writeJson } from '../src/lib/server/json-file.ts';
 import { monitoringEnabled, setMonitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import { backupSettings } from '../src/lib/server/settings-backup.ts';
 import { unzipSync } from 'fflate';
@@ -200,64 +199,10 @@ test('the engine choice is part of config.json and is shown without enabling mon
 	await runtime.apply();
 	assert.equal(runtime.status().mode, 'native');
 	assert.equal(runtime.status().phase, 'stopped');
-	await assert.rejects(readFile(path.join(directory, 'runtime.json')), { code: 'ENOENT' });
 	const reloaded = new ManagedDetector({ executable: 'unused', dataDirectory: directory });
 	await reloaded.initialize();
 	assert.equal(reloaded.status().mode, 'native');
 	assert.equal(reloaded.status().phase, 'stopped');
-});
-
-test('settings an earlier version kept in runtime.json move into config.json and app.json once', async (t) => {
-	const { directory, files } = await fixture(t);
-	const runtimeFile = path.join(directory, 'runtime.json');
-	await writeJson(files.config, { detectors: [{ detection: { source: ['video.mp4'] } }] });
-	await writeJson(runtimeFile, { mode: 'docker', enabled: true });
-	const store = new ConfigurationStore({ ...files, runtime: runtimeFile });
-	assert.equal((await store.read()).config.runtime, 'docker');
-	assert.equal(JSON.parse(await readFile(files.config, 'utf8')).runtime, 'docker');
-	assert.equal(await monitoringEnabled(files.app), true);
-	await assert.rejects(readFile(runtimeFile), { code: 'ENOENT' });
-	const launcher = new ManagedDetector({ executable: 'unused', dataDirectory: directory });
-	await launcher.apply();
-	assert.equal(launcher.status().mode, 'docker');
-
-	// Choosing automatic afterwards stays chosen, and saving does not touch the resume flag.
-	const saved = await store.read();
-	await store.saveAdvanced(
-		'config',
-		{ detectors: saved.config.detectors },
-		settingsRevision(saved)
-	);
-	const reopened = new ConfigurationStore({ ...files, runtime: runtimeFile });
-	assert.equal((await reopened.read()).config.runtime, undefined);
-	assert.equal(await monitoringEnabled(files.app), true);
-});
-
-test('old launcher settings never create a new installation, override a choice, or block on damage', async (t) => {
-	const { directory, files } = await fixture(t);
-	const runtimeFile = path.join(directory, 'runtime.json');
-	await writeJson(runtimeFile, { mode: 'docker', enabled: false });
-	const empty = new ConfigurationStore({ ...files, runtime: runtimeFile });
-	assert.equal((await empty.read()).config.runtime, undefined);
-	await assert.rejects(readFile(files.config), { code: 'ENOENT' });
-	await assert.rejects(readFile(files.app), { code: 'ENOENT' });
-
-	await writeJson(files.config, { detectors: [], runtime: 'native' });
-	const chosen = new ConfigurationStore({ ...files, runtime: runtimeFile });
-	assert.equal((await chosen.read()).config.runtime, 'native');
-	await assert.rejects(readFile(runtimeFile), { code: 'ENOENT' });
-	assert.equal(await monitoringEnabled(files.app), false);
-
-	await writeJson(files.config, { detectors: [] });
-	await writeJson(runtimeFile, { mode: 'auto', enabled: true });
-	const automatic = new ConfigurationStore({ ...files, runtime: runtimeFile });
-	assert.equal((await automatic.read()).config.runtime, undefined);
-	assert.equal(await monitoringEnabled(files.app), true);
-	await assert.rejects(readFile(runtimeFile), { code: 'ENOENT' });
-
-	await writeFile(runtimeFile, '{damaged');
-	const damaged = new ConfigurationStore({ ...files, runtime: runtimeFile });
-	assert.deepEqual((await damaged.read()).config.detectors, []);
 });
 
 test('saving settings keeps the launcher’s resume flag, which never appears in settings, backups or revisions', async (t) => {

@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
@@ -36,6 +37,15 @@ internal static class Program
             });
             quit.WaitForExit();
             return quit.ExitCode;
+        }
+        // One menu per person: opening AI Detector again shows the dashboard of the one that runs.
+        using var menu = new Mutex(true, @"Local\AI Detector menu", out bool firstMenu);
+        if (!firstMenu)
+        {
+            if (args.Contains("--background")) return 0;
+            using var running = new DesktopProcess(web, false);
+            running.OpenDashboard();
+            return 0;
         }
         using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
         var preference = new StartupPreference(key, Application.ExecutablePath);

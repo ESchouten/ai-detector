@@ -31,8 +31,6 @@ Create a `presets/` folder in the data folder, beside `config.json`, and put det
 
 A local folder replaces the bundled choices: copy the bundled files into it to keep them. An empty folder gives an empty list, and no folder gives the bundled presets. `AIDETECTOR_PRESETS` names another folder, which must exist. An invalid file is reported by name; it is never replaced by something else.
 
-An installation that still has a `presets.json` catalogue from an earlier version must move the detector files it refers to into `presets/`. The catalogue is not read any more, and `AIDETECTOR_PRESETS` is a folder, not a catalogue file.
-
 For example, `presets/entrance-activity.json` adds **Entrance Activity**:
 
 ```json

@@ -67,7 +67,6 @@ test('downloads group manually reviewed events by their effective verdict and re
 	assert.equal(exported.review.validated, false);
 	assert.equal(exported.review.source, 'web');
 	assert.equal(exported.validated, true);
-	assert.ok(!(base + 'review.json' in files));
 	assert.ok(files[base + 'video.mp4']);
 	assert.equal(
 		(await exportRecordings(archive, { stage: 'approved' }, new Request('http://localhost/export')))

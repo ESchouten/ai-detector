@@ -16,7 +16,7 @@ Run `--check-config` against the saved file and correct what it reports. These a
 - Configuration is validated before anything starts and is never repaired or rewritten. Unknown options are errors; remove `yolo.strategy`, which never had an effect.
 - Nothing creates a configuration implicitly. A missing file is an error; `--init-config` writes a template and refuses to overwrite.
 - `frames_min` defaults to `3` on every platform. Set `6` explicitly to keep the old CUDA default. It counts matching observations in an event; they need not be consecutive.
-- Verification is switched by `key` alone. Remove `vlm.enabled` and detector-level `vlm_enabled`, and clear the key of an entry that was disabled. A null or omitted key turns an entry off and no longer falls back to credentials from the environment; `""` selects an unauthenticated local service. The web application converts saved files by itself; standalone configurations must be edited.
+- Verification is switched by `key` alone. A null or omitted key turns an entry off and no longer falls back to credentials from the environment; `""` selects an unauthenticated local service. Add the key to every verifier that should keep running.
 - A verifier must answer exactly `{"detected": true}` or `{"detected": false}`. Custom providers and fixtures that return `confidence` or `reasoning` are rejected.
 - Failed verification is its own outcome. It does not send ordinary Telegram or webhook notifications; disk may keep the event under `unvalidated` with `validation_error`.
 - Disk `directory` is one category name under `detections/`, such as `mounts`. Move an old absolute output root to `--data-dir` and choose a category name.
@@ -28,7 +28,7 @@ Run `--check-config` against the saved file and correct what it reports. These a
 ## Files other software reads
 
 - Each delivered event has an `event_id` in `metadata.json`; metadata written before that has none and stays valid.
-- A person's review is the optional `review` object in `metadata.json` (`validated`, `source`, `reviewed_at`), written by the web application. `validated` stays the validator's own result. A separate `review.json` from earlier versions is moved into `metadata.json` when the web application starts. An earlier application version cannot read a recording reviewed by this one.
+- A person's review is the optional `review` object in `metadata.json` (`validated`, `source`, `reviewed_at`), written by the web application. `validated` stays the validator's own result.
 - Status records for the launcher (`--status-json`) and live pictures (`--live-preview`) are versioned protocols between the detector and the web application of the same release. Deploy both from one release.
 
 ## Jetson
@@ -43,7 +43,7 @@ New Jetson work targets JetPack 7.2 and Python 3.12, but the generic ARM64 image
 2. Check the saved configuration with the replacement. Correct only what it reports.
 3. Run a recording into a separate data folder and compare how events are grouped and delivered.
 4. Stop the old detector before starting the replacement on the same output folder. Never run two versions against one live folder.
-5. To go back: stop the replacement, restore the previous program and configuration, and start it again. Archives need no conversion in either direction, except that an older web application cannot read reviewed recordings.
+5. To go back: stop the replacement, restore the previous program and configuration, and start it again. Archives need no conversion in either direction.
 
 From `detector/`:
 

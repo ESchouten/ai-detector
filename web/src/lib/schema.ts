@@ -40,7 +40,6 @@ export interface Config extends Omit<Input.Config, 'detectors'> {
 const text = v.pipe(v.string(), v.trim(), v.minLength(1));
 export const detectorMeta = v.object({
 	label: text,
-	cameraId: v.optional(text),
 	preset: v.optional(text),
 	llmConnection: v.optional(text)
 });

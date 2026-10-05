@@ -14,7 +14,6 @@ import { webLog } from '../web-log.ts';
 import { settingsRevision } from './advanced.ts';
 import { identifyCameras } from './cameras.ts';
 import { writeConfiguration } from './files.ts';
-import { upgradeVerificationKeys } from './upgrade.ts';
 
 export interface SettingsPaths {
 	config: string;
@@ -39,10 +38,7 @@ export class SettingsFiles {
 		this.snapshot = `${paths.config}.last-valid`;
 	}
 
-	/**
-	 * Both files as one valid document. Settings in an earlier form are saved in the current one,
-	 * and a valid document becomes the snapshot to recover from.
-	 */
+	/** Both files as one valid document, which becomes the snapshot to recover from. */
 	async load(): Promise<Configuration> {
 		const [config, app] = await Promise.all([
 			readJson<unknown>(this.paths.config, missingFile),
@@ -58,13 +54,10 @@ export class SettingsFiles {
 		try {
 			const input =
 				config === missingFile ? { $schema: DEFAULT_SCHEMA_URL, detectors: [] } : config;
-			const upgraded = upgradeVerificationKeys(input);
 			const document = identifyCameras(
-				normalizeConfiguration(upgraded, app === missingFile ? {} : app)
+				normalizeConfiguration(input, app === missingFile ? {} : app)
 			);
-			if (upgraded !== input) await this.write(document);
-			if (config !== missingFile)
-				await this.remember(document, app !== missingFile || upgraded !== input);
+			if (config !== missingFile) await this.remember(document, app !== missingFile);
 			return document;
 		} catch (error) {
 			if (error instanceof ConfigurationError)

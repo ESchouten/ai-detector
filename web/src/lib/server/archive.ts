@@ -1,4 +1,4 @@
-import { readdir, readFile, realpath, stat, unlink } from 'node:fs/promises';
+import { readdir, readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import Ajv from 'ajv';
 import * as v from 'valibot';
@@ -24,7 +24,6 @@ class ArchiveDataError extends Error {}
 const validateMetadata = new Ajv().compile<Metadata>(metadataSchema);
 const savedReview = v.nullish(manualReviewSchema);
 /** Where a review lived before it became part of metadata.json. */
-const LEGACY_REVIEW = 'review.json';
 const REVIEW_READS = 32;
 
 export function isMissingFile(error: unknown): boolean {
@@ -277,7 +276,7 @@ export class DetectionArchive {
 				stage: address.archiveStage,
 				review: await this.readReview(address)
 			});
-			// All disk destinations for a new event share its ID. Legacy recordings remain reviewable by location.
+			// All disk destinations of an event share its ID. A recording without one is reviewed by location.
 			const locations = current.event_id ? await this.findEvent(current.event_id) : [current];
 			await this.writeReviews(locations, validated, source);
 			const review = await this.readReview(address);
@@ -336,39 +335,5 @@ export class DetectionArchive {
 		// No mode is given, so the file keeps the permissions the detector gave it.
 		await writeFileAtomic(file, JSON.stringify(metadata));
 		this.reviews.set(this.addressKey(address), { checked: Date.now(), review });
-	}
-
-	/**
-	 * Earlier versions kept a review in review.json beside the metadata. Move each into
-	 * metadata.json once, when the application starts. Returns how many were moved.
-	 */
-	adoptLegacyReviews(): Promise<number> {
-		return this.enqueueReview(async () => {
-			let moved = 0;
-			for (const address of await this.addresses()) {
-				try {
-					const legacy = await archivePath(
-						this.directory,
-						address.type,
-						address.archiveStage,
-						address.timestamp,
-						LEGACY_REVIEW
-					);
-					const review = v.parse(manualReviewSchema, JSON.parse(await readFile(legacy, 'utf8')));
-					// A review already in the metadata is the newer one.
-					if (!(await this.readReview(address))) await this.saveReview(address, review);
-					await unlink(legacy);
-					moved++;
-				} catch (error) {
-					if (isMissingFile(error)) continue;
-					// Leave the file for a person to look at; the recording itself stays usable.
-					webLog.warn(
-						`Could not move the review of recording ${address.type}/${address.archiveStage}/${address.timestamp} into its metadata.`,
-						error
-					);
-				}
-			}
-			return moved;
-		});
 	}
 }

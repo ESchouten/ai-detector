@@ -429,13 +429,13 @@ jobs:
           files: downloads/*
           draft: true
           body: |
-            Update channel: **${{ needs.configuration.outputs.channel }}**. Use **Include preview updates** in the desktop menu to receive both previews and official releases. Turn it off for official releases only. Windows can return to an older official release; macOS waits for a newer official release. Existing previews without an updater need this installer once.
+            Update channel: **${{ needs.configuration.outputs.channel }}**. Use **Include preview updates** in the desktop menu to receive both previews and official releases. Turn it off for official releases only. Windows can return to an older official release; macOS waits for a newer official release.
 
             Install the download for your computer: extract the Windows ZIP and run its setup program, open the macOS disk image and drag AI Detector to Applications, or install the Ubuntu desktop package. Open **AI Detector** and follow the setup. Python, the web server and FFmpeg are included.
 
             Closing the browser leaves monitoring active. Pause explicitly when you want monitoring to stay paused. Desktop startup runs after you sign in; monitoring before login is not promised.
 
-            Updates are authenticated using AI Detector’s own signing key. These downloads have no Windows publisher certificate or Apple notarization; OS warnings or execution restrictions can apply. Packaging targets: Windows 10 22H2+ / Windows 11 x64, macOS 14+ Apple Silicon, Ubuntu 22.04/24.04 amd64. Older Windows systems download CUDA dependencies on first use when a supported NVIDIA GPU is present. GPU and camera qualification remains specific to the tested hardware.
+            Updates are authenticated using AI Detector’s own signing key. These downloads have no Windows publisher certificate or Apple notarization; OS warnings or execution restrictions can apply. Packaging targets: Windows 10 22H2+ / Windows 11 x64, macOS 14+ Apple Silicon, Ubuntu 22.04/24.04 amd64. Windows downloads CUDA dependencies on first use when a supported NVIDIA GPU is present. GPU and camera qualification remains specific to the tested hardware.
 
             Choose one download: `*-windows-x64-setup.zip`, `*-macos-arm64.dmg`, or `*-linux-amd64.deb`. The `.nupkg` and `.delta` assets are used by automatic updates; you do not need to download them yourself.
       - name: Publish application before promoting update feeds

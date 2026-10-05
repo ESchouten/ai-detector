@@ -20,13 +20,9 @@ Settings, models and recordings live outside the installed program, and updates 
 - Windows: `%LOCALAPPDATA%\AI Detector` (the program itself is in `%LOCALAPPDATA%\AIDetector\current`)
 - Linux: `$XDG_DATA_HOME/ai-detector`, by default `~/.local/share/ai-detector`
 
-`AIDETECTOR_DATA_DIR` selects another folder. An old portable installation with `config.json` beside the executable keeps using that folder.
+`AIDETECTOR_DATA_DIR` selects another folder.
 
-Moving from an older installation:
-
-- **Portable release with data beside the executable**: keep the whole old folder, install the new application, choose **Use existing setup** in its first setup step and select the old folder. See the [import guide](../web/README.md#bring-an-existing-installation-into-setup). Do not delete the old folder before importing.
-- **Older Windows Inno Setup installation**: quit AI Detector, uninstall the old program, then run the new setup. Its data stays where it is.
-- **First release with an updater**: install it by hand once. Later Mac and Windows releases arrive through **Check for Updates**. Linux upgrades by installing the new package.
+The released detector and web executables kept `config.json`, `app.json` and `detections/` beside the program. To move such an installation, keep that whole folder, install the application, choose **Use existing setup** in its first setup step and select the old folder. See the [import guide](../web/README.md#bring-an-existing-installation-into-setup). Do not delete the old folder before importing.
 
 ## Updates
 
@@ -153,7 +149,7 @@ The [workflow guide](../.github/README.md) describes the jobs, their artifacts a
 
 Push an increasing `app/vX.Y.Z` tag. Versions with a prerelease or build suffix are rejected on this channel.
 
-The workflow reads the signed history of the channel, builds the Mac deltas and the Windows packages, and combines both channels into one newly signed feed. When every platform has succeeded it publishes the versioned release and promotes the feeds to the fixed **app-update-channels** release; the separate **app-updates** and **app-preview-updates** feeds remain for older launchers and Mac delta generation. Release runs are serialized because both channels write the same feeds. Never edit or delete a published version: installed applications and retained deltas refer to it.
+The workflow reads the signed history of the channel, builds the Mac deltas and the Windows packages, and combines both channels into one newly signed feed. When every platform has succeeded it publishes the versioned release and promotes the feeds to the fixed **app-update-channels** release, which the launchers read; **app-updates** and **app-preview-updates** hold each channel's own history, from which the Mac deltas and the combined feed are built. Release runs are serialized because both channels write the same feeds. Never edit or delete a published version: installed applications and retained deltas refer to it.
 
 Two entries under **Settings → Secrets and variables → Actions** are required:
 

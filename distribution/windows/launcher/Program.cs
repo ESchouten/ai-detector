@@ -66,8 +66,7 @@ internal static class Program
     {
         using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
         var startup = new StartupPreference(key, Application.ExecutablePath);
-        // Retarget a previous installation's login entry to the stable 'current' path.
-        if (startup.Enabled) { startup.Enabled = true; return; }
+        if (startup.Enabled) return;
         if (MessageBox.Show(
             "Open AI Detector when you sign in? Once you start monitoring in setup, it resumes automatically whenever you sign in, unless you pause it in the dashboard.",
             "AI Detector", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)

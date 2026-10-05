@@ -807,7 +807,7 @@ test(
 			yolo: { model: 'workshop-safety.onnx', confidence: { helmet: 0.75 } },
 			exporters: { disk: [{ directory: 'workshop-recordings' }] }
 		};
-		const detectorMeta = { label: 'Workshop rule', cameraId, preset: 'workshop' };
+		const detectorMeta = { label: 'Workshop rule', preset: 'workshop' };
 		const configPath = path.join(directory, 'config.json');
 		const configText = JSON.stringify({ detectors: [detector] });
 		await mkdir(path.join(directory, 'presets'));
@@ -844,13 +844,10 @@ test(
 			assert.match(html, expectedContent, route);
 			assert.ok(html.includes(savedValue), `${route} must retain ${savedValue}`);
 		}
-		// Bookmarks from both earlier layouts open the page that now owns the camera or detector.
+		// A bookmark to a detector from the released web application opens its editor.
 		for (const [oldPath, destination] of [
-			[`/streams/add?id=${cameraId}`, `/streams/${cameraId}`],
-			[`/setup?step=cameras&camera=${cameraId}`, `/streams/${cameraId}`],
 			['/detectors/add?label=Workshop%20rule', '/detectors/edit?label=Workshop%20rule'],
-			['/detectors/add?label=Pen%20%26%20yard', '/detectors/edit?label=Pen%20%26%20yard'],
-			['/setup?step=detectors&detector=Pen%20%26%20yard', '/detectors/edit?label=Pen%20%26%20yard']
+			['/detectors/add?label=Pen%20%26%20yard', '/detectors/edit?label=Pen%20%26%20yard']
 		]) {
 			const response = await send(base + oldPath);
 			assert.equal(response.status, 302, oldPath);

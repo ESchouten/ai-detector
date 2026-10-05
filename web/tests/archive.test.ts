@@ -118,52 +118,6 @@ test(
 	}
 );
 
-test('reviews an earlier version saved beside the metadata move into it once', async (t) => {
-	const { root, archive, event } = await fixture(t);
-	const earlier = { validated: false, source: 'telegram', reviewed_at: '2026-09-23T08:00:00.000Z' };
-	await writeFile(path.join(event, 'review.json'), JSON.stringify(earlier));
-	// A review already in the metadata is the later decision and wins.
-	const decided = path.join(root, 'cow', 'rejected', timestamp);
-	const later = { validated: true, source: 'web', reviewed_at: '2026-09-24T08:00:00.000Z' };
-	await mkdir(decided, { recursive: true });
-	await writeFile(
-		path.join(decided, 'metadata.json'),
-		JSON.stringify({ ...metadata, review: later })
-	);
-	await writeFile(path.join(decided, 'review.json'), JSON.stringify(earlier));
-	// A file nobody can read is left for a person to look at, and its recording stays usable.
-	const unclear = path.join(root, 'sheep', 'approved', timestamp);
-	await mkdir(unclear, { recursive: true });
-	await writeFile(path.join(unclear, 'metadata.json'), JSON.stringify(metadata));
-	await writeFile(path.join(unclear, 'review.json'), '{broken');
-
-	assert.equal(await archive.adoptLegacyReviews(), 2);
-	assert.deepEqual(
-		JSON.parse(await readFile(path.join(event, 'metadata.json'), 'utf8')).review,
-		earlier
-	);
-	assert.deepEqual(
-		JSON.parse(await readFile(path.join(decided, 'metadata.json'), 'utf8')).review,
-		later
-	);
-	assert.deepEqual((await readdir(event)).sort(), ['metadata.json', 'video.mp4']);
-	assert.deepEqual(await readdir(decided), ['metadata.json']);
-	assert.deepEqual((await readdir(unclear)).sort(), ['metadata.json', 'review.json']);
-
-	const { items } = await new DetectionArchive(root).page({ offset: 0, limit: 24 });
-	assert.deepEqual(
-		items
-			.map((item) => [item.type, item.archiveStage, item.stage, item.review?.source ?? null])
-			.sort(),
-		[
-			['cow', 'approved', 'rejected', 'telegram'],
-			['cow', 'rejected', 'approved', 'web'],
-			['sheep', 'approved', 'approved', null]
-		]
-	);
-	assert.equal(await archive.adoptLegacyReviews(), 0);
-});
-
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'ai-archive-'));
 	t.after(() => rm(directory, { recursive: true, force: true }));

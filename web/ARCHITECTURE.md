@@ -92,7 +92,7 @@ Services take their dependencies as constructor arguments and are tested with No
 
 **Pages.** `app-shell.svelte` frames every page from the one list in `lib/navigation.ts`. `lib/monitoring.ts` turns runtime status into the single summary that the navigation, the banner and `/status` share. The admin layout provides one polling runtime monitor through context. Read a polled query once with `await` and then follow `query.current`: awaiting it inside `$derived` suspends every other pending update on the page. Editors own their drafts and report completion to the page that rendered them.
 
-**Desktop.** `desktop/runtime.ts` binds the port before SvelteKit starts, owns the parent pipe and shutdown, and announces `ai-detector.local`. Native menus and installers are in `distribution/`. Request handlers do not own the desktop lifecycle.
+**Desktop.** `desktop/runtime.ts` binds the port before SvelteKit starts, owns the parent pipe and shutdown, and announces `ai-detector.local`. The announcing library is patched (`patches/@homebridge__ciao@1.3.12.patch`): on current macOS it took a connected Wi-Fi network for a disconnected one and announced the name to this computer only, and it promised an IPv6 address the announcement does not have, which made every lookup wait five seconds. Native menus and installers are in `distribution/`. Request handlers do not own the desktop lifecycle.
 
 ## Settings save boundary
 

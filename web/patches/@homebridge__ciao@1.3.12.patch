@@ -1,0 +1,44 @@
+diff --git a/lib/CiaoService.js b/lib/CiaoService.js
+index 37933f10fb27f18cd1de450916c5463a613cfecd..bf42349bec5f858f38f4d1db3cf9e779e9e69e1b 100644
+--- a/lib/CiaoService.js
++++ b/lib/CiaoService.js
+@@ -641,7 +641,9 @@ class CiaoService extends events_1.EventEmitter {
+             aaaaR: aaaaRoutableRecordMap,
+             aaaaULA: aaaaUniqueLocalRecordMap,
+             reverseAddressPTRs: reverseAddressMap,
+-            addressNSEC: new NSECRecord_1.NSECRecord(this.hostname, this.hostname, [1 /* RType.A */, 28 /* RType.AAAA */], 120, true), // 120 TTL of A and AAAA records
++            // AI Detector: name only the address types this service has. Naming AAAA while IPv6 is
++            // disabled made every lookup wait five seconds for an address that never comes.
++            addressNSEC: new NSECRecord_1.NSECRecord(this.hostname, this.hostname, this.disableIpv6 ? [1 /* RType.A */] : [1 /* RType.A */, 28 /* RType.AAAA */], 120, true), // 120 TTL of A and AAAA records
+         };
+     }
+     /**
+diff --git a/lib/NetworkManager.js b/lib/NetworkManager.js
+index 6ee019f2b95484894b4f2fda7778be82ea2d321e..eae31bebf4c6e9d553948b6fd68aa7865368ad62 100644
+--- a/lib/NetworkManager.js
++++ b/lib/NetworkManager.js
+@@ -496,20 +496,10 @@ class NetworkManager extends events_1.EventEmitter {
+                         names.push(interfaceName);
+                     }
+                 }
+-                const promises = [];
+-                for (const name of names) {
+-                    const promise = NetworkManager.getDarwinWifiNetworkState(name).then(state => {
+-                        if (state !== 1 /* WifiState.NOT_A_WIFI_INTERFACE */ && state !== 3 /* WifiState.CONNECTED */) {
+-                            // removing wifi networks which are not connected to any networks
+-                            const index = names.indexOf(name);
+-                            if (index !== -1) {
+-                                names.splice(index, 1);
+-                            }
+-                        }
+-                    });
+-                    promises.push(promise);
+-                }
+-                await Promise.all(promises);
++                // AI Detector: a check stood here that removed Wi-Fi interfaces without a network. It asked
++                // `networksetup -getairportnetwork`, which current macOS answers with "not associated"
++                // for a connected network, so the name was announced to this computer only. An interface
++                // without a network has no address and is left out below anyway.
+                 if (names.length) {
+                     resolve(names);
+                 }

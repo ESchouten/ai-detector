@@ -97,7 +97,8 @@
 	"pnpm": {
 		"patchedDependencies": {
 			"@jesterkit/exe-sveltekit@0.1.7": "patches/@jesterkit__exe-sveltekit@0.1.7.patch",
-			"dependency-cruiser@18.4.0": "patches/dependency-cruiser@18.4.0.patch"
+			"dependency-cruiser@18.4.0": "patches/dependency-cruiser@18.4.0.patch",
+			"@homebridge/ciao@1.3.12": "patches/@homebridge__ciao@1.3.12.patch"
 		}
 	},
 	"engines": {

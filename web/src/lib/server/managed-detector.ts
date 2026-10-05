@@ -13,6 +13,7 @@ import { DetectorPreparation, type DetectorOptions } from './detector-preparatio
 import { sanitizeTextForLogs as redact } from './runtime-logs.ts';
 import { RuntimeProgress, STATUS_PREFIX } from './runtime-status.ts';
 import { chooseRuntime, SetupError } from './runtime-platform.ts';
+import { serialQueue } from './serial.ts';
 
 /** Whether monitoring resumes with the application: `monitoring` in app.json. */
 interface Settings {
@@ -29,7 +30,7 @@ export class ManagedDetector {
 	private child: ChildProcessWithoutNullStreams | null = null;
 	private stoppingChild = false;
 	private finished: Promise<number | null> = Promise.resolve(0);
-	private operation: Promise<unknown> = Promise.resolve();
+	private readonly enqueue = serialQueue();
 	private startup = new AbortController();
 	private restartDelay = INITIAL_RESTART_DELAY_MS;
 	private settings: Settings = { enabled: false };
@@ -89,12 +90,6 @@ export class ManagedDetector {
 			issues: this.progress.issues,
 			backends: this.progress.backends
 		};
-	}
-
-	private enqueue<T>(action: () => Promise<T>): Promise<T> {
-		const result = this.operation.then(action);
-		this.operation = result.catch(() => undefined);
-		return result;
 	}
 
 	async refreshMetadata(): Promise<void> {

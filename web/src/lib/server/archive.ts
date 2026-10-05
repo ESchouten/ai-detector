@@ -13,6 +13,7 @@ import {
 	type ManualReview,
 	type RecordingExportFilter
 } from '../detections.ts';
+import { serialQueue } from './serial.ts';
 import { webLog } from './web-log.ts';
 
 export { isArchiveSegment } from '../detections.ts';
@@ -70,7 +71,7 @@ export type RecordingAddress = Pick<ArchiveLocation, 'type' | 'archiveStage' | '
 
 export class DetectionArchive {
 	readonly directory: string;
-	private pendingReview: Promise<unknown> = Promise.resolve();
+	private readonly enqueueReview = serialQueue();
 	private directories = new Map<string, { modified: number; names: string[] }>();
 	private reviews = new Map<string, { checked: number; review: ManualReview | null }>();
 	private eventIds = new Map<string, string | undefined>();
@@ -294,12 +295,6 @@ export class DetectionArchive {
 			await this.writeReviews(locations, validated, source);
 			return locations.length > 0;
 		});
-	}
-
-	private enqueueReview<T>(operation: () => Promise<T>): Promise<T> {
-		const result = this.pendingReview.then(operation);
-		this.pendingReview = result.catch(() => undefined);
-		return result;
 	}
 
 	private async findEvent(id: string): Promise<Detection[]> {

@@ -11,6 +11,7 @@ import {
 } from '../../schema.ts';
 import type { Locale } from '../../locales.ts';
 import { readJson, writeJson } from '../json-file.ts';
+import { serialQueue } from '../serial.ts';
 import { webLog } from '../web-log.ts';
 import { exclusiveWrite, monitoringEnabled, setMonitoringEnabled } from '../monitoring-flag.ts';
 import {
@@ -51,7 +52,7 @@ const missingFile = Symbol('missing settings file');
 type RecoverySettings = { config: Config; app?: Configuration['app'] };
 
 export class ConfigurationStore {
-	private pending: Promise<unknown> = Promise.resolve();
+	private readonly enqueue = serialQueue();
 	private files: { config: string; app: string; runtime?: string };
 	private runtime: () => Runtime | null;
 	private recoveryRevision = '';
@@ -67,12 +68,6 @@ export class ConfigurationStore {
 		this.files = files;
 		this.runtime = runtime;
 		this.language = language;
-	}
-
-	private enqueue<T>(operation: () => Promise<T>): Promise<T> {
-		const result = this.pending.then(operation);
-		this.pending = result.catch(() => undefined);
-		return result;
 	}
 
 	private async load(): Promise<Configuration> {

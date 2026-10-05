@@ -7,6 +7,7 @@ import type { ImportStatus, ImportSummary } from '../../installation-import.ts';
 import { STAGES, type Configuration } from '../../schema.ts';
 import type { ConfigurationStore } from '../configuration/store.ts';
 import { readJson, writeJson } from '../json-file.ts';
+import { serialQueue } from '../serial.ts';
 import { readLegacyConfiguration } from './configuration.ts';
 import {
 	availableSpace,
@@ -32,7 +33,7 @@ interface ImportJob {
 export class InstallationImport {
 	private job?: ImportJob;
 	private status: ImportStatus = { phase: 'idle', copiedBytes: 0, totalBytes: 0 };
-	private pending: Promise<unknown> = Promise.resolve();
+	private readonly serial = serialQueue();
 	private work: Promise<void> | null = null;
 	private readonly staging: string;
 	private readonly manifest: string;
@@ -65,10 +66,9 @@ export class InstallationImport {
 			};
 	}
 
+	/** Each operation first waits for an unfinished import to be read back, when its turn comes. */
 	private enqueue<T>(operation: () => Promise<T>): Promise<T> {
-		const result = this.pending.then(() => this.ready).then(operation);
-		this.pending = result.catch(() => undefined);
-		return result;
+		return this.serial(() => this.ready.then(operation));
 	}
 
 	async getStatus(): Promise<ImportStatus> {

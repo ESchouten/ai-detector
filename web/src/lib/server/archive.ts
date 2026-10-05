@@ -199,14 +199,7 @@ export class DetectionArchive {
 	}
 
 	private async read(location: ArchiveLocation): Promise<Detection> {
-		const file = await archivePath(
-			this.directory,
-			location.type,
-			location.archiveStage,
-			location.timestamp,
-			'metadata.json'
-		);
-		const metadata: unknown = JSON.parse(await readFile(file, 'utf8'));
+		const { metadata } = await this.metadataFile(location);
 		if (!validateMetadata(metadata))
 			throw new ArchiveDataError(
 				/* @wc-ignore */ `Invalid archive metadata: ${location.type}/${location.stage}/${location.timestamp}`
@@ -248,10 +241,10 @@ export class DetectionArchive {
 		return review;
 	}
 
-	/** The recording's metadata as saved, and its real location inside the archive. */
-	private async readMetadata(
+	/** A recording's metadata.json as parsed, and its real location inside the archive. */
+	private async metadataFile(
 		address: RecordingAddress
-	): Promise<{ file: string; metadata: Record<string, unknown> }> {
+	): Promise<{ file: string; metadata: unknown }> {
 		const file = await archivePath(
 			this.directory,
 			address.type,
@@ -259,7 +252,14 @@ export class DetectionArchive {
 			address.timestamp,
 			'metadata.json'
 		);
-		const metadata: unknown = JSON.parse(await readFile(file, 'utf8'));
+		return { file, metadata: JSON.parse(await readFile(file, 'utf8')) };
+	}
+
+	/** The metadata as saved, with every field kept, for reading or replacing only its review. */
+	private async readMetadata(
+		address: RecordingAddress
+	): Promise<{ file: string; metadata: Record<string, unknown> }> {
+		const { file, metadata } = await this.metadataFile(address);
 		if (typeof metadata !== 'object' || metadata === null || Array.isArray(metadata))
 			throw new ArchiveDataError(/* @wc-ignore */ 'Archive metadata is not an object.');
 		return { file, metadata: metadata as Record<string, unknown> };

@@ -14,7 +14,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-from build import ROOT, TARGETS, native_platform
+from build import ROOT, TARGETS, native_platform, warm_windows_compiler
 from fixtures.processes import cleanup_process, wait_for
 
 
@@ -30,6 +30,9 @@ class CompiledDesktopTest(unittest.TestCase):
         cls.addClassCleanup(temporary.cleanup)
         target = TARGETS[native_platform()]
         cls.detector = Path(temporary.name) / f"detector{target.suffix}"
+        if native_platform() == "windows-x64":
+            # These tests may run without a web build before them in the same job.
+            warm_windows_compiler()
         subprocess.run(
             [
                 shutil.which("bun"),

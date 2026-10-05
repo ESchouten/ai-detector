@@ -274,6 +274,20 @@ test('an interrupted copy resumes across application restarts without copying co
 	assert.equal((await stat(path.join(destination, event, 'video.mp4'))).ino, before.ino);
 });
 
+test('a damaged record of an unfinished import is discarded and a new import can start', async (t) => {
+	const { source, destination, importer, store } = await fixture(t);
+	await importer.inspect(source);
+	const staging = path.join(destination, '.installation-import');
+	await writeFile(path.join(staging, 'job.json'), '{broken');
+	const restarted = new InstallationImport(destination, store);
+	assert.equal((await restarted.getStatus()).phase, 'idle');
+	assert.equal(await exists(staging), false);
+	assert.equal(await readFile(path.join(source, event, 'video.mp4'), 'utf8'), 'original recording');
+	const summary = await restarted.inspect(source);
+	await finish(restarted, summary.id);
+	assert.equal((await store.read()).app.streams.length, 1);
+});
+
 test('publication interrupted before settings commit resumes without losing the imported archive', async (t) => {
 	const { source, destination, importer, store } = await fixture(t);
 	const summary = await importer.inspect(source);

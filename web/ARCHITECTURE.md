@@ -86,7 +86,7 @@ Services take their dependencies as constructor arguments and are tested with No
 
 **Access.** `authorizeRequest` runs before every dynamic route, remote command and media request. The dashboard on this computer is trusted when the peer and the URL host are both loopback and the request is not cross-site; that decision is recorded in `locals.deviceId` and asked for with `isLocalDashboard`. Other browsers pair with a one-use code and receive a revocable cookie; only its hash is stored. Reading the paired devices looks at no other setting and does not wait for the settings queue, so access and recovery keep working with broken settings or a slow detector.
 
-**Import** copies into a staging folder outside the settings queue, then publishes folders and settings in one queued step that refuses an existing setup. A manifest lets a restart finish an interrupted import.
+**Import** copies into a staging folder outside the settings queue, then publishes folders and settings in one queued step that refuses an existing setup. A manifest lets a restart finish an interrupted import; a damaged manifest is discarded with its staged copies.
 
 **Presets** are the JSON files in `config/detector/`, embedded by Vite, or a `presets/` folder in the data folder, or `AIDETECTOR_PRESETS`. The filename is the ID and the name. A saved detector owns a copy of the settings, not a reference to the file.
 
@@ -101,6 +101,8 @@ Validation comes first: the shared schema checks every save, and a managed detec
 When detector settings changed, `configuration/files.ts` writes both new files beside their destinations, replaces `app.json`, then `config.json`. If the second replacement fails it puts the previous `app.json` back and rejects the save. This handles ordinary I/O failures in one writer. The two files are **not** replaced atomically: a crash or power loss between them can leave a mismatch, and running two web processes on one data folder is unsupported.
 
 `SettingsFiles` keeps the last valid pair in `config.json.last-valid`, without paired devices. Broken or missing files cannot overwrite it. **Recover settings** validates that snapshot, copies the current files aside with an `.invalid` suffix, and saves it through the normal path, keeping the devices that are paired now.
+
+A settings file that cannot be read is reported by name. The `(admin)` layout's server load reads the settings before any page renders, so every page shows the same error page: the reason, **Recover settings** and the diagnostics download. A page that only failed while rendering would show nothing useful.
 
 Once both files are saved the save has succeeded. If applying it to the running detector then fails, the failure appears in the monitoring status and the request is not rejected, so a client never retries an already created camera. A change that touches only `app.json` skips the detector check and does not restart monitoring.
 

@@ -53,7 +53,7 @@ Selecting a recording opens a viewer; the arrow keys step through recordings. Th
 ### Recovery and storage
 
 - **Logs → Download diagnostics** bundles the detector and application logs, system details and redacted settings. It works even when settings cannot be read. Review paths and camera addresses before sharing it.
-- A settings error offers **Recover settings**: the last valid settings are restored and the current files are kept beside them with an `.invalid` suffix.
+- When a settings file cannot be read, every page names the damaged file and offers **Recover settings**: the last valid settings are restored and the current files are kept beside them with an `.invalid` suffix.
 - **Settings → Storage** shows free space on the recordings drive and removes recordings older than a date you choose, after showing the count. Nothing deletes recordings automatically. Clearing the model cache requires paused monitoring.
 - Alert and Validator failures stay visible in the monitoring status until a later attempt succeeds.
 

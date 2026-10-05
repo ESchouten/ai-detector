@@ -163,8 +163,8 @@ msgstr "Démarrage…"
 msgid "Nothing is detected or recorded while monitoring is paused."
 msgstr "Rien n’est détecté ni enregistré tant que la surveillance est en pause."
 
+#: src/lib/components/page-error.svelte
 #: src/lib/monitoring.ts
-#: src/routes/(admin)/+error.svelte
 msgid "Needs attention"
 msgstr "Attention requise"
 
@@ -928,8 +928,8 @@ msgstr "Choisissez un flux de caméra avant de vérifier son image."
 msgid "The camera check request was not valid. Please try again."
 msgstr "La demande de vérification de la caméra n’était pas valide. Veuillez réessayer."
 
-#: src/routes/(admin)/+error.svelte
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
+#: src/lib/components/page-error.svelte
 #: src/routes/(admin)/[...catchall]/+page.ts
 msgid "Page not found"
 msgstr "Page introuvable"
@@ -1074,7 +1074,7 @@ msgstr "Restaurer les paramètres enregistrés"
 msgid "No valid recovery snapshot is available. Restore config.json and app.json from your settings backup, or ask for help using the diagnostics download."
 msgstr "Aucune copie de récupération valide n’est disponible. Restaurez config.json et app.json depuis votre sauvegarde des paramètres, ou demandez de l’aide en joignant le diagnostic téléchargé."
 
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
 #: src/routes/(admin)/logs/+page.svelte
 #: src/routes/(admin)/status/+page.svelte
 #: src/routes/recovery/+page.svelte
@@ -1134,7 +1134,7 @@ msgstr "Connecter l’appareil"
 #. 0: saved?.label ?? 'Add recipient'
 #. 0: camera?.label ?? 'Camera'
 #. 0: initial?.label ?? 'Connect validator'
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
 #: src/routes/(admin)/detectors/edit/+page.svelte
 #: src/routes/(admin)/notifications/add/+page.svelte
 #: src/routes/(admin)/streams/[id]/+page.svelte
@@ -1142,15 +1142,15 @@ msgstr "Connecter l’appareil"
 msgid "{0} · AI Detector"
 msgstr "{0} · AI Detector"
 
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
 msgid "This page needs attention"
 msgstr "Cette page requiert votre attention"
 
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
 msgid "Go to the start"
 msgstr "Aller à l’accueil"
 
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
 msgid "<0/>Recover settings"
 msgstr "<0/>Récupérer les paramètres"
 
@@ -3757,3 +3757,8 @@ msgstr ""
 "\n"
 "Cet export ne contient ni les paramètres de l’application ni les identifiants des caméras.\n"
 ""
+
+#. 0: file
+#: src/lib/server/configuration/settings-files.ts
+msgid "The settings file {0} is damaged and cannot be read."
+msgstr "Le fichier de paramètres {0} est endommagé et ne peut pas être lu."

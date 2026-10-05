@@ -907,9 +907,15 @@ test('broken settings retain an accessible diagnostics download and explicit rec
 	};
 	assert.equal((await send(base + '/setup?step=detectors')).status, 200);
 	await writeFile(path.join(directory, 'config.json'), '{invalid settings');
-	const broken = await send(base + '/setup?step=cameras', { headers });
-	assert.equal(broken.status, 500);
-	assert.match(await broken.text(), /Recover settings/);
+	// Every page says which file is damaged and offers the same two ways forward.
+	for (const route of ['/setup?step=cameras', '/streams', '/detectors', '/detections', '/status']) {
+		const broken = await send(base + route, { headers });
+		assert.equal(broken.status, 500, route);
+		const page = await broken.text();
+		assert.match(page, /config\.json is damaged and cannot be read/, route);
+		assert.match(page, /Recover settings/, route);
+		assert.match(page, /Download diagnostics/, route);
+	}
 	const download = await send(base + '/logs/diagnostics', { headers });
 	assert.equal(download.status, 200);
 	const files = unzipSync(new Uint8Array(await download.arrayBuffer()));

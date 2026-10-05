@@ -8,6 +8,7 @@ import { STAGES, type Configuration } from '../../schema.ts';
 import type { ConfigurationStore } from '../configuration/store.ts';
 import { readJson, writeJson } from '../json-file.ts';
 import { serialQueue } from '../serial.ts';
+import { webLog } from '../web-log.ts';
 import { readLegacyConfiguration } from './configuration.ts';
 import {
 	availableSpace,
@@ -50,7 +51,15 @@ export class InstallationImport {
 	}
 
 	private async restore(): Promise<void> {
-		this.job = (await readJson<ImportJob>(this.manifest)) ?? undefined;
+		try {
+			this.job = (await readJson<ImportJob>(this.manifest)) ?? undefined;
+		} catch (error) {
+			// It cannot be resumed, and must not stop the application or a new import. The copies
+			// staged beside it go too; the installation they were copied from is untouched.
+			if (!(error instanceof SyntaxError)) throw error;
+			await rm(this.staging, { recursive: true, force: true });
+			webLog.warn('Discarded a damaged record of an unfinished import.', error);
+		}
 		if (this.job)
 			this.status = {
 				phase: 'ready',

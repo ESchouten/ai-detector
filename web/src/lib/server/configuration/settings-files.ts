@@ -41,8 +41,8 @@ export class SettingsFiles {
 	/** Both files as one valid document, which becomes the snapshot to recover from. */
 	async load(): Promise<Configuration> {
 		const [config, app] = await Promise.all([
-			readJson<unknown>(this.paths.config, missingFile),
-			readJson<unknown>(this.paths.app, missingFile)
+			this.saved(this.paths.config),
+			this.saved(this.paths.app)
 		]);
 		if (config === missingFile || app === missingFile) {
 			const saved = await readJson<RecoverySettings>(this.snapshot);
@@ -62,7 +62,21 @@ export class SettingsFiles {
 		} catch (error) {
 			if (error instanceof ConfigurationError)
 				throw new ConfigurationError(`${this.paths.config}: ${error.message}`, { cause: error });
+			if (error instanceof v.ValiError)
+				throw new ConfigurationError(`${this.paths.app}: ${error.message}`, { cause: error });
 			throw error;
+		}
+	}
+
+	/** A settings file as saved. One that is not JSON is reported by name, for whoever must act. */
+	private async saved(file: string): Promise<unknown> {
+		try {
+			return await readJson<unknown>(file, missingFile);
+		} catch (cause) {
+			if (!(cause instanceof SyntaxError)) throw cause;
+			throw new ConfigurationError(`The settings file ${file} is damaged and cannot be read.`, {
+				cause
+			});
 		}
 	}
 

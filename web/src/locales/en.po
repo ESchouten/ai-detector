@@ -163,8 +163,8 @@ msgstr "Starting…"
 msgid "Nothing is detected or recorded while monitoring is paused."
 msgstr "Nothing is detected or recorded while monitoring is paused."
 
+#: src/lib/components/page-error.svelte
 #: src/lib/monitoring.ts
-#: src/routes/(admin)/+error.svelte
 msgid "Needs attention"
 msgstr "Needs attention"
 
@@ -928,8 +928,8 @@ msgstr "Choose a camera stream before checking its picture."
 msgid "The camera check request was not valid. Please try again."
 msgstr "The camera check request was not valid. Please try again."
 
-#: src/routes/(admin)/+error.svelte
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
+#: src/lib/components/page-error.svelte
 #: src/routes/(admin)/[...catchall]/+page.ts
 msgid "Page not found"
 msgstr "Page not found"
@@ -1074,7 +1074,7 @@ msgstr "Restore saved settings"
 msgid "No valid recovery snapshot is available. Restore config.json and app.json from your settings backup, or ask for help using the diagnostics download."
 msgstr "No valid recovery snapshot is available. Restore config.json and app.json from your settings backup, or ask for help using the diagnostics download."
 
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
 #: src/routes/(admin)/logs/+page.svelte
 #: src/routes/(admin)/status/+page.svelte
 #: src/routes/recovery/+page.svelte
@@ -1134,7 +1134,7 @@ msgstr "Connect device"
 #. 0: saved?.label ?? 'Add recipient'
 #. 0: camera?.label ?? 'Camera'
 #. 0: initial?.label ?? 'Connect validator'
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
 #: src/routes/(admin)/detectors/edit/+page.svelte
 #: src/routes/(admin)/notifications/add/+page.svelte
 #: src/routes/(admin)/streams/[id]/+page.svelte
@@ -1142,15 +1142,15 @@ msgstr "Connect device"
 msgid "{0} · AI Detector"
 msgstr "{0} · AI Detector"
 
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
 msgid "This page needs attention"
 msgstr "This page needs attention"
 
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
 msgid "Go to the start"
 msgstr "Go to the start"
 
-#: src/routes/(admin)/+error.svelte
+#: src/lib/components/page-error.svelte
 msgid "<0/>Recover settings"
 msgstr "<0/>Recover settings"
 
@@ -3743,3 +3743,8 @@ msgstr ""
 "\n"
 "This export does not include application settings or camera login details.\n"
 ""
+
+#. 0: file
+#: src/lib/server/configuration/settings-files.ts
+msgid "The settings file {0} is damaged and cannot be read."
+msgstr "The settings file {0} is damaged and cannot be read."

@@ -21,7 +21,13 @@ test('invalid settings can be recovered from the last valid pair without deletin
 	const { files, store } = await fixture(t);
 	const original = await store.read();
 	await writeFile(files.config, '{broken');
-	await assert.rejects(store.read(), SyntaxError);
+	// The person is told which file is damaged, not what a parser found in it.
+	await assert.rejects(store.read(), (error: Error) => {
+		assert.ok(error instanceof ConfigurationError);
+		assert.ok(error.message.includes(files.config), error.message);
+		assert.match(error.message, /damaged and cannot be read/);
+		return true;
+	});
 	assert.equal(await store.recoveryAvailable(), true);
 	await store.restore();
 	assert.deepEqual(await store.read(), original);
@@ -30,6 +36,15 @@ test('invalid settings can be recovered from the last valid pair without deletin
 	);
 	assert.ok(saved);
 	assert.equal(await readFile(path.join(path.dirname(files.config), saved), 'utf8'), '{broken');
+	// The same holds for app.json, whether it is not JSON or holds something it should not.
+	for (const damaged of ['{broken', JSON.stringify({ streams: 'none' })]) {
+		await writeFile(files.app, damaged);
+		await assert.rejects(store.read(), (error: Error) => {
+			assert.ok(error instanceof ConfigurationError);
+			assert.ok(error.message.includes(files.app), error.message);
+			return true;
+		});
+	}
 });
 
 async function fixture(

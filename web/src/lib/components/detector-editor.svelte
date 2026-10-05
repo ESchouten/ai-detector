@@ -2,11 +2,7 @@
 	import { resolve } from '$app/paths';
 	import CategoryDot from '$lib/components/category-dot.svelte';
 	import { onMount, untrack } from 'svelte';
-	import {
-		readDetectorChoices,
-		writeDetectorChoices,
-		type DetectorChoices
-	} from '$lib/detector-draft-storage';
+	import { readDetectorChoices, writeDetectorChoices } from '$lib/detector-draft-storage';
 	import { toast } from 'svelte-sonner';
 	import { Bell, Plus } from '@lucide/svelte';
 	import CameraSelection from '$lib/components/camera-selection.svelte';
@@ -14,7 +10,6 @@
 	import NotificationEditor from '$lib/components/notification-editor.svelte';
 	import LlmConnectionEditor from '$lib/components/llm-connection-editor.svelte';
 	import DetectorVerification from '$lib/components/detector-verification.svelte';
-	import { assignConnection, suggestedConnection } from '$lib/llm';
 	import { getLlmConnections, canTestLlm } from '$lib/remote/llm.remote';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -24,13 +19,22 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import {
-		applyDetectorPreset,
+		chooseConnection,
+		choosePreset,
 		createDetectorDraft,
+		detectorChoices,
 		detectorDraftMeta,
+		followsPreset,
+		lacksQuestion,
+		questionPreset,
+		restoreDetectorChoices,
+		selectTelegram,
 		validDetectorDraft,
-		selectTelegram
+		type DetectorEdit,
+		type DetectorEditProblem,
+		type DetectorOptions
 	} from '$lib/detector-editor';
-	import { detectorSettings, sameTelegram, uniqueLabel } from '$lib/configuration';
+	import { detectorSettings, sameTelegram } from '$lib/configuration';
 	import { errorMessage } from '$lib/remote-errors';
 	import type { DetectorConfig, LlmConnection } from '$lib/schema';
 	import {
@@ -98,63 +102,70 @@
 	let presetSettings = $state(
 		untrack(() => (initial ? JSON.stringify(detectorSettings(initial)) : ''))
 	);
-	const matchesPreset = $derived(JSON.stringify(detectorSettings(detector)) === presetSettings);
+	const matchesPreset = $derived(followsPreset(detector, presetSettings));
 	const selectedPreset = $derived(
 		matchesPreset ? presets.find((item) => item.id === preset) : undefined
 	);
 	const selectedChannels = $derived(detector.exporters.telegram ?? []);
+	const options = $derived<DetectorOptions>({
+		cameras,
+		telegrams,
+		connections: llms,
+		presets,
+		usedLabels: existingDetectors
+			.filter(({ meta }) => meta.label !== originalLabel)
+			.map(({ meta }) => meta.label)
+	});
+	// The rule being edited, as one value for the functions that change it, and back again.
+	function edited(): DetectorEdit {
+		return {
+			label,
+			suggestedLabel,
+			detector: $state.snapshot(detector),
+			preset,
+			presetSettings,
+			connection: llmLabel
+		};
+	}
+	function show(edit: DetectorEdit) {
+		({ label, suggestedLabel, detector, preset, presetSettings } = edit);
+		llmLabel = edit.connection;
+	}
+	const presetDetector = (id: string) => getDetectorPreset({ id });
+
 	const draftKey = untrack(() => `detector-draft:${originalLabel || 'new'}`);
 	let draftLoaded = $state(false);
 	let restoredDraft = $state(false);
 	let initialChoices = '';
-	function draftChoices(): DetectorChoices {
-		// Keep choices only; camera passwords and connection keys stay in server settings.
-		return {
-			label,
-			preset,
-			cameras: cameras
-				.filter((camera) => detector.detection.source.includes(camera.source))
-				.map((camera) => camera.id!),
-			telegrams: telegrams
-				.filter((channel) => selectedChannels.some((item) => sameTelegram(item, channel)))
-				.map((channel) => channel.label),
-			connection: llmLabel,
-			validatorEnabled: !!detector.vlm?.some((verifier) => verifier.key)
-		};
-	}
+	const draftChoices = () =>
+		detectorChoices({ label, preset, detector, connection: llmLabel }, { cameras, telegrams });
 
 	onMount(() => {
 		initialChoices = JSON.stringify(draftChoices());
 		async function restore() {
 			const draft = readDetectorChoices(draftKey);
+			if (!draft) return;
+			suggestValidator = false;
+			pending = true;
 			try {
-				if (draft) {
-					suggestValidator = false;
-					if (draft.preset && draft.preset !== initialPreset) await loadPreset(draft.preset);
-					label = draft.label;
-					detector.detection.source = cameras
-						.filter((camera) => draft.cameras.includes(camera.id!))
-						.map((camera) => camera.source);
-					for (const channel of telegrams)
-						detector.exporters.telegram = selectTelegram(
-							detector.exporters.telegram ?? [],
-							channel,
-							draft.telegrams.includes(channel.label)
-						);
-					keepDelivery = true;
-					const connection = llms.find((item) => item.label === draft.connection);
-					if (connection) await selectConnection(connection);
-					if (!draft.validatorEnabled)
-						for (const verifier of detector.vlm ?? []) verifier.key = null;
-					restoredDraft = true;
-				}
+				const restored = await restoreDetectorChoices(
+					edited(),
+					draft,
+					options,
+					{ savedPreset: initialPreset, keepDelivery },
+					presetDetector
+				);
+				show(restored.edit);
+				keepDelivery = true;
+				if (restored.problem) showProblem(restored.problem);
+				restoredDraft = true;
 			} catch {
 				writeDetectorChoices(draftKey, null);
 			} finally {
-				draftLoaded = true;
+				pending = false;
 			}
 		}
-		void restore();
+		void restore().finally(() => (draftLoaded = true));
 	});
 	$effect(() => {
 		if (!draftLoaded) return;
@@ -169,42 +180,27 @@
 	function showError(cause: unknown, fallback: string) {
 		error = errorMessage(cause, fallback);
 	}
-
-	function connectionForPreset(next: DetectorConfig) {
-		if (!next.vlm?.[0]?.prompt.trim()) return undefined;
-		return (
-			llms.find(({ label }) => label === llmLabel) ??
-			(suggestValidator ? suggestedConnection(next, llms) : undefined)
-		);
+	function showProblem(problem: DetectorEditProblem) {
+		if (problem.kind === 'no-question')
+			error = 'Choose a preset to use its AI verification question.';
+		else if (problem.kind === 'preset') showError(problem.cause, 'The preset could not be loaded.');
+		else showError(problem.cause, 'Could not load the preset question.');
 	}
 
 	async function loadPreset(id: string) {
 		if (!id) return;
-		const previousName = selectedPreset?.name;
 		pending = true;
 		error = '';
 		try {
-			const next = applyDetectorPreset($state.snapshot(detector), await getDetectorPreset({ id }), {
-				keepDelivery
-			});
-			const connection = connectionForPreset(next);
-			detector = connection ? assignConnection(next, connection) : next;
-			llmLabel = connection?.label ?? '';
-			presetSettings = JSON.stringify(detectorSettings(next));
-			if (!label || label === previousName || label === suggestedLabel) {
-				label = uniqueLabel(
-					presets.find((item) => item.id === id)?.name ?? label,
-					new Set(
-						existingDetectors
-							.filter(({ meta }) => meta.label !== originalLabel)
-							.map(({ meta }) => meta.label)
-					)
-				);
-				suggestedLabel = label;
-			}
-			preset = id;
+			const chosen = { id, detector: await presetDetector(id) };
+			show(
+				choosePreset(edited(), chosen, options, {
+					keepDelivery,
+					suggestConnection: suggestValidator
+				})
+			);
 		} catch (cause) {
-			showError(cause, 'The preset could not be loaded.');
+			showProblem({ kind: 'preset', cause });
 		} finally {
 			pending = false;
 		}
@@ -214,18 +210,12 @@
 		pending = true;
 		error = '';
 		try {
-			const template =
-				!detector.vlm?.[0] && selectedPreset
-					? await getDetectorPreset({ id: selectedPreset.id })
-					: undefined;
-			const assigned = assignConnection(detector, connection, template);
-			detector = assigned;
-			llmLabel = connection.label;
-			if (!assigned.vlm[0].prompt.trim()) {
-				error = 'Choose a preset to use its AI verification question.';
-			}
+			const template = questionPreset(edited(), presets);
+			const question = template ? await presetDetector(template) : undefined;
+			show(chooseConnection(edited(), connection, question));
+			if (lacksQuestion(detector)) showProblem({ kind: 'no-question' });
 		} catch (cause) {
-			showError(cause, 'Could not load the preset question.');
+			showProblem({ kind: 'question', cause });
 		} finally {
 			pending = false;
 		}

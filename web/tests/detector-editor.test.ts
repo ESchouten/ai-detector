@@ -1,11 +1,21 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { detectorSettings } from '../src/lib/configuration.ts';
 import {
 	applyDetectorPreset,
 	cameraRuleNames,
+	chooseConnection,
+	choosePreset,
 	createDetectorDraft,
+	detectorChoices,
+	followsPreset,
+	lacksQuestion,
+	questionPreset,
+	restoreDetectorChoices,
+	selectTelegram,
 	validDetectorDraft,
-	selectTelegram
+	type DetectorEdit,
+	type DetectorOptions
 } from '../src/lib/detector-editor.ts';
 import type { DetectorConfig, TelegramConfig } from '../src/lib/schema.ts';
 
@@ -166,4 +176,189 @@ test('changing presets keeps an explicitly paused validator paused when connecti
 	});
 	assert.notStrictEqual(result.vlm?.[0].model, current.vlm[0].model);
 	assert.equal('model' in preset.vlm[0], false);
+});
+
+const barn = { id: 'camera-barn', source: 'rtsp://farmer:secret@barn.example/live' };
+const yard = { id: 'camera-yard', source: 'rtsp://farmer:secret@yard.example/live' };
+const phone = { label: 'Phone', token: 'bot-token', chat: '1234' };
+const gemini = { label: 'Gemini', model: 'gemini/flash', key: 'api-key' };
+const calving: DetectorConfig = {
+	detection: { source: [], interval: 2 },
+	yolo: { model: 'calving.pt' },
+	vlm: [{ prompt: 'Is a cow calving?', strategy: 'VIDEO' }],
+	exporters: { disk: [{ directory: 'calving' }] }
+};
+const options: DetectorOptions = {
+	cameras: [barn, yard],
+	telegrams: [phone],
+	connections: [gemini],
+	presets: [
+		{ id: 'calving', name: 'Calving Catcher' },
+		{ id: 'general', name: 'General' }
+	],
+	usedLabels: ['Calving Catcher']
+};
+const blank = (): DetectorEdit => ({
+	label: '',
+	suggestedLabel: '',
+	detector: createDetectorDraft(),
+	preset: '',
+	presetSettings: '',
+	connection: ''
+});
+const presetDetector = async (id: string) => {
+	assert.equal(id, 'calving');
+	return structuredClone(calving);
+};
+
+test('a preset names an unnamed rule, connects its question when asked to, and leaves a typed name alone', () => {
+	const chosen = { id: 'calving', detector: calving };
+	const suggested = choosePreset(blank(), chosen, options, {
+		keepDelivery: false,
+		suggestConnection: true
+	});
+	assert.equal(suggested.label, 'Calving Catcher (2)');
+	assert.equal(suggested.suggestedLabel, suggested.label);
+	assert.equal(suggested.connection, 'Gemini');
+	assert.equal(suggested.detector.vlm?.[0].key, 'api-key');
+	assert.deepEqual(suggested.detector.exporters, calving.exporters);
+	assert.ok(followsPreset(suggested.detector, suggested.presetSettings));
+
+	const typed = choosePreset({ ...blank(), label: 'North pen' }, chosen, options, {
+		keepDelivery: false,
+		suggestConnection: false
+	});
+	assert.equal(typed.label, 'North pen');
+	assert.equal(typed.connection, '');
+	assert.equal(typed.detector.vlm?.[0].key, undefined);
+	// Choosing again renames a suggested name, never a typed one.
+	const again = choosePreset(suggested, { id: 'general', detector: calving }, options, {
+		keepDelivery: true,
+		suggestConnection: false
+	});
+	assert.equal(again.label, 'General');
+});
+
+test('an unfinished edit comes back from references alone, in the order it was made', async () => {
+	const edit = blank();
+	edit.detector.detection.source = [barn.source];
+	const before = structuredClone(edit);
+	const draft = {
+		label: 'North pen',
+		preset: 'calving',
+		cameras: [yard.id, 'camera-removed'],
+		telegrams: ['Phone', 'Removed recipient'],
+		connection: 'Gemini',
+		validatorEnabled: true
+	};
+	const { edit: restored, problem } = await restoreDetectorChoices(
+		edit,
+		draft,
+		options,
+		{ keepDelivery: false },
+		presetDetector
+	);
+	assert.equal(problem, undefined);
+	assert.deepEqual(edit, before);
+	assert.equal(restored.label, 'North pen');
+	assert.equal(restored.preset, 'calving');
+	assert.ok(followsPreset(restored.detector, restored.presetSettings));
+	assert.deepEqual(restored.detector.detection.source, [yard.source]);
+	assert.deepEqual(restored.detector.exporters, {
+		disk: [{ directory: 'calving' }],
+		telegram: [{ token: 'bot-token', chat: '1234' }]
+	});
+	assert.equal(restored.connection, 'Gemini');
+	assert.equal(restored.detector.vlm?.[0].prompt, 'Is a cow calving?');
+	assert.equal(restored.detector.vlm?.[0].key, 'api-key');
+	// What is kept in the browser names saved settings and holds none of their secrets.
+	const kept = detectorChoices(restored, options);
+	assert.deepEqual(kept, { ...draft, cameras: [yard.id], telegrams: ['Phone'] });
+	assert.doesNotMatch(JSON.stringify(kept), /secret|bot-token|api-key|rtsp:/);
+});
+
+test('a paused validator stays paused, and a rule without recipients gains no empty list', async () => {
+	const saved: DetectorEdit = {
+		...blank(),
+		label: 'Calving',
+		detector: createDetectorDraft({ ...calving, detection: { source: [barn.source] } }),
+		preset: 'calving',
+		presetSettings: JSON.stringify(detectorSettings(calving))
+	};
+	const { edit: restored, problem } = await restoreDetectorChoices(
+		saved,
+		{
+			label: 'Calving',
+			preset: 'calving',
+			cameras: [barn.id],
+			telegrams: [],
+			connection: 'Gemini',
+			validatorEnabled: false
+		},
+		{ ...options, telegrams: [] },
+		{ savedPreset: 'calving', keepDelivery: true },
+		async () => assert.fail('The saved preset is not fetched again.')
+	);
+	assert.equal(problem, undefined);
+	assert.equal(restored.connection, 'Gemini');
+	assert.deepEqual(restored.detector.vlm?.[0].model, 'gemini/flash');
+	assert.equal(restored.detector.vlm?.[0].key, null);
+	assert.ok(!('telegram' in restored.detector.exporters));
+});
+
+test('a preset that cannot be fetched is reported and the other choices still return', async () => {
+	const unavailable = new Error('Preset file is not valid JSON.');
+	const { edit: restored, problem } = await restoreDetectorChoices(
+		blank(),
+		{
+			label: 'North pen',
+			preset: 'calving',
+			cameras: [barn.id],
+			telegrams: ['Phone'],
+			connection: 'Gemini',
+			validatorEnabled: true
+		},
+		options,
+		{ keepDelivery: false },
+		() => Promise.reject(unavailable)
+	);
+	assert.equal(restored.preset, '');
+	assert.equal(restored.label, 'North pen');
+	assert.deepEqual(restored.detector.detection.source, [barn.source]);
+	assert.equal(restored.detector.exporters.telegram?.length, 1);
+	// The connection is restored, but there is no question to ask without the preset.
+	assert.equal(restored.connection, 'Gemini');
+	assert.deepEqual(problem, { kind: 'no-question' });
+
+	const withoutConnection = await restoreDetectorChoices(
+		blank(),
+		{
+			label: '',
+			preset: 'calving',
+			cameras: [],
+			telegrams: [],
+			connection: '',
+			validatorEnabled: false
+		},
+		options,
+		{ keepDelivery: false },
+		() => Promise.reject(unavailable)
+	);
+	assert.deepEqual(withoutConnection.problem, { kind: 'preset', cause: unavailable });
+});
+
+test('a connection chosen for a preset rule takes the preset’s question when the rule has none', () => {
+	const edit: DetectorEdit = {
+		...blank(),
+		detector: createDetectorDraft({ ...calving, vlm: undefined }),
+		preset: 'calving',
+		presetSettings: JSON.stringify(detectorSettings(calving))
+	};
+	assert.equal(questionPreset(edit, options.presets), 'calving');
+	const connected = chooseConnection(edit, gemini, calving);
+	assert.equal(connected.connection, 'Gemini');
+	assert.equal(connected.detector.vlm?.[0].prompt, 'Is a cow calving?');
+	assert.equal(questionPreset(connected, options.presets), undefined);
+	assert.equal(lacksQuestion(connected.detector), false);
+	assert.equal(lacksQuestion(chooseConnection(blank(), gemini).detector), true);
 });

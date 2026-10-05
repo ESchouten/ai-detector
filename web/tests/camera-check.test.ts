@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { test, type TestContext } from 'node:test';
-import { checkCameraRecording } from '../src/lib/camera-check.ts';
+import { checkCameraRecording, checkConnection } from '../src/lib/camera-check.ts';
 
 async function serve(
 	t: TestContext,
@@ -42,6 +42,38 @@ test('recording check sends the resolved source and reads the checked camera res
 		await checkCameraRecording(source, new AbortController().signal, endpoint),
 		result
 	);
+});
+
+test('a checked connection keeps what the camera answered and takes the source that worked', async (t) => {
+	const answered = {
+		source: 'rtsp://camera.example.test/live',
+		profiles: [{ token: 'main', name: 'Main stream' }],
+		connection: { address: 'http://camera.example.test/onvif' }
+	};
+	const check = {
+		source: 'rtsp://camera.example.test/live?transport=tcp',
+		checkId: 'checked-camera',
+		checkedAt: new Date().toISOString(),
+		previewUrl: '/camera-checks/checked-camera/picture.jpg',
+		recordingUrl: '/camera-checks/checked-camera/recording.mp4',
+		profiles: []
+	};
+	let requests = 0;
+	const endpoint = await serve(t, (_request, response) => {
+		requests++;
+		response.writeHead(200, { 'Content-Type': 'application/json' });
+		response.end(JSON.stringify(check));
+	});
+	assert.deepEqual(await checkConnection(answered, new AbortController().signal, endpoint), {
+		...answered,
+		source: check.source,
+		check
+	});
+	// Leaving the page between the camera's answer and its picture check starts no check.
+	const left = new AbortController();
+	left.abort();
+	await assert.rejects(checkConnection(answered, left.signal, endpoint), { name: 'AbortError' });
+	assert.equal(requests, 1);
 });
 
 test('recording check displays expected camera errors and a useful message for server failures', async (t) => {

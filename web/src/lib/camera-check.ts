@@ -20,3 +20,17 @@ export async function checkCameraRecording(
 	}
 	return response.json();
 }
+
+/**
+ * Check the picture of a camera that answered. The check reports the source that worked, which
+ * is the one to save.
+ */
+export async function checkConnection<T extends { source: string }>(
+	connection: T,
+	signal: AbortSignal,
+	endpoint?: string
+): Promise<T & { check: CameraConnectionResult }> {
+	signal.throwIfAborted();
+	const check = await checkCameraRecording(connection.source, signal, endpoint);
+	return { ...connection, source: check.source, check };
+}

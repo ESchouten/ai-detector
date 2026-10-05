@@ -10,14 +10,23 @@
 	import * as NativeSelect from '$lib/components/ui/native-select';
 	import Pill from './pill.svelte';
 	import SecretInput from './secret-input.svelte';
-	import { connectCameraBatch, type BatchCamera } from '$lib/camera-batch';
-	import { checkCameraRecording } from '$lib/camera-check';
+	import {
+		connectCameraBatch,
+		type BatchCamera,
+		type CameraLogin,
+		type CheckedConnection
+	} from '$lib/camera-batch';
+	import { checkConnection } from '$lib/camera-check';
 	import type { DiscoveredCamera } from '$lib/cameras';
 	import { uniqueLabel } from '$lib/configuration';
 	import { plural } from '$lib/format';
 	import { errorMessage } from '$lib/remote-errors';
-	import { discoverCameras, getCameraConnection } from '$lib/remote/camera.remote';
-	import { getCameras, saveCamera } from '$lib/remote/camera.remote';
+	import {
+		discoverCameras,
+		getCameraConnection,
+		getCameras,
+		saveCamera
+	} from '$lib/remote/camera.remote';
 
 	// One flow for one camera or several: find them, check each picture, name them, add them.
 	let {
@@ -46,6 +55,7 @@
 	let saving = $state(false);
 	let controller: AbortController | undefined;
 	onDestroy(() => controller?.abort());
+	const checks = resolve('/camera-checks');
 
 	const busy = $derived(connecting || saving);
 	const pending = $derived(queue.filter((camera) => camera.state !== 'saved'));
@@ -115,16 +125,7 @@
 		await connectCameraBatch(
 			queue.filter((camera) => selected.includes(camera.address)),
 			{ username, password },
-			async (input) => {
-				const connection = await getCameraConnection(input);
-				signal.throwIfAborted();
-				const check = await checkCameraRecording(
-					connection.source,
-					signal,
-					resolve('/camera-checks')
-				);
-				return { ...connection, source: check.source, check };
-			},
+			async (input) => checkConnection(await getCameraConnection(input), signal, checks),
 			update,
 			signal
 		);
@@ -136,12 +137,10 @@
 		manualError = '';
 		const signal = start();
 		try {
-			const connection = await getCameraConnection({ streamUri });
-			signal.throwIfAborted();
-			const check = await checkCameraRecording(
-				connection.source,
+			const connection = await checkConnection(
+				await getCameraConnection({ streamUri }),
 				signal,
-				resolve('/camera-checks')
+				checks
 			);
 			const used = new Set([
 				...existing.map((camera) => camera.label),
@@ -153,7 +152,7 @@
 					address: `manual:${++manualCount}`,
 					name: uniqueLabel('Camera', used),
 					state: 'ready',
-					connection: { ...connection, source: check.source, check }
+					connection
 				}
 			];
 			streamUri = '';
@@ -169,24 +168,14 @@
 		}
 	}
 
-	async function refreshPicture(camera: BatchCamera, profileToken?: string) {
+	/** Show a fresh picture for a camera in the list, from the connection `reach` gives. */
+	async function recheck(
+		camera: BatchCamera,
+		reach: (signal: AbortSignal) => Promise<CheckedConnection>
+	) {
 		const signal = start();
 		try {
-			const connection = profileToken
-				? await getCameraConnection({ address: camera.address, ...camera.login!, profileToken })
-				: camera.connection!;
-			signal.throwIfAborted();
-			const check = await checkCameraRecording(
-				connection.source,
-				signal,
-				resolve('/camera-checks')
-			);
-			update({
-				...camera,
-				state: 'ready',
-				error: undefined,
-				connection: { ...connection, source: check.source, check }
-			});
+			update({ ...camera, state: 'ready', error: undefined, connection: await reach(signal) });
 		} catch (cause) {
 			if (!signal.aborted)
 				update({
@@ -198,17 +187,33 @@
 			if (!signal.aborted) connecting = false;
 		}
 	}
+	function refreshPicture(camera: BatchCamera, current: CheckedConnection) {
+		return recheck(camera, (signal) => checkConnection(current, signal, checks));
+	}
+	/** Another stream of the same camera, opened with the login that reached it. */
+	function showStream(camera: BatchCamera, login: CameraLogin, profileToken: string) {
+		return recheck(camera, async (signal) =>
+			checkConnection(
+				{
+					...(await getCameraConnection({ address: camera.address, ...login, profileToken })),
+					login
+				},
+				signal,
+				checks
+			)
+		);
+	}
 
 	async function save() {
 		saving = true;
 		for (const camera of ready) {
-			const connection = camera.connection!;
+			const { connection } = camera;
 			try {
 				const saved = await saveCamera({
 					label: camera.name.trim(),
 					source: connection.source,
 					mode: 'view-only',
-					checkId: connection.check!.checkId,
+					checkId: connection.check.checkId,
 					connection: connection.connection
 				});
 				update({ ...camera, state: 'saved', savedId: saved.id, error: undefined });
@@ -371,7 +376,7 @@
 				{#each queue as camera, index (camera.address)}
 					<li class="flex min-w-0 flex-col gap-3">
 						<div class="relative aspect-video overflow-hidden rounded-xl bg-media">
-							{#if camera.connection?.check}
+							{#if camera.connection}
 								<img
 									src={camera.connection.check.previewUrl}
 									alt={`${camera.name} connection preview`}
@@ -421,14 +426,15 @@
 						{:else}
 							<p class="text-sm font-medium break-words">{camera.name}</p>
 						{/if}
-						{#if camera.connection && camera.connection.profiles.length > 1}
+						{#if camera.connection?.login && camera.connection.profiles.length > 1}
+							{@const login = camera.connection.login}
 							<Field.Field>
 								<Field.Label for={`camera-profile-${index}`}>Camera channel or stream</Field.Label>
 								<NativeSelect.Root
 									id={`camera-profile-${index}`}
 									value={camera.connection.connection?.profileToken ?? ''}
 									disabled={busy || camera.state === 'saved'}
-									onchange={(event) => refreshPicture(camera, event.currentTarget.value)}
+									onchange={(event) => showStream(camera, login, event.currentTarget.value)}
 								>
 									{#each camera.connection.profiles as profile (profile.token)}
 										<NativeSelect.Option value={profile.token}>{profile.name}</NativeSelect.Option>
@@ -439,12 +445,13 @@
 						{#if camera.error}
 							<p role="alert" class="text-sm break-words text-danger-foreground">{camera.error}</p>
 							{#if camera.state === 'ready'}
+								{@const connection = camera.connection}
 								<Button
 									variant="outline"
 									size="sm"
 									class="self-start"
 									disabled={busy}
-									onclick={() => refreshPicture(camera)}>Refresh picture</Button
+									onclick={() => refreshPicture(camera, connection)}>Refresh picture</Button
 								>
 							{/if}
 						{/if}

@@ -14,10 +14,15 @@
 	import Pill from './pill.svelte';
 	import SecretInput from './secret-input.svelte';
 	import type { StreamMeta } from '$lib/schema';
-	import { discoverCameras, getCameraConnection } from '$lib/remote/camera.remote';
 	import { checkCameraRecording } from '$lib/camera-check';
 	import { cameraDraftAddress, cameraEditConnection } from '$lib/cameras';
-	import { getCameras, removeCamera, saveCamera } from '$lib/remote/camera.remote';
+	import {
+		discoverCameras,
+		getCameraConnection,
+		getCameras,
+		removeCamera,
+		saveCamera
+	} from '$lib/remote/camera.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
 
 	// Rename, reconnect or remove one saved camera. Its detectors are chosen under Detectors.

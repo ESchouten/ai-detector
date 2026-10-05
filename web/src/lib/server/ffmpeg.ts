@@ -13,10 +13,10 @@ const execute = promisify(execFile);
 let cachedPath: string | undefined;
 let pendingPath: Promise<string | null> | undefined;
 
-export const getExecutableName = () => (process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg');
-export const isRtspSource = (source: string) => /^rtsps?:\/\//i.test(source.trim());
+const getExecutableName = () => (process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg');
+const isRtspSource = (source: string) => /^rtsps?:\/\//i.test(source.trim());
 
-export function getRtspInputArgs(source: string): string[] {
+function getRtspInputArgs(source: string): string[] {
 	return [
 		'-rtsp_transport',
 		'tcp',

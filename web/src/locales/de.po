@@ -184,13 +184,13 @@ msgstr "Der Verbindungstest ist nur in der Desktop-App möglich. Sie können die
 msgid "Open the localhost dashboard on the computer running AI Detector to import its files."
 msgstr "Öffnen Sie das Dashboard über localhost auf dem Computer, auf dem AI Detector läuft, um dessen Dateien zu importieren."
 
-#: src/lib/remote/exporter.remote.ts
+#: src/lib/remote/alerts.remote.ts
 msgid "Setup test sent."
 msgstr "Testnachricht gesendet."
 
 #: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
-#: src/lib/remote/stream.remote.ts
+#: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/routes/(admin)/streams/[id]/+page.svelte
 msgid "Camera"
@@ -823,23 +823,6 @@ msgstr "Dieser Kamerakanal ist nicht mehr verfügbar. Verbinden Sie erneut und w
 #: src/lib/server/cameras/discovery.ts
 msgid "The camera did not return a stream address."
 msgstr "Die Kamera hat keine Stream-Adresse geliefert."
-
-#: src/lib/server/configuration/streams.ts
-#: src/lib/server/configuration/streams.ts
-msgid "This camera source no longer exists."
-msgstr "Diese Kameraquelle existiert nicht mehr."
-
-#: src/lib/server/configuration/streams.ts
-msgid "This camera source already exists."
-msgstr "Diese Kameraquelle existiert bereits."
-
-#: src/lib/server/configuration/streams.ts
-msgid "This camera is a detector’s only source. Update or remove that detector first."
-msgstr "Diese Kamera ist die einzige Quelle eines Detektors. Ändern oder entfernen Sie zuerst diesen Detektor."
-
-#: src/lib/server/configuration/streams.ts
-msgid "The camera order changed. Reload and try again."
-msgstr "Die Reihenfolge der Kameras hat sich geändert. Laden Sie die Seite neu und versuchen Sie es erneut."
 
 #: src/lib/server/configuration/telegrams.ts
 #: src/lib/server/configuration/telegrams.ts
@@ -3706,11 +3689,6 @@ msgstr "Geprüft von {0}"
 #: src/routes/(admin)/detectors/+page.svelte
 msgid "Checked by a custom validator"
 msgstr "Geprüft von einer eigenen KI-Prüfung"
-
-#. 0: index + 1
-#: src/lib/remote/stream.remote.ts
-msgid "Stream {0}"
-msgstr "Stream {0}"
 
 #. 0: amount
 #: src/lib/format.ts

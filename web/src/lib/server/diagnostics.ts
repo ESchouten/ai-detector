@@ -9,7 +9,7 @@ import type { ZipEntry } from './zip-download.ts';
 const SECRET_FIELD = /^(?:key|token|password|secret|headers|authorization)$/i;
 
 /** Redact structured settings and the same credentials wherever a library printed them. */
-export function diagnosticRedactor(...documents: unknown[]) {
+function diagnosticRedactor(...documents: unknown[]) {
 	const secrets = new Set<string>();
 	function settings(value: unknown, sensitive = false): unknown {
 		if (typeof value === 'string') {

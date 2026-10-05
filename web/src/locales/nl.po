@@ -184,13 +184,13 @@ msgstr "De verbinding testen kan alleen in de desktopapp. Je kunt deze verbindin
 msgid "Open the localhost dashboard on the computer running AI Detector to import its files."
 msgstr "Open het dashboard via localhost op de computer waarop AI Detector draait om de bestanden te importeren."
 
-#: src/lib/remote/exporter.remote.ts
+#: src/lib/remote/alerts.remote.ts
 msgid "Setup test sent."
 msgstr "Testbericht verstuurd."
 
 #: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
-#: src/lib/remote/stream.remote.ts
+#: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/routes/(admin)/streams/[id]/+page.svelte
 msgid "Camera"
@@ -823,23 +823,6 @@ msgstr "Dat camerakanaal is niet meer beschikbaar. Verbind opnieuw en kies een k
 #: src/lib/server/cameras/discovery.ts
 msgid "The camera did not return a stream address."
 msgstr "De camera gaf geen streamadres terug."
-
-#: src/lib/server/configuration/streams.ts
-#: src/lib/server/configuration/streams.ts
-msgid "This camera source no longer exists."
-msgstr "Deze camerabron bestaat niet meer."
-
-#: src/lib/server/configuration/streams.ts
-msgid "This camera source already exists."
-msgstr "Deze camerabron bestaat al."
-
-#: src/lib/server/configuration/streams.ts
-msgid "This camera is a detector’s only source. Update or remove that detector first."
-msgstr "Deze camera is de enige bron van een detector. Pas die detector eerst aan of verwijder hem."
-
-#: src/lib/server/configuration/streams.ts
-msgid "The camera order changed. Reload and try again."
-msgstr "De volgorde van de camera’s is gewijzigd. Laad de pagina opnieuw en probeer het nog eens."
 
 #: src/lib/server/configuration/telegrams.ts
 #: src/lib/server/configuration/telegrams.ts
@@ -3706,11 +3689,6 @@ msgstr "Gecontroleerd door {0}"
 #: src/routes/(admin)/detectors/+page.svelte
 msgid "Checked by a custom validator"
 msgstr "Gecontroleerd door een eigen AI-controle"
-
-#. 0: index + 1
-#: src/lib/remote/stream.remote.ts
-msgid "Stream {0}"
-msgstr "Stream {0}"
 
 #. 0: amount
 #: src/lib/format.ts

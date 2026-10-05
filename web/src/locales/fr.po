@@ -184,13 +184,13 @@ msgstr "Le test de connexion nécessite l’application de bureau. Vous pouvez t
 msgid "Open the localhost dashboard on the computer running AI Detector to import its files."
 msgstr "Ouvrez le tableau de bord via localhost sur l’ordinateur qui exécute AI Detector pour importer ses fichiers."
 
-#: src/lib/remote/exporter.remote.ts
+#: src/lib/remote/alerts.remote.ts
 msgid "Setup test sent."
 msgstr "Message de test envoyé."
 
 #: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
-#: src/lib/remote/stream.remote.ts
+#: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/routes/(admin)/streams/[id]/+page.svelte
 msgid "Camera"
@@ -823,23 +823,6 @@ msgstr "Ce canal de la caméra n’est plus disponible. Reconnectez-vous et choi
 #: src/lib/server/cameras/discovery.ts
 msgid "The camera did not return a stream address."
 msgstr "La caméra n’a pas renvoyé d’adresse de flux."
-
-#: src/lib/server/configuration/streams.ts
-#: src/lib/server/configuration/streams.ts
-msgid "This camera source no longer exists."
-msgstr "Cette source de caméra n’existe plus."
-
-#: src/lib/server/configuration/streams.ts
-msgid "This camera source already exists."
-msgstr "Cette source de caméra existe déjà."
-
-#: src/lib/server/configuration/streams.ts
-msgid "This camera is a detector’s only source. Update or remove that detector first."
-msgstr "Cette caméra est la seule source d’un détecteur. Modifiez ou supprimez d’abord ce détecteur."
-
-#: src/lib/server/configuration/streams.ts
-msgid "The camera order changed. Reload and try again."
-msgstr "L’ordre des caméras a changé. Rechargez la page et réessayez."
 
 #: src/lib/server/configuration/telegrams.ts
 #: src/lib/server/configuration/telegrams.ts
@@ -3720,11 +3703,6 @@ msgstr "Vérifié par {0}"
 #: src/routes/(admin)/detectors/+page.svelte
 msgid "Checked by a custom validator"
 msgstr "Vérifié par une vérification par IA personnalisée"
-
-#. 0: index + 1
-#: src/lib/remote/stream.remote.ts
-msgid "Stream {0}"
-msgstr "Flux {0}"
 
 #. 0: amount
 #: src/lib/format.ts

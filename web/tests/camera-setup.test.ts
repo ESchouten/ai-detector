@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import * as v from 'valibot';
-import { cameraInput, streamInput } from '../src/lib/configuration.ts';
+import { cameraInput } from '../src/lib/configuration.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import {
 	cameraArchiveSelection,
@@ -151,10 +151,11 @@ test('password or source changes preserve camera identity but invalidate earlier
 	assert.equal(progress.pictureVerifiedAt, nextCheck);
 	assert.equal(progress.archiveVerifiedAt, undefined);
 	assert.equal(progress.completedAt, undefined);
-	await store.saveStream({ original: updatedSource, label: 'Yard', source });
-	const legacyEdit = await store.read();
-	assert.equal(legacyEdit.app.streams[0].connection, undefined);
-	assert.equal(cameraSetupStatus(legacyEdit, camera.id).pictureVerifiedAt, undefined);
+	// An address saved without a new picture check keeps neither the earlier check nor its connection.
+	await store.saveCamera({ id: camera.id, label: 'Yard', source, mode: 'keep' });
+	const unchecked = await store.read();
+	assert.equal(unchecked.app.streams[0].connection, undefined);
+	assert.equal(cameraSetupStatus(unchecked, camera.id).pictureVerifiedAt, undefined);
 });
 
 test('changing archive destinations invalidates its proof and rejects an obsolete in-flight check', async (t) => {
@@ -261,14 +262,6 @@ test('client camera input cannot forge progress and rejects secrets in reusable 
 		setup: { pictureVerifiedAt: verifiedAt, completedAt: verifiedAt }
 	});
 	assert.equal('setup' in parsed, false);
-	const stream = v.parse(streamInput, {
-		label: 'Yard',
-		source,
-		setup: { completedAt: verifiedAt },
-		connection
-	});
-	assert.equal('setup' in stream, false);
-	assert.equal('connection' in stream, false);
 });
 
 test('camera edits and completion do not depend on preset files', async (t) => {

@@ -17,7 +17,7 @@
 	import { plural } from '$lib/format';
 	import { errorMessage } from '$lib/remote-errors';
 	import { discoverCameras, getCameraConnection } from '$lib/remote/camera.remote';
-	import { getCameras, saveCamera } from '$lib/remote/stream.remote';
+	import { getCameras, saveCamera } from '$lib/remote/camera.remote';
 
 	// One flow for one camera or several: find them, check each picture, name them, add them.
 	let {

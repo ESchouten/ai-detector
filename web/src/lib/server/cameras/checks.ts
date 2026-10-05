@@ -12,7 +12,7 @@ const LIFETIME_MS = 15 * 60 * 1000;
 const MAX_CHECKS = 16;
 type Check = { source: string; checkedAt: number; directory: string };
 
-export async function recordCameraTest(
+async function recordCameraTest(
 	source: string,
 	executable: string,
 	directory: string,

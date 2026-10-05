@@ -3,7 +3,7 @@ import { promisify } from 'node:util';
 import type { RuntimeMode } from '../runtime.ts';
 
 const execute = promisify(execFile);
-export const DOCKER_HELP = 'https://docs.docker.com/desktop/setup/install/windows-install/';
+const DOCKER_HELP = 'https://docs.docker.com/desktop/setup/install/windows-install/';
 export const NVIDIA_HELP =
 	'https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html';
 

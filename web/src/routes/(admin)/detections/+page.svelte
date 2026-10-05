@@ -24,7 +24,7 @@
 	import MonitoringBanner from '$lib/components/monitoring-banner.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import { dayHeading, plural } from '$lib/format';
-	import { getCameras } from '$lib/remote/stream.remote';
+	import { getCameras } from '$lib/remote/camera.remote';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { Action } from 'svelte/action';

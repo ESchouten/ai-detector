@@ -8,7 +8,7 @@
 	import CameraSettings from '$lib/components/camera-settings.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import Pill from '$lib/components/pill.svelte';
-	import { getCameras } from '$lib/remote/stream.remote';
+	import { getCameras } from '$lib/remote/camera.remote';
 
 	const cameras = $derived(await getCameras());
 	const camera = $derived(cameras.find((item) => item.id === page.params.id));

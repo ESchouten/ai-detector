@@ -14,7 +14,7 @@
 		saveAlerts,
 		getTelegrams,
 		connectTelegram
-	} from '$lib/remote/exporter.remote';
+	} from '$lib/remote/alerts.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
 	import { sameTelegram } from '$lib/configuration';

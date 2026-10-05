@@ -10,7 +10,7 @@
 	import Pill from '$lib/components/pill.svelte';
 	import StatusDot from '$lib/components/status-dot.svelte';
 	import { cameraStatusBadge } from '$lib/camera-status';
-	import { getCameras } from '$lib/remote/stream.remote';
+	import { getCameras } from '$lib/remote/camera.remote';
 	import { getDetectorPresets } from '$lib/remote/detector.remote';
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	const cameras = $derived(await getCameras());

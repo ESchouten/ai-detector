@@ -31,9 +31,6 @@ export const discoverTelegramChats = command(tokenInput, ({ token }) =>
 );
 
 export const getTelegrams = query(async () => (await configuration.read()).app.telegrams);
-export const getTelegram = query(v.pick(telegramMeta, ['label']), async ({ label }) =>
-	(await configuration.read()).app.telegrams.find((telegram) => telegram.label === label)
-);
 
 export const connectTelegram = command(
 	v.object({ ...telegramInput.entries, received: v.literal(true) }),

@@ -74,6 +74,7 @@ async function fixture(t: TestContext, requested?: Locale) {
 }
 
 const camera = { label: 'Barn', source: 'rtsp://camera.example.test/live' };
+const added = { ...camera, mode: 'view-only' as const };
 
 test('a browser gets the first of its languages that the interface has', () => {
 	assert.equal(negotiateLocale('nl-NL,nl;q=0.9,en-US;q=0.8,en;q=0.7'), 'nl');
@@ -146,7 +147,7 @@ test('an installation takes the language of the browser that sets it up, then ke
 	// Opening the application writes nothing.
 	await dutch.store.read();
 	await assert.rejects(readFile(dutch.files.app), { code: 'ENOENT' });
-	await dutch.store.saveStream(camera);
+	await dutch.store.saveCamera(added);
 	assert.equal(await dutch.stored(), 'nl');
 	assert.equal(dutch.saved.at(-1), 'nl');
 
@@ -155,7 +156,11 @@ test('an installation takes the language of the browser that sets it up, then ke
 		requested: () => 'fr',
 		saved: () => undefined
 	});
-	await french.saveStream({ label: 'Stable', source: 'rtsp://stable.example.test/live' });
+	await french.saveCamera({
+		label: 'Stable',
+		source: 'rtsp://stable.example.test/live',
+		mode: 'view-only'
+	});
 	assert.equal(await dutch.stored(), 'nl');
 
 	await french.saveLanguage('de');
@@ -165,7 +170,7 @@ test('an installation takes the language of the browser that sets it up, then ke
 
 test('settings saved without a browser language stay as they were', async (t) => {
 	const { store, files, stored } = await fixture(t);
-	await store.saveStream(camera);
+	await store.saveCamera(added);
 	assert.equal(await stored(), undefined);
 	assert.ok(!('language' in JSON.parse(await readFile(files.app, 'utf8'))));
 });

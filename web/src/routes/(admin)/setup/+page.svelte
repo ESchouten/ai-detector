@@ -13,7 +13,7 @@
 	import SetupFinish from '$lib/components/setup-finish.svelte';
 	import SetupSteps from '$lib/components/setup-steps.svelte';
 	import { plural } from '$lib/format';
-	import { getCameras } from '$lib/remote/stream.remote';
+	import { getCameras } from '$lib/remote/camera.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { setupStep } from '$lib/setup';
 

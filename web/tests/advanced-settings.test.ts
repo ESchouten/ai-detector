@@ -107,7 +107,7 @@ test('invalid and stale saves leave both files untouched', async (t) => {
 	});
 	const saved = await store.read();
 	const revision = settingsRevision(saved);
-	await store.saveStream({ source: 'other.mp4', label: 'Other camera' });
+	await store.saveCamera({ source: 'other.mp4', label: 'Other camera', mode: 'view-only' });
 	const before = await Promise.all([readFile(files.config), readFile(files.app)]);
 	await assert.rejects(
 		store.saveAdvanced('config', { detectors: [] }, revision),

@@ -21,7 +21,7 @@ type Runtime = Pick<
 >;
 
 /** Cameras that are analysed and recorded right now. */
-export function monitoredCount(runtime: Pick<RuntimeStatus, 'cameras'>): number {
+function monitoredCount(runtime: Pick<RuntimeStatus, 'cameras'>): number {
 	return runtime.cameras.filter(
 		(camera) => camera.state === 'monitoring' && !camera.error && !camera.recordingError
 	).length;

@@ -14,7 +14,7 @@
 		cancelTelegramPairing,
 		discoverTelegramChats,
 		testTelegram
-	} from '$lib/remote/exporter.remote';
+	} from '$lib/remote/alerts.remote';
 	import { TelegramPairing, type TelegramPairingState } from '$lib/telegram-pairing';
 	import type { TelegramDestination, TelegramRecipient } from '$lib/telegram';
 	import { errorMessage } from '$lib/remote-errors';

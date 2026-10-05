@@ -184,13 +184,13 @@ msgstr "Connection testing requires the desktop application. You can still save 
 msgid "Open the localhost dashboard on the computer running AI Detector to import its files."
 msgstr "Open the localhost dashboard on the computer running AI Detector to import its files."
 
-#: src/lib/remote/exporter.remote.ts
+#: src/lib/remote/alerts.remote.ts
 msgid "Setup test sent."
 msgstr "Setup test sent."
 
 #: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
-#: src/lib/remote/stream.remote.ts
+#: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/routes/(admin)/streams/[id]/+page.svelte
 msgid "Camera"
@@ -823,23 +823,6 @@ msgstr "That camera channel is no longer available. Connect again and choose a c
 #: src/lib/server/cameras/discovery.ts
 msgid "The camera did not return a stream address."
 msgstr "The camera did not return a stream address."
-
-#: src/lib/server/configuration/streams.ts
-#: src/lib/server/configuration/streams.ts
-msgid "This camera source no longer exists."
-msgstr "This camera source no longer exists."
-
-#: src/lib/server/configuration/streams.ts
-msgid "This camera source already exists."
-msgstr "This camera source already exists."
-
-#: src/lib/server/configuration/streams.ts
-msgid "This camera is a detector’s only source. Update or remove that detector first."
-msgstr "This camera is a detector’s only source. Update or remove that detector first."
-
-#: src/lib/server/configuration/streams.ts
-msgid "The camera order changed. Reload and try again."
-msgstr "The camera order changed. Reload and try again."
 
 #: src/lib/server/configuration/telegrams.ts
 #: src/lib/server/configuration/telegrams.ts
@@ -3706,11 +3689,6 @@ msgstr "Checked by {0}"
 #: src/routes/(admin)/detectors/+page.svelte
 msgid "Checked by a custom validator"
 msgstr "Checked by a custom validator"
-
-#. 0: index + 1
-#: src/lib/remote/stream.remote.ts
-msgid "Stream {0}"
-msgstr "Stream {0}"
 
 #. 0: amount
 #: src/lib/format.ts

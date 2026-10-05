@@ -511,9 +511,9 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 			throw error;
 		}
 	}));
-	await store.saveStream({ source: other, label: 'Unused camera' });
-	await store.reorderStream(0, 1);
-	await store.saveStream({ original: source, source, label: 'Renamed camera' });
+	const camera = (await store.read()).app.streams[0];
+	await store.saveCamera({ source: other, label: 'Unused camera', mode: 'view-only' });
+	await store.saveCamera({ id: camera.id, source, label: 'Renamed camera', mode: 'keep' });
 	await store.saveTelegram({ label: 'Unused channel', token: 'other', chat: 'other' });
 	await store.saveTelegram({ original: 'chat', label: 'Renamed channel', ...telegram });
 	const { config } = await store.read();
@@ -530,13 +530,18 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 	assert.deepEqual(
 		saved.streams.map(({ label, source }: StreamMeta) => ({ label, source })),
 		[
-			{ label: 'Unused camera', source: other },
-			{ label: 'Renamed camera', source }
+			{ label: 'Renamed camera', source },
+			{ label: 'Unused camera', source: other }
 		]
 	);
 	assert.equal(saved.telegrams.length, 2);
 	const replacement = 'rtsp://camera.local/replacement';
-	await store.saveStream({ original: source, source: replacement, label: 'Renamed camera' });
+	await store.saveCamera({
+		id: camera.id,
+		source: replacement,
+		label: 'Renamed camera',
+		mode: 'keep'
+	});
 	await store.saveTelegram({
 		original: 'Renamed channel',
 		label: 'Renamed channel',
@@ -628,7 +633,7 @@ test('renaming or changing delivery settings keeps the monitoring preset and cam
 test('metadata-only first save still creates the missing empty configuration', async (t) => {
 	const { files, store } = await fixture(t);
 	await rm(files.config);
-	await store.saveStream({ source, label: 'First camera' });
+	await store.saveCamera({ source, label: 'First camera', mode: 'view-only' });
 	assert.deepEqual(JSON.parse(await readFile(files.config, 'utf8')), {
 		$schema: DEFAULT_SCHEMA_URL,
 		detectors: []
@@ -729,37 +734,33 @@ test('duplicate and stale notification edits fail without creating extra channel
 	assert.equal((await store.read()).app.telegrams.length, 1);
 });
 
-test('source edits propagate, duplicates are refused, and a detector cannot lose its only source', async (t) => {
+test('a changed camera address reaches every detector that uses it, and duplicates are refused', async (t) => {
 	const { store } = await fixture(t, {
 		detectors: [detector, { detection: { source: [source, other] } }]
 	});
+	const [camera, second] = (await store.read()).app.streams;
 	const replacement = 'rtsp://camera.local/new';
-	await store.saveStream({ original: source, source: replacement, label: 'Renamed camera' });
+	await store.saveCamera({
+		id: camera.id,
+		source: replacement,
+		label: 'Renamed camera',
+		mode: 'keep'
+	});
 	assert.deepEqual(
 		(await store.read()).config.detectors.map((item) => item.detection.source),
 		[[replacement], [replacement, other]]
 	);
 	await assert.rejects(
-		store.saveStream({ original: replacement, source: other, label: 'Duplicate' }),
-		/already exists/
+		store.saveCamera({ id: camera.id, source: other, label: 'Duplicate', mode: 'keep' }),
+		/already saved/
 	);
-	await assert.rejects(store.deleteStream(replacement), /only source/);
-	await store.deleteStream(other);
+	await assert.rejects(
+		store.saveCamera({ id: second.id, source: other, label: 'Renamed camera', mode: 'keep' }),
+		/name already exists/
+	);
 	assert.deepEqual(
 		(await store.read()).config.detectors.map((item) => item.detection.source),
-		[[replacement], [replacement]]
-	);
-});
-
-test('source reorder validates indices and reorders the latest saved list', async (t) => {
-	const { store } = await fixture(t);
-	await store.saveStream({ source: other, label: 'Second' });
-	for (const index of [-1, 0.5, 9])
-		await assert.rejects(store.reorderStream(index, 0), /camera order changed/);
-	await store.reorderStream(0, 1);
-	assert.deepEqual(
-		(await store.read()).app.streams.map((item) => item.source),
-		[other, source]
+		[[replacement], [replacement, other]]
 	);
 });
 

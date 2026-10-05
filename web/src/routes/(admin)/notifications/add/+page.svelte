@@ -4,7 +4,7 @@
 	import NotificationEditor from '$lib/components/notification-editor.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import * as Alert from '$lib/components/ui/alert';
-	import { getTelegrams } from '$lib/remote/exporter.remote';
+	import { getTelegrams } from '$lib/remote/alerts.remote';
 	const label = $derived(page.url.searchParams.get('label') ?? '');
 	const recipients = $derived(await getTelegrams());
 	const saved = $derived(recipients.find((recipient) => recipient.label === label));

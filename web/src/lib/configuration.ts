@@ -7,7 +7,6 @@ import {
 	appSchema,
 	cameraConnectionMeta,
 	detectorMeta,
-	streamMeta,
 	telegramMeta,
 	type Config,
 	type Configuration,
@@ -15,7 +14,7 @@ import {
 	type TelegramConfig
 } from './schema.ts';
 
-export { cameraConnectionMeta, detectorMeta, streamMeta, telegramMeta } from './schema.ts';
+export { cameraConnectionMeta, detectorMeta, telegramMeta } from './schema.ts';
 
 export class ConfigurationError extends Error {}
 
@@ -25,22 +24,11 @@ export const detectorInput = v.object({
 	detector: v.unknown(),
 	meta: detectorMeta
 });
-export const streamInput = v.object({
-	...v.pick(streamMeta, ['id', 'label', 'source']).entries,
-	label: text,
-	original: v.optional(v.string()),
-	next: v.optional(v.string())
-});
 export const telegramInput = v.object({
 	...telegramMeta.entries,
 	token: text,
 	chat: text,
-	original: v.optional(v.string()),
-	next: v.optional(v.string())
-});
-export const streamOrder = v.object({
-	index0: v.pipe(v.number(), v.integer(), v.minValue(0)),
-	index1: v.pipe(v.number(), v.integer(), v.minValue(0))
+	original: v.optional(v.string())
 });
 
 const cameraDetails = {

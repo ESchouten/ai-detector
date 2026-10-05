@@ -2,7 +2,7 @@ import { resolve } from '$app/paths';
 import { checkCameraRecording } from '../camera-check';
 import { errorMessage } from '../remote-errors';
 import { finishSetup, getSetupStatus } from '../remote/camera-setup.remote';
-import { getCameras, saveCamera } from '../remote/stream.remote';
+import { getCameras, saveCamera } from '../remote/camera.remote';
 
 export type SetupCamera = Awaited<ReturnType<typeof getSetupStatus>>[number];
 

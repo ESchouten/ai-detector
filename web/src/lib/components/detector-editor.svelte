@@ -40,8 +40,8 @@
 		getDetectorPresets,
 		saveDetector
 	} from '$lib/remote/detector.remote';
-	import { getCameras } from '$lib/remote/stream.remote';
-	import { getTelegrams } from '$lib/remote/exporter.remote';
+	import { getCameras } from '$lib/remote/camera.remote';
+	import { getTelegrams } from '$lib/remote/alerts.remote';
 
 	let {
 		originalLabel,

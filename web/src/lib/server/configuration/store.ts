@@ -20,7 +20,6 @@ import {
 	detectorInput,
 	normalizeConfig,
 	normalizeConfiguration,
-	streamInput,
 	telegramInput,
 	heartbeatInput
 } from '../../configuration.ts';
@@ -28,7 +27,6 @@ import { identifyCameras, saveCamera, removeCamera } from './cameras.ts';
 import { writeConfiguration } from './files.ts';
 import { upgradeLauncherSettings, upgradeVerificationKeys } from './upgrade.ts';
 import { saveDetector, deleteDetector } from './detectors.ts';
-import { saveStream, deleteStream, reorderStream } from './streams.ts';
 import { saveTelegram, deleteTelegram, saveAlerts } from './telegrams.ts';
 import { saveLlm, deleteLlm } from './llms.ts';
 import { replaceConnections, replaceDetectorConfig, settingsRevision } from './advanced.ts';
@@ -374,18 +372,6 @@ export class ConfigurationStore {
 
 	deleteDetector(label: string): Promise<void> {
 		return this.update((document) => deleteDetector(document, label));
-	}
-
-	saveStream(input: v.InferOutput<typeof streamInput>): Promise<void> {
-		return this.update((document) => saveStream(document, input));
-	}
-
-	deleteStream(source: string): Promise<void> {
-		return this.update((document) => deleteStream(document, source));
-	}
-
-	reorderStream(index0: number, index1: number): Promise<void> {
-		return this.update((document) => reorderStream(document, index0, index1));
 	}
 
 	saveTelegram(input: v.InferOutput<typeof telegramInput>): Promise<void> {

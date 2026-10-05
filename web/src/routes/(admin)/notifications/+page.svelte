@@ -4,7 +4,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Empty from '$lib/components/ui/empty';
 	import PageHeader from '$lib/components/page-header.svelte';
-	import { getTelegrams } from '$lib/remote/exporter.remote';
+	import { getTelegrams } from '$lib/remote/alerts.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
 	const [detectors, telegrams] = $derived(await Promise.all([getDetectors(), getTelegrams()]));

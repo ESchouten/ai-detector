@@ -111,12 +111,12 @@
 			});
 			await query.refresh();
 			const result = await query;
-			archiveWarnings = result.warnings ?? [];
 
 			if (version !== requestVersion) {
 				return;
 			}
 
+			archiveWarnings = result.warnings ?? [];
 			const current = new Set(entries.map(detectionKey));
 			entries = reset
 				? result.items
@@ -182,7 +182,8 @@
 			hasMore ||= result.hasMore;
 			await getTypes().refresh();
 		} catch {
-			refreshError = true;
+			// A refresh overtaken by new filters or a review says nothing about what is shown now.
+			if (version === requestVersion && reviewsVersion === reviewVersion) refreshError = true;
 		}
 	}
 

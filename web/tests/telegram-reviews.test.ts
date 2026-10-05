@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
@@ -70,16 +70,13 @@ async function fixture(t: TestContext) {
 		assert.ok(method in replies, method);
 		return Response.json({ ok: true, result: replies[method] });
 	});
-	const offsets = path.join(directory, 'offsets');
 	const receive = (token: string, update: TelegramUpdate, signal?: AbortSignal) =>
 		reviewTelegramDetection(archive, connections, token, update, signal);
 	return {
-		directory,
 		archive,
 		calls,
-		offsets,
 		receive,
-		inbox: new TelegramInbox(offsets, receive),
+		inbox: new TelegramInbox(receive),
 		setUpdates(value: TelegramUpdate[]) {
 			updates = value;
 		}
@@ -122,23 +119,6 @@ test('missing recordings and unrelated callbacks never claim a successful saved 
 	await f.receive('fixture-token', unrelated);
 	assert.equal(f.calls.length, count);
 	assert.equal(await f.archive.readReview(address), null);
-});
-
-test('persisted offsets prevent old Telegram clicks from overwriting a later web review after restart', async (t) => {
-	const f = await fixture(t);
-	f.setUpdates([callback()]);
-	await f.inbox.receive('fixture-token');
-	await f.archive.review(address, false, 'web');
-	const restarted = new TelegramInbox(f.offsets, f.receive);
-	await restarted.receive('fixture-token');
-	assert.equal(f.calls.filter((call) => call.method === 'getUpdates').at(-1)?.body.offset, 11);
-	assert.equal((await f.archive.readReview(address))?.source, 'web');
-	const [file] = await readdir(f.offsets);
-	assert.doesNotMatch(file, /fixture-token/);
-	assert.equal(await readFile(path.join(f.offsets, file), 'utf8'), '11\n');
-	f.setUpdates([callback(12)]);
-	await restarted.receive('fixture-token');
-	assert.equal((await f.archive.readReview(address))?.validated, true);
 });
 
 test('pairing and reviews consume one batch together, including callbacks after confirmation', async (t) => {
@@ -234,5 +214,9 @@ test('a failed archive write reports failure in Telegram and leaves the update a
 	await assert.rejects(f.inbox.receive('fixture-token'), /Read-only archive/);
 	assert.match(String(f.calls.at(-1)?.body.text), /Could not save/);
 	assert.equal(await f.archive.readReview(address), null);
-	await assert.rejects(readdir(f.offsets), { code: 'ENOENT' });
+	await assert.rejects(f.inbox.receive('fixture-token'), /Read-only archive/);
+	assert.equal(
+		f.calls.filter((call) => call.method === 'getUpdates').at(-1)?.body.offset,
+		undefined
+	);
 });

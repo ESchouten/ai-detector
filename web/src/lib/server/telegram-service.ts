@@ -1,25 +1,20 @@
-import path from 'node:path';
 import { configuration } from './configuration/index.ts';
-import { DATA_DIRECTORY } from './application-paths.ts';
 import { recordings } from './recordings.ts';
 import { TelegramInbox } from './telegram-inbox.ts';
 import { TelegramPairings } from './telegram-pairing.ts';
 import { reviewTelegramDetection, telegramConnections } from './telegram-reviews.ts';
 import { ConfigurationError } from '../configuration.ts';
 
-const inbox = new TelegramInbox(
-	path.join(DATA_DIRECTORY, 'telegram-updates'),
-	async (token, update, signal) => {
-		if (!update.callback_query?.data?.startsWith('review:')) return;
-		await reviewTelegramDetection(
-			recordings,
-			telegramConnections(await configuration.read()),
-			token,
-			update,
-			signal
-		);
-	}
-);
+const inbox = new TelegramInbox(async (token, update, signal) => {
+	if (!update.callback_query?.data?.startsWith('review:')) return;
+	await reviewTelegramDetection(
+		recordings,
+		telegramConnections(await configuration.read()),
+		token,
+		update,
+		signal
+	);
+});
 export const telegramPairings = new TelegramPairings(Date.now, inbox);
 
 let started = false;

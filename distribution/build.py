@@ -34,6 +34,8 @@ TARGETS = {
 # Dynamic model/provider loading requires full collection. ImageIO's FFmpeg
 # binary and ONNX Runtime's provider DLLs are handled by upstream hooks.
 COLLECT = ("ultralytics", "litellm")
+# The hook here keeps aidetector/version.py outside the frozen archive.
+HOOKS = ROOT / "distribution/pyinstaller-hooks"
 
 
 def run(*arguments: str | Path, cwd: Path = ROOT, env: dict | None = None) -> None:
@@ -74,7 +76,11 @@ def build_detector(args) -> Path:
             kind,
             cwd=ROOT / "detector",
         )
-    flags = ["--onefile" if args.onefile else "--onedir"]
+    flags = [
+        "--onefile" if args.onefile else "--onedir",
+        "--additional-hooks-dir",
+        HOOKS,
+    ]
     for module in COLLECT:
         flags += ["--collect-all", module]
     # Our exports use FP32/FP16. Exclude the unused reference evaluator and
@@ -135,6 +141,35 @@ def build_detector(args) -> Path:
     if args.platform == "windows-x64" and kind == "windowsml" and not args.onefile:
         stage_nvidia_runtime(ROOT, destination / "nvidia-runtime", reference)
     return destination
+
+
+def stamp_detector(folder: Path, reference: str) -> None:
+    """Give a detector frozen earlier from the same sources this build's reference.
+
+    Freezing takes minutes and its result depends only on the detector's sources and
+    locked dependencies. The reference is the one thing that differs per build: it is
+    in aidetector/version.py, which the build keeps as a plain file for this purpose.
+    """
+    versions = [
+        path for path in folder.rglob("aidetector/version.py") if not path.is_symlink()
+    ]
+    if not versions:
+        raise ValueError(f"This detector has no version file to stamp: {folder}")
+    for version in versions:
+        lines = version.read_text(encoding="utf-8").splitlines()
+        if sum(line.startswith("REF_NAME = ") for line in lines) != 1:
+            raise ValueError(f"Unexpected version file: {version}")
+        version.write_text(
+            "\n".join(
+                f"REF_NAME = {reference!r}" if line.startswith("REF_NAME = ") else line
+                for line in lines
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+    if folder.suffix == ".app" and host.system() == "Darwin":
+        # The file is a sealed resource of the bundle PyInstaller signed.
+        run("codesign", "--force", "--deep", "--sign", "-", folder)
 
 
 @contextmanager
@@ -424,6 +459,12 @@ def parse_arguments(argv: list[str] | None = None):
         "archive", help="Archive a validated, assembled application"
     )
     packed.add_argument("folder", type=Path)
+    stamp = stages.add_parser(
+        "stamp-detector",
+        help="Write a build reference into a detector frozen from the same sources",
+    )
+    stamp.add_argument("folder", type=Path)
+    stamp.add_argument("--version", required=True)
     return parser.parse_args(argv)
 
 
@@ -431,6 +472,12 @@ if __name__ == "__main__":
     args = parse_arguments()
     if args.stage == "archive":
         print(archive(args.folder))
+        raise SystemExit(0)
+    if args.stage == "stamp-detector":
+        try:
+            stamp_detector(args.folder, args.version)
+        except ValueError as error:
+            raise SystemExit(str(error)) from error
         raise SystemExit(0)
     try:
         preflight(args)

@@ -50,6 +50,8 @@ jobs:
           working-directory: detector
           version-file: pyproject.toml
           enable-cache: true
+          # Caches are private to the tag that wrote them; a tag build can only read main's.
+          save-cache: ${{ github.ref_type != 'tag' }}
 
       - name: Set up Python
         run: uv python install
@@ -168,6 +170,8 @@ jobs:
           working-directory: detector
           version-file: pyproject.toml
           enable-cache: true
+          # Caches are private to the tag that wrote them; a tag build can only read main's.
+          save-cache: ${{ github.ref_type != 'tag' }}
       - run: uv python install
       - run: uv sync --locked --extra default
       - name: Mutate domain rules

@@ -60,7 +60,7 @@ runs:
     - name: Read release history and retrieve macOS delta bases
       if: runner.os != 'Linux'
       shell: bash
-      run: python distribution/updates.py prepare --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --feed-url "$UPDATE_FEED"
+      run: python distribution/updates.py prepare --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --feed-url "$UPDATE_FEED"
     - name: Build native installer
       shell: bash
       run: |
@@ -71,7 +71,7 @@ runs:
       env:
         SPARKLE_PRIVATE_KEY: ${{ inputs.signing-key }}
       shell: bash
-      run: python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
+      run: python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
     - name: Sign Velopack feed and package hashes
       if: runner.os == 'Windows'
       env:

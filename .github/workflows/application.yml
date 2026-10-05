@@ -92,6 +92,10 @@ jobs:
     needs: configuration
     runs-on: windows-latest
     timeout-minutes: 120
+    permissions: &native-permissions
+      contents: read
+      # Find and download the detector an earlier build froze from the same sources.
+      actions: read
     defaults:
       run:
         shell: bash
@@ -108,18 +112,69 @@ jobs:
       ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS: '1'
     steps: &native-steps
       - uses: actions/checkout@v6
+      - name: Keep virus scanning out of the build folders
+        # Freezing reads and copies tens of thousands of files. An experiment: the
+        # status line shows whether real-time scanning was on for this runner at all.
+        if: runner.os == 'Windows'
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          Get-MpComputerStatus | Select-Object RealTimeProtectionEnabled | Format-List
+          Add-MpPreference -ExclusionPath $env:GITHUB_WORKSPACE, $env:RUNNER_TEMP
       - uses: ./.github/actions/setup-distribution
         with:
           dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
       - uses: ./.github/actions/build-launcher
         with:
           version: ${{ env.APP_VERSION }}
-          dotnet-tests: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+          # The launcher's tests run beside packaging, in the desktop test job.
+          tests: 'false'
+      - name: Look for a detector already frozen from these sources
+        # Freezing takes most of this job and depends only on the files hashed here.
+        # A build that froze and tested them leaves a marker with this name.
+        id: detector
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MARKER: detector-${{ env.PLATFORM }}-${{ hashFiles('detector/src/**', 'detector/pyproject.toml', 'detector/uv.lock', 'detector/.python-version', 'distribution/build.py', 'distribution/nvidia_runtime.py', 'distribution/nvidia/**', 'distribution/pyinstaller-hooks/**', 'distribution/build-requirements.txt', '.github/workflows/application.yml', '.github/actions/setup-distribution/action.yml') }}
+        run: |
+          echo "marker=$MARKER" >> "$GITHUB_OUTPUT"
+          # Official releases are always frozen afresh.
+          if [ "$UPDATE_CHANNEL" = preview ]; then
+            python distribution/tested_detector.py "$MARKER" | tee -a "$GITHUB_OUTPUT"
+          fi
+      - name: Download that build's binaries
+        id: earlier
+        if: steps.detector.outputs.run-id != ''
+        continue-on-error: true
+        uses: actions/download-artifact@v7
+        with:
+          name: native-build-${{ env.PLATFORM }}
+          run-id: ${{ steps.detector.outputs.run-id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/earlier-build
+      - name: Reuse its detector under this build's version
+        id: reuse
+        if: steps.earlier.outcome == 'success'
+        continue-on-error: true
+        run: |
+          # Git Bash tar needs a POSIX path, not RUNNER_TEMP's Windows drive path.
+          runner_temp=$(cd "$RUNNER_TEMP" && pwd)
+          tar -xf "$runner_temp/earlier-build/native-build.tar" 'detector/dist/${{ env.DETECTOR_FOLDER }}'
+          rm -rf "$runner_temp/earlier-build"
+          python distribution/build.py stamp-detector 'detector/dist/${{ env.DETECTOR_FOLDER }}' --version "$GITHUB_REF_NAME"
+          executable="detector/dist/${{ env.DETECTOR_FOLDER }}/aidetector${{ env.EXE_SUFFIX }}"
+          if [ '${{ runner.os }}' = macOS ]; then executable="detector/dist/${{ env.DETECTOR_FOLDER }}/Contents/MacOS/aidetector"; fi
+          # The detector must start and report this build, or it is frozen again below.
+          "$executable" --version | tee /dev/stderr | grep -F "$GITHUB_REF_NAME"
+          echo "reused=true" >> "$GITHUB_OUTPUT"
       - name: Build detector
+        if: steps.reuse.outputs.reused != 'true'
         run: |
           mkdir -p .reports
           python distribution/build.py detector --platform '${{ env.PLATFORM }}' --version "$GITHUB_REF_NAME" 2>&1 | tee .reports/detector-build.log
       - name: Smoke test packaged detector
+        if: steps.reuse.outputs.reused != 'true'
         working-directory: detector
         run: |
           executable="dist/${{ env.DETECTOR_FOLDER }}/aidetector${{ env.EXE_SUFFIX }}"
@@ -130,11 +185,10 @@ jobs:
             uv run --no-sync python -m tests.support.smoke_package "$executable" --windows-ml 2>&1 | tee ../.reports/detector-smoke-windowsml.log
           fi
       - name: Build web executable
-        run: python distribution/build.py web --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --skip-dependencies 2>&1 | tee .reports/web-build.log
-      - uses: ./.github/actions/test-distribution
-        with:
-          web-executable: ${{ github.workspace }}/web/dist/ai-detector-web${{ env.EXE_SUFFIX }}
-      - name: Archive tested binaries for packaging
+        run: |
+          mkdir -p .reports
+          python distribution/build.py web --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --skip-dependencies 2>&1 | tee .reports/web-build.log
+      - name: Archive binaries for packaging and testing
         # Tar preserves executable permissions and macOS framework symlinks.
         run: |
           export COPYFILE_DISABLE=1
@@ -149,13 +203,26 @@ jobs:
           if [ '${{ runner.os }}' = Windows ]; then
             tar -rf native-build.tar -C "$runner_temp" windows-launcher
           fi
-      - name: Upload tested binaries
+      - name: Upload binaries
         uses: actions/upload-artifact@v7
         with:
           name: native-build-${{ env.PLATFORM }}
           path: native-build.tar
           if-no-files-found: error
           compression-level: 1
+          retention-days: 7
+      - name: Mark this build's detector as reusable
+        # Only now: the detector started, was smoke-tested here or in the build it came
+        # from, and its binaries are uploaded. The marker expires together with them.
+        if: steps.detector.outputs.marker != ''
+        run: echo "$GITHUB_SHA" > detector-marker.txt
+      - uses: actions/upload-artifact@v7
+        if: steps.detector.outputs.marker != ''
+        with:
+          name: ${{ steps.detector.outputs.marker }}
+          path: detector-marker.txt
+          if-no-files-found: error
+          overwrite: true
           retention-days: 7
 
       - name: Upload build diagnostics
@@ -176,6 +243,7 @@ jobs:
     needs: configuration
     runs-on: macos-latest
     timeout-minutes: 120
+    permissions: *native-permissions
     defaults: {run: {shell: bash}}
     env: *release-environment
     steps: *native-steps
@@ -185,9 +253,68 @@ jobs:
     needs: configuration
     runs-on: ubuntu-22.04
     timeout-minutes: 120
+    permissions: *native-permissions
     defaults: {run: {shell: bash}}
     env: *release-environment
     steps: *native-steps
+
+  # Packaging does not wait for these: they run beside it, and publication needs both.
+  tests-windows:
+    name: Windows desktop tests
+    needs: [configuration, native-windows]
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    env: *release-environment
+    steps: &desktop-test-steps
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-distribution
+        with:
+          dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+      - name: Download this build's binaries
+        uses: actions/download-artifact@v7
+        with:
+          name: native-build-${{ env.PLATFORM }}
+      - name: Unpack the compiled web application
+        run: |
+          tar -xf native-build.tar "web/dist/ai-detector-web${{ env.EXE_SUFFIX }}"
+          rm native-build.tar
+      - uses: ./.github/actions/build-launcher
+        with:
+          version: ${{ env.APP_VERSION }}
+          dotnet-tests: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+      - uses: ./.github/actions/test-distribution
+        with:
+          web-executable: ${{ github.workspace }}/web/dist/ai-detector-web${{ env.EXE_SUFFIX }}
+      - name: Upload test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-diagnostics-${{ env.PLATFORM }}
+          path: .reports/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
+
+  tests-macos:
+    name: macOS desktop tests
+    needs: [configuration, native-macos]
+    runs-on: macos-latest
+    timeout-minutes: 30
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps: *desktop-test-steps
+
+  tests-linux:
+    name: Linux desktop tests
+    needs: [configuration, native-linux]
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps: *desktop-test-steps
 
   installer-windows:
     name: Windows installer
@@ -267,7 +394,7 @@ jobs:
     uses: ./.github/workflows/workflow-tests.yml
 
   release:
-    needs: [configuration, workflow-checks, web-checks, detector-checks, nvidia-checks, installer-windows, installer-macos, installer-linux]
+    needs: [configuration, workflow-checks, web-checks, detector-checks, nvidia-checks, tests-windows, tests-macos, tests-linux, installer-windows, installer-macos, installer-linux]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -339,7 +466,7 @@ jobs:
   summary:
     name: Build summary
     if: always()
-    needs: [configuration, workflow-checks, web-checks, detector-checks, nvidia-checks, installer-windows, installer-macos, installer-linux, release]
+    needs: [configuration, workflow-checks, web-checks, detector-checks, nvidia-checks, tests-windows, tests-macos, tests-linux, installer-windows, installer-macos, installer-linux, release]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

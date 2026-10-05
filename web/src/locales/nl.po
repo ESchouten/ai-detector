@@ -841,7 +841,7 @@ msgstr "Bevestig dat je de testmelding hebt ontvangen voordat je nieuwe of gewij
 msgid "A selected detector no longer exists."
 msgstr "Een gekozen detector bestaat niet meer."
 
-#: src/lib/server/configuration/store.ts
+#: src/lib/server/configuration/settings-files.ts
 msgid "A settings file is missing. Restore the last valid settings to continue."
 msgstr "Er ontbreekt een instellingenbestand. Herstel de laatste geldige instellingen om verder te gaan."
 

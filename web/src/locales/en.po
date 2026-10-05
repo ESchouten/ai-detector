@@ -841,7 +841,7 @@ msgstr "Confirm that you received the test alert before enabling new or changed 
 msgid "A selected detector no longer exists."
 msgstr "A selected detector no longer exists."
 
-#: src/lib/server/configuration/store.ts
+#: src/lib/server/configuration/settings-files.ts
 msgid "A settings file is missing. Restore the last valid settings to continue."
 msgstr "A settings file is missing. Restore the last valid settings to continue."
 

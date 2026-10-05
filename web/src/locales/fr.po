@@ -841,7 +841,7 @@ msgstr "Confirmez que vous avez reçu l’alerte de test avant d’activer des i
 msgid "A selected detector no longer exists."
 msgstr "Un détecteur sélectionné n’existe plus."
 
-#: src/lib/server/configuration/store.ts
+#: src/lib/server/configuration/settings-files.ts
 msgid "A settings file is missing. Restore the last valid settings to continue."
 msgstr "Un fichier de paramètres est manquant. Restaurez les derniers paramètres valides pour continuer."
 

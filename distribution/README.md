@@ -7,7 +7,7 @@ One application release contains the browser application, the native detector, F
 | Target | Installer | Desktop integration |
 | --- | --- | --- |
 | macOS 14+ Apple Silicon | `AI-Detector-VERSION-macos-arm64.dmg` | Drag to Applications. Menu bar: Open dashboard, Open at login, Check for Updates, Quit. |
-| Windows 10 22H2+ / Windows 11 x64 | `AI-Detector-VERSION-windows-x64-setup.zip` | Extract and run the setup EXE; it installs for the current user. Tray: Open dashboard, Start at login, Check for Updates, Quit. |
+| Windows 10 22H2+ / Windows 11 x64 | `AI-Detector-VERSION-windows-x64-setup.zip` | Extract and run the setup EXE; it installs for the current user. Tray: Open dashboard, Open at login, Check for Updates, Quit. |
 | Ubuntu 22.04/24.04 amd64 | `AI-Detector-VERSION-linux-amd64.deb` | Installs under `/opt/ai-detector` with an Applications and a login entry. Upgrade with the package manager. |
 
 Login startup runs after login, under that user's account. It is not a service that monitors before anyone signs in.
@@ -62,7 +62,7 @@ The SvelteKit executable adapter carries a small patch: upstream has no applicat
 
 ## Windows NVIDIA runtime
 
-The Windows installer carries no GPU binaries. When automatic inference finds an NVIDIA device with compute capability 7.5 or newer and driver branch 572 or newer, the web application's process manager downloads a CUDA environment into the data folder and runs the same detector source in it. An explicit ONNX provider, a configuration without a YOLO model, and the Docker engine bypass it; other hardware uses the bundled Windows ML build.
+The Windows installer carries no GPU binaries. When automatic inference finds an NVIDIA device with compute capability 7.5 or newer, the web application's process manager downloads a CUDA environment into the data folder and runs the same detector source in it. That device needs driver branch 572 or newer: with an older driver, starting stops with a request to update the driver, and does not fall back to Windows ML. An explicit ONNX provider, a configuration without a YOLO model, and the Docker engine bypass the download; a computer without such a device uses the bundled Windows ML build.
 
 - The build stages `detector/nvidia-runtime/`: the detector source, an entry script, uv, a `runtime.json` naming the Python version, and two locks exported from the detector's lockfile, `pylock.toml` for CUDA and `pylock.tensorrt.toml` for the optional TensorRT group. Every package is pinned by URL and SHA-256.
 - uv installs Python and the packages under `runtimes/nvidia/<hash>/`, with its cache in `cache/uv/`. The hash covers the Python version and the lock, not the application version, so an application update reuses the environment and runs its own newer detector source in it.

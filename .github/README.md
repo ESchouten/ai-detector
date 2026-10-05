@@ -25,7 +25,7 @@ Artifacts of a run:
 - `AI-Detector-PLATFORM`: one installer each, a Mac `.dmg`, a Windows setup `.exe` or a Linux `.deb`.
 - `update-files-PLATFORM` (Mac and Windows): update packages, deltas and signed feeds for the publishing job.
 
-A release offers one download per system; the Windows setup EXE is wrapped in a ZIP. Feeds are published only to their dedicated update releases. Published tags and versions are never changed: retry a failed run, and give a new build a new tag. Keep this workflow's file name and run-number sequence, because internal update versions are derived from them.
+A release offers one download per system; the Windows setup EXE is wrapped in a ZIP. Feeds are published only to their dedicated update releases. Tags, versions and retries are covered by the [preview](../distribution/README.md#github-actions-previews) and [release](../distribution/README.md#publishing-a-release) procedures.
 
 ## Container releases
 

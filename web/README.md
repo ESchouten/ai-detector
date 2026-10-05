@@ -32,13 +32,13 @@ Alerts carry 👍 and 👎 buttons that save a review. For that the application 
 
 A **Validator** connection lets a vision language model confirm or reject each event. Under **Settings → Validator**, connect Google Gemini with an API key from AI Studio; in the complete application the key is tested with a generated image before it is saved. Other providers are configured under **Advanced → AI connections** with a base URL, model names, and a key or headers.
 
-A connection is saved once and used by any number of detectors; each detector keeps its own question. Saving a connection also switches on saved detectors whose preset question was still waiting for one, and a new detector suggests the connection when it is the only one. Turning the Validator off for a detector keeps its question and models. A connection in use cannot be removed.
+A connection is saved once and used by any number of detectors; each detector keeps its own question. Saving a connection also switches on saved detectors whose preset question was still waiting for one, and a new detector suggests the connection when it is the only one. Turning the Validator off for a detector keeps its question and models but clears every key, including those of fallback entries added in Advanced. Choosing the connection again restores only the first entry; fallback keys must be entered again. A connection in use cannot be removed.
 
 ### Bring an existing installation into setup
 
 Before adding a camera, choose **Use existing setup**, close the old application, select its folder containing `config.json`, review the counts and import. Cameras, detectors and alert assignments fill the normal setup steps; importing starts nothing and sends nothing.
 
-The import copies `config.json`, `app.json` when present, `detections/`, local `presets/` and referenced local model and video files into the new data folder, and leaves the old files as they were. **Keep recordings in their current folder** links to the old archive instead of copying it: keep that folder and its drive available, because new recordings go there too.
+The import copies `config.json`, `app.json` when present, `detections/`, local `presets/` and referenced local model and video files into the new data folder, and leaves the old files as they were. **Keep recordings in their current folder** links to the old archive instead of copying it. Keep that folder and its drive available: new recordings go there too, and reviewing or deleting a recording changes that original archive. Back up both folders.
 
 An import never replaces an existing setup. Copies are staged, so reopening Setup resumes an interrupted import. Importing is available only on the computer the application runs on.
 

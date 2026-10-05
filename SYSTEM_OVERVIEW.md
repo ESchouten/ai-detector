@@ -1,109 +1,109 @@
-# Overzicht van AI Detector
+# AI Detector system overview
 
-Gebaseerd op de implementatie van 22 september 2026. Lees de diagrammen van buiten naar binnen: eerst de onderdelen, dan de verwerking van een camerabeeld, het domeinmodel en de verbindingen in de code. De namen in de diagrammen verwijzen naar bestaande code.
+Read the diagrams from the outside in: first the parts, then how a camera picture becomes an event, the domain model, and how the code is connected. The names in the diagrams are names in the code.
 
-## 1. Welke onderdelen werken samen?
+## 1. Which parts work together?
 
-Deze systeemkaart volgt de aanpak van het [C4-model](https://c4model.com/): begin bij de gebruiker, de draaiende onderdelen en hun verbindingen. Een C4-container is bijvoorbeeld een webserver of detectorproces; dat hoeft geen Docker-container te zijn.
+This map follows the [C4 model](https://c4model.com/): start with the user, the running parts and their connections. A C4 container is a running program, such as a web server or the detector process; it need not be a Docker container.
 
 ```mermaid
 flowchart TB
-    User["Boer in de browser"]
-    Sources["Camera's en videobestanden"]
+    User["Farmer in the browser"]
+    Sources["Cameras and video files"]
 
-    subgraph Installation["Installatie op pc of Jetson"]
-        Web["Webapp · SvelteKit<br/>Setup, instellingen en detecties bekijken"]
+    subgraph Installation["Installation on a PC or Jetson"]
+        Web["Web application · SvelteKit<br/>Setup, settings and reviewing detections"]
         Config[("config.json")]
-        Detector["Python-detector<br/>Lokaal proces of Docker"]
-        Archive[("Eventarchief<br/>Metadata, foto's en video")]
+        Detector["Python detector<br/>Local process or Docker"]
+        Archive[("Event archive<br/>Metadata, pictures and video")]
 
-        Web -->|slaat instellingen op| Config
-        Config -->|leest bij het starten| Detector
-        Detector -->|diskexport indien ingesteld| Archive
-        Archive -->|leest opgeslagen gebeurtenissen| Web
-        Web -.->|start en stop bij beheerde installatie| Detector
+        Web -->|saves settings| Config
+        Config -->|read at start| Detector
+        Detector -->|disk export when configured| Archive
+        Archive -->|reads saved events| Web
+        Web -.->|starts and stops, in a managed installation| Detector
     end
 
     User <-->|HTTP| Web
-    Sources -->|beelden| Detector
-    Detector <-->|optionele verificatie| VLM["VLM-provider"]
-    Detector -->|optionele meldingen| Destinations["Telegram en webhooks"]
+    Sources -->|pictures| Detector
+    Detector <-->|optional verification| VLM["VLM provider"]
+    Detector -->|optional alerts| Destinations["Telegram and webhooks"]
 ```
 
-De doorgetrokken pijlen tonen gegevensuitwisseling; de stippellijn toont procesbeheer. De webapp leest het eventarchief rechtstreeks uit de gedeelde datamap. De detector levert hiervoor geen HTTP-API. De metadata en mediabestanden vormen het contract tussen beide onderdelen.
+Solid arrows are data; the dotted arrow is process control. The web application reads the event archive straight from the shared data folder. The detector offers no HTTP API: the metadata and media files are the contract between the two.
 
-Er zijn twee manieren om deze onderdelen te draaien:
+There are two ways to run these parts:
 
-| Installatie | Wie start en stopt de detector? | Instellingen toepassen |
+| Installation | Who starts and stops the detector? | Applying settings |
 | --- | --- | --- |
-| Complete applicatiedownload | De webapp via `ManagedDetector`; lokaal of via Docker | De actieve detector wordt bij opslaan opnieuw gestart. |
-| Losse diensten met Compose, bijvoorbeeld op Jetson | Docker Compose en het ingestelde opstartgedrag | De detector moet na een configuratiewijziging worden herstart. |
+| Complete application download | The web application, through `ManagedDetector`; locally or through Docker | The running detector is restarted when settings are saved. |
+| Separate services with Compose, for example on a Jetson | Docker Compose and its restart policy | The detector must be restarted after a configuration change. |
 
-Het sluiten van een browsertab stopt de verwerking niet. De details van installeren en automatisch starten staan in de [gebruikershandleiding](README.md).
+Closing a browser tab does not stop processing. Installing and starting automatically are described in the [user guide](README.md).
 
-De kaart toont de hoofdroute. De webapp heeft daarnaast een eigen FFmpeg-route voor livevoorbeelden van camerastreams. Die verbindingen vallen buiten de gedeelde cameraverbindingen van het Python-proces. Modeldownloads, healthchecks en applicatielabels zijn hier weggelaten om de hoofdroute leesbaar te houden.
+The map shows the main route. The web application also has its own FFmpeg route for live camera pictures, separate from the camera connections of the Python process. Model downloads, health checks and the web application's own labels are left out to keep the map readable.
 
-## 2. Hoe wordt een camerabeeld een gebeurtenis?
+## 2. How does a camera picture become an event?
 
-Dit is de verwerkingsvolgorde binnen Python. Pijlen tonen gegevens en beslissingen, geen imports tussen modules.
+This is the order of processing inside Python. Arrows are data and decisions, not imports between modules.
 
 ```mermaid
 flowchart TB
-    Camera["Live camera"] --> Pool["StreamPool<br/>Eén capture per unieke bron"]
-    Pool --> Subscription["StreamSource<br/>Eigen sampling, formaat en buffer"]
-    Pool --> Other["Abonnement van een andere detector"]
-    File["Videobestand of afbeelding"] --> FileSource["FileSource<br/>Eigen reader met mediatijd"]
+    Camera["Live camera"] --> Pool["StreamPool<br/>One capture per distinct source"]
+    Pool --> Subscription["StreamSource<br/>Own sampling, size and buffer"]
+    Pool --> Other["Another detector's subscription"]
+    File["Video file or image"] --> FileSource["FileSource<br/>Own reader with media time"]
 
-    subgraph Worker["Per detectorconfiguratie"]
+    subgraph Worker["Per detector configuration"]
         subgraph Pipeline["DetectionPipeline"]
-            Mode{"YOLO ingesteld?"}
+            Mode{"YOLO configured?"}
             Inference["YoloDetector"]
-            Events["EventAssembler<br/>Context, minimum matches en tijdvenster"]
-            Snapshot["Laatste frame per bron<br/>Direct ongescoord event"]
-            Mode -->|ja| Inference
+            Events["EventAssembler<br/>Context, minimum matches and time window"]
+            Snapshot["Latest frame per source<br/>Unscored event at once"]
+            Mode -->|yes| Inference
             Inference -->|Observation| Events
-            Mode -->|nee| Snapshot
+            Mode -->|no| Snapshot
         end
-        Queue["Begrensde wachtrij<br/>Voltooide gebeurtenissen"]
+        Queue["Bounded queue<br/>Completed events"]
         Allowed{"Cooldown.allows?"}
-        Skip["Overslaan"]
-        Verify["EventDelivery<br/>Optionele verificatie en EventResult"]
-        Record["Cooldown.record<br/>Uitkomst verwerken"]
-        Policy["ExportPolicy<br/>Beslissing per bestemming"]
-        Export["Disk, Telegram en webhook<br/>Via de ingestelde adapters"]
+        Skip["Skip"]
+        Verify["EventDelivery<br/>Optional verification and EventResult"]
+        Record["Cooldown.record<br/>Take the outcome into account"]
+        Policy["ExportPolicy<br/>Decision per destination"]
+        Export["Disk, Telegram and webhook<br/>Through the configured adapters"]
 
         Events -->|DetectionEvent| Queue
         Snapshot -->|DetectionEvent| Queue
         Queue --> Allowed
-        Allowed -->|nee| Skip
-        Allowed -->|ja| Verify
+        Allowed -->|no| Skip
+        Allowed -->|yes| Verify
         Verify -->|EventResult| Record
         Record --> Policy
-        Policy -->|toegestane bestemming| Export
+        Policy -->|allowed destination| Export
     end
 
     Subscription -->|Frames| Mode
     FileSource -->|Frames| Mode
 ```
 
-`StreamPool` deelt livebeelden tussen detectoren binnen één Python-proces op basis van exact dezelfde bronstring. Iedere detector behoudt zijn eigen model, tracking, sampling, gebeurtenisvensters en cooldown. Bestandslezers blijven onafhankelijk.
+`StreamPool` shares live pictures between detectors in one Python process, by exactly the same source string. Each detector keeps its own model, tracking, sampling, event windows and cooldown. File readers stay independent.
 
-`DetectionPipeline` maakt en beheert zijn eigen `EventAssembler` met een vast `EventPolicy`. Een gebeurtenis kan meerdere beelden bevatten, inclusief context zonder score. Alleen waarnemingen met passende class-scores tellen mee voor het minimumaantal matches. Het tijdvenster, inactiviteit, het einde van een bestand of afsluiten van de applicatie bepalen wanneer het event wordt afgerond. Zonder YOLO maakt de pipeline direct één ongescoord event met het laatste frame van elke bron; daarvoor is geen apart detectorobject nodig.
+`DetectionPipeline` creates and owns its `EventAssembler`, with a fixed `EventPolicy`. An event can hold several pictures, including context without a score. Only observations with matching class scores count toward the minimum number of matches. The time window, inactivity, the end of a file or shutting down decide when the event is completed. Without YOLO the pipeline makes one unscored event from the latest frame of each source.
 
-Elke detector heeft één eigenaar voor eventopbouw en één afzonderlijke delivery-thread. De begrensde wachtrij verbindt die twee. Die delivery-thread handelt verificatie en uitvoer op volgorde af en gebruikt de domeinregels voor cooldown en export.
+Each detector has one owner for assembling events and one separate delivery thread, joined by the bounded queue. The delivery thread handles verification and output in order, using the domain rules for cooldown and export.
 
-| Verificatie-uitkomst | Verbruikt cooldown? | Uitvoer |
+| Verification outcome | Consumes cooldown? | Output |
 | --- | --- | --- |
-| `APPROVED` | Ja | Volgens het beleid van elke bestemming. |
-| `UNVALIDATED` | Ja | Verificatie is niet ingesteld; het normale uitvoerbeleid geldt. |
-| `REJECTED` | Nee | Alleen naar bestemmingen die afgewezen events toestaan. |
-| `FAILED` | Nee | Kan met foutinformatie worden gearchiveerd; geen gewone externe melding. |
+| `APPROVED` | Yes | According to each destination's policy. |
+| `UNVALIDATED` | Yes | No verification is configured; the normal output policy applies. |
+| `REJECTED` | No | Only to destinations that accept rejected events. |
+| `FAILED` | No | May be archived with the error; no ordinary external alert. |
 
-Cooldown geldt per bron en class op de beste waarneming. Een event zonder class-scores heeft geen class-cooldown. Een mislukte bezorging draait de acceptatie niet terug. De confidencefilter van iedere bestemming blijft daarnaast van toepassing.
+Cooldown is kept per source and class, on the best observation. An event without class scores has no class cooldown. A failed delivery does not undo acceptance. Each destination's confidence filter still applies.
 
-## 3. Wat betekenen de belangrijkste domeinobjecten?
+## 3. What do the main domain objects mean?
 
-Dit kleine UML-klassendiagram toont de relaties en een selectie van velden en afgeleide eigenschappen. Het is bedoeld om de taal van het systeem te begrijpen.
+This small class diagram shows the relations and a selection of fields and derived properties. It is meant for learning the language of the system.
 
 ```mermaid
 classDiagram
@@ -140,51 +140,47 @@ classDiagram
     Observation --> "0..*" BoundingBox : boxes
 ```
 
-Een `Frame` is een beeld met een tijdstip, vóór inference. Een `Observation` voegt class-scores en eventuele bounding boxes toe. Contextbeelden kunnen geen scores hebben en wel boxes voor de weergave bevatten. `BoundingBox.label`, `BoundingBox.confidence` en `ValidationResult.error` zijn optioneel.
+A `Frame` is a picture with a time, before inference. An `Observation` adds class scores and possibly bounding boxes. Context pictures can have no scores and still carry boxes for display. `BoundingBox.label`, `BoundingBox.confidence` and `ValidationResult.error` are optional.
 
-`DetectionEvent` bundelt de waarnemingen van één afgeronde gebeurtenis. `EventResult` koppelt dat event aan de verificatie-uitkomst. De resultaten van de daadwerkelijke bezorging staan afzonderlijk in `DeliveryReport` in de applicatielaag.
+`DetectionEvent` bundles the observations of one completed event. `EventResult` joins that event to its verification outcome. What actually happened during delivery is kept separately, in the application layer's `DeliveryReport`.
 
-## 4. Hoe zijn de onderdelen in de code verbonden?
+## 4. How are the parts connected in the code?
 
-`run_application` bouwt per detectorconfiguratie een worker met een bron, pipeline en delivery. Dit diagram toont de belangrijkste objectverbindingen; de pijlen betekenen "gebruikt". De pipeline maakt zijn assembler zelf.
+`run_application` builds one worker per detector configuration, with a source, a pipeline and a delivery. The arrows mean "uses". The pipeline creates its own assembler.
 
 ```mermaid
 flowchart LR
-    Worker["DetectorWorker"] --> Source["FrameSource<br/>FileSource of StreamSource"]
+    Worker["DetectorWorker"] --> Source["FrameSource<br/>FileSource or StreamSource"]
     Worker --> Pipeline["DetectionPipeline"]
     Worker --> Delivery["EventDelivery"]
-    Pipeline --> Detector["ObjectDetector<br/>Optioneel: YoloDetector"]
+    Pipeline --> Detector["ObjectDetector<br/>Optional: YoloDetector"]
     Pipeline --> Assembler["EventAssembler"]
-    Delivery --> Validator["EventValidator<br/>Optioneel: VlmValidator"]
-    Delivery --> Destinations["Destination<br/>Exporter en ExportPolicy"]
+    Delivery --> Validator["EventValidator<br/>Optional: VlmValidator"]
+    Delivery --> Destinations["Destination<br/>Exporter and ExportPolicy"]
     Delivery --> Cooldown["Cooldown"]
 ```
 
-Model- en platformresources worden door twee contextfuncties beheerd. [`inference_runtime`](detector/src/aidetector/adapters/inference/onnx.py) beheert de providerbibliotheken en tijdelijke ONNX-instellingen voor de hele applicatie. [`open_detector`](detector/src/aidetector/adapters/inference/yolo.py) levert een gebruiksklare `YoloDetector` en ruimt predictor en trackingbeelden samen op. Bij afsluiten stopt eerst de verwerking, daarna sluiten de gedeelde captures, detectoren en platformresources.
+Model and platform resources are managed by two context functions. [`inference_runtime`](detector/src/aidetector/adapters/inference/onnx.py) manages the provider libraries and temporary ONNX settings for the whole application. [`open_detector`](detector/src/aidetector/adapters/inference/yolo.py) yields a ready `YoloDetector` and releases its predictor and tracking pictures together. At shutdown, processing stops first; then the shared captures, the detectors and the platform resources close.
 
-De regels hebben deze eigenaren:
+Each rule has one owner:
 
-| Verantwoordelijkheid | Eigenaar in de code |
+| Responsibility | Owner in the code |
 | --- | --- |
-| Beginnen, verlengen en afsluiten van events | [`EventAssembler`](detector/src/aidetector/domain/events.py) |
-| Cooldown en toelating per bestemming | [`Cooldown` en `ExportPolicy`](detector/src/aidetector/domain/policy.py) |
-| Inference, eventopbouw en verwerking zonder YOLO | [`DetectionPipeline`](detector/src/aidetector/application/pipeline.py) |
-| Verifiëren en bestemmingen afhandelen | [`EventDelivery`](detector/src/aidetector/application/delivery.py) |
-| Threads, wachtrij, fouten en afsluiten | [`DetectorWorker` en `run_detectors`](detector/src/aidetector/runtime.py) |
-| Configuratie omzetten in concrete onderdelen | [`run_application`](detector/src/aidetector/bootstrap.py) |
+| Starting, extending and closing events | [`EventAssembler`](detector/src/aidetector/domain/events.py) |
+| Cooldown, and admission per destination | [`Cooldown` and `ExportPolicy`](detector/src/aidetector/domain/policy.py) |
+| Inference, event assembly, and processing without YOLO | [`DetectionPipeline`](detector/src/aidetector/application/pipeline.py) |
+| Verifying, and handling destinations | [`EventDelivery`](detector/src/aidetector/application/delivery.py) |
+| Threads, queue, failures and shutdown | [`DetectorWorker` and `run_detectors`](detector/src/aidetector/runtime.py) |
+| Turning configuration into concrete parts | [`run_application`](detector/src/aidetector/bootstrap.py) |
 
-## Hoe lees je daarna de code?
+## Reading the code from here
 
-Begin bij [bootstrap.py](detector/src/aidetector/bootstrap.py): daar wordt één configuratie omgezet in bronnen, modellen, policies, adapters en workers. Volg daarna `DetectionPipeline` en `EventDelivery`. Open pas een adapter wanneer je wilt weten hoe een specifieke integratie werkt.
+Start at [bootstrap.py](detector/src/aidetector/bootstrap.py), where one configuration becomes sources, models, policies, adapters and workers. Then follow `DetectionPipeline` and `EventDelivery`. Open an adapter only when you want to know how one integration works.
 
-De adapters besteden bestaande bibliotheekfuncties uit: Ultralytics verzorgt modeldownloads, boxlabels en de conversie van checkpointpaden; LiteLLM maakt het antwoordschema uit het Pydantic-model; Pydantic valideert HTTP-URL's. De detector behoudt zijn eigen eventregels en herstelt tijdelijke wijzigingen aan globale SDK-instellingen.
+Dependencies point inward: the application layer uses domain objects and small protocols; adapters implement the integrations; bootstrap connects them. The domain imports no application services, configuration models or inference frameworks. Import rules also keep sources, inference and exporters from using one another; the [package map](detector/ARCHITECTURE.md#dependency-direction) shows that structure. Together the layers are one model of event processing, not separate bounded contexts.
 
-De afhankelijkheden wijzen naar binnen: de applicatielaag gebruikt domeinobjecten en kleine protocols. Adapters implementeren de integraties; bootstrap verbindt ze. Het domein importeert geen applicatieservices, configuratiemodellen of inferenceframeworks. Deze lagen vormen samen één model voor eventverwerking. De pakketten zijn geen afzonderlijke DDD-bounded contexts.
+The [detector architecture](detector/ARCHITECTURE.md) has the exact time rules, the resource owners and the failure handling.
 
-Binnen `adapters/` staan de bronlezers in `sources/`, modelintegraties in `inference/`, bestemmingen in `exporters/` en beeldbewerking in `media/`. Healthmonitoring, gedeeld HTTP-transport en VLM-verificatie blijven afzonderlijke modules. Importregels voorkomen dat bronnen, inference en exporters elkaar rechtstreeks of via andere modules gebruiken; bootstrap verbindt ze via de applicatielaag. De [pakketkaart](detector/ARCHITECTURE.md#dependency-direction) toont deze structuur en de gedeelde afhankelijkheden.
+## Keeping this up to date
 
-De [uitgebreide detectorarchitectuur](detector/ARCHITECTURE.md) beschrijft de precieze tijdregels, resource-eigenaren en foutafhandeling.
-
-## Bijhouden
-
-De diagrammen staan als Mermaid-tekst naast de code. [GitHub rendert deze blokken in Markdown](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams). Werk ze bij wanneer een procesgrens, publieke gegevensuitwisseling, domeinbegrip of belangrijke verwerkingsstap verandert. Kleine interne helpers hoeven niet in het overzicht.
+The diagrams are Mermaid text beside the code, and [GitHub renders them](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams). Update them when a process boundary, a public data exchange, a domain concept or an important processing step changes. Small internal helpers do not belong in the overview.

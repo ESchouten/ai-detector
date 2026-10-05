@@ -49,7 +49,7 @@ uv run --no-sync python tools/quality_report.py --base HEAD --output .reports/qu
 - complexity and nesting per function, with the change for functions that already existed;
 - module fan-in, fan-out and added or removed dependency edges. Bootstrap importing much and domain records being imported by many is expected; there is no coupling limit;
 - added, removed, modified and renamed modules;
-- how often each file was touched in the last 100 commits.
+- how often each file was touched in the last 100 non-merge commits to the detector's Python source. Paths are exact, so a renamed or new file starts at zero, which says nothing about its risk.
 
 There is no composite score. CI compares a pull request with its base and a push with the previous commit, and shows the summary on the workflow run.
 

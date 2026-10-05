@@ -2,7 +2,7 @@
 
 Watch cameras, detect configured events on your own computer, and review the recordings in your browser. Telegram alerts and AI verification are optional.
 
-The [system overview](SYSTEM_OVERVIEW.md) (in Dutch) explains with diagrams how the application works.
+The [system overview](SYSTEM_OVERVIEW.md) explains with diagrams how the application works.
 
 ## Install, open, set up
 

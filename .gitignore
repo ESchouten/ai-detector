@@ -3,7 +3,6 @@ config.json
 config.**.json
 yolo11**
 app.json
-runtime.json
 /application-dist/
 !example/config.json
 !web/src/routes/(admin)/detections

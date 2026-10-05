@@ -13,7 +13,6 @@ web/static/_internal
 web/live
 web/config.json
 web/app.json
-web/runtime.json
 web/detections
 web/models
 web/.env*

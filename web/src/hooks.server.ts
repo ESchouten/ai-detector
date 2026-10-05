@@ -6,6 +6,7 @@ import { configuration } from '$lib/server/configuration';
 import { previews } from '$lib/server/preview-pool';
 import { access, authorizeRequest } from '$lib/server/access';
 import { webLog } from '$lib/server/web-log';
+import { recordings } from '$lib/server/recordings';
 import { APP_CONFIG_PATH, DATA_DIRECTORY } from '$lib/server/application-paths';
 import { negotiateLocale, SOURCE_LOCALE } from '$lib/locales';
 import {
@@ -31,6 +32,11 @@ export const init: ServerInit = async () => {
 				error
 			);
 		}
+		await recordings
+			.adoptLegacyReviews()
+			.catch((error) =>
+				webLog.warn('Could not look for reviews saved by an earlier version', error)
+			);
 		await initializeDetector(() => configuration.read());
 		startTelegramReviews();
 		process.once('sveltekit:shutdown', () => previews.close());

@@ -62,8 +62,12 @@ test('downloads group manually reviewed events by their effective verdict and re
 		)
 	);
 	const base = `detections/activity/rejected/${timestamp}/`;
-	assert.equal(JSON.parse(Buffer.from(files[base + 'review.json']).toString()).validated, false);
-	assert.equal(JSON.parse(Buffer.from(files[base + 'metadata.json']).toString()).validated, true);
+	// One metadata file carries both the person's review and the validator's own verdict.
+	const exported = JSON.parse(Buffer.from(files[base + 'metadata.json']).toString());
+	assert.equal(exported.review.validated, false);
+	assert.equal(exported.review.source, 'web');
+	assert.equal(exported.validated, true);
+	assert.ok(!(base + 'review.json' in files));
 	assert.ok(files[base + 'video.mp4']);
 	assert.equal(
 		(await exportRecordings(archive, { stage: 'approved' }, new Request('http://localhost/export')))
@@ -194,12 +198,11 @@ test(
 		const outside = path.join(directory, 'outside');
 		await event(outside, 'private', 'approved', '2026-09-22T12-00-00');
 		await symlink(path.join(outside, 'private'), path.join(root, 'external'));
-		const response = await exportRecordings(
-			archive,
-			{ type: 'external' },
-			new Request('http://localhost/export')
+		// The link is refused while listing recordings, before any download starts.
+		await assert.rejects(
+			exportRecordings(archive, { type: 'external' }, new Request('http://localhost/export')),
+			/Invalid archive path/
 		);
-		await assert.rejects(response.arrayBuffer(), /Invalid archive path/);
 	}
 );
 

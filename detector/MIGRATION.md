@@ -12,6 +12,12 @@ The rebuild covers the Python detector, its schemas, tests, and distributions. T
 - Runtime data is kept separate from installed source. Existing live config and detection archives are not modified by the rewrite or its tests.
 - Docker, macOS, Windows CUDA, and Windows ML packaging remain supported; actual provider execution can only be verified on available hardware.
 
+## Reviews inside metadata.json — 2026-10-05
+
+A manual review is now the optional `review` object in the recording's `metadata.json` (`validated`, `source`, `reviewed_at`) instead of a separate `review.json`. `metadata.schema.json` describes it. The detector still publishes `metadata.json` once, without `review`, and never reads or rewrites a published archive; the web application adds, replaces or removes only that field. `validated` remains the validator's own result.
+
+Existing archives need no manual step. When the web application starts it moves each `review.json` into the neighbouring `metadata.json` and deletes it; a file it cannot read is left in place and logged. Software that reads archives should read `review` from `metadata.json`. An earlier application version cannot read a reviewed recording written by this one, because its schema does not know `review`.
+
 ## TensorRT helper startup on Windows — 2026-10-03
 
 The helper's parent-pipe watcher now uses non-blocking reads, avoiding the Windows NumPy import hang caused by reading stdin concurrently during native library loading. It continues watching for parent exit during imports and engine building. Logs distinguish NumPy import from subsequent inference-library imports. GPU settings, dependency downloads and engine compatibility are unchanged; existing failure markers still defer retries for 24 hours, with the next attempt occurring on a subsequent monitoring start. No configuration or data migration is required.
@@ -24,9 +30,9 @@ Container base images are pinned by digest. Dependency installation precedes sou
 
 ## Manual recording review — 2026-09-30
 
-Each delivered event now has a UUID assigned by the delivery use case. Independent exporters receive the same ID; disk stores it as optional `event_id` metadata and Telegram uses it in language-independent 👍/👎 callback buttons. Existing metadata without IDs remains readable and reviewable in the web app. Telegram albums receive a silent button message replying to the first album item. The web server receives callbacks and writes manual review sidecars; Python does not consume Telegram updates or alter completed archives.
+Each delivered event now has a UUID assigned by the delivery use case. Independent exporters receive the same ID; disk stores it as optional `event_id` metadata and Telegram uses it in language-independent 👍/👎 callback buttons. Existing metadata without IDs remains readable and reviewable in the web app. Telegram albums receive a silent button message replying to the first album item. The web server receives callbacks and records manual reviews; Python does not consume Telegram updates or alter completed archives.
 
-Manual reviews change display/filter/export classification, never inference, validation, cooldowns or alert policy. Original metadata and media remain unchanged. The existing configuration schema needs no migration. Internal `EventResult` constructors now require an ID; pure domain rules do not generate identities.
+Manual reviews change display/filter/export classification, never inference, validation, cooldowns or alert policy. Original validator output and media remain unchanged. The existing configuration schema needs no migration. Internal `EventResult` constructors now require an ID; pure domain rules do not generate identities.
 
 ## Background TensorRT preparation — 2026-10-01
 

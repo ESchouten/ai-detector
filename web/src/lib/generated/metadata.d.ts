@@ -13,6 +13,9 @@ export type Y1 = number;
 export type X2 = number;
 export type Y2 = number;
 export type ValidationError = string | null;
+export type Validated1 = boolean;
+export type Source = 'web' | 'telegram';
+export type ReviewedAt = string;
 
 export interface EventMetadata {
 	timestamp: Timestamp;
@@ -26,6 +29,7 @@ export interface EventMetadata {
 	duration: Duration;
 	crop?: CropMetadata | null;
 	validation_error?: ValidationError;
+	review?: ManualReview | null;
 }
 export interface Confidences {
 	[k: string]: number;
@@ -36,4 +40,12 @@ export interface CropMetadata {
 	x2: X2;
 	y2: Y2;
 	[k: string]: unknown;
+}
+/**
+ * A person's verdict on the event, from the web application or Telegram.
+ */
+export interface ManualReview {
+	validated: Validated1;
+	source: Source;
+	reviewed_at: ReviewedAt;
 }

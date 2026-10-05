@@ -1,10 +1,12 @@
 import errno
+import json
 from datetime import datetime, timedelta
 from pathlib import Path
 
 import cv2
 import numpy as np
 import pytest
+from pydantic import ValidationError
 
 from aidetector.adapters.exporters.archive_metadata import EventMetadata
 from aidetector.adapters.exporters.disk import DiskExporter
@@ -128,6 +130,36 @@ def test_archive_preserves_public_stages_and_validation_metadata(
     metadata = EventMetadata.model_validate_json(metadata_path.read_text())
     assert metadata.validated is validated
     assert metadata.validation_error == error
+
+
+def test_metadata_accepts_a_review_the_detector_never_writes(tmp_path):
+    observation = Observation(
+        datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8), {"cow": 0.9}
+    )
+    result = EventResult(
+        DetectionEvent("camera", (observation,)),
+        ValidationResult(ValidationStatus.APPROVED),
+        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    )
+    DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(result)
+    [metadata_path] = list(tmp_path.glob("cow/approved/*/metadata.json"))
+    published = json.loads(metadata_path.read_text())
+    assert "review" not in published
+
+    # The web application adds the review to the published file.
+    review = {
+        "validated": False,
+        "source": "telegram",
+        "reviewed_at": "2026-10-05T08:00:00.000Z",
+    }
+    reviewed = EventMetadata.model_validate({**published, "review": review})
+    assert reviewed.validated is True
+    assert reviewed.review is not None
+    assert reviewed.review.validated is False
+    with pytest.raises(ValidationError):
+        EventMetadata.model_validate(
+            {**published, "review": {**review, "source": "email"}}
+        )
 
 
 def test_all_strategy_archives_every_frame_and_the_standard_event_files(tmp_path):

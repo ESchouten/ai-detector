@@ -27,6 +27,35 @@
       ],
       "title": "CropMetadata",
       "type": "object"
+    },
+    "ManualReview": {
+      "additionalProperties": false,
+      "description": "A person's verdict on the event, from the web application or Telegram.",
+      "properties": {
+        "validated": {
+          "title": "Validated",
+          "type": "boolean"
+        },
+        "source": {
+          "enum": [
+            "web",
+            "telegram"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "reviewed_at": {
+          "title": "Reviewed At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "validated",
+        "source",
+        "reviewed_at"
+      ],
+      "title": "ManualReview",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -112,6 +141,17 @@
       ],
       "default": null,
       "title": "Validation Error"
+    },
+    "review": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ManualReview"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     }
   },
   "required": [

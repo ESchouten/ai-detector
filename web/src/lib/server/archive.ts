@@ -2,6 +2,7 @@ import { readdir, readFile, realpath, stat, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import Ajv from 'ajv';
 import * as v from 'valibot';
+import writeFileAtomic from 'write-file-atomic';
 import metadataSchema from '../../../../config/metadata.schema.json' with { type: 'json' };
 import { STAGES, type Metadata, type Stage } from '../schema.ts';
 import type { Detection, DetectionFilter, DetectionPage } from '../detections.ts';
@@ -12,7 +13,6 @@ import {
 	type ManualReview,
 	type RecordingExportFilter
 } from '../detections.ts';
-import { writeJson } from './json-file.ts';
 import { webLog } from './web-log.ts';
 
 export { isArchiveSegment } from '../detections.ts';
@@ -21,6 +21,10 @@ export class ArchivePathError extends Error {}
 class ArchiveDataError extends Error {}
 
 const validateMetadata = new Ajv().compile<Metadata>(metadataSchema);
+const savedReview = v.nullish(manualReviewSchema);
+/** Where a review lived before it became part of metadata.json. */
+const LEGACY_REVIEW = 'review.json';
+const REVIEW_READS = 32;
 
 export function isMissingFile(error: unknown): boolean {
 	return ['ENOENT', 'ENOTDIR'].includes((error as NodeJS.ErrnoException).code ?? '');
@@ -104,7 +108,7 @@ export class DetectionArchive {
 		this.warnings.clear();
 	}
 
-	private unavailable(address: RecordingAddress, error: unknown, kind = 'metadata'): void {
+	private unavailable(address: RecordingAddress, error: unknown): void {
 		if (
 			!(
 				error instanceof SyntaxError ||
@@ -114,7 +118,7 @@ export class DetectionArchive {
 			)
 		)
 			throw error;
-		const key = `${kind}:${this.addressKey(address)}`;
+		const key = this.addressKey(address);
 		const message = `Could not read recording ${address.type}/${address.archiveStage}/${address.timestamp}. Other recordings remain available.`;
 		if (!this.warnings.has(key)) webLog.warn(message, error);
 		this.warnings.set(key, message);
@@ -140,7 +144,7 @@ export class DetectionArchive {
 		};
 	}
 
-	/** Completed archive folders, independent of optional review or metadata files. */
+	/** Completed archive folders, whether or not their metadata can be read. */
 	async addresses({ type, from, to }: Omit<RecordingExportFilter, 'stage'> = {}): Promise<
 		RecordingAddress[]
 	> {
@@ -170,18 +174,26 @@ export class DetectionArchive {
 	}
 
 	async locations({ stage, ...filter }: RecordingExportFilter): Promise<ArchiveLocation[]> {
+		const addresses = await this.addresses(filter);
 		const locations: ArchiveLocation[] = [];
-		for (const address of await this.addresses(filter)) {
-			let review: ManualReview | null;
-			try {
-				review = await this.cachedReview(address);
-			} catch (error) {
-				this.unavailable(address, error, 'review');
-				continue;
+		// Each review is read from its recording's metadata; several at once keeps a large archive quick.
+		for (let start = 0; start < addresses.length; start += REVIEW_READS) {
+			const batch = addresses.slice(start, start + REVIEW_READS);
+			const reviews = await Promise.all(
+				batch.map((address) =>
+					this.cachedReview(address).catch((error) => {
+						this.unavailable(address, error);
+						return undefined;
+					})
+				)
+			);
+			for (const [index, address] of batch.entries()) {
+				const review = reviews[index];
+				if (review === undefined) continue;
+				const effectiveStage = reviewedStage(address.archiveStage, review);
+				if (!stage || stage === effectiveStage)
+					locations.push({ ...address, stage: effectiveStage, review });
 			}
-			const effectiveStage = reviewedStage(address.archiveStage, review);
-			if (!stage || stage === effectiveStage)
-				locations.push({ ...address, stage: effectiveStage, review });
 		}
 		return locations;
 	}
@@ -200,7 +212,7 @@ export class DetectionArchive {
 				/* @wc-ignore */ `Invalid archive metadata: ${location.type}/${location.stage}/${location.timestamp}`
 			);
 		this.eventIds.set(this.addressKey(location), metadata.event_id ?? undefined);
-		this.warnings.delete(`metadata:${this.addressKey(location)}`);
+		this.warnings.delete(this.addressKey(location));
 		return { ...metadata, ...location };
 	}
 
@@ -215,24 +227,42 @@ export class DetectionArchive {
 			: this.readReview(address);
 	}
 
+	/**
+	 * The review a person gave this recording, kept as `review` in its metadata.json beside
+	 * the validator's own result. A recording whose metadata cannot be read at all has none:
+	 * it stays listed in its original stage, and reading it reports the damage. A review
+	 * that is present but not understood is an error, so the decision is never ignored.
+	 */
 	async readReview(address: RecordingAddress): Promise<ManualReview | null> {
-		let review: ManualReview | null;
+		let review: ManualReview | null = null;
 		try {
-			const file = await archivePath(
-				this.directory,
-				address.type,
-				address.archiveStage,
-				address.timestamp,
-				'review.json'
-			);
-			review = v.parse(manualReviewSchema, JSON.parse(await readFile(file, 'utf8')));
+			const { metadata } = await this.readMetadata(address);
+			review = v.parse(savedReview, metadata.review) ?? null;
 		} catch (error) {
-			if (!isMissingFile(error)) throw error;
-			review = null;
+			if (
+				!(isMissingFile(error) || error instanceof SyntaxError || error instanceof ArchiveDataError)
+			)
+				throw error;
 		}
 		this.reviews.set(this.addressKey(address), { checked: Date.now(), review });
-		this.warnings.delete(`review:${this.addressKey(address)}`);
 		return review;
+	}
+
+	/** The recording's metadata as saved, and its real location inside the archive. */
+	private async readMetadata(
+		address: RecordingAddress
+	): Promise<{ file: string; metadata: Record<string, unknown> }> {
+		const file = await archivePath(
+			this.directory,
+			address.type,
+			address.archiveStage,
+			address.timestamp,
+			'metadata.json'
+		);
+		const metadata: unknown = JSON.parse(await readFile(file, 'utf8'));
+		if (typeof metadata !== 'object' || metadata === null || Array.isArray(metadata))
+			throw new ArchiveDataError(/* @wc-ignore */ 'Archive metadata is not an object.');
+		return { file, metadata: metadata as Record<string, unknown> };
 	}
 
 	review(
@@ -288,28 +318,62 @@ export class DetectionArchive {
 	}
 
 	private async writeReviews(
-		locations: ArchiveLocation[],
+		locations: RecordingAddress[],
 		validated: boolean | null,
 		source: ManualReview['source']
 	): Promise<void> {
 		const review: ManualReview | null =
 			validated === null ? null : { validated, source, reviewed_at: new Date().toISOString() };
-		for (const address of locations) {
-			const folder = await archivePath(
-				this.directory,
-				address.type,
-				address.archiveStage,
-				address.timestamp
-			);
-			// Validate any existing sidecar, including symlinks, before replacing it.
-			await this.readReview(address);
-			const file = path.join(folder, 'review.json');
-			if (review) await writeJson(file, review);
-			else
-				await unlink(file).catch((error: unknown) => {
-					if (!isMissingFile(error)) throw error;
-				});
-			this.reviews.set(this.addressKey(address), { checked: Date.now(), review });
-		}
+		for (const address of locations) await this.saveReview(address, review);
+	}
+
+	/**
+	 * Replace only the review in a recording's metadata.json. The detector publishes that file
+	 * once and never rewrites it, so everything else in it, including the validator's own
+	 * verdict, keeps its value.
+	 */
+	private async saveReview(address: RecordingAddress, review: ManualReview | null): Promise<void> {
+		const { file, metadata } = await this.readMetadata(address);
+		// Refuse to replace a review that cannot be understood.
+		v.parse(savedReview, metadata.review);
+		if (review) metadata.review = review;
+		else delete metadata.review;
+		// No mode is given, so the file keeps the permissions the detector gave it.
+		await writeFileAtomic(file, JSON.stringify(metadata));
+		this.reviews.set(this.addressKey(address), { checked: Date.now(), review });
+	}
+
+	/**
+	 * Earlier versions kept a review in review.json beside the metadata. Move each into
+	 * metadata.json once, when the application starts. Returns how many were moved.
+	 */
+	adoptLegacyReviews(): Promise<number> {
+		return this.enqueueReview(async () => {
+			let moved = 0;
+			for (const address of await this.addresses()) {
+				try {
+					const legacy = await archivePath(
+						this.directory,
+						address.type,
+						address.archiveStage,
+						address.timestamp,
+						LEGACY_REVIEW
+					);
+					const review = v.parse(manualReviewSchema, JSON.parse(await readFile(legacy, 'utf8')));
+					// A review already in the metadata is the newer one.
+					if (!(await this.readReview(address))) await this.saveReview(address, review);
+					await unlink(legacy);
+					moved++;
+				} catch (error) {
+					if (isMissingFile(error)) continue;
+					// Leave the file for a person to look at; the recording itself stays usable.
+					webLog.warn(
+						`Could not move the review of recording ${address.type}/${address.archiveStage}/${address.timestamp} into its metadata.`,
+						error
+					);
+				}
+			}
+			return moved;
+		});
 	}
 }

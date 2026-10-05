@@ -1,10 +1,13 @@
 import assert from 'node:assert/strict';
 import {
+	chmod,
 	mkdtemp,
 	mkdir,
 	open,
+	readdir,
 	readFile,
 	rm,
+	stat,
 	symlink,
 	truncate,
 	writeFile,
@@ -40,6 +43,13 @@ test('manual review overrides filtering, survives restart and can restore the or
 	assert.equal(rejected.stage, 'rejected');
 	assert.equal(rejected.validated, true, 'The original AI verdict is preserved');
 	assert.equal(rejected.review?.source, 'web');
+	// The review lives in the recording's one metadata file, beside the AI verdict.
+	const saved = JSON.parse(await readFile(path.join(event, 'metadata.json'), 'utf8'));
+	assert.deepEqual(
+		{ ...saved, review: { ...saved.review, reviewed_at: '' } },
+		{ ...metadata, review: { validated: false, source: 'web', reviewed_at: '' } }
+	);
+	assert.deepEqual((await readdir(event)).sort(), ['metadata.json', 'video.mp4']);
 	assert.equal(detectionKey(rejected), detectionKey(before));
 	assert.equal((await archive.locations({ stage: 'approved' })).length, 0);
 	assert.equal((await archive.locations({ stage: 'rejected' })).length, 1);
@@ -82,13 +92,76 @@ test('reviewing refuses traversal and missing recordings without creating archiv
 	assert.deepEqual(await archive.types(), ['cow']);
 });
 
-test('invalid review sidecars exclude that recording with a warning instead of losing the decision', async (t) => {
+test('an unreadable review excludes that recording with a warning instead of losing the decision', async (t) => {
 	const { archive, event } = await fixture(t);
-	await writeFile(path.join(event, 'review.json'), JSON.stringify({ validated: 'false' }));
+	const address = { type: 'cow', archiveStage: 'approved' as const, timestamp };
+	const damaged = JSON.stringify({ ...metadata, review: { validated: 'false' } });
+	await writeFile(path.join(event, 'metadata.json'), damaged);
 	const page = await archive.page({ offset: 0, limit: 24 });
 	assert.equal(page.items.length, 0);
 	assert.equal(page.warnings?.length, 1);
-	await assert.rejects(archive.readReview({ type: 'cow', archiveStage: 'approved', timestamp }));
+	await assert.rejects(archive.readReview(address));
+	// Reviewing again must not silently replace what could not be understood.
+	await assert.rejects(archive.review(address, true, 'web'));
+	assert.equal(await readFile(path.join(event, 'metadata.json'), 'utf8'), damaged);
+});
+
+test(
+	'a review keeps the permissions the detector gave the metadata file',
+	{ skip: process.platform === 'win32' },
+	async (t) => {
+		const { archive, event } = await fixture(t);
+		const file = path.join(event, 'metadata.json');
+		await chmod(file, 0o644);
+		await archive.review({ type: 'cow', archiveStage: 'approved', timestamp }, true, 'web');
+		assert.equal((await stat(file)).mode & 0o777, 0o644);
+	}
+);
+
+test('reviews an earlier version saved beside the metadata move into it once', async (t) => {
+	const { root, archive, event } = await fixture(t);
+	const earlier = { validated: false, source: 'telegram', reviewed_at: '2026-09-23T08:00:00.000Z' };
+	await writeFile(path.join(event, 'review.json'), JSON.stringify(earlier));
+	// A review already in the metadata is the later decision and wins.
+	const decided = path.join(root, 'cow', 'rejected', timestamp);
+	const later = { validated: true, source: 'web', reviewed_at: '2026-09-24T08:00:00.000Z' };
+	await mkdir(decided, { recursive: true });
+	await writeFile(
+		path.join(decided, 'metadata.json'),
+		JSON.stringify({ ...metadata, review: later })
+	);
+	await writeFile(path.join(decided, 'review.json'), JSON.stringify(earlier));
+	// A file nobody can read is left for a person to look at, and its recording stays usable.
+	const unclear = path.join(root, 'sheep', 'approved', timestamp);
+	await mkdir(unclear, { recursive: true });
+	await writeFile(path.join(unclear, 'metadata.json'), JSON.stringify(metadata));
+	await writeFile(path.join(unclear, 'review.json'), '{broken');
+
+	assert.equal(await archive.adoptLegacyReviews(), 2);
+	assert.deepEqual(
+		JSON.parse(await readFile(path.join(event, 'metadata.json'), 'utf8')).review,
+		earlier
+	);
+	assert.deepEqual(
+		JSON.parse(await readFile(path.join(decided, 'metadata.json'), 'utf8')).review,
+		later
+	);
+	assert.deepEqual((await readdir(event)).sort(), ['metadata.json', 'video.mp4']);
+	assert.deepEqual(await readdir(decided), ['metadata.json']);
+	assert.deepEqual((await readdir(unclear)).sort(), ['metadata.json', 'review.json']);
+
+	const { items } = await new DetectionArchive(root).page({ offset: 0, limit: 24 });
+	assert.deepEqual(
+		items
+			.map((item) => [item.type, item.archiveStage, item.stage, item.review?.source ?? null])
+			.sort(),
+		[
+			['cow', 'approved', 'rejected', 'telegram'],
+			['cow', 'rejected', 'approved', 'web'],
+			['sheep', 'approved', 'approved', null]
+		]
+	);
+	assert.equal(await archive.adoptLegacyReviews(), 0);
 });
 
 async function fixture(t: TestContext) {

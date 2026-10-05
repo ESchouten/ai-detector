@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from aidetector.domain.models import EventResult
@@ -8,6 +10,16 @@ class CropMetadata(BaseModel):
     y1: int
     x2: int
     y2: int
+
+
+class ManualReview(BaseModel):
+    """A person's verdict on the event, from the web application or Telegram."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    validated: bool
+    source: Literal["web", "telegram"]
+    reviewed_at: str
 
 
 class EventMetadata(BaseModel):
@@ -24,6 +36,10 @@ class EventMetadata(BaseModel):
     duration: float = Field(ge=0)
     crop: CropMetadata | None = None
     validation_error: str | None = None
+    # The web application adds this to a published metadata.json when someone reviews
+    # the event, leaving `validated` as the validator's own result. The detector
+    # describes it here for the shared schema and never writes it.
+    review: ManualReview | None = Field(default=None, exclude=True)
 
     @classmethod
     def from_result(cls, result: EventResult, timestamp: str) -> "EventMetadata":

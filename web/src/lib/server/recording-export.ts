@@ -29,8 +29,8 @@ ${locations.length} recorded events.
 Files are grouped by category, stage and recording timestamp under detections/.
 clean.jpg is the original image when available; best.jpg includes annotations.
 Other saved images, video clips and metadata.json are included unchanged.
-Manual reviews override the original stage. review.json records the manual
-decision and its origin; metadata.json preserves the original validator result.
+Manual reviews override the original stage. In metadata.json, review records the
+manual decision and its origin; validated remains the validator's original result.
 Dates follow the recording dates shown in AI Detector.
 
 An accepted event is not a verified bounding-box annotation. Review and annotate
@@ -44,7 +44,7 @@ This export does not include application settings or camera login details.
 		const name = path.posix.join(type, stage, timestamp);
 		names.set(name, (names.get(name) ?? 0) + 1);
 	}
-	for (const { type, stage, archiveStage, timestamp, review } of locations) {
+	for (const { type, stage, archiveStage, timestamp } of locations) {
 		const folder = await archivePath(directory, type, archiveStage, timestamp);
 		// Older archives can have the same timestamp in different stages. Reviewing must not overwrite either in the ZIP.
 		const uniqueTimestamp =
@@ -52,11 +52,6 @@ This export does not include application settings or camera login details.
 				? `${timestamp}-${archiveStage}`
 				: timestamp;
 		const target = path.posix.join('detections', type, stage, uniqueTimestamp);
-		if (review)
-			yield {
-				name: path.posix.join(target, 'review.json'),
-				content: JSON.stringify(review, null, 2) + '\n'
-			};
 		const entries = await readdir(folder, { withFileTypes: true });
 		for (const entry of entries) {
 			if (!entry.isFile()) continue;

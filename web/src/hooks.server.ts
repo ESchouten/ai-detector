@@ -7,6 +7,7 @@ import { followPresets } from '$lib/server/configuration/presets';
 import { previews } from '$lib/server/preview-pool';
 import { access, authorizeRequest } from '$lib/server/access';
 import { webLog } from '$lib/server/web-log';
+import { version } from '$lib/version';
 import { APP_CONFIG_PATH, DATA_DIRECTORY } from '$lib/server/application-paths';
 import { negotiateLocale, SOURCE_LOCALE } from '$lib/locales';
 import {
@@ -17,7 +18,7 @@ import {
 
 export const init: ServerInit = async () => {
 	if (!building) {
-		await webLog.initialize(DATA_DIRECTORY);
+		await webLog.initialize(DATA_DIRECTORY, version);
 		await loadInstallationLanguage(APP_CONFIG_PATH);
 		try {
 			if (!(await access.list()).length) {

@@ -6,6 +6,7 @@ import { promisify } from 'node:util';
 import type { CameraConnectionResult, CameraProfile } from '../../cameras.ts';
 import { getCameraInputArgs } from '../ffmpeg.ts';
 import { CameraConnectionError, cameraStorageFailure, connectionFailure } from './connection.ts';
+import { webLog } from '../web-log.ts';
 
 const execute = promisify(execFile);
 const LIFETIME_MS = 15 * 60 * 1000;
@@ -70,6 +71,10 @@ async function recordCameraTest(
 	} catch (cause) {
 		signal?.throwIfAborted();
 		const failure = cause as NodeJS.ErrnoException & { stderr?: string; killed?: boolean };
+		// What FFmpeg itself said: the person is told what to do, the log keeps why.
+		webLog.warn(
+			/* @wc-ignore */ `Camera check of ${source} failed: ${failure.killed ? 'no picture within the time limit' : failure.stderr?.trim() || failure.code}`
+		);
 		if (failure.code === 'ENOENT')
 			throw new CameraConnectionError(
 				'The camera software is missing. Repair or reinstall AI Detector and try again.'

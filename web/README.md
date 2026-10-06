@@ -47,7 +47,7 @@ A connection is saved once and used by any number of detectors, each with its ow
 
 ### Other devices
 
-The application listens on `0.0.0.0:80`, so other devices open `http://ai-detector.local/` or `http://<computer-IP>/`. The computer it runs on is trusted; every other browser needs a one-use code from **Settings → Devices** (scan the QR code, then tap Connect). Codes expire after five minutes or ten wrong attempts. A connected browser is remembered for a year and can be removed there. A first start without a screen prints a code on the console.
+The application listens on `0.0.0.0:80`, so other devices open `http://aidetector.local/` or `http://<computer-IP>/`. The computer it runs on is trusted; every other browser needs a one-use code from **Settings → Devices** (scan the QR code, then tap Connect). Codes expire after five minutes or ten wrong attempts. A connected browser is remembered for a year and can be removed there. A first start without a screen prints a code on the console.
 
 On a phone or tablet the application offers once to be put on the home screen and shows the steps for that phone and browser; **Settings → Home screen** shows them again.
 

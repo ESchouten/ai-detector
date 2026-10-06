@@ -7,8 +7,8 @@ import { promisify } from 'node:util';
 import ciao, { type ServiceOptions } from '@homebridge/ciao';
 import { advertiseDashboard } from './network.ts';
 
-test('dashboard uses ai-detector.local and reports the name selected after a conflict', async (t) => {
-	let hostname = 'ai-detector.local.';
+test('dashboard uses aidetector.local and reports the name selected after a conflict', async (t) => {
+	let hostname = 'aidetector.local.';
 	const service = Object.assign(new EventEmitter(), {
 		getHostname: () => hostname,
 		advertise: async () => {},
@@ -17,7 +17,7 @@ test('dashboard uses ai-detector.local and reports the name selected after a con
 	const shutdown = Promise.withResolvers<void>();
 	const responder = {
 		createService(options: ServiceOptions) {
-			assert.equal(options.hostname, 'ai-detector');
+			assert.equal(options.hostname, 'aidetector');
 			assert.equal(options.type, 'http');
 			assert.equal(options.port, 80);
 			assert.equal(options.disabledIpv6, true);
@@ -30,7 +30,7 @@ test('dashboard uses ai-detector.local and reports the name selected after a con
 	const close = advertiseDashboard(80);
 	await setImmediate();
 	assert.ok(
-		info.mock.calls.some(({ arguments: args }) => args[0] === 'LAN name: http://ai-detector.local')
+		info.mock.calls.some(({ arguments: args }) => args[0] === 'LAN name: http://aidetector.local')
 	);
 	hostname = 'ai-detector-(2).local.';
 	service.emit('hostname-change', 'ai-detector-(2)');
@@ -50,7 +50,7 @@ test('dashboard uses ai-detector.local and reports the name selected after a con
 test('optional discovery errors are logged without failing application shutdown', async (t) => {
 	const unavailable = new Error('Multicast unavailable');
 	const service = Object.assign(new EventEmitter(), {
-		getHostname: () => 'ai-detector.local.',
+		getHostname: () => 'aidetector.local.',
 		advertise: async () => {
 			throw unavailable;
 		},

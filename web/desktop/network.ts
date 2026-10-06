@@ -10,7 +10,7 @@ export function advertiseDashboard(port: number): () => Promise<void> {
 	// remains responsible for the computer's own hostname.
 	const service = responder.createService({
 		name: 'AI Detector',
-		hostname: 'ai-detector',
+		hostname: 'aidetector',
 		type: 'http',
 		port,
 		disabledIpv6: true

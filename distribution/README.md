@@ -73,7 +73,7 @@ The Windows installer carries no GPU binaries. When automatic inference finds an
 | --- | --- |
 | Port ownership, parent pipe, browser launch, graceful shutdown | `web/desktop/runtime.ts`, `host.ts`, `instance.ts`, `browser.ts` |
 | Data-folder rules | `web/desktop/paths.ts`, also used by the server |
-| Network discovery (`ai-detector.local`) | `web/desktop/network.ts` |
+| Network discovery (`aidetector.local`) | `web/desktop/network.ts` |
 | Native menus and process ownership | `macos/Launcher.swift`, `macos/DesktopProcess.swift`, `windows/launcher/` |
 | Verified Windows updates | `windows/launcher/Updates/` |
 | Build stages | `build.py`; CI calls the same commands |

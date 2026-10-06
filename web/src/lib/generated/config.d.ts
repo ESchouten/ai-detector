@@ -130,17 +130,12 @@ export type Headers2 = {
 } | null;
 export type Body1 = string | null;
 export type Interval1 = number;
-/**
- * How the AI Detector application starts this detector: its bundled program or the release's Docker image. The detector does not read it.
- */
-export type Runtime = 'auto' | 'native' | 'docker';
 
 export interface Config {
 	$schema?: $Schema;
 	detectors: Detectors;
 	onnx?: OnnxConfig;
 	health?: HealthcheckConfig | null;
-	runtime?: Runtime;
 }
 export interface DetectorConfig {
 	detection: SourceConfig;

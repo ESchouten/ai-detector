@@ -251,18 +251,6 @@ msgid "Browser"
 msgstr "Browser"
 
 #: src/lib/server/detector-preparation.ts
-msgid "This download does not include a Docker image reference. Choose “On this computer” or download a complete application release."
-msgstr "Deze download bevat geen verwijzing naar een Docker-image. Kies “Op deze computer” of download een volledige versie van de applicatie."
-
-#: src/lib/server/detector-preparation.ts
-msgid "Downloading and checking GPU support. The first download can take several minutes."
-msgstr "GPU-ondersteuning downloaden en controleren. De eerste download kan enkele minuten duren."
-
-#: src/lib/server/detector-preparation.ts
-msgid "Docker could not run the NVIDIA GPU check. Check your internet connection, NVIDIA driver and Docker GPU support, then try again. You can also choose “On this computer”."
-msgstr "Docker kon de NVIDIA GPU-controle niet uitvoeren. Controleer je internetverbinding, het NVIDIA-stuurprogramma en de GPU-ondersteuning van Docker en probeer het opnieuw. Je kunt ook “Op deze computer” kiezen."
-
-#: src/lib/server/detector-preparation.ts
 msgid "NVIDIA acceleration could not be prepared. Check your internet connection and graphics driver, then try again. Details are available below."
 msgstr "NVIDIA-versnelling kon niet worden voorbereid. Controleer je internetverbinding en het stuurprogramma van de videokaart en probeer het opnieuw. Details staan hieronder."
 
@@ -393,14 +381,6 @@ msgstr "De detector kon niet starten."
 #: src/lib/server/recording-export.ts
 msgid "No recordings match these filters."
 msgstr "Geen opnamen voor deze filters."
-
-#: src/lib/server/runtime-platform.ts
-msgid "Install or open Docker, then try again. Docker must be running on this computer."
-msgstr "Installeer of open Docker en probeer het opnieuw. Docker moet op deze computer draaien."
-
-#: src/lib/server/runtime-platform.ts
-msgid "Switch Docker to Linux containers, then try again."
-msgstr "Zet Docker op Linux-containers en probeer het opnieuw."
 
 #: src/lib/server/settings-backup.ts
 msgid ""
@@ -2474,10 +2454,6 @@ msgid "AI connections"
 msgstr "AI-verbindingen"
 
 #: src/routes/(admin)/advanced/settings-editor.svelte
-msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus runtime (auto, native or docker), health and onnx for the whole installation. Saving applies the changes to active monitoring."
-msgstr "Alles in config.json: per detector het model, de prompts, drempelwaarden en opname-opties, plus runtime (auto, native of docker), health en onnx voor de hele installatie. Bij het opslaan worden de wijzigingen toegepast op de lopende bewaking."
-
-#: src/routes/(admin)/advanced/settings-editor.svelte
 msgid "Shared AI connections in app.json. Use a LiteLLM model name, API key, optional URL and headers. Changes apply to assigned detectors. Unassign a connection before removing or renaming it here."
 msgstr "Gedeelde AI-verbindingen in app.json. Gebruik een LiteLLM-modelnaam, API-sleutel en eventueel een URL en headers. Wijzigingen gelden voor de detectoren waaraan de verbinding is toegewezen. Koppel een verbinding eerst los voordat je haar hier verwijdert of hernoemt."
 
@@ -2784,10 +2760,6 @@ msgstr "Technische details <0>Voor het oplossen van problemen</0>"
 #: src/routes/(admin)/status/+page.svelte
 msgid "{0} runs on"
 msgstr "{0} draait op"
-
-#: src/routes/(admin)/status/+page.svelte
-msgid "Detection engine"
-msgstr "Detectie-engine"
 
 #: src/routes/(admin)/status/+page.svelte
 msgid "Settings and recordings folder"
@@ -3907,3 +3879,7 @@ msgstr "Komt er voor deze voorinstelling een nieuwer model uit, dan neemt deze d
 #: src/lib/components/detector-editor.svelte
 msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
 msgstr "Kies een voorinstelling. Die bevat alles wat nodig is om dat soort gebeurtenissen te herkennen."
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
+msgstr "Alles in config.json: per detector het model, de prompts, drempelwaarden en opname-opties, plus health en onnx voor de hele installatie. Bij het opslaan worden de wijzigingen toegepast op de lopende bewaking."

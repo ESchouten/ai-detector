@@ -15,8 +15,6 @@ const camera: CameraRuntimeStatus = {
 };
 const runtime: RuntimeStatus = {
 	managed: true,
-	mode: 'auto',
-	selected: 'native',
 	phase: 'running',
 	message: 'Monitoring 2 cameras.',
 	dataDirectory: '/data',

@@ -3,7 +3,7 @@ import path from 'node:path';
 import { createInterface } from 'node:readline';
 import { setTimeout as delay } from 'node:timers/promises';
 import { plural } from '../format.ts';
-import type { RuntimeMode, RuntimeStatus } from '../runtime.ts';
+import type { RuntimeStatus } from '../runtime.ts';
 import type { AppConfig, Config, LlmConnection } from '../schema.ts';
 import { readJson } from './json-file.ts';
 import { monitoringEnabled, setMonitoringEnabled } from './monitoring-flag.ts';
@@ -12,7 +12,7 @@ import type { DetectorCommand } from './nvidia-runtime.ts';
 import { DetectorPreparation, type DetectorOptions } from './detector-preparation.ts';
 import { sanitizeTextForLogs as redact } from './runtime-logs.ts';
 import { RuntimeProgress, STATUS_PREFIX } from './runtime-status.ts';
-import { chooseRuntime, SetupError } from './runtime-platform.ts';
+import { SetupError } from './runtime-platform.ts';
 import { serialQueue } from './serial.ts';
 
 /** Whether monitoring resumes with the application: `monitoring` in app.json. */
@@ -49,8 +49,6 @@ export class ManagedDetector {
 		});
 		this.state = {
 			managed: true,
-			mode: 'auto',
-			selected: null,
 			phase: 'stopped',
 			message: 'Ready to set up your camera.',
 			dataDirectory: options.dataDirectory,
@@ -101,7 +99,6 @@ export class ManagedDetector {
 		const signal = this.startup.signal;
 		return this.enqueue(async () => {
 			this.settings = { enabled: await monitoringEnabled(this.appPath) };
-			this.state.mode = await this.configuredMode();
 			if (this.settings.enabled) {
 				await this.log.resume();
 				await this.startChild(signal, true);
@@ -124,17 +121,6 @@ export class ManagedDetector {
 		});
 	}
 
-	/** config.json's `runtime`; a missing file or setting means automatic. */
-	private async configuredMode(): Promise<RuntimeMode> {
-		try {
-			const config = await readJson<Config>(path.join(this.options.dataDirectory, 'config.json'));
-			return config?.runtime ?? 'auto';
-		} catch {
-			// Unreadable settings are reported where they are loaded; keep showing the last choice.
-			return this.state.mode;
-		}
-	}
-
 	whileStopped<T>(operation: () => Promise<T>): Promise<T> {
 		return this.enqueue(() => {
 			if (this.settings.enabled || this.child)
@@ -150,15 +136,12 @@ export class ManagedDetector {
 		this.state = {
 			...this.state,
 			phase: 'checking',
-			selected: null,
 			helpUrl: undefined,
 			message: 'Checking this computer…'
 		};
 		try {
 			const config = await readJson<Config>(path.join(this.options.dataDirectory, 'config.json'));
 			if (!config) throw new SetupError('Add a camera and choose what to detect first.');
-			const mode = config.runtime ?? 'auto';
-			this.state.mode = mode;
 			await this.validate(config, signal);
 			const app = await readJson<AppConfig>(this.appPath);
 			this.progress.configure(
@@ -166,11 +149,8 @@ export class ManagedDetector {
 				app ?? { streams: [], telegrams: [], llms: [], detectors: [] },
 				this.options.dataDirectory
 			);
-			const selected = chooseRuntime(mode);
-			this.state.selected = selected;
-			this.log.append(`${new Date().toISOString()} Selected detection engine: ${selected}\n`);
 			signal.throwIfAborted();
-			const command = await this.preparation.command(selected, config, signal);
+			const command = await this.preparation.command(config, signal);
 			signal.throwIfAborted();
 			this.settings = { enabled: true };
 			await setMonitoringEnabled(this.appPath, true);
@@ -331,7 +311,6 @@ export class ManagedDetector {
 		this.state.phase = 'stopping';
 		this.state.message = 'Finishing detections and stopping…';
 		child.stdin.end('stop\n');
-		let forcedStop: Promise<void> | undefined;
 		let timedOut = false;
 		const timer = setTimeout(() => {
 			timedOut = true;
@@ -340,17 +319,10 @@ export class ManagedDetector {
 					'The detector did not finish shutting down within 30 seconds. It was forced to stop; the last detection may be incomplete.'
 				)
 			);
-			if (this.state.selected === 'docker') {
-				forcedStop = this.preparation
-					.stopContainer()
-					.then(() => undefined)
-					.catch((error) => this.fail(error));
-			}
 			child.kill('SIGKILL');
 		}, 30000);
 		try {
 			const code = await this.finished;
-			await forcedStop;
 			if (code !== 0 || timedOut) throw new SetupError(this.state.message);
 		} finally {
 			clearTimeout(timer);
@@ -360,8 +332,6 @@ export class ManagedDetector {
 	apply(): Promise<void> {
 		const signal = this.startup.signal;
 		return this.enqueue(async () => {
-			// Show a changed engine choice while paused too; a running detector restarts with it.
-			if (!this.settings.enabled) this.state.mode = await this.configuredMode();
 			await this.restartChild(signal, 'detector settings changed');
 		});
 	}

@@ -77,7 +77,6 @@ class PackageTest(unittest.TestCase):
                         self.ffmpeg,
                         self.root / "out",
                         platform,
-                        "image@sha256:123",
                         version="app/v1.2.3",
                         mac_launcher=self.launcher
                         if platform == "macos-arm64"
@@ -153,7 +152,7 @@ class PackageTest(unittest.TestCase):
                         )
                     self.assertEqual(
                         json.loads(download.read(metadata)),
-                        {"dockerImage": "image@sha256:123"},
+                        {},
                     )
                     if os.name != "nt":
                         for executable in (
@@ -188,23 +187,6 @@ class PackageTest(unittest.TestCase):
                         )
                     self.assertNotIn(prefix + "config.json", download.namelist())
 
-    def test_native_preview_omits_the_docker_image(self):
-        folder = assemble_package(
-            PackageInputs(
-                self.detector,
-                self.web,
-                self.ffmpeg,
-                self.root / "out",
-                "linux-x64",
-                None,
-            )
-        )
-        archive = archive_package(folder)
-        with zipfile.ZipFile(archive) as download:
-            self.assertEqual(
-                json.loads(download.read("AI-Detector-linux-x64/application.json")), {}
-            )
-
     def test_installed_updates_pin_the_public_key_on_both_platforms(self):
         for platform in ("macos-arm64", "windows-x64"):
             if platform == "macos-arm64" and os.name == "nt":
@@ -219,7 +201,6 @@ class PackageTest(unittest.TestCase):
                         self.ffmpeg,
                         self.root / "release",
                         platform,
-                        None,
                         mac_launcher=self.launcher,
                         windows_launcher=self.windows_launcher,
                         sparkle=self.sparkle,
@@ -256,7 +237,7 @@ class PackageTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "compiled native launcher"):
             assemble_package(
                 PackageInputs(
-                    self.detector, self.web, self.ffmpeg, output, "windows-x64", None
+                    self.detector, self.web, self.ffmpeg, output, "windows-x64"
                 )
             )
         self.assertFalse(output.exists())
@@ -314,7 +295,6 @@ class PackageTest(unittest.TestCase):
                     self.ffmpeg,
                     output,
                     "macos-arm64",
-                    None,
                     mac_launcher=self.launcher,
                     sparkle=self.sparkle,
                 )
@@ -328,7 +308,6 @@ class PackageTest(unittest.TestCase):
             self.ffmpeg,
             self.root / "out",
             "linux-x64",
-            None,
         )
         folder = assemble_package(PackageInputs(*arguments))
         self.assertFalse(folder.with_suffix(".zip").exists())

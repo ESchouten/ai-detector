@@ -8,7 +8,6 @@ import { createHash } from 'node:crypto';
 import { mockTimeouts, realDelay } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
-import { chooseRuntime, dockerArguments } from '../src/lib/server/runtime-platform.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 
 const executable = fileURLToPath(new URL('./fixtures/detector.mjs', import.meta.url));
@@ -94,31 +93,6 @@ async function waitFor(predicate: () => boolean | Promise<boolean>) {
 	}
 	assert.fail('Expected process state was not reached');
 }
-
-for (const [mode, expected] of [
-	['auto', 'native'],
-	['native', 'native'],
-	['docker', 'docker']
-] as const) {
-	test(`${mode} selects ${expected}`, () => assert.equal(chooseRuntime(mode), expected));
-}
-
-test('Docker mounts the same data, requests a GPU and runs as the Linux user without a shell', () => {
-	const args = dockerArguments(
-		'registry/app@sha256:123',
-		'/farm data/$cash',
-		'farm',
-		'linux',
-		'1001:1001'
-	);
-	assert.ok(args.includes('/farm data/$cash:/data'));
-	assert.ok(args.includes('1001:1001'));
-	assert.equal(args[args.indexOf('--gpus') + 1], 'all');
-	assert.ok(args.includes('--control-stdin'));
-	assert.ok(args.includes('--status-json'));
-	assert.ok(args.includes('--live-preview'));
-	assert.ok(!dockerArguments('image', 'C:\\Farm data', 'farm', 'win32').includes('--user'));
-});
 
 test(
 	'start is idempotent, config apply restarts once, stop drains and disables resume',
@@ -225,23 +199,6 @@ test(
 );
 
 test(
-	'Docker mode without a release image gives an actionable error without launching a container',
-	posixOnly,
-	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-docker-'));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
-		await writeJson(path.join(directory, 'config.json'), { ...config, runtime: 'docker' });
-		await detector.start();
-		assert.equal(detector.status().phase, 'failed');
-		assert.match(detector.status().message, /complete application release/);
-	}
-);
-
-test(
 	'cancelling startup never launches the detector or enables automatic resume',
 	posixOnly,
 	async (t) => {
@@ -260,42 +217,6 @@ test(
 		assert.equal(detector.status().phase, 'stopped');
 		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
 		await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
-	}
-);
-
-test(
-	'an NVIDIA Docker GPU failure is visible and links to installation help',
-	posixOnly,
-	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-gpu-'));
-		const detector = new ManagedDetector({
-			executable,
-			dataDirectory: directory,
-			dockerImage: 'example.invalid/detector@sha256:123'
-		});
-		const oldPath = process.env.PATH;
-		t.after(async () => {
-			process.env.PATH = oldPath;
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
-		await writeFile(path.join(directory, 'nvidia-smi'), '#!/bin/sh\necho NVIDIA\n', {
-			mode: 0o755
-		});
-		await writeFile(
-			path.join(directory, 'docker'),
-			'#!/bin/sh\nif [ "$1" = "info" ]; then echo linux; else echo "CUDA driver unavailable" >&2; exit 1; fi\n',
-			{ mode: 0o755 }
-		);
-		process.env.PATH = directory + path.delimiter + oldPath;
-		await writeJson(path.join(directory, 'config.json'), { ...config, runtime: 'docker' });
-		await detector.start();
-		assert.equal(detector.status().selected, 'docker');
-		assert.equal(detector.status().phase, 'failed');
-		assert.match(detector.status().message, /GPU check/);
-		assert.match(await detector.log.read(), /CUDA driver unavailable/);
-		assert.match(detector.status().helpUrl!, /^https:\/\/docs.nvidia.com/);
-		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
 	}
 );
 
@@ -329,12 +250,6 @@ for (const action of ['start', 'resume', 'apply'] as const) {
 		else await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
 	});
 }
-
-test('an aborted hardware probe cannot select a fallback runtime', async () => {
-	const { checkDocker } = await import('../src/lib/server/runtime-platform.ts');
-	const signal = AbortSignal.abort(new Error('startup cancelled'));
-	await assert.rejects(checkDocker(process.platform, signal), /startup cancelled/);
-});
 
 test(
 	'cancelled validation reaps its child and removes the temporary configuration',
@@ -382,7 +297,6 @@ test('automatic detection never invokes NVIDIA or Docker prerequisites', posixOn
 	await writeJson(path.join(directory, 'config.json'), config);
 	await detector.start();
 	await waitFor(() => detector.status().phase === 'running');
-	assert.equal(detector.status().selected, 'native');
 	assert.equal(detector.status().readiness, 'preparing');
 	await assert.rejects(readFile(path.join(directory, 'probes.txt')), { code: 'ENOENT' });
 });

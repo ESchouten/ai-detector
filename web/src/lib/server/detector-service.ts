@@ -1,7 +1,6 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { DATA_DIRECTORY, EXECUTABLE_DIRECTORY, PACKAGED } from './application-paths';
-import { readJson } from './json-file';
 import { ManagedDetector } from './managed-detector';
 import type { RuntimeStatus } from '../runtime';
 import { diskSpace } from './storage';
@@ -56,15 +55,7 @@ async function initialize(prepareConfiguration: () => Promise<unknown>): Promise
 	detector = new ManagedDetector({ executable, dataDirectory: DATA_DIRECTORY });
 	try {
 		await prepareConfiguration();
-		const bundle = await readJson<{ dockerImage?: string }>(
-			path.join(EXECUTABLE_DIRECTORY, 'application.json')
-		);
-		detector = new ManagedDetector({
-			executable,
-			dataDirectory: DATA_DIRECTORY,
-			dockerImage: process.env.AIDETECTOR_DOCKER_IMAGE ?? bundle?.dockerImage
-		});
-		// The server must remain available while a first model/image is being prepared.
+		// The server must remain available while a first model is being prepared.
 		void detector.initialize().catch((error) => detector?.fail(error));
 	} catch (error) {
 		detector.fail(error);
@@ -98,8 +89,6 @@ export async function detectorStatus(): Promise<RuntimeStatus> {
 	}
 	const status: RuntimeStatus = detector?.status() ?? {
 		managed: false,
-		mode: 'auto',
-		selected: null,
 		phase: 'stopped',
 		message:
 			'This web server uses a separately managed detector. Download the complete application to start and stop it here.',

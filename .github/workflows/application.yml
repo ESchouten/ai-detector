@@ -60,33 +60,6 @@ jobs:
     needs: configuration
     uses: ./.github/workflows/detector-tests.yml
 
-  image:
-    name: Matching NVIDIA image
-    needs: configuration
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    permissions:
-      contents: read
-      packages: write
-    outputs:
-      digest: ${{ steps.build.outputs.digest }}
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/setup-container
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          minimum-free-gb: '35'
-      - uses: docker/build-push-action@v6
-        id: build
-        with:
-          context: detector
-          platforms: linux/amd64
-          push: true
-          tags: ghcr.io/eschouten/ai-detector:app-${{ github.sha }}
-          build-args: REF_NAME=${{ github.ref_name }}
-          cache-from: type=registry,ref=ghcr.io/eschouten/ai-detector:cache-application-amd64
-          cache-to: type=registry,ref=ghcr.io/eschouten/ai-detector:cache-application-amd64,mode=max
-
   native-windows:
     name: Windows binaries
     needs: configuration
@@ -311,7 +284,7 @@ jobs:
 
   installer-windows:
     name: Windows installer
-    needs: [configuration, native-windows, image]
+    needs: [configuration, native-windows]
     runs-on: windows-latest
     timeout-minutes: 60
     defaults:
@@ -322,7 +295,6 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/package-application
         with:
-          image-digest: ${{ needs.image.outputs.digest }}
           signing-key: ${{ secrets.SPARKLE_PRIVATE_KEY }}
 
   installer-macos:
@@ -340,7 +312,7 @@ jobs:
 
   installer-linux:
     name: Linux installer
-    needs: [configuration, native-linux, image]
+    needs: [configuration, native-linux]
     runs-on: ubuntu-22.04
     timeout-minutes: 60
     defaults: {run: {shell: bash}}
@@ -348,8 +320,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/package-application
-        with:
-          image-digest: ${{ needs.image.outputs.digest }}
 
   nvidia-checks:
     name: NVIDIA runtime installation

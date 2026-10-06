@@ -339,13 +339,6 @@ class Config(_ConfigModel):
     detectors: Annotated[tuple[DetectorConfig, ...], Field(min_length=1)]
     onnx: OnnxConfig = Field(default_factory=OnnxConfig)
     health: HealthcheckConfig | None = None
-    runtime: Literal["auto", "native", "docker"] = Field(
-        default="auto",
-        description=(
-            "How the AI Detector application starts this detector: its bundled "
-            "program or the release's Docker image. The detector does not read it."
-        ),
-    )
 
 
 class ConfigurationError(ValueError):

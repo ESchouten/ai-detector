@@ -1,6 +1,6 @@
 # Application installers and updates
 
-One application release contains the browser application, the native detector, FFmpeg and, for the optional Docker engine, the digest of its matching image. People open **AI Detector** and set it up in their browser.
+One application release contains the browser application, the native detector and FFmpeg. People open **AI Detector** and set it up in their browser.
 
 ## Installation and data
 
@@ -58,7 +58,7 @@ The SvelteKit executable adapter carries a small patch: upstream has no applicat
 
 ## Windows NVIDIA runtime
 
-The Windows installer carries no GPU binaries. When automatic inference finds an NVIDIA device with compute capability 7.5 or newer, the web application's process manager downloads a CUDA environment into the data folder and runs the same detector source in it. That device needs driver branch 572 or newer: with an older driver, starting stops with a request to update the driver, and does not fall back to Windows ML. An explicit ONNX provider, a configuration without a YOLO model, and the Docker engine bypass the download; a computer without such a device uses the bundled Windows ML build.
+The Windows installer carries no GPU binaries. When automatic inference finds an NVIDIA device with compute capability 7.5 or newer, the web application's process manager downloads a CUDA environment into the data folder and runs the same detector source in it. That device needs driver branch 572 or newer: with an older driver, starting stops with a request to update the driver, and does not fall back to Windows ML. An explicit ONNX provider and a configuration without a YOLO model bypass the download; a computer without such a device uses the bundled Windows ML build.
 
 - The build stages `detector/nvidia-runtime/`: the detector source, an entry script, uv, a `runtime.json` naming the Python version, and two locks exported from the detector's lockfile, `pylock.toml` for CUDA and `pylock.tensorrt.toml` for the optional TensorRT group. Every package is pinned by URL and SHA-256.
 - uv installs Python and the packages under `runtimes/nvidia/<hash>/`, with its cache in `cache/uv/`. The hash covers the Python version and the lock, not the application version, so an application update reuses the environment and runs its own newer detector source in it.

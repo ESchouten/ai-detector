@@ -956,17 +956,6 @@
         }
       ],
       "default": null
-    },
-    "runtime": {
-      "default": "auto",
-      "description": "How the AI Detector application starts this detector: its bundled program or the release's Docker image. The detector does not read it.",
-      "enum": [
-        "auto",
-        "native",
-        "docker"
-      ],
-      "title": "Runtime",
-      "type": "string"
     }
   },
   "required": [

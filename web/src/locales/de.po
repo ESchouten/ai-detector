@@ -251,18 +251,6 @@ msgid "Browser"
 msgstr "Browser"
 
 #: src/lib/server/detector-preparation.ts
-msgid "This download does not include a Docker image reference. Choose “On this computer” or download a complete application release."
-msgstr "Dieser Download enthält keinen Verweis auf ein Docker-Image. Wählen Sie „Auf diesem Computer“ oder laden Sie eine vollständige Version der Anwendung herunter."
-
-#: src/lib/server/detector-preparation.ts
-msgid "Downloading and checking GPU support. The first download can take several minutes."
-msgstr "GPU-Unterstützung wird heruntergeladen und geprüft. Der erste Download kann einige Minuten dauern."
-
-#: src/lib/server/detector-preparation.ts
-msgid "Docker could not run the NVIDIA GPU check. Check your internet connection, NVIDIA driver and Docker GPU support, then try again. You can also choose “On this computer”."
-msgstr "Docker konnte die NVIDIA-GPU-Prüfung nicht ausführen. Prüfen Sie Ihre Internetverbindung, den NVIDIA-Treiber und die GPU-Unterstützung von Docker und versuchen Sie es erneut. Sie können auch „Auf diesem Computer“ wählen."
-
-#: src/lib/server/detector-preparation.ts
 msgid "NVIDIA acceleration could not be prepared. Check your internet connection and graphics driver, then try again. Details are available below."
 msgstr "Die NVIDIA-Beschleunigung konnte nicht vorbereitet werden. Prüfen Sie Ihre Internetverbindung und den Grafiktreiber und versuchen Sie es erneut. Details finden Sie unten."
 
@@ -393,14 +381,6 @@ msgstr "Der Detektor konnte nicht gestartet werden."
 #: src/lib/server/recording-export.ts
 msgid "No recordings match these filters."
 msgstr "Keine Aufnahmen für diese Filter."
-
-#: src/lib/server/runtime-platform.ts
-msgid "Install or open Docker, then try again. Docker must be running on this computer."
-msgstr "Installieren oder öffnen Sie Docker und versuchen Sie es erneut. Docker muss auf diesem Computer laufen."
-
-#: src/lib/server/runtime-platform.ts
-msgid "Switch Docker to Linux containers, then try again."
-msgstr "Stellen Sie Docker auf Linux-Container um und versuchen Sie es erneut."
 
 #: src/lib/server/settings-backup.ts
 msgid ""
@@ -2474,10 +2454,6 @@ msgid "AI connections"
 msgstr "KI-Verbindungen"
 
 #: src/routes/(admin)/advanced/settings-editor.svelte
-msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus runtime (auto, native or docker), health and onnx for the whole installation. Saving applies the changes to active monitoring."
-msgstr "Alles in config.json: Modell, Prompts, Schwellenwerte und Aufnahmeoptionen jedes Detektors sowie runtime (auto, native oder docker), health und onnx für die gesamte Installation. Beim Speichern werden die Änderungen auf die laufende Überwachung angewendet."
-
-#: src/routes/(admin)/advanced/settings-editor.svelte
 msgid "Shared AI connections in app.json. Use a LiteLLM model name, API key, optional URL and headers. Changes apply to assigned detectors. Unassign a connection before removing or renaming it here."
 msgstr "Gemeinsame KI-Verbindungen in app.json. Verwenden Sie einen LiteLLM-Modellnamen, einen API-Schlüssel sowie optional URL und Header. Änderungen gelten für die zugewiesenen Detektoren. Lösen Sie eine Verbindung, bevor Sie sie hier entfernen oder umbenennen."
 
@@ -2784,10 +2760,6 @@ msgstr "Technische Details <0>Zur Fehlersuche</0>"
 #: src/routes/(admin)/status/+page.svelte
 msgid "{0} runs on"
 msgstr "{0} läuft auf"
-
-#: src/routes/(admin)/status/+page.svelte
-msgid "Detection engine"
-msgstr "Erkennungs-Engine"
 
 #: src/routes/(admin)/status/+page.svelte
 msgid "Settings and recordings folder"
@@ -3907,3 +3879,7 @@ msgstr "Erscheint für diese Voreinstellung ein neueres Modell, übernimmt diese
 #: src/lib/components/detector-editor.svelte
 msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
 msgstr "Wählen Sie eine Voreinstellung. Sie enthält alles, was nötig ist, um diese Art von Ereignis zu erkennen."
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
+msgstr "Alles in config.json: Modell, Prompts, Schwellenwerte und Aufnahmeoptionen jedes Detektors sowie health und onnx für die gesamte Installation. Beim Speichern werden die Änderungen auf die laufende Überwachung angewendet."

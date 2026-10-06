@@ -9,7 +9,6 @@ import { parseSettings } from '../src/lib/advanced-settings.ts';
 import { heartbeatInput } from '../src/lib/configuration.ts';
 import { settingsRevision } from '../src/lib/server/configuration/advanced.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
-import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { monitoringEnabled, setMonitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import { backupSettings } from '../src/lib/server/settings-backup.ts';
 import { unzipSync } from 'fflate';
@@ -46,14 +45,12 @@ test('editor validation accepts an empty setup and checks syntax, unknown proper
 		[{ label: 'AI', model: ['gemini/first', 'gemini/backup'] }]
 	);
 	assert.throws(() => parseSettings('connections', '[{"label":"AI","model":[]}]'), /fewer than 1/);
-	assert.deepEqual(parseSettings('config', '{"detectors":[],"runtime":"docker"}'), {
+	assert.deepEqual(parseSettings('config', '{"detectors":[],"onnx":{"opset":20}}'), {
 		detectors: [],
-		runtime: 'docker'
+		onnx: { opset: 20 }
 	});
-	assert.throws(
-		() => parseSettings('config', '{"detectors":[],"runtime":"cpu"}'),
-		/allowed values/
-	);
+	// The engine choice is gone; a setting that is not one is refused, not ignored.
+	assert.throws(() => parseSettings('config', '{"detectors":[],"runtime":"docker"}'), /runtime/);
 });
 
 test('advanced edits preserve names, camera identities and delivery; tuning clears preset identity', async (t) => {
@@ -177,31 +174,6 @@ test('editing detector credentials detaches only that shared connection', async 
 	assert.equal(next.app.detectors[0].llmConnection, undefined);
 	assert.equal(next.app.llms[0].key, 'shared');
 	assert.equal(next.config.detectors[0].vlm![0].key, 'detector-specific');
-});
-
-test('the engine choice is part of config.json and is shown without enabling monitoring', async (t) => {
-	const { directory, store } = await fixture(t);
-	const runtime = new ManagedDetector({ executable: 'unused', dataDirectory: directory });
-	await runtime.initialize();
-	assert.equal(runtime.status().mode, 'auto');
-	const saved = await store.read();
-	await store.saveAdvanced(
-		'config',
-		{ ...saved.config, runtime: 'native' },
-		settingsRevision(saved)
-	);
-	assert.equal(
-		JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8')).runtime,
-		'native'
-	);
-	// The store asks the launcher to apply saved settings; paused monitoring stays paused.
-	await runtime.apply();
-	assert.equal(runtime.status().mode, 'native');
-	assert.equal(runtime.status().phase, 'stopped');
-	const reloaded = new ManagedDetector({ executable: 'unused', dataDirectory: directory });
-	await reloaded.initialize();
-	assert.equal(reloaded.status().mode, 'native');
-	assert.equal(reloaded.status().phase, 'stopped');
 });
 
 test('saving settings keeps the launcher’s resume flag, which never appears in settings, backups or revisions', async (t) => {

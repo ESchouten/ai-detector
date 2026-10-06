@@ -251,18 +251,6 @@ msgid "Browser"
 msgstr "Browser"
 
 #: src/lib/server/detector-preparation.ts
-msgid "This download does not include a Docker image reference. Choose “On this computer” or download a complete application release."
-msgstr "This download does not include a Docker image reference. Choose “On this computer” or download a complete application release."
-
-#: src/lib/server/detector-preparation.ts
-msgid "Downloading and checking GPU support. The first download can take several minutes."
-msgstr "Downloading and checking GPU support. The first download can take several minutes."
-
-#: src/lib/server/detector-preparation.ts
-msgid "Docker could not run the NVIDIA GPU check. Check your internet connection, NVIDIA driver and Docker GPU support, then try again. You can also choose “On this computer”."
-msgstr "Docker could not run the NVIDIA GPU check. Check your internet connection, NVIDIA driver and Docker GPU support, then try again. You can also choose “On this computer”."
-
-#: src/lib/server/detector-preparation.ts
 msgid "NVIDIA acceleration could not be prepared. Check your internet connection and graphics driver, then try again. Details are available below."
 msgstr "NVIDIA acceleration could not be prepared. Check your internet connection and graphics driver, then try again. Details are available below."
 
@@ -393,14 +381,6 @@ msgstr "The detector could not start."
 #: src/lib/server/recording-export.ts
 msgid "No recordings match these filters."
 msgstr "No recordings match these filters."
-
-#: src/lib/server/runtime-platform.ts
-msgid "Install or open Docker, then try again. Docker must be running on this computer."
-msgstr "Install or open Docker, then try again. Docker must be running on this computer."
-
-#: src/lib/server/runtime-platform.ts
-msgid "Switch Docker to Linux containers, then try again."
-msgstr "Switch Docker to Linux containers, then try again."
 
 #: src/lib/server/settings-backup.ts
 msgid ""
@@ -2474,10 +2454,6 @@ msgid "AI connections"
 msgstr "AI connections"
 
 #: src/routes/(admin)/advanced/settings-editor.svelte
-msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus runtime (auto, native or docker), health and onnx for the whole installation. Saving applies the changes to active monitoring."
-msgstr "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus runtime (auto, native or docker), health and onnx for the whole installation. Saving applies the changes to active monitoring."
-
-#: src/routes/(admin)/advanced/settings-editor.svelte
 msgid "Shared AI connections in app.json. Use a LiteLLM model name, API key, optional URL and headers. Changes apply to assigned detectors. Unassign a connection before removing or renaming it here."
 msgstr "Shared AI connections in app.json. Use a LiteLLM model name, API key, optional URL and headers. Changes apply to assigned detectors. Unassign a connection before removing or renaming it here."
 
@@ -2784,10 +2760,6 @@ msgstr "Technical details <0>For troubleshooting</0>"
 #: src/routes/(admin)/status/+page.svelte
 msgid "{0} runs on"
 msgstr "{0} runs on"
-
-#: src/routes/(admin)/status/+page.svelte
-msgid "Detection engine"
-msgstr "Detection engine"
 
 #: src/routes/(admin)/status/+page.svelte
 msgid "Settings and recordings folder"
@@ -3907,3 +3879,7 @@ msgstr "When a newer model is published for this preset, this detector takes it 
 #: src/lib/components/detector-editor.svelte
 msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
 msgstr "Choose a preset. It supplies everything needed to recognise that kind of event."
+
+#: src/routes/(admin)/advanced/settings-editor.svelte
+msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
+msgstr "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."

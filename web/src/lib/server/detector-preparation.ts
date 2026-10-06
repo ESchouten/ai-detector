@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { mkdir, rm } from 'node:fs/promises';
 import path from 'node:path';
@@ -14,12 +14,11 @@ import {
 	type DetectorCommand
 } from './nvidia-runtime.ts';
 import { sanitizeTextForLogs as redact } from './runtime-logs.ts';
-import { checkDocker, dockerArguments, NVIDIA_HELP, SetupError } from './runtime-platform.ts';
+import { SetupError } from './runtime-platform.ts';
 
 export interface DetectorOptions {
 	executable: string;
 	dataDirectory: string;
-	dockerImage?: string;
 }
 
 /** Temporary configuration checks and runtime dependencies, before process supervision begins. */
@@ -27,17 +26,10 @@ export class DetectorPreparation {
 	private options: DetectorOptions;
 	private log: DetectorLog;
 	private report: (message: string) => void;
-	private containerName: string;
 	constructor(options: DetectorOptions, log: DetectorLog, report: (message: string) => void) {
 		this.options = options;
 		this.log = log;
 		this.report = report;
-		this.containerName =
-			'ai-detector-' +
-			createHash('sha256').update(options.dataDirectory).digest('hex').slice(0, 12);
-	}
-	async stopContainer(): Promise<void> {
-		await this.runCheck('docker', ['stop', '--time', '5', this.containerName], 10000);
 	}
 	async validate(config: unknown, signal?: AbortSignal): Promise<void> {
 		await mkdir(this.options.dataDirectory, { recursive: true });
@@ -73,70 +65,20 @@ export class DetectorPreparation {
 		}
 	}
 
-	async command(
-		selected: 'native' | 'docker',
-		config: Config,
-		signal: AbortSignal
-	): Promise<DetectorCommand> {
-		if (selected === 'native') {
-			const command = await this.nativeCommand(config, signal);
-			return {
-				...command,
-				args: [
-					...command.args,
-					'--config',
-					path.join(this.options.dataDirectory, 'config.json'),
-					'--data-dir',
-					this.options.dataDirectory,
-					'--control-stdin',
-					'--status-json',
-					'--live-preview'
-				]
-			};
-		}
-		const image = this.options.dockerImage;
-		if (!image)
-			throw new SetupError(
-				'This download does not include a Docker image reference. Choose “On this computer” or download a complete application release.'
-			);
-		await checkDocker(process.platform, signal);
-		signal.throwIfAborted();
-		this.report(
-			'Downloading and checking GPU support. The first download can take several minutes.'
-		);
-		try {
-			await this.runCheck(
-				'docker',
-				[
-					'run',
-					'--rm',
-					'--gpus',
-					'all',
-					image,
-					'python3',
-					'-c',
-					'import torch; assert torch.cuda.is_available(), "CUDA is unavailable"; print(torch.ones(1, device="cuda").cpu())'
-				],
-				900000,
-				signal
-			);
-		} catch {
-			throw new SetupError(
-				'Docker could not run the NVIDIA GPU check. Check your internet connection, NVIDIA driver and Docker GPU support, then try again. You can also choose “On this computer”.',
-				process.platform === 'win32' ? 'https://docs.docker.com/desktop/features/gpu/' : NVIDIA_HELP
-			);
-		}
-		const user =
-			process.getuid && process.getgid ? `${process.getuid()}:${process.getgid()}` : undefined;
+	async command(config: Config, signal: AbortSignal): Promise<DetectorCommand> {
+		const command = await this.nativeCommand(config, signal);
 		return {
-			file: 'docker',
-			args: dockerArguments(
-				image,
+			...command,
+			args: [
+				...command.args,
+				'--config',
+				path.join(this.options.dataDirectory, 'config.json'),
+				'--data-dir',
 				this.options.dataDirectory,
-				this.containerName,
-				process.platform,
-				user
-			)
+				'--control-stdin',
+				'--status-json',
+				'--live-preview'
+			]
 		};
 	}
 

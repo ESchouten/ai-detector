@@ -129,14 +129,7 @@
 						<dd class="font-medium break-all">{backend.engine}</dd>
 					</div>
 				{/each}
-				{#if runtime.managed}
-					<div class="flex flex-wrap justify-between gap-x-4 gap-y-0.5">
-						<dt class="text-muted-foreground">Detection engine</dt>
-						<dd class="font-medium">
-							{runtime.selected ?? runtime.mode}{runtime.mode === 'auto' ? ' (automatic)' : ''}
-						</dd>
-					</div>
-				{:else}
+				{#if !runtime.managed}
 					<p class="text-muted-foreground">{runtime.message}</p>
 				{/if}
 				<div class="flex flex-col gap-0.5">

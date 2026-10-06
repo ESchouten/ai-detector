@@ -14,8 +14,6 @@ export const [useRuntimeStatus, provideRuntimeStatus] = createContext<RuntimeMon
 
 const UNAVAILABLE: RuntimeStatus = {
 	managed: false,
-	mode: 'auto',
-	selected: null,
 	phase: 'stopped',
 	message: 'Status is unavailable.',
 	dataDirectory: '',

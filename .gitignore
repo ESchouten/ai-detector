@@ -2,6 +2,7 @@ detections
 config.json
 config.**.json
 yolo11**
+yolo26**
 app.json
 /application-dist/
 !example/config.json

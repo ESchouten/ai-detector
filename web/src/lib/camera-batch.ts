@@ -49,6 +49,9 @@ export async function connectCameraBatch(
 	const pending = cameras.filter(
 		(camera) => camera.state === 'waiting' || camera.state === 'failed'
 	);
+	// Named here and not where it is used: the translation tool leaves text inside the nested
+	// function without the means to translate it, and reading it then throws.
+	const unreachable = 'Could not connect. Check this camera’s login and network.';
 	let next = 0;
 	async function worker() {
 		while (!signal.aborted && next < pending.length) {
@@ -68,7 +71,7 @@ export async function connectCameraBatch(
 				update({
 					...camera,
 					state: 'failed',
-					error: errorMessage(cause, 'Could not connect. Check this camera’s login and network.')
+					error: errorMessage(cause, unreachable)
 				});
 			}
 		}

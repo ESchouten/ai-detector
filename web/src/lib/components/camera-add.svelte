@@ -45,6 +45,8 @@
 	let selected = $state<string[]>([]);
 	let username = $state('admin');
 	let password = $state('');
+	// Many cameras still have the login they came with, so that is tried before asking for one.
+	let askLogin = $state(false);
 	let manual = $state(false);
 	let streamUri = $state('');
 	let manualError = $state('');
@@ -77,8 +79,11 @@
 			const result = await discoverCameras();
 			candidates = result.cameras;
 			if (!candidates.length) manual = true;
-			else if (candidates.length === 1 && !selected.length && !queue.length)
-				selected = [candidates[0].address];
+			// Most people want every camera that was found; leaving one out is the exception.
+			else if (!selected.length && !queue.length)
+				selected = candidates
+					.map((camera) => camera.address)
+					.filter((address) => !known.has(address));
 			discoveryMessage =
 				result.message ??
 				(candidates.length
@@ -129,7 +134,12 @@
 			update,
 			signal
 		);
-		if (!signal.aborted) connecting = false;
+		if (signal.aborted) return;
+		connecting = false;
+		if (!askLogin && queue.some((camera) => camera.state === 'failed')) {
+			askLogin = true;
+			choosing = true;
+		}
 	}
 
 	async function connectManual(event: SubmitEvent) {
@@ -276,7 +286,7 @@
 						</li>
 					{/each}
 				</ul>
-				{#if selected.length}
+				{#if selected.length && askLogin}
 					<Field.Group class="border-t pt-5">
 						<Field.Group class="grid gap-4 sm:grid-cols-2">
 							<Field.Field>

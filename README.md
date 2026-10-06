@@ -18,7 +18,7 @@ The downloads are not signed with an Apple or Windows publisher certificate, so 
 
 Open **AI Detector**. Setup opens in your browser, in English, Dutch, German or French. If no browser opens, go to [localhost](http://localhost/).
 
-1. **Cameras.** Pick the cameras found on your network and enter their login, or paste an RTSP address. Check each picture and give the cameras a name.
+1. **Cameras.** The cameras found on your network are already ticked; a camera that needs its own login asks for it. Or paste an RTSP address. Check each picture and give the cameras a name.
 2. **Detection.** Choose a preset, such as Cow Catcher, and the cameras it watches. Phone alerts and the Validator can be added here or later.
 3. **Start.** Every camera is checked, and **Start monitoring** opens Recordings once the cameras are really being analysed.
 

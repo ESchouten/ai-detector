@@ -30,6 +30,8 @@
 	let removing = $state(false);
 
 	async function remove(entry: Detection) {
+		// The viewer moves on to the next recording, which must not inherit the question.
+		confirmRemove = false;
 		removing = true;
 		try {
 			const { type, archiveStage, timestamp } = entry;

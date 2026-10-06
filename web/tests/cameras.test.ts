@@ -352,7 +352,7 @@ test(
 );
 
 test(
-	'failed or cancelled checks leave no partial recording and allow another attempt',
+	'failed or cancelled checks leave no partial recording and let the waiting check run',
 	{ timeout: 10000 },
 	async (t) => {
 		assert.ok(ffmpeg);
@@ -371,14 +371,13 @@ test(
 		const address = await server(t, () => started());
 		const pending = cache.check(address, ffmpeg, [], controller.signal);
 		await connected;
-		await assert.rejects(cache.check(address, ffmpeg, []), /still running/);
+		const waiting = cache.check(address, path.join(dir, 'missing-ffmpeg'), []);
 		controller.abort(new Error('Setup cancelled'));
-		await assert.rejects(pending, /Setup cancelled/);
+		await Promise.all([
+			assert.rejects(pending, /Setup cancelled/),
+			assert.rejects(waiting, /software is missing/)
+		]);
 		assert.deepEqual(await readdir(dir), []);
-		await assert.rejects(
-			cache.check(address, path.join(dir, 'missing-ffmpeg'), []),
-			/software is missing/
-		);
 	}
 );
 

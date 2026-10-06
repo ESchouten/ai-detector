@@ -738,10 +738,6 @@ msgid "Camera check failed"
 msgstr "Kameraprüfung fehlgeschlagen"
 
 #: src/lib/server/cameras/checks.ts
-msgid "Another camera check is still running. Please wait a moment and try again."
-msgstr "Es läuft noch eine andere Kameraprüfung. Bitte warten Sie einen Moment und versuchen Sie es erneut."
-
-#: src/lib/server/cameras/checks.ts
 msgid "Check the camera picture again before saving. The previous check has expired or the camera address changed."
 msgstr "Prüfen Sie das Kamerabild erneut, bevor Sie speichern. Die vorherige Prüfung ist abgelaufen oder die Kameraadresse hat sich geändert."
 

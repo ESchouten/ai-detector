@@ -86,7 +86,7 @@ async function recordCameraTest(
 /** Short-lived setup recordings, isolated from real detections and addressed without credentials. */
 export class CameraChecks {
 	private readonly checks = new Map<string, Check>();
-	private active = false;
+	private last: Promise<unknown> = Promise.resolve();
 	private readonly directory: string;
 	private readonly now: () => number;
 	constructor(directory: string, now: () => number = Date.now) {
@@ -94,17 +94,24 @@ export class CameraChecks {
 		this.now = now;
 	}
 
-	async check(
+	/** Checks run one at a time; setup connects several cameras at once, so the others wait. */
+	check(
 		source: string,
 		executable: string,
 		profiles: CameraProfile[],
 		signal?: AbortSignal
 	): Promise<CameraConnectionResult> {
-		if (this.active)
-			throw new CameraConnectionError(
-				'Another camera check is still running. Please wait a moment and try again.'
-			);
-		this.active = true;
+		const check = this.last.then(() => this.record(source, executable, profiles, signal));
+		this.last = check.catch(() => {});
+		return check;
+	}
+
+	private async record(
+		source: string,
+		executable: string,
+		profiles: CameraProfile[],
+		signal?: AbortSignal
+	): Promise<CameraConnectionResult> {
 		const id = randomUUID();
 		const directory = path.join(this.directory, id);
 		try {
@@ -131,8 +138,6 @@ export class CameraChecks {
 				);
 			}
 			throw cameraStorageFailure(cause) ?? cause;
-		} finally {
-			this.active = false;
 		}
 	}
 

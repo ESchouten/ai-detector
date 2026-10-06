@@ -1,3 +1,4 @@
+import logging
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from threading import Barrier, Event, get_ident
@@ -8,7 +9,7 @@ import pytest
 import torch
 from ultralytics.engine.results import Results
 
-from aidetector.adapters.inference import MpsInferenceError
+from aidetector.adapters.inference import MpsInferenceError, yolo
 from aidetector.adapters.inference.onnx import (
     InferenceOptions,
 )
@@ -352,3 +353,18 @@ def test_other_backends_retain_independent_detector_execution(model_path, native
             )
         )
     assert all(result["camera"][-1].date == frame().date for result in results)
+
+
+def test_inference_timing_is_summarised_instead_of_logged_per_batch(
+    monkeypatch, caplog
+):
+    detector = YoloDetector(
+        Model(), YoloConfig(model="model.onnx"), ("one",), InferenceOptions()
+    )
+    with caplog.at_level(logging.INFO, logger=yolo.__name__):
+        detector.detect({"one": (frame(0),)})
+        assert caplog.messages == []
+        monkeypatch.setattr(yolo, "SUMMARY_SECONDS", 0)
+        detector.detect({"one": (frame(1),)})
+    [summary] = caplog.messages
+    assert summary.startswith("Inference: 2 frame(s) in 2 batch(es)")

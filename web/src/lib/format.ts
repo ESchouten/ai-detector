@@ -33,6 +33,14 @@ export function calendarDate(value: string | number | Date): string {
 	return date ? dateFormat(language(), { dateStyle: 'long' }).format(date) : String(value);
 }
 
+/** Tue 6: a day on a time axis that spans a week. */
+export function weekday(value: string | number | Date): string {
+	const date = parse(value);
+	return date
+		? dateFormat(language(), { weekday: 'short', day: 'numeric' }).format(date)
+		: String(value);
+}
+
 function calendarDay(date: Date): string {
 	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }

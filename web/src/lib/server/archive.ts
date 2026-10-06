@@ -198,6 +198,31 @@ export class DetectionArchive {
 		return locations;
 	}
 
+	/** The recordings that began between two moments, newest first. */
+	async between(from: Date, to: Date): Promise<Detection[]> {
+		const day = (moment: Date) => new Date(moment.getTime() - moment.getTimezoneOffset() * 60000);
+		const locations = await this.locations({
+			from: day(from).toISOString().slice(0, 10),
+			to: day(to).toISOString().slice(0, 10)
+		});
+		const items: Detection[] = [];
+		for (let start = 0; start < locations.length; start += REVIEW_READS) {
+			const batch = await Promise.all(
+				locations.slice(start, start + REVIEW_READS).map((location) =>
+					this.read(location).catch((error) => {
+						this.unavailable(location, error);
+						return undefined;
+					})
+				)
+			);
+			for (const item of batch) {
+				const began = item ? Date.parse(item.start) : NaN;
+				if (item && began >= from.getTime() && began <= to.getTime()) items.push(item);
+			}
+		}
+		return items;
+	}
+
 	private async read(location: ArchiveLocation): Promise<Detection> {
 		const { metadata } = await this.metadataFile(location);
 		if (!validateMetadata(metadata))

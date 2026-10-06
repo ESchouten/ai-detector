@@ -12,6 +12,7 @@ from aidetector.adapters.exporters.archive_metadata import EventMetadata
 from aidetector.adapters.exporters.disk import DiskExporter
 from aidetector.adapters.media import MediaError
 from aidetector.adapters.media.event_media import EventMedia
+from aidetector.adapters.operational_status import source_key
 from aidetector.application.ports import DeliveryError
 from aidetector.configuration import DiskConfig
 from aidetector.domain.models import (
@@ -77,6 +78,7 @@ def test_archive_publication_retries_a_concurrent_timestamp_collision(
     metadata = EventMetadata.model_validate_json(metadata_path.read_text())
     assert metadata.timestamp == metadata_path.parent.name
     assert metadata.event_id == result.id
+    assert metadata.camera == source_key(result.event.source)[:12]
     assert metadata.timestamp == "2026-01-01T00-00-00.000001"
     assert len(list((tmp_path / "cow/unvalidated").iterdir())) == 2
     assert list((tmp_path / "cow/.pending").iterdir()) == []

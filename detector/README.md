@@ -114,7 +114,7 @@ The outcomes are **approved**, **rejected**, **unvalidated** (no verifier) and *
 
 Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected`, which defaults to true for disk and false for Telegram and webhooks. Destinations are attempted independently, without hidden retries.
 
-**Disk.** `directory` is one category name under `detections/` (default: the best class); `strategy` is `"BEST"` or `"ALL"`, which also writes every event frame. An archive is `best.jpg`, `clean.jpg`, `video.mp4` and `metadata.json` under `detections/<category>/<approved|rejected|unvalidated>/<timestamp>/`. Files are published together and an existing event is never overwritten. The web application adds a person's `review` to `metadata.json`; the detector never writes it.
+**Disk.** `directory` is one category name under `detections/` (default: the best class); `strategy` is `"BEST"` or `"ALL"`, which also writes every event frame. An archive is `best.jpg`, `clean.jpg`, `video.mp4` and `metadata.json` under `detections/<category>/<approved|rejected|unvalidated>/<timestamp>/`. Files are published together and an existing event is never overwritten. `metadata.json` names the camera by its 12-character ID from the logs, never by its address. The web application adds a person's `review` to `metadata.json`; the detector never writes it.
 
 **Telegram.** Needs `token` and `chat`. `alert_every` (`1`) plays the sound on every Nth alert. `quiet` takes a `start` and `end` such as `"22:00"` and `"06:00"`, in the computer's local time: alerts in that period arrive without sound. Photos are limited to 10 MB and videos to 12 MB. Alerts carry 👍 and 👎 buttons tied to the event's `event_id`; the web application receives the reviews.
 

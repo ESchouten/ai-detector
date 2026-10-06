@@ -77,6 +77,19 @@
       "default": null,
       "title": "Event Id"
     },
+    "camera": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{12}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Camera"
+    },
     "validated": {
       "anyOf": [
         {

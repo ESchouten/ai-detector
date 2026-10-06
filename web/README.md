@@ -17,6 +17,8 @@ There are three main pages, **Recordings**, **Cameras** and **Detectors**; every
 
 Camera pictures show the latest detection boxes over live video; the boxes can lag behind moving objects. At most four live pictures run per browser tab, and hidden ones are released. A camera shows its first picture at its next keyframe, which can take a few seconds; after that the picture stays ready for twenty seconds.
 
+**History** on the same page shows, per camera, when it was really watched over the last hour, day or week, with every recording as a mark on the same line; a mark opens the recording. A gap is time in which nothing would have been noticed, and it says why: the camera was offline, monitoring was paused, or AI Detector was not running. History is kept for thirty days from the day this version was installed, and a gap is known to within about ten seconds. With a separately managed detector only the recordings are shown.
+
 ### Detectors and presets
 
 A detector made from a preset follows it. When a newer model is published for that preset, the detector takes it within a day or at the next start: monitoring restarts by itself and is interrupted while the model is downloaded and prepared. Cameras, alerts and Validator stay as you set them. For this the application asks GitHub once a day; without internet nothing changes.

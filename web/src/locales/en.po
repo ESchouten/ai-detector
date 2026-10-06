@@ -44,6 +44,7 @@ msgstr "Status unavailable"
 #: src/lib/camera-status.ts
 #: src/lib/camera-status.ts
 #: src/lib/monitoring.ts
+#: src/routes/(admin)/streams/camera-history.svelte
 msgid "Paused"
 msgstr "Paused"
 
@@ -58,6 +59,7 @@ msgid "Preparing"
 msgstr "Preparing"
 
 #: src/lib/camera-status.ts
+#: src/routes/(admin)/streams/camera-history.svelte
 msgid "Camera offline"
 msgstr "Camera offline"
 
@@ -76,6 +78,7 @@ msgid "Monitoring"
 msgstr "Monitoring"
 
 #: src/lib/camera-status.ts
+#: src/routes/(admin)/streams/camera-history.svelte
 msgid "Connecting"
 msgstr "Connecting"
 
@@ -190,6 +193,7 @@ msgstr "Setup test sent."
 
 #: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
+#: src/lib/remote/camera.remote.ts
 #: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/routes/(admin)/streams/[id]/+page.svelte
@@ -3827,3 +3831,71 @@ msgstr "Home screen shortcut"
 #: src/routes/(admin)/settings/+page.svelte
 msgid "Open your browser’s menu (⋮) and choose “Add to Home screen”. The shortcut opens AI Detector in the browser."
 msgstr "Open your browser’s menu (⋮) and choose “Add to Home screen”. The shortcut opens AI Detector in the browser."
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "View"
+msgstr "View"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Live"
+msgstr "Live"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "History"
+msgstr "History"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Other recordings"
+msgstr "Other recordings"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Watched"
+msgstr "Watched"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "AI Detector was not running"
+msgstr "AI Detector was not running"
+
+#. 0: minutes
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "{0} min"
+msgstr "{0} min"
+
+#. 0: Math.floor(minutes / 60); 1: String(minutes % 60).padStart(2, '0')
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "{0} h {1} min"
+msgstr "{0} h {1} min"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Period"
+msgstr "Period"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Last 24 hours"
+msgstr "Last 24 hours"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Last 7 days"
+msgstr "Last 7 days"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "This installation runs its detector separately, so it does not know when cameras were watched. Recordings are shown."
+msgstr "This installation runs its detector separately, so it does not know when cameras were watched. Recordings are shown."
+
+#. 0: duration(watched)
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Watched {0}"
+msgstr "Watched {0}"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Not watched"
+msgstr "Not watched"
+
+#. 0: label
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Play recording: {0}"
+msgstr "Play recording: {0}"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Last hour"
+msgstr "Last hour"

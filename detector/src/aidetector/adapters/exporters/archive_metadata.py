@@ -2,6 +2,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from aidetector.adapters.operational_status import source_key
 from aidetector.domain.models import EventResult
 
 
@@ -27,6 +28,8 @@ class EventMetadata(BaseModel):
 
     timestamp: str
     event_id: str | None = Field(default=None, pattern=r"^[a-f0-9]{32}$")
+    # The camera's 12-character ID, as in the logs; never its address.
+    camera: str | None = Field(default=None, pattern=r"^[a-f0-9]{12}$")
     validated: bool | None
     confidence: float = Field(ge=0, le=1)
     confidences: dict[str, float]
@@ -49,6 +52,7 @@ class EventMetadata(BaseModel):
         return cls(
             timestamp=timestamp,
             event_id=result.id,
+            camera=source_key(event.source)[:12],
             validated=result.validation.validated,
             confidence=best.score,
             confidences=dict(best.confidence),

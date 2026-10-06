@@ -7,11 +7,38 @@ import type { RuntimeStatus } from '../runtime';
 import { diskSpace } from './storage';
 import { recordings } from './recordings';
 import { webLog } from './web-log';
+import { WatchHistory } from './watch-history';
+import { watchState } from '../camera-history';
 
 let detector: ManagedDetector | null = null;
 let initialization: Promise<void> | undefined;
 let storageCheckedAt = 0;
 let storageWarning: string | undefined;
+export const watchHistory = new WatchHistory(path.join(DATA_DIRECTORY, 'history'));
+
+/** Every ten seconds is as precisely as a gap in the history is known. */
+async function keepHistory(): Promise<void> {
+	try {
+		await watchHistory.start();
+	} catch (error) {
+		webLog.warn('Could not open the camera history', error);
+		return;
+	}
+	const timer = setInterval(async () => {
+		try {
+			await detector?.refreshMetadata();
+			await watchHistory.sample(
+				(detector?.status().cameras ?? []).map(({ id, state }) => ({
+					id,
+					state: watchState(state)
+				}))
+			);
+		} catch (error) {
+			webLog.warn('Could not keep the camera history', error);
+		}
+	}, 10000);
+	timer.unref();
+}
 
 export function initializeDetector(prepareConfiguration: () => Promise<unknown>): Promise<void> {
 	return (initialization ??= initialize(prepareConfiguration));
@@ -42,6 +69,7 @@ async function initialize(prepareConfiguration: () => Promise<unknown>): Promise
 	} catch (error) {
 		detector.fail(error);
 	}
+	await keepHistory();
 	process.once('sveltekit:shutdown', (reason?: string) => detector?.stop(false, reason));
 	process.once('aidetector:launcher-disconnected', () => {
 		detector?.log.append(

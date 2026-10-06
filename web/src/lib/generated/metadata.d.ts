@@ -2,6 +2,7 @@
 
 export type Timestamp = string;
 export type EventId = string | null;
+export type Camera = string | null;
 export type Validated = boolean | null;
 export type Confidence = number;
 export type Detections = number;
@@ -20,6 +21,7 @@ export type ReviewedAt = string;
 export interface EventMetadata {
 	timestamp: Timestamp;
 	event_id?: EventId;
+	camera?: Camera;
 	validated: Validated;
 	confidence: Confidence;
 	confidences: Confidences;

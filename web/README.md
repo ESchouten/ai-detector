@@ -49,10 +49,9 @@ A connection is saved once and used by any number of detectors, each with its ow
 
 The application listens on `0.0.0.0:80`, so other devices open `http://aidetector.local/` or `http://<computer-IP>/`. The computer it runs on is trusted; every other browser needs a one-use code from **Settings → Devices** (scan the QR code, then tap Connect). Codes expire after five minutes or ten wrong attempts. A connected browser is remembered for a year and can be removed there. A first start without a screen prints a code on the console.
 
-On a phone or tablet the application offers once to be put on the home screen and shows the steps for that phone and browser; **Settings → Home screen** shows them again.
+An iPhone or iPad is offered once to put the application on its home screen, with the steps for that device; **Settings → Home screen** shows them again. It then opens like an app. An iPhone older than iOS 17.2 must connect once more from the icon.
 
-- On an iPhone or iPad it then opens like an app. An iPhone older than iOS 17.2 must connect once more from the icon.
-- Android installs web apps only from HTTPS. Over plain HTTP the icon opens the dashboard in the browser.
+Android makes a web page an app only over HTTPS. Over plain HTTP nothing is offered, and **Settings → Home screen shortcut** tells how to add a link that opens the dashboard in the browser.
 
 Plain HTTP is not encrypted: use a trusted network, or an HTTPS reverse proxy with `ORIGIN` set.
 

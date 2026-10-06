@@ -12,9 +12,6 @@
 		await import('@khmyznikov/pwa-install');
 		// It first works out what this device can do, and has done so once it has drawn itself.
 		await element.updateComplete;
-		// Over plain HTTP Android installs nothing and its Install button would do nothing, so
-		// show the steps for adding the page by hand, as for a browser that cannot install.
-		if (element.isAndroid && !isSecureContext) element.isAndroidFallback = true;
 		element.showDialog(true);
 	}
 </script>

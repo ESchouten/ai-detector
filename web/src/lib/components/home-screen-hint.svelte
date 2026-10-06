@@ -2,15 +2,17 @@
 	import { onMount } from 'svelte';
 	import { Smartphone, X } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { deviceLacksHomeScreenIcon } from '$lib/home-screen';
+	import { deviceHoldsOnlyShortcut, deviceLacksHomeScreenIcon } from '$lib/home-screen';
 	import HomeScreenGuide from './home-screen-guide.svelte';
 
-	// Offered once on a phone or tablet, until it is done or declined. Settings keeps the way in.
+	// Offered once on a phone or tablet that can hold the application, until it is done or
+	// declined. Settings keeps the way in.
 	const DECLINED = 'ai-detector.home-screen-hint';
 	let offered = $state(false);
 	let guide = $state<HomeScreenGuide>();
 	onMount(() => {
-		offered = !localStorage.getItem(DECLINED) && deviceLacksHomeScreenIcon();
+		offered =
+			!localStorage.getItem(DECLINED) && deviceLacksHomeScreenIcon() && !deviceHoldsOnlyShortcut();
 	});
 
 	function decline() {

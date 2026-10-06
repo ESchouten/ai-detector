@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { lacksHomeScreenIcon } from '../src/lib/home-screen.ts';
+import { holdsOnlyShortcut, lacksHomeScreenIcon } from '../src/lib/home-screen.ts';
 
 const iphone =
 	'Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1';
@@ -29,4 +29,11 @@ test('a phone or tablet is offered the home screen, a computer is not', () => {
 test('nothing is offered once the application was opened from the home screen', () => {
 	assert.equal(lacksHomeScreenIcon(device(iphone, 5, true)), false);
 	assert.equal(lacksHomeScreenIcon(device(android, 5, true)), false);
+});
+
+test('Android over plain HTTP can only hold a shortcut', () => {
+	assert.equal(holdsOnlyShortcut({ userAgent: android, secure: false }), true);
+	assert.equal(holdsOnlyShortcut({ userAgent: android, secure: true }), false);
+	// An iPhone makes the page an app over plain HTTP too.
+	assert.equal(holdsOnlyShortcut({ userAgent: iphone, secure: false }), false);
 });

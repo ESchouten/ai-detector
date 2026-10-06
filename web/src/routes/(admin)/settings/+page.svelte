@@ -10,7 +10,7 @@
 	import LinkRows from '$lib/components/link-rows.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import SettingsBackup from '$lib/components/settings-backup.svelte';
-	import { deviceLacksHomeScreenIcon } from '$lib/home-screen';
+	import { deviceHoldsOnlyShortcut, deviceLacksHomeScreenIcon } from '$lib/home-screen';
 	import { logsNavigation, settingsNavigation, REPOSITORY_URL } from '$lib/navigation';
 	import { version } from '$lib/version';
 
@@ -21,9 +21,11 @@
 	] as const;
 	// Only a phone or tablet that does not have the application on its home screen yet.
 	let homeScreen = $state(false);
+	let shortcutOnly = $state(false);
 	let homeScreenGuide = $state<HomeScreenGuide>();
 	onMount(() => {
 		homeScreen = deviceLacksHomeScreenIcon();
+		shortcutOnly = deviceHoldsOnlyShortcut();
 	});
 </script>
 
@@ -63,7 +65,15 @@
 					{/each}
 				</div>
 			</div>
-			{#if homeScreen}
+			{#if homeScreen && shortcutOnly}
+				<div class="flex flex-col px-4 py-3.5">
+					<p class="text-sm font-medium">Home screen shortcut</p>
+					<p class="text-sm text-muted-foreground">
+						Open your browser’s menu (⋮) and choose “Add to Home screen”. The shortcut opens AI
+						Detector in the browser.
+					</p>
+				</div>
+			{:else if homeScreen}
 				<div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3.5">
 					<div class="flex min-w-0 flex-col">
 						<p class="text-sm font-medium">Home screen</p>

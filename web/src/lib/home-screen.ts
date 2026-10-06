@@ -25,3 +25,16 @@ export function deviceLacksHomeScreenIcon(): boolean {
 			(navigator as Navigator & { standalone?: boolean }).standalone === true
 	});
 }
+
+/**
+ * Whether the home screen of this device can only hold a link to the page: Android makes a web
+ * page an app over HTTPS only, and a link opens in the browser as before.
+ */
+export function holdsOnlyShortcut(device: { userAgent: string; secure: boolean }): boolean {
+	return /Android/.test(device.userAgent) && !device.secure;
+}
+
+/** The same for the device this page is open on. */
+export function deviceHoldsOnlyShortcut(): boolean {
+	return holdsOnlyShortcut({ userAgent: navigator.userAgent, secure: isSecureContext });
+}

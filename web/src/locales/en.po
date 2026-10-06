@@ -3819,3 +3819,11 @@ msgstr "Delete this recording?"
 #: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "Its pictures and video are removed from this computer and cannot be brought back."
 msgstr "Its pictures and video are removed from this computer and cannot be brought back."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Home screen shortcut"
+msgstr "Home screen shortcut"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Open your browser’s menu (⋮) and choose “Add to Home screen”. The shortcut opens AI Detector in the browser."
+msgstr "Open your browser’s menu (⋮) and choose “Add to Home screen”. The shortcut opens AI Detector in the browser."

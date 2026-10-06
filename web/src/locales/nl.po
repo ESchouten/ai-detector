@@ -3819,3 +3819,11 @@ msgstr "Deze opname verwijderen?"
 #: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "Its pictures and video are removed from this computer and cannot be brought back."
 msgstr "De foto’s en de video worden van deze computer verwijderd en zijn niet terug te halen."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Home screen shortcut"
+msgstr "Snelkoppeling op startscherm"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Open your browser’s menu (⋮) and choose “Add to Home screen”. The shortcut opens AI Detector in the browser."
+msgstr "Open het menu van je browser (⋮) en kies ‘Toevoegen aan startscherm’. De snelkoppeling opent AI Detector in de browser."

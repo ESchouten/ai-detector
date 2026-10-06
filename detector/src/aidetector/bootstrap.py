@@ -152,11 +152,23 @@ def run_application(
         )
         engines = None
         if prefer_tensorrt and TYPE == "cuda":
-            from aidetector.adapters.inference.prepared_engines import EnginePreparation
-
-            engines = EnginePreparation(
-                data_directory / "models" / "prepared", stop_requested, report_status
+            from aidetector.adapters.inference.prepared_engines import (
+                EnginePreparation,
+                gpu_available,
             )
+
+            if gpu_available():
+                engines = EnginePreparation(
+                    data_directory / "models" / "prepared",
+                    stop_requested,
+                    report_status,
+                )
+            else:
+                # A container started without its GPU still detects, on the processor.
+                logger.warning(
+                    "TensorRT was preferred but no NVIDIA GPU is available to this "
+                    "process; detection continues without it"
+                )
         streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None
         workers: list[DetectorWorker] = []

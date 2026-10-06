@@ -10,7 +10,7 @@ Download the application for your computer from an **AI Detector app/** [release
 | --- | --- | --- |
 | Windows 10 22H2+ or Windows 11, x64 | `AI-Detector-VERSION-windows-x64-setup.zip` (extract, then run the setup) | A supported NVIDIA GPU when present, otherwise Windows ML |
 | macOS 14+, Apple Silicon | `AI-Detector-VERSION-macos-arm64.dmg` (drag to Applications) | The Apple GPU |
-| Ubuntu 22.04 or 24.04, amd64 | `AI-Detector-VERSION-linux-amd64.deb` | The CPU |
+| Ubuntu 22.04 or 24.04, amd64 | `AI-Detector-VERSION-linux-amd64.deb` | The CPU; for an NVIDIA GPU use [Docker](#docker) |
 
 The downloads are not signed with an Apple or Windows publisher certificate, so the system may ask for approval. Intel Macs, Windows on ARM and Jetson have no installer; use [Docker](#docker) or run the [detector](detector/README.md) by itself.
 
@@ -38,14 +38,20 @@ Monitoring keeps running when you close the browser. Keep the computer awake whi
 
 ## Docker
 
-The [example Compose file](example/compose.yml) runs the detector and the web interface on an NVIDIA container host that is already set up:
+One image, `ghcr.io/eschouten/ai-detector`, holds the web application and the detector it starts and supervises, as the desktop application does. The [example Compose file](example/compose.yml) runs it on a Linux PC with an NVIDIA GPU and the NVIDIA Container Toolkit:
 
 ```sh
 cd example
 docker compose up -d
 ```
 
-The containers are managed separately there: the browser cannot start or restart the detector, and a change to detector settings needs `docker compose restart aidetector`.
+Open `http://<computer-IP>/`. Settings, models and recordings live in the folder beside the Compose file. The container uses the host's network so the cameras on it can be found; update with `docker compose pull && docker compose up -d`. Coming from the two separate images, read [Docker](detector/MIGRATION.md#docker) first.
+
+| Host | Compose file |
+| --- | --- |
+| Linux PC with an NVIDIA GPU | [`example/compose.yml`](example/compose.yml) |
+| Jetson Orin or Thor with JetPack 7.2 | [`example/compose.jetson.yml`](example/compose.jetson.yml); not yet checked on a board, see [Jetson](detector/MIGRATION.md#jetson) |
+| Jetson with JetPack 6, existing installation | [`example/compose.jetpack6.yml`](example/compose.jetpack6.yml); its two images get no updates |
 
 ### Start automatically on a Jetson or Linux desktop
 
@@ -55,9 +61,7 @@ For an existing Compose installation, run this once from the repository folder a
 python3 distribution/linux_startup.py install --compose example/compose.jetson.yml
 ```
 
-It enables Docker at boot, starts the services and opens the application in the browser at login, so detection runs from boot. Use the Compose file your installation already uses (`example/compose.yml` on an ordinary NVIDIA Linux PC), and add `--url http://localhost:YOUR_PORT/` if you changed the web port. `python3 distribution/linux_startup.py uninstall` removes the browser autostart and nothing else. The helper does not install Docker or GPU drivers.
-
-The Jetson example serves existing JetPack 6 installations. New images are not built for it and JetPack 7.2 is not qualified; read [Jetson](detector/MIGRATION.md#jetson) before changing the system or the image.
+It enables Docker at boot, starts the services and opens the application in the browser at login, so detection runs from boot. Use the Compose file your installation already uses, and add `--url http://localhost:YOUR_PORT/` if you changed the web port. `python3 distribution/linux_startup.py uninstall` removes the browser autostart and nothing else. The helper does not install Docker or GPU drivers.
 
 ## Where to read on
 

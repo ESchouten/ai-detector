@@ -94,7 +94,6 @@ pnpm test:production
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
 | `AIDETECTOR_DATA_DIR`          | Folder with `config.json`, `app.json` and recordings. Development uses the working directory.                        |
 | `AIDETECTOR_EXECUTABLE`        | Detector to start and supervise. Without it the server is only an interface to a detector that is managed elsewhere. |
-| `AIDETECTOR_DOCKER_IMAGE`      | Image for the optional Docker engine.                                                                                |
 | `AIDETECTOR_PRESETS`           | Folder of preset files, instead of `presets/` in the data folder or the bundled ones.                                |
 | `AIDETECTOR_PRESETS_URL`       | Where newer presets are published, as a folder listing in GitHub's format. Empty switches following them off.        |
 | `FFMPEG_PATH`                  | FFmpeg for camera checks and live pictures.                                                                          |
@@ -107,10 +106,10 @@ Missing settings files start an empty setup. A separately started detector needs
 
 `AI_DETECTOR_WEB_TARGET` set to `windows-x64-baseline`, `darwin-arm64` or `linux-x64-baseline` makes `pnpm build` compile a single executable. The complete application is assembled and tested by [`distribution/build.py`](../distribution/README.md).
 
-Build the container from the repository root, because the presets are shared with the detector:
+The container image is built from the [`Dockerfile`](../Dockerfile) in the repository root and holds this server together with the detector it starts:
 
 ```sh
-docker build -f web/Dockerfile -t ai-detector-web .
+docker build -t ai-detector .
 ```
 
-The image serves port 3000 and reads `/data`. It cannot start a detector; `pnpm start` runs the same server without a container. A container cannot open the host's browser; the [Linux startup helper](../README.md#start-automatically-on-a-jetson-or-linux-desktop) does that at login.
+It serves port 3000 unless `PORT` says otherwise, and reads `/data`. `pnpm start` runs the same server without a container. A container cannot open the host's browser; the [Linux startup helper](../README.md#start-automatically-on-a-jetson-or-linux-desktop) does that at login.

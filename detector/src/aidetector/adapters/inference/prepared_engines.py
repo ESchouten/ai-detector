@@ -31,6 +31,11 @@ BUILD_TIMEOUT = 1800.0
 RETRY_DELAY = 86400.0
 
 
+def gpu_available() -> bool:
+    """Whether engines can be built and run at all in this process."""
+    return torch.cuda.is_available()
+
+
 class EnginePreparation:
     """Use cached engines now; build missing ones serially after monitoring opens."""
 

@@ -33,9 +33,9 @@ Install exactly one runtime extra per environment. They share the `onnxruntime` 
 | `--control-stdin` | Stops gracefully on a line `stop` or on EOF from the parent. |
 | `--log-level` | `WARNING` hides routine activity; `DEBUG` adds per-batch details. |
 
-**Executables and Docker.** [Releases](https://github.com/ESchouten/ai-detector/releases) carry platform builds that take the same flags; `--version` reports the build and runtime type. Docker runs the same module from `/data`: mount configuration and recordings there. [`example/compose.yml`](../example/compose.yml) runs the detector with the web interface. A package that passes its smoke test has not shown that every GPU provider works on every machine.
+**Executables and Docker.** [Releases](https://github.com/ESchouten/ai-detector/releases) carry platform builds that take the same flags; `--version` reports the build and runtime type. The [container image](../README.md#docker) holds the detector together with the web application that starts it; `docker run --rm IMAGE python3 -m aidetector …` runs the detector by itself from `/data`. A package that passes its smoke test has not shown that every GPU provider works on every machine.
 
-**Jetson.** JetPack 6 images are no longer built, and the generic ARM64 image is not qualified for Orin and JetPack 7.2. See [Jetson](MIGRATION.md#jetson).
+**Jetson.** The ARM64 image is for Orin and Thor with JetPack 7.2 and has not been checked on a board yet; JetPack 6 images are no longer built. See [Jetson](MIGRATION.md#jetson).
 
 **Stopping and exit codes.** Ctrl+C or SIGTERM stops acquisition, flushes eligible events and drains accepted deliveries. Exit `0` is success or a graceful stop, `1` an application, verification or delivery failure, `2` a configuration error, and `75` an Apple GPU error that a supervisor may answer with a restart. The detector does not restart itself.
 
@@ -132,7 +132,6 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 ### Runtime and health
 
 - `onnx.provider` requests an installed execution provider; `onnx.winml` (`true`) registers Windows ML providers in Windows ML builds; `onnx.opset` (`20`) is used for model export.
-- `runtime` (`auto`, `native` or `docker`) tells the complete application how to start this detector. The detector itself does not read it.
 - `health` takes a `url`, `method` (`GET`), `interval` (`60`), `timeout` (`5`), and optional `headers` and `body`. Failed pings are warnings.
 
 ## Working on it

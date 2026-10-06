@@ -31,11 +31,26 @@ Run `--check-config` against the saved file and correct what it reports. These a
 - A person's review is the optional `review` object in `metadata.json` (`validated`, `source`, `reviewed_at`), written by the web application. `validated` stays the validator's own result.
 - Status records for the launcher (`--status-json`) and live pictures (`--live-preview`) are versioned protocols between the detector and the web application of the same release. Deploy both from one release.
 
+## Docker
+
+There is one image now, `ghcr.io/eschouten/ai-detector`: the web application starts and supervises the detector inside it, so detector settings apply without restarting a container. The separate `ai-detector-web` image is no longer published, and the `ai-detector` image no longer runs the detector as its default command.
+
+To move an installation that used the two images:
+
+1. Stop it with `docker compose down`, and back up the data folder.
+2. Replace the Compose file with [`example/compose.yml`](../example/compose.yml) or, on a Jetson with JetPack 7.2, [`example/compose.jetson.yml`](../example/compose.jetson.yml). They have one service and use the host's network on port 80.
+3. Give the data folder to the image's user: `sudo chown -R 999:999 .` in that folder. The web image wrote its files as another user, which the single image cannot change.
+4. Start it with `docker compose up -d`.
+
+Running the detector alone still works by naming the command: `python3 -m aidetector`.
+
+The desktop application no longer offers to run its detector through Docker, and `runtime` is no longer a setting: remove it from `config.json` if it is there. On Linux with an NVIDIA GPU, use this image.
+
 ## Jetson
 
-JetPack 6 images are no longer built. Published `-jetpack6` images stay available and receive no updates; keep the existing image and `example/compose.jetson.yml` on a JetPack 6 host, and do not point it at the generic `latest` image.
+JetPack 6 images are no longer built. Published `-jetpack6` images stay available and receive no updates; keep the existing images and [`example/compose.jetpack6.yml`](../example/compose.jetpack6.yml) on a JetPack 6 host, and do not point it at the generic `latest` image.
 
-New Jetson work targets JetPack 7.2 and Python 3.12, but the generic ARM64 image is not qualified for Orin: Ultralytics' [Jetson guide](https://docs.ultralytics.com/guides/nvidia-jetson/) calls for separate validation and documents a TensorRT incompatibility in its ARM64 image. Before moving a farm installation, check model loading and export, GPU inference, several streams and a restart on that hardware, and back up the mounted settings and recordings.
+JetPack 7.2 runs the standard ARM64 CUDA 13 software on Orin and Thor, so the ARM64 image is built from plain Ubuntu 24.04 with the standard PyTorch build for CUDA 13, as Ultralytics' [Jetson guide](https://docs.ultralytics.com/guides/nvidia-jetson/) describes for a native installation; use it with [`example/compose.jetson.yml`](../example/compose.jetson.yml). It starts on PyTorch on the GPU and prepares TensorRT 10 engines in the background, taking them at the next start; without a GPU it says so in the log and detects on the processor. It has been built and run without a GPU only, so neither the GPU nor TensorRT has been seen working on a board: before moving a farm installation, check model loading, GPU inference, several streams and a restart on that hardware, and back up the mounted settings and recordings.
 
 ## Upgrade steps
 

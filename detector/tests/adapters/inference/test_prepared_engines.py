@@ -176,6 +176,7 @@ def test_monitoring_opens_both_detectors_before_starting_background_preparation(
 ):
     monkeypatch.setenv("TENSORRT_TEST_MODE", mode)
     monkeypatch.setattr(bootstrap, "TYPE", "cuda")
+    monkeypatch.setattr(prepared_engines, "gpu_available", lambda: True)
     monkeypatch.setattr(
         bootstrap,
         "inference_runtime",
@@ -597,3 +598,33 @@ def test_real_sdk_builds_and_runs_dynamic_engine_in_helper(tmp_path):
         assert all(
             np.isfinite(result.boxes.cpu().numpy().data).all() for result in results
         )
+
+
+def test_a_tensorrt_preference_without_a_gpu_detects_without_it(
+    tmp_path, gpu_builder, monkeypatch, caplog
+):
+    monkeypatch.setattr(bootstrap, "TYPE", "cuda")
+    monkeypatch.setattr(prepared_engines, "gpu_available", lambda: False)
+    monkeypatch.setattr(
+        bootstrap,
+        "inference_runtime",
+        lambda *args: nullcontext(InferenceOptions()),
+    )
+    YOLO("yolo26n.yaml").save(gpu_builder.source)
+    assert cv2.imwrite(str(tmp_path / "input.png"), np.zeros((64, 64, 3), np.uint8))
+    config = Config.model_validate(
+        {
+            "detectors": [
+                {
+                    "detection": {"source": "input.png"},
+                    "yolo": {"model": str(gpu_builder.source), "imgsz": 64},
+                }
+            ]
+        }
+    )
+    results = bootstrap.run_application(
+        config, tmp_path, tmp_path, prefer_tensorrt=True
+    )
+    assert len(results) == 1
+    assert gpu_builder.processes == []
+    assert "no NVIDIA GPU is available" in caplog.text

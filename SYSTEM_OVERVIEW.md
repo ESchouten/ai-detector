@@ -14,7 +14,7 @@ flowchart TB
     subgraph Installation["Installation on a PC or Jetson"]
         Web["Web application · SvelteKit<br/>Setup, settings and reviewing detections"]
         Config[("config.json")]
-        Detector["Python detector<br/>Local process or Docker"]
+        Detector["Python detector<br/>Started by the web application"]
         Archive[("Event archive<br/>Metadata, pictures and video")]
 
         Web -->|saves settings| Config
@@ -36,8 +36,8 @@ There are two ways to run these parts:
 
 | Installation | Who starts and stops the detector? | Applying settings |
 | --- | --- | --- |
-| Complete application download | The web application, through `ManagedDetector`; locally or through Docker | The running detector is restarted when settings are saved. |
-| Separate services with Compose, for example on a Jetson | Docker Compose and its restart policy | The detector must be restarted after a configuration change. |
+| Complete application download, or the container image | The web application, through `ManagedDetector` | The running detector is restarted when settings are saved. |
+| The web server and the detector started separately, as in development | Whoever started the detector | The detector must be restarted after a configuration change. |
 
 Closing a browser tab does not stop processing. Installing and starting automatically are described in the [user guide](README.md).
 

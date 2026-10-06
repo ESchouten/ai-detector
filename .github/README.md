@@ -1,11 +1,11 @@
 # Workflows
 
-Use **Application download** for desktop installers and their updates, and **Container releases** for separately managed Docker and Compose deployments.
+Use **Application download** for desktop installers and their updates, and **Container releases** for Docker and Compose deployments.
 
 | Workflow | Runs on | Does |
 | --- | --- | --- |
 | [Application download](workflows/application.yml) | `app/v*`, `app/test-*`, manual | Checks all three systems, builds the matching NVIDIA image and the native applications, tests the packages, then publishes signed official or preview updates. |
-| [Container releases](workflows/containers.yml) | `detector/v*`, `web/v*`, manual | Tests and publishes amd64 and arm64 detector and web images. |
+| [Container releases](workflows/containers.yml) | `app/v*`, manual | Tests and publishes the amd64 and arm64 image, which holds the web application and the detector it runs. |
 | [Detector Tests](workflows/detector-tests.yml) | Relevant pushes to `main` and pull requests, manual, and the two release workflows | Tests on three systems, branch coverage, architecture, schemas, the change report and domain mutation tests. |
 | [Web and setup tests](workflows/web-tests.yml) | The same | Unit tests on three systems; static checks, the production server and Compose checks on Linux. |
 | [Desktop distribution tests](workflows/distribution-tests.yml) | Relevant pushes to `main` and pull requests, manual | Native launchers, the compiled web process, installers and update packages. |

@@ -3,7 +3,7 @@ import { execFile } from 'node:child_process';
 import { once } from 'node:events';
 import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-import { tmpdir } from 'node:os';
+import os, { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { promisify } from 'node:util';
@@ -16,8 +16,10 @@ import {
 	connectionFailure
 } from '../src/lib/server/cameras/connection.ts';
 import {
+	camerasAt,
 	discoveredCameras,
 	discoverCameras,
+	neighbours,
 	resolveCameraStream
 } from '../src/lib/server/cameras/discovery.ts';
 import { CameraChecks } from '../src/lib/server/cameras/checks.ts';
@@ -408,7 +410,15 @@ test('ONVIF scopes with XML attributes and malformed display names still expose 
 	);
 });
 
+// One connection, on a network that is not a home or farm network, so nothing is asked directly.
+function oneConnection(t: TestContext) {
+	t.mock.method(os, 'networkInterfaces', () => ({
+		en0: [{ address: '192.0.2.10', family: 'IPv4', internal: false }]
+	}));
+}
+
 test('concurrent discovery shares one scan and releases the SDK error listener', async (t) => {
+	oneConnection(t);
 	const previous = onvif.Discovery.listenerCount('error');
 	let finish!: ProbeCallback;
 	const probe = t.mock.method(
@@ -433,6 +443,7 @@ test('concurrent discovery shares one scan and releases the SDK error listener',
 });
 
 test('a failed discovery start releases its listener and permits a new attempt', async (t) => {
+	oneConnection(t);
 	const previous = onvif.Discovery.listenerCount('error');
 	const probe = t.mock.method(onvif.Discovery, 'probe', () => {
 		throw new Error('Socket unavailable');
@@ -474,4 +485,61 @@ test('unwritable test storage reports repair guidance and keeps the original fai
 	t.mock.method(console, 'warn', () => {});
 	await assert.rejects(checks.check('rtsp://camera', ffmpeg, []), /data folder is writable/);
 	assert.equal(await readFile(occupied, 'utf8'), 'An existing file must not be overwritten.');
+});
+
+test('discovery asks on every connection of the computer', async (t) => {
+	t.mock.method(os, 'networkInterfaces', () => ({
+		lo0: [{ address: '127.0.0.1', family: 'IPv4', internal: true }],
+		ethernet: [{ address: '192.0.2.10', family: 'IPv4', internal: false }],
+		wifi: [
+			{ address: 'fe80::1', family: 'IPv6', internal: false },
+			{ address: '198.51.100.7', family: 'IPv4', internal: false }
+		]
+	}));
+	const probe = t.mock.method(
+		onvif.Discovery,
+		'probe',
+		(options?: DiscoveryProbeOptions | ProbeCallback, callback?: ProbeCallback) => {
+			assert.ok(callback && typeof options === 'object');
+			callback(
+				null,
+				options.device === 'wifi'
+					? [
+							{
+								probeMatches: {
+									probeMatch: { XAddrs: 'http://198.51.100.20/onvif/device_service' }
+								}
+							}
+						]
+					: []
+			);
+		}
+	);
+	assert.deepEqual((await discoverCameras()).cameras, [
+		{ address: 'http://198.51.100.20/onvif/device_service', name: '198.51.100.20' }
+	]);
+	assert.deepEqual(
+		probe.mock.calls.map(({ arguments: [options] }) => (options as DiscoveryProbeOptions).device),
+		['ethernet', 'wifi']
+	);
+});
+
+test('a camera that never announces itself is found by asking its address', async (t) => {
+	const camera = await server(t, (_req, res) =>
+		res.end('<Envelope><Body><GetSystemDateAndTimeResponse/></Body></Envelope>')
+	);
+	const other = await server(t, (_req, res) => res.end('<html>A printer</html>'));
+	const port = (address: string) => Number(new URL(address).port);
+	assert.deepEqual(await camerasAt(['127.0.0.1'], [port(other), port(camera), 1]), [
+		{ address: `http://127.0.0.1:${port(camera)}/onvif/device_service`, name: '127.0.0.1' }
+	]);
+	assert.deepEqual(await camerasAt(['127.0.0.1'], [port(other)]), []);
+});
+
+test('only the addresses beside this computer on a home or farm network are asked', () => {
+	const hosts = neighbours('192.168.1.115');
+	assert.equal(hosts.length, 253);
+	assert.ok(hosts.includes('192.168.1.27') && !hosts.includes('192.168.1.115'));
+	assert.deepEqual(neighbours('172.20.4.9').slice(0, 2), ['172.20.4.1', '172.20.4.2']);
+	assert.deepEqual(neighbours('203.0.113.5'), []);
 });

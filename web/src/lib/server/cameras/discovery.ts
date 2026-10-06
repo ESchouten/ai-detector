@@ -1,4 +1,6 @@
 import { Agent as HttpAgent } from 'node:http';
+import { connect } from 'node:net';
+import os from 'node:os';
 import { Agent as HttpsAgent } from 'node:https';
 import { promisify } from 'node:util';
 import onvif from 'onvif';
@@ -69,6 +71,85 @@ export function discoverCameras(): Promise<CameraDiscovery> {
 	return pendingDiscovery;
 }
 
+/** This computer's addresses on its networks, by connection. */
+function localAddresses(): { connection: string; address: string }[] {
+	return Object.entries(os.networkInterfaces()).flatMap(([connection, addresses]) =>
+		(addresses ?? [])
+			.filter(({ family, internal }) => family === /* @wc-ignore */ 'IPv4' && !internal)
+			.map(({ address }) => ({ connection, address }))
+	);
+}
+
+/** Ask every camera on one connection to announce itself; a computer often has several. */
+function probe(connection: string): Promise<unknown[]> {
+	return new Promise((resolve) => {
+		Discovery.probe({ device: connection, resolve: false, timeout: 5000 }, (_error, devices) => {
+			// Socket errors call back early; the SDK still closes its socket and returns devices at the deadline.
+			if (devices) resolve(devices);
+		});
+	});
+}
+
+/** The ports cameras and recorders serve ONVIF on: the standard one, then Reolink's and other makers' own. */
+const ONVIF_PORTS = [80, 8000, 8080, 2020, 8899];
+const DATE_REQUEST =
+	'<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"><s:Body><GetSystemDateAndTime xmlns="http://www.onvif.org/ver10/device/wsdl"/></s:Body></s:Envelope>';
+
+function open(host: string, port: number): Promise<boolean> {
+	return new Promise((resolve) => {
+		const socket = connect({ host, port, timeout: 500 });
+		const done = (result: boolean) => {
+			socket.destroy();
+			resolve(result);
+		};
+		socket.once('connect', () => done(true));
+		socket.once('timeout', () => done(false));
+		socket.once('error', () => done(false));
+	});
+}
+
+/** Whether an address answers the one ONVIF question that needs no login. */
+async function speaksOnvif(address: string): Promise<boolean> {
+	try {
+		const response = await fetch(address, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/soap+xml; charset=utf-8' },
+			body: DATE_REQUEST,
+			signal: AbortSignal.timeout(2000)
+		});
+		return (await response.text()).includes('GetSystemDateAndTimeResponse');
+	} catch {
+		return false;
+	}
+}
+
+/**
+ * The cameras among some addresses, found by asking each one directly. Announcements do not
+ * get through on every network: a firewall may drop them, and some cameras never answer the
+ * call, while they do answer when spoken to.
+ */
+export async function camerasAt(hosts: string[], ports = ONVIF_PORTS): Promise<DiscoveredCamera[]> {
+	const found = await Promise.all(
+		hosts.map(async (host) => {
+			for (const port of ports) {
+				const address = `http://${host}${port === 80 ? '' : `:${port}`}/onvif/device_service`;
+				if ((await open(host, port)) && (await speaksOnvif(address)))
+					return { address, name: host };
+			}
+		})
+	);
+	return found.filter((camera) => camera !== undefined);
+}
+
+/** The other addresses of a home or farm network this computer is on. */
+export function neighbours(address: string): string[] {
+	if (!/^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(address)) return [];
+	const network = address.slice(0, address.lastIndexOf('.'));
+	return Array.from({ length: 254 }, (_, index) => `${network}.${index + 1}`).filter(
+		(host) => host !== address
+	);
+}
+
 async function scanCameras(): Promise<CameraDiscovery> {
 	let incomplete = false;
 	const onError = () => {
@@ -76,13 +157,14 @@ async function scanCameras(): Promise<CameraDiscovery> {
 	};
 	Discovery.on('error', onError);
 	try {
-		const devices = await new Promise<unknown[]>((resolve) => {
-			Discovery.probe({ resolve: false, timeout: 5000 }, (_error, devices) => {
-				// Socket errors call back early; the SDK still closes its socket and returns devices at the deadline.
-				if (devices) resolve(devices);
-			});
-		});
-		const cameras = discoveredCameras(devices);
+		const local = localAddresses();
+		const [announced, asked] = await Promise.all([
+			Promise.all(local.map(({ connection }) => probe(connection))),
+			camerasAt(local.flatMap(({ address }) => neighbours(address)))
+		]);
+		const cameras = discoveredCameras(announced.flat());
+		const known = new Set(cameras.map(({ address }) => new URL(address).hostname));
+		cameras.push(...asked.filter(({ address }) => !known.has(new URL(address).hostname)));
 		return {
 			cameras,
 			message: incomplete

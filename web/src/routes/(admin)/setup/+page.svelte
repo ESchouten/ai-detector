@@ -136,6 +136,7 @@
 					originalLabel={edited?.meta.label ?? ''}
 					initial={edited?.detector}
 					initialPreset={edited?.meta.preset}
+					initialAutoUpdate={edited?.meta.autoUpdate !== false}
 					initialConnection={edited?.meta.llmConnection}
 					onDone={detectorSaved}
 					onCancel={detectors.length

@@ -29,14 +29,15 @@ export function saveDetector(
 		if (!settings) throw new ConfigurationError('Enter a question for AI verification.');
 		normalized = assignConnection(normalized, connection);
 	}
-	const meta = { ...app.detectors[index], ...input.meta };
-	if (!input.meta.llmConnection) delete meta.llmConnection;
-	if (
-		index >= 0 &&
+	const previous = app.detectors[index];
+	// A save that names no preset keeps the one the detector follows while its settings are the same.
+	const kept =
+		previous &&
 		!input.meta.preset &&
-		!isDeepStrictEqual(detectorSettings(config.detectors[index]), detectorSettings(normalized))
-	)
-		delete meta.preset;
+		isDeepStrictEqual(detectorSettings(config.detectors[index]), detectorSettings(normalized));
+	const meta = kept
+		? { ...input.meta, preset: previous.preset, autoUpdate: previous.autoUpdate }
+		: { ...input.meta };
 	if (meta.preset) meta.presetVersion = presetVersion(normalized);
 	else delete meta.presetVersion;
 	const position = index < 0 ? config.detectors.length : index;

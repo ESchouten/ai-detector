@@ -3741,10 +3741,6 @@ msgstr "Die Einstellungsdatei {0} ist beschädigt und kann nicht gelesen werden.
 msgid "This detector uses its own settings and does not get new models automatically. Choosing a preset replaces them."
 msgstr "Dieser Detektor verwendet eigene Einstellungen und erhält neue Modelle nicht automatisch. Wenn Sie eine Voreinstellung wählen, werden sie ersetzt."
 
-#: src/lib/components/detector-editor.svelte
-msgid "Choose a preset. It supplies everything needed to recognise that kind of event, and keeps this detector up to date with new models."
-msgstr "Wählen Sie eine Voreinstellung. Sie enthält alles, was nötig ist, um diese Art von Ereignis zu erkennen, und hält diesen Detektor mit neuen Modellen aktuell."
-
 #: src/lib/components/home-screen-hint.svelte
 msgid "Not now"
 msgstr "Nicht jetzt"
@@ -3830,7 +3826,7 @@ msgstr "Verknüpfung auf dem Startbildschirm"
 
 #: src/routes/(admin)/settings/+page.svelte
 msgid "Open your browser’s menu (⋮) and choose “Add to Home screen”. The shortcut opens AI Detector in the browser."
-msgstr "Öffne das Menü deines Browsers (⋮) und wähle „Zum Startbildschirm hinzufügen“. Die Verknüpfung öffnet AI Detector im Browser."
+msgstr "Öffnen Sie das Menü Ihres Browsers (⋮) und wählen Sie „Zum Startbildschirm hinzufügen“. Die Verknüpfung öffnet AI Detector im Browser."
 
 #: src/routes/(admin)/streams/+page.svelte
 msgid "View"
@@ -3899,3 +3895,15 @@ msgstr "Aufnahme abspielen: {0}"
 #: src/routes/(admin)/streams/camera-history.svelte
 msgid "Last hour"
 msgstr "Letzte Stunde"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Update automatically"
+msgstr "Automatisch aktualisieren"
+
+#: src/lib/components/detector-editor.svelte
+msgid "When a newer model is published for this preset, this detector takes it by itself, at start and once a day."
+msgstr "Erscheint für diese Voreinstellung ein neueres Modell, übernimmt dieser Detektor es von selbst, beim Start und einmal täglich."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
+msgstr "Wählen Sie eine Voreinstellung. Sie enthält alles, was nötig ist, um diese Art von Ereignis zu erkennen."

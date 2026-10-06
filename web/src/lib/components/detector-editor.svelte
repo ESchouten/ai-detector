@@ -14,6 +14,7 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
+	import { Switch } from '$lib/components/ui/switch';
 	import * as Field from '$lib/components/ui/field';
 	import * as RadioGroup from '$lib/components/ui/radio-group';
 	import * as Alert from '$lib/components/ui/alert';
@@ -51,6 +52,7 @@
 		originalLabel,
 		initial,
 		initialPreset,
+		initialAutoUpdate = true,
 		initialConnection,
 		onDone,
 		onCancel,
@@ -59,6 +61,7 @@
 		originalLabel: string;
 		initial?: DetectorConfig;
 		initialPreset?: string;
+		initialAutoUpdate?: boolean;
 		initialConnection?: string;
 		onDone: () => Promise<void>;
 		onCancel?: () => Promise<void>;
@@ -99,6 +102,7 @@
 	let keepDelivery = $state(untrack(() => Boolean(initial)));
 	let error = $state('');
 	let preset = $state(untrack(() => initialPreset ?? ''));
+	let autoUpdate = $state(untrack(() => initialAutoUpdate));
 	let presetSettings = $state(
 		untrack(() => (initial ? JSON.stringify(detectorSettings(initial)) : ''))
 	);
@@ -245,7 +249,7 @@
 				meta: detectorDraftMeta(
 					valid,
 					savedLabel,
-					{ id: preset, settings: presetSettings },
+					{ id: preset, settings: presetSettings, autoUpdate },
 					connection
 				)
 			}).updates(getDetectors(), getCameras());
@@ -298,8 +302,7 @@
 		<Field.Set>
 			<Field.Legend>What do you want to detect?</Field.Legend>
 			<Field.Description>
-				Choose a preset. It supplies everything needed to recognise that kind of event, and keeps
-				this detector up to date with new models.
+				Choose a preset. It supplies everything needed to recognise that kind of event.
 			</Field.Description>
 			{#if presets.length}
 				<RadioGroup.Root
@@ -320,6 +323,18 @@
 						</label>
 					{/each}
 				</RadioGroup.Root>
+			{/if}
+			{#if selectedPreset}
+				<Field.Field orientation="horizontal">
+					<Switch id="detector-auto-update" bind:checked={autoUpdate} disabled={pending} />
+					<Field.Content>
+						<Field.Label for="detector-auto-update">Update automatically</Field.Label>
+						<Field.Description>
+							When a newer model is published for this preset, this detector takes it by itself, at
+							start and once a day.
+						</Field.Description>
+					</Field.Content>
+				</Field.Field>
 			{/if}
 			{#if !selectedPreset && (initial || preset)}
 				<p class="text-sm text-muted-foreground">

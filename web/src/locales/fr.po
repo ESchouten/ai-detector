@@ -3755,10 +3755,6 @@ msgstr "Le fichier de paramètres {0} est endommagé et ne peut pas être lu."
 msgid "This detector uses its own settings and does not get new models automatically. Choosing a preset replaces them."
 msgstr "Ce détecteur utilise ses propres paramètres et ne reçoit pas automatiquement les nouveaux modèles. Choisir un préréglage les remplace."
 
-#: src/lib/components/detector-editor.svelte
-msgid "Choose a preset. It supplies everything needed to recognise that kind of event, and keeps this detector up to date with new models."
-msgstr "Choisissez un préréglage. Il fournit tout ce qu’il faut pour reconnaître ce type d’événement et tient ce détecteur à jour avec les nouveaux modèles."
-
 #: src/lib/components/home-screen-hint.svelte
 msgid "Not now"
 msgstr "Pas maintenant"
@@ -3913,3 +3909,15 @@ msgstr "Lire l’enregistrement : {0}"
 #: src/routes/(admin)/streams/camera-history.svelte
 msgid "Last hour"
 msgstr "Dernière heure"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Update automatically"
+msgstr "Mettre à jour automatiquement"
+
+#: src/lib/components/detector-editor.svelte
+msgid "When a newer model is published for this preset, this detector takes it by itself, at start and once a day."
+msgstr "Lorsqu’un modèle plus récent est publié pour ce préréglage, ce détecteur l’adopte de lui-même, au démarrage et une fois par jour."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
+msgstr "Choisissez un préréglage. Il fournit tout ce qu’il faut pour reconnaître ce type d’événement."

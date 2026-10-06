@@ -3741,10 +3741,6 @@ msgstr "Het instellingenbestand {0} is beschadigd en kan niet worden gelezen."
 msgid "This detector uses its own settings and does not get new models automatically. Choosing a preset replaces them."
 msgstr "Deze detector gebruikt eigen instellingen en krijgt nieuwe modellen niet vanzelf. Als je een voorinstelling kiest, worden die vervangen."
 
-#: src/lib/components/detector-editor.svelte
-msgid "Choose a preset. It supplies everything needed to recognise that kind of event, and keeps this detector up to date with new models."
-msgstr "Kies een voorinstelling. Die bevat alles wat nodig is om dat soort gebeurtenissen te herkennen, en zorgt dat deze detector nieuwe modellen vanzelf krijgt."
-
 #: src/lib/components/home-screen-hint.svelte
 msgid "Not now"
 msgstr "Niet nu"
@@ -3899,3 +3895,15 @@ msgstr "Opname afspelen: {0}"
 #: src/routes/(admin)/streams/camera-history.svelte
 msgid "Last hour"
 msgstr "Afgelopen uur"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Update automatically"
+msgstr "Automatisch bijwerken"
+
+#: src/lib/components/detector-editor.svelte
+msgid "When a newer model is published for this preset, this detector takes it by itself, at start and once a day."
+msgstr "Komt er voor deze voorinstelling een nieuwer model uit, dan neemt deze detector dat vanzelf over, bij het starten en één keer per dag."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
+msgstr "Kies een voorinstelling. Die bevat alles wat nodig is om dat soort gebeurtenissen te herkennen."

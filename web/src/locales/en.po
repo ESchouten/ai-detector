@@ -3741,10 +3741,6 @@ msgstr "The settings file {0} is damaged and cannot be read."
 msgid "This detector uses its own settings and does not get new models automatically. Choosing a preset replaces them."
 msgstr "This detector uses its own settings and does not get new models automatically. Choosing a preset replaces them."
 
-#: src/lib/components/detector-editor.svelte
-msgid "Choose a preset. It supplies everything needed to recognise that kind of event, and keeps this detector up to date with new models."
-msgstr "Choose a preset. It supplies everything needed to recognise that kind of event, and keeps this detector up to date with new models."
-
 #: src/lib/components/home-screen-hint.svelte
 msgid "Not now"
 msgstr "Not now"
@@ -3899,3 +3895,15 @@ msgstr "Play recording: {0}"
 #: src/routes/(admin)/streams/camera-history.svelte
 msgid "Last hour"
 msgstr "Last hour"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Update automatically"
+msgstr "Update automatically"
+
+#: src/lib/components/detector-editor.svelte
+msgid "When a newer model is published for this preset, this detector takes it by itself, at start and once a day."
+msgstr "When a newer model is published for this preset, this detector takes it by itself, at start and once a day."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
+msgstr "Choose a preset. It supplies everything needed to recognise that kind of event."

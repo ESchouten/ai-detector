@@ -43,6 +43,8 @@ export const detectorMeta = v.object({
 	preset: v.optional(text),
 	/** Which settings the preset gave, to tell whether the detector still follows it. */
 	presetVersion: v.optional(text),
+	/** Present only when the person switched off taking the preset's newer settings by itself. */
+	autoUpdate: v.optional(v.literal(false)),
 	llmConnection: v.optional(text)
 });
 export const cameraConnectionMeta = v.object({

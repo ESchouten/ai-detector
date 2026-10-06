@@ -757,6 +757,28 @@ test('a detector that follows a preset takes its new model and keeps what the pe
 	assert.deepEqual(await written(), saved);
 });
 
+test('a detector whose automatic updates are switched off keeps its model until they are on again', async (t) => {
+	const { store } = await fixture(t, { detectors: [] });
+	await addPresetDetector(store, { label: 'Barn', source }, 'cow-catcher');
+	const saved = (await store.read()).config.detectors[0];
+	const meta = { label: 'Barn', preset: 'cow-catcher' };
+	await store.saveDetector({
+		original: 'Barn',
+		detector: saved,
+		meta: { ...meta, autoUpdate: false }
+	});
+	const { presets, preset } = await presetsWithNewModel();
+	assert.deepEqual(newerPresets(await store.read(), presets), []);
+	assert.deepEqual(await store.followPresets(presets), []);
+	assert.deepEqual((await store.read()).config.detectors[0].yolo, saved.yolo);
+
+	// Saving without the setting switches them on again.
+	await store.saveDetector({ original: 'Barn', detector: saved, meta });
+	assert.equal('autoUpdate' in (await store.read()).app.detectors[0], false);
+	assert.deepEqual(await store.followPresets(presets), ['Barn']);
+	assert.deepEqual((await store.read()).config.detectors[0].yolo, preset.yolo);
+});
+
 test('detectors with their own settings, or a preset that is gone, are not changed by a new preset', async (t) => {
 	const { store } = await fixture(t, { detectors: [] });
 	await addPresetDetector(store, { label: 'Barn', source }, 'cow-catcher');

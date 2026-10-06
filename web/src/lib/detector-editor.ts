@@ -19,16 +19,18 @@ import type {
 export function detectorDraftMeta(
 	detector: DetectorConfig,
 	label: string,
-	preset: { id: string; settings: string },
+	preset: { id: string; settings: string; autoUpdate: boolean },
 	connection?: LlmConnection
 ): DetectorMeta {
 	const [verification] = detector.vlm ?? [];
+	const followed =
+		preset.id && JSON.stringify(detectorSettings(detector)) === preset.settings
+			? preset.id
+			: undefined;
 	return {
 		label,
-		preset:
-			preset.id && JSON.stringify(detectorSettings(detector)) === preset.settings
-				? preset.id
-				: undefined,
+		preset: followed,
+		autoUpdate: followed && !preset.autoUpdate ? false : undefined,
 		llmConnection:
 			connection && verification && connectionMatches(verification, connection)
 				? connection.label

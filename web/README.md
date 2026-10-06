@@ -23,6 +23,8 @@ Camera pictures show the latest detection boxes over live video; the boxes can l
 
 A detector made from a preset follows it. When a newer model is published for that preset, the detector takes it within a day or at the next start: monitoring restarts by itself and is interrupted while the model is downloaded and prepared. Cameras, alerts and Validator stay as you set them. For this the application asks GitHub once a day; without internet nothing changes.
 
+**Update automatically** in a detector's settings switches this off for that detector: it then keeps the model it has until you switch it on again or choose the preset anew.
+
 A detector whose detection settings you changed keeps them and is not updated. Choose the preset again to follow it.
 
 ### Recordings

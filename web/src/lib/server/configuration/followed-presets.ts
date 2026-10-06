@@ -44,20 +44,25 @@ export function forgetChangedPresets(document: Configuration): Configuration {
 export function newerPresets({ app }: Configuration, presets: DetectorPreset[]): DetectorPreset[] {
 	return presets.filter((preset) =>
 		app.detectors.some(
-			(meta) => meta.preset === preset.id && meta.presetVersion !== presetVersion(preset.detector)
+			(meta) =>
+				meta.preset === preset.id &&
+				meta.autoUpdate !== false &&
+				meta.presetVersion !== presetVersion(preset.detector)
 		)
 	);
 }
 
 /**
- * Give each detector that follows a preset the preset's current detection settings. Its cameras,
- * delivery and verification stay as saved. Returns the names of the detectors that changed.
+ * Give each detector that follows a preset the preset's current detection settings, unless the
+ * person switched that off for it. Its cameras, delivery and verification stay as saved. Returns
+ * the names of the detectors that changed.
  */
 export function followPresets({ config, app }: Configuration, presets: DetectorPreset[]): string[] {
 	const updated: string[] = [];
 	for (const [index, meta] of app.detectors.entries()) {
 		const preset = presets.find(({ id }) => id === meta.preset)?.detector;
-		if (!preset || presetVersion(preset) === meta.presetVersion) continue;
+		if (!preset || meta.autoUpdate === false || presetVersion(preset) === meta.presetVersion)
+			continue;
 		const saved = config.detectors[index];
 		if (!meta.presetVersion) {
 			// Saved before versions were recorded: it follows only if it has the preset's settings now.

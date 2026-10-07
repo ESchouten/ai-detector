@@ -69,6 +69,8 @@ function missing(error: unknown): boolean {
 interface Lease {
 	viewers: number;
 	pending: Promise<void>;
+	/** When the lease was last written; it is valid for twelve seconds from then. */
+	renewedAt: number;
 	timer?: ReturnType<typeof setInterval>;
 	error?: unknown;
 	renew: () => void;
@@ -79,6 +81,7 @@ function newLease(file: string): Lease {
 	const lease: Lease = {
 		viewers: 0,
 		pending: Promise.resolve(),
+		renewedAt: 0,
 		renew() {
 			lease.pending = lease.pending.then(async () => {
 				if (!lease.viewers) return;
@@ -91,8 +94,11 @@ function newLease(file: string): Lease {
 						{ fsync: false }
 					);
 					lease.error = undefined;
+					lease.renewedAt = Date.now();
 				} catch (error) {
-					lease.error = error;
+					// Windows refuses to replace the file at the moment the detector reads it. The
+					// lease on disk is still good then; only one that could not be kept is a failure.
+					if (Date.now() - lease.renewedAt > 9000) lease.error = error;
 				}
 			});
 		}
@@ -241,6 +247,10 @@ function previewStream(
 	signal: AbortSignal
 ): ReadableStream<Uint8Array> {
 	const encoder = new TextEncoder();
+	// Named here and not where they are used: the translation tool leaves text inside the nested
+	// functions without the means to translate it, and reading it there throws.
+	const notPublishing = 'The detector is no longer publishing live pictures.';
+	const unavailable = 'Live detection preview is unavailable. Close it and try again.';
 	let close: (cancelled?: boolean) => Promise<void> = async () => {};
 	return new ReadableStream({
 		start(controller) {
@@ -283,11 +293,7 @@ function previewStream(
 							target,
 							event:
 								!session && seen.has(targetKey(target))
-									? status(
-											target.rule,
-											'unavailable',
-											'The detector is no longer publishing live pictures.'
-										)
+									? status(target.rule, 'unavailable', notPublishing)
 									: await readPreview(directory, target.sourceKey, target.rule, session)
 						}))
 					);
@@ -299,7 +305,7 @@ function previewStream(
 					const data: LivePreviewStatus = {
 						version: 1,
 						state: 'unavailable',
-						message: 'Live detection preview is unavailable. Close it and try again.'
+						message: unavailable
 					};
 					controller.enqueue(encoder.encode(`event: status\ndata: ${JSON.stringify(data)}\n\n`));
 					await close();

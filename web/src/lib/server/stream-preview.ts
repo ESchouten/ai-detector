@@ -18,6 +18,10 @@ export function createPreviewStream(source: string, executable: string, signal: 
 				controller.close();
 			}
 		});
+	// Named here and not in the function that uses them: the translation tool leaves text inside
+	// a nested function without the means to translate it, and reading it there throws.
+	const stalled = 'Live stream stopped receiving frames.';
+	const unavailable = 'Live stream unavailable.';
 	const child = spawn(
 		executable,
 		[
@@ -141,9 +145,7 @@ export function createPreviewStream(source: string, executable: string, signal: 
 	function armReadTimeout(delay: number): void {
 		clearTimeout(readTimer);
 		readTimer = setTimeout(() => {
-			finish(
-				new Error(hadFrame ? 'Live stream stopped receiving frames.' : 'Live stream unavailable.')
-			);
+			finish(new Error(hadFrame ? stalled : unavailable));
 			void stop();
 		}, delay);
 	}

@@ -16,7 +16,6 @@ web/app.json
 web/detections
 web/models
 web/.env*
-!detector/
 !detector/pyproject.toml
 !detector/uv.lock
 !detector/README.md
@@ -24,7 +23,6 @@ web/.env*
 !detector/MIGRATION.md
 !detector/QUALITY.md
 !detector/LICENSE
-!detector/src/
 !detector/src/**
 detector/src/**/__pycache__
 detector/src/**/*.pyc

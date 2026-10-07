@@ -40,12 +40,14 @@ FROM --platform=linux/arm64 ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe3
 ENV PIP_BREAK_SYSTEM_PACKAGES=1 PIP_NO_CACHE_DIR=1
 RUN apt-get update \
     && apt-get install --yes --no-install-recommends ca-certificates libgl1 libglib2.0-0 python3 python3-pip \
-    && rm -rf /var/lib/apt/lists/* \
-    && pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cu130 \
-    && pip install onnx onnxslim \
-        https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxruntime_gpu-1.24.0-cp312-cp312-linux_aarch64.whl \
-    # TensorRT 10, the line JetPack supports; 11 does not run there.
-    && pip install --extra-index-url https://pypi.nvidia.com tensorrt-cu13==10.15.1.29
+    && rm -rf /var/lib/apt/lists/*
+# One layer each: a registry keeps what has arrived, so a download or upload that is cut off
+# repeats a few gigabytes at most, and a newer TensorRT replaces only its own layer.
+RUN pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cu130
+RUN pip install onnx onnxslim \
+        https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxruntime_gpu-1.24.0-cp312-cp312-linux_aarch64.whl
+# TensorRT 10, the line JetPack supports; 11 does not run there.
+RUN pip install --extra-index-url https://pypi.nvidia.com tensorrt-cu13==10.15.1.29
 
 FROM runtime-${TARGETARCH} AS runtime
 ARG TARGETARCH

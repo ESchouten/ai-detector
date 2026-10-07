@@ -205,7 +205,8 @@ export async function resolveCameraStream(
 		username: input.username,
 		password: input.password,
 		useSecure: secure,
-		timeout: 7000,
+		// A recorder with many channels can take well over ten seconds to list them.
+		timeout: 20000,
 		autoconnect: false,
 		agent
 	});

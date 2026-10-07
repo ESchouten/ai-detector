@@ -48,6 +48,8 @@ RUN pip install onnx onnxslim \
         https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxruntime_gpu-1.24.0-cp312-cp312-linux_aarch64.whl
 # TensorRT 10, the line JetPack supports; 11 does not run there.
 RUN pip install --extra-index-url https://pypi.nvidia.com tensorrt-cu13==10.15.1.29
+# NVIDIA's own base images say this; without it the NVIDIA runtime passes no GPU in.
+ENV NVIDIA_VISIBLE_DEVICES=all NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 FROM runtime-${TARGETARCH} AS runtime
 ARG TARGETARCH

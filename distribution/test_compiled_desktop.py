@@ -62,7 +62,6 @@ class CompiledDesktopTest(unittest.TestCase):
             json.dumps(
                 {
                     "detectors": [{"detection": {"source": "input.bmp"}}],
-                    "runtime": "native",
                 }
             )
         )

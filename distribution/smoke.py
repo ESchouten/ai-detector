@@ -88,7 +88,6 @@ def smoke(folder: Path) -> None:
                             "exporters": {"disk": {}},
                         }
                     ],
-                    "runtime": "native",
                 }
             ),
             encoding="utf-8",

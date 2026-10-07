@@ -221,6 +221,16 @@ class YoloDetector:
                 self._busy_ms / self._frames,
                 self._slowest_ms,
             )
+            if self._inference_scope is _mps_inference:
+                import torch
+
+                # The process total is what the Apple GPU limit is held against.
+                logger.info(
+                    "Apple GPU memory: %.0f MiB held by PyTorch, %.0f MiB by the "
+                    "whole process",
+                    torch.mps.current_allocated_memory() / 2**20,
+                    torch.mps.driver_allocated_memory() / 2**20,
+                )
             self._summarised_at = perf_counter()
             self._batches = self._frames = 0
             self._busy_ms = self._slowest_ms = 0.0

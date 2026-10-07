@@ -14,6 +14,27 @@ internal sealed class DesktopProcess(string executable, bool background) : IDisp
     private readonly CancellationTokenSource restart = new();
     public string ErrorMessage { get; private set; }
 
+    // What the web process said on its way out is the only trace of a crash, and a windowed
+    // launcher has no console to show it. The diagnostics download picks this file up.
+    private static readonly string LogPath = Path.Combine(
+        Environment.GetEnvironmentVariable("AIDETECTOR_DATA_DIR")
+            ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AI Detector"),
+        "logs", "launcher.log");
+
+    private static void Log(string line)
+    {
+        Console.Error.WriteLine(line);
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(LogPath));
+            var file = new FileInfo(LogPath);
+            if (file.Exists && file.Length > 1_000_000) file.Delete();
+            File.AppendAllText(LogPath, $"{DateTime.UtcNow:O} {line}{Environment.NewLine}");
+        }
+        catch (IOException) { /* A log that cannot be written must not stop the application. */ }
+        catch (UnauthorizedAccessException) { }
+    }
+
     public async Task<int> RunAsync(Action ready)
     {
         var delay = 2000;
@@ -25,10 +46,11 @@ internal sealed class DesktopProcess(string executable, bool background) : IDisp
             {
                 var code = await RunOnceAsync(ready, background || !first);
                 if (stopping) return code;
+                Log($"The web process ended by itself with exit code {code} (0x{code:X8}).");
             }
             catch (Exception error)
             {
-                Console.Error.WriteLine(error);
+                Log(error.ToString());
                 ErrorMessage = error.Message;
                 if (stopping) return 1;
             }
@@ -39,7 +61,7 @@ internal sealed class DesktopProcess(string executable, bool background) : IDisp
             }
             first = false;
             if (DateTime.UtcNow - startedAt >= TimeSpan.FromMinutes(10)) delay = 2000;
-            Console.Error.WriteLine($"AI Detector background process stopped; restarting in {delay / 1000} seconds.");
+            Log($"Restarting the web process in {delay / 1000} seconds.");
             try { await Task.Delay(delay, restart.Token); }
             catch (OperationCanceledException) { return 0; }
             delay = Math.Min(delay * 2, 30000);
@@ -80,7 +102,7 @@ internal sealed class DesktopProcess(string executable, bool background) : IDisp
         {
             if (line.StartsWith(prefix, StringComparison.Ordinal)) ErrorMessage = line.Substring(prefix.Length);
             if (line == "AI_DETECTOR_STOPPING") stopping = true;
-            Console.Error.WriteLine(line);
+            Log(line);
         }
     }
 

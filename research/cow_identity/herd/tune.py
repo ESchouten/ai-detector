@@ -25,10 +25,9 @@ FINAL_WITHHELD = (3, 4, 12)
 ENROLLABLE = (0, 1, 5, 6, 7, 8, 9, 10, 11, 13)
 
 
-def load_run(scores_path, frames_root, labels_root):
-    meta = json.loads(Path(scores_path).with_suffix(".json").read_text())
-    saved = np.load(Path(scores_path).with_suffix(".npz"))
-    track = json.loads(Path(meta["track"]).read_text())
+def tracked_run(track_path, frames_root, labels_root):
+    """A video's tracked boxes, paired with the publisher's animals."""
+    track = json.loads(Path(track_path).read_text())
     boxes = track["boxes"]
     video = track["video"]
     frames = [
@@ -41,13 +40,7 @@ def load_run(scores_path, frames_root, labels_root):
     )
     occupied = {box["seconds"] for box in boxes}
     return {
-        "name": Path(scores_path).name,
         "video": video,
-        "classes": saved["classes"].tolist(),
-        # No cow of another farm competes in the application: an empty last column.
-        "scores": np.concatenate(
-            [saved["scores"], np.full((len(saved["scores"]), 1), -1.0)], axis=1
-        ),
         "boxes": [{**box, "box": box["app_box"], "frame_size": box["app_size"]} for box in boxes],
         "empty": [float(step) for step in range(track["frames"]) if float(step) not in occupied],
         "infrared": boxes[0]["infrared"],
@@ -55,6 +48,22 @@ def load_run(scores_path, frames_root, labels_root):
         "visible": visible,
         "located": located,
         "around": around,
+    }
+
+
+def no_competitor(scores):
+    """No cow of another farm competes in the application: an empty last column."""
+    return np.concatenate([scores, np.full((len(scores), 1), -1.0)], axis=1)
+
+
+def load_run(scores_path, frames_root, labels_root):
+    meta = json.loads(Path(scores_path).with_suffix(".json").read_text())
+    saved = np.load(Path(scores_path).with_suffix(".npz"))
+    return {
+        **tracked_run(meta["track"], frames_root, labels_root),
+        "name": Path(scores_path).name,
+        "classes": saved["classes"].tolist(),
+        "scores": no_competitor(saved["scores"]),
         "meta": meta,
     }
 
@@ -155,7 +164,9 @@ def main():
         arguments.output.write_text(
             json.dumps(
                 {
-                    "runs": {run["name"]: run["meta"] | {"infrared": run["infrared"]} for run in runs},
+                    "runs": {
+                        run["name"]: run["meta"] | {"infrared": run["infrared"]} for run in runs
+                    },
                     "ignored": list(FINAL_WITHHELD),
                     "rows": rows,
                 },

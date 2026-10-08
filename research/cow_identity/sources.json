@@ -23,7 +23,7 @@
       "source": "https://huggingface.co/conservationxlabs/miewid-msv3",
       "revision": "4f1d7f2b521149e5fe34bb85f377248ce9971a7d",
       "weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
-      "license": "Local noncommercial experiment with existing official checkpoint; no redistribution",
+      "license": "None stated on the model card or in the publisher's repository (checked 2026-10-09); local noncommercial experiment with the official checkpoint, no redistribution",
       "preprocessing": "RGB bilinear square stretch 440, ImageNet normalization, EfficientNetV2 rw_m + learned GeM + BatchNorm, FP32 normalized embedding",
       "overlap": "Publisher describes wildlife training, complete identity-level overlap unknown"
     },
@@ -53,7 +53,7 @@
       "revision": "ec5cdd4cf16f75c73ad785a2f96fb97dbad4125a",
       "weights_source": "https://github.com/hkchengrex/Cutie/releases/download/v1.0/cutie-base-mega.pth",
       "weights_sha256": "9c05402ee36d3a356fb72715d263ba7e1ea06ad3bada48c1306491792da43023",
-      "preprocessing": "Official generic eval config, RGB0\u20131, FP32, shortestedge480, long-term memory enabled, mem_every5; reviewed research runner loads complete official checkpoint strictly.",
+      "preprocessing": "Official generic eval config, RGB0–1, FP32, shortestedge480, long-term memory enabled, mem_every5; reviewed research runner loads complete official checkpoint strictly.",
       "scope": "Separate noncommercial research-only manually initialized video tracking control; no application dependency or accuracy claim from initial smoke."
     }
   ],
@@ -67,5 +67,34 @@
     "detector_source": "https://github.com/ultralytics/assets",
     "fingerprints": "Full source-video, source-pickle, annotation NPZ and both model hashes recorded in runtime-smoke.json",
     "limitation": "Same-clip integration evidence only, not independent recognition accuracy"
+  },
+  "herd_learning": {
+    "purpose": "Learning a herd from its confirmed photographs (HERD_LEARNING.md)",
+    "evaluation": {
+      "name": "A tracking-by-classification approach for continuous individual monitoring of Holstein dairy cows in a free-stall barn",
+      "source": "https://doi.org/10.3929/ethz-c-000796658",
+      "license": "In Copyright - Non-Commercial Use Permitted (http://rightsstatements.org/page/InC-NC/1.0/)",
+      "use": "Tracking videos and identified crops for development, validation and test; nothing taught from it is distributed"
+    },
+    "cattle_starting_weights": {
+      "use": "DINOv2-small taught 26,236 photographs of 287 cows of other farms (herd/auxiliary.py, herd/pretrain.py); local file, not distributed",
+      "datasets": [
+        {
+          "name": "MmCows",
+          "source": "https://huggingface.co/datasets/neis-lab/mmcows",
+          "license": "CC BY-NC-SA 4.0"
+        },
+        {
+          "name": "MultiCamCows2024",
+          "source": "https://data.bris.ac.uk/data/dataset/2inu67jru7a6821kkgehxg3cv2",
+          "license": "Non-Commercial Government Licence for public sector information"
+        },
+        {
+          "name": "Cows2021",
+          "source": "https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7",
+          "license": "Non-Commercial Government Licence for public sector information"
+        }
+      ]
+    }
   }
 }

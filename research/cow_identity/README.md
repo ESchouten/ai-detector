@@ -9,7 +9,9 @@ Reliable unattended identification is not established yet.
 Two experimental paths currently exist. The **Cow Identity** preset collects
 photographs that a farmer confirms and then learns the herd from them;
 [Learning the herd](HERD_LEARNING.md) has its method, its frozen protocol and
-its results on held-out video, where it missed its coverage target at night. The explicit
+its results on held-out video, where it missed its coverage target at night. With
+such a detector on a camera, the recordings of that camera's other detectors,
+Cow Catcher's mounting recordings for one, carry the names of the cows in them. The explicit
 source-install `identity.mode="continuous"` path follows anonymous animals on
 one MPS camera and automatically retains bounded observations without a gallery.
 It does not yet read ear numbers, join separate visits or create permanent cow
@@ -210,7 +212,7 @@ Run the normal detector and web quality commands. Focused contracts are in `test
 3. Test only materially different adaptation hypotheses. The original 60-photo partial-backbone fine-tune, public metric head and external full-backbone adaptation are documented negative controls. The [dense temporal projection pilot](TEMPORAL_PROJECTION_PILOT.md) also fails: its fixed residual head achieves 5.09% early coverage at 91.67% precision; the fixed 96-view untrained bank achieves 1.20% at 72.22%. The completed [spatial-tail adaptation](SPATIAL_TAIL_PILOT.md) reduces naming coverage further to 0.37%. Better raw retrieval alone is insufficient. Anatomy-aligned coat comparison and readable ear numbers are separate current investigations, not production features.
 4. Keep seconds 3000 through the end closed until a new complete method is frozen. The earlier reserved panels are now exposed. Then perform a small independently labelled multi-day farm trial, including night, camera changes, arrivals, departures and restarts.
 5. Verify complete installer behaviour and camera throughput on each supported platform before wider deployment. Confirmed-herd backup/restore and background preparation already use the normal application flows.
-6. Associate reliably identified individual animals with behaviour events and add per-cow history only after identity reliability is established. Never treat predicted names as confirmed training labels.
+6. Behaviour events now carry the names of the cows recognised in them ([how, and how it was measured](HERD_LEARNING.md#names-on-another-rules-events)): on simulated events and one mounting clip, not yet on mounts with known cows. Measure that, and add per-cow history only after identity reliability is established. Never treat predicted names as confirmed training labels.
 
 ## Verification on 3 October 2026
 

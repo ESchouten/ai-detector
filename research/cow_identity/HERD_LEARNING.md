@@ -279,6 +279,8 @@ The clip was then played in a loop as a live camera to the whole application, wi
 
 So the mounting cow is named, and the mounted cow only sometimes: she is half hidden, her box breaks up, and boxes cannot tell her from a cow standing behind.
 
+**On mounting pictures of other barns.** MOUNT-Cattle, under the MIT licence, has pictures of mounts in other barns; no cow in them is known, so they show only where the boxes fall ([script](herd/mounting_boxes.py), [result](herd/results/mounting-boxes.json)). The mounting model found a mount in 146 of the first 450 pictures. In 143 of them one cow's box from the stock detector overlapped the mounting box by at least half: there too the mounting box is one cow's box. A second cow lay more than half inside it in 106 pictures and a third in 34. Many of these pictures are neighbouring frames of the same scenes. A cow standing close is therefore inside the box in about a quarter of single pictures, here as on the example, and is named with the event when that lasts.
+
 **Simulated on the barn videos.** No public mounting video has named cows. So the publisher's box of one animal stood in for an event's box, for every five seconds in which she stays annotated, and the names came from the application's runs of the validation and test videos through the detector's own code ([script](herd/event_names.py)). The test videos had been scored before. The rule was set on the mounting example; nothing was chosen on these four videos.
 
 | Video | Events | Framed cow named | Nobody named | Another cow named: inside the box | overlapping it | not there | Events on unknown cows | Of those, named |

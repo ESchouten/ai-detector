@@ -1,0 +1,13 @@
+{
+  "pictures": 450,
+  "pictures_with_a_mount": 146,
+  "a_cow_box_overlaps_the_mounting_box_by_half": 143,
+  "median_overlap_of_the_best_matching_cow_box": 0.847,
+  "cows_more_than_half_inside_the_mounting_box": {
+    "none": 2,
+    "one": 38,
+    "two": 72,
+    "three_or_more": 34
+  },
+  "median_share_inside_of_the_second_cow": 0.595
+}

@@ -95,6 +95,22 @@
           "license": "Non-Commercial Government Licence for public sector information"
         }
       ]
+    },
+    "cattle_starting_weights_any_use": {
+      "use": "DINOv2-small taught 10,639 parlour photographs of 105 cows (herd/auxiliary.py --any-use, herd/pretrain.py); local file, not distributed",
+      "datasets": [
+        {
+          "name": "SideViewCows2026",
+          "source": "https://zenodo.org/records/21605650",
+          "license": "CC BY 4.0"
+        }
+      ]
+    },
+    "mounting_pictures": {
+      "name": "MOUNT-Cattle",
+      "source": "https://huggingface.co/datasets/eelianafang/MOUNT-Cattle",
+      "license": "MIT",
+      "use": "Where cow boxes fall inside the mounting model's box (herd/mounting_boxes.py); no identities"
     }
   }
 }

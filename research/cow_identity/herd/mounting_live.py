@@ -51,7 +51,12 @@ def share_inside(box, outer):
 
 
 def confirm(clip, data, mounting_weights, detector_weights, width):
-    """Write the clip's cows into the data folder as a confirmed herd; photographs by name."""
+    """Write the clip's cows into the data folder as a confirmed herd.
+
+    Returns, by name, the number of photographs and how the cow's box lay
+    inside the mounting box in the pictures that had one: the median share, and
+    the share of pictures in which more than half of it was inside.
+    """
     mounting, animals = YOLO(str(mounting_weights)), YOLO(str(detector_weights))
     capture = cv2.VideoCapture(str(clip))
     crops, inside = defaultdict(list), defaultdict(list)
@@ -95,7 +100,16 @@ def confirm(clip, data, mounting_weights, detector_weights, width):
         herd.append(EnrolledIdentity(id=identifier(name), name=name, samples=tuple(samples)))
     catalog = Catalog(revision=1, identities=tuple(herd))
     (images.parent / "catalog.json").write_text(catalog.model_dump_json())
-    return {cow.name: len(cow.samples) for cow in herd}
+    return {
+        cow.name: {
+            "photographs": len(cow.samples),
+            "median_share_inside_the_mounting_box": round(median(inside[track] or [0]), 2),
+            "pictures_more_than_half_inside": round(
+                sum(share > 0.5 for share in inside[track]) / max(1, len(inside[track])), 2
+            ),
+        }
+        for cow, track in zip(herd, ranked, strict=True)
+    }
 
 
 def camera(clip):
@@ -190,7 +204,7 @@ def main():
         if datetime.fromisoformat(recording["start"]) >= ready[0]
     ]
     result = {
-        "confirmed_photographs": confirmed,
+        "confirmed": confirmed,
         "recordings_before_the_herd_was_ready": len(recordings) - len(named),
         "recordings": named,
     }

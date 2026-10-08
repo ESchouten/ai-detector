@@ -269,6 +269,29 @@ After scoring, the recorded similarities were replayed at other limits ([file](h
 - **No limit would have passed the night video.** Between 0.56 and 0.74 the share of animals named stays between 48% and 55%: at lower limits the strangers claim enrolled cows' names, and a contested name is taken from both. Two enrolled cows score no higher there than two of the strangers.
 - **More photographs raised the strangers too.** The test herds were taught from 3,753 and 6,092 photographs, the validation herds from 2,016 and 3,442. A stranger compared with more photographs finds closer ones. The limits were chosen on smaller herds of photographs than they were tested on, and how they should move with the number of photographs was not measured.
 
+## Names on another rule's events
+
+Added after the test. A rule that detects behaviour, such as Cow Catcher's mounting model, boxes a scene and knows no animal. When a Cow Identity rule watches the same camera, the other rules' events now take the names of the cows that were inside their boxes. A cow counts when more than half of her box lay inside the event's box, in most of the pictures in which she was recognised while the event lasted and in at least two. Each of her boxes is compared with the event's box of the same moment, to within a second, because animals move.
+
+**On the mounting example.** The repository has one mounting clip of eleven seconds. The mounting model's box is the mounting cow's own: her box lies 93% inside it. The mounted cow is found in pieces underneath and lies 69% inside, with more than half inside in three quarters of the pictures. A neighbour standing behind lies 44% inside, with more than half in a quarter of the pictures.
+
+The clip was then played in a loop as a live camera to the whole application, with a Cow Catcher and a Cow Identity detector on it and eight of its cows confirmed from the clip itself ([script](herd/mounting_live.py), [result](herd/results/mounting-live.json)). That shows the path from camera to recording; recognising cows from their own pictures through the published encoder is no test of recognition. All six mounting recordings made once the herd was loaded named the mounting cow, three also the mounted cow, who is "Cow 2" in the result, and none a neighbour. A first version of the rule asked for 70% inside in two pictures within five seconds of the event: it named the neighbour in 11 of 15 recordings, which is why the rule now compares the same moment and asks for most of the time.
+
+So the mounting cow is named, and the mounted cow only sometimes: she is half hidden, her box breaks up, and boxes cannot tell her from a cow standing behind.
+
+**Simulated on the barn videos.** No public mounting video has named cows. So the publisher's box of one animal stood in for an event's box, for every five seconds in which she stays annotated, and the names came from the application's runs of the validation and test videos through the detector's own code ([script](herd/event_names.py)). The test videos had been scored before. The rule was set on the mounting example; nothing was chosen on these four videos.
+
+| Video | Events | Framed cow named | Nobody named | Another cow named: inside the box | overlapping it | not there | Events on unknown cows | Of those, named |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1, day, validation | 464 | 333 (72%) | 131 | 5 | 1 | 0 | 150 | 0 |
+| 2, night, validation | 226 | 180 (80%) | 31 | 15 | 0 | 0 | 101 | 0 |
+| 5, day, test | 2,954 | 2,235 (76%) | 716 | 2 | 0 | 13 | 432 | 1 |
+| 6, night, test | 4,445 | 2,371 (53%) | 2,070 | 15 | 10 | 1 | 1,341 | 35 |
+
+Over all 10,113 events, 14 carried the name of a cow who was not at the event's box at all: a wrong name. In 29 a real neighbour was named whose box, as the publisher drew it, lay mostly outside, and in 55 a cow who was inside. Every name on an event with an unknown cow belonged to an enrolled cow who really stood at that box. Events of three and of ten seconds give the same picture ([files](herd/results/)). How often the framed cow is named follows the share of animals the identity rule names at all.
+
+This simulates the boxes, not the behaviour. The cows in it stand, walk and lie as in their confirmed photographs. A mounting cow rears up and hides half of the other, and a tracker confuses animals that overlap, so on real mounts fewer names and more wrong ones are to be expected. That has not been measured.
+
 ## Limits
 
 - **One barn.** Thirteen Holstein cows, fixed cameras, three weeks. Nothing here says how the method does on another farm, breed, herd size or camera position.
@@ -279,6 +302,7 @@ After scoring, the recorded similarities were replayed at other limits ([file](h
 - **The limits depend on how many photographs are confirmed.** They were set with two to three and a half thousand and held, narrowly, with four to six thousand. Nothing here says where they belong for a herd with fewer or more.
 - **Names on animals the publisher did not box cannot be judged.** They are left out of the precision and counted in the conservative one.
 - **Learning needs a GPU and time.** After every change to the confirmed photographs the networks are taught again, which takes ten minutes to half an hour on an Apple GPU, and no name is shown meanwhile. The largest stock detector and the four networks together take about half a second per picture there.
+- **Names on other rules' events were simulated.** No mounting video with known cows was available; see [above](#names-on-another-rules-events).
 - **Weights.** The cattle starting weights were taught from datasets published for non-commercial research and are not hosted anywhere yet; the preset names an address that does not exist. MIEWid is downloaded from its publisher.
 - **Held out, not untouched, and now used.** Earlier work in this repository had scored another method on short windows of the test videos. The development figures for the second kind of network came from a trial script, not the application's code; the validation and test figures come from the application's code. Both test videos have now been seen by this method: a later version cannot be tested on them as on unseen video.
 
@@ -308,4 +332,4 @@ $python $herd/report.py $herd/results/test-video6.json $herd/results/test-video5
   --protocol $herd/protocol.json --output $herd/results/test.json
 ```
 
-The cattle starting weights come from [`auxiliary.py`](herd/auxiliary.py), which gathers the other farms' photographs, and [`pretrain.py`](herd/pretrain.py). Development used [`app_track.py`](herd/app_track.py) and [`app_scores.py`](herd/app_scores.py) for the rotations (`--either-side`), [`tune.py`](herd/tune.py) for the rules, [`app_localization.py`](herd/app_localization.py) for the detectors and [`similarity_study.py`](herd/similarity_study.py) for the ways of scoring. [`app_smoke.py`](herd/app_smoke.py) starts the whole application on a short clip. The tests beside the scripts run with `pytest` in that folder.
+The cattle starting weights come from [`auxiliary.py`](herd/auxiliary.py), which gathers the other farms' photographs, and [`pretrain.py`](herd/pretrain.py). Development used [`app_track.py`](herd/app_track.py) and [`app_scores.py`](herd/app_scores.py) for the rotations (`--either-side`), [`tune.py`](herd/tune.py) for the rules, [`app_localization.py`](herd/app_localization.py) for the detectors and [`similarity_study.py`](herd/similarity_study.py) for the ways of scoring. [`app_smoke.py`](herd/app_smoke.py) starts the whole application on a short clip. [`event_names.py`](herd/event_names.py) simulates the names on another rule's events from a run that `app_run.py` wrote, and [`mounting_live.py`](herd/mounting_live.py) plays the mounting example to the whole application as a camera. The tests beside the scripts run with `pytest` in that folder.

@@ -1,0 +1,60 @@
+{
+  "confirmed_photographs": {
+    "Mounting cow": 68,
+    "Cow 2": 54,
+    "Cow 3": 18,
+    "Cow 4": 68,
+    "Cow 5": 68,
+    "Cow 6": 68,
+    "Cow 7": 68,
+    "Cow 8": 68
+  },
+  "recordings_before_the_herd_was_ready": 3,
+  "recordings": [
+    {
+      "start": "2026-10-09T00:09:48.857468",
+      "seconds": 27.6,
+      "names": [
+        "Mounting cow",
+        "Cow 2"
+      ]
+    },
+    {
+      "start": "2026-10-09T00:10:21.486609",
+      "seconds": 17.8,
+      "names": [
+        "Mounting cow"
+      ]
+    },
+    {
+      "start": "2026-10-09T00:10:44.287368",
+      "seconds": 6.0,
+      "names": [
+        "Mounting cow",
+        "Cow 2"
+      ]
+    },
+    {
+      "start": "2026-10-09T00:10:55.363817",
+      "seconds": 6.2,
+      "names": [
+        "Mounting cow"
+      ]
+    },
+    {
+      "start": "2026-10-09T00:11:06.655953",
+      "seconds": 50.0,
+      "names": [
+        "Mounting cow",
+        "Cow 2"
+      ]
+    },
+    {
+      "start": "2026-10-09T00:11:56.731005",
+      "seconds": 12.8,
+      "names": [
+        "Mounting cow"
+      ]
+    }
+  ]
+}

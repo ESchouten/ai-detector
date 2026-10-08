@@ -1,0 +1,65 @@
+{
+  "video": "video1",
+  "events_of_seconds": {
+    "3": {
+      "enrolled": {
+        "events": 699,
+        "framed_animal_named": 485,
+        "nobody_named": 214,
+        "enrolled_animal_inside_her_box": 26,
+        "another_named_who_was_inside": 5,
+        "another_named_who_overlapped": 1,
+        "another_named_who_was_not_there": 0
+      },
+      "stranger": {
+        "events": 225,
+        "framed_animal_named": 0,
+        "nobody_named": 225,
+        "enrolled_animal_inside_her_box": 8,
+        "another_named_who_was_inside": 0,
+        "another_named_who_overlapped": 0,
+        "another_named_who_was_not_there": 0
+      }
+    },
+    "5": {
+      "enrolled": {
+        "events": 464,
+        "framed_animal_named": 333,
+        "nobody_named": 131,
+        "enrolled_animal_inside_her_box": 18,
+        "another_named_who_was_inside": 5,
+        "another_named_who_overlapped": 1,
+        "another_named_who_was_not_there": 0
+      },
+      "stranger": {
+        "events": 150,
+        "framed_animal_named": 0,
+        "nobody_named": 150,
+        "enrolled_animal_inside_her_box": 5,
+        "another_named_who_was_inside": 0,
+        "another_named_who_overlapped": 0,
+        "another_named_who_was_not_there": 0
+      }
+    },
+    "10": {
+      "enrolled": {
+        "events": 251,
+        "framed_animal_named": 184,
+        "nobody_named": 67,
+        "enrolled_animal_inside_her_box": 10,
+        "another_named_who_was_inside": 2,
+        "another_named_who_overlapped": 1,
+        "another_named_who_was_not_there": 0
+      },
+      "stranger": {
+        "events": 81,
+        "framed_animal_named": 0,
+        "nobody_named": 81,
+        "enrolled_animal_inside_her_box": 2,
+        "another_named_who_was_inside": 0,
+        "another_named_who_overlapped": 0,
+        "another_named_who_was_not_there": 0
+      }
+    }
+  }
+}

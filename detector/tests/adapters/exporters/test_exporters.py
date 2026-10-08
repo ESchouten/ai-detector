@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 from datetime import datetime
 
 import cv2
@@ -16,6 +17,7 @@ from aidetector.configuration import TelegramConfig, WebhookConfig
 from aidetector.domain.models import (
     DetectionEvent,
     EventResult,
+    IdentityMatch,
     Observation,
     ValidationResult,
     ValidationStatus,
@@ -84,6 +86,28 @@ def test_webhook_base64_includes_metadata_and_selected_media(result, requests_se
     assert request["json"]["image"].startswith("/9j/")
     assert "crop" not in request["json"]
     assert request["headers"] == {"X-Test": "value", "Authorization": "secret"}
+
+
+def test_recognised_individuals_are_named_in_the_alert_and_the_webhook(
+    result, requests_sent
+):
+    named = replace(
+        result,
+        seen=(IdentityMatch("cow-1", "Bella"), IdentityMatch("cow-2", "4512")),
+    )
+    TelegramExporter(
+        TelegramConfig(token="token", chat="chat", include_video=False), EventMedia()
+    ).export(named)
+    WebhookExporter(
+        WebhookConfig(url="https://example.test", data_type="base64"), EventMedia()
+    ).export(named)
+    WebhookExporter(
+        WebhookConfig(url="https://example.test", data_type="base64"), EventMedia()
+    ).export(result)
+
+    assert requests_sent[0][2]["data"]["text"] == "90%\n0 second(s)\nBella, 4512"
+    assert requests_sent[1][2]["json"]["identities"] == ["Bella", "4512"]
+    assert requests_sent[2][2]["json"]["identities"] == []
 
 
 def test_webhook_multipart_uses_matching_file_names(result, requests_sent):

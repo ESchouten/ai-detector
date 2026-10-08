@@ -1,4 +1,5 @@
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass
 from uuid import uuid4
 
@@ -12,12 +13,18 @@ from aidetector.application.status import ReportStatus, StatusEvent, ignore_stat
 from aidetector.domain.models import (
     DetectionEvent,
     EventResult,
+    IdentityMatch,
     ValidationResult,
     ValidationStatus,
 )
 from aidetector.domain.policy import Cooldown, ExportPolicy
 
 logger = logging.getLogger(__name__)
+NameIndividuals = Callable[[DetectionEvent], tuple[IdentityMatch, ...]]
+
+
+def name_nobody(event: DetectionEvent) -> tuple[IdentityMatch, ...]:
+    return ()
 
 
 @dataclass(frozen=True)
@@ -53,11 +60,13 @@ class EventDelivery:
         cooldown: Cooldown,
         validator: EventValidator | None = None,
         report_status: ReportStatus = ignore_status,
+        name_individuals: NameIndividuals = name_nobody,
     ):
         self.destinations = destinations
         self.cooldown = cooldown
         self.validator = validator
         self.report_status = report_status
+        self.name_individuals = name_individuals
 
     def deliver(self, event: DetectionEvent) -> DeliveryReport:
         logger.info(
@@ -70,9 +79,11 @@ class EventDelivery:
             logger.info("Event skipped: cooldown is still active")
             return DeliveryReport(None)
 
+        # Before validation: what was seen around the event is kept only briefly.
+        seen = self.name_individuals(event)
         validation = self._validate(event)
         logger.info("Event validation: %s", validation.status.value)
-        result = EventResult(event, validation, uuid4().hex)
+        result = EventResult(event, validation, uuid4().hex, seen)
         self.cooldown.record(result)
         delivered: list[str] = []
         failures: list[DeliveryFailure] = []

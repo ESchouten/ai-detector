@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { clipLength, dayHeading, gigabytes, percent, plural } from '../src/lib/format.ts';
-import { recordingVerdict } from '../src/lib/detections.ts';
+import { recordingNames, recordingVerdict } from '../src/lib/detections.ts';
 
 test('recent days read as words and older days keep their date', () => {
 	const now = new Date(2026, 9, 3, 21, 30);
@@ -64,4 +64,19 @@ test('a recording shows who decided its outcome, and a failed AI check is not a 
 		recordingVerdict({ stage: 'unvalidated', review: null, validation_error: 'Timed out' }),
 		{ tone: 'warn', label: 'AI check failed', source: 'Not checked', detail: 'Timed out' }
 	);
+});
+
+test('a recording lists the individuals recognised in it by name', () => {
+	assert.equal(
+		recordingNames({
+			identities: [
+				{ id: 'a', name: 'Bella', similarity: 0.81 },
+				{ id: 'b', name: '4512' }
+			]
+		}),
+		'Bella, 4512'
+	);
+	assert.equal(recordingNames({ identities: [] }), '');
+	// Recordings made before individuals were recognised carry no list.
+	assert.equal(recordingNames({}), '');
 });

@@ -14,7 +14,7 @@ class CropMetadata(BaseModel):
 
 
 class IdentityMetadata(BaseModel):
-    """Matched individual visible in the event's best observation."""
+    """A recognised individual in the event, by this rule or another on that camera."""
 
     id: str
     name: str | None = None
@@ -75,11 +75,11 @@ class EventMetadata(BaseModel):
             validation_error=result.validation.error,
             identities=[
                 IdentityMetadata(
-                    id=box.identity.identity_id,
-                    name=box.identity.name,
-                    similarity=box.identity.similarity,
+                    id=identity.identity_id,
+                    name=identity.name,
+                    similarity=identity.similarity,
                 )
-                for box in best.boxes
-                if box.identity is not None and box.identity.identity_id is not None
+                for identity in result.identities
+                if identity.identity_id is not None
             ],
         )

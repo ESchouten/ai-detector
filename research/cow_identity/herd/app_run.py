@@ -58,7 +58,7 @@ class Immediately(Executor):
 def detector_config(preset, detector_weights, source=SOURCE + ".mp4"):
     """The shipped preset, with its detector model taken from local disk."""
     settings = json.loads(Path(preset).read_text())
-    settings["detection"]["source"] = str(source)
+    settings.setdefault("detection", {})["source"] = str(source)
     settings["yolo"]["model"] = str(Path(detector_weights).resolve())
     return settings
 

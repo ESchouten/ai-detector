@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Play } from '@lucide/svelte';
 	import Pill from '$lib/components/pill.svelte';
-	import { recordingVerdict, type Detection } from '$lib/detections';
+	import { recordingNames, recordingVerdict, type Detection } from '$lib/detections';
 	import { clipLength, percent, timeOfDay } from '$lib/format';
 	import ReviewButtons from './review-buttons.svelte';
 	import { categoryName, recordingMedia } from './media';
@@ -18,6 +18,7 @@
 		onreview: (entry: Detection) => void;
 	} = $props();
 	const verdict = $derived(recordingVerdict(entry));
+	const names = $derived(recordingNames(entry));
 	const time = $derived(timeOfDay(entry.start));
 	const dismissed = $derived(entry.stage === 'rejected');
 </script>
@@ -64,6 +65,7 @@
 					<Pill tone="warn" title={verdict.detail}>{verdict.label}</Pill>
 				{/if}
 			</div>
+			{#if names}<p class="text-sm break-words">{names}</p>{/if}
 			<!-- Separate pieces, so each is a whole phrase to translate; the gaps supply the spaces. -->
 			<p class="flex flex-wrap gap-x-1 text-xs text-muted-foreground">
 				{#if verdict}<span>{verdict.source}</span><span aria-hidden="true">·</span>{/if}

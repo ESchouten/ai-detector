@@ -30,6 +30,7 @@ A detector whose detection settings you changed keeps them and is not updated. C
 ### Recordings
 
 - Selecting a recording opens a viewer; the arrow keys step through recordings.
+- A recording shows the names of the cows that were recognised in it, when a [Cow Identity](#herd-experimental) detector watches the same camera. On a mounting recording that is the cow that mounts, and sometimes the one underneath or one standing close behind. No name means that no cow was recognised, not that it was an unknown one.
 - The thumbs record your own verdict. Pressing your choice again removes it and restores the Validator's result.
 - The chips filter by category and by result; pressing a chosen chip clears it.
 - The bin in the viewer deletes that recording from the computer, after asking once.

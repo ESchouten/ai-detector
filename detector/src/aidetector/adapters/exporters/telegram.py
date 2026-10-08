@@ -13,7 +13,11 @@ from aidetector.domain.models import EventResult
 def _caption(result: EventResult) -> str:
     validated = result.validation.validated
     status = " ✅" if validated is True else " ❌" if validated is False else ""
-    return f"{result.event.best.score:.0%}{status}\n{round(result.event.duration)} second(s)"
+    names = ", ".join(identity.name for identity in result.identities if identity.name)
+    return (
+        f"{result.event.best.score:.0%}{status}\n{round(result.event.duration)} second(s)"
+        + (f"\n{names}" if names else "")
+    )
 
 
 def _review_buttons(result: EventResult) -> str:

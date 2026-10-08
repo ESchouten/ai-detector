@@ -49,7 +49,7 @@ export interface CropMetadata {
 	[k: string]: unknown;
 }
 /**
- * Matched individual visible in the event's best observation.
+ * A recognised individual in the event, by this rule or another on that camera.
  */
 export interface IdentityMetadata {
 	id: Id;

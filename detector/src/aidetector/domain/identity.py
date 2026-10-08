@@ -8,6 +8,10 @@ from typing import cast
 
 from aidetector.domain.models import IdentityMatch
 
+# Left, top, right and bottom as fractions of the picture: rules may analyse
+# one camera at different sizes.
+Region = tuple[float, float, float, float]
+
 
 def choose_identity(
     scores: Sequence[IdentityMatch], min_similarity: float, min_margin: float
@@ -143,3 +147,64 @@ class TrackAgreement:
         self._tracks = {
             key: state for key, state in self._tracks.items() if key[0] != source
         }
+
+
+@dataclass(frozen=True)
+class Sighting:
+    """A recognised individual at one moment, and where in the picture."""
+
+    at: datetime
+    identity: IdentityMatch
+    region: Region
+
+
+def _share_inside(inner: Region, outer: Region) -> float:
+    width = min(inner[2], outer[2]) - max(inner[0], outer[0])
+    height = min(inner[3], outer[3]) - max(inner[1], outer[1])
+    area = (inner[2] - inner[0]) * (inner[3] - inner[1])
+    return max(0.0, width) * max(0.0, height) / area
+
+
+def individuals_in_event(
+    moments: Sequence[tuple[datetime, Sequence[Region]]],
+    sightings: Sequence[Sighting],
+    inside: float = 0.5,
+    seen: int = 2,
+    apart: float = 1.0,
+) -> tuple[IdentityMatch, ...]:
+    """The individuals who were inside an event's boxes while it lasted, most present first.
+
+    `moments` are in time order. A sighting is held against the event's moment
+    nearest in time, and only when the two are at most `apart` seconds apart,
+    because animals move. The individual was inside when more than `inside` of
+    its box lay within one of that moment's boxes. It is named when that holds
+    for most of its sightings and for at least `seen` of them, so that an
+    animal walking past or standing behind is not named with the event.
+    """
+    if not moments:
+        return ()
+    held: Counter[str] = Counter()
+    within: Counter[str] = Counter()
+    presence: Counter[str] = Counter()
+    latest: dict[str, IdentityMatch] = {}
+    position = 0
+    for sighting in sorted(sightings, key=lambda sighting: sighting.at):
+        while position + 1 < len(moments) and abs(
+            moments[position + 1][0] - sighting.at
+        ) <= abs(moments[position][0] - sighting.at):
+            position += 1
+        at, regions = moments[position]
+        if abs((at - sighting.at).total_seconds()) > apart:
+            continue
+        identity_id = cast(str, sighting.identity.identity_id)
+        share = max(_share_inside(sighting.region, region) for region in regions)
+        held[identity_id] += 1
+        latest[identity_id] = sighting.identity
+        if share > inside:
+            within[identity_id] += 1
+            presence[identity_id] += share
+    return tuple(
+        latest[identity_id]
+        for identity_id, _ in presence.most_common()
+        if within[identity_id] >= seen and 2 * within[identity_id] > held[identity_id]
+    )

@@ -49,13 +49,16 @@ def test_archive_retains_only_matched_individuals_from_the_best_observation(tmp_
         DetectionEvent("camera", (earlier, best)),
         ValidationResult(ValidationStatus.UNVALIDATED),
         id="a" * 32,
+        seen=(IdentityMatch("cow-7", "Daisy"),),
     )
     DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(result)
     [metadata_path] = list(tmp_path.glob("cow/unvalidated/*/metadata.json"))
     metadata = EventMetadata.model_validate_json(metadata_path.read_text())
 
+    # Its own recognised box, then the individual another rule saw in the event.
     assert [identity.model_dump() for identity in metadata.identities] == [
-        {"id": "cow-42", "name": "Bella", "similarity": 0.94}
+        {"id": "cow-42", "name": "Bella", "similarity": 0.94},
+        {"id": "cow-7", "name": "Daisy", "similarity": None},
     ]
     assert metadata.crop.model_dump() == {"x1": 0, "y1": 0, "x2": 4, "y2": 4}
     legacy = metadata.model_dump(exclude={"identities"})

@@ -8,6 +8,7 @@ from aidetector.application.delivery import Destination, EventDelivery
 from aidetector.application.ports import DeliveryError, ValidationUnavailable
 from aidetector.domain.models import (
     DetectionEvent,
+    IdentityMatch,
     Observation,
     ValidationResult,
     ValidationStatus,
@@ -45,6 +46,27 @@ class Validator:
         if isinstance(self.result, Exception):
             raise self.result
         return ValidationResult(self.result)
+
+
+def test_an_event_is_delivered_with_the_individuals_named_for_it():
+    bella = IdentityMatch("cow-1", "Bella")
+    named, unnamed = RecordingExporter(), RecordingExporter()
+    asked = []
+
+    def name(event):
+        asked.append(event)
+        return (bella,)
+
+    EventDelivery(
+        (Destination("disk", named, ExportPolicy()),), Cooldown(), name_individuals=name
+    ).deliver(event())
+    EventDelivery((Destination("disk", unnamed, ExportPolicy()),), Cooldown()).deliver(
+        event()
+    )
+
+    assert asked == [named.results[0].event]
+    assert named.results[0].identities == (bella,)
+    assert unnamed.results[0].identities == ()
 
 
 def test_event_identity_is_shared_across_destinations_and_unique_per_delivery():

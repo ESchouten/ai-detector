@@ -33,6 +33,9 @@ class WebhookExporter:
             "timestamp": event.best.date.isoformat(),
             "duration": event.duration,
             "validated": result.validation.validated,
+            "identities": [
+                identity.name for identity in result.identities if identity.name
+            ],
         }
         try:
             attachments = self.media.attachments(

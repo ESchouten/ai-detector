@@ -133,6 +133,11 @@ export function recordingVerdict(
 	};
 }
 
+/** The individuals recognised in a recording, as they are named on the Herd page. */
+export function recordingNames(entry: Pick<Detection, 'identities'>): string {
+	return (entry.identities ?? []).flatMap(({ name }) => name ?? []).join(', ');
+}
+
 export function detectionKey(
 	detection: Pick<Detection, 'type' | 'archiveStage' | 'timestamp'>
 ): string {

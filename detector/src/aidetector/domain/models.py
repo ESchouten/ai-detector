@@ -139,8 +139,24 @@ class ValidationResult:
 
 @dataclass(frozen=True)
 class EventResult:
-    """An event and its verification outcome, independent of delivery."""
+    """An event and its verification outcome, independent of delivery.
+
+    `seen` holds the individuals another rule recognised inside the event.
+    """
 
     event: DetectionEvent
     validation: ValidationResult
     id: str
+    seen: tuple[IdentityMatch, ...] = ()
+
+    @property
+    def identities(self) -> tuple[IdentityMatch, ...]:
+        """Recognised individuals: in the best observation's own boxes, then `seen`."""
+        own = (
+            box.identity for box in self.event.best.boxes if box.identity is not None
+        )
+        unique: dict[str, IdentityMatch] = {}
+        for match in (*own, *self.seen):
+            if match.identity_id is not None:
+                unique.setdefault(match.identity_id, match)
+        return tuple(unique.values())

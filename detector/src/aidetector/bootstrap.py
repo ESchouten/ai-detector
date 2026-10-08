@@ -23,14 +23,16 @@ from aidetector.adapters.inference.onnx import (
 )
 from aidetector.adapters.live_preview import LivePreview
 from aidetector.adapters.media.event_media import EventMedia
+from aidetector.adapters.named_sightings import NamedSightings
 from aidetector.adapters.sources.files import FileSource
 from aidetector.adapters.sources.streams import StreamPool, StreamSource
-from aidetector.application.delivery import Destination, EventDelivery
+from aidetector.application.delivery import Destination, EventDelivery, name_nobody
 from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import (
     EventValidator,
     ObjectDetector,
     ObservationIdentifier,
+    PublishObservation,
     ignore_observation,
 )
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
@@ -42,6 +44,7 @@ from aidetector.configuration import (
     SourceConfig,
     source_kind,
 )
+from aidetector.domain.models import Observation
 from aidetector.domain.policy import Cooldown, EventPolicy, ExportPolicy
 from aidetector.runtime import DetectorWorker, RunStats, run_detectors
 from aidetector.version import TYPE
@@ -194,6 +197,7 @@ def run_application(
         identifiers = _identity_resources(
             config, config_directory, data_directory, resources, report_status
         )
+        sightings = NamedSightings()
         for index, settings in enumerate(config.detectors, start=1):
             logger.info(
                 "Preparing detector-%d: %d source(s), %.2fs sampling interval, object detection %s",
@@ -275,12 +279,15 @@ def run_application(
                 if preview is not None
                 else ignore_observation
             )
+            identifier = identifiers.get(index)
             pipeline = DetectionPipeline(
                 detector,
                 event_policy,
                 rule_status,
-                publish,
-                identifier=identifiers.get(index),
+                _publish_both(publish, sightings.record)
+                if identifier is not None
+                else publish,
+                identifier=identifier,
             )
             delivery = EventDelivery(
                 build_destinations(
@@ -289,6 +296,8 @@ def run_application(
                 cooldown,
                 validator,
                 rule_status,
+                # A rule that recognises individuals names its own boxes.
+                sightings.named if identifiers and identifier is None else name_nobody,
             )
             logger.info(
                 "Detector-%d ready: validation %s; destinations: %s",
@@ -316,6 +325,16 @@ def run_application(
         if engines is not None:
             resources.enter_context(engines.running())
         return run_detectors(tuple(workers), health, stop_requested)
+
+
+def _publish_both(
+    first: PublishObservation, second: PublishObservation
+) -> PublishObservation:
+    def publish(source: str, observation: Observation) -> None:
+        first(source, observation)
+        second(source, observation)
+
+    return publish
 
 
 def _engine_preparation(

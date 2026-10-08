@@ -3,8 +3,10 @@ from datetime import datetime, timedelta
 import pytest
 
 from aidetector.domain.identity import (
+    Sighting,
     TrackAgreement,
     choose_identity,
+    individuals_in_event,
     reject_conflicting_matches,
 )
 from aidetector.domain.models import IdentityMatch
@@ -190,3 +192,59 @@ def test_simultaneous_collisions_reject_every_duplicate_without_guessing_a_winne
         unknown,
         IdentityMatch(),
     )
+
+
+MOUNT = (0.25, 0.25, 0.75, 0.75)
+INSIDE = (0.3, 0.3, 0.6, 0.7)
+# Three quarters of this animal's box lie inside the mount's: she is under it.
+UNDER = (0.35, 0.4, 0.75, 0.9)
+# Three tenths of this neighbour's box lie inside the mount's.
+BESIDE = (0.65, 0.3, 1.0, 0.7)
+
+
+def mounting(*seconds: float):
+    return [(at(second), [MOUNT]) for second in seconds]
+
+
+def test_individuals_mostly_inside_an_events_box_are_named_most_present_first():
+    sightings = [
+        *(Sighting(at(second), DAISY, UNDER) for second in (0, 1, 2)),
+        *(Sighting(at(second), BELLA, INSIDE) for second in (0, 1, 2)),
+    ]
+
+    assert individuals_in_event(mounting(0, 1, 2), sightings) == (BELLA, DAISY)
+
+
+def test_a_neighbour_and_an_animal_seen_once_are_not_named_with_the_event():
+    sightings = [
+        *(Sighting(at(second), DAISY, BESIDE) for second in (0, 1, 2)),
+        Sighting(at(1), BELLA, INSIDE),
+    ]
+
+    assert individuals_in_event(mounting(0, 1, 2), sightings) == ()
+
+
+def test_an_animal_that_was_inside_only_part_of_the_time_is_not_named():
+    # She walked through the event's box: inside twice, outside three times.
+    passing = [
+        *(Sighting(at(second), DAISY, INSIDE) for second in (1, 2)),
+        *(Sighting(at(second), DAISY, BESIDE) for second in (0, 3, 4)),
+    ]
+    staying = [Sighting(at(second), BELLA, INSIDE) for second in (0, 1, 2, 3, 4)]
+
+    assert individuals_in_event(mounting(0, 1, 2, 3, 4), [*passing, *staying]) == (
+        BELLA,
+    )
+
+
+def test_a_sighting_counts_only_at_the_moment_the_event_had_a_box():
+    # The event's box moves away; the animal stays where the box was.
+    moments = [(at(0), [MOUNT]), (at(1), [MOUNT]), (at(10), [(0.0, 0.0, 0.2, 0.2)])]
+    early = [Sighting(at(second), BELLA, INSIDE) for second in (0, 1, 2)]
+    between = [Sighting(at(second), BELLA, INSIDE) for second in (4, 5, 6)]
+    late = [Sighting(at(second), BELLA, INSIDE) for second in (9, 10, 11)]
+
+    assert individuals_in_event(moments, early) == (BELLA,)
+    assert individuals_in_event(moments, between) == ()
+    assert individuals_in_event(moments, late) == ()
+    assert individuals_in_event([], early) == ()

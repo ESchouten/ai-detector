@@ -5,7 +5,7 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Pill from '$lib/components/pill.svelte';
-	import { detectionKey, recordingVerdict, type Detection } from '$lib/detections';
+	import { detectionKey, recordingNames, recordingVerdict, type Detection } from '$lib/detections';
 	import { clipLength, dayHeading, percent, timeOfDay } from '$lib/format';
 	import { removeDetection } from '$lib/remote/detections.remote';
 	import ReviewButtons from './review-buttons.svelte';
@@ -47,6 +47,7 @@
 	const index = $derived(entries.findIndex((entry) => detectionKey(entry) === selected));
 	const entry = $derived(index >= 0 ? entries[index] : undefined);
 	const verdict = $derived(entry ? recordingVerdict(entry) : null);
+	const names = $derived(entry ? recordingNames(entry) : '');
 	// A review can move the recording out of the current filter; remember where it was.
 	let position = $state(0);
 	$effect(() => {
@@ -92,6 +93,7 @@
 					{#if verdict?.tone === 'warn'}<Pill tone="warn">{verdict.label}</Pill>{/if}
 				</Dialog.Title>
 				<Dialog.Description>
+					{#if names}<span class="block break-words text-foreground">{names}</span>{/if}
 					<span class="flex flex-wrap gap-x-1">
 						{#if verdict}<span>{verdict.source}</span><span aria-hidden="true">·</span>{/if}
 						<span>{percent(entry.confidence)} confidence</span>

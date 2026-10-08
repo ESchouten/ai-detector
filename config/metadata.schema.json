@@ -29,7 +29,7 @@
       "type": "object"
     },
     "IdentityMetadata": {
-      "description": "Matched individual visible in the event's best observation.",
+      "description": "A recognised individual in the event, by this rule or another on that camera.",
       "properties": {
         "id": {
           "title": "Id",

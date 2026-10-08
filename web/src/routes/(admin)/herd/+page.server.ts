@@ -3,7 +3,7 @@ import { herd } from '$lib/server/herd';
 import { configuration } from '$lib/server/configuration';
 import { HerdError } from '$lib/server/identity-catalog';
 import { readHerdPage } from '$lib/server/herd-page';
-import { liveSourceKey } from '$lib/server/live-preview';
+import { sourceKey } from '$lib/server/source-key';
 import { DATA_DIRECTORY } from '$lib/server/application-paths';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async () => {
 		catalog,
 		cameras: Object.fromEntries(
 			(app.streams ?? []).map((camera, index) => [
-				liveSourceKey(camera.source, DATA_DIRECTORY),
+				sourceKey(camera.source, DATA_DIRECTORY),
 				camera.label || `Camera ${index + 1}`
 			])
 		),

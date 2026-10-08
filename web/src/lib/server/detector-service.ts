@@ -1,17 +1,43 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { DATA_DIRECTORY, EXECUTABLE_DIRECTORY, PACKAGED } from './application-paths';
-import { readJson } from './json-file';
 import { ManagedDetector } from './managed-detector';
 import type { RuntimeStatus } from '../runtime';
 import { diskSpace } from './storage';
 import { recordings } from './recordings';
 import { webLog } from './web-log';
+import { WatchHistory } from './watch-history';
+import { watchState } from '../camera-history';
 
 let detector: ManagedDetector | null = null;
 let initialization: Promise<void> | undefined;
 let storageCheckedAt = 0;
 let storageWarning: string | undefined;
+export const watchHistory = new WatchHistory(path.join(DATA_DIRECTORY, 'history'));
+
+/** Every ten seconds is as precisely as a gap in the history is known. */
+async function keepHistory(): Promise<void> {
+	try {
+		await watchHistory.start();
+	} catch (error) {
+		webLog.warn('Could not open the camera history', error);
+		return;
+	}
+	const timer = setInterval(async () => {
+		try {
+			await detector?.refreshMetadata();
+			await watchHistory.sample(
+				(detector?.status().cameras ?? []).map(({ id, state }) => ({
+					id,
+					state: watchState(state)
+				}))
+			);
+		} catch (error) {
+			webLog.warn('Could not keep the camera history', error);
+		}
+	}, 10000);
+	timer.unref();
+}
 
 export function initializeDetector(prepareConfiguration: () => Promise<unknown>): Promise<void> {
 	return (initialization ??= initialize(prepareConfiguration));
@@ -29,19 +55,12 @@ async function initialize(prepareConfiguration: () => Promise<unknown>): Promise
 	detector = new ManagedDetector({ executable, dataDirectory: DATA_DIRECTORY });
 	try {
 		await prepareConfiguration();
-		const bundle = await readJson<{ dockerImage?: string }>(
-			path.join(EXECUTABLE_DIRECTORY, 'application.json')
-		);
-		detector = new ManagedDetector({
-			executable,
-			dataDirectory: DATA_DIRECTORY,
-			dockerImage: process.env.AIDETECTOR_DOCKER_IMAGE ?? bundle?.dockerImage
-		});
-		// The server must remain available while a first model/image is being prepared.
+		// The server must remain available while a first model is being prepared.
 		void detector.initialize().catch((error) => detector?.fail(error));
 	} catch (error) {
 		detector.fail(error);
 	}
+	await keepHistory();
 	process.once('sveltekit:shutdown', (reason?: string) => detector?.stop(false, reason));
 	process.once('aidetector:launcher-disconnected', () => {
 		detector?.log.append(
@@ -70,8 +89,6 @@ export async function detectorStatus(): Promise<RuntimeStatus> {
 	}
 	const status: RuntimeStatus = detector?.status() ?? {
 		managed: false,
-		mode: 'auto',
-		selected: null,
 		phase: 'stopped',
 		message:
 			'This web server uses a separately managed detector. Download the complete application to start and stop it here.',

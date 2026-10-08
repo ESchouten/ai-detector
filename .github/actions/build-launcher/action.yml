@@ -7,6 +7,9 @@ inputs:
   dotnet-tests:
     description: Run portable update tests; requires the .NET SDK
     default: 'false'
+  tests:
+    description: Run the launcher's tests after compiling it
+    default: 'true'
 runs:
   using: composite
   steps:
@@ -17,13 +20,13 @@ runs:
         APP_VERSION: ${{ inputs.version }}
       run: python distribution/build.py launcher --version "$APP_VERSION" --output "$RUNNER_TEMP"
     - name: Windows tray tests
-      if: runner.os == 'Windows'
+      if: runner.os == 'Windows' && inputs.tests == 'true'
       shell: bash
       run: |
         dotnet restore distribution/windows/launcher-tests/Launcher.Tests.csproj --locked-mode
         dotnet test distribution/windows/launcher-tests/Launcher.Tests.csproj --no-restore --configuration Release
     - name: Portable update recovery tests
-      if: inputs.dotnet-tests == 'true'
+      if: inputs.tests == 'true' && inputs.dotnet-tests == 'true'
       shell: bash
       run: |
         dotnet restore distribution/windows/update-tests/Update.Tests.csproj --locked-mode

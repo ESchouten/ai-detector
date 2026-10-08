@@ -148,7 +148,6 @@ class PackageInputs:
     ffmpeg: Path
     output: Path
     platform: str
-    image: str | None = None
     version: str = "0.0.0"
     mac_launcher: Path | None = None
     windows_launcher: Path | None = None
@@ -224,7 +223,7 @@ def copy_payload_files(
     (payload / "bin").mkdir()
     shutil.copy2(inputs.ffmpeg, payload / "bin" / encoder)
     (payload / "bin" / encoder).chmod(0o755)
-    metadata = {"dockerImage": inputs.image} if inputs.image else {}
+    metadata = {}
     if inputs.update_feed and inputs.platform == "windows-x64":
         metadata["updateFeed"] = inputs.update_feed
         metadata["updatePublicKey"] = inputs.sparkle_public_key
@@ -272,8 +271,5 @@ if __name__ == "__main__":
     parser.add_argument("--sparkle-public-key")
     parser.add_argument(
         "--windows-launcher", type=Path, help="Compiled Windows launcher folder"
-    )
-    parser.add_argument(
-        "--image", help="Matching image digest; omit for native-only previews"
     )
     print(assemble_package(PackageInputs(**vars(parser.parse_args()))))

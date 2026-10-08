@@ -255,6 +255,32 @@ class UpdateFeedTest(unittest.TestCase):
             ["1.2.0", "1.1.0", "1.0.0"],
         )
 
+    def test_previews_stage_only_the_previous_release_as_a_delta_base(self):
+        items = []
+        for version in ("1.0.0", "1.1.0", "1.2.0"):
+            name = f"AI-Detector-{version}.dmg"
+            (self.host / name).write_bytes(version.encode())
+            items.append(
+                f'<item><sparkle:version>{version}</sparkle:version><enclosure url="{self.url}/{name}" /></item>'
+            )
+        (self.host / "appcast.xml").write_text(
+            '<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"><channel>'
+            + "".join(items)
+            + "</channel></rss>"
+        )
+        prepare(self.output, "macos-arm64", "1.3.0", self.url, channel="preview")
+        folder = self.output / "macos-updates"
+        self.assertEqual(
+            {path.name for path in folder.glob("*.dmg")}, {"AI-Detector-1.2.0.dmg"}
+        )
+        self.assertEqual(
+            [
+                version
+                for version, _ in mac_items((folder / "appcast.xml").read_bytes())
+            ],
+            ["1.2.0"],
+        )
+
     def test_sparkle_skips_deleted_previews_and_stages_only_available_archives(self):
         for available in (("1.2.0", "1.0.0"), ("1.2.0",), ()):
             with self.subTest(available=available):

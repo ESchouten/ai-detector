@@ -7,6 +7,7 @@ import os
 import sys
 from pathlib import Path
 from threading import Thread
+from time import sleep
 
 logger = logging.getLogger(__name__)
 TRACE_INTERVAL = 60.0
@@ -15,21 +16,32 @@ TRACE_INTERVAL = 60.0
 def exit_with_parent() -> None:
     # The parent keeps this pipe open. A crash/forced shutdown must not leave
     # an engine builder running after the monitoring process has gone away.
-    # A buffered read holds Python's stdin lock and can abort interpreter
-    # shutdown when a completed helper exits with this daemon still waiting.
-    while os.read(sys.stdin.fileno(), 1):
-        pass
-    os._exit(1)
+    # Blocking stdin reads can deadlock NumPy's native import on Windows:
+    # https://github.com/numpy/numpy/issues/24290
+    descriptor = sys.stdin.fileno()
+    os.set_blocking(descriptor, False)
+    while True:
+        try:
+            if not os.read(descriptor, 1):
+                os._exit(1)
+        except BlockingIOError:
+            sleep(0.25)
 
 
 def build_and_test(request: dict) -> None:
-    logger.info("TensorRT preparation: importing inference libraries")
+    logger.info("TensorRT preparation: importing NumPy")
     import numpy as np
+
+    logger.info(
+        "TensorRT preparation: NumPy %s ready; importing inference libraries",
+        np.__version__,
+    )
     from ultralytics import YOLO
 
     from aidetector.adapters.inference.onnx import ModelRequirements, inference_runtime
     from aidetector.configuration import OnnxConfig
 
+    logger.info("TensorRT preparation: inference libraries ready")
     arguments = request["export"]
     checkpoint = request["checkpoint"]
     requirements = (

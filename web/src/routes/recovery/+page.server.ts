@@ -24,6 +24,6 @@ export const actions: Actions = {
 				message: 'The saved settings could not be restored. Download diagnostics for help.'
 			});
 		}
-		redirect(303, '/setup');
+		redirect(303, '/');
 	}
 };

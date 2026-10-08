@@ -7,6 +7,7 @@ import { test, type TestContext } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { mockTimeouts, realDelay } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
+import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 
 const executable = fileURLToPath(new URL('./fixtures/detector.mjs', import.meta.url));
@@ -44,7 +45,7 @@ async function fixture(t: TestContext, extra = {}) {
 	};
 	await writeJson(path.join(directory, 'config.json'), settings);
 	await writeJson(path.join(directory, 'fixture-options.json'), options);
-	await detector.start('auto');
+	await detector.start();
 	await waitFor(() => detector.status().readiness === 'monitoring');
 	return {
 		detector,
@@ -74,10 +75,7 @@ test(
 		assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
 		assert.throws(() => process.kill(originalPid, 0), { code: 'ESRCH' });
 		assert.deepEqual(await readJson(path.join(directory, 'config.json')), settings);
-		assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
-			mode: 'auto',
-			enabled: true
-		});
+		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), true);
 		const log = await detector.log.read();
 		assert.equal(log.match(/Restart requested: TensorRT models are ready/g)?.length, 1);
 		assert.doesNotMatch(log, /ERROR|stopped unexpectedly|Restarting the detector in/);
@@ -98,10 +96,7 @@ for (const disable of [true, false]) {
 			assert.equal(await starts(), 1);
 			assert.equal(detector.status().phase, 'stopped');
 			assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
-			assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
-				mode: 'auto',
-				enabled: !disable
-			});
+			assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), !disable);
 		}
 	);
 }
@@ -141,10 +136,7 @@ test(
 		assert.match(await detector.log.read(), /Restarting the detector/);
 		assert.ok(!(await detector.log.read()).includes('secret'));
 		assert.deepEqual(await readJson(path.join(directory, 'config.json')), settings);
-		assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
-			mode: 'auto',
-			enabled: true
-		});
+		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), true);
 	}
 );
 
@@ -196,10 +188,7 @@ for (const disable of [true, false]) {
 		await detector.stop(disable);
 		assert.equal(detector.status().phase, 'stopped');
 		assert.equal(detector.status().readiness, 'idle');
-		assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
-			mode: 'auto',
-			enabled: !disable
-		});
+		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), !disable);
 		t.mock.timers.tick(2100);
 		await realDelay(0);
 		assert.equal(await starts(), 1);
@@ -244,7 +233,7 @@ test(
 		assert.throws(() => process.kill(checkPid, 0), { code: 'ESRCH' });
 		assert.equal(await starts(), 1);
 		await writeJson(path.join(directory, 'fixture-options.json'), {});
-		await detector.start('auto');
+		await detector.start();
 		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		assert.equal(await starts(), 2);
 	}
@@ -328,10 +317,7 @@ test(
 		const { detector, directory, pid } = await fixture(t, { ignoreStop: true });
 		const childPid = await pid();
 		const stopped = assert.rejects(detector.stop(), /stopped unexpectedly/);
-		await waitFor(
-			async () =>
-				!(await readJson<{ enabled: boolean }>(path.join(directory, 'runtime.json')))!.enabled
-		);
+		await waitFor(async () => !(await monitoringEnabled(path.join(directory, 'app.json'))));
 		process.kill(childPid, 0); // Still draining: a web crash now must not restore enabled monitoring.
 		process.kill(childPid, 'SIGKILL');
 		await stopped;

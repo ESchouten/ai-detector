@@ -3,7 +3,7 @@
         "interval": 1
     },
     "yolo": {
-        "model": "yolo11n.pt",
+        "model": "yolo26m.pt",
         "confidence": 0.5
     },
     "exporters": {

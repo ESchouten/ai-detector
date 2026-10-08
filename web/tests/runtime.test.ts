@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { mockTimeouts, realDelay } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
-import { chooseRuntime, dockerArguments } from '../src/lib/server/runtime-platform.ts';
+import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 
 const executable = fileURLToPath(new URL('./fixtures/detector.mjs', import.meta.url));
@@ -73,7 +73,7 @@ test(
 				{ version: 1, event: 'preparation_failed', at: new Date().toISOString(), message }
 			]
 		});
-		await detector.start('native');
+		await detector.start();
 		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
 		assert.ok(detector.status().message.startsWith(message));
 		assert.equal(detector.status().readiness, 'preparing');
@@ -94,31 +94,6 @@ async function waitFor(predicate: () => boolean | Promise<boolean>) {
 	assert.fail('Expected process state was not reached');
 }
 
-for (const [mode, expected] of [
-	['auto', 'native'],
-	['native', 'native'],
-	['docker', 'docker']
-] as const) {
-	test(`${mode} selects ${expected}`, () => assert.equal(chooseRuntime(mode), expected));
-}
-
-test('Docker mounts the same data, requests a GPU and runs as the Linux user without a shell', () => {
-	const args = dockerArguments(
-		'registry/app@sha256:123',
-		'/farm data/$cash',
-		'farm',
-		'linux',
-		'1001:1001'
-	);
-	assert.ok(args.includes('/farm data/$cash:/data'));
-	assert.ok(args.includes('1001:1001'));
-	assert.equal(args[args.indexOf('--gpus') + 1], 'all');
-	assert.ok(args.includes('--control-stdin'));
-	assert.ok(args.includes('--status-json'));
-	assert.ok(args.includes('--live-preview'));
-	assert.ok(!dockerArguments('image', 'C:\\Farm data', 'farm', 'win32').includes('--user'));
-});
-
 test(
 	'start is idempotent, config apply restarts once, stop drains and disables resume',
 	posixOnly,
@@ -131,7 +106,7 @@ test(
 		});
 		await writeJson(path.join(directory, 'config.json'), config);
 		await detector.initialize();
-		await Promise.all([detector.start('native'), detector.start('native')]);
+		await Promise.all([detector.start(), detector.start()]);
 		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		assert.equal(detector.status().phase, 'running');
 		await assert.rejects(
@@ -151,10 +126,7 @@ test(
 		assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
 		assert.equal(detector.status().phase, 'stopped');
 		assert.equal(await detector.whileStopped(async () => 'cache cleared'), 'cache cleared');
-		assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
-			mode: 'native',
-			enabled: false
-		});
+		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
 		const reopened = new ManagedDetector({ executable, dataDirectory: directory });
 		await reopened.initialize();
 		assert.equal(reopened.status().phase, 'stopped');
@@ -171,7 +143,7 @@ test('closing and reopening the application resumes enabled detection', posixOnl
 		await rm(directory, { recursive: true, force: true });
 	});
 	await writeJson(path.join(directory, 'config.json'), config);
-	await first.start('native');
+	await first.start();
 	await first.stop(false);
 	assert.match(await first.log.read(), /Stop requested: Application shutdown/);
 	await second.initialize();
@@ -190,16 +162,13 @@ test(
 		});
 		await writeJson(path.join(directory, 'config.json'), config);
 		await writeJson(path.join(directory, 'fixture-options.json'), { stopExitCode: 17 });
-		await detector.start('native');
+		await detector.start();
 		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		await assert.rejects(detector.stop(), /stopped unexpectedly/);
 		assert.equal(detector.status().phase, 'failed');
-		assert.equal(
-			(await readJson<{ enabled: boolean }>(path.join(directory, 'runtime.json')))?.enabled,
-			false
-		);
+		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
 		await writeJson(path.join(directory, 'fixture-options.json'), {});
-		await detector.start('native');
+		await detector.start();
 		await waitFor(() => detector.status().phase === 'running');
 		await detector.stop();
 		assert.equal(detector.status().phase, 'stopped');
@@ -217,32 +186,15 @@ test(
 			await rm(directory, { recursive: true, force: true });
 		});
 		await writeJson(path.join(directory, 'config.json'), { detectors: [] });
-		await detector.start('native');
+		await detector.start();
 		assert.equal(detector.status().phase, 'failed');
 		assert.match(detector.status().message, /Add a detector/);
-		assert.equal(await readJson(path.join(directory, 'runtime.json')), null);
+		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
 		await writeJson(path.join(directory, 'config.json'), config);
 		await writeJson(path.join(directory, 'fixture-options.json'), { crash: true });
-		await detector.start('native');
+		await detector.start();
 		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
 		assert.match(detector.status().message, /stopped unexpectedly/);
-	}
-);
-
-test(
-	'Docker mode without a release image gives an actionable error without launching a container',
-	posixOnly,
-	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-docker-'));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
-		await writeJson(path.join(directory, 'config.json'), config);
-		await detector.start('docker');
-		assert.equal(detector.status().phase, 'failed');
-		assert.match(detector.status().message, /complete application release/);
 	}
 );
 
@@ -258,52 +210,13 @@ test(
 		});
 		await writeJson(path.join(directory, 'config.json'), config);
 		await writeJson(path.join(directory, 'fixture-options.json'), { holdCheck: true });
-		const starting = detector.start('native');
+		const starting = detector.start();
 		await waitFor(() => detector.status().phase === 'checking');
 		await detector.stop();
 		await starting;
 		assert.equal(detector.status().phase, 'stopped');
-		assert.deepEqual(await readJson(path.join(directory, 'runtime.json')), {
-			mode: 'auto',
-			enabled: false
-		});
+		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
 		await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
-	}
-);
-
-test(
-	'an NVIDIA Docker GPU failure is visible and links to installation help',
-	posixOnly,
-	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-gpu-'));
-		const detector = new ManagedDetector({
-			executable,
-			dataDirectory: directory,
-			dockerImage: 'example.invalid/detector@sha256:123'
-		});
-		const oldPath = process.env.PATH;
-		t.after(async () => {
-			process.env.PATH = oldPath;
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
-		await writeFile(path.join(directory, 'nvidia-smi'), '#!/bin/sh\necho NVIDIA\n', {
-			mode: 0o755
-		});
-		await writeFile(
-			path.join(directory, 'docker'),
-			'#!/bin/sh\nif [ "$1" = "info" ]; then echo linux; else echo "CUDA driver unavailable" >&2; exit 1; fi\n',
-			{ mode: 0o755 }
-		);
-		process.env.PATH = directory + path.delimiter + oldPath;
-		await writeJson(path.join(directory, 'config.json'), config);
-		await detector.start('docker');
-		assert.equal(detector.status().selected, 'docker');
-		assert.equal(detector.status().phase, 'failed');
-		assert.match(detector.status().message, /GPU check/);
-		assert.match(await detector.log.read(), /CUDA driver unavailable/);
-		assert.match(detector.status().helpUrl!, /^https:\/\/docs.nvidia.com/);
-		assert.equal(await readJson(path.join(directory, 'runtime.json')), null);
 	}
 );
 
@@ -317,35 +230,26 @@ for (const action of ['start', 'resume', 'apply'] as const) {
 		});
 		await writeJson(path.join(directory, 'config.json'), config);
 		if (action === 'resume')
-			await writeJson(path.join(directory, 'runtime.json'), { mode: 'native', enabled: true });
+			await writeJson(path.join(directory, 'app.json'), { monitoring: true });
 		if (action === 'apply') {
-			await detector.start('native');
+			await detector.start();
 			await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		}
 		const pending =
 			action === 'start'
-				? detector.start('native')
+				? detector.start()
 				: action === 'resume'
 					? detector.initialize()
 					: detector.apply();
 		await detector.stop();
 		await pending;
 		assert.equal(detector.status().phase, 'stopped');
-		assert.equal(
-			(await readJson<{ enabled: boolean }>(path.join(directory, 'runtime.json')))!.enabled,
-			false
-		);
+		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
 		if (action === 'apply')
 			assert.equal(await readFile(path.join(directory, 'starts.txt'), 'utf8'), 'started\n');
 		else await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
 	});
 }
-
-test('an aborted hardware probe cannot select a fallback runtime', async () => {
-	const { checkDocker } = await import('../src/lib/server/runtime-platform.ts');
-	const signal = AbortSignal.abort(new Error('startup cancelled'));
-	await assert.rejects(checkDocker(process.platform, signal), /startup cancelled/);
-});
 
 test(
 	'cancelled validation reaps its child and removes the temporary configuration',
@@ -391,9 +295,8 @@ test('automatic detection never invokes NVIDIA or Docker prerequisites', posixOn
 		});
 	process.env.PATH = directory + path.delimiter + oldPath;
 	await writeJson(path.join(directory, 'config.json'), config);
-	await detector.start('auto');
+	await detector.start();
 	await waitFor(() => detector.status().phase === 'running');
-	assert.equal(detector.status().selected, 'native');
 	assert.equal(detector.status().readiness, 'preparing');
 	await assert.rejects(readFile(path.join(directory, 'probes.txt')), { code: 'ENOENT' });
 });
@@ -423,7 +326,7 @@ test(
 				at: new Date().toISOString()
 			}))
 		});
-		await detector.start('auto');
+		await detector.start();
 		await waitFor(() => detector.status().readiness === 'monitoring');
 		assert.equal(detector.status().cameras[0].id, 'barn-camera');
 		assert.ok(detector.status().cameras[0].lastInferenceAt);
@@ -439,7 +342,7 @@ test(
 		assert.equal(detector.status().readiness, 'idle');
 		assert.equal(detector.status().cameras[0].state, 'paused');
 		await writeJson(path.join(directory, 'fixture-options.json'), { holdCheck: true });
-		const restarting = detector.start('auto');
+		const restarting = detector.start();
 		await waitFor(() => detector.status().phase === 'checking');
 		assert.equal(detector.status().readiness, 'preparing');
 		assert.deepEqual(detector.status().cameras, []);
@@ -471,7 +374,7 @@ test(
 				{ version: 1, event: 'frame', sourceKey, at: new Date(now).toISOString() }
 			]
 		});
-		await detector.start('native');
+		await detector.start();
 		await waitFor(
 			() => detector.status().cameras?.[0]?.lastFrameAt === new Date(now).toISOString()
 		);

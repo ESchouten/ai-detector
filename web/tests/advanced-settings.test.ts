@@ -4,10 +4,15 @@ import { test, type TestContext } from 'node:test';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import * as v from 'valibot';
 import { parseSettings } from '../src/lib/advanced-settings.ts';
+import { heartbeatInput } from '../src/lib/configuration.ts';
 import { settingsRevision } from '../src/lib/server/configuration/advanced.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
-import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
+import { IdentityCatalog } from '../src/lib/server/identity-catalog.ts';
+import { monitoringEnabled, setMonitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
+import { backupSettings } from '../src/lib/server/settings-backup.ts';
+import { unzipSync } from 'fflate';
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'advanced-settings-'));
@@ -41,11 +46,12 @@ test('editor validation accepts an empty setup and checks syntax, unknown proper
 		[{ label: 'AI', model: ['gemini/first', 'gemini/backup'] }]
 	);
 	assert.throws(() => parseSettings('connections', '[{"label":"AI","model":[]}]'), /fewer than 1/);
-	assert.throws(() => parseSettings('runtime', '{"mode":"cpu"}'), /allowed values/);
-	assert.throws(
-		() => parseSettings('runtime', '{"mode":"auto","enabled":true}'),
-		/unsupported property/
-	);
+	assert.deepEqual(parseSettings('config', '{"detectors":[],"onnx":{"opset":20}}'), {
+		detectors: [],
+		onnx: { opset: 20 }
+	});
+	// The engine choice is gone; a setting that is not one is refused, not ignored.
+	assert.throws(() => parseSettings('config', '{"detectors":[],"runtime":"docker"}'), /runtime/);
 });
 
 test('advanced edits preserve names, camera identities and delivery; tuning clears preset identity', async (t) => {
@@ -64,8 +70,7 @@ test('advanced edits preserve names, camera identities and delivery; tuning clea
 	draft.detectors[0].detection.interval = 17;
 	await store.saveAdvanced('config', draft, settingsRevision(saved));
 	saved = await store.read();
-	assert.equal(saved.app.detectors[0].preset, undefined);
-	assert.equal(saved.app.detectors[0].label, 'Barn');
+	assert.deepEqual(saved.app.detectors[0], { label: 'Barn' });
 	assert.equal(saved.app.streams[0].id, camera.id);
 	assert.equal(saved.config.detectors[0].detection.interval, 17);
 	assert.deepEqual(saved.config.detectors[0].exporters, { disk: [{ strategy: 'ALL' }] });
@@ -98,7 +103,7 @@ test('invalid and stale saves leave both files untouched', async (t) => {
 	});
 	const saved = await store.read();
 	const revision = settingsRevision(saved);
-	await store.saveStream({ source: 'other.mp4', label: 'Other camera' });
+	await store.saveCamera({ source: 'other.mp4', label: 'Other camera', mode: 'view-only' });
 	const before = await Promise.all([readFile(files.config), readFile(files.app)]);
 	await assert.rejects(
 		store.saveAdvanced('config', { detectors: [] }, revision),
@@ -172,19 +177,99 @@ test('editing detector credentials detaches only that shared connection', async 
 	assert.equal(next.config.detectors[0].vlm![0].key, 'detector-specific');
 });
 
-test('runtime mode saves without enabling monitoring and rejects a stale mode', async (t) => {
-	const { directory } = await fixture(t);
-	const runtime = new ManagedDetector({ executable: 'unused', dataDirectory: directory });
-	await runtime.setMode('native', 'auto');
-	assert.deepEqual(JSON.parse(await readFile(path.join(directory, 'runtime.json'), 'utf8')), {
-		mode: 'native',
-		enabled: false
+test('saving settings keeps the launcher’s resume flag, which never appears in settings, backups or revisions', async (t) => {
+	const { directory, files, store } = await fixture(t);
+	const source = 'rtsp://camera.example.test/barn';
+	await store.saveCamera({ label: 'Barn', source, mode: 'view-only' });
+	await setMonitoringEnabled(files.app, true);
+	const loaded = await store.read();
+	assert.equal('monitoring' in loaded.app, false);
+	const revision = settingsRevision(loaded);
+
+	// Metadata-only, two-file and device writes each replace app.json.
+	await store.saveCamera({
+		id: loaded.app.streams[0].id,
+		label: 'Barn north',
+		source,
+		mode: 'keep'
 	});
-	assert.equal(runtime.status().mode, 'native');
-	assert.equal(runtime.status().phase, 'stopped');
-	await assert.rejects(runtime.setMode('docker', 'auto'), /changed/);
-	const reloaded = new ManagedDetector({ executable: 'unused', dataDirectory: directory });
-	await reloaded.initialize();
-	assert.equal(reloaded.status().mode, 'native');
-	assert.equal(reloaded.status().phase, 'stopped');
+	assert.equal(await monitoringEnabled(files.app), true);
+	await store.saveDetector({
+		meta: { label: 'Activity' },
+		detector: { detection: { source: [source] } }
+	});
+	assert.equal(await monitoringEnabled(files.app), true);
+	await store.updateDevices(() => [
+		{ id: 'phone', name: 'Phone', hash: 'hash', created: 1, expires: 2 }
+	]);
+	assert.equal(await monitoringEnabled(files.app), true);
+	assert.equal((await store.readDevices()).length, 1);
+
+	const response = await backupSettings(
+		store,
+		new IdentityCatalog(directory),
+		new Request('http://localhost/setup/backup')
+	);
+	const backup = unzipSync(new Uint8Array(await response.arrayBuffer()));
+	assert.equal('monitoring' in JSON.parse(Buffer.from(backup['app.json']).toString()), false);
+	const snapshot = JSON.parse(await readFile(`${files.config}.last-valid`, 'utf8'));
+	assert.equal('monitoring' in snapshot.app, false);
+
+	// Pausing is not a settings change: an open Advanced draft stays valid.
+	const beforePause = settingsRevision(await store.read());
+	await setMonitoringEnabled(files.app, false);
+	assert.equal(settingsRevision(await store.read()), beforePause);
+	assert.notEqual(beforePause, revision);
+});
+
+test('the launcher and the settings store can replace app.json at the same time without losing either change', async (t) => {
+	const { files, store } = await fixture(t);
+	const saves = Array.from({ length: 6 }, (_, index) =>
+		store.saveCamera({
+			label: `Camera ${index + 1}`,
+			source: `rtsp://camera.example.test/${index}`,
+			mode: 'view-only'
+		})
+	);
+	const toggles = [true, false, true, false, true].map((enabled) =>
+		setMonitoringEnabled(files.app, enabled)
+	);
+	await Promise.all([...saves, ...toggles]);
+	assert.equal(await monitoringEnabled(files.app), true);
+	assert.equal((await store.read()).app.streams.length, 6);
+	assert.equal(JSON.parse(await readFile(files.app, 'utf8')).streams.length, 6);
+});
+
+test('the heartbeat form changes its two fields, keeps options set in Advanced, and can be turned off', async (t) => {
+	const { files, store } = await fixture(t);
+	await store.saveHeartbeat({ url: 'https://hc.example.test/ping/abc', interval: 120 });
+	assert.deepEqual((await store.read()).config.health, {
+		url: 'https://hc.example.test/ping/abc',
+		interval: 120
+	});
+	const saved = await store.read();
+	await store.saveAdvanced(
+		'config',
+		{ ...saved.config, health: { ...saved.config.health, method: 'POST', timeout: 3 } },
+		settingsRevision(saved)
+	);
+	await store.saveHeartbeat({ url: 'https://hc.example.test/ping/next', interval: 60 });
+	assert.deepEqual(JSON.parse(await readFile(files.config, 'utf8')).health, {
+		url: 'https://hc.example.test/ping/next',
+		interval: 60,
+		method: 'POST',
+		timeout: 3
+	});
+	await store.saveHeartbeat(null);
+	assert.equal('health' in JSON.parse(await readFile(files.config, 'utf8')), false);
+	for (const input of [
+		{ url: 'ftp://hc.example.test/ping', interval: 60 },
+		{ url: 'not an address', interval: 60 },
+		{ url: 'https://hc.example.test/ping', interval: 0 }
+	])
+		assert.equal(v.safeParse(heartbeatInput, input).success, false);
+	assert.equal(
+		v.parse(heartbeatInput, { url: ' https://hc.example.test/ping ', interval: 60 })!.url,
+		'https://hc.example.test/ping'
+	);
 });

@@ -2,6 +2,7 @@ import { readdir, readFile, lstat } from 'node:fs/promises';
 import { arch, cpus, platform, release, totalmem } from 'node:os';
 import path from 'node:path';
 import { stripVTControlCharacters } from 'node:util';
+import { preview, version } from '../version.ts';
 import { readJson } from './json-file.ts';
 import { sanitizeTextForLogs } from './runtime-logs.ts';
 import type { ZipEntry } from './zip-download.ts';
@@ -9,7 +10,7 @@ import type { ZipEntry } from './zip-download.ts';
 const SECRET_FIELD = /^(?:key|token|password|secret|headers|authorization)$/i;
 
 /** Redact structured settings and the same credentials wherever a library printed them. */
-export function diagnosticRedactor(...documents: unknown[]) {
+function diagnosticRedactor(...documents: unknown[]) {
 	const secrets = new Set<string>();
 	function settings(value: unknown, sensitive = false): unknown {
 		if (typeof value === 'string') {
@@ -78,6 +79,8 @@ export async function* diagnosticFiles(
 		content: redact.text(
 			JSON.stringify(
 				{
+					version,
+					preview,
 					platform: platform(),
 					release: release(),
 					architecture: arch(),

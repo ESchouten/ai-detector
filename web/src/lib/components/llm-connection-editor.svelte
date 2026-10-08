@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { ExternalLink, Eye, EyeOff } from '@lucide/svelte';
+	import { ExternalLink } from '@lucide/svelte';
+	import SecretInput from './secret-input.svelte';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import * as Field from '$lib/components/ui/field';
-	import * as InputGroup from '$lib/components/ui/input-group';
 	import { resolve } from '$app/paths';
 	import * as Alert from '$lib/components/ui/alert';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
@@ -39,7 +39,6 @@
 		)
 	);
 	let key = $state(untrack(() => initial?.key ?? ''));
-	let showKey = $state(false);
 	const isGemini = $derived(
 		!initial ||
 			([initial.model].flat().every((model) => model.startsWith('gemini/')) &&
@@ -98,52 +97,41 @@
 	class="flex flex-col gap-6"
 >
 	<Field.Group>
-		{#if initial}<Field.Field>
+		{#if initial}
+			<Field.Field class="max-w-md">
 				<Field.Label for="ai-name">Connection name</Field.Label>
 				<Input id="ai-name" bind:value={label} required disabled={busy} />
-			</Field.Field>{/if}
+			</Field.Field>
+		{/if}
 		{#if isGemini}
-			<p class="text-sm text-muted-foreground">
-				Open Google AI Studio, copy or create an API key and paste it below.
-			</p>
-			<Button
-				href={AI_STUDIO_KEYS}
-				target="_blank"
-				rel="noopener noreferrer"
-				variant="outline"
-				class="self-start">Open Google AI Studio<ExternalLink data-icon="inline-end" /></Button
-			>
+			<ol class="flex list-decimal flex-col gap-3 pl-5 text-sm leading-relaxed">
+				<li>
+					Open Google AI Studio and copy or create an API key.
+					<Button
+						href={AI_STUDIO_KEYS}
+						target="_blank"
+						rel="noopener noreferrer"
+						variant="outline"
+						size="sm"
+						class="mt-2 flex w-fit"
+						>Open Google AI Studio<ExternalLink data-icon="inline-end" aria-hidden="true" /></Button
+					>
+				</li>
+				<li>Paste the key below.</li>
+			</ol>
 			<Field.Field>
 				<Field.Label for="ai-key">API key</Field.Label>
-				<InputGroup.Root
-					><InputGroup.Input
-						id="ai-key"
-						type={showKey ? 'text' : 'password'}
-						bind:value={key}
-						required
-						autocomplete="off"
-						disabled={busy}
-						spellcheck={false}
-					/>
-					<InputGroup.Addon align="inline-end"
-						><InputGroup.Button
-							size="icon-sm"
-							aria-label={showKey ? 'Hide API key' : 'Show API key'}
-							onclick={() => (showKey = !showKey)}
-							>{#if showKey}<EyeOff />{:else}<Eye />{/if}</InputGroup.Button
-						></InputGroup.Addon
-					>
-				</InputGroup.Root>
-				<Field.Description
-					>Kept on this computer. Selected event clips are sent to Google for validation.</Field.Description
-				>
+				<SecretInput id="ai-key" name="API key" bind:value={key} required disabled={busy} />
+				<Field.Description>
+					Kept on this computer. Clips of detected events are sent to Google to be checked.
+				</Field.Description>
 			</Field.Field>
 			<p class="text-sm text-muted-foreground">
 				Google offers a limited free tier. Quotas and billing depend on your project. <a
 					href="https://ai.google.dev/gemini-api/docs/pricing"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="underline">Google’s pricing and data-use terms</a
+					class="underline underline-offset-4">Google’s pricing and data-use terms</a
 				>.
 			</p>
 		{:else}
@@ -154,36 +142,47 @@
 			>
 		{/if}
 	</Field.Group>
-	<p class="text-sm text-muted-foreground">
+	<p class="text-sm leading-relaxed text-muted-foreground">
 		{canTest
-			? 'We’ll check the key with a test image before saving.'
+			? 'The key is checked with a test image before it is saved.'
 			: 'Connection testing is available in the desktop application. Save settings here for your separate detector.'}
-		Detectors waiting for a validator will use this connection automatically. You can turn it off for
-		each detector.
+		Detectors waiting for a validator start using this connection. You can turn it off for each detector.
 	</p>
-	{#if message}<Alert.Root variant="destructive"
-			><Alert.Title>Connection needs attention</Alert.Title><Alert.Description
-				>{message}</Alert.Description
-			></Alert.Root
-		>{/if}
+	{#if message}
+		<Alert.Root variant="destructive">
+			<Alert.Title>Connection needs attention</Alert.Title>
+			<Alert.Description>{message}</Alert.Description>
+		</Alert.Root>
+	{/if}
 	<div class="flex flex-wrap gap-3">
-		<Button type="submit" disabled={busy || (isGemini && !key.trim())}
-			>{busy ? 'Connecting…' : canTest ? 'Connect' : 'Save connection'}</Button
-		><Button type="button" onclick={onCancel} variant="outline" disabled={busy}>Cancel</Button>
+		<Button type="submit" disabled={busy || (isGemini && !key.trim())}>
+			{busy ? 'Connecting…' : canTest ? 'Connect' : 'Save connection'}
+		</Button>
+		<Button onclick={onCancel} variant="outline" disabled={busy}>Cancel</Button>
 	</div>
 </form>
-{#if initial}<AlertDialog.Root bind:open={confirmRemove}
-		><AlertDialog.Trigger class={buttonVariants({ variant: 'outline' })} disabled={busy}
-			>Remove connection</AlertDialog.Trigger
-		><AlertDialog.Content
-			><AlertDialog.Header
-				><AlertDialog.Title>Remove {initial.label}?</AlertDialog.Title><AlertDialog.Description
-					>Connections assigned to detectors must be unassigned first.</AlertDialog.Description
-				></AlertDialog.Header
-			><AlertDialog.Footer
-				><AlertDialog.Cancel>Cancel</AlertDialog.Cancel><AlertDialog.Action onclick={remove}
-					>Remove connection</AlertDialog.Action
-				></AlertDialog.Footer
-			></AlertDialog.Content
-		></AlertDialog.Root
-	>{/if}
+{#if initial}
+	<div class="mt-6 border-t pt-5">
+		<AlertDialog.Root bind:open={confirmRemove}>
+			<AlertDialog.Trigger
+				class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
+					' -ml-2.5 text-danger-foreground hover:text-danger-foreground'}
+				disabled={busy}>Remove this connection…</AlertDialog.Trigger
+			>
+			<AlertDialog.Content>
+				<AlertDialog.Header>
+					<AlertDialog.Title>Remove {initial.label}?</AlertDialog.Title>
+					<AlertDialog.Description>
+						Connections assigned to detectors must be unassigned first.
+					</AlertDialog.Description>
+				</AlertDialog.Header>
+				<AlertDialog.Footer>
+					<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+					<AlertDialog.Action class={buttonVariants({ variant: 'destructive' })} onclick={remove}
+						>Remove connection</AlertDialog.Action
+					>
+				</AlertDialog.Footer>
+			</AlertDialog.Content>
+		</AlertDialog.Root>
+	</div>
+{/if}

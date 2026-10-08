@@ -1,122 +1,119 @@
 # AI Detector web application
 
-The SvelteKit application provides first-run camera setup, detector controls, camera previews, and saved detections. Most users should use the [complete application download](../README.md).
+The interface of AI Detector: setup, cameras, detectors, recordings and settings. In the [complete application](../README.md) it also starts and supervises the detector. This guide covers using it after setup, and working on it.
 
-## Complete application
+## Using the application
 
-Install and open **AI Detector** using the [platform package](../distribution/README.md#platform-packages). It opens `http://localhost/`: incomplete installations go to Setup; completed installations go to Recordings, or Cameras when configured for live viewing only. Setup has three steps: connect and save cameras, choose detector presets and their cameras, then finish all checks together. **Settings** is the only place to add or edit cameras and detectors. The Cameras page is for live viewing; its Add and Edit shortcuts open the relevant Settings step. Discovery starts immediately for each new camera. If none are found, manual entry opens automatically; a sole discovered camera is selected for you. Name the camera after its picture connects, with a suggested name already filled in. The first detector form opens directly in step two, asks for the preset before its suggested name, and selects the only camera when there is one. For several cameras, **Select all cameras** saves repeated selections. Later visits show saved cameras and detectors, with their existing forms embedded in the same steps. Old editor links redirect to Settings. Choose a discovered camera and enter its login, or choose **Enter camera manually** and paste a complete RTSP URL, including credentials when required. HTTP stream URLs are also supported. Manual entry has no separate address or login fields. Cameras without a detector provide live viewing only. Telegram alerts and advanced settings are optional.
+There are three main pages, **Recordings**, **Cameras** and **Detectors**; everything else is under **Settings**. The monitoring state is always visible and opens a status page.
 
-The web process owns one detector process. It validates changed detector settings before replacing them, applies saved changes to enabled monitoring, exposes runtime failures, and drains detection when stopped. Automatic mode uses the bundled native detector. Docker is an explicit advanced option that checks a CUDA operation against the release's pinned image; it is not selected merely because the computer has an NVIDIA GPU. A spawned process is not proof of monitoring: readiness requires fresh frames and completed processing from the configured rules.
+### Monitoring
 
-**Set up several cameras** appears when discovery finds multiple cameras and connects and connects cameras sharing a login, with two connection attempts at a time. Connected pictures appear together in a grid. Name the cameras and choose **Add selected cameras** once; successful saves survive partial failures. Each camera uses the same recording check as single-camera setup. Connecting automatically records 24 decoded frames at 12 fps, allowing time for the first keyframe, then checks the saved clip; the user does not need to play a test recording or tick a confirmation box. Failed connections can be retried without losing successes. The queue and its credentials stay in memory; keep that tab open until the cameras are saved. Then choose their detectors. **Finish setup** checks recording locations automatically and offers retries for failed checks. Phone alerts remain optional and do not block **Start monitoring**. There is no separate skip decision. Once all cameras are processing and their recording checks pass, setup finishes and opens Recordings automatically. A failed check stays on this page for retry.
+- A camera counts as monitored only when fresh pictures are being analysed by every detector assigned to it. A started program is not proof.
+- Closing the browser leaves monitoring running. **Pause monitoring** also keeps it paused at the next launch.
+- **Heartbeat** on the status page is an address the detector calls while it runs, so a service such as Healthchecks.io can warn you when the computer stops.
+- Alert and Validator failures stay visible in the status until a later attempt succeeds.
 
-Camera pictures start automatically, with detection boxes, confidence and optional temporary track IDs drawn directly over monitored cameras. Multiple detectors appear together in their preset colors, including in setup and camera selection. Video stays independent of inference, so boxes show the latest result and can briefly lag behind moving objects. Hidden or offscreen camera previews release their connections; at most four automatic previews run per browser tab. Detector editing shows presets, cameras, AI connections and phone recipients. The **Advanced** tab contains the schema-backed JSON editor for model thresholds, tracking, prompts, delivery options, shared AI connections and the detection engine. These settings use the preset/defaults unless explicitly changed in JSON.
+### Cameras
 
-The executable defaults to `0.0.0.0:80`, so other devices on the same network can open `http://ai-detector.local/` or `http://<computer-IP>/`. It opens a localhost URL on the installed computer without depending on mDNS and uses the user's application data directory. LAN addresses are logged; mDNS uses the separate application hostname and automatically adds a number if it is already taken. `HOST`, `PORT` and `OPEN_BROWSER=false` override serving behavior; `HOST=127.0.0.1` restricts access to this computer and disables discovery. The installed computer opens automatically through loopback. Other devices need a one-use pairing code from **Settings → Connected devices**: scan its QR code, then tap Connect. The browser remembers access; a connected browser can revoke other devices. Codes expire after five minutes or ten incorrect attempts. HTTP traffic is not encrypted, so use a trusted local network or an HTTPS reverse proxy. For a headless first start, the console prints an initial five-minute code. A second launch verifies the running local instance and opens its dashboard. Closing a browser tab leaves monitoring active. **Pause monitoring** disables automatic resume; quitting the application preserves the enabled choice for its next launch. Desktop startup runs after login, not before it.
+Camera pictures show the latest detection boxes over live video; the boxes can lag behind moving objects. At most four live pictures run per browser tab, and hidden ones are released. A camera shows its first picture at its next keyframe, which can take a few seconds; after that the picture stays ready for twenty seconds.
 
-## Telegram alerts
+**History** on the same page shows, per camera, when it was really watched over the last hour, day or week, with every recording as a mark on the same line; a mark opens the recording. A gap is time in which nothing would have been noticed, and it says why: the camera was offline, monitoring was paused, or AI Detector was not running. History is kept for thirty days from the day this version was installed, and a gap is known to within about ten seconds. With a separately managed detector only the recordings are shown.
 
-**Connect Telegram** opens inside the detector editor, retaining unsaved changes. New recipients automatically reuse a saved bot; when several bots are saved, choose one by its existing recipient name. **Use another bot** reveals BotFather token entry. Choose **My phone**, **A group**, or **A channel**, open Telegram and follow its selection flow. Groups must already include the bot; Telegram requests posting permission for channels. Confirm the test alert in the destination chat. The app detects confirmation and fills the recipient name; save the recipient, then save the detector when ready. The same bot can send different detectors’ alerts to different chats. **Add recipient** on Alerts goes directly to the connection form and reuses the saved bot. Reconnecting a known chat reuses its recipient instead of creating a duplicate. Recipients can be saved before a detector exists, or kept with no detectors assigned. Saving returns directly to Alerts or the setup step.
+### Detectors and presets
 
-**Enter chat ID manually** remains available for bots polled by another application or using a webhook. That path sends a test and asks for receipt confirmation in the app. Setup never deletes another application's webhook. Automatic pairing expires after five minutes and accepts confirmation only from the initiating Telegram user in the selected chat.
+A detector made from a preset follows it. When a newer model is published for that preset, the detector takes it within a day or at the next start: monitoring restarts by itself and is interrupted while the model is downloaded and prepared. Cameras, alerts and Validator stay as you set them. For this the application asks GitHub once a day; without internet nothing changes.
 
-Optional token-free bot creation needs the separately hosted [Telegram manager](telegram-manager/README.md). Set `AI_DETECTOR_TELEGRAM_MANAGER_URL` only after deploying and checking that service. With no configured service, the app uses saved bots and BotFather.
+**Update automatically** in a detector's settings switches this off for that detector: it then keeps the model it has until you switch it on again or choose the preset anew.
 
-## Bring an existing installation into setup
+A detector whose detection settings you changed keeps them and is not updated. Choose the preset again to follow it.
 
-Before adding a camera, choose **Use existing setup** on Setup. Close the old application, choose its folder containing `config.json`, review the camera/detector/recording counts, and import. Existing camera names, detector rules and notification assignments populate the normal setup steps. Review them and start monitoring in **Finish setup**; importing itself does not start monitoring or send alerts.
+### Recordings
 
-The default copies `config.json`, optional `app.json`, `detections/`, local `presets/`, and referenced local models/videos into the new data folder. It leaves the old files intact and updates relative model/video references. Standard missing model names remain managed by Ultralytics and are shown in the import notes. The unused legacy `yolo.strategy` setting is removed; other unsupported settings are reported instead of silently discarded. Custom absolute/nested disk destinations and linked archive folders need arranging into the standard `detections/<category>/...` layout before import.
+- Selecting a recording opens a viewer; the arrow keys step through recordings.
+- The thumbs record your own verdict. Pressing your choice again removes it and restores the Validator's result.
+- The chips filter by category and by result; pressing a chosen chip clears it.
+- The bin in the viewer deletes that recording from the computer, after asking once.
+- **Export** downloads a ZIP of the current filter, optionally between two dates, laid out as `detections/<category>/<stage>/<timestamp>/` with images, clips and `metadata.json`. In that file `review` is the person's decision and `validated` the Validator's. **Only the original photos** leaves out videos and pictures with boxes, for a small ZIP to share with the people who train the model. A confirmed event is not a checked bounding box: annotate the original images before training a model with them.
 
-**Recording storage → Keep recordings in their current folder** avoids copying a large archive. The new data folder links to that archive (a directory junction on Windows). Keep the old folder and its drive available: new recordings also go there, and approving/deleting recordings affects that shared archive. Back up both locations.
+### Herd (experimental)
 
-Imports refuse to replace an existing setup or data folder. Completed copies are staged under `.installation-import/`; reopen Setup to resume after interruption. The private manifest is deleted after success. Importing and the native folder chooser are available only from the local computer. **Enter folder path** is available if a native dialog cannot open.
+A detector made from the **Cow Identity** preset collects clear cow photographs. On **Herd**, confirm a photograph with a name or tag number; once at least two cows have examples, new photographs show a possible match. A match is a suggestion and is never added to a cow's examples without your confirmation. A wrong example can be moved to another cow or removed. See the [trial guide and its limits](../research/cow_identity/README.md).
 
-## Export recordings and back up settings
+### Telegram alerts
 
-Use **Accept** or **Reject** beneath a recording to review it yourself, including older recordings. **Undo review** restores the original validator result. The latest manual decision takes precedence and is saved across restarts.
+**Connect Telegram** opens inside the detector editor. Paste a BotFather token once, choose **My phone**, **A group** or **A channel**, and confirm the test alert in that chat. Recipients belong to detectors, so one bot can send different detectors' alerts to different chats.
 
-New Telegram alerts have **👍** (accept) and **👎** (reject) buttons, without text labels. Clicking one saves the same review and confirms it in Telegram; the web app updates automatically. Albums have a silent review reply beneath them. Anyone who can use the buttons in a connected chat can review that event. The AI Detector application must be running, but monitoring may be paused and the browser closed. Use a bot dedicated to this installation: another polling app or webhook prevents incoming reviews. Previously sent messages cannot acquire these buttons; review their recordings in the web app. Reviews are available for events saved on disk.
-
-Choose **Export recordings** on Recordings to download a ZIP of the selected category and stage across all pages. Optional **From date** and **To date** fields include both complete days, using the recording dates shown on screen. Leave either field empty for an open-ended range, or both for all dates. The dialog shows the number of matching events before downloading.
-
-The ZIP preserves the `detections/<category>/<stage>/<timestamp>/` structure, original images (`clean.jpg` when available), annotated images, saved frames, videos and `metadata.json`. It does not include settings. Manual reviews take precedence when choosing the exported stage. A `review.json` file records that decision; `metadata.json` preserves the original validator result. Accepting an event does not verify its bounding boxes: review and annotate original images or video frames before training. Exports download locally and are not uploaded anywhere by the app.
-
-On Settings, **Back up settings** downloads `config.json`, `app.json` and the confirmed herd together. The herd backup includes cow IDs, names, reference photos and their original sighting details, so enrollment and corrections survive a fresh installation. Saved camera passwords and alert tokens are included: keep the backup private. Unconfirmed cow photos, recognition caches, recordings, model/video files, custom preset files, computer startup preferences and paired-device access are not included. Paired devices are stored in `app.json` on the running installation; importing or recovering settings preserves its current device access when readable. To restore into a new installation, extract the ZIP and use **Use existing setup** to select that folder. Keep referenced local model/video files available at their configured paths, or update the paths before importing on another computer. Import never overwrites an existing setup or herd; missing confirmed photos or invalid herd data must be repaired before importing.
-
-## Recovery and storage
-
-**Logs → Download diagnostics** bundles the available rotated detector logs, application startup log, web warnings/errors, eight latest TensorRT build logs, runtime/system details and redacted settings. Web errors are also searchable on the Logs page and persist in a bounded `logs/web.log`. Recordings, access tokens and raw settings backups are excluded. Review local paths and camera addresses before sharing. The download remains available when settings cannot be parsed.
-
-A settings error offers **Recover settings**. This restores the last validated snapshot and preserves the current files with a dated `.invalid` suffix. It does not remove recordings or change Python's configuration format. The detector editor remembers unsaved preset, camera and connection choices in the browser tab until Save or Cancel; it stores references, never camera credentials or API keys.
-
-**Settings → Storage** shows free space on the recordings drive, including when imported recordings remain on another drive. Low space (below 2 GB or 5% of the volume) also appears in monitoring status. To remove old recordings, select a date, review the count and confirm; recent and unfinished recordings are kept. Cleanup also includes older recordings with damaged metadata or reviews and refuses a changed selection until reviewed again. Model-cache cleanup requires paused monitoring, removes prepared engines and unused downloads, and preserves configured source models and custom model files. Nothing automatically deletes recordings.
-
-Telegram and validator failures stay visible in monitoring status until a later delivery/validation succeeds. Troubleshooting shows the backend each detector actually loaded. A successful live camera image alone does not prove alerts or verification are working.
-
-## Development
+- Alerts carry 👍 and 👎 buttons that save a review; the thumb you press stays coloured on that alert. The application must be running for this, and the bot must be used by this installation only.
+- **Quiet hours** on a recipient make alerts between two times of day arrive without sound, for example at night. They still arrive.
+- **Enter chat ID manually** is for a bot that another application also reads. Setup never removes another application's webhook.
 
 ### Validator
 
-Google Gemini defaults to one connection with an ordered model list: 3.8 Flash → 3.7 Flash → 3.6 Flash → 3.5 Flash → 3.5 Flash-Lite → 3.1 Flash-Lite. This prioritizes general capability based on Google's model descriptions; it is not a measured ranking on farm footage. Open AI Studio, copy or create a key, then choose **Connect**. In the desktop app this tests a generated image and saves only after the test succeeds. A failed test keeps the form intact for retry. Separately managed detector installations can save the settings without a local test.
+A **Validator** connection lets a vision language model confirm or reject each event. Under **Settings → Validator**, connect Google Gemini with a key from AI Studio; other providers are set under **Advanced → AI connections**.
 
-Under **Validator** (`/validator`), connect Google Gemini. Configure other providers in **Advanced → AI connections**. The Gemini shortcut opens Google AI Studio for sign-in and API-key creation; paste the key into the app. Free-tier availability and quota depend on Google's model and project settings. Custom connections accept an API base URL, a model name or ordered list of model names, optional Bearer key and additional authentication headers. The connection test sends only a generated image and checks the same structured answer contract and model fallbacks as the detector. It tries each model once, sharing a 20-second request timeout budget. It does not test video support and requires the desktop detector executable.
+A connection is saved once and used by any number of detectors, each with its own question. Turning the Validator off for a detector keeps its question and clears its keys. A connection in use cannot be removed.
 
-Existing saved model choices are retained; edit **Advanced → AI connections** to change their fallback list. The defaults use stable models with video input and free-tier availability in [Google’s pricing](https://ai.google.dev/gemini-api/docs/pricing); the former 2.5 models are now restricted to existing users.
+### Other devices
 
-The Cow Catcher, Calving Catcher and Tailup presets include their question, `strategy: "VIDEO"` and `key: null`. Adding or editing an AI connection with a key automatically assigns it to saved detectors whose verification settings are still waiting for a model, and enables those validators in the same save. Explicitly paused detectors and existing standalone or shared connections retain their choices. When a connection already exists, a new preset detector suggests it if it is the only usable connection. With multiple connections, you choose which to use. **Off** remains off when switching presets. You can also select a connection under **Validator** in a detector. The normal setup needs no prompt or strategy fields; editing those uses **Advanced → Detector configuration**. Presets without a verification question do not show a validator connection control; custom questions belong in Advanced. Applying updated presets affects new drafts; saved questions and media choices are not silently migrated.
+The application listens on `0.0.0.0:80`, so other devices open `http://aidetector.local/` or `http://<computer-IP>/`. The computer it runs on is trusted; every other browser needs a one-use code from **Settings → Devices** (scan the QR code, then tap Connect). Codes expire after five minutes or ten wrong attempts. A connected browser is remembered for a year and can be removed there. A first start without a screen prints a code on the console.
 
-**Add AI connection** opens a dialog without saving the detector draft. Saving the connection selects it in that draft and enables any saved detectors waiting for a connection; **Save detector** applies the completed draft. Existing preset-based detectors receive the preset question only when they have no verification settings; custom questions and detection settings are retained. Turning verification off clears keys throughout the list, retaining models, questions and media settings. Reselecting a connection fills the primary key again; advanced fallback keys must be re-entered separately. A null or omitted key disables an entry, while an explicit empty string supports an unauthenticated local service. Changing a shared connection updates its assigned detectors without replacing their questions. A connection in use must be unassigned before removal. Advanced JSON keeps existing standalone verifiers and fallback lists available. **Advanced → AI connections** contains model overrides, URLs and authentication headers. The normal form asks only for the API key and, for existing connections, their name.
+An iPhone or iPad is offered once to put the application on its home screen, with the steps for that device; **Settings → Home screen** shows them again. It then opens like an app. An iPhone older than iOS 17.2 must connect once more from the icon.
 
-`app.json` stores `llms` and each detector's `llmConnection` reference. The configuration store materializes the selected connection in `config.json` on save, leaving Python independent of web metadata. Old preview enable flags are converted once when saved files are loaded, before automatic monitoring starts. Disabled entries lose their keys; active keys remain unchanged. New JSON must use the current schema. Settings backups include both files and their credentials. `tests/llm.test.ts` covers shared updates and preservation of detector questions; `tests/runtime.test.ts` covers connection-check failure/cancellation and removal of temporary credentials.
+Android makes a web page an app only over HTTPS. Over plain HTTP nothing is offered, and **Settings → Home screen shortcut** tells how to add a link that opens the dashboard in the browser.
 
-### Running locally
+Plain HTTP is not encrypted: use a trusted network, or an HTTPS reverse proxy with `ORIGIN` set.
 
-Use Node 24 and pnpm 9.15.9:
+### Bring an existing installation into setup
+
+Before adding a camera, choose **Use existing setup**, close the old application, select its folder containing `config.json`, review the counts and import. Importing starts nothing and sends nothing, never replaces an existing setup, and resumes if it is interrupted. It works only on the computer the application runs on.
+
+The import copies settings, `detections/`, local `presets/` and referenced local model and video files, and leaves the old files as they were. **Keep recordings in their current folder** links to the old archive instead: keep that drive available, because new recordings, reviews and deletions then happen there.
+
+### Backup, recovery and storage
+
+- **Settings → Back up** downloads `config.json`, `app.json` and the confirmed herd: cow names, their reference photos and where each was seen. It contains camera passwords and alert tokens, and no recordings, models, own presets, paired devices or unconfirmed cow photos. Restore it with **Use existing setup** in a new installation; an existing herd is never overwritten.
+- When a settings file cannot be read, every page names the damaged file and offers **Recover settings**: the last valid settings are restored and the damaged files are kept beside them with an `.invalid` suffix.
+- **Logs → Download diagnostics** bundles logs, system details and redacted settings, also when settings cannot be read. Review paths and camera addresses before sharing it.
+- **Settings → Storage** shows free space and removes recordings older than a date you choose. Nothing deletes recordings automatically.
+
+### Language
+
+English, Nederlands, Deutsch and Français. An installation takes the language of the browser that sets it up, for every device and for its Telegram replies; change it under **Settings → Language**. Logs, the Advanced JSON editor's hints and the detector's own messages stay in English.
+
+## Development
+
+Use Node 24 and pnpm 9.15.9.
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm dev
 pnpm quality
 pnpm build
+pnpm test:production
 ```
 
-Local development reads `config.json` and `app.json` from the working directory (`web/` when running the commands above), unless `AIDETECTOR_DATA_DIR` is set. Missing files start an empty setup. Existing files must match the current schema; validation errors identify the file and unsupported options.
+`pnpm quality` runs the schema, formatting, lint, translation, type, dependency and unit checks. `pnpm test:production` exercises the built server over HTTP. The [architecture guide](ARCHITECTURE.md) maps the code and its rules. Interface text is written in English in the source and translated in `src/locales/*.po`; run `pnpm i18n` after changing it.
 
-Run a built Node deployment with `pnpm start` (or `node node-server.mjs`). This entry point keeps the adapter's server and graceful shutdown, while correctly identifying direct HTTP requests on localhost and LAN addresses. `HOST` and `PORT` select the listening interface and port. Run `pnpm test:production` after building to check first-run setup, origin protection and shutdown against the actual server.
+| Variable                       | Effect                                                                                                               |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `AIDETECTOR_DATA_DIR`          | Folder with `config.json`, `app.json` and recordings. Development uses the working directory.                        |
+| `AIDETECTOR_EXECUTABLE`        | Detector to start and supervise. Without it the server is only an interface to a detector that is managed elsewhere. |
+| `AIDETECTOR_PRESETS`           | Folder of preset files, instead of `presets/` in the data folder or the bundled ones.                                |
+| `AIDETECTOR_PRESETS_URL`       | Where newer presets are published, as a folder listing in GitHub's format. Empty switches following them off.        |
+| `FFMPEG_PATH`                  | FFmpeg for camera checks and live pictures.                                                                          |
+| `HOST`, `PORT`, `OPEN_BROWSER` | Listening address and port, and whether a browser opens. `HOST=127.0.0.1` also turns network discovery off.          |
+| `ORIGIN`                       | The public address behind an HTTPS reverse proxy, such as `https://detector.example.com`.                            |
 
-To exercise managed detection from source, point `AIDETECTOR_EXECUTABLE` to the detector executable and `AIDETECTOR_DATA_DIR` to a disposable data directory before starting the web server. `AIDETECTOR_DOCKER_IMAGE` optionally selects the exact matching image. With no detector executable configured, the web server remains a frontend for a separately managed detector.
+Missing settings files start an empty setup. A separately started detector needs `--live-preview` and the same data folder for detection boxes to appear.
 
-Managed detection enables `--live-preview`. For a separately launched detector, pass that flag and share its data directory with the web server. The Compose examples already do this. Preview transport uses temporary files in `live/`, with a short viewer lease: publishing runs only while a viewer is connected. Visible cameras share one `/cameras/live?camera=<id>` SSE connection (repeat `camera` for multiple cameras). It delivers box metadata without JPEGs, leaving each independent video stream running at its own pace. Empty results, stopped detectors and expired frames clear the affected boxes. Preview results are not event recordings. See the [live preview protocol](../detector/LIVE_PREVIEW.md) for ownership, freshness and cleanup.
+### Executables and Docker
 
-Reading valid settings also keeps a private `config.json.last-valid` snapshot of both settings files; unchanged reads do not rewrite it. The checked-in Python JSON schema validates every save, including separately managed installations. Web requests share a serialized configuration store. Changed detector settings and metadata are staged before replacement; a failed second replacement restores the previous metadata. This protects ordinary I/O failures within one writer, not crashes or power loss across two files. Once saved, runtime application failures appear in monitoring status without falsely rejecting the save. Metadata-only changes avoid detector restarts. See the [settings save boundary](ARCHITECTURE.md#settings-save-boundary) for failure and recovery details.
+`AI_DETECTOR_WEB_TARGET` set to `windows-x64-baseline`, `darwin-arm64` or `linux-x64-baseline` makes `pnpm build` compile a single executable. The complete application is assembled and tested by [`distribution/build.py`](../distribution/README.md).
 
-The Advanced editor uses the bundled schema offline for suggestions, inline errors and immediate validation. Saving also validates on the server; a stale draft is rejected instead of overwriting changes made elsewhere. Detector JSON changes preserve camera names and clear preset identity when detection settings are customized. Editing a shared AI connection updates its assigned detectors while retaining their questions. Runtime mode changes require paused monitoring and take effect at the next start.
-
-Malformed JSON remains an error. Detector presets are discovered directly from `../config/detector/*.json` and embedded in the build, so setup does not fetch them from GitHub. Filenames supply the displayed names. An installed application can use a local `presets/` folder; see the [preset guide](../config/README.md). Camera connections and the first model download still need network access.
-
-Enabled monitoring restarts automatically after an unexpected detector failure, including a hard process crash. Repeated failures wait 2, 4, 8, 16 and then 30 seconds between attempts, without giving up; ten minutes of running resets the wait. Failed recovery attempts also retry. The error and next retry remain visible, and the new process must establish monitoring again. If cameras keep supplying frames but a ready detector stops processing for at least two minutes (longer for slow sampling intervals), the manager drains and restarts it through the same recovery path. A two-minute grace period after suspend avoids restarting before cameras and GPU drivers recover. Offline cameras and model preparation do not trigger this watchdog. Pause and Quit cancel recovery. An unexpected exit zero also restarts: managed monitoring is continuous. Run the standalone detector CLI for one-shot file processing. Applying saved settings resumes monitoring even if the old detector fails while draining. On Mac and Windows the native launcher also restarts a crashed background web process. Losing the native menu alone leaves monitoring running; reopening the app reconnects the menu. Quit still closes the whole app.
-
-`pnpm test` runs platform selection, process lifecycle, cancellation, restart, configuration failure, GPU check failure, credential redaction and data persistence tests. `runtime-recovery.test.ts` covers repeated failures, hard termination, capped retry delays, failed startup, preserved logs, fresh readiness and pause/quit cancellation with real child processes. Process fixture tests run on POSIX; Windows shutdown is covered by the Python stdin-control tests and the complete bundle smoke in release CI. `pnpm check` fails on errors and warnings. See the [architecture and reading map](ARCHITECTURE.md) for the source boundaries, test map, complexity limits and generated dependency graph.
-
-## Building executables
-
-On Windows 10 and Windows 11, `nvidia-runtime.ts` prepares the CUDA runtime through uv when automatic inference detects a supported NVIDIA GPU. Other hardware and explicit ONNX provider choices retain the bundled detector. `nvidia-runtime.test.ts` checks discovery, cache reuse, download failures, retry and cancellation; `nvidia-runtime-installed.test.ts` installs the real packages in Windows application CI. See the [distribution guide](../distribution/README.md) for supported GPUs and the dependency cache layout.
-
-Set `AI_DETECTOR_WEB_TARGET` to `windows-x64-baseline`, `darwin-arm64` or `linux-x64-baseline` when running `pnpm build`. The complete [application workflow](../.github/workflows/application.yml) builds and packages the web executable, the native detector and FFmpeg together, then tests the result. The [container workflow](../.github/workflows/containers.yml) publishes the separate web image for Docker/Compose deployments; standalone web executables can still be built locally with `distribution/build.py web --standalone-web`.
-
-The patched executable adapter binds the instance port before initialization, starts SvelteKit's server hook without waiting for a browser request, and awaits shutdown listeners before releasing the port. Its authenticated local `--quit` command waits for the owning process to exit. The manager uses a pipe to request graceful detector shutdown on every OS; it does not depend on Windows POSIX signal behavior. A 30-second detector stop deadline triggers forced termination and a visible warning if draining failed. Runtime output displayed in the browser is bounded and URL credentials are redacted. Native launchers, installers, login behavior and signing gates are documented in the [distribution guide](../distribution/README.md).
-
-## Docker
-
-Build from the repository root, since setup presets are shared with the detector:
+The container image is built from the [`Dockerfile`](../Dockerfile) in the repository root and holds this server together with the detector it starts:
 
 ```sh
-docker build -f web/Dockerfile -t ai-detector-web .
+docker build -t ai-detector .
 ```
 
-The image serves port 3000 and reads configuration/recordings in `/data`. The existing Compose files expose port 80. This separately managed deployment intentionally has no Docker socket mount and cannot launch another detector from the web UI.
-
-Direct HTTP works with the hostname or IP address used in the browser; no fixed `ORIGIN` is needed. Behind an HTTPS reverse proxy, set `ORIGIN` to the public origin, for example `https://detector.example.com`. The Node entry point always supplies its own HTTP transport header; it does not trust a browser's forwarded protocol header. SvelteKit's cross-origin request protection remains enabled.
-
-Containers restart at boot when Docker starts, unless deliberately stopped. A web server inside Docker cannot open the host's desktop browser; the [Linux startup helper](../README.md#start-automatically-on-a-jetson-or-linux-desktop) installs a separate desktop-login launcher that waits for the web app and opens its home route.
+It serves port 3000 unless `PORT` says otherwise, and reads `/data`. `pnpm start` runs the same server without a container. A container cannot open the host's browser; the [Linux startup helper](../README.md#start-automatically-on-a-jetson-or-linux-desktop) does that at login.

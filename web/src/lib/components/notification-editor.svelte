@@ -14,7 +14,7 @@
 		saveAlerts,
 		getTelegrams,
 		connectTelegram
-	} from '$lib/remote/exporter.remote';
+	} from '$lib/remote/alerts.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
 	import { sameTelegram } from '$lib/configuration';
@@ -25,8 +25,6 @@
 	let {
 		originalLabel = '',
 		initial,
-		detectorLabel = '',
-		setupMode = false,
 		inline = false,
 		onSaved,
 		onCancel
@@ -36,19 +34,19 @@
 		onSaved?: (recipient: TelegramMeta) => void;
 		onCancel?: () => void;
 		initial?: TelegramMeta;
-		detectorLabel?: string;
-		setupMode?: boolean;
 	} = $props();
 	const detectors = await getDetectors();
 	const recipients = await getTelegrams();
 	let label = $state(untrack(() => initial?.label ?? 'My phone'));
 	let token = $state(untrack(() => initial?.token ?? ''));
 	let chat = $state(untrack(() => initial?.chat ?? ''));
+	let quietStart = $state(untrack(() => initial?.quiet?.start ?? ''));
+	let quietEnd = $state(untrack(() => initial?.quiet?.end ?? ''));
 	let detectorLabels = $state(
 		untrack(() =>
-			!initial && !detectorLabel && detectors.length === 1
+			!initial && detectors.length === 1
 				? [detectors[0].meta.label]
-				: recipientDetectorLabels(detectors, initial, detectorLabel)
+				: recipientDetectorLabels(detectors, initial)
 		)
 	);
 	let pending = $state(false);
@@ -58,12 +56,14 @@
 	const existing = $derived(
 		!initial ? recipients.find((recipient) => sameTelegram(recipient, { token, chat })) : undefined
 	);
+	// Both times, or none: half a period says nothing.
+	const quiet = $derived(
+		quietStart && quietEnd ? { start: quietStart, end: quietEnd } : existing?.quiet
+	);
 	const connectionUnchanged = $derived(initial && token === initial.token && chat === initial.chat);
 	const readyForDetectors = $derived(Boolean(connectionUnchanged || received));
 	const canSave = $derived(label.trim() && token && chat && (connectionUnchanged || received));
-	const back = $derived(
-		setupMode ? '/setup?step=finish' : detectorLabel ? '/setup?step=detectors' : '/notifications'
-	);
+	const back = resolve('/notifications');
 	async function save(event: SubmitEvent) {
 		event.preventDefault();
 		if (!canSave) return;
@@ -82,6 +82,7 @@
 							label: existing?.label ?? label,
 							token,
 							chat,
+							quiet,
 							detectorLabels: existing
 								? [...new Set([...recipientDetectorLabels(detectors, existing), ...detectorLabels])]
 								: detectorLabels,
@@ -91,7 +92,7 @@
 			if (inline) onSaved?.({ label, token, chat });
 			else {
 				toast.success('Alert settings saved.');
-				await goto(resolve(back));
+				await goto(back);
 			}
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not save alerts. Your choices are still here.');
@@ -104,7 +105,7 @@
 		error = '';
 		try {
 			await deleteTelegram({ label: originalLabel }).updates(getDetectors(), getTelegrams());
-			await goto(resolve('/notifications'));
+			await goto(back);
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not remove this recipient.');
 		} finally {
@@ -113,135 +114,135 @@
 	}
 </script>
 
-<section class={inline ? 'flex flex-col gap-4' : 'settings-page max-w-3xl'}>
-	{#if !inline}
-		<header class="flex flex-col items-start gap-2">
-			<h1 class="settings-heading">
-				{initial ? 'Manage alerts' : 'Connect alerts'}
-			</h1>
-			<p class="settings-description">
-				{initial
-					? 'Keep using your saved recipient and choose which detectors send alerts.'
-					: 'Connect your phone, confirm a test message, then choose your detectors.'}
+<form class="flex flex-col gap-6" onsubmit={save}>
+	<div class={inline ? 'flex flex-col gap-5' : 'panel flex flex-col gap-5 p-5'}>
+		<TelegramConnection
+			{initial}
+			bind:token
+			bind:chat
+			bind:received
+			onRecipient={(name) => {
+				if (!initial) label = name;
+			}}
+			bind:busy={connecting}
+			disabled={pending}
+		/>
+	</div>
+	{#if readyForDetectors}
+		{#if existing}
+			<p class="text-sm">
+				Already connected as <strong>{existing.label}</strong>. We’ll reuse this recipient.
 			</p>
-		</header>
-	{/if}
-	<form class="flex flex-col gap-6" onsubmit={save}>
-		<div class="flex min-w-0 flex-col gap-6">
-			<section class="flex flex-col gap-5">
-				<div class="flex flex-col gap-5">
-					<TelegramConnection
-						{initial}
-						bind:token
-						bind:chat
-						bind:received
-						onRecipient={(name) => {
-							if (!initial) label = name;
-						}}
-						bind:busy={connecting}
-						disabled={pending}
-					/>
-				</div>
-			</section>
-			{#if readyForDetectors}
-				<section class="flex flex-col gap-5">
-					{#if !inline}<header class="flex flex-col gap-2">
-							<h2 class="font-medium">Alert settings</h2>
-							<p class="text-sm text-muted-foreground">
-								{initial
-									? 'Existing detector assignments are already selected.'
-									: 'Choose which detectors send alerts. Each selection includes all of that detector’s cameras.'}
-							</p>
-						</header>{/if}
-					<div class="flex flex-col gap-5">
-						{#if existing}<p class="text-sm">
-								Already connected as <strong>{existing.label}</strong>. We’ll reuse this recipient.
-							</p>{:else}<Field.Field
-								><Field.Label for="notification-label">Recipient name</Field.Label><Input
-									id="notification-label"
-									bind:value={label}
-									disabled={pending}
-									required
-									placeholder="e.g. My phone"
-								/></Field.Field
-							>{/if}
-						{#if !inline}<Field.Set
-								><Field.Legend>Detectors that send alerts</Field.Legend><Field.Group>
-									{#each detectors as { meta }, index (meta.label)}
-										<Field.Field orientation="horizontal">
-											<Checkbox
-												id={`alerts-${index}`}
-												checked={detectorLabels.includes(meta.label)}
-												disabled={pending}
-												onCheckedChange={(enabled) =>
-													(detectorLabels = enabled
-														? [...detectorLabels, meta.label]
-														: detectorLabels.filter((id) => id !== meta.label))}
-											/>
-											<Field.Label for={`alerts-${index}`}>{meta.label}</Field.Label>
-										</Field.Field>
-									{:else}<Field.Description
-											>You can connect now and choose this recipient when you add a detector.</Field.Description
-										>{/each}
-								</Field.Group></Field.Set
-							>{/if}
-					</div>
-				</section>
-			{/if}
-			{#if error}<Alert.Root variant="destructive"
-					><Alert.Title>Alerts need attention</Alert.Title><Alert.Description
-						>{error}</Alert.Description
-					></Alert.Root
-				>{/if}
-			<div class="flex flex-wrap gap-3">
-				{#if readyForDetectors}<Button type="submit" disabled={pending || connecting || !canSave}
-						>{pending
-							? 'Saving alerts…'
-							: initial
-								? 'Save alert settings'
-								: inline
-									? 'Use this recipient'
-									: detectorLabels.length
-										? 'Save alerts'
-										: 'Save recipient'}</Button
-					>{/if}
-				{#if inline}<Button type="button" onclick={onCancel} disabled={pending} variant="outline"
-						>Cancel</Button
-					>{:else}<Button href={resolve(back)} disabled={pending} variant="outline">Cancel</Button
-					>{/if}
-			</div>
-		</div>
-		{#if initial}<details>
-				<summary class="cursor-pointer text-sm text-muted-foreground">Remove recipient</summary>
-				<div class="mt-3 flex flex-col items-start gap-3">
-					<p class="text-sm text-muted-foreground">
-						This stops its alerts for every detector. Monitoring and recordings continue.
-					</p>
-					<AlertDialog.Root>
-						<AlertDialog.Trigger
-							type="button"
-							class={buttonVariants({ variant: 'outline', size: 'sm' })}
-							disabled={pending || connecting}>Remove recipient</AlertDialog.Trigger
+		{:else}
+			<Field.Field class="max-w-md">
+				<Field.Label for="notification-label">Recipient name</Field.Label>
+				<Input
+					id="notification-label"
+					bind:value={label}
+					disabled={pending}
+					required
+					placeholder="Example: My phone"
+				/>
+			</Field.Field>
+		{/if}
+		{#if !inline}
+			<Field.Set>
+				<Field.Legend>Which detectors alert this recipient?</Field.Legend>
+				<Field.Description>Each detector alerts for all of its cameras.</Field.Description>
+				<Field.Group class="gap-1">
+					{#each detectors as { meta }, index (meta.label)}
+						<label
+							for={`alerts-${index}`}
+							class="-mx-2 flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 hover:bg-accent"
 						>
-						<AlertDialog.Content>
-							<AlertDialog.Header
-								><AlertDialog.Title>Remove “{originalLabel}”?</AlertDialog.Title
-								><AlertDialog.Description
-									>Every detector will stop sending alerts to this recipient. Monitoring and saved
-									recordings are kept. You can reconnect the recipient later.</AlertDialog.Description
-								></AlertDialog.Header
-							>
-							<AlertDialog.Footer
-								><AlertDialog.Cancel type="button">Keep recipient</AlertDialog.Cancel
-								><AlertDialog.Action
-									type="button"
-									class={buttonVariants({ variant: 'destructive' })}
-									onclick={remove}>Remove recipient</AlertDialog.Action
-								></AlertDialog.Footer
-							>
-						</AlertDialog.Content>
-					</AlertDialog.Root>
-				</div>
-			</details>{/if}
-	</form>
-</section>
+							<Checkbox
+								id={`alerts-${index}`}
+								checked={detectorLabels.includes(meta.label)}
+								disabled={pending}
+								onCheckedChange={(enabled) =>
+									(detectorLabels = enabled
+										? [...detectorLabels, meta.label]
+										: detectorLabels.filter((id) => id !== meta.label))}
+							/>
+							<span class="text-sm font-medium">{meta.label}</span>
+						</label>
+					{:else}
+						<Field.Description>
+							You can connect now and choose this recipient when you add a detector.
+						</Field.Description>
+					{/each}
+				</Field.Group>
+			</Field.Set>
+			<Field.Set>
+				<Field.Legend>Quiet hours</Field.Legend>
+				<Field.Description>
+					Alerts between these times still arrive, but without sound. Leave both empty for sound at
+					any hour.
+				</Field.Description>
+				<Field.Group class="max-w-md sm:flex-row">
+					<Field.Field>
+						<Field.Label for="quiet-start">Quiet from</Field.Label>
+						<Input id="quiet-start" type="time" bind:value={quietStart} disabled={pending} />
+					</Field.Field>
+					<Field.Field>
+						<Field.Label for="quiet-end">Until</Field.Label>
+						<Input id="quiet-end" type="time" bind:value={quietEnd} disabled={pending} />
+					</Field.Field>
+				</Field.Group>
+			</Field.Set>
+		{/if}
+	{/if}
+	{#if error}
+		<Alert.Root variant="destructive">
+			<Alert.Title>Alerts need attention</Alert.Title>
+			<Alert.Description>{error}</Alert.Description>
+		</Alert.Root>
+	{/if}
+	<div class="flex flex-wrap gap-3">
+		{#if readyForDetectors}
+			<Button type="submit" disabled={pending || connecting || !canSave}>
+				{pending
+					? 'Saving…'
+					: initial
+						? 'Save changes'
+						: inline
+							? 'Use this recipient'
+							: 'Save recipient'}
+			</Button>
+		{/if}
+		{#if inline}
+			<Button onclick={onCancel} disabled={pending} variant="outline">Cancel</Button>
+		{:else}
+			<Button href={back} disabled={pending} variant="outline">Cancel</Button>
+		{/if}
+	</div>
+	{#if initial}
+		<div class="border-t pt-5">
+			<AlertDialog.Root>
+				<AlertDialog.Trigger
+					type="button"
+					class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
+						' -ml-2.5 text-danger-foreground hover:text-danger-foreground'}
+					disabled={pending || connecting}>Remove this recipient…</AlertDialog.Trigger
+				>
+				<AlertDialog.Content>
+					<AlertDialog.Header>
+						<AlertDialog.Title>Remove “{originalLabel}”?</AlertDialog.Title>
+						<AlertDialog.Description>
+							Every detector will stop sending alerts to this recipient. Monitoring and saved
+							recordings are kept. You can reconnect the recipient later.
+						</AlertDialog.Description>
+					</AlertDialog.Header>
+					<AlertDialog.Footer>
+						<AlertDialog.Cancel type="button">Keep recipient</AlertDialog.Cancel>
+						<AlertDialog.Action
+							type="button"
+							class={buttonVariants({ variant: 'destructive' })}
+							onclick={remove}>Remove recipient</AlertDialog.Action
+						>
+					</AlertDialog.Footer>
+				</AlertDialog.Content>
+			</AlertDialog.Root>
+		</div>
+	{/if}
+</form>

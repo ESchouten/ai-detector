@@ -63,8 +63,11 @@ test('downloads group manually reviewed events by their effective verdict and re
 		)
 	);
 	const base = `detections/activity/rejected/${timestamp}/`;
-	assert.equal(JSON.parse(Buffer.from(files[base + 'review.json']).toString()).validated, false);
-	assert.equal(JSON.parse(Buffer.from(files[base + 'metadata.json']).toString()).validated, true);
+	// One metadata file carries both the person's review and the validator's own verdict.
+	const exported = JSON.parse(Buffer.from(files[base + 'metadata.json']).toString());
+	assert.equal(exported.review.validated, false);
+	assert.equal(exported.review.source, 'web');
+	assert.equal(exported.validated, true);
 	assert.ok(files[base + 'video.mp4']);
 	assert.equal(
 		(await exportRecordings(archive, { stage: 'approved' }, new Request('http://localhost/export')))
@@ -179,6 +182,25 @@ test('ZIP includes original media and metadata across all pages, but no configur
 	);
 });
 
+test('an export of photos only holds the picture without boxes and the details of each event', async (t) => {
+	const { root, archive } = await fixture(t);
+	const timestamp = '2026-09-22T12-00-00';
+	await event(root, 'activity', 'approved', timestamp);
+	const folder = path.join(root, 'activity', 'approved', timestamp);
+	for (const name of ['clean.jpg', 'best.jpg', `${timestamp}_0.jpg`])
+		await writeFile(path.join(folder, name), `image ${name}`);
+	const files = await unzip(
+		await exportRecordings(archive, { content: 'photos' }, new Request('http://localhost/export'))
+	);
+	assert.deepEqual(Object.keys(files).sort(), [
+		'PHOTOS-ONLY.txt',
+		'README.txt',
+		`detections/activity/approved/${timestamp}/clean.jpg`,
+		`detections/activity/approved/${timestamp}/metadata.json`
+	]);
+	assert.match(Buffer.from(files['PHOTOS-ONLY.txt']).toString(), /original photos only/);
+});
+
 test(
 	'export ignores linked media and rejects a category link outside the archive',
 	{ skip: process.platform === 'win32' },
@@ -195,12 +217,11 @@ test(
 		const outside = path.join(directory, 'outside');
 		await event(outside, 'private', 'approved', '2026-09-22T12-00-00');
 		await symlink(path.join(outside, 'private'), path.join(root, 'external'));
-		const response = await exportRecordings(
-			archive,
-			{ type: 'external' },
-			new Request('http://localhost/export')
+		// The link is refused while listing recordings, before any download starts.
+		await assert.rejects(
+			exportRecordings(archive, { type: 'external' }, new Request('http://localhost/export')),
+			/Invalid archive path/
 		);
-		await assert.rejects(response.arrayBuffer(), /Invalid archive path/);
 	}
 );
 

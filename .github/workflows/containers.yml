@@ -2,14 +2,8 @@ name: Container releases
 
 on:
   push:
-    tags: ['detector/v*', 'web/v*']
+    tags: ['app/v*']
   workflow_dispatch:
-    inputs:
-      component:
-        description: Images to publish from the selected branch
-        type: choice
-        options: [all, detector, web]
-        default: all
 
 permissions:
   contents: read
@@ -20,24 +14,24 @@ concurrency:
   group: container-releases
   cancel-in-progress: false
 
+env:
+  IMAGE: ghcr.io/eschouten/ai-detector
+
 jobs:
   workflows:
     uses: ./.github/workflows/workflow-tests.yml
 
   detector-checks:
-    if: &build-detector (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/detector/v')) || (github.event_name == 'workflow_dispatch' && inputs.component != 'web')
     uses: ./.github/workflows/detector-tests.yml
 
   web-checks:
-    if: &build-web (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/web/v')) || (github.event_name == 'workflow_dispatch' && inputs.component != 'detector')
     uses: ./.github/workflows/web-tests.yml
 
-  detector:
-    name: Detector / ${{ matrix.platform }}
-    if: *build-detector
+  image:
+    name: Image / ${{ matrix.platform }}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
-    strategy: &native-platforms
+    strategy:
       fail-fast: false
       matrix:
         include:
@@ -47,18 +41,12 @@ jobs:
           - platform: linux/arm64
             arch: arm64
             runner: ubuntu-24.04-arm
-    env:
-      COMPONENT: detector
-      IMAGE: ghcr.io/eschouten/ai-detector
-      CONTEXT: detector
-      DOCKERFILE: detector/Dockerfile
-      MINIMUM_FREE_GB: '35'
-    steps: &build-steps
+    steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-container
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          minimum-free-gb: ${{ env.MINIMUM_FREE_GB }}
+          minimum-free-gb: '35'
       - name: Image tags and labels
         id: meta
         uses: docker/metadata-action@v5
@@ -66,28 +54,20 @@ jobs:
           images: ${{ env.IMAGE }}
           flavor: latest=${{ github.event_name == 'push' && 'auto' || 'false' }}
           tags: |
-            type=semver,pattern={{version}},match=^${{ env.COMPONENT }}/v(.*)$
+            type=semver,pattern={{version}},match=^app/v(.*)$
             type=ref,event=branch
       - name: Build and push by digest
         id: build
         uses: docker/build-push-action@v6
         with:
-          context: ${{ env.CONTEXT }}
-          file: ${{ env.DOCKERFILE }}
+          context: .
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: REF_NAME=${{ github.ref_name }}
           outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
           cache-from: type=registry,ref=${{ env.IMAGE }}:cache-${{ matrix.arch }}
           cache-to: type=registry,ref=${{ env.IMAGE }}:cache-${{ matrix.arch }},mode=max
-      - name: Check detector container starts
-        if: env.COMPONENT == 'detector'
-        timeout-minutes: 5
-        env:
-          DIGEST: ${{ steps.build.outputs.digest }}
-        run: docker run --rm --entrypoint python3 "$IMAGE@$DIGEST" -m aidetector --help
-      - name: Check web container serves setup and includes working FFmpeg
-        if: env.COMPONENT == 'web'
+      - name: Check the container serves setup, has working FFmpeg and can run its detector
         timeout-minutes: 5
         env:
           DIGEST: ${{ steps.build.outputs.digest }}
@@ -100,39 +80,22 @@ jobs:
           touch "$RUNNER_TEMP/digests/${DIGEST#sha256:}"
       - uses: actions/upload-artifact@v7
         with:
-          name: digests-${{ env.COMPONENT }}-${{ matrix.arch }}
+          name: digests-${{ matrix.arch }}
           path: ${{ runner.temp }}/digests/*
           if-no-files-found: error
           retention-days: 7
 
-  web:
-    name: Web / ${{ matrix.platform }}
-    if: *build-web
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 60
-    strategy: *native-platforms
-    env:
-      COMPONENT: web
-      IMAGE: ghcr.io/eschouten/ai-detector-web
-      CONTEXT: .
-      DOCKERFILE: web/Dockerfile
-      MINIMUM_FREE_GB: '0'
-    steps: *build-steps
-
-  detector-manifest:
-    name: Publish detector
-    needs: [workflows, detector, detector-checks]
+  manifest:
+    name: Publish image
+    needs: [workflows, image, detector-checks, web-checks]
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      COMPONENT: detector
-      IMAGE: ghcr.io/eschouten/ai-detector
-    steps: &publish-steps
+    steps:
       - uses: actions/checkout@v6
       - uses: actions/download-artifact@v7
         with:
           path: ${{ runner.temp }}/digests
-          pattern: digests-${{ env.COMPONENT }}-*
+          pattern: digests-*
           merge-multiple: true
       - uses: ./.github/actions/setup-container
         with:
@@ -152,13 +115,3 @@ jobs:
         env:
           IMAGE_VERSION: ${{ steps.meta.outputs.version }}
         run: docker buildx imagetools inspect "$IMAGE:$IMAGE_VERSION"
-
-  web-manifest:
-    name: Publish web
-    needs: [workflows, web, web-checks]
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    env:
-      COMPONENT: web
-      IMAGE: ghcr.io/eschouten/ai-detector-web
-    steps: *publish-steps

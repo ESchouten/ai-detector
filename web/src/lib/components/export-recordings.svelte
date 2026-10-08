@@ -4,10 +4,12 @@
 	import * as v from 'valibot';
 	import { SvelteURLSearchParams } from 'svelte/reactivity';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Input } from '$lib/components/ui/input';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Field from '$lib/components/ui/field';
-	import { recordingExportInput, STAGE_LABELS } from '$lib/detections';
+	import { recordingExportInput, stageLabel } from '$lib/detections';
+	import { plural } from '$lib/format';
 	import { getExportCount } from '$lib/remote/detections.remote';
 	import type { Stage } from '$lib/schema';
 
@@ -15,13 +17,15 @@
 	let open = $state(false);
 	let from = $state('');
 	let to = $state('');
+	let photosOnly = $state(false);
 	const selection = $derived(
 		v.safeParse(recordingExportInput, { type, stage, from: from || undefined, to: to || undefined })
 	);
 	const count = $derived(open && selection.success ? getExportCount(selection.output) : null);
 	const search = $derived.by(() => {
 		const params = new SvelteURLSearchParams();
-		for (const [key, value] of Object.entries({ type, stage, from, to })) {
+		const content = photosOnly ? 'photos' : '';
+		for (const [key, value] of Object.entries({ type, stage, from, to, content })) {
 			if (value) params.set(key, value);
 		}
 		return params.toString();
@@ -30,7 +34,7 @@
 
 <Dialog.Root bind:open>
 	<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
-		<Download data-icon="inline-start" aria-hidden="true" />Export recordings
+		<Download data-icon="inline-start" aria-hidden="true" />Export
 	</Dialog.Trigger>
 	<Dialog.Content>
 		<Dialog.Header>
@@ -40,7 +44,7 @@
 			</Dialog.Description>
 		</Dialog.Header>
 		<p class="text-sm">
-			{type ?? 'All categories'} · {stage ? STAGE_LABELS[stage] : 'All stages'}
+			{type ?? 'All categories'} · {stage ? stageLabel(stage) : 'All results'}
 		</p>
 		<Field.Group>
 			<Field.Group class="sm:flex-row">
@@ -70,9 +74,19 @@
 			<Field.Description id="export-dates-help"
 				>Optional. Leave both empty to include all dates.</Field.Description
 			>
+			<Field.Field orientation="horizontal">
+				<Checkbox id="export-photos" bind:checked={photosOnly} />
+				<Field.Content>
+					<Field.Label for="export-photos">Only the original photos</Field.Label>
+					<Field.Description>
+						Leaves out videos and pictures with boxes: a much smaller ZIP to share for model
+						improvement.
+					</Field.Description>
+				</Field.Content>
+			</Field.Field>
 		</Field.Group>
 		{#if !selection.success}
-			<p id="export-dates-error" role="alert" class="text-sm text-destructive">
+			<p id="export-dates-error" role="alert" class="text-sm text-danger-foreground">
 				{selection.issues[0].message}
 			</p>
 		{:else if count}
@@ -82,7 +96,10 @@
 				<p role="status" class="text-sm text-muted-foreground">
 					{total === 0
 						? 'No recordings match these filters.'
-						: `${total} ${total === 1 ? 'recording' : 'recordings'} selected, including all pages.`}
+						: plural(total, [
+								'# recording selected, including all pages.',
+								'# recordings selected, including all pages.'
+							])}
 				</p>
 				<Dialog.Footer>
 					<Button
@@ -95,7 +112,7 @@
 					</Button>
 				</Dialog.Footer>
 			{:catch}
-				<p role="alert" class="text-sm text-destructive">
+				<p role="alert" class="text-sm text-danger-foreground">
 					Could not read the recordings. Close this window and try again.
 				</p>
 			{/await}

@@ -1,10 +1,13 @@
 import assert from 'node:assert/strict';
 import {
+	chmod,
 	mkdtemp,
 	mkdir,
 	open,
+	readdir,
 	readFile,
 	rm,
+	stat,
 	symlink,
 	truncate,
 	writeFile,
@@ -40,6 +43,13 @@ test('manual review overrides filtering, survives restart and can restore the or
 	assert.equal(rejected.stage, 'rejected');
 	assert.equal(rejected.validated, true, 'The original AI verdict is preserved');
 	assert.equal(rejected.review?.source, 'web');
+	// The review lives in the recording's one metadata file, beside the AI verdict.
+	const saved = JSON.parse(await readFile(path.join(event, 'metadata.json'), 'utf8'));
+	assert.deepEqual(
+		{ ...saved, review: { ...saved.review, reviewed_at: '' } },
+		{ ...metadata, review: { validated: false, source: 'web', reviewed_at: '' } }
+	);
+	assert.deepEqual((await readdir(event)).sort(), ['metadata.json', 'video.mp4']);
 	assert.equal(detectionKey(rejected), detectionKey(before));
 	assert.equal((await archive.locations({ stage: 'approved' })).length, 0);
 	assert.equal((await archive.locations({ stage: 'rejected' })).length, 1);
@@ -82,14 +92,42 @@ test('reviewing refuses traversal and missing recordings without creating archiv
 	assert.deepEqual(await archive.types(), ['cow']);
 });
 
-test('invalid review sidecars exclude that recording with a warning instead of losing the decision', async (t) => {
+test('deleting a recording removes its files and it from the list, and nothing outside the archive', async (t) => {
 	const { archive, event } = await fixture(t);
-	await writeFile(path.join(event, 'review.json'), JSON.stringify({ validated: 'false' }));
+	const address = { type: 'cow', archiveStage: 'approved' as const, timestamp };
+	assert.equal((await archive.page({ offset: 0, limit: 24 })).items.length, 1);
+	await assert.rejects(archive.remove({ ...address, type: '..' }), ArchivePathError);
+	await archive.remove(address);
+	await assert.rejects(readFile(path.join(event, 'metadata.json')), { code: 'ENOENT' });
+	assert.equal((await archive.page({ offset: 0, limit: 24 })).items.length, 0);
+	await assert.rejects(archive.remove(address), { code: 'ENOENT' });
+});
+
+test('an unreadable review excludes that recording with a warning instead of losing the decision', async (t) => {
+	const { archive, event } = await fixture(t);
+	const address = { type: 'cow', archiveStage: 'approved' as const, timestamp };
+	const damaged = JSON.stringify({ ...metadata, review: { validated: 'false' } });
+	await writeFile(path.join(event, 'metadata.json'), damaged);
 	const page = await archive.page({ offset: 0, limit: 24 });
 	assert.equal(page.items.length, 0);
 	assert.equal(page.warnings?.length, 1);
-	await assert.rejects(archive.readReview({ type: 'cow', archiveStage: 'approved', timestamp }));
+	await assert.rejects(archive.readReview(address));
+	// Reviewing again must not silently replace what could not be understood.
+	await assert.rejects(archive.review(address, true, 'web'));
+	assert.equal(await readFile(path.join(event, 'metadata.json'), 'utf8'), damaged);
 });
+
+test(
+	'a review keeps the permissions the detector gave the metadata file',
+	{ skip: process.platform === 'win32' },
+	async (t) => {
+		const { archive, event } = await fixture(t);
+		const file = path.join(event, 'metadata.json');
+		await chmod(file, 0o644);
+		await archive.review({ type: 'cow', archiveStage: 'approved', timestamp }, true, 'web');
+		assert.equal((await stat(file)).mode & 0o777, 0o644);
+	}
+);
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'ai-archive-'));

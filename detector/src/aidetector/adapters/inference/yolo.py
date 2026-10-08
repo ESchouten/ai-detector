@@ -97,6 +97,9 @@ def map_observations(
     )
 
 
+SUMMARY_SECONDS = 30
+
+
 class YoloDetector:
     def __init__(
         self,
@@ -119,13 +122,20 @@ class YoloDetector:
             "classes": list(self.classes),
             "imgsz": config.imgsz,
             "rect": options.rectangular,
-            "verbose": logger.isEnabledFor(logging.INFO),
+            "verbose": logger.isEnabledFor(logging.DEBUG),
         }
         if config.iou is not None:
             self._arguments["iou"] = config.iou
         if config.tracker is not None and config.tracking:
             self._arguments["tracker"] = config.tracker
         self._last_frames: dict[str, NDArray[np.uint8]] = {}
+        # One line per batch would push everything else out of the log within a
+        # day, so routine timing is summarised.
+        self._summarised_at = perf_counter()
+        self._batches = 0
+        self._frames = 0
+        self._busy_ms = 0.0
+        self._slowest_ms = 0.0
 
     def detect(self, frames: Frames) -> dict[str, tuple[Observation, ...]]:
         started = perf_counter()
@@ -169,7 +179,7 @@ class YoloDetector:
             }
             mapping_ms = (perf_counter() - predicted) * 1000
         elapsed_ms = (perf_counter() - started) * 1000
-        logger.info(
+        logger.debug(
             "%s time: %.1fms for %d frame(s), %.1fms/frame (%d active source(s)); "
             "GPU lock wait=%.1fms; SDK ms/frame=%s; result mapping=%.1fms; input shapes=%s",
             "Track" if self.tracking else "Predict",
@@ -186,6 +196,34 @@ class YoloDetector:
             mapping_ms,
             sorted({image.shape[:2] for image in images}),
         )
+        self._batches += 1
+        self._frames += len(images)
+        self._busy_ms += elapsed_ms
+        self._slowest_ms = max(self._slowest_ms, elapsed_ms)
+        if perf_counter() - self._summarised_at >= SUMMARY_SECONDS:
+            logger.info(
+                "%s: %d frame(s) in %d batch(es) over %.0fs; %.1fms/frame on "
+                "average, slowest batch %.1fms",
+                "Tracking" if self.tracking else "Inference",
+                self._frames,
+                self._batches,
+                perf_counter() - self._summarised_at,
+                self._busy_ms / self._frames,
+                self._slowest_ms,
+            )
+            if self._inference_scope is mps_inference:
+                import torch
+
+                # The process total is what the Apple GPU limit is held against.
+                logger.info(
+                    "Apple GPU memory: %.0f MiB held by PyTorch, %.0f MiB by the "
+                    "whole process",
+                    torch.mps.current_allocated_memory() / 2**20,
+                    torch.mps.driver_allocated_memory() / 2**20,
+                )
+            self._summarised_at = perf_counter()
+            self._batches = self._frames = 0
+            self._busy_ms = self._slowest_ms = 0.0
         return mapped
 
 
@@ -360,7 +398,7 @@ def initialize_predictor(
         overrides=overrides, _callbacks=model.callbacks
     )
     model.predictor.setup_model(
-        model=model.model, verbose=logger.isEnabledFor(logging.INFO)
+        model=model.model, verbose=logger.isEnabledFor(logging.DEBUG)
     )
     backend = model.predictor.model
     if backend.format == "onnx":

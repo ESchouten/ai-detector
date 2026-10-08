@@ -3,33 +3,37 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import type { WithoutChildren } from '$lib/utils';
 	import type { ComponentProps } from 'svelte';
-	import type { NavItem } from './types';
+	import { isActive, isSettingsArea, type NavItem } from '$lib/navigation';
 
 	let {
 		title,
 		items,
-		size = 'default',
 		...restProps
 	}: {
-		title: string;
+		title?: string;
 		items: NavItem[];
-		size?: 'lg' | 'default' | 'sm';
 	} & WithoutChildren<ComponentProps<typeof Sidebar.Group>> = $props();
-
-	function isActive(item: NavItem): boolean {
-		const path = new URL(item.url, page.url).pathname;
-		return page.url.pathname === path || page.url.pathname.startsWith(`${path}/`);
-	}
 </script>
 
 <Sidebar.Group {...restProps}>
-	<Sidebar.GroupLabel>{title}</Sidebar.GroupLabel>
+	{#if title}<Sidebar.GroupLabel>{title}</Sidebar.GroupLabel>{/if}
 	<Sidebar.Menu>
-		{#each items as item (item.title)}
+		{#each items as item (item.href)}
+			{@const active =
+				item.area === 'settings'
+					? isSettingsArea(page.url.pathname)
+					: isActive(item, page.url.pathname)}
+			{@const external = item.href.startsWith('http')}
 			<Sidebar.MenuItem>
-				<Sidebar.MenuButton {size} isActive={isActive(item)}>
+				<Sidebar.MenuButton isActive={active} class="h-9 gap-2.5 px-2.5">
 					{#snippet child({ props })}
-						<a href={item.url} {...props} aria-current={isActive(item) ? 'page' : undefined}>
+						<a
+							href={item.href}
+							{...props}
+							aria-current={active ? 'page' : undefined}
+							target={external ? '_blank' : undefined}
+							rel={external ? 'noreferrer' : undefined}
+						>
 							<item.icon />
 							<span>{item.title}</span>
 						</a>

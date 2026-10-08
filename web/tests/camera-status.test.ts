@@ -17,7 +17,7 @@ const camera: CameraRuntimeStatus = {
 };
 
 test('camera badges distinguish connection, processing and recording problems', () => {
-	assert.equal(cameraStatusBadge(camera, runtime, false).variant, 'success');
+	assert.equal(cameraStatusBadge(camera, runtime, false).tone, 'ok');
 	assert.equal(
 		cameraStatusBadge({ ...camera, state: 'offline' }, runtime, false).label,
 		'Camera offline'
@@ -40,7 +40,7 @@ test('paused and unknown status never claim monitoring or an old camera failure'
 	const failed = { ...camera, error: 'Old error', recordingError: 'Old recording error' };
 	assert.deepEqual(cameraStatusBadge(failed, { ...runtime, readiness: 'idle' }, false), {
 		label: 'Paused',
-		variant: 'secondary'
+		tone: 'neutral'
 	});
 	assert.equal(cameraStatusBadge(camera, runtime, true).label, 'Status unavailable');
 	assert.equal(

@@ -1,25 +1,34 @@
+<script lang="ts" module>
+	import { resolve } from '$app/paths';
+	import { CameraPictures } from '$lib/camera-pictures';
+	const pictures = new CameraPictures(() => resolve('/cameras/pictures'));
+</script>
+
 <script lang="ts">
 	import { onMount, type Snippet } from 'svelte';
-	import { resolve } from '$app/paths';
 	import { Button } from '$lib/components/ui/button';
-	import { Badge } from '$lib/components/ui/badge';
-	import CardOverlay from './card-overlay.svelte';
 	import CameraDetections from './camera-detections.svelte';
 	import { cameraPreviewSlots } from '$lib/preview-slots';
+	import { cn } from '$lib/utils';
 	let {
 		id,
 		label,
 		monitored = false,
-		overlay: overlayContent,
+		caption,
+		corner,
 		class: className
 	}: {
 		id: string;
 		label: string;
 		monitored?: boolean;
-		overlay?: Snippet;
+		/** Replaces the camera name along the bottom of the picture. */
+		caption?: Snippet;
+		/** Controls in the top corner, above the picture. */
+		corner?: Snippet;
 		class?: string;
 	} = $props();
 	let failed = $state(false);
+	let picture = $state<string>();
 	let version = $state(0);
 	let container: HTMLDivElement;
 	let visible = $state(false);
@@ -47,53 +56,67 @@
 		};
 	});
 
-	function releaseImage(node: HTMLImageElement) {
-		return { destroy: () => (node.src = 'data:,') };
-	}
+	$effect(() => {
+		// Asking again after a failure is a new subscription.
+		void version;
+		if (!active) return;
+		const release = pictures.subscribe(id, (url) => {
+			if (url) picture = url;
+			else failed = true;
+		});
+		return () => {
+			release();
+			picture = undefined;
+		};
+	});
 </script>
 
-<div bind:this={container}>
-	<CardOverlay class={className}>
-		<div class="relative aspect-video bg-muted">
-			{#if active}
-				{#key version}
-					<img
-						use:releaseImage
-						src={resolve(`/cameras/${id}/preview`)}
-						alt={`${label} live picture`}
-						onload={() => (failed = false)}
-						onerror={() => (failed = true)}
-						class="size-full object-contain"
-					/>
-				{/key}
-			{/if}
-			{#if active && !failed && monitored}<CameraDetections {id} {label} />{/if}
-			{#if !active || failed}
-				<div
-					class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-muted px-4 pt-12 pb-4"
+<div
+	bind:this={container}
+	class={cn(
+		'relative aspect-video overflow-hidden rounded-xl bg-media text-media-foreground',
+		className
+	)}
+>
+	{#if active && picture && !failed}
+		<img src={picture} alt={`${label} live picture`} class="size-full object-contain" />
+	{/if}
+	{#if active && !failed && monitored}<CameraDetections {id} {label} />{/if}
+	{#if active && !failed && !picture}
+		<p
+			role="status"
+			class="absolute inset-0 flex items-center justify-center pb-6 text-sm text-media-foreground/70"
+		>
+			Connecting…
+		</p>
+	{/if}
+	{#if !active || failed}
+		<div class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4 pb-6">
+			<p role="status" class="text-center text-sm text-media-foreground/70">
+				{active ? 'The live picture is unavailable.' : 'Preview paused'}
+			</p>
+			{#if visible && pageVisible}
+				<Button
+					type="button"
+					variant="secondary"
+					size="sm"
+					class="relative z-20"
+					onclick={() => {
+						failed = false;
+						version += 1;
+					}}>{active ? 'Try again' : 'Show live picture'}</Button
 				>
-					<p role="status" class="text-center text-sm text-muted-foreground">
-						{active ? 'The live picture is unavailable.' : 'Preview paused'}
-					</p>
-					{#if visible && pageVisible}
-						<Button
-							type="button"
-							variant="outline"
-							size="sm"
-							onclick={() => {
-								failed = false;
-								version += 1;
-							}}>{active ? 'Retry picture' : 'Show live picture'}</Button
-						>
-					{/if}
-				</div>
 			{/if}
 		</div>
-		{#snippet overlay()}
-			{#if overlayContent}{@render overlayContent()}{:else}<Badge
-					variant="secondary"
-					class="max-w-full text-left whitespace-normal">{label}</Badge
-				>{/if}
-		{/snippet}
-	</CardOverlay>
+	{/if}
+	<div
+		class="pointer-events-none absolute inset-x-0 bottom-0 flex items-end bg-linear-to-t from-black/80 via-black/35 to-transparent px-3.5 pt-10 pb-3"
+	>
+		{#if caption}{@render caption()}{:else}
+			<p class="min-w-0 truncate text-sm font-medium">{label}</p>
+		{/if}
+	</div>
+	{#if corner}
+		<div class="absolute top-2.5 right-2.5 z-20">{@render corner()}</div>
+	{/if}
 </div>

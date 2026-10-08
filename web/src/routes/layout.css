@@ -1,89 +1,121 @@
 @import 'tailwindcss';
+/* Translation catalogs are text, not markup: keep their words out of the class scan. */
+@source not '../locales';
 
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * The application's look lives in these tokens and in the components outside `ui/`.
+ * The shadcn components in `$lib/components/ui` stay as published, so they can be updated.
+ */
 :root {
-	--radius: 0.625rem;
-	--background: oklch(1 0 0);
-	--foreground: oklch(0.129 0.042 264.695);
+	--radius: 0.75rem;
+	--background: oklch(0.985 0.004 95);
+	--foreground: oklch(0.22 0.012 75);
 	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.129 0.042 264.695);
+	--card-foreground: oklch(0.22 0.012 75);
 	--popover: oklch(1 0 0);
-	--popover-foreground: oklch(0.129 0.042 264.695);
-	--primary: oklch(0.208 0.042 265.755);
-	--primary-foreground: oklch(0.984 0.003 247.858);
-	--secondary: oklch(0.968 0.007 247.896);
-	--secondary-foreground: oklch(0.208 0.042 265.755);
-	--muted: oklch(0.968 0.007 247.896);
-	--muted-foreground: oklch(0.554 0.046 257.417);
-	--accent: oklch(0.968 0.007 247.896);
-	--accent-foreground: oklch(0.208 0.042 265.755);
-	--destructive: oklch(0.577 0.245 27.325);
-	--success: oklch(0.94 0.04 155);
-	--success-foreground: oklch(0.34 0.09 155);
-	--warning: oklch(0.95 0.06 85);
-	--warning-foreground: oklch(0.38 0.09 70);
-	--category-background: 0.94 0.04;
-	--category-foreground: 0.34 0.1;
+	--popover-foreground: oklch(0.22 0.012 75);
+	--primary: oklch(0.42 0.085 158);
+	--primary-foreground: oklch(0.985 0.012 150);
+	--secondary: oklch(0.955 0.006 95);
+	--secondary-foreground: oklch(0.27 0.012 75);
+	--muted: oklch(0.96 0.005 95);
+	--muted-foreground: oklch(0.49 0.012 75);
+	--accent: oklch(0.95 0.008 110);
+	--accent-foreground: oklch(0.25 0.012 75);
+	--destructive: oklch(0.56 0.2 27);
+	--border: oklch(0.915 0.006 95);
+	--input: oklch(0.885 0.007 95);
+	--ring: oklch(0.62 0.09 158);
+
+	/* Status: a soft surface with readable text, and a saturated dot. */
+	--success: oklch(0.945 0.045 155);
+	--success-foreground: oklch(0.36 0.09 155);
+	--warning: oklch(0.955 0.06 88);
+	--warning-foreground: oklch(0.42 0.095 65);
+	--danger: oklch(0.95 0.032 25);
+	--danger-foreground: oklch(0.46 0.17 27);
+	--status-ok: oklch(0.64 0.17 150);
+	--status-warn: oklch(0.76 0.16 72);
+	--status-bad: oklch(0.6 0.21 27);
+	--status-idle: oklch(0.72 0.01 95);
+
+	/* Category colors keep their hue; green, amber and red stay reserved for status. */
+	--category-background: 0.945 0.04;
+	--category-foreground: 0.36 0.11;
 	--badge-hue: 210;
-	--border: oklch(0.929 0.013 255.508);
-	--input: oklch(0.929 0.013 255.508);
-	--ring: oklch(0.704 0.04 256.788);
+
+	/* Camera pictures and clips sit on the same dark surface in both themes. */
+	--media: oklch(0.17 0.006 80);
+	--media-foreground: oklch(0.97 0.004 95);
+
 	--chart-1: oklch(0.646 0.222 41.116);
 	--chart-2: oklch(0.6 0.118 184.704);
 	--chart-3: oklch(0.398 0.07 227.392);
 	--chart-4: oklch(0.828 0.189 84.429);
 	--chart-5: oklch(0.769 0.188 70.08);
-	--sidebar: oklch(0.984 0.003 247.858);
-	--sidebar-foreground: oklch(0.129 0.042 264.695);
-	--sidebar-primary: oklch(0.208 0.042 265.755);
-	--sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-	--sidebar-accent: oklch(0.968 0.007 247.896);
-	--sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-	--sidebar-border: oklch(0.929 0.013 255.508);
-	--sidebar-ring: oklch(0.704 0.04 256.788);
+	--sidebar: oklch(0.972 0.005 95);
+	--sidebar-foreground: oklch(0.22 0.012 75);
+	--sidebar-primary: oklch(0.42 0.085 158);
+	--sidebar-primary-foreground: oklch(0.985 0.012 150);
+	--sidebar-accent: oklch(0.935 0.008 100);
+	--sidebar-accent-foreground: oklch(0.22 0.012 75);
+	--sidebar-border: oklch(0.915 0.006 95);
+	--sidebar-ring: oklch(0.62 0.09 158);
 }
 
 .dark {
-	--background: oklch(0.129 0.042 264.695);
-	--foreground: oklch(0.984 0.003 247.858);
-	--card: oklch(0.208 0.042 265.755);
-	--card-foreground: oklch(0.984 0.003 247.858);
-	--popover: oklch(0.208 0.042 265.755);
-	--popover-foreground: oklch(0.984 0.003 247.858);
-	--primary: oklch(0.929 0.013 255.508);
-	--primary-foreground: oklch(0.208 0.042 265.755);
-	--secondary: oklch(0.279 0.041 260.031);
-	--secondary-foreground: oklch(0.984 0.003 247.858);
-	--muted: oklch(0.279 0.041 260.031);
-	--muted-foreground: oklch(0.704 0.04 256.788);
-	--accent: oklch(0.279 0.041 260.031);
-	--accent-foreground: oklch(0.984 0.003 247.858);
-	--destructive: oklch(0.704 0.191 22.216);
-	--success: oklch(0.3 0.05 155);
-	--success-foreground: oklch(0.9 0.06 155);
-	--warning: oklch(0.32 0.05 85);
-	--warning-foreground: oklch(0.92 0.07 85);
-	--category-background: 0.3 0.05;
-	--category-foreground: 0.9 0.05;
+	--background: oklch(0.175 0.006 80);
+	--foreground: oklch(0.95 0.005 95);
+	--card: oklch(0.215 0.007 80);
+	--card-foreground: oklch(0.95 0.005 95);
+	--popover: oklch(0.235 0.007 80);
+	--popover-foreground: oklch(0.95 0.005 95);
+	--primary: oklch(0.74 0.13 158);
+	--primary-foreground: oklch(0.19 0.035 160);
+	--secondary: oklch(0.265 0.007 80);
+	--secondary-foreground: oklch(0.95 0.005 95);
+	--muted: oklch(0.255 0.007 80);
+	--muted-foreground: oklch(0.7 0.01 90);
+	--accent: oklch(0.28 0.009 90);
+	--accent-foreground: oklch(0.95 0.005 95);
+	--destructive: oklch(0.68 0.19 24);
 	--border: oklch(1 0 0 / 10%);
-	--input: oklch(1 0 0 / 15%);
-	--ring: oklch(0.551 0.027 264.364);
+	--input: oklch(1 0 0 / 16%);
+	--ring: oklch(0.6 0.1 158);
+
+	--success: oklch(0.31 0.055 155);
+	--success-foreground: oklch(0.89 0.08 155);
+	--warning: oklch(0.33 0.055 80);
+	--warning-foreground: oklch(0.91 0.09 88);
+	--danger: oklch(0.31 0.07 25);
+	--danger-foreground: oklch(0.88 0.075 25);
+	--status-ok: oklch(0.74 0.17 150);
+	--status-warn: oklch(0.8 0.15 75);
+	--status-bad: oklch(0.7 0.19 25);
+	--status-idle: oklch(0.55 0.01 90);
+
+	--category-background: 0.31 0.055;
+	--category-foreground: 0.9 0.06;
+
+	--media: oklch(0.13 0.005 80);
+
 	--chart-1: oklch(0.488 0.243 264.376);
 	--chart-2: oklch(0.696 0.17 162.48);
 	--chart-3: oklch(0.769 0.188 70.08);
 	--chart-4: oklch(0.627 0.265 303.9);
 	--chart-5: oklch(0.645 0.246 16.439);
-	--sidebar: oklch(0.208 0.042 265.755);
-	--sidebar-foreground: oklch(0.984 0.003 247.858);
-	--sidebar-primary: oklch(0.488 0.243 264.376);
-	--sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-	--sidebar-accent: oklch(0.279 0.041 260.031);
-	--sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+	--sidebar: oklch(0.195 0.006 80);
+	--sidebar-foreground: oklch(0.95 0.005 95);
+	--sidebar-primary: oklch(0.74 0.13 158);
+	--sidebar-primary-foreground: oklch(0.19 0.035 160);
+	--sidebar-accent: oklch(0.265 0.008 85);
+	--sidebar-accent-foreground: oklch(0.95 0.005 95);
 	--sidebar-border: oklch(1 0 0 / 10%);
-	--sidebar-ring: oklch(0.551 0.027 264.364);
+	--sidebar-ring: oklch(0.6 0.1 158);
 }
 
 @theme inline {
@@ -110,8 +142,16 @@
 	--color-success-foreground: var(--success-foreground);
 	--color-warning: var(--warning);
 	--color-warning-foreground: var(--warning-foreground);
+	--color-danger: var(--danger);
+	--color-danger-foreground: var(--danger-foreground);
+	--color-status-ok: var(--status-ok);
+	--color-status-warn: var(--status-warn);
+	--color-status-bad: var(--status-bad);
+	--color-status-idle: var(--status-idle);
 	--color-category: oklch(var(--category-background) var(--badge-hue));
 	--color-category-foreground: oklch(var(--category-foreground) var(--badge-hue));
+	--color-media: var(--media);
+	--color-media-foreground: var(--media-foreground);
 	--color-border: var(--border);
 	--color-input: var(--input);
 	--color-ring: var(--ring);
@@ -134,25 +174,29 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+	html {
+		color-scheme: light;
+		-webkit-text-size-adjust: 100%;
+	}
+	html.dark {
+		color-scheme: dark;
+	}
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-background text-foreground antialiased;
+		-webkit-tap-highlight-color: transparent;
 	}
 }
 
 @layer components {
-	.settings-page {
-		@apply flex w-full max-w-5xl flex-col gap-6;
+	/* Pages share one left edge; media pages use the full canvas, forms stay readable. */
+	.page {
+		@apply flex w-full flex-col gap-6;
 	}
-	.settings-heading {
-		@apply text-2xl font-semibold tracking-tight;
+	.page-narrow {
+		@apply flex w-full max-w-3xl flex-col gap-6;
 	}
-	.settings-description {
-		@apply text-sm leading-relaxed text-muted-foreground;
-	}
-	.settings-layout {
-		@apply grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_17.5rem];
-	}
-	.settings-aside {
-		@apply flex min-w-0 flex-col gap-6 border-t pt-6 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-6;
+	/* A titled group of related settings on a narrow page. */
+	.panel {
+		@apply rounded-xl border bg-card text-card-foreground;
 	}
 }

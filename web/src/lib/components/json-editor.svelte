@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type * as Monaco from 'monaco-editor';
+	import { mode } from 'mode-watcher';
 	import * as Alert from '$lib/components/ui/alert';
 
 	let {
@@ -21,6 +22,9 @@
 	let container: HTMLDivElement;
 	let loadError = $state('');
 	let editor = $state.raw<Monaco.editor.IStandaloneCodeEditor>();
+	let setTheme = $state.raw<(theme: string) => void>();
+	const theme = $derived(mode.current === 'dark' ? 'vs-dark' : 'vs');
+	$effect(() => setTheme?.(theme));
 
 	$effect(() => {
 		editor?.updateOptions({ readOnly: readonly });
@@ -73,8 +77,10 @@
 			}
 			configureSchema();
 			const model = monaco.editor.createModel(value, 'json', uri);
+			setTheme = monaco.editor.setTheme;
 			editor = monaco.editor.create(container, {
 				model,
+				theme,
 				ariaLabel,
 				automaticLayout: true,
 				formatOnPaste: true,
@@ -110,7 +116,7 @@
 <div class="flex flex-col gap-2">
 	<div
 		bind:this={container}
-		class="overflow-hidden rounded-md border border-input"
+		class="overflow-hidden rounded-xl border"
 		style:height={typeof height === 'number' ? `${height}px` : height}
 	></div>
 	{#if loadError}

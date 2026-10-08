@@ -86,6 +86,8 @@ export type VideoCrf = number;
 export type Token = string;
 export type Chat = string;
 export type AlertEvery = number;
+export type Start = string;
+export type End = string;
 export type Timeout2 = number;
 export type Webhook = WebhookConfig | WebhookConfig[] | null;
 export type Url1 = string;
@@ -222,7 +224,18 @@ export interface TelegramConfig {
 	token: Token;
 	chat: Chat;
 	alert_every?: AlertEvery;
+	/**
+	 * Alerts in this period arrive without sound.
+	 */
+	quiet?: QuietHours | null;
 	timeout?: Timeout2;
+}
+/**
+ * A daily period, in this computer's local time; it may run past midnight.
+ */
+export interface QuietHours {
+	start: Start;
+	end: End;
 }
 export interface WebhookConfig {
 	url: Url1;

@@ -239,7 +239,7 @@ def test_launcher_status_reports_real_capture_processing_and_archive_outcome(
 
 # Tracking itself is covered by the inference adapter; CLI only needs each
 # logging level once to prove machine-readable status is independent of logs.
-@pytest.mark.parametrize("tracking, level", [(False, "INFO"), (True, "WARNING")])
+@pytest.mark.parametrize("tracking, level", [(False, "DEBUG"), (True, "WARNING")])
 def test_launcher_inference_status_follows_real_onnx_prediction(
     tmp_path, tracking, level
 ):
@@ -289,7 +289,7 @@ def test_launcher_inference_status_follows_real_onnx_prediction(
         "Event collected:",
         "Event delivered to disk-1",
     ):
-        assert (diagnostic in logs) is (level == "INFO"), logs
+        assert (diagnostic in logs) is (level == "DEBUG"), logs
 
 
 def test_launcher_keeps_shared_camera_rule_and_archive_failures_distinct(tmp_path):

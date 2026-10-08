@@ -3,8 +3,12 @@ import { access, ACCESS_COOKIE, sessionCookie } from '$lib/server/access';
 import { PairingError } from '$lib/server/device-access';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = ({ locals }) => {
-	if (locals.deviceId) redirect(303, '/');
+export const load: PageServerLoad = ({ locals, cookies, url }) => {
+	if (locals.deviceId) {
+		const token = cookies.get(ACCESS_COOKIE);
+		if (token) cookies.set(ACCESS_COOKIE, token, sessionCookie(url.protocol === 'https:'));
+		redirect(303, '/');
+	}
 };
 
 export const actions: Actions = {

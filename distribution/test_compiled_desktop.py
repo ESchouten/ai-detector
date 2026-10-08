@@ -14,7 +14,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-from build import ROOT, TARGETS, native_platform
+from build import ROOT, TARGETS, native_platform, warm_windows_compiler
 from fixtures.processes import cleanup_process, wait_for
 
 
@@ -30,6 +30,9 @@ class CompiledDesktopTest(unittest.TestCase):
         cls.addClassCleanup(temporary.cleanup)
         target = TARGETS[native_platform()]
         cls.detector = Path(temporary.name) / f"detector{target.suffix}"
+        if native_platform() == "windows-x64":
+            # These tests may run without a web build before them in the same job.
+            warm_windows_compiler()
         subprocess.run(
             [
                 shutil.which("bun"),
@@ -56,12 +59,14 @@ class CompiledDesktopTest(unittest.TestCase):
 
     def launch(self, open_browser=False, host="127.0.0.1", **fixture_options):
         (self.data / "config.json").write_text(
-            json.dumps({"detectors": [{"detection": {"source": "input.bmp"}}]})
+            json.dumps(
+                {
+                    "detectors": [{"detection": {"source": "input.bmp"}}],
+                }
+            )
         )
         (self.data / "fixture-options.json").write_text(json.dumps(fixture_options))
-        (self.data / "runtime.json").write_text(
-            json.dumps({"enabled": True, "mode": "native"})
-        )
+        (self.data / "app.json").write_text(json.dumps({"monitoring": True}))
         log = self.log.open("w")
         self.addCleanup(log.close)
         env = {
@@ -115,6 +120,11 @@ class CompiledDesktopTest(unittest.TestCase):
                         with self.assertRaises(urllib.error.HTTPError) as denied:
                             opener.open(url + "logs/output", timeout=5)
                         self.assertEqual(denied.exception.code, 401)
+                        # A phone fetches these without its pairing cookie, to keep
+                        # the application on its home screen.
+                        for name in ("manifest.webmanifest", "apple-touch-icon.png"):
+                            with opener.open(url + name, timeout=5) as response:
+                                self.assertEqual(response.status, 200)
                         browser = urllib.request.build_opener(
                             urllib.request.ProxyHandler({}),
                             urllib.request.HTTPCookieProcessor(
@@ -157,7 +167,12 @@ class CompiledDesktopTest(unittest.TestCase):
                         self.assertNotIn("LAN URL:", self.log.read_text())
                     process.stdin.write(b"quit\n")
                     process.stdin.flush()
-                    self.assertEqual(process.wait(timeout=15), 0, self.log.read_text())
+                    wait_for(
+                        process,
+                        lambda child=process: child.poll() is not None,
+                        self.log,
+                    )
+                    self.assertEqual(process.returncode, 0, self.log.read_text())
                 finally:
                     cleanup_process(process)
 
@@ -175,7 +190,7 @@ class CompiledDesktopTest(unittest.TestCase):
         process.stdin.flush()
         self.assertEqual(process.wait(timeout=45), expected, self.log.read_text())
         self.assertFalse((self.data / "desktop-instance.json").exists())
-        self.assertTrue(json.loads((self.data / "runtime.json").read_text())["enabled"])
+        self.assertTrue(json.loads((self.data / "app.json").read_text())["monitoring"])
         messages = [
             line
             for line in self.log.read_text().splitlines()

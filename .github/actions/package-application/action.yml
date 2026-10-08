@@ -1,9 +1,6 @@
 name: Package tested application
 description: Assemble tested native binaries, check the payload, and build installers and update feeds.
 inputs:
-  image-digest:
-    description: Matching NVIDIA image digest for Windows and Linux Docker mode
-    default: ''
   signing-key:
     description: Desktop update signing key (macOS and Windows only)
     default: ''
@@ -46,9 +43,6 @@ runs:
           launcher+=(--update-feed "$CHANNELS_URL" --update-channel "$UPDATE_CHANNEL" --build-version "$APP_BUILD_VERSION")
           launcher+=(--sparkle-public-key "$SPARKLE_PUBLIC_KEY")
         fi
-        if [ '${{ runner.os }}' != macOS ]; then
-          launcher+=(--image 'ghcr.io/eschouten/ai-detector@${{ inputs.image-digest }}')
-        fi
         python distribution/package.py --detector 'native-build/detector/dist/${{ env.DETECTOR_FOLDER }}' --web "native-build/web/dist/ai-detector-web${{ env.EXE_SUFFIX }}" --ffmpeg "$ffmpeg" --output application-dist --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" "${launcher[@]}" 2>&1 | tee .reports/assemble.log
     - name: Ad-hoc sign macOS application
       if: runner.os == 'macOS'
@@ -60,7 +54,7 @@ runs:
     - name: Read release history and retrieve macOS delta bases
       if: runner.os != 'Linux'
       shell: bash
-      run: python distribution/updates.py prepare --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --feed-url "$UPDATE_FEED"
+      run: python distribution/updates.py prepare --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --feed-url "$UPDATE_FEED"
     - name: Build native installer
       shell: bash
       run: |
@@ -71,7 +65,7 @@ runs:
       env:
         SPARKLE_PRIVATE_KEY: ${{ inputs.signing-key }}
       shell: bash
-      run: python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
+      run: python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
     - name: Sign Velopack feed and package hashes
       if: runner.os == 'Windows'
       env:

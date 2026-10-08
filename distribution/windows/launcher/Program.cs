@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
@@ -37,6 +38,15 @@ internal static class Program
             quit.WaitForExit();
             return quit.ExitCode;
         }
+        // One menu per person: opening AI Detector again shows the dashboard of the one that runs.
+        using var menu = new Mutex(true, @"Local\AI Detector menu", out bool firstMenu);
+        if (!firstMenu)
+        {
+            if (args.Contains("--background")) return 0;
+            using var running = new DesktopProcess(web, false);
+            running.OpenDashboard();
+            return 0;
+        }
         using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
         var preference = new StartupPreference(key, Application.ExecutablePath);
         var metadata = JObject.Parse(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "application.json")));
@@ -66,8 +76,7 @@ internal static class Program
     {
         using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
         var startup = new StartupPreference(key, Application.ExecutablePath);
-        // Retarget a previous installation's login entry to the stable 'current' path.
-        if (startup.Enabled) { startup.Enabled = true; return; }
+        if (startup.Enabled) return;
         if (MessageBox.Show(
             "Open AI Detector when you sign in? Once you start monitoring in setup, it resumes automatically whenever you sign in, unless you pause it in the dashboard.",
             "AI Detector", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)

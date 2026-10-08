@@ -1,5 +1,8 @@
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
+from aidetector.adapters.operational_status import source_key
 from aidetector.domain.models import EventResult
 
 
@@ -18,11 +21,23 @@ class IdentityMetadata(BaseModel):
     similarity: float | None = Field(default=None, ge=-1, le=1)
 
 
+class ManualReview(BaseModel):
+    """A person's verdict on the event, from the web application or Telegram."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    validated: bool
+    source: Literal["web", "telegram"]
+    reviewed_at: str
+
+
 class EventMetadata(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     timestamp: str
     event_id: str | None = Field(default=None, pattern=r"^[a-f0-9]{32}$")
+    # The camera's 12-character ID, as in the logs; never its address.
+    camera: str | None = Field(default=None, pattern=r"^[a-f0-9]{12}$")
     validated: bool | None
     confidence: float = Field(ge=0, le=1)
     confidences: dict[str, float]
@@ -33,6 +48,10 @@ class EventMetadata(BaseModel):
     crop: CropMetadata | None = None
     validation_error: str | None = None
     identities: list[IdentityMetadata] = Field(default_factory=list)
+    # The web application adds this to a published metadata.json when someone reviews
+    # the event, leaving `validated` as the validator's own result. The detector
+    # describes it here for the shared schema and never writes it.
+    review: ManualReview | None = Field(default=None, exclude=True)
 
     @classmethod
     def from_result(cls, result: EventResult, timestamp: str) -> "EventMetadata":
@@ -42,6 +61,7 @@ class EventMetadata(BaseModel):
         return cls(
             timestamp=timestamp,
             event_id=result.id,
+            camera=source_key(event.source)[:12],
             validated=result.validation.validated,
             confidence=best.score,
             confidences=dict(best.confidence),

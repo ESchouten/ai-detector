@@ -3,12 +3,15 @@ import { mkdir, rename, rm, symlink } from 'node:fs/promises';
 import path from 'node:path';
 import { isValiError } from 'valibot';
 import { ConfigurationError } from '../../configuration.ts';
+import { plural } from '../../format.ts';
 import type { ImportStatus, ImportSummary } from '../../installation-import.ts';
 import { STAGES, type Configuration } from '../../schema.ts';
 import type { ConfigurationStore } from '../configuration/store.ts';
 import { readJson, writeJson } from '../json-file.ts';
 import { IdentityCatalog, HerdError } from '../identity-catalog.ts';
 import { confirmedHerdFiles } from '../herd-backup.ts';
+import { serialQueue } from '../serial.ts';
+import { webLog } from '../web-log.ts';
 import { readLegacyConfiguration } from './configuration.ts';
 import {
 	availableSpace,
@@ -34,7 +37,7 @@ interface ImportJob {
 export class InstallationImport {
 	private job?: ImportJob;
 	private status: ImportStatus = { phase: 'idle', copiedBytes: 0, totalBytes: 0 };
-	private pending: Promise<unknown> = Promise.resolve();
+	private readonly serial = serialQueue();
 	private work: Promise<void> | null = null;
 	private readonly staging: string;
 	private readonly manifest: string;
@@ -51,7 +54,15 @@ export class InstallationImport {
 	}
 
 	private async restore(): Promise<void> {
-		this.job = (await readJson<ImportJob>(this.manifest)) ?? undefined;
+		try {
+			this.job = (await readJson<ImportJob>(this.manifest)) ?? undefined;
+		} catch (error) {
+			// It cannot be resumed, and must not stop the application or a new import. The copies
+			// staged beside it go too; the installation they were copied from is untouched.
+			if (!(error instanceof SyntaxError)) throw error;
+			await rm(this.staging, { recursive: true, force: true });
+			webLog.warn('Discarded a damaged record of an unfinished import.', error);
+		}
 		if (this.job)
 			this.status = {
 				phase: 'ready',
@@ -67,10 +78,9 @@ export class InstallationImport {
 			};
 	}
 
+	/** Each operation first waits for an unfinished import to be read back, when its turn comes. */
 	private enqueue<T>(operation: () => Promise<T>): Promise<T> {
-		const result = this.pending.then(() => this.ready).then(operation);
-		this.pending = result.catch(() => undefined);
-		return result;
+		return this.serial(() => this.ready.then(operation));
 	}
 
 	async getStatus(): Promise<ImportStatus> {
@@ -106,7 +116,7 @@ export class InstallationImport {
 			const allFiles = [...recordings, ...presets, ...files, ...(herd?.files ?? [])];
 			if (herd?.catalog.identities.length)
 				notes.push(
-					`Confirmed herd: ${herd.catalog.identities.length} ${herd.catalog.identities.length === 1 ? 'cow' : 'cows'}, ${herd.sightings.length} ${herd.sightings.length === 1 ? 'photo' : 'photos'}.`
+					`Confirmed herd: ${plural(herd.catalog.identities.length, ['# cow', '# cows'])}, ${plural(herd.sightings.length, ['# photo', '# photos'])}.`
 				);
 			const summary: ImportSummary = {
 				id: randomUUID(),

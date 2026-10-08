@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { Badge } from '$lib/components/ui/badge';
+	import { ArrowUp, CircleDashed, Film, ThumbsDown, ThumbsUp } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
+	import * as Empty from '$lib/components/ui/empty';
+	import { Skeleton } from '$lib/components/ui/skeleton';
 	import {
 		getDetectionPage,
 		getTypes,
@@ -12,22 +14,32 @@
 		detectionKey,
 		mergeDetections,
 		reviewedStage,
-		STAGE_LABELS,
+		stageLabel,
 		type Detection
 	} from '$lib/detections';
 	import { resolve } from '$app/paths';
 	import { onMount, untrack } from 'svelte';
-	import DetectorRuntime from '$lib/components/detector-runtime.svelte';
 	import ExportRecordings from '$lib/components/export-recordings.svelte';
-	import { getCameras } from '$lib/remote/stream.remote';
+	import FilterChips from '$lib/components/filter-chips.svelte';
+	import MonitoringBanner from '$lib/components/monitoring-banner.svelte';
+	import PageHeader from '$lib/components/page-header.svelte';
+	import { dayHeading, plural } from '$lib/format';
+	import { getCameras } from '$lib/remote/camera.remote';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { Action } from 'svelte/action';
-	import DetectionCard from './detection-card.svelte';
+	import RecordingCard from './recording-card.svelte';
+	import RecordingViewer from './recording-viewer.svelte';
+	import { categoryName } from './media';
 	import { SvelteMap, SvelteURLSearchParams } from 'svelte/reactivity';
 
 	const PAGE_SIZE = 24;
-	const dayFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'full' });
+	// The thumbs a recording shows for the same result.
+	const stageIcons = {
+		approved: { icon: ThumbsUp, iconClass: 'fill-current text-success-foreground' },
+		rejected: { icon: ThumbsDown, iconClass: 'fill-current text-danger-foreground' },
+		unvalidated: { icon: CircleDashed }
+	};
 
 	const type = $derived(page.url.searchParams.get('type') || undefined);
 	const stage = $derived(STAGES.find((value) => value === page.url.searchParams.get('stage')));
@@ -45,6 +57,7 @@
 	let hasNewRecordings = $state(false);
 	let refreshError = $state(false);
 	let archiveWarnings = $state<string[]>([]);
+	let viewing = $state<string | null>(null);
 
 	const detectionsByDay = $derived.by(() => {
 		const dayDetections = new SvelteMap<string, Detection[]>();
@@ -57,10 +70,6 @@
 		}
 		return Array.from(dayDetections.entries());
 	});
-
-	function capitalize(value: string) {
-		return value.charAt(0).toUpperCase() + value.slice(1);
-	}
 
 	function reviewed(updated: Detection) {
 		reviewVersion += 1;
@@ -80,6 +89,12 @@
 			})
 			.filter((entry) => !stage || entry.stage === stage);
 		nextOffset -= before - entries.length;
+	}
+
+	function removed(gone: Detection) {
+		reviewVersion += 1;
+		entries = entries.filter((entry) => detectionKey(entry) !== detectionKey(gone));
+		nextOffset -= 1;
 	}
 
 	async function loadNextPage(reset = false, filters = { type, stage }) {
@@ -108,12 +123,12 @@
 			});
 			await query.refresh();
 			const result = await query;
-			archiveWarnings = result.warnings ?? [];
 
 			if (version !== requestVersion) {
 				return;
 			}
 
+			archiveWarnings = result.warnings ?? [];
 			const current = new Set(entries.map(detectionKey));
 			entries = reset
 				? result.items
@@ -122,7 +137,7 @@
 			hasMore = result.hasMore;
 		} catch (error) {
 			if (version === requestVersion) {
-				errorMessage = error instanceof Error ? error.message : 'Failed to load detections.';
+				errorMessage = error instanceof Error ? error.message : 'Failed to load recordings.';
 			}
 		} finally {
 			if (version === requestVersion) {
@@ -168,9 +183,9 @@
 			const added = result.items.filter((item) => !current.has(detectionKey(item)));
 			refreshError = false;
 			if (!added.length) return;
-			const playing = [...document.querySelectorAll('video')].some((video) => !video.paused);
 			const overlaps = result.items.some((item) => current.has(detectionKey(item)));
-			if (playing || window.scrollY > 80 || (entries.length > 0 && !overlaps)) {
+			// Do not move recordings under someone who is watching or has scrolled down.
+			if (viewing !== null || window.scrollY > 80 || (entries.length > 0 && !overlaps)) {
 				hasNewRecordings = true;
 				return;
 			}
@@ -179,7 +194,8 @@
 			hasMore ||= result.hasMore;
 			await getTypes().refresh();
 		} catch {
-			refreshError = true;
+			// A refresh overtaken by new filters or a review says nothing about what is shown now.
+			if (version === requestVersion && reviewsVersion === reviewVersion) refreshError = true;
 		}
 	}
 
@@ -259,84 +275,102 @@
 
 <svelte:head><title>Recordings · AI Detector</title></svelte:head>
 
-<section class="flex flex-col gap-6">
-	<header class="flex flex-wrap items-start justify-between gap-4">
-		<div class="flex flex-col gap-2">
-			<h1 class="settings-heading">Recordings</h1>
-			<p class="settings-description">
-				Review recorded events and play each clip. New recordings appear automatically.
-			</p>
-		</div>
-		<ExportRecordings {type} {stage} />
-	</header>
-	<DetectorRuntime configured={cameras.some((camera) => camera.monitored)} compact />
-	{#if archiveWarnings.length}<p role="status" class="text-sm text-destructive">
-			{archiveWarnings.length} recording(s) could not be read. Other recordings are available. <Button
-				href={resolve('/logs/diagnostics')}
-				variant="outline"
-				size="sm"
-				download>Download diagnostics</Button
-			>
-		</p>{/if}
-	{#if hasNewRecordings}<Button variant="outline" onclick={() => loadNextPage(true)}
-			>New recordings are available — show latest</Button
-		>{/if}
-	{#if refreshError}<p role="status" class="text-sm text-muted-foreground">
-			Could not check for new recordings. Retrying automatically.
-		</p>{/if}
+<section class="page">
+	<PageHeader title="Recordings">
+		{#snippet actions()}<ExportRecordings {type} {stage} />{/snippet}
+	</PageHeader>
+	<MonitoringBanner configured={cameras.some((camera) => camera.monitored)} />
 
-	<div class="flex flex-col gap-2">
-		{#if types.length > 0}
-			<div class="flex flex-wrap gap-2">
-				{#each [undefined, ...types] as t (t)}
-					<Button
-						type="button"
-						size="sm"
-						variant={t === type ? 'default' : 'outline'}
-						aria-pressed={t === type}
-						onclick={() => updateSearchParams(t, stage || undefined)}
-					>
-						{t ? capitalize(t) : 'All categories'}
-					</Button>
-				{/each}
-			</div>
+	{#if archiveWarnings.length}
+		<p role="status" class="flex flex-wrap items-center gap-3 text-sm text-danger-foreground">
+			{plural(archiveWarnings.length, [
+				'One recording could not be read. The others are shown below.',
+				'# recordings could not be read. The others are shown below.'
+			])}
+			<Button href={resolve('/logs/diagnostics')} variant="outline" size="sm" download
+				>Download diagnostics</Button
+			>
+		</p>
+	{/if}
+
+	<div class="flex flex-col gap-2.5 md:flex-row md:flex-wrap md:items-center md:justify-between">
+		{#if types.length > 1}
+			<FilterChips
+				label="Category"
+				value={type}
+				options={types.map((value) => ({ value, label: categoryName(value) }))}
+				onchange={(value) => updateSearchParams(value, stage)}
+			/>
 		{/if}
-		<div class="flex flex-wrap gap-2">
-			{#each [undefined, ...STAGES] as s (s)}
-				<Button
-					type="button"
-					size="sm"
-					variant={s === stage ? 'default' : 'outline'}
-					aria-pressed={s === stage}
-					onclick={() => updateSearchParams(type || undefined, s)}
-				>
-					{s ? STAGE_LABELS[s] : 'All stages'}
-				</Button>
-			{/each}
-		</div>
+		<FilterChips
+			label="Review result"
+			value={stage}
+			options={STAGES.map((value) => ({ value, label: stageLabel(value), ...stageIcons[value] }))}
+			onchange={(value) => updateSearchParams(type, value)}
+		/>
 	</div>
 
-	{#if entries.length === 0 && isLoading}
-		<h2 class="text-sm font-semibold text-muted-foreground">Loading recordings…</h2>
-	{:else if detectionsByDay.length === 0 && !errorMessage}
-		<p class="text-sm text-muted-foreground">
-			{type || stage
-				? 'No recordings match these filters.'
-				: 'No events recorded yet. Check the monitoring status above; recordings will appear here when an event is detected.'}
+	{#if hasNewRecordings}
+		<div class="sticky top-16 z-20 flex justify-center md:top-4">
+			<Button class="rounded-full shadow-md" size="sm" onclick={() => loadNextPage(true)}>
+				<ArrowUp data-icon="inline-start" aria-hidden="true" />Show new recordings
+			</Button>
+		</div>
+	{/if}
+	{#if refreshError}
+		<p role="status" class="text-sm text-muted-foreground">
+			Could not check for new recordings. Retrying automatically.
 		</p>
+	{/if}
+
+	{#if entries.length === 0 && isLoading}
+		<div
+			class="grid gap-x-4 gap-y-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+			aria-busy="true"
+			aria-label="Loading recordings"
+		>
+			{#each { length: 8 }, index (index)}
+				<div class="flex flex-col gap-2.5">
+					<Skeleton class="aspect-video rounded-xl" />
+					<Skeleton class="h-4 w-2/5" />
+				</div>
+			{/each}
+		</div>
+	{:else if detectionsByDay.length === 0 && !errorMessage}
+		<Empty.Root class="border border-dashed">
+			<Empty.Header>
+				<Empty.Media variant="icon"><Film aria-hidden="true" /></Empty.Media>
+				<Empty.Title
+					>{type || stage ? 'Nothing matches these filters' : 'No recordings yet'}</Empty.Title
+				>
+				<Empty.Description>
+					{type || stage
+						? 'Try another category or result.'
+						: 'When a detector sees something, the clip appears here and stays until you remove it.'}
+				</Empty.Description>
+			</Empty.Header>
+			{#if type || stage}
+				<Empty.Content>
+					<Button variant="outline" onclick={() => updateSearchParams()}>Show everything</Button>
+				</Empty.Content>
+			{/if}
+		</Empty.Root>
 	{:else}
-		<div class="flex flex-col gap-8">
-			{#each detectionsByDay as dayGroup (dayGroup[0])}
-				<section class="flex flex-col gap-3">
-					<div class="flex items-center gap-2">
-						<h2 class="text-sm font-semibold text-muted-foreground">
-							{dayFormatter.format(new Date(`${dayGroup[0]}T00:00:00`))}
-						</h2>
-						<Badge variant="outline">{dayGroup[1].length}</Badge>
-					</div>
-					<div class="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
-						{#each dayGroup[1] as entry (detectionKey(entry))}
-							<DetectionCard {entry} colorSeed={recordingPresets[entry.type]} onreview={reviewed} />
+		<div class="flex flex-col gap-9">
+			{#each detectionsByDay as [day, recordings] (day)}
+				<section class="flex flex-col gap-3.5" aria-label={dayHeading(day)}>
+					<h2 class="flex items-baseline gap-2 text-sm font-semibold">
+						{dayHeading(day)}
+						<span class="font-normal text-muted-foreground tabular-nums">{recordings.length}</span>
+					</h2>
+					<div class="grid gap-x-4 gap-y-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+						{#each recordings as entry (detectionKey(entry))}
+							<RecordingCard
+								{entry}
+								colorSeed={recordingPresets[entry.type]}
+								onopen={() => (viewing = detectionKey(entry))}
+								onreview={reviewed}
+							/>
 						{/each}
 					</div>
 				</section>
@@ -345,21 +379,29 @@
 	{/if}
 
 	{#if errorMessage}
-		<div class="flex items-center gap-3">
-			<p class="text-sm font-semibold text-destructive">{errorMessage}</p>
+		<div class="flex flex-wrap items-center gap-3">
+			<p class="text-sm font-medium text-danger-foreground">{errorMessage}</p>
 			<Button type="button" size="sm" variant="outline" onclick={() => void loadNextPage()}>
-				Retry
+				Try again
 			</Button>
 		</div>
 	{/if}
 
 	{#if entries.length > 0}
-		<div use:infiniteTrigger class="flex min-h-16 items-center justify-center">
+		<div use:infiniteTrigger class="flex min-h-12 items-center justify-center">
 			{#if isLoading}
-				<p class="text-sm font-semibold text-muted-foreground">Loading more recordings…</p>
+				<p class="text-sm text-muted-foreground">Loading more…</p>
 			{:else if !hasMore}
-				<p class="text-sm font-semibold text-muted-foreground">You reached the end.</p>
+				<p class="text-sm text-muted-foreground">That’s everything.</p>
 			{/if}
 		</div>
 	{/if}
 </section>
+
+<RecordingViewer
+	{entries}
+	bind:selected={viewing}
+	colorSeeds={recordingPresets}
+	onreview={reviewed}
+	onremove={removed}
+/>

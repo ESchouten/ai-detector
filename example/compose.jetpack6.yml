@@ -1,0 +1,25 @@
+# Legacy JetPack 6 installation: neither image receives updates any more, and the two
+# belong together. Keep them on JetPack 6; see detector/MIGRATION.md before upgrading.
+services:
+  aidetector:
+    image: "ghcr.io/eschouten/ai-detector:latest-jetpack6"
+    restart: unless-stopped
+    command: ["python3", "-m", "aidetector", "--live-preview"]
+    runtime: nvidia
+    ipc: host
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    volumes:
+      - .:/data
+
+  web:
+    image: "ghcr.io/eschouten/ai-detector-web:latest"
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+    ports:
+      - "80:3000"
+    volumes:
+      - .:/data

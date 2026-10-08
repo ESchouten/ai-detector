@@ -28,7 +28,7 @@ AIDETECTOR_DATA_DIR=/tmp/ai-detector-development pnpm --dir web dev
 
 Without a configured detector executable the web app is a frontend for separately managed detection. To exercise managed startup, set `AIDETECTOR_EXECUTABLE` to a built detector. Never use real notification destinations in automated tests.
 
-To build a complete desktop preview with the same stages used in CI, follow the [single-command build](distribution/README.md#local-builds-and-tests). The current contributor guides are authoritative; [historical assessments](docs/history/README.md) preserve earlier evidence and decisions.
+To build a complete desktop preview with the same stages used in CI, follow the [single-command build](distribution/README.md#local-builds-and-tests).
 
 ## Repository map
 
@@ -41,7 +41,6 @@ To build a complete desktop preview with the same stages used in CI, follow the 
 | `ruff.toml` | Shared Python formatting, import and complexity rules |
 | `.github/` | CI orchestration using those same build stages and quality tools |
 | `.vscode/` | Editor tasks and debug entry points into the existing commands |
-| `docs/history/` | Dated assessments; not current setup instructions or pending work |
 
 Python tools discover the root `ruff.toml` from either the repository or component directory. Do not copy its rules into another project file. The [configuration guide](config/README.md) identifies each settings file's owner; the [distribution guide](distribution/README.md) identifies build outputs and tool versions.
 
@@ -51,6 +50,8 @@ Follow one request through the relevant feature before adding files. In the web 
 
 The Python-generated schemas in `config/` are shared contracts. After changing Python configuration or archive metadata, regenerate the schemas, run `pnpm --dir web schema:generate`, and check both applications. The web app uses these schemas for Ajv validation and generated TypeScript declarations in `web/src/lib/generated/`. Edit the Python models rather than those generated files. `pnpm --dir web quality` checks that the declarations are current. Web-only labels are stored in `app.json`.
 
-Preserve unused shadcn components. They are an intentional local component library. Prefer composition and small reviewed fixes over wholesale component upgrades. Application complexity checks exclude that upstream library; formatting and Svelte checks still cover it.
+Keep `web/src/lib/components/ui` as published by shadcn-svelte, including components the app does not use yet, so `pnpm --dir web shadcn` can update them. Change the look through the theme tokens in `web/src/routes/layout.css`, classes at the call site, or an application component that wraps the shadcn one; see `pill.svelte` for an example. Do not add variants inside that folder. ESLint skips it; formatting and Svelte checks still cover it, so an update may need its newer dependencies installed before `pnpm check` passes.
+
+The interface is translated (English, Dutch, German, French). After adding or changing text in `web/src`, run `pnpm --dir web i18n` and translate the new entries in `web/src/locales/*.po`; `pnpm --dir web quality` fails while a catalog is incomplete. Write whole sentences a farmer would understand, use `plural()` for counts, and keep text in `.ts` files inside functions. The [web architecture guide](web/ARCHITECTURE.md#languages) has the rules and what stays in English.
 
 Before handing off a change, state what behavior changed, which tests establish it, and what still requires a target machine. A passing CPU smoke test does not establish GPU acceleration, live camera behavior or signed installer support.

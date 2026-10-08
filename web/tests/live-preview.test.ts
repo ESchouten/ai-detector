@@ -8,15 +8,15 @@ import writeFileAtomic from 'write-file-atomic';
 import { detectionBoxLabel } from '../src/lib/live-preview.ts';
 import {
 	createCameraOverlayStream,
-	liveSourceKey,
 	type LivePreviewCamera
 } from '../src/lib/server/live-preview.ts';
+import { sourceKey as keyOf } from '../src/lib/server/source-key.ts';
 
 const rules = [
 	{ id: 'detector-1', label: 'People', preset: 'people', interval: 1 },
 	{ id: 'detector-2', label: 'Vehicles', interval: 1 }
 ];
-const sourceKey = liveSourceKey('rtsp://user:secret@camera/live', '/data');
+const sourceKey = keyOf('rtsp://user:secret@camera/live', '/data');
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-live-'));
@@ -24,7 +24,9 @@ async function fixture(t: TestContext) {
 	const readers: ReadableStreamDefaultReader<Uint8Array>[] = [];
 	t.after(async () => {
 		for (const reader of readers) await reader.cancel();
-		await rm(directory, { recursive: true, force: true });
+		// A stream that closed by itself may still be removing its lease; Windows refuses
+		// a second removal of that file until the first has finished.
+		await rm(directory, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
 	});
 	const session = async (
 		runId = 'run-1',
@@ -237,12 +239,9 @@ test(
 );
 
 test('local paths share the detector source hash while camera URLs and numeric sources stay literal', () => {
-	assert.equal(liveSourceKey('video.mp4', '/data'), liveSourceKey('/data/video.mp4', '/elsewhere'));
-	assert.equal(liveSourceKey('0', '/data'), liveSourceKey('0', '/elsewhere'));
-	assert.equal(
-		liveSourceKey('rtsp://camera/live', '/data'),
-		liveSourceKey('rtsp://camera/live', '/elsewhere')
-	);
+	assert.equal(keyOf('video.mp4', '/data'), keyOf('/data/video.mp4', '/elsewhere'));
+	assert.equal(keyOf('0', '/data'), keyOf('0', '/elsewhere'));
+	assert.equal(keyOf('rtsp://camera/live', '/data'), keyOf('rtsp://camera/live', '/elsewhere'));
 });
 
 test(
@@ -264,7 +263,7 @@ test(
 	{ timeout: 5000 },
 	async (t) => {
 		const { directory, session, frame, open } = await fixture(t);
-		const otherKey = liveSourceKey('rtsp://other-camera/live', '/data');
+		const otherKey = keyOf('rtsp://other-camera/live', '/data');
 		const cameras = [
 			{ id: 'shed', sourceKey, rules },
 			{ id: 'pen', sourceKey: otherKey, rules: [rules[0]] }
@@ -331,7 +330,7 @@ test(
 	{ timeout: 5000 },
 	async (t) => {
 		const { session, frame, open } = await fixture(t);
-		const otherKey = liveSourceKey('rtsp://other-camera/live', '/data');
+		const otherKey = keyOf('rtsp://other-camera/live', '/data');
 		const epochs = { [sourceKey]: 'before', [otherKey]: 'stable' };
 		await session('run-1', new Date().toISOString(), epochs);
 		await frame('detector-1', { capture: { epoch: 'before', sequence: 100 } });

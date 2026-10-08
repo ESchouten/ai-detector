@@ -1,6 +1,7 @@
 """Build staging and preflight operate on disposable files, never a real checkout."""
 
 import argparse
+import os
 import subprocess
 import tempfile
 import unittest
@@ -44,6 +45,37 @@ class BuildTest(unittest.TestCase):
             args.standalone_web = False
             build.build_web(args)
         self.assertEqual(self.version.read_bytes(), b"original version\r\n")
+
+    def test_the_web_build_knows_its_version_and_whether_it_is_a_test_build(self):
+        args = argparse.Namespace(
+            platform="linux-x64",
+            standalone_web=False,
+            skip_dependencies=True,
+            version="1.2.3",
+        )
+        built = []
+        for channel in ("stable", "preview"):
+            with (
+                patch.dict(
+                    os.environ,
+                    {"GITHUB_REF_NAME": "app/v1.2.3", "UPDATE_CHANNEL": channel},
+                ),
+                patch.object(
+                    build,
+                    "run",
+                    side_effect=lambda *_a, **_k: built.append(
+                        self.version.read_text()
+                    ),
+                ),
+            ):
+                build.build_web(args)
+        self.assertEqual(
+            built,
+            [
+                'export const version = "app/v1.2.3";\nexport const preview = false;\n',
+                'export const version = "app/v1.2.3";\nexport const preview = true;\n',
+            ],
+        )
 
     def test_failure_restores_existing_assets_and_source_metadata(self):
         self.assets.mkdir(parents=True)
@@ -169,6 +201,43 @@ class BuildTest(unittest.TestCase):
                     ["detector", "--type", "cuda", "--skip-dependencies"]
                 )
             )
+
+    def test_a_reused_detector_takes_the_reference_of_the_new_build(self):
+        folder = self.root / "aidetector"
+        frozen = folder / "_internal/aidetector/version.py"
+        nvidia = folder / "nvidia-runtime/app/aidetector/version.py"
+        for path, kind in ((frozen, "'windowsml'"), (nvidia, "'cuda'")):
+            path.parent.mkdir(parents=True)
+            path.write_text(f"TYPE = {kind}\nREF_NAME = 'app/test-1'\n")
+        if os.name != "nt":
+            # A Mac bundle reaches the same file through a symbolic link.
+            (folder / "link").mkdir()
+            (folder / "link/aidetector").symlink_to(
+                frozen.parent, target_is_directory=True
+            )
+
+        build.stamp_detector(folder, "app/test-2")
+
+        # Each copy keeps its own backend; only the reference changes.
+        self.assertEqual(
+            frozen.read_text(), "TYPE = 'windowsml'\nREF_NAME = 'app/test-2'\n"
+        )
+        self.assertEqual(nvidia.read_text(), "TYPE = 'cuda'\nREF_NAME = 'app/test-2'\n")
+        scope: dict = {}
+        exec(frozen.read_text(), scope)
+        self.assertEqual(scope["REF_NAME"], "app/test-2")
+
+        frozen.write_text("TYPE = 'default'\n")
+        with self.assertRaisesRegex(ValueError, "Unexpected version file"):
+            build.stamp_detector(folder, "app/test-3")
+        with self.assertRaisesRegex(ValueError, "no version file"):
+            build.stamp_detector(self.root / "missing", "app/test-3")
+
+    def test_freezing_keeps_the_build_reference_outside_the_archive(self):
+        hook = (build.HOOKS / "hook-aidetector.py").read_text()
+        scope: dict = {}
+        exec(hook, scope)
+        self.assertEqual(scope["module_collection_mode"], {"aidetector.version": "py"})
 
     def test_detector_dependency_selection_matches_the_requested_backend(self):
         version = self.root / "detector/src/aidetector/version.py"

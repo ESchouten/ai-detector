@@ -186,6 +186,35 @@ def test_telegram_video_is_rendered_once_and_notification_cadence_is_preserved(
 
 
 @pytest.mark.parametrize(
+    "start, end, clock, silent",
+    [
+        ("22:00", "06:00", "21:59", "false"),
+        ("22:00", "06:00", "22:00", "true"),
+        ("22:00", "06:00", "03:30", "true"),
+        ("22:00", "06:00", "06:00", "false"),
+        ("12:00", "13:30", "12:45", "true"),
+        ("12:00", "13:30", "13:30", "false"),
+        ("08:00", "08:00", "08:00", "false"),
+    ],
+)
+def test_telegram_alerts_arrive_without_sound_during_quiet_hours(
+    result, requests_sent, start, end, clock, silent
+):
+    exporter = TelegramExporter(
+        TelegramConfig(
+            token="token",
+            chat="chat",
+            include_video=False,
+            quiet={"start": start, "end": end},
+        ),
+        EventMedia(),
+        now=lambda: datetime.fromisoformat(f"2026-10-06T{clock}:00"),
+    )
+    exporter.export(result)
+    assert requests_sent[0][2]["data"]["disable_notification"] == silent
+
+
+@pytest.mark.parametrize(
     "body, message",
     [
         (b"not JSON", "Telegram returned an invalid response"),

@@ -8,6 +8,7 @@ import {
 } from '../../configuration.ts';
 import type { Configuration } from '../../schema.ts';
 import { assignConnection } from '../../llm.ts';
+import { presetVersion } from './followed-presets.ts';
 
 export function saveDetector(
 	{ config, app }: Configuration,
@@ -28,20 +29,20 @@ export function saveDetector(
 		if (!settings) throw new ConfigurationError('Enter a question for AI verification.');
 		normalized = assignConnection(normalized, connection);
 	}
-	if (index < 0) {
-		config.detectors.push(normalized);
-		app.detectors.push(input.meta);
-		return;
-	}
-	const meta = { ...app.detectors[index], ...input.meta };
-	if (!input.meta.llmConnection) delete meta.llmConnection;
-	if (
+	const previous = app.detectors[index];
+	// A save that names no preset keeps the one the detector follows while its settings are the same.
+	const kept =
+		previous &&
 		!input.meta.preset &&
-		!isDeepStrictEqual(detectorSettings(config.detectors[index]), detectorSettings(normalized))
-	)
-		delete meta.preset;
-	config.detectors[index] = normalized;
-	app.detectors[index] = meta;
+		isDeepStrictEqual(detectorSettings(config.detectors[index]), detectorSettings(normalized));
+	const meta = kept
+		? { ...input.meta, preset: previous.preset, autoUpdate: previous.autoUpdate }
+		: { ...input.meta };
+	if (meta.preset) meta.presetVersion = presetVersion(normalized);
+	else delete meta.presetVersion;
+	const position = index < 0 ? config.detectors.length : index;
+	config.detectors[position] = normalized;
+	app.detectors[position] = meta;
 }
 
 export function deleteDetector({ config, app }: Configuration, label: string): void {

@@ -2,11 +2,11 @@ import type { Configuration, Metadata, Stage } from './schema.ts';
 import { STAGES } from './schema.ts';
 import * as v from 'valibot';
 
-export const STAGE_LABELS: Record<Stage, string> = {
-	approved: 'Accepted',
-	rejected: 'Rejected',
-	unvalidated: 'Unvalidated'
-};
+/** How each outcome reads to the people reviewing recordings. */
+export function stageLabel(stage: Stage): string {
+	if (stage === 'approved') return 'Confirmed';
+	return stage === 'rejected' ? 'False alarm' : 'Unreviewed';
+}
 
 export function isArchiveSegment(value: string): boolean {
 	return value.length > 0 && value !== '.' && value !== '..' && !/[/\\\0]/.test(value);
@@ -14,20 +14,30 @@ export function isArchiveSegment(value: string): boolean {
 
 const calendarDate = v.pipe(
 	v.string(),
-	v.isoDate('Enter a date in YYYY-MM-DD format.'),
-	v.check((value) => new Date(value).toJSON()?.slice(0, 10) === value, 'Enter a valid date.')
+	v.isoDate(() => 'Enter a date in YYYY-MM-DD format.'),
+	v.check(
+		(value) => new Date(value).toJSON()?.slice(0, 10) === value,
+		() => 'Enter a valid date.'
+	)
 );
 
 export const recordingExportInput = v.pipe(
 	v.object({
-		type: v.optional(v.pipe(v.string(), v.check(isArchiveSegment, 'Invalid category.'))),
+		type: v.optional(
+			v.pipe(
+				v.string(),
+				v.check(isArchiveSegment, () => 'Invalid category.')
+			)
+		),
 		stage: v.optional(v.picklist(STAGES)),
 		from: v.optional(calendarDate),
-		to: v.optional(calendarDate)
+		to: v.optional(calendarDate),
+		/** Only the picture without boxes and the event's details, to share for training a model. */
+		content: v.optional(v.literal('photos'))
 	}),
 	v.check(
 		({ from, to }) => !from || !to || from <= to,
-		'The end date must be on or after the start date.'
+		() => 'The end date must be on or after the start date.'
 	)
 );
 
@@ -90,6 +100,37 @@ export interface DetectionFilter {
 	stage?: Stage;
 	offset: number;
 	limit: number;
+}
+
+export interface Verdict {
+	tone: 'ok' | 'neutral' | 'warn';
+	label: string;
+	/** Who decided: the validator, or a person here or in Telegram. */
+	source: string;
+	detail?: string;
+}
+
+/** The outcome shown on a recording; unreviewed recordings have none. */
+export function recordingVerdict(
+	entry: Pick<Detection, 'stage' | 'review' | 'validation_error'>
+): Verdict | null {
+	if (!entry.review && entry.validation_error)
+		return {
+			tone: 'warn',
+			label: 'AI check failed',
+			source: 'Not checked',
+			detail: entry.validation_error
+		};
+	if (entry.stage === 'unvalidated') return null;
+	return {
+		tone: entry.stage === 'approved' ? 'ok' : 'neutral',
+		label: stageLabel(entry.stage),
+		source: !entry.review
+			? 'Checked by AI'
+			: entry.review.source === 'telegram'
+				? 'Reviewed in Telegram'
+				: 'Reviewed by you'
+	};
 }
 
 export function detectionKey(

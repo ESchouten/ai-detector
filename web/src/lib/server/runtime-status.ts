@@ -1,5 +1,3 @@
-import { createHash } from 'node:crypto';
-import path from 'node:path';
 import * as v from 'valibot';
 import type { AppConfig, Config, DetectorConfig } from '../schema.ts';
 import type {
@@ -7,6 +5,7 @@ import type {
 	IdentificationRuntimeStatus,
 	RuntimeReadiness
 } from '../runtime.ts';
+import { sourceKey } from './source-key.ts';
 
 export const STATUS_PREFIX = 'AIDETECTOR_STATUS ';
 const eventSchema = v.pipe(
@@ -82,6 +81,13 @@ function ruleProgress(detector: DetectorConfig, index: number, app: AppConfig): 
 	};
 }
 
+/** "telegram-2" is the detector's second Telegram destination; say that in words. */
+function destinationName(id: string): string {
+	const [kind, ordinal] = id.split('-');
+	const name = kind === 'telegram' ? 'Telegram alert' : kind === 'webhook' ? 'Webhook' : id;
+	return ordinal && ordinal !== '1' ? `${name} ${ordinal}` : name;
+}
+
 /** Only these structured observations can establish camera readiness. */
 export class RuntimeProgress {
 	private prepared = false;
@@ -108,20 +114,17 @@ export class RuntimeProgress {
 		for (const [index, detector] of config.detectors.entries()) {
 			const sources = detector.detection.source;
 			for (const source of typeof sources === 'string' ? [sources] : sources) {
-				const resolved = /^(?:[a-z]+:\/\/|\d+$)/i.test(source)
-					? source
-					: path.resolve(directory, source);
-				const sourceKey = createHash('sha256').update(resolved).digest('hex');
-				let camera = this.cameras.get(sourceKey);
+				const key = sourceKey(source, directory);
+				let camera = this.cameras.get(key);
 				if (!camera) {
 					camera = {
 						source,
 						connectedAt: null,
 						rules: new Map(),
 						status: {
-							id: sourceKey,
+							id: key,
 							label: `Camera ${this.cameras.size + 1}`,
-							sourceKey,
+							sourceKey: key,
 							state: 'connecting',
 							lastFrameAt: null,
 							lastProcessedAt: null,
@@ -129,7 +132,7 @@ export class RuntimeProgress {
 							lastRecordingAt: null
 						}
 					};
-					this.cameras.set(sourceKey, camera);
+					this.cameras.set(key, camera);
 				}
 				camera.rules.set(`detector-${index + 1}`, ruleProgress(detector, index, app));
 			}
@@ -322,7 +325,7 @@ export class RuntimeProgress {
 	get issues(): string[] {
 		return Array.from(this.failures, ([key, message]) => {
 			const [rule, destination] = key.split('/');
-			return `${this.ruleLabel(rule)} · ${destination}: ${message}`;
+			return `${this.ruleLabel(rule)} · ${destinationName(destination)}: ${message}`;
 		});
 	}
 

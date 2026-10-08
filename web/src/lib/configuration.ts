@@ -7,15 +7,15 @@ import {
 	appSchema,
 	cameraConnectionMeta,
 	detectorMeta,
-	streamMeta,
 	telegramMeta,
 	type Config,
 	type Configuration,
 	type DetectorConfig,
-	type TelegramConfig
+	type TelegramConfig,
+	type TelegramMeta
 } from './schema.ts';
 
-export { cameraConnectionMeta, detectorMeta, streamMeta, telegramMeta } from './schema.ts';
+export { cameraConnectionMeta, detectorMeta, telegramMeta } from './schema.ts';
 
 export class ConfigurationError extends Error {}
 
@@ -25,22 +25,11 @@ export const detectorInput = v.object({
 	detector: v.unknown(),
 	meta: detectorMeta
 });
-export const streamInput = v.object({
-	...v.pick(streamMeta, ['id', 'label', 'source']).entries,
-	label: text,
-	original: v.optional(v.string()),
-	next: v.optional(v.string())
-});
 export const telegramInput = v.object({
 	...telegramMeta.entries,
 	token: text,
 	chat: text,
-	original: v.optional(v.string()),
-	next: v.optional(v.string())
-});
-export const streamOrder = v.object({
-	index0: v.pipe(v.number(), v.integer(), v.minValue(0)),
-	index1: v.pipe(v.number(), v.integer(), v.minValue(0))
+	original: v.optional(v.string())
 });
 
 const cameraDetails = {
@@ -54,6 +43,23 @@ export const cameraInput = v.object({
 	id: v.optional(text),
 	mode: v.picklist(['view-only', 'keep'])
 });
+
+/** The part of `health` shown on the Monitoring page; other options stay as set in Advanced. */
+export const heartbeatInput = v.nullable(
+	v.object({
+		url: v.pipe(
+			v.string(),
+			v.trim(),
+			v.url(() => 'Enter the complete address, starting with https://.'),
+			v.regex(/^https?:\/\//i, () => 'Use an address that starts with http:// or https://.')
+		),
+		interval: v.pipe(
+			v.number(),
+			v.minValue(5, () => 'Use an interval of at least 5 seconds.'),
+			v.maxValue(86400, () => 'Use an interval of at most one day.')
+		)
+	})
+);
 
 export const alertsInput = v.object({
 	...telegramInput.entries,
@@ -123,6 +129,11 @@ export function uniqueLabel(label: string, used: Set<string>): string {
 
 export function sameTelegram(left: TelegramConfig, right: TelegramConfig): boolean {
 	return left.token === right.token && left.chat === right.chat;
+}
+
+/** What a detector needs to alert a recipient; quiet hours belong to the recipient. */
+export function telegramExporter({ token, chat, quiet }: TelegramMeta): TelegramConfig {
+	return quiet ? { token, chat, quiet } : { token, chat };
 }
 
 /** Preset identity follows detection settings, independently of connections and delivery. */

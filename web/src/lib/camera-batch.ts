@@ -7,32 +7,51 @@ export interface CameraLogin {
 	password: string;
 }
 
-export interface BatchConnection {
+/** A camera that answered: the stream to use, its other streams, and how to find it again. */
+export interface CameraConnection {
 	source: string;
-	check?: CameraConnectionResult;
 	profiles: CameraProfile[];
 	connection?: StreamMeta['connection'];
 }
 
-export interface BatchCamera extends DiscoveredCamera {
-	state: 'waiting' | 'connecting' | 'ready' | 'failed' | 'saved';
-	connection?: BatchConnection;
+/** A connection whose picture was checked. */
+export interface CheckedConnection extends CameraConnection {
+	check: CameraConnectionResult;
+	/** The login that reached a camera found on the network. A stream entered by hand has none. */
 	login?: CameraLogin;
-	savedId?: string;
-	error?: string;
 }
+
+interface ListedCamera extends DiscoveredCamera {
+	/** The last connection that showed a picture; it stays on screen while the camera is tried again. */
+	connection?: CheckedConnection;
+}
+
+/** A camera on its way into the installation. Each state carries what its next step needs. */
+export type BatchCamera =
+	| (ListedCamera & { state: 'waiting' | 'connecting'; error?: undefined })
+	| (ListedCamera & { state: 'failed'; error: string })
+	| (ListedCamera & { state: 'ready'; connection: CheckedConnection; error?: string })
+	| (ListedCamera & {
+			state: 'saved';
+			connection: CheckedConnection;
+			savedId: string;
+			error?: undefined;
+	  });
 
 /** Connect cameras with bounded concurrency, preserving successful results on retry. */
 export async function connectCameraBatch(
 	cameras: BatchCamera[],
 	login: CameraLogin,
-	connect: (input: CameraLogin & { address: string }) => Promise<BatchConnection>,
+	connect: (input: CameraLogin & { address: string }) => Promise<CheckedConnection>,
 	update: (camera: BatchCamera) => void,
 	signal: AbortSignal
 ): Promise<void> {
 	const pending = cameras.filter(
 		(camera) => camera.state === 'waiting' || camera.state === 'failed'
 	);
+	// Named here and not where it is used: the translation tool leaves text inside the nested
+	// function without the means to translate it, and reading it then throws.
+	const unreachable = 'Could not connect. Check this camera’s login and network.';
 	let next = 0;
 	async function worker() {
 		while (!signal.aborted && next < pending.length) {
@@ -41,13 +60,18 @@ export async function connectCameraBatch(
 			try {
 				const connection = await connect({ address: camera.address, ...login });
 				if (signal.aborted) return;
-				update({ ...camera, state: 'ready', connection, login: { ...login }, error: undefined });
+				update({
+					...camera,
+					state: 'ready',
+					connection: { ...connection, login: { ...login } },
+					error: undefined
+				});
 			} catch (cause) {
 				if (signal.aborted) return;
 				update({
 					...camera,
 					state: 'failed',
-					error: errorMessage(cause, 'Could not connect. Check this camera’s login and network.')
+					error: errorMessage(cause, unreachable)
 				});
 			}
 		}

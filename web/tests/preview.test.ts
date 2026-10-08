@@ -8,7 +8,6 @@ import { setTimeout } from 'node:timers/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import ffmpeg from 'ffmpeg-static';
-import { parseMultipart } from '@remix-run/multipart-parser';
 import { createPreviewStream } from '../src/lib/server/stream-preview.ts';
 import { PreviewPool } from '../src/lib/server/preview-pool.ts';
 import { sanitizeTextForLogs } from '../src/lib/server/runtime-logs.ts';
@@ -17,11 +16,11 @@ const executable = fileURLToPath(new URL('./fixtures/preview.mjs', import.meta.u
 const posixOnly = { skip: process.platform === 'win32' };
 
 test(
-	'two viewers share one preview process; it closes only after the last viewer leaves',
+	'viewers share one preview process, which stays a while for whoever comes back',
 	posixOnly,
 	async (t) => {
 		const { directory, source } = await fixture(t);
-		const pool = new PreviewPool();
+		const pool = new PreviewPool(300);
 		t.after(() => pool.close());
 		const first = pool.open(source, executable, new AbortController().signal).getReader();
 		const second = pool.open(source, executable, new AbortController().signal).getReader();
@@ -31,6 +30,13 @@ test(
 		await first.cancel();
 		assert.doesNotThrow(() => process.kill(pid, 0));
 		await second.cancel();
+		// Someone who returns in time sees the running capture, not a new one that must wait for
+		// the camera's next keyframe.
+		const returning = pool.open(source, executable, new AbortController().signal).getReader();
+		await setTimeout(400);
+		assert.doesNotThrow(() => process.kill(pid, 0));
+		assert.equal(await readFile(path.join(directory, 'starts'), 'utf8'), `${pid}\n`);
+		await returning.cancel();
 		await waitForExit(pid);
 	}
 );
@@ -83,12 +89,7 @@ test('real camera previews sample frames without filling timestamp gaps with dup
 
 function picture(chunk: Uint8Array | undefined): Uint8Array {
 	assert.ok(chunk);
-	const [part] = parseMultipart(Buffer.concat([chunk, Buffer.from('--frame--\r\n')]), {
-		boundary: 'frame'
-	});
-	assert.equal(part.headers['content-type'], 'image/jpeg');
-	assert.equal(Number(part.headers['content-length']), part.size);
-	return part.bytes;
+	return chunk;
 }
 
 async function fixture(

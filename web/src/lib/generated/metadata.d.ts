@@ -2,6 +2,7 @@
 
 export type Timestamp = string;
 export type EventId = string | null;
+export type Camera = string | null;
 export type Validated = boolean | null;
 export type Confidence = number;
 export type Detections = number;
@@ -17,10 +18,14 @@ export type Id = string;
 export type Name = string | null;
 export type Similarity = number | null;
 export type Identities = IdentityMetadata[];
+export type Validated1 = boolean;
+export type Source = 'web' | 'telegram';
+export type ReviewedAt = string;
 
 export interface EventMetadata {
 	timestamp: Timestamp;
 	event_id?: EventId;
+	camera?: Camera;
 	validated: Validated;
 	confidence: Confidence;
 	confidences: Confidences;
@@ -31,6 +36,7 @@ export interface EventMetadata {
 	crop?: CropMetadata | null;
 	validation_error?: ValidationError;
 	identities?: Identities;
+	review?: ManualReview | null;
 }
 export interface Confidences {
 	[k: string]: number;
@@ -50,4 +56,12 @@ export interface IdentityMetadata {
 	name?: Name;
 	similarity?: Similarity;
 	[k: string]: unknown;
+}
+/**
+ * A person's verdict on the event, from the web application or Telegram.
+ */
+export interface ManualReview {
+	validated: Validated1;
+	source: Source;
+	reviewed_at: ReviewedAt;
 }

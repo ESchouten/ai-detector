@@ -26,7 +26,7 @@ test('a new installation has an available empty herd without creating a catalog'
 
 test('unreadable enrollment is visible as unavailable, logged, and never replaced', async (t) => {
 	const { root, herd, file } = await fixture(t);
-	await webLog.initialize(root);
+	await webLog.initialize(root, '1.2.3');
 	for (const contents of ['{broken', '{"version":99}']) {
 		await writeFile(file, contents);
 		assert.equal(await readHerdPage(herd), null);

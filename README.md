@@ -1,83 +1,77 @@
 # AI Detector
 
-Watch cameras, detect configured events locally, and review recordings in your browser. Models, watched classes and event rules are configurable. Optional Telegram alerts and AI verification are available in the settings.
+AI Detector watches your cameras on your own computer, records what a detector recognises, and shows it in your browser. Phone alerts through Telegram and a second check by an AI model are optional. Nothing runs on a server of ours.
 
-For a visual explanation of how the application works, see the [system overview and diagrams](SYSTEM_OVERVIEW.md) (Dutch), from the web app and detector to the event-processing flow and domain model.
+This branch adds an experimental **Cow Identity** preset and a **Herd** page for confirming cow photographs and reviewing suggested names. Read the [trial guide, measured results and limitations](research/cow_identity/README.md) before using it.
 
-This branch includes an experimental **Cow Identity** preset and **Herd** screen for confirming cow photographs and reviewing suggested names. See the [trial guide, measured results and limitations](research/cow_identity/README.md) before using it. Existing behaviour detectors remain separately configurable.
+## Install
 
-## Install, open, set up
+Download the application for your computer from an **AI Detector app/** [release](https://github.com/ESchouten/ai-detector/releases).
 
-1. Download the complete application for your computer from an **AI Detector app/** [release](https://github.com/ESchouten/ai-detector/releases).
-2. Run the Windows installer, drag the macOS app from its disk image into Applications, or install the Ubuntu `.deb` with the desktop package manager.
-3. Open **AI Detector**. Its browser setup guides you through cameras, detectors and final checks. Python, the web server and FFmpeg are included.
-4. In **Cameras**, choose a discovered camera and enter its login, or select **Enter camera manually** and paste its full RTSP URL. Connect, then save. Its preview appears in the same form; recording checks run automatically. In **Detectors**, choose a preset and select its cameras using their live previews. A camera can be used by several detectors. In **Finish setup**, start monitoring while recording locations are checked automatically, then connect Telegram alerts or choose **Skip for now**. Finish all cameras together once the checks pass. Saved cameras and detectors remain available when you return to an earlier step.
+| Computer | Download | Detection runs on |
+| --- | --- | --- |
+| Windows 10 22H2+ or Windows 11, x64 | `AI-Detector-VERSION-windows-x64-setup.zip` (extract, then run the setup) | A supported NVIDIA GPU when present, otherwise Windows ML |
+| macOS 14+, Apple Silicon | `AI-Detector-VERSION-macos-arm64.dmg` (drag to Applications) | The Apple GPU |
+| Ubuntu 22.04 or 24.04, amd64 | `AI-Detector-VERSION-linux-amd64.deb` | The CPU; for an NVIDIA GPU use [Docker](#docker) |
 
-Telegram setup opens BotFather with the creation command prepared. After pasting its token once, open the verified bot link or scan its QR code, choose Start in Telegram, and confirm a test alert. Adding another camera offers your existing recipients; changing a recipient name or camera assignment does not require another connection test. **Finish setup** resumes an incomplete camera setup after reopening the application.
+The downloads are not signed with an Apple or Windows publisher certificate, so the system may ask for approval. Intel Macs, Windows on ARM and Jetson have no installer; use [Docker](#docker) or run the [detector](detector/README.md) by itself.
 
-Setup choices come directly from [preset JSON files](config/README.md). The filename supplies the name: `cow-catcher.json` appears as **Cow Catcher**. Add a file to add a choice; no separate list or descriptions are required. Installations can supply their own preset folder without rebuilding, and saved detectors retain their settings when preset files change.
+## Set up
 
-For several cameras, choose **Set up several cameras** in Add camera. Select discovered devices that share a login, then preview, name and save each camera. Connections and recording compatibility are checked automatically. Successful connections stay ready if another camera fails. After adding the cameras, continue to **Detectors** to choose what each should watch for. Recording and alert checks follow in **Finish setup**.
+Open **AI Detector**. Setup opens in your browser, in English, Dutch, German or French. If no browser opens, go to [localhost](http://localhost/).
 
-Camera previews automatically show detection boxes, confidence and temporary tracking numbers when tracking is enabled. Every detector assigned to a camera can appear together, with colors matching its preset badge. Video runs independently of inference; boxes show the latest result and can briefly lag behind moving objects. Automatic previews pause outside the visible page, and at most four run per browser tab. Monitoring continues when previews are closed.
+1. **Cameras.** The cameras found on your network are already ticked; a camera that needs its own login asks for it. Or paste an RTSP address. Check each picture and give the cameras a name.
+2. **Detection.** Choose a preset, such as Cow Catcher, and the cameras it watches. Phone alerts and the Validator can be added here or later.
+3. **Start.** Every camera is checked, and **Start monitoring** opens Recordings once the cameras are really being analysed.
 
-Closing the browser leaves monitoring active. Open **AI Detector** again to return to its dashboard; a verified second launch reuses the existing application. **Pause monitoring** keeps monitoring paused on future launches. Quitting the application stops it for the current session and preserves the enabled choice for next launch. Keep the computer awake while monitoring is needed.
+Monitoring keeps running when you close the browser. Keep the computer awake while you need it. The [application guide](web/README.md) describes everything after setup.
 
-| Packaging target         | Normal installer                            | Automatic runtime                                                                   |
-| ------------------------ | ------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Windows 10 22H2+ / Windows 11 x64 | `AI-Detector-VERSION-windows-x64-setup.zip` | Automatic CUDA download, plus direct TensorRT on RTX 3000+ when preparation succeeds; Windows ML for other hardware |
-| macOS 14+ Apple Silicon  | `AI-Detector-VERSION-macos-arm64.dmg`       | Native PyTorch MPS for `.pt` models; ONNX/Core ML and CPU fallback when unavailable |
-| Ubuntu 22.04/24.04 amd64 | `AI-Detector-VERSION-linux-amd64.deb`       | Bundled native CPU baseline                                                         |
+## Good to know
 
-The [Application download workflow](.github/workflows/application.yml) builds these formats for `app/v*` release tags and `app/test-*` preview tags. Release publication authenticates updates with our own Ed25519 signing key; no Apple developer account or Windows signing subscription is required. Downloads have no OS-trusted publisher signature or Apple notarization, so macOS/Windows may warn or block execution. See [packaging, update verification and installation limitations](distribution/README.md). Test tags and manual branch runs publish signed previews to a separate update channel. Install its first preview once; later previews arrive through **Check for Updates** on Mac and installed Windows applications. See [building a preview in GitHub Actions](distribution/README.md#github-actions-previews).
+- **Other devices.** Phones and computers on the same network open `http://aidetector.local/` or `http://<computer-IP>/` and connect with the code under **Settings → Devices**. A phone can keep the application on its home screen. The connection is not encrypted, so use a network you trust.
+- **Starting at login.** Windows asks at first launch, macOS has **Open at login** in the menu-bar menu, and the Ubuntu package adds a login entry.
+- **Updates.** Mac and Windows have **Check for Updates** in the AI Detector menu; Linux upgrades by installing the new package. A detector made from a preset gets newer models by itself.
+- **Your data.** Settings, models and recordings live outside the program, and uninstalling leaves them in place. Back up the whole folder:
+  - Windows: `%LOCALAPPDATA%\AI Detector`
+  - macOS: `~/Library/Application Support/AI Detector`
+  - Linux: `~/.local/share/ai-detector`
+- **Something wrong?** **Logs → Download diagnostics** bundles what a bug report needs.
+- **Coming from an older release?** Choose **Use existing setup** in the new installation and select the old folder.
 
-Windows offers to start AI Detector when you sign in during its first launch. The AI Detector icon beside the clock lets you open the dashboard, change **Start at login**, or quit. On macOS choose **Open at login** in the AI Detector menu-bar menu; macOS may require approval in System Settings. The Ubuntu package adds a login entry which can be disabled in Startup Applications. These options run under your desktop account **after login**. They do not promise unattended monitoring before login. Closing the browser does not change that preference.
+## Docker
 
-Choose the single installer for your operating system from the release. On Windows, extract the ZIP and run the setup EXE inside. The `.nupkg` and `.delta` assets support automatic updates and do not need to be downloaded manually. If a browser does not open, the default dashboard is [localhost](http://localhost/). GPU availability depends on the operating system, driver and model. Docker is an explicit advanced runtime, not a prerequisite inferred from an NVIDIA card. Intel Macs, Windows ARM and Jetson do not yet have combined native installers; existing [detector installation options](detector/README.md) remain available.
-
-## Your settings and recordings
-
-Use **Export recordings** on Recordings to share a ZIP, optionally limited by date and the current filters. **Back up settings** on Settings saves cameras, detectors, alerts and the confirmed herd with its reference photos; this backup includes passwords and tokens and should stay private. See the [export and backup guide](web/README.md#export-recordings-and-back-up-settings).
-
-The monitoring controls show the storage folder under **Advanced and troubleshooting**:
-
-- Windows: `%LOCALAPPDATA%\AI Detector`
-- macOS: `~/Library/Application Support/AI Detector`
-- Linux: `$XDG_DATA_HOME/ai-detector`, or `~/.local/share/ai-detector`
-
-For troubleshooting, open `logs/detector.log` inside that folder. It keeps detector startup settings, model preparation, camera connections and errors across restarts; older logs rotate into `detector.log.1` through `.5`. These Python logs are more complete than the dashboard's short recent-log view. See [detector diagnostics](detector/README.md#runtime-and-health) for log levels and retained context.
-
-Existing portable installations with `config.json` beside the executable continue using that directory. `AIDETECTOR_DATA_DIR` explicitly selects another location. Back up the whole data folder. Updater-enabled Mac and Windows installations offer **Check for Updates** in the AI Detector menu. Download while monitoring continues, then restart to install. The first updater-enabled version still needs a manual installation; see the [migration and update guide](distribution/README.md#installation-and-data). To move from an older portable release, choose **Use existing setup** in the new installation and select the old folder. Linux upgrades use the new package. Uninstalling a normal desktop package preserves settings and recordings.
-
-The bundled web app is available on the same network at `http://ai-detector.local/` or `http://<computer-IP>/`, while the installed computer opens its own localhost URL. It listens on `0.0.0.0` by default. If the mDNS name is already in use, the discovery library automatically adds a number and logs the selected address. The operating system keeps its own computer hostname. Other devices connect using the pairing code or QR code in **Settings → Connected devices**. `HOST=127.0.0.1` restricts access to the installed computer. HTTP traffic is not encrypted, so use a trusted local network or an HTTPS reverse proxy.
-
-## Existing Docker and source installations
-
-The [example Compose file](example/compose.yml) remains available for an already configured NVIDIA container host:
+One image, `ghcr.io/eschouten/ai-detector`, holds the web application and the detector it starts and supervises, as the desktop application does. The [example Compose file](example/compose.yml) runs it on a Linux PC with an NVIDIA GPU and the NVIDIA Container Toolkit:
 
 ```sh
 cd example
 docker compose up -d
 ```
 
-That deployment uses separately managed containers; the browser cannot start or restart its detector. See [web development and distribution](web/README.md), [the detector guide](detector/README.md), and [how complete downloads are built and tested](distribution/README.md).
+Open `http://<computer-IP>/`. Settings, models and recordings live in the folder beside the Compose file. The container uses the host's network so the cameras on it can be found; update with `docker compose pull && docker compose up -d`. Coming from the two separate images, read [Docker](detector/MIGRATION.md#docker) first.
+
+| Host | Compose file |
+| --- | --- |
+| Linux PC with an NVIDIA GPU | [`example/compose.yml`](example/compose.yml) |
+| Jetson Orin or Thor with JetPack 7.2 | [`example/compose.jetson.yml`](example/compose.jetson.yml); not yet checked on a board, see [Jetson](detector/MIGRATION.md#jetson) |
+| Jetson with JetPack 6, existing installation | [`example/compose.jetpack6.yml`](example/compose.jetpack6.yml); its two images get no updates |
 
 ### Start automatically on a Jetson or Linux desktop
 
-For an existing **JetPack 6** installation using its legacy detector image, with Docker Compose and the NVIDIA Container Runtime available, run this once from the repository folder, as the account used on the desktop:
+For an existing Compose installation, run this once from the repository folder as the desktop's user:
 
 ```sh
 python3 distribution/linux_startup.py install --compose example/compose.jetson.yml
 ```
 
-The command requests the administrator password, enables Docker at boot, starts the services, and installs browser autostart for that desktop account. It opens the web app after it responds. On later boots, detection runs even before login; at desktop login the browser opens **Detections**, or **Setup** if no cameras are configured. For power-on without a login prompt, enable **Automatic Login** in the Linux desktop's user settings. The installer leaves that account setting to you.
+It enables Docker at boot, starts the services and opens the application in the browser at login, so detection runs from boot. Use the Compose file your installation already uses, and add `--url http://localhost:YOUR_PORT/` if you changed the web port. `python3 distribution/linux_startup.py uninstall` removes the browser autostart and nothing else. The helper does not install Docker or GPU drivers.
 
-Use the Compose file belonging to your existing installation so it keeps the same settings and recordings. On an ordinary NVIDIA Linux PC use `--compose example/compose.yml`. If you changed the published web port, also pass `--url http://localhost:YOUR_PORT/`. The Jetson example preserves legacy JetPack 6 installations; new releases no longer build that image. The generic ARM64 image is not yet qualified for Orin / JetPack 7.2. See [Jetson migration guidance](detector/MIGRATION.md#python-312-and-jetpack-6-retirement--2026-09-28) before changing the OS or detector image. This helper configures startup for an existing Docker installation; it does not install Docker or GPU drivers. Changes to detector settings still require `docker compose -f example/compose.jetson.yml restart aidetector`.
+## Where to read on
 
-Both services use `restart: unless-stopped`. A deliberate `docker compose stop` keeps them stopped across reboots; run `docker compose up -d` with the same Compose file to resume them. Closing the browser does not stop either service.
-
-Remove browser autostart with `python3 distribution/linux_startup.py uninstall`. This keeps Docker, services, settings and recordings. The helper copies its launcher into the user's data folder, so browser autostart does not depend on keeping a checkout of the installer; keep the installation's mounted data folder in place.
-
-## Developing the system
-
-See [the contributor guide](CONTRIBUTING.md) for the repository map, local setup and the **Repository: check** VS Code task. The [web architecture guide](web/ARCHITECTURE.md) explains request, configuration, process and archive boundaries; the [detector architecture](detector/ARCHITECTURE.md) explains event processing.
+| You want to | Read |
+| --- | --- |
+| Use the application after setup | [web/README.md](web/README.md) |
+| Run or configure the detector by itself | [detector/README.md](detector/README.md) |
+| Write or publish a preset | [config/README.md](config/README.md) |
+| See how the parts fit together | [SYSTEM_OVERVIEW.md](SYSTEM_OVERVIEW.md) |
+| Change the code | [CONTRIBUTING.md](CONTRIBUTING.md), then the [web](web/ARCHITECTURE.md) and [detector](detector/ARCHITECTURE.md) architecture |
+| Build installers or release | [distribution/README.md](distribution/README.md) |

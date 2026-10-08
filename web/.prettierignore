@@ -5,13 +5,17 @@ yarn.lock
 bun.lock
 bun.lockb
 
+# Compiled translation catalogs
+/src/locales/.wuchale/
+/src/locales/data.js
+/src/locales/plural.js
+
 # Miscellaneous
 /static/
 
 # Local settings and recordings (never format user data)
 /config.json
 /app.json
-/runtime.json
 /detections/
 /models/
 

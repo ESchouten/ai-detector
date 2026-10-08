@@ -6,13 +6,14 @@ import { promisify } from 'node:util';
 import type { CameraConnectionResult, CameraProfile } from '../../cameras.ts';
 import { getCameraInputArgs } from '../ffmpeg.ts';
 import { CameraConnectionError, cameraStorageFailure, connectionFailure } from './connection.ts';
+import { webLog } from '../web-log.ts';
 
 const execute = promisify(execFile);
 const LIFETIME_MS = 15 * 60 * 1000;
 const MAX_CHECKS = 16;
 type Check = { source: string; checkedAt: number; directory: string };
 
-export async function recordCameraTest(
+async function recordCameraTest(
 	source: string,
 	executable: string,
 	directory: string,
@@ -70,6 +71,10 @@ export async function recordCameraTest(
 	} catch (cause) {
 		signal?.throwIfAborted();
 		const failure = cause as NodeJS.ErrnoException & { stderr?: string; killed?: boolean };
+		// What FFmpeg itself said: the person is told what to do, the log keeps why.
+		webLog.warn(
+			/* @wc-ignore */ `Camera check of ${source} failed: ${failure.killed ? 'no picture within the time limit' : failure.stderr?.trim() || failure.code}`
+		);
 		if (failure.code === 'ENOENT')
 			throw new CameraConnectionError(
 				'The camera software is missing. Repair or reinstall AI Detector and try again.'
@@ -86,7 +91,7 @@ export async function recordCameraTest(
 /** Short-lived setup recordings, isolated from real detections and addressed without credentials. */
 export class CameraChecks {
 	private readonly checks = new Map<string, Check>();
-	private active?: { signal?: AbortSignal; finished: Promise<void> };
+	private last: Promise<unknown> = Promise.resolve();
 	private readonly directory: string;
 	private readonly now: () => number;
 	constructor(directory: string, now: () => number = Date.now) {
@@ -94,22 +99,24 @@ export class CameraChecks {
 		this.now = now;
 	}
 
-	async check(
+	/** Checks run one at a time; setup connects several cameras at once, so the others wait. */
+	check(
 		source: string,
 		executable: string,
 		profiles: CameraProfile[],
 		signal?: AbortSignal
 	): Promise<CameraConnectionResult> {
-		// Cancellation stops FFmpeg before its temporary files finish being removed.
-		// Let an immediate retry wait for that cleanup without overlapping checks.
-		if (this.active?.signal?.aborted) await this.active.finished;
-		signal?.throwIfAborted();
-		if (this.active)
-			throw new CameraConnectionError(
-				'Another camera check is still running. Please wait a moment and try again.'
-			);
-		const finished = Promise.withResolvers<void>();
-		this.active = { signal, finished: finished.promise };
+		const check = this.last.then(() => this.record(source, executable, profiles, signal));
+		this.last = check.catch(() => {});
+		return check;
+	}
+
+	private async record(
+		source: string,
+		executable: string,
+		profiles: CameraProfile[],
+		signal?: AbortSignal
+	): Promise<CameraConnectionResult> {
 		const id = randomUUID();
 		const directory = path.join(this.directory, id);
 		try {
@@ -136,9 +143,6 @@ export class CameraChecks {
 				);
 			}
 			throw cameraStorageFailure(cause) ?? cause;
-		} finally {
-			this.active = undefined;
-			finished.resolve();
 		}
 	}
 

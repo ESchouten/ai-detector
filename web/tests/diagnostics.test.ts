@@ -63,18 +63,18 @@ test('archive warnings and web failure details survive restart and reach the sup
 		await webLog.flush();
 		await rm(directory, { recursive: true, force: true });
 	});
-	await webLog.initialize(directory);
+	await webLog.initialize(directory, '1.2.3');
 	const archive = new DetectionArchive(path.join(directory, 'detections'));
 	const damaged = path.join(archive.directory, 'activity', 'approved', '2026-01-01T12-00-00');
 	await mkdir(damaged, { recursive: true });
-	await writeFile(path.join(damaged, 'review.json'), '{"key":"private-validation-key",broken');
+	await writeFile(path.join(damaged, 'metadata.json'), '{"key":"private-validation-key",broken');
 	assert.equal((await archive.page({ offset: 0, limit: 10 })).items.length, 0);
 	webLog.error(
 		'Could not restore the saved settings',
 		Object.assign(new Error('private-validation-key'), { code: 'EACCES' })
 	);
 	await webLog.flush();
-	await webLog.initialize(directory);
+	await webLog.initialize(directory, '1.2.3');
 	await webLog.flush();
 	const files = [];
 	for await (const file of diagnosticFiles(directory, {})) files.push(file);
@@ -84,4 +84,8 @@ test('archive warnings and web failure details survive restart and reach the sup
 	assert.match(log.content, /SyntaxError/);
 	assert.match(log.content, /Could not restore the saved settings[\s\S]*EACCES/);
 	assert.ok(!log.content.includes('private-validation-key'));
+	assert.match(log.content, /Web application 1\.2\.3 started/);
+	const system = files.find((file) => file.name === 'system.json');
+	assert.ok(system && 'content' in system);
+	assert.equal(JSON.parse(system.content).version, 'DEV');
 });

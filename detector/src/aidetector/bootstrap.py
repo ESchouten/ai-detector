@@ -47,6 +47,7 @@ from aidetector.runtime import DetectorWorker, RunStats, run_detectors
 from aidetector.version import TYPE
 
 if TYPE_CHECKING:
+    from aidetector.adapters.inference.prepared_engines import EnginePreparation
     from aidetector.adapters.inference.yolo import YoloDetector
 
 logger = logging.getLogger(__name__)
@@ -180,13 +181,11 @@ def run_application(
             inference_runtime(config.onnx, models, TYPE, report_status)
         )
         _check_continuous_support(config, options)
-        engines = None
-        if prefer_tensorrt and TYPE == "cuda":
-            from aidetector.adapters.inference.prepared_engines import EnginePreparation
-
-            engines = EnginePreparation(
-                data_directory / "models" / "prepared", stop_requested, report_status
-            )
+        engines = (
+            _engine_preparation(data_directory, stop_requested, report_status)
+            if prefer_tensorrt and TYPE == "cuda"
+            else None
+        )
         preview = LivePreview(data_directory / "live") if live_preview else None
         source_listeners: dict[str, tuple[Callable[[str | None], None], ...]] = {}
 
@@ -317,6 +316,26 @@ def run_application(
         if engines is not None:
             resources.enter_context(engines.running())
         return run_detectors(tuple(workers), health, stop_requested)
+
+
+def _engine_preparation(
+    data_directory: Path, stop_requested: Event | None, report_status: ReportStatus
+) -> "EnginePreparation | None":
+    from aidetector.adapters.inference.prepared_engines import (
+        EnginePreparation,
+        gpu_available,
+    )
+
+    if gpu_available():
+        return EnginePreparation(
+            data_directory / "models" / "prepared", stop_requested, report_status
+        )
+    # A container started without its GPU still detects, on the processor.
+    logger.warning(
+        "TensorRT was preferred but no NVIDIA GPU is available to this "
+        "process; detection continues without it"
+    )
+    return None
 
 
 def _source_reporter(

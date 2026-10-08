@@ -24,6 +24,7 @@ import {
 } from '../src/lib/server/nvidia-runtime.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
+import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 
 const execute = promisify(execFile);
 const config = {
@@ -151,7 +152,7 @@ for (const release of ['10.0.19045', '10.0.26200']) {
 		posixOnly,
 		async (t) => {
 			const { detector, data } = await windowsFixture(t, release);
-			await detector.start('auto');
+			await detector.start();
 			await waitFor(async () => (await detector.log.read()).includes('Using NVIDIA runtime'));
 			assert.equal(detector.status().phase, 'running');
 			assert.match(await detector.log.read(), /GPU-00000000/);
@@ -176,7 +177,7 @@ for (const provider of [undefined, 'CPUExecutionProvider', 'NvTensorRTRTXExecuti
 			} else {
 				await writeFile(path.join(root, 'nvidia-smi'), '#!/bin/sh\nexit 1\n');
 			}
-			await detector.start('auto');
+			await detector.start();
 			await waitFor(async () => (await detector.log.read()).includes('Camera rtsp://'));
 			assert.equal(detector.status().phase, 'running');
 			assert.doesNotMatch(await detector.log.read(), /Using NVIDIA runtime/);
@@ -192,13 +193,13 @@ test(
 	async (t) => {
 		const { detector, bundle, data } = await windowsFixture(t);
 		await writeJson(path.join(bundle, 'fixture.json'), { installFailure: true });
-		await detector.start('auto');
+		await detector.start();
 		assert.equal(detector.status().phase, 'failed');
 		assert.match(detector.status().message, /NVIDIA acceleration could not be prepared/);
 		assert.match(await detector.log.read(), /hash mismatch/);
-		assert.equal(await readJson(path.join(data, 'runtime.json')), null);
+		assert.equal(await monitoringEnabled(path.join(data, 'app.json')), false);
 		await writeJson(path.join(bundle, 'fixture.json'), {});
-		await detector.start('auto');
+		await detector.start();
 		await waitFor(async () => (await detector.log.read()).includes('Using NVIDIA runtime'));
 		assert.equal(detector.status().phase, 'running');
 		await detector.stop();
@@ -211,17 +212,16 @@ test(
 	async (t) => {
 		const { detector, bundle, data } = await windowsFixture(t);
 		await writeJson(path.join(bundle, 'fixture.json'), { holdInstall: true });
-		const starting = detector.start('auto');
+		const starting = detector.start();
 		await waitFor(async () => (await detector.log.read()).includes('Downloading GPU packages'));
+		// The installer announces itself before it has written its process id.
+		await waitFor(async () => (await readJson(path.join(bundle, 'install-pid.txt'))) !== null);
 		const pid = Number(await readFile(path.join(bundle, 'install-pid.txt'), 'utf8'));
 		await detector.stop();
 		await starting;
 		assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
 		assert.equal(detector.status().phase, 'stopped');
-		assert.equal(
-			(await readJson<{ enabled: boolean }>(path.join(data, 'runtime.json')))?.enabled,
-			false
-		);
+		assert.equal(await monitoringEnabled(path.join(data, 'app.json')), false);
 		await assert.rejects(readFile(path.join(data, 'starts.txt')), { code: 'ENOENT' });
 	}
 );
@@ -403,7 +403,7 @@ test(
 	async (t) => {
 		const { detector, bundle, data } = await windowsFixture(t);
 		await writeJson(path.join(bundle, 'fixture.json'), { holdTensorRtInstall: true });
-		const starting = detector.start('auto');
+		const starting = detector.start();
 		await waitFor(async () => (await detector.log.read()).includes('Downloading TensorRT'));
 		await waitFor(async () => (await readJson(path.join(bundle, 'install-pid.txt'))) !== null);
 		const pid = Number(await readFile(path.join(bundle, 'install-pid.txt'), 'utf8'));

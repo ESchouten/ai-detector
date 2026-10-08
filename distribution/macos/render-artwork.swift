@@ -23,6 +23,17 @@ for scale in [1, 2] {
                width: 660 * scale, height: 420 * scale)
 }
 
+// What a phone's home screen and an installed web app show; served by the web application.
+let favicon = "../../web/src/lib/assets/favicon.svg"
+for (source, name, size) in [
+    (favicon, "icon-192.png", 192),
+    (favicon, "icon-512.png", 512),
+    ("home-screen-icon.svg", "icon-maskable-512.png", 512),
+    ("home-screen-icon.svg", "apple-touch-icon.png", 180),
+] {
+    try render(source, to: assets.appendingPathComponent("../../web/static/\(name)"), width: size, height: size)
+}
+
 let scratch = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
 let iconset = scratch.appendingPathComponent("AI Detector.iconset")
 try FileManager.default.createDirectory(at: iconset, withIntermediateDirectories: true)

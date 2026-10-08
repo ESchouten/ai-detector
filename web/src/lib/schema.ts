@@ -1,5 +1,9 @@
 import * as v from 'valibot';
 import type * as Input from './generated/config.js';
+import { LOCALES } from './locales.ts';
+
+// Validation messages are functions so each is written in the language of the request that
+// fails, not fixed in whichever language was current when this module loaded.
 
 export type { EventMetadata as Metadata } from './generated/metadata.js';
 export type { TelegramConfig, VLMConfig } from './generated/config.js';
@@ -36,27 +40,33 @@ export interface Config extends Omit<Input.Config, 'detectors'> {
 const text = v.pipe(v.string(), v.trim(), v.minLength(1));
 export const detectorMeta = v.object({
 	label: text,
-	cameraId: v.optional(text),
 	preset: v.optional(text),
+	/** Which settings the preset gave, to tell whether the detector still follows it. */
+	presetVersion: v.optional(text),
+	/** Present only when the person switched off taking the preset's newer settings by itself. */
+	autoUpdate: v.optional(v.literal(false)),
 	llmConnection: v.optional(text)
 });
 export const cameraConnectionMeta = v.object({
 	address: v.pipe(
 		text,
-		v.check((value) => {
-			try {
-				const url = new URL(value);
-				return (
-					['http:', 'https:'].includes(url.protocol) &&
-					!url.username &&
-					!url.password &&
-					!url.search &&
-					!url.hash
-				);
-			} catch {
-				return false;
-			}
-		}, 'Camera connection details must not contain login details or access tokens.')
+		v.check(
+			(value) => {
+				try {
+					const url = new URL(value);
+					return (
+						['http:', 'https:'].includes(url.protocol) &&
+						!url.username &&
+						!url.password &&
+						!url.search &&
+						!url.hash
+					);
+				} catch {
+					return false;
+				}
+			},
+			() => 'Camera connection details must not contain login details or access tokens.'
+		)
 	),
 	profileToken: v.optional(text)
 });
@@ -77,33 +87,59 @@ export const streamMeta = v.object({
 	setup: v.optional(cameraSetup)
 });
 const identity = v.pipe(v.string(), v.minLength(1));
-export const telegramMeta = v.object({ label: text, token: identity, chat: identity });
+const clockTime = v.pipe(
+	v.string(),
+	v.regex(/^([01]\d|2[0-3]):[0-5]\d$/, () => 'Enter a time such as 22:00.')
+);
+export const telegramMeta = v.object({
+	label: text,
+	token: identity,
+	chat: identity,
+	/** Alerts between these times of day arrive without sound. */
+	quiet: v.optional(v.object({ start: clockTime, end: clockTime }))
+});
 const headerName = v.pipe(
 	text,
-	v.regex(/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/, 'Enter a valid header name.')
+	v.regex(/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/, () => 'Enter a valid header name.')
 );
 const headerValue = v.pipe(
 	v.string(),
-	v.check((value) => !/[\r\n]/.test(value), 'Use a single-line header value.')
+	v.check(
+		(value) => !/[\r\n]/.test(value),
+		() => 'Use a single-line header value.'
+	)
 );
 const modelName = v.pipe(
 	v.string(),
 	v.trim(),
-	v.minLength(1, 'Enter a model name.'),
+	v.minLength(1, () => 'Enter a model name.'),
 	v.check(
 		(value) => !/\s/.test(value) && !value.endsWith('/'),
-		'Enter a model name, without spaces or a trailing slash.'
+		() => 'Enter a model name, without spaces or a trailing slash.'
 	)
 );
 export const llmConnection = v.object({
-	label: v.pipe(v.string(), v.trim(), v.minLength(1, 'Enter a connection name.')),
+	label: v.pipe(
+		v.string(),
+		v.trim(),
+		v.minLength(1, () => 'Enter a connection name.')
+	),
 	model: v.union([
 		modelName,
-		v.pipe(v.array(modelName), v.minLength(1, 'Enter at least one model.'))
+		v.pipe(
+			v.array(modelName),
+			v.minLength(1, () => 'Enter at least one model.')
+		)
 	]),
 	key: v.optional(v.nullable(v.string())),
 	url: v.optional(
-		v.nullable(v.pipe(text, v.url(), v.regex(/^https?:\/\//i, 'Use an HTTP or HTTPS API URL.')))
+		v.nullable(
+			v.pipe(
+				text,
+				v.url(),
+				v.regex(/^https?:\/\//i, () => 'Use an HTTP or HTTPS API URL.')
+			)
+		)
 	),
 	headers: v.optional(
 		v.pipe(
@@ -112,7 +148,7 @@ export const llmConnection = v.object({
 				(headers) =>
 					new Set(Object.keys(headers).map((name) => name.toLowerCase())).size ===
 					Object.keys(headers).length,
-				'Each header name must be unique.'
+				() => 'Each header name must be unique.'
 			)
 		)
 	)
@@ -124,7 +160,12 @@ const pairedDevice = v.object({
 	created: v.number(),
 	expires: v.number()
 });
+// app.json also holds `monitoring`, the detector launcher's resume flag (see monitoring-flag.ts).
+// It is deliberately absent here, so settings documents, backups and revisions never contain it.
 export const appSchema = v.object({
+	// The interface language of this installation; absent until setup or a choice records one.
+	// A value this version does not know must not make the other settings unreadable.
+	language: v.fallback(v.optional(v.picklist(LOCALES)), undefined),
 	streams: v.optional(v.array(streamMeta), []),
 	telegrams: v.optional(v.array(telegramMeta), []),
 	llms: v.optional(v.array(llmConnection), []),

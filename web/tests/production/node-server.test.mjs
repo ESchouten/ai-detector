@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFile, spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { once } from 'node:events';
 import { createServer, request } from 'node:http';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
@@ -27,7 +28,8 @@ for (const [id, load] of Object.entries(manifest._.remotes)) {
 		'saveDetector',
 		'finishSetup',
 		'inspectInstallation',
-		'importInstallation'
+		'importInstallation',
+		'setLanguage'
 	]) {
 		if (name in remote) commands[name] = `/${manifest.appPath}/remote/${id}/${name}`;
 	}
@@ -48,7 +50,29 @@ function commandBody(input) {
 		refreshes: []
 	});
 }
-const startBody = commandBody('native');
+const startBody = commandBody(undefined);
+
+/** What app.json records for a detector that follows a preset; takes its detection settings as ordered JSON. */
+function presetVersion(settings) {
+	return createHash('sha256').update(settings).digest('hex');
+}
+
+test('a phone finds what it needs to put the application on its home screen', async (t) => {
+	const { base } = await startServer(t);
+	const page = await (await send(`${base}/streams`)).text();
+	assert.match(page, /<link rel="manifest" href="[^"]*\/manifest\.webmanifest"/);
+	assert.match(page, /<link rel="apple-touch-icon" href="[^"]*\/apple-touch-icon\.png"/);
+	const response = await send(`${base}/manifest.webmanifest`);
+	assert.equal(response.status, 200);
+	const manifest = await response.json();
+	assert.equal(manifest.display, 'standalone');
+	assert.equal(manifest.icons.length, 3);
+	for (const src of [...manifest.icons.map((icon) => icon.src), 'apple-touch-icon.png']) {
+		const icon = await send(`${base}/${src}`);
+		assert.equal(icon.status, 200, src);
+		assert.equal(icon.headers.get('content-type'), 'image/png', src);
+	}
+});
 
 test('saved logs are searchable in the page and downloadable with conditional refreshes', async (t) => {
 	const { directory, base } = await startServer(t);
@@ -181,10 +205,66 @@ async function connectBrowser(base, origin, code) {
 		body: new URLSearchParams({ code, name: 'Farm tablet' }).toString()
 	});
 	assert.equal(response.status, 303, await response.clone().text());
+	assert.match(response.headers.get('set-cookie'), /; SameSite=Lax/i);
+	assert.match(response.headers.get('set-cookie'), /; HttpOnly/i);
 	return response.headers.get('set-cookie').split(';')[0];
 }
 
-async function startServer(t, origin, prepare) {
+test('remembered devices renew their cookie on the pairing page and revoked devices stay blocked', async (t) => {
+	const { directory, base, logs } = await startServer(t);
+	const origin = 'http://barn.local';
+	const cookie = await connectBrowser(
+		base,
+		origin,
+		logs().match(/initial pairing code: (\d{6})/)[1]
+	);
+	const headers = { Host: 'barn.local', Cookie: cookie, Accept: 'text/html' };
+	const remembered = await send(`${base}/pair`, { headers });
+	assert.equal(remembered.status, 303);
+	assert.equal(remembered.headers.get('location'), '/');
+	assert.equal(remembered.headers.get('set-cookie').split(';')[0], cookie);
+	assert.match(remembered.headers.get('set-cookie'), /; SameSite=Lax/i);
+	assert.match(remembered.headers.get('set-cookie'), /; HttpOnly/i);
+	const externalPost = await send(`${base}/pair`, {
+		method: 'POST',
+		headers: {
+			...headers,
+			Origin: 'http://other.example.test',
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: 'code=123456'
+	});
+	assert.equal(externalPost.status, 403);
+	// A paired device invites others to the address it used itself. Only the dashboard on
+	// this computer swaps in one of its own network addresses.
+	const invitationLink = /href="http:\/\/([^"/:]+)(?::\d+)?\/pair#code=\d{6}"/;
+	const form = { 'Content-Type': 'application/x-www-form-urlencoded' };
+	const invited = await send(`${base}/devices?/connect`, {
+		method: 'POST',
+		headers: { ...headers, ...form, Origin: origin }
+	});
+	assert.equal(invited.status, 200);
+	assert.equal((await invited.text()).match(invitationLink)?.[1], 'barn.local');
+	const local = await send(`${base}/devices?/connect`, {
+		method: 'POST',
+		headers: { ...form, Origin: base, Accept: 'text/html' }
+	});
+	const localPage = await local.text();
+	if (local.status === 200) {
+		const host = localPage.match(invitationLink)?.[1];
+		assert.ok(host, 'The invitation has no pairing link.');
+		assert.notEqual(host, '127.0.0.1');
+	} else assert.match(localPage, /Connect this computer to your local network/);
+	const appPath = path.join(directory, 'app.json');
+	const app = JSON.parse(await readFile(appPath, 'utf8'));
+	await writeFile(appPath, JSON.stringify({ ...app, devices: [] }));
+	const revoked = await send(`${base}/pair`, { headers });
+	assert.equal(revoked.status, 200);
+	assert.match(await revoked.text(), /Connect to AI Detector/);
+	assert.equal(revoked.headers.get('set-cookie'), null);
+});
+
+async function startServer(t, origin, prepare, presetsUrl = '') {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-node-production-'));
 	await prepare?.(directory);
 	const env = {
@@ -193,6 +273,8 @@ async function startServer(t, origin, prepare) {
 		PORT: '0',
 		AIDETECTOR_DATA_DIR: directory,
 		AIDETECTOR_EXECUTABLE: executable,
+		// No test asks the published presets on GitHub; one names a stand-in for them.
+		AIDETECTOR_PRESETS_URL: presetsUrl,
 		SHUTDOWN_TIMEOUT: '2'
 	};
 	for (const name of [
@@ -371,13 +453,75 @@ test(
 			path.join(directory, 'app.json'),
 			JSON.stringify({ streams: [{ label: 'Barn', source: 'rtsp://camera.example.test/live' }] })
 		);
-		const response = await send(`${base}/setup?step=detectors&add=detector`);
+		const response = await send(`${base}/setup?step=detectors`);
 		assert.equal(response.status, 200);
 		const html = await response.text();
 		for (const name of ['Calving Catcher', 'Cow Catcher', 'General'])
 			assert.ok(html.includes(name), `Bundled preset ${name} should be available`);
 		assert.ok(html.includes('Choose a preset'));
 		assert.ok(!html.includes('Cow mounting behaviour'));
+	}
+);
+
+test(
+	'pages follow each browser until the installation has a language of its own',
+	{ timeout: 20000 },
+	async (t) => {
+		const { directory, base } = await startServer(t);
+		const open = async (language) => {
+			const response = await send(`${base}/setup?step=cameras`, {
+				headers: language ? { 'Accept-Language': language } : {}
+			});
+			assert.equal(response.status, 200);
+			return response.text();
+		};
+		const english = await open();
+		assert.match(english, /<html lang="en"/);
+		assert.match(english, /<title>Set up · AI Detector<\/title>/);
+		const dutch = await open('nl-NL,nl;q=0.9,en;q=0.8');
+		assert.match(dutch, /<html lang="nl"/);
+		assert.match(dutch, /<title>Instellen · AI Detector<\/title>/);
+		assert.doesNotMatch(dutch, /Connect your cameras/);
+		// A language without a catalog is served in English rather than refused.
+		assert.match(await open('pl-PL,pl;q=0.9'), /<html lang="en"/);
+
+		// Messages raised on the server follow the request too, not only the pages.
+		const refused = await send(`${base}/pair`, {
+			method: 'POST',
+			headers: {
+				Host: 'barn.local',
+				Origin: 'http://barn.local',
+				Accept: 'text/html',
+				'Accept-Language': 'de-DE,de;q=0.9',
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: 'code=000000&name=Tablet'
+		});
+		assert.equal(refused.status, 400);
+		const refusal = await refused.text();
+		assert.match(refusal, /<html lang="de"/);
+		assert.doesNotMatch(refusal, /The code did not match/);
+
+		// Nothing was saved by looking; choosing a language is what records it.
+		await assert.rejects(readFile(path.join(directory, 'app.json')), { code: 'ENOENT' });
+		const chosen = await send(base + commands.setLanguage, {
+			method: 'POST',
+			headers: {
+				Origin: base,
+				'Content-Type': 'application/json',
+				'x-sveltekit-pathname': '/setup',
+				'x-sveltekit-search': '?step=cameras'
+			},
+			body: commandBody('fr')
+		});
+		assert.equal(chosen.status, 200, await chosen.clone().text());
+		assert.equal(
+			JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8')).language,
+			'fr'
+		);
+		// From then on every browser sees the installation's language.
+		assert.match(await open('nl-NL,nl;q=0.9'), /<html lang="fr"/);
+		assert.match(await open(), /<html lang="fr"/);
 	}
 );
 
@@ -416,7 +560,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			assert.equal(firstVisit.status, 302);
 			assert.equal(
 				new URL(firstVisit.headers.get('location'), base + '/setup').href,
-				base + '/setup?step=cameras&add=camera'
+				base + '/setup?step=cameras'
 			);
 			const page = await send(new URL(firstVisit.headers.get('location'), base + '/setup'), {
 				headers: browserHeaders
@@ -428,8 +572,8 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 				assert.equal(page.headers.get('set-cookie'), null);
 				await assert.rejects(readFile(path.join(directory, 'app.json')), { code: 'ENOENT' });
 			}
-			assert.ok(html.includes('<title>Settings · AI Detector</title>'));
-			assert.ok(html.includes('Add your camera'));
+			assert.ok(html.includes('<title>Set up · AI Detector</title>'));
+			assert.ok(html.includes('Connect your cameras'));
 			assert.ok(!html.includes('Calving Catcher'));
 			const headers = {
 				...browserHeaders,
@@ -470,7 +614,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			});
 			assert.equal(saved.status, 200, await saved.clone().text());
 			assert.equal((await saved.json()).type, 'result');
-			const detectorPage = await send(`${base}/setup?step=detectors&add=detector`, {
+			const detectorPage = await send(`${base}/setup?step=detectors`, {
 				headers: browserHeaders
 			});
 			assert.equal(detectorPage.status, 200);
@@ -611,10 +755,12 @@ test(
 			[]
 		);
 		assert.equal((await send(base + '/')).headers.get('location'), '/setup');
-		const detectorStep = await send(base + '/setup?step=detectors');
+		// The step stays in the address, so the first detector form opens without another redirect.
+		assert.equal((await send(base + '/setup?step=detectors')).status, 200);
 		assert.equal(
-			new URL(detectorStep.headers.get('location'), base + '/setup').href,
-			base + '/setup?step=detectors&add=detector'
+			(await send(base + '/setup?step=finish')).headers.get('location'),
+			null,
+			'Cameras without a detector can finish for live viewing'
 		);
 		assert.equal((await command('finishSetup')).type, 'result');
 		assert.equal((await send(base + '/')).headers.get('location'), '/streams');
@@ -675,6 +821,130 @@ test(
 );
 
 test(
+	'a detector that follows a preset takes the new model of that preset when the server starts',
+	{ skip: process.platform === 'win32', timeout: 20000 },
+	async (t) => {
+		const source = 'rtsp://camera.example.test/workshop';
+		const { directory, base, logs } = await startServer(t, undefined, async (directory) => {
+			await mkdir(path.join(directory, 'presets'));
+			await Promise.all([
+				// The preset as a new release brings it, with the second model.
+				writeFile(
+					path.join(directory, 'presets', 'workshop.json'),
+					JSON.stringify({ detection: { interval: 2 }, yolo: { model: 'workshop-v2.onnx' } })
+				),
+				writeFile(
+					path.join(directory, 'config.json'),
+					JSON.stringify({
+						detectors: [
+							{
+								detection: { source: [source], interval: 2 },
+								yolo: { model: 'workshop-v1.onnx' },
+								exporters: { disk: [{ directory: 'workshop' }] }
+							}
+						]
+					})
+				),
+				writeFile(
+					path.join(directory, 'app.json'),
+					JSON.stringify({
+						streams: [{ id: 'workshop-camera', label: 'Workshop camera', source }],
+						detectors: [
+							{
+								label: 'Workshop rule',
+								preset: 'workshop',
+								// As recorded when the preset still gave the first model.
+								presetVersion: presetVersion(
+									'{"detection":{"interval":2},"yolo":{"model":"workshop-v1.onnx"}}'
+								)
+							}
+						],
+						telegrams: []
+					})
+				)
+			]);
+		});
+		assert.equal((await send(`${base}/detectors`)).status, 200);
+		const config = JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8'));
+		assert.deepEqual(config.detectors, [
+			{
+				detection: { source: [source], interval: 2 },
+				yolo: { model: 'workshop-v2.onnx' },
+				exporters: { disk: [{ directory: 'workshop' }] }
+			}
+		]);
+		const app = JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8'));
+		assert.equal(app.detectors[0].preset, 'workshop');
+		assert.match(logs(), /Detector "Workshop rule" now has the current settings of its preset/);
+	}
+);
+
+test(
+	'a detector that follows a published preset takes its new model once that can be downloaded',
+	{ skip: process.platform === 'win32', timeout: 30000 },
+	async (t) => {
+		const source = 'rtsp://camera.example.test/workshop';
+		let modelPublished = false;
+		const github = createServer((request, response) => {
+			const origin = `http://${request.headers.host}`;
+			if (request.url === '/folder')
+				return response.end(
+					JSON.stringify([{ name: 'workshop.json', download_url: `${origin}/workshop.json` }])
+				);
+			if (request.url === '/workshop.json')
+				return response.end(
+					JSON.stringify({ detection: { interval: 2 }, yolo: { model: `${origin}/v2.pt` } })
+				);
+			response.statusCode = request.url === '/v2.pt' && modelPublished ? 200 : 404;
+			response.end();
+		});
+		github.listen(0, '127.0.0.1');
+		await once(github, 'listening');
+		t.after(() => github.close());
+		const published = `http://127.0.0.1:${github.address().port}`;
+		const saved = {
+			detection: { source: [source], interval: 2 },
+			yolo: { model: 'workshop-v1.onnx' },
+			exporters: { disk: [{ directory: 'workshop' }] }
+		};
+		const prepare = (directory) =>
+			Promise.all([
+				writeFile(path.join(directory, 'config.json'), JSON.stringify({ detectors: [saved] })),
+				writeFile(
+					path.join(directory, 'app.json'),
+					JSON.stringify({
+						streams: [{ id: 'workshop-camera', label: 'Workshop camera', source }],
+						detectors: [
+							{
+								label: 'Workshop rule',
+								preset: 'workshop',
+								presetVersion: presetVersion(
+									'{"detection":{"interval":2},"yolo":{"model":"workshop-v1.onnx"}}'
+								)
+							}
+						],
+						telegrams: []
+					})
+				)
+			]);
+		const detectors = async ({ directory, base }) => {
+			assert.equal((await send(`${base}/detectors`)).status, 200);
+			return JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8')).detectors;
+		};
+
+		// The preset names a model that is not there yet: the detector keeps what works.
+		const early = await startServer(t, undefined, prepare, `${published}/folder`);
+		assert.deepEqual(await detectors(early), [saved]);
+		assert.match(early.logs(), /The model of preset "Workshop" cannot be downloaded now/);
+
+		modelPublished = true;
+		const later = await startServer(t, undefined, prepare, `${published}/folder`);
+		assert.deepEqual(await detectors(later), [{ ...saved, yolo: { model: `${published}/v2.pt` } }]);
+		assert.match(later.logs(), /Detector "Workshop rule" now has the current settings/);
+	}
+);
+
+test(
 	'production saved cameras remain editable when a preset file becomes invalid',
 	{ skip: process.platform === 'win32', timeout: 20000 },
 	async (t) => {
@@ -686,7 +956,13 @@ test(
 			yolo: { model: 'workshop-safety.onnx', confidence: { helmet: 0.75 } },
 			exporters: { disk: [{ directory: 'workshop-recordings' }] }
 		};
-		const detectorMeta = { label: 'Workshop rule', cameraId, preset: 'workshop' };
+		const detectorMeta = {
+			label: 'Workshop rule',
+			preset: 'workshop',
+			presetVersion: presetVersion(
+				'{"detection":{"interval":2},"yolo":{"confidence":{"helmet":0.75},"model":"workshop-safety.onnx"}}'
+			)
+		};
 		const configPath = path.join(directory, 'config.json');
 		const configText = JSON.stringify({ detectors: [detector] });
 		await mkdir(path.join(directory, 'presets'));
@@ -709,16 +985,13 @@ test(
 		await writeFile(templatePath, '{"yolo":');
 		for (const [route, savedValue, expectedContent] of [
 			['/streams', 'Workshop camera', /Monitoring preset names are unavailable/],
+			[`/streams/${cameraId}`, 'Workshop camera', /Camera name[\s\S]*Save changes/],
 			[
-				`/setup?step=cameras&camera=${cameraId}`,
-				'Workshop camera',
-				/Camera name[\s\S]*Save changes/
-			],
-			[
-				'/setup?step=detectors&detector=Workshop%20rule',
+				'/detectors/edit?label=Workshop%20rule',
 				'workshop-safety.onnx',
 				/Monitoring presets are unavailable/
-			]
+			],
+			['/detectors', 'Workshop rule', /Workshop camera/]
 		]) {
 			const response = await send(base + route);
 			const html = await response.text();
@@ -726,13 +999,10 @@ test(
 			assert.match(html, expectedContent, route);
 			assert.ok(html.includes(savedValue), `${route} must retain ${savedValue}`);
 		}
+		// A bookmark to a detector from the released web application opens its editor.
 		for (const [oldPath, destination] of [
-			['/streams/add', '/setup?step=cameras&add=camera'],
-			[`/streams/add?id=${cameraId}`, `/setup?step=cameras&camera=${cameraId}`],
-			['/detectors', '/setup?step=detectors'],
-			['/detectors/add?setup=1', '/setup?step=detectors&add=detector'],
-			['/detectors/add?label=Workshop%20rule', '/setup?step=detectors&detector=Workshop%20rule'],
-			['/detectors/add?label=Pen%20%26%20yard', '/setup?step=detectors&detector=Pen%20%26%20yard']
+			['/detectors/add?label=Workshop%20rule', '/detectors/edit?label=Workshop%20rule'],
+			['/detectors/add?label=Pen%20%26%20yard', '/detectors/edit?label=Pen%20%26%20yard']
 		]) {
 			const response = await send(base + oldPath);
 			assert.equal(response.status, 302, oldPath);
@@ -741,22 +1011,23 @@ test(
 				base + destination
 			);
 		}
-		for (const [selection, message] of [
-			['camera=missing', 'Camera not found'],
-			['detector=missing', 'Detector not found']
+		for (const [route, title] of [
+			['/streams/add', 'Add cameras'],
+			['/detectors/add', 'Add a detector'],
+			['/streams/missing', 'Camera not found'],
+			['/detectors/edit?label=missing', 'Detector not found']
 		]) {
-			const step = selection.startsWith('camera') ? 'cameras' : 'detectors';
-			const response = await send(`${base}/setup?step=${step}&${selection}`);
-			assert.equal(response.status, 200);
-			assert.ok((await response.text()).includes(message));
+			const response = await send(base + route);
+			assert.equal(response.status, 200, route);
+			assert.ok((await response.text()).includes(title), route);
 		}
 		const renamed = await send(base + commands.saveCamera, {
 			method: 'POST',
 			headers: {
 				Origin: base,
 				'Content-Type': 'application/json',
-				'x-sveltekit-pathname': '/setup',
-				'x-sveltekit-search': `?step=cameras&camera=${cameraId}`
+				'x-sveltekit-pathname': `/streams/${cameraId}`,
+				'x-sveltekit-search': ''
 			},
 			body: commandBody({ id: cameraId, label: 'Main workshop', source, mode: 'keep' })
 		});
@@ -791,9 +1062,15 @@ test('broken settings retain an accessible diagnostics download and explicit rec
 	};
 	assert.equal((await send(base + '/setup?step=detectors')).status, 200);
 	await writeFile(path.join(directory, 'config.json'), '{invalid settings');
-	const broken = await send(base + '/setup?step=cameras', { headers });
-	assert.equal(broken.status, 500);
-	assert.match(await broken.text(), /Recover settings/);
+	// Every page says which file is damaged and offers the same two ways forward.
+	for (const route of ['/setup?step=cameras', '/streams', '/detectors', '/detections', '/status']) {
+		const broken = await send(base + route, { headers });
+		assert.equal(broken.status, 500, route);
+		const page = await broken.text();
+		assert.match(page, /config\.json is damaged and cannot be read/, route);
+		assert.match(page, /Recover settings/, route);
+		assert.match(page, /Download diagnostics/, route);
+	}
 	const download = await send(base + '/logs/diagnostics', { headers });
 	assert.equal(download.status, 200);
 	const files = unzipSync(new Uint8Array(await download.arrayBuffer()));

@@ -10,6 +10,10 @@ export const reviewDetection = command(reviewDetectionInput, ({ validated, ...ad
 	archive.review(address, validated, 'web')
 );
 
+export const removeDetection = command(v.omit(reviewDetectionInput, ['validated']), (address) =>
+	archive.remove(address)
+);
+
 export const getDetectionReviews = query(
 	v.pipe(v.array(v.omit(reviewDetectionInput, ['validated'])), v.maxLength(100)),
 	(addresses) =>

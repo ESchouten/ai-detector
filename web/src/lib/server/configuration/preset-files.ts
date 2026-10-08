@@ -38,7 +38,7 @@ function detectorTemplate(input: unknown): DetectorConfig {
 	return detector;
 }
 
-function presetFromFile(file: string, input: unknown): DetectorPreset {
+export function presetFromFile(file: string, input: unknown): DetectorPreset {
 	const id = path.basename(file, '.json');
 	const name = id
 		.split(/[-_\s]+/)

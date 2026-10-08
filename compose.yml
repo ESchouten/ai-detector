@@ -1,8 +1,13 @@
+# AI Detector on a Linux PC with an NVIDIA GPU and the NVIDIA Container Toolkit.
 services:
   aidetector:
     image: "ghcr.io/eschouten/ai-detector:latest"
     restart: unless-stopped
-    command: ["python3", "-m", "aidetector", "--live-preview"]
+    # The host's network, so cameras on it can be found.
+    network_mode: host
+    environment:
+      PORT: 80
+
     ipc: host
     ulimits:
       memlock: -1
@@ -10,6 +15,7 @@ services:
 
     volumes:
       - ./example:/data
+
     deploy:
       resources:
         reservations:
@@ -17,14 +23,3 @@ services:
             - driver: nvidia
               count: all
               capabilities: [ gpu ]
-
-  web:
-    image: "ghcr.io/eschouten/ai-detector-web:latest"
-    restart: unless-stopped
-    environment:
-      HOST: 0.0.0.0
-      PORT: 3000
-    ports:
-      - "80:3000"
-    volumes:
-      - ./example:/data

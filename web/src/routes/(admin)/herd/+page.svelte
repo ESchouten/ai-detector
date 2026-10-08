@@ -5,9 +5,11 @@
 	import { tick } from 'svelte';
 	import { Fingerprint, RefreshCw, Trash2, TriangleAlert, X } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { Badge } from '$lib/components/ui/badge';
 	import { Input } from '$lib/components/ui/input';
-	import DetectorRuntime from '$lib/components/detector-runtime.svelte';
+	import MonitoringBanner from '$lib/components/monitoring-banner.svelte';
+	import PageHeader from '$lib/components/page-header.svelte';
+	import Pill from '$lib/components/pill.svelte';
+	import { calendarDate, plural, timeOfDay } from '$lib/format';
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import { herdEmptyState } from '$lib/herd-status';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -24,6 +26,15 @@
 	const initialRuntime = monitor.query.current ?? (await monitor.query);
 	const runtime = $derived(monitor.query.current ?? initialRuntime);
 	const emptyState = $derived(herdEmptyState(data.identityModes, runtime, monitor.stale));
+	const identification = $derived(
+		runtime.phase === 'running' && !monitor.stale ? (runtime.identification ?? []) : []
+	);
+	const identityLabels = {
+		collecting: 'Collecting clear photos; name at least two cows to suggest matches.',
+		preparing: 'Preparing cow identification; detection continues.',
+		ready: 'Ready to suggest cow matches.',
+		failed: 'Cow identification is unavailable; detection continues. Check Logs for details.'
+	};
 	const automaticOnly = $derived(
 		data.identityModes.includes('continuous') && !data.identityModes.includes('appearance')
 	);
@@ -61,7 +72,7 @@
 	}
 
 	function capturedAt(value: string) {
-		return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+		return `${calendarDate(value)} ${timeOfDay(value)}`;
 	}
 
 	function identify(item: NonNullable<PageData['catalog']>['review'][number]) {
@@ -112,39 +123,48 @@
 
 <svelte:head><title>Herd · AI Detector</title></svelte:head>
 
-<section class="settings-page max-w-6xl">
-	<header class="flex flex-col gap-2">
-		<div class="flex flex-wrap items-center justify-between gap-3">
-			<div class="flex items-center gap-3">
-				<h1 class="settings-heading">Herd</h1>
-				<Badge variant="secondary">Experimental</Badge>
-			</div>
+<section class="page">
+	<PageHeader
+		title="Herd"
+		description={data.identityModes.includes('continuous')
+			? 'Automatic camera tracking runs without naming photos. Ear-number recognition is still being developed.'
+			: 'Name your cows and confirm clear photos. Suggested matches always need your confirmation.'}
+	>
+		{#snippet actions()}
+			<Pill>Experimental</Pill>
 			{#if !automaticOnly || !data.catalog || review.length || identities.length}
 				<Button variant="outline" onclick={() => invalidateAll()} disabled={busy}>
-					<RefreshCw data-icon="inline-start" />{data.catalog ? 'Refresh photos' : 'Try again'}
+					<RefreshCw data-icon="inline-start" aria-hidden="true" />{data.catalog
+						? 'Refresh photos'
+						: 'Try again'}
 				</Button>
 			{/if}
-		</div>
-		<p class="settings-description">
-			{#if data.identityModes.includes('continuous')}
-				Automatic camera tracking runs without naming photos. Ear-number recognition is still being
-				developed.
-			{:else}
-				Name your cows and confirm clear photos. Suggested matches always need your confirmation.
-			{/if}
-		</p>
-	</header>
+		{/snippet}
+	</PageHeader>
 	{#if data.identityModes.length}
-		<DetectorRuntime configured compact />
+		<MonitoringBanner configured />
+		{#each identification as identity (identity.ruleId)}
+			<p
+				role="status"
+				class={[
+					'text-sm',
+					identity.state === 'failed' ? 'text-danger-foreground' : 'text-muted-foreground'
+				]}
+			>
+				{identity.label}: {identity.message || identityLabels[identity.state]}
+			</p>
+		{/each}
 	{/if}
 
 	{#if message && !dialog}
-		<p role="alert" class="text-sm text-destructive">{message}</p>
+		<p role="alert" class="text-sm text-danger-foreground">{message}</p>
 	{/if}
 	{#if data.catalog?.unavailable}
 		<p role="status" class="text-sm text-muted-foreground">
-			{data.catalog.unavailable} photo{data.catalog.unavailable === 1 ? '' : 's'} could not be loaded.
-			Other photos are still available.
+			{plural(data.catalog.unavailable, [
+				'# photo could not be loaded. Other photos are still available.',
+				'# photos could not be loaded. Other photos are still available.'
+			])}
 		</p>
 	{/if}
 
@@ -174,7 +194,7 @@
 			</Empty.Header>
 			{#if !data.identityModes.length}
 				<Empty.Content>
-					<Button href={resolve('/setup?step=detectors&add=detector')}>Set up cow identity</Button>
+					<Button href={resolve('/detectors/add')}>Set up cow identity</Button>
 				</Empty.Content>
 			{/if}
 		</Empty.Root>
@@ -203,9 +223,8 @@
 										loading="lazy"
 									/>
 									{#if suggestion && confirmedCows >= 2}
-										<Badge
-											class="absolute top-2 left-2 max-w-[calc(100%-1rem)] truncate"
-											variant="secondary">Possible match: {suggestion.name}</Badge
+										<Pill class="absolute top-2 left-2 max-w-[calc(100%-1rem)]"
+											>Possible match: {suggestion.name}</Pill
 										>
 									{/if}
 								</div>
@@ -282,7 +301,7 @@
 								<div class="flex items-baseline justify-between gap-3 py-2">
 									<span class="truncate font-medium">{item.name}</span><span
 										class="shrink-0 text-sm text-muted-foreground"
-										>{item.samples.length} example{item.samples.length === 1 ? '' : 's'}</span
+										>{plural(item.samples.length, ['# example', '# examples'])}</span
 									>
 								</div>
 								<Button
@@ -404,7 +423,7 @@
 								</Field.Field>
 							{/if}
 						</Field.Group>
-						{#if message}<p role="alert" class="text-sm text-destructive">{message}</p>{/if}
+						{#if message}<p role="alert" class="text-sm text-danger-foreground">{message}</p>{/if}
 						<Dialog.Footer>
 							<Button variant="outline" onclick={() => (dialog = null)} disabled={busy}
 								>Cancel</Button
@@ -477,7 +496,7 @@
 							Add a photo from the review list to recognize this cow.
 						</p>
 					{/if}
-					{#if message}<p role="alert" class="text-sm text-destructive">{message}</p>{/if}
+					{#if message}<p role="alert" class="text-sm text-danger-foreground">{message}</p>{/if}
 					<Dialog.Footer class="sm:justify-between">
 						<form method="POST" use:enhance={submit}>
 							<input type="hidden" name="revision" value={data.catalog.revision} />
@@ -487,7 +506,7 @@
 								name="operation"
 								value="remove-cow"
 								variant="ghost"
-								class="text-destructive"
+								class="text-danger-foreground"
 								disabled={busy}><Trash2 data-icon="inline-start" />Remove cow</Button
 							>
 						</form>

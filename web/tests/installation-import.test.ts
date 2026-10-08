@@ -8,6 +8,7 @@ import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { DetectionArchive, archivePath } from '../src/lib/server/archive.ts';
 import { availableSpace, exists } from '../src/lib/server/installation-import/files.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
+import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import type { Configuration } from '../src/lib/schema.ts';
 
 const camera = 'rtsp://farmer:private-password@camera.example.test/live';
@@ -50,7 +51,7 @@ async function fixture(t: TestContext) {
 	};
 	const app = {
 		streams: [{ label: 'Barn', source: camera }],
-		detectors: [{ label: 'Cow catcher', preset: 'cow-catcher' }],
+		detectors: [{ label: 'Cow catcher' }],
 		telegrams: [{ label: 'My phone', token: 'private-token', chat: '1234' }]
 	};
 	await writeJson(path.join(source, 'config.json'), config);
@@ -155,7 +156,7 @@ test('imports legacy settings and original recordings into setup without startin
 	assert.deepEqual(await readFile(path.join(source, 'config.json')), original);
 	assert.equal(await readFile(path.join(source, event, 'video.mp4'), 'utf8'), 'original recording');
 	assert.equal(await exists(path.join(destination, '.installation-import')), false);
-	assert.equal(await exists(path.join(destination, 'runtime.json')), false);
+	assert.equal(await monitoringEnabled(path.join(destination, 'app.json')), false);
 });
 
 test('relocates shared local camera files and ONNX tensors and preserves standalone camera names', async (t) => {
@@ -273,6 +274,20 @@ test('an interrupted copy resumes across application restarts without copying co
 	assert.equal((await stat(path.join(destination, event, 'video.mp4'))).ino, before.ino);
 });
 
+test('a damaged record of an unfinished import is discarded and a new import can start', async (t) => {
+	const { source, destination, importer, store } = await fixture(t);
+	await importer.inspect(source);
+	const staging = path.join(destination, '.installation-import');
+	await writeFile(path.join(staging, 'job.json'), '{broken');
+	const restarted = new InstallationImport(destination, store);
+	assert.equal((await restarted.getStatus()).phase, 'idle');
+	assert.equal(await exists(staging), false);
+	assert.equal(await readFile(path.join(source, event, 'video.mp4'), 'utf8'), 'original recording');
+	const summary = await restarted.inspect(source);
+	await finish(restarted, summary.id);
+	assert.equal((await store.read()).app.streams.length, 1);
+});
+
 test('publication interrupted before settings commit resumes without losing the imported archive', async (t) => {
 	const { source, destination, importer, store } = await fixture(t);
 	const summary = await importer.inspect(source);
@@ -341,7 +356,7 @@ test('existing destination recordings and setups are never replaced, including c
 	await assert.rejects(importer.inspect(source), /will not overwrite/);
 	await rm(path.join(destination, 'detections'), { recursive: true });
 	const summary = await importer.inspect(source);
-	await store.saveStream({ label: 'New camera', source: '0' });
+	await store.saveCamera({ label: 'New camera', source: '0', mode: 'view-only' });
 	await importer.start(summary.id, false);
 	await importer.settled();
 	assert.match((await importer.getStatus()).message!, /already has a setup/);

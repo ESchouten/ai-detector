@@ -6,8 +6,8 @@
 </script>
 
 <Dialog.Root>
-	<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
-		<Download data-icon="inline-start" aria-hidden="true" />Back up settings
+	<Dialog.Trigger class={buttonVariants({ variant: 'outline', size: 'sm' })}>
+		<Download data-icon="inline-start" aria-hidden="true" />Back up
 	</Dialog.Trigger>
 	<Dialog.Content>
 		<Dialog.Header>

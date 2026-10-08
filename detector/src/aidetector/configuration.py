@@ -24,6 +24,7 @@ PositiveDuration = Annotated[float, Field(gt=0)]
 PaddingRatio = Annotated[float, Field(ge=0)]
 PositiveInt = Annotated[int, Field(gt=0)]
 NonEmptyString = Annotated[str, Field(min_length=1, pattern=r"\S")]
+ClockTime = Annotated[str, Field(pattern=r"^([01]\d|2[0-3]):[0-5]\d$")]
 StringList = Annotated[list[NonEmptyString], Field(min_length=1)]
 SourceList = Annotated[
     list[NonEmptyString], Field(min_length=1, json_schema_extra={"uniqueItems": True})
@@ -227,10 +228,20 @@ class MediaConfig(ExporterConfig):
     video_crf: Annotated[int, Field(ge=0, le=51)] = 28
 
 
+class QuietHours(_ConfigModel):
+    """A daily period, in this computer's local time; it may run past midnight."""
+
+    start: ClockTime
+    end: ClockTime
+
+
 class TelegramConfig(MediaConfig):
     token: NonEmptyString = Field(repr=False)
     chat: NonEmptyString
     alert_every: PositiveInt = 1
+    quiet: QuietHours | None = Field(
+        default=None, description="Alerts in this period arrive without sound."
+    )
     include_video: bool = True
     timeout: PositiveDuration = 30
 

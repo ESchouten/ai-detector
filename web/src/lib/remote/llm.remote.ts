@@ -11,10 +11,10 @@ export const getLlmConnections = query(async () => (await configuration.read()).
 export const canTestLlm = query(() => Boolean(managedDetector()));
 export const saveLlmConnection = command(
 	v.object({ ...llmConnection.entries, original: v.optional(v.string()) }),
-	(input) => configurationAction(configuration.saveLlm(input))
+	(input) => configurationAction(() => configuration.saveLlm(input))
 );
 export const deleteLlmConnection = command(v.string(), (label) =>
-	configurationAction(configuration.deleteLlm(label))
+	configurationAction(() => configuration.deleteLlm(label))
 );
 export const testLlmConnection = command(llmConnection, async (connection) => {
 	const runtime = managedDetector();

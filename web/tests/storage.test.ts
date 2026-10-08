@@ -19,7 +19,7 @@ test('recording cleanup requires an unchanged preview and preserves recent and u
 		await writeFile(path.join(directory, item, 'image.jpg'), 'recording');
 	}
 	// Cleanup must still include damaged recordings, which the gallery cannot display.
-	await writeFile(path.join(directory, old, 'review.json'), '{broken');
+	await writeFile(path.join(directory, old, 'metadata.json'), '{broken');
 	const preview = await recordingCleanup(archive, '2026-02-01');
 	assert.equal(preview.count, 1);
 	const another = 'activity/rejected/2026-01-02T12-00-00';

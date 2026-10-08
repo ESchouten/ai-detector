@@ -10,6 +10,7 @@ import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { normalizeConfiguration, ConfigurationError } from '../src/lib/configuration.ts';
 import { DEFAULT_SCHEMA_URL, type DetectorConfig, type StreamMeta } from '../src/lib/schema.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
+import { newerPresets, presetVersion } from '../src/lib/server/configuration/followed-presets.ts';
 import { configurationAction } from '../src/lib/server/configuration/request.ts';
 import { isHttpError } from '@sveltejs/kit';
 
@@ -21,7 +22,13 @@ test('invalid settings can be recovered from the last valid pair without deletin
 	const { files, store } = await fixture(t);
 	const original = await store.read();
 	await writeFile(files.config, '{broken');
-	await assert.rejects(store.read(), SyntaxError);
+	// The person is told which file is damaged, not what a parser found in it.
+	await assert.rejects(store.read(), (error: Error) => {
+		assert.ok(error instanceof ConfigurationError);
+		assert.ok(error.message.includes(files.config), error.message);
+		assert.match(error.message, /damaged and cannot be read/);
+		return true;
+	});
 	assert.equal(await store.recoveryAvailable(), true);
 	await store.restore();
 	assert.deepEqual(await store.read(), original);
@@ -30,6 +37,15 @@ test('invalid settings can be recovered from the last valid pair without deletin
 	);
 	assert.ok(saved);
 	assert.equal(await readFile(path.join(path.dirname(files.config), saved), 'utf8'), '{broken');
+	// The same holds for app.json, whether it is not JSON or holds something it should not.
+	for (const damaged of ['{broken', JSON.stringify({ streams: 'none' })]) {
+		await writeFile(files.app, damaged);
+		await assert.rejects(store.read(), (error: Error) => {
+			assert.ok(error instanceof ConfigurationError);
+			assert.ok(error.message.includes(files.app), error.message);
+			return true;
+		});
+	}
 });
 
 async function fixture(
@@ -170,16 +186,32 @@ test('loaded notification identities match their exporters without silently chan
 
 test('expected configuration failures reach the UI as actionable client errors', async () => {
 	await assert.rejects(
-		configurationAction(Promise.reject(new ConfigurationError('This detector no longer exists.'))),
+		configurationAction(() =>
+			Promise.reject(new ConfigurationError('This detector no longer exists.'))
+		),
 		(failure) => {
 			assert.ok(isHttpError(failure, 400));
 			assert.equal(failure.body.message, 'This detector no longer exists.');
 			return true;
 		}
 	);
+	// A check that fails before anything is awaited is the same kind of answer.
+	await assert.rejects(
+		configurationAction(() => {
+			throw new ConfigurationError('Add a camera before finishing setup.');
+		}),
+		(failure) => isHttpError(failure, 400)
+	);
+	assert.equal(await configurationAction(() => 'saved'), 'saved');
 	const defect = new Error('Unexpected implementation defect');
 	await assert.rejects(
-		configurationAction(Promise.reject(defect)),
+		configurationAction(() => Promise.reject(defect)),
+		(failure) => failure === defect
+	);
+	await assert.rejects(
+		configurationAction(() => {
+			throw defect;
+		}),
 		(failure) => failure === defect
 	);
 });
@@ -469,11 +501,13 @@ test('a committed detector save succeeds while an apply failure is reported to r
 
 test('failed managed stop settings remain visible without rejecting the saved empty setup', async (t) => {
 	const { files } = await fixture(t);
-	const directory = path.dirname(files.app);
-	const runtime = new ManagedDetector({ executable: 'unused', dataDirectory: directory });
-	// An occupied path reproduces an actual filesystem rejection in stop(), without
-	// launching a child process or depending on platform-specific permission behavior.
-	await mkdir(path.join(directory, 'runtime.json'));
+	// The launcher keeps its resume flag in its own app.json. An occupied path there reproduces
+	// an actual filesystem rejection in stop(), without launching a child process or depending on
+	// platform-specific permission behavior.
+	const launcherData = await mkdtemp(path.join(tmpdir(), 'detector-launcher-'));
+	t.after(() => rm(launcherData, { recursive: true, force: true }));
+	await mkdir(path.join(launcherData, 'app.json'));
+	const runtime = new ManagedDetector({ executable: 'unused', dataDirectory: launcherData });
 	const store = new ConfigurationStore(files, () => runtime);
 	try {
 		await store.deleteDetector('Detector 1');
@@ -481,7 +515,7 @@ test('failed managed stop settings remain visible without rejecting the saved em
 		assert.deepEqual((await store.read()).app.detectors, []);
 		assert.equal(runtime.status().phase, 'failed');
 		assert.equal(runtime.status().readiness, 'failed');
-		assert.match(runtime.status().message, /runtime\.json/);
+		assert.match(runtime.status().message, /EISDIR|directory/);
 	} finally {
 		// Drain logging without rewriting the deliberately blocked settings path.
 		await runtime.stop(false);
@@ -509,9 +543,9 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 			throw error;
 		}
 	}));
-	await store.saveStream({ source: other, label: 'Unused camera' });
-	await store.reorderStream(0, 1);
-	await store.saveStream({ original: source, source, label: 'Renamed camera' });
+	const camera = (await store.read()).app.streams[0];
+	await store.saveCamera({ source: other, label: 'Unused camera', mode: 'view-only' });
+	await store.saveCamera({ id: camera.id, source, label: 'Renamed camera', mode: 'keep' });
 	await store.saveTelegram({ label: 'Unused channel', token: 'other', chat: 'other' });
 	await store.saveTelegram({ original: 'chat', label: 'Renamed channel', ...telegram });
 	const { config } = await store.read();
@@ -528,13 +562,18 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 	assert.deepEqual(
 		saved.streams.map(({ label, source }: StreamMeta) => ({ label, source })),
 		[
-			{ label: 'Unused camera', source: other },
-			{ label: 'Renamed camera', source }
+			{ label: 'Renamed camera', source },
+			{ label: 'Unused camera', source: other }
 		]
 	);
 	assert.equal(saved.telegrams.length, 2);
 	const replacement = 'rtsp://camera.local/replacement';
-	await store.saveStream({ original: source, source: replacement, label: 'Renamed camera' });
+	await store.saveCamera({
+		id: camera.id,
+		source: replacement,
+		label: 'Renamed camera',
+		mode: 'keep'
+	});
 	await store.saveTelegram({
 		original: 'Renamed channel',
 		label: 'Renamed channel',
@@ -605,7 +644,11 @@ test('renaming or changing delivery settings keeps the monitoring preset and cam
 		detector: original,
 		meta: { label: 'Calving pen' }
 	});
-	const meta = { label: 'Calving pen', preset: 'calving-catcher' };
+	const meta = {
+		label: 'Calving pen',
+		preset: 'calving-catcher',
+		presetVersion: presetVersion(original)
+	};
 	assert.equal((await store.read()).app.streams[0].id, camera.id);
 	assert.deepEqual((await store.read()).app.detectors[0], meta);
 	const changed = structuredClone(original);
@@ -626,7 +669,7 @@ test('renaming or changing delivery settings keeps the monitoring preset and cam
 test('metadata-only first save still creates the missing empty configuration', async (t) => {
 	const { files, store } = await fixture(t);
 	await rm(files.config);
-	await store.saveStream({ source, label: 'First camera' });
+	await store.saveCamera({ source, label: 'First camera', mode: 'view-only' });
 	assert.deepEqual(JSON.parse(await readFile(files.config, 'utf8')), {
 		$schema: DEFAULT_SCHEMA_URL,
 		detectors: []
@@ -659,6 +702,160 @@ test('preset identity survives camera changes and follows an explicitly selected
 		meta: { label: 'Entrances', preset: 'calving-catcher' }
 	});
 	assert.equal((await store.read()).app.detectors[0].preset, 'calving-catcher');
+});
+
+/** The bundled presets after a release that brought a newer Cow Catcher model. */
+async function presetsWithNewModel() {
+	const presets = await readTestPresets();
+	const preset = presets.find(({ id }) => id === 'cow-catcher')!.detector;
+	preset.yolo = {
+		...preset.yolo,
+		model: 'https://models.example.test/cowcatcherV18.pt',
+		imgsz: 800
+	};
+	return { presets, preset };
+}
+
+test('a detector that follows a preset takes its new model and keeps what the person chose', async (t) => {
+	const { files, store } = await fixture(t, { detectors: [] });
+	await addPresetDetector(store, { label: 'Barn', source }, 'cow-catcher');
+	await addPresetDetector(store, { label: 'Calving pen', source: other }, 'calving-catcher');
+	const chosen = (await store.read()).config.detectors[0];
+	chosen.detection.source = [source, other];
+	chosen.exporters = { telegram: [{ token: 'fixture-token', chat: '123' }] };
+	chosen.vlm = [
+		{
+			prompt: 'Is a cow mounting?',
+			strategy: 'VIDEO',
+			key: 'fixture-key',
+			model: ['gemini/gemini-3.5-flash']
+		}
+	];
+	await store.saveDetector({ original: 'Barn', detector: chosen, meta: { label: 'Barn' } });
+	const before = await store.read();
+	const { presets, preset } = await presetsWithNewModel();
+	assert.deepEqual(
+		newerPresets(before, presets).map(({ id }) => id),
+		['cow-catcher']
+	);
+
+	assert.deepEqual(await store.followPresets(presets), ['Barn']);
+	const after = await store.read();
+	assert.deepEqual(newerPresets(after, presets), []);
+	assert.deepEqual(after.config.detectors[0], {
+		...before.config.detectors[0],
+		yolo: preset.yolo
+	});
+	assert.deepEqual(after.config.detectors[1], before.config.detectors[1]);
+	assert.equal(after.app.detectors[0].preset, 'cow-catcher');
+
+	// The next start finds nothing to do and replaces neither file.
+	const written = async () =>
+		(await Promise.all([fs.stat(files.config), fs.stat(files.app)])).map(({ ino }) => ino);
+	const saved = await written();
+	assert.deepEqual(await new ConfigurationStore(files).followPresets(presets), []);
+	assert.deepEqual(await written(), saved);
+});
+
+test('a detector whose automatic updates are switched off keeps its model until they are on again', async (t) => {
+	const { store } = await fixture(t, { detectors: [] });
+	await addPresetDetector(store, { label: 'Barn', source }, 'cow-catcher');
+	const saved = (await store.read()).config.detectors[0];
+	const meta = { label: 'Barn', preset: 'cow-catcher' };
+	await store.saveDetector({
+		original: 'Barn',
+		detector: saved,
+		meta: { ...meta, autoUpdate: false }
+	});
+	const { presets, preset } = await presetsWithNewModel();
+	assert.deepEqual(newerPresets(await store.read(), presets), []);
+	assert.deepEqual(await store.followPresets(presets), []);
+	assert.deepEqual((await store.read()).config.detectors[0].yolo, saved.yolo);
+
+	// Saving without the setting switches them on again.
+	await store.saveDetector({ original: 'Barn', detector: saved, meta });
+	assert.equal('autoUpdate' in (await store.read()).app.detectors[0], false);
+	assert.deepEqual(await store.followPresets(presets), ['Barn']);
+	assert.deepEqual((await store.read()).config.detectors[0].yolo, preset.yolo);
+});
+
+test('detectors with their own settings, or a preset that is gone, are not changed by a new preset', async (t) => {
+	const { store } = await fixture(t, { detectors: [] });
+	await addPresetDetector(store, { label: 'Barn', source }, 'cow-catcher');
+	await addPresetDetector(store, { label: 'Yard', source: other }, 'general');
+	const own = (await store.read()).config.detectors[0];
+	own.yolo = { ...own.yolo!, confidence: 0.7 };
+	await store.saveDetector({ original: 'Barn', detector: own, meta: { label: 'Barn' } });
+	const before = await store.read();
+	assert.deepEqual(before.app.detectors[0], { label: 'Barn' });
+	const { presets } = await presetsWithNewModel();
+	assert.deepEqual(await store.followPresets(presets.filter(({ id }) => id !== 'general')), []);
+	assert.deepEqual(await store.read(), before);
+});
+
+test('settings changed or moved in config.json itself stop following a preset', async (t) => {
+	const { presets } = await presetsWithNewModel();
+	// Someone tunes the followed detector in the file.
+	const tuned = await fixture(t, { detectors: [] });
+	await addPresetDetector(tuned.store, { label: 'Barn', source }, 'cow-catcher');
+	const config = JSON.parse(await readFile(tuned.files.config, 'utf8'));
+	config.detectors[0].yolo.confidence = 0.7;
+	await writeJson(tuned.files.config, config);
+	assert.deepEqual((await tuned.store.read()).app.detectors[0], { label: 'Barn' });
+	assert.deepEqual(await tuned.store.followPresets(presets), []);
+	assert.equal((await tuned.store.read()).config.detectors[0].yolo?.confidence, 0.7);
+
+	// Someone removes the followed detector in the file, so the next one takes its place.
+	const moved = await fixture(t, { detectors: [] });
+	await addPresetDetector(moved.store, { label: 'Barn', source }, 'cow-catcher');
+	await moved.store.saveDetector({
+		detector: { detection: { source: [other] }, yolo: { model: 'own-model.pt' } },
+		meta: { label: 'Yard' }
+	});
+	const both = JSON.parse(await readFile(moved.files.config, 'utf8'));
+	await writeJson(moved.files.config, { ...both, detectors: [both.detectors[1]] });
+	assert.deepEqual(await moved.store.followPresets(presets), []);
+	assert.equal((await moved.store.read()).config.detectors[0].yolo?.model, 'own-model.pt');
+});
+
+test('a preset saved before versions were recorded is kept when its settings still match', async (t) => {
+	const { presets } = await presetsWithNewModel();
+	const { files, store } = await fixture(t, { detectors: [] });
+	await addPresetDetector(store, { label: 'Barn', source }, 'cow-catcher');
+	await addPresetDetector(store, { label: 'Calving pen', source: other }, 'calving-catcher');
+	const app = JSON.parse(await readFile(files.app, 'utf8'));
+	for (const meta of app.detectors) delete meta.presetVersion;
+	await writeJson(files.app, app);
+
+	// Calving Catcher is unchanged, so that detector follows it; Cow Catcher has moved on, and
+	// nothing tells whether the older settings were the preset's or the person's own.
+	const reopened = new ConfigurationStore(files);
+	assert.deepEqual(await reopened.followPresets(presets), []);
+	const saved = await reopened.read();
+	assert.deepEqual(saved.app.detectors[0], { label: 'Barn' });
+	assert.equal(saved.app.detectors[1].preset, 'calving-catcher');
+	assert.equal(
+		saved.app.detectors[1].presetVersion,
+		presetVersion(presets.find(({ id }) => id === 'calving-catcher')!.detector)
+	);
+	assert.notEqual(saved.config.detectors[0].yolo?.model, presets[0].detector.yolo?.model);
+});
+
+test('the recorded preset version does not depend on how the settings are written down', () => {
+	// app.json holds this value from earlier releases. Computing it differently would make every
+	// detector stop following its preset at the next update.
+	const settings = { yolo: { model: 'yolo11n.pt', confidence: 0.5 }, detection: { interval: 1 } };
+	const version = presetVersion({ ...settings, detection: { ...settings.detection, source: [] } });
+	assert.equal(version, '708de73ca71ea031e1d8231926fd04f8ee4e690b8ff75f85f944227793b982bd');
+	assert.equal(
+		presetVersion({
+			detection: { source: [source], interval: 1 },
+			exporters: { disk: [{ directory: 'general' }] },
+			vlm: [{ prompt: 'Is it there?', strategy: 'VIDEO', key: null }],
+			yolo: { confidence: 0.5, model: 'yolo11n.pt' }
+		}),
+		version
+	);
 });
 
 test('deleting the last detector saves the empty setup and stops managed detection', async (t) => {
@@ -727,37 +924,33 @@ test('duplicate and stale notification edits fail without creating extra channel
 	assert.equal((await store.read()).app.telegrams.length, 1);
 });
 
-test('source edits propagate, duplicates are refused, and a detector cannot lose its only source', async (t) => {
+test('a changed camera address reaches every detector that uses it, and duplicates are refused', async (t) => {
 	const { store } = await fixture(t, {
 		detectors: [detector, { detection: { source: [source, other] } }]
 	});
+	const [camera, second] = (await store.read()).app.streams;
 	const replacement = 'rtsp://camera.local/new';
-	await store.saveStream({ original: source, source: replacement, label: 'Renamed camera' });
+	await store.saveCamera({
+		id: camera.id,
+		source: replacement,
+		label: 'Renamed camera',
+		mode: 'keep'
+	});
 	assert.deepEqual(
 		(await store.read()).config.detectors.map((item) => item.detection.source),
 		[[replacement], [replacement, other]]
 	);
 	await assert.rejects(
-		store.saveStream({ original: replacement, source: other, label: 'Duplicate' }),
-		/already exists/
+		store.saveCamera({ id: camera.id, source: other, label: 'Duplicate', mode: 'keep' }),
+		/already saved/
 	);
-	await assert.rejects(store.deleteStream(replacement), /only source/);
-	await store.deleteStream(other);
+	await assert.rejects(
+		store.saveCamera({ id: second.id, source: other, label: 'Renamed camera', mode: 'keep' }),
+		/name already exists/
+	);
 	assert.deepEqual(
 		(await store.read()).config.detectors.map((item) => item.detection.source),
-		[[replacement], [replacement]]
-	);
-});
-
-test('source reorder validates indices and reorders the latest saved list', async (t) => {
-	const { store } = await fixture(t);
-	await store.saveStream({ source: other, label: 'Second' });
-	for (const index of [-1, 0.5, 9])
-		await assert.rejects(store.reorderStream(index, 0), /camera order changed/);
-	await store.reorderStream(0, 1);
-	assert.deepEqual(
-		(await store.read()).app.streams.map((item) => item.source),
-		[other, source]
+		[[replacement], [replacement, other]]
 	);
 });
 

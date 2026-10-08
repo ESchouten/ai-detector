@@ -2,8 +2,8 @@ detections
 config.json
 config.**.json
 yolo11**
+yolo26**
 app.json
-runtime.json
 /application-dist/
 !example/config.json
 !web/src/routes/(admin)/detections
@@ -11,6 +11,7 @@ web/static/_internal/
 
 # Local tooling and download caches
 .DS_Store
+.mcp.json
 .cache/
 .pytest_cache/
 .ruff_cache/
@@ -44,4 +45,3 @@ __pycache__/
 /detector/examples/
 /detector/fixtures/
 /docs/*
-!/docs/history/

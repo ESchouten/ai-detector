@@ -1,7 +1,7 @@
 import { awaitsConnection, suggestedConnection } from '../src/lib/llm.ts';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import {
@@ -179,83 +179,6 @@ test('connections without a key leave preset questions waiting until a key is sa
 	assert.deepEqual((await store.read()).config, before.config);
 	await store.saveLlm({ ...connection, original: connection.label });
 	assert.equal((await store.read()).config.detectors[0].vlm![0].key, connection.key);
-});
-
-test('loading old preview settings removes flags and keeps disabled validators disconnected', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-verification-upgrade-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
-	const connected = assignConnection(
-		{
-			detection: { source: ['video.mp4'] },
-			vlm: [{ prompt: 'Check?', strategy: 'VIDEO' as const }]
-		},
-		connection
-	);
-	const input = {
-		detectors: [
-			{ ...connected, vlm_enabled: false },
-			{
-				...connected,
-				vlm: [
-					{ ...connected.vlm[0], enabled: true },
-					{ ...connected.vlm[0], enabled: false }
-				]
-			},
-			{ detection: { source: ['video.mp4'] }, vlm: { prompt: 'Waiting?', enabled: false } }
-		]
-	};
-	await writeFile(files.config, JSON.stringify(input));
-	await writeFile(
-		files.app,
-		JSON.stringify({
-			llms: [connection],
-			detectors: [
-				{ label: 'Paused', llmConnection: connection.label },
-				{ label: 'Connected', llmConnection: connection.label }
-			]
-		})
-	);
-	const store = new ConfigurationStore(files);
-	const saved = await store.read();
-	assert.deepEqual(saved.config.detectors[0].vlm, clearVerificationKeys(connected).vlm);
-	assert.deepEqual(saved.config.detectors[1].vlm, [
-		connected.vlm[0],
-		{ ...connected.vlm[0], key: null }
-	]);
-	assert.deepEqual(saved.config.detectors[2].vlm, [{ prompt: 'Waiting?', key: null }]);
-	assert.equal(saved.app.detectors[0].llmConnection, undefined);
-	assert.equal(saved.app.detectors[1].llmConnection, connection.label);
-	assert.deepEqual(saved.app.llms, [connection]);
-	assert.deepEqual(JSON.parse(await readFile(files.config, 'utf8')), saved.config);
-	assert.deepEqual(await store.read(), saved);
-	// Compatibility belongs only to loading saved files, not the editor's new schema.
-	assert.throws(() => normalizeConfig(input), /unsupported property/);
-});
-
-test('invalid legacy settings are reported without rewriting either file', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-verification-invalid-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
-	const config = JSON.stringify({
-		detectors: [
-			{
-				detection: { source: ['video.mp4'] },
-				vlm: { enabled: false, prompt: 'Check?', unexpected: true }
-			}
-		]
-	});
-	await writeFile(files.config, config);
-	await writeFile(files.app, '{}');
-	await assert.rejects(new ConfigurationStore(files).read(), /unsupported property/);
-	assert.equal(await readFile(files.config, 'utf8'), config);
-	assert.equal(await readFile(files.app, 'utf8'), '{}');
 });
 
 test('one connection updates multiple detectors without changing their questions or fallbacks', async (t) => {

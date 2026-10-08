@@ -1,7 +1,7 @@
 """Combine the two signed release feeds for the desktop channel preference.
 
-Per-channel feeds remain available for older installed launchers and delta inputs.
-New launchers read the combined feed; native updaters still own installation.
+Each channel keeps its own feed as the history that deltas and the combined feed are built
+from. Launchers read the combined feed; the native updaters own installation.
 """
 
 import argparse

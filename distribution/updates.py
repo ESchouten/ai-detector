@@ -14,6 +14,10 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 SPARKLE = "http://www.andymatuschak.org/xml-namespaces/sparkle"
+# Mac releases a delta is generated from. Each one is a full disk image to download,
+# unpack and compare, which dominates packaging time. Previews are built several times
+# a day and installed one after another, so the previous build is enough for them.
+DELTA_BASES = {"stable": 2, "preview": 1}
 
 
 def numeric_version(value: str) -> tuple[int, ...]:
@@ -68,15 +72,16 @@ def mac_items(feed: bytes) -> list[tuple[str, ET.Element]]:
     return sorted(result, key=lambda item: numeric_version(item[0]), reverse=True)
 
 
-def prepare_macos(feed: bytes, folder: Path, version: str) -> None:
+def prepare_macos(feed: bytes, folder: Path, version: str, bases: int = 2) -> None:
     items = mac_items(feed)
     newer_than(version, [old for old, _ in items])
     available: set[str] = set()
     urls = list(dict.fromkeys(enclosure.attrib["url"] for _, enclosure in items))
-    # Independent release archives can download together; keep at most two delta bases.
+    # Independent release archives can download together; keep only the delta bases.
     with ThreadPoolExecutor(max_workers=2) as downloads:
-        while urls and len(available) < 2:
-            batch, urls = urls[: 2 - len(available)], urls[2 - len(available) :]
+        while urls and len(available) < bases:
+            wanted = bases - len(available)
+            batch, urls = urls[:wanted], urls[wanted:]
             pending = {
                 url: downloads.submit(
                     download,
@@ -101,7 +106,12 @@ def prepare_macos(feed: bytes, folder: Path, version: str) -> None:
 
 
 def prepare(
-    output: Path, platform: str, version: str, feed_url: str, public_key: str = ""
+    output: Path,
+    platform: str,
+    version: str,
+    feed_url: str,
+    public_key: str = "",
+    channel: str = "stable",
 ) -> None:
     numeric_version(version)
     name = "appcast.xml" if platform == "macos-arm64" else "releases.win.json"
@@ -113,7 +123,7 @@ def prepare(
     if feed is None:
         return
     if platform == "macos-arm64":
-        prepare_macos(feed, folder, version)
+        prepare_macos(feed, folder, version, DELTA_BASES[channel])
     else:
         from release_signatures import verify_feed
 
@@ -126,7 +136,7 @@ def prepare(
 
 
 def generate_macos_feed(
-    folder: Path, version: str, release_url: str, sparkle: Path
+    folder: Path, version: str, release_url: str, sparkle: Path, bases: int = 2
 ) -> None:
     feed = folder / "appcast.xml"
     previous = (
@@ -145,9 +155,9 @@ def generate_macos_feed(
             "--versions",
             version,
             "--maximum-versions",
-            "3",
+            str(bases + 1),
             "--maximum-deltas",
-            "2",
+            str(bases),
             "--delta-compression",
             "lzfse",
             "--download-url-prefix",
@@ -209,11 +219,14 @@ def macos(
     release_url: str,
     sparkle: Path,
     build_version: str | None = None,
+    channel: str = "stable",
 ) -> None:
     folder = output / "macos-updates"
     folder.mkdir(parents=True, exist_ok=True)
     shutil.copy2(output / f"AI-Detector-{version}-macos-arm64.dmg", folder)
-    generate_macos_feed(folder, build_version or version, release_url, sparkle)
+    generate_macos_feed(
+        folder, build_version or version, release_url, sparkle, DELTA_BASES[channel]
+    )
     shutil.copy2(folder / "appcast.xml", output)
     for delta in folder.glob("*.delta"):
         shutil.copy2(delta, output)
@@ -303,6 +316,7 @@ if __name__ == "__main__":
             else args.version,
             args.feed_url,
             os.environ.get("SPARKLE_PUBLIC_KEY", ""),
+            args.channel,
         )
     elif args.platform == "macos-arm64":
         macos(
@@ -311,6 +325,7 @@ if __name__ == "__main__":
             args.release_url,
             args.sparkle,
             args.build_version,
+            args.channel,
         )
     else:
         windows(

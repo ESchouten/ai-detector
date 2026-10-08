@@ -1,16 +1,14 @@
-import * as v from 'valibot';
+import type * as v from 'valibot';
 import { isDeepStrictEqual } from 'node:util';
-import { chmod, copyFile } from 'node:fs/promises';
-import {
-	DEFAULT_SCHEMA_URL,
-	appSchema,
-	type Config,
-	type Configuration,
-	type LlmConnection,
-	type PairedDevice
+import type {
+	Config,
+	Configuration,
+	DetectorPreset,
+	LlmConnection,
+	PairedDevice
 } from '../../schema.ts';
-import { readJson, writeJson } from '../json-file.ts';
-import { webLog } from '../web-log.ts';
+import type { Locale } from '../../locales.ts';
+import { serialQueue } from '../serial.ts';
 import {
 	alertsInput,
 	ConfigurationError,
@@ -18,18 +16,17 @@ import {
 	detectorInput,
 	normalizeConfig,
 	normalizeConfiguration,
-	streamInput,
-	telegramInput
+	telegramInput,
+	heartbeatInput
 } from '../../configuration.ts';
 import { identifyCameras, saveCamera, removeCamera } from './cameras.ts';
-import { writeConfiguration } from './files.ts';
-import { upgradeVerificationKeys } from './upgrade.ts';
+import { SettingsFiles, type SettingsPaths } from './settings-files.ts';
 import { saveDetector, deleteDetector } from './detectors.ts';
-import { saveStream, deleteStream, reorderStream } from './streams.ts';
 import { saveTelegram, deleteTelegram, saveAlerts } from './telegrams.ts';
 import { saveLlm, deleteLlm } from './llms.ts';
 import { replaceConnections, replaceDetectorConfig, settingsRevision } from './advanced.ts';
 import { recordArchiveCheck, finishCameraSetup } from './camera-setup.ts';
+import { followPresets, forgetChangedPresets } from './followed-presets.ts';
 
 interface Runtime {
 	validate(config: Config): Promise<void>;
@@ -38,105 +35,70 @@ interface Runtime {
 	fail(error: unknown): void;
 }
 
-const missingFile = Symbol('missing settings file');
-type RecoverySettings = { config: Config; app?: Configuration['app'] };
+/** Where the store learns the interface language, and who it tells about the saved one. */
+export interface LanguageSource {
+	/** The language the browser being answered asked for, when it stated one we have. */
+	requested(): Locale | undefined;
+	/** Told whenever settings are read or written, so work outside a request uses it too. */
+	saved(language: Locale | undefined): void;
+}
 
+/**
+ * The settings of this installation and everything that may change them. Changes run one at a
+ * time: read, change, check with the detector, save, then apply to the running detector.
+ */
 export class ConfigurationStore {
-	private pending: Promise<unknown> = Promise.resolve();
-	private files: { config: string; app: string };
+	private readonly enqueue = serialQueue();
+	private readonly files: SettingsFiles;
 	private runtime: () => Runtime | null;
-	private recoveryRevision = '';
+	private language?: LanguageSource;
 
-	constructor(files: { config: string; app: string }, runtime: () => Runtime | null = () => null) {
-		this.files = files;
+	constructor(
+		files: SettingsPaths,
+		runtime: () => Runtime | null = () => null,
+		language?: LanguageSource
+	) {
+		this.files = new SettingsFiles(files);
 		this.runtime = runtime;
-	}
-
-	private enqueue<T>(operation: () => Promise<T>): Promise<T> {
-		const result = this.pending.then(operation);
-		this.pending = result.catch(() => undefined);
-		return result;
+		this.language = language;
 	}
 
 	private async load(): Promise<Configuration> {
-		const [config, app] = await Promise.all([
-			readJson<unknown>(this.files.config, missingFile),
-			readJson<unknown>(this.files.app, missingFile)
-		]);
-		if (config === missingFile || app === missingFile) {
-			const saved = await readJson<RecoverySettings>(`${this.files.config}.last-valid`);
-			if (saved && (config === missingFile || saved.app !== undefined))
-				throw new ConfigurationError(
-					'A settings file is missing. Restore the last valid settings to continue.'
-				);
-		}
-		try {
-			const input =
-				config === missingFile ? { $schema: DEFAULT_SCHEMA_URL, detectors: [] } : config;
-			const upgraded = upgradeVerificationKeys(input);
-			const document = identifyCameras(
-				normalizeConfiguration(upgraded, app === missingFile ? {} : app)
-			);
-			if (upgraded !== input) await writeConfiguration(this.files, document);
-			if (config !== missingFile)
-				await this.remember(document, app !== missingFile || upgraded !== input);
-			return document;
-		} catch (error) {
-			if (error instanceof ConfigurationError)
-				throw new ConfigurationError(`${this.files.config}: ${error.message}`, { cause: error });
-			throw error;
-		}
+		const document = await this.files.load();
+		this.language?.saved(document.app.language);
+		return document;
 	}
 
-	private async remember(document: Configuration, appPresent = true): Promise<void> {
-		const revision = `${appPresent}:${settingsRevision(document)}`;
-		if (revision === this.recoveryRevision) return;
-		try {
-			await writeJson(`${this.files.config}.last-valid`, {
-				...document,
-				app: appPresent ? { ...document.app, devices: undefined } : undefined
-			});
-			this.recoveryRevision = revision;
-		} catch (error) {
-			// Read-only or full storage must not make valid settings unreadable.
-			webLog.error('Could not save the settings recovery snapshot', error);
-		}
+	private async save(document: Configuration, config = true): Promise<void> {
+		await this.files.write(document, config);
+		this.language?.saved(document.app.language);
+	}
+
+	/**
+	 * An installation takes the language of the browser that first saves settings in it, so
+	 * setup needs no language question; `saveLanguage` changes it afterwards.
+	 */
+	private keepLanguage(app: Configuration['app'], current?: Locale): void {
+		const language = app.language ?? current ?? this.language?.requested();
+		if (language) app.language = language;
 	}
 
 	async recoveryAvailable(): Promise<boolean> {
-		const saved = await readJson<RecoverySettings>(`${this.files.config}.last-valid`);
-		if (!saved) return false;
-		normalizeConfiguration(saved.config, saved.app === undefined ? {} : saved.app);
-		return true;
+		return (await this.files.lastValid()) !== null;
 	}
 
 	restore(): Promise<void> {
 		return this.enqueue(async () => {
-			const saved = await readJson<RecoverySettings>(`${this.files.config}.last-valid`);
+			const saved = await this.files.lastValid();
 			if (!saved) throw new ConfigurationError('No previous valid settings are available.');
-			const document = identifyCameras(
-				normalizeConfiguration(saved.config, saved.app === undefined ? {} : saved.app)
-			);
+			const document = identifyCameras(saved);
 			// Recover settings without restoring access for a previously revoked browser.
-			try {
-				document.app.devices = (await this.loadDeviceSettings()).devices;
-			} catch (error) {
-				if (!(error instanceof SyntaxError || error instanceof v.ValiError)) throw error;
-				delete document.app.devices;
-				webLog.warn('Connected devices could not be recovered; pair remote browsers again.', error);
-			}
+			const devices = await this.files.recoverableDevices();
+			if (devices) document.app.devices = devices;
+			else delete document.app.devices;
 			if (document.config.detectors.length) await this.runtime()?.validate(document.config);
-			const stamp = new Date().toISOString().replaceAll(':', '-');
-			for (const file of [this.files.config, this.files.app]) {
-				try {
-					const backup = `${file}.${stamp}.invalid`;
-					await copyFile(file, backup);
-					await chmod(backup, 0o600);
-				} catch (error) {
-					if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-				}
-			}
-			await writeConfiguration(this.files, document);
+			await this.files.setAside();
+			await this.save(document);
 			await this.applySaved(document.config);
 		});
 	}
@@ -145,25 +107,13 @@ export class ConfigurationStore {
 		return this.enqueue(() => this.load());
 	}
 
-	private async loadDeviceSettings() {
-		// Access to diagnostics and recovery must not depend on valid detector settings.
-		return v.parse(
-			v.looseObject({ devices: appSchema.entries.devices }),
-			await readJson(this.files.app, {})
-		);
-	}
-
+	/** Not queued: atomic file writes make committed access readable during slow runtime changes. */
 	async readDevices(): Promise<PairedDevice[]> {
-		// Atomic file writes make committed access readable during slow runtime changes.
-		return (await this.loadDeviceSettings()).devices ?? [];
+		return (await this.files.devices()) ?? [];
 	}
 
 	updateDevices(change: (devices: PairedDevice[]) => PairedDevice[]): Promise<void> {
-		return this.enqueue(async () => {
-			const app = await this.loadDeviceSettings();
-			app.devices = change(app.devices ?? []);
-			await writeJson(this.files.app, app);
-		});
+		return this.enqueue(() => this.files.updateDevices(change));
 	}
 
 	/** Seed onboarding without starting monitoring or sending alerts. */
@@ -173,12 +123,15 @@ export class ConfigurationStore {
 		resuming = false
 	): Promise<void> {
 		return this.enqueue(async () => {
-			const next = identifyCameras(normalizeConfiguration(document.config, document.app));
+			const next = forgetChangedPresets(
+				identifyCameras(normalizeConfiguration(document.config, document.app))
+			);
 			const current = await this.load();
 			if (current.app.devices) next.app.devices = current.app.devices;
 			else delete next.app.devices;
+			this.keepLanguage(next.app, current.app.language);
 			if (resuming && isDeepStrictEqual(current, next)) return;
-			const recoveringApp = resuming && isDeepStrictEqual(await readJson(this.files.app), next.app);
+			const recoveringApp = resuming && isDeepStrictEqual(await this.files.savedApp(), next.app);
 			if (
 				current.config.detectors.length ||
 				(!recoveringApp &&
@@ -189,26 +142,27 @@ export class ConfigurationStore {
 				);
 			if (next.config.detectors.length) await this.runtime()?.validate(next.config);
 			await publishFiles();
-			await writeConfiguration(this.files, next);
-			await this.remember(next);
+			await this.save(next);
+			await this.files.remember(next);
 		});
 	}
 
 	private async persist(input: { config: unknown; app: unknown }): Promise<void> {
 		const { config, app } = identifyCameras(normalizeConfiguration(input.config, input.app));
-		app.devices = (await this.loadDeviceSettings()).devices;
-		const previous = await readJson<unknown>(this.files.config);
+		app.devices = await this.files.devices();
+		this.keepLanguage(app);
+		const previous = await this.files.savedConfig();
 		const configChanged =
 			previous === null || !isDeepStrictEqual(normalizeConfig(previous), config);
 		const runtime = this.runtime();
 		if (configChanged && config.detectors.length) await runtime?.validate(config);
 		if (!configChanged) {
-			await writeJson(this.files.app, app);
-			await this.remember({ config, app });
+			await this.save({ config, app }, false);
+			await this.files.remember({ config, app });
 			return;
 		}
-		await writeConfiguration(this.files, { config, app });
-		await this.remember({ config, app });
+		await this.save({ config, app });
+		await this.files.remember({ config, app });
 		await this.applySaved(config);
 	}
 
@@ -284,24 +238,40 @@ export class ConfigurationStore {
 		});
 	}
 
+	saveLanguage(language: Locale): Promise<void> {
+		return this.update((document) => {
+			document.app.language = language;
+		});
+	}
+
+	/** Turn the detector's heartbeat on, change it, or turn it off with `null`. */
+	saveHeartbeat(input: v.InferOutput<typeof heartbeatInput>): Promise<void> {
+		return this.update((document) => {
+			if (input) document.config.health = { ...document.config.health, ...input };
+			else delete document.config.health;
+		});
+	}
+
 	saveDetector(input: v.InferOutput<typeof detectorInput>): Promise<void> {
 		return this.update((document) => saveDetector(document, input));
 	}
 
+	/**
+	 * Bring detectors that follow a preset up to date with it, and name the ones that changed.
+	 * Nothing is written when all of them already are.
+	 */
+	followPresets(presets: DetectorPreset[]): Promise<string[]> {
+		return this.enqueue(async () => {
+			const document = await this.load();
+			const before = structuredClone(document.app.detectors);
+			const updated = followPresets(document, presets);
+			if (!isDeepStrictEqual(document.app.detectors, before)) await this.persist(document);
+			return updated;
+		});
+	}
+
 	deleteDetector(label: string): Promise<void> {
 		return this.update((document) => deleteDetector(document, label));
-	}
-
-	saveStream(input: v.InferOutput<typeof streamInput>): Promise<void> {
-		return this.update((document) => saveStream(document, input));
-	}
-
-	deleteStream(source: string): Promise<void> {
-		return this.update((document) => deleteStream(document, source));
-	}
-
-	reorderStream(index0: number, index1: number): Promise<void> {
-		return this.update((document) => reorderStream(document, index0, index1));
 	}
 
 	saveTelegram(input: v.InferOutput<typeof telegramInput>): Promise<void> {

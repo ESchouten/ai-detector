@@ -181,6 +181,13 @@
 		</p>
 	{/if}
 
+	{#if data.catalog?.full}
+		<p role="status" class="text-sm">
+			So many photos are waiting that the cameras take no new ones. Identify or discard some to make
+			room.
+		</p>
+	{/if}
+
 	{#if !data.catalog}
 		<Empty.Root>
 			<Empty.Header>

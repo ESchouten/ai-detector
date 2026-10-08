@@ -57,6 +57,7 @@ class Catalog(BaseModel):
 class IdentityCatalog:
     """No predicted identity is ever written into the farmer-confirmed catalog."""
 
+    # The web application tells the farmer when this many photos wait: its REVIEW_LIMIT.
     def __init__(self, directory: Path, max_pending: int = 200):
         self.directory = directory
         self.max_pending = max_pending

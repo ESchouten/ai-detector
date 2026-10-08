@@ -51,7 +51,8 @@ test('farmer confirms varied examples, corrects a mistake, and returns removed c
 		revision: 0,
 		identities: [],
 		review: [],
-		unavailable: 0
+		unavailable: 0,
+		full: false
 	});
 	await sighting(photoA);
 	await sighting(photoB);
@@ -189,6 +190,18 @@ test('bad sightings do not hide healthy photos; a corrupt catalogue cannot be ov
 		await readFile(path.join(catalog.directory, 'catalog.json'), 'utf8'),
 		'{"version":99}'
 	);
+});
+
+test('says when so many photos wait that the detector takes no new ones', async (t) => {
+	const { catalog, sighting } = await fixture(t);
+	const waiting = Array.from({ length: 199 }, (_, index) => index.toString(16).padStart(32, '0'));
+	await Promise.all(waiting.map((id) => sighting(id)));
+	assert.equal((await catalog.list()).full, false);
+	// The detector counts a photo it wrote whether or not this application can read it.
+	await writeFile(path.join(catalog.directory, 'sightings', `${photoC}.json`), '{broken');
+	assert.equal((await catalog.list()).full, true);
+	await catalog.discard(0, waiting[0]);
+	assert.equal((await catalog.list()).full, false);
 });
 
 test('bounds enrollment without losing existing reference photos', async (t) => {

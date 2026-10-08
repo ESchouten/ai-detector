@@ -4363,3 +4363,7 @@ msgstr "La caméra les a prises pendant qu’elle suivait le même animal."
 #: src/routes/(admin)/herd/+page.svelte
 msgid "The same animal, seen again"
 msgstr "Le même animal, vu de nouveau"
+
+#: src/routes/(admin)/herd/+page.svelte
+msgid "So many photos are waiting that the cameras take no new ones. Identify or discard some to make room."
+msgstr "Tant de photos attendent que les caméras n’en prennent plus de nouvelles. Identifiez-en ou écartez-en quelques-unes pour faire de la place."

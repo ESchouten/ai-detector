@@ -4344,3 +4344,7 @@ msgstr "Die Kamera hat sie aufgenommen, während sie dasselbe Tier weiterverfolg
 #: src/routes/(admin)/herd/+page.svelte
 msgid "The same animal, seen again"
 msgstr "Dasselbe Tier, erneut gesehen"
+
+#: src/routes/(admin)/herd/+page.svelte
+msgid "So many photos are waiting that the cameras take no new ones. Identify or discard some to make room."
+msgstr "Es warten so viele Fotos, dass die Kameras keine neuen mehr aufnehmen. Ordnen Sie einige zu oder verwerfen Sie sie, um Platz zu schaffen."

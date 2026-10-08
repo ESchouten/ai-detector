@@ -65,6 +65,9 @@ function findCow(catalog: Catalog, cowId: string) {
 	return cow;
 }
 
+/** The detector takes no new photos while this many wait for review: its `max_pending`. */
+const REVIEW_LIMIT = 200;
+
 /** Photos the camera took while it kept following the same animal. */
 function sameAnimal(first: Sighting, second: Sighting): boolean {
 	return (
@@ -166,7 +169,8 @@ export class IdentityCatalog {
 			...catalog,
 			identities: catalog.identities.sort((a, b) => a.name.localeCompare(b.name)),
 			review,
-			unavailable: sightings.filter((item) => item === null).length
+			unavailable: sightings.filter((item) => item === null).length,
+			full: sightings.length >= REVIEW_LIMIT
 		};
 	}
 

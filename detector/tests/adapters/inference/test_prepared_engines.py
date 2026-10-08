@@ -38,6 +38,7 @@ def gpu_builder(tmp_path, monkeypatch):
     source.write_bytes(b"checkpoint")
     gpu = SimpleNamespace(name="RTX fixture", major=8, minor=6, total_memory=8 << 30)
     monkeypatch.setattr(torch.cuda, "get_device_properties", lambda _index: gpu)
+    monkeypatch.setattr(torch.version, "cuda", "12.8")
     monkeypatch.setattr(prepared_engines, "version", lambda _name: "1.0")
     monkeypatch.setenv("AI_DETECTOR_NVIDIA_DRIVER", "580.88")
     processes, commands, outcomes = [], [], []
@@ -260,6 +261,25 @@ def test_successful_engine_is_published_once_without_modifying_checkpoint(
     assert first.is_file() and second.is_file()
     assert second.read_bytes() == b"engine-from-new checkpoint"
     assert len(gpu_builder.commands) == 2
+
+
+@pytest.mark.parametrize(("cuda", "package"), [("12.8", "cu12"), ("13.0", "cu13")])
+def test_engine_identity_reads_the_tensorrt_package_of_the_installed_cuda(
+    gpu_builder, monkeypatch, cuda, package
+):
+    names = []
+    monkeypatch.setattr(torch.version, "cuda", cuda)
+    monkeypatch.setattr(
+        prepared_engines, "version", lambda name: names.append(name) or "1.0"
+    )
+    config = YoloConfig(model=str(gpu_builder.source), imgsz=64)
+    arguments = export_arguments(
+        config, OnnxConfig(), 1, InferenceOptions(half=True), "engine"
+    )
+
+    engine_identity(gpu_builder.source, config.task, arguments)
+
+    assert f"tensorrt-{package}" in names
 
 
 @pytest.mark.parametrize(

@@ -123,7 +123,14 @@ def engine_identity(source: Path, task: str, arguments: dict) -> str:
         "cuda": torch.version.cuda,
         "libraries": {
             name: version(name)
-            for name in ("tensorrt-cu12", "torch", "ultralytics", "onnx", "onnxslim")
+            for name in (
+                # NVIDIA names the package after the CUDA line it was built for.
+                f"tensorrt-cu{str(torch.version.cuda).partition('.')[0]}",
+                "torch",
+                "ultralytics",
+                "onnx",
+                "onnxslim",
+            )
         },
     }
     digest = hashlib.sha256(json.dumps(identity, sort_keys=True).encode())

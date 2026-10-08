@@ -46,8 +46,14 @@ RUN apt-get update \
 RUN pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cu130
 RUN pip install onnx onnxslim \
         https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxruntime_gpu-1.24.0-cp312-cp312-linux_aarch64.whl
-# TensorRT 10, the line JetPack supports; 11 does not run there.
-RUN pip install --extra-index-url https://pypi.nvidia.com tensorrt-cu13==10.15.1.29
+# TensorRT from NVIDIA's Jetson packages for JetPack 7.2. The one on PyPI is built for ARM
+# servers and refuses to build an engine on an Orin.
+ADD --chmod=644 https://repo.download.nvidia.com/jetson/jetson-ota-public.asc /etc/apt/keyrings/jetson.asc
+RUN echo "deb [signed-by=/etc/apt/keyrings/jetson.asc] https://repo.download.nvidia.com/jetson/common r39.2 main" \
+        > /etc/apt/sources.list.d/jetson.list \
+    && apt-get update \
+    && apt-get install --yes --no-install-recommends python3-libnvinfer=10.16.2.10-1+cuda13.2 \
+    && rm -rf /var/lib/apt/lists/*
 # NVIDIA's own base images say this; without it the NVIDIA runtime passes no GPU in.
 ENV NVIDIA_VISIBLE_DEVICES=all NVIDIA_DRIVER_CAPABILITIES=compute,utility
 

@@ -6,6 +6,7 @@ of the few it was taught.
 """
 
 import argparse
+import csv
 import json
 import re
 import zipfile
@@ -26,8 +27,10 @@ def spread(items, count):
 
 def write(data, target, limit=448):
     image = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
-    if image is None:
-        return False
+    return image is not None and write_image(image, target, limit)
+
+
+def write_image(image, target, limit=448):
     height, width = image.shape[:2]
     scale = limit / max(height, width)
     if scale < 1:
@@ -84,12 +87,49 @@ def from_folders(root, per_identity, source, output):
     return rows
 
 
+def from_masks(root, subset, per_identity, source, output):
+    """SideViewCows2026: frames listed in `manifest.csv`, each cut to the box around its mask.
+
+    Only the files that are on disk are used; the dataset is large and need not be complete.
+    """
+    members = defaultdict(list)
+    with (Path(root) / "manifest.csv").open() as stream:
+        for row in csv.DictReader(stream):
+            image, mask = Path(root) / row["image_path"], Path(root) / row["mask_path"]
+            if row["subset"] == subset and image.exists() and mask.exists():
+                members[row["individual_id"]].append((image, mask))
+    rows = []
+    for identity, pairs in sorted(members.items()):
+        for image, mask in spread(pairs, per_identity):
+            target = output / source / identity / f"{image.stem}.jpg"
+            if not target.exists():
+                ys, xs = np.nonzero(cv2.imread(str(mask), cv2.IMREAD_GRAYSCALE))
+                picture = cv2.imread(str(image))[ys.min() : ys.max() + 1, xs.min() : xs.max() + 1]
+                write_image(picture, target)
+            rows.append(
+                {
+                    "path": str(target.relative_to(output)),
+                    "source": source,
+                    "identity": f"{source}:{identity}",
+                }
+            )
+    return rows
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--datasets", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--any-use",
+        action="store_true",
+        help="Only SideViewCows2026, published under CC BY 4.0; the others forbid commercial use",
+    )
     arguments = parser.parse_args()
     data, output = arguments.datasets, arguments.output
+    if arguments.any_use:
+        report(from_masks(data / "SideViewCows2026", "parlor", 240, "sideview", output), output)
+        return
     rows = from_zip(
         data / "mmcows" / "cropped_bboxes.zip",
         r"cropped_bboxes/(standing|lying)/(\d+)/[^/]+\.jpg$",
@@ -116,6 +156,10 @@ def main():
         "cows2021",
         output,
     )
+    report(rows, output)
+
+
+def report(rows, output):
     (output / "auxiliary.json").write_text(json.dumps(rows) + "\n")
     counts = defaultdict(set)
     for row in rows:

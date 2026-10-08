@@ -292,6 +292,32 @@ Over all 10,113 events, 14 carried the name of a cow who was not at the event's 
 
 This simulates the boxes, not the behaviour. The cows in it stand, walk and lie as in their confirmed photographs. A mounting cow rears up and hides half of the other, and a tracker confuses animals that overlap, so on real mounts fewer names and more wrong ones are to be expected. That has not been measured.
 
+## What the method depends on
+
+Added after the test, on development and validation video only. [`parts.py`](herd/parts.py) keeps what each network describes for a run, and [`parts_compare.py`](herd/parts_compare.py) combines kept descriptions into herd models without teaching again. Every combination gets its limits by the rule the frozen preset followed: the highest limit at which a development run named a stranger or a wrong cow, plus 0.04 by day and 0.08 at night. The shares below are of animals named at those limits; no combination then named a stranger or a wrong cow in any of the eight runs. One learning differs from the next by a few points.
+
+### The cattle starting weights
+
+The first kind of network starts from weights taught other farms' cows. They are a file of 89 MB that is not published anywhere, and the three datasets behind them forbid commercial use: MmCows under CC BY-NC-SA 4.0, MultiCamCows2024 and Cows2021 under the Non-Commercial Government Licence. Two other starts were tried ([file](herd/results/development-starting-weights.json)): DINOv2 as published, and weights taught the same way from SideViewCows2026 alone, which is under CC BY 4.0. Of that dataset 10,639 parlour photographs of 105 cows were on disk, a fifth of it, all taken from the right side (`auxiliary.py --any-use`).
+
+| First kind starts from | Limits, day and night | Day: rotations 1–3, validation | Night: rotations 1–3, validation |
+| --- | --- | --- | --- |
+| The cattle weights, three networks, as frozen | 0.66, 0.72 | 85%, 82%, 80%, 68% | 77%, 80%, 68%, 83% |
+| The cattle weights, one network | 0.66, 0.72 | 83%, 82%, 80%, 68% | 78%, 83%, 67%, 85% |
+| CC BY cattle weights, one network | 0.68, 0.76 | 85%, 81%, 79%, 69% | 66%, 64%, 63%, 73% |
+| Published DINOv2, one network | 0.72, 0.78 | 86%, 81%, 77%, 67% | 71%, 39%, 49%, 68% |
+| Published DINOv2, three networks | 0.70, 0.78 | 85%, 81%, 80%, 68% | 63%, 41%, 48%, 47% |
+
+By day the start makes no difference. At night it does: without cattle weights strangers score higher, the limit has to rise, and in the worst runs fewer than half of the animals are named. A fifth of one dataset with one view of the cow recovers part of that, and names 63–73% where the frozen weights name 67–85%.
+
+Beside the second kind, one cattle network names as many animals as three. Three are kept: in four of the eight runs the highest limit at which they named a stranger is 0.02–0.04 lower than one network's, and the test showed how little margin there is.
+
+### A processor alone
+
+Timed on the processor of the computer used here, an Apple M2 Max on eight threads, with its GPU left out and other work running beside it: a learning step takes 1.8 seconds for a cattle network and 15 seconds for the second kind, which for 2,016 photographs comes to about three and a half hours where the GPU took nine minutes. Finding and following the cows in one picture takes 1.0 second and describing ten of them 1.3 seconds, so a picture a second is out of reach. The method needs a GPU.
+
+Learning has only ever run on an Apple GPU. It needs about 6 GB of graphics memory beside the detector's own. An error in learning other than a missing file or a failed download ends the detector's process, and with it every other detector in that application until it is started again; too little graphics memory would be such an error and has not been tried.
+
 ## Limits
 
 - **One barn.** Thirteen Holstein cows, fixed cameras, three weeks. Nothing here says how the method does on another farm, breed, herd size or camera position.
@@ -301,9 +327,9 @@ This simulates the boxes, not the behaviour. The cows in it stand, walk and lie 
 - **Night is harder.** Infrared light hides red-and-white patterns. At night the test named half of the animals, and the limit that kept unknown animals out did so by a small margin.
 - **The limits depend on how many photographs are confirmed.** They were set with two to three and a half thousand and held, narrowly, with four to six thousand. Nothing here says where they belong for a herd with fewer or more.
 - **Names on animals the publisher did not box cannot be judged.** They are left out of the precision and counted in the conservative one.
-- **Learning needs a GPU and time.** After every change to the confirmed photographs the networks are taught again, which takes ten minutes to half an hour on an Apple GPU, and no name is shown meanwhile. The largest stock detector and the four networks together take about half a second per picture there.
+- **Learning needs a GPU and time.** After every change to the confirmed photographs the networks are taught again, which takes ten minutes to half an hour on an Apple GPU, and no name is shown meanwhile. The largest stock detector and the four networks together take about half a second per picture there. A processor alone needs hours to learn and seconds per picture, and no other kind of GPU has been tried ([above](#a-processor-alone)).
 - **Names on other rules' events were simulated.** No mounting video with known cows was available; see [above](#names-on-another-rules-events).
-- **Weights.** The cattle starting weights were taught from datasets published for non-commercial research and are not hosted anywhere yet; the preset names an address that does not exist. MIEWid is downloaded from its publisher.
+- **Weights.** The cattle starting weights were taught from datasets that forbid commercial use and are not published anywhere; the preset names an address that does not exist, so it cannot learn a herd as it stands. Without them the method names far fewer animals at night ([above](#the-cattle-starting-weights)). MIEWid is downloaded from its publisher, whose model card and repository state no licence.
 - **Held out, not untouched, and now used.** Earlier work in this repository had scored another method on short windows of the test videos. The development figures for the second kind of network came from a trial script, not the application's code; the validation and test figures come from the application's code. Both test videos have now been seen by this method: a later version cannot be tested on them as on unseen video.
 
 ## Reproduce

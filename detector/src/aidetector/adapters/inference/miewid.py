@@ -24,6 +24,20 @@ REVISION = "4f1d7f2b521149e5fe34bb85f377248ce9971a7d"
 WEIGHTS_SHA256 = "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348"
 
 
+def published_weights(cache_directory: Path) -> Path:
+    """The pinned checkpoint, downloaded once."""
+    return checked(
+        download_identity_asset(MODEL, "model.safetensors", REVISION, cache_directory)
+    )
+
+
+def checked(weights: Path) -> Path:
+    with weights.open("rb") as stream:
+        if hashlib.file_digest(stream, "sha256").hexdigest() != WEIGHTS_SHA256:
+            raise OSError("Identity weights failed the SHA-256 check")
+    return weights
+
+
 class GeM(torch.nn.Module):
     def __init__(self):
         super().__init__()
@@ -70,15 +84,7 @@ class MiewidEncoder:
                 device = "mps"
         self.device = device
         self._lock = Lock()
-        weights = weights or download_identity_asset(
-            MODEL,
-            "model.safetensors",
-            REVISION,
-            cache_directory,
-        )
-        with weights.open("rb") as stream:
-            if hashlib.file_digest(stream, "sha256").hexdigest() != WEIGHTS_SHA256:
-                raise OSError("Identity weights failed the SHA-256 check")
+        weights = checked(weights) if weights else published_weights(cache_directory)
         self.model = MiewidNetwork()
         self.model.load_state_dict(load_file(str(weights)), strict=True)
         self.model.eval().requires_grad_(False)

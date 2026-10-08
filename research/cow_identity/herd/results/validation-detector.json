@@ -1,0 +1,472 @@
+{
+ "video1-yolo26l-seg-1280": {
+  "video": "video1",
+  "detector_weights_sha256": "636024306410afa1732692322fba57d22ea2b1c2f07613fcee131a93d7dd380c",
+  "yolo": {
+   "model": "yolo26l-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1280
+  },
+  "visible": 3701,
+  "located": 0.8340988921912996,
+  "fit": 0.8338286949473115,
+  "boxes": 3474,
+  "boxes_without_annotation": 387,
+  "tracks_on_annotated_animals": 32,
+  "tracks_covering_two_animals": 2,
+  "detect_seconds": {
+   "mean": 0.4073509923744433,
+   "p95": 0.6165036039194093,
+   "max": 0.764201917219907
+  },
+  "per_cow": {
+   "0": {
+    "visible": 293,
+    "located": 234,
+    "fit": 234
+   },
+   "1": {
+    "visible": 300,
+    "located": 162,
+    "fit": 162
+   },
+   "3": {
+    "visible": 300,
+    "located": 16,
+    "fit": 16
+   },
+   "4": {
+    "visible": 300,
+    "located": 294,
+    "fit": 294
+   },
+   "5": {
+    "visible": 241,
+    "located": 238,
+    "fit": 237
+   },
+   "6": {
+    "visible": 300,
+    "located": 294,
+    "fit": 294
+   },
+   "7": {
+    "visible": 300,
+    "located": 270,
+    "fit": 270
+   },
+   "8": {
+    "visible": 300,
+    "located": 238,
+    "fit": 238
+   },
+   "9": {
+    "visible": 167,
+    "located": 155,
+    "fit": 155
+   },
+   "10": {
+    "visible": 300,
+    "located": 300,
+    "fit": 300
+   },
+   "11": {
+    "visible": 300,
+    "located": 286,
+    "fit": 286
+   },
+   "12": {
+    "visible": 300,
+    "located": 300,
+    "fit": 300
+   },
+   "13": {
+    "visible": 300,
+    "located": 300,
+    "fit": 300
+   }
+  }
+ },
+ "video1-yolo26m-seg-1280-confidence-0.05": {
+  "video": "video1",
+  "detector_weights_sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+  "yolo": {
+   "model": "yolo26m-seg.pt",
+   "confidence": {
+    "cow": 0.05
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1280
+  },
+  "visible": 3701,
+  "located": 0.6935963253174817,
+  "fit": 0.6935963253174817,
+  "boxes": 2652,
+  "boxes_without_annotation": 85,
+  "tracks_on_annotated_animals": 20,
+  "tracks_covering_two_animals": 2,
+  "detect_seconds": {
+   "mean": 0.15016211591307715,
+   "p95": 0.19684668742120265,
+   "max": 0.21656916663050652
+  },
+  "per_cow": {
+   "0": {
+    "visible": 293,
+    "located": 3,
+    "fit": 3
+   },
+   "1": {
+    "visible": 300,
+    "located": 0,
+    "fit": 0
+   },
+   "3": {
+    "visible": 300,
+    "located": 8,
+    "fit": 8
+   },
+   "4": {
+    "visible": 300,
+    "located": 288,
+    "fit": 288
+   },
+   "5": {
+    "visible": 241,
+    "located": 236,
+    "fit": 236
+   },
+   "6": {
+    "visible": 300,
+    "located": 282,
+    "fit": 282
+   },
+   "7": {
+    "visible": 300,
+    "located": 290,
+    "fit": 290
+   },
+   "8": {
+    "visible": 300,
+    "located": 165,
+    "fit": 165
+   },
+   "9": {
+    "visible": 167,
+    "located": 152,
+    "fit": 152
+   },
+   "10": {
+    "visible": 300,
+    "located": 286,
+    "fit": 286
+   },
+   "11": {
+    "visible": 300,
+    "located": 257,
+    "fit": 257
+   },
+   "12": {
+    "visible": 300,
+    "located": 300,
+    "fit": 300
+   },
+   "13": {
+    "visible": 300,
+    "located": 300,
+    "fit": 300
+   }
+  }
+ },
+ "video1-yolo26m-seg-1280": {
+  "video": "video1",
+  "detector_weights_sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+  "yolo": {
+   "model": "yolo26m-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1280
+  },
+  "visible": 3701,
+  "located": 0.6935963253174817,
+  "fit": 0.6935963253174817,
+  "boxes": 2652,
+  "boxes_without_annotation": 85,
+  "tracks_on_annotated_animals": 20,
+  "tracks_covering_two_animals": 2,
+  "detect_seconds": {
+   "mean": 0.07589300923081564,
+   "p95": 0.07972991419956088,
+   "max": 0.09909020876511931
+  },
+  "per_cow": {
+   "0": {
+    "visible": 293,
+    "located": 3,
+    "fit": 3
+   },
+   "1": {
+    "visible": 300,
+    "located": 0,
+    "fit": 0
+   },
+   "3": {
+    "visible": 300,
+    "located": 8,
+    "fit": 8
+   },
+   "4": {
+    "visible": 300,
+    "located": 288,
+    "fit": 288
+   },
+   "5": {
+    "visible": 241,
+    "located": 236,
+    "fit": 236
+   },
+   "6": {
+    "visible": 300,
+    "located": 282,
+    "fit": 282
+   },
+   "7": {
+    "visible": 300,
+    "located": 290,
+    "fit": 290
+   },
+   "8": {
+    "visible": 300,
+    "located": 165,
+    "fit": 165
+   },
+   "9": {
+    "visible": 167,
+    "located": 152,
+    "fit": 152
+   },
+   "10": {
+    "visible": 300,
+    "located": 286,
+    "fit": 286
+   },
+   "11": {
+    "visible": 300,
+    "located": 257,
+    "fit": 257
+   },
+   "12": {
+    "visible": 300,
+    "located": 300,
+    "fit": 300
+   },
+   "13": {
+    "visible": 300,
+    "located": 300,
+    "fit": 300
+   }
+  }
+ },
+ "video1-yolo26m-seg-1920": {
+  "video": "video1",
+  "detector_weights_sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+  "yolo": {
+   "model": "yolo26m-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1920
+  },
+  "visible": 3701,
+  "located": 0.6979194812212915,
+  "fit": 0.6979194812212915,
+  "boxes": 2978,
+  "boxes_without_annotation": 395,
+  "tracks_on_annotated_animals": 31,
+  "tracks_covering_two_animals": 2,
+  "detect_seconds": {
+   "mean": 0.27424943878411734,
+   "p95": 0.33931951676495375,
+   "max": 0.3824729169718921
+  },
+  "per_cow": {
+   "0": {
+    "visible": 293,
+    "located": 69,
+    "fit": 69
+   },
+   "1": {
+    "visible": 300,
+    "located": 38,
+    "fit": 38
+   },
+   "3": {
+    "visible": 300,
+    "located": 8,
+    "fit": 8
+   },
+   "4": {
+    "visible": 300,
+    "located": 273,
+    "fit": 273
+   },
+   "5": {
+    "visible": 241,
+    "located": 229,
+    "fit": 229
+   },
+   "6": {
+    "visible": 300,
+    "located": 287,
+    "fit": 287
+   },
+   "7": {
+    "visible": 300,
+    "located": 286,
+    "fit": 286
+   },
+   "8": {
+    "visible": 300,
+    "located": 204,
+    "fit": 204
+   },
+   "9": {
+    "visible": 167,
+    "located": 155,
+    "fit": 155
+   },
+   "10": {
+    "visible": 300,
+    "located": 295,
+    "fit": 295
+   },
+   "11": {
+    "visible": 300,
+    "located": 144,
+    "fit": 144
+   },
+   "12": {
+    "visible": 300,
+    "located": 299,
+    "fit": 299
+   },
+   "13": {
+    "visible": 300,
+    "located": 296,
+    "fit": 296
+   }
+  }
+ },
+ "video1-yolo26x-seg-1280": {
+  "video": "video1",
+  "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1280
+  },
+  "visible": 3701,
+  "located": 0.8362604701432046,
+  "fit": 0.8362604701432046,
+  "boxes": 3792,
+  "boxes_without_annotation": 697,
+  "tracks_on_annotated_animals": 26,
+  "tracks_covering_two_animals": 0,
+  "detect_seconds": {
+   "mean": 0.2967915577717639,
+   "p95": 0.3706480246502906,
+   "max": 0.4825128330849111
+  },
+  "per_cow": {
+   "0": {
+    "visible": 293,
+    "located": 153,
+    "fit": 153
+   },
+   "1": {
+    "visible": 300,
+    "located": 155,
+    "fit": 155
+   },
+   "3": {
+    "visible": 300,
+    "located": 17,
+    "fit": 17
+   },
+   "4": {
+    "visible": 300,
+    "located": 300,
+    "fit": 300
+   },
+   "5": {
+    "visible": 241,
+    "located": 238,
+    "fit": 238
+   },
+   "6": {
+    "visible": 300,
+    "located": 296,
+    "fit": 296
+   },
+   "7": {
+    "visible": 300,
+    "located": 299,
+    "fit": 299
+   },
+   "8": {
+    "visible": 300,
+    "located": 294,
+    "fit": 294
+   },
+   "9": {
+    "visible": 167,
+    "located": 154,
+    "fit": 154
+   },
+   "10": {
+    "visible": 300,
+    "located": 300,
+    "fit": 300
+   },
+   "11": {
+    "visible": 300,
+    "located": 291,
+    "fit": 291
+   },
+   "12": {
+    "visible": 300,
+    "located": 300,
+    "fit": 300
+   },
+   "13": {
+    "visible": 300,
+    "located": 298,
+    "fit": 298
+   }
+  }
+ }
+}

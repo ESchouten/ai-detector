@@ -1,0 +1,57 @@
+{
+ "visible_enrolled": 483,
+ "visible_withheld": 120,
+ "located_enrolled": 477,
+ "located_withheld": 119,
+ "correct": 295,
+ "wrong_enrolled": 0,
+ "named_withheld": 0,
+ "named_unannotated": 0,
+ "unpaired_on_named": 0,
+ "unpaired_on_other": 0,
+ "unpaired_on_withheld": 0,
+ "unpaired_elsewhere": 0,
+ "unpaired_unjudged": 0,
+ "coverage": 0.6107660455486542,
+ "precision": 1.0,
+ "precision_conservative": 1.0,
+ "withheld_named": 0.0,
+ "localization_recall": 0.988391376451078,
+ "per_cow": {
+  "0": {
+   "visible": 120,
+   "located": 116,
+   "correct": 97
+  },
+  "1": {
+   "visible": 120,
+   "located": 118,
+   "correct": 99
+  },
+  "5": {
+   "visible": 11,
+   "located": 11
+  },
+  "6": {
+   "visible": 120,
+   "located": 120,
+   "correct": 99
+  },
+  "8": {
+   "visible": 120,
+   "located": 119
+  },
+  "10": {
+   "visible": 112,
+   "located": 112
+  }
+ },
+ "video": "video3",
+ "first_second": 600,
+ "frames": 120,
+ "observations": 120,
+ "identity_statuses": [
+  "identity_preparing",
+  "identity_ready"
+ ]
+}

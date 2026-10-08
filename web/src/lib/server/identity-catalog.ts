@@ -9,7 +9,7 @@ const name = v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(80));
 const cowSchema = v.strictObject({
 	id,
 	name,
-	samples: v.pipe(v.array(id), v.maxLength(32))
+	samples: v.pipe(v.array(id), v.maxLength(1000))
 });
 const catalogSchema = v.strictObject({
 	version: v.literal(1),
@@ -25,6 +25,8 @@ const sightingSchema = v.strictObject({
 		v.string(),
 		v.check((value) => Number.isFinite(Date.parse(value)))
 	),
+	// The detector run that numbered the track; absent in photos of earlier versions.
+	run: v.optional(id),
 	track_id: v.nullable(v.pipe(v.number(), v.integer())),
 	gallery_revision: v.optional(v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0)))),
 	identity: v.strictObject({
@@ -61,6 +63,17 @@ function findCow(catalog: Catalog, cowId: string) {
 	const cow = catalog.identities.find((item) => item.id === cowId);
 	if (!cow) throw new HerdError('This cow was removed. Refresh the herd and try again.');
 	return cow;
+}
+
+/** Photos the camera took while it kept following the same animal. */
+function sameAnimal(first: Sighting, second: Sighting): boolean {
+	return (
+		first.run !== undefined &&
+		first.track_id !== null &&
+		first.run === second.run &&
+		first.track_id === second.track_id &&
+		first.source === second.source
+	);
 }
 
 function cowName(value: string): string {
@@ -118,9 +131,8 @@ export class IdentityCatalog {
 		return { catalog, sightings };
 	}
 
-	async list() {
-		await this.pending;
-		const catalog = await this.read();
+	/** Photos nobody confirmed yet; null stands for one that cannot be read. */
+	private async unconfirmed(catalog: Catalog): Promise<(Sighting | null)[]> {
 		let files: string[];
 		try {
 			files = await readdir(path.join(this.directory, 'sightings'));
@@ -132,16 +144,23 @@ export class IdentityCatalog {
 		const pendingFiles = files.filter(
 			(file) => /^[a-f0-9]{32}\.json$/.test(file) && !samples.has(file.slice(0, -5))
 		);
-		const sightings = await Promise.all(
-			pendingFiles.map((file) => this.sighting(file.slice(0, -5)))
-		);
-		const review = sightings
-			.filter((item): item is Sighting => item !== null)
-			.map((item) =>
-				item.gallery_revision === catalog.revision
+		return Promise.all(pendingFiles.map((file) => this.sighting(file.slice(0, -5))));
+	}
+
+	async list() {
+		await this.pending;
+		const catalog = await this.read();
+		const sightings = await this.unconfirmed(catalog);
+		const readable = sightings.filter((item): item is Sighting => item !== null);
+		const review = readable
+			.map((item) => ({
+				...(item.gallery_revision === catalog.revision
 					? item
-					: { ...item, identity: { ...item.identity, id: null, name: null } }
-			)
+					: { ...item, identity: { ...item.identity, id: null, name: null } }),
+				companions: readable
+					.filter((other) => other.id !== item.id && sameAnimal(item, other))
+					.map((other) => other.id)
+			}))
 			.sort((a, b) => b.captured_at.localeCompare(a.captured_at));
 		return {
 			...catalog,
@@ -164,12 +183,17 @@ export class IdentityCatalog {
 		return result;
 	}
 
+	/**
+	 * Confirm a photo as a cow. `withCompanions` also confirms the unconfirmed photos
+	 * the camera took while following that same animal, as far as the cow has room.
+	 */
 	assign(
 		revision: number,
 		sightingId: string,
 		cowId: string | null,
 		label: string,
-		previousCowId: string | null = null
+		previousCowId: string | null = null,
+		withCompanions = false
 	) {
 		return this.change(revision, async (catalog) => {
 			const sighting = await this.sighting(sightingId);
@@ -181,17 +205,32 @@ export class IdentityCatalog {
 			if (!previous && catalog.identities.some((cow) => cow.samples.includes(sightingId)))
 				throw new HerdError('This photo has already been confirmed.');
 			if (previous && previous.id === cowId) throw new HerdError('Choose a different cow.');
-			const cow = cowId
-				? findCow(catalog, cowId)
-				: { id: randomUUID().replaceAll('-', ''), name: cowName(label), samples: [] as string[] };
-			if (!cowId && catalog.identities.length >= 500)
-				throw new HerdError('This herd already has 500 cows. Remove an unused cow first.');
-			if (!cowId) catalog.identities.push(cow);
-			if (cow.samples.length >= 32)
-				throw new HerdError('This cow already has 32 examples. Remove a less useful photo first.');
+			const cow = this.receivingCow(catalog, cowId, label);
 			if (previous) previous.samples = previous.samples.filter((sample) => sample !== sightingId);
 			cow.samples.push(sightingId);
+			if (withCompanions) await this.confirmCompanions(catalog, cow.samples, sighting);
 		});
+	}
+
+	/** The existing cow, or a new one, with room for another example. */
+	private receivingCow(catalog: Catalog, cowId: string | null, label: string) {
+		const cow = cowId
+			? findCow(catalog, cowId)
+			: { id: randomUUID().replaceAll('-', ''), name: cowName(label), samples: [] as string[] };
+		if (!cowId && catalog.identities.length >= 500)
+			throw new HerdError('This herd already has 500 cows. Remove an unused cow first.');
+		if (!cowId) catalog.identities.push(cow);
+		if (cow.samples.length >= 1000)
+			throw new HerdError('This cow already has 1000 examples. Remove a less useful photo first.');
+		return cow;
+	}
+
+	private async confirmCompanions(catalog: Catalog, samples: string[], confirmed: Sighting) {
+		for (const other of await this.unconfirmed(catalog)) {
+			if (samples.length >= 1000) break;
+			if (other && other.id !== confirmed.id && sameAnimal(confirmed, other))
+				samples.push(other.id);
+		}
 	}
 
 	rename(revision: number, cowId: string, label: string) {

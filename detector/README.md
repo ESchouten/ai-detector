@@ -131,7 +131,22 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 
 ### Cow identity (experimental)
 
-An optional, noncommercial trial; a detector without `identity` runs none of it. In the complete application, choose the Cow Identity preset and confirm clear photographs on **Herd** with a name or tag number. Matching starts once at least two cows have examples. Live labels are suggestions, and the detector never adds its own predictions to the confirmed gallery. The [trial guide](../research/cow_identity/README.md) has the measurements and limits.
+An optional, noncommercial trial; a detector without `identity` runs none of it. In the complete application, choose the Cow Identity preset and confirm photographs on **Herd** with a name or tag number. Live labels are suggestions, and the detector never adds its own predictions to the confirmed photographs.
+
+The preset sets `identity.model` to `"herd"`: the detector learns the confirmed cows. It adapts two kinds of network to the herd's photographs, three that start from weights taught other farms' cattle (`identity.weights`) and the published MIEWid network, keeps the result in `identities/herd/` and learns again when the confirmed photographs change. On a GPU that takes ten to thirty minutes for a few thousand photographs, on a processor alone hours, and names are hidden meanwhile. A crop is then compared with the confirmed photographs as the learned networks describe them. A cow is named dependably only after hundreds of confirmed photographs, across days, views, daylight and night; most of the herd should be confirmed, because an unconfirmed cow that resembles a confirmed one is the main source of wrong names. The other models compare a crop with the confirmed photographs through a published encoder, need no learning, and named few animals in every measurement. The preset detects with the largest stock model, which finds cows lying behind cubicle rails that smaller ones miss, and is meant for a computer with a GPU. The [research record](../research/cow_identity/HERD_LEARNING.md) has the protocol, the results on held-out video and the limits.
+
+| `identity` setting | Default | Meaning |
+| --- | --- | --- |
+| `labels` | required | Classes whose boxes are individual animals |
+| `model` | `"miewid-msv3"` | `"herd"` learns the confirmed cows; `"miewid-msv3"`, `"dinov2-small-224"` and `"dinov2-small-336"` are published encoders |
+| `weights` | unset | For `"herd"`, and required then: the cattle weights learning starts from, a `.safetensors` file or its URL |
+| `min_similarity`, `min_margin` | `0.65`, `0.1` | A crop proposes a cow when it is this similar to it and this far ahead of the next cow |
+| `min_similarity_infrared` | unset | The similarity needed in a picture without colour, as a camera takes under infrared light at night, where coats show less and look-alikes are more alike; unset, `min_similarity` |
+| `min_observations` | `3` | Consecutive samples of a track that must propose the same cow before its name is shown; a track the detector misses for a few seconds carries on |
+| `hold` | `0` | Seconds a shown name survives samples that fall short but still resemble that cow most, while no other animal in view claims it |
+| `sample_interval` | `1` | Seconds between samples of one track |
+| `min_crop_size`, `max_overlap` | `64`, `0.2` | Smaller boxes, boxes at the picture's edge and boxes overlapping another by more than this share are no evidence |
+| `review_interval` | `30` | Seconds between photographs of one track saved for review on **Herd** |
 
 `identity.mode: "continuous"` is a separate experiment that follows anonymous animals on one live camera, without enrollment. It needs native MPS and the optional SDK:
 

@@ -3994,8 +3994,8 @@ msgid "This herd already has 500 cows. Remove an unused cow first."
 msgstr "Diese Herde hat bereits 500 Kühe. Entfernen Sie zuerst eine nicht verwendete Kuh."
 
 #: src/lib/server/identity-catalog.ts
-msgid "This cow already has 32 examples. Remove a less useful photo first."
-msgstr "Diese Kuh hat bereits 32 Beispiele. Entfernen Sie zuerst ein weniger brauchbares Foto."
+msgid "This cow already has 1000 examples. Remove a less useful photo first."
+msgstr "Diese Kuh hat bereits 1000 Beispiele. Entfernen Sie zuerst ein weniger brauchbares Foto."
 
 #: src/lib/server/identity-catalog.ts
 msgid "This example was already removed."
@@ -4136,7 +4136,7 @@ msgstr "Fügen Sie Beispiele für mindestens zwei Kühe hinzu, damit Übereinsti
 msgid "Herd views"
 msgstr "Ansichten der Herde"
 
-#. 0: review.length
+#. 0: animals.length
 #: src/routes/(admin)/herd/+page.svelte
 msgid "Photos to review ({0})"
 msgstr "Zu bewertende Fotos ({0})"
@@ -4320,6 +4320,7 @@ msgstr[0] "# Kuh"
 msgstr[1] "# Kühe"
 
 #: src/lib/server/installation-import/service.ts
+#: src/routes/(admin)/herd/+page.svelte
 msgid "# photo"
 msgid_plural "# photos"
 msgstr[0] "# Foto"
@@ -4329,3 +4330,17 @@ msgstr[1] "# Fotos"
 #: src/lib/server/installation-import/service.ts
 msgid "Confirmed herd: {0}, {1}."
 msgstr "Bestätigte Herde: {0}, {1}."
+
+#: src/routes/(admin)/herd/+page.svelte
+msgid "Also confirm the # other photo of this animal"
+msgid_plural "Also confirm the # other photos of this animal"
+msgstr[0] "Auch das # andere Foto dieses Tieres bestätigen"
+msgstr[1] "Auch die # anderen Fotos dieses Tieres bestätigen"
+
+#: src/routes/(admin)/herd/+page.svelte
+msgid "The camera took them while it kept following the same animal."
+msgstr "Die Kamera hat sie aufgenommen, während sie dasselbe Tier weiterverfolgt hat."
+
+#: src/routes/(admin)/herd/+page.svelte
+msgid "The same animal, seen again"
+msgstr "Dasselbe Tier, erneut gesehen"

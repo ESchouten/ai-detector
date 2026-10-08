@@ -4,16 +4,25 @@
         "frame_retention": 1
     },
     "yolo": {
-        "model": "yolo26m-seg.pt",
-        "confidence": { "cow": 0.25 },
+        "model": "yolo26x-seg.pt",
+        "confidence": { "cow": 0.1 },
         "tracking": true,
         "tracker": "bytetrack.yaml",
         "frames_min": 3,
         "time_max": 30,
-        "imgsz": 640
+        "imgsz": 1280
     },
     "identity": {
-        "labels": ["cow"]
+        "labels": ["cow"],
+        "model": "herd",
+        "weights": "https://github.com/ESchouten/ai-detector/releases/download/herd-weights-1/cattle-dinov2-small.safetensors",
+        "min_similarity": 0.66,
+        "min_similarity_infrared": 0.72,
+        "min_margin": 0,
+        "min_observations": 5,
+        "hold": 300,
+        "min_crop_size": 32,
+        "max_overlap": 1
     },
     "exporters": {}
 }

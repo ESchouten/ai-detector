@@ -313,6 +313,58 @@ def test_identity_modes_preserve_appearance_defaults_and_allow_unenrolled_contin
     )
 
 
+def herd_rule(**identity):
+    return {
+        "detection": {"source": "0"},
+        "yolo": {"model": "model.pt", "tracking": True},
+        "identity": {"labels": ["cow"], **identity},
+    }
+
+
+def test_herd_model_takes_its_starting_weights_a_hold_and_a_limit_for_the_night():
+    from jsonschema import Draft7Validator
+
+    value = {
+        "detectors": [
+            herd_rule(
+                model="herd",
+                weights="cattle.safetensors",
+                hold=60,
+                min_similarity_infrared=0.9,
+            )
+        ]
+    }
+    identity = Config.model_validate(value).detectors[0].identity
+    assert (
+        identity.model,
+        identity.weights,
+        identity.hold,
+        identity.min_similarity_infrared,
+    ) == ("herd", "cattle.safetensors", 60, 0.9)
+    Draft7Validator(Config.model_json_schema()).validate(value)
+    plain = Config.model_validate({"detectors": [herd_rule()]}).detectors[0].identity
+    assert (plain.hold, plain.min_similarity_infrared) == (0, None)
+
+
+@pytest.mark.parametrize(
+    "identity",
+    [
+        {"model": "herd"},
+        {"weights": "cattle.safetensors"},
+        {"model": "herd", "weights": "cattle.pt"},
+        {"hold": -1},
+        {"min_similarity_infrared": 1.5},
+    ],
+)
+def test_weights_belong_to_the_herd_model_in_the_input_model_and_json_schema(identity):
+    from jsonschema import Draft7Validator
+
+    value = {"detectors": [herd_rule(**identity)]}
+    with pytest.raises(ValidationError):
+        Config.model_validate(value)
+    assert not Draft7Validator(Config.model_json_schema()).is_valid(value)
+
+
 @pytest.mark.parametrize(
     "section, change",
     [

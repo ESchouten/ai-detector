@@ -51,7 +51,9 @@ def reject_conflicting_matches(
 @dataclass
 class _Agreement:
     identity_id: str
+    name: str | None
     last_at: datetime
+    matched_at: datetime
     observations: int = 1
 
 
@@ -60,11 +62,16 @@ class TrackAgreement:
 
     One inference worker owns access. Source and tracker ID together identify
     a temporary track; a long observation gap requires fresh agreement.
+
+    A confirmed track keeps its identity through samples that fall short of a
+    match while they still resemble that identity most, for at most `hold`
+    seconds after its last match. Holding never confirms a track.
     """
 
-    def __init__(self, min_observations: int = 3, max_gap: float = 5):
+    def __init__(self, min_observations: int = 3, max_gap: float = 5, hold: float = 0):
         self.min_observations = min_observations
         self.max_gap = max_gap
+        self.hold = hold
         self._tracks: dict[tuple[str, int], _Agreement] = {}
 
     def update(
@@ -73,15 +80,32 @@ class TrackAgreement:
         track_id: int | None,
         at: datetime,
         match: IdentityMatch,
+        resembles: str | None = None,
     ) -> IdentityMatch:
+        """`resembles` names the identity an unmatched sample still looks most like.
+
+        The caller leaves it out when the sample is unfit as evidence or when
+        another subject in view claims that identity.
+        """
         unknown = IdentityMatch(similarity=match.similarity)
         if track_id is None:
             return unknown
         key = (source, track_id)
+        previous = self._tracks.get(key)
         if match.identity_id is None:
+            if (
+                previous is not None
+                and previous.observations >= self.min_observations
+                and previous.identity_id == resembles
+                and 0 < (at - previous.last_at).total_seconds() <= self.max_gap
+                and (at - previous.matched_at).total_seconds() <= self.hold
+            ):
+                previous.last_at = at
+                return IdentityMatch(
+                    previous.identity_id, previous.name, match.similarity
+                )
             self._tracks.pop(key, None)
             return unknown
-        previous = self._tracks.get(key)
         if previous is not None and at <= previous.last_at:
             return unknown
         if (
@@ -89,11 +113,11 @@ class TrackAgreement:
             or previous.identity_id != match.identity_id
             or (at - previous.last_at).total_seconds() > self.max_gap
         ):
-            agreement = _Agreement(match.identity_id, at)
+            agreement = _Agreement(match.identity_id, match.name, at, at)
             self._tracks[key] = agreement
         else:
             agreement = previous
-            agreement.last_at = at
+            agreement.last_at = agreement.matched_at = at
             agreement.observations = min(
                 agreement.observations + 1, self.min_observations
             )

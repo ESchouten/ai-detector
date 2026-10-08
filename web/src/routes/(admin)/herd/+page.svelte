@@ -3,8 +3,10 @@
 	import { invalidateAll } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { tick } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 	import { Fingerprint, RefreshCw, Trash2, TriangleAlert, X } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
+	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Input } from '$lib/components/ui/input';
 	import MonitoringBanner from '$lib/components/monitoring-banner.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
@@ -50,6 +52,16 @@
 	let reviewPage = $state(1);
 	let cowsPage = $state(1);
 	const review = $derived(data.catalog?.review ?? []);
+	// One card per animal the camera followed; its other photos are confirmed with it.
+	const animals = $derived.by(() => {
+		const covered = new SvelteSet<string>();
+		return review.filter((item) => {
+			if (covered.has(item.id)) return false;
+			for (const other of item.companions) covered.add(other);
+			return true;
+		});
+	});
+	let together = $state(true);
 	const identities = $derived(data.catalog?.identities ?? []);
 	const photo = $derived(review.find((item) => item.id === selectedPhoto));
 	const cow = $derived(identities.find((item) => item.id === selectedCow));
@@ -60,7 +72,7 @@
 	const message = $derived(form && 'message' in form ? form.message : null);
 
 	$effect(() => {
-		reviewPage = Math.min(reviewPage, Math.max(1, Math.ceil(review.length / pageSize)));
+		reviewPage = Math.min(reviewPage, Math.max(1, Math.ceil(animals.length / pageSize)));
 		cowsPage = Math.min(cowsPage, Math.max(1, Math.ceil(identities.length / pageSize)));
 		if (!data.catalog) {
 			dialog = null;
@@ -83,6 +95,7 @@
 				? item.identity.id!
 				: '';
 		label = '';
+		together = true;
 		form = null;
 		dialog = 'identify';
 	}
@@ -206,13 +219,13 @@
 		{/if}
 		<Tabs.Root value="review" class="gap-4">
 			<Tabs.List aria-label="Herd views">
-				<Tabs.Trigger value="review">Photos to review ({review.length})</Tabs.Trigger>
+				<Tabs.Trigger value="review">Photos to review ({animals.length})</Tabs.Trigger>
 				<Tabs.Trigger value="cows">Your cows ({identities.length})</Tabs.Trigger>
 			</Tabs.List>
 			<Tabs.Content value="review" class="flex flex-col gap-4">
 				{#if review.length}
 					<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-						{#each review.slice((reviewPage - 1) * pageSize, reviewPage * pageSize) as item (item.id)}
+						{#each animals.slice((reviewPage - 1) * pageSize, reviewPage * pageSize) as item (item.id)}
 							{@const suggestion = identities.find((entry) => entry.id === item.identity.id)}
 							<div class="space-y-2">
 								<div class="relative overflow-hidden rounded-lg bg-muted">
@@ -225,6 +238,11 @@
 									{#if suggestion && confirmedCows >= 2}
 										<Pill class="absolute top-2 left-2 max-w-[calc(100%-1rem)]"
 											>Possible match: {suggestion.name}</Pill
+										>
+									{/if}
+									{#if item.companions.length}
+										<Pill class="absolute right-2 bottom-2"
+											>{plural(item.companions.length + 1, ['# photo', '# photos'])}</Pill
 										>
 									{/if}
 								</div>
@@ -256,9 +274,9 @@
 							</div>
 						{/each}
 					</div>
-					{#if review.length > pageSize}
+					{#if animals.length > pageSize}
 						<Pagination.Root
-							count={review.length}
+							count={animals.length}
 							perPage={pageSize}
 							bind:page={reviewPage}
 							aria-label="Review photos pages"
@@ -266,7 +284,7 @@
 							<Pagination.Content>
 								<Pagination.Item><Pagination.Previous /></Pagination.Item>
 								<li class="px-3 text-sm text-muted-foreground" aria-live="polite">
-									{reviewPage} / {Math.ceil(review.length / pageSize)}
+									{reviewPage} / {Math.ceil(animals.length / pageSize)}
 								</li>
 								<Pagination.Item><Pagination.Next /></Pagination.Item>
 							</Pagination.Content>
@@ -423,6 +441,33 @@
 								</Field.Field>
 							{/if}
 						</Field.Group>
+						{#if photo?.companions.length && !previousCow}
+							<Field.Field orientation="horizontal">
+								<Checkbox id="with-companions" bind:checked={together} />
+								<Field.Content>
+									<Field.Label for="with-companions"
+										>{plural(photo.companions.length, [
+											'Also confirm the # other photo of this animal',
+											'Also confirm the # other photos of this animal'
+										])}</Field.Label
+									>
+									<Field.Description>
+										The camera took them while it kept following the same animal.
+									</Field.Description>
+								</Field.Content>
+							</Field.Field>
+							<div class="flex gap-2 overflow-x-auto">
+								{#each photo.companions.slice(0, 6) as other (other)}
+									<img
+										src={image(other)}
+										alt="The same animal, seen again"
+										class="h-16 rounded-md bg-muted object-contain"
+										loading="lazy"
+									/>
+								{/each}
+							</div>
+							{#if together}<input type="hidden" name="companions" value="1" />{/if}
+						{/if}
 						{#if message}<p role="alert" class="text-sm text-danger-foreground">{message}</p>{/if}
 						<Dialog.Footer>
 							<Button variant="outline" onclick={() => (dialog = null)} disabled={busy}

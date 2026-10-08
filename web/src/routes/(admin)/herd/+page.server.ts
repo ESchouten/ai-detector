@@ -48,7 +48,8 @@ export const actions: Actions = {
 						photo,
 						cow || null,
 						name,
-						formText(form, 'previousCow') || null
+						formText(form, 'previousCow') || null,
+						form.has('companions')
 					);
 					break;
 				case 'rename':

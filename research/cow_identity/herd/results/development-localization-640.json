@@ -1,0 +1,137 @@
+[
+ {
+  "video": "video3",
+  "frames": 1802,
+  "annotated": 12248,
+  "matched": 6247,
+  "recall": 0.5100424559111691,
+  "unmatched_predictions": 347,
+  "matched_without_track": 1,
+  "tracks": 59,
+  "tracks_covering_two_cows": 2,
+  "observations_off_track_majority": 25,
+  "track_changes_per_cow": 143,
+  "per_cow": {
+   "0": {
+    "annotated": 1802,
+    "matched": 763,
+    "recall": 0.42341842397336293
+   },
+   "1": {
+    "annotated": 1802,
+    "matched": 1788,
+    "recall": 0.9922308546059934
+   },
+   "3": {
+    "annotated": 1675,
+    "matched": 1613,
+    "recall": 0.9629850746268657
+   },
+   "5": {
+    "annotated": 1027,
+    "matched": 937,
+    "recall": 0.9123661148977604
+   },
+   "6": {
+    "annotated": 1407,
+    "matched": 362,
+    "recall": 0.2572850035536603
+   },
+   "8": {
+    "annotated": 1802,
+    "matched": 15,
+    "recall": 0.008324084350721421
+   },
+   "9": {
+    "annotated": 75,
+    "matched": 67,
+    "recall": 0.8933333333333333
+   },
+   "10": {
+    "annotated": 765,
+    "matched": 473,
+    "recall": 0.6183006535947713
+   },
+   "11": {
+    "annotated": 85,
+    "matched": 2,
+    "recall": 0.023529411764705882
+   },
+   "12": {
+    "annotated": 1802,
+    "matched": 224,
+    "recall": 0.12430632630410655
+   },
+   "13": {
+    "annotated": 6,
+    "matched": 3,
+    "recall": 0.5
+   }
+  }
+ },
+ {
+  "video": "video4",
+  "frames": 1801,
+  "annotated": 10688,
+  "matched": 9467,
+  "recall": 0.8857597305389222,
+  "unmatched_predictions": 3286,
+  "matched_without_track": 0,
+  "tracks": 76,
+  "tracks_covering_two_cows": 2,
+  "observations_off_track_majority": 98,
+  "track_changes_per_cow": 572,
+  "per_cow": {
+   "0": {
+    "annotated": 1801,
+    "matched": 1797,
+    "recall": 0.9977790116601888
+   },
+   "3": {
+    "annotated": 886,
+    "matched": 626,
+    "recall": 0.7065462753950339
+   },
+   "4": {
+    "annotated": 330,
+    "matched": 328,
+    "recall": 0.9939393939393939
+   },
+   "6": {
+    "annotated": 480,
+    "matched": 465,
+    "recall": 0.96875
+   },
+   "7": {
+    "annotated": 35,
+    "matched": 34,
+    "recall": 0.9714285714285714
+   },
+   "8": {
+    "annotated": 1170,
+    "matched": 1076,
+    "recall": 0.9196581196581196
+   },
+   "9": {
+    "annotated": 1801,
+    "matched": 1514,
+    "recall": 0.8406440866185453
+   },
+   "10": {
+    "annotated": 1785,
+    "matched": 1616,
+    "recall": 0.9053221288515406
+   },
+   "11": {
+    "annotated": 1791,
+    "matched": 1615,
+    "recall": 0.9017308766052484
+   },
+   "12": {
+    "annotated": 609,
+    "matched": 396,
+    "recall": 0.6502463054187192
+   }
+  }
+ }
+]

@@ -192,7 +192,7 @@ def run_application(
         streams = StreamPool(_source_reporter(source_listeners, preview, report_status))
         workers: list[DetectorWorker] = []
         identifiers = _identity_resources(
-            config, data_directory, resources, report_status
+            config, config_directory, data_directory, resources, report_status
         )
         for index, settings in enumerate(config.detectors, start=1):
             logger.info(
@@ -376,6 +376,7 @@ def _check_continuous_support(config: Config, options: InferenceOptions) -> None
 
 def _identity_resources(
     config: Config,
+    config_directory: Path,
     directory: Path,
     resources: ExitStack,
     report_status: ReportStatus,
@@ -387,12 +388,16 @@ def _identity_resources(
     ]
     if not configured:
         return {}
-    from aidetector.adapters.identity_catalog import IdentityCatalog
+    from aidetector.adapters.identity_catalog import Catalog, IdentityCatalog
     from aidetector.adapters.inference.identity import (
         DeferredEncoder,
         DinoEncoder,
         EmbeddingCache,
         ImageEncoder,
+    )
+    from aidetector.adapters.inference.identity_gallery import (
+        PreparedGallery,
+        prepare_gallery,
     )
     from aidetector.adapters.inference.identity_observations import GalleryIdentifier
 
@@ -417,18 +422,45 @@ def _identity_resources(
             image_size=int(model.rsplit("-", 1)[1]),
         )
 
-    encoders = {
+    def learn_herd(
+        weights: str, herd: Catalog, stopped: Event | None
+    ) -> PreparedGallery:
+        from aidetector.adapters.inference.herd_gallery import prepare_herd
+        from aidetector.adapters.inference.miewid import published_weights
+
+        # Both are fetched when the first herd is learned, not at every start.
+        return prepare_herd(
+            herd,
+            stopped,
+            store=catalog,
+            cattle_start=Path(
+                resolve_model_path(
+                    weights, config_directory, directory / "models" / "identity"
+                )
+            ),
+            animal_start=published_weights(directory / "models" / "identity"),
+            directory=directory / "identities" / "herd",
+        )
+
+    encoders: dict[str, DeferredEncoder] = {
         model: DeferredEncoder(
             2152 if model == "miewid-msv3" else 384, partial(load, model)
         )
         for model in {settings.model for _, settings in configured}
+        if model != "herd"
     }
     return {
         index: GalleryIdentifier(
             settings,
             catalog,
-            encoders[settings.model],
-            cache,
+            partial(learn_herd, settings.weights)
+            if settings.weights is not None
+            else partial(
+                prepare_gallery,
+                store=catalog,
+                encoder=encoders[settings.model],
+                cache=cache,
+            ),
             executor,
             report_status=_rule_reporter(report_status, f"detector-{index}"),
             preparation_stopped=preparation_stopped,

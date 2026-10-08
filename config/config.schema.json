@@ -374,6 +374,23 @@
     "IdentityConfig": {
       "additionalProperties": false,
       "description": "Recognition applies only to explicitly named individual-object classes.",
+      "else": {
+        "properties": {
+          "weights": {
+            "type": "null"
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "model": {
+            "const": "herd"
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
       "properties": {
         "mode": {
           "const": "appearance",
@@ -396,10 +413,24 @@
           "enum": [
             "miewid-msv3",
             "dinov2-small-224",
-            "dinov2-small-336"
+            "dinov2-small-336",
+            "herd"
           ],
           "title": "Model",
           "type": "string"
+        },
+        "weights": {
+          "anyOf": [
+            {
+              "pattern": "\\S\\.safetensors$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Weights"
         },
         "min_similarity": {
           "default": 0.65,
@@ -407,6 +438,20 @@
           "minimum": 0,
           "title": "Min Similarity",
           "type": "number"
+        },
+        "min_similarity_infrared": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Similarity Infrared"
         },
         "min_margin": {
           "default": 0.1,
@@ -420,6 +465,12 @@
           "exclusiveMinimum": 0,
           "title": "Min Observations",
           "type": "integer"
+        },
+        "hold": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Hold",
+          "type": "number"
         },
         "sample_interval": {
           "default": 1,
@@ -450,6 +501,16 @@
       "required": [
         "labels"
       ],
+      "then": {
+        "properties": {
+          "weights": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "weights"
+        ]
+      },
       "title": "IdentityConfig",
       "type": "object"
     },

@@ -96,8 +96,10 @@ def resolve_model_path(
         cache.mkdir(parents=True, exist_ok=True)
         return str(cache / Path(value).name)
     name = PurePosixPath(url.path).name
-    if not name.endswith((".pt", ".pth", ".onnx", ".engine")):
-        raise ValueError("Model URLs must identify a .pt, .pth, .onnx, or .engine file")
+    if not name.endswith((".pt", ".pth", ".onnx", ".engine", ".safetensors")):
+        raise ValueError(
+            "Model URLs must identify a .pt, .pth, .onnx, .engine, or .safetensors file"
+        )
     cache = cache / hashlib.sha256(value.encode()).hexdigest()[:16]
     cache.mkdir(parents=True, exist_ok=True)
     target = cache / name

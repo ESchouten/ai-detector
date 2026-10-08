@@ -6,8 +6,10 @@ reliably read four-digit work number to the correct animal, and recognize that
 animal later. Keep leading zeros; a complete national number is not required.
 Reliable unattended identification is not established yet.
 
-Two experimental paths currently exist. The original **Cow Identity** preset
-collects photographs for a manually confirmed appearance gallery. The explicit
+Two experimental paths currently exist. The **Cow Identity** preset collects
+photographs that a farmer confirms and then learns the herd from them;
+[Learning the herd](HERD_LEARNING.md) has its method, its frozen protocol and
+its results on held-out video. The explicit
 source-install `identity.mode="continuous"` path follows anonymous animals on
 one MPS camera and automatically retains bounded observations without a gallery.
 It does not yet read ear numbers, join separate visits or create permanent cow
@@ -175,7 +177,7 @@ All identity data lives below the existing application data directory:
 | `models/identity/` | Pinned downloaded model weights |
 
 In the manual-gallery path, new photo collection stops at 200 pending photos;
-recognition continues. Confirm or discard photos to make room. Removing confirmed examples can return additional existing photos to review. A cow has up to 32 confirmed examples; the gallery allows up to 500 cows. Those are storage bounds, not verified accuracy or performance at that herd size. Small inference batches limit image memory during gallery loading. The embedding cache currently keeps prior model/example entries; it can be removed while monitoring is stopped. Settings backup includes confirmed names, reference photos and their evidence metadata. Fresh-setup import restores them without replacing an existing herd; unconfirmed photos and disposable caches are excluded.
+recognition continues. Confirm or discard photos to make room. Removing confirmed examples can return additional existing photos to review. A cow has up to 1000 confirmed examples; the gallery allows up to 500 cows. Those are storage bounds, not verified accuracy or performance at that herd size. Small inference batches limit image memory during gallery loading. The embedding cache currently keeps prior model/example entries; it can be removed while monitoring is stopped. Settings backup includes confirmed names, reference photos and their evidence metadata. Fresh-setup import restores them without replacing an existing herd; unconfirmed photos and disposable caches are excluded.
 
 Continuous collection instead expires old observations automatically; it does
 not create a review queue the farmer must clear. Its current seven-day,

@@ -305,18 +305,46 @@ class HealthcheckConfig(HttpConfig):
 class IdentityConfig(_ConfigModel):
     """Recognition applies only to explicitly named individual-object classes."""
 
+    model_config = ConfigDict(
+        json_schema_extra={
+            "if": {
+                "properties": {"model": {"const": "herd"}},
+                "required": ["model"],
+            },
+            "then": {
+                "required": ["weights"],
+                "properties": {"weights": {"type": "string"}},
+            },
+            "else": {"properties": {"weights": {"type": "null"}}},
+        }
+    )
+
     mode: Literal["appearance"] = "appearance"
     labels: Annotated[tuple[NonEmptyString, ...], Field(min_length=1)]
-    model: Literal["miewid-msv3", "dinov2-small-224", "dinov2-small-336"] = (
+    # "herd" learns the confirmed cows instead of comparing with their photographs.
+    model: Literal["miewid-msv3", "dinov2-small-224", "dinov2-small-336", "herd"] = (
         "miewid-msv3"
     )
+    # For "herd": the cattle weights its learning starts from, a file or a URL.
+    weights: Annotated[str, Field(pattern=r"\S\.safetensors$")] | None = None
     min_similarity: Probability = 0.65
+    # Infrared light hides much of a coat, so look-alikes are more alike at night.
+    min_similarity_infrared: Probability | None = None
     min_margin: Probability = 0.1
     min_observations: PositiveInt = 3
+    hold: Duration = 0
     sample_interval: PositiveDuration = 1
     min_crop_size: Annotated[int, Field(ge=32)] = 64
     max_overlap: Probability = 0.2
     review_interval: PositiveDuration = 30
+
+    @model_validator(mode="after")
+    def validate_weights(self) -> IdentityConfig:
+        if (self.model == "herd") != (self.weights is not None):
+            raise ValueError(
+                "Identity weights belong to the herd model, and it needs them"
+            )
+        return self
 
 
 class ContinuousIdentityConfig(_ConfigModel):

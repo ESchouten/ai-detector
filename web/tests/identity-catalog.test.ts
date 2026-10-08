@@ -18,7 +18,8 @@ async function fixture(t: TestContext) {
 	async function sighting(
 		id: string,
 		capturedAt = '2026-10-03T10:00:00',
-		suggestion?: { id: string; name: string; revision?: number | null }
+		suggestion?: { id: string; name: string; revision?: number | null },
+		followed?: { run: string; track: number }
 	) {
 		await writeFile(
 			path.join(catalog.directory, 'sightings', `${id}.json`),
@@ -28,7 +29,8 @@ async function fixture(t: TestContext) {
 				image: id,
 				source: '1'.repeat(64),
 				captured_at: capturedAt,
-				track_id: 2,
+				run: followed?.run,
+				track_id: followed?.track ?? 2,
 				gallery_revision: suggestion?.revision,
 				identity: {
 					id: suggestion?.id ?? null,
@@ -193,7 +195,7 @@ test('bounds enrollment without losing existing reference photos', async (t) => 
 	const { catalog, sighting } = await fixture(t);
 	await sighting(photoA);
 	const cowId = 'f'.repeat(32);
-	const samples = Array.from({ length: 32 }, (_, index) => index.toString(16).padStart(32, '0'));
+	const samples = Array.from({ length: 1000 }, (_, index) => index.toString(16).padStart(32, '0'));
 	await writeFile(
 		path.join(catalog.directory, 'catalog.json'),
 		JSON.stringify({
@@ -205,11 +207,11 @@ test('bounds enrollment without losing existing reference photos', async (t) => 
 			]
 		})
 	);
-	await assert.rejects(catalog.assign(7, photoA, cowId, ''), /already has 32 examples/);
+	await assert.rejects(catalog.assign(7, photoA, cowId, ''), /already has 1000 examples/);
 	await sighting(photoB);
 	await assert.rejects(
 		catalog.assign(7, photoB, cowId, '', 'e'.repeat(32)),
-		/already has 32 examples/
+		/already has 1000 examples/
 	);
 	assert.deepEqual((await catalog.list()).identities[0].samples, samples);
 	assert.deepEqual((await catalog.list()).identities[1].samples, [photoB]);
@@ -248,4 +250,46 @@ test('unversioned and unknown-revision photos remain reviewable without suggeste
 	assert.equal(review.length, 2);
 	assert.equal(unavailable, 0);
 	assert.ok(review.every((item) => item.identity.id === null && item.identity.name === null));
+});
+
+test('photos of one followed animal are confirmed together, and only those', async (t) => {
+	const { catalog, sighting } = await fixture(t);
+	const morning = { run: 'd'.repeat(32), track: 5 };
+	const [first, second, third] = ['1', '2', '3'].map((digit) => digit.repeat(32));
+	await sighting(first, '2026-10-03T10:00:00', undefined, morning);
+	await sighting(second, '2026-10-03T10:00:30', undefined, morning);
+	await sighting(third, '2026-10-03T10:01:00', undefined, morning);
+	// The same track number after a restart, another track, and a photo from before runs
+	// were recorded: none of these is known to be the same animal.
+	await sighting(photoA, '2026-10-03T12:00:00', undefined, { run: 'e'.repeat(32), track: 5 });
+	await sighting(photoB, '2026-10-03T10:00:10', undefined, { ...morning, track: 6 });
+	await sighting(photoC, '2026-10-03T10:00:20');
+
+	const review = (await catalog.list()).review;
+	const companions = Object.fromEntries(review.map((item) => [item.id, item.companions.sort()]));
+	assert.deepEqual(companions[second], [first, third]);
+	assert.deepEqual([companions[photoA], companions[photoB], companions[photoC]], [[], [], []]);
+
+	await catalog.assign(0, second, null, '142', null, true);
+	const data = await catalog.list();
+	assert.deepEqual(data.identities[0].samples.sort(), [first, second, third]);
+	assert.deepEqual(data.review.map((item) => item.id).sort(), [photoA, photoB, photoC]);
+
+	// Alone when not asked for, and never beyond what a cow can hold.
+	const afternoon = { run: 'e'.repeat(32), track: 5 };
+	await sighting('4'.repeat(32), '2026-10-03T12:00:30', undefined, afternoon);
+	await catalog.assign(1, photoA, null, '143');
+	assert.deepEqual((await catalog.list()).identities[1].samples, [photoA]);
+	const full = Array.from({ length: 999 }, (_, index) => index.toString(16).padStart(32, '0'));
+	await writeFile(
+		path.join(catalog.directory, 'catalog.json'),
+		JSON.stringify({
+			version: 1,
+			revision: 2,
+			identities: [{ id: 'f'.repeat(32), name: '144', samples: full }]
+		})
+	);
+	await sighting('5'.repeat(32), '2026-10-03T12:01:00', undefined, afternoon);
+	await catalog.assign(2, photoA, 'f'.repeat(32), '', null, true);
+	assert.equal((await catalog.list()).identities[0].samples.length, 1000);
 });

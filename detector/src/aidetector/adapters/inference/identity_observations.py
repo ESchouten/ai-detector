@@ -10,17 +10,14 @@ from dataclasses import dataclass, replace
 from datetime import datetime
 from threading import Event
 from time import monotonic
+from typing import cast
 
 import numpy as np
 from numpy.typing import NDArray
 from pydantic import ValidationError
 
 from aidetector.adapters.identity_catalog import Catalog, IdentityCatalog
-from aidetector.adapters.inference.identity import EmbeddingCache, ImageEncoder
-from aidetector.adapters.inference.identity_gallery import (
-    PreparedGallery,
-    prepare_gallery,
-)
+from aidetector.adapters.inference.identity_gallery import PreparedGallery
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import IdentityConfig
 from aidetector.domain.identity import (
@@ -42,20 +39,43 @@ def distinct_identity_scores(
     vectors: NDArray[np.float32],
     gallery: NDArray[np.float32],
     owners: tuple[tuple[str, str], ...],
+    neighbours: int = 1,
+    parts: tuple[int, ...] = (),
 ) -> list[list[IdentityMatch]]:
-    """Compare all confirmed views, then take each cow's best reference score."""
-    similarities = vectors @ gallery.T
-    if not np.isfinite(similarities).all():
+    """Compare all confirmed views, then score each cow by its nearest references.
+
+    Descriptions that lie side by side in a vector, `parts` wide each, are
+    compared one by one: each finds its own nearest references of a cow, and
+    the cow's score is their mean.
+    """
+    similarities = []
+    first = 0
+    for width in parts or (gallery.shape[1],):
+        similarities.append(
+            vectors[:, first : first + width] @ gallery[:, first : first + width].T
+        )
+        first += width
+    if not all(np.isfinite(part).all() for part in similarities):
         raise ValueError("Identity embeddings must contain finite values")
     columns: dict[tuple[str, str], list[int]] = {}
     for index, owner in enumerate(owners):
         columns.setdefault(owner, []).append(index)
     results: list[list[IdentityMatch]] = [[] for _ in vectors]
     for (identity_id, name), indices in columns.items():
-        scores = np.clip(similarities[:, indices].max(axis=1), -1, 1)
+        nearest = [
+            np.sort(part[:, indices], axis=1)[:, -neighbours:].mean(axis=1)
+            for part in similarities
+        ]
+        scores = np.clip(np.mean(nearest, axis=0), -1, 1)
         for matches, score in zip(results, scores, strict=True):
             matches.append(IdentityMatch(identity_id, name, float(score)))
     return results
+
+
+def infrared(image: NDArray[np.uint8]) -> bool:
+    """Whether a camera took this picture under infrared light: it has no colour."""
+    sample = image[::8, ::8].astype(np.int16)
+    return float(np.abs(sample - sample.mean(axis=2, keepdims=True)).mean()) < 1
 
 
 def usable_crop(
@@ -101,14 +121,17 @@ class _Track:
 
 
 class GalleryIdentifier:
-    """One detector worker owns temporal state; encoder/cache may be shared."""
+    """One detector worker owns temporal state; what `prepare` uses may be shared.
+
+    `prepare` turns a confirmed catalog into reference vectors and the encoder
+    that describes new crops in their space. It runs on the executor.
+    """
 
     def __init__(
         self,
         settings: IdentityConfig,
         catalog: IdentityCatalog,
-        encoder: ImageEncoder,
-        cache: EmbeddingCache,
+        prepare: Callable[[Catalog, Event | None], PreparedGallery],
         executor: Executor,
         *,
         report_status: ReportStatus = ignore_status,
@@ -117,8 +140,7 @@ class GalleryIdentifier:
     ):
         self.settings = settings
         self.catalog = catalog
-        self.encoder = encoder
-        self.cache = cache
+        self.prepare = prepare
         self.executor = executor
         self.clock = clock
         self.report_status = report_status
@@ -127,11 +149,12 @@ class GalleryIdentifier:
         self._preparation: tuple[Catalog, Future[PreparedGallery]] | None = None
         self._prepared_catalog: Catalog | None = None
         self.agreement = TrackAgreement(
-            settings.min_observations, max_gap=max(5, settings.sample_interval * 3)
+            settings.min_observations,
+            max_gap=max(5, settings.sample_interval * 3),
+            hold=settings.hold,
         )
         self._catalog: Catalog | None = None
-        self._gallery = np.empty((0, encoder.dimension), dtype=np.float32)
-        self._owners: tuple[tuple[str, str], ...] = ()
+        self._gallery: PreparedGallery | None = None
         self._tracks: dict[tuple[str, int | None], _Track] = {}
         self._sources: dict[str, _SourceState] = {}
 
@@ -173,7 +196,7 @@ class GalleryIdentifier:
         if catalog != self._catalog:
             self._catalog = catalog
             self._prepared_catalog = None
-            self._owners = ()
+            self._gallery = None
             self._tracks.clear()
             self.agreement.clear()
             available = sum(bool(cow.samples) for cow in catalog.identities)
@@ -199,14 +222,7 @@ class GalleryIdentifier:
         ):
             self._preparation = (
                 catalog,
-                self.executor.submit(
-                    prepare_gallery,
-                    catalog,
-                    self.catalog,
-                    self.encoder,
-                    self.cache,
-                    self.preparation_stopped,
-                ),
+                self.executor.submit(self.prepare, catalog, self.preparation_stopped),
             )
             self._finish_preparation(catalog)
         return catalog
@@ -226,7 +242,7 @@ class GalleryIdentifier:
         if submitted_catalog != catalog:
             return
         self._prepared_catalog = catalog
-        self._gallery, self._owners = gallery.vectors, gallery.owners
+        self._gallery = gallery
         self._tracks.clear()
         self.agreement.clear()
         logger.info("Identity gallery revision %d is ready", catalog.revision)
@@ -234,22 +250,35 @@ class GalleryIdentifier:
             StatusEvent("identity_ready", message="Identification is ready.")
         )
 
-    def _match(self, images: list[NDArray[np.uint8]]) -> list[IdentityMatch]:
+    def _match(
+        self, images: list[NDArray[np.uint8]], min_similarity: float
+    ) -> list[tuple[IdentityMatch, str | None]]:
+        """Per image: the accepted match, and the identity it resembles most."""
+        gallery = self._gallery
         if not images:
             return []
-        if len(set(self._owners)) < 2:
-            return [IdentityMatch() for _ in images]
+        if gallery is None or len(set(gallery.owners)) < 2:
+            return [(IdentityMatch(), None) for _ in images]
         vectors = np.concatenate(
             [
-                self.encoder.encode(images[start : start + 8])
+                gallery.encoder.encode(images[start : start + 8])
                 for start in range(0, len(images), 8)
             ]
         )
         return [
-            choose_identity(
-                scores, self.settings.min_similarity, self.settings.min_margin
+            (
+                choose_identity(scores, min_similarity, self.settings.min_margin),
+                max(
+                    scores, key=lambda score: cast(float, score.similarity)
+                ).identity_id,
             )
-            for scores in distinct_identity_scores(vectors, self._gallery, self._owners)
+            for scores in distinct_identity_scores(
+                vectors,
+                gallery.vectors,
+                gallery.owners,
+                gallery.neighbours,
+                gallery.parts,
+            )
         ]
 
     def identify(self, source: str, observation: Observation) -> Observation:
@@ -270,7 +299,7 @@ class GalleryIdentifier:
         except (OSError, sqlite3.Error, ValidationError):
             self._catalog = None
             self._prepared_catalog = None
-            self._owners = ()
+            self._gallery = None
             self._tracks.clear()
             self.agreement.clear()
             self._retry_at = self.clock() + 60
@@ -327,7 +356,21 @@ class GalleryIdentifier:
                 matches[index] = track.match
                 continue
             crops[index] = observation.image[box.y1 : box.y2, box.x1 : box.x2]
-        candidates.update(zip(crops, self._match(list(crops.values())), strict=True))
+        night_limit = self.settings.min_similarity_infrared
+        matched = self._match(
+            list(crops.values()),
+            self.settings.min_similarity
+            if night_limit is None or not infrared(observation.image)
+            else night_limit,
+        )
+        candidates.update(zip(crops, (match for match, _ in matched), strict=True))
+        claimed = {candidate.identity_id for candidate in candidates.values()}
+        # A confirmed animal keeps its name through a weaker crop only while
+        # nobody else in view claims that identity.
+        resembles = {
+            index: likeness if likeness not in claimed else None
+            for index, (_, likeness) in zip(crops, matched, strict=True)
+        }
         # Pending candidates still compete with visible animals whose sampling
         # clocks differ; waiting for agreement must not hide a known collision.
         for index in self._reject_conflicts(candidates):
@@ -341,7 +384,11 @@ class GalleryIdentifier:
         for index, crop in crops.items():
             box = observation.boxes[index]
             matches[index] = self.agreement.update(
-                source, box.track_id, observation.date, candidates[index]
+                source,
+                box.track_id,
+                observation.date,
+                candidates[index],
+                resembles[index],
             )
             self._retain(
                 source,
@@ -410,17 +457,13 @@ class GalleryIdentifier:
         self._tracks[key] = _Track(at, candidate, match, saved)
 
     def _retire_tracks(self, source: str, observation: Observation) -> None:
-        current = {box.track_id for box in observation.boxes}
+        """Forget tracks this source last sampled longer ago than the agreement gap.
+
+        A track the detector misses for a moment is still the tracker's same
+        animal, and keeps the agreement it had.
+        """
         for key, track in tuple(self._tracks.items()):
-            same_source, track_id = key[0] == source, key[1]
-            expired = same_source and (
-                track_id not in current
-                or (observation.date - track.at).total_seconds()
-                > self.agreement.max_gap
-                or observation.date < track.at
-            )
-            if expired:
-                self.agreement.update(
-                    source, track_id, observation.date, IdentityMatch()
-                )
+            elapsed = (observation.date - track.at).total_seconds()
+            if key[0] == source and not 0 <= elapsed <= self.agreement.max_gap:
+                self.agreement.update(source, key[1], observation.date, IdentityMatch())
                 del self._tracks[key]

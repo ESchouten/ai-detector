@@ -3,6 +3,7 @@ import sqlite3
 from concurrent.futures import CancelledError, Executor, Future
 from dataclasses import replace
 from datetime import datetime, timedelta
+from functools import partial
 from threading import Event
 
 import numpy as np
@@ -111,8 +112,7 @@ def environment(tmp_path):
     identifier = GalleryIdentifier(
         IdentityConfig(labels=("cow",), min_crop_size=32),
         catalog,
-        encoder,
-        cache,
+        partial(prepare_gallery, store=catalog, encoder=encoder, cache=cache),
         ImmediateExecutor(),
     )
     try:
@@ -429,13 +429,28 @@ def test_cached_collision_clears_every_tracks_confirmation(environment):
     )
 
 
-def test_departed_or_reused_track_needs_fresh_agreement(environment):
+def test_briefly_missed_track_keeps_its_agreement(environment):
     identifier, _, _, _ = environment
     for second in range(3):
         identifier.identify("camera", observation(second, cow()))
 
-    assert identifier.identify("camera", observation(2.1)).boxes == ()
-    for second in (3, 4):
+    assert identifier.identify("camera", observation(3)).boxes == ()
+    assert (
+        identifier.identify("camera", observation(4, cow()))
+        .boxes[0]
+        .identity.identity_id
+        == BELLA
+    )
+
+
+def test_track_gone_for_longer_than_the_gap_needs_fresh_agreement(environment):
+    identifier, _, _, _ = environment
+    for second in range(3):
+        identifier.identify("camera", observation(second, cow()))
+
+    for second in range(3, 9):
+        assert identifier.identify("camera", observation(second)).boxes == ()
+    for second in (9, 10):
         assert (
             identifier.identify("camera", observation(second, cow()))
             .boxes[0]
@@ -443,16 +458,10 @@ def test_departed_or_reused_track_needs_fresh_agreement(environment):
             is None
         )
     assert (
-        identifier.identify("camera", observation(5, cow()))
-        .boxes[0]
-        .identity.identity_id
-        == BELLA
-    )
-    assert (
         identifier.identify("camera", observation(11, cow()))
         .boxes[0]
         .identity.identity_id
-        is None
+        == BELLA
     )
 
 
@@ -515,6 +524,37 @@ def test_multiple_references_are_reduced_to_one_score_per_distinct_identity():
     assert scores[1] == [
         IdentityMatch(BELLA, "Bella", pytest.approx(0.6)),
         IdentityMatch(DAISY, "Daisy", 1),
+    ]
+
+
+def test_a_score_can_be_the_mean_of_an_identitys_nearest_references():
+    gallery = np.asarray([[1, 0], [0.8, 0.6], [0, 1], [0.6, 0.8]], dtype=np.float32)
+    scores = distinct_identity_scores(
+        np.asarray([[1, 0]], dtype=np.float32),
+        gallery,
+        ((BELLA, "Bella"), (BELLA, "Bella"), (BELLA, "Bella"), (DAISY, "Daisy")),
+        neighbours=2,
+    )
+    # Bella's two nearest of three; Daisy has one reference and keeps its score.
+    assert scores[0] == [
+        IdentityMatch(BELLA, "Bella", pytest.approx(0.9)),
+        IdentityMatch(DAISY, "Daisy", pytest.approx(0.6)),
+    ]
+
+
+def test_descriptions_side_by_side_are_scored_apart_and_then_averaged():
+    # The first description finds Bella's first photograph, the second her
+    # second: each takes its own nearest, a mix of the two would find neither.
+    gallery = np.asarray([[1, 0, 0, 1], [0, 1, 1, 0], [0, 1, 0, 1]], dtype=np.float32)
+    scores = distinct_identity_scores(
+        np.asarray([[1, 0, 1, 0]], dtype=np.float32),
+        gallery,
+        ((BELLA, "Bella"), (BELLA, "Bella"), (DAISY, "Daisy")),
+        parts=(2, 2),
+    )
+    assert scores[0] == [
+        IdentityMatch(BELLA, "Bella", 1),
+        IdentityMatch(DAISY, "Daisy", 0),
     ]
 
 
@@ -582,6 +622,115 @@ def test_failed_encoder_is_not_cached_as_a_successful_empty_result(tmp_path):
         cache.close()
 
 
+class ShadeEncoder(FakeEncoder):
+    """Describe a crop by its mean colour, so a mixed coat is a weaker match."""
+
+    def encode(self, images):
+        vectors = np.zeros((len(images), 384), dtype=np.float32)
+        for row, image in enumerate(images):
+            vectors[row, :3] = image.mean(axis=(0, 1))
+        return vectors / np.linalg.norm(vectors, axis=1, keepdims=True)
+
+
+def test_confirmed_name_is_held_through_a_weaker_crop_until_another_animal_claims_it(
+    environment, tmp_path
+):
+    _, catalog, _, _ = environment
+    cache = EmbeddingCache(tmp_path / "shades.sqlite")
+    identifier = GalleryIdentifier(
+        IdentityConfig(labels=("cow",), min_crop_size=32, min_margin=0.4, hold=10),
+        catalog,
+        partial(prepare_gallery, store=catalog, encoder=ShadeEncoder(), cache=cache),
+        ImmediateExecutor(),
+    )
+    mixed = (200, 130, 0)
+    try:
+        for second in range(3):
+            confirmed = identifier.identify("camera", observation(second, cow()))
+        assert confirmed.boxes[0].identity.identity_id == BELLA
+
+        held = identifier.identify("camera", observation(3, cow(color=mixed)))
+        assert held.boxes[0].identity.identity_id == BELLA
+        assert held.boxes[0].identity.similarity == pytest.approx(0.838, abs=0.001)
+
+        contested = identifier.identify(
+            "camera",
+            observation(
+                4, cow(color=mixed), cow(track=8, coordinates=(70, 10, 110, 50))
+            ),
+        )
+        assert contested.boxes[0].identity.identity_id is None
+        assert contested.boxes[1].identity.identity_id is None
+    finally:
+        cache.close()
+
+
+class LightnessEncoder:
+    """Tells subjects apart by how light they are, as an infrared picture allows."""
+
+    dimension = 2
+    fingerprint = "lightness-v1"
+
+    def encode(self, images):
+        angles = np.array([image.mean() / 255 * np.pi / 2 for image in images])
+        return np.stack([np.cos(angles), np.sin(angles)], axis=1).astype(np.float32)
+
+
+def test_an_infrared_picture_needs_a_closer_match_than_a_daylight_one(tmp_path):
+    catalog = IdentityCatalog(tmp_path / "identities")
+    dark, light = (
+        catalog.save_sighting(
+            np.full((40, 40, 3), shade, dtype=np.uint8),
+            "enrollment",
+            START,
+            index,
+            IdentityMatch(),
+        )
+        for index, shade in enumerate((40, 220))
+    )
+    write_gallery(
+        catalog.directory,
+        1,
+        [
+            {"id": BELLA, "name": "Bella", "samples": [dark]},
+            {"id": DAISY, "name": "Daisy", "samples": [light]},
+        ],
+    )
+    cache = EmbeddingCache(tmp_path / "lightness.sqlite")
+    identifier = GalleryIdentifier(
+        IdentityConfig(
+            labels=("cow",),
+            min_crop_size=32,
+            min_similarity=0.9,
+            min_similarity_infrared=0.99,
+        ),
+        catalog,
+        partial(
+            prepare_gallery, store=catalog, encoder=LightnessEncoder(), cache=cache
+        ),
+        ImmediateExecutor(),
+    )
+    # A little lighter than Bella's photograph: 0.98 similar to it.
+    lighter = cow(color=(70, 70, 70))
+
+    def by_day(second):
+        seen = observation(second, lighter)
+        seen.image[150:, :] = (0, 160, 255)  # straw
+        return seen
+
+    try:
+        for second in range(3):
+            night = identifier.identify("camera", observation(second, lighter))
+            assert night.boxes[0].identity.identity_id is None
+        assert night.boxes[0].identity.similarity == pytest.approx(0.983, abs=0.001)
+
+        for second in range(3, 6):
+            day = identifier.identify("camera", by_day(second))
+        assert day.boxes[0].identity.identity_id == BELLA
+    finally:
+        cache.close()
+
+
 def test_first_enrollment_collects_photos_without_downloading_a_model(tmp_path):
     loads = []
 
@@ -594,8 +743,12 @@ def test_first_enrollment_collects_photos_without_downloading_a_model(tmp_path):
     identifier = GalleryIdentifier(
         IdentityConfig(labels=("cow",), min_crop_size=32),
         catalog,
-        DeferredEncoder(384, load),
-        cache,
+        partial(
+            prepare_gallery,
+            store=catalog,
+            encoder=DeferredEncoder(384, load),
+            cache=cache,
+        ),
         ImmediateExecutor(),
     )
     try:
@@ -687,8 +840,7 @@ def test_gallery_preparation_is_bounded_and_cannot_publish_a_stale_revision(
     identifier = GalleryIdentifier(
         original.settings,
         catalog,
-        encoder,
-        original.cache,
+        original.prepare,
         executor,
         report_status=statuses.append,
     )
@@ -736,8 +888,7 @@ def test_missing_reference_from_obsolete_preparation_does_not_suspend_new_herd(
     identifier = GalleryIdentifier(
         original.settings,
         catalog,
-        encoder,
-        original.cache,
+        original.prepare,
         executor,
         report_status=statuses.append,
     )
@@ -758,8 +909,7 @@ def test_accelerator_failure_from_obsolete_preparation_is_still_supervised(envir
     identifier = GalleryIdentifier(
         original.settings,
         catalog,
-        encoder,
-        original.cache,
+        original.prepare,
         executor,
     )
     identifier.identify("camera", observation(0, cow()))
@@ -770,8 +920,8 @@ def test_accelerator_failure_from_obsolete_preparation_is_still_supervised(envir
         identifier.identify("camera", observation(1, cow()))
 
 
-def test_gallery_preparation_stops_between_encoder_batches(environment):
-    original, catalog, _, identities = environment
+def test_gallery_preparation_stops_between_encoder_batches(environment, tmp_path):
+    _, catalog, _, identities = environment
     stopped = Event()
 
     class StoppingEncoder(FakeEncoder):
@@ -794,8 +944,14 @@ def test_gallery_preparation_stops_between_encoder_batches(environment):
     write_gallery(
         catalog.directory, 2, [{**identities[0], "samples": samples}, identities[1]]
     )
-    with pytest.raises(CancelledError, match="preparation stopped"):
-        prepare_gallery(catalog.load(), catalog, encoder, original.cache, stopped)
+    cache = EmbeddingCache(tmp_path / "stopping.sqlite")
+    try:
+        with pytest.raises(CancelledError, match="preparation stopped"):
+            prepare_gallery(
+                catalog.load(), stopped, store=catalog, encoder=encoder, cache=cache
+            )
+    finally:
+        cache.close()
     assert len(encoder.calls) == 1
 
 

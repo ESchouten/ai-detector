@@ -37,7 +37,7 @@ A detector whose detection settings you changed keeps them and is not updated. C
 
 ### Herd (experimental)
 
-A detector made from the **Cow Identity** preset collects clear cow photographs. On **Herd**, confirm a photograph with a name or tag number; once at least two cows have examples, new photographs show a possible match. A match is a suggestion and is never added to a cow's examples without your confirmation. A wrong example can be moved to another cow or removed. See the [trial guide and its limits](../research/cow_identity/README.md).
+A detector made from the **Cow Identity** preset takes photographs of the cows it follows. On **Herd**, confirm a photograph with a name or tag number; the other photographs the camera took while it kept following that animal are confirmed with it unless you untick them. The detector then learns the herd, which takes ten minutes or more after every change, and shows a name on the live picture when it is sure. It needs hundreds of photographs of a cow, from several days, by day and by night, and most of the herd named, before names are dependable. A wrong example can be moved to another cow or removed, and nothing is ever added to a cow's examples without your confirmation. See the [research record and its limits](../research/cow_identity/HERD_LEARNING.md).
 
 ### Telegram alerts
 

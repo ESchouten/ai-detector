@@ -1,0 +1,302 @@
+[
+ {
+  "scorer": "gallery",
+  "split": "early",
+  "left_out": [
+   5,
+   8,
+   9
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 1319,
+  "rank1": 0.5305410122164049,
+  "limits": {
+   "floor": 0.9523273259401321,
+   "margin": 1.615285873413086e-05,
+   "left_out_correct": 44
+  },
+  "known": 573,
+  "unknown": 334,
+  "correct": 11,
+  "wrong_known": 0,
+  "named_unknown": 4,
+  "precision": 0.7333333333333333,
+  "coverage": 0.019197207678883072,
+  "unknown_named": 0.011976047904191617,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "gallery",
+  "split": "early",
+  "left_out": [
+   1,
+   10,
+   11
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 1453,
+  "rank1": 0.44523470839260315,
+  "limits": {
+   "floor": 0.9712580442428589,
+   "margin": 1.430511474609375e-06,
+   "left_out_correct": 2
+  },
+  "known": 703,
+  "unknown": 204,
+  "correct": 0,
+  "wrong_known": 0,
+  "named_unknown": 0,
+  "precision": null,
+  "coverage": 0.0,
+  "unknown_named": 0.0,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "gallery",
+  "split": "early",
+  "left_out": [
+   7,
+   8,
+   9
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 1357,
+  "rank1": 0.5614973262032086,
+  "limits": {
+   "floor": 0.9546953310569127,
+   "margin": 1.1324882507324219e-06,
+   "left_out_correct": 46
+  },
+  "known": 561,
+  "unknown": 346,
+  "correct": 3,
+  "wrong_known": 0,
+  "named_unknown": 0,
+  "precision": 1.0,
+  "coverage": 0.0053475935828877,
+  "unknown_named": 0.0,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "gallery",
+  "split": "late",
+  "left_out": [
+   5,
+   8,
+   9
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 1892,
+  "rank1": 0.4818181818181818,
+  "limits": {
+   "floor": 0.9535611271858215,
+   "margin": 0.03848680186271667,
+   "left_out_correct": 32
+  },
+  "known": 660,
+  "unknown": 327,
+  "correct": 6,
+  "wrong_known": 0,
+  "named_unknown": 0,
+  "precision": 1.0,
+  "coverage": 0.00909090909090909,
+  "unknown_named": 0.0,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "gallery",
+  "split": "late",
+  "left_out": [
+   1,
+   10,
+   11
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 2156,
+  "rank1": 0.4069400630914827,
+  "limits": null,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "gallery",
+  "split": "late",
+  "left_out": [
+   7,
+   8,
+   9
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 1918,
+  "rank1": 0.4878419452887538,
+  "limits": {
+   "floor": 0.9495670596758524,
+   "margin": 0.05270810286204011,
+   "left_out_correct": 35
+  },
+  "known": 658,
+  "unknown": 329,
+  "correct": 2,
+  "wrong_known": 0,
+  "named_unknown": 0,
+  "precision": 1.0,
+  "coverage": 0.00303951367781155,
+  "unknown_named": 0.0,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "linear",
+  "split": "early",
+  "left_out": [
+   5,
+   8,
+   9
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 1319,
+  "rank1": 0.6736474694589878,
+  "limits": {
+   "floor": 2.8923420906066895,
+   "margin": 0.0006121695041656494,
+   "left_out_correct": 1
+  },
+  "known": 573,
+  "unknown": 334,
+  "correct": 0,
+  "wrong_known": 0,
+  "named_unknown": 0,
+  "precision": null,
+  "coverage": 0.0,
+  "unknown_named": 0.0,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "linear",
+  "split": "early",
+  "left_out": [
+   1,
+   10,
+   11
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 1453,
+  "rank1": 0.5860597439544808,
+  "limits": {
+   "floor": 1.948901653289795,
+   "margin": 0.00016236305236816406,
+   "left_out_correct": 1
+  },
+  "known": 703,
+  "unknown": 204,
+  "correct": 0,
+  "wrong_known": 0,
+  "named_unknown": 0,
+  "precision": null,
+  "coverage": 0.0,
+  "unknown_named": 0.0,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "linear",
+  "split": "early",
+  "left_out": [
+   7,
+   8,
+   9
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 1357,
+  "rank1": 0.679144385026738,
+  "limits": {
+   "floor": 2.7662386894226074,
+   "margin": 0.0002945065498352051,
+   "left_out_correct": 1
+  },
+  "known": 561,
+  "unknown": 346,
+  "correct": 0,
+  "wrong_known": 0,
+  "named_unknown": 0,
+  "precision": null,
+  "coverage": 0.0,
+  "unknown_named": 0.0,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "linear",
+  "split": "late",
+  "left_out": [
+   5,
+   8,
+   9
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 1892,
+  "rank1": 0.55,
+  "limits": {
+   "floor": 2.6229753494262695,
+   "margin": 8.255243301391602e-06,
+   "left_out_correct": 1
+  },
+  "known": 660,
+  "unknown": 327,
+  "correct": 0,
+  "wrong_known": 0,
+  "named_unknown": 0,
+  "precision": null,
+  "coverage": 0.0,
+  "unknown_named": 0.0,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "linear",
+  "split": "late",
+  "left_out": [
+   1,
+   10,
+   11
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 2156,
+  "rank1": 0.45741324921135645,
+  "limits": {
+   "floor": 2.022554397583008,
+   "margin": 0.00012987852096557617,
+   "left_out_correct": 1
+  },
+  "known": 634,
+  "unknown": 353,
+  "correct": 0,
+  "wrong_known": 0,
+  "named_unknown": 0,
+  "precision": null,
+  "coverage": 0.0,
+  "unknown_named": 0.0,
+  "encoder": "dinov2-b-448"
+ },
+ {
+  "scorer": "linear",
+  "split": "late",
+  "left_out": [
+   7,
+   8,
+   9
+  ],
+  "confirmations_per_cow": null,
+  "training_crops": 1918,
+  "rank1": 0.5562310030395137,
+  "limits": {
+   "floor": 2.631181240081787,
+   "margin": 0.00013336539268493652,
+   "left_out_correct": 1
+  },
+  "known": 658,
+  "unknown": 329,
+  "correct": 0,
+  "wrong_known": 0,
+  "named_unknown": 0,
+  "precision": null,
+  "coverage": 0.0,
+  "unknown_named": 0.0,
+  "encoder": "dinov2-b-448"
+ }
+]

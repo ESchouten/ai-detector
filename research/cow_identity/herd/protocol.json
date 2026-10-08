@@ -1,0 +1,94 @@
+{
+ "title": "Herd learning on held-out ETH Zurich barn video",
+ "frozen_on": "2026-10-08",
+ "dataset": {
+  "doi": "10.3929/ethz-c-000796658",
+  "sha256": {
+   "classification.tar.gz": "ff686b2da8bd2862c129227b49e70d26f597d0d5dfd34977f502851df7a80e4a",
+   "video1.mp4": "c98e1117fe8bdbb01324cda95234e399b882fd36662880144c7a49e4479378a7",
+   "video2.mp4": "cf19a78684b57083b3afd12b20d9b456837817f54cef8e36f8002139162b29fb",
+   "video3.mp4": "e4aa40a2016c1b4b3fdb50f9c2ec7b434ba6838c4f52fab09fb26c13ee87324e",
+   "video4.mp4": "8ae959f82c2877fcf7bafa86ef70ebdfa06ada9f3739a2634c95ad500f5f8249",
+   "video5.mp4": "8f5aa9138e0ea10d56bb2c861b2a66ac70f0fb8d0c68d380b1a369e41e5fc48b",
+   "video6.mp4": "4425fc1ec1db3b536cb2f2c2c321ff8eb6ece53e46e670fe40baff742439ec49"
+  }
+ },
+ "videos": {
+  "development": [
+   "video3",
+   "video4"
+  ],
+  "validation": [
+   "video2",
+   "video1"
+  ],
+  "test": [
+   "video6",
+   "video5"
+  ]
+ },
+ "enrolled": [
+  0,
+  1,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  13
+ ],
+ "withheld": [
+  3,
+  4,
+  12
+ ],
+ "confirmed_photographs": "Every publisher crop of an enrolled cow recorded at least 24 hours before the video's first frame, stored by prepare.py with its longest side at most 448 pixels.",
+ "sampling": "One frame per second over the whole video, shrunk as the application's camera source shrinks it.",
+ "system": {
+  "code": "The commit that adds this file.",
+  "preset": "config/detector/cow-identity.json",
+  "preset_sha256": "8e6a7e1429606a2e248826d94fb7d06d5f2c77ed9a457df717d4489ecc0d8442",
+  "identity": {
+   "labels": [
+    "cow"
+   ],
+   "model": "herd",
+   "weights": "https://github.com/ESchouten/ai-detector/releases/download/herd-weights-1/cattle-dinov2-small.safetensors",
+   "min_similarity": 0.66,
+   "min_similarity_infrared": 0.72,
+   "min_margin": 0,
+   "min_observations": 5,
+   "hold": 300,
+   "min_crop_size": 32,
+   "max_overlap": 1
+  },
+  "detector_weights": {
+   "name": "yolo26x-seg.pt",
+   "sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3"
+  },
+  "cattle_weights": {
+   "name": "cattle-dinov2-small.safetensors",
+   "sha256": "f83a4bb6178c7394988db32cc2dc155c6dd51f04183b646e08e845001f5dcc26"
+  },
+  "animal_weights": {
+   "name": "conservationxlabs/miewid-msv3 model.safetensors",
+   "revision": "4f1d7f2b521149e5fe34bb85f377248ce9971a7d",
+   "sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348"
+  },
+  "device": "Apple GPU (MPS)"
+ },
+ "scoring": {
+  "pairing_overlap": 0.5,
+  "unpaired_box_lies_on_overlap": 0.25,
+  "disputed": "Frames in which the publisher gave one cow two boxes: both boxes are left out of every count."
+ },
+ "criteria": {
+  "precision_min": 0.99,
+  "coverage_min": 0.6,
+  "withheld_named_max": 0.01,
+  "p95_seconds_per_frame_max": 1.0
+ },
+ "judged": "Each test video on its own and both pooled must meet every criterion. Each test video is run once."
+}

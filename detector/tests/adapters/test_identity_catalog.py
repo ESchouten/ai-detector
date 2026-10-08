@@ -49,6 +49,21 @@ def test_sighting_is_reviewable_evidence_and_never_enrolls_a_prediction(tmp_path
     assert not list((tmp_path / "sightings").glob("*.tmp"))
 
 
+def test_sightings_name_the_detector_run_that_numbered_their_track(tmp_path):
+    def run(catalog, track):
+        sample = catalog.save_sighting(IMAGE, "camera", NOW, track, IdentityMatch())
+        return json.loads((tmp_path / "sightings" / f"{sample}.json").read_text())[
+            "run"
+        ]
+
+    first, restarted = IdentityCatalog(tmp_path), IdentityCatalog(tmp_path)
+
+    assert run(first, 7) == run(first, 8)
+    assert len(run(first, 7)) == 32
+    # After a restart the tracker counts from one again: track 7 is another animal.
+    assert run(restarted, 7) != run(first, 7)
+
+
 def test_pending_limit_counts_only_unassigned_examples_and_recovers_after_review(
     tmp_path,
 ):

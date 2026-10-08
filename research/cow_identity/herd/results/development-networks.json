@@ -1,0 +1,57 @@
+{
+ "note": "How many cattle networks vote. First block: six development rotations taught with colour, medium detector, scored by the two nearest photographs; share of fit crops of enrolled cows above the one limit at which 1% of the left-out cows' crops pass in the worst run (worst run, mean of runs). Second block: one rotation (first, daylight video) with the largest detector and one to five networks; a stranger's best similarity and the weakest enrolled cow's median similarity.",
+ "one_limit_for_six_runs": {
+  "network 1": [
+   0.41,
+   0.68
+  ],
+  "network 2": [
+   0.13,
+   0.48
+  ],
+  "network 3": [
+   0.25,
+   0.61
+  ],
+  "networks 1 and 2": [
+   0.46,
+   0.75
+  ],
+  "three networks": [
+   0.59,
+   0.82
+  ]
+ },
+ "one_rotation": {
+  "1": {
+   "stranger_median": 0.817,
+   "stranger_90th": 0.875,
+   "stranger_99th": 0.895,
+   "weakest_cow_median": 0.85
+  },
+  "2": {
+   "stranger_median": 0.81,
+   "stranger_90th": 0.842,
+   "stranger_99th": 0.865,
+   "weakest_cow_median": 0.85
+  },
+  "3": {
+   "stranger_median": 0.795,
+   "stranger_90th": 0.826,
+   "stranger_99th": 0.849,
+   "weakest_cow_median": 0.85
+  },
+  "4": {
+   "stranger_median": 0.785,
+   "stranger_90th": 0.816,
+   "stranger_99th": 0.847,
+   "weakest_cow_median": 0.84
+  },
+  "5": {
+   "stranger_median": 0.78,
+   "stranger_90th": 0.809,
+   "stranger_99th": 0.838,
+   "weakest_cow_median": 0.83
+  }
+ }
+}

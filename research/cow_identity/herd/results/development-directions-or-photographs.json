@@ -1,0 +1,181 @@
+{
+ "note": "Share of fit crops of enrolled cows that score above the limit which 1 in 100, or 1 in 1000, crops of the left-out cows pass; a crop that resembles another cow most never passes. Six development rotations of seven cows, three cattle networks taught with colour, medium detector. `own limit` sets the limit per run, `one limit` once for all six. Measured from cached descriptions when the comparison with photographs was first made; similarity_study.py repeats it on models taught by the current application.",
+ "directions": {
+  "own_limit_1_in_100": {
+   "r1-video3": 0.97,
+   "r2-video3": 0.77,
+   "r3-video3": 0.76,
+   "r1-video4": 0.91,
+   "r2-video4": 0.83,
+   "r3-video4": 0.85
+  },
+  "own_limit_1_in_1000": {
+   "r1-video3": 0.89,
+   "r2-video3": 0.68,
+   "r3-video3": 0.58,
+   "r1-video4": 0.79,
+   "r2-video4": 0.69,
+   "r3-video4": 0.27
+  },
+  "one_limit_1_in_100": {
+   "worst": 0.37,
+   "mean": 0.69,
+   "limit": 0.73
+  },
+  "one_limit_1_in_1000": {
+   "worst": 0.27,
+   "mean": 0.52,
+   "limit": 0.75
+  }
+ },
+ "nearest 1 photograph": {
+  "own_limit_1_in_100": {
+   "r1-video3": 0.93,
+   "r2-video3": 0.91,
+   "r3-video3": 0.98,
+   "r1-video4": 0.87,
+   "r2-video4": 0.85,
+   "r3-video4": 0.94
+  },
+  "own_limit_1_in_1000": {
+   "r1-video3": 0.9,
+   "r2-video3": 0.86,
+   "r3-video3": 0.97,
+   "r1-video4": 0.76,
+   "r2-video4": 0.66,
+   "r3-video4": 0.61
+  },
+  "one_limit_1_in_100": {
+   "worst": 0.5,
+   "mean": 0.78,
+   "limit": 0.87
+  },
+  "one_limit_1_in_1000": {
+   "worst": 0.37,
+   "mean": 0.69,
+   "limit": 0.88
+  }
+ },
+ "nearest 2 photographs": {
+  "own_limit_1_in_100": {
+   "r1-video3": 0.94,
+   "r2-video3": 0.91,
+   "r3-video3": 0.98,
+   "r1-video4": 0.9,
+   "r2-video4": 0.84,
+   "r3-video4": 0.94
+  },
+  "own_limit_1_in_1000": {
+   "r1-video3": 0.91,
+   "r2-video3": 0.87,
+   "r3-video3": 0.97,
+   "r1-video4": 0.75,
+   "r2-video4": 0.63,
+   "r3-video4": 0.77
+  },
+  "one_limit_1_in_100": {
+   "worst": 0.59,
+   "mean": 0.82,
+   "limit": 0.85
+  },
+  "one_limit_1_in_1000": {
+   "worst": 0.37,
+   "mean": 0.7,
+   "limit": 0.87
+  }
+ },
+ "nearest 3 photographs": {
+  "own_limit_1_in_100": {
+   "r1-video3": 0.94,
+   "r2-video3": 0.91,
+   "r3-video3": 0.98,
+   "r1-video4": 0.91,
+   "r2-video4": 0.82,
+   "r3-video4": 0.94
+  },
+  "own_limit_1_in_1000": {
+   "r1-video3": 0.91,
+   "r2-video3": 0.87,
+   "r3-video3": 0.97,
+   "r1-video4": 0.79,
+   "r2-video4": 0.59,
+   "r3-video4": 0.74
+  },
+  "one_limit_1_in_100": {
+   "worst": 0.62,
+   "mean": 0.84,
+   "limit": 0.85
+  },
+  "one_limit_1_in_1000": {
+   "worst": 0.35,
+   "mean": 0.69,
+   "limit": 0.87
+  }
+ },
+ "nearest 5 photographs": {
+  "own_limit_1_in_100": {
+   "r1-video3": 0.95,
+   "r2-video3": 0.9,
+   "r3-video3": 0.98,
+   "r1-video4": 0.92,
+   "r2-video4": 0.77,
+   "r3-video4": 0.94
+  },
+  "own_limit_1_in_1000": {
+   "r1-video3": 0.91,
+   "r2-video3": 0.87,
+   "r3-video3": 0.97,
+   "r1-video4": 0.81,
+   "r2-video4": 0.53,
+   "r3-video4": 0.72
+  },
+  "one_limit_1_in_100": {
+   "worst": 0.65,
+   "mean": 0.85,
+   "limit": 0.84
+  },
+  "one_limit_1_in_1000": {
+   "worst": 0.32,
+   "mean": 0.67,
+   "limit": 0.87
+  }
+ },
+ "not adopted": {
+  "nearest 2, divided by its spread over other farms' cows": {
+   "one_limit_1_in_100": {
+    "worst": 0.09,
+    "mean": 0.23
+   }
+  },
+  "nearest 3 photographs by the unadapted starting network": {
+   "one_limit_1_in_100": {
+    "worst": 0.09,
+    "mean": 0.16
+   },
+   "crops_with_right_cow": [
+    0.9,
+    1.0
+   ]
+  }
+ },
+ "rules_replayed": {
+  "note": "Best rule set that named no stranger in any run, with the rule of that time that a track missing from one frame starts over: share of animals named, worst run and mean.",
+  "directions": {
+   "worst": 0.351,
+   "mean": 0.577,
+   "file": "development-rules-directions.json"
+  },
+  "nearest 2 photographs": {
+   "worst": 0.604,
+   "mean": 0.691,
+   "min_similarity": 0.85,
+   "min_observations": 5
+  },
+  "nearest 2 photographs, briefly missed tracks kept": {
+   "worst": 0.667,
+   "mean": 0.753,
+   "min_similarity": 0.85,
+   "min_observations": 5
+  }
+ }
+}

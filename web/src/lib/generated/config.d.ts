@@ -125,10 +125,13 @@ export type Mode = 'appearance';
  * @minItems 1
  */
 export type Labels = [string, ...string[]];
-export type Model2 = 'miewid-msv3' | 'dinov2-small-224' | 'dinov2-small-336';
+export type Model2 = 'miewid-msv3' | 'dinov2-small-224' | 'dinov2-small-336' | 'herd';
+export type Weights = string | null;
 export type MinSimilarity = number;
+export type MinSimilarityInfrared = number | null;
 export type MinMargin = number;
 export type MinObservations = number;
+export type Hold = number;
 export type SampleInterval = number;
 export type MinCropSize = number;
 export type MaxOverlap = number;
@@ -263,9 +266,12 @@ export interface IdentityConfig {
 	mode?: Mode;
 	labels: Labels;
 	model?: Model2;
+	weights?: Weights;
 	min_similarity?: MinSimilarity;
+	min_similarity_infrared?: MinSimilarityInfrared;
 	min_margin?: MinMargin;
 	min_observations?: MinObservations;
+	hold?: Hold;
 	sample_interval?: SampleInterval;
 	min_crop_size?: MinCropSize;
 	max_overlap?: MaxOverlap;

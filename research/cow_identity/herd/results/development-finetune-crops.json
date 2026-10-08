@@ -1,0 +1,436 @@
+{
+ "note": "Single DINOv2-small networks adapted to seven of the ten enrollable cows and scored on publisher crops of later days. 'best_possible' chooses its two limits on the scored crops themselves and is an upper bound, not a result. These runs read crops recorded 23-27 and 29-31 August and 6-10 September, before development was restricted to crops a day away from every held-back video; no frame of a held-back video and no crop of the withheld cows 3, 4 and 12 was read.",
+ "runs": [
+  {
+   "split": "late",
+   "left_out": [
+    7,
+    8,
+    11
+   ],
+   "settings": {
+    "backbone": "dinov2-s",
+    "size": 224,
+    "epochs": 3,
+    "rate": 3e-05,
+    "margin": 0.25,
+    "scale": 24.0,
+    "turn": 20.0,
+    "mirror": false,
+    "head_rate": 0.001,
+    "others": "auxiliary.json:26236"
+   },
+   "run": "a0ff37b1404f35e7",
+   "training_crops": 3491,
+   "known": 653,
+   "unknown": 334,
+   "direction": {
+    "rank1": 0.9601837672281777,
+    "best_possible": {
+     "coverage": 0.2450229709035222,
+     "floor": 0.8564234897494316,
+     "margin": 0.0007307231426239014
+    },
+    "separation": {
+     "best_area": 0.8725849735934829,
+     "lead_area": 0.867704781823912,
+     "right_kept_at_5pct_unknown_best": 0.5119617224880383,
+     "right_kept_at_5pct_unknown_lead": 0.529505582137161
+    }
+   },
+   "gallery": {
+    "rank1": 0.9770290964777948,
+    "best_possible": {
+     "coverage": 0.41347626339969373,
+     "floor": 0.9175673633813858,
+     "margin": 0.0005158782005310059
+    },
+    "separation": {
+     "best_area": 0.869769864659396,
+     "lead_area": 0.8208801832072532,
+     "right_kept_at_5pct_unknown_best": 0.6175548589341693,
+     "right_kept_at_5pct_unknown_lead": 0.4278996865203762
+    }
+   },
+   "experiment": "aux-e3"
+  },
+  {
+   "split": "late",
+   "left_out": [
+    7,
+    8,
+    11
+   ],
+   "settings": {
+    "backbone": "dinov2-s",
+    "size": 224,
+    "epochs": 3,
+    "rate": 3e-05,
+    "margin": 0.25,
+    "scale": 24.0,
+    "turn": 20.0,
+    "mirror": false,
+    "head_rate": 0.001
+   },
+   "run": "b79782887275b9e2",
+   "training_crops": 3491,
+   "known": 653,
+   "unknown": 334,
+   "direction": {
+    "rank1": 0.9310872894333844,
+    "best_possible": {
+     "coverage": 0.2450229709035222,
+     "floor": 0.8319868847727776,
+     "margin": 0.0001875162124633789
+    },
+    "separation": {
+     "best_area": 0.8203001890954932,
+     "lead_area": 0.8046554916482824,
+     "right_kept_at_5pct_unknown_best": 0.43585526315789475,
+     "right_kept_at_5pct_unknown_lead": 0.37335526315789475
+    }
+   },
+   "gallery": {
+    "rank1": 0.9341500765696784,
+    "best_possible": {
+     "coverage": 0.4318529862174579,
+     "floor": 0.940016570687294,
+     "margin": 0.000693202018737793
+    },
+    "separation": {
+     "best_area": 0.841705114361441,
+     "lead_area": 0.7165505055462845,
+     "right_kept_at_5pct_unknown_best": 0.5819672131147541,
+     "right_kept_at_5pct_unknown_lead": 0.1737704918032787
+    }
+   },
+   "experiment": "base-e3"
+  },
+  {
+   "split": "late",
+   "left_out": [
+    7,
+    8,
+    11
+   ],
+   "settings": {
+    "backbone": "dinov2-s",
+    "size": 224,
+    "epochs": 12,
+    "rate": 3e-05,
+    "margin": 0.25,
+    "scale": 24.0
+   },
+   "run": "543e24097c8bd2f3",
+   "training_crops": 3491,
+   "known": 653,
+   "unknown": 334,
+   "direction": {
+    "rank1": 0.9464012251148545,
+    "best_possible": {
+     "coverage": 0.045941807044410414,
+     "floor": 0.9113007485866547,
+     "margin": 0.9421304854750633
+    }
+   },
+   "gallery": {
+    "rank1": 0.9418070444104135,
+    "best_possible": {
+     "coverage": 0.2450229709035222,
+     "floor": 0.9838954105973243,
+     "margin": 3.546476364135742e-05
+    }
+   },
+   "prototype": {
+    "rank1": 0.9479326186830015,
+    "best_possible": {
+     "coverage": 0.09494640122511486,
+     "floor": 0.9786067381501198,
+     "margin": 0.0020189285278320312
+    }
+   },
+   "experiment": "e12"
+  },
+  {
+   "split": "late",
+   "left_out": [
+    7,
+    8,
+    11
+   ],
+   "settings": {
+    "backbone": "dinov2-s",
+    "size": 224,
+    "epochs": 3,
+    "rate": 3e-05,
+    "margin": 0.25,
+    "scale": 24.0,
+    "turn": 20.0,
+    "mirror": false,
+    "head_rate": 0.001
+   },
+   "run": "f01ae948f6cafcbb",
+   "training_crops": 3491,
+   "known": 653,
+   "unknown": 334,
+   "direction": {
+    "rank1": 0.9310872894333844,
+    "best_possible": {
+     "coverage": 0.16845329249617153,
+     "floor": 0.8431470438838005,
+     "margin": 0.0006726384162902832
+    },
+    "separation": {
+     "best_area": 0.8143712574850299,
+     "lead_area": 0.7886857863220926,
+     "right_kept_at_5pct_unknown_best": 0.3848684210526316,
+     "right_kept_at_5pct_unknown_lead": 0.29769736842105265
+    }
+   },
+   "gallery": {
+    "rank1": 0.9326186830015314,
+    "best_possible": {
+     "coverage": 0.33537519142419603,
+     "floor": 0.952105700969696,
+     "margin": 0.05550771188735962
+    },
+    "separation": {
+     "best_area": 0.8397539895578302,
+     "lead_area": 0.7531292095611732,
+     "right_kept_at_5pct_unknown_best": 0.5566502463054187,
+     "right_kept_at_5pct_unknown_lead": 0.23316912972085385
+    }
+   },
+   "experiment": "m-base-e3"
+  },
+  {
+   "split": "late",
+   "left_out": [
+    7,
+    8,
+    11
+   ],
+   "settings": {
+    "backbone": "dinov2-s",
+    "size": 224,
+    "epochs": 8,
+    "rate": 3e-05,
+    "margin": 0.25,
+    "scale": 24.0,
+    "turn": 180.0,
+    "mirror": true,
+    "head_rate": 0.001
+   },
+   "run": "6bc1b8b3f69f44c8",
+   "training_crops": 3491,
+   "known": 653,
+   "unknown": 334,
+   "direction": {
+    "rank1": 0.7856049004594181,
+    "best_possible": {
+     "coverage": 0.022970903522205207,
+     "floor": 0.8009100914001467,
+     "margin": 0.4689131179153919
+    },
+    "separation": {
+     "best_area": 0.6423760665802897,
+     "lead_area": 0.528842898997327,
+     "right_kept_at_5pct_unknown_best": 0.18323586744639375,
+     "right_kept_at_5pct_unknown_lead": 0.10526315789473684
+    }
+   },
+   "gallery": {
+    "rank1": 0.8759571209800919,
+    "best_possible": {
+     "coverage": 0.08575803981623277,
+     "floor": 0.9020632013678551,
+     "margin": 0.15715781921148303
+    },
+    "separation": {
+     "best_area": 0.785713537959047,
+     "lead_area": 0.7789403710062393,
+     "right_kept_at_5pct_unknown_best": 0.3881118881118881,
+     "right_kept_at_5pct_unknown_lead": 0.243006993006993
+    }
+   },
+   "experiment": "m-mirror180-e8"
+  },
+  {
+   "split": "late",
+   "left_out": [
+    7,
+    8,
+    11
+   ],
+   "settings": {
+    "backbone": "dinov2-s",
+    "size": 224,
+    "epochs": 6,
+    "rate": 3e-05,
+    "margin": 0.25,
+    "scale": 24.0,
+    "turn": 180.0,
+    "mirror": true,
+    "head_rate": 0.001
+   },
+   "run": "e7dd4ee01f543d73",
+   "training_crops": 3491,
+   "known": 653,
+   "unknown": 334,
+   "direction": {
+    "rank1": 0.8177641653905053,
+    "best_possible": {
+     "coverage": 0.03828483920367534,
+     "floor": 0.7934575766324998,
+     "margin": -0.6877084970474243
+    }
+   },
+   "gallery": {
+    "rank1": 0.886676875957121,
+    "best_possible": {
+     "coverage": 0.09494640122511486,
+     "floor": 0.8750733643770218,
+     "margin": 0.2098500127792359
+    }
+   },
+   "experiment": "mirror180-e6"
+  },
+  {
+   "split": "late",
+   "left_out": [
+    7,
+    8,
+    11
+   ],
+   "settings": {
+    "backbone": "dinov2-s",
+    "size": 224,
+    "epochs": 6,
+    "rate": 3e-05,
+    "margin": 0.25,
+    "scale": 24.0,
+    "turn": 20.0,
+    "mirror": true,
+    "head_rate": 0.001
+   },
+   "run": "791795e3b101c65a",
+   "training_crops": 3491,
+   "known": 653,
+   "unknown": 334,
+   "direction": {
+    "rank1": 0.9081163859111792,
+    "best_possible": {
+     "coverage": 0.12863705972434916,
+     "floor": 0.8364832162857055,
+     "margin": 0.44930265653133394
+    },
+    "separation": {
+     "best_area": 0.7568892568993547,
+     "lead_area": 0.6973119528228534,
+     "right_kept_at_5pct_unknown_best": 0.33895446880269814,
+     "right_kept_at_5pct_unknown_lead": 0.24283305227655985
+    }
+   },
+   "gallery": {
+    "rank1": 0.9218989280245024,
+    "best_possible": {
+     "coverage": 0.225114854517611,
+     "floor": 0.9498851060867309,
+     "margin": 0.0004463791847229004
+    },
+    "separation": {
+     "best_area": 0.7949002327570772,
+     "lead_area": 0.7638858495633318,
+     "right_kept_at_5pct_unknown_best": 0.5282392026578073,
+     "right_kept_at_5pct_unknown_lead": 0.287375415282392
+    }
+   },
+   "experiment": "mirror20-e6"
+  },
+  {
+   "split": "late",
+   "left_out": [
+    7,
+    8,
+    11
+   ],
+   "settings": {
+    "backbone": "dinov2-s",
+    "size": 224,
+    "epochs": 6,
+    "rate": 3e-05,
+    "margin": 0.25,
+    "scale": 24.0,
+    "turn": 180.0,
+    "mirror": false,
+    "head_rate": 0.001
+   },
+   "run": "96ea4e2dc2b60fd4",
+   "training_crops": 3491,
+   "known": 653,
+   "unknown": 334,
+   "direction": {
+    "rank1": 0.9234303215926493,
+    "best_possible": {
+     "coverage": 0.019908116385911178,
+     "floor": 0.9132278010249139,
+     "margin": 8.630752563476562e-05
+    }
+   },
+   "gallery": {
+    "rank1": 0.9280245022970903,
+    "best_possible": {
+     "coverage": 0.3124042879019908,
+     "floor": 0.9729413911700249,
+     "margin": 0.02112909397482872
+    }
+   },
+   "experiment": "plain180-e6"
+  },
+  {
+   "split": "late",
+   "left_out": [
+    7,
+    8,
+    11
+   ],
+   "settings": {
+    "backbone": "dinov2-s",
+    "size": 224,
+    "epochs": 2,
+    "rate": 3e-05,
+    "margin": 0.25,
+    "scale": 24.0
+   },
+   "run": "1376cfa3e4d5c095",
+   "training_crops": 3491,
+   "known": 653,
+   "unknown": 334,
+   "direction": {
+    "rank1": 0.9479326186830015,
+    "best_possible": {
+     "coverage": 0.25267993874425726,
+     "floor": 0.7718052566051483,
+     "margin": 0.6046148848831655
+    }
+   },
+   "gallery": {
+    "rank1": 0.9586523736600306,
+    "best_possible": {
+     "coverage": 0.4058192955589586,
+     "floor": 0.9206083789467812,
+     "margin": 0.09453658968210221
+    }
+   },
+   "prototype": {
+    "rank1": 0.9555895865237366,
+    "best_possible": {
+     "coverage": 0.21592649310872894,
+     "floor": 0.9079643160104752,
+     "margin": 0.6038455893695355
+    }
+   },
+   "experiment": "probe"
+  }
+ ]
+}

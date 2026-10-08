@@ -27,7 +27,8 @@ class EnrolledIdentity(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     id: Identifier
     name: Annotated[str, Field(min_length=1, max_length=80)]
-    samples: Annotated[tuple[Identifier, ...], Field(max_length=32)]
+    # Learning a herd takes hundreds of photographs of a cow, across days and views.
+    samples: Annotated[tuple[Identifier, ...], Field(max_length=1000)]
 
 
 class Catalog(BaseModel):
@@ -59,6 +60,9 @@ class IdentityCatalog:
     def __init__(self, directory: Path, max_pending: int = 200):
         self.directory = directory
         self.max_pending = max_pending
+        # Tracker numbers start again with every detector start; a sighting's
+        # track means something only together with the run that numbered it.
+        self._run = uuid4().hex
         self._lock = Lock()
         self._stamp: tuple[int, int] | None = None
         self._catalog = Catalog()
@@ -123,6 +127,7 @@ class IdentityCatalog:
                 "image": sample,
                 "source": hashlib.sha256(source.encode()).hexdigest(),
                 "captured_at": at.isoformat(),
+                "run": self._run,
                 "track_id": track_id,
                 "gallery_revision": gallery_revision,
                 "identity": {

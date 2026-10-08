@@ -13,17 +13,29 @@ from aidetector.adapters.inference.identity import EmbeddingCache, ImageEncoder
 
 @dataclass(frozen=True)
 class PreparedGallery:
+    """Reference vectors with their owners and the encoder that describes new crops.
+
+    An identity's score is the mean of its `neighbours` most similar references.
+    A vector may hold several descriptions side by side, `parts` wide each;
+    every part then scores an identity by its own nearest references, and the
+    parts' scores are averaged.
+    """
+
     catalog: Catalog
     vectors: NDArray[np.float32]
     owners: tuple[tuple[str, str], ...]
+    encoder: ImageEncoder
+    neighbours: int
+    parts: tuple[int, ...]
 
 
 def prepare_gallery(
     catalog: Catalog,
+    stopped: Event | None = None,
+    *,
     store: IdentityCatalog,
     encoder: ImageEncoder,
     cache: EmbeddingCache,
-    stopped: Event | None = None,
 ) -> PreparedGallery:
     samples = [(cow, sample) for cow in catalog.identities for sample in cow.samples]
     batches = []
@@ -40,4 +52,7 @@ def prepare_gallery(
         catalog,
         np.concatenate(batches),
         tuple((cow.id, cow.name) for cow, _ in samples),
+        encoder,
+        neighbours=1,
+        parts=(encoder.dimension,),
     )

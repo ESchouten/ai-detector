@@ -1,0 +1,150 @@
+{
+ "video3-yolo26m-seg-1280": {
+  "video": "video3",
+  "detector_weights_sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+  "yolo": {
+   "model": "yolo26m-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1280
+  },
+  "visible": 8771,
+  "located": 0.911298597651351,
+  "fit": 0.7855432675863642,
+  "boxes": 11636,
+  "boxes_without_annotation": 559,
+  "tracks_on_annotated_animals": 35,
+  "tracks_covering_two_animals": 0,
+  "detect_seconds": {
+   "mean": 0.10044757599124361,
+   "p95": 0.14849386864807454,
+   "max": 0.15794729115441442
+  },
+  "per_cow": {
+   "0": {
+    "visible": 1802,
+    "located": 1797,
+    "fit": 1797
+   },
+   "1": {
+    "visible": 1802,
+    "located": 1785,
+    "fit": 1785
+   },
+   "5": {
+    "visible": 1027,
+    "located": 1005,
+    "fit": 672
+   },
+   "6": {
+    "visible": 1407,
+    "located": 1073,
+    "fit": 752
+   },
+   "8": {
+    "visible": 1802,
+    "located": 1559,
+    "fit": 1559
+   },
+   "9": {
+    "visible": 75,
+    "located": 70,
+    "fit": 25
+   },
+   "10": {
+    "visible": 765,
+    "located": 672,
+    "fit": 294
+   },
+   "11": {
+    "visible": 85,
+    "located": 26,
+    "fit": 2
+   },
+   "13": {
+    "visible": 6,
+    "located": 6,
+    "fit": 4
+   }
+  }
+ },
+ "video3-yolo26x-seg-1280": {
+  "video": "video3",
+  "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1280
+  },
+  "visible": 8771,
+  "located": 0.9956675407593205,
+  "fit": 0.8890662410215483,
+  "boxes": 15869,
+  "boxes_without_annotation": 3675,
+  "tracks_on_annotated_animals": 18,
+  "tracks_covering_two_animals": 0,
+  "detect_seconds": {
+   "mean": 0.25244939264095073,
+   "p95": 0.3330994725460186,
+   "max": 0.4015373750589788
+  },
+  "per_cow": {
+   "0": {
+    "visible": 1802,
+    "located": 1802,
+    "fit": 1802
+   },
+   "1": {
+    "visible": 1802,
+    "located": 1802,
+    "fit": 1802
+   },
+   "5": {
+    "visible": 1027,
+    "located": 1023,
+    "fit": 705
+   },
+   "6": {
+    "visible": 1407,
+    "located": 1404,
+    "fit": 1113
+   },
+   "8": {
+    "visible": 1802,
+    "located": 1801,
+    "fit": 1801
+   },
+   "9": {
+    "visible": 75,
+    "located": 72,
+    "fit": 24
+   },
+   "10": {
+    "visible": 765,
+    "located": 748,
+    "fit": 545
+   },
+   "11": {
+    "visible": 85,
+    "located": 75,
+    "fit": 2
+   },
+   "13": {
+    "visible": 6,
+    "located": 6,
+    "fit": 4
+   }
+  }
+ }
+}

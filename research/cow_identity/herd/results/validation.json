@@ -1,0 +1,101 @@
+{
+ "criteria": {
+  "precision_min": 0.99,
+  "coverage_min": 0.6,
+  "withheld_named_max": 0.01,
+  "p95_seconds_per_frame_max": 1.0
+ },
+ "videos": {
+  "video2": {
+   "visible_enrolled": 1373,
+   "visible_withheld": 608,
+   "located_enrolled": 1368,
+   "located_withheld": 606,
+   "correct": 1070,
+   "wrong_enrolled": 0,
+   "named_withheld": 0,
+   "named_unannotated": 0,
+   "unpaired_on_named": 0,
+   "unpaired_on_other": 0,
+   "unpaired_on_withheld": 0,
+   "unpaired_elsewhere": 0,
+   "unpaired_unjudged": 0,
+   "coverage": 0.7793153678077204,
+   "precision": 1.0,
+   "precision_conservative": 1.0,
+   "withheld_named": 0.0,
+   "seconds_per_frame": {
+    "mean": 0.3072569642001539,
+    "p95": 0.32763827103190124,
+    "max": 0.5732842911966145
+   },
+   "replay_matches_application": true,
+   "meets": {
+    "precision": true,
+    "coverage": true,
+    "unknown": true,
+    "real_time": true
+   },
+   "passes": true
+  },
+  "video1": {
+   "visible_enrolled": 2801,
+   "visible_withheld": 900,
+   "located_enrolled": 2478,
+   "located_withheld": 617,
+   "correct": 1902,
+   "wrong_enrolled": 0,
+   "named_withheld": 0,
+   "named_unannotated": 12,
+   "unpaired_on_named": 7,
+   "unpaired_on_other": 0,
+   "unpaired_on_withheld": 0,
+   "unpaired_elsewhere": 0,
+   "unpaired_unjudged": 5,
+   "coverage": 0.6790431988575508,
+   "precision": 1.0,
+   "precision_conservative": 0.9937304075235109,
+   "withheld_named": 0.0,
+   "seconds_per_frame": {
+    "mean": 0.4509595234252127,
+    "p95": 0.49991077277809387,
+    "max": 0.7280296660028398
+   },
+   "replay_matches_application": true,
+   "meets": {
+    "precision": true,
+    "coverage": true,
+    "unknown": true,
+    "real_time": true
+   },
+   "passes": true
+  }
+ },
+ "pooled": {
+  "visible_enrolled": 4174,
+  "visible_withheld": 1508,
+  "located_enrolled": 3846,
+  "located_withheld": 1223,
+  "correct": 2972,
+  "wrong_enrolled": 0,
+  "named_withheld": 0,
+  "named_unannotated": 12,
+  "unpaired_on_named": 7,
+  "unpaired_on_other": 0,
+  "unpaired_on_withheld": 0,
+  "unpaired_elsewhere": 0,
+  "unpaired_unjudged": 5,
+  "coverage": 0.7120268327743172,
+  "precision": 1.0,
+  "precision_conservative": 0.9959785522788204,
+  "withheld_named": 0.0,
+  "localization_recall": 0.8921154523055262,
+  "meets": {
+   "precision": true,
+   "coverage": true,
+   "unknown": true
+  },
+  "passes": true
+ },
+ "passes": true
+}

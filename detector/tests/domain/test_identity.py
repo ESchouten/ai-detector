@@ -65,6 +65,54 @@ def test_different_identity_or_unknown_clears_prior_agreement(interruption):
     assert agreement.update("camera", 7, at(6), BELLA) == BELLA
 
 
+def test_confirmed_track_keeps_its_name_while_weaker_samples_still_resemble_it():
+    agreement = TrackAgreement(hold=4)
+    weaker = IdentityMatch(similarity=0.5)
+    for second in range(3):
+        agreement.update("camera", 7, at(second), BELLA)
+
+    held = IdentityMatch("cow-1", "Bella", 0.5)
+    assert agreement.update("camera", 7, at(3), weaker, "cow-1") == held
+    assert agreement.update("camera", 7, at(6), weaker, "cow-1") == held
+    # The hold counts from the last match, not from the last held sample.
+    assert agreement.update("camera", 7, at(7), weaker, "cow-1") == weaker
+    assert agreement.update("camera", 7, at(8), BELLA).identity_id is None
+
+
+def test_a_match_during_the_hold_continues_the_confirmation():
+    agreement = TrackAgreement(hold=4)
+    weaker = IdentityMatch(similarity=0.5)
+    for second in range(3):
+        agreement.update("camera", 7, at(second), BELLA)
+    agreement.update("camera", 7, at(3), weaker, "cow-1")
+
+    assert agreement.update("camera", 7, at(4), BELLA) == BELLA
+    assert agreement.update("camera", 7, at(8), weaker, "cow-1").identity_id == "cow-1"
+
+
+@pytest.mark.parametrize("resembles", [None, "cow-2"])
+def test_hold_ends_when_the_sample_resembles_nobody_or_someone_else(resembles):
+    agreement = TrackAgreement(hold=60)
+    weaker = IdentityMatch(similarity=0.5)
+    for second in range(3):
+        agreement.update("camera", 7, at(second), BELLA)
+
+    assert agreement.update("camera", 7, at(3), weaker, resembles) == weaker
+    assert agreement.update("camera", 7, at(4), weaker, "cow-1") == weaker
+
+
+def test_holding_never_confirms_a_track_or_bridges_a_long_gap():
+    agreement = TrackAgreement(hold=60)
+    weaker = IdentityMatch(similarity=0.5)
+    agreement.update("camera", 7, at(0), BELLA)
+    agreement.update("camera", 7, at(1), BELLA)
+    assert agreement.update("camera", 7, at(2), weaker, "cow-1") == weaker
+
+    for second in range(3, 6):
+        agreement.update("camera", 8, at(second), BELLA)
+    assert agreement.update("camera", 8, at(11), weaker, "cow-1") == weaker
+
+
 def test_missing_track_never_confirms_and_sources_and_tracks_stay_independent():
     agreement = TrackAgreement()
     for second in range(3):

@@ -9,7 +9,7 @@ Reliable unattended identification is not established yet.
 Two experimental paths currently exist. The **Cow Identity** preset collects
 photographs that a farmer confirms and then learns the herd from them;
 [Learning the herd](HERD_LEARNING.md) has its method, its frozen protocol and
-its results on held-out video. The explicit
+its results on held-out video, where it missed its coverage target at night. The explicit
 source-install `identity.mode="continuous"` path follows anonymous animals on
 one MPS camera and automatically retains bounded observations without a gallery.
 It does not yet read ear numbers, join separate visits or create permanent cow

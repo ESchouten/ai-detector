@@ -1,0 +1,101 @@
+{
+ "criteria": {
+  "precision_min": 0.99,
+  "coverage_min": 0.6,
+  "withheld_named_max": 0.01,
+  "p95_seconds_per_frame_max": 1.0
+ },
+ "videos": {
+  "video6": {
+   "visible_enrolled": 26752,
+   "visible_withheld": 8103,
+   "located_enrolled": 22732,
+   "located_withheld": 7408,
+   "correct": 13494,
+   "wrong_enrolled": 0,
+   "named_withheld": 1,
+   "named_unannotated": 295,
+   "unpaired_on_named": 64,
+   "unpaired_on_other": 7,
+   "unpaired_on_withheld": 1,
+   "unpaired_elsewhere": 1,
+   "unpaired_unjudged": 222,
+   "coverage": 0.5044108851674641,
+   "precision": 0.9992594786729858,
+   "precision_conservative": 0.978535170413343,
+   "withheld_named": 0.0002468221646303838,
+   "seconds_per_frame": {
+    "mean": 0.46566337443079764,
+    "p95": 0.8377814377658068,
+    "max": 1.8533553332090378
+   },
+   "replay_matches_application": true,
+   "meets": {
+    "precision": true,
+    "coverage": false,
+    "unknown": true,
+    "real_time": true
+   },
+   "passes": false
+  },
+  "video5": {
+   "visible_enrolled": 17808,
+   "visible_withheld": 2609,
+   "located_enrolled": 17607,
+   "located_withheld": 2578,
+   "correct": 12785,
+   "wrong_enrolled": 0,
+   "named_withheld": 0,
+   "named_unannotated": 195,
+   "unpaired_on_named": 51,
+   "unpaired_on_other": 57,
+   "unpaired_on_withheld": 0,
+   "unpaired_elsewhere": 66,
+   "unpaired_unjudged": 21,
+   "coverage": 0.7179357592093442,
+   "precision": 0.9904710257204834,
+   "precision_conservative": 0.9849768875192604,
+   "withheld_named": 0.0,
+   "seconds_per_frame": {
+    "mean": 0.2623758851846095,
+    "p95": 0.31898997311946004,
+    "max": 0.6290158331394196
+   },
+   "replay_matches_application": true,
+   "meets": {
+    "precision": true,
+    "coverage": true,
+    "unknown": true,
+    "real_time": true
+   },
+   "passes": true
+  }
+ },
+ "pooled": {
+  "visible_enrolled": 44560,
+  "visible_withheld": 10712,
+  "located_enrolled": 40339,
+  "located_withheld": 9986,
+  "correct": 26279,
+  "wrong_enrolled": 0,
+  "named_withheld": 1,
+  "named_unannotated": 490,
+  "unpaired_on_named": 115,
+  "unpaired_on_other": 64,
+  "unpaired_on_withheld": 1,
+  "unpaired_elsewhere": 67,
+  "unpaired_unjudged": 243,
+  "coverage": 0.5897441651705565,
+  "precision": 0.9949644101166136,
+  "precision_conservative": 0.9816585730295107,
+  "withheld_named": 0.00018670649738610905,
+  "localization_recall": 0.910497177594442,
+  "meets": {
+   "precision": true,
+   "coverage": false,
+   "unknown": true
+  },
+  "passes": false
+ },
+ "passes": false
+}

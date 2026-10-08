@@ -1,0 +1,171 @@
+{
+ "note": "Replays of the recorded test similarities at other limits, made after the test was scored. They explain the result; they are not results, and no limit read from them is a held-out one.",
+ "replays": {
+  "video6": [
+   {
+    "limit": 0.56,
+    "coverage": 0.5451,
+    "precision": 0.9489,
+    "precision_conservative": 0.8549,
+    "withheld_named": 23,
+    "visible_withheld": 8103,
+    "unjudged": 1558
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.5326,
+    "precision": 0.9892,
+    "precision_conservative": 0.9573,
+    "withheld_named": 92,
+    "visible_withheld": 8103,
+    "unjudged": 400
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.5233,
+    "precision": 0.9868,
+    "precision_conservative": 0.9617,
+    "withheld_named": 159,
+    "visible_withheld": 8103,
+    "unjudged": 295
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.5112,
+    "precision": 0.9862,
+    "precision_conservative": 0.9621,
+    "withheld_named": 175,
+    "visible_withheld": 8103,
+    "unjudged": 279
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.4827,
+    "precision": 0.9798,
+    "precision_conservative": 0.9558,
+    "withheld_named": 250,
+    "visible_withheld": 8103,
+    "unjudged": 261
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.4874,
+    "precision": 0.9782,
+    "precision_conservative": 0.9559,
+    "withheld_named": 279,
+    "visible_withheld": 8103,
+    "unjudged": 244
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.4955,
+    "precision": 0.9781,
+    "precision_conservative": 0.9577,
+    "withheld_named": 286,
+    "visible_withheld": 8103,
+    "unjudged": 227
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.5044,
+    "precision": 0.9993,
+    "precision_conservative": 0.9785,
+    "withheld_named": 2,
+    "visible_withheld": 8103,
+    "unjudged": 222
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.5077,
+    "precision": 0.9993,
+    "precision_conservative": 0.979,
+    "withheld_named": 2,
+    "visible_withheld": 8103,
+    "unjudged": 221
+   }
+  ],
+  "video5": [
+   {
+    "limit": 0.56,
+    "coverage": 0.6733,
+    "precision": 0.9488,
+    "precision_conservative": 0.9397,
+    "withheld_named": 499,
+    "visible_withheld": 2609,
+    "unjudged": 90
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.6802,
+    "precision": 0.9616,
+    "precision_conservative": 0.9524,
+    "withheld_named": 344,
+    "visible_withheld": 2609,
+    "unjudged": 80
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.6956,
+    "precision": 0.978,
+    "precision_conservative": 0.9701,
+    "withheld_named": 134,
+    "visible_withheld": 2609,
+    "unjudged": 63
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.7092,
+    "precision": 0.9862,
+    "precision_conservative": 0.9793,
+    "withheld_named": 33,
+    "visible_withheld": 2609,
+    "unjudged": 40
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.7179,
+    "precision": 0.9905,
+    "precision_conservative": 0.985,
+    "withheld_named": 0,
+    "visible_withheld": 2609,
+    "unjudged": 21
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.7182,
+    "precision": 0.9928,
+    "precision_conservative": 0.9874,
+    "withheld_named": 0,
+    "visible_withheld": 2609,
+    "unjudged": 20
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.7211,
+    "precision": 0.9963,
+    "precision_conservative": 0.9914,
+    "withheld_named": 0,
+    "visible_withheld": 2609,
+    "unjudged": 14
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.7141,
+    "precision": 0.9994,
+    "precision_conservative": 0.9947,
+    "withheld_named": 0,
+    "visible_withheld": 2609,
+    "unjudged": 8
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.7011,
+    "precision": 1.0,
+    "precision_conservative": 0.9956,
+    "withheld_named": 0,
+    "visible_withheld": 2609,
+    "unjudged": 7
+   }
+  ]
+ }
+}

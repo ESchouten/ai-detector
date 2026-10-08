@@ -1,6 +1,17 @@
 # Learning the herd: named cows on held-out barn video
 
-This is the record of a method that names enrolled cows on barn video and refuses unknown ones: how it was developed, the protocol it was frozen under, and what it did on two held-out test videos. **At this commit the protocol is frozen and the test has not been run.**
+**The frozen system does not meet its protocol: it names too few animals at night.** On two held-out hours of public barn video, run once each, the names it showed were right 99.9% and 99.1% of the time, it named 2 of 10,712 appearances of unknown animals, and it handled 95% of the frames within 0.84 seconds on an Apple GPU. But it named 50.4% of the enrolled cows' appearances in the night video and 71.8% in the daylight one, 59.0% together, where the protocol asks for 60% in each.
+
+| Criterion | Video 6, night | Video 5, day | Both |
+| --- | --- | --- | --- |
+| Precision at least 99% | 99.93% | 99.05% | 99.50% |
+| Coverage at least 60% | **50.4%** | 71.8% | **59.0%** |
+| At most 1% of unknown animals' appearances named | 0.02% | 0% | 0.02% |
+| 95% of frames within one second | 0.84 s | 0.32 s | |
+
+What is shown here is one barn with thirteen cows. The refusal of unknown animals held by a smaller margin than development suggested (see [after the fact](#after-the-fact)), so this is not yet a method to rely on, and nothing in it speaks for other farms.
+
+The rest of this document is the record: how the method was developed, the protocol it was frozen under, and the test in detail.
 
 ## What changed against the earlier trials
 
@@ -207,7 +218,56 @@ The protocol was committed before either test video was opened, with the hashes 
 
 ## Results
 
-The test has not been run at this commit.
+The test ran once per video at the frozen commit, alone on the Apple GPU ([video 6](herd/results/test-video6.json), [video 5](herd/results/test-video5.json), [judged](herd/results/test.json)). It fails: coverage is under 60% in the night video and in both together. The other three criteria are met in both videos. The replay reproduced every shown name.
+
+| | Video 6, night | Video 5, day |
+| --- | --- | --- |
+| Confirmed photographs | 3,753 | 6,092 |
+| Learning | 15.9 minutes | 25.4 minutes |
+| Appearances of enrolled cows | 26,752 | 17,808 |
+| Found by the detector | 22,732 (85.0%) | 17,607 (98.9%) |
+| With a box fit to be evidence | 22,655 | 14,508 |
+| Resembling their own cow most | 21,985 | 14,420 |
+| Named correctly | 13,494 (**50.4%**) | 12,785 (71.8%) |
+| Named wrongly | 8 | 123 |
+| Appearances of withheld cows | 8,103 | 2,609 |
+| of which named | 2 (0.02%) | 0 |
+| Names on boxes without a partner | 295: 64 on the named cow, 8 wrong, 1 on a withheld cow, 222 that cannot be judged | 195: 51 on the named cow, 123 wrong, 21 that cannot be judged |
+| Precision | 99.93% | 99.05% |
+| Conservative precision | 97.85% | 98.50% |
+| Seconds per frame: mean, 95th percentile, slowest | 0.47, 0.84, 1.85 | 0.26, 0.32, 0.63 |
+| Tracks on annotated animals, of which cover two animals | 124, 6 | 52, 3 |
+
+Every wrong name in the daylight video is on a box without a partner: 57 lie on another annotated cow and 66 on no annotated animal while the named cow is boxed elsewhere in the frame. No paired box of an enrolled cow carries another cow's name in either video.
+
+Named appearances per cow:
+
+| Cow | Video 6, night | Video 5, day |
+| --- | --- | --- |
+| 0 | 0 of 3,602 | 795 of 2,075 (38%) |
+| 1 | 0 of 3,541 | 1,464 of 2,340 (63%) |
+| 5 | 3,193 of 3,602 (89%) | 648 of 2,124 (31%) |
+| 6 | 2,959 of 3,083 (96%) | 1,416 of 1,975 (72%) |
+| 7 | 1,626 of 3,197 (51%) | not in view |
+| 8 | 1,633 of 1,689 (97%) | 3,592 of 3,602 (100%) |
+| 9 | 702 of 2,756 (25%) | 2,158 of 2,514 (86%) |
+| 10 | 147 of 209 (70%) | 944 of 1,313 (72%) |
+| 11 | 1,135 of 2,632 (43%) | 1,768 of 1,865 (95%) |
+| 13 | 2,099 of 2,441 (86%) | not in view |
+
+### Where the animals were lost
+
+In the night video two cows are never named in an hour, and they are 27% of all appearances. Cow 1 lies in the far row and is found in 13% of her appearances. Cow 0 is found in 99% of hers and resembles herself most in 97% of those crops, but her similarity stays between 0.54 and 0.65, under the night limit. Cows 9, 11 and 7 are named a quarter to half of the time for the same reason: their similarity moves around the limit. The other five are named 70–97% of the time. The validation video from the same camera had shown the same two cows unnamed; with the others named almost always, it still passed.
+
+In the daylight video the largest loss is at the picture's edge: cow 5 is found in 96% of her appearances, but only 39% of those boxes are clear of the edge.
+
+### After the fact
+
+After scoring, the recorded similarities were replayed at other limits ([file](herd/results/test-after-the-fact.json)). This explains the result. It is not a result, and no limit read from it is a held-out one.
+
+- **The margin against unknown animals was thinner than development showed.** In development and validation no stranger was named from a limit of 0.66 upward at night and 0.64 by day. In the night test video the withheld cows 4 and 12 score up to 0.77 and 0.78, and at a limit of 0.70 they would have been named in 286 of 8,103 appearances (3.5%). The night limit of 0.72 held by 0.02. By day the limit of 0.66 held by as much: at 0.64, 33 of 2,609 appearances (1.3%) would have been named.
+- **No limit would have passed the night video.** Between 0.56 and 0.74 the share of animals named stays between 48% and 55%: at lower limits the strangers claim enrolled cows' names, and a contested name is taken from both. Two enrolled cows score no higher there than two of the strangers.
+- **More photographs raised the strangers too.** The test herds were taught from 3,753 and 6,092 photographs, the validation herds from 2,016 and 3,442. A stranger compared with more photographs finds closer ones. The limits were chosen on smaller herds of photographs than they were tested on, and how they should move with the number of photographs was not measured.
 
 ## Limits
 
@@ -215,11 +275,12 @@ The test has not been run at this commit.
 - **Most of the herd was enrolled.** Ten of thirteen. Every unknown animal is a chance of a wrong name, and the margin against strangers was measured with three.
 - **Hundreds of confirmed photographs per cow**, over several days, by day and by night, which a farmer has to confirm. The publisher's crops stood in for them; they come from the same barn and cameras but were not taken by the application.
 - **A cow that is not found is not named.** Cows in the far row behind cubicle rails are missed even by the largest stock detector, and a box that touches the picture's edge is not used. On the first validation video that leaves two of ten enrolled cows unnamed for the whole video.
-- **Night is harder.** Infrared light hides red-and-white patterns; the night limit is higher for that reason and rests on fewer animals than a real herd has.
+- **Night is harder.** Infrared light hides red-and-white patterns. At night the test named half of the animals, and the limit that kept unknown animals out did so by a small margin.
+- **The limits depend on how many photographs are confirmed.** They were set with two to three and a half thousand and held, narrowly, with four to six thousand. Nothing here says where they belong for a herd with fewer or more.
 - **Names on animals the publisher did not box cannot be judged.** They are left out of the precision and counted in the conservative one.
 - **Learning needs a GPU and time.** After every change to the confirmed photographs the networks are taught again, which takes ten minutes to half an hour on an Apple GPU, and no name is shown meanwhile. The largest stock detector and the four networks together take about half a second per picture there.
 - **Weights.** The cattle starting weights were taught from datasets published for non-commercial research and are not hosted anywhere yet; the preset names an address that does not exist. MIEWid is downloaded from its publisher.
-- **Held out, not untouched.** Earlier work in this repository had scored another method on short windows of the test videos. The development figures for the second kind of network came from a trial script, not the application's code; the validation and test figures come from the application's code.
+- **Held out, not untouched, and now used.** Earlier work in this repository had scored another method on short windows of the test videos. The development figures for the second kind of network came from a trial script, not the application's code; the validation and test figures come from the application's code. Both test videos have now been seen by this method: a later version cannot be tested on them as on unseen video.
 
 ## Reproduce
 

@@ -1,0 +1,257 @@
+{
+ "visible_enrolled": 26752,
+ "visible_withheld": 8103,
+ "located_enrolled": 22732,
+ "located_withheld": 7408,
+ "correct": 13494,
+ "wrong_enrolled": 0,
+ "named_withheld": 1,
+ "named_unannotated": 295,
+ "unpaired_on_named": 64,
+ "unpaired_on_other": 7,
+ "unpaired_on_withheld": 1,
+ "unpaired_elsewhere": 1,
+ "unpaired_unjudged": 222,
+ "coverage": 0.5044108851674641,
+ "precision": 0.9992594786729858,
+ "precision_conservative": 0.978535170413343,
+ "withheld_named": 0.0002468221646303838,
+ "localization_recall": 0.8647252904891695,
+ "per_cow": {
+  "0": {
+   "visible": 3602,
+   "located": 3571
+  },
+  "1": {
+   "visible": 3541,
+   "located": 455
+  },
+  "3": {
+   "visible": 3495,
+   "located": 2966
+  },
+  "4": {
+   "visible": 1006,
+   "located": 886,
+   "named": 1
+  },
+  "5": {
+   "visible": 3602,
+   "located": 3393,
+   "correct": 3193
+  },
+  "6": {
+   "visible": 3083,
+   "located": 3065,
+   "correct": 2959
+  },
+  "7": {
+   "visible": 3197,
+   "located": 3132,
+   "correct": 1626
+  },
+  "8": {
+   "visible": 1689,
+   "located": 1653,
+   "correct": 1633
+  },
+  "9": {
+   "visible": 2756,
+   "located": 2436,
+   "correct": 702
+  },
+  "10": {
+   "visible": 209,
+   "located": 191,
+   "correct": 147
+  },
+  "11": {
+   "visible": 2632,
+   "located": 2565,
+   "correct": 1135
+  },
+  "12": {
+   "visible": 3602,
+   "located": 3556
+  },
+  "13": {
+   "visible": 2441,
+   "located": 2271,
+   "correct": 2099
+  }
+ },
+ "replay_matches_application": true,
+ "replay_differences": 0,
+ "stages": {
+  "visible": 26752,
+  "located": 22732,
+  "fit_crop": 22655,
+  "resembles_itself": 21985,
+  "accepted_candidate": 14153,
+  "unchallenged": 13742,
+  "shown": 13494
+ },
+ "stages_per_cow": {
+  "0": {
+   "visible": 3602,
+   "located": 3571,
+   "fit_crop": 3571,
+   "resembles_itself": 3447,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "1": {
+   "visible": 3541,
+   "located": 455,
+   "fit_crop": 455,
+   "resembles_itself": 441,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "5": {
+   "visible": 3602,
+   "located": 3393,
+   "fit_crop": 3393,
+   "resembles_itself": 3393,
+   "accepted_candidate": 3383,
+   "unchallenged": 3307,
+   "shown": 3193
+  },
+  "6": {
+   "visible": 3083,
+   "located": 3065,
+   "fit_crop": 3065,
+   "resembles_itself": 3054,
+   "accepted_candidate": 2942,
+   "unchallenged": 2938,
+   "shown": 2959
+  },
+  "7": {
+   "visible": 3197,
+   "located": 3132,
+   "fit_crop": 3132,
+   "resembles_itself": 2794,
+   "accepted_candidate": 1622,
+   "unchallenged": 1572,
+   "shown": 1626
+  },
+  "8": {
+   "visible": 1689,
+   "located": 1653,
+   "fit_crop": 1648,
+   "resembles_itself": 1648,
+   "accepted_candidate": 1640,
+   "unchallenged": 1638,
+   "shown": 1633
+  },
+  "9": {
+   "visible": 2756,
+   "located": 2436,
+   "fit_crop": 2408,
+   "resembles_itself": 2406,
+   "accepted_candidate": 1067,
+   "unchallenged": 867,
+   "shown": 702
+  },
+  "10": {
+   "visible": 209,
+   "located": 191,
+   "fit_crop": 170,
+   "resembles_itself": 169,
+   "accepted_candidate": 141,
+   "unchallenged": 141,
+   "shown": 147
+  },
+  "11": {
+   "visible": 2632,
+   "located": 2565,
+   "fit_crop": 2565,
+   "resembles_itself": 2393,
+   "accepted_candidate": 1214,
+   "unchallenged": 1142,
+   "shown": 1135
+  },
+  "13": {
+   "visible": 2441,
+   "located": 2271,
+   "fit_crop": 2248,
+   "resembles_itself": 2240,
+   "accepted_candidate": 2144,
+   "unchallenged": 2137,
+   "shown": 2099
+  }
+ },
+ "names_on_other_animals": {
+  "unannotated shown as 10": 14,
+  "unannotated shown as 7": 12,
+  "unannotated shown as 9": 262,
+  "unannotated shown as 8": 2,
+  "unannotated shown as 5": 1,
+  "unannotated shown as 13": 3,
+  "4 shown as 9": 1,
+  "unannotated shown as 6": 1
+ },
+ "tracking": {
+  "tracks_on_annotated_animals": 124,
+  "tracks_covering_two_animals": 6
+ },
+ "video": "video6",
+ "enrolled": [
+  0,
+  1,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  13
+ ],
+ "confirmed_photographs": 3753,
+ "confirmations": 2053,
+ "photographs_per_cow": {
+  "0": 381,
+  "1": 348,
+  "5": 438,
+  "6": 382,
+  "7": 315,
+  "8": 421,
+  "9": 476,
+  "10": 344,
+  "11": 337,
+  "13": 311
+ },
+ "latest_photograph": "20230827011922",
+ "device": "mps",
+ "learning_seconds": 955.8389168749563,
+ "frames": 3602,
+ "seconds_per_frame": {
+  "detect_and_track": {
+   "mean": 0.15747275923128304,
+   "p95": 0.19275662112049757,
+   "max": 0.41293833404779434
+  },
+  "identify": {
+   "mean": 0.3081906151995146,
+   "p95": 0.6438533315435051,
+   "max": 1.6170918750576675
+  },
+  "total": {
+   "mean": 0.46566337443079764,
+   "p95": 0.8377814377658068,
+   "max": 1.8533553332090378
+  }
+ },
+ "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+ "herd_weights_sha256": "f83a4bb6178c7394988db32cc2dc155c6dd51f04183b646e08e845001f5dcc26",
+ "animal_weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
+ "withheld": [
+  3,
+  4,
+  12
+ ],
+ "ignored": []
+}

@@ -83,6 +83,7 @@ def identity_scores(gallery, crops):
         gallery.owners,
         gallery.neighbours,
         gallery.parts,
+        gallery.share,
     )
     return np.array([[match.similarity for match in row] for row in matches])
 

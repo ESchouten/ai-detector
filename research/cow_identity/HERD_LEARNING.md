@@ -11,7 +11,7 @@
 
 What is shown here is one barn with thirteen cows. The refusal of unknown animals held by a smaller margin than development suggested (see [after the fact](#after-the-fact)), so this is not yet a method to rely on, and nothing in it speaks for other farms.
 
-The rest of this document is the record: how the method was developed, the protocol it was frozen under, and the test in detail.
+The rest of this document is the record: how the method was developed, the protocol it was frozen under, and the test in detail. Work done after the test is marked as such. One part of it changed what the application does: a cow is now scored by a share of her photographs instead of a fixed two, with the limits that follow ([the number of photographs](#the-number-of-photographs)). No unseen video is left to test that on.
 
 ## What changed against the earlier trials
 
@@ -267,7 +267,7 @@ After scoring, the recorded similarities were replayed at other limits ([file](h
 
 - **The margin against unknown animals was thinner than development showed.** In development and validation no stranger was named from a limit of 0.66 upward at night and 0.64 by day. In the night test video the withheld cows 4 and 12 score up to 0.77 and 0.78, and at a limit of 0.70 they would have been named in 286 of 8,103 appearances (3.5%). The night limit of 0.72 held by 0.02. By day the limit of 0.66 held by as much: at 0.64, 33 of 2,609 appearances (1.3%) would have been named.
 - **No limit would have passed the night video.** Between 0.56 and 0.74 the share of animals named stays between 48% and 55%: at lower limits the strangers claim enrolled cows' names, and a contested name is taken from both. Two enrolled cows score no higher there than two of the strangers.
-- **More photographs raised the strangers too.** The test herds were taught from 3,753 and 6,092 photographs, the validation herds from 2,016 and 3,442. A stranger compared with more photographs finds closer ones. The limits were chosen on smaller herds of photographs than they were tested on, and how they should move with the number of photographs was not measured.
+- **More photographs raised the strangers too.** The test herds were taught from 3,753 and 6,092 photographs, the validation herds from 2,016 and 3,442. A stranger compared with more photographs finds closer ones. The limits were chosen on smaller herds of photographs than they were tested on. Measured since, this accounts for the whole of the thin margin by day and for 0.02 of the night's ([the number of photographs](#the-number-of-photographs)).
 
 ## Names on another rule's events
 
@@ -312,7 +312,7 @@ The first kind of network starts from weights taught other farms' cows. They are
 
 By day the start makes no difference. At night it does: without cattle weights strangers score higher, the limit has to rise, and in the worst runs fewer than half of the animals are named. A fifth of one dataset with one view of the cow recovers part of that, and names 63–73% where the frozen weights name 67–85%.
 
-Beside the second kind, one cattle network names as many animals as three. Three are kept: in four of the eight runs the highest limit at which they named a stranger is 0.02–0.04 lower than one network's, and the test showed how little margin there is.
+Beside the second kind, one cattle network names as many animals as three. Three are kept: in four of the eight runs the highest limit at which they named a stranger is 0.02–0.04 lower than one network's, and replayed over the test videos one network falls under 99% precision by day ([below](#the-number-of-photographs)).
 
 ### MIEWid
 
@@ -327,6 +327,27 @@ The second kind is MIEWid as its publisher distributes it; neither the model car
 
 Alone, the ImageNet network cannot tell a stranger from the herd at any limit, and beside the cattle networks it does harm. What the second kind adds comes from having been taught to tell individual animals apart, not from its architecture. Neither kind does at night alone what the two do together.
 
+### The number of photographs
+
+The test scored a cow by her two most similar photographs. The more photographs she has, the closer the two nearest lie, for her own crops and for a stranger's alike, so limits chosen with one number of photographs are too low with more. In the eight development and validation runs, the highest limit at which a stranger or a wrong cow was named is 0.02 higher with all 170–440 photographs a cow than with 100 of them drawn at random in five runs, 0.06 higher in one and the same in two ([file](herd/results/development-nearest-share.json)).
+
+A cow is now scored by one in fifty of her photographs, the most similar ones, and never fewer than two. With all photographs that score puts the highest unsafe limit where two of 100 put it, to within 0.02 in every run. The scores come out about 0.02 lower than the tested ones, and the rule that set the frozen limits sets them 0.02 lower too, at 0.64 by day and 0.70 at night; development and validation then name the same share of animals as before, within two points in every run, and no stranger.
+
+For the test videos the crops were described again with the networks each run had taught ([`app_describe.py`](herd/app_describe.py)), which reproduces the recorded scores exactly, and scored both ways ([`rescore.py`](herd/rescore.py); [night](herd/results/test-video6-rescored.json), [day](herd/results/test-video5-rescored.json)). These are videos that were already scored: this explains the test, it is not a second one.
+
+| | Video 6, night, 311–476 photographs a cow | Video 5, day, 423–758 photographs a cow |
+| --- | --- | --- |
+| Two nearest, as tested: limit | 0.72 | 0.66 |
+| named, appearances of strangers named, precision | 50.4%, 2, 99.93% | 71.8%, 0, 99.05% |
+| highest limit that still names a stranger | 0.74 | 0.64 |
+| Nearest one in fifty: limit | 0.70 | 0.64 |
+| named, appearances of strangers named, precision | 50.3%, 0, 99.95% | 70.5%, 0, 99.23% |
+| highest limit that still names a stranger | 0.68 | 0.60 |
+
+By day the new score puts the test where development was: no stranger is named from 0.62 upward, as in development from 0.62. At night the strangers of the test video still score 0.06 above those of development, with either score. The number of photographs explains the day; it does not explain the night.
+
+With one cattle network in place of three, the same replay names 70.0% by day at 98.90% precision, under the criterion, and a stranger at the same limits as three.
+
 ### A processor alone
 
 Timed on the processor of the computer used here, an Apple M2 Max on eight threads, with its GPU left out and other work running beside it: a learning step takes 1.8 seconds for a cattle network and 15 seconds for the second kind, which for 2,016 photographs comes to about three and a half hours where the GPU took nine minutes. Finding and following the cows in one picture takes 1.0 second and describing ten of them 1.3 seconds, so a picture a second is out of reach. The method needs a GPU.
@@ -340,7 +361,7 @@ Learning has only ever run on an Apple GPU. It needs about 6 GB of graphics memo
 - **Hundreds of confirmed photographs per cow**, over several days, by day and by night, which a farmer has to confirm. The publisher's crops stood in for them; they come from the same barn and cameras but were not taken by the application.
 - **A cow that is not found is not named.** Cows in the far row behind cubicle rails are missed even by the largest stock detector, and a box that touches the picture's edge is not used. On the first validation video that leaves two of ten enrolled cows unnamed for the whole video.
 - **Night is harder.** Infrared light hides red-and-white patterns. At night the test named half of the animals, and the limit that kept unknown animals out did so by a small margin.
-- **The limits depend on how many photographs are confirmed.** They were set with two to three and a half thousand and held, narrowly, with four to six thousand. Nothing here says where they belong for a herd with fewer or more.
+- **The limits were tested with a score that depends on how many photographs are confirmed.** They were set with two to three and a half thousand and held, narrowly, with four to six thousand. The score now used does not move with that number between 100 and 760 photographs a cow; with fewer than 100 it does, and nothing was measured beyond 760.
 - **Names on animals the publisher did not box cannot be judged.** They are left out of the precision and counted in the conservative one.
 - **Learning needs a GPU and time.** After every change to the confirmed photographs the networks are taught again, which takes ten minutes to half an hour on an Apple GPU, and no name is shown meanwhile. The largest stock detector and the four networks together take about half a second per picture there. A processor alone needs hours to learn and seconds per picture, and no other kind of GPU has been tried ([above](#a-processor-alone)).
 - **Names on other rules' events were simulated.** No mounting video with known cows was available; see [above](#names-on-another-rules-events).
@@ -373,4 +394,4 @@ $python $herd/report.py $herd/results/test-video6.json $herd/results/test-video5
   --protocol $herd/protocol.json --output $herd/results/test.json
 ```
 
-The cattle starting weights come from [`auxiliary.py`](herd/auxiliary.py), which gathers the other farms' photographs, and [`pretrain.py`](herd/pretrain.py). Development used [`app_track.py`](herd/app_track.py) and [`app_scores.py`](herd/app_scores.py) for the rotations (`--either-side`), [`tune.py`](herd/tune.py) for the rules, [`app_localization.py`](herd/app_localization.py) for the detectors and [`similarity_study.py`](herd/similarity_study.py) for the ways of scoring. [`app_smoke.py`](herd/app_smoke.py) starts the whole application on a short clip. [`event_names.py`](herd/event_names.py) simulates the names on another rule's events from a run that `app_run.py` wrote, and [`mounting_live.py`](herd/mounting_live.py) plays the mounting example to the whole application as a camera. The tests beside the scripts run with `pytest` in that folder.
+The cattle starting weights come from [`auxiliary.py`](herd/auxiliary.py), which gathers the other farms' photographs, and [`pretrain.py`](herd/pretrain.py). Development used [`app_track.py`](herd/app_track.py) and [`app_scores.py`](herd/app_scores.py) for the rotations (`--either-side`), [`tune.py`](herd/tune.py) for the rules, [`app_localization.py`](herd/app_localization.py) for the detectors and [`similarity_study.py`](herd/similarity_study.py) for the ways of scoring. [`app_smoke.py`](herd/app_smoke.py) starts the whole application on a short clip. [`parts.py`](herd/parts.py) and [`parts_compare.py`](herd/parts_compare.py) compare ways of building the herd model, and [`app_describe.py`](herd/app_describe.py) with [`rescore.py`](herd/rescore.py) score a finished run another way. [`event_names.py`](herd/event_names.py) simulates the names on another rule's events from a run that `app_run.py` wrote, and [`mounting_live.py`](herd/mounting_live.py) plays the mounting example to the whole application as a camera. The tests beside the scripts run with `pytest` in that folder.

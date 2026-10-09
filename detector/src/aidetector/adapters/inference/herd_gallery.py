@@ -30,6 +30,10 @@ RECIPE = "cattle-dinov2-small-224-and-miewid-288-v4"
 MEMBERS = 3
 # One odd or wrongly confirmed photograph cannot carry a name on its own.
 NEIGHBOURS = 2
+# A cow is scored by one in fifty of her photographs, the most similar ones. A
+# fixed number would score every animal higher, strangers too, as she gains
+# photographs, and the limits would hold for one size of herd only.
+SHARE = 0.02
 
 
 def prepare_herd(
@@ -133,4 +137,5 @@ def prepare_herd(
         encoder,
         NEIGHBOURS,
         encoder.parts,
+        SHARE,
     )

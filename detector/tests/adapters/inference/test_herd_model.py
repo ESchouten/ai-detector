@@ -102,7 +102,7 @@ def test_learning_the_confirmed_photographs_tells_new_crops_apart(
 
     # Every confirmed photograph is a reference of its cow.
     assert gallery.owners == ((BELLA, "Bella"),) * 4 + ((DAISY, "Daisy"),) * 4
-    assert gallery.neighbours == 2
+    assert (gallery.neighbours, gallery.share) == (2, 0.02)
     # One part for the two cattle networks, scaled so that a dot product is
     # their mean, and one for the animal network.
     assert gallery.parts == (2 * 256, 2152)
@@ -119,6 +119,7 @@ def test_learning_the_confirmed_photographs_tells_new_crops_apart(
             gallery.owners,
             gallery.neighbours,
             gallery.parts,
+            gallery.share,
         )
     ]
     assert best == ["Bella", "Daisy"]

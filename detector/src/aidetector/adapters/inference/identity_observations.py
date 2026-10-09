@@ -41,9 +41,11 @@ def distinct_identity_scores(
     owners: tuple[tuple[str, str], ...],
     neighbours: int = 1,
     parts: tuple[int, ...] = (),
+    share: float = 0,
 ) -> list[list[IdentityMatch]]:
     """Compare all confirmed views, then score each cow by its nearest references.
 
+    The nearest are `share` of a cow's references and at least `neighbours`.
     Descriptions that lie side by side in a vector, `parts` wide each, are
     compared one by one: each finds its own nearest references of a cow, and
     the cow's score is their mean.
@@ -62,8 +64,9 @@ def distinct_identity_scores(
         columns.setdefault(owner, []).append(index)
     results: list[list[IdentityMatch]] = [[] for _ in vectors]
     for (identity_id, name), indices in columns.items():
+        count = max(neighbours, round(share * len(indices)))
         nearest = [
-            np.sort(part[:, indices], axis=1)[:, -neighbours:].mean(axis=1)
+            np.sort(part[:, indices], axis=1)[:, -count:].mean(axis=1)
             for part in similarities
         ]
         scores = np.clip(np.mean(nearest, axis=0), -1, 1)
@@ -278,6 +281,7 @@ class GalleryIdentifier:
                 gallery.owners,
                 gallery.neighbours,
                 gallery.parts,
+                gallery.share,
             )
         ]
 

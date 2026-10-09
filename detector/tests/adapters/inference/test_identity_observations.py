@@ -542,6 +542,25 @@ def test_a_score_can_be_the_mean_of_an_identitys_nearest_references():
     ]
 
 
+def test_the_nearest_references_can_be_a_share_of_all_an_identity_has():
+    # A hundred references of Bella at similarities 0.00 to 0.99, and one of Daisy.
+    angles = np.arccos(np.arange(100, dtype=np.float32) / 100)
+    gallery = np.concatenate(
+        [np.stack([np.cos(angles), np.sin(angles)], axis=1), [[0.6, 0.8]]]
+    ).astype(np.float32)
+    owners = ((BELLA, "Bella"),) * 100 + ((DAISY, "Daisy"),)
+    seen = np.asarray([[1, 0]], dtype=np.float32)
+
+    two = distinct_identity_scores(seen, gallery, owners, neighbours=2)
+    share = distinct_identity_scores(seen, gallery, owners, neighbours=2, share=0.05)
+
+    assert two[0][0].similarity == pytest.approx(0.985)
+    # One in twenty of a hundred references are five: 0.95 to 0.99.
+    assert share[0][0].similarity == pytest.approx(0.97)
+    # Daisy has fewer references than the least number, and keeps her one.
+    assert share[0][1].similarity == pytest.approx(0.6)
+
+
 def test_descriptions_side_by_side_are_scored_apart_and_then_averaged():
     # The first description finds Bella's first photograph, the second her
     # second: each takes its own nearest, a mix of the two would find neither.

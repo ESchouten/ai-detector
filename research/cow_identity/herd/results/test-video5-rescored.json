@@ -1,0 +1,1173 @@
+{
+ "note": "A run that was already scored, replayed with other ways of scoring. These explain a result; they are not results.",
+ "ways": {
+  "two nearest, as tested": [
+   {
+    "limit": 0.5,
+    "coverage": 0.6741913746630728,
+    "strangers_named": 508,
+    "strangers_named_share": 0.1947106170946723,
+    "wrongly_named": 159,
+    "precision": 0.9473684210526315
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.6697551662174304,
+    "strangers_named": 508,
+    "strangers_named_share": 0.1947106170946723,
+    "wrongly_named": 154,
+    "precision": 0.9474144094050362
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.6704290206648698,
+    "strangers_named": 505,
+    "strangers_named_share": 0.193560751245688,
+    "wrongly_named": 154,
+    "precision": 0.947690109541197
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.673292902066487,
+    "strangers_named": 499,
+    "strangers_named_share": 0.19126101954771943,
+    "wrongly_named": 148,
+    "precision": 0.9488011395109599
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.6738544474393531,
+    "strangers_named": 450,
+    "strangers_named_share": 0.17247987734764278,
+    "wrongly_named": 147,
+    "precision": 0.9526077637532746
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.6801999101527404,
+    "strangers_named": 344,
+    "strangers_named_share": 0.1318512840168647,
+    "wrongly_named": 140,
+    "precision": 0.961578153528618
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.6955862533692723,
+    "strangers_named": 134,
+    "strangers_named_share": 0.051360674587964734,
+    "wrongly_named": 144,
+    "precision": 0.9780497433872878
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.7092318059299192,
+    "strangers_named": 33,
+    "strangers_named_share": 0.012648524338827136,
+    "wrongly_named": 144,
+    "precision": 0.9861794331225111
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.7179357592093442,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 123,
+    "precision": 0.9904710257204834
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.7182165318957772,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 93,
+    "precision": 0.9927811845067143
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.7210804132973945,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 48,
+    "precision": 0.9962758941733261
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.7141172506738545,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 8,
+    "precision": 0.9993713163064833
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.7011455525606469,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.603829739442947,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.5629492362982929,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.5108939802336029,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.47113656783468105,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.4199236298292902,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   }
+  ],
+  "nearest 2%": [
+   {
+    "limit": 0.5,
+    "coverage": 0.665038185085355,
+    "strangers_named": 485,
+    "strangers_named_share": 0.1858949789191261,
+    "wrongly_named": 155,
+    "precision": 0.9487302731715133
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.6675651392632524,
+    "strangers_named": 475,
+    "strangers_named_share": 0.18206209275584515,
+    "wrongly_named": 150,
+    "precision": 0.9500519459761848
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.6696990116801438,
+    "strangers_named": 447,
+    "strangers_named_share": 0.17133001149865848,
+    "wrongly_named": 143,
+    "precision": 0.952860338766379
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.6720013477088949,
+    "strangers_named": 331,
+    "strangers_named_share": 0.12686853200459947,
+    "wrongly_named": 143,
+    "precision": 0.9619001687967205
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.6794137466307277,
+    "strangers_named": 189,
+    "strangers_named_share": 0.07244154848600996,
+    "wrongly_named": 139,
+    "precision": 0.9736058582119579
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.690532345013477,
+    "strangers_named": 33,
+    "strangers_named_share": 0.012648524338827136,
+    "wrongly_named": 124,
+    "precision": 0.9873936084792034
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.7023809523809523,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 120,
+    "precision": 0.9904973075704783
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.7050763701707098,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 98,
+    "precision": 0.9922554133080449
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.7058063791554358,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 42,
+    "precision": 0.9966695741812703
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.6791329739442947,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 12,
+    "precision": 0.9990087559887659
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.675314465408805,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.5998427672955975,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.5253256963162624,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.5047169811320755,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.4774258760107817,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.34181266846361186,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.31457771787960465,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.15594115004492362,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   }
+  ],
+  "two nearest of at most 300": [
+   {
+    "limit": 0.5,
+    "coverage": 0.6588050314465409,
+    "strangers_named": 419,
+    "strangers_named_share": 0.16059793024147181,
+    "wrongly_named": 139,
+    "precision": 0.9545972335231896
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.6585242587601078,
+    "strangers_named": 417,
+    "strangers_named_share": 0.15983135300881565,
+    "wrongly_named": 137,
+    "precision": 0.9548896669652308
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.6621181491464511,
+    "strangers_named": 401,
+    "strangers_named_share": 0.15369873514756613,
+    "wrongly_named": 137,
+    "precision": 0.9563630464757887
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.665038185085355,
+    "strangers_named": 284,
+    "strangers_named_share": 0.10885396703717899,
+    "wrongly_named": 131,
+    "precision": 0.9661445586555719
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.6749213836477987,
+    "strangers_named": 168,
+    "strangers_named_share": 0.06439248754311996,
+    "wrongly_named": 127,
+    "precision": 0.9760435276920578
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.6949123989218329,
+    "strangers_named": 46,
+    "strangers_named_share": 0.01763127635109237,
+    "wrongly_named": 126,
+    "precision": 0.9862915437953296
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.7077156334231806,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 133,
+    "precision": 0.9895571608040201
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.7155772686433064,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 137,
+    "precision": 0.989363354037267
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.7146787960467206,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 93,
+    "precision": 0.9927457098283932
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.7042340521114105,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 69,
+    "precision": 0.994528152260111
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.7060871518418689,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 25,
+    "precision": 0.9980157155329789
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.6662174303683738,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.639937106918239,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.5604222821203954,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.5082547169811321,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.48450134770889486,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.39100404312668463,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.24146451033243485,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   }
+  ],
+  "two nearest of at most 200": [
+   {
+    "limit": 0.5,
+    "coverage": 0.6681828391734053,
+    "strangers_named": 463,
+    "strangers_named_share": 0.177462629359908,
+    "wrongly_named": 153,
+    "precision": 0.9507790651218537
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.6677336028751123,
+    "strangers_named": 458,
+    "strangers_named_share": 0.17554618627826754,
+    "wrongly_named": 152,
+    "precision": 0.951203903687705
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.6708782569631626,
+    "strangers_named": 437,
+    "strangers_named_share": 0.16749712533537753,
+    "wrongly_named": 146,
+    "precision": 0.9534716679968077
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.6727875112309074,
+    "strangers_named": 390,
+    "strangers_named_share": 0.14948256036795707,
+    "wrongly_named": 146,
+    "precision": 0.9571782375968683
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.6714398023360287,
+    "strangers_named": 199,
+    "strangers_named_share": 0.07627443464929091,
+    "wrongly_named": 139,
+    "precision": 0.9725091500610004
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.6800876010781671,
+    "strangers_named": 46,
+    "strangers_named_share": 0.01763127635109237,
+    "wrongly_named": 126,
+    "precision": 0.9859969062932509
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.6921608265947888,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 127,
+    "precision": 0.9898016542198667
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.7007524707996406,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 50,
+    "precision": 0.996009258520233
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.7051325247079964,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 24,
+    "precision": 0.9980923614974962
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.6866015274034142,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.6854222821203954,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.6457771787960467,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.5333557951482479,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.4990453728661276,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.4427785265049416,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.35023584905660377,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.32507861635220126,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.23843216531895778,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   }
+  ],
+  "two nearest of at most 100": [
+   {
+    "limit": 0.5,
+    "coverage": 0.6584119496855346,
+    "strangers_named": 469,
+    "strangers_named_share": 0.17976236105787657,
+    "wrongly_named": 136,
+    "precision": 0.9509326845093269
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.6612758310871518,
+    "strangers_named": 399,
+    "strangers_named_share": 0.15293215791490994,
+    "wrongly_named": 136,
+    "precision": 0.9565429290878077
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.666329739442947,
+    "strangers_named": 286,
+    "strangers_named_share": 0.10962054426983518,
+    "wrongly_named": 131,
+    "precision": 0.9660506390946837
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.6646451033243486,
+    "strangers_named": 183,
+    "strangers_named_share": 0.07014181678804139,
+    "wrongly_named": 131,
+    "precision": 0.974156378600823
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.6742475292003594,
+    "strangers_named": 79,
+    "strangers_named_share": 0.03027980068991951,
+    "wrongly_named": 116,
+    "precision": 0.9840190132765121
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.6921608265947888,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 110,
+    "precision": 0.9911547121260855
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.6814914645103325,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 123,
+    "precision": 0.9899665551839465
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.6868823000898473,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 92,
+    "precision": 0.9925348912690685
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.6850853548966757,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 53,
+    "precision": 0.9956745286868522
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.6816037735849056,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.6167452830188679,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.5969788858939802,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.5113432165318957,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.49932614555256066,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.4734389038634322,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.4499101527403414,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.32030548068283915,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.15858041329739442,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   }
+  ],
+  "one cattle network": [
+   {
+    "limit": 0.5,
+    "coverage": 0.6626235399820305,
+    "strangers_named": 482,
+    "strangers_named_share": 0.18474511307014183,
+    "wrongly_named": 167,
+    "precision": 0.9478672985781991
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.6624550763701708,
+    "strangers_named": 489,
+    "strangers_named_share": 0.18742813338443848,
+    "wrongly_named": 151,
+    "precision": 0.9485406448500442
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.66312893081761,
+    "strangers_named": 494,
+    "strangers_named_share": 0.18934457646607897,
+    "wrongly_named": 151,
+    "precision": 0.9482094106311225
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.66312893081761,
+    "strangers_named": 495,
+    "strangers_named_share": 0.18972786508240705,
+    "wrongly_named": 148,
+    "precision": 0.9483617089624157
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.6648697214734951,
+    "strangers_named": 484,
+    "strangers_named_share": 0.18551169030279802,
+    "wrongly_named": 148,
+    "precision": 0.949326491340603
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.6682951482479784,
+    "strangers_named": 458,
+    "strangers_named_share": 0.17554618627826754,
+    "wrongly_named": 144,
+    "precision": 0.9518515556266496
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.6698674752920036,
+    "strangers_named": 272,
+    "strangers_named_share": 0.10425450364124185,
+    "wrongly_named": 147,
+    "precision": 0.9660673793326855
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.6845799640610961,
+    "strangers_named": 82,
+    "strangers_named_share": 0.03142966653890379,
+    "wrongly_named": 141,
+    "precision": 0.9820364105042694
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.699966307277628,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 139,
+    "precision": 0.9889717549984132
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.7096248876909255,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 103,
+    "precision": 0.9919152276295133
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.7139487870619946,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 81,
+    "precision": 0.9936694021101993
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.7120395327942498,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 37,
+    "precision": 0.9970905087677912
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.6975516621743036,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 25,
+    "precision": 0.9979914838917008
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.639207097933513,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.5681154537286612,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.5077493261455526,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.4846698113207547,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.41481356693620847,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   }
+  ],
+  "cattle networks alone": [
+   {
+    "limit": 0.5,
+    "coverage": 0.660826594788859,
+    "strangers_named": 508,
+    "strangers_named_share": 0.1947106170946723,
+    "wrongly_named": 122,
+    "precision": 0.9491853524762058
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.6615004492362982,
+    "strangers_named": 508,
+    "strangers_named_share": 0.1947106170946723,
+    "wrongly_named": 122,
+    "precision": 0.9492344883158743
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.6620058400718778,
+    "strangers_named": 508,
+    "strangers_named_share": 0.1947106170946723,
+    "wrongly_named": 122,
+    "precision": 0.9492712778806667
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.6640835579514824,
+    "strangers_named": 508,
+    "strangers_named_share": 0.1947106170946723,
+    "wrongly_named": 121,
+    "precision": 0.9494981934965877
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.6662174303683738,
+    "strangers_named": 508,
+    "strangers_named_share": 0.1947106170946723,
+    "wrongly_named": 121,
+    "precision": 0.949651805010806
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.6679582210242587,
+    "strangers_named": 509,
+    "strangers_named_share": 0.19509390571100038,
+    "wrongly_named": 121,
+    "precision": 0.9497005988023952
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.669081311769991,
+    "strangers_named": 511,
+    "strangers_named_share": 0.19586048294365657,
+    "wrongly_named": 121,
+    "precision": 0.9496293934805132
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.6700920934411501,
+    "strangers_named": 511,
+    "strangers_named_share": 0.19586048294365657,
+    "wrongly_named": 120,
+    "precision": 0.949777141037886
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.6717205750224619,
+    "strangers_named": 511,
+    "strangers_named_share": 0.19586048294365657,
+    "wrongly_named": 118,
+    "precision": 0.9500436819950758
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.6691374663072777,
+    "strangers_named": 513,
+    "strangers_named_share": 0.19662706017631276,
+    "wrongly_named": 117,
+    "precision": 0.9497847919655668
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.6703167115902965,
+    "strangers_named": 515,
+    "strangers_named_share": 0.19739363740896895,
+    "wrongly_named": 111,
+    "precision": 0.9501711374671655
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.6730682839173405,
+    "strangers_named": 520,
+    "strangers_named_share": 0.19931008049060944,
+    "wrongly_named": 111,
+    "precision": 0.9499881112784339
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.6739106019766398,
+    "strangers_named": 512,
+    "strangers_named_share": 0.19624377155998468,
+    "wrongly_named": 108,
+    "precision": 0.9508755249187861
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.6772237196765498,
+    "strangers_named": 508,
+    "strangers_named_share": 0.1947106170946723,
+    "wrongly_named": 97,
+    "precision": 0.952230556652191
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.6798629829290207,
+    "strangers_named": 487,
+    "strangers_named_share": 0.1866615561517823,
+    "wrongly_named": 95,
+    "precision": 0.9541335014579557
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.6863769092542678,
+    "strangers_named": 430,
+    "strangers_named_share": 0.16481410502108088,
+    "wrongly_named": 69,
+    "precision": 0.9607766074516585
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.6948562443845463,
+    "strangers_named": 311,
+    "strangers_named_share": 0.11920275967803756,
+    "wrongly_named": 30,
+    "precision": 0.9731812819504522
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.674303683737646,
+    "strangers_named": 172,
+    "strangers_named_share": 0.06592564200843234,
+    "wrongly_named": 12,
+    "precision": 0.9849081364829396
+   }
+  ],
+  "second kind alone": [
+   {
+    "limit": 0.5,
+    "coverage": 0.706929469901168,
+    "strangers_named": 12,
+    "strangers_named_share": 0.0045994633959371405,
+    "wrongly_named": 148,
+    "precision": 0.9874499960781238
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.7093441150044923,
+    "strangers_named": 6,
+    "strangers_named_share": 0.0022997316979685703,
+    "wrongly_named": 135,
+    "precision": 0.9889610897987944
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.7088948787061995,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 128,
+    "precision": 0.9899623588456713
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.7134433962264151,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 100,
+    "precision": 0.9921905505661851
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.699966307277628,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 54,
+    "precision": 0.99568655643422
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.6677336028751123,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 8,
+    "precision": 0.9993276745945038
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.6369047619047619,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.5828279424977538,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.555986073674753,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.5509321653189577,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.528863432165319,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.4873652291105121,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.45625561545372867,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.351358939802336,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.2195642407906559,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.07507861635220126,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.07339398023360287,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.06497079964061096,
+    "strangers_named": 0,
+    "strangers_named_share": 0.0,
+    "wrongly_named": 0,
+    "precision": 1.0
+   }
+  ]
+ }
+}

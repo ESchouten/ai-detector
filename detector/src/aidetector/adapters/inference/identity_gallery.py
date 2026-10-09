@@ -15,10 +15,10 @@ from aidetector.adapters.inference.identity import EmbeddingCache, ImageEncoder
 class PreparedGallery:
     """Reference vectors with their owners and the encoder that describes new crops.
 
-    An identity's score is the mean of its `neighbours` most similar references.
-    A vector may hold several descriptions side by side, `parts` wide each;
-    every part then scores an identity by its own nearest references, and the
-    parts' scores are averaged.
+    An identity's score is the mean of its most similar references: `share`
+    of them, and at least `neighbours`. A vector may hold several descriptions
+    side by side, `parts` wide each; every part then scores an identity by its
+    own nearest references, and the parts' scores are averaged.
     """
 
     catalog: Catalog
@@ -27,6 +27,7 @@ class PreparedGallery:
     encoder: ImageEncoder
     neighbours: int
     parts: tuple[int, ...]
+    share: float
 
 
 def prepare_gallery(
@@ -55,4 +56,5 @@ def prepare_gallery(
         encoder,
         neighbours=1,
         parts=(encoder.dimension,),
+        share=0,
     )

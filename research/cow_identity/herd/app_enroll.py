@@ -7,9 +7,10 @@ stand in for the farmer: a photograph is confirmed as the cow whose box the
 application's box was paired with, and photographs of unpaired boxes and of
 cows that are not to be enrolled are left out.
 
-That gives a herd as a farmer would have it after reviewing those videos:
-many photographs of each animal from few moments, and none of a cow that was
-not in view.
+That gives the herd of a farmer who reviewed those videos without pause, the
+most the application can take of them: many photographs of each animal from
+few moments, and none of a cow that was not in view. The application's limit
+on photographs per hour is left out here.
 """
 
 import argparse

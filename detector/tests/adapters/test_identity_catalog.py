@@ -1,6 +1,6 @@
 import hashlib
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import numpy as np
@@ -82,6 +82,24 @@ def test_pending_limit_counts_only_unassigned_examples_and_recovers_after_review
     assert catalog.save_sighting(IMAGE, "camera", NOW, 4, IdentityMatch()) is None
     assert len(list((tmp_path / "sightings").glob("*.json"))) == 3
     assert (tmp_path / "catalog.json").read_bytes() == before
+
+
+def test_photographs_to_review_are_spread_over_the_hours(tmp_path):
+    catalog = IdentityCatalog(tmp_path, per_hour=2)
+
+    def photograph(minutes):
+        return catalog.save_sighting(
+            IMAGE, "camera", NOW + timedelta(minutes=minutes), 1, IdentityMatch()
+        )
+
+    assert photograph(0) and photograph(10)
+    # Two an hour: the animals followed for the rest of it are not photographed.
+    assert photograph(20) is None
+    assert photograph(59) is None
+    assert photograph(60)
+    assert photograph(65) is None
+    assert photograph(70)
+    assert len(list((tmp_path / "sightings").glob("*.json"))) == 4
 
 
 def test_live_catalog_reads_corrections_and_removal_without_altering_evidence(tmp_path):

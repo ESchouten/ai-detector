@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+from collections import deque
 from datetime import datetime
 from pathlib import Path
 from threading import Lock
@@ -58,9 +59,15 @@ class IdentityCatalog:
     """No predicted identity is ever written into the farmer-confirmed catalog."""
 
     # The web application tells the farmer when this many photos wait: its REVIEW_LIMIT.
-    def __init__(self, directory: Path, max_pending: int = 200):
+    def __init__(self, directory: Path, max_pending: int = 200, per_hour: int = 16):
         self.directory = directory
         self.max_pending = max_pending
+        # A herd is learned from many occasions, not from many photographs of
+        # one. Taken as fast as animals are followed, the photographs to review
+        # would all be of the minutes after a review; at this pace they are
+        # spread over half a day, the night included.
+        self.per_hour = per_hour
+        self._taken: deque[datetime] = deque()
         # Tracker numbers start again with every detector start; a sighting's
         # track means something only together with the run that numbered it.
         self._run = uuid4().hex
@@ -100,6 +107,11 @@ class IdentityCatalog:
         *,
         gallery_revision: int | None = None,
     ) -> str | None:
+        with self._lock:
+            while self._taken and (at - self._taken[0]).total_seconds() >= 3600:
+                self._taken.popleft()
+            if len(self._taken) >= self.per_hour:
+                return None
         catalog = self.load()
         enrolled = {sample for item in catalog.identities for sample in item.samples}
         with self._lock:
@@ -147,4 +159,5 @@ class IdentityCatalog:
                 raise
             finally:
                 temporary.unlink(missing_ok=True)
+            self._taken.append(at)
             return sample

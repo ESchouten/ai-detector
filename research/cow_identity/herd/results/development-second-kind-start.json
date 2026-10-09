@@ -1,0 +1,358 @@
+{
+ "MIEWid": {
+  "parts": "cattle:0,1,2+animal:3",
+  "limits": {
+   "day": 0.66,
+   "night": 0.72
+  },
+  "runs": {
+   "r1-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.66,
+    "coverage": 0.8513945380592679,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.62
+   },
+   "r2-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.66,
+    "coverage": 0.8193284472473155,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.58
+   },
+   "r3-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.66,
+    "coverage": 0.8030018761726079,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.58
+   },
+   "val-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.66,
+    "coverage": 0.6840414137807925,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.52
+   },
+   "r1-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.72,
+    "coverage": 0.7651269814215101,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.64
+   },
+   "r2-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.72,
+    "coverage": 0.8040296521573845,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.58
+   },
+   "r3-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.72,
+    "coverage": 0.6814186117005153,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.52
+   },
+   "val-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.72,
+    "coverage": 0.8266569555717407,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.62
+   }
+  }
+ },
+ "EfficientNetV2-M as published for ImageNet": {
+  "parts": "cattle:0,1,2+imagenet:5",
+  "limits": {
+   "day": 0.9,
+   "night": 0.96
+  },
+  "runs": {
+   "r1-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.9,
+    "coverage": 0.8300406740267287,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.86
+   },
+   "r2-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.9,
+    "coverage": 0.776717231975456,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.84
+   },
+   "r3-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.9,
+    "coverage": 0.7848655409631019,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.84
+   },
+   "val-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.9,
+    "coverage": 0.5033916458407711,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.66
+   },
+   "r1-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.96,
+    "coverage": 0.16294528719959092,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.88
+   },
+   "r2-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.96,
+    "coverage": 0.07964265348793005,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.88
+   },
+   "r3-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.96,
+    "coverage": 0.13943619278569264,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.74
+   },
+   "val-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.96,
+    "coverage": 0.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": null,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.86
+   }
+  }
+ },
+ "no second kind": {
+  "parts": "cattle:0,1,2",
+  "limits": {
+   "day": 0.86,
+   "night": 0.9
+  },
+  "runs": {
+   "r1-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.86,
+    "coverage": 0.8531377106333528,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.8
+   },
+   "r2-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.86,
+    "coverage": 0.8113175387762059,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.78
+   },
+   "r3-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.86,
+    "coverage": 0.7861163227016885,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.82
+   },
+   "val-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.86,
+    "coverage": 0.5251695822920386,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.68
+   },
+   "r1-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.9,
+    "coverage": 0.5437191068689279,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.82
+   },
+   "r2-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.9,
+    "coverage": 0.2892986124310967,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.82
+   },
+   "r3-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.9,
+    "coverage": 0.43679903000909365,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.78
+   },
+   "val-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.9,
+    "coverage": 0.5477057538237436,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.82
+   }
+  }
+ },
+ "MIEWid alone": {
+  "parts": "animal:3",
+  "limits": {
+   "day": 0.52,
+   "night": 0.66
+  },
+  "runs": {
+   "r1-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.52,
+    "coverage": 0.8413712957582801,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.46
+   },
+   "r2-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.52,
+    "coverage": 0.8043292994716209,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.48
+   },
+   "r3-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.52,
+    "coverage": 0.7890348134250573,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.44
+   },
+   "val-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.52,
+    "coverage": 0.6447697250981792,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.48
+   },
+   "r1-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.66,
+    "coverage": 0.4823589568774501,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.5
+   },
+   "r2-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.66,
+    "coverage": 0.2969017297091808,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.58
+   },
+   "r3-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.66,
+    "coverage": 0.45316762655350107,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.52
+   },
+   "val-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.66,
+    "coverage": 0.5054624908958485,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.44
+   }
+  }
+ }
+}

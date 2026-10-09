@@ -314,6 +314,19 @@ By day the start makes no difference. At night it does: without cattle weights s
 
 Beside the second kind, one cattle network names as many animals as three. Three are kept: in four of the eight runs the highest limit at which they named a stranger is 0.02–0.04 lower than one network's, and the test showed how little margin there is.
 
+### MIEWid
+
+The second kind is MIEWid as its publisher distributes it; neither the model card nor the repository states a licence. Its network is an EfficientNetV2-M, whose weights as published for ImageNet are under Apache-2.0. Started from those and adapted by the same recipe, it is of no use ([file](herd/results/development-second-kind-start.json)):
+
+| Second kind | Limits, day and night | Day: rotations 1–3, validation | Night: rotations 1–3, validation |
+| --- | --- | --- | --- |
+| MIEWid, as frozen | 0.66, 0.72 | 85%, 82%, 80%, 68% | 77%, 80%, 68%, 83% |
+| The same network as published for ImageNet | 0.90, 0.96 | 83%, 78%, 78%, 50% | 16%, 8%, 14%, 0% |
+| None: the three cattle networks alone | 0.86, 0.90 | 85%, 81%, 79%, 53% | 54%, 29%, 44%, 55% |
+| MIEWid alone | 0.52, 0.66 | 84%, 80%, 79%, 64% | 48%, 30%, 45%, 51% |
+
+Alone, the ImageNet network cannot tell a stranger from the herd at any limit, and beside the cattle networks it does harm. What the second kind adds comes from having been taught to tell individual animals apart, not from its architecture. Neither kind does at night alone what the two do together.
+
 ### A processor alone
 
 Timed on the processor of the computer used here, an Apple M2 Max on eight threads, with its GPU left out and other work running beside it: a learning step takes 1.8 seconds for a cattle network and 15 seconds for the second kind, which for 2,016 photographs comes to about three and a half hours where the GPU took nine minutes. Finding and following the cows in one picture takes 1.0 second and describing ten of them 1.3 seconds, so a picture a second is out of reach. The method needs a GPU.

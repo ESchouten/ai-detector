@@ -10,7 +10,9 @@ ROOT = Path(__file__).resolve().parent.parent
 
 class BuildConfigurationTest(unittest.TestCase):
     def test_velopack_cli_matches_the_runtime_package(self):
-        tools = json.loads((ROOT / ".config/dotnet-tools.json").read_text())
+        tools = json.loads(
+            (ROOT / "distribution/windows/dotnet-tools.json").read_text()
+        )
         packages = ET.parse(ROOT / "distribution/windows/Directory.Packages.props")
         runtime = packages.find(".//PackageVersion[@Include='Velopack']")
         self.assertEqual(tools["tools"]["vpk"]["version"], runtime.attrib["Version"])

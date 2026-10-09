@@ -82,7 +82,7 @@ def windows(folder: Path, version: str) -> Path:
         "--delta",
         "None",
     ]
-    subprocess.run(arguments, check=True)
+    subprocess.run(arguments, check=True, cwd=ASSETS / "windows")
     installer = folder.parent / f"AI-Detector-{version}-windows-x64-setup.exe"
     shutil.copy2(output / "AIDetector-win-Setup.exe", installer)
     return installer

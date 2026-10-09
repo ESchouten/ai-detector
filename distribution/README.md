@@ -26,7 +26,7 @@ The released detector and web executables kept `config.json`, `app.json` and `de
 
 ## Updates
 
-[Sparkle](https://sparkle-project.org/documentation/) updates the Mac application and [Velopack](https://docs.velopack.io/integrating/overview) installs and updates the Windows one. Their versions are pinned in `macos/build-launcher.sh`, `.config/dotnet-tools.json`, `windows/Directory.Packages.props` and the lockfiles.
+[Sparkle](https://sparkle-project.org/documentation/) updates the Mac application and [Velopack](https://docs.velopack.io/integrating/overview) installs and updates the Windows one. Their versions are pinned in `macos/build-launcher.sh`, `windows/dotnet-tools.json`, `windows/Directory.Packages.props` and the lockfiles.
 
 The native menu checks daily and on request, downloads after confirmation while monitoring keeps running, and then offers a restart. Nothing is installed or restarted silently. **Include preview updates** considers the newest build of either channel; it starts on for preview installations and off for official ones. Turning it off on Windows can install an older official release; the Mac keeps its preview until a newer official build exists, because Sparkle does not downgrade.
 
@@ -110,7 +110,7 @@ bun test ./web/desktop/host.test.ts
 Windows launcher checks:
 
 ```sh
-dotnet tool restore
+dotnet tool restore --tool-manifest distribution/windows/dotnet-tools.json
 dotnet restore distribution/windows/launcher-tests/Launcher.Tests.csproj --locked-mode
 dotnet build distribution/windows/launcher/Launcher.csproj --no-restore --configuration Release --warnaserror
 dotnet test distribution/windows/launcher-tests/Launcher.Tests.csproj --no-restore --configuration Release

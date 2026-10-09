@@ -16,7 +16,6 @@ on:
       - 'detector/.python-version'
       - 'detector/pyproject.toml'
       - 'detector/uv.lock'
-      - '.config/**'
       - '.github/**'
       - '.gitattributes'
   push:
@@ -35,7 +34,6 @@ on:
       - 'detector/.python-version'
       - 'detector/pyproject.toml'
       - 'detector/uv.lock'
-      - '.config/**'
       - '.github/**'
       - '.gitattributes'
   workflow_dispatch:

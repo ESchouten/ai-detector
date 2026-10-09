@@ -17,7 +17,7 @@ runs:
     - name: Restore Windows installer tool
       if: runner.os == 'Windows'
       shell: bash
-      run: dotnet tool restore
+      run: dotnet tool restore --tool-manifest distribution/windows/dotnet-tools.json
     - name: Install Linux desktop tools
       if: runner.os == 'Linux'
       shell: bash

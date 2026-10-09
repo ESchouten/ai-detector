@@ -11,7 +11,7 @@
 
 What is shown here is one barn with thirteen cows. The refusal of unknown animals held by a smaller margin than development suggested (see [after the fact](#after-the-fact)), so this is not yet a method to rely on, and nothing in it speaks for other farms.
 
-The rest of this document is the record: how the method was developed, the protocol it was frozen under, and the test in detail. Work done after the test is marked as such. One part of it changed what the application does: a cow is now scored by a share of her photographs instead of a fixed two, with the limits that follow ([the number of photographs](#the-number-of-photographs)). No unseen video is left to test that on.
+The rest of this document is the record: how the method was developed, the protocol it was frozen under, and the test in detail. Work done after the test is marked as such. Three parts of it changed what the application does: the recordings of other detectors carry the names of the cows in them ([names](#names-on-another-rules-events)); a cow is scored by a share of her photographs instead of a fixed two, with the limits that follow ([the number of photographs](#the-number-of-photographs)); and the photographs to review are taken over the hours instead of at once ([how many to start](#how-many-photographs-to-start)). No unseen video is left to test any of that on.
 
 ## What changed against the earlier trials
 

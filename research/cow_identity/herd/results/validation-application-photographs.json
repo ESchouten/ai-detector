@@ -1,0 +1,131 @@
+{
+ "as shipped": {
+  "parts": "cattle:0,1,2+animal:3@share",
+  "limits": {
+   "day": 0.64,
+   "night": 0.7
+  },
+  "runs": {
+   "r1-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.64,
+    "coverage": 0.8519755955839629,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.6
+   },
+   "r2-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.64,
+    "coverage": 0.8186466678029657,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.56
+   },
+   "r3-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.64,
+    "coverage": 0.7844486137169064,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.56
+   },
+   "val-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.64,
+    "coverage": 0.6758300606926098,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.48
+   },
+   "valapp-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.64,
+    "coverage": 0.2151139544182327,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.52
+   },
+   "valsession-video3": {
+    "light": "day",
+    "development": false,
+    "limit": 0.64,
+    "coverage": 0.0764403879064461,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.58
+   },
+   "r1-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.7,
+    "coverage": 0.7629111982273734,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.62
+   },
+   "r2-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.7,
+    "coverage": 0.7977570804029652,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.58
+   },
+   "r3-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.7,
+    "coverage": 0.6771749014852986,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.52
+   },
+   "val-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.7,
+    "coverage": 0.8419519300801165,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.62
+   },
+   "valapp-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.7,
+    "coverage": 0.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": null,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.66
+   },
+   "valsession-video4": {
+    "light": "night",
+    "development": false,
+    "limit": 0.7,
+    "coverage": 0.19733724472526232,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.56
+   }
+  }
+ }
+}

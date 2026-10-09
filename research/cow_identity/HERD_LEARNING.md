@@ -348,6 +348,33 @@ By day the new score puts the test where development was: no stranger is named f
 
 With one cattle network in place of three, the same replay names 70.0% by day at 98.90% precision, under the criterion, and a stranger at the same limits as three.
 
+### How many photographs to start
+
+The development record found tens of photographs a cow too few, with one network that named a cow by her direction. The system as it is now was taught again on the two validation herds thinned at random to a fixed number of photographs a cow ([`parts.py --photographs`](herd/parts.py), [file](herd/results/validation-fewer-photographs.json)); thinned so, they stay spread over the same three or four days. At the limits of the preset:
+
+| Photographs a cow | Video 1, day: named | highest limit that names a stranger or a wrong cow | Video 2, night: named | highest such limit |
+| --- | --- | --- | --- | --- |
+| All: 281–437 by day, 168–265 at night | 68% | 0.48 | 84% | 0.62 |
+| 200 | 64% | 0.44 | 76% | 0.64 |
+| 100 | 65% | 0.46 | 86% | 0.66 |
+| 50 | 60% | 0.42 | 79% | 0.62 |
+| 25 | 38% | 0.42 | 64% | 0.58 |
+
+No stranger and no wrong cow was named at any size. Fewer photographs cost names, slowly down to fifty a cow and steeply below, and by night they bring the strangers closer to the limit of 0.70. Each row is one learning of one herd.
+
+**From the application's own photographs.** The publisher's crops come from about fifty recordings of a cow a day, two crops from each. The application photographs every animal it follows once every thirty seconds, so a cow lying in one place gives 120 photographs of one occasion in an hour. [`app_enroll.py`](herd/app_enroll.py) makes the herd a farmer would have after reviewing a video: the application's own boxes of every followed animal, confirmed as the cow the publisher boxed there ([file](herd/results/validation-application-photographs.json)).
+
+| Herd confirmed from | Photographs, cows, confirmations | Checked on | Named | Highest unsafe limit |
+| --- | --- | --- | --- | --- |
+| Videos 3 and 4, half an hour each: another camera or another light | 567, 9, 22 | Video 1, day | 22% | 0.52 |
+| Video 4, half an hour: another camera | 296, 6, 9 | Video 2, night | 0% | 0.66 |
+| Video 5, an hour: the same camera and light, 23 days later | 546, 8, 38 | Video 3, day | 8% | 0.58 |
+| Video 6, an hour: the same camera and light, four days later | 825, 10, 81 | Video 4, night | 20% | 0.56 |
+
+Again nobody was named wrongly, but hardly anybody was named: 60–120 photographs of a cow from one or two occasions do less than 25 from many. What counts is on how many occasions a cow was photographed, over how many days, on each camera and by day and by night; the number of photographs counts for little.
+
+The application's collection works against that. It stops when 200 photographs wait for review, which with ten cows in view is after 15–22 minutes, and starts again when the farmer makes room. A farmer who reviews every morning gets a quarter of an hour of every morning and no photograph taken at night.
+
 ### A processor alone
 
 Timed on the processor of the computer used here, an Apple M2 Max on eight threads, with its GPU left out and other work running beside it: a learning step takes 1.8 seconds for a cattle network and 15 seconds for the second kind, which for 2,016 photographs comes to about three and a half hours where the GPU took nine minutes. Finding and following the cows in one picture takes 1.0 second and describing ten of them 1.3 seconds, so a picture a second is out of reach. The method needs a GPU.
@@ -358,7 +385,7 @@ Learning has only ever run on an Apple GPU. It needs about 6 GB of graphics memo
 
 - **One barn.** Thirteen Holstein cows, fixed cameras, three weeks. Nothing here says how the method does on another farm, breed, herd size or camera position.
 - **Most of the herd was enrolled.** Ten of thirteen. Every unknown animal is a chance of a wrong name, and the margin against strangers was measured with three.
-- **Hundreds of confirmed photographs per cow**, over several days, by day and by night, which a farmer has to confirm. The publisher's crops stood in for them; they come from the same barn and cameras but were not taken by the application.
+- **Photographs from many occasions**, over several days, by day and by night and on every camera, which a farmer has to confirm: fifty of a cow from dozens of occasions name most animals, hundreds from one afternoon almost none ([above](#how-many-photographs-to-start)). The test used the publisher's crops, which are spread like that. The application collects in bursts after each review, and a herd collected by the application over days has not been tried.
 - **A cow that is not found is not named.** Cows in the far row behind cubicle rails are missed even by the largest stock detector, and a box that touches the picture's edge is not used. On the first validation video that leaves two of ten enrolled cows unnamed for the whole video.
 - **Night is harder.** Infrared light hides red-and-white patterns. At night the test named half of the animals, and the limit that kept unknown animals out did so by a small margin.
 - **The limits were tested with a score that depends on how many photographs are confirmed.** They were set with two to three and a half thousand and held, narrowly, with four to six thousand. The score now used does not move with that number between 100 and 760 photographs a cow; with fewer than 100 it does, and nothing was measured beyond 760.

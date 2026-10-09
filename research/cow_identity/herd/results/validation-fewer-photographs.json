@@ -1,0 +1,171 @@
+{
+ "as shipped": {
+  "parts": "cattle:0,1,2+animal:3@share",
+  "limits": {
+   "day": 0.64,
+   "night": 0.7
+  },
+  "runs": {
+   "r1-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.64,
+    "coverage": 0.8519755955839629,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.6
+   },
+   "r2-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.64,
+    "coverage": 0.8186466678029657,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.56
+   },
+   "r3-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.64,
+    "coverage": 0.7844486137169064,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.56
+   },
+   "val-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.64,
+    "coverage": 0.6758300606926098,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.48
+   },
+   "valk200-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.64,
+    "coverage": 0.6419136022848982,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.44
+   },
+   "valk100-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.64,
+    "coverage": 0.6497679400214209,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.46
+   },
+   "valk50-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.64,
+    "coverage": 0.6022848982506248,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.42
+   },
+   "valk25-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.64,
+    "coverage": 0.3834344876829704,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.42
+   },
+   "r1-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.7,
+    "coverage": 0.7629111982273734,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.62
+   },
+   "r2-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.7,
+    "coverage": 0.7977570804029652,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.58
+   },
+   "r3-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.7,
+    "coverage": 0.6771749014852986,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.52
+   },
+   "val-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.7,
+    "coverage": 0.8419519300801165,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.62
+   },
+   "valk200-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.7,
+    "coverage": 0.7603787327021122,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.64
+   },
+   "valk100-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.7,
+    "coverage": 0.8550619082301529,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.66
+   },
+   "valk50-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.7,
+    "coverage": 0.7873270211216314,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.62
+   },
+   "valk25-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.7,
+    "coverage": 0.6387472687545521,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.58
+   }
+  }
+ }
+}

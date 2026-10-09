@@ -1,0 +1,866 @@
+[
+ {
+  "video": "mmcows-1200-cam1",
+  "visible_enrolled": 964,
+  "visible_withheld": 270,
+  "highest_limit_with_a_stranger_or_wrong_name": 0.68,
+  "limits": [
+   {
+    "limit": 0.4,
+    "coverage": 0.3153526970954357,
+    "precision": 0.7414634146341463,
+    "strangers_named": 91,
+    "wrongly_named": 15,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.42,
+    "coverage": 0.32053941908713696,
+    "precision": 0.7339667458432304,
+    "strangers_named": 98,
+    "wrongly_named": 14,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.44,
+    "coverage": 0.3288381742738589,
+    "precision": 0.7406542056074766,
+    "strangers_named": 99,
+    "wrongly_named": 12,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.46,
+    "coverage": 0.3329875518672199,
+    "precision": 0.7482517482517482,
+    "strangers_named": 96,
+    "wrongly_named": 12,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.48,
+    "coverage": 0.3329875518672199,
+    "precision": 0.7535211267605634,
+    "strangers_named": 97,
+    "wrongly_named": 8,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.5,
+    "coverage": 0.3008298755186722,
+    "precision": 0.7360406091370558,
+    "strangers_named": 95,
+    "wrongly_named": 9,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.245850622406639,
+    "precision": 0.7011834319526628,
+    "strangers_named": 92,
+    "wrongly_named": 9,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.21369294605809128,
+    "precision": 0.6912751677852349,
+    "strangers_named": 85,
+    "wrongly_named": 7,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.19294605809128632,
+    "precision": 0.6813186813186813,
+    "strangers_named": 80,
+    "wrongly_named": 7,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.18983402489626555,
+    "precision": 0.7093023255813954,
+    "strangers_named": 72,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.18568464730290457,
+    "precision": 0.7489539748953975,
+    "strangers_named": 57,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.1690871369294606,
+    "precision": 0.815,
+    "strangers_named": 34,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.15560165975103735,
+    "precision": 0.9803921568627451,
+    "strangers_named": 0,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.13278008298755187,
+    "precision": 0.9846153846153847,
+    "strangers_named": 0,
+    "wrongly_named": 2,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.1037344398340249,
+    "precision": 0.9803921568627451,
+    "strangers_named": 0,
+    "wrongly_named": 2,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.1016597510373444,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.0912863070539419,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.09024896265560166,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.08921161825726141,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.08713692946058091,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.07676348547717843,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.86,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.88,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.9,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   }
+  ]
+ },
+ {
+  "video": "mmcows-1200-cam2",
+  "visible_enrolled": 1137,
+  "visible_withheld": 227,
+  "highest_limit_with_a_stranger_or_wrong_name": 0.66,
+  "limits": [
+   {
+    "limit": 0.4,
+    "coverage": 0.25241864555848725,
+    "precision": 0.8466076696165191,
+    "strangers_named": 49,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.42,
+    "coverage": 0.2620932277924362,
+    "precision": 0.863768115942029,
+    "strangers_named": 44,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.44,
+    "coverage": 0.2638522427440633,
+    "precision": 0.9009009009009009,
+    "strangers_named": 30,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.46,
+    "coverage": 0.23658751099384345,
+    "precision": 0.9438596491228071,
+    "strangers_named": 12,
+    "wrongly_named": 4,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.48,
+    "coverage": 0.21372031662269128,
+    "precision": 0.9759036144578314,
+    "strangers_named": 3,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.5,
+    "coverage": 0.20932277924362358,
+    "precision": 0.9834710743801653,
+    "strangers_named": 1,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.19261213720316622,
+    "precision": 0.9864864864864865,
+    "strangers_named": 0,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.18469656992084432,
+    "precision": 0.9813084112149533,
+    "strangers_named": 1,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.14951627088830255,
+    "precision": 0.9826589595375722,
+    "strangers_named": 0,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.12049252418645559,
+    "precision": 0.9785714285714285,
+    "strangers_named": 0,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.09850483729111698,
+    "precision": 0.9739130434782609,
+    "strangers_named": 0,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.08795074758135445,
+    "precision": 0.970873786407767,
+    "strangers_named": 0,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.079155672823219,
+    "precision": 0.967741935483871,
+    "strangers_named": 0,
+    "wrongly_named": 3,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.06156552330694811,
+    "precision": 0.9859154929577465,
+    "strangers_named": 0,
+    "wrongly_named": 1,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.047493403693931395,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.03605980650835532,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.03430079155672823,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.0008795074758135445,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.86,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.88,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.9,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   }
+  ]
+ },
+ {
+  "video": "mmcows-1200-cam3",
+  "visible_enrolled": 1055,
+  "visible_withheld": 360,
+  "highest_limit_with_a_stranger_or_wrong_name": 0.58,
+  "limits": [
+   {
+    "limit": 0.4,
+    "coverage": 0.13364928909952606,
+    "precision": 0.6911764705882353,
+    "strangers_named": 31,
+    "wrongly_named": 32,
+    "names_that_cannot_be_judged": 1
+   },
+   {
+    "limit": 0.42,
+    "coverage": 0.14312796208530806,
+    "precision": 0.766497461928934,
+    "strangers_named": 25,
+    "wrongly_named": 21,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.44,
+    "coverage": 0.13744075829383887,
+    "precision": 0.838150289017341,
+    "strangers_named": 16,
+    "wrongly_named": 12,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.46,
+    "coverage": 0.13364928909952606,
+    "precision": 0.8597560975609756,
+    "strangers_named": 13,
+    "wrongly_named": 10,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.48,
+    "coverage": 0.12511848341232226,
+    "precision": 0.9103448275862069,
+    "strangers_named": 4,
+    "wrongly_named": 9,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.5,
+    "coverage": 0.11184834123222749,
+    "precision": 0.921875,
+    "strangers_named": 2,
+    "wrongly_named": 8,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.09194312796208531,
+    "precision": 0.9326923076923077,
+    "strangers_named": 0,
+    "wrongly_named": 7,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.07582938388625593,
+    "precision": 0.9302325581395349,
+    "strangers_named": 0,
+    "wrongly_named": 6,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.06255924170616113,
+    "precision": 0.9705882352941176,
+    "strangers_named": 0,
+    "wrongly_named": 2,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.061611374407582936,
+    "precision": 0.9848484848484849,
+    "strangers_named": 0,
+    "wrongly_named": 1,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.05308056872037915,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.04739336492890995,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.043601895734597156,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.03981042654028436,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.03033175355450237,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.029383886255924172,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.86,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.88,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.9,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   }
+  ]
+ },
+ {
+  "video": "mmcows-1200-cam4",
+  "visible_enrolled": 982,
+  "visible_withheld": 417,
+  "highest_limit_with_a_stranger_or_wrong_name": 0.58,
+  "limits": [
+   {
+    "limit": 0.4,
+    "coverage": 0.2515274949083503,
+    "precision": 0.7286135693215339,
+    "strangers_named": 70,
+    "wrongly_named": 22,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.42,
+    "coverage": 0.2637474541751528,
+    "precision": 0.7295774647887324,
+    "strangers_named": 70,
+    "wrongly_named": 26,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.44,
+    "coverage": 0.2769857433808554,
+    "precision": 0.7331536388140162,
+    "strangers_named": 71,
+    "wrongly_named": 28,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.46,
+    "coverage": 0.2820773930753564,
+    "precision": 0.7446236559139785,
+    "strangers_named": 76,
+    "wrongly_named": 19,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.48,
+    "coverage": 0.2820773930753564,
+    "precision": 0.8052325581395349,
+    "strangers_named": 61,
+    "wrongly_named": 6,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.5,
+    "coverage": 0.28411405295315684,
+    "precision": 0.8403614457831325,
+    "strangers_named": 52,
+    "wrongly_named": 1,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.52,
+    "coverage": 0.2790224032586558,
+    "precision": 0.845679012345679,
+    "strangers_named": 49,
+    "wrongly_named": 1,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.54,
+    "coverage": 0.26476578411405294,
+    "precision": 0.8414239482200647,
+    "strangers_named": 49,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.56,
+    "coverage": 0.23421588594704684,
+    "precision": 0.8582089552238806,
+    "strangers_named": 38,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.58,
+    "coverage": 0.23319755600814665,
+    "precision": 0.8773946360153256,
+    "strangers_named": 32,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.6,
+    "coverage": 0.23116089613034624,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.62,
+    "coverage": 0.22810590631364563,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.64,
+    "coverage": 0.23014256619144602,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.66,
+    "coverage": 0.17820773930753564,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.68,
+    "coverage": 0.15071283095723015,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.7,
+    "coverage": 0.1384928716904277,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.72,
+    "coverage": 0.10488798370672098,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.74,
+    "coverage": 0.04989816700610998,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.76,
+    "coverage": 0.048879837067209775,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.78,
+    "coverage": 0.014256619144602852,
+    "precision": 1.0,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.8,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.82,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.84,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.86,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.88,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   {
+    "limit": 0.9,
+    "coverage": 0.0,
+    "precision": null,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   }
+  ]
+ }
+]

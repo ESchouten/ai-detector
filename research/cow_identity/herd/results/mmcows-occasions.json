@@ -1,0 +1,274 @@
+{
+ "1": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "11:01:23",
+   "changes_since_the_last_photograph": 89
+  },
+  "14:00": {
+   "lying": true,
+   "unchanged_since": "11:01:23",
+   "changes_since_the_last_photograph": 89
+  },
+  "22:00": {
+   "lying": true,
+   "unchanged_since": "21:27:01",
+   "changes_since_the_last_photograph": 298
+  }
+ },
+ "2": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "11:22:24",
+   "changes_since_the_last_photograph": 115
+  },
+  "14:00": {
+   "lying": false,
+   "unchanged_since": "13:59:56",
+   "changes_since_the_last_photograph": 181
+  },
+  "22:00": {
+   "lying": true,
+   "unchanged_since": "21:06:07",
+   "changes_since_the_last_photograph": 399
+  }
+ },
+ "3": {
+  "12:00": {
+   "lying": false,
+   "unchanged_since": "11:59:51",
+   "changes_since_the_last_photograph": 265
+  },
+  "14:00": {
+   "lying": true,
+   "unchanged_since": "13:59:35",
+   "changes_since_the_last_photograph": 338
+  },
+  "22:00": {
+   "lying": true,
+   "unchanged_since": "20:45:32",
+   "changes_since_the_last_photograph": 821
+  }
+ },
+ "4": {
+  "12:00": {
+   "lying": false,
+   "unchanged_since": "11:59:53",
+   "changes_since_the_last_photograph": 36
+  },
+  "14:00": {
+   "lying": true,
+   "unchanged_since": "13:19:59",
+   "changes_since_the_last_photograph": 191
+  },
+  "22:00": {
+   "lying": false,
+   "unchanged_since": "21:41:38",
+   "changes_since_the_last_photograph": 467
+  }
+ },
+ "5": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "11:54:31",
+   "changes_since_the_last_photograph": 142
+  },
+  "14:00": {
+   "lying": true,
+   "unchanged_since": "11:54:31",
+   "changes_since_the_last_photograph": 142
+  },
+  "22:00": {
+   "lying": true,
+   "unchanged_since": "21:40:56",
+   "changes_since_the_last_photograph": 472
+  }
+ },
+ "6": {
+  "12:00": {
+   "lying": false,
+   "unchanged_since": "11:59:56",
+   "changes_since_the_last_photograph": 97
+  },
+  "14:00": {
+   "lying": false,
+   "unchanged_since": "13:56:35",
+   "changes_since_the_last_photograph": 231
+  },
+  "22:00": {
+   "lying": false,
+   "unchanged_since": "21:58:29",
+   "changes_since_the_last_photograph": 587
+  }
+ },
+ "7": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "11:28:23",
+   "changes_since_the_last_photograph": 76
+  },
+  "14:00": {
+   "lying": true,
+   "unchanged_since": "13:41:05",
+   "changes_since_the_last_photograph": 80
+  },
+  "22:00": {
+   "lying": true,
+   "unchanged_since": "19:25:40",
+   "changes_since_the_last_photograph": 377
+  }
+ },
+ "8": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "11:46:39",
+   "changes_since_the_last_photograph": 92
+  },
+  "14:00": {
+   "lying": false,
+   "unchanged_since": "13:59:27",
+   "changes_since_the_last_photograph": 226
+  },
+  "22:00": {
+   "lying": true,
+   "unchanged_since": "21:07:34",
+   "changes_since_the_last_photograph": 522
+  }
+ },
+ "9": {
+  "12:00": {
+   "lying": false,
+   "unchanged_since": "11:57:47",
+   "changes_since_the_last_photograph": 38
+  },
+  "14:00": {
+   "lying": false,
+   "unchanged_since": "13:58:59",
+   "changes_since_the_last_photograph": 106
+  },
+  "22:00": {
+   "lying": false,
+   "unchanged_since": "21:58:38",
+   "changes_since_the_last_photograph": 237
+  }
+ },
+ "10": {
+  "12:00": {
+   "lying": false,
+   "unchanged_since": "11:16:39",
+   "changes_since_the_last_photograph": 77
+  },
+  "14:00": {
+   "lying": true,
+   "unchanged_since": "12:17:19",
+   "changes_since_the_last_photograph": 82
+  },
+  "22:00": {
+   "lying": true,
+   "unchanged_since": "20:44:27",
+   "changes_since_the_last_photograph": 330
+  }
+ },
+ "11": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "11:12:56",
+   "changes_since_the_last_photograph": 161
+  },
+  "14:00": {
+   "lying": false,
+   "unchanged_since": "13:59:50",
+   "changes_since_the_last_photograph": 197
+  },
+  "22:00": {
+   "lying": true,
+   "unchanged_since": "20:01:01",
+   "changes_since_the_last_photograph": 452
+  }
+ },
+ "12": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "10:35:38",
+   "changes_since_the_last_photograph": 138
+  },
+  "14:00": {
+   "lying": false,
+   "unchanged_since": "13:59:53",
+   "changes_since_the_last_photograph": 227
+  },
+  "22:00": {
+   "lying": false,
+   "unchanged_since": "21:00:47",
+   "changes_since_the_last_photograph": 604
+  }
+ },
+ "13": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "11:48:05",
+   "changes_since_the_last_photograph": 98
+  },
+  "14:00": {
+   "lying": false,
+   "unchanged_since": "13:59:47",
+   "changes_since_the_last_photograph": 218
+  },
+  "22:00": {
+   "lying": true,
+   "unchanged_since": "21:35:29",
+   "changes_since_the_last_photograph": 654
+  }
+ },
+ "14": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "10:03:27",
+   "changes_since_the_last_photograph": 71
+  },
+  "14:00": {
+   "lying": true,
+   "unchanged_since": "13:12:53",
+   "changes_since_the_last_photograph": 123
+  },
+  "22:00": {
+   "lying": true,
+   "unchanged_since": "21:02:13",
+   "changes_since_the_last_photograph": 236
+  }
+ },
+ "15": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "10:38:45",
+   "changes_since_the_last_photograph": 110
+  },
+  "14:00": {
+   "lying": false,
+   "unchanged_since": "13:58:05",
+   "changes_since_the_last_photograph": 160
+  },
+  "22:00": {
+   "lying": false,
+   "unchanged_since": "21:59:26",
+   "changes_since_the_last_photograph": 478
+  }
+ },
+ "16": {
+  "12:00": {
+   "lying": true,
+   "unchanged_since": "11:22:47",
+   "changes_since_the_last_photograph": 235
+  },
+  "14:00": {
+   "lying": false,
+   "unchanged_since": "13:57:59",
+   "changes_since_the_last_photograph": 240
+  },
+  "22:00": {
+   "lying": false,
+   "unchanged_since": "21:42:50",
+   "changes_since_the_last_photograph": 656
+  }
+ }
+}

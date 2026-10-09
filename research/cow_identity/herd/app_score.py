@@ -41,41 +41,58 @@ def preset_rules(preset):
     )
 
 
-def score_run(path, frames_directory, labels_root, withheld, ignored=frozenset()):
-    run, classes, scores = load_run(path)
-    boxes = run["boxes"]
-    all_frames = [
-        frame["index"]
-        for frame in json.loads((Path(frames_directory) / "frames.json").read_text())["frames"]
-    ]
-    width, height = boxes[0]["frame_size"]
-    partner, visible, located, around = associate(
-        boxes,
-        all_frames,
+def labelled_frames(frames_directory):
+    """The frames the publisher boxed: all of a video, unless its index says which."""
+    index = json.loads((Path(frames_directory) / "frames.json").read_text())
+    return [frame["index"] for frame in index["frames"] if frame.get("labelled", True)]
+
+
+def paired(run, frames_directory, labels_root):
+    """Which recorded boxes are judged, and the publisher's animal each of those was paired with.
+
+    What the application showed in a frame without publisher boxes cannot be
+    judged and is not counted.
+    """
+    labelled = labelled_frames(frames_directory)
+    judged = set(labelled)
+    counted = [position for position, box in enumerate(run["boxes"]) if box["index"] in judged]
+    width, height = run["boxes"][0]["frame_size"]
+    return counted, associate(
+        [run["boxes"][position] for position in counted],
+        labelled,
         lambda index: frame_labels(labels_root, run["video"], index, width, height),
     )
+
+
+def replay(run, classes, scores, rules):
+    """The name and the stage the rules give every recorded box, judged or not."""
+    boxes = [{**box, "box": box["app_box"], "frame_size": box["app_size"]} for box in run["boxes"]]
+    occupied = {box["seconds"] for box in run["boxes"]}
+    return name_crops(
+        boxes,
+        scores,
+        classes,
+        rules,
+        [float(step) for step in range(run["frames"]) if float(step) not in occupied],
+    )
+
+
+def score_run(path, frames_directory, labels_root, withheld, ignored=frozenset()):
+    run, classes, scores = load_run(path)
+    counted, (partner, visible, located, around) = paired(run, frames_directory, labels_root)
+    boxes = [run["boxes"][position] for position in counted]
+    shown = [run["shown"][position] for position in counted]
     enrolled = set(classes)
     unexpected = set(visible) - enrolled - set(withheld) - set(ignored) - {DISPUTED}
     if unexpected:
         raise ValueError(f"Animals that are neither enrolled nor withheld: {unexpected}")
-    result = tally(
-        run["shown"], partner, visible, located, around, enrolled, {*ignored, DISPUTED}
-    )
-    replay_boxes = [
-        {**box, "box": box["app_box"], "frame_size": box["app_size"]} for box in boxes
-    ]
-    occupied = {box["seconds"] for box in boxes}
-    replayed, stages = name_crops(
-        replay_boxes,
-        scores,
-        classes,
-        preset_rules(run["preset"]),
-        [float(step) for step in range(run["frames"]) if float(step) not in occupied],
-    )
+    result = tally(shown, partner, visible, located, around, enrolled, {*ignored, DISPUTED})
+    replayed, stages = replay(run, classes, scores, preset_rules(run["preset"]))
     result["replay_matches_application"] = replayed == run["shown"]
     result["replay_differences"] = sum(
         first != second for first, second in zip(replayed, run["shown"], strict=True)
     )
+    stages = [stages[position] for position in counted]
     result["stages"] = funnel(stages, partner, visible, located, enrolled)
     result["stages_per_cow"] = {
         str(cow): funnel(stages, partner, visible, located, {cow})
@@ -83,7 +100,7 @@ def score_run(path, frames_directory, labels_root, withheld, ignored=frozenset()
         if visible[cow]
     }
     names_elsewhere = {}
-    for name, cow in zip(run["shown"], partner, strict=True):
+    for name, cow in zip(shown, partner, strict=True):
         if name is not None and cow != name and cow not in ignored and cow != DISPUTED:
             key = f"{'unannotated' if cow is None else cow} shown as {name}"
             names_elsewhere[key] = names_elsewhere.get(key, 0) + 1

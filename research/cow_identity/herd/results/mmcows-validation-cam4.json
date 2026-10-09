@@ -1,0 +1,264 @@
+{
+ "visible_enrolled": 982,
+ "visible_withheld": 417,
+ "located_enrolled": 550,
+ "located_withheld": 280,
+ "correct": 226,
+ "wrong_enrolled": 0,
+ "named_withheld": 0,
+ "named_unannotated": 0,
+ "unpaired_on_named": 0,
+ "unpaired_on_other": 0,
+ "unpaired_on_withheld": 0,
+ "unpaired_elsewhere": 0,
+ "unpaired_unjudged": 0,
+ "coverage": 0.23014256619144602,
+ "precision": 1.0,
+ "precision_conservative": 1.0,
+ "withheld_named": 0.0,
+ "localization_recall": 0.5932809149392423,
+ "per_cow": {
+  "1": {
+   "visible": 120,
+   "located": 32
+  },
+  "2": {
+   "visible": 60,
+   "located": 1
+  },
+  "3": {
+   "visible": 120,
+   "located": 120,
+   "correct": 107
+  },
+  "4": {
+   "visible": 120,
+   "located": 108
+  },
+  "5": {
+   "visible": 60,
+   "located": 33
+  },
+  "6": {
+   "visible": 119,
+   "located": 103
+  },
+  "7": {
+   "visible": 120,
+   "located": 10
+  },
+  "8": {
+   "visible": 120,
+   "located": 119
+  },
+  "9": {
+   "visible": 120,
+   "located": 108,
+   "correct": 69
+  },
+  "10": {
+   "visible": 69,
+   "located": 65,
+   "correct": 50
+  },
+  "11": {
+   "visible": 10,
+   "located": 3
+  },
+  "12": {
+   "visible": 57,
+   "located": 0
+  },
+  "14": {
+   "visible": 64,
+   "located": 60
+  },
+  "15": {
+   "visible": 120,
+   "located": 15
+  },
+  "16": {
+   "visible": 120,
+   "located": 53
+  }
+ },
+ "replay_matches_application": true,
+ "replay_differences": 0,
+ "stages": {
+  "visible": 982,
+  "located": 550,
+  "fit_crop": 550,
+  "resembles_itself": 427,
+  "accepted_candidate": 131,
+  "unchallenged": 130,
+  "shown": 226
+ },
+ "stages_per_cow": {
+  "1": {
+   "visible": 120,
+   "located": 32,
+   "fit_crop": 32,
+   "resembles_itself": 26,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "2": {
+   "visible": 60,
+   "located": 1,
+   "fit_crop": 1,
+   "resembles_itself": 1,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "3": {
+   "visible": 120,
+   "located": 120,
+   "fit_crop": 120,
+   "resembles_itself": 120,
+   "accepted_candidate": 68,
+   "unchallenged": 68,
+   "shown": 107
+  },
+  "5": {
+   "visible": 60,
+   "located": 33,
+   "fit_crop": 33,
+   "resembles_itself": 1,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "6": {
+   "visible": 119,
+   "located": 103,
+   "fit_crop": 103,
+   "resembles_itself": 98,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "7": {
+   "visible": 120,
+   "located": 10,
+   "fit_crop": 10,
+   "resembles_itself": 3,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "9": {
+   "visible": 120,
+   "located": 108,
+   "fit_crop": 108,
+   "resembles_itself": 108,
+   "accepted_candidate": 57,
+   "unchallenged": 56,
+   "shown": 69
+  },
+  "10": {
+   "visible": 69,
+   "located": 65,
+   "fit_crop": 65,
+   "resembles_itself": 64,
+   "accepted_candidate": 6,
+   "unchallenged": 6,
+   "shown": 50
+  },
+  "11": {
+   "visible": 10,
+   "located": 3,
+   "fit_crop": 3,
+   "resembles_itself": 3,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "14": {
+   "visible": 64,
+   "located": 60,
+   "fit_crop": 60,
+   "resembles_itself": 3,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "15": {
+   "visible": 120,
+   "located": 15,
+   "fit_crop": 15,
+   "resembles_itself": 0,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  }
+ },
+ "names_on_other_animals": {},
+ "tracking": {
+  "tracks_on_annotated_animals": 68,
+  "tracks_covering_two_animals": 8
+ },
+ "video": "mmcows-1200-cam4",
+ "enrolled": [
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11,
+  13,
+  14,
+  15
+ ],
+ "confirmed_photographs": 4482,
+ "confirmations": 4482,
+ "photographs_per_cow": {
+  "1": 436,
+  "2": 382,
+  "3": 349,
+  "5": 438,
+  "6": 412,
+  "7": 390,
+  "9": 413,
+  "10": 388,
+  "11": 299,
+  "13": 417,
+  "14": 223,
+  "15": 335
+ },
+ "latest_photograph": "20230725075926",
+ "device": "mps",
+ "learning_seconds": 3.1377842500805855,
+ "frames": 1800,
+ "seconds_per_frame": {
+  "detect_and_track": {
+   "mean": 0.22148419105026393,
+   "p95": 0.23256836247164756,
+   "max": 0.2701589581556618
+  },
+  "identify": {
+   "mean": 0.27089061134692555,
+   "p95": 0.35227665409911424,
+   "max": 0.6033619581721723
+  },
+  "total": {
+   "mean": 0.49237480239718945,
+   "p95": 0.5789986210642383,
+   "max": 0.8304032911546528
+  }
+ },
+ "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+ "herd_weights_sha256": "883d0e94a13a0e300ef8b9eeaa002b52811d28dd44a85e685731481216360d82",
+ "animal_weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
+ "withheld": [
+  4,
+  8,
+  12,
+  16
+ ],
+ "ignored": []
+}

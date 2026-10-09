@@ -1,0 +1,90 @@
+{
+ "run-mmcows-1200-cam1.json": {
+  "enrolled_lying": {
+   "visible": 463,
+   "found": 174,
+   "named": 0
+  },
+  "enrolled_on_her_feet": {
+   "visible": 501,
+   "found": 484,
+   "named": 150
+  },
+  "withheld_lying": {
+   "visible": 151,
+   "found": 15,
+   "named": 0
+  },
+  "withheld_on_her_feet": {
+   "visible": 119,
+   "found": 118,
+   "named": 0
+  }
+ },
+ "run-mmcows-1200-cam2.json": {
+  "enrolled_lying": {
+   "visible": 658,
+   "found": 223,
+   "named": 13
+  },
+  "enrolled_on_her_feet": {
+   "visible": 479,
+   "found": 365,
+   "named": 77
+  },
+  "withheld_lying": {
+   "visible": 107,
+   "found": 61,
+   "named": 0
+  },
+  "withheld_on_her_feet": {
+   "visible": 120,
+   "found": 120,
+   "named": 0
+  }
+ },
+ "run-mmcows-1200-cam3.json": {
+  "enrolled_lying": {
+   "visible": 598,
+   "found": 226,
+   "named": 0
+  },
+  "enrolled_on_her_feet": {
+   "visible": 457,
+   "found": 307,
+   "named": 46
+  },
+  "withheld_lying": {
+   "visible": 240,
+   "found": 61,
+   "named": 0
+  },
+  "withheld_on_her_feet": {
+   "visible": 120,
+   "found": 119,
+   "named": 0
+  }
+ },
+ "run-mmcows-1200-cam4.json": {
+  "enrolled_lying": {
+   "visible": 481,
+   "found": 91,
+   "named": 0
+  },
+  "enrolled_on_her_feet": {
+   "visible": 501,
+   "found": 459,
+   "named": 226
+  },
+  "withheld_lying": {
+   "visible": 297,
+   "found": 172,
+   "named": 0
+  },
+  "withheld_on_her_feet": {
+   "visible": 120,
+   "found": 108,
+   "named": 0
+  }
+ }
+}

@@ -76,6 +76,13 @@
       "license": "In Copyright - Non-Commercial Use Permitted (http://rightsstatements.org/page/InC-NC/1.0/)",
       "use": "Tracking videos and identified crops for development, validation and test; nothing taught from it is distributed"
     },
+    "evaluation_second_farm": {
+      "name": "MmCows: Multimodal Dairy Cattle Dataset",
+      "source": "https://huggingface.co/datasets/neis-lab/mmcows",
+      "revision": "310667084905487154b66b2fe5fbaa992cf55e3a",
+      "license": "CC BY-NC-SA 4.0",
+      "use": "Pictures, boxes and behaviour labels of 25 July 2023 for the photographs, validation and test of a second farm (herd/mmcows.py); nothing taught from it is distributed"
+    },
     "cattle_starting_weights": {
       "use": "DINOv2-small taught 26,236 photographs of 287 cows of other farms (herd/auxiliary.py, herd/pretrain.py); local file, not distributed",
       "datasets": [
@@ -97,8 +104,28 @@
       ]
     },
     "cattle_starting_weights_any_use": {
-      "use": "DINOv2-small taught 10,639 parlour photographs of 105 cows (herd/auxiliary.py --any-use, herd/pretrain.py); local file, not distributed",
+      "use": "DINOv2-small taught 10,639 parlour photographs of 105 cows (herd/auxiliary.py --sources sideview, herd/pretrain.py); local file, not distributed",
       "datasets": [
+        {
+          "name": "SideViewCows2026",
+          "source": "https://zenodo.org/records/21605650",
+          "license": "CC BY 4.0"
+        }
+      ]
+    },
+    "cattle_starting_weights_without_mmcows": {
+      "use": "DINOv2-small taught 24,075 photographs of 376 cows of three other farms (herd/auxiliary.py --sources multicam cows2021 sideview, herd/pretrain.py), for herds evaluated on MmCows; local file, not distributed",
+      "datasets": [
+        {
+          "name": "MultiCamCows2024",
+          "source": "https://data.bris.ac.uk/data/dataset/2inu67jru7a6821kkgehxg3cv2",
+          "license": "Non-Commercial Government Licence for public sector information"
+        },
+        {
+          "name": "Cows2021",
+          "source": "https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7",
+          "license": "Non-Commercial Government Licence for public sector information"
+        },
         {
           "name": "SideViewCows2026",
           "source": "https://zenodo.org/records/21605650",

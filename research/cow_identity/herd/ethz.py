@@ -37,6 +37,11 @@ GAP = timedelta(hours=24)
 HELD_BACK = ("video1", "video2", "video5", "video6")
 
 
+def gap(video):
+    """How much older than a video its confirmed photographs must be: a day, unless it says otherwise."""
+    return timedelta(hours=VIDEOS[video].get("gap_hours", GAP.total_seconds() / 3600))
+
+
 def crop_time(row):
     return datetime.strptime(row["date"] + row["time"], "%Y%m%d%H%M%S")
 
@@ -71,7 +76,7 @@ def confirmed_before(rows, video, cows, either_side=False):
             for row in development_rows(rows)
             if row["cow"] in cows and not near(row, video)
         ]
-    return [row for row in rows if row["cow"] in cows and crop_time(row) <= start - GAP]
+    return [row for row in rows if row["cow"] in cows and crop_time(row) <= start - gap(video)]
 
 
 def classification_rows(root):

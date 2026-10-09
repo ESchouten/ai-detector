@@ -1,0 +1,242 @@
+{
+ "visible_enrolled": 964,
+ "visible_withheld": 270,
+ "located_enrolled": 658,
+ "located_withheld": 133,
+ "correct": 150,
+ "wrong_enrolled": 3,
+ "named_withheld": 0,
+ "named_unannotated": 1,
+ "unpaired_on_named": 1,
+ "unpaired_on_other": 0,
+ "unpaired_on_withheld": 0,
+ "unpaired_elsewhere": 0,
+ "unpaired_unjudged": 0,
+ "coverage": 0.15560165975103735,
+ "precision": 0.9803921568627451,
+ "precision_conservative": 0.974025974025974,
+ "withheld_named": 0.0,
+ "localization_recall": 0.6410048622366289,
+ "per_cow": {
+  "2": {
+   "visible": 85,
+   "located": 0
+  },
+  "3": {
+   "visible": 120,
+   "located": 111,
+   "correct": 12
+  },
+  "4": {
+   "visible": 119,
+   "located": 118
+  },
+  "5": {
+   "visible": 64,
+   "located": 56
+  },
+  "6": {
+   "visible": 120,
+   "located": 117,
+   "correct": 40
+  },
+  "9": {
+   "visible": 119,
+   "located": 116,
+   "correct": 30
+  },
+  "10": {
+   "visible": 120,
+   "located": 82,
+   "correct": 63,
+   "wrong": 1
+  },
+  "11": {
+   "visible": 108,
+   "located": 106
+  },
+  "12": {
+   "visible": 119,
+   "located": 13
+  },
+  "13": {
+   "visible": 108,
+   "located": 3
+  },
+  "14": {
+   "visible": 120,
+   "located": 67,
+   "wrong": 2,
+   "correct": 5
+  },
+  "16": {
+   "visible": 32,
+   "located": 2
+  }
+ },
+ "replay_matches_application": true,
+ "replay_differences": 0,
+ "stages": {
+  "visible": 964,
+  "located": 658,
+  "fit_crop": 657,
+  "resembles_itself": 541,
+  "accepted_candidate": 126,
+  "unchallenged": 126,
+  "shown": 150
+ },
+ "stages_per_cow": {
+  "2": {
+   "visible": 85,
+   "located": 0,
+   "fit_crop": 0,
+   "resembles_itself": 0,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "3": {
+   "visible": 120,
+   "located": 111,
+   "fit_crop": 111,
+   "resembles_itself": 93,
+   "accepted_candidate": 10,
+   "unchallenged": 10,
+   "shown": 12
+  },
+  "5": {
+   "visible": 64,
+   "located": 56,
+   "fit_crop": 56,
+   "resembles_itself": 56,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "6": {
+   "visible": 120,
+   "located": 117,
+   "fit_crop": 117,
+   "resembles_itself": 95,
+   "accepted_candidate": 20,
+   "unchallenged": 20,
+   "shown": 40
+  },
+  "9": {
+   "visible": 119,
+   "located": 116,
+   "fit_crop": 116,
+   "resembles_itself": 101,
+   "accepted_candidate": 31,
+   "unchallenged": 31,
+   "shown": 30
+  },
+  "10": {
+   "visible": 120,
+   "located": 82,
+   "fit_crop": 82,
+   "resembles_itself": 68,
+   "accepted_candidate": 60,
+   "unchallenged": 60,
+   "shown": 63
+  },
+  "11": {
+   "visible": 108,
+   "located": 106,
+   "fit_crop": 105,
+   "resembles_itself": 93,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "13": {
+   "visible": 108,
+   "located": 3,
+   "fit_crop": 3,
+   "resembles_itself": 3,
+   "accepted_candidate": 3,
+   "unchallenged": 3,
+   "shown": 0
+  },
+  "14": {
+   "visible": 120,
+   "located": 67,
+   "fit_crop": 67,
+   "resembles_itself": 32,
+   "accepted_candidate": 2,
+   "unchallenged": 2,
+   "shown": 5
+  }
+ },
+ "names_on_other_animals": {
+  "14 shown as 13": 2,
+  "unannotated shown as 10": 1,
+  "10 shown as 13": 1
+ },
+ "tracking": {
+  "tracks_on_annotated_animals": 48,
+  "tracks_covering_two_animals": 5
+ },
+ "video": "mmcows-1200-cam1",
+ "enrolled": [
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11,
+  13,
+  14,
+  15
+ ],
+ "confirmed_photographs": 4482,
+ "confirmations": 4482,
+ "photographs_per_cow": {
+  "1": 436,
+  "2": 382,
+  "3": 349,
+  "5": 438,
+  "6": 412,
+  "7": 390,
+  "9": 413,
+  "10": 388,
+  "11": 299,
+  "13": 417,
+  "14": 223,
+  "15": 335
+ },
+ "latest_photograph": "20230725075926",
+ "device": "mps",
+ "learning_seconds": 1636.477335375268,
+ "frames": 1800,
+ "seconds_per_frame": {
+  "detect_and_track": {
+   "mean": 0.21969510920959728,
+   "p95": 0.24786389004439116,
+   "max": 0.559309583157301
+  },
+  "identify": {
+   "mean": 0.2457994390575621,
+   "p95": 0.3585905340500176,
+   "max": 0.6700214170850813
+  },
+  "total": {
+   "mean": 0.46549454826715936,
+   "p95": 0.5985188875114545,
+   "max": 0.9100675829686224
+  }
+ },
+ "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+ "herd_weights_sha256": "883d0e94a13a0e300ef8b9eeaa002b52811d28dd44a85e685731481216360d82",
+ "animal_weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
+ "withheld": [
+  4,
+  8,
+  12,
+  16
+ ],
+ "ignored": []
+}

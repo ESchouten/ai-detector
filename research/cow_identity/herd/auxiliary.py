@@ -116,29 +116,18 @@ def from_masks(root, subset, per_identity, source, output):
     return rows
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--datasets", type=Path, required=True)
-    parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument(
-        "--any-use",
-        action="store_true",
-        help="Only SideViewCows2026, published under CC BY 4.0; the others forbid commercial use",
-    )
-    arguments = parser.parse_args()
-    data, output = arguments.datasets, arguments.output
-    if arguments.any_use:
-        report(from_masks(data / "SideViewCows2026", "parlor", 240, "sideview", output), output)
-        return
-    rows = from_zip(
+SOURCES = {
+    # MmCows, CC BY-NC-SA 4.0: one pen of sixteen cows, lying and standing.
+    "mmcows": lambda data, output: from_zip(
         data / "mmcows" / "cropped_bboxes.zip",
         r"cropped_bboxes/(standing|lying)/(\d+)/[^/]+\.jpg$",
         lambda match: (int(match[2]), match[1]),
         400,
         "mmcows",
         output,
-    )
-    rows += from_folders(
+    ),
+    # MultiCamCows2024, Non-Commercial Government Licence: three cameras, seven days.
+    "multicam": lambda data, output: from_folders(
         data
         / "MultiCamCows2024"
         / "extracted"
@@ -147,16 +136,39 @@ def main():
         80,
         "multicam",
         output,
-    )
-    rows += from_zip(
+    ),
+    # Cows2021, Non-Commercial Government Licence: seen from above.
+    "cows2021": lambda data, output: from_zip(
         data / "Cows2021" / "Cows2021.zip",
         r"Identification/Test/(\d+)/[^/]+\.jpg$",
         lambda match: (int(match[1]), "top"),
         40,
         "cows2021",
         output,
+    ),
+    # SideViewCows2026, CC BY 4.0: the right side, at a parlour entrance.
+    "sideview": lambda data, output: from_masks(
+        data / "SideViewCows2026", "parlor", 240, "sideview", output
+    ),
+}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--datasets", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--sources",
+        nargs="+",
+        choices=SOURCES,
+        default=["mmcows", "multicam", "cows2021"],
+        help="A herd evaluated on one of these farms must start from weights taught without it",
     )
-    report(rows, output)
+    arguments = parser.parse_args()
+    rows = []
+    for source in arguments.sources:
+        rows += SOURCES[source](arguments.datasets, arguments.output)
+    report(rows, arguments.output)
 
 
 def report(rows, output):

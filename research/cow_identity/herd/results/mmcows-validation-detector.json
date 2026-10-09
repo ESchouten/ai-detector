@@ -1,0 +1,49 @@
+{
+ "note": "Camera 3, the half hour from noon: the stock detector on pictures 1280 wide with a 1280-pixel input, as the preset has it, and on pictures 2560 wide with a 1920-pixel input.",
+ "preset": {
+  "seconds_per_frame_detector": {
+   "mean": 0.21762059415539717,
+   "p95": 0.2293807422276586,
+   "max": 0.2815507920458913
+  },
+  "enrolled_lying": {
+   "visible": 598,
+   "found": 226
+  },
+  "enrolled_on_her_feet": {
+   "visible": 457,
+   "found": 307
+  },
+  "withheld_lying": {
+   "visible": 240,
+   "found": 61
+  },
+  "withheld_on_her_feet": {
+   "visible": 120,
+   "found": 119
+  }
+ },
+ "pictures_2560_wide_input_1920": {
+  "seconds_per_frame_detector": {
+   "mean": 0.43248655524120444,
+   "p95": 0.4512473353883252,
+   "max": 0.5399347920902073
+  },
+  "enrolled_lying": {
+   "visible": 598,
+   "found": 201
+  },
+  "enrolled_on_her_feet": {
+   "visible": 457,
+   "found": 319
+  },
+  "withheld_lying": {
+   "visible": 240,
+   "found": 106
+  },
+  "withheld_on_her_feet": {
+   "visible": 120,
+   "found": 118
+  }
+ }
+}

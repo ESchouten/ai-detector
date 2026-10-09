@@ -9,9 +9,11 @@
 | At most 1% of unknown animals' appearances named | 0.02% | 0% | 0.02% |
 | 95% of frames within one second | 0.84 s | 0.32 s | |
 
-What is shown here is one barn with thirteen cows. The refusal of unknown animals held by a smaller margin than development suggested (see [after the fact](#after-the-fact)), so this is not yet a method to rely on, and nothing in it speaks for other farms.
+What is shown here is one barn with thirteen cows, whose cameras see a cow whole and seldom behind another. The refusal of unknown animals held by a smaller margin than development suggested (see [after the fact](#after-the-fact)), so this is not yet a method to rely on.
 
-The rest of this document is the record: how the method was developed, the protocol it was frozen under, and the test in detail. Work done after the test is marked as such. Three parts of it changed what the application does: the recordings of other detectors carry the names of the cows in them ([names](#names-on-another-rules-events)); a cow is scored by a share of her photographs instead of a fixed two, with the limits that follow ([the number of photographs](#the-number-of-photographs)); and the photographs to review are taken over the hours instead of at once ([how many to start](#how-many-photographs-to-start)). No unseen video is left to test any of that on.
+**On a second farm it does not work.** Taken afterwards to another public pen, where a cow is half as large in the picture and the herd lies side by side in the cubicles, the application named 12% of the animals in validation video, 4–23% by camera, and no unknown cow. Two in three lying cows are not found there, and the cows that are found are not told apart; a sharper picture helps with neither. That farm's test hours were not run ([a second farm](#a-second-farm)).
+
+The rest of this document is the record: how the method was developed, the protocol it was frozen under, and the test in detail. Work done after the test is marked as such. Three parts of it changed what the application does: the recordings of other detectors carry the names of the cows in them ([names](#names-on-another-rules-events)); a cow is scored by a share of her photographs instead of a fixed two, with the limits that follow ([the number of photographs](#the-number-of-photographs)); and the photographs to review are taken over the hours instead of at once ([how many to start](#how-many-photographs-to-start)). No unseen video of the first barn is left to test any of that on.
 
 ## What changed against the earlier trials
 
@@ -300,7 +302,7 @@ Added after the test, on development and validation video only. [`parts.py`](her
 
 ### The cattle starting weights
 
-The first kind of network starts from weights taught other farms' cows. They are a file of 89 MB that is not published anywhere, and the three datasets behind them forbid commercial use: MmCows under CC BY-NC-SA 4.0, MultiCamCows2024 and Cows2021 under the Non-Commercial Government Licence. Two other starts were tried ([file](herd/results/development-starting-weights.json)): DINOv2 as published, and weights taught the same way from SideViewCows2026 alone, which is under CC BY 4.0. Of that dataset 10,639 parlour photographs of 105 cows were on disk, a fifth of it, all taken from the right side (`auxiliary.py --any-use`).
+The first kind of network starts from weights taught other farms' cows. They are a file of 89 MB that is not published anywhere, and the three datasets behind them forbid commercial use: MmCows under CC BY-NC-SA 4.0, MultiCamCows2024 and Cows2021 under the Non-Commercial Government Licence. Two other starts were tried ([file](herd/results/development-starting-weights.json)): DINOv2 as published, and weights taught the same way from SideViewCows2026 alone, which is under CC BY 4.0. Of that dataset 10,639 parlour photographs of 105 cows were on disk, a fifth of it, all taken from the right side (`auxiliary.py --sources sideview`).
 
 | First kind starts from | Limits, day and night | Day: rotations 1–3, validation | Night: rotations 1–3, validation |
 | --- | --- | --- | --- |
@@ -313,6 +315,18 @@ The first kind of network starts from weights taught other farms' cows. They are
 By day the start makes no difference. At night it does: without cattle weights strangers score higher, the limit has to rise, and in the worst runs fewer than half of the animals are named. A fifth of one dataset with one view of the cow recovers part of that, and names 63–73% where the frozen weights name 67–85%.
 
 Beside the second kind, one cattle network names as many animals as three. Three are kept: in four of the eight runs the highest limit at which they named a stranger is 0.02–0.04 lower than one network's, and replayed over the test videos one network falls under 99% precision by day ([below](#the-number-of-photographs)).
+
+**Taught without MmCows.** A herd of the [second farm](#a-second-farm) cannot start from weights that were taught that farm's cows. For it the weights were taught again from MultiCamCows2024, Cows2021 and SideViewCows2026: 24,075 photographs of 376 cows (`auxiliary.py --sources multicam cows2021 sideview`). With a cow scored by one in fifty of her photographs, as the application now does ([file](herd/results/development-weights-without-mmcows.json)):
+
+| First kind starts from | Limits, day and night | Day: rotations 1–3, validation | Night: rotations 1–3, validation |
+| --- | --- | --- | --- |
+| The frozen cattle weights, three networks | 0.64, 0.70 | 85%, 82%, 78%, 68% | 76%, 80%, 68%, 84% |
+| Weights taught without MmCows, three networks | 0.62, 0.70 | 82%, 82%, 80%, 68% | 77%, 79%, 77%, 84% |
+| Those weights, one network | 0.66, 0.68 | 84%, 79%, 74%, 68% | 85%, 92%, 90%, 85% |
+| The same network taught in a second order | 0.66, 0.74 | 83%, 81%, 77%, 68% | 68%, 36%, 62%, 67% |
+| The same network taught in a third order | 0.64, 0.72 | 84%, 80%, 80%, 67% | 76%, 62%, 63%, 76% |
+
+Three networks from either start do equally well; the preset's limits serve both, and are 0.02 stricter by day than the rule asks of the new weights. The last three rows are one network taught three times from the same weights and the same photographs, in a different order. At night the highest limit at which it still names a stranger moves between 0.60 and 0.66 from one learning to the next, and the share of animals named at the limit that follows moves between 36% and 92%. That, more than the average, is why three networks are kept.
 
 ### MIEWid
 
@@ -383,19 +397,96 @@ Timed on the processor of the computer used here, an Apple M2 Max on eight threa
 
 Learning has only ever run on an Apple GPU. It needs about 6 GB of graphics memory beside the detector's own. An error in learning other than a missing file or a failed download ends the detector's process, and with it every other detector in that application until it is started again; too little graphics memory would be such an error and has not been tried.
 
+## A second farm
+
+Added after the test. Both test videos of the first barn are used, so no later version can be tested there as on unseen video. This section takes the application as it stands after the changes above to another public farm, under the same criteria. **It fails there on validation video already, far below the share of animals it has to name, and the two test hours set aside for it were not run.**
+
+### The pen
+
+[MmCows](https://huggingface.co/datasets/neis-lab/mmcows), under CC BY-NC-SA 4.0, films one pen of sixteen Holstein cows for two weeks in July 2023, with four cameras that look into it from its corners. For one day, 25 July, the publisher boxed and numbered every cow in every fifteenth second of every camera from three in the night until midnight, wrote down what each cow did in every second, and published every camera's picture of every second. [`mmcows.py`](herd/mmcows.py) reads what is needed of it over the network.
+
+| | The first barn | This pen |
+| --- | --- | --- |
+| Cows | 13, some red-and-white | 16, all black-and-white |
+| A cow's longer side in the picture the application analyses | typically 220–320 pixels | typically 110–180 pixels |
+| Appearances in which more than half of a cow's box lies inside another cow's | 0–10% | 20–57% |
+| Night | infrared | lamps: the pictures keep their colour, so the night limit does not apply |
+| Confirmed photographs | at least a day older than the video | of the same morning |
+
+**Pictures.** A camera's picture is 4480 by 2800 pixels and is shrunk to the 1280 the application analyses. The publisher blacked out everything outside the pen in the pictures it labelled and boxed only the pen's cows; the pictures of every second show the neighbouring pens too, whose cows nobody numbered. The same area is blacked out here before the application sees a picture. The application has no such mask: without it, it would find those cows as well, and no label could judge a name on them.
+
+**Photographs.** Cows are numbered on one day only, so the photographs cannot be a day older than the video. They are the publisher's boxes from 02:57 to 08:00, of every eighth labelled picture, which is one every two minutes, from all four cameras, cut as large as the application's picture shows them: 4,482 photographs of twelve cows, 223 to 438 of each, by lamp light and by daylight. No video starts before noon. The first barn asked for a day because a cow can lie in one place for hours; by the publisher's record of what each cow did, no cow is in a video as she was photographed. Between eight and noon every cow changed what she was doing at least 36 times, and the longest unbroken stretch that reaches into a video began at 10:03 ([`mmcows.py occasions`](herd/mmcows.py), [file](herd/results/mmcows-occasions.json)).
+
+**Cows.** Every fourth cow by the publisher's number, 4, 8, 12 and 16, is withheld. The other twelve are enrolled.
+
+**Starting weights.** The frozen cattle weights had been taught MmCows photographs of this very day, so they were taught again without it ([above](#the-cattle-starting-weights)). MIEWid's publisher describes it as taught 64 species of wildlife, and the list it gives has no cattle.
+
+**Videos.** Validation is the half hour from noon and the hour from 14:00; the test would have been the hours from 17:00 and from 22:00, each on all four cameras. The herd is milked between 15:30 and 16:10, so by 17:00 no cow lies where she lay in a validation video. The application sees a picture a second, as in the first barn. What it shows is judged in the pictures the publisher boxed, one in fifteen.
+
+### Validation
+
+The half hour from noon ran through the application's code with the shipped preset, alone on the Apple GPU ([camera 1](herd/results/mmcows-validation-cam1.json), [2](herd/results/mmcows-validation-cam2.json), [3](herd/results/mmcows-validation-cam3.json), [4](herd/results/mmcows-validation-cam4.json)). The replay reproduced every shown name. Learning the herd took 27 minutes.
+
+| | Camera 1 | Camera 2 | Camera 3 | Camera 4 | All four |
+| --- | --- | --- | --- | --- | --- |
+| Appearances of enrolled cows | 964 | 1,137 | 1,055 | 982 | 4,138 |
+| Found by the detector | 658 (68%) | 588 (52%) | 533 (51%) | 550 (56%) | 2,329 (56%) |
+| Resembling their own cow most | 541 | 471 | 345 | 427 | 1,784 |
+| Similar enough for a name | 126 | 75 | 33 | 131 | 365 |
+| Named correctly | 150 (15.6%) | 90 (7.9%) | 46 (4.4%) | 226 (23.0%) | 512 (**12.4%**) |
+| Named wrongly | 3 | 3 | 0 | 0 | 6 |
+| Appearances of withheld cows, of which named | 270, 0 | 227, 0 | 360, 0 | 417, 0 | 1,274, 0 |
+| Precision | 98.0% | 96.8% | 100% | 100% | 98.8% |
+| Seconds per frame: mean, 95th percentile, slowest | 0.47, 0.60, 0.91 | 0.49, 0.60, 0.86 | 0.45, 0.55, 0.64 | 0.49, 0.58, 0.83 | |
+
+Where 60% of the appearances have to be named, 4–23% are. No unknown cow was named and every frame was handled within a second. Six names are wrong, which leaves the precision under 99% in two cameras and in the four together. More appearances are named than are similar enough, because a confirmed name is held through weaker crops.
+
+With validation this far from the criteria, the hour from 14:00 was not run, and neither were the two test hours: they would have added a failure and used up the only unseen video of this farm. The hours from 17:00 and from 22:00 have not been shown to the application; their pictures were fetched and, for one camera, their labels counted.
+
+### Why so few
+
+**It is not the limit.** [`app_limits.py`](herd/app_limits.py) replays the four runs at other limits ([file](herd/results/mmcows-validation-limits.json)). At its best limit a camera names 33%, 26%, 14% and 28% of the appearances, and those limits, between 0.42 and 0.50, name dozens of strangers and wrong cows. Nor is the preset's limit safe here: one camera still names a wrong cow at 0.68.
+
+**Lying cows are not found.** By the publisher's record, 53% of the enrolled cows' appearances in that half hour are of a cow lying down. They lie side by side in the cubicles and are seen from the side through the rails ([`mmcows.py postures`](herd/mmcows.py), [file](herd/results/mmcows-validation-postures.json)):
+
+| Enrolled cows | Appearances | Found | Named correctly |
+| --- | --- | --- | --- |
+| Lying | 2,200 | 714 (32%) | 13 (0.6%) |
+| On their feet | 1,938 | 1,615 (83%) | 499 (26%) |
+
+The stock detector draws one box around several lying cows, or none. A larger input does not change that: on camera 3, with pictures twice as wide and a 1920-pixel input, it finds 37% of the lying cows instead of 34% and 76% of those on their feet instead of 74%, and takes 0.43 seconds a picture instead of 0.22 ([file](herd/results/mmcows-validation-detector.json)).
+
+**The cows that are found are not told apart.** To set the detector aside, one network of each kind was taught from the morning's photographs and asked about the publisher's own boxes of that half hour, every other labelled picture: 2,066 crops of enrolled cows and 637 of withheld ones ([`mmcows_boxes.py`](herd/mmcows_boxes.py), [file](herd/results/mmcows-validation-boxes.json)). Photographs and crops were cut from pictures of three widths:
+
+| Picture width | Crops that resemble their own cow most: all, lying, on her feet | Crops that also score above 99 in 100 strangers' crops |
+| --- | --- | --- |
+| 1280 pixels, as the application analyses | 66%, 52%, 82% | 25% |
+| 2560 pixels | 68%, 56%, 83% | 23% |
+| 4480 pixels, the camera's own | 68%, 55%, 82% | 23% |
+
+In the first barn's test videos 97% and 99% of the crops fit to be evidence resembled their own cow most. Here a third do not, with every cow boxed by hand, and the camera's full resolution changes nothing: what the method lacks in this pen is not pixels but a view of the cow. Seen from a corner of the pen, a lying cow shows a strip of back between her neighbours and the cubicle rails, and a standing one is often half behind another.
+
+**More photographs do not close the gap.** With the publisher's boxes of 18:00 to 22:00 added to the morning's, which lie between the two test hours and after the video they are asked about, there are 8,484 photographs in place of 4,482. Then 76% of the crops resemble their own cow most, 64% of the lying and 89% of those on their feet, and 19% score above 99 in 100 strangers' crops: the strangers come closer as well.
+
+### What follows
+
+- **The method is for a camera that sees each cow whole and apart from the others.** The first barn's cameras do; a camera in the corner of a pen, looking across the cubicles, does not. Barn cameras often hang where the second farm's do, so this difference matters more than any figure in this record.
+- **Lying cows need a detector that was taught to find them.** The stock one does not find them at any input size. None was trained here: this pen's own morning boxes could teach one, but a farmer has no boxes to give, and with the publisher's boxes the cows were still not told apart.
+- **Two hours of this farm are unseen.** They are for a version that passes this validation first.
+
 ## Limits
 
-- **One barn.** Thirteen Holstein cows, fixed cameras, three weeks. Nothing here says how the method does on another farm, breed, herd size or camera position.
+- **One barn where it comes close, one pen where it does not.** Thirteen and sixteen Holstein cows, fixed cameras. In the first barn a cow is 220–320 pixels long in the analysed picture and seldom behind another; there the method named 72% of the animals by day and 50% at night. In the second she is 110–180 pixels long and lies between her neighbours; there it names 12% ([above](#a-second-farm)). Nothing here says how it does with another breed or a larger herd.
 - **Most of the herd was enrolled.** Ten of thirteen. Every unknown animal is a chance of a wrong name, and the margin against strangers was measured with three.
 - **Photographs from many occasions**, over several days, by day and by night and on every camera, which a farmer has to confirm: fifty of a cow from dozens of occasions name most animals, hundreds from one afternoon almost none ([above](#how-many-photographs-to-start)). The test used the publisher's crops, which are spread like that. The application now spreads its photographs over the hours, and a herd collected by it over days has not been tried.
-- **A cow that is not found is not named.** Cows in the far row behind cubicle rails are missed even by the largest stock detector, and a box that touches the picture's edge is not used. On the first validation video that leaves two of ten enrolled cows unnamed for the whole video.
+- **A cow that is not found is not named.** Cows in the far row behind cubicle rails are missed even by the largest stock detector, and a box that touches the picture's edge is not used. On the first validation video that leaves two of ten enrolled cows unnamed for the whole video. In the second pen the detector finds a third of the cows that lie down, at any input size.
 - **Night is harder.** Infrared light hides red-and-white patterns. At night the test named half of the animals, and the limit that kept unknown animals out did so by a small margin.
 - **The limits were tested with a score that depends on how many photographs are confirmed.** They were set with two to three and a half thousand and held, narrowly, with four to six thousand. The score now used does not move with that number between 100 and 760 photographs a cow; with fewer than 100 it does, and nothing was measured beyond 760.
 - **Names on animals the publisher did not box cannot be judged.** They are left out of the precision and counted in the conservative one.
 - **Learning needs a GPU and time.** After every change to the confirmed photographs the networks are taught again, which takes ten minutes to half an hour on an Apple GPU, and no name is shown meanwhile. The largest stock detector and the four networks together take about half a second per picture there. A processor alone needs hours to learn and seconds per picture, and no other kind of GPU has been tried ([above](#a-processor-alone)).
 - **Names on other rules' events were simulated.** No mounting video with known cows was available; see [above](#names-on-another-rules-events).
 - **Weights.** The cattle starting weights were taught from datasets that forbid commercial use and are not published anywhere; the preset names an address that does not exist, so it cannot learn a herd as it stands. Without them the method names far fewer animals at night ([above](#the-cattle-starting-weights)). MIEWid is downloaded from its publisher, whose model card and repository state no licence.
-- **Held out, not untouched, and now used.** Earlier work in this repository had scored another method on short windows of the test videos. The development figures for the second kind of network came from a trial script, not the application's code; the validation and test figures come from the application's code. Both test videos have now been seen by this method: a later version cannot be tested on them as on unseen video.
+- **Held out, not untouched, and now used.** Earlier work in this repository had scored another method on short windows of the test videos. The development figures for the second kind of network came from a trial script, not the application's code; the validation and test figures come from the application's code. Both test videos have now been seen by this method: a later version cannot be tested on them as on unseen video. Of the second farm two hours remain that no version has been shown.
 
 ## Reproduce
 
@@ -421,6 +512,19 @@ $python $herd/app_score.py $W/run-video6.json --frames $W/frames/video6 \
 # Both test videos against the protocol's criteria.
 $python $herd/report.py $herd/results/test-video6.json $herd/results/test-video5.json \
   --protocol $herd/protocol.json --output $herd/results/test.json
+
+# The second farm, read over the network: photographs, one validation video, its score.
+$python $herd/mmcows.py photographs $W/mmcows/photographs
+$python $herd/mmcows.py frames mmcows-1200-cam1 $W/mmcows/frames/mmcows-1200-cam1 \
+  --labels $W/mmcows/labels
+$python $herd/mmcows.py run $W/mmcows/photographs/classification.json --video mmcows-1200-cam1 \
+  --frames $W/mmcows/frames/mmcows-1200-cam1 --enrolled 1 2 3 5 6 7 9 10 11 13 14 15 \
+  --preset config/detector/cow-identity.json --detector-weights yolo26x-seg.pt \
+  --herd-weights cattle-without-mmcows.safetensors --animal-weights miewid-msv3.safetensors \
+  --data $W/mmcows/data --output $W/mmcows/run-mmcows-1200-cam1.json
+$python $herd/mmcows.py score $W/mmcows/run-mmcows-1200-cam1.json \
+  --frames $W/mmcows/frames/mmcows-1200-cam1 --labels $W/mmcows/labels \
+  --withheld 4 8 12 16 --output $herd/results/mmcows-validation-cam1.json
 ```
 
-The cattle starting weights come from [`auxiliary.py`](herd/auxiliary.py), which gathers the other farms' photographs, and [`pretrain.py`](herd/pretrain.py). Development used [`app_track.py`](herd/app_track.py) and [`app_scores.py`](herd/app_scores.py) for the rotations (`--either-side`), [`tune.py`](herd/tune.py) for the rules, [`app_localization.py`](herd/app_localization.py) for the detectors and [`similarity_study.py`](herd/similarity_study.py) for the ways of scoring. [`app_smoke.py`](herd/app_smoke.py) starts the whole application on a short clip. [`parts.py`](herd/parts.py) and [`parts_compare.py`](herd/parts_compare.py) compare ways of building the herd model, and [`app_describe.py`](herd/app_describe.py) with [`rescore.py`](herd/rescore.py) score a finished run another way. [`event_names.py`](herd/event_names.py) simulates the names on another rule's events from a run that `app_run.py` wrote, and [`mounting_live.py`](herd/mounting_live.py) plays the mounting example to the whole application as a camera. The tests beside the scripts run with `pytest` in that folder.
+The cattle starting weights come from [`auxiliary.py`](herd/auxiliary.py), which gathers the other farms' photographs, and [`pretrain.py`](herd/pretrain.py). Development used [`app_track.py`](herd/app_track.py) and [`app_scores.py`](herd/app_scores.py) for the rotations (`--either-side`), [`tune.py`](herd/tune.py) for the rules, [`app_localization.py`](herd/app_localization.py) for the detectors and [`similarity_study.py`](herd/similarity_study.py) for the ways of scoring. [`app_smoke.py`](herd/app_smoke.py) starts the whole application on a short clip. [`parts.py`](herd/parts.py) and [`parts_compare.py`](herd/parts_compare.py) compare ways of building the herd model, and [`app_describe.py`](herd/app_describe.py) with [`rescore.py`](herd/rescore.py) score a finished run another way. [`event_names.py`](herd/event_names.py) simulates the names on another rule's events from a run that `app_run.py` wrote, and [`mounting_live.py`](herd/mounting_live.py) plays the mounting example to the whole application as a camera. For the second farm, [`app_limits.py`](herd/app_limits.py) replays a run at other limits, `mmcows.py postures` and `mmcows.py occasions` read the publisher's record of what each cow did, and [`mmcows_boxes.py`](herd/mmcows_boxes.py) asks the networks about the publisher's own boxes. The tests beside the scripts run with `pytest` in that folder.

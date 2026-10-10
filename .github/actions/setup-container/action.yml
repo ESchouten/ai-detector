@@ -1,9 +1,6 @@
 name: Set up container publishing
 description: Set up Buildx and authenticate to GitHub Container Registry.
 inputs:
-  token:
-    description: GitHub token with packages write permission
-    required: true
   minimum-free-gb:
     description: Clean the ephemeral runner only below this free-space budget (0 skips cleanup)
     default: '0'
@@ -32,4 +29,4 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ inputs.token }}
+        password: ${{ github.token }}

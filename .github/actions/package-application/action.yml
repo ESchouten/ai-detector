@@ -57,21 +57,13 @@ runs:
       run: python distribution/updates.py prepare --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --feed-url "$UPDATE_FEED"
     - name: Build native installer
       shell: bash
-      run: |
-        mkdir -p .reports
-        python distribution/installers.py 'application-dist/AI-Detector-${{ env.PLATFORM }}' --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" 2>&1 | tee .reports/installer.log
-    - name: Generate signed Sparkle feed and deltas
-      if: runner.os == 'macOS'
+      run: python distribution/installers.py 'application-dist/AI-Detector-${{ env.PLATFORM }}' --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" 2>&1 | tee .reports/installer.log
+    - name: Generate the signed update feed, with macOS deltas
+      if: runner.os != 'Linux'
       env:
         SPARKLE_PRIVATE_KEY: ${{ inputs.signing-key }}
       shell: bash
-      run: python distribution/updates.py publish --platform macos-arm64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
-    - name: Sign Velopack feed and package hashes
-      if: runner.os == 'Windows'
-      env:
-        SPARKLE_PRIVATE_KEY: ${{ inputs.signing-key }}
-      shell: bash
-      run: python distribution/updates.py publish --platform windows-x64 --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --release-url "$RELEASE_URL"
+      run: python distribution/updates.py publish --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --build-version "$APP_BUILD_VERSION" --channel "$UPDATE_CHANNEL" --sparkle "native-build/sparkle" --release-url "$RELEASE_URL"
     - name: Publish both update choices in one signed feed
       if: runner.os != 'Linux'
       env:

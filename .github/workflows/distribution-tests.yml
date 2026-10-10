@@ -4,7 +4,7 @@ on:
   pull_request:
     # UI-only changes still build/test the web server; native packaging is also
     # checked on every preview/release build by application.yml.
-    paths:
+    paths: &paths
       - 'distribution/**'
       - 'web/**'
       - '!web/src/**/*.svelte'
@@ -20,22 +20,7 @@ on:
       - '.gitattributes'
   push:
     branches: ['main']
-    # UI-only changes still build/test the web server; native packaging is also
-    # checked on every preview/release build by application.yml.
-    paths:
-      - 'distribution/**'
-      - 'web/**'
-      - '!web/src/**/*.svelte'
-      - '!web/src/**/*.css'
-      - '!web/tests/**'
-      - '!web/*.md'
-      - 'config/**'
-      - 'ruff.toml'
-      - 'detector/.python-version'
-      - 'detector/pyproject.toml'
-      - 'detector/uv.lock'
-      - '.github/**'
-      - '.gitattributes'
+    paths: *paths
   workflow_dispatch:
 
 permissions:
@@ -70,8 +55,6 @@ jobs:
         with:
           dotnet-tests: 'true'
       - uses: ./.github/actions/test-distribution
-        with:
-          web-executable: ${{ github.workspace }}/web/dist/ai-detector-web${{ runner.os == 'Windows' && '.exe' || '' }}
       - name: Upload distribution diagnostics
         if: failure()
         uses: actions/upload-artifact@v7

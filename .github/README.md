@@ -48,16 +48,11 @@ Python is pinned once in [`detector/.python-version`](../detector/.python-versio
 
 The build summary lists each job with its result and duration. Open the first failing step, not the jobs skipped after it; `gh run view RUN_ID --log-failed` prints its log. Failure diagnostics are kept for seven days.
 
-Run the matching check locally:
+Run the matching check locally. For the workflow files and the packaging scripts:
 
 ```sh
 actionlint
-pnpm --dir web quality
-pnpm --dir web build
-pnpm --dir web test:production
 uv run --project detector ruff check distribution
-python -m unittest discover -s distribution -p 'test_*.py'
-dotnet test distribution/windows/update-tests/Update.Tests.csproj --configuration Release
 ```
 
-The packaging tests need `distribution/requirements.txt`. See the [distribution guide](../distribution/README.md#local-builds-and-tests) for complete builds and the [detector guide](../detector/README.md#development-checks) for the Python checks.
+[CONTRIBUTING.md](../CONTRIBUTING.md) has the web checks, the [distribution guide](../distribution/README.md#local-builds-and-tests) the packaging tests, the Windows launcher checks and complete builds, and the [detector guide](../detector/README.md#development-checks) the Python checks.

@@ -252,8 +252,6 @@ jobs:
           version: ${{ env.APP_VERSION }}
           dotnet-tests: ${{ runner.os == 'Windows' && 'true' || 'false' }}
       - uses: ./.github/actions/test-distribution
-        with:
-          web-executable: ${{ github.workspace }}/web/dist/ai-detector-web${{ env.EXE_SUFFIX }}
       - name: Upload test diagnostics
         if: failure()
         uses: actions/upload-artifact@v7
@@ -330,11 +328,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-distribution
-        with:
-          web: 'false'
-      - uses: ./.github/actions/setup-web
-        with:
-          runtime-only: 'true'
       - name: Stage the shipped NVIDIA bootstrap
         run: python distribution/nvidia_runtime.py "$RUNNER_TEMP/nvidia-runtime" --version "$GITHUB_REF_NAME"
       - name: Test a fresh CUDA and TensorRT installation

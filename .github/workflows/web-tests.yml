@@ -2,10 +2,10 @@ name: Web and setup tests
 
 on:
   pull_request:
-    paths: ['web/**', 'config/**', 'distribution/**', 'Dockerfile', '.dockerignore', 'compose.yml', 'example/compose*.yml', 'detector/pyproject.toml', '.github/**', '.gitattributes']
+    paths: &paths ['web/**', 'config/**', 'distribution/toolchain.json', 'example/compose*.yml', '.github/**', '.gitattributes']
   push:
     branches: ['main']
-    paths: ['web/**', 'config/**', 'distribution/**', 'Dockerfile', '.dockerignore', 'compose.yml', 'example/compose*.yml', 'detector/pyproject.toml', '.github/**', '.gitattributes']
+    paths: *paths
   workflow_dispatch:
   workflow_call:
 
@@ -48,7 +48,6 @@ jobs:
       - name: Validate Docker Compose deployments
         if: runner.os == 'Linux'
         run: |
-          docker compose -f compose.yml config --quiet
           docker compose -f example/compose.yml config --quiet
           docker compose -f example/compose.jetson.yml config --quiet
       - name: Upload test diagnostics

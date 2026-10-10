@@ -45,7 +45,6 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-container
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           minimum-free-gb: '35'
       - name: Image tags and labels
         id: meta
@@ -98,8 +97,6 @@ jobs:
           pattern: digests-*
           merge-multiple: true
       - uses: ./.github/actions/setup-container
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Image tags and labels
         id: meta
         uses: docker/metadata-action@v5

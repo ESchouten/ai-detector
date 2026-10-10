@@ -1,9 +1,5 @@
 name: Test desktop distribution
 description: Shared packaging and process lifecycle checks against the compiled web application.
-inputs:
-  web-executable:
-    description: Compiled web executable to exercise
-    required: true
 runs:
   using: composite
   steps:
@@ -18,8 +14,8 @@ runs:
       if: runner.os == 'Linux'
       shell: bash
       run: |
-        uvx --from ruff==0.15.20 ruff check distribution
-        uvx --from ruff==0.15.20 ruff format --check distribution
+        uv run --project detector --only-group dev --locked ruff check distribution
+        uv run --project detector --only-group dev --locked ruff format --check distribution
     - name: Bun desktop host tests
       shell: bash
       run: bun test ./web/desktop/host.test.ts
@@ -28,7 +24,7 @@ runs:
       env:
         SPARKLE_SDK: ${{ runner.temp }}/sparkle
         WINDOWS_LAUNCHER: ${{ runner.temp }}/windows-launcher
-        DESKTOP_WEB_EXECUTABLE: ${{ inputs.web-executable }}
+        DESKTOP_WEB_EXECUTABLE: ${{ github.workspace }}/web/dist/ai-detector-web${{ env.EXE_SUFFIX }}
       run: |
         mkdir -p .reports
         python -m unittest discover -s distribution -p 'test_*.py' -v 2>&1 | tee .reports/distribution-tests.log

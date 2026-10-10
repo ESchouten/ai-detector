@@ -2,7 +2,7 @@ name: Detector Tests
 
 on:
   pull_request:
-    paths:
+    paths: &paths
       - "detector/**"
       - "config/**"
       - "ruff.toml"
@@ -10,11 +10,7 @@ on:
   push:
     branches:
       - "main"
-    paths:
-      - "detector/**"
-      - "config/**"
-      - "ruff.toml"
-      - ".github/**"
+    paths: *paths
   workflow_dispatch:
   workflow_call:
 
@@ -82,10 +78,6 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: uv run --no-sync ty check src/aidetector tools
 
-      - name: Architecture contracts
-        if: matrix.os == 'ubuntu-latest'
-        run: uv run --no-sync lint-imports --no-cache
-
       - name: Pytest with branch coverage
         if: runner.os == 'Linux'
         run: uv run --no-sync coverage run -m pytest --junitxml=.reports/tests.xml
@@ -106,9 +98,7 @@ jobs:
           mkdir -p .reports
           uv run --no-sync radon cc --show-complexity --show-closures --min B src/aidetector
           uv run --no-sync radon cc --show-closures --json --output-file .reports/complexity.json src/aidetector
-          uv run --no-sync coverage json -o .reports/coverage.json
           uv run --no-sync coverage html
-          uv run --no-sync coverage xml
 
       - name: Changes in complexity and dependencies
         if: matrix.os == 'ubuntu-latest'

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -48,8 +47,8 @@ public sealed class TrayTests
     public void MenuOpensTheDashboardTogglesStartupAndRequestsGracefulQuit()
     {
         var preference = new StartupPreference(key, Executable);
-        var commands = new List<string>();
-        using var menu = new TrayMenu(preference, () => commands.Add("open"), () => commands.Add("quit"));
+        int opened = 0, stopped = 0;
+        using var menu = new TrayMenu(preference, () => opened++, () => stopped++);
         var items = menu.Items.OfType<ToolStripMenuItem>().ToArray();
         items[0].PerformClick();
         items[1].PerformClick();
@@ -59,7 +58,8 @@ public sealed class TrayTests
         Assert.That(preference.Enabled, Is.False);
         Assert.That(items[1].Checked, Is.False);
         items[2].PerformClick();
-        Assert.That(commands, Is.EqualTo(new[] { "open", "quit" }));
+        Assert.That(opened, Is.EqualTo(1));
+        Assert.That(stopped, Is.EqualTo(1));
         Assert.That(items[2].Enabled, Is.False);
         Assert.That(items[2].Text, Is.EqualTo("Stopping monitoring…"));
     }

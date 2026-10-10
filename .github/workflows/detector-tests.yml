@@ -214,5 +214,6 @@ jobs:
         with:
           name: detector-mutations
           path: detector/.reports/mutations.*
+          include-hidden-files: true
           retention-days: 14
           if-no-files-found: error

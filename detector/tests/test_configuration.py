@@ -49,6 +49,26 @@ def test_scalar_and_list_representations_normalize_at_boundary():
     assert one.vlm[0].model == ("provider/model",)
 
 
+def test_prompt_without_key_is_valid_but_connecting_requires_a_model():
+    config = Config.model_validate(
+        {
+            "detectors": [
+                {
+                    "detection": {"source": "video.mp4"},
+                    "vlm": {"key": None, "prompt": "Is the event visible?"},
+                }
+            ]
+        }
+    )
+    assert config.detectors[0].active_vlm == ()
+    assert config.detectors[0].vlm[0].prompt == "Is the event visible?"
+    assert Config.model_validate_json(config.model_dump_json()) == config
+    with pytest.raises(ValidationError, match="requires a model"):
+        VLMConfig(prompt="Check?", key="test-key")
+    with pytest.raises(ValidationError, match="requires a model"):
+        VLMConfig(prompt="Check?", model=(), key="")
+
+
 @pytest.mark.parametrize(
     "overrides",
     [

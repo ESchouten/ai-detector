@@ -1,10 +1,10 @@
 import hashlib
-import json
 from concurrent.futures import ThreadPoolExecutor
 from io import StringIO
 
-from aidetector.adapters.operational_status import STATUS_PREFIX, JsonStatusReporter
+from aidetector.adapters.operational_status import JsonStatusReporter
 from aidetector.application.status import StatusEvent
+from tests.support.status import status_records
 
 
 def test_protocol_is_versioned_hides_credentials_and_throttles_frame_traffic():
@@ -14,10 +14,7 @@ def test_protocol_is_versioned_hides_credentials_and_throttles_frame_traffic():
     for _ in range(30):
         report(StatusEvent("frame", source))
     report(StatusEvent("delivery", source))
-    records = [
-        json.loads(line.removeprefix(STATUS_PREFIX))
-        for line in output.getvalue().splitlines()
-    ]
+    records = status_records(output.getvalue())
     assert [record["event"] for record in records] == ["frame", "delivery"]
     assert all(record["version"] == 1 for record in records)
     assert all(
@@ -37,10 +34,7 @@ def test_concurrent_workers_emit_intact_independent_camera_records():
                 lambda source: report(StatusEvent("frame", str(source))), range(100)
             )
         )
-    records = [
-        json.loads(line.removeprefix(STATUS_PREFIX))
-        for line in output.getvalue().splitlines()
-    ]
+    records = status_records(output.getvalue())
     assert len(records) == 100
     assert len({record["sourceKey"] for record in records}) == 100
 
@@ -55,10 +49,7 @@ def test_shared_camera_does_not_throttle_one_rules_inference_behind_another():
             "delivery_failed", "camera", rule_id="detector-1", destination_id="disk-2"
         )
     )
-    records = [
-        json.loads(line.removeprefix(STATUS_PREFIX))
-        for line in output.getvalue().splitlines()
-    ]
+    records = status_records(output.getvalue())
     assert [record["ruleId"] for record in records] == [
         "detector-1",
         "detector-2",
@@ -74,10 +65,7 @@ def test_queue_wait_is_throttled_per_rule_without_delaying_resume():
         report(StatusEvent("waiting_delivery", rule_id="detector-1"))
         report(StatusEvent("waiting_delivery", rule_id="detector-2"))
     report(StatusEvent("processing_resumed", rule_id="detector-1"))
-    records = [
-        json.loads(line.removeprefix(STATUS_PREFIX))
-        for line in output.getvalue().splitlines()
-    ]
+    records = status_records(output.getvalue())
     assert [(item["event"], item["ruleId"]) for item in records] == [
         ("waiting_delivery", "detector-1"),
         ("waiting_delivery", "detector-2"),

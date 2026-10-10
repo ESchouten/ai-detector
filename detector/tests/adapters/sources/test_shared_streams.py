@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from queue import Queue
 from threading import Event
 
+import cv2
 import numpy as np
 import pytest
 
@@ -216,8 +217,6 @@ def test_resized_frames_are_shared_by_width_without_changing_pixels(cameras):
 
 
 def test_skipped_samples_do_not_resize_and_same_width_resizes_only_once(monkeypatch):
-    import cv2
-
     resize = cv2.resize
     sizes = []
 

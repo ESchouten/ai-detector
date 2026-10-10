@@ -1,6 +1,7 @@
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier, Event, Thread
+from types import SimpleNamespace
 
 import cv2
 import numpy as np
@@ -51,14 +52,15 @@ def test_local_image_names_are_not_parsed_as_urls(tmp_path, name):
     assert batches[1].finished_sources == (str(path),)
 
 
-def test_capture_initialization_failure_is_reconnectable_and_stop_is_interruptible(
-    monkeypatch,
-):
+@pytest.mark.parametrize("raises", [False, True])
+def test_closing_wakes_a_reader_whose_camera_cannot_be_opened(monkeypatch, raises):
     attempted = Event()
 
     def unavailable(*args):
         attempted.set()
-        raise cv2.error("camera backend unavailable")
+        if raises:
+            raise cv2.error("camera backend unavailable")
+        return SimpleNamespace(isOpened=lambda: False, release=lambda: None)
 
     monkeypatch.setattr(
         "aidetector.adapters.sources.streams.cv2.VideoCapture", unavailable

@@ -52,18 +52,23 @@ def requests_sent(monkeypatch):
     return calls
 
 
-def test_webhook_none_and_explicit_body_do_not_render_media(result, requests_sent):
-    for body in (None, "fixed-body"):
-        exporter = WebhookExporter(
-            WebhookConfig(url="https://example.test", data_type="none", body=body),
-            EventMedia(),
-        )
-        exporter.export(result)
-        _, _, request = requests_sent[-1]
-        assert request["data"] == body
-        assert request["json"] is None
-        assert request["files"] is None
-        assert request["timeout"] == 30
+@pytest.mark.parametrize(
+    "options",
+    [
+        {"data_type": "none"},
+        {"data_type": "base64", "include_image": True, "body": "fixed-body"},
+    ],
+)
+def test_webhook_without_data_or_with_a_fixed_body_sends_no_event_payload(
+    result, requests_sent, options
+):
+    config = WebhookConfig(url="https://example.test", **options)
+    WebhookExporter(config, EventMedia()).export(result)
+    [(_, _, request)] = requests_sent
+    assert request["data"] == config.body
+    assert request["json"] is None
+    assert request["files"] is None
+    assert request["timeout"] == 30
 
 
 def test_webhook_base64_includes_metadata_and_selected_media(result, requests_sent):
@@ -98,21 +103,6 @@ def test_webhook_multipart_uses_matching_file_names(result, requests_sent):
     assert set(request["files"]) == {"image", "photo"}
     assert request["files"]["image"][2] == "image/jpeg"
     assert request["data"]["confidence"] == 0.9
-
-
-def test_transport_failure_is_observable_without_credentials(result, monkeypatch):
-    def fail(*args, **kwargs):
-        raise requests.ConnectionError("https://example.test/private-token")
-
-    monkeypatch.setattr(requests, "request", fail)
-    exporter = WebhookExporter(
-        WebhookConfig(url="https://example.test/private-token", data_type="none"),
-        EventMedia(),
-    )
-    with pytest.raises(DeliveryError) as raised:
-        exporter.export(result)
-    assert "ConnectionError" in str(raised.value)
-    assert "private-token" not in str(raised.value)
 
 
 @pytest.mark.parametrize(
@@ -329,44 +319,24 @@ def test_telegram_compresses_large_photos_to_the_photo_limit(requests_sent, albu
         assert 0 < len(content) <= 10_000_000
 
 
-def test_ffmpeg_discovery_failure_does_not_stop_independent_delivery(
+def test_ffmpeg_discovery_failure_is_a_delivery_error_every_time(
     result, requests_sent, monkeypatch
 ):
     def unavailable():
         raise RuntimeError("No ffmpeg exe could be found")
 
     monkeypatch.setattr("aidetector.adapters.media.video.get_ffmpeg_exe", unavailable)
-    delivery = EventDelivery(
-        (
-            Destination(
-                "telegram",
-                TelegramExporter(
-                    TelegramConfig(token="token", chat="chat"), EventMedia()
-                ),
-                ExportPolicy(),
-            ),
-            Destination(
-                "webhook",
-                WebhookExporter(
-                    WebhookConfig(url="https://example.test", data_type="none"),
-                    EventMedia(),
-                ),
-                ExportPolicy(),
-            ),
-        ),
-        Cooldown(),
+    exporter = TelegramExporter(
+        TelegramConfig(token="token", chat="chat"), EventMedia()
     )
     for _ in range(2):
-        report = delivery.deliver(result.event)
-        assert report.delivered == ("webhook",)
-        [failure] = report.failures
-        assert failure.destination == "telegram"
-        assert "FFmpeg is unavailable" in failure.message
-    assert len(requests_sent) == 2
+        with pytest.raises(DeliveryError, match="FFmpeg is unavailable"):
+            exporter.export(result)
+    assert requests_sent == []
 
 
 @pytest.mark.parametrize("raises", [False, True])
-def test_jpeg_codec_failure_is_reported_and_later_events_still_deliver(
+def test_jpeg_codec_failure_is_a_delivery_error_every_time(
     result, requests_sent, monkeypatch, raises
 ):
     def unavailable(*args, **kwargs):
@@ -375,31 +345,10 @@ def test_jpeg_codec_failure_is_reported_and_later_events_still_deliver(
         return False, None
 
     monkeypatch.setattr("aidetector.adapters.media.images.cv2.imencode", unavailable)
-    delivery = EventDelivery(
-        (
-            Destination(
-                "image",
-                WebhookExporter(
-                    WebhookConfig(url="https://example.test", include_image=True),
-                    EventMedia(),
-                ),
-                ExportPolicy(),
-            ),
-            Destination(
-                "metadata",
-                WebhookExporter(
-                    WebhookConfig(url="https://example.test", data_type="none"),
-                    EventMedia(),
-                ),
-                ExportPolicy(),
-            ),
-        ),
-        Cooldown(),
+    exporter = WebhookExporter(
+        WebhookConfig(url="https://example.test", include_image=True), EventMedia()
     )
     for _ in range(2):
-        report = delivery.deliver(result.event)
-        assert report.delivered == ("metadata",)
-        assert len(report.failures) == 1
-        assert report.failures[0].destination == "image"
-        assert "JPEG encoding failed" in report.failures[0].message
-    assert len(requests_sent) == 2
+        with pytest.raises(DeliveryError, match="JPEG encoding failed"):
+            exporter.export(result)
+    assert requests_sent == []

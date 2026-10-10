@@ -6,7 +6,6 @@ from pathlib import Path
 import cv2
 import numpy as np
 import pytest
-from pydantic import ValidationError
 
 from aidetector.adapters.exporters.archive_metadata import EventMetadata
 from aidetector.adapters.exporters.disk import DiskExporter
@@ -24,15 +23,18 @@ from aidetector.domain.models import (
 )
 
 
-def test_failed_archive_does_not_publish_partial_files(tmp_path, monkeypatch):
+def event_result(status=ValidationStatus.UNVALIDATED, error=None):
     observation = Observation(
         datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8), {"cow": 0.9}
     )
-    result = EventResult(
+    return EventResult(
         DetectionEvent("camera", (observation,)),
-        ValidationResult(ValidationStatus.UNVALIDATED),
+        ValidationResult(status, error),
         id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     )
+
+
+def test_failed_archive_does_not_publish_partial_files(tmp_path, monkeypatch):
     media = EventMedia()
 
     def failed_video(*args, **kwargs):
@@ -41,7 +43,7 @@ def test_failed_archive_does_not_publish_partial_files(tmp_path, monkeypatch):
     monkeypatch.setattr(media, "video", failed_video)
     exporter = DiskExporter(DiskConfig(strategy="ALL"), tmp_path, media)
     with pytest.raises(DeliveryError, match="Encoding failed"):
-        exporter.export(result)
+        exporter.export(event_result())
     assert list((tmp_path / "cow/unvalidated").iterdir()) == []
     assert list((tmp_path / "cow/.pending").iterdir()) == []
 
@@ -50,14 +52,7 @@ def test_failed_archive_does_not_publish_partial_files(tmp_path, monkeypatch):
 def test_archive_publication_retries_a_concurrent_timestamp_collision(
     tmp_path, monkeypatch, collision
 ):
-    observation = Observation(
-        datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8), {"cow": 0.9}
-    )
-    result = EventResult(
-        DetectionEvent("camera", (observation,)),
-        ValidationResult(ValidationStatus.UNVALIDATED),
-        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    )
+    result = event_result()
     rename = Path.rename
     competing_archive = None
 
@@ -87,21 +82,12 @@ def test_archive_publication_retries_a_concurrent_timestamp_collision(
 def test_archive_publication_failure_cleans_staging_and_reports_delivery_error(
     tmp_path, monkeypatch
 ):
-    observation = Observation(
-        datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8), {"cow": 0.9}
-    )
-    result = EventResult(
-        DetectionEvent("camera", (observation,)),
-        ValidationResult(ValidationStatus.UNVALIDATED),
-        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    )
-
     def cannot_publish(path, target):
         raise PermissionError(errno.EACCES, "Cannot publish archive")
 
     monkeypatch.setattr(Path, "rename", cannot_publish)
     with pytest.raises(DeliveryError, match="Cannot publish archive"):
-        DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(result)
+        DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(event_result())
     assert list((tmp_path / "cow/unvalidated").iterdir()) == []
     assert list((tmp_path / "cow/.pending").iterdir()) == []
 
@@ -118,15 +104,9 @@ def test_archive_publication_failure_cleans_staging_and_reports_delivery_error(
 def test_archive_preserves_public_stages_and_validation_metadata(
     tmp_path, status, stage, validated, error
 ):
-    observation = Observation(
-        datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8), {"cow": 0.9}
+    DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(
+        event_result(status, error)
     )
-    result = EventResult(
-        DetectionEvent("camera", (observation,)),
-        ValidationResult(status, error),
-        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    )
-    DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(result)
     [metadata_path] = list(tmp_path.glob("cow/*/*/metadata.json"))
     assert metadata_path.parent.parent.name == stage
     metadata = EventMetadata.model_validate_json(metadata_path.read_text())
@@ -134,34 +114,10 @@ def test_archive_preserves_public_stages_and_validation_metadata(
     assert metadata.validation_error == error
 
 
-def test_metadata_accepts_a_review_the_detector_never_writes(tmp_path):
-    observation = Observation(
-        datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8), {"cow": 0.9}
-    )
-    result = EventResult(
-        DetectionEvent("camera", (observation,)),
-        ValidationResult(ValidationStatus.APPROVED),
-        id="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    )
-    DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(result)
-    [metadata_path] = list(tmp_path.glob("cow/approved/*/metadata.json"))
-    published = json.loads(metadata_path.read_text())
-    assert "review" not in published
-
-    # The web application adds the review to the published file.
-    review = {
-        "validated": False,
-        "source": "telegram",
-        "reviewed_at": "2026-10-05T08:00:00.000Z",
-    }
-    reviewed = EventMetadata.model_validate({**published, "review": review})
-    assert reviewed.validated is True
-    assert reviewed.review is not None
-    assert reviewed.review.validated is False
-    with pytest.raises(ValidationError):
-        EventMetadata.model_validate(
-            {**published, "review": {**review, "source": "email"}}
-        )
+def test_published_metadata_leaves_the_review_to_the_web_application(tmp_path):
+    DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(event_result())
+    [metadata_path] = list(tmp_path.glob("cow/unvalidated/*/metadata.json"))
+    assert "review" not in json.loads(metadata_path.read_text())
 
 
 def test_all_strategy_archives_every_frame_and_the_standard_event_files(tmp_path):

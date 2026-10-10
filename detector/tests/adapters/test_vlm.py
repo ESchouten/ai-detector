@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from pathlib import Path
 
 import litellm
 import numpy as np
@@ -38,17 +39,14 @@ def test_ffmpeg_discovery_failure_is_unavailable_validation(event, monkeypatch):
         validator.validate(event)
 
 
-def response(detected):
+def response_with(content):
     return ModelResponse(
-        choices=[
-            {
-                "message": {
-                    "role": "assistant",
-                    "content": json.dumps({"detected": detected}),
-                }
-            }
-        ]
+        choices=[{"message": {"role": "assistant", "content": content}}]
     )
+
+
+def response(detected):
+    return response_with(json.dumps({"detected": detected}))
 
 
 @pytest.mark.parametrize(
@@ -62,9 +60,7 @@ def test_verifier_requests_and_accepts_only_the_boolean_decision(
 
     def complete(**kwargs):
         calls.append(kwargs)
-        return ModelResponse(
-            choices=[{"message": {"content": json.dumps({"detected": detected})}}]
-        )
+        return response(detected)
 
     monkeypatch.setattr(litellm, "completion", complete)
     config = VLMConfig(
@@ -136,31 +132,23 @@ def test_negative_validation_is_final_and_does_not_trigger_fallback(event, monke
     )
 
 
-@pytest.mark.parametrize("detected", ["false", 1, None])
-def test_non_boolean_provider_answer_uses_next_model(event, monkeypatch, detected):
-    answers = iter([response(detected), response(True)])
-    calls = []
-
-    def complete(**kwargs):
-        calls.append(kwargs["model"])
-        return next(answers)
-
-    monkeypatch.setattr(litellm, "completion", complete)
-    config = VLMConfig(
-        key="test-key", model=("first", "second"), prompt="Detect?", strategy="IMAGE"
-    )
-    answer = VlmValidator((config,), EventMedia()).validate(event)
-    assert answer.status is ValidationStatus.APPROVED
-    assert calls == ["first", "second"]
-
-
 @pytest.mark.parametrize(
-    "content", ["{}", '{"detected": true, "unexpected": 1}', "bad JSON"]
+    "invalid",
+    [
+        pytest.param(response("false"), id="text"),
+        pytest.param(response(1), id="number"),
+        pytest.param(response(None), id="null"),
+        pytest.param(response_with("{}"), id="no decision"),
+        pytest.param(
+            response_with('{"detected": true, "unexpected": 1}'), id="extra field"
+        ),
+        pytest.param(response_with("bad JSON"), id="not JSON"),
+        pytest.param(response_with(None), id="no content"),
+        pytest.param(ModelResponse(choices=[]), id="no choices"),
+    ],
 )
-def test_invalid_answer_shape_uses_next_model(event, monkeypatch, content):
-    answers = iter(
-        [ModelResponse(choices=[{"message": {"content": content}}]), response(True)]
-    )
+def test_invalid_provider_answer_uses_next_model(event, monkeypatch, invalid):
+    answers = iter([invalid, response(True)])
     calls = []
 
     def complete(**kwargs):
@@ -193,25 +181,6 @@ def test_verifier_programming_errors_do_not_trigger_provider_fallback(
     with pytest.raises(error_type, match="Unexpected SDK failure"):
         VlmValidator((config,), EventMedia()).validate(event)
     assert calls == ["first"]
-
-
-@pytest.mark.parametrize("choices", [[], [{"message": {"content": None}}]])
-def test_missing_provider_answer_uses_next_model(event, monkeypatch, choices):
-    invalid = ModelResponse(choices=choices)
-    answers = iter([invalid, response(True)])
-    calls = []
-
-    def complete(**kwargs):
-        calls.append(kwargs["model"])
-        return next(answers)
-
-    monkeypatch.setattr(litellm, "completion", complete)
-    config = VLMConfig(
-        key="test-key", model=("first", "second"), prompt="Detect?", strategy="IMAGE"
-    )
-    answer = VlmValidator((config,), EventMedia()).validate(event)
-    assert answer.status is ValidationStatus.APPROVED
-    assert calls == ["first", "second"]
 
 
 def test_unavailable_provider_has_bounded_retries_and_safe_error(event, monkeypatch):
@@ -308,9 +277,6 @@ def test_connected_model_lists_fall_back_to_another_key(event, monkeypatch, fail
     "preset_name", ["cow-catcher", "calving-catcher", "calving-catcher-tailup"]
 )
 def test_preset_question_and_video_reach_provider(preset_name, event, monkeypatch):
-    import json
-    from pathlib import Path
-
     preset_path = (
         Path(__file__).resolve().parents[3]
         / "config"

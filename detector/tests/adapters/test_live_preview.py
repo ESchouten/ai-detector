@@ -2,7 +2,7 @@ import hashlib
 import json
 from datetime import datetime
 from threading import Event
-from time import monotonic, time
+from time import monotonic, sleep, time
 
 import numpy as np
 
@@ -16,7 +16,7 @@ def wait_for(condition):
         result = condition()
         if result:
             return result
-        Event().wait(0.02)
+        sleep(0.02)
     raise AssertionError("Live preview did not progress")
 
 
@@ -56,7 +56,7 @@ def test_nothing_is_published_without_a_valid_viewer_and_late_viewer_works(tmp_p
     with publisher.open():
         wait_for(lambda: read_record(tmp_path / "session.json"))
         publish("camera", observation())
-        Event().wait(0.3)
+        sleep(0.3)
         assert not file.exists()
         lease(tmp_path, "camera")
 
@@ -161,7 +161,7 @@ def test_write_failure_does_not_starve_other_rules_and_disconnect_stops_publicat
         assert "Preview folder is full" in caplog.text
         (tmp_path / "leases" / f"{key}.json").unlink()
         second("camera", observation(3))
-        Event().wait(0.5)
+        sleep(0.5)
         assert read_record(file) == record
 
 

@@ -142,7 +142,7 @@ def test_impossible_image_size_is_an_explicit_error():
         compress_jpeg(observation().image, 1)
 
 
-def test_ffmpeg_failure_is_not_reported_as_missing_optional_video(monkeypatch):
+def test_ffmpeg_that_cannot_start_is_a_media_error(monkeypatch):
     monkeypatch.setattr(
         "aidetector.adapters.media.video.get_ffmpeg_exe", lambda: "/nonexistent/ffmpeg"
     )
@@ -160,7 +160,7 @@ def test_ffmpeg_discovery_failure_is_a_media_error(monkeypatch):
     assert isinstance(error.value.__cause__, RuntimeError)
 
 
-def test_requested_aspect_ratio_never_cuts_off_the_detected_region():
+def test_preferred_aspect_ratio_never_cuts_off_the_detected_region():
     original = observation(BoundingBox(20, 0, 140, 100))
     crop = crop_observation(original, padding=0, plot=False)
     assert crop.shape == (100, 160, 3)

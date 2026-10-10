@@ -8,7 +8,6 @@ import numpy as np
 import pytest
 
 from aidetector.adapters.operational_status import source_key
-from aidetector.adapters.sources.streams import StreamPool
 from aidetector.application.delivery import Destination, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import (
@@ -288,31 +287,6 @@ def test_failed_inference_reports_source_and_frame_metadata_without_pixels_or_cr
     ]
     assert "secret" not in caplog.text and "private-token" not in caplog.text
     assert source.closed
-
-
-def test_stream_stop_wakes_waiter_even_without_frames(monkeypatch):
-    attempted = Event()
-
-    class UnavailableCapture:
-        def __init__(self, *args):
-            attempted.set()
-
-        def isOpened(self):
-            return False
-
-        def release(self):
-            pass
-
-    monkeypatch.setattr(
-        "aidetector.adapters.sources.streams.cv2.VideoCapture", UnavailableCapture
-    )
-    streams = StreamPool()
-    source = streams.subscribe(("rtsp://camera",))
-    with streams.open(), ThreadPoolExecutor(max_workers=1) as pool:
-        task = pool.submit(lambda: list(source.batches()))
-        assert attempted.wait(2)
-        source.close()
-        assert task.result(timeout=2) == []
 
 
 def test_source_failure_reaches_caller_and_closes_input():

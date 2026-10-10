@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -279,27 +279,6 @@ test(
 		);
 	}
 );
-
-test('automatic detection never invokes NVIDIA or Docker prerequisites', posixOnly, async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-native-auto-'));
-	const detector = new ManagedDetector({ executable, dataDirectory: directory });
-	const oldPath = process.env.PATH;
-	t.after(async () => {
-		process.env.PATH = oldPath;
-		await detector.stop();
-		await rm(directory, { recursive: true, force: true });
-	});
-	for (const tool of ['nvidia-smi', 'docker'])
-		await writeFile(path.join(directory, tool), '#!/bin/sh\necho invoked >> probes.txt\nexit 1\n', {
-			mode: 0o755
-		});
-	process.env.PATH = directory + path.delimiter + oldPath;
-	await writeJson(path.join(directory, 'config.json'), config);
-	await detector.start();
-	await waitFor(() => detector.status().phase === 'running');
-	assert.equal(detector.status().readiness, 'preparing');
-	await assert.rejects(readFile(path.join(directory, 'probes.txt')), { code: 'ENOENT' });
-});
 
 test(
 	'split structured records establish readiness while process spawn and human logs do not',

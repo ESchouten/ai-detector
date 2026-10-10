@@ -38,15 +38,6 @@ export function detectorDraftMeta(
 	};
 }
 
-export function cameraRuleNames(
-	rules: { label: string; preset?: string }[],
-	presets: PresetInfo[]
-): string {
-	return rules
-		.map((rule) => presets.find((preset) => preset.id === rule.preset)?.name ?? rule.label)
-		.join(', ');
-}
-
 export type DetectorDraft = DetectorConfig & {
 	exporters: NonNullable<DetectorConfig['exporters']>;
 };

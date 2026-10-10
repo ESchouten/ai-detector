@@ -6,17 +6,14 @@
 	import { isActive, isSettingsArea, type NavItem } from '$lib/navigation';
 
 	let {
-		title,
 		items,
 		...restProps
 	}: {
-		title?: string;
 		items: NavItem[];
 	} & WithoutChildren<ComponentProps<typeof Sidebar.Group>> = $props();
 </script>
 
 <Sidebar.Group {...restProps}>
-	{#if title}<Sidebar.GroupLabel>{title}</Sidebar.GroupLabel>{/if}
 	<Sidebar.Menu>
 		{#each items as item (item.href)}
 			{@const active =

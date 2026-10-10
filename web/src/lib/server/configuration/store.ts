@@ -147,7 +147,7 @@ export class ConfigurationStore {
 		});
 	}
 
-	private async persist(input: { config: unknown; app: unknown }): Promise<void> {
+	private async persist(input: Configuration): Promise<void> {
 		const { config, app } = identifyCameras(normalizeConfiguration(input.config, input.app));
 		app.devices = await this.files.devices();
 		this.keepLanguage(app);
@@ -223,10 +223,6 @@ export class ConfigurationStore {
 		});
 	}
 
-	replace(document: { config: unknown; app: unknown }): Promise<void> {
-		return this.enqueue(() => this.persist(document));
-	}
-
 	saveAdvanced(target: 'config' | 'connections', value: unknown, revision: string): Promise<void> {
 		return this.update((document) => {
 			if (settingsRevision(document) !== revision)
@@ -263,9 +259,8 @@ export class ConfigurationStore {
 	followPresets(presets: DetectorPreset[]): Promise<string[]> {
 		return this.enqueue(async () => {
 			const document = await this.load();
-			const before = structuredClone(document.app.detectors);
 			const updated = followPresets(document, presets);
-			if (!isDeepStrictEqual(document.app.detectors, before)) await this.persist(document);
+			if (updated.length) await this.persist(document);
 			return updated;
 		});
 	}

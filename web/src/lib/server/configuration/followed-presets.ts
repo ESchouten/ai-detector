@@ -23,16 +23,10 @@ export function presetVersion(detector: DetectorConfig): string {
 		.digest('hex');
 }
 
-/**
- * A detector whose detection settings were changed outside this application follows no preset.
- * One saved before versions were recorded is left for `followPresets` to judge.
- */
+/** A detector whose detection settings were changed outside this application follows no preset. */
 export function forgetChangedPresets(document: Configuration): Configuration {
 	for (const [index, meta] of document.app.detectors.entries()) {
-		if (
-			meta.presetVersion &&
-			meta.presetVersion !== presetVersion(document.config.detectors[index])
-		) {
+		if (meta.preset && meta.presetVersion !== presetVersion(document.config.detectors[index])) {
 			delete meta.preset;
 			delete meta.presetVersion;
 		}
@@ -64,13 +58,6 @@ export function followPresets({ config, app }: Configuration, presets: DetectorP
 		if (!preset || meta.autoUpdate === false || presetVersion(preset) === meta.presetVersion)
 			continue;
 		const saved = config.detectors[index];
-		if (!meta.presetVersion) {
-			// Saved before versions were recorded: it follows only if it has the preset's settings now.
-			if (presetVersion(saved) === presetVersion(preset))
-				meta.presetVersion = presetVersion(preset);
-			else delete meta.preset;
-			continue;
-		}
 		config.detectors[index] = {
 			...preset,
 			detection: { ...preset.detection, source: saved.detection.source },

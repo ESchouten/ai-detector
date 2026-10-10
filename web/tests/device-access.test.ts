@@ -61,7 +61,6 @@ test('pairing expires and wrong codes exhaust a bounded number of attempts', asy
 test('pairing and settings edits share a queue and do not overwrite each other', async (t) => {
 	const { files } = await fixture(t);
 	const store = new ConfigurationStore(files);
-	await store.replace({ config: { detectors: [] }, app: {} });
 	const revision = settingsRevision(await store.read());
 	const access = new DeviceAccess(store);
 	const pairing = access.createPairing();
@@ -75,8 +74,6 @@ test('pairing and settings edits share a queue and do not overwrite each other',
 	assert.equal(saved.app.llms[0].label, 'Validator');
 	assert.equal(saved.app.streams[0].label, 'Barn');
 	assert.equal(saved.app.devices?.length, 1);
-	await store.replace({ ...saved, app: { ...saved.app, devices: [] } });
-	assert.ok(await access.identify(token));
 });
 
 test('device access remains usable with invalid detector settings and does not cache read failures', async (t) => {
@@ -116,9 +113,9 @@ test(
 		}));
 		const access = new DeviceAccess(store);
 		const token = await access.pair(access.createPairing().code, 'Phone');
-		const saving = store.replace({
-			config: { detectors: [{ detection: { source: ['camera.mp4'] } }] },
-			app: {}
+		const saving = store.saveDetector({
+			detector: { detection: { source: ['camera.mp4'] } },
+			meta: { label: 'Barn' }
 		});
 		await applying.promise;
 		try {
@@ -133,7 +130,6 @@ test(
 test('recovering settings preserves current access without reviving a revoked browser', async (t) => {
 	const { files } = await fixture(t);
 	const store = new ConfigurationStore(files);
-	await store.replace({ config: { detectors: [] }, app: {} });
 	const access = new DeviceAccess(store);
 	const oldToken = await access.pair(access.createPairing().code, 'Old phone');
 	await store.saveCamera({ label: 'Barn', source: 'rtsp://camera.local/live' });

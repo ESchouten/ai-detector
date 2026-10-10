@@ -299,9 +299,9 @@ test('settings backup preserves cameras, detector options and alerts, and import
 		config: path.join(directory, 'config.json'),
 		app: path.join(directory, 'app.json')
 	};
-	const store = new ConfigurationStore(files);
-	await store.replace({
-		config: {
+	await writeFile(
+		files.config,
+		JSON.stringify({
 			detectors: [
 				{
 					detection: { source: [source], interval: 3 },
@@ -312,13 +312,17 @@ test('settings backup preserves cameras, detector options and alerts, and import
 					}
 				}
 			]
-		},
-		app: {
+		})
+	);
+	await writeFile(
+		files.app,
+		JSON.stringify({
 			streams: [{ id: 'barn', source, label: 'Barn' }],
 			detectors: [{ label: 'Activity', preset: 'general' }],
 			telegrams: [{ label: 'Phone', token: 'private-token', chat: '1234' }]
-		}
-	});
+		})
+	);
+	const store = new ConfigurationStore(files);
 	const before = await readFile(files.config);
 	const expected = await store.read();
 	await store.updateDevices(() => [

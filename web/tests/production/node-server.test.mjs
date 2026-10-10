@@ -74,7 +74,7 @@ test('a phone finds what it needs to put the application on its home screen', as
 	}
 });
 
-test('saved logs are searchable in the page and downloadable with conditional refreshes', async (t) => {
+test('saved logs are searchable in the page with conditional refreshes', async (t) => {
 	const { directory, base } = await startServer(t);
 	await mkdir(path.join(directory, 'logs'), { recursive: true });
 	await writeFile(
@@ -92,12 +92,6 @@ test('saved logs are searchable in the page and downloadable with conditional re
 		headers: { 'If-None-Match': response.headers.get('etag') }
 	});
 	assert.equal(unchanged.status, 304);
-	const download = await fetch(`${base}/logs/output?download`);
-	assert.match(
-		download.headers.get('content-disposition'),
-		/attachment; filename="ai-detector.log"/
-	);
-	assert.equal(await download.text(), text);
 	const page = await fetch(`${base}/logs`);
 	assert.equal(page.status, 200);
 	assert.match(await page.text(), /Search logs/);
@@ -210,7 +204,7 @@ async function connectBrowser(base, origin, code) {
 	return response.headers.get('set-cookie').split(';')[0];
 }
 
-test('remembered devices renew their cookie on the pairing page and revoked devices stay blocked', async (t) => {
+test('remembered devices skip the pairing page and revoked devices stay blocked', async (t) => {
 	const { directory, base, logs } = await startServer(t);
 	const origin = 'http://barn.local';
 	const cookie = await connectBrowser(
@@ -222,9 +216,6 @@ test('remembered devices renew their cookie on the pairing page and revoked devi
 	const remembered = await send(`${base}/pair`, { headers });
 	assert.equal(remembered.status, 303);
 	assert.equal(remembered.headers.get('location'), '/');
-	assert.equal(remembered.headers.get('set-cookie').split(';')[0], cookie);
-	assert.match(remembered.headers.get('set-cookie'), /; SameSite=Lax/i);
-	assert.match(remembered.headers.get('set-cookie'), /; HttpOnly/i);
 	const externalPost = await send(`${base}/pair`, {
 		method: 'POST',
 		headers: {

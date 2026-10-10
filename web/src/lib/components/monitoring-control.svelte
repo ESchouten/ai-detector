@@ -9,13 +9,10 @@
 
 	let {
 		action,
-		size = 'default',
-		quiet = false
+		size = 'default'
 	}: {
 		action: MonitoringAction | null;
 		size?: ButtonSize;
-		/** Use the outline style, for places where this is not the main thing to do. */
-		quiet?: boolean;
 	} = $props();
 	const monitor = useRuntimeStatus();
 	let pending = $state(false);
@@ -47,7 +44,7 @@
 {#if action}
 	<Button
 		{size}
-		variant={starts && !quiet ? 'default' : 'outline'}
+		variant={starts ? 'default' : 'outline'}
 		disabled={pending || monitor.stale}
 		onclick={run}
 	>

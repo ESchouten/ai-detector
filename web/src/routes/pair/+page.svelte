@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import * as Field from '$lib/components/ui/field';
@@ -15,9 +14,6 @@
 		code = new URLSearchParams(location.hash.slice(1)).get('code') ?? '';
 		scanned = /^[0-9]{6}$/.test(code);
 		if (location.hash) history.replaceState(null, '', location.pathname);
-		// Earlier pairing cookies use SameSite=Strict and may be absent on an
-		// external link's first request. Recheck from this page before asking to pair.
-		void invalidateAll();
 	});
 </script>
 

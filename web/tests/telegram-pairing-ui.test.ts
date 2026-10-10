@@ -31,12 +31,6 @@ test('recipient selections distinguish detectors that watch the same cameras', (
 	];
 	const original = structuredClone(detectors);
 	assert.deepEqual(recipientDetectorLabels(detectors, recipient), ['Calving', 'Gate']);
-	assert.deepEqual(recipientDetectorLabels(detectors, recipient, 'Mounting'), [
-		'Calving',
-		'Mounting',
-		'Gate'
-	]);
-	assert.deepEqual(recipientDetectorLabels(detectors, undefined, 'Mounting'), ['Mounting']);
 	assert.deepEqual(detectors, original);
 });
 

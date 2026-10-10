@@ -3,7 +3,6 @@ import { test } from 'node:test';
 import { detectorSettings } from '../src/lib/configuration.ts';
 import {
 	applyDetectorPreset,
-	cameraRuleNames,
 	chooseConnection,
 	choosePreset,
 	createDetectorDraft,
@@ -18,20 +17,6 @@ import {
 	type DetectorOptions
 } from '../src/lib/detector-editor.ts';
 import type { DetectorConfig, TelegramConfig } from '../src/lib/schema.ts';
-
-test('camera rule names use preset filenames and preserve removed or custom rule labels', () => {
-	const rules = [
-		{ label: 'Saved entrance rule', preset: 'entry' },
-		{ label: 'Legacy delivery rule', preset: 'removed' },
-		{ label: 'Custom rule' }
-	];
-	const presets = [{ id: 'entry', name: 'Entry' }];
-	assert.equal(cameraRuleNames(rules, presets), 'Entry, Legacy delivery rule, Custom rule');
-	assert.equal(
-		cameraRuleNames(rules, []),
-		'Saved entrance rule, Legacy delivery rule, Custom rule'
-	);
-});
 
 for (const yolo of [undefined, null]) {
 	test(`opening a snapshot detector preserves yolo=${String(yolo)} and isolates edits`, () => {

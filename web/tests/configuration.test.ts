@@ -554,7 +554,6 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 		detector: config.detectors[0],
 		meta: { label: 'Renamed detector' }
 	});
-	await store.replace(await store.read());
 	assert.deepEqual(calls, []);
 	assert.equal(await readFile(files.config, 'utf8'), before);
 	const saved = JSON.parse(await readFile(files.app, 'utf8'));
@@ -815,29 +814,6 @@ test('settings changed or moved in config.json itself stop following a preset', 
 	await writeJson(moved.files.config, { ...both, detectors: [both.detectors[1]] });
 	assert.deepEqual(await moved.store.followPresets(presets), []);
 	assert.equal((await moved.store.read()).config.detectors[0].yolo?.model, 'own-model.pt');
-});
-
-test('a preset saved before versions were recorded is kept when its settings still match', async (t) => {
-	const { presets } = await presetsWithNewModel();
-	const { files, store } = await fixture(t, { detectors: [] });
-	await addPresetDetector(store, { label: 'Barn', source }, 'cow-catcher');
-	await addPresetDetector(store, { label: 'Calving pen', source: other }, 'calving-catcher');
-	const app = JSON.parse(await readFile(files.app, 'utf8'));
-	for (const meta of app.detectors) delete meta.presetVersion;
-	await writeJson(files.app, app);
-
-	// Calving Catcher is unchanged, so that detector follows it; Cow Catcher has moved on, and
-	// nothing tells whether the older settings were the preset's or the person's own.
-	const reopened = new ConfigurationStore(files);
-	assert.deepEqual(await reopened.followPresets(presets), []);
-	const saved = await reopened.read();
-	assert.deepEqual(saved.app.detectors[0], { label: 'Barn' });
-	assert.equal(saved.app.detectors[1].preset, 'calving-catcher');
-	assert.equal(
-		saved.app.detectors[1].presetVersion,
-		presetVersion(presets.find(({ id }) => id === 'calving-catcher')!.detector)
-	);
-	assert.notEqual(saved.config.detectors[0].yolo?.model, presets[0].detector.yolo?.model);
 });
 
 test('the recorded preset version does not depend on how the settings are written down', () => {

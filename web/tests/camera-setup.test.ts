@@ -164,7 +164,11 @@ test('changing archive destinations invalidates its proof and rejects an obsolet
 	const document = await store.read();
 	const { signature } = cameraArchiveSelection(document, camera.id);
 	document.config.detectors[0].exporters!.disk = [{ directory: 'other-location' }];
-	await store.replace(document);
+	await store.saveDetector({
+		original: document.app.detectors[0].label,
+		meta: document.app.detectors[0],
+		detector: document.config.detectors[0]
+	});
 	const before = await readFile(files.app, 'utf8');
 	const progress = cameraSetupStatus(await store.read(), camera.id);
 	assert.equal(progress.pictureVerifiedAt, verifiedAt);

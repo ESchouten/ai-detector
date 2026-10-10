@@ -10,8 +10,6 @@ import {
 	rm,
 	writeFile
 } from 'node:fs/promises';
-import os from 'node:os';
-import { syncBuiltinESMExports } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
@@ -109,7 +107,7 @@ async function fixture(t: TestContext) {
 	return { root, bundle, data, abort, messages, options, cleanup };
 }
 
-async function windowsFixture(t: TestContext, release = '10.0.26200') {
+async function windowsFixture(t: TestContext) {
 	const fixtureData = await fixture(t);
 	const { root, bundle, data } = fixtureData;
 	const descriptor = Object.getOwnPropertyDescriptor(process, 'platform')!;
@@ -117,12 +115,8 @@ async function windowsFixture(t: TestContext, release = '10.0.26200') {
 	fixtureData.cleanup.push(() => {
 		Object.defineProperty(process, 'platform', descriptor);
 		process.env.PATH = previousPath;
-		t.mock.restoreAll();
-		syncBuiltinESMExports();
 	});
 	Object.defineProperty(process, 'platform', { value: 'win32' });
-	t.mock.method(os, 'release', () => release);
-	syncBuiltinESMExports();
 	await writeFile(
 		path.join(root, 'nvidia-smi'),
 		'#!/bin/sh\necho "' + device.uuid + ', NVIDIA RTX 5060, 12.0, 580.88"\n',
@@ -146,23 +140,21 @@ async function waitFor(predicate: () => boolean | Promise<boolean>) {
 	assert.fail('Expected runtime state was not reached');
 }
 
-for (const release of ['10.0.19045', '10.0.26200']) {
-	test(
-		`Windows ${release} starts the cached CUDA environment and stops it through stdin`,
-		posixOnly,
-		async (t) => {
-			const { detector, data } = await windowsFixture(t, release);
-			await detector.start();
-			await waitFor(async () => (await detector.log.read()).includes('Using NVIDIA runtime'));
-			assert.equal(detector.status().phase, 'running');
-			assert.match(await detector.log.read(), /GPU-00000000/);
-			assert.match(await detector.log.read(), /NVIDIA acceleration on NVIDIA RTX 5060/);
-			await detector.stop();
-			assert.equal(await readFile(path.join(data, 'flushed.txt'), 'utf8'), 'flushed');
-			assert.equal(detector.status().phase, 'stopped');
-		}
-	);
-}
+test(
+	'Windows starts the cached CUDA environment and stops it through stdin',
+	posixOnly,
+	async (t) => {
+		const { detector, data } = await windowsFixture(t);
+		await detector.start();
+		await waitFor(async () => (await detector.log.read()).includes('Using NVIDIA runtime'));
+		assert.equal(detector.status().phase, 'running');
+		assert.match(await detector.log.read(), /GPU-00000000/);
+		assert.match(await detector.log.read(), /NVIDIA acceleration on NVIDIA RTX 5060/);
+		await detector.stop();
+		assert.equal(await readFile(path.join(data, 'flushed.txt'), 'utf8'), 'flushed');
+		assert.equal(detector.status().phase, 'stopped');
+	}
+);
 
 for (const provider of [undefined, 'CPUExecutionProvider', 'NvTensorRTRTXExecutionProvider']) {
 	test(

@@ -6,7 +6,7 @@ import { managedDetector } from '$lib/server/detector-service';
 import { readLogTail } from '$lib/server/detector-log';
 import { webLog } from '$lib/server/web-log';
 
-export const GET: RequestHandler = async ({ request, url }) => {
+export const GET: RequestHandler = async ({ request }) => {
 	const detector = managedDetector();
 	const detectorText = detector
 		? await detector.log.read()
@@ -20,11 +20,6 @@ export const GET: RequestHandler = async ({ request, url }) => {
 		'Cache-Control': 'private, no-cache',
 		ETag: etag
 	};
-	if (url.searchParams.has('download')) {
-		return new Response(text, {
-			headers: { ...headers, 'Content-Disposition': 'attachment; filename="ai-detector.log"' }
-		});
-	}
 	return request.headers.get('If-None-Match') === etag
 		? new Response(null, { status: 304, headers })
 		: new Response(text, { headers });

@@ -3,7 +3,6 @@ import pathlib
 import sys
 from datetime import datetime
 from types import SimpleNamespace
-from weakref import ref
 
 import numpy as np
 import pytest
@@ -45,7 +44,7 @@ def model_sdk(monkeypatch):
             self.overrides = {}
             self.callbacks = {}
             self.predictor = None
-            created.append(ref(self))
+            created.append(path)
 
         def export(self, **options):
             exports.append(options)

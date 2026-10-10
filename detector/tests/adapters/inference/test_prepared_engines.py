@@ -68,6 +68,29 @@ def gpu_builder(tmp_path, monkeypatch):
     )
 
 
+def cuda_monitoring(tmp_path, monkeypatch, gpu_builder, sizes, gpu_available):
+    monkeypatch.setattr(bootstrap, "TYPE", "cuda")
+    monkeypatch.setattr(prepared_engines, "gpu_available", lambda: gpu_available)
+    monkeypatch.setattr(
+        bootstrap,
+        "inference_runtime",
+        lambda *args: nullcontext(InferenceOptions()),
+    )
+    YOLO("yolo26n.yaml").save(gpu_builder.source)
+    assert cv2.imwrite(str(tmp_path / "input.png"), np.zeros((64, 64, 3), np.uint8))
+    return Config.model_validate(
+        {
+            "detectors": [
+                {
+                    "detection": {"source": "input.png"},
+                    "yolo": {"model": str(gpu_builder.source), "imgsz": size},
+                }
+                for size in sizes
+            ]
+        }
+    )
+
+
 def test_background_builds_wait_for_start_and_publish_reusable_engines_serially(
     tmp_path, gpu_builder
 ):
@@ -177,25 +200,8 @@ def test_monitoring_opens_both_detectors_before_starting_background_preparation(
     tmp_path, gpu_builder, monkeypatch, mode
 ):
     monkeypatch.setenv("TENSORRT_TEST_MODE", mode)
-    monkeypatch.setattr(bootstrap, "TYPE", "cuda")
-    monkeypatch.setattr(prepared_engines, "gpu_available", lambda: True)
-    monkeypatch.setattr(
-        bootstrap,
-        "inference_runtime",
-        lambda *args: nullcontext(InferenceOptions()),
-    )
-    YOLO("yolo26n.yaml").save(gpu_builder.source)
-    assert cv2.imwrite(str(tmp_path / "input.png"), np.zeros((64, 64, 3), np.uint8))
-    config = Config.model_validate(
-        {
-            "detectors": [
-                {
-                    "detection": {"source": "input.png"},
-                    "yolo": {"model": str(gpu_builder.source), "imgsz": size},
-                }
-                for size in (64, 96)
-            ]
-        }
+    config = cuda_monitoring(
+        tmp_path, monkeypatch, gpu_builder, sizes=(64, 96), gpu_available=True
     )
     statuses = []
     completed = Event()
@@ -588,24 +594,8 @@ def test_real_sdk_builds_and_runs_dynamic_engine_in_helper(tmp_path):
 def test_a_tensorrt_preference_without_a_gpu_detects_without_it(
     tmp_path, gpu_builder, monkeypatch, caplog
 ):
-    monkeypatch.setattr(bootstrap, "TYPE", "cuda")
-    monkeypatch.setattr(prepared_engines, "gpu_available", lambda: False)
-    monkeypatch.setattr(
-        bootstrap,
-        "inference_runtime",
-        lambda *args: nullcontext(InferenceOptions()),
-    )
-    YOLO("yolo26n.yaml").save(gpu_builder.source)
-    assert cv2.imwrite(str(tmp_path / "input.png"), np.zeros((64, 64, 3), np.uint8))
-    config = Config.model_validate(
-        {
-            "detectors": [
-                {
-                    "detection": {"source": "input.png"},
-                    "yolo": {"model": str(gpu_builder.source), "imgsz": 64},
-                }
-            ]
-        }
+    config = cuda_monitoring(
+        tmp_path, monkeypatch, gpu_builder, sizes=(64,), gpu_available=False
     )
     results = bootstrap.run_application(
         config, tmp_path, tmp_path, prefer_tensorrt=True

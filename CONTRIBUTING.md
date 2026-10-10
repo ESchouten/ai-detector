@@ -52,6 +52,6 @@ The Python-generated schemas in `config/` are shared contracts. After changing P
 
 Keep `web/src/lib/components/ui` as published by shadcn-svelte, including components the app does not use yet, and change the look outside that folder: with classes at the call site, or as [appearance and the shadcn components](web/ARCHITECTURE.md#appearance-and-the-shadcn-components) describes. ESLint skips the folder; formatting and Svelte checks still cover it, so an update may need its newer dependencies installed before `pnpm check` passes.
 
-The interface is translated (English, Dutch, German, French). After adding or changing text in `web/src`, run `pnpm --dir web i18n` and translate the new entries, in sentences a farmer would understand. [Languages](web/ARCHITECTURE.md#languages) in the web architecture guide has the rules that keep text translatable and what stays in English.
+The interface is translated (English, Dutch, German, French). Write text in `web/src` in sentences a farmer would understand; after adding or changing it, run `pnpm --dir web i18n` and translate the new entries. [Languages](web/ARCHITECTURE.md#languages) in the web architecture guide has the rules that keep text translatable and what stays in English.
 
 Before handing off a change, state what behavior changed, which tests establish it, and what still requires a target machine. A passing CPU smoke test does not establish GPU acceleration, live camera behavior or signed installer support.

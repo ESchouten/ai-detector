@@ -51,6 +51,8 @@ public sealed class TrayTests
         using var menu = new TrayMenu(preference, () => opened++, () => stopped++);
         var items = menu.Items.OfType<ToolStripMenuItem>().ToArray();
         items[0].PerformClick();
+        Assert.That(opened, Is.EqualTo(1));
+        Assert.That(stopped, Is.Zero);
         items[1].PerformClick();
         Assert.That(preference.Enabled, Is.True);
         Assert.That(items[1].Checked, Is.True);

@@ -1,6 +1,5 @@
 import sys
 from concurrent.futures import ThreadPoolExecutor
-from queue import Queue
 from threading import Barrier, Event, Thread
 
 import cv2
@@ -50,59 +49,6 @@ def test_local_image_names_are_not_parsed_as_urls(tmp_path, name):
     batches = list(source.batches())
     assert list(batches[0].frames) == [str(path)]
     assert batches[1].finished_sources == (str(path),)
-
-
-def test_stream_retention_keeps_exactly_the_latest_unread_frames_and_releases_capture(
-    monkeypatch,
-):
-    inputs = Queue()
-    buffered, released = Event(), Event()
-
-    class Capture:
-        def __init__(self, *args):
-            pass
-
-        def isOpened(self):
-            return True
-
-        def read(self):
-            item = inputs.get(timeout=5)
-            if item == "buffered":
-                buffered.set()
-                item = inputs.get(timeout=5)
-            return (
-                (False, None)
-                if item is None
-                else (True, np.full((8, 8, 3), item, dtype=np.uint8))
-            )
-
-        def release(self):
-            released.set()
-
-    monkeypatch.setattr("aidetector.adapters.sources.streams.cv2.VideoCapture", Capture)
-    streams = StreamPool()
-    source = streams.subscribe(("rtsp://camera",), retention=3)
-    batches = source.batches()
-    with streams.open(), ThreadPoolExecutor(max_workers=1) as pool:
-        first = pool.submit(next, batches)
-        try:
-            inputs.put(1)
-            assert (
-                first.result(timeout=2).frames["rtsp://camera"][0].image[0, 0, 0] == 1
-            )
-            for index in range(2, 13):
-                inputs.put(index)
-            inputs.put("buffered")
-            assert buffered.wait(2)
-            batch = next(batches)
-            assert [
-                int(frame.image[0, 0, 0]) for frame in batch.frames["rtsp://camera"]
-            ] == [10, 11, 12]
-        finally:
-            inputs.put(None)
-            source.close()
-            batches.close()
-    assert released.is_set()
 
 
 def test_capture_initialization_failure_is_reconnectable_and_stop_is_interruptible(

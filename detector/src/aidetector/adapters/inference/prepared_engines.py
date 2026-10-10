@@ -63,7 +63,6 @@ class EnginePreparation:
             batch,
             options,
             self.cache,
-            self._report,
             self._stop,
             schedule=self._pending.append,
         )
@@ -99,11 +98,6 @@ class EnginePreparation:
         except Exception:
             # An optional background worker must not stop active monitoring.
             logger.exception("Background TensorRT preparation failed")
-
-    @staticmethod
-    def _report(event: StatusEvent) -> None:
-        # Preparation must not replace the running detectors' readiness/status.
-        logger.info("Background TensorRT: %s", event.message)
 
 
 def engine_identity(source: Path, task: str, arguments: dict) -> str:
@@ -151,7 +145,6 @@ def prepare_engine(
     batch: int,
     options: InferenceOptions,
     cache: Path,
-    report_status: ReportStatus,
     stop_requested: Event | None = None,
     *,
     schedule: Callable[[Callable[[], Path | None]], None] | None = None,
@@ -195,7 +188,6 @@ def prepare_engine(
                         batch,
                         options,
                         cache,
-                        report_status,
                         stop_requested,
                     )
                 )
@@ -206,14 +198,7 @@ def prepare_engine(
                 return None
             reject_engine(engine, "An earlier TensorRT preparation did not complete")
             try:
-                _build_engine(
-                    source,
-                    config.task,
-                    arguments,
-                    engine,
-                    report_status,
-                    stop_requested,
-                )
+                _build_engine(source, config.task, arguments, engine, stop_requested)
             except (OSError, RuntimeError, subprocess.SubprocessError) as error:
                 reject_engine(engine, str(error))
                 raise
@@ -231,7 +216,7 @@ def prepare_engine(
         return None
 
 
-def _build_engine(source, task, arguments, engine, report_status, stop_requested):
+def _build_engine(source, task, arguments, engine, stop_requested):
     logger.info(
         "Preparing direct TensorRT FP16 engine: %s; settings=%s; timeout=%.0fs",
         source.name,
@@ -252,18 +237,13 @@ def _build_engine(source, task, arguments, engine, report_status, stop_requested
             ),
             encoding="utf-8",
         )
-        run_preparation(
-            request, engine.parent / "build.log", report_status, stop_requested
-        )
+        run_preparation(request, engine.parent / "build.log", stop_requested)
         (pending / "model.engine").replace(engine)
     logger.info("Direct TensorRT engine prepared and GPU-tested: %s", engine)
 
 
 def run_preparation(
-    request: Path,
-    log_path: Path,
-    report_status: ReportStatus,
-    stop_requested: Event | None = None,
+    request: Path, log_path: Path, stop_requested: Event | None = None
 ) -> None:
     command = [sys.executable]
     if getattr(sys, "frozen", False):
@@ -301,7 +281,7 @@ def run_preparation(
         ) as process:
             logger.info("TensorRT helper process started; pid=%d", process.pid)
             try:
-                _wait_for_preparation(process, tail, report_status, stopped)
+                _wait_for_preparation(process, tail, stopped)
                 if stopped.is_set():
                     raise KeyboardInterrupt
                 if process.returncode:
@@ -317,7 +297,7 @@ def run_preparation(
                     logger.info("TensorRT preparation:\n%s", diagnostic)
 
 
-def _wait_for_preparation(process, tail, report_status, stopped):
+def _wait_for_preparation(process, tail, stopped):
     started, reported = monotonic(), -15.0
     while process.poll() is None:
         if stopped.is_set():
@@ -326,11 +306,10 @@ def _wait_for_preparation(process, tail, report_status, stopped):
         if elapsed > BUILD_TIMEOUT:
             raise TimeoutError(f"TensorRT preparation exceeded {BUILD_TIMEOUT:.0f}s")
         if elapsed - reported >= 15:
-            report_status(
-                StatusEvent(
-                    "preparing",
-                    message=f"Preparing the TensorRT model ({elapsed:.0f}s elapsed, limit {BUILD_TIMEOUT:.0f}s). A completed model is saved for later starts.",
-                )
+            logger.info(
+                "TensorRT preparation running: %.0fs elapsed, limit %.0fs",
+                elapsed,
+                BUILD_TIMEOUT,
             )
             reported = elapsed
         diagnostic = tail.read().strip()

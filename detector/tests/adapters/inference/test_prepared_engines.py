@@ -235,27 +235,21 @@ def test_monitoring_opens_both_detectors_before_starting_background_preparation(
 def test_successful_engine_is_published_once_without_modifying_checkpoint(
     tmp_path, gpu_builder
 ):
-    progress = []
     config = YoloConfig(model=str(gpu_builder.source), imgsz=64)
     cache = tmp_path / "cache"
     options = InferenceOptions(half=True)
-    first = prepare_engine(config, OnnxConfig(), 3, options, cache, progress.append)
+    first = prepare_engine(config, OnnxConfig(), 3, options, cache)
     assert first is not None and first.read_bytes() == b"engine-from-checkpoint"
-    assert (
-        prepare_engine(config, OnnxConfig(), 3, options, cache, progress.append)
-        == first
-    )
+    assert prepare_engine(config, OnnxConfig(), 3, options, cache) == first
     assert len(gpu_builder.commands) == 1
     assert gpu_builder.processes[0].returncode == 0
     assert gpu_builder.source.read_bytes() == b"checkpoint"
     assert not gpu_builder.source.with_suffix(".engine").exists()
     assert not list(cache.rglob("preparing-*"))
     assert not list(cache.rglob("failure.txt"))
-    assert all(event.kind == "preparing" for event in progress)
-    assert all("limit" in event.message for event in progress)
     assert "GPU builder fixture: ready" in (first.parent / "build.log").read_text()
     gpu_builder.source.write_bytes(b"new checkpoint")
-    second = prepare_engine(config, OnnxConfig(), 3, options, cache, progress.append)
+    second = prepare_engine(config, OnnxConfig(), 3, options, cache)
     assert second is not None and second != first
     assert first.is_file() and second.is_file()
     assert second.read_bytes() == b"engine-from-new checkpoint"
@@ -324,10 +318,7 @@ def test_failed_or_stalled_builder_is_reaped_and_deferred_across_restarts(
     cache = tmp_path / "cache"
     for _ in range(2):
         assert (
-            prepare_engine(
-                config, OnnxConfig(), 1, InferenceOptions(), cache, lambda _: None
-            )
-            is None
+            prepare_engine(config, OnnxConfig(), 1, InferenceOptions(), cache) is None
         )
     assert len(gpu_builder.commands) == 1
     assert gpu_builder.processes[0].poll() is not None
@@ -346,38 +337,22 @@ def test_cancelled_builder_is_reaped_and_next_start_can_retry(
 ):
     monkeypatch.setenv("TENSORRT_TEST_MODE", "blocked")
     stop = Event()
+    stop.set()
     config = YoloConfig(model=str(gpu_builder.source))
     cache = tmp_path / "cache"
     with pytest.raises(KeyboardInterrupt):
-        prepare_engine(
-            config,
-            OnnxConfig(),
-            1,
-            InferenceOptions(),
-            cache,
-            lambda _: stop.set(),
-            stop,
-        )
+        prepare_engine(config, OnnxConfig(), 1, InferenceOptions(), cache, stop)
     assert gpu_builder.processes[0].poll() is not None
     assert not list(cache.rglob("*.engine"))
     assert not list(cache.rglob("failure.txt"))
     assert not list(cache.rglob("preparing-*"))
     monkeypatch.delenv("TENSORRT_TEST_MODE")
-    assert prepare_engine(
-        config, OnnxConfig(), 1, InferenceOptions(), cache, lambda _: None
-    ).is_file()
+    assert prepare_engine(config, OnnxConfig(), 1, InferenceOptions(), cache).is_file()
 
 
 def test_rejected_cached_engine_waits_then_is_rebuilt(tmp_path, gpu_builder):
     config = YoloConfig(model=str(gpu_builder.source))
-    args = (
-        config,
-        OnnxConfig(),
-        1,
-        InferenceOptions(),
-        tmp_path / "cache",
-        lambda _: None,
-    )
+    args = (config, OnnxConfig(), 1, InferenceOptions(), tmp_path / "cache")
     engine = prepare_engine(*args)
     reject_engine(engine, "GPU rejected the cached engine")
     assert prepare_engine(*args) is None
@@ -389,14 +364,7 @@ def test_rejected_cached_engine_waits_then_is_rebuilt(tmp_path, gpu_builder):
 
 def test_concurrent_builder_does_not_block_monitoring(tmp_path, gpu_builder):
     config = YoloConfig(model=str(gpu_builder.source))
-    args = (
-        config,
-        OnnxConfig(),
-        1,
-        InferenceOptions(),
-        tmp_path / "cache",
-        lambda _: None,
-    )
+    args = (config, OnnxConfig(), 1, InferenceOptions(), tmp_path / "cache")
     engine = prepare_engine(*args)
     engine.unlink()
     with FileLock(str(engine.parent / "build.lock")):
@@ -418,7 +386,6 @@ def test_model_download_failure_is_not_hidden_by_optional_optimization(
             1,
             InferenceOptions(),
             tmp_path,
-            lambda _: None,
         )
 
 
@@ -455,7 +422,7 @@ def test_helper_imports_with_parent_pipe_open_and_reports_startup_failures(
     request.write_text(request_text, encoding="utf-8")
     log = tmp_path / "build.log"
     with caplog.at_level("INFO"), pytest.raises(RuntimeError, match="status 1"):
-        run_preparation(request, log, lambda _: None)
+        run_preparation(request, log)
     diagnostic = log.read_text()
     assert "Starting TensorRT helper:" in diagnostic
     assert "TensorRT helper started; pid=" in diagnostic
@@ -521,7 +488,7 @@ def test_automatic_engine_failure_keeps_the_original_torch_model(
         monkeypatch.setattr(BasePredictor, "setup_model", setup)
     config = YoloConfig(model=str(gpu_builder.source), imgsz=64)
     cache = tmp_path / "cache"
-    prepare_engine(config, OnnxConfig(), 1, InferenceOptions(), cache, lambda _: None)
+    prepare_engine(config, OnnxConfig(), 1, InferenceOptions(), cache)
     for _ in range(2):
         with open_detector(
             config,
@@ -602,7 +569,6 @@ def test_real_sdk_builds_and_runs_dynamic_engine_in_helper(tmp_path):
         2,
         InferenceOptions(half=True),
         tmp_path / "prepared",
-        lambda _: None,
     )
     assert engine is not None, (
         "TensorRT preparation must succeed on the qualified GPU runner"

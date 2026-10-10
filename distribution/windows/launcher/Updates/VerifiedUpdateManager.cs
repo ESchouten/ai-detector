@@ -16,8 +16,8 @@ internal class VerifiedUpdateManager(SignedUpdateSource source, IVelopackLocator
     : UpdateManager(source, new UpdateOptions
     {
         // The signed policy chooses an eligible build before Velopack compares versions.
-        ExplicitChannel = source.Policy == null ? "win" : "selected",
-        AllowVersionDowngrade = source.Policy != null,
+        ExplicitChannel = "selected",
+        AllowVersionDowngrade = true,
         // Delta reconstruction re-compresses the ZIP, so its bytes need not match
         // the signed full-package hash. Download that exact archive for verification.
         MaximumDeltasBeforeFallback = 0,
@@ -31,7 +31,6 @@ internal class VerifiedUpdateManager(SignedUpdateSource source, IVelopackLocator
     {
         get
         {
-            if (source.Policy == null) return base.UpdatePendingRestart;
             try
             {
                 // Velopack's default property only recognizes upgrades. A channel

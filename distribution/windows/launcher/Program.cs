@@ -1,7 +1,5 @@
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
@@ -13,7 +11,7 @@ namespace AIDetector.Desktop;
 internal static class Program
 {
     [STAThread]
-    private static int Main(string[] args)
+    private static int Main()
     {
         bool firstRun = false;
         // Installer hooks must run before creating windows or starting monitoring.
@@ -29,21 +27,11 @@ internal static class Program
         }
         if (firstRun) ConfigureStartup();
         var web = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ai-detector-web.exe");
-        if (args.Contains("--quit"))
-        {
-            using var quit = Process.Start(new ProcessStartInfo(web, "--quit")
-            {
-                UseShellExecute = false, CreateNoWindow = true
-            });
-            quit.WaitForExit();
-            return quit.ExitCode;
-        }
         // One menu per person: opening AI Detector again shows the dashboard of the one that runs.
         using var menu = new Mutex(true, @"Local\AI Detector menu", out bool firstMenu);
         if (!firstMenu)
         {
-            if (args.Contains("--background")) return 0;
-            using var running = new DesktopProcess(web, false);
+            using var running = new DesktopProcess(web);
             running.OpenDashboard();
             return 0;
         }
@@ -59,8 +47,8 @@ internal static class Program
         updatePreferences.SetValue("IncludePreviewUpdates", previews ? 1 : 0);
         var policy = feed == null ? null : new UpdateChannelPolicy((string)metadata["updateBuild"], channel, previews);
         var updater = feed == null ? null : new VerifiedUpdateManager(
-            new SignedUpdateSource(feed, (string)metadata["updatePublicKey"], SignedUpdateSource.CachePath(updateCache, feed), policy: policy));
-        using var desktop = new TrayApplication(preference, web, args.Contains("--background"), updater,
+            new SignedUpdateSource(feed, (string)metadata["updatePublicKey"], SignedUpdateSource.CachePath(updateCache, feed), policy));
+        using var desktop = new TrayApplication(preference, web, updater,
             enabled => updatePreferences.SetValue("IncludePreviewUpdates", enabled ? 1 : 0));
         Application.Run(desktop);
         return desktop.ExitCode;

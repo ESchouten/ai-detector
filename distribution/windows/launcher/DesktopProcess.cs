@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AIDetector.Desktop;
 
 // The web process retains ownership of the instance lock and detector shutdown.
-internal sealed class DesktopProcess(string executable, bool background) : IDisposable
+internal sealed class DesktopProcess(string executable) : IDisposable
 {
     private Process process;
     private bool stopping;
@@ -44,7 +44,7 @@ internal sealed class DesktopProcess(string executable, bool background) : IDisp
             var startedAt = DateTime.UtcNow;
             try
             {
-                var code = await RunOnceAsync(ready, background || !first);
+                var code = await RunOnceAsync(ready, !first);
                 if (stopping) return code;
                 Log($"The web process ended by itself with exit code {code} (0x{code:X8}).");
             }

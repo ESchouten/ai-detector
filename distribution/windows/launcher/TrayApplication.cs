@@ -17,9 +17,9 @@ internal sealed class TrayApplication : ApplicationContext
     private Action afterShutdown;
     public int ExitCode { get; private set; }
 
-    public TrayApplication(StartupPreference startup, string executable, bool background, VerifiedUpdateManager updater, Action<bool> savePreviewPreference)
+    public TrayApplication(StartupPreference startup, string executable, VerifiedUpdateManager updater, Action<bool> savePreviewPreference)
     {
-        web = new DesktopProcess(executable, background);
+        web = new DesktopProcess(executable);
         using var artwork = Assembly.GetExecutingAssembly().GetManifestResourceStream("app.ico");
         icon = new Icon(artwork, 32, 32);
         menu = new TrayMenu(startup, command =>

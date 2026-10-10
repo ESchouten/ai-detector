@@ -21,7 +21,7 @@ public sealed class DesktopProcessTests
         try
         {
             var executable = CompileFixture(folder, code, false);
-            using var web = new DesktopProcess(executable, background: true);
+            using var web = new DesktopProcess(executable);
             var first = new TaskCompletionSource<bool>();
             var second = new TaskCompletionSource<bool>();
             var starts = 0;
@@ -55,7 +55,7 @@ public sealed class DesktopProcessTests
         try
         {
             var executable = CompileFixture(folder, code, true);
-            using var web = new DesktopProcess(executable, background: true);
+            using var web = new DesktopProcess(executable);
             var running = web.RunAsync(() => File.WriteAllText(Path.Combine(folder, "exit"), "now"));
             try
             {

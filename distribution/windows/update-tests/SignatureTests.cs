@@ -26,6 +26,7 @@ public sealed class SignatureTests
     private string cache;
     private byte[] package;
     private FakeDownloader downloader;
+    private UpdateChannelPolicy stablePolicy;
     private SignedUpdateSource source;
     private VelopackAsset release;
 
@@ -40,8 +41,9 @@ public sealed class SignatureTests
         envelope = fixture["envelope"].ToString();
         package = Convert.FromBase64String((string)fixture["package"]);
         downloader = new FakeDownloader(envelope, package);
-        source = new SignedUpdateSource("https://example.invalid/updates", publicKey, cache, downloader);
-        release = SignedFeed.Verify(envelope, publicKey).Assets.Single(asset => asset.Type == VelopackAssetType.Full);
+        stablePolicy = new UpdateChannelPolicy("1.0.0", "stable", false);
+        source = new SignedUpdateSource("https://example.invalid/updates", publicKey, cache, stablePolicy, downloader);
+        release = SignedFeed.Verify(envelope, publicKey, stablePolicy).Assets.Single(asset => asset.Type == VelopackAssetType.Full);
     }
 
     [TearDown]
@@ -50,7 +52,7 @@ public sealed class SignatureTests
     [Test]
     public void PythonSignatureAuthenticatesBothFullAndDeltaHashes()
     {
-        var feed = SignedFeed.Verify(envelope, publicKey);
+        var feed = SignedFeed.Verify(envelope, publicKey, stablePolicy);
         Assert.That(feed.Assets.Select(asset => asset.Type), Is.EquivalentTo(new[] { VelopackAssetType.Full, VelopackAssetType.Delta }));
         Assert.That(release.SHA256, Is.EqualTo(Convert.ToHexString(SHA256.HashData(package))));
     }
@@ -62,15 +64,15 @@ public sealed class SignatureTests
         var bytes = Convert.FromBase64String((string)changed["payload"]);
         bytes[bytes.Length - 2] ^= 1;
         changed["payload"] = Convert.ToBase64String(bytes);
-        Assert.Throws<CryptographicException>(() => SignedFeed.Verify(changed.ToString(), publicKey));
+        Assert.Throws<CryptographicException>(() => SignedFeed.Verify(changed.ToString(), publicKey, stablePolicy));
     }
 
     [Test]
     public void WrongKeyAndUnsignedFeedAreRejected()
     {
         var otherKey = new Ed25519PrivateKeyParameters(new byte[32], 0).GeneratePublicKey().GetEncoded();
-        Assert.Throws<CryptographicException>(() => SignedFeed.Verify(envelope, Convert.ToBase64String(otherKey)));
-        Assert.That(() => SignedFeed.Verify("{\"Assets\":[]}", publicKey), Throws.Exception);
+        Assert.Throws<CryptographicException>(() => SignedFeed.Verify(envelope, Convert.ToBase64String(otherKey), stablePolicy));
+        Assert.That(() => SignedFeed.Verify("{\"Assets\":[]}", publicKey, stablePolicy), Throws.Exception);
     }
 
     [Test]
@@ -152,46 +154,39 @@ public sealed class SignatureTests
         var pending = Pending();
         var locator = Locator(pending);
         File.WriteAllBytes(Path.Combine(root, pending.FileName), package);
-        var restartedSource = new SignedUpdateSource("https://example.invalid/updates", publicKey, cache, new FakeDownloader(null, null));
+        var restartedSource = new SignedUpdateSource("https://example.invalid/updates", publicKey, cache, stablePolicy, new FakeDownloader(null, null));
         var manager = new VerifiedUpdateManager(restartedSource, locator);
-        Assert.That(await manager.VerifyPendingUpdateAsync(), Is.SameAs(pending));
+        Assert.That(await manager.VerifyPendingUpdateAsync(), Is.EqualTo(release with { FileName = pending.FileName }));
         File.WriteAllBytes(Path.Combine(root, pending.FileName), new byte[package.Length]);
         Assert.ThrowsAsync<ChecksumFailedException>(() => manager.VerifyPendingUpdateAsync());
         Assert.That(File.Exists(Path.Combine(root, pending.FileName)), Is.False);
     }
 
     [Test]
-    public async Task MissingDeferredMetadataAllowsAFreshDownload()
+    public async Task MissingDeferredMetadataKeepsThePackageForTheNextCheckToVerify()
     {
         var pending = Pending();
         File.WriteAllBytes(Path.Combine(root, pending.FileName), package);
-        var deferred = new VerifiedUpdateManager(source, Locator(pending));
-        Assert.ThrowsAsync<FileNotFoundException>(() => deferred.VerifyPendingUpdateAsync());
-        Assert.That(File.Exists(Path.Combine(root, pending.FileName)), Is.False);
-        var retry = new VerifiedUpdateManager(source, Locator());
-        await retry.DownloadUpdatesAsync(await retry.CheckForUpdatesAsync());
-        Assert.That(downloader.Downloads, Is.EqualTo(1));
+        var manager = new VerifiedUpdateManager(source, Locator(pending));
+        Assert.That(manager.UpdatePendingRestart, Is.Null);
+        Assert.ThrowsAsync<InvalidOperationException>(() => manager.VerifyPendingUpdateAsync());
+        await manager.DownloadUpdatesAsync(await manager.CheckForUpdatesAsync());
+        Assert.That(downloader.Downloads, Is.Zero);
+        Assert.That(manager.UpdatePendingRestart, Is.Not.Null);
     }
 
     [TestCase("{\"Assets\":[]}")]
     [TestCase("{")]
     [TestCase("{\"payload\":\"!\",\"signature\":\"\"}")]
-    public async Task UnreadableCachedMetadataClearsThePendingDownload(string metadata)
+    public void UnreadableCachedMetadataLeavesNoPendingUpdateAndKeepsThePackage(string metadata)
     {
-        await source.GetReleaseFeed(new NullVelopackLogger(), "AIDetector", "win");
         var pending = Pending();
         File.WriteAllBytes(Path.Combine(root, pending.FileName), package);
-        var manager = new VerifiedUpdateManager(source, Locator(pending));
         File.WriteAllText(cache, metadata);
-        Assert.That(async () => await manager.VerifyPendingUpdateAsync(), Throws.Exception);
-        Assert.That(File.Exists(Path.Combine(root, pending.FileName)), Is.False);
-    }
-
-    [Test]
-    public async Task SignedOldVersionCannotDowngradeTheInstalledApplication()
-    {
-        var manager = new VerifiedUpdateManager(source, Locator(version: "2.0.0"));
-        Assert.That(await manager.CheckForUpdatesAsync(), Is.Null);
+        var manager = new VerifiedUpdateManager(source, Locator(pending));
+        Assert.That(manager.UpdatePendingRestart, Is.Null);
+        Assert.ThrowsAsync<InvalidOperationException>(() => manager.VerifyPendingUpdateAsync());
+        Assert.That(File.Exists(Path.Combine(root, pending.FileName)), Is.True);
     }
 
     [Test]
@@ -203,9 +198,9 @@ public sealed class SignatureTests
         var previewCache = SignedUpdateSource.CachePath(root, previewUrl);
         Assert.That(stableCache, Is.EqualTo(SignedUpdateSource.CachePath(root, stableUrl + "/")));
         Assert.That(previewCache, Is.Not.EqualTo(stableCache));
-        var stable = new SignedUpdateSource(stableUrl, publicKey, stableCache, downloader);
+        var stable = new SignedUpdateSource(stableUrl, publicKey, stableCache, stablePolicy, downloader);
         await stable.GetReleaseFeed(new NullVelopackLogger(), "AIDetector", "win");
-        var preview = new SignedUpdateSource(previewUrl, publicKey, previewCache, downloader);
+        var preview = new SignedUpdateSource(previewUrl, publicKey, previewCache, stablePolicy, downloader);
         Assert.Throws<DirectoryNotFoundException>(() => preview.ReadCachedFeed());
         await preview.GetReleaseFeed(new NullVelopackLogger(), "AIDetector", "win");
         Assert.That(downloader.LastFeedUrl, Is.EqualTo(previewUrl + "/releases.win.json"));
@@ -241,7 +236,7 @@ public sealed class SignatureTests
         // Recreate the manager offline, as happens after quitting before applying.
         downloader.Envelope = null;
         var restarted = new VerifiedUpdateManager(new SignedUpdateSource(
-            "https://example.invalid", publicKey, cache, downloader, policy), Locator(version: "0.0.51"));
+            "https://example.invalid", publicKey, cache, policy, downloader), Locator(version: "0.0.51"));
         Assert.That(restarted.UpdatePendingRestart.Version.ToString(), Is.EqualTo("0.0.20"));
         var pending = await restarted.VerifyPendingUpdateAsync();
         Assert.That(pending.Version.ToString(), Is.EqualTo("0.0.20"));
@@ -300,7 +295,7 @@ public sealed class SignatureTests
         {
             ["payload"] = Convert.ToBase64String(payload), ["signature"] = Convert.ToBase64String(signer.GenerateSignature())
         }.ToString();
-        return new VerifiedUpdateManager(new SignedUpdateSource("https://example.invalid", publicKey, cache, downloader, policy), Locator(version: version));
+        return new VerifiedUpdateManager(new SignedUpdateSource("https://example.invalid", publicKey, cache, policy, downloader), Locator(version: version));
     }
 
     private VelopackAsset Pending() => new()

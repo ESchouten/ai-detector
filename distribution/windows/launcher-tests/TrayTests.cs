@@ -97,7 +97,7 @@ public sealed class TrayTests
                     }
                 }".Replace("EXIT_CODE", exitCode.ToString()));
             Assert.That(result.Errors.HasErrors, Is.False);
-            using var web = new DesktopProcess(executable, background: true);
+            using var web = new DesktopProcess(executable);
             var ready = new TaskCompletionSource<bool>();
             var running = web.RunAsync(() => ready.SetResult(true));
             Assert.That(await Task.WhenAny(ready.Task, running, Task.Delay(10000)), Is.SameAs(ready.Task), "Native child did not become ready");

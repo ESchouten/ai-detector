@@ -11,12 +11,14 @@ using Velopack.Locators;
 public sealed class UpdateTests
 {
     private string folder;
+    private UpdateChannelPolicy policy;
 
     [SetUp]
     public void SetUp()
     {
         folder = Path.Combine(Path.GetTempPath(), "ai-detector-updates-" + Guid.NewGuid());
         Directory.CreateDirectory(folder);
+        policy = new UpdateChannelPolicy("40.0.0", "preview", true);
     }
 
     [TearDown]
@@ -25,9 +27,9 @@ public sealed class UpdateTests
     [Test]
     public async Task BackgroundCheckNotifiesWithoutDownloadingOrStoppingMonitoring()
     {
-        var manager = new TestUpdater(folder);
+        var manager = new TestUpdater(folder, policy);
         int notices = 0;
-        using var item = new UpdateMenuItem(manager, _ => Assert.Fail("No automatic restart"), () => notices++);
+        using var item = new UpdateMenuItem(manager, _ => Assert.Fail("No automatic restart"), () => notices++, _ => { });
         var checking = item.CheckInBackgroundAsync();
         await item.CheckInBackgroundAsync();
         Assert.That(item.Enabled, Is.False);
@@ -42,8 +44,8 @@ public sealed class UpdateTests
     [Test]
     public async Task FailedBackgroundCheckLeavesManualRetryAvailable()
     {
-        var manager = new TestUpdater(folder);
-        using var item = new UpdateMenuItem(manager, _ => Assert.Fail("No restart"), () => Assert.Fail("No update"));
+        var manager = new TestUpdater(folder, policy);
+        using var item = new UpdateMenuItem(manager, _ => Assert.Fail("No restart"), () => Assert.Fail("No update"), _ => { });
         var checking = item.CheckInBackgroundAsync();
         manager.Check.SetException(new IOException("offline"));
         await checking;
@@ -53,8 +55,8 @@ public sealed class UpdateTests
     [Test]
     public async Task DownloadedUpdateWaitsForAnExplicitRestart()
     {
-        var manager = new TestUpdater(folder) { Pending = Release() };
-        using var item = new UpdateMenuItem(manager, _ => Assert.Fail("No automatic restart"), () => { });
+        var manager = new TestUpdater(folder, policy) { Pending = Release() };
+        using var item = new UpdateMenuItem(manager, _ => Assert.Fail("No automatic restart"), () => { }, _ => { });
         await item.CheckInBackgroundAsync();
         Assert.That(item.Text, Is.EqualTo("Update and restart…"));
         Assert.That(manager.Checks, Is.Zero);
@@ -63,14 +65,13 @@ public sealed class UpdateTests
     [Test]
     public void PreviewBuildDoesNotOfferAnUpdateItCannotInstall()
     {
-        using var item = new UpdateMenuItem(null, _ => Assert.Fail(), () => Assert.Fail());
+        using var item = new UpdateMenuItem(null, _ => Assert.Fail(), () => Assert.Fail(), _ => Assert.Fail());
         Assert.That(item.Enabled, Is.False);
     }
 
     [Test]
     public async Task PreviewPreferenceIsSavedAndCannotChangeDuringAnUpdateCheck()
     {
-        var policy = new UpdateChannelPolicy("40.0.0", "preview", true);
         var manager = new TestUpdater(folder, policy);
         bool? saved = null;
         using var item = new UpdateMenuItem(manager, _ => Assert.Fail(), () => { }, value => saved = value);
@@ -88,8 +89,8 @@ public sealed class UpdateTests
 
     private static VelopackAsset Release() => new() { Version = SemanticVersion.Parse("1.0.1"), Type = VelopackAssetType.Full };
 
-    private sealed class TestUpdater(string folder, UpdateChannelPolicy policy = null) : VerifiedUpdateManager(
-        new SignedUpdateSource("https://example.invalid", "unused test key", Path.Combine(folder, "feed.json"), policy: policy),
+    private sealed class TestUpdater(string folder, UpdateChannelPolicy policy) : VerifiedUpdateManager(
+        new SignedUpdateSource("https://example.invalid", "unused test key", Path.Combine(folder, "feed.json"), policy),
         new TestVelopackLocator("AIDetectorTest", "1.0.0", folder))
     {
         public TaskCompletionSource<UpdateInfo> Check { get; } = new();

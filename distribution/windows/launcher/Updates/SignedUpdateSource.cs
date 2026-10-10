@@ -11,7 +11,7 @@ namespace AIDetector.Desktop;
 
 // Velopack downloads packages. Only authenticated metadata
 // reaches its version selection and checksum verification.
-internal sealed class SignedUpdateSource(string url, string publicKey, string cacheFile, IFileDownloader downloader = null, UpdateChannelPolicy policy = null)
+internal sealed class SignedUpdateSource(string url, string publicKey, string cacheFile, UpdateChannelPolicy policy, IFileDownloader downloader = null)
     : SimpleWebSource(url, downloader)
 {
     public UpdateChannelPolicy Policy { get; } = policy;

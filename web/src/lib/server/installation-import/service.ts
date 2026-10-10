@@ -162,7 +162,7 @@ export class InstallationImport {
 		});
 	}
 
-	/** Used by shutdown/tests to wait for the current transfer. */
+	/** Lets tests wait for the current transfer. */
 	async settled(): Promise<void> {
 		await this.work;
 	}

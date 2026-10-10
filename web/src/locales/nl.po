@@ -534,8 +534,7 @@ msgstr "De opnamelocatie bevat een bestand of een gekoppelde map. Kies een gewon
 msgid "The recording location is invalid. Check the camera settings."
 msgstr "De opnamelocatie is ongeldig. Controleer de camera-instellingen."
 
-#: src/lib/server/cameras/archive-check.ts
-#: src/lib/server/cameras/checks.ts
+#: src/lib/server/cameras/connection.ts
 msgid "The camera software is missing. Repair or reinstall AI Detector and try again."
 msgstr "De camerasoftware ontbreekt. Herstel AI Detector of installeer het opnieuw en probeer het dan nog eens."
 
@@ -590,10 +589,6 @@ msgstr "De testopname kon niet worden opgeslagen. Controleer of er in de gegeven
 #: src/routes/pair/+page.server.ts
 msgid "Phone or computer"
 msgstr "Telefoon of computer"
-
-#: src/lib/server/cameras/index.ts
-msgid "The camera software could not be found. Repair or reinstall AI Detector, then try again."
-msgstr "De camerasoftware is niet gevonden. Herstel AI Detector of installeer het opnieuw en probeer het dan nog eens."
 
 #: src/lib/server/configuration/advanced.ts
 msgid "Each AI connection needs a unique name."
@@ -920,10 +915,6 @@ msgstr "Het verzoek voor de opnamecontrole was niet geldig."
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "This camera has no local recording destination to check."
 msgstr "Deze camera heeft geen lokale opnamelocatie om te controleren."
-
-#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
-msgid "Camera software is missing. Repair or reinstall AI Detector."
-msgstr "De camerasoftware ontbreekt. Herstel AI Detector of installeer het opnieuw."
 
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "Check the camera picture again. The test recording has expired."

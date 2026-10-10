@@ -5,7 +5,13 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 import type { CameraConnectionResult } from '../../cameras.ts';
 import { getCameraInputArgs } from '../ffmpeg.ts';
-import { CameraConnectionError, cameraStorageFailure, connectionFailure } from './connection.ts';
+import {
+	CameraConnectionError,
+	cameraSoftwareMissing,
+	cameraStorageFailure,
+	connectionFailure
+} from './connection.ts';
+import { serialQueue } from '../serial.ts';
 import { webLog } from '../web-log.ts';
 
 const execute = promisify(execFile);
@@ -75,10 +81,7 @@ async function recordCameraTest(
 		webLog.warn(
 			/* @wc-ignore */ `Camera check of ${source} failed: ${failure.killed ? 'no picture within the time limit' : failure.stderr?.trim() || failure.code}`
 		);
-		if (failure.code === 'ENOENT')
-			throw new CameraConnectionError(
-				'The camera software is missing. Repair or reinstall AI Detector and try again.'
-			);
+		if (failure.code === 'ENOENT') throw cameraSoftwareMissing();
 		if (failure.killed)
 			throw new CameraConnectionError(
 				'The camera check took too long. Try again or choose another camera channel.'
@@ -91,7 +94,7 @@ async function recordCameraTest(
 /** Short-lived setup recordings, isolated from real detections and addressed without credentials. */
 export class CameraChecks {
 	private readonly checks = new Map<string, Check>();
-	private last: Promise<unknown> = Promise.resolve();
+	private readonly enqueue = serialQueue();
 	private readonly directory: string;
 	private readonly now: () => number;
 	constructor(directory: string, now: () => number = Date.now) {
@@ -101,9 +104,7 @@ export class CameraChecks {
 
 	/** Checks run one at a time; setup connects several cameras at once, so the others wait. */
 	check(source: string, executable: string, signal?: AbortSignal): Promise<CameraConnectionResult> {
-		const check = this.last.then(() => this.record(source, executable, signal));
-		this.last = check.catch(() => {});
-		return check;
+		return this.enqueue(() => this.record(source, executable, signal));
 	}
 
 	private async record(

@@ -19,7 +19,7 @@ export interface ImportFile extends ReferencedFile {
 	modified: number;
 }
 
-export function contains(root: string, file: string): boolean {
+function contains(root: string, file: string): boolean {
 	const relative = path.relative(root, file);
 	return (
 		relative === '' ||

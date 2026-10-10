@@ -75,7 +75,6 @@ const cameraSetup = v.object({
 	pictureVerifiedAt: v.optional(timestamp),
 	archiveVerifiedAt: v.optional(timestamp),
 	archiveSignature: v.optional(text),
-	alerts: v.optional(v.literal('skipped')),
 	completedAt: v.optional(timestamp),
 	completionSignature: v.optional(text)
 });

@@ -36,7 +36,7 @@ interface Runtime {
 }
 
 /** Where the store learns the interface language, and who it tells about the saved one. */
-export interface LanguageSource {
+interface LanguageSource {
 	/** The language the browser being answered asked for, when it stated one we have. */
 	requested(): Locale | undefined;
 	/** Told whenever settings are read or written, so work outside a request uses it too. */
@@ -155,14 +155,9 @@ export class ConfigurationStore {
 			previous === null || !isDeepStrictEqual(normalizeConfig(previous), config);
 		const runtime = this.runtime();
 		if (configChanged && config.detectors.length) await runtime?.validate(config);
-		if (!configChanged) {
-			await this.save({ config, app }, false);
-			await this.files.remember({ config, app });
-			return;
-		}
-		await this.save({ config, app });
+		await this.save({ config, app }, configChanged);
 		await this.files.remember({ config, app });
-		await this.applySaved(config);
+		if (configChanged) await this.applySaved(config);
 	}
 
 	private async applySaved(config: Config): Promise<void> {

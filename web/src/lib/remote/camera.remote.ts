@@ -1,11 +1,11 @@
 import { command, query } from '$app/server';
 import * as v from 'valibot';
 import { cameraConnectionInput } from '$lib/cameras';
-import { cameraInput, sameTelegram } from '$lib/configuration';
+import { cameraInput } from '$lib/configuration';
 import {
-	assertCameraCheck,
+	cameraChecks,
 	discoverCameras as discover,
-	getCameraConnection as resolveConnection
+	resolveCameraStream
 } from '$lib/server/cameras';
 import type { CameraHistory } from '$lib/camera-history';
 import { DATA_DIRECTORY } from '$lib/server/application-paths';
@@ -13,35 +13,28 @@ import { managedDetector, watchHistory } from '$lib/server/detector-service';
 import { recordings } from '$lib/server/recordings';
 import { sourceKey } from '$lib/server/source-key';
 import { configuration } from '$lib/server/configuration';
+import { cameraSetupStatus } from '$lib/server/configuration/camera-setup';
 import { configurationAction } from '$lib/server/configuration/request';
 
 export const discoverCameras = command(() => discover());
 
 export const getCameraConnection = command(cameraConnectionInput, (input) =>
-	configurationAction(() => resolveConnection(input))
+	configurationAction(() => resolveCameraStream(input))
 );
 
 export const getCameras = query(async () => {
 	const { app, config } = await configuration.read();
 	return app.streams.map((camera) => {
-		const rules = config.detectors.flatMap((detector, index) =>
-			detector.detection.source.includes(camera.source)
-				? [{ detector, meta: app.detectors[index] }]
-				: []
-		);
+		const { monitored, alerts } = cameraSetupStatus({ app, config }, camera.id!);
 		return {
 			...camera,
 			id: camera.id!,
 			label: camera.label ?? 'Camera',
-			monitored: rules.length > 0,
-			rules: rules.map(({ meta }) => meta),
-			alerts: app.telegrams
-				.filter((channel) =>
-					rules.some(({ detector }) =>
-						detector.exporters?.telegram?.some((item) => sameTelegram(item, channel))
-					)
-				)
-				.map(({ label }) => label)
+			monitored,
+			rules: app.detectors.filter((_, index) =>
+				config.detectors[index].detection.source.includes(camera.source)
+			),
+			alerts
 		};
 	});
 });
@@ -53,7 +46,7 @@ export const saveCamera = command(cameraInput, (input) =>
 			: undefined;
 		const verifiedAt =
 			input.checkId || !existing || existing.source !== input.source
-				? assertCameraCheck(input.checkId, input.source)
+				? cameraChecks.assert(input.checkId, input.source)
 				: undefined;
 		return configuration.saveCamera(input, verifiedAt);
 	})

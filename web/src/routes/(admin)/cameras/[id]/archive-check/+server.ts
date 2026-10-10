@@ -1,12 +1,16 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import * as v from 'valibot';
 import { ConfigurationError } from '$lib/configuration';
-import { cameraChecks, connectCamera, CameraConnectionError } from '$lib/server/cameras';
+import {
+	cameraChecks,
+	cameraSoftware,
+	connectCamera,
+	CameraConnectionError
+} from '$lib/server/cameras';
 import { verifyCameraArchive } from '$lib/server/cameras/archive-check';
 import { configuration } from '$lib/server/configuration';
 import { cameraArchiveSelection } from '$lib/server/configuration/camera-setup';
 import { DATA_DIRECTORY } from '$lib/server/application-paths';
-import { getFfmpegPathWithFallback } from '$lib/server/ffmpeg';
 
 const inputSchema = v.object({ checkId: v.optional(v.string()) });
 
@@ -21,11 +25,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 		);
 		if (!categories.length)
 			throw new CameraConnectionError('This camera has no local recording destination to check.');
-		const executable = await getFfmpegPathWithFallback();
-		if (!executable)
-			throw new CameraConnectionError(
-				'Camera software is missing. Repair or reinstall AI Detector.'
-			);
+		const executable = await cameraSoftware();
 		let checkId = input.output.checkId;
 		if (checkId) cameraChecks.assert(checkId, camera.source);
 		else {

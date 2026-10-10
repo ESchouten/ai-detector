@@ -32,7 +32,7 @@ function updateCameraMetadata(
 	pictureVerifiedAt?: string
 ): void {
 	if (camera.source !== input.source) {
-		camera.setup = camera.setup?.alerts ? { alerts: camera.setup.alerts } : undefined;
+		delete camera.setup;
 		delete camera.connection;
 	}
 	if (input.connection === null) delete camera.connection;

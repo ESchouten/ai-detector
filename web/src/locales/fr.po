@@ -534,8 +534,7 @@ msgstr "L’emplacement d’enregistrement contient un fichier ou un dossier li�
 msgid "The recording location is invalid. Check the camera settings."
 msgstr "L’emplacement d’enregistrement n’est pas valide. Vérifiez les paramètres de la caméra."
 
-#: src/lib/server/cameras/archive-check.ts
-#: src/lib/server/cameras/checks.ts
+#: src/lib/server/cameras/connection.ts
 msgid "The camera software is missing. Repair or reinstall AI Detector and try again."
 msgstr "Le logiciel de caméra est manquant. Réparez ou réinstallez AI Detector, puis réessayez."
 
@@ -590,10 +589,6 @@ msgstr "L’enregistrement de test n’a pas pu être sauvegardé. Vérifiez que
 #: src/routes/pair/+page.server.ts
 msgid "Phone or computer"
 msgstr "Téléphone ou ordinateur"
-
-#: src/lib/server/cameras/index.ts
-msgid "The camera software could not be found. Repair or reinstall AI Detector, then try again."
-msgstr "Le logiciel de caméra est introuvable. Réparez ou réinstallez AI Detector, puis réessayez."
 
 #: src/lib/server/configuration/advanced.ts
 msgid "Each AI connection needs a unique name."
@@ -920,10 +915,6 @@ msgstr "La demande de vérification de l’enregistrement n’était pas valide.
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "This camera has no local recording destination to check."
 msgstr "Cette caméra n’a pas d’emplacement d’enregistrement local à vérifier."
-
-#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
-msgid "Camera software is missing. Repair or reinstall AI Detector."
-msgstr "Le logiciel de caméra est manquant. Réparez ou réinstallez AI Detector."
 
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "Check the camera picture again. The test recording has expired."

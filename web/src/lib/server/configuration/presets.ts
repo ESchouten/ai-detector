@@ -62,7 +62,7 @@ async function updateFollowedPresets(): Promise<void> {
 			else webLog.warn(`The model of preset "${preset.name}" cannot be downloaded now.`);
 		}
 		for (const label of await configuration.followPresets(ready))
-			console.info(`Detector "${label}" now has the current settings of its preset.`);
+			webLog.info(`Detector "${label}" now has the current settings of its preset.`);
 	} catch (error) {
 		webLog.warn(`Could not check for newer presets: ${(error as Error).message}`, error);
 	}
@@ -71,7 +71,5 @@ async function updateFollowedPresets(): Promise<void> {
 /** Before monitoring starts, and once a day while the application runs. */
 export async function followPresets(): Promise<void> {
 	await updateFollowedPresets();
-	const daily = setInterval(() => void updateFollowedPresets(), DAY);
-	daily.unref();
-	process.once('sveltekit:shutdown', () => clearInterval(daily));
+	setInterval(() => void updateFollowedPresets(), DAY).unref();
 }

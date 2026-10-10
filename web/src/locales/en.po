@@ -534,8 +534,7 @@ msgstr "The recording location contains a file or linked folder. Choose a regula
 msgid "The recording location is invalid. Check the camera settings."
 msgstr "The recording location is invalid. Check the camera settings."
 
-#: src/lib/server/cameras/archive-check.ts
-#: src/lib/server/cameras/checks.ts
+#: src/lib/server/cameras/connection.ts
 msgid "The camera software is missing. Repair or reinstall AI Detector and try again."
 msgstr "The camera software is missing. Repair or reinstall AI Detector and try again."
 
@@ -590,10 +589,6 @@ msgstr "The test recording could not be saved. Check that AI Detector’s data f
 #: src/routes/pair/+page.server.ts
 msgid "Phone or computer"
 msgstr "Phone or computer"
-
-#: src/lib/server/cameras/index.ts
-msgid "The camera software could not be found. Repair or reinstall AI Detector, then try again."
-msgstr "The camera software could not be found. Repair or reinstall AI Detector, then try again."
 
 #: src/lib/server/configuration/advanced.ts
 msgid "Each AI connection needs a unique name."
@@ -920,10 +915,6 @@ msgstr "The recording check request was not valid."
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "This camera has no local recording destination to check."
 msgstr "This camera has no local recording destination to check."
-
-#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
-msgid "Camera software is missing. Repair or reinstall AI Detector."
-msgstr "Camera software is missing. Repair or reinstall AI Detector."
 
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "Check the camera picture again. The test recording has expired."

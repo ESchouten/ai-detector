@@ -534,8 +534,7 @@ msgstr "Der Aufnahmeort enthält eine Datei oder einen verknüpften Ordner. Wäh
 msgid "The recording location is invalid. Check the camera settings."
 msgstr "Der Aufnahmeort ist ungültig. Prüfen Sie die Kameraeinstellungen."
 
-#: src/lib/server/cameras/archive-check.ts
-#: src/lib/server/cameras/checks.ts
+#: src/lib/server/cameras/connection.ts
 msgid "The camera software is missing. Repair or reinstall AI Detector and try again."
 msgstr "Die Kamerasoftware fehlt. Reparieren Sie AI Detector oder installieren Sie es neu und versuchen Sie es erneut."
 
@@ -590,10 +589,6 @@ msgstr "Die Testaufnahme konnte nicht gespeichert werden. Prüfen Sie, ob der Da
 #: src/routes/pair/+page.server.ts
 msgid "Phone or computer"
 msgstr "Handy oder Computer"
-
-#: src/lib/server/cameras/index.ts
-msgid "The camera software could not be found. Repair or reinstall AI Detector, then try again."
-msgstr "Die Kamerasoftware wurde nicht gefunden. Reparieren Sie AI Detector oder installieren Sie es neu und versuchen Sie es erneut."
 
 #: src/lib/server/configuration/advanced.ts
 msgid "Each AI connection needs a unique name."
@@ -920,10 +915,6 @@ msgstr "Die Anfrage zur Aufnahmeprüfung war ungültig."
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "This camera has no local recording destination to check."
 msgstr "Diese Kamera hat keinen lokalen Aufnahmeort, der geprüft werden kann."
-
-#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
-msgid "Camera software is missing. Repair or reinstall AI Detector."
-msgstr "Die Kamerasoftware fehlt. Reparieren Sie AI Detector oder installieren Sie es neu."
 
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "Check the camera picture again. The test recording has expired."

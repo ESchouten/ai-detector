@@ -702,7 +702,7 @@ test(
 	{ skip: process.platform === 'win32', timeout: 20000 },
 	async (t) => {
 		const source = 'rtsp://camera.example.test/workshop';
-		const { directory, base, logs } = await startServer(t, undefined, async (directory) => {
+		const { directory, base } = await startServer(t, undefined, async (directory) => {
 			await mkdir(path.join(directory, 'presets'));
 			await Promise.all([
 				// The preset as a new release brings it, with the second model.
@@ -752,7 +752,10 @@ test(
 		]);
 		const app = JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8'));
 		assert.equal(app.detectors[0].preset, 'workshop');
-		assert.match(logs(), /Detector "Workshop rule" now has the current settings of its preset/);
+		assert.match(
+			await (await send(`${base}/logs/output`)).text(),
+			/Detector "Workshop rule" now has the current settings of its preset/
+		);
 	}
 );
 
@@ -817,7 +820,10 @@ test(
 		modelPublished = true;
 		const later = await startServer(t, undefined, prepare, `${published}/folder`);
 		assert.deepEqual(await detectors(later), [{ ...saved, yolo: { model: `${published}/v2.pt` } }]);
-		assert.match(later.logs(), /Detector "Workshop rule" now has the current settings/);
+		assert.match(
+			await (await send(`${later.base}/logs/output`)).text(),
+			/Detector "Workshop rule" now has the current settings/
+		);
 	}
 );
 

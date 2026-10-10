@@ -5,7 +5,11 @@ import { copyFile, lstat, mkdir, realpath, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import { isArchiveSegment } from '../../detections.ts';
-import { CameraConnectionError, cameraStorageFailure } from './connection.ts';
+import {
+	CameraConnectionError,
+	cameraSoftwareMissing,
+	cameraStorageFailure
+} from './connection.ts';
 
 const execute = promisify(execFile);
 
@@ -80,11 +84,11 @@ export async function verifyCameraArchive(
 					);
 				} catch (cause) {
 					signal?.throwIfAborted();
-					throw new CameraConnectionError(
-						(cause as NodeJS.ErrnoException).code === 'ENOENT'
-							? 'The camera software is missing. Repair or reinstall AI Detector and try again.'
-							: 'The test recording was saved but could not be played. Check the camera picture and try again.'
-					);
+					throw (cause as NodeJS.ErrnoException).code === 'ENOENT'
+						? cameraSoftwareMissing()
+						: new CameraConnectionError(
+								'The test recording was saved but could not be played. Check the camera picture and try again.'
+							);
 				}
 			} finally {
 				await rm(clip, { force: true });

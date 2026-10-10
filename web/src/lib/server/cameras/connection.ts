@@ -81,3 +81,9 @@ export function cameraStorageFailure(cause: unknown): CameraConnectionError | un
 		);
 	return undefined;
 }
+
+export function cameraSoftwareMissing(): CameraConnectionError {
+	return new CameraConnectionError(
+		'The camera software is missing. Repair or reinstall AI Detector and try again.'
+	);
+}

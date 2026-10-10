@@ -52,8 +52,10 @@ def test_local_image_names_are_not_parsed_as_urls(tmp_path, name):
     assert batches[1].finished_sources == (str(path),)
 
 
-@pytest.mark.parametrize("raises", [False, True])
-def test_closing_wakes_a_reader_whose_camera_cannot_be_opened(monkeypatch, raises):
+@pytest.mark.parametrize(("address", "raises"), [("rtsp://camera", False), ("0", True)])
+def test_closing_wakes_a_reader_whose_camera_cannot_be_opened(
+    monkeypatch, address, raises
+):
     attempted = Event()
 
     def unavailable(*args):
@@ -66,7 +68,7 @@ def test_closing_wakes_a_reader_whose_camera_cannot_be_opened(monkeypatch, raise
         "aidetector.adapters.sources.streams.cv2.VideoCapture", unavailable
     )
     streams = StreamPool()
-    source = streams.subscribe(("0",))
+    source = streams.subscribe((address,))
     with streams.open(), ThreadPoolExecutor(max_workers=1) as pool:
         task = pool.submit(lambda: list(source.batches()))
         try:

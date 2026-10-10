@@ -6,7 +6,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager, nullcontext
 from threading import Lock
 from time import perf_counter
-from typing import TYPE_CHECKING, Any, Literal, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 from numpy.typing import NDArray
@@ -289,12 +289,8 @@ def open_detector(
                     loaded = _load_prepared_engine(
                         engine, config.task, options, report_status
                     )
-            conversion = _export_format(model_path, build_type, native_mps)
-            if (
-                conversion == "onnx"
-                and cache_directory is not None
-                and model_path.endswith(".pt")
-            ):
+            export = _needs_export(model_path, build_type, native_mps)
+            if export and cache_directory is not None and model_path.endswith(".pt"):
                 from aidetector.adapters.inference.prepared_models import prepare_onnx
 
                 model_path = str(
@@ -307,10 +303,10 @@ def open_detector(
                         report_status,
                     )
                 )
-                conversion = None
+                export = False
             if loaded is None:
                 loaded = _load_model(model_path, config.task, report_status)
-            if conversion:
+            if export:
                 report_status(
                     StatusEvent(
                         "preparing", message="Preparing the model for this computer…"
@@ -356,12 +352,10 @@ def _load_prepared_engine(
         return None
 
 
-def _export_format(
-    path: str, build_type: str, native_mps: bool
-) -> Literal["onnx"] | None:
-    if path.endswith((".onnx", ".engine")) or build_type == "cuda" or native_mps:
-        return None
-    return "onnx"
+def _needs_export(path: str, build_type: str, native_mps: bool) -> bool:
+    return not (
+        path.endswith((".onnx", ".engine")) or build_type == "cuda" or native_mps
+    )
 
 
 def _load_model(path: str, task: str, report_status: ReportStatus) -> YOLO:

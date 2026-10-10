@@ -180,6 +180,8 @@ class LivePreview:
                 for box in observation.boxes
             ],
         }
+        # The poll read the leases before taking the lock; a viewer can leave and
+        # a frame arrive in between.
         if self._has_viewer(source_key):
             _atomic_json(
                 self.directory / "frames" / f"{source_key}.{rule_id}.json", record

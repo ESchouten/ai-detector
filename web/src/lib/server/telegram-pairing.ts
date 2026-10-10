@@ -19,7 +19,6 @@ import {
 import { TelegramInbox } from './telegram-inbox.ts';
 
 const LIFETIME_MS = 5 * 60 * 1000;
-const MAX_SESSIONS = 16;
 const expired = () =>
 	'This Telegram connection link expired. Create a new link and open it in Telegram.';
 const cancelled = () => 'This Telegram connection was cancelled. Create a new link to try again.';
@@ -92,10 +91,6 @@ export class TelegramPairings {
 		const token = input.trim();
 		this.expire();
 		this.assertAvailable(token);
-		if (this.sessions.size >= MAX_SESSIONS)
-			throw new ConfigurationError(
-				'Finish or cancel another Telegram connection before starting a new one.'
-			);
 		const session: Session = {
 			id: randomBytes(32).toString('base64url'),
 			token,

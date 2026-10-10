@@ -51,12 +51,12 @@ interface CameraProgress {
 	rules: Map<string, RuleProgress>;
 }
 
-function ruleProgress(detector: DetectorConfig, index: number, app: AppConfig): RuleProgress {
+function ruleProgress(detector: DetectorConfig, index: number): RuleProgress {
 	const disk = detector.exporters?.disk;
 	const recordings = disk === undefined ? [] : Array.isArray(disk) ? disk : [disk];
 	return {
 		index,
-		label: app.detectors?.[index]?.label || `Detector ${index + 1}`,
+		label: `Detector ${index + 1}`,
 		timeout: Math.max(15000, (detector.detection.interval ?? 0) * 3000 + 5000),
 		lastProcessedAt: null,
 		workerActivityAt: null,
@@ -91,13 +91,6 @@ export class RuntimeProgress {
 	notice: string | undefined;
 
 	configure(config: Config, app: AppConfig, directory: string): void {
-		this.prepared = false;
-		this.cameras.clear();
-		this.failures.clear();
-		this.engines.clear();
-		this.preparation = undefined;
-		this.preparationFailure = undefined;
-		this.notice = undefined;
 		for (const [index, detector] of config.detectors.entries()) {
 			const sources = detector.detection.source;
 			for (const source of typeof sources === 'string' ? [sources] : sources) {
@@ -113,15 +106,12 @@ export class RuntimeProgress {
 							label: `Camera ${this.cameras.size + 1}`,
 							sourceKey: key,
 							state: 'connecting',
-							lastFrameAt: null,
-							lastProcessedAt: null,
-							lastInferenceAt: null,
-							lastRecordingAt: null
+							lastFrameAt: null
 						}
 					};
 					this.cameras.set(key, camera);
 				}
-				camera.rules.set(`detector-${index + 1}`, ruleProgress(detector, index, app));
+				camera.rules.set(`detector-${index + 1}`, ruleProgress(detector, index));
 			}
 		}
 		this.updateMetadata(app);
@@ -230,11 +220,8 @@ export class RuntimeProgress {
 		if (event.event === 'inference' || event.event === 'processed') {
 			// Completing an old batch cannot recover a disconnected camera.
 			if (camera.state !== 'offline') rule.lastProcessedAt = event.at;
-			camera.lastProcessedAt = event.at;
-			if (event.event === 'inference') camera.lastInferenceAt = event.at;
 		} else if (event.destinationId && rule.recordings.has(event.destinationId)) {
 			if (event.event === 'delivery') {
-				camera.lastRecordingAt = event.at;
 				rule.recordings.set(event.destinationId, undefined);
 			} else if (event.event === 'delivery_failed') {
 				rule.recordings.set(

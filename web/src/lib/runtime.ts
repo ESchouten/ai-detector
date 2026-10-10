@@ -13,9 +13,6 @@ export interface CameraRuntimeStatus {
 	sourceKey: string;
 	state: 'connecting' | 'receiving' | 'monitoring' | 'offline' | 'failed' | 'paused';
 	lastFrameAt: string | null;
-	lastProcessedAt: string | null;
-	lastInferenceAt: string | null;
-	lastRecordingAt: string | null;
 	error?: string;
 	recordingError?: string;
 }

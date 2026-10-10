@@ -13,6 +13,7 @@ import {
 	type ManualReview,
 	type RecordingExportFilter
 } from '../detections.ts';
+import { calendarDay } from '../format.ts';
 import { serialQueue } from './serial.ts';
 import { webLog } from './web-log.ts';
 
@@ -191,11 +192,7 @@ export class DetectionArchive {
 
 	/** The recordings that began between two moments, newest first. */
 	async between(from: Date, to: Date): Promise<Detection[]> {
-		const day = (moment: Date) => new Date(moment.getTime() - moment.getTimezoneOffset() * 60000);
-		const locations = await this.locations({
-			from: day(from).toISOString().slice(0, 10),
-			to: day(to).toISOString().slice(0, 10)
-		});
+		const locations = await this.locations({ from: calendarDay(from), to: calendarDay(to) });
 		const items: Detection[] = [];
 		for (let start = 0; start < locations.length; start += REVIEW_READS) {
 			const batch = await Promise.all(

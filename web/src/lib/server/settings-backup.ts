@@ -24,10 +24,11 @@ To restore into a new installation, extract the ZIP, open Settings, choose
 Use existing setup and select the extracted folder. Review the imported setup
 before starting monitoring. Existing setups are never overwritten by import.
 
-Recordings, downloaded models, local video sources, custom preset files and
-computer startup preferences and connected-device access are not included. Keep any local model or video
-files referenced by config.json alongside this backup, at their original
-relative paths, or update those paths before importing on another computer.
+Recordings, downloaded models, local video sources, custom preset files,
+computer startup preferences and connected-device access are not included.
+Keep any local model or video files referenced by config.json alongside this
+backup, at their original relative paths, or update those paths before
+importing on another computer.
 `
 			}
 		],

@@ -300,7 +300,6 @@ test(
 		await detector.start();
 		await waitFor(() => detector.status().readiness === 'monitoring');
 		assert.equal(detector.status().cameras[0].id, 'barn-camera');
-		assert.ok(detector.status().cameras[0].lastInferenceAt);
 		assert.ok(!(await detector.log.read()).includes('AIDETECTOR_STATUS'));
 		await writeJson(path.join(directory, 'app.json'), {
 			streams: [{ id: 'barn-camera', source, label: 'North barn' }]

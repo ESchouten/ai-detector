@@ -5,7 +5,7 @@ import { llmConnection } from '$lib/schema';
 import { configuration } from '$lib/server/configuration';
 import { configurationAction } from '$lib/server/configuration/request';
 import { managedDetector } from '$lib/server/detector-service';
-import { SetupError } from '$lib/server/runtime-platform';
+import { SetupError } from '$lib/server/setup-error';
 
 export const getLlmConnections = query(async () => (await configuration.read()).app.llms);
 export const canTestLlm = query(() => Boolean(managedDetector()));

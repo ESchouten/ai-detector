@@ -14,7 +14,7 @@ import {
 	type DetectorCommand
 } from './nvidia-runtime.ts';
 import { sanitizeTextForLogs as redact } from './runtime-logs.ts';
-import { SetupError } from './runtime-platform.ts';
+import { SetupError } from './setup-error.ts';
 
 export interface DetectorOptions {
 	executable: string;

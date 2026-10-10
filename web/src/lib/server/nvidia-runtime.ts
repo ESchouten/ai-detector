@@ -6,7 +6,7 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 import type { Config } from '../schema.ts';
 import { readJson, writeJson } from './json-file.ts';
-import { SetupError } from './runtime-platform.ts';
+import { SetupError } from './setup-error.ts';
 
 const execute = promisify(execFile);
 const NVIDIA_DRIVER_HELP = 'https://www.nvidia.com/drivers/';

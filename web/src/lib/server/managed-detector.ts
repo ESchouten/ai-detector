@@ -12,7 +12,7 @@ import type { DetectorCommand } from './nvidia-runtime.ts';
 import { DetectorPreparation, type DetectorOptions } from './detector-preparation.ts';
 import { sanitizeTextForLogs as redact } from './runtime-logs.ts';
 import { RuntimeProgress, STATUS_PREFIX } from './runtime-status.ts';
-import { SetupError } from './runtime-platform.ts';
+import { SetupError } from './setup-error.ts';
 import { serialQueue } from './serial.ts';
 
 const INITIAL_RESTART_DELAY_MS = 2000;

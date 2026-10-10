@@ -8,10 +8,7 @@ const camera: CameraRuntimeStatus = {
 	label: 'Barn',
 	sourceKey: 'source-1',
 	state: 'monitoring',
-	lastFrameAt: null,
-	lastProcessedAt: null,
-	lastInferenceAt: null,
-	lastRecordingAt: null
+	lastFrameAt: null
 };
 const runtime: RuntimeStatus = {
 	managed: true,

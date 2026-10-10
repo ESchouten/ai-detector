@@ -63,7 +63,6 @@ export async function clearModelCache(directory: string, config: Config): Promis
 			const relative = path.relative(models, path.resolve(directory, model));
 			return [
 				createHash('sha256').update(model).digest('hex').slice(0, 16),
-				path.basename(model),
 				relative.split(path.sep)[0]
 			];
 		})

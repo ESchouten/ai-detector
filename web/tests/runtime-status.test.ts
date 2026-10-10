@@ -84,7 +84,6 @@ test('camera readiness requires actual frames and processing; recordings remain 
 	assert.equal(ready.readiness, 'monitoring');
 	assert.equal(ready.cameras[0].id, 'stable-camera');
 	assert.equal(ready.cameras[0].label, 'Barn');
-	assert.equal(ready.cameras[0].lastRecordingAt, null);
 	assert.ok(!JSON.stringify(ready).includes('secret'));
 	record(
 		state,
@@ -98,23 +97,15 @@ test('camera readiness requires actual frames and processing; recordings remain 
 	record(state, 'delivery');
 	assert.equal(state.snapshot(now).readiness, 'monitoring');
 	assert.equal(state.snapshot(now).cameras[0].recordingError, undefined);
-	assert.equal(Date.parse(state.snapshot(now).cameras[0].lastRecordingAt!), now);
 });
 
-test('preparation failures remain actionable until a new run resets progress', () => {
+test('a failed preparation fails the run and keeps its advice', () => {
 	const state = progress();
 	record(state, 'preparing', 'Downloading the detection model…');
 	assert.match(state.preparation!, /Detector 1: Downloading/);
 	record(state, 'preparation_failed', 'Check the internet connection and try again.');
 	assert.equal(state.snapshot(now).readiness, 'failed');
 	assert.match(state.preparationFailure!, /internet connection/);
-	state.configure(
-		{ detectors: [] },
-		{ streams: [], telegrams: [], llms: [], detectors: [] },
-		'/data'
-	);
-	assert.equal(state.preparationFailure, undefined);
-	assert.equal(state.preparation, undefined);
 });
 
 test('offline cameras need a new frame; completion of an old batch does not claim recovery', () => {
@@ -188,7 +179,6 @@ test('delivery backpressure keeps the worker alive without pretending inference 
 	assert.equal(state.stalledDetector(now + 180000), undefined);
 	const status = state.snapshot(now + 180000).cameras[0];
 	assert.match(status.error!, /waiting for AI validation or delivery/);
-	assert.equal(Date.parse(status.lastProcessedAt!), now);
 	record(state, 'processing_resumed', undefined, now + 181000);
 	assert.equal(state.stalledDetector(now + 182000), undefined);
 	assert.match(state.snapshot(now + 182000).cameras[0].error!, /processing has not completed/);
@@ -221,22 +211,6 @@ test('unsupported, invalid and unknown-camera status records cannot create monit
 	])
 		state.accept(STATUS_PREFIX + value);
 	assert.equal(state.snapshot(now).readiness, 'preparing');
-	assert.equal(state.snapshot(now).cameras[0].lastInferenceAt, null);
-});
-
-test('snapshot processing does not fabricate inference activity, and restart clears old evidence', () => {
-	const state = progress();
-	record(state, 'frame');
-	record(state, 'processed');
-	assert.equal(state.snapshot(now).readiness, 'monitoring');
-	assert.equal(state.snapshot(now).cameras[0].lastInferenceAt, null);
-	state.configure(
-		{ detectors: [{ detection: { source: [source] } }] },
-		{ streams: [], telegrams: [], llms: [], detectors: [] },
-		'/data'
-	);
-	assert.equal(state.snapshot(now).readiness, 'preparing');
-	assert.equal(state.snapshot(now).cameras[0].lastProcessedAt, null);
 });
 
 test('every rule must process the camera, and a healthy rule cannot hide another stalled rule', () => {

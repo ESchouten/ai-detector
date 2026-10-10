@@ -6,15 +6,10 @@ import {
 	type WatchState,
 	type WatchStretch
 } from '../camera-history.ts';
+import { calendarDay } from '../format.ts';
 import { isMissingFile } from './archive.ts';
 
 const DAYS_KEPT = 30;
-
-/** The calendar day of a moment on this computer, as in the names of recordings. */
-function day(moment: Date): string {
-	const pad = (value: number) => String(value).padStart(2, '0');
-	return `${moment.getFullYear()}-${pad(moment.getMonth() + 1)}-${pad(moment.getDate())}`;
-}
 
 /**
  * When each camera was really watched. Every change of a camera's state is one line in the
@@ -62,7 +57,7 @@ export class WatchHistory {
 		await mkdir(this.directory, { recursive: true });
 		const stopped = await this.alive();
 		if (!stopped) return;
-		this.today = day(stopped);
+		this.today = calendarDay(stopped);
 		for (const change of await this.changes(this.today))
 			this.states.set(change.camera, change.state);
 		await this.write(
@@ -73,11 +68,11 @@ export class WatchHistory {
 
 	/** Keep the state of every camera at this moment; cameras no longer listed have stopped. */
 	async sample(cameras: { id: string; state: WatchState }[], now = new Date()): Promise<void> {
-		if (day(now) !== this.today) {
+		if (calendarDay(now) !== this.today) {
 			const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 			const carried = Array.from(this.states, ([camera, state]) => ({ camera, state }));
 			this.states.clear();
-			this.today = day(now);
+			this.today = calendarDay(now);
 			await this.write(carried, midnight);
 			await this.prune(now);
 		}
@@ -104,20 +99,20 @@ export class WatchHistory {
 	}
 
 	private async prune(now: Date): Promise<void> {
-		const oldest = day(new Date(now.getTime() - DAYS_KEPT * 86400000));
+		const oldest = calendarDay(new Date(now.getTime() - DAYS_KEPT * 86400000));
 		for (const name of await readdir(this.directory))
 			if (name.endsWith('.jsonl') && name.slice(0, 10) < oldest) await rm(this.file(name));
 	}
 
 	async read(from: Date, to: Date): Promise<Map<string, WatchStretch[]>> {
 		const changes: WatchChange[] = [];
-		const last = day(to);
+		const last = calendarDay(to);
 		for (
 			let date = new Date(from.getFullYear(), from.getMonth(), from.getDate());
-			day(date) <= last;
+			calendarDay(date) <= last;
 			date.setDate(date.getDate() + 1)
 		)
-			changes.push(...(await this.changes(day(date))));
+			changes.push(...(await this.changes(calendarDay(date))));
 		return watchStretches(changes, from, to, (await this.alive()) ?? from);
 	}
 }

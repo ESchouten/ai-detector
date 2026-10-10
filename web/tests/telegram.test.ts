@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { findTelegramChats, sendTelegramTest } from '../src/lib/server/telegram.ts';
+import { sendTelegramTest } from '../src/lib/server/telegram.ts';
+import { TelegramInbox } from '../src/lib/server/telegram-inbox.ts';
 
 test('chat discovery returns unique recipient names without exposing message bodies', async (t) => {
 	t.mock.method(
@@ -25,7 +26,9 @@ test('chat discovery returns unique recipient names without exposing message bod
 				})
 			)
 	);
-	assert.deepEqual(await findTelegramChats('fixture-token'), [
+	const inbox = new TelegramInbox();
+	await inbox.receive('fixture-token');
+	assert.deepEqual(inbox.chats('fixture-token'), [
 		{ id: '1', name: 'Farmer' },
 		{ id: '-2', name: 'Farm' }
 	]);
@@ -50,7 +53,7 @@ test('unavailable Telegram gives internet guidance without exposing request cred
 		t.mock.method(globalThis, 'fetch', async () => {
 			throw failure;
 		});
-		await assert.rejects(findTelegramChats('secret-token'), (error: Error) => {
+		await assert.rejects(new TelegramInbox().receive('secret-token'), (error: Error) => {
 			assert.match(error.message, /internet connection/);
 			assert.match(error.message, /Local monitoring can continue/);
 			assert.doesNotMatch(error.message, /secret-token/);
@@ -63,7 +66,10 @@ test('unavailable Telegram gives internet guidance without exposing request cred
 test('an invalid Telegram response offers retry instead of a JSON or schema error', async (t) => {
 	for (const body of ['<h1>Service unavailable</h1>', '{"unexpected":true}']) {
 		t.mock.method(globalThis, 'fetch', async () => new Response(body));
-		await assert.rejects(findTelegramChats('fixture-token'), /unexpected reply.*try again later/);
+		await assert.rejects(
+			new TelegramInbox().receive('fixture-token'),
+			/unexpected reply.*try again later/
+		);
 		t.mock.restoreAll();
 	}
 });
@@ -77,7 +83,10 @@ test('the Telegram request deadline aborts the fetch and gives connection guidan
 			signal!.addEventListener('abort', () => reject(signal!.reason), { once: true });
 		});
 	});
-	const request = assert.rejects(findTelegramChats('fixture-token'), /internet connection/);
+	const request = assert.rejects(
+		new TelegramInbox().receive('fixture-token'),
+		/internet connection/
+	);
 	assert.ok(signal);
 	t.mock.timers.tick(10000);
 	await request;

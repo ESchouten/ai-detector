@@ -10,10 +10,7 @@ const camera: CameraRuntimeStatus = {
 	label: 'Camera 1',
 	sourceKey: 'source-1',
 	state: 'monitoring',
-	lastFrameAt: null,
-	lastProcessedAt: null,
-	lastInferenceAt: null,
-	lastRecordingAt: null
+	lastFrameAt: null
 };
 
 test('camera badges distinguish connection, processing and recording problems', () => {

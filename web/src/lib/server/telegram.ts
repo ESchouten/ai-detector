@@ -20,7 +20,6 @@ const chatSchema = v.object({
 });
 const userSchema = v.object({ id: v.number(), is_bot: v.boolean() });
 const messageSchema = v.object({
-	message_id: v.optional(v.number()),
 	chat_shared: v.optional(
 		v.object({ request_id: v.number(), chat_id: v.number(), title: v.optional(v.string()) })
 	),
@@ -142,7 +141,7 @@ export async function getTelegramUpdates(
 		offset?: number;
 		signal?: AbortSignal;
 		allowedUpdates?: Exclude<keyof Update, 'update_id'>[];
-	} = {}
+	}
 ) {
 	return result(
 		updatesSchema,
@@ -179,10 +178,6 @@ export function telegramChats(updates: TelegramUpdate[]) {
 		if (message) chats.set(String(message.chat.id), telegramRecipient(message.chat));
 	}
 	return [...chats.values()];
-}
-
-export async function findTelegramChats(token: string) {
-	return telegramChats(await getTelegramUpdates(token));
 }
 
 export async function answerTelegramReview(

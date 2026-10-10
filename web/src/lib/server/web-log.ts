@@ -22,7 +22,7 @@ class WebLog {
 
 	/** Something worth knowing afterwards that is not a problem by itself. */
 	info(message: string): void {
-		this.output?.append(`${new Date().toISOString()} INFO ${sanitizeTextForLogs(message)}\n`);
+		this.output?.append(`${new Date().toISOString()} INFO ${message}\n`);
 	}
 
 	warn(message: string, error?: unknown): void {

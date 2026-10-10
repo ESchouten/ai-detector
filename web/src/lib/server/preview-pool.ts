@@ -66,7 +66,7 @@ export class PreviewPool {
 							closed = true;
 							if (error) controller.error(error);
 							else controller.close();
-							void detach();
+							detach();
 						}
 					};
 					shared.viewers.add(viewer);
@@ -78,7 +78,7 @@ export class PreviewPool {
 				},
 				cancel() {
 					closed = true;
-					return detach();
+					detach();
 				}
 			},
 			{ highWaterMark: 0 }

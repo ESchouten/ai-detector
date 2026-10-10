@@ -1,6 +1,5 @@
 """Prepare GPU-specific TensorRT engines without risking the inference process."""
 
-import hashlib
 import json
 import logging
 import os
@@ -21,7 +20,7 @@ import torch
 from filelock import FileLock
 from ultralytics.utils.downloads import attempt_download_asset
 
-from aidetector.adapters.inference.export_settings import export_arguments
+from aidetector.adapters.inference.export_settings import content_key, export_arguments
 from aidetector.adapters.inference.onnx import InferenceOptions
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig, YoloConfig
@@ -127,11 +126,7 @@ def engine_identity(source: Path, task: str, arguments: dict) -> str:
             )
         },
     }
-    digest = hashlib.sha256(json.dumps(identity, sort_keys=True).encode())
-    with source.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+    return content_key(identity, source)
 
 
 def reject_engine(engine: Path, reason: str) -> None:
@@ -199,7 +194,7 @@ def prepare_engine(
             reject_engine(engine, "An earlier TensorRT preparation did not complete")
             try:
                 _build_engine(source, config.task, arguments, engine, stop_requested)
-            except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+            except (OSError, RuntimeError) as error:
                 reject_engine(engine, str(error))
                 raise
             failure.unlink(missing_ok=True)
@@ -207,7 +202,7 @@ def prepare_engine(
     except KeyboardInterrupt:
         (destination / "failure.txt").unlink(missing_ok=True)
         raise
-    except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+    except (OSError, RuntimeError) as error:
         logger.warning(
             "TensorRT preparation unavailable; using PyTorch/CUDA: %s; build log: %s",
             error,
@@ -245,26 +240,21 @@ def _build_engine(source, task, arguments, engine, stop_requested):
 def run_preparation(
     request: Path, log_path: Path, stop_requested: Event | None = None
 ) -> None:
-    command = [sys.executable]
-    if getattr(sys, "frozen", False):
-        command.extend(["--prepare-tensorrt", str(request)])
-    else:
-        # Source installs and the downloaded runtime both use this package root;
-        # the latter intentionally does not install the app into site-packages.
-        # Enter the standard-library-only worker directly so its diagnostics
-        # are active before any application or inference dependencies load.
-        command.extend(
-            [
-                "-I",
-                "-u",
-                "-X",
-                "faulthandler",
-                "-c",
-                "import sys; sys.path.insert(0, sys.argv.pop(1)); from pathlib import Path; from aidetector.adapters.inference.tensorrt_worker import run_helper; raise SystemExit(run_helper(Path(sys.argv[1])))",
-                str(Path(__file__).resolve().parents[3]),
-                str(request),
-            ]
-        )
+    # Source installs and the downloaded runtime both use this package root;
+    # the latter intentionally does not install the app into site-packages.
+    # Enter the standard-library-only worker directly so its diagnostics
+    # are active before any application or inference dependencies load.
+    command = [
+        sys.executable,
+        "-I",
+        "-u",
+        "-X",
+        "faulthandler",
+        "-c",
+        "import sys; sys.path.insert(0, sys.argv.pop(1)); from pathlib import Path; from aidetector.adapters.inference.tensorrt_worker import run_helper; raise SystemExit(run_helper(Path(sys.argv[1])))",
+        str(Path(__file__).resolve().parents[3]),
+        str(request),
+    ]
     stopped = stop_requested if stop_requested is not None else Event()
     with (
         log_path.open("w", encoding="utf-8") as output,

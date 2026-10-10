@@ -1,5 +1,8 @@
 """The SDK conversion contract shared by cached and direct model exports."""
 
+import hashlib
+import json
+from pathlib import Path
 from typing import Any, Literal
 
 from aidetector.adapters.inference.onnx import InferenceOptions
@@ -22,3 +25,10 @@ def export_arguments(
         "simplify": True,
         "opset": onnx.opset,
     }
+
+
+def content_key(identity: dict[str, Any], source: Path) -> str:
+    """Name a prepared model after what produced it and the checkpoint's bytes."""
+    digest = hashlib.sha256(json.dumps(identity, sort_keys=True).encode())
+    with source.open("rb") as checkpoint:
+        return hashlib.file_digest(checkpoint, lambda: digest).hexdigest()

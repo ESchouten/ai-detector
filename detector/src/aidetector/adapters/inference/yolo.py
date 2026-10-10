@@ -283,18 +283,8 @@ def open_detector(
         with _restore_path_classes():
             model_path = config.model
             native_mps = options.native_mps and model_path.endswith(".pt")
-            if (
-                engines is not None
-                and build_type == "cuda"
-                and model_path.endswith(".pt")
-                and cache_directory is not None
-            ):
-                engine = engines.prepare(
-                    config,
-                    onnx,
-                    len(sources),
-                    options,
-                )
+            if engines is not None and model_path.endswith(".pt"):
+                engine = engines.prepare(config, onnx, len(sources), options)
                 if engine is not None:
                     loaded = _load_prepared_engine(
                         engine, config.task, options, report_status
@@ -327,7 +317,7 @@ def open_detector(
                     )
                 )
                 exported = loaded.export(
-                    **export_arguments(config, onnx, len(sources), options, conversion)
+                    **export_arguments(config, onnx, len(sources), options)
                 )
                 loaded = YOLO(str(exported), task=config.task)
             if loaded.predictor is None:
@@ -368,10 +358,10 @@ def _load_prepared_engine(
 
 def _export_format(
     path: str, build_type: str, native_mps: bool
-) -> Literal["onnx", "engine"] | None:
+) -> Literal["onnx"] | None:
     if path.endswith((".onnx", ".engine")) or build_type == "cuda" or native_mps:
         return None
-    return "engine" if build_type == "tensorrt" else "onnx"
+    return "onnx"
 
 
 def _load_model(path: str, task: str, report_status: ReportStatus) -> YOLO:

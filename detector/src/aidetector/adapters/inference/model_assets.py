@@ -15,6 +15,7 @@ from aidetector.adapters.diagnostics import resource_label
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 
 logger = logging.getLogger(__name__)
+MODEL_DOWNLOADING = "Downloading the detection model. This may take a few minutes…"
 MODEL_DOWNLOAD_HELP = (
     "The detection model could not be downloaded. Check this computer's internet "
     "connection and try again. Your camera settings are saved. "
@@ -98,12 +99,7 @@ def resolve_model_path(
     if target.exists():
         logger.info("Model cache hit: %s (%d bytes)", target, target.stat().st_size)
         return str(target)
-    report_status(
-        StatusEvent(
-            "preparing",
-            message="Downloading the detection model. This may take a few minutes…",
-        )
-    )
+    report_status(StatusEvent("preparing", message=MODEL_DOWNLOADING))
     with tempfile.TemporaryDirectory(dir=cache, prefix="download-") as temporary:
         pending = Path(temporary) / name
         started = perf_counter()

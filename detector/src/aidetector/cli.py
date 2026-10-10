@@ -101,7 +101,6 @@ def _arguments(argv: list[str] | None) -> argparse.Namespace:
     action.add_argument(
         "--prepare-windows-ml", nargs="?", const="", help=argparse.SUPPRESS
     )
-    action.add_argument("--prepare-tensorrt", type=Path, help=argparse.SUPPRESS)
     action.add_argument(
         "--test-vlm",
         type=Path,
@@ -136,10 +135,6 @@ def main(argv: list[str] | None = None) -> int:
         from aidetector.adapters.inference.windows_ml import run_helper
 
         return run_helper(args.prepare_windows_ml or None)
-    if args.prepare_tensorrt is not None:
-        from aidetector.adapters.inference.tensorrt_worker import run_helper
-
-        return run_helper(args.prepare_tensorrt)
     if args.test_vlm is not None:
         from aidetector.adapters.vlm_check import run_check
 

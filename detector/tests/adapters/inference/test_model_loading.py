@@ -75,22 +75,17 @@ def test_export_model_is_released_before_inference_starts(model_sdk):
     assert model.predictor is None
 
 
-@pytest.mark.parametrize(
-    "build_type, model_format", [("default", "onnx"), ("tensorrt", "engine")]
-)
-def test_conversion_passes_the_selected_format_and_settings_to_the_sdk(
-    model_sdk, build_type, model_format
-):
+def test_conversion_passes_the_onnx_format_and_settings_to_the_sdk(model_sdk):
     with open_detector(
         YoloConfig(model="weights.pt", imgsz=128),
         OnnxConfig(opset=19),
         ("camera-1", "camera-2"),
-        build_type,
+        "default",
         InferenceOptions(half=True),
     ):
         assert model_sdk.exports == [
             {
-                "format": model_format,
+                "format": "onnx",
                 "batch": 2,
                 "dynamic": True,
                 "quantize": 16,

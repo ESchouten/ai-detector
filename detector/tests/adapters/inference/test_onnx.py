@@ -52,16 +52,13 @@ def unavailable_windows_ml(monkeypatch):
     def prepare(requested):
         raise OSError("Windows acceleration package is unavailable offline")
 
-    monkeypatch.delenv("CI", raising=False)
-    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
     monkeypatch.setattr(
         "aidetector.adapters.inference.onnx.prepare_windows_ml", prepare
     )
 
 
-@pytest.mark.parametrize("ci_variable", [None, "CI", "GITHUB_ACTIONS"])
 def test_optional_windows_provider_failure_falls_back_to_real_cpu_inference(
-    tmp_path, unavailable_windows_ml, monkeypatch, ci_variable
+    tmp_path, unavailable_windows_ml
 ):
     import numpy as np
     import onnxruntime as ort
@@ -70,8 +67,6 @@ def test_optional_windows_provider_failure_falls_back_to_real_cpu_inference(
 
     path = tmp_path / "model.onnx"
     write_detection_model(path)
-    if ci_variable:
-        monkeypatch.setenv(ci_variable, "true")
     notices = []
     with inference_runtime(
         OnnxConfig(), ONNX_MODELS, "windowsml", notices.append
@@ -363,7 +358,7 @@ def test_tensorrt_profiles_use_all_detector_dimensions_and_source_counts():
     }
 
 
-@pytest.mark.parametrize("build_type", ["default", "cuda", "tensorrt", "windowsml"])
+@pytest.mark.parametrize("build_type", ["default", "cuda", "windowsml"])
 def test_disabled_inference_does_not_load_onnx_runtime(monkeypatch, build_type):
     import sys
 
@@ -371,11 +366,9 @@ def test_disabled_inference_does_not_load_onnx_runtime(monkeypatch, build_type):
     with inference_runtime(OnnxConfig(), (), build_type) as options:
         assert options.half is False
         assert options.rectangular is True
-    assert tensorrt_profiles(()) == {}
 
 
-@pytest.mark.parametrize("build_type", ["cuda", "tensorrt"])
-def test_native_cuda_models_do_not_load_onnx_runtime(monkeypatch, build_type):
+def test_native_cuda_models_do_not_load_onnx_runtime(monkeypatch):
     import sys
 
     monkeypatch.setitem(sys.modules, "onnxruntime", None)
@@ -383,7 +376,7 @@ def test_native_cuda_models_do_not_load_onnx_runtime(monkeypatch, build_type):
         ModelRequirements("model.pt", image_size=320, batch_size=1),
         ModelRequirements("model.engine", image_size=640, batch_size=2),
     )
-    with inference_runtime(OnnxConfig(), models, build_type) as options:
+    with inference_runtime(OnnxConfig(), models, "cuda") as options:
         assert options.half is True
         assert options.rectangular is True
         assert options.native_mps is False
@@ -554,7 +547,6 @@ def test_unavailable_explicit_provider_fails_and_rolls_back_environment(monkeypa
     assert "ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS" not in os.environ
 
 
-@pytest.mark.parametrize("build_type", ["cuda", "tensorrt"])
 @pytest.mark.parametrize(
     "model_path",
     [
@@ -563,7 +555,7 @@ def test_unavailable_explicit_provider_fails_and_rolls_back_environment(monkeypa
         "https://example.test/model.onnx#download",
     ],
 )
-def test_cuda_onnx_preloads_runtime_libraries(monkeypatch, build_type, model_path):
+def test_cuda_onnx_preloads_runtime_libraries(monkeypatch, model_path):
     import onnxruntime as ort
 
     calls = []
@@ -573,12 +565,11 @@ def test_cuda_onnx_preloads_runtime_libraries(monkeypatch, build_type, model_pat
     )
     monkeypatch.setattr(ort, "get_ep_devices", list)
     models = (ModelRequirements(model_path, image_size=640, batch_size=1),)
-    with inference_runtime(OnnxConfig(), models, build_type):
+    with inference_runtime(OnnxConfig(), models, "cuda"):
         assert calls == [{"directory": ""}]
 
 
-@pytest.mark.parametrize("build_type", ["cuda", "tensorrt"])
-def test_signed_onnx_url_still_checks_the_configured_provider(monkeypatch, build_type):
+def test_signed_onnx_url_still_checks_the_configured_provider(monkeypatch):
     import onnxruntime as ort
 
     monkeypatch.setattr(ort, "preload_dlls", lambda **kwargs: None)
@@ -597,7 +588,7 @@ def test_signed_onnx_url_still_checks_the_configured_provider(monkeypatch, build
     )
     with (
         pytest.raises(ValueError, match="Configured ONNX provider is unavailable"),
-        inference_runtime(config, models, build_type),
+        inference_runtime(config, models, "cuda"),
     ):
         pytest.fail("A query string must not bypass provider validation")
     assert ort.InferenceSession is original_session

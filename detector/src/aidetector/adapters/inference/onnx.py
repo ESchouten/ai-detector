@@ -190,8 +190,6 @@ def select_providers(
 
 
 def tensorrt_profiles(models: tuple[ModelRequirements, ...]) -> dict[str, str]:
-    if not models:
-        return {}
     sizes = [model.image_size for model in models]
     batch = max(model.batch_size for model in models)
     return {
@@ -228,7 +226,7 @@ def inference_runtime(
         # inference library's opportunistic pip-install path.
         _set_environment(resources, "ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS", "1")
         _set_environment(resources, "YOLO_AUTOINSTALL", "false")
-        uses_cuda = build_type in ("cuda", "tensorrt")
+        uses_cuda = build_type == "cuda"
         if uses_cuda:
             _cuda_libraries(resources)
         if not models:

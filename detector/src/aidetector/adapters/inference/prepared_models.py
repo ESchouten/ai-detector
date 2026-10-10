@@ -1,8 +1,6 @@
 """Reuse portable ONNX exports of the same checkpoint and conversion settings."""
 
 import errno
-import hashlib
-import json
 import logging
 import shutil
 import tempfile
@@ -17,8 +15,11 @@ from onnxruntime.transformers.onnx_model import OnnxModel
 from ultralytics import YOLO
 from ultralytics.utils.downloads import attempt_download_asset
 
-from aidetector.adapters.inference.export_settings import export_arguments
-from aidetector.adapters.inference.model_assets import MODEL_DOWNLOAD_HELP
+from aidetector.adapters.inference.export_settings import content_key, export_arguments
+from aidetector.adapters.inference.model_assets import (
+    MODEL_DOWNLOAD_HELP,
+    MODEL_DOWNLOADING,
+)
 from aidetector.adapters.inference.onnx import InferenceOptions
 from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig, YoloConfig
@@ -38,11 +39,7 @@ def _cache_key(source: Path, task: str, arguments: dict) -> str:
             "onnxslim": onnxslim.__version__,
         },
     }
-    digest = hashlib.sha256(json.dumps(identity, sort_keys=True).encode())
-    with source.open("rb") as checkpoint:
-        for chunk in iter(lambda: checkpoint.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+    return content_key(identity, source)
 
 
 def prepare_onnx(
@@ -56,12 +53,7 @@ def prepare_onnx(
     # Stock weights still use Ultralytics' asset downloader. Explicit model URLs
     # have already been resolved by model_assets before entering this boundary.
     if not Path(config.model).is_file():
-        report_status(
-            StatusEvent(
-                "preparing",
-                message="Downloading the detection model. This may take a few minutes…",
-            )
-        )
+        report_status(StatusEvent("preparing", message=MODEL_DOWNLOADING))
     try:
         source = Path(attempt_download_asset(config.model))
     except ConnectionError:

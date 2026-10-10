@@ -33,7 +33,7 @@ Install exactly one runtime extra per environment. They share the `onnxruntime` 
 | `--control-stdin` | Stops gracefully on a line `stop` or on EOF from the parent. |
 | `--log-level` | `WARNING` hides routine activity; `DEBUG` adds per-batch details. |
 
-**Executables and Docker.** [Releases](https://github.com/ESchouten/ai-detector/releases) carry platform builds that take the same flags; `--version` reports the build and runtime type. The [container image](../README.md#docker) holds the detector together with the web application that starts it; `docker run --rm IMAGE python3 -m aidetector …` runs the detector by itself from `/data`. A package that passes its smoke test has not shown that every GPU provider works on every machine.
+**Executables and Docker.** [Releases](https://github.com/ESchouten/ai-detector/releases) carry the application installers, and the detector inside them takes the same flags; `--version` reports the build and runtime type. The [container image](../README.md#docker) holds the detector together with the web application that starts it; `docker run --rm IMAGE python3 -m aidetector …` runs the detector by itself from `/data`. A package that passes its smoke test has not shown that every GPU provider works on every machine.
 
 **Jetson.** The ARM64 image is for Orin and Thor with JetPack 7.2 and has not been checked on a board yet; JetPack 6 images are no longer built. See [Jetson](MIGRATION.md#jetson).
 

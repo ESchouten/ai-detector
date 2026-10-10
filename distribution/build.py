@@ -64,7 +64,6 @@ def build_metadata(path: Path, content: str):
 
 def build_detector(args) -> Path:
     target = TARGETS[args.platform]
-    kind = args.type or target.extra
     if not args.skip_dependencies:
         run(
             "uv",
@@ -73,14 +72,10 @@ def build_detector(args) -> Path:
             "--python",
             (ROOT / "detector/.python-version").read_text().strip(),
             "--extra",
-            kind,
+            target.extra,
             cwd=ROOT / "detector",
         )
-    flags = [
-        "--onefile" if args.onefile else "--onedir",
-        "--additional-hooks-dir",
-        HOOKS,
-    ]
+    flags = ["--onedir", "--additional-hooks-dir", HOOKS]
     for module in COLLECT:
         flags += ["--collect-all", module]
     # Our exports use FP32/FP16. Exclude the unused reference evaluator and
@@ -91,7 +86,7 @@ def build_detector(args) -> Path:
         "--exclude-module=onnx.reference",
         "--exclude-module=onnxruntime.quantization",
     ]
-    if kind == "windowsml":
+    if target.extra == "windowsml":
         # Windows ML's ORT helpers modify sys.path and import sibling .py files.
         # The upstream DLL hook alone cannot collect those dynamic imports.
         flags += [
@@ -101,15 +96,14 @@ def build_detector(args) -> Path:
             "--copy-metadata=wasdk-microsoft-windows-ai-machinelearning",
             "--copy-metadata=winrt-runtime",
         ]
-    if args.platform == "macos-arm64" and not args.onefile:
+    if args.platform == "macos-arm64":
         flags += [
             "--windowed",
             "--osx-bundle-identifier",
             "io.github.eschouten.ai-detector.detector",
         ]
-    name = args.name or "aidetector"
     reference = os.environ.get("GITHUB_REF_NAME", args.version)
-    metadata = f"TYPE = {kind!r}\nREF_NAME = {reference!r}\n"
+    metadata = f"TYPE = {target.extra!r}\nREF_NAME = {reference!r}\n"
     with build_metadata(ROOT / "detector/src/aidetector/version.py", metadata):
         run(
             "uv",
@@ -118,7 +112,7 @@ def build_detector(args) -> Path:
             "pyinstaller",
             "src/aidetector/__main__.py",
             "--name",
-            name,
+            "aidetector",
             *flags,
             "--hidden-import=tiktoken_ext.openai_public",
             "--hidden-import=tiktoken_ext",
@@ -130,15 +124,9 @@ def build_detector(args) -> Path:
             "--noconfirm",
             cwd=ROOT / "detector",
         )
-    artifact = name + (
-        target.suffix
-        if args.onefile
-        else ".app"
-        if args.platform == "macos-arm64"
-        else ""
-    )
+    artifact = "aidetector.app" if args.platform == "macos-arm64" else "aidetector"
     destination = ROOT / "detector/dist" / artifact
-    if args.platform == "windows-x64" and kind == "windowsml" and not args.onefile:
+    if args.platform == "windows-x64":
         stage_nvidia_runtime(ROOT, destination / "nvidia-runtime", reference)
     return destination
 
@@ -172,26 +160,6 @@ def stamp_detector(folder: Path, reference: str) -> None:
         run("codesign", "--force", "--deep", "--sign", "-", folder)
 
 
-@contextmanager
-def staged_ffmpeg(standalone: bool, suffix: str):
-    """Keep build-only assets out of the next build, including after a failure."""
-    destination = ROOT / "web/static/_internal"
-    with tempfile.TemporaryDirectory(prefix="ai-web-assets-") as temporary:
-        original = Path(temporary) / "original"
-        if destination.exists():
-            shutil.move(destination, original)
-        try:
-            if standalone:
-                destination.mkdir(parents=True)
-                shutil.copy2(ffmpeg_path(), destination / f"ffmpeg{suffix}")
-            yield
-        finally:
-            if destination.exists():
-                shutil.rmtree(destination)
-            if original.exists():
-                shutil.move(original, destination)
-
-
 def warm_windows_compiler() -> None:
     # Bun needs its compile cache populated on the system drive before CI's D: checkout.
     with tempfile.TemporaryDirectory(
@@ -222,13 +190,10 @@ def build_web(args) -> Path:
         "AI_DETECTOR_WEB_TARGET": target.bun,
         "APP_VERSION": args.version,
     }
-    with (
-        staged_ffmpeg(args.standalone_web, target.suffix),
-        build_metadata(
-            ROOT / "web/src/lib/version.ts",
-            f"export const version = {json.dumps(os.environ.get('GITHUB_REF_NAME', args.version))};\n"
-            f"export const preview = {json.dumps(os.environ.get('UPDATE_CHANNEL') == 'preview')};\n",
-        ),
+    with build_metadata(
+        ROOT / "web/src/lib/version.ts",
+        f"export const version = {json.dumps(os.environ.get('GITHUB_REF_NAME', args.version))};\n"
+        f"export const preview = {json.dumps(os.environ.get('UPDATE_CHANNEL') == 'preview')};\n",
     ):
         run("pnpm", "build", cwd=ROOT / "web", env=env)
     return ROOT / "web/dist" / f"ai-detector-web{target.suffix}"
@@ -352,8 +317,6 @@ def preflight(args) -> None:
         args.output = args.output.resolve()
     if args.stage == "all" and args.detector:
         args.detector = args.detector.resolve()
-    if args.stage == "detector":
-        validate_detector_build(args)
     missing = sorted(
         tool for tool in required_tools(args) if shutil.which(tool) is None
     )
@@ -369,20 +332,6 @@ def preflight(args) -> None:
             raise ValueError(
                 "Install distribution/requirements.txt in this Python environment before building the Mac installer."
             )
-
-
-def validate_detector_build(args) -> None:
-    if args.name and (
-        "/" in args.name or "\\" in args.name or args.name in {".", ".."}
-    ):
-        raise ValueError("--name must be a filename, not a path.")
-    if args.type == "windowsml" and args.platform != "windows-x64":
-        raise ValueError("Windows ML requires a Windows x64 build machine.")
-    if args.type in {"cuda", "tensorrt"} and not args.skip_dependencies:
-        raise ValueError(
-            "CUDA and TensorRT builds require a prepared GPU dependency environment. "
-            "Install the matching dependencies first, then use --skip-dependencies."
-        )
 
 
 def validate_preview(args) -> None:
@@ -431,26 +380,13 @@ def parse_arguments(argv: list[str] | None = None):
     )
     full.add_argument("--output", type=Path, default=ROOT / "application-dist")
     full.add_argument("--detector", type=Path, help="Reuse an already frozen detector")
-    full.set_defaults(onefile=False, name=None, type=None, standalone_web=False)
-    detector = stages.add_parser(
+    stages.add_parser(
         "detector",
         parents=[common, dependencies],
         help="Freeze the detector using the shared hooks",
     )
-    detector.add_argument("--onefile", action="store_true")
-    detector.add_argument("--name", help="Standalone detector artifact name")
-    detector.add_argument(
-        "--type",
-        choices=("default", "windowsml", "cuda", "tensorrt"),
-        help="Inference backend; CUDA and TensorRT require --skip-dependencies",
-    )
-    web = stages.add_parser(
+    stages.add_parser(
         "web", parents=[common, dependencies], help="Compile the desktop web executable"
-    )
-    web.add_argument(
-        "--standalone-web",
-        action="store_true",
-        help="Embed FFmpeg for standalone web downloads",
     )
     launcher = stages.add_parser(
         "launcher", parents=[common], help="Compile the native desktop launcher"

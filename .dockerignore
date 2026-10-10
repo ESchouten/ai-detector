@@ -9,7 +9,6 @@ web/dist
 web/build
 web/.reports
 web/.vscode
-web/static/_internal
 web/live
 web/config.json
 web/app.json

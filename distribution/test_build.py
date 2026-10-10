@@ -21,35 +21,10 @@ class BuildTest(unittest.TestCase):
         self.version = self.root / "web/src/lib/version.ts"
         self.version.parent.mkdir(parents=True)
         self.version.write_bytes(b"original version\r\n")
-        self.assets = self.root / "web/static/_internal"
-        self.encoder = self.root / "ffmpeg"
-        self.encoder.write_bytes(b"encoder")
-        self.enterContext(patch.object(build, "ffmpeg_path", return_value=self.encoder))
-
-    def test_standalone_assets_do_not_leak_into_the_next_build(self):
-        args = argparse.Namespace(
-            platform="linux-x64",
-            standalone_web=True,
-            skip_dependencies=True,
-            version="1.2.3",
-        )
-
-        def compile_stage(*_args, **_kwargs):
-            self.assertEqual(self.assets.exists(), args.standalone_web)
-            if args.standalone_web:
-                self.assertEqual((self.assets / "ffmpeg").read_bytes(), b"encoder")
-
-        with patch.object(build, "run", side_effect=compile_stage):
-            build.build_web(args)
-            self.assertFalse(self.assets.exists())
-            args.standalone_web = False
-            build.build_web(args)
-        self.assertEqual(self.version.read_bytes(), b"original version\r\n")
 
     def test_the_web_build_knows_its_version_and_whether_it_is_a_test_build(self):
         args = argparse.Namespace(
             platform="linux-x64",
-            standalone_web=False,
             skip_dependencies=True,
             version="1.2.3",
         )
@@ -76,14 +51,11 @@ class BuildTest(unittest.TestCase):
                 'export const version = "app/v1.2.3";\nexport const preview = true;\n',
             ],
         )
+        self.assertEqual(self.version.read_bytes(), b"original version\r\n")
 
-    def test_failure_restores_existing_assets_and_source_metadata(self):
-        self.assets.mkdir(parents=True)
-        original = self.assets / "ffmpeg"
-        original.write_bytes(b"previous developer asset")
+    def test_failure_restores_source_metadata(self):
         args = argparse.Namespace(
             platform="linux-x64",
-            standalone_web=True,
             skip_dependencies=True,
             version="1.2.3",
         )
@@ -92,14 +64,7 @@ class BuildTest(unittest.TestCase):
         ):
             with self.assertRaises(subprocess.CalledProcessError):
                 build.build_web(args)
-        self.assertEqual(original.read_bytes(), b"previous developer asset")
         self.assertEqual(self.version.read_bytes(), b"original version\r\n")
-        with build.staged_ffmpeg(False, ""):
-            self.assertFalse(
-                self.assets.exists(),
-                "A combined build must exclude stale standalone assets",
-            )
-        self.assertEqual(original.read_bytes(), b"previous developer asset")
 
     def test_platform_selection_checks_the_machine_architecture(self):
         for system, machine, expected in (
@@ -177,31 +142,6 @@ class BuildTest(unittest.TestCase):
             self.assertEqual(launcher.output, self.root.resolve() / "local launcher")
         self.assertFalse(args.output.exists(), "Preflight must not create the output")
 
-    def test_detector_rejects_incompatible_or_unprepared_backends(self):
-        for arguments, message in (
-            (["--type", "cuda"], "prepared GPU dependency environment"),
-            (["--type", "tensorrt"], "prepared GPU dependency environment"),
-            (["--type", "windowsml"], "Windows ML requires a Windows"),
-            (["--name", "../outside"], "filename, not a path"),
-            (["--name", "nested\\outside"], "filename, not a path"),
-        ):
-            with (
-                self.subTest(arguments=arguments),
-                patch.object(build, "native_platform", return_value="linux-x64"),
-            ):
-                args = build.parse_arguments(["detector", *arguments])
-                with self.assertRaisesRegex(ValueError, message):
-                    build.preflight(args)
-        with (
-            patch.object(build, "native_platform", return_value="linux-x64"),
-            patch.object(build.shutil, "which", side_effect=lambda tool: tool),
-        ):
-            build.preflight(
-                build.parse_arguments(
-                    ["detector", "--type", "cuda", "--skip-dependencies"]
-                )
-            )
-
     def test_a_reused_detector_takes_the_reference_of_the_new_build(self):
         folder = self.root / "aidetector"
         frozen = folder / "_internal/aidetector/version.py"
@@ -239,14 +179,12 @@ class BuildTest(unittest.TestCase):
         exec(hook, scope)
         self.assertEqual(scope["module_collection_mode"], {"aidetector.version": "py"})
 
-    def test_detector_dependency_selection_matches_the_requested_backend(self):
+    def test_detector_dependency_selection_matches_the_platform(self):
         version = self.root / "detector/src/aidetector/version.py"
         version.parent.mkdir(parents=True)
         version.write_text("original version\n")
         (self.root / "detector/.python-version").write_text("3.12.14\n")
-        args = build.parse_arguments(
-            ["detector", "--platform", "windows-x64", "--type", "default"]
-        )
+        args = build.parse_arguments(["detector", "--platform", "linux-x64"])
         with patch.object(build, "run") as run:
             result = build.build_detector(args)
         install, freeze = (call.args for call in run.call_args_list)

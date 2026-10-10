@@ -1,29 +1,21 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
-import { fileURLToPath } from 'node:url';
+import { executable, managedDetector } from './support/detector.ts';
 import { mockTimeouts, realDelay, waitFor } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 
-const executable = fileURLToPath(new URL('./fixtures/detector.mjs', import.meta.url));
 const posixOnly = { skip: process.platform === 'win32' };
 const source = 'rtsp://camera.local/live';
 const config = { detectors: [{ detection: { source } }] };
 
 async function fixture(t: TestContext, extra = {}) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-recovery-'));
-	const detector = new ManagedDetector({ executable, dataDirectory: directory });
-	t.after(async () => {
-		await detector.stop();
-		await rm(directory, { recursive: true, force: true });
-	});
+	const { detector, directory } = await managedDetector(t);
 	mockTimeouts(t);
-	const settings = config;
 	const options = {
 		failureExitCode: 75,
 		statusEvents: ['ready', 'frame', 'inference'].map((event) => ({
@@ -35,14 +27,13 @@ async function fixture(t: TestContext, extra = {}) {
 		})),
 		...extra
 	};
-	await writeJson(path.join(directory, 'config.json'), settings);
+	await writeJson(path.join(directory, 'config.json'), config);
 	await writeJson(path.join(directory, 'fixture-options.json'), options);
 	await detector.start();
 	await waitFor(() => detector.status().readiness === 'monitoring');
 	return {
 		detector,
 		directory,
-		settings,
 		options,
 		pid: async () => Number(await readFile(path.join(directory, 'pid.txt'), 'utf8')),
 		starts: async () =>
@@ -55,7 +46,7 @@ test(
 	posixOnly,
 	async (t) => {
 		const modelsReady = { version: 1, event: 'models_ready', at: new Date().toISOString() };
-		const { detector, directory, settings, pid, starts } = await fixture(t, {
+		const { detector, directory, pid, starts } = await fixture(t, {
 			modelsReadyEvents: [modelsReady, modelsReady]
 		});
 		const originalPid = await pid();
@@ -66,7 +57,7 @@ test(
 		assert.notEqual(await pid(), originalPid);
 		assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
 		assert.throws(() => process.kill(originalPid, 0), { code: 'ESRCH' });
-		assert.deepEqual(await readJson(path.join(directory, 'config.json')), settings);
+		assert.deepEqual(await readJson(path.join(directory, 'config.json')), config);
 		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), true);
 		const log = await detector.log.read();
 		assert.equal(log.match(/Restart requested: TensorRT models are ready/g)?.length, 1);
@@ -111,7 +102,7 @@ test(
 	'an MPS failure starts a fresh process and retains diagnostics without stale readiness',
 	posixOnly,
 	async (t) => {
-		const { detector, directory, settings, pid, starts } = await fixture(t);
+		const { detector, directory, pid, starts } = await fixture(t);
 		const originalPid = await pid();
 		process.kill(originalPid, 'SIGUSR2');
 		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
@@ -127,7 +118,7 @@ test(
 		assert.match(await detector.log.read(), /Injected inference failure/);
 		assert.match(await detector.log.read(), /Restarting the detector/);
 		assert.ok(!(await detector.log.read()).includes('secret'));
-		assert.deepEqual(await readJson(path.join(directory, 'config.json')), settings);
+		assert.deepEqual(await readJson(path.join(directory, 'config.json')), config);
 		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), true);
 	}
 );
@@ -191,7 +182,7 @@ test(
 	'a failed recovery stays visible and keeps retrying until settings work again',
 	posixOnly,
 	async (t) => {
-		const { detector, directory, settings, pid, starts } = await fixture(t);
+		const { detector, directory, pid, starts } = await fixture(t);
 		process.kill(await pid(), 'SIGUSR2');
 		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
 		await writeJson(path.join(directory, 'config.json'), { detectors: [] });
@@ -202,7 +193,7 @@ test(
 		assert.equal(detector.status().readiness, 'preparing');
 		assert.match(await detector.log.read(), /Injected inference failure/);
 		assert.equal(await starts(), 1);
-		await writeJson(path.join(directory, 'config.json'), settings);
+		await writeJson(path.join(directory, 'config.json'), config);
 		t.mock.timers.tick(4000);
 		await waitFor(() => detector.status().readiness === 'monitoring');
 		assert.equal(await starts(), 2);
@@ -261,7 +252,7 @@ test(
 	'an enabled installation retries a failed startup when the app reopens',
 	posixOnly,
 	async (t) => {
-		const { detector, directory, settings, starts } = await fixture(t);
+		const { detector, directory, starts } = await fixture(t);
 		detector.log.append('Diagnostic from the previous application process\n');
 		await detector.stop(false);
 		const reopened = new ManagedDetector({ executable, dataDirectory: directory });
@@ -270,7 +261,7 @@ test(
 			await reopened.initialize();
 			assert.match(await reopened.log.read(), /Diagnostic from the previous application process/);
 			assert.match(reopened.status().message, /Add a detector.*Restarting monitoring/);
-			await writeJson(path.join(directory, 'config.json'), settings);
+			await writeJson(path.join(directory, 'config.json'), config);
 			t.mock.timers.tick(2000);
 			await waitFor(() => reopened.status().readiness === 'monitoring');
 			assert.equal(await starts(), 2);
@@ -279,14 +270,6 @@ test(
 		}
 	}
 );
-
-test('an MPS error while stopping never reverses the requested shutdown', posixOnly, async (t) => {
-	const { detector, starts } = await fixture(t, { stopExitCode: 75 });
-	await assert.rejects(detector.stop(), /stopped unexpectedly/);
-	assert.equal(detector.status().phase, 'failed');
-	assert.doesNotMatch(await detector.log.read(), /Restarting the detector/);
-	assert.equal(await starts(), 1);
-});
 
 test(
 	'a failed drain while applying settings still resumes enabled monitoring',

@@ -49,14 +49,13 @@ process.on('SIGUSR1', () => {
 });
 writeFileSync('pid.txt', String(process.pid));
 console.log('Camera rtsp://farmer:secret@camera.local/live?token=secret');
-if (options.crash) process.exit(1);
 for (const event of options.statusEvents ?? []) {
 	const record = 'AIDETECTOR_STATUS ' + JSON.stringify(event) + '\n';
 	process.stdout.write(record.slice(0, 20));
 	await new Promise((resolve) => setImmediate(resolve));
 	process.stdout.write(record.slice(20));
 }
-if (options.crashAfterStatus) process.exit(1);
+if (options.crash) process.exit(1);
 
 let stopping = false;
 function stop() {

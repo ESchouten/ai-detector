@@ -3,14 +3,13 @@ import { test } from 'node:test';
 import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
+import { executable, managedDetector } from './support/detector.ts';
 import { mockTimeouts, waitFor } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 
-const executable = fileURLToPath(new URL('./fixtures/detector.mjs', import.meta.url));
 const posixOnly = { skip: process.platform === 'win32' };
 const config = { detectors: [{ detection: { source: 'rtsp://camera.local/live' } }] };
 
@@ -18,12 +17,7 @@ test(
 	'AI connection checks clean up credentials on success, failure and cancellation without starting monitoring',
 	posixOnly,
 	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-ai-check-'));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
+		const { detector, directory } = await managedDetector(t);
 		const connection = {
 			label: 'Shared AI',
 			model: ['vision', 'backup'],
@@ -57,18 +51,13 @@ test(
 	'a model download failure stays visible until the automatic retry succeeds',
 	posixOnly,
 	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-download-failure-'));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
+		const { detector, directory } = await managedDetector(t);
 		mockTimeouts(t);
 		const message =
 			'The detection model could not be downloaded. Check the internet connection and try again.';
 		await writeJson(path.join(directory, 'config.json'), config);
 		await writeJson(path.join(directory, 'fixture-options.json'), {
-			crashAfterStatus: true,
+			crash: true,
 			statusEvents: [
 				{ version: 1, event: 'preparation_failed', at: new Date().toISOString(), message }
 			]
@@ -90,12 +79,7 @@ test(
 	'start is idempotent, config apply restarts once, stop drains and disables resume',
 	posixOnly,
 	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector lifecycle '));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
+		const { detector, directory } = await managedDetector(t);
 		await writeJson(path.join(directory, 'config.json'), config);
 		await detector.initialize();
 		await Promise.all([detector.start(), detector.start()]);
@@ -146,18 +130,15 @@ test(
 	'a failed drain rejects stop, preserves the pause choice and permits a later restart',
 	posixOnly,
 	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-failed-stop-'));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
+		const { detector, directory } = await managedDetector(t);
 		await writeJson(path.join(directory, 'config.json'), config);
 		await writeJson(path.join(directory, 'fixture-options.json'), { stopExitCode: 17 });
 		await detector.start();
 		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		await assert.rejects(detector.stop(), /stopped unexpectedly/);
 		assert.equal(detector.status().phase, 'failed');
+		assert.doesNotMatch(await detector.log.read(), /Restarting the detector/);
+		assert.equal(await readFile(path.join(directory, 'starts.txt'), 'utf8'), 'started\n');
 		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
 		await writeJson(path.join(directory, 'fixture-options.json'), {});
 		await detector.start();
@@ -171,12 +152,7 @@ test(
 	'invalid initial configuration fails visibly and a process crash schedules recovery',
 	posixOnly,
 	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-failure-'));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
+		const { detector, directory } = await managedDetector(t);
 		await writeJson(path.join(directory, 'config.json'), { detectors: [] });
 		await detector.start();
 		assert.equal(detector.status().phase, 'failed');
@@ -194,12 +170,7 @@ test(
 	'cancelling startup never launches the detector or enables automatic resume',
 	posixOnly,
 	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-cancel-'));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
+		const { detector, directory } = await managedDetector(t);
 		await writeJson(path.join(directory, 'config.json'), config);
 		await writeJson(path.join(directory, 'fixture-options.json'), { holdCheck: true });
 		const starting = detector.start();
@@ -214,12 +185,7 @@ test(
 
 for (const action of ['start', 'resume', 'apply'] as const) {
 	test(`stop cancels a queued ${action} before it can launch or restart`, posixOnly, async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-queued-'));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
+		const { detector, directory } = await managedDetector(t);
 		await writeJson(path.join(directory, 'config.json'), config);
 		if (action === 'resume')
 			await writeJson(path.join(directory, 'app.json'), { monitoring: true });
@@ -276,12 +242,7 @@ test(
 	'split structured records establish readiness while process spawn and human logs do not',
 	posixOnly,
 	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-status-protocol-'));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
+		const { detector, directory } = await managedDetector(t);
 		const source = config.detectors[0].detection.source;
 		const sourceKey = createHash('sha256').update(source).digest('hex');
 		await writeJson(path.join(directory, 'app.json'), {
@@ -325,12 +286,7 @@ test(
 	'a live detector that stops processing fresh frames is drained and restarted; pause cancels supervision',
 	posixOnly,
 	async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'detector-stall-'));
-		const detector = new ManagedDetector({ executable, dataDirectory: directory });
-		t.after(async () => {
-			await detector.stop();
-			await rm(directory, { recursive: true, force: true });
-		});
+		const { detector, directory } = await managedDetector(t);
 		const now = Date.now();
 		t.mock.timers.enable({ apis: ['setInterval', 'Date'], now });
 		const sourceKey = createHash('sha256')

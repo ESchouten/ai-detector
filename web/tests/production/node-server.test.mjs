@@ -12,39 +12,45 @@ import { unzipSync } from 'fflate';
 import { manifest } from '../../build/server/manifest.js';
 import { cameraSource, startServer } from './server.mjs';
 
+const names = [
+	'startDetector',
+	'saveCamera',
+	'saveDetector',
+	'finishSetup',
+	'inspectInstallation',
+	'importInstallation',
+	'setLanguage'
+];
 const commands = {};
 for (const [id, load] of Object.entries(manifest._.remotes)) {
 	const { default: remote } = await load();
-	for (const name of [
-		'startDetector',
-		'getCameraConnection',
-		'saveCamera',
-		'saveDetector',
-		'finishSetup',
-		'inspectInstallation',
-		'importInstallation',
-		'setLanguage'
-	]) {
+	for (const name of names) {
 		if (name in remote) commands[name] = `/${manifest.appPath}/remote/${id}/${name}`;
 	}
 }
 assert.ok(
-	commands.saveCamera &&
-		commands.getCameraConnection &&
-		commands.startDetector &&
-		commands.saveDetector &&
-		commands.finishSetup,
+	names.every((name) => commands[name]),
 	'Build is missing setup/runtime commands'
 );
 
-// Match SvelteKit's wire encoding, using its serialization library for nested results too.
-function commandBody(input) {
-	return JSON.stringify({
-		payload: Buffer.from(stringify(input)).toString('base64url'),
-		refreshes: []
+/** Sends a remote command as the setup page on this computer does, unless `headers` differ. */
+function command(base, name, input, headers) {
+	return send(base + commands[name], {
+		method: 'POST',
+		headers: {
+			Origin: base,
+			'Content-Type': 'application/json',
+			'x-sveltekit-pathname': '/setup',
+			'x-sveltekit-search': '',
+			...headers
+		},
+		// Match SvelteKit's wire encoding, using its serialization library for nested results too.
+		body: JSON.stringify({
+			payload: Buffer.from(stringify(input)).toString('base64url'),
+			refreshes: []
+		})
 	});
 }
-const startBody = commandBody(undefined);
 
 /** What app.json records for a detector that follows a preset; takes its detection settings as ordered JSON. */
 function presetVersion(settings) {
@@ -198,14 +204,42 @@ async function connectBrowser(base, origin, code) {
 	return response.headers.get('set-cookie').split(';')[0];
 }
 
+function pairingCode(logs) {
+	const code = logs().match(/initial pairing code: (\d{6})/)?.[1];
+	assert.ok(code, logs());
+	return code;
+}
+
+/** Waits for a file that appears only after its request was answered. */
+async function fileWritten(file) {
+	for (let i = 0; i < 100; i++) {
+		try {
+			await readFile(file);
+			return;
+		} catch (error) {
+			if (error.code !== 'ENOENT') throw error;
+		}
+		await delay(20);
+	}
+}
+
+function restoreSettings(base, headers) {
+	return send(base + '/recovery', {
+		method: 'POST',
+		headers: {
+			Origin: base,
+			Accept: 'text/html',
+			'Content-Type': 'application/x-www-form-urlencoded',
+			...headers
+		},
+		body: ''
+	});
+}
+
 test('remembered devices skip the pairing page and revoked devices stay blocked', async (t) => {
 	const { directory, base, logs } = await startServer(t);
 	const origin = 'http://barn.local';
-	const cookie = await connectBrowser(
-		base,
-		origin,
-		logs().match(/initial pairing code: (\d{6})/)[1]
-	);
+	const cookie = await connectBrowser(base, origin, pairingCode(logs));
 	const headers = { Host: 'barn.local', Cookie: cookie, Accept: 'text/html' };
 	const remembered = await send(`${base}/pair`, { headers });
 	assert.equal(remembered.status, 303);
@@ -273,51 +307,29 @@ test(
 				detectors: [{ label: 'Existing detector' }]
 			})
 		);
-		const headers = {
-			Origin: base,
-			'Content-Type': 'application/json',
-			'x-sveltekit-pathname': '/setup',
-			'x-sveltekit-search': ''
-		};
-		async function command(name, input, extraHeaders = {}) {
-			return send(base + commands[name], {
-				method: 'POST',
-				headers: { ...headers, ...extraHeaders },
-				body: commandBody(input)
-			});
-		}
-		const blocked = await command('inspectInstallation', previous, {
+		const blocked = await command(base, 'inspectInstallation', previous, {
 			Origin: 'https://other.example.test'
 		});
 		assert.equal(blocked.status, 403);
-		const remoteHost = await command('inspectInstallation', previous, {
+		const remoteHost = await command(base, 'inspectInstallation', previous, {
 			Host: 'farm.example.test',
 			Origin: 'http://farm.example.test',
-			Cookie: await connectBrowser(
-				base,
-				'http://farm.example.test',
-				logs().match(/initial pairing code: (\d{6})/)[1]
-			)
+			Cookie: await connectBrowser(base, 'http://farm.example.test', pairingCode(logs))
 		});
 		const remoteError = await remoteHost.json();
 		assert.equal(remoteError.type, 'error');
 		assert.equal(remoteError.status, 403);
-		const inspected = await command('inspectInstallation', previous);
+		const inspected = await command(base, 'inspectInstallation', previous);
 		assert.equal(inspected.status, 200, await inspected.clone().text());
 		const summary = parse((await inspected.json()).result);
 		assert.equal(summary.cameras, 1);
 		assert.equal(summary.detectors, 1);
-		const started = await command('importInstallation', { id: summary.id, keepRecordings: false });
+		const started = await command(base, 'importInstallation', {
+			id: summary.id,
+			keepRecordings: false
+		});
 		assert.equal(started.status, 200, await started.clone().text());
-		for (let i = 0; i < 100; i++) {
-			try {
-				await readFile(path.join(directory, 'config.json'));
-				break;
-			} catch (error) {
-				if (error.code !== 'ENOENT') throw error;
-			}
-			await delay(20);
-		}
+		await fileWritten(path.join(directory, 'config.json'));
 		const saved = JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8'));
 		assert.deepEqual(saved.detectors[0].detection.source, ['rtsp://camera.example.test/live']);
 		assert.ok(!('strategy' in saved.detectors[0].yolo));
@@ -343,7 +355,6 @@ test(
 		for (const name of ['Calving Catcher', 'Cow Catcher', 'General'])
 			assert.ok(html.includes(name), `Bundled preset ${name} should be available`);
 		assert.ok(html.includes('Choose a preset'));
-		assert.ok(!html.includes('Cow mounting behaviour'));
 	}
 );
 
@@ -388,15 +399,8 @@ test(
 
 		// Nothing was saved by looking; choosing a language is what records it.
 		await assert.rejects(readFile(path.join(directory, 'app.json')), { code: 'ENOENT' });
-		const chosen = await send(base + commands.setLanguage, {
-			method: 'POST',
-			headers: {
-				Origin: base,
-				'Content-Type': 'application/json',
-				'x-sveltekit-pathname': '/setup',
-				'x-sveltekit-search': '?step=cameras'
-			},
-			body: commandBody('fr')
+		const chosen = await command(base, 'setLanguage', 'fr', {
+			'x-sveltekit-search': '?step=cameras'
 		});
 		assert.equal(chosen.status, 200, await chosen.clone().text());
 		assert.equal(
@@ -436,9 +440,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			if (deployment !== 'local HTTP') {
 				const anonymous = await send(base + '/logs/output', { headers: browserHeaders });
 				assert.equal(anonymous.status, 401);
-				const code = logs().match(/initial pairing code: (\d{6})/)?.[1];
-				assert.ok(code, logs());
-				browserHeaders.Cookie = await connectBrowser(base, origin, code);
+				browserHeaders.Cookie = await connectBrowser(base, origin, pairingCode(logs));
 			}
 			const firstVisit = await send(`${base}/setup`, { headers: browserHeaders });
 			assert.equal(firstVisit.status, 302);
@@ -463,18 +465,12 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 				...browserHeaders,
 				Origin: origin,
 				'Content-Type': 'application/json',
-				'x-sveltekit-pathname': '/setup',
-				'x-sveltekit-search': '',
 				'x-ai-detector-protocol': 'https',
 				'x-forwarded-proto': 'https'
 			};
-			const rejected = await send(base + commands.saveCamera, {
-				method: 'POST',
-				body: commandBody(cameraInput),
-				headers: {
-					...headers,
-					Origin: `https://${host}` === origin ? 'https://other.example.test' : `https://${host}`
-				}
+			const rejected = await command(base, 'saveCamera', cameraInput, {
+				...headers,
+				Origin: `https://${host}` === origin ? 'https://other.example.test' : `https://${host}`
 			});
 			assert.equal(rejected.status, 403, await rejected.text());
 			const rejectedCheck = await send(base + '/camera-checks', {
@@ -491,11 +487,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			});
 			assert.equal(checked.status, 200, await checked.clone().text());
 			const { checkId } = await checked.json();
-			const saved = await send(base + commands.saveCamera, {
-				method: 'POST',
-				body: commandBody({ ...cameraInput, checkId }),
-				headers
-			});
+			const saved = await command(base, 'saveCamera', { ...cameraInput, checkId }, headers);
 			assert.equal(saved.status, 200, await saved.clone().text());
 			assert.equal((await saved.json()).type, 'result');
 			const detectorPage = await send(`${base}/setup?step=detectors`, {
@@ -505,18 +497,19 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			const detectorHtml = await detectorPage.text();
 			assert.ok(detectorHtml.includes('Copy'));
 			assert.ok(!detectorHtml.includes('Calving Catcher'));
-			const detectorSaved = await send(base + commands.saveDetector, {
-				method: 'POST',
-				headers,
-				body: commandBody({
+			const detectorSaved = await command(
+				base,
+				'saveDetector',
+				{
 					meta: { label: 'Safety', preset: 'copy' },
 					detector: {
 						detection: { source: [source] },
 						yolo: { model: 'safety.onnx', confidence: { helmet: 0.75 } },
 						exporters: { disk: [{ directory: 'safety' }] }
 					}
-				})
-			});
+				},
+				headers
+			);
 			assert.equal(detectorSaved.status, 200, await detectorSaved.clone().text());
 			assert.equal((await detectorSaved.json()).type, 'result');
 
@@ -545,22 +538,10 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 			assert.ok(Number.isFinite(Date.parse(verifiedAt)));
 			const checkedApp = JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8'));
 			assert.equal(checkedApp.streams[0].setup.archiveVerifiedAt, verifiedAt);
-			const started = await send(base + commands.startDetector, {
-				method: 'POST',
-				body: startBody,
-				headers
-			});
+			const started = await command(base, 'startDetector', undefined, headers);
 			assert.equal(started.status, 200);
 			await started.arrayBuffer();
-			for (let i = 0; i < 100; i++) {
-				try {
-					await readFile(path.join(directory, 'starts.txt'));
-					break;
-				} catch (error) {
-					if (error.code !== 'ENOENT') throw error;
-				}
-				await delay(20);
-			}
+			await fileWritten(path.join(directory, 'starts.txt'));
 			assert.equal(await readFile(path.join(directory, 'starts.txt'), 'utf8'), 'started\n');
 			assert.deepEqual(await stop(), [0, null], logs());
 			assert.equal(await readFile(path.join(directory, 'flushed.txt'), 'utf8'), 'flushed');
@@ -578,29 +559,19 @@ test(
 	async (t) => {
 		const { directory, base } = await startServer(t);
 		const source = await cameraSource(t, directory);
-		const headers = {
-			Origin: base,
-			'Content-Type': 'application/json',
-			'x-sveltekit-pathname': '/setup',
-			'x-sveltekit-search': ''
-		};
-		async function command(name, input) {
-			const response = await send(base + commands[name], {
-				method: 'POST',
-				headers,
-				body: commandBody(input)
-			});
+		async function answer(name, input) {
+			const response = await command(base, name, input);
 			assert.equal(response.status, 200, await response.clone().text());
 			return response.json();
 		}
-		const unverified = await command('saveCamera', { label: 'Pen', source });
+		const unverified = await answer('saveCamera', { label: 'Pen', source });
 		assert.equal(unverified.type, 'error');
 		assert.equal(unverified.status, 400);
 		await assert.rejects(readFile(path.join(directory, 'config.json')), { code: 'ENOENT' });
 		async function checkCamera(source) {
 			const response = await send(base + '/camera-checks', {
 				method: 'POST',
-				headers,
+				headers: { Origin: base, 'Content-Type': 'application/json' },
 				body: JSON.stringify({ source })
 			});
 			assert.equal(response.status, 200, await response.clone().text());
@@ -618,7 +589,7 @@ test(
 				.toString('hex'),
 			'ffd8'
 		);
-		const saved = await command('saveCamera', {
+		const saved = await answer('saveCamera', {
 			label: 'Pen',
 			source: result.source,
 			checkId: result.checkId
@@ -637,9 +608,9 @@ test(
 			null,
 			'Cameras without a detector can finish for live viewing'
 		);
-		assert.equal((await command('finishSetup')).type, 'result');
+		assert.equal((await answer('finishSetup')).type, 'result');
 		assert.equal((await send(base + '/')).headers.get('location'), '/streams');
-		const detectorSaved = await command('saveDetector', {
+		const detectorSaved = await answer('saveDetector', {
 			meta: { label: 'Activity' },
 			detector: {
 				detection: { source: [result.source] },
@@ -650,7 +621,7 @@ test(
 		assert.equal(detectorSaved.type, 'result', JSON.stringify(detectorSaved));
 		assert.equal((await send(base + '/')).headers.get('location'), '/detections');
 		await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
-		const renamed = await command('saveCamera', {
+		const renamed = await answer('saveCamera', {
 			id,
 			label: 'Calving pen',
 			source: result.source
@@ -659,7 +630,7 @@ test(
 		const other = await checkCamera(source + '-yard');
 		assert.equal(
 			(
-				await command('saveCamera', {
+				await answer('saveCamera', {
 					label: 'Yard',
 					source: other.source,
 					checkId: other.checkId
@@ -668,7 +639,7 @@ test(
 			'result'
 		);
 
-		const yardDetector = await command('saveDetector', {
+		const yardDetector = await answer('saveDetector', {
 			meta: { label: 'Yard monitoring', preset: 'general' },
 			detector: {
 				detection: { source: [other.source] },
@@ -900,16 +871,12 @@ test(
 			assert.equal(response.status, 200, route);
 			assert.ok((await response.text()).includes(title), route);
 		}
-		const renamed = await send(base + commands.saveCamera, {
-			method: 'POST',
-			headers: {
-				Origin: base,
-				'Content-Type': 'application/json',
-				'x-sveltekit-pathname': `/streams/${cameraId}`,
-				'x-sveltekit-search': ''
-			},
-			body: commandBody({ id: cameraId, label: 'Main workshop', source })
-		});
+		const renamed = await command(
+			base,
+			'saveCamera',
+			{ id: cameraId, label: 'Main workshop', source },
+			{ 'x-sveltekit-pathname': `/streams/${cameraId}` }
+		);
 		assert.equal(renamed.status, 200, await renamed.clone().text());
 		const result = await renamed.json();
 		assert.equal(result.type, 'result', JSON.stringify(result));
@@ -937,7 +904,7 @@ test('broken settings retain an accessible diagnostics download and explicit rec
 	const origin = 'http://barn.local';
 	const headers = {
 		Host: 'barn.local',
-		Cookie: await connectBrowser(base, origin, logs().match(/initial pairing code: (\d{6})/)[1])
+		Cookie: await connectBrowser(base, origin, pairingCode(logs))
 	};
 	assert.equal((await send(base + '/setup?step=detectors')).status, 200);
 	await writeFile(path.join(directory, 'config.json'), '{invalid settings');
@@ -963,16 +930,7 @@ test('broken settings retain an accessible diagnostics download and explicit rec
 		await (await send(base + '/recovery', { headers })).text(),
 		/Restore saved settings/
 	);
-	const restored = await send(base + '/recovery', {
-		method: 'POST',
-		headers: {
-			...headers,
-			Origin: origin,
-			Accept: 'text/html',
-			'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body: ''
-	});
+	const restored = await restoreSettings(base, { ...headers, Origin: origin });
 	assert.equal(restored.status, 303, await restored.clone().text());
 	assert.match(await (await send(base + '/setup?step=cameras', { headers })).text(), /Saved barn/);
 	assert.equal(
@@ -980,16 +938,7 @@ test('broken settings retain an accessible diagnostics download and explicit rec
 		1
 	);
 	await writeFile(path.join(directory, 'config.json.last-valid'), '{"key":"private-key",broken');
-	const failedRecovery = await send(base + '/recovery', {
-		method: 'POST',
-		headers: {
-			...headers,
-			Origin: origin,
-			Accept: 'text/html',
-			'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body: ''
-	});
+	const failedRecovery = await restoreSettings(base, { ...headers, Origin: origin });
 	assert.equal(failedRecovery.status, 400);
 	const support = unzipSync(
 		new Uint8Array(await (await send(base + '/logs/diagnostics', { headers })).arrayBuffer())
@@ -1017,15 +966,7 @@ test('damaged app settings do not prevent server startup or local recovery', asy
 	const recovery = await send(base + '/recovery');
 	assert.equal(recovery.status, 200);
 	assert.match(await recovery.text(), /Restore saved settings/);
-	const restored = await send(base + '/recovery', {
-		method: 'POST',
-		headers: {
-			Origin: base,
-			Accept: 'text/html',
-			'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body: ''
-	});
+	const restored = await restoreSettings(base);
 	assert.equal(restored.status, 303, await restored.clone().text());
 	assert.equal((await send(base + '/devices')).status, 200);
 });

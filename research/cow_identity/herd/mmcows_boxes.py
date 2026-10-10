@@ -12,19 +12,15 @@ import argparse
 import json
 from pathlib import Path
 
-import cv2
 import numpy as np
 
 import mmcows
-from enroll import write_herd
-from parts import KINDS, describe
+from parts import teach
 from parts_compare import scores
 
-from aidetector.adapters.identity_catalog import IdentityCatalog
-from aidetector.adapters.inference.herd_model import choose_device, learn
-
 # One network of each kind, numbered as the application numbers its own.
-NETWORKS = {"cattle": 0, "animal": 3}
+NETWORKS = {"cattle": (0,), "animal": (3,)}
+COMBINATION = "cattle:0+animal:3@share"
 
 
 def rows_of(manifest):
@@ -33,32 +29,6 @@ def rows_of(manifest):
         {**row, "path": str((manifest.parent / row["path"]).resolve())}
         for row in json.loads(manifest.read_text())
     ]
-
-
-def describe_all(photographs, crops, weights, work):
-    """Teach each kind on the enrolled cows and keep what it describes, as `parts` does."""
-    data = work / "data"
-    if not (data / "identities" / "catalog.json").exists():
-        write_herd([row for row in photographs if row["cow"] in mmcows.ENROLLED], "/", data)
-    store = IdentityCatalog(data / "identities")
-    cows = [cow for cow in store.load().identities if cow.samples]
-    samples = [(sample, index) for index, cow in enumerate(cows) for sample in cow.samples]
-    np.save(work / "owners.npy", np.array([int(cows[index].name) for _, index in samples]))
-    device = choose_device()
-    for kind, seed in NETWORKS.items():
-        target = work / f"{kind}-s{seed}.npz"
-        if target.exists():
-            continue
-        network = KINDS[kind](len(cows))
-        network.start(weights[kind])
-        learn(store.read_image, samples, network, device, seed=seed)
-        np.savez(
-            target,
-            photographs=describe(
-                network, [store.read_image(sample) for sample, _ in samples], device
-            ),
-            crops=describe(network, [cv2.imread(row["path"]) for row in crops], device),
-        )
 
 
 def told_apart(similarity, cows, truth, chosen):
@@ -89,15 +59,15 @@ def main():
     photographs = [row for manifest in arguments.photographs for row in rows_of(manifest)]
     crops = rows_of(arguments.crops)
     arguments.work.mkdir(parents=True, exist_ok=True)
-    describe_all(
-        photographs,
-        crops,
+    teach(
+        [row for row in photographs if row["cow"] in mmcows.ENROLLED],
+        "/",
+        [row["path"] for row in crops],
+        NETWORKS,
         {"cattle": arguments.herd_weights, "animal": arguments.animal_weights},
         arguments.work,
     )
-    similarity, cows = scores(
-        arguments.work, "+".join(f"{kind}:{seed}" for kind, seed in NETWORKS.items()) + "@share"
-    )
+    similarity, cows = scores(arguments.work, COMBINATION)
     truth = np.array([row["cow"] for row in crops])
     bundle, _ = mmcows.archive(mmcows.LABELLED)
     doing = {cow: mmcows.behaviour(bundle, cow) for cow in sorted(set(truth.tolist()))}

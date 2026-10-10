@@ -1,0 +1,189 @@
+{
+ "enrolled_cows": [
+  6,
+  11,
+  14,
+  26,
+  31,
+  41,
+  58,
+  62,
+  63,
+  78,
+  81,
+  89
+ ],
+ "withheld_cows": [
+  4,
+  8,
+  12,
+  16,
+  20,
+  24,
+  28,
+  32,
+  36,
+  40,
+  44,
+  48,
+  52,
+  56,
+  60,
+  64,
+  68,
+  72,
+  76,
+  80,
+  84,
+  88
+ ],
+ "photographs": 814,
+ "photographs_a_cow": [
+  48,
+  72
+ ],
+ "limit": 0.64,
+ "pictures_in_a_row": 5,
+ "all": {
+  "pictures_of_enrolled_cows": 2317,
+  "pictures_of_withheld_cows": 3697,
+  "resemble_their_own_cow_most": 0.9995684074233924,
+  "and_are_similar_enough": 0.974104445403539,
+  "resemble_another_cow_and_are_similar_enough": 0.0,
+  "withheld_that_are_similar_enough": 0.16337571003516366
+ },
+ "cows_of_the_smallest_herd": {
+  "pictures_of_enrolled_cows": 2317,
+  "pictures_of_withheld_cows": 3697,
+  "resemble_their_own_cow_most": 0.9995684074233924,
+  "and_are_similar_enough": 0.974104445403539,
+  "resemble_another_cow_and_are_similar_enough": 0.0,
+  "withheld_that_are_similar_enough": 0.16337571003516366
+ },
+ "by_camera": {
+  "1": {
+   "pictures_of_enrolled_cows": 479,
+   "pictures_of_withheld_cows": 923,
+   "resemble_their_own_cow_most": 1.0,
+   "and_are_similar_enough": 0.9874739039665971,
+   "resemble_another_cow_and_are_similar_enough": 0.0,
+   "withheld_that_are_similar_enough": 0.17984832069339113
+  },
+  "2": {
+   "pictures_of_enrolled_cows": 693,
+   "pictures_of_withheld_cows": 1326,
+   "resemble_their_own_cow_most": 0.9985569985569985,
+   "and_are_similar_enough": 0.9595959595959596,
+   "resemble_another_cow_and_are_similar_enough": 0.0,
+   "withheld_that_are_similar_enough": 0.18024132730015083
+  },
+  "3": {
+   "pictures_of_enrolled_cows": 1145,
+   "pictures_of_withheld_cows": 1448,
+   "resemble_their_own_cow_most": 1.0,
+   "and_are_similar_enough": 0.977292576419214,
+   "resemble_another_cow_and_are_similar_enough": 0.0,
+   "withheld_that_are_similar_enough": 0.13743093922651933
+  }
+ },
+ "at_other_limits": {
+  "0.5": {
+   "pictures_of_enrolled_cows": 2317,
+   "pictures_of_withheld_cows": 3697,
+   "resemble_their_own_cow_most": 0.9995684074233924,
+   "and_are_similar_enough": 0.9991368148467846,
+   "resemble_another_cow_and_are_similar_enough": 0.00043159257660768235,
+   "withheld_that_are_similar_enough": 0.37057073302677845
+  },
+  "0.54": {
+   "pictures_of_enrolled_cows": 2317,
+   "pictures_of_withheld_cows": 3697,
+   "resemble_their_own_cow_most": 0.9995684074233924,
+   "and_are_similar_enough": 0.998705222270177,
+   "resemble_another_cow_and_are_similar_enough": 0.00043159257660768235,
+   "withheld_that_are_similar_enough": 0.2404652420881796
+  },
+  "0.58": {
+   "pictures_of_enrolled_cows": 2317,
+   "pictures_of_withheld_cows": 3697,
+   "resemble_their_own_cow_most": 0.9995684074233924,
+   "and_are_similar_enough": 0.9948208890807078,
+   "resemble_another_cow_and_are_similar_enough": 0.00043159257660768235,
+   "withheld_that_are_similar_enough": 0.19421152285637003
+  },
+  "0.6": {
+   "pictures_of_enrolled_cows": 2317,
+   "pictures_of_withheld_cows": 3697,
+   "resemble_their_own_cow_most": 0.9995684074233924,
+   "and_are_similar_enough": 0.991799741044454,
+   "resemble_another_cow_and_are_similar_enough": 0.0,
+   "withheld_that_are_similar_enough": 0.18366242899648363
+  },
+  "0.62": {
+   "pictures_of_enrolled_cows": 2317,
+   "pictures_of_withheld_cows": 3697,
+   "resemble_their_own_cow_most": 0.9995684074233924,
+   "and_are_similar_enough": 0.9866206301251619,
+   "resemble_another_cow_and_are_similar_enough": 0.0,
+   "withheld_that_are_similar_enough": 0.17257235596429538
+  },
+  "0.66": {
+   "pictures_of_enrolled_cows": 2317,
+   "pictures_of_withheld_cows": 3697,
+   "resemble_their_own_cow_most": 0.9995684074233924,
+   "and_are_similar_enough": 0.9577039274924471,
+   "resemble_another_cow_and_are_similar_enough": 0.0,
+   "withheld_that_are_similar_enough": 0.14795780362456046
+  },
+  "0.68": {
+   "pictures_of_enrolled_cows": 2317,
+   "pictures_of_withheld_cows": 3697,
+   "resemble_their_own_cow_most": 0.9995684074233924,
+   "and_are_similar_enough": 0.9356927060854553,
+   "resemble_another_cow_and_are_similar_enough": 0.0,
+   "withheld_that_are_similar_enough": 0.12334325128482554
+  },
+  "0.7": {
+   "pictures_of_enrolled_cows": 2317,
+   "pictures_of_withheld_cows": 3697,
+   "resemble_their_own_cow_most": 0.9995684074233924,
+   "and_are_similar_enough": 0.9141130772550712,
+   "resemble_another_cow_and_are_similar_enough": 0.0,
+   "withheld_that_are_similar_enough": 0.09331890722207195
+  },
+  "0.74": {
+   "pictures_of_enrolled_cows": 2317,
+   "pictures_of_withheld_cows": 3697,
+   "resemble_their_own_cow_most": 0.9995684074233924,
+   "and_are_similar_enough": 0.8407423392317652,
+   "resemble_another_cow_and_are_similar_enough": 0.0,
+   "withheld_that_are_similar_enough": 0.047065187990262373
+  },
+  "0.78": {
+   "pictures_of_enrolled_cows": 2317,
+   "pictures_of_withheld_cows": 3697,
+   "resemble_their_own_cow_most": 0.9995684074233924,
+   "and_are_similar_enough": 0.697022011221407,
+   "resemble_another_cow_and_are_similar_enough": 0.0,
+   "withheld_that_are_similar_enough": 0.0032458750338111983
+  }
+ },
+ "walks_at_one_picture_a_second": {
+  "walks_of_enrolled_cows": 60,
+  "named_as_herself": 32,
+  "named_as_another_cow": 0,
+  "walks_of_withheld_cows": 99,
+  "withheld_named": 7,
+  "pictures_of_enrolled_cows": 482,
+  "pictures_that_carry_her_name": 235
+ },
+ "walks_at_five_pictures_a_second": {
+  "walks_of_enrolled_cows": 60,
+  "named_as_herself": 60,
+  "named_as_another_cow": 0,
+  "walks_of_withheld_cows": 99,
+  "withheld_named": 13,
+  "pictures_of_enrolled_cows": 2317,
+  "pictures_that_carry_her_name": 2049
+ }
+}

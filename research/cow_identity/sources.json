@@ -83,6 +83,12 @@
       "license": "CC BY-NC-SA 4.0",
       "use": "Pictures, boxes and behaviour labels of 25 July 2023 for the photographs, validation and test of a second farm (herd/mmcows.py); nothing taught from it is distributed"
     },
+    "evaluation_third_farm": {
+      "name": "MultiCamCows2024",
+      "source": "https://data.bris.ac.uk/data/dataset/2inu67jru7a6821kkgehxg3cv2",
+      "license": "Non-Commercial Government Licence for public sector information",
+      "use": "The publisher's cut-outs of 14 to 18 August 2023 as photographs and validation for herds of 12, 30 and 67 cows (herd/multicam.py, herd/herd_size.py), started from the weights taught SideViewCows2026 alone; 19 and 20 August are kept unseen; nothing taught from it is distributed"
+    },
     "cattle_starting_weights": {
       "use": "DINOv2-small taught 26,236 photographs of 287 cows of other farms (herd/auxiliary.py, herd/pretrain.py); local file, not distributed",
       "datasets": [

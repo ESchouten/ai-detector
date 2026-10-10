@@ -9,8 +9,9 @@ Reliable unattended identification is not established yet.
 Two experimental paths currently exist. The **Cow Identity** preset collects
 photographs that a farmer confirms and then learns the herd from them;
 [Learning the herd](HERD_LEARNING.md) has its method, its frozen protocol and
-its results on held-out video, where it missed its coverage target at night, and on
-a second farm, where it named few animals at all. With
+its results on held-out video, where it missed its coverage target at night, on
+a second farm, where it named few animals at all, and on a third, where a herd
+of 67 seen from the ceiling is told apart in the publisher's own cut-outs. With
 such a detector on a camera, the recordings of that camera's other detectors,
 Cow Catcher's mounting recordings for one, carry the names of the cows in them. The explicit
 source-install `identity.mode="continuous"` path follows anonymous animals on
@@ -31,7 +32,7 @@ Use the detector and web app from this branch together. Follow the normal [sourc
 1. In **Settings**, add or select a camera that looks down on each cow and shows her whole and apart from the others, such as one above a passageway. As a rule of thumb, a cow should be no farther away along the floor than one and a half times the camera's height above her back. Start with one camera. A camera in the corner of a pen, looking across cows that lie side by side in the cubicles, named one animal in eight in the [trial on a second farm](HERD_LEARNING.md#a-second-farm); a sharper picture helped neither finding the cows nor telling them apart.
 2. Add a detector using **Cow Identity**, select its cameras, save, and start monitoring. The first start downloads the normal YOLO detector. The identity model prepares in the background once at least two animals have confirmed photos. Keep the existing behaviour detectors if you also want mounting/calving alerts.
 3. Open **Herd** and refresh the photos. Choose **Identify cow**, then enter the cow's familiar name or ear-tag number. Confirm only pictures you can identify yourself.
-4. Add examples for at least two different cows. Add varied, clear views of each cow, especially from each camera that will be used. One animal in the gallery cannot establish a meaningful runner-up comparison.
+4. Add examples for at least two different cows. Add varied, clear views of each cow, especially from each camera that will be used. One animal in the gallery cannot establish a meaningful runner-up comparison. Work towards the whole herd, and confirm the cows with an all-black or all-white back first: on a [third public farm](HERD_LEARNING.md#a-third-farm), with twelve of 89 cows confirmed, an unknown all-black cow was taken for the confirmed one in nine of ten pictures, and with 67 confirmed in none.
 5. The camera overlay can now show **Possible 274**, for example. Ambiguous or unsuitable observations remain **Unknown**. Review suggestions before adding them to the gallery.
 6. Use **Edit examples → Change cow** to move a mistaken example directly to the correct cow. A confirmed reference appears beside the photo so you can compare them. Remove unclear examples to return them to review. A cow can also be renamed or removed. Corrections affect subsequent matching, not archived results. Pending photos keep their images but lose suggestions made using an older gallery revision.
 
@@ -215,6 +216,7 @@ Run the normal detector and web quality commands. Focused contracts are in `test
 5. Verify complete installer behaviour and camera throughput on each supported platform before wider deployment. Confirmed-herd backup/restore and background preparation already use the normal application flows.
 6. Behaviour events now carry the names of the cows recognised in them ([how, and how it was measured](HERD_LEARNING.md#names-on-another-rules-events)): on simulated events and one mounting clip, not yet on mounts with known cows. Measure that, and add per-cow history only after identity reliability is established. Never treat predicted names as confirmed training labels.
 7. The confirmed-herd method does not carry over to a pen filmed from its corners, where cows lie side by side: [on a second farm](HERD_LEARNING.md#a-second-farm) it named one animal in eight, because lying cows are not found and the cows that are found are not told apart, with or without a sharper picture. Naming cows there needs a detector taught to find lying cows and a way to tell cows apart from a strip of back; the method as it is suits a camera that sees each cow whole. Two hours of that farm are kept unseen for a version that first passes its validation.
+8. Seen from the ceiling, a herd of 67 is told apart in the publisher's own cut-outs of a [third farm](HERD_LEARNING.md#a-third-farm), with nobody named wrongly and one picture in 3,697 of unknown cows passing. Run the application on that farm's footage next: its detector and tracker on cows seen from straight above that walk nose to tail, at the five pictures a second a passage needs. Two days of that farm are kept unseen for it.
 
 ## Verification on 3 October 2026
 

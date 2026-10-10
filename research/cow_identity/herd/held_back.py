@@ -12,17 +12,12 @@ import json
 import tempfile
 from pathlib import Path
 
-import cv2
 import numpy as np
 
 import mmcows  # registers the second farm's videos
-from enroll import write_herd
 from ethz import confirmed_before, crop_time
-from parts import KINDS, describe
+from parts import teach
 from parts_compare import scores
-
-from aidetector.adapters.identity_catalog import IdentityCatalog
-from aidetector.adapters.inference.herd_model import choose_device, learn
 
 HELD_BACK = 0.2
 
@@ -51,28 +46,15 @@ def main():
     )
     earlier, later = split(rows)
     with tempfile.TemporaryDirectory() as work:
-        work = Path(work)
-        write_herd(earlier, arguments.manifest.parent, work)
-        store = IdentityCatalog(work / "identities")
-        cows = [cow for cow in store.load().identities if cow.samples]
-        samples = [(sample, index) for index, cow in enumerate(cows) for sample in cow.samples]
-        np.save(work / "owners.npy", np.array([int(cows[index].name) for _, index in samples]))
-        device = choose_device()
-        network = KINDS["cattle"](len(cows))
-        network.start(arguments.herd_weights)
-        learn(store.read_image, samples, network, device, seed=0)
-        np.savez(
-            work / "cattle-s0.npz",
-            photographs=describe(
-                network, [store.read_image(sample) for sample, _ in samples], device
-            ),
-            crops=describe(
-                network,
-                [cv2.imread(str(arguments.manifest.parent / row["path"])) for row in later],
-                device,
-            ),
+        teach(
+            earlier,
+            arguments.manifest.parent,
+            [arguments.manifest.parent / row["path"] for row in later],
+            {"cattle": (0,)},
+            {"cattle": arguments.herd_weights},
+            Path(work),
         )
-        similarity, names = scores(work, "cattle:0@share")
+        similarity, names = scores(Path(work), "cattle:0@share")
     right = np.array(names)[similarity.argmax(1)] == np.array([row["cow"] for row in later])
     result = {
         "video": arguments.video,

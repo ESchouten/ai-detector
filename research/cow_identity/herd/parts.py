@@ -12,6 +12,7 @@ import json
 import time
 from pathlib import Path
 
+import cv2
 import numpy as np
 import torch
 
@@ -49,6 +50,48 @@ def describe(network, pictures, device):
             pixels = to_tensor([network.fit(picture) for picture in pictures[first : first + 64]])
             described.append(network.describe(pixels.to(device)).cpu().numpy())
     return np.concatenate(described).astype(np.float16)
+
+
+def teach(photographs, root, crops, networks, weights, work):
+    """Teach networks a herd of confirmed photographs and keep what each describes.
+
+    `networks` holds the seeds of each kind and `weights` what each kind starts
+    from; `crops` lists the files of the pictures to ask about. A network is
+    kept in `work` as `main` keeps it, and one that is kept is not taught again.
+    """
+    data = work / "data"
+    if not (data / "identities" / "catalog.json").exists():
+        write_herd(photographs, root, data)
+    store = IdentityCatalog(data / "identities")
+    cows = [cow for cow in store.load().identities if cow.samples]
+    samples = [(sample, index) for index, cow in enumerate(cows) for sample in cow.samples]
+    np.save(work / "owners.npy", np.array([int(cows[index].name) for _, index in samples]))
+    device = choose_device()
+    for kind, seeds in networks.items():
+        for seed in seeds:
+            target = work / f"{kind}-s{seed}.npz"
+            if target.exists():
+                continue
+            network = KINDS[kind](len(cows))
+            network.start(weights[kind])
+            learn(store.read_image, samples, network, device, seed=seed)
+            np.savez(
+                target,
+                photographs=describe(
+                    network, [store.read_image(sample) for sample, _ in samples], device
+                ),
+                # A thousand crops at a time: a herd's walks do not fit in memory at once.
+                crops=np.concatenate(
+                    [
+                        describe(
+                            network,
+                            [cv2.imread(str(file)) for file in crops[first : first + 1024]],
+                            device,
+                        )
+                        for first in range(0, len(crops), 1024)
+                    ]
+                ),
+            )
 
 
 def main():

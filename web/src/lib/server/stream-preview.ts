@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { MultipartParser, type MultipartPart } from '@remix-run/multipart-parser';
+import { MultipartParser } from '@remix-run/multipart-parser';
 import { getCameraInputArgs } from './ffmpeg.ts';
 import { sanitizeSourceForLogs, sanitizeTextForLogs } from './runtime-logs.ts';
 
@@ -9,8 +9,9 @@ const NO_FRAME_TIMEOUT_MS = 8_000;
 const FORCE_KILL_DELAY_MS = 2_000;
 
 /**
- * The camera's pictures as JPEG files, about eight a second. Owns one preview process until it
- * exits, including when the reader cancels.
+ * The camera's pictures as JPEG files, about eight a second, each handed on as it arrives:
+ * PreviewPool reads them all and decides what a slow browser misses. Owns one preview process
+ * until it exits, including when the reader cancels.
  */
 export function createPreviewStream(source: string, executable: string) {
 	// Named here and not in the function that uses them: the translation tool leaves text inside
@@ -57,8 +58,6 @@ export function createPreviewStream(source: string, executable: string) {
 		maxParts: Infinity,
 		maxTotalSize: Infinity
 	});
-	let latest: MultipartPart | undefined;
-	let waiting = false;
 	let controller: ReadableStreamDefaultController<Uint8Array>;
 	let responseClosed = false;
 	let stopping = false;
@@ -72,9 +71,8 @@ export function createPreviewStream(source: string, executable: string) {
 		try {
 			for (const part of parser.write(chunk)) {
 				hadFrame = true;
-				latest = part;
 				armReadTimeout(NO_FRAME_TIMEOUT_MS);
-				sendLatest();
+				controller.enqueue(part.bytes);
 			}
 		} catch {
 			finish(new Error('Invalid live picture received.'));
@@ -126,7 +124,6 @@ export function createPreviewStream(source: string, executable: string) {
 	function finish(error: Error): void {
 		if (responseClosed) return;
 		responseClosed = true;
-		latest = undefined;
 		controller.error(error);
 	}
 
@@ -138,30 +135,14 @@ export function createPreviewStream(source: string, executable: string) {
 		}, delay);
 	}
 
-	function sendLatest(): void {
-		if (!waiting || !latest || responseClosed) return;
-		const picture = latest.bytes;
-		latest = undefined;
-		waiting = false;
-		controller.enqueue(picture);
-	}
-
-	return new ReadableStream<Uint8Array>(
-		{
-			start(value) {
-				controller = value;
-				armReadTimeout(FIRST_FRAME_TIMEOUT_MS);
-			},
-			pull() {
-				waiting = true;
-				sendLatest();
-			},
-			cancel() {
-				responseClosed = true;
-				latest = undefined;
-				return stop();
-			}
+	return new ReadableStream<Uint8Array>({
+		start(value) {
+			controller = value;
+			armReadTimeout(FIRST_FRAME_TIMEOUT_MS);
 		},
-		{ highWaterMark: 0 }
-	);
+		cancel() {
+			responseClosed = true;
+			return stop();
+		}
+	});
 }

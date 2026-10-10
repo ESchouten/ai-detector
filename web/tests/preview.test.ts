@@ -79,7 +79,7 @@ test('real camera previews sample frames without filling timestamp gaps with dup
 				}
 			}, /Live stream ended/);
 			assert.ok(pictures > 0, 'The live preview must produce pictures');
-			// The latest-picture stream may drop frames, but must never synthesize extras.
+			// Half of the 32 frames are sampled; a gap must never synthesize extras.
 			assert.ok(pictures <= 16, `Expected at most 16 sampled pictures, received ${pictures}`);
 		});
 	}
@@ -155,8 +155,9 @@ test(
 	posixOnly,
 	async (t) => {
 		const { directory, source } = await fixture(t, { flood: true });
-		const reader = createPreviewStream(source, executable).getReader();
-		t.after(() => reader.cancel());
+		const pool = new PreviewPool();
+		t.after(() => pool.close());
+		const reader = pool.open(source, executable, new AbortController().signal).getReader();
 		// More than the parser's default 1,000-part / 41 MiB upload limits:
 		// an ongoing camera stream must not stop at an upload-oriented limit.
 		assert.equal(await readStartedFile(path.join(directory, 'frames')), '1500');

@@ -82,5 +82,26 @@
    "resemble_their_own_cow_most": 0.8927835051546392,
    "and_score_above_99_in_100_strangers": 0.21030927835051547
   }
+ },
+ "pictures_1280_wide_weights_taught_rendered_cattle_as_well": {
+  "photographs_of_enrolled_cows": 4482,
+  "all": {
+   "crops_of_enrolled_cows": 2066,
+   "crops_of_withheld_cows": 637,
+   "resemble_their_own_cow_most": 0.6413359148112294,
+   "and_score_above_99_in_100_strangers": 0.21781219748305905
+  },
+  "lying": {
+   "crops_of_enrolled_cows": 1096,
+   "crops_of_withheld_cows": 397,
+   "resemble_their_own_cow_most": 0.4781021897810219,
+   "and_score_above_99_in_100_strangers": 0.20437956204379562
+  },
+  "on_her_feet": {
+   "crops_of_enrolled_cows": 970,
+   "crops_of_withheld_cows": 240,
+   "resemble_their_own_cow_most": 0.8257731958762886,
+   "and_score_above_99_in_100_strangers": 0.25773195876288657
+  }
  }
 }

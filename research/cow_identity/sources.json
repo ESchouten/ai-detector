@@ -133,6 +133,31 @@
         }
       ]
     },
+    "cattle_starting_weights_with_rendered_cattle": {
+      "use": "DINOv2-small taught the 24,075 photographs above and 32,000 pictures of 1,000 rendered cattle (herd/auxiliary.py --sources multicam cows2021 sideview moo, herd/pretrain.py); a comparison only; local file, not distributed",
+      "datasets": [
+        {
+          "name": "MultiCamCows2024",
+          "source": "https://data.bris.ac.uk/data/dataset/2inu67jru7a6821kkgehxg3cv2",
+          "license": "Non-Commercial Government Licence for public sector information"
+        },
+        {
+          "name": "Cows2021",
+          "source": "https://data.bris.ac.uk/data/dataset/4vnrca7qw1642qlwxjadp87h7",
+          "license": "Non-Commercial Government Licence for public sector information"
+        },
+        {
+          "name": "SideViewCows2026",
+          "source": "https://zenodo.org/records/21605650",
+          "license": "CC BY 4.0"
+        },
+        {
+          "name": "MOO: Multi-view Oriented Observations",
+          "source": "https://github.com/TurtleSmoke/MOO",
+          "license": "CC BY-NC-ND 4.0 by the licence file in the archive and the repository; their README names CC BY 4.0"
+        }
+      ]
+    },
     "mounting_pictures": {
       "name": "MOUNT-Cattle",
       "source": "https://huggingface.co/datasets/eelianafang/MOUNT-Cattle",

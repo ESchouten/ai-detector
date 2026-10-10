@@ -1,0 +1,180 @@
+{
+ "three networks from the weights without MmCows": {
+  "parts": "nommcows:0,1,2+animal:3@share",
+  "limits": {
+   "day": 0.62,
+   "night": 0.7
+  },
+  "runs": {
+   "r1-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.62,
+    "coverage": 0.823213248111563,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.58
+   },
+   "r2-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.62,
+    "coverage": 0.8205215612749276,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.54
+   },
+   "r3-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.62,
+    "coverage": 0.8002918490723369,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.54
+   },
+   "val-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.62,
+    "coverage": 0.6783291681542306,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.52
+   },
+   "r1-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.7,
+    "coverage": 0.7693881029486961,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.62
+   },
+   "r2-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.7,
+    "coverage": 0.793385287968067,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.56
+   },
+   "r3-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.7,
+    "coverage": 0.7664443770839648,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.46
+   },
+   "val-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.7,
+    "coverage": 0.8353969410050983,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.62
+   }
+  }
+ },
+ "three networks from those weights taught rendered cattle as well": {
+  "parts": "moo:0,1,2+animal:3@share",
+  "limits": {
+   "day": 0.6,
+   "night": 0.66
+  },
+  "runs": {
+   "r1-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.6,
+    "coverage": 0.8486345148169668,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.54
+   },
+   "r2-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.6,
+    "coverage": 0.808249531276632,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.48
+   },
+   "r3-video3": {
+    "light": "day",
+    "development": true,
+    "limit": 0.6,
+    "coverage": 0.8052949760266833,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.56
+   },
+   "val-video1": {
+    "light": "day",
+    "development": false,
+    "limit": 0.6,
+    "coverage": 0.6733309532309889,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.46
+   },
+   "r1-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.66,
+    "coverage": 0.9173342423725924,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.58
+   },
+   "r2-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.66,
+    "coverage": 0.8091617563200912,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.54
+   },
+   "r3-video4": {
+    "light": "night",
+    "development": true,
+    "limit": 0.66,
+    "coverage": 0.8843588966353441,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.42
+   },
+   "val-video2": {
+    "light": "night",
+    "development": false,
+    "limit": 0.66,
+    "coverage": 0.9162418062636563,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "precision": 1.0,
+    "highest_limit_with_a_stranger_or_wrong_name": 0.6
+   }
+  }
+ }
+}

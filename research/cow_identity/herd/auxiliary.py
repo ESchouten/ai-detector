@@ -116,6 +116,43 @@ def from_masks(root, subset, per_identity, source, output):
     return rows
 
 
+def from_renders(root, per_identity, source, output):
+    """MOO: one rendered animal with a thousand coats, each seen from 128 sides.
+
+    `root` holds `data.hdf5` and `metadata.json` as the archive unpacks them.
+    A camera never looks up at a cow, so only views from the horizontal
+    upward are drawn from, and each is cut to the box around the animal. The
+    file needs h5py, which the detector's environment does not have.
+    """
+    import h5py
+
+    views = json.loads((Path(root) / "metadata.json").read_text())
+    rows = []
+    with h5py.File(Path(root) / "data.hdf5") as renders:
+        for number, identity in enumerate(sorted(views)):
+            level = sorted(name for name, view in views[identity].items() if view["elevation"] >= 0)
+            drawn = np.random.default_rng(number).choice(
+                level, min(per_identity, len(level)), replace=False
+            )
+            for name in sorted(drawn):
+                target = output / source / identity / f"{name}.jpg"
+                if not target.exists():
+                    # The renderer puts whatever is not the animal infinitely far away.
+                    ys, xs = np.nonzero(renders[identity][name]["depth"][:] < 1e9)
+                    colours = renders[identity][name]["colors"][
+                        ys.min() : ys.max() + 1, xs.min() : xs.max() + 1
+                    ]
+                    write_image(np.ascontiguousarray(colours[:, :, ::-1]), target)
+                rows.append(
+                    {
+                        "path": str(target.relative_to(output)),
+                        "source": source,
+                        "identity": f"{source}:{identity}",
+                    }
+                )
+    return rows
+
+
 SOURCES = {
     # MmCows, CC BY-NC-SA 4.0: one pen of sixteen cows, lying and standing.
     "mmcows": lambda data, output: from_zip(
@@ -150,6 +187,8 @@ SOURCES = {
     "sideview": lambda data, output: from_masks(
         data / "SideViewCows2026", "parlor", 240, "sideview", output
     ),
+    # MOO, rendered cattle; its licence file is CC BY-NC-ND 4.0, its README says CC BY 4.0.
+    "moo": lambda data, output: from_renders(data / "MOO", 32, "moo", output),
 }
 
 

@@ -14,7 +14,7 @@
 		cancelInstallationImport
 	} from '$lib/remote/installation-import.remote';
 	import type { ImportStatus } from '$lib/installation-import';
-	import { plural } from '$lib/format';
+	import { dataSize, plural } from '$lib/format';
 	import { errorMessage } from '$lib/remote-errors';
 
 	let {
@@ -32,10 +32,6 @@
 	const copying = $derived(status.phase === 'copying');
 	const summary = $derived(status.summary);
 	const locked = $derived(status.keepRecordings !== undefined);
-
-	function size(bytes: number): string {
-		return bytes < 1e9 ? `${(bytes / 1e6).toFixed(1)} MB` : `${(bytes / 1e9).toFixed(1)} GB`;
-	}
 
 	async function refresh(): Promise<void> {
 		await getImportStatus().refresh();
@@ -83,7 +79,7 @@
 	}
 
 	async function start(): Promise<void> {
-		if (!summary || !closed) return;
+		if (!summary) return;
 		await run(async () => {
 			await importInstallation({ id: summary.id, keepRecordings });
 			await refresh();
@@ -154,6 +150,27 @@
 					disabled={busy}>Enter folder path</Button
 				>
 			</div>
+			{#if manual}
+				<form
+					onsubmit={(event) => {
+						event.preventDefault();
+						void run(inspect);
+					}}
+					class="flex flex-col gap-3"
+				>
+					<Field.Field
+						><Field.Label for="import-folder">Old application folder</Field.Label><Input
+							id="import-folder"
+							bind:value={folder}
+							disabled={busy}
+							required
+						/></Field.Field
+					>
+					<Button type="submit" class="self-start" disabled={busy || !folder.trim()}
+						>Find existing setup</Button
+					>
+				</form>
+			{/if}
 		{:else}
 			<div class="space-y-2 text-sm">
 				<p class="font-medium">
@@ -170,7 +187,7 @@
 				<div class="space-y-3" role="status">
 					<p class="text-sm">
 						{status.message ?? 'Copying your files…'}
-						{size(status.copiedBytes)} / {size(status.totalBytes)}
+						{dataSize(status.copiedBytes)} / {dataSize(status.totalBytes)}
 					</p>
 					<Progress
 						value={status.totalBytes ? (100 * status.copiedBytes) / status.totalBytes : 0}
@@ -194,7 +211,7 @@
 								in their current folder</label
 							>
 							<p class="text-muted-foreground">
-								Saves {size(summary.recordingBytes)} of copying. Keep the old folder and drive connected;
+								Saves {dataSize(summary.recordingBytes)} of copying. Keep the old folder and drive connected;
 								new recordings will also be saved there.
 							</p>
 						</div>
@@ -219,27 +236,6 @@
 						>{/if}
 				</div>
 			{/if}
-		{/if}
-		{#if manual && !summary && local}
-			<form
-				onsubmit={(event) => {
-					event.preventDefault();
-					void run(inspect);
-				}}
-				class="flex flex-col gap-3"
-			>
-				<Field.Field
-					><Field.Label for="import-folder">Old application folder</Field.Label><Input
-						id="import-folder"
-						bind:value={folder}
-						disabled={busy}
-						required
-					/></Field.Field
-				>
-				<Button type="submit" class="self-start" disabled={busy || !folder.trim()}
-					>Find existing setup</Button
-				>
-			</form>
 		{/if}
 		{#if message || (status.message && !copying)}<p
 				role={message || status.phase === 'failed' ? 'alert' : 'status'}

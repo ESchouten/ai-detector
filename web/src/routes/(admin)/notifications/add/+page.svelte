@@ -27,7 +27,7 @@
 				: 'Connect a phone, group or channel in Telegram, then choose which detectors alert it.'}
 		/>
 		{#key label}
-			<NotificationEditor originalLabel={label} initial={saved} />
+			<NotificationEditor initial={saved} />
 		{/key}
 	{/if}
 </section>

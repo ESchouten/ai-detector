@@ -23,12 +23,13 @@ export interface NavItem {
 
 // The lists are functions so their titles are written in the language of each request.
 
-/** What people open every day. */
+/** The sidebar and the phone's four tabs: what people open every day, and Settings for the rest. */
 export function mainNavigation(): NavItem[] {
 	return [
 		{ title: 'Recordings', href: resolve('/detections'), icon: FilmIcon },
 		{ title: 'Cameras', href: resolve('/streams'), icon: CctvIcon },
-		{ title: 'Detectors', href: resolve('/detectors'), icon: ScanSearchIcon }
+		{ title: 'Detectors', href: resolve('/detectors'), icon: ScanSearchIcon },
+		{ title: 'Settings', href: resolve('/settings'), icon: SettingsIcon, area: 'settings' }
 	];
 }
 
@@ -77,19 +78,15 @@ export function logsNavigation(): NavItem {
 	};
 }
 
-export function settingsHome(): NavItem {
-	return { title: 'Settings', href: resolve('/settings'), icon: SettingsIcon, area: 'settings' };
-}
-
 export const REPOSITORY_URL = 'https://github.com/ESchouten/ai-detector';
 
-export function isActive(item: NavItem, pathname: string): boolean {
+function matches(item: NavItem, pathname: string): boolean {
 	return pathname === item.href || pathname.startsWith(`${item.href}/`);
 }
 
-/** The phone's fourth tab stands for every settings and support page. */
-export function isSettingsArea(pathname: string): boolean {
-	return [settingsHome(), ...settingsNavigation(), logsNavigation()].some((item) =>
-		isActive(item, pathname)
-	);
+/** Whether an item is lit. Settings stands for every settings and support page. */
+export function isActive(item: NavItem, pathname: string): boolean {
+	return item.area === 'settings'
+		? [item, ...settingsNavigation(), logsNavigation()].some((entry) => matches(entry, pathname))
+		: matches(item, pathname);
 }

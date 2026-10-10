@@ -55,7 +55,6 @@
 	let testSent = $state(false);
 	let message = $state('');
 	let error = $state('');
-	let active = true;
 	const pairing = new TelegramPairing(
 		{
 			begin: beginTelegramPairing,
@@ -75,10 +74,7 @@
 	$effect(() => {
 		busy = disabled || finding || testing || switching || pairingState.state === 'starting';
 	});
-	onDestroy(() => {
-		active = false;
-		void pairing.cancel();
-	});
+	onDestroy(() => void pairing.cancel());
 
 	function clearTest() {
 		received = false;
@@ -99,12 +95,8 @@
 	async function changeMethod() {
 		switching = true;
 		await pairing.cancel();
-		if (!active) return;
 		manual = !manual;
-		chat = '';
-		chats = [];
-		message = '';
-		clearTest();
+		tokenChanged();
 		switching = false;
 	}
 	function connect() {
@@ -117,16 +109,14 @@
 		finding = true;
 		error = '';
 		try {
-			const found = await discoverTelegramChats({ token });
-			if (!active) return;
-			chats = found;
-			message = found.length
+			chats = await discoverTelegramChats({ token });
+			message = chats.length
 				? 'Choose your recipient below.'
 				: 'Send a message to your bot, then try again. In a group, mention the bot in your message.';
 		} catch (cause) {
-			if (active) error = errorMessage(cause, 'Could not find Telegram chats.');
+			error = errorMessage(cause, 'Could not find Telegram chats.');
 		} finally {
-			if (active) finding = false;
+			finding = false;
 		}
 	}
 	async function sendTest() {
@@ -134,12 +124,11 @@
 		clearTest();
 		try {
 			await testTelegram({ token, chat });
-			if (active) testSent = true;
+			testSent = true;
 		} catch (cause) {
-			if (active)
-				error = errorMessage(cause, 'The test could not be sent. Check your bot and recipient.');
+			error = errorMessage(cause, 'The test could not be sent. Check your bot and recipient.');
 		} finally {
-			if (active) testing = false;
+			testing = false;
 		}
 	}
 </script>
@@ -281,7 +270,7 @@
 				<Input id="notification-chat" bind:value={chat} oninput={clearTest} disabled={busy} />
 			</Field.Field>
 		{:else if token.trim()}
-			<Button class="self-start" disabled={busy || !token.trim()} onclick={connect}>
+			<Button class="self-start" disabled={busy} onclick={connect}>
 				{pairingState.state === 'starting' ? 'Checking your bot…' : 'Connect Telegram'}
 			</Button>
 			{#if pairingState.state === 'failed'}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { isActive, isSettingsArea, mainNavigation, settingsHome } from '$lib/navigation';
-	const items = $derived([...mainNavigation(), settingsHome()]);
+	import { isActive, mainNavigation } from '$lib/navigation';
+	const items = $derived(mainNavigation());
 </script>
 
 <nav
@@ -10,10 +10,7 @@
 >
 	<ul class="mx-auto grid max-w-lg grid-cols-4">
 		{#each items as item (item.href)}
-			{@const active =
-				item.area === 'settings'
-					? isSettingsArea(page.url.pathname)
-					: isActive(item, page.url.pathname)}
+			{@const active = isActive(item, page.url.pathname)}
 			<li>
 				<a
 					href={item.href}

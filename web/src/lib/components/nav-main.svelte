@@ -3,7 +3,7 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import type { WithoutChildren } from '$lib/utils';
 	import type { ComponentProps } from 'svelte';
-	import { isActive, isSettingsArea, type NavItem } from '$lib/navigation';
+	import { isActive, type NavItem } from '$lib/navigation';
 
 	let {
 		items,
@@ -16,10 +16,7 @@
 <Sidebar.Group {...restProps}>
 	<Sidebar.Menu>
 		{#each items as item (item.href)}
-			{@const active =
-				item.area === 'settings'
-					? isSettingsArea(page.url.pathname)
-					: isActive(item, page.url.pathname)}
+			{@const active = isActive(item, page.url.pathname)}
 			{@const external = item.href.startsWith('http')}
 			<Sidebar.MenuItem>
 				<Sidebar.MenuButton isActive={active} class="h-9 gap-2.5 px-2.5">

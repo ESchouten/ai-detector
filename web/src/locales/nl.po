@@ -1371,7 +1371,7 @@ msgid "Change connection"
 msgstr "Verbinding wijzigen"
 
 #. 0: initial.label
-#. 0: originalLabel
+#. 0: initial.label
 #: src/lib/components/camera-settings.svelte
 #: src/lib/components/notification-editor.svelte
 msgid "Remove “{0}”?"
@@ -1649,7 +1649,7 @@ msgstr "Laat AI Detector open. Je kunt dit browsertabblad sluiten."
 msgid "<0/>Keep recordings in their current folder"
 msgstr "<0/>Opnamen in hun huidige map laten staan"
 
-#. 0: size(summary.recordingBytes)
+#. 0: dataSize(summary.recordingBytes)
 #: src/lib/components/import-installation.svelte
 msgid "Saves {0} of copying. Keep the old folder and drive connected; new recordings will also be saved there."
 msgstr "Bespaart {0} aan kopiëren. Houd de oude map en schijf aangesloten; nieuwe opnamen worden daar ook opgeslagen."
@@ -1773,10 +1773,6 @@ msgid "Turn off"
 msgstr "Uitzetten"
 
 #: src/lib/components/json-editor.svelte
-msgid "JSON configuration"
-msgstr "JSON-configuratie"
-
-#: src/lib/components/json-editor.svelte
 msgid "The editor could not load. Reload this page to try again."
 msgstr "De editor kon niet worden geladen. Laad deze pagina opnieuw om het nog eens te proberen."
 
@@ -1787,10 +1783,6 @@ msgstr "Editor niet beschikbaar"
 #: src/lib/components/llm-connection-editor.svelte
 msgid "Google Gemini"
 msgstr "Google Gemini"
-
-#: src/lib/components/llm-connection-editor.svelte
-msgid "Enter your Google AI Studio API key."
-msgstr "Vul je API-sleutel van Google AI Studio in."
 
 #: src/lib/components/llm-connection-editor.svelte
 msgid "Could not save this connection."
@@ -2919,12 +2911,12 @@ msgstr "Opslag"
 msgid "Recordings are kept until you remove them. Nothing is deleted automatically."
 msgstr "Opnamen blijven bewaard totdat je ze verwijdert. Er wordt niets automatisch verwijderd."
 
-#. 0: gigabytes(data.space.available)
+#. 0: dataSize(data.space.available)
 #: src/routes/(admin)/storage/+page.svelte
 msgid "{0} free"
 msgstr "{0} vrij"
 
-#. 0: gigabytes(used); 1: gigabytes(data.space.total)
+#. 0: dataSize(used); 1: dataSize(data.space.total)
 #: src/routes/(admin)/storage/+page.svelte
 msgid "{0} used of {1}"
 msgstr "{0} gebruikt van {1}"
@@ -3726,3 +3718,8 @@ msgstr ""
 "op hun oorspronkelijke relatieve paden, of pas die paden aan voordat je op een andere\n"
 "computer importeert.\n"
 ""
+
+#. 0: amount
+#: src/lib/format.ts
+msgid "{0} MB"
+msgstr "{0} MB"

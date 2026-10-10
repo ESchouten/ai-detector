@@ -9,7 +9,7 @@
 	import StatusDot from './status-dot.svelte';
 	import ThemeToggle from './theme-toggle.svelte';
 	import type { MonitoringSummary } from '$lib/monitoring';
-	import { mainNavigation, settingsHome, REPOSITORY_URL } from '$lib/navigation';
+	import { mainNavigation, REPOSITORY_URL } from '$lib/navigation';
 	import { version } from '$lib/version';
 
 	let { summary }: { summary: MonitoringSummary } = $props();
@@ -48,7 +48,7 @@
 		</a>
 	</Sidebar.Header>
 	<Sidebar.Content>
-		<NavMain items={[...mainNavigation(), settingsHome()]} />
+		<NavMain items={mainNavigation()} />
 		<NavMain
 			class="mt-auto"
 			items={[{ title: 'Help on GitHub', href: REPOSITORY_URL, icon: GithubIcon }]}

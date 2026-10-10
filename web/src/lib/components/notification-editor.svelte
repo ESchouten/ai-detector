@@ -23,13 +23,11 @@
 	import TelegramConnection from './telegram-connection.svelte';
 
 	let {
-		originalLabel = '',
 		initial,
 		inline = false,
 		onSaved,
 		onCancel
 	}: {
-		originalLabel?: string;
 		inline?: boolean;
 		onSaved?: (recipient: TelegramMeta) => void;
 		onCancel?: () => void;
@@ -76,9 +74,9 @@
 			}
 			await (
 				inline
-					? connectTelegram({ label, token, chat, received: true })
+					? connectTelegram({ label, token, chat })
 					: saveAlerts({
-							original: originalLabel || existing?.label,
+							original: (initial ?? existing)?.label,
 							label: existing?.label ?? label,
 							token,
 							chat,
@@ -101,10 +99,11 @@
 		}
 	}
 	async function remove() {
+		if (!initial) return;
 		pending = true;
 		error = '';
 		try {
-			await deleteTelegram({ label: originalLabel }).updates(getDetectors(), getTelegrams());
+			await deleteTelegram({ label: initial.label }).updates(getDetectors(), getTelegrams());
 			await goto(back);
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not remove this recipient.');
@@ -219,7 +218,7 @@
 	{#if initial}
 		<ConfirmRemove
 			trigger="Remove this recipient…"
-			title={`Remove “${originalLabel}”?`}
+			title={`Remove “${initial.label}”?`}
 			description="Every detector will stop sending alerts to this recipient. Monitoring and saved recordings are kept. You can reconnect the recipient later."
 			keep="Keep recipient"
 			confirm="Remove recipient"

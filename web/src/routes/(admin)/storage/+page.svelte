@@ -7,7 +7,7 @@
 	import * as Field from '$lib/components/ui/field';
 	import * as Alert from '$lib/components/ui/alert';
 	import PageHeader from '$lib/components/page-header.svelte';
-	import { calendarDate, gigabytes, plural } from '$lib/format';
+	import { calendarDate, dataSize, plural } from '$lib/format';
 	let { data, form } = $props();
 	const used = $derived(data.space.total - data.space.available);
 </script>
@@ -21,9 +21,9 @@
 
 	<div class="panel flex flex-col gap-3 p-5">
 		<div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-			<p class="text-lg font-semibold tabular-nums">{gigabytes(data.space.available)} free</p>
+			<p class="text-lg font-semibold tabular-nums">{dataSize(data.space.available)} free</p>
 			<p class="text-sm text-muted-foreground tabular-nums">
-				{gigabytes(used)} used of {gigabytes(data.space.total)}
+				{dataSize(used)} used of {dataSize(data.space.total)}
 			</p>
 		</div>
 		<Progress

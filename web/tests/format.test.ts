@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { clipLength, dayHeading, gigabytes, percent, plural } from '../src/lib/format.ts';
+import { clipLength, dataSize, dayHeading, percent, plural } from '../src/lib/format.ts';
 import { recordingVerdict } from '../src/lib/detections.ts';
 
 test('recent days read as words and older days keep their date', () => {
@@ -19,8 +19,9 @@ test('clip lengths, sizes and counts are short and unambiguous', () => {
 	assert.equal(clipLength(6.4), '0:06');
 	assert.equal(clipLength(102), '1:42');
 	assert.equal(clipLength(-1), '0:00');
-	assert.equal(gigabytes(1.5 * 1024 ** 3), '1.5 GB');
-	assert.equal(gigabytes(137.4 * 1024 ** 3), '137 GB');
+	assert.equal(dataSize(350 * 1024 ** 2), '350 MB');
+	assert.equal(dataSize(1.5 * 1024 ** 3), '1.5 GB');
+	assert.equal(dataSize(137.4 * 1024 ** 3), '137 GB');
 	assert.equal(percent(0.624), '62%');
 	assert.equal(plural(1, ['# camera', '# cameras']), '1 camera');
 	assert.equal(plural(3, ['# camera', '# cameras']), '3 cameras');

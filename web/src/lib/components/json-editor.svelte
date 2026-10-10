@@ -7,14 +7,14 @@
 	let {
 		value = $bindable(''),
 		schema,
-		height = 420,
-		ariaLabel = 'JSON configuration',
+		height,
+		ariaLabel,
 		readonly = false
 	}: {
 		value?: string;
-		schema?: Record<string, unknown>;
-		height?: number | string;
-		ariaLabel?: string;
+		schema: Record<string, unknown>;
+		height: string;
+		ariaLabel: string;
 		readonly?: boolean;
 	} = $props();
 
@@ -64,15 +64,9 @@
 					schemaValidation: 'error',
 					allowComments: false,
 					enableSchemaRequest: false,
-					schemas: schema
-						? [
-								{
-									uri: schemaUri,
-									fileMatch: [uri.toString()],
-									schema: $state.snapshot(schema)
-								}
-							]
-						: []
+					schemas: [
+						{ uri: schemaUri, fileMatch: [uri.toString()], schema: $state.snapshot(schema) }
+					]
 				});
 			}
 			configureSchema();
@@ -114,11 +108,7 @@
 </script>
 
 <div class="flex flex-col gap-2">
-	<div
-		bind:this={container}
-		class="overflow-hidden rounded-xl border"
-		style:height={typeof height === 'number' ? `${height}px` : height}
-	></div>
+	<div bind:this={container} class="overflow-hidden rounded-xl border" style:height></div>
 	{#if loadError}
 		<Alert.Root variant="destructive"
 			><Alert.Title>Editor unavailable</Alert.Title><Alert.Description

@@ -1371,7 +1371,7 @@ msgid "Change connection"
 msgstr "Change connection"
 
 #. 0: initial.label
-#. 0: originalLabel
+#. 0: initial.label
 #: src/lib/components/camera-settings.svelte
 #: src/lib/components/notification-editor.svelte
 msgid "Remove “{0}”?"
@@ -1649,7 +1649,7 @@ msgstr "Keep AI Detector open. You can close this browser tab."
 msgid "<0/>Keep recordings in their current folder"
 msgstr "<0/>Keep recordings in their current folder"
 
-#. 0: size(summary.recordingBytes)
+#. 0: dataSize(summary.recordingBytes)
 #: src/lib/components/import-installation.svelte
 msgid "Saves {0} of copying. Keep the old folder and drive connected; new recordings will also be saved there."
 msgstr "Saves {0} of copying. Keep the old folder and drive connected; new recordings will also be saved there."
@@ -1773,10 +1773,6 @@ msgid "Turn off"
 msgstr "Turn off"
 
 #: src/lib/components/json-editor.svelte
-msgid "JSON configuration"
-msgstr "JSON configuration"
-
-#: src/lib/components/json-editor.svelte
 msgid "The editor could not load. Reload this page to try again."
 msgstr "The editor could not load. Reload this page to try again."
 
@@ -1787,10 +1783,6 @@ msgstr "Editor unavailable"
 #: src/lib/components/llm-connection-editor.svelte
 msgid "Google Gemini"
 msgstr "Google Gemini"
-
-#: src/lib/components/llm-connection-editor.svelte
-msgid "Enter your Google AI Studio API key."
-msgstr "Enter your Google AI Studio API key."
 
 #: src/lib/components/llm-connection-editor.svelte
 msgid "Could not save this connection."
@@ -2919,12 +2911,12 @@ msgstr "Storage"
 msgid "Recordings are kept until you remove them. Nothing is deleted automatically."
 msgstr "Recordings are kept until you remove them. Nothing is deleted automatically."
 
-#. 0: gigabytes(data.space.available)
+#. 0: dataSize(data.space.available)
 #: src/routes/(admin)/storage/+page.svelte
 msgid "{0} free"
 msgstr "{0} free"
 
-#. 0: gigabytes(used); 1: gigabytes(data.space.total)
+#. 0: dataSize(used); 1: dataSize(data.space.total)
 #: src/routes/(admin)/storage/+page.svelte
 msgid "{0} used of {1}"
 msgstr "{0} used of {1}"
@@ -3726,3 +3718,8 @@ msgstr ""
 "backup, at their original relative paths, or update those paths before\n"
 "importing on another computer.\n"
 ""
+
+#. 0: amount
+#: src/lib/format.ts
+msgid "{0} MB"
+msgstr "{0} MB"

@@ -68,14 +68,17 @@ export function clipLength(seconds: number): string {
 	return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
 }
 
-export function gigabytes(bytes: number): string {
-	const digits = bytes < 10 * 1024 ** 3 ? 1 : 0;
+/** Megabytes below one gigabyte, where gigabytes would read as 0.0 GB. */
+export function dataSize(bytes: number): string {
+	const small = bytes < 1024 ** 3;
+	const value = bytes / 1024 ** (small ? 2 : 3);
+	const digits = value < 10 ? 1 : 0;
 	const amount = new Intl.NumberFormat(language(), {
 		minimumFractionDigits: digits,
 		maximumFractionDigits: digits
-	}).format(bytes / 1024 ** 3);
-	// The unit is translated: French writes Go.
-	return /* @wc-include */ `${amount} GB`;
+	}).format(value);
+	// The units are translated: French writes Mo and Go.
+	return small ? /* @wc-include */ `${amount} MB` : /* @wc-include */ `${amount} GB`;
 }
 
 export function percent(fraction: number): string {

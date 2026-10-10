@@ -53,7 +53,6 @@
 		busy = true;
 		message = '';
 		try {
-			if (isGemini && !key.trim()) throw new Error('Enter your Google AI Studio API key.');
 			const saved = {
 				...(initial ?? { model: [...GEMINI_MODELS] }),
 				label: label.trim(),

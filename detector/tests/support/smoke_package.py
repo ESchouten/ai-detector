@@ -19,6 +19,7 @@ import numpy as np
 
 from tests.support.https import enable_https
 from tests.support.onnx_model import write_detection_model
+from tests.support.status import status_records
 
 
 def run_executable(
@@ -48,11 +49,7 @@ def run_executable(
     ):
         assert diagnostic in saved_logs, saved_logs
     assert "local-test-key" not in saved_logs
-    records = [
-        json.loads(line.removeprefix("AIDETECTOR_STATUS "))
-        for line in process.stdout.splitlines()
-        if line.startswith("AIDETECTOR_STATUS ")
-    ]
+    records = status_records(process.stdout)
     assert all(record["version"] == 1 for record in records)
     sources = {record["sourceKey"] for record in records if record["event"] == "frame"}
     assert len(sources) == 2, process.stdout + process.stderr

@@ -9,10 +9,8 @@ from threading import Event
 request = json.loads(Path(sys.argv[-1]).read_text())
 checkpoint = Path(request["checkpoint"])
 checkpoint.with_suffix(".engine").write_bytes(b"engine-from-" + checkpoint.read_bytes())
-print(
-    "GPU builder fixture: " + os.environ.get("TENSORRT_TEST_MODE", "ready"), flush=True
-)
-mode = os.environ.get("TENSORRT_TEST_MODE")
+mode = os.environ.get("TENSORRT_TEST_MODE", "ready")
+print("GPU builder fixture: " + mode, flush=True)
 if mode == "failed":
     raise SystemExit(2)
 if mode == "crashed":

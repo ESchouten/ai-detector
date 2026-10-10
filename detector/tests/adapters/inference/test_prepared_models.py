@@ -1,9 +1,10 @@
+from pathlib import Path
+
 import onnx
 import pytest
 
-from aidetector.adapters.inference.onnx import (
-    InferenceOptions,
-)
+from aidetector.adapters.inference import prepared_models
+from aidetector.adapters.inference.onnx import InferenceOptions
 from aidetector.adapters.inference.prepared_models import prepare_onnx
 from aidetector.configuration import OnnxConfig, YoloConfig
 from tests.support.onnx_model import write_detection_model
@@ -17,8 +18,6 @@ def prepared_checkpoint(tmp_path, monkeypatch):
 
     class Model:
         def __init__(self, checkpoint, task):
-            from pathlib import Path
-
             self.path = Path(checkpoint)
             assert self.path.read_bytes().startswith(b"checkpoint-")
 
@@ -123,8 +122,6 @@ def test_interrupted_export_is_not_published_and_can_be_retried(
     tmp_path, prepared_checkpoint, monkeypatch
 ):
     source, calls = prepared_checkpoint
-    from aidetector.adapters.inference import prepared_models
-
     export = prepared_models.YOLO.export
 
     def fail(self, **arguments):
@@ -146,8 +143,6 @@ def test_interrupted_export_is_not_published_and_can_be_retried(
 def test_export_with_missing_input_is_rejected_without_publishing_cache(
     tmp_path, prepared_checkpoint, monkeypatch, half
 ):
-    from aidetector.adapters.inference import prepared_models
-
     source, _ = prepared_checkpoint
     export = prepared_models.YOLO.export
 

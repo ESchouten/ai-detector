@@ -15,6 +15,8 @@ import pytest
 import torch
 from filelock import FileLock
 from ultralytics import YOLO
+from ultralytics.engine.predictor import BasePredictor
+from ultralytics.engine.results import Results
 
 from aidetector import bootstrap
 from aidetector.adapters.inference import prepared_engines
@@ -415,8 +417,8 @@ def test_helper_imports_with_parent_pipe_open_and_reports_startup_failures(
     tmp_path, caplog, monkeypatch, request_text, error
 ):
     # A valid JSON object reaches real cold native imports without a GPU/model.
-    # The parent pipe stays open: blocking reads previously deadlocked NumPy
-    # on Windows. Bound this regression independently of the engine deadline.
+    # The parent pipe stays open: a blocking read of it can deadlock NumPy's
+    # import on Windows. Bound that failure independently of the engine deadline.
     monkeypatch.setattr(prepared_engines, "BUILD_TIMEOUT", 60)
     request = tmp_path / "request.json"
     request.write_text(request_text, encoding="utf-8")
@@ -472,8 +474,6 @@ def test_helper_dumps_repeated_stacks_during_a_blocked_inference_import(tmp_path
 def test_automatic_engine_failure_keeps_the_original_torch_model(
     tmp_path, gpu_builder, monkeypatch, failure
 ):
-    from ultralytics.engine.predictor import BasePredictor
-
     YOLO("yolo26n.yaml").save(gpu_builder.source)
     if failure == "builder":
         monkeypatch.setenv("TENSORRT_TEST_MODE", "failed")
@@ -508,8 +508,6 @@ def test_automatic_engine_failure_keeps_the_original_torch_model(
 def test_gpu_smoke_test_checks_dynamic_shapes_and_rejects_nonfinite_results(
     tmp_path, monkeypatch, invalid
 ):
-    from ultralytics.engine.results import Results
-
     predictions, exports = [], []
 
     class Model:
@@ -571,7 +569,7 @@ def test_real_sdk_builds_and_runs_dynamic_engine_in_helper(tmp_path):
         tmp_path / "prepared",
     )
     assert engine is not None, (
-        "TensorRT preparation must succeed on the qualified GPU runner"
+        "TensorRT preparation must succeed on a machine with CUDA and TensorRT"
     )
     model = YOLO(str(engine))
     for shape in ((32, 64), (64, 32), (64, 64)):

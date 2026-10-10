@@ -1,9 +1,17 @@
+import faulthandler
 import json
+import logging
+import os
+import sys
 from contextlib import nullcontext
 from pathlib import Path
 from types import SimpleNamespace
 
+import numpy as np
+import onnxruntime as ort
 import pytest
+import torch
+from onnxruntime.capi.onnxruntime_pybind11_state import Fail, InvalidProtobuf
 
 from aidetector.adapters.inference.onnx import (
     REGISTRATION_TRACE_DELAY,
@@ -14,14 +22,13 @@ from aidetector.adapters.inference.onnx import (
     tensorrt_profiles,
 )
 from aidetector.configuration import OnnxConfig
+from tests.support.onnx_model import write_detection_model
 
 ONNX_MODELS = (ModelRequirements("model.onnx", image_size=640, batch_size=1),)
 
 
 @pytest.fixture
 def windows_ml(monkeypatch):
-    import faulthandler
-
     state = SimpleNamespace(libraries={}, lifecycle=[], watchdog=[])
     monkeypatch.setattr(
         faulthandler,
@@ -57,14 +64,16 @@ def unavailable_windows_ml(monkeypatch):
     )
 
 
+@pytest.fixture
+def cpu_provider_only(monkeypatch):
+    monkeypatch.setattr(
+        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
+    )
+
+
 def test_optional_windows_provider_failure_falls_back_to_real_cpu_inference(
     tmp_path, unavailable_windows_ml
 ):
-    import numpy as np
-    import onnxruntime as ort
-
-    from tests.support.onnx_model import write_detection_model
-
     path = tmp_path / "model.onnx"
     write_detection_model(path)
     notices = []
@@ -100,11 +109,6 @@ def test_explicit_cpu_selection_skips_unavailable_windows_acceleration(
 def test_real_sessions_disable_idle_spinning_and_preserve_caller_options(
     tmp_path, supplied_options
 ):
-    import numpy as np
-    import onnxruntime as ort
-
-    from tests.support.onnx_model import write_detection_model
-
     path = tmp_path / "model.onnx"
     write_detection_model(path)
     supplied = ort.SessionOptions() if supplied_options else None
@@ -143,9 +147,6 @@ def test_explicit_accelerator_does_not_silently_fall_back(unavailable_windows_ml
 def test_invalid_model_is_not_treated_as_an_optional_acceleration_failure(
     tmp_path, unavailable_windows_ml
 ):
-    import onnxruntime as ort
-    from onnxruntime.capi.onnxruntime_pybind11_state import InvalidProtobuf
-
     path = tmp_path / "broken.onnx"
     path.write_text("not an ONNX model")
     with inference_runtime(OnnxConfig(), ONNX_MODELS, "windowsml"):
@@ -192,17 +193,11 @@ def test_windows_ml_session_uses_registered_device_and_releases_libraries(
     explicit,
     caplog,
 ):
-    import logging
-    import sys
-
-    import onnxruntime as real_ort
-    from onnxruntime.capi.onnxruntime_pybind11_state import Fail
-
     lifecycle = windows_ml.lifecycle
     sessions, options = [], []
     caplog.set_level(logging.INFO)
 
-    class SessionOptions(real_ort.SessionOptions):
+    class SessionOptions(ort.SessionOptions):
         def add_provider_for_devices(self, devices, settings):
             options.append((devices, settings))
 
@@ -230,7 +225,7 @@ def test_windows_ml_session_uses_registered_device_and_releases_libraries(
         lifecycle.append("register")
 
     device = SimpleNamespace(ep_name=provider.name, device=SimpleNamespace(type="GPU"))
-    ort = SimpleNamespace(
+    sdk = SimpleNamespace(
         SessionOptions=SessionOptions,
         InferenceSession=session,
         get_available_providers=lambda: ["CPUExecutionProvider"],
@@ -240,7 +235,7 @@ def test_windows_ml_session_uses_registered_device_and_releases_libraries(
             f"unregister:{name}"
         ),
     )
-    monkeypatch.setitem(sys.modules, "onnxruntime", ort)
+    monkeypatch.setitem(sys.modules, "onnxruntime", sdk)
     supplied = SessionOptions()
 
     outcome = (
@@ -258,7 +253,7 @@ def test_windows_ml_session_uses_registered_device_and_releases_libraries(
     ):
         assert inference.half is False
         assert (
-            ort.InferenceSession(
+            sdk.InferenceSession(
                 "model.onnx", sess_options=supplied, providers=["CPUExecutionProvider"]
             )
             == "session"
@@ -287,7 +282,7 @@ def test_windows_ml_session_uses_registered_device_and_releases_libraries(
         assert "Error 126" in caplog.text
     else:
         assert "unavailable" not in caplog.text
-    assert ort.InferenceSession is session
+    assert sdk.InferenceSession is session
     assert not settings_path.exists()
     assert "Windows ML provider OpenVINOExecutionProvider registered in" in caplog.text
     assert windows_ml.watchdog == [REGISTRATION_TRACE_DELAY, "cancel"] * (
@@ -299,14 +294,6 @@ def test_windows_ml_session_uses_registered_device_and_releases_libraries(
 def test_windows_ml_registration_failure_is_observable(
     monkeypatch, windows_ml, caplog, tmp_path, explicit
 ):
-    import logging
-
-    import numpy as np
-    import onnxruntime as ort
-    from onnxruntime.capi.onnxruntime_pybind11_state import Fail
-
-    from tests.support.onnx_model import write_detection_model
-
     def register(name, path):
         raise Fail(f'Error loading "{path}" which is missing. (Error 126)')
 
@@ -360,8 +347,6 @@ def test_tensorrt_profiles_use_all_detector_dimensions_and_source_counts():
 
 @pytest.mark.parametrize("build_type", ["default", "cuda", "windowsml"])
 def test_disabled_inference_does_not_load_onnx_runtime(monkeypatch, build_type):
-    import sys
-
     monkeypatch.setitem(sys.modules, "onnxruntime", None)
     with inference_runtime(OnnxConfig(), (), build_type) as options:
         assert options.half is False
@@ -369,8 +354,6 @@ def test_disabled_inference_does_not_load_onnx_runtime(monkeypatch, build_type):
 
 
 def test_native_cuda_models_do_not_load_onnx_runtime(monkeypatch):
-    import sys
-
     monkeypatch.setitem(sys.modules, "onnxruntime", None)
     models = (
         ModelRequirements("model.pt", image_size=320, batch_size=1),
@@ -386,10 +369,6 @@ def test_native_cuda_models_do_not_load_onnx_runtime(monkeypatch):
     "model_path", ["model.pt", "https://example.test/model.pt?signature=fake"]
 )
 def test_available_mps_skips_onnx_setup_for_native_checkpoints(monkeypatch, model_path):
-    import sys
-
-    import torch
-
     monkeypatch.setattr(sys, "platform", "darwin")
     monkeypatch.setattr(torch.backends.mps, "is_available", lambda: True)
     monkeypatch.setitem(sys.modules, "onnxruntime", None)
@@ -400,19 +379,10 @@ def test_available_mps_skips_onnx_setup_for_native_checkpoints(monkeypatch, mode
 
 @pytest.mark.parametrize("platform, available", [("darwin", False), ("linux", True)])
 def test_native_checkpoints_keep_onnx_when_mps_is_not_available_on_mac(
-    monkeypatch, platform, available
+    monkeypatch, cpu_provider_only, platform, available
 ):
-    import sys
-
-    import onnxruntime as ort
-    import torch
-
     monkeypatch.setattr(sys, "platform", platform)
     monkeypatch.setattr(torch.backends.mps, "is_available", lambda: available)
-    monkeypatch.setattr(
-        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
-    )
-    monkeypatch.setattr(ort, "get_ep_devices", list)
     original = ort.InferenceSession
     models = (ModelRequirements("model.pt", image_size=640, batch_size=1),)
     with inference_runtime(OnnxConfig(), models, "default") as options:
@@ -424,20 +394,11 @@ def test_native_checkpoints_keep_onnx_when_mps_is_not_available_on_mac(
 
 @pytest.mark.parametrize("explicit_provider", [False, True])
 def test_mixed_models_keep_onnx_and_explicit_provider_overrides_mps(
-    monkeypatch, explicit_provider
+    monkeypatch, cpu_provider_only, explicit_provider
 ):
-    import sys
-
-    import onnxruntime as ort
-    import torch
-
     calls = []
     monkeypatch.setattr(sys, "platform", "darwin")
     monkeypatch.setattr(torch.backends.mps, "is_available", lambda: True)
-    monkeypatch.setattr(
-        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
-    )
-    monkeypatch.setattr(ort, "get_ep_devices", list)
     monkeypatch.setattr(
         ort, "InferenceSession", lambda *args, **kwargs: calls.append(kwargs)
     )
@@ -454,19 +415,10 @@ def test_mixed_models_keep_onnx_and_explicit_provider_overrides_mps(
 
 
 def test_unavailable_explicit_onnx_provider_is_not_replaced_by_available_mps(
-    monkeypatch,
+    monkeypatch, cpu_provider_only
 ):
-    import sys
-
-    import onnxruntime as ort
-    import torch
-
     monkeypatch.setattr(sys, "platform", "darwin")
     monkeypatch.setattr(torch.backends.mps, "is_available", lambda: True)
-    monkeypatch.setattr(
-        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
-    )
-    monkeypatch.setattr(ort, "get_ep_devices", list)
     models = (ModelRequirements("model.pt", image_size=640, batch_size=1),)
     with (
         pytest.raises(ValueError, match="Configured ONNX provider is unavailable"),
@@ -492,10 +444,8 @@ def test_device_selection_prefers_openvino_gpu_and_puts_provider_last():
 
 @pytest.mark.parametrize("inference_fails", [False, True])
 def test_onnx_runtime_restores_session_factory_and_environment(
-    monkeypatch, inference_fails
+    monkeypatch, cpu_provider_only, inference_fails
 ):
-    import onnxruntime as ort
-
     calls = []
 
     def session(*args, **kwargs):
@@ -503,10 +453,6 @@ def test_onnx_runtime_restores_session_factory_and_environment(
         return "session"
 
     monkeypatch.setattr(ort, "InferenceSession", session)
-    monkeypatch.setattr(
-        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
-    )
-    monkeypatch.setattr(ort, "get_ep_devices", list)
     monkeypatch.setenv("ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS", "original")
     outcome = (
         pytest.raises(RuntimeError, match="inference failed")
@@ -522,21 +468,13 @@ def test_onnx_runtime_restores_session_factory_and_environment(
         assert calls[0]["providers"] == [("CPUExecutionProvider", {})]
         if inference_fails:
             raise RuntimeError("inference failed")
-    import os
-
     assert ort.InferenceSession is session
     assert os.environ["ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS"] == "original"
 
 
-def test_unavailable_explicit_provider_fails_and_rolls_back_environment(monkeypatch):
-    import os
-
-    import onnxruntime as ort
-
-    monkeypatch.setattr(
-        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
-    )
-    monkeypatch.setattr(ort, "get_ep_devices", list)
+def test_unavailable_explicit_provider_fails_and_rolls_back_environment(
+    monkeypatch, cpu_provider_only
+):
     monkeypatch.delenv("ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS", raising=False)
     config = OnnxConfig(provider="UnavailableProvider")
     with (
@@ -555,28 +493,20 @@ def test_unavailable_explicit_provider_fails_and_rolls_back_environment(monkeypa
         "https://example.test/model.onnx#download",
     ],
 )
-def test_cuda_onnx_preloads_runtime_libraries(monkeypatch, model_path):
-    import onnxruntime as ort
-
+def test_cuda_onnx_preloads_runtime_libraries(
+    monkeypatch, cpu_provider_only, model_path
+):
     calls = []
     monkeypatch.setattr(ort, "preload_dlls", lambda **kwargs: calls.append(kwargs))
-    monkeypatch.setattr(
-        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
-    )
-    monkeypatch.setattr(ort, "get_ep_devices", list)
     models = (ModelRequirements(model_path, image_size=640, batch_size=1),)
     with inference_runtime(OnnxConfig(), models, "cuda"):
         assert calls == [{"directory": ""}]
 
 
-def test_signed_onnx_url_still_checks_the_configured_provider(monkeypatch):
-    import onnxruntime as ort
-
+def test_signed_onnx_url_still_checks_the_configured_provider(
+    monkeypatch, cpu_provider_only
+):
     monkeypatch.setattr(ort, "preload_dlls", lambda **kwargs: None)
-    monkeypatch.setattr(
-        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
-    )
-    monkeypatch.setattr(ort, "get_ep_devices", list)
     original_session = ort.InferenceSession
     config = OnnxConfig(provider="UnavailableProvider")
     models = (

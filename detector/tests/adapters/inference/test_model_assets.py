@@ -25,6 +25,7 @@ from aidetector.cli import main
 from aidetector.configuration import Config
 from tests.support.https import enable_https
 from tests.support.onnx_model import write_detection_model
+from tests.support.status import status_records
 
 _CONNECT = socket.socket.connect
 
@@ -34,6 +35,10 @@ class Asset:
     body: bytes
     status: int = 200
     declared_size: int | None = None
+
+
+def full_traceback(failure):
+    return "".join(traceback.format_exception(failure.type, failure.value, failure.tb))
 
 
 @pytest.fixture(params=["http", "https"])
@@ -156,9 +161,7 @@ def test_failed_sdk_download_can_be_retried_without_reusing_a_partial_file(
     cache = tmp_path / "models"
     with pytest.raises(RuntimeError, match="download failed") as failure:
         resolve_model_path(base + path, tmp_path, cache)
-    assert "secret" not in "".join(
-        traceback.format_exception(failure.type, failure.value, failure.tb)
-    )
+    assert "secret" not in full_traceback(failure)
     assert not list(cache.rglob("*.pt"))
     assets[path] = Asset(b"complete checkpoint")
     model = Path(resolve_model_path(base + path, tmp_path, cache))
@@ -226,11 +229,7 @@ def test_packaged_startup_downloads_over_https_with_bundled_or_custom_certificat
     )
     assert main(["--config", str(config), "--status-json"]) == 0
     assert requests == ["/model.onnx"]
-    records = [
-        json.loads(line.removeprefix("AIDETECTOR_STATUS "))
-        for line in capsys.readouterr().out.splitlines()
-        if line.startswith("AIDETECTOR_STATUS ")
-    ]
+    records = status_records(capsys.readouterr().out)
     assert any(record["event"] == "inference" for record in records)
 
 
@@ -248,9 +247,7 @@ def test_untrusted_https_certificate_is_rejected_with_a_useful_diagnostic(
         )
     assert observations[-1].kind == "preparation_failed"
     assert "HTTPS certificate" in observations[-1].message
-    assert "secret" not in "".join(
-        traceback.format_exception(failure.type, failure.value, failure.tb)
-    )
+    assert "secret" not in full_traceback(failure)
     assert requests == []
     assert not list(cache.rglob("*.onnx"))
 
@@ -279,9 +276,7 @@ def test_download_reports_transport_failures_without_exposing_credentials(
         )
     assert diagnostic in observations[-1].message
     assert "secret" not in repr(observations)
-    assert "secret" not in "".join(
-        traceback.format_exception(failure.type, failure.value, failure.tb)
-    )
+    assert "secret" not in full_traceback(failure)
 
 
 def test_sdk_diagnostics_hide_credentials_without_muting_other_threads(
@@ -313,8 +308,6 @@ def test_sdk_diagnostics_hide_credentials_without_muting_other_threads(
         sdk_logger.removeHandler(handler)
     assert sdk_logger.filters == original_filters
     assert "Other detector diagnostic" in output.getvalue()
-    diagnostic = output.getvalue() + "".join(
-        traceback.format_exception(failure.type, failure.value, failure.tb)
-    )
+    diagnostic = output.getvalue() + full_traceback(failure)
     assert "secret" not in diagnostic
     assert not list((tmp_path / "models").rglob("*.onnx"))

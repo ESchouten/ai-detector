@@ -82,7 +82,7 @@ def write_windows_ml_sdk(directory: Path, providers: list[tuple[str, str]]) -> P
         "winui3/microsoft/windows/applicationmodel/dynamicdependency/bootstrap/__init__.py": (
             "from _test_windows_ml import initialize\n"
             "from types import SimpleNamespace\n"
-            "InitializeOptions = SimpleNamespace(NONE=0, ON_NO_MATCH_SHOW_UI=1)\n"
+            "InitializeOptions = SimpleNamespace(NONE=0)\n"
         ),
         "winui3/microsoft/windows/ai/machinelearning/__init__.py": (
             "from _test_windows_ml import ExecutionProviderCatalog\n"

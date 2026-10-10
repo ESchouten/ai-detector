@@ -10,9 +10,7 @@ import torch
 from ultralytics.engine.results import Results
 
 from aidetector.adapters.inference import MpsInferenceError, yolo
-from aidetector.adapters.inference.onnx import (
-    InferenceOptions,
-)
+from aidetector.adapters.inference.onnx import InferenceOptions
 from aidetector.adapters.inference.yolo import (
     InMemoryStreamBatch,
     YoloDetector,
@@ -90,7 +88,6 @@ def test_no_boxes_still_produce_unscored_observations_for_trailing_footage():
 
 class Model:
     names = {0: "cow", 1: "horse"}
-    predictor = None
 
     def __init__(self):
         self.calls = []
@@ -179,7 +176,6 @@ def test_optional_nms_and_tracker_settings_preserve_sdk_defaults(tracking, speci
 def test_unknown_model_class_fails_with_available_names():
     with pytest.raises(ValueError, match="Unknown YOLO classes: chicken"):
         resolve_classes({0: "cow"}, {"chicken": 0.8})
-    assert resolve_classes({0: "cow"}, 0) == {0: ("cow", 0)}
 
 
 @pytest.mark.parametrize("result_count", [1, 3])

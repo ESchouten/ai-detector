@@ -3,9 +3,11 @@ import logging
 from datetime import datetime, timedelta
 from weakref import ref
 
+import cv2
 import numpy as np
 import onnxruntime as ort
 import pytest
+from ultralytics import YOLO
 
 from aidetector.adapters.inference.onnx import ModelRequirements, inference_runtime
 from aidetector.adapters.inference.yolo import open_detector
@@ -81,9 +83,6 @@ def test_real_onnx_yolo_batching_tracking_and_session_lifetime(
 
 
 def test_failed_detector_startup_releases_the_loaded_predictor(tmp_path, monkeypatch):
-    import cv2
-    from ultralytics import YOLO
-
     model_path = tmp_path / "model.onnx"
     write_detection_model(model_path)
     assert cv2.imwrite(

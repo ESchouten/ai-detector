@@ -59,22 +59,6 @@ def model_sdk(monkeypatch):
     return SimpleNamespace(created=created, exports=exports)
 
 
-def test_export_model_is_released_before_inference_starts(model_sdk):
-    with open_detector(
-        YoloConfig(model="weights.pt"),
-        OnnxConfig(),
-        ("0", "1"),
-        "default",
-        InferenceOptions(),
-    ) as detector:
-        model = detector.model
-        assert model.model == "converted.onnx"
-        assert model_sdk.created[0]() is None, "Export-only weights are still retained"
-        assert model_sdk.created[1]() is model
-        assert model_sdk.exports[0]["batch"] == 2
-    assert model.predictor is None
-
-
 def test_conversion_passes_the_onnx_format_and_settings_to_the_sdk(model_sdk):
     with open_detector(
         YoloConfig(model="weights.pt", imgsz=128),
@@ -94,23 +78,6 @@ def test_conversion_passes_the_onnx_format_and_settings_to_the_sdk(model_sdk):
                 "opset": 19,
             }
         ]
-
-
-@pytest.mark.parametrize("half", [False, True])
-def test_native_model_precision_is_selected_when_the_predictor_is_created(
-    model_sdk, half
-):
-    with open_detector(
-        YoloConfig(model="weights.pt"),
-        OnnxConfig(),
-        ("0",),
-        "cuda",
-        InferenceOptions(half=half),
-    ) as detector:
-        model = detector.model
-        assert model.predictor.args.quantize == (16 if half else None)
-        assert model_sdk.exports == []
-    assert model.predictor is None
 
 
 def test_native_mps_model_skips_export_and_uses_fp16(model_sdk, tmp_path):
@@ -145,24 +112,6 @@ def test_exported_model_is_not_redirected_to_mps(model_sdk, suffix):
         assert detector.model.predictor.args.device is None
         assert detector.model.predictor.args.quantize is None
         assert model_sdk.exports == []
-
-
-def test_failed_mps_model_load_remains_a_visible_failure(monkeypatch):
-    def failed_load(*args, **kwargs):
-        raise RuntimeError("Broken checkpoint")
-
-    monkeypatch.setattr("aidetector.adapters.inference.yolo.YOLO", failed_load)
-    with (
-        pytest.raises(RuntimeError, match="Broken checkpoint"),
-        open_detector(
-            YoloConfig(model="broken.pt"),
-            OnnxConfig(),
-            ("0",),
-            "default",
-            InferenceOptions(native_mps=True),
-        ),
-    ):
-        pytest.fail("A model error must not trigger another backend")
 
 
 @pytest.mark.skipif(

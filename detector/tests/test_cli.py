@@ -12,6 +12,7 @@ import pytest
 
 from aidetector.adapters.inference import MpsInferenceError
 from aidetector.cli import main
+from tests.support.status import status_records
 
 SOURCE = Path(__file__).resolve().parents[1] / "src"
 
@@ -216,11 +217,7 @@ def test_launcher_status_reports_real_capture_processing_and_archive_outcome(
     if blocked_archive:
         (tmp_path / "detections").write_text("Cannot create a directory here")
     process = run_cli(tmp_path, "--status-json")
-    records = [
-        json.loads(line.removeprefix("AIDETECTOR_STATUS "))
-        for line in process.stdout.splitlines()
-        if line.startswith("AIDETECTOR_STATUS ")
-    ]
+    records = status_records(process.stdout)
     events = [record["event"] for record in records]
     assert events[:2] == ["preparing", "ready"]
     assert events[2:4] == ["frame", "processed"]
@@ -266,11 +263,7 @@ def test_launcher_inference_status_follows_real_onnx_prediction(
     )
     process = run_cli(tmp_path, "--status-json", "--log-level", level)
     assert process.returncode == 0, process.stderr
-    records = [
-        json.loads(line.removeprefix("AIDETECTOR_STATUS "))
-        for line in process.stdout.splitlines()
-        if line.startswith("AIDETECTOR_STATUS ")
-    ]
+    records = status_records(process.stdout)
     events = [record["event"] for record in records]
     assert events.index("frame") < events.index("inference") < events.index("delivery")
     assert "processed" not in events
@@ -317,11 +310,7 @@ def test_launcher_keeps_shared_camera_rule_and_archive_failures_distinct(tmp_pat
     )
     process = run_cli(tmp_path, "--status-json")
     assert process.returncode == 1, process.stderr
-    records = [
-        json.loads(line.removeprefix("AIDETECTOR_STATUS "))
-        for line in process.stdout.splitlines()
-        if line.startswith("AIDETECTOR_STATUS ")
-    ]
+    records = status_records(process.stdout)
     outcomes = {
         (record["event"], record["ruleId"], record["destinationId"])
         for record in records

@@ -50,7 +50,7 @@ Open `http://<computer-IP>/`. Settings, models and recordings live in the folder
 | Host | Compose file |
 | --- | --- |
 | Linux PC with an NVIDIA GPU | [`example/compose.yml`](example/compose.yml) |
-| Jetson Orin or Thor with JetPack 7.2 | [`example/compose.jetson.yml`](example/compose.jetson.yml); not yet checked on a board, see [Jetson](detector/MIGRATION.md#jetson) |
+| Jetson Orin or Thor with JetPack 7.2 | [`example/compose.jetson.yml`](example/compose.jetson.yml); checked on an Orin Nano, not on a Thor, see [Jetson](detector/MIGRATION.md#jetson) |
 
 ### Start automatically on a Jetson or Linux desktop
 

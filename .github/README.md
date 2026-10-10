@@ -4,18 +4,18 @@ Use **Application download** for desktop installers and their updates, and **Con
 
 | Workflow | Runs on | Does |
 | --- | --- | --- |
-| [Application download](workflows/application.yml) | `app/v*`, `app/test-*`, manual | Checks all three systems, builds the matching NVIDIA image and the native applications, tests the packages, then publishes signed official or preview updates. |
+| [Application download](workflows/application.yml) | `app/v*`, `app/test-*`, manual | Checks all three systems, builds the native applications, tests the packages, then publishes signed official or preview updates. |
 | [Container releases](workflows/containers.yml) | `app/v*`, manual | Tests and publishes the amd64 and arm64 image, which holds the web application and the detector it runs. |
 | [Detector Tests](workflows/detector-tests.yml) | Relevant pushes to `main` and pull requests, manual, and the two release workflows | Tests on three systems, branch coverage, architecture, schemas, the change report and domain mutation tests. |
 | [Web and setup tests](workflows/web-tests.yml) | The same | Unit tests on three systems; static checks, the production server and Compose checks on Linux. |
 | [Desktop distribution tests](workflows/distribution-tests.yml) | Relevant pushes to `main` and pull requests, manual | Native launchers, the compiled web process, installers and update packages. |
-| [Workflow syntax](workflows/workflow-tests.yml) | Called by the others | Lints workflow files and their embedded scripts. |
+| [Workflow syntax](workflows/workflow-tests.yml) | Called by the release and distribution workflows | Lints workflow files and their embedded scripts. |
 
 A release workflow calls the detector and web checks for the exact commit it releases. Feature branches can run the test workflows by hand.
 
 ## Application builds
 
-After the release configuration, these start together: native compilation per system, the NVIDIA image, the web and detector checks, and a real installation of the Windows NVIDIA runtime. Each installer waits only for its own system's binaries; Windows and Linux also wait for the image digest. The desktop tests for those binaries run beside packaging. Publication needs every installer, test and check to succeed. Runs are serialized across official and preview releases because both write the same update feeds.
+After the release configuration, these start together: native compilation per system, the web and detector checks, and a real installation of the Windows NVIDIA runtime. Each installer waits only for its own system's binaries. The desktop tests for those binaries run beside packaging. Publication needs every installer, test and check to succeed. Runs are serialized across official and preview releases because both write the same update feeds.
 
 Freezing the detector is the slowest step, and its result depends only on the detector's sources, its locked dependencies and the build scripts. A preview build therefore first looks for an earlier application build of this repository that froze and smoke-tested the same inputs, takes that build's binaries, and writes its own version into `aidetector/version.py`, which the freeze keeps as a plain file for this purpose. If none is found, or anything on that path fails, it freezes and smoke-tests as usual. Official `app/v*` releases always freeze afresh. Editing `application.yml`, `build.py` or the PyInstaller hooks changes those inputs, so the next build freezes again. [`tested_detector.py`](../distribution/tested_detector.py) accepts an earlier build only from this repository's own tag or manual runs, never from a pull request.
 
@@ -29,7 +29,7 @@ A release offers one download per system; the Windows setup EXE is wrapped in a 
 
 ## Container releases
 
-`detector/vX.Y.Z` publishes only the detector image and `web/vX.Y.Z` only the web image. Stable tags also move `latest`; prerelease tags do not. Both are built for amd64 and arm64 on native runners, and a tag is published only after both architectures pass their smoke checks, the component's tests and workflow lint. A manual run on a branch publishes branch-named images. JetPack 6 images are no longer built; see [Jetson](../detector/MIGRATION.md#jetson).
+`app/vX.Y.Z` publishes `ghcr.io/eschouten/ai-detector`. Stable tags also move `latest`; prerelease tags do not. The image is built for amd64 and arm64 on native runners, and a tag is published only after both architectures pass the container smoke check and the detector tests, web tests and workflow lint succeed. A manual run on a branch publishes a branch-named image.
 
 ## Shared setup
 

@@ -35,7 +35,7 @@ Install exactly one runtime extra per environment. They share the `onnxruntime` 
 
 **Executables and Docker.** [Releases](https://github.com/ESchouten/ai-detector/releases) carry the application installers, and the detector inside them takes the same flags; `--version` reports the build and runtime type. The [container image](../README.md#docker) holds the detector together with the web application that starts it; `docker run --rm IMAGE python3 -m aidetector …` runs the detector by itself from `/data`. A package that passes its smoke test has not shown that every GPU provider works on every machine.
 
-**Jetson.** The ARM64 image is for Orin and Thor with JetPack 7.2 and has not been checked on a board yet; JetPack 6 images are no longer built. See [Jetson](MIGRATION.md#jetson).
+**Jetson.** The ARM64 image is for Orin and Thor with JetPack 7.2. GPU inference and TensorRT have been verified on an Orin Nano; a Thor is untested. JetPack 6 images are no longer built. See [Jetson](MIGRATION.md#jetson).
 
 **Stopping and exit codes.** Ctrl+C or SIGTERM stops acquisition, flushes eligible events and drains accepted deliveries. Exit `0` is success or a graceful stop, `1` an application, verification or delivery failure, `2` a configuration error, and `75` an Apple GPU error that a supervisor may answer with a restart. The detector does not restart itself.
 

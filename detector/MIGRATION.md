@@ -44,13 +44,13 @@ To move an installation that used the two images:
 
 Running the detector alone still works by naming the command: `python3 -m aidetector`.
 
-The desktop application no longer offers to run its detector through Docker, and `runtime` is no longer a setting: remove it from `config.json` if it is there. On Linux with an NVIDIA GPU, use this image.
-
 ## Jetson
 
 JetPack 6 is no longer supported. Its images are no longer built and the published `-jetpack6` images receive no updates; do not point a JetPack 6 host at the generic `latest` image.
 
-JetPack 7.2 runs the standard ARM64 CUDA 13 software on Orin and Thor, so the ARM64 image is built from plain Ubuntu 24.04 with the standard PyTorch build for CUDA 13, as Ultralytics' [Jetson guide](https://docs.ultralytics.com/guides/nvidia-jetson/) describes for a native installation; use it with [`example/compose.jetson.yml`](../example/compose.jetson.yml). It starts on PyTorch on the GPU and prepares TensorRT 10 engines in the background, taking them at the next start; without a GPU it says so in the log and detects on the processor. It has been built and run without a GPU only, so neither the GPU nor TensorRT has been seen working on a board: before moving a farm installation, check model loading, GPU inference, several streams and a restart on that hardware, and back up the mounted settings and recordings.
+JetPack 7.2 runs the standard ARM64 CUDA 13 software on Orin and Thor, so the ARM64 image is built from plain Ubuntu 24.04 with the standard PyTorch build for CUDA 13, as Ultralytics' [Jetson guide](https://docs.ultralytics.com/guides/nvidia-jetson/) describes for a native installation; use it with [`example/compose.jetson.yml`](../example/compose.jetson.yml). It starts on PyTorch on the GPU and prepares TensorRT 10 engines in the background, taking them at the next start; without a GPU it says so in the log and detects on the processor.
+
+The image has been run on a Jetson Orin Nano with JetPack 7.2 and one RTSP camera. PyTorch detected on the GPU, the engine for a YOLO26m model was built in about twenty minutes with TensorRT 10.16 from NVIDIA's Jetson packages, and from the next start of monitoring TensorRT took about 16 ms per frame where PyTorch had taken 45 ms. A Thor has not been tried. Before moving a farm installation, back up the mounted settings and recordings.
 
 ## Upgrade steps
 

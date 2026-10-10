@@ -2,13 +2,13 @@
 
 Speed comparisons are only meaningful when detection settings stay fixed. Raising `detection.interval`, lowering `imgsz`, choosing a smaller model or changing `frames_min` all change which events are found. Live capture reads continuously, and each inference batch scores only the newest retained frame of each camera; older frames are event context.
 
-The automatic TensorRT route on Windows NVIDIA systems has functional checks but has not been benchmarked or qualified for detection quality. Background engine building shares the GPU with monitoring and affects timings, so measure both during and after it.
+The automatic TensorRT route has functional checks but has not been benchmarked or qualified for detection quality. Background engine building shares the GPU with monitoring and affects timings, so measure both during and after it.
 
 ## Timings in the running application
 
-At the default `INFO` level each prediction logs total wall time, time spent waiting for the shared MPS lock, Ultralytics' preprocessing, inference and postprocessing per image, result mapping (which includes moving boxes to CPU memory) and the input shapes. Wall time includes SDK overhead and need not equal the sum of the stages.
+At the default `INFO` level each detector logs a summary every thirty seconds: frames, batches, average time per frame and the slowest batch, and on the Apple GPU the memory held by PyTorch and by the whole process. `--log-level DEBUG` adds a line per prediction with total wall time, time spent waiting for the shared MPS lock, Ultralytics' preprocessing, inference and postprocessing per image, result mapping (which includes moving boxes to CPU memory) and the input shapes. Wall time includes SDK overhead and need not equal the sum of the stages.
 
-Every thirty seconds each camera logs decoded frames per second, average read time and average resize and publication time. Read time includes waiting for the camera or network; it is not CPU decoding time. Neither log measures how old an image was inside the camera's buffer, or delay in the browser.
+Every thirty seconds each camera logs decoded frames per second, average read time and average resize and publication time. Read time includes waiting for the camera or network; it is not CPU decoding time. None of these lines measures how old an image was inside the camera's buffer, or delay in the browser.
 
 Detectors that share a source and a frame width share one resize per decoded frame, with identical pixels.
 

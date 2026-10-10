@@ -1,5 +1,5 @@
 # AI Detector on a Jetson Orin or Thor with JetPack 7.2: PyTorch on the GPU, then TensorRT once
-# its engines are prepared. Not checked on a board yet: see detector/MIGRATION.md.
+# its engines are prepared. Checked on an Orin Nano, not on a Thor: see detector/MIGRATION.md.
 services:
   aidetector:
     image: "ghcr.io/eschouten/ai-detector:latest"

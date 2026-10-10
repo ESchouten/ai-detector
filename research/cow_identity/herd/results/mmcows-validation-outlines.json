@@ -1,0 +1,45 @@
+{
+ "note": "Photographs of the morning and crops of the half hour from noon, cut by the stock detector's own boxes at 1280 pixels and numbered by the publisher's box each overlaps; plain, and with everything outside the cow's outline blacked out.",
+ "cut_by_the_box": {
+  "photographs_of_enrolled_cows": 3763,
+  "all": {
+   "crops_of_enrolled_cows": 1553,
+   "crops_of_withheld_cows": 525,
+   "resemble_their_own_cow_most": 0.6445589182227945,
+   "and_score_above_99_in_100_strangers": 0.1957501609787508
+  },
+  "lying": {
+   "crops_of_enrolled_cows": 659,
+   "crops_of_withheld_cows": 288,
+   "resemble_their_own_cow_most": 0.44309559939301973,
+   "and_score_above_99_in_100_strangers": 0.1471927162367223
+  },
+  "on_her_feet": {
+   "crops_of_enrolled_cows": 894,
+   "crops_of_withheld_cows": 237,
+   "resemble_their_own_cow_most": 0.7930648769574944,
+   "and_score_above_99_in_100_strangers": 0.24608501118568232
+  }
+ },
+ "cut_by_the_outline": {
+  "photographs_of_enrolled_cows": 3763,
+  "all": {
+   "crops_of_enrolled_cows": 1553,
+   "crops_of_withheld_cows": 525,
+   "resemble_their_own_cow_most": 0.6870573084352866,
+   "and_score_above_99_in_100_strangers": 0.19510624597553122
+  },
+  "lying": {
+   "crops_of_enrolled_cows": 659,
+   "crops_of_withheld_cows": 288,
+   "resemble_their_own_cow_most": 0.5311077389984825,
+   "and_score_above_99_in_100_strangers": 0.19271623672230653
+  },
+  "on_her_feet": {
+   "crops_of_enrolled_cows": 894,
+   "crops_of_withheld_cows": 237,
+   "resemble_their_own_cow_most": 0.802013422818792,
+   "and_score_above_99_in_100_strangers": 0.2550335570469799
+  }
+ }
+}

@@ -48,3 +48,17 @@ def test_publisher_lines_are_a_cow_and_her_box():
         (9, 0.5, 0.25, 0.2, 0.1),
         (14, 0.7, 0.3, 0.05, 0.13),
     ]
+
+
+def test_a_camera_looks_down_on_a_place_by_its_height_over_the_distance_along_the_floor():
+    camera = (0.0, 0.0, 400.0)
+
+    assert round(mmcows.angle_of_view(camera, (300.0, 400.0, 100.0)), 1) == 31.0
+    assert round(mmcows.angle_of_view(camera, (0.0, 400.0, 0.0)), 1) == 45.0
+    # A cow far across the pen is seen almost from the side.
+    assert mmcows.angle_of_view(camera, (2000.0, 0.0, 100.0)) < 9
+
+
+def test_every_angle_of_view_falls_in_one_band():
+    assert mmcows.BANDS[0][0] == 0 and mmcows.BANDS[-1][1] == 90
+    assert all(low == high for (_, high), (low, _) in zip(mmcows.BANDS, mmcows.BANDS[1:]))

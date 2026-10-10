@@ -16,6 +16,7 @@ import argparse
 import importlib
 import io
 import json
+import re
 import sys
 import zipfile
 from collections import Counter
@@ -41,6 +42,8 @@ WIDTH, HEIGHT = 4480, 2800
 ZONE = 5 * 3600
 # The publisher's number for a cow that lies.
 LYING = 7
+# Degrees above the horizontal from which a camera sees a cow, in bands.
+BANDS = ((0, 8), (8, 12), (12, 16), (16, 20), (20, 30), (30, 90))
 
 
 class Remote(io.IOBase):
@@ -324,40 +327,47 @@ def occasions(arguments):
         )
 
 
-def postures(arguments):
-    """Of the cows in a run's judged pictures, lying and on their feet: how many were found, and named.
+def appearances(run, frames, labels):
+    """Every cow the publisher boxed in a run's judged pictures: the picture, the cow, found, named.
 
-    A run is what `run` or `track` wrote; a cow is found when one of the
-    application's boxes was paired with hers.
+    A run is what `run` or `track` wrote. A cow is found when one of the
+    application's boxes was paired with hers, and named when that box showed
+    her own name.
     """
     from app_score import labelled_frames, paired
     from ethz import frame_labels
 
+    counted, (partner, *_) = paired(run, frames, labels)
+    shown = run.get("shown", [None] * len(run["boxes"]))
+    found, named = set(), set()
+    for position, cow in zip(counted, partner, strict=True):
+        if cow is not None:
+            found.add((run["boxes"][position]["index"], cow))
+            if shown[position] == cow:
+                named.add((run["boxes"][position]["index"], cow))
+    width, height = run["boxes"][0]["frame_size"]
+    for index in labelled_frames(frames):
+        for cow, *_ in frame_labels(labels, run["video"], index, width, height):
+            yield index, cow, (index, cow) in found, (index, cow) in named
+
+
+def postures(arguments):
+    """Of the cows in a run's judged pictures, lying and on their feet: how many were found, and named."""
     bundle, _ = archive(LABELLED)
     doing = {cow: behaviour(bundle, cow) for cow in sorted(ENROLLED + WITHHELD)}
     result = {}
     for path in arguments.runs:
         run = json.loads(path.read_text())
-        frames = arguments.frames / run["video"]
-        counted, (partner, *_) = paired(run, frames, arguments.labels)
-        shown = run.get("shown", [None] * len(run["boxes"]))
-        found, named = set(), set()
-        for position, cow in zip(counted, partner, strict=True):
-            if cow is not None:
-                found.add((run["boxes"][position]["index"], cow))
-                if shown[position] == cow:
-                    named.add((run["boxes"][position]["index"], cow))
-        width, height = run["boxes"][0]["frame_size"]
         counts = Counter()
-        for index in labelled_frames(frames):
-            for cow, *_ in frame_labels(arguments.labels, run["video"], index, width, height):
-                group = (
-                    "enrolled" if cow in ENROLLED else "withheld",
-                    "lying" if doing[cow][index] == LYING else "on_her_feet",
-                )
-                counts[(*group, "visible")] += 1
-                counts[(*group, "found")] += (index, cow) in found
-                counts[(*group, "named")] += (index, cow) in named
+        seen = appearances(run, arguments.frames / run["video"], arguments.labels)
+        for index, cow, found, named in seen:
+            group = (
+                "enrolled" if cow in ENROLLED else "withheld",
+                "lying" if doing[cow][index] == LYING else "on_her_feet",
+            )
+            counts[(*group, "visible")] += 1
+            counts[(*group, "found")] += found
+            counts[(*group, "named")] += named
         result[path.name] = {
             f"{who}_{posture}": {
                 what: counts[(who, posture, what)] for what in ("visible", "found", "named")
@@ -369,6 +379,83 @@ def postures(arguments):
             print(path.name, group, numbers)
     if arguments.output:
         arguments.output.write_text(json.dumps(result, indent=1) + "\n")
+
+
+def camera_place(bundle, camera):
+    """Where a camera hangs, in the pen's centimetres, from the projection the publisher gives."""
+    text = bundle.read(f"visual_data/proj_mat/0725/proj_mat_cam{camera}.xml").decode()
+    numbers = re.search(r"<projection_matrix.*?<data>(.*?)</data>", text, re.DOTALL)[1].split()
+    projection = np.array(numbers, dtype=float).reshape(3, 4)
+    return -np.linalg.inv(projection[:, :3]) @ projection[:, 3]
+
+
+def places(bundle, cow):
+    """Where the publisher located a cow in the labelled seconds: x, y and height in centimetres."""
+    lines = bundle.read(f"visual_data/visual_location/C{cow:02d}/C{cow:02d}_0725.csv").decode()
+    return {
+        int(float(second)): tuple(map(float, place))
+        for second, *place in map(lambda line: line.split(","), lines.splitlines()[1:])
+        if all(place)
+    }
+
+
+def angle_of_view(camera, place):
+    """How many degrees above the horizontal a camera looks down on a place."""
+    across = np.hypot(camera[0] - place[0], camera[1] - place[1])
+    return float(np.degrees(np.arctan2(camera[2] - place[2], across)))
+
+
+def angles(arguments):
+    """Of the enrolled cows in runs' judged pictures, by how steeply the camera looks down on them.
+
+    A study with rendered cattle (https://arxiv.org/abs/2603.04314) finds
+    that cattle are recognised from new sides far better when seen from more
+    than about thirty degrees above the horizontal. The publisher gives every
+    camera's projection and every cow's place, so each appearance has such an
+    angle.
+    """
+    bundle, _ = archive(LABELLED)
+    cows = sorted(ENROLLED + WITHHELD)
+    doing = {cow: behaviour(bundle, cow) for cow in cows}
+    where = {cow: places(bundle, cow) for cow in cows}
+    counts = Counter()
+    seen_from = []
+    for path in arguments.runs:
+        run = json.loads(path.read_text())
+        camera = camera_place(bundle, VIDEOS[run["video"]]["camera"])
+        seen = appearances(run, arguments.frames / run["video"], arguments.labels)
+        for index, cow, found, named in seen:
+            if index not in where[cow]:
+                continue
+            angle = angle_of_view(camera, where[cow][index])
+            seen_from.append(angle)
+            if cow not in ENROLLED:
+                continue
+            band = next(f"{low}-{high}" for low, high in BANDS if low <= angle < high)
+            posture = "lying" if doing[cow][index] == LYING else "on_her_feet"
+            counts[(band, posture, "visible")] += 1
+            counts[(band, posture, "found")] += found
+            counts[(band, posture, "named")] += named
+    result = {
+        "degrees_above_the_horizontal": {
+            "median": float(np.median(seen_from)),
+            "tenth_percentile": float(np.percentile(seen_from, 10)),
+            "ninetieth_percentile": float(np.percentile(seen_from, 90)),
+            "share_above_30": float(np.mean(np.array(seen_from) > 30)),
+        },
+        "enrolled_cows": {
+            f"{low}-{high}": {
+                posture: {
+                    what: counts[(f"{low}-{high}", posture, what)]
+                    for what in ("visible", "found", "named")
+                }
+                for posture in ("lying", "on_her_feet")
+            }
+            for low, high in BANDS
+        },
+    }
+    arguments.output.write_text(json.dumps(result, indent=1) + "\n")
+    print(json.dumps(result, indent=1))
 
 
 def main():
@@ -391,6 +478,11 @@ def main():
     lying.add_argument("--frames", type=Path, required=True, help="Folder of frame folders")
     lying.add_argument("--labels", type=Path, required=True)
     lying.add_argument("--output", type=Path)
+    steep = commands.add_parser("angles", help="Cows found and named by the camera's angle of view")
+    steep.add_argument("runs", type=Path, nargs="+", help="JSON written by run or track")
+    steep.add_argument("--frames", type=Path, required=True, help="Folder of frame folders")
+    steep.add_argument("--labels", type=Path, required=True)
+    steep.add_argument("--output", type=Path, required=True)
     for name in ("track", "run", "score"):
         commands.add_parser(name, add_help=False, help=f"As app_{name}, with this farm's videos")
     arguments, rest = parser.parse_known_args()
@@ -403,6 +495,7 @@ def main():
             "frames": frames,
             "occasions": occasions,
             "postures": postures,
+            "angles": angles,
         }[arguments.command](arguments)
 
 

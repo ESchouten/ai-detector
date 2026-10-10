@@ -1,0 +1,82 @@
+{
+ "degrees_above_the_horizontal": {
+  "median": 13.48390823763416,
+  "tenth_percentile": 8.693309960243012,
+  "ninetieth_percentile": 17.959344083805348,
+  "share_above_30": 0.0022172949002217295
+ },
+ "enrolled_cows": {
+  "0-8": {
+   "lying": {
+    "visible": 0,
+    "found": 0,
+    "named": 0
+   },
+   "on_her_feet": {
+    "visible": 238,
+    "found": 139,
+    "named": 27
+   }
+  },
+  "8-12": {
+   "lying": {
+    "visible": 314,
+    "found": 151,
+    "named": 0
+   },
+   "on_her_feet": {
+    "visible": 774,
+    "found": 604,
+    "named": 118
+   }
+  },
+  "12-16": {
+   "lying": {
+    "visible": 1380,
+    "found": 314,
+    "named": 13
+   },
+   "on_her_feet": {
+    "visible": 334,
+    "found": 300,
+    "named": 120
+   }
+  },
+  "16-20": {
+   "lying": {
+    "visible": 506,
+    "found": 249,
+    "named": 0
+   },
+   "on_her_feet": {
+    "visible": 344,
+    "found": 325,
+    "named": 135
+   }
+  },
+  "20-30": {
+   "lying": {
+    "visible": 0,
+    "found": 0,
+    "named": 0
+   },
+   "on_her_feet": {
+    "visible": 236,
+    "found": 235,
+    "named": 87
+   }
+  },
+  "30-90": {
+   "lying": {
+    "visible": 0,
+    "found": 0,
+    "named": 0
+   },
+   "on_her_feet": {
+    "visible": 12,
+    "found": 12,
+    "named": 12
+   }
+  }
+ }
+}

@@ -32,25 +32,18 @@ export class DesktopInstance {
 
 	/** Publish only after successfully binding the server; the OS port is the instance lock. */
 	publish(port: number): void {
-		const temporary = `${this.file}.${process.pid}.tmp`;
-		writeFileSync(temporary, JSON.stringify({ port, token: this.token, pid: process.pid }), {
-			mode: 0o600
-		});
-		renameSync(temporary, this.file);
+		writePrivate(this.file, { port, token: this.token, pid: process.pid });
 	}
 
 	/** A reattached menu must distinguish a completed Quit from a vanished/crashed owner. */
 	completeShutdown(success: boolean): void {
-		const temporary = `${this.shutdownFile}.${process.pid}.tmp`;
-		writeFileSync(temporary, JSON.stringify({ token: this.token, success }), { mode: 0o600 });
-		renameSync(temporary, this.shutdownFile);
+		writePrivate(this.shutdownFile, { token: this.token, success });
 	}
 
 	shutdownResult(): boolean | undefined {
 		try {
 			const saved = JSON.parse(readFileSync(this.shutdownFile, 'utf8'));
-			if (saved.token === this.connected?.token && typeof saved.success === 'boolean')
-				return saved.success;
+			if (saved.token === this.connected?.token) return saved.success;
 		} catch (error) {
 			if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
 		}
@@ -112,17 +105,21 @@ export class DesktopInstance {
 				if (quit && saved && connectionRefused(failure)) return this.awaitShutdown(saved);
 				// A stale record or a server still starting cannot authorize a browser launch.
 			}
-			if (Date.now() >= deadline) return false;
-			await delay(Math.min(100, deadline - Date.now()));
+			await delay(100);
 		} while (Date.now() < deadline);
 		return false;
 	}
 
 	private readRecord(port: number): SavedInstance | undefined {
-		const saved: SavedInstance | undefined = JSON.parse(readFileSync(this.file, 'utf8'));
-		if (!saved || saved.port !== port || typeof saved.token !== 'string') return;
-		return saved;
+		const saved: SavedInstance = JSON.parse(readFileSync(this.file, 'utf8'));
+		if (saved.port === port) return saved;
 	}
+}
+
+function writePrivate(file: string, record: object): void {
+	const temporary = `${file}.${process.pid}.tmp`;
+	writeFileSync(temporary, JSON.stringify(record), { mode: 0o600 });
+	renameSync(temporary, file);
 }
 
 async function probe(saved: SavedInstance, quit: boolean, deadline: number): Promise<boolean> {
@@ -145,7 +142,6 @@ async function probe(saved: SavedInstance, quit: boolean, deadline: number): Pro
 }
 
 async function waitForExit(pid: number, timeout: number, signal?: AbortSignal): Promise<boolean> {
-	if (!Number.isInteger(pid) || pid <= 0) return false;
 	const deadline = Date.now() + timeout;
 	do {
 		try {

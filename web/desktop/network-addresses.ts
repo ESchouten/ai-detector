@@ -3,7 +3,7 @@ import { networkInterfaces } from 'node:os';
 const VIRTUAL =
 	/^(?:docker|veth|br[-\d]|bridge\d|virbr|vmnet|vboxnet|utun|tun|tap|wg\d|tailscale|vEthernet)|VPN|Virtual|WSL/i;
 const PHYSICAL = /^(?:en\d|eth\d|wlan\d|en[opsx]|wl[px]|Wi-?Fi|Ethernet)/i;
-const PRIVATE_IP = /^(?:10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/;
+export const PRIVATE_IP = /^(?:10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/;
 
 /** Local-network candidates for desktop links and pairing. Multiple NICs remain selectable. */
 export function lanAddresses(

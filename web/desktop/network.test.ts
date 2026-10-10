@@ -32,9 +32,9 @@ test('dashboard uses aidetector.local and reports the name selected after a conf
 	assert.ok(
 		info.mock.calls.some(({ arguments: args }) => args[0] === 'LAN name: http://aidetector.local')
 	);
-	hostname = 'ai-detector-(2).local.';
-	service.emit('hostname-change', 'ai-detector-(2)');
-	assert.equal(info.mock.calls.at(-1)?.arguments[0], 'LAN name: http://ai-detector-(2).local');
+	hostname = 'aidetector-(2).local.';
+	service.emit('hostname-change', 'aidetector-(2)');
+	assert.equal(info.mock.calls.at(-1)?.arguments[0], 'LAN name: http://aidetector-(2).local');
 	let closed = false;
 	const closing = close().then(() => {
 		closed = true;

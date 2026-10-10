@@ -5,6 +5,7 @@ import { Agent as HttpsAgent } from 'node:https';
 import { promisify } from 'node:util';
 import onvif from 'onvif';
 import * as v from 'valibot';
+import { PRIVATE_IP } from '../../../../desktop/network-addresses.ts';
 import type { CameraConnectionInput, CameraProfile, DiscoveredCamera } from '../../cameras.ts';
 import type { StreamMeta } from '../../schema.ts';
 import {
@@ -144,7 +145,7 @@ export async function camerasAt(hosts: string[], ports = ONVIF_PORTS): Promise<D
 
 /** The other addresses of a home or farm network this computer is on. */
 export function neighbours(address: string): string[] {
-	if (!/^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(address)) return [];
+	if (!PRIVATE_IP.test(address)) return [];
 	const network = address.slice(0, address.lastIndexOf('.'));
 	return Array.from({ length: 254 }, (_, index) => `${network}.${index + 1}`).filter(
 		(host) => host !== address

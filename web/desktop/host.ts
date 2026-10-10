@@ -1,4 +1,7 @@
-/** Private pipe to the native shell; only the server that owns the port connects. */
+/**
+ * Private pipe to the native shell: the server that owns the port connects, and so does a
+ * process that attaches a reopened menu to it.
+ */
 import { createInterface } from 'node:readline';
 import type { Readable, Writable } from 'node:stream';
 

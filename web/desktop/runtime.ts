@@ -37,7 +37,7 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 		}
 	}
 
-	function quit(reason = 'Application shutdown'): void {
+	function quit(reason: string): void {
 		const intentional = reason !== 'SIGTERM' && reason !== 'SIGINT';
 		if (intentional && !shutdown) console.error('AI_DETECTOR_STOPPING');
 		shutdown ??= (async () => {
@@ -61,7 +61,7 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 		server = Bun.serve({
 			port,
 			hostname: host,
-			idleTimeout: Number(process.env.BUN_IDLE_TIMEOUT ?? 255),
+			idleTimeout: 255,
 			fetch(request, owner) {
 				if (!handler) return new Response('Starting AI Detector…', { status: 503 });
 				return (

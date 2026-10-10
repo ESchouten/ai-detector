@@ -13,7 +13,6 @@ import {
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
-import { setTimeout } from 'node:timers/promises';
 import { promisify } from 'node:util';
 import {
 	needsNvidiaRuntime,
@@ -23,6 +22,7 @@ import {
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
+import { waitFor } from './support/timers.ts';
 
 const execute = promisify(execFile);
 const config = {
@@ -132,12 +132,14 @@ async function windowsFixture(t: TestContext) {
 	return { ...fixtureData, detector };
 }
 
-async function waitFor(predicate: () => boolean | Promise<boolean>) {
-	for (let i = 0; i < 200; i++) {
-		if (await predicate()) return;
-		await setTimeout(25);
-	}
-	assert.fail('Expected runtime state was not reached');
+/** The installer announces itself before it has written its process id. */
+async function installerPid(bundle: string) {
+	let pid = 0;
+	await waitFor(async () => {
+		pid = Number(await readFile(path.join(bundle, 'install-pid.txt'), 'utf8').catch(() => ''));
+		return pid > 0;
+	});
+	return pid;
 }
 
 test(
@@ -206,9 +208,7 @@ test(
 		await writeJson(path.join(bundle, 'fixture.json'), { holdInstall: true });
 		const starting = detector.start();
 		await waitFor(async () => (await detector.log.read()).includes('Downloading GPU packages'));
-		// The installer announces itself before it has written its process id.
-		await waitFor(async () => (await readJson(path.join(bundle, 'install-pid.txt'))) !== null);
-		const pid = Number(await readFile(path.join(bundle, 'install-pid.txt'), 'utf8'));
+		const pid = await installerPid(bundle);
 		await detector.stop();
 		await starting;
 		assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
@@ -288,19 +288,10 @@ test(
 		const { bundle, data, abort, options } = await fixture(t);
 		await writeJson(path.join(bundle, 'fixture.json'), { holdInstall: true });
 		const cancelled = assert.rejects(prepareNvidiaRuntime(options), { name: 'AbortError' });
-		let pid: number | undefined;
-		for (let i = 0; i < 100 && !pid; i++) {
-			try {
-				pid = Number(await readFile(path.join(bundle, 'install-pid.txt'), 'utf8'));
-			} catch (error) {
-				if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-			}
-			if (!pid) await setTimeout(25);
-		}
-		assert.ok(pid, 'uv did not start');
+		const pid = await installerPid(bundle);
 		abort.abort();
 		await cancelled;
-		assert.throws(() => process.kill(pid!, 0), { code: 'ESRCH' });
+		assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
 		const [folder] = await readdir(path.join(data, 'runtimes/nvidia'));
 		assert.equal(await readJson(path.join(data, 'runtimes/nvidia', folder, 'ready.json')), null);
 	}
@@ -397,8 +388,7 @@ test(
 		await writeJson(path.join(bundle, 'fixture.json'), { holdTensorRtInstall: true });
 		const starting = detector.start();
 		await waitFor(async () => (await detector.log.read()).includes('Downloading TensorRT'));
-		await waitFor(async () => (await readJson(path.join(bundle, 'install-pid.txt'))) !== null);
-		const pid = Number(await readFile(path.join(bundle, 'install-pid.txt'), 'utf8'));
+		const pid = await installerPid(bundle);
 		await detector.stop();
 		await starting;
 		assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });

@@ -1,4 +1,4 @@
-import { addPresetDetector } from './support/configuration.ts';
+import { addPresetDetector, settingsStore } from './support/configuration.ts';
 import { readTestPresets } from './support/presets.ts';
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
@@ -53,15 +53,10 @@ async function fixture(
 	config: unknown = { detectors: [detector] },
 	app: unknown = {}
 ) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-config-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
+	const { files, store } = await settingsStore(t);
 	await writeJson(files.config, config);
 	await writeJson(files.app, app);
-	return { files, store: new ConfigurationStore(files) };
+	return { files, store };
 }
 
 test('missing saved settings preserve recovery across restarts, including camera metadata', async (t) => {

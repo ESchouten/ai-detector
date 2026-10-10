@@ -1,9 +1,7 @@
 import { awaitsConnection, suggestedConnection } from '../src/lib/llm.ts';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
+import { readFile } from 'node:fs/promises';
 import {
 	normalizeConfiguration,
 	normalizeConfig,
@@ -15,9 +13,9 @@ import {
 	connectionMatches,
 	GEMINI_MODELS
 } from '../src/lib/llm.ts';
-import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import * as v from 'valibot';
 import { llmConnection, type LlmConnection } from '../src/lib/schema.ts';
+import { settingsStore } from './support/configuration.ts';
 import { readTestPresets } from './support/presets.ts';
 
 const connection: LlmConnection = {
@@ -52,13 +50,7 @@ test('a preset can retain an inactive question; enabling it requires a model', (
 
 for (const editing of [false, true]) {
 	test(`${editing ? 'editing' : 'adding'} a connection activates saved preset validators waiting for one`, async (t) => {
-		const directory = await mkdtemp(path.join(tmpdir(), 'ai-preset-connections-'));
-		t.after(() => rm(directory, { recursive: true, force: true }));
-		const files = {
-			config: path.join(directory, 'config.json'),
-			app: path.join(directory, 'app.json')
-		};
-		const store = new ConfigurationStore(files);
+		const { files, store } = await settingsStore(t);
 		if (editing) await store.saveLlm(connection);
 		const presets = (await readTestPresets()).filter(({ detector }) => detector.vlm?.length);
 		assert.equal(presets.length, 3);
@@ -95,12 +87,7 @@ for (const editing of [false, true]) {
 }
 
 test('a new connection preserves paused, standalone and already assigned validators', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-preset-preservation-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const store = new ConfigurationStore({
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	});
+	const { store } = await settingsStore(t);
 	await store.saveLlm(connection);
 	const waiting = { key: null, prompt: 'Check the event?', strategy: 'VIDEO' as const };
 	for (const [label, settings] of Object.entries({
@@ -127,13 +114,7 @@ test('connection assignment defaults to video when no verification settings exis
 });
 
 test('the default Gemini connection saves one verifier with an ordered model list', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-gemini-fallbacks-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
-	const store = new ConfigurationStore(files);
+	const { files, store } = await settingsStore(t);
 	await store.saveDetector({
 		meta: { label: 'Detector' },
 		detector: {
@@ -164,12 +145,7 @@ test('the default Gemini connection saves one verifier with an ordered model lis
 });
 
 test('connections without a key leave preset questions waiting until a key is saved', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-key-required-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const store = new ConfigurationStore({
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	});
+	const { store } = await settingsStore(t);
 	await store.saveDetector({
 		meta: { label: 'Waiting' },
 		detector: { detection: { source: ['video.mp4'] }, vlm: [{ prompt: 'Check?', key: null }] }
@@ -182,13 +158,7 @@ test('connections without a key leave preset questions waiting until a key is sa
 });
 
 test('one connection updates multiple detectors without changing their questions or fallbacks', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-connections-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
-	const store = new ConfigurationStore(files);
+	const { files, store } = await settingsStore(t);
 	await store.saveLlm(connection);
 	const fallback = {
 		prompt: 'Fallback question',
@@ -254,12 +224,7 @@ test('editing verification JSON detaches a stale shared connection without chang
 });
 
 test('clearing keys disables all verification and connection edits do not reactivate it', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-verification-pause-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const store = new ConfigurationStore({
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	});
+	const { store } = await settingsStore(t);
 	await store.saveLlm(connection);
 	const original = assignConnection(
 		{

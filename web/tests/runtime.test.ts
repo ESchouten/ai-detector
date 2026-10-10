@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
-import { mockTimeouts, realDelay } from './support/timers.ts';
+import { mockTimeouts, waitFor } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
@@ -85,14 +85,6 @@ test(
 		assert.equal(detector.status().readiness, 'preparing');
 	}
 );
-
-async function waitFor(predicate: () => boolean | Promise<boolean>) {
-	for (let i = 0; i < 200; i++) {
-		if (await predicate()) return;
-		await realDelay(25);
-	}
-	assert.fail('Expected process state was not reached');
-}
 
 test(
 	'start is idempotent, config apply restarts once, stop drains and disables resume',

@@ -1,24 +1,16 @@
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
+import { readFile, writeFile } from 'node:fs/promises';
 import { DeviceAccess, PairingError, localDashboard } from '../src/lib/server/device-access.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { settingsRevision } from '../src/lib/server/configuration/advanced.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
+import { settingsStore } from './support/configuration.ts';
 
-async function fixture(t: TestContext) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-access-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
-	const store = new ConfigurationStore(files, () => {
+function fixture(t: TestContext) {
+	return settingsStore(t, () => {
 		assert.fail('Pairing must not restart or reconfigure the detector');
 	});
-	return { files, store };
 }
 
 test('pairing is single-use; remembered browsers survive restart and can be revoked', async (t) => {

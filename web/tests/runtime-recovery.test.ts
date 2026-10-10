@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { mockTimeouts, realDelay } from './support/timers.ts';
+import { mockTimeouts, realDelay, waitFor } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
@@ -14,14 +14,6 @@ const executable = fileURLToPath(new URL('./fixtures/detector.mjs', import.meta.
 const posixOnly = { skip: process.platform === 'win32' };
 const source = 'rtsp://camera.local/live';
 const config = { detectors: [{ detection: { source } }] };
-
-async function waitFor(predicate: () => boolean | Promise<boolean>) {
-	for (let i = 0; i < 200; i++) {
-		if (await predicate()) return;
-		await realDelay(25);
-	}
-	assert.fail('Expected recovery state was not reached');
-}
 
 async function fixture(t: TestContext, extra = {}) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-recovery-'));

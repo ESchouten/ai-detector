@@ -1,11 +1,9 @@
-import { addMonitoredCamera } from './support/configuration.ts';
+import { addMonitoredCamera, settingsStore } from './support/configuration.ts';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
-import { test, type TestContext } from 'node:test';
+import { test } from 'node:test';
 import * as v from 'valibot';
 import { cameraInput } from '../src/lib/configuration.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
@@ -17,16 +15,6 @@ import {
 const source = 'rtsp://farmer:secret@camera.test/yard';
 const verifiedAt = '2026-09-22T10:00:00.000Z';
 const connection = { address: 'http://camera.test/onvif/device_service', profileToken: 'yard' };
-
-async function fixture(t: TestContext) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'camera-progress-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
-	return { files, store: new ConfigurationStore(files) };
-}
 
 async function readyCamera(store: ConfigurationStore) {
 	const camera = await addMonitoredCamera(
@@ -41,7 +29,7 @@ async function readyCamera(store: ConfigurationStore) {
 }
 
 test('camera progress and non-secret ONVIF details survive reopening and renaming', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const camera = await readyCamera(store);
 	await store.finishSetup(async () => new Set([camera.id]));
 	await store.saveCamera({ id: camera.id, label: 'Main yard', source });
@@ -56,7 +44,7 @@ test('camera progress and non-secret ONVIF details survive reopening and renamin
 });
 
 test('setup can finish without phone alerts but still requires real current monitoring', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const camera = await addMonitoredCamera(store, { label: 'Yard', source }, 'general', verifiedAt);
 	const { signature } = cameraArchiveSelection(await store.read(), camera.id);
 	await store.recordArchiveCheck(camera.id, signature, verifiedAt);
@@ -70,7 +58,7 @@ test('setup can finish without phone alerts but still requires real current moni
 });
 
 test('view-only setup can finish after picture confirmation without monitoring, alerts or an archive test', async (t) => {
-	const { store } = await fixture(t);
+	const { store } = await settingsStore(t);
 	const camera = await store.saveCamera({ label: 'Yard', source });
 	await assert.rejects(
 		store.finishSetup(async () => new Set()),
@@ -85,7 +73,7 @@ test('view-only setup can finish after picture confirmation without monitoring, 
 });
 
 test('finishing all cameras is atomic and still requires every camera check and current monitoring', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const first = await readyCamera(store);
 	const second = await store.saveCamera({
 		label: 'Entrance',
@@ -113,7 +101,7 @@ test('finishing all cameras is atomic and still requires every camera check and 
 });
 
 test('setup lists only the recipients actually assigned to each camera', async (t) => {
-	const { store } = await fixture(t);
+	const { store } = await settingsStore(t);
 	const first = await addMonitoredCamera(store, { label: 'Yard', source }, 'general', verifiedAt);
 	const second = await addMonitoredCamera(
 		store,
@@ -134,7 +122,7 @@ test('setup lists only the recipients actually assigned to each camera', async (
 });
 
 test('password or source changes preserve camera identity but invalidate earlier proofs', async (t) => {
-	const { store } = await fixture(t);
+	const { store } = await settingsStore(t);
 	const camera = await readyCamera(store);
 	await store.finishSetup(async () => new Set([camera.id]));
 	const updatedSource = 'rtsp://farmer:new-password@camera.test/yard';
@@ -158,7 +146,7 @@ test('password or source changes preserve camera identity but invalidate earlier
 });
 
 test('changing archive destinations invalidates its proof and rejects an obsolete in-flight check', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const camera = await readyCamera(store);
 	await store.finishSetup(async () => new Set([camera.id]));
 	const document = await store.read();
@@ -182,7 +170,7 @@ test('changing archive destinations invalidates its proof and rejects an obsolet
 });
 
 test('advanced model changes require completion again while preserving relevant historical picture and archive checks', async (t) => {
-	const { store } = await fixture(t);
+	const { store } = await settingsStore(t);
 	const camera = await readyCamera(store);
 	await store.finishSetup(async () => new Set([camera.id]));
 	const document = await store.read();
@@ -198,7 +186,7 @@ test('advanced model changes require completion again while preserving relevant 
 });
 
 test('Finish checks runtime after a queued rule change has restarted monitoring', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const camera = await readyCamera(store);
 	let monitoring = true;
 	let callbackCalled = false;
@@ -228,7 +216,7 @@ test('Finish checks runtime after a queued rule change has restarted monitoring'
 });
 
 test('failed progress persistence does not claim completion and retry succeeds', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const camera = await readyCamera(store);
 	const before = await readFile(files.app, 'utf8');
 	// Match the callback-based realpath used by write-file-atomic, including Windows casing.
@@ -268,7 +256,7 @@ test('client camera input cannot forge progress and rejects secrets in reusable 
 });
 
 test('camera edits and completion do not depend on preset files', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const camera = await readyCamera(store);
 	await store.finishSetup(async () => new Set([camera.id]));
 	const original = await store.read();

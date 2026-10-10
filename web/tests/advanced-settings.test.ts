@@ -1,28 +1,14 @@
-import { addMonitoredCamera } from './support/configuration.ts';
+import { addMonitoredCamera, settingsStore } from './support/configuration.ts';
 import assert from 'node:assert/strict';
-import { test, type TestContext } from 'node:test';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
+import { test } from 'node:test';
+import { readFile } from 'node:fs/promises';
 import * as v from 'valibot';
 import { parseSettings } from '../src/lib/advanced-settings.ts';
 import { heartbeatInput } from '../src/lib/configuration.ts';
 import { settingsRevision } from '../src/lib/server/configuration/advanced.ts';
-import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { monitoringEnabled, setMonitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import { backupSettings } from '../src/lib/server/settings-backup.ts';
 import { unzipSync } from 'fflate';
-
-async function fixture(t: TestContext) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'advanced-settings-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
-	const store = new ConfigurationStore(files);
-	return { directory, files, store };
-}
 
 test('editor validation accepts an empty setup and checks syntax, unknown properties and bounds', () => {
 	assert.deepEqual(parseSettings('config', '{"detectors":[]}'), { detectors: [] });
@@ -54,7 +40,7 @@ test('editor validation accepts an empty setup and checks syntax, unknown proper
 });
 
 test('advanced edits preserve names, camera identities and delivery; tuning clears preset identity', async (t) => {
-	const { store } = await fixture(t);
+	const { store } = await settingsStore(t);
 	const camera = await addMonitoredCamera(
 		store,
 		{ label: 'Barn', source: 'rtsp://camera.test/live' },
@@ -76,7 +62,7 @@ test('advanced edits preserve names, camera identities and delivery; tuning clea
 });
 
 test('reordering and deleting detectors retains metadata of unchanged detectors', async (t) => {
-	const { store } = await fixture(t);
+	const { store } = await settingsStore(t);
 	for (const label of ['First', 'Second', 'Third'])
 		await store.saveDetector({
 			meta: { label },
@@ -95,7 +81,7 @@ test('reordering and deleting detectors retains metadata of unchanged detectors'
 });
 
 test('invalid and stale saves leave both files untouched', async (t) => {
-	const { store, files } = await fixture(t);
+	const { store, files } = await settingsStore(t);
 	await store.saveDetector({
 		meta: { label: 'First' },
 		detector: { detection: { source: ['video.mp4'] } }
@@ -121,7 +107,7 @@ test('invalid and stale saves leave both files untouched', async (t) => {
 });
 
 test('shared connection JSON propagates credentials without changing questions or fallbacks', async (t) => {
-	const { store } = await fixture(t);
+	const { store } = await settingsStore(t);
 	const connection = {
 		label: 'AI',
 		model: ['openai/vision', 'openai/backup'],
@@ -160,7 +146,7 @@ test('shared connection JSON propagates credentials without changing questions o
 });
 
 test('editing detector credentials detaches only that shared connection', async (t) => {
-	const { store } = await fixture(t);
+	const { store } = await settingsStore(t);
 	await store.saveLlm({ label: 'AI', model: 'gemini/test', key: 'shared' });
 	await store.saveDetector({
 		meta: { label: 'Detector', llmConnection: 'AI' },
@@ -177,7 +163,7 @@ test('editing detector credentials detaches only that shared connection', async 
 });
 
 test('saving settings keeps the launcher’s resume flag, which never appears in settings, backups or revisions', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const source = 'rtsp://camera.example.test/barn';
 	await store.saveCamera({ label: 'Barn', source });
 	await setMonitoringEnabled(files.app, true);
@@ -217,7 +203,7 @@ test('saving settings keeps the launcher’s resume flag, which never appears in
 });
 
 test('the launcher and the settings store can replace app.json at the same time without losing either change', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const saves = Array.from({ length: 6 }, (_, index) =>
 		store.saveCamera({
 			label: `Camera ${index + 1}`,
@@ -234,7 +220,7 @@ test('the launcher and the settings store can replace app.json at the same time 
 });
 
 test('the heartbeat form changes its two fields, keeps options set in Advanced, and can be turned off', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	await store.saveHeartbeat({ url: 'https://hc.example.test/ping/abc', interval: 120 });
 	assert.deepEqual((await store.read()).config.health, {
 		url: 'https://hc.example.test/ping/abc',

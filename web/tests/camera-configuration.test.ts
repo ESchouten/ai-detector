@@ -1,28 +1,18 @@
-import { addMonitoredCamera } from './support/configuration.ts';
+import { addMonitoredCamera, settingsStore } from './support/configuration.ts';
 import assert from 'node:assert/strict';
-import { test, type TestContext } from 'node:test';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { test } from 'node:test';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import * as v from 'valibot';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { alertsInput } from '../src/lib/configuration.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
 
-async function fixture(t: TestContext) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'camera-setup-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
-	return { files, store: new ConfigurationStore(files) };
-}
 const first = 'rtsp://first.example.test/live';
 const second = 'rtsp://second.example.test/live';
 
 test('legacy identities are stable across reads, persistence, rename and password change', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	await writeJson(files.config, { detectors: [{ detection: { source: first } }] });
 	const original = (await store.read()).app.streams[0].id;
 	assert.equal((await new ConfigurationStore(files).read()).app.streams[0].id, original);
@@ -40,7 +30,7 @@ test('legacy identities are stable across reads, persistence, rename and passwor
 });
 
 test('alerts belong to selected detectors without splitting cameras or changing other settings', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	await writeJson(files.config, {
 		detectors: [
 			{
@@ -75,7 +65,7 @@ test('alerts belong to selected detectors without splitting cameras or changing 
 });
 
 test('recipient edits preserve per-detector delivery options and all camera assignments', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const channel = { token: 'old', chat: 'old-chat', alert_every: 3, include_video: false };
 	const other = { token: 'other', chat: 'other-chat' };
 	await writeJson(files.config, {
@@ -128,7 +118,7 @@ test('recipient edits preserve per-detector delivery options and all camera assi
 });
 
 test('renaming an unchanged recipient leaves config.json byte-for-byte unchanged', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	await writeJson(files.config, {
 		detectors: [
 			{
@@ -156,7 +146,7 @@ test('renaming an unchanged recipient leaves config.json byte-for-byte unchanged
 });
 
 test('unconfirmed connections and missing detectors cannot change settings', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	await addMonitoredCamera(store, { label: 'Pen', source: first }, 'calving-catcher');
 	const channel = { label: 'Phone', token: 'token', chat: 'chat', detectorLabels: ['Pen'] };
 	const unconfirmed = v.parse(alertsInput, { ...channel, received: false });
@@ -193,7 +183,7 @@ test('unconfirmed connections and missing detectors cannot change settings', asy
 });
 
 test('quiet hours belong to a recipient and reach every detector that alerts it', async (t) => {
-	const { store } = await fixture(t);
+	const { store } = await settingsStore(t);
 	await addMonitoredCamera(store, { label: 'Pen', source: first }, 'calving-catcher');
 	const channel = { label: 'Phone', token: 'token', chat: 'chat', detectorLabels: ['Pen'] };
 	const quiet = { start: '22:00', end: '06:00' };
@@ -217,7 +207,7 @@ test('quiet hours belong to a recipient and reach every detector that alerts it'
 });
 
 test('removing a camera removes its rules but preserves other cameras and archived data', async (t) => {
-	const { files, store } = await fixture(t);
+	const { files, store } = await settingsStore(t);
 	const one = await addMonitoredCamera(store, { label: 'One', source: first }, 'general');
 	await addMonitoredCamera(store, { label: 'Two', source: second }, 'general');
 	const archiveMarker = path.join(path.dirname(files.config), 'recording.json');
@@ -233,7 +223,7 @@ test('removing a camera removes its rules but preserves other cameras and archiv
 });
 
 test('a recipient can be connected before detectors exist and later disconnected from alerts without deleting it', async (t) => {
-	const { store } = await fixture(t);
+	const { store } = await settingsStore(t);
 	const recipient = { label: 'My phone', token: 'token', chat: 'chat' };
 	await store.saveAlerts({ ...recipient, detectorLabels: [], received: true });
 	assert.deepEqual((await store.read()).app.telegrams, [recipient]);

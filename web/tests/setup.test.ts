@@ -1,11 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mkdtemp, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
 import { setupStep } from '../src/lib/setup.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { applyDetectorPreset, createDetectorDraft } from '../src/lib/detector-editor.ts';
+import { settingsStore } from './support/configuration.ts';
 import { readTestPresets } from './support/presets.ts';
 
 test('setup resumes from saved configuration and always connects cameras first', () => {
@@ -19,13 +17,7 @@ test('setup resumes from saved configuration and always connects cameras first',
 });
 
 test('cameras are saved first, shared by detectors later, and stay assigned after reconnecting', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'setup-stages-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
-	const store = new ConfigurationStore(files);
+	const { files, store } = await settingsStore(t);
 	const entrance = 'rtsp://camera-one.example.test/live';
 	const yard = 'rtsp://camera-two.example.test/live';
 	const one = await store.saveCamera({ label: 'Entrance', source: entrance });

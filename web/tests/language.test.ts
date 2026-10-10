@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import {
 	LANGUAGE_NAMES,
@@ -19,6 +18,7 @@ import {
 	requestedLanguage,
 	runInLanguage
 } from '../src/lib/server/request-language.ts';
+import { settingsStore } from './support/configuration.ts';
 
 const catalogs = path.join(import.meta.dirname, '../src/locales');
 
@@ -58,14 +58,8 @@ async function readCatalog(locale: string): Promise<{ header: string; entries: E
 const placeholders = (text: string) => (text.match(/\{\d+\}|<\/?\d+\/?>/g) ?? []).sort();
 
 async function fixture(t: TestContext, requested?: Locale) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'language-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
 	const saved: (Locale | undefined)[] = [];
-	const store = new ConfigurationStore(files, undefined, {
+	const { files, store } = await settingsStore(t, undefined, {
 		requested: () => requested,
 		saved: (value) => saved.push(value)
 	});

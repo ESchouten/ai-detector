@@ -14,6 +14,7 @@ import { backupSettings } from '../src/lib/server/settings-backup.ts';
 import { zipDownload } from '../src/lib/server/zip-download.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { InstallationImport } from '../src/lib/server/installation-import/service.ts';
+import { settingsStore } from './support/configuration.ts';
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-export-'));
@@ -293,12 +294,8 @@ test('file errors reject the download instead of completing an incomplete ZIP', 
 });
 
 test('settings backup preserves cameras, detector options and alerts, and imports into a new setup', async (t) => {
-	const { directory } = await fixture(t);
+	const { directory, files, store } = await settingsStore(t);
 	const source = 'rtsp://farmer:private-password@camera.example.test/live';
-	const files = {
-		config: path.join(directory, 'config.json'),
-		app: path.join(directory, 'app.json')
-	};
 	await writeFile(
 		files.config,
 		JSON.stringify({
@@ -322,7 +319,6 @@ test('settings backup preserves cameras, detector options and alerts, and import
 			telegrams: [{ label: 'Phone', token: 'private-token', chat: '1234' }]
 		})
 	);
-	const store = new ConfigurationStore(files);
 	const before = await readFile(files.config);
 	const expected = await store.read();
 	await store.updateDevices(() => [

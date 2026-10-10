@@ -82,7 +82,7 @@ def _arguments(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument(
         "--live-preview",
         action="store_true",
-        help="Publish analyzed frames only while the web application has a live viewer",
+        help="Publish the latest detection boxes only while the web application has a live viewer",
     )
     parser.add_argument(
         "--prefer-tensorrt", action="store_true", help=argparse.SUPPRESS

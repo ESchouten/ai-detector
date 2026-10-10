@@ -28,7 +28,7 @@ Install exactly one runtime extra per environment. They share the `onnxruntime` 
 | `--init-config` | Writes a template; refuses to overwrite a file. A normal run never creates or repairs configuration. |
 | `--check-config` | Validates fields, bounds and source syntax without loading models, opening sources or making requests. |
 | `--config FILE --data-dir FOLDER` | Keeps runtime data apart from the program. Relative input and model paths resolve against the configuration's folder; the data folder defaults to it and holds `detections/`, `models/` and `logs/`. |
-| `--live-preview` | Publishes analysed pictures for the web application, which must share the data folder. See the [protocol](LIVE_PREVIEW.md). |
+| `--live-preview` | Publishes the detection boxes of the latest analysed picture for the web application, which must share the data folder. See the [protocol](LIVE_PREVIEW.md). |
 | `--test-vlm FILE` | Checks a verifier connection with generated media, without starting detection. |
 | `--control-stdin` | Stops gracefully on a line `stop` or on EOF from the parent. |
 | `--log-level` | `WARNING` hides routine activity; `DEBUG` adds per-batch details. |

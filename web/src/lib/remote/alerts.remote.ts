@@ -2,7 +2,8 @@ import { configurationAction } from '$lib/server/configuration/request';
 import { command, query } from '$app/server';
 import * as v from 'valibot';
 import { configuration } from '$lib/server/configuration';
-import { alertsInput, telegramInput, telegramMeta } from '$lib/configuration';
+import { alertsInput, telegramInput } from '$lib/configuration';
+import { telegramMeta } from '$lib/schema';
 import { sendTelegramTest } from '$lib/server/telegram';
 import { telegramPairings as pairings } from '$lib/server/telegram-service';
 
@@ -12,7 +13,7 @@ const pairingInput = v.object({ id: v.pipe(v.string(), v.minLength(1)) });
 export const beginTelegramPairing = command(
 	v.object({
 		...tokenInput.entries,
-		destination: v.optional(v.picklist(['private', 'group', 'channel']), 'private')
+		destination: v.picklist(['private', 'group', 'channel'])
 	}),
 	({ token, destination }) => configurationAction(() => pairings.begin(token, destination))
 );
@@ -41,10 +42,6 @@ export const deleteTelegram = command(v.pick(telegramMeta, ['label']), ({ label 
 	configurationAction(() => configuration.deleteTelegram(label))
 );
 
-export const testTelegram = command(
-	v.pick(telegramMeta, ['token', 'chat']),
-	async ({ token, chat }) => {
-		await configurationAction(() => sendTelegramTest(token, chat));
-		return { ok: true, description: 'Setup test sent.' };
-	}
+export const testTelegram = command(v.pick(telegramMeta, ['token', 'chat']), ({ token, chat }) =>
+	configurationAction(() => sendTelegramTest(token, chat))
 );

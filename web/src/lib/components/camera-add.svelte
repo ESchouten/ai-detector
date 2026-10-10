@@ -215,13 +215,13 @@
 		for (const camera of ready) {
 			const { connection } = camera;
 			try {
-				const saved = await saveCamera({
+				await saveCamera({
 					label: camera.name.trim(),
 					source: connection.source,
 					checkId: connection.check.checkId,
 					connection: connection.connection
 				});
-				update({ ...camera, state: 'saved', savedId: saved.id, error: undefined });
+				update({ ...camera, state: 'saved', error: undefined });
 			} catch (cause) {
 				update({ ...camera, error: errorMessage(cause, 'Could not add this camera. Try again.') });
 			}

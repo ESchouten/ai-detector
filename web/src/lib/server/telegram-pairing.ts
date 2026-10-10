@@ -84,10 +84,7 @@ export class TelegramPairings {
 		this.inbox = inbox;
 	}
 
-	async begin(
-		input: string,
-		destination: TelegramDestination = 'private'
-	): Promise<TelegramPairing> {
+	async begin(input: string, destination: TelegramDestination): Promise<TelegramPairing> {
 		const token = input.trim();
 		this.expire();
 		this.assertAvailable(token);

@@ -31,12 +31,7 @@ export type BatchCamera =
 	| (ListedCamera & { state: 'waiting' | 'connecting'; error?: undefined })
 	| (ListedCamera & { state: 'failed'; error: string })
 	| (ListedCamera & { state: 'ready'; connection: CheckedConnection; error?: string })
-	| (ListedCamera & {
-			state: 'saved';
-			connection: CheckedConnection;
-			savedId: string;
-			error?: undefined;
-	  });
+	| (ListedCamera & { state: 'saved'; connection: CheckedConnection; error?: undefined });
 
 /** Connect cameras with bounded concurrency, preserving successful results on retry. */
 export async function connectCameraBatch(

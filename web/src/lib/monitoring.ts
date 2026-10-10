@@ -1,5 +1,5 @@
 import { plural } from './format.ts';
-import type { RuntimeStatus } from './runtime.ts';
+import type { CameraRuntimeStatus, RuntimeStatus } from './runtime.ts';
 
 export type StatusTone = 'ok' | 'busy' | 'warn' | 'bad' | 'idle';
 export type MonitoringAction = 'start' | 'retry' | 'cancel' | 'pause';
@@ -20,11 +20,9 @@ type Runtime = Pick<
 	'managed' | 'phase' | 'readiness' | 'message' | 'preparation' | 'cameras' | 'issues'
 >;
 
-/** Cameras that are analysed and recorded right now. */
-function monitoredCount(runtime: Pick<RuntimeStatus, 'cameras'>): number {
-	return runtime.cameras.filter(
-		(camera) => camera.state === 'monitoring' && !camera.error && !camera.recordingError
-	).length;
+/** Whether a camera is analysed and recorded right now. */
+export function monitoredNow(camera: CameraRuntimeStatus): boolean {
+	return camera.state === 'monitoring' && !camera.error && !camera.recordingError;
 }
 
 function problem(runtime: Runtime): string {
@@ -121,7 +119,10 @@ export function monitoringSummary(
 		return {
 			tone: 'ok',
 			label: 'Monitoring',
-			detail: plural(monitoredCount(runtime), ['Watching # camera.', 'Watching # cameras.']),
+			detail: plural(runtime.cameras.filter(monitoredNow).length, [
+				'Watching # camera.',
+				'Watching # cameras.'
+			]),
 			attention: false,
 			action: 'pause'
 		};

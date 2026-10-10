@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { PreviewSlots } from '../src/lib/preview-slots.ts';
 
-test('only four viewers run and releasing a connection resumes the next waiting viewer', () => {
+test('only four viewers run and releasing a live picture resumes the next waiting viewer', () => {
 	const slots = new PreviewSlots();
 	const starts: number[] = [];
 	const release = Array.from({ length: 6 }, (_, index) => slots.request(() => starts.push(index)));
@@ -24,7 +24,7 @@ test('a hidden or closed waiting viewer is removed from the queue', () => {
 	assert.deepEqual(starts, ['first', 'last']);
 });
 
-test('opening a paused preview keeps the connection limit and resumes the displaced preview afterward', () => {
+test('opening a paused preview keeps the limit and resumes the displaced preview afterward', () => {
 	const slots = new PreviewSlots(2);
 	const active = new Set<string>();
 	const notify = (name: string) => (running: boolean) => {

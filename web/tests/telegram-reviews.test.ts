@@ -184,7 +184,7 @@ test('missing recordings and unrelated callbacks never claim a successful saved 
 test('pairing and reviews consume one batch together, including callbacks after confirmation', async (t) => {
 	const f = await fixture(t);
 	const pairings = new TelegramPairings(Date.now, f.inbox);
-	const pairing = await pairings.begin('fixture-token');
+	const pairing = await pairings.begin('fixture-token', 'private');
 	t.after(() => pairings.cancel(pairing.id));
 	const code = new URL(pairing.url).searchParams.get('start')!;
 	f.setUpdates([
@@ -231,7 +231,7 @@ test('background polling yields to pairing and cached chats remain discoverable'
 	await pairings.receiveReviews('fixture-token', new AbortController().signal);
 	f.setUpdates([]);
 	assert.deepEqual(await pairings.discoverChats('fixture-token'), [{ id: '123', name: 'Farmer' }]);
-	const pairing = await pairings.begin('fixture-token');
+	const pairing = await pairings.begin('fixture-token', 'private');
 	t.after(() => pairings.cancel(pairing.id));
 	const count = f.calls.length;
 	await pairings.receiveReviews('fixture-token', new AbortController().signal);
@@ -257,8 +257,8 @@ test('starting setup waits for an existing background poll instead of competing 
 	});
 	const background = pairings.receiveReviews('fixture-token', new AbortController().signal);
 	await entered.promise;
-	const starting = pairings.begin('fixture-token');
-	await assert.rejects(pairings.begin('fixture-token'), /connection in progress/);
+	const starting = pairings.begin('fixture-token', 'private');
+	await assert.rejects(pairings.begin('fixture-token', 'private'), /connection in progress/);
 	release.resolve();
 	const pairing = await starting;
 	t.after(() => pairings.cancel(pairing.id));

@@ -178,7 +178,6 @@ export type DetectorMeta = v.InferOutput<typeof detectorMeta>;
 export type TelegramMeta = v.InferOutput<typeof telegramMeta>;
 export type LlmConnection = v.InferOutput<typeof llmConnection>;
 export type StreamMeta = v.InferOutput<typeof streamMeta>;
-export type CameraSetup = v.InferOutput<typeof cameraSetup>;
 
 export interface PresetInfo {
 	id: string;

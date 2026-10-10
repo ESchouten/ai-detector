@@ -3,7 +3,7 @@ import type { CameraConnectionResult } from './cameras.ts';
 export async function checkCameraRecording(
 	source: string,
 	signal: AbortSignal,
-	endpoint = '/camera-checks'
+	endpoint: string
 ): Promise<CameraConnectionResult> {
 	const response = await fetch(endpoint, {
 		method: 'POST',
@@ -28,7 +28,7 @@ export async function checkCameraRecording(
 export async function checkConnection<T extends { source: string }>(
 	connection: T,
 	signal: AbortSignal,
-	endpoint?: string
+	endpoint: string
 ): Promise<T & { check: CameraConnectionResult }> {
 	signal.throwIfAborted();
 	const check = await checkCameraRecording(connection.source, signal, endpoint);

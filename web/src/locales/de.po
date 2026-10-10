@@ -186,10 +186,6 @@ msgstr "Der Verbindungstest ist nur in der Desktop-App möglich. Sie können die
 msgid "Open the localhost dashboard on the computer running AI Detector to import its files."
 msgstr "Öffnen Sie das Dashboard über localhost auf dem Computer, auf dem AI Detector läuft, um dessen Dateien zu importieren."
 
-#: src/lib/remote/alerts.remote.ts
-msgid "Setup test sent."
-msgstr "Testnachricht gesendet."
-
 #: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
 #: src/lib/remote/camera.remote.ts

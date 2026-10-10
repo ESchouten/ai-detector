@@ -38,10 +38,6 @@ export const inspectInstallation = command(v.pipe(v.string(), v.trim(), v.minLen
 );
 
 export const importInstallation = command(
-	v.object({
-		id: v.string(),
-		keepRecordings: v.boolean(),
-		previousAppClosed: v.literal(true)
-	}),
+	v.object({ id: v.string(), keepRecordings: v.boolean() }),
 	(input) => locally(() => installationImport.start(input.id, input.keepRecordings))
 );

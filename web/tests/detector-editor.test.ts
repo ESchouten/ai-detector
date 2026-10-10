@@ -121,7 +121,7 @@ test('changing a preset preserves sources, notification recipients and custom de
 		yolo: { model: 'new.pt' },
 		exporters: { disk: [{}] }
 	};
-	const updated = applyDetectorPreset(saved, preset);
+	const updated = applyDetectorPreset(saved, preset, { keepDelivery: true });
 	assert.deepEqual(updated.detection.source, saved.detection.source);
 	assert.deepEqual(updated.exporters, saved.exporters);
 	assert.equal(updated.yolo?.model, 'new.pt');
@@ -152,7 +152,7 @@ test('changing presets keeps an explicitly paused validator paused when connecti
 		detection: { source: [] },
 		vlm: [{ prompt: 'New question', strategy: 'VIDEO' as const, key: null }]
 	};
-	const result = applyDetectorPreset(current, preset);
+	const result = applyDetectorPreset(current, preset, { keepDelivery: true });
 	assert.deepEqual(result.vlm?.[0], {
 		prompt: 'New question',
 		strategy: 'VIDEO',

@@ -29,5 +29,4 @@ export const testLlmConnection = command(llmConnection, async (connection) => {
 		if (cause instanceof SetupError) error(400, cause.message);
 		throw cause;
 	}
-	return { ok: true };
 });

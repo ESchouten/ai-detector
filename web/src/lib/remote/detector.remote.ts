@@ -3,7 +3,8 @@ import { configurationAction } from '$lib/server/configuration/request';
 import { command, query } from '$app/server';
 import * as v from 'valibot';
 import { configuration } from '$lib/server/configuration';
-import { detectorInput, detectorMeta } from '$lib/configuration';
+import { detectorInput } from '$lib/configuration';
+import { detectorMeta } from '$lib/schema';
 import { readPresets } from '$lib/server/configuration/presets';
 import { readPresetChoices } from '$lib/server/configuration/preset-files';
 

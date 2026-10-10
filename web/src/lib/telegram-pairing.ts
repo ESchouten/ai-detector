@@ -8,13 +8,13 @@ import type {
 export type TelegramPairingState =
 	| { state: 'idle' | 'starting' }
 	| { state: 'waiting' | 'choosing' | 'confirming'; session: TelegramPairingSession }
-	| { state: 'matched'; chat: TelegramRecipient; bot: TelegramPairingSession['bot'] }
+	| { state: 'matched'; chat: TelegramRecipient }
 	| { state: 'failed'; message: string };
 
 interface PairingApi {
 	begin(input: {
 		token: string;
-		destination?: TelegramDestination;
+		destination: TelegramDestination;
 	}): Promise<TelegramPairingSession>;
 	poll(input: { id: string }): Promise<PairingResult>;
 	cancel(input: { id: string }): Promise<unknown>;
@@ -34,7 +34,7 @@ export class TelegramPairing {
 		this.changed = changed;
 	}
 
-	async start(token: string, destination: TelegramDestination = 'private'): Promise<void> {
+	async start(token: string, destination: TelegramDestination): Promise<void> {
 		this.cancel();
 		const generation = this.generation;
 		this.changed({ state: 'starting' });
@@ -87,7 +87,7 @@ export class TelegramPairing {
 			if (generation !== this.generation) return;
 			if (result.state === 'matched') {
 				this.release();
-				this.changed({ state: 'matched', chat: result.chat, bot: session.bot });
+				this.changed({ state: 'matched', chat: result.chat });
 			} else {
 				this.changed({ state: result.state, session });
 				this.schedule(generation);

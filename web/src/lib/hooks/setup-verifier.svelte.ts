@@ -13,7 +13,6 @@ export class SetupVerifier {
 	checking = $state('');
 	errors = $state<Record<string, string>>({});
 	connectionLost = $state(false);
-	lastCheckedAt = $state(Date.now());
 	#controller = new AbortController();
 	/** A picture check also records the clip that the recording check needs. */
 	#checks: Record<string, string> = {};
@@ -51,7 +50,6 @@ export class SetupVerifier {
 		await getSetupStatus().refresh();
 		this.cameras = await getSetupStatus();
 		this.connectionLost = false;
-		this.lastCheckedAt = Date.now();
 	}
 
 	/** Refresh every two seconds and run outstanding checks until stopped. */

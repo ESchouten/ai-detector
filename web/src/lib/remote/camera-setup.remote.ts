@@ -3,16 +3,13 @@ import { configuration } from '$lib/server/configuration';
 import { configurationAction } from '$lib/server/configuration/request';
 import { cameraSetupStatus } from '$lib/server/configuration/camera-setup';
 import { detectorStatus } from '$lib/server/detector-service';
+import { monitoredNow } from '$lib/monitoring';
 import type { RuntimeStatus } from '$lib/runtime';
 
 function monitoringCameras(runtime: RuntimeStatus) {
 	return new Set(
 		runtime.phase === 'running'
-			? runtime.cameras
-					.filter(
-						(camera) => camera.state === 'monitoring' && !camera.error && !camera.recordingError
-					)
-					.map((camera) => camera.id)
+			? runtime.cameras.filter(monitoredNow).map((camera) => camera.id)
 			: []
 	);
 }

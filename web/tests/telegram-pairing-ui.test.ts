@@ -51,7 +51,7 @@ test('abandoning a pending begin cancels its eventual server session without upd
 		},
 		(state) => states.push(state)
 	);
-	const starting = pairing.start('fixture-token');
+	const starting = pairing.start('fixture-token', 'private');
 	await flush();
 	await pairing.cancel();
 	begin.resolve(session('late-session'));
@@ -77,7 +77,7 @@ test('navigation or switching to manual setup retires an in-flight poll result',
 		},
 		(state) => states.push(state)
 	);
-	await pairing.start('fixture-token');
+	await pairing.start('fixture-token', 'private');
 	t.mock.timers.tick(2000);
 	await pairing.cancel();
 	poll.resolve({ state: 'matched', chat: { id: '123', name: 'Old recipient' } });
@@ -105,16 +105,12 @@ test('a matched phone stops polling and releases the session exactly once', asyn
 		},
 		(state) => states.push(state)
 	);
-	await pairing.start('fixture-token');
+	await pairing.start('fixture-token', 'private');
 	t.mock.timers.tick(2000);
 	await flush();
 	t.mock.timers.tick(20000);
 	assert.equal(polls, 1);
-	assert.deepEqual(states.at(-1), {
-		state: 'matched',
-		chat: { id: '123', name: 'Farmer' },
-		bot: { name: 'Farm', username: 'farm_bot' }
-	});
+	assert.deepEqual(states.at(-1), { state: 'matched', chat: { id: '123', name: 'Farmer' } });
 	await pairing.cancel();
 	assert.deepEqual(cancelled, ['match']);
 });
@@ -139,11 +135,11 @@ test('slow polling does not overlap and replacing a session waits for cancellati
 		},
 		() => {}
 	);
-	await pairing.start('first');
+	await pairing.start('first', 'private');
 	t.mock.timers.tick(2000);
 	t.mock.timers.tick(10000);
 	assert.equal(polls, 1);
-	const replacing = pairing.start('second');
+	const replacing = pairing.start('second', 'private');
 	await flush();
 	assert.deepEqual(beginnings, ['first']);
 	cancellation.resolve();
@@ -172,7 +168,7 @@ test('expired pairing links stop locally and offer a fresh connection', async (t
 		},
 		(state) => states.push(state)
 	);
-	await pairing.start('fixture-token');
+	await pairing.start('fixture-token', 'private');
 	t.mock.timers.tick(2000);
 	await flush();
 	const last = states.at(-1);

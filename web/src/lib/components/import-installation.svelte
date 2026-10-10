@@ -85,7 +85,7 @@
 	async function start(): Promise<void> {
 		if (!summary || !closed) return;
 		await run(async () => {
-			await importInstallation({ id: summary.id, keepRecordings, previousAppClosed: true });
+			await importInstallation({ id: summary.id, keepRecordings });
 			await refresh();
 		});
 	}

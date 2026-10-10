@@ -75,12 +75,7 @@ test('batch connections are bounded, keep independent successes and retain chann
 
 test('retry only connects failures and keeps ready and saved cameras untouched', async () => {
 	const ready: BatchCamera = { ...found('ready'), state: 'ready', connection };
-	const saved: BatchCamera = {
-		...found('saved'),
-		state: 'saved',
-		connection,
-		savedId: 'stable-camera-id'
-	};
+	const saved: BatchCamera = { ...found('saved'), state: 'saved', connection };
 	// A camera whose refreshed picture failed still shows the one that worked before.
 	const failed: BatchCamera = {
 		...found('failed'),

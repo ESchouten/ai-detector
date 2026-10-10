@@ -307,11 +307,7 @@ test(
 		const summary = parse((await inspected.json()).result);
 		assert.equal(summary.cameras, 1);
 		assert.equal(summary.detectors, 1);
-		const started = await command('importInstallation', {
-			id: summary.id,
-			keepRecordings: false,
-			previousAppClosed: true
-		});
+		const started = await command('importInstallation', { id: summary.id, keepRecordings: false });
 		assert.equal(started.status, 200, await started.clone().text());
 		for (let i = 0; i < 100; i++) {
 			try {

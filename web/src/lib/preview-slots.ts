@@ -1,4 +1,7 @@
-/** Limits active camera connections in one browser tab; waiting viewers resume in order. */
+/**
+ * Limits the live pictures in one browser tab, each a camera capture on the server; waiting
+ * viewers resume in order.
+ */
 export class PreviewSlots {
 	private viewers = new Map<symbol, { notify: (active: boolean) => void; active: boolean }>();
 	private readonly limit: number;

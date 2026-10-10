@@ -23,10 +23,7 @@ export function detectorDraftMeta(
 	connection?: LlmConnection
 ): DetectorMeta {
 	const [verification] = detector.vlm ?? [];
-	const followed =
-		preset.id && JSON.stringify(detectorSettings(detector)) === preset.settings
-			? preset.id
-			: undefined;
+	const followed = preset.id && followsPreset(detector, preset.settings) ? preset.id : undefined;
 	return {
 		label,
 		preset: followed,
@@ -62,7 +59,7 @@ export function validDetectorDraft(detector: unknown): DetectorDraft {
 export function applyDetectorPreset(
 	current: DetectorConfig,
 	preset: DetectorConfig,
-	{ keepDelivery = true }: { keepDelivery?: boolean } = {}
+	{ keepDelivery }: { keepDelivery: boolean }
 ): DetectorDraft {
 	const next = createDetectorDraft({
 		...structuredClone(preset),

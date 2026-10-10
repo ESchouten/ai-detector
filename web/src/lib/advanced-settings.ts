@@ -1,5 +1,10 @@
-import Ajv from 'ajv';
-import { configurationSchema, webConfigurationSchema } from './configuration.ts';
+import {
+	ajv,
+	configurationSchema,
+	issueMessage,
+	validateConfig,
+	webConfigurationSchema
+} from './configuration.ts';
 
 export type SettingsDocument = 'config' | 'connections';
 
@@ -32,27 +37,20 @@ export const settingsSchemas: Record<SettingsDocument, Record<string, unknown>> 
 	}
 };
 
-const ajv = new Ajv({ strict: false, allErrors: true });
-const validators = Object.fromEntries(
-	Object.entries(settingsSchemas).map(([name, schema]) => [name, ajv.compile(schema)])
-);
+const validators = {
+	config: validateConfig,
+	connections: ajv.compile(settingsSchemas.connections)
+};
 
 /** Use the same bundled schemas in the editor and at the save boundary. */
 export function parseSettings(document: SettingsDocument, text: string): unknown {
 	const value: unknown = JSON.parse(text);
 	const validate = validators[document];
-	if (!validate(value)) {
+	if (!validate(value))
 		throw new Error(
 			validate
-				.errors!.map((issue) => {
-					const detail =
-						issue.keyword === 'additionalProperties'
-							? `has unsupported property ${JSON.stringify(issue.params.additionalProperty)}`
-							: issue.message;
-					return `${issue.instancePath || '/'} ${detail}`;
-				})
+				.errors!.map((issue) => `${issue.instancePath || '/'} ${issueMessage(issue)}`)
 				.join('\n')
 		);
-	}
 	return value;
 }

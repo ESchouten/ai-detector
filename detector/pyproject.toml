@@ -150,17 +150,8 @@ precision = 1
 [tool.coverage.html]
 directory = ".reports/coverage"
 
-[tool.coverage.xml]
-output = ".reports/coverage.xml"
-
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/aidetector"]
-
-[tool.hatch.build.targets.sdist]
-only-include = [
-    "src/aidetector", "pyproject.toml", "uv.lock", "README.md", "LICENSE",
-    "ARCHITECTURE.md", "MIGRATION.md", "QUALITY.md", "PERFORMANCE.md", "LIVE_PREVIEW.md", ".importlinter",
-]

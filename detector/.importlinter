@@ -1,6 +1,5 @@
 [importlinter]
 root_package = aidetector
-include_external_packages = True
 exclude_type_checking_imports = False
 
 [importlinter:contract:layers]

@@ -166,7 +166,7 @@ uv run --no-sync ty check src/aidetector tools
 uv run --no-sync lint-imports --no-cache
 uv run --no-sync pytest
 uv run --no-sync generate-schema --check
-uv build
+uv build --wheel
 ```
 
 CI runs the full suite on Linux, Windows and macOS. [QUALITY.md](QUALITY.md) covers coverage and mutation testing, and [PERFORMANCE.md](PERFORMANCE.md) how to measure inference. VS Code has matching tasks: **Detector: check**, **Detector: core tests (fast)** and **Detector: debug reference flow**.

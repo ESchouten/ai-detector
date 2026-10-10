@@ -21,13 +21,9 @@ from aidetector.domain.models import BoundingBox, Observation
 
 
 def _video_frames(
-    observations: Sequence[Observation], crop: bool, plot: bool, padding: float
+    observations: Sequence[Observation], plot: bool, padding: float
 ) -> Iterator[Image]:
-    boxes = (
-        [box for observation in observations for box in observation.boxes]
-        if crop
-        else []
-    )
+    boxes = [box for observation in observations for box in observation.boxes]
     region = BoundingBox.enclosing(boxes)
     if region is None:
         for item in observations:
@@ -133,13 +129,10 @@ def encode_video(
     observations: Sequence[Observation],
     width: int | None = None,
     crf: int = 28,
-    crop: bool = True,
     plot: bool = True,
     data_max: int | None = None,
     padding: float = 0.1,
 ) -> bytes:
-    if not observations:
-        raise ValueError("A video needs at least one frame")
     try:
         executable = get_ffmpeg_exe()
     except RuntimeError as error:
@@ -148,7 +141,7 @@ def encode_video(
         ) from error
     duration = (observations[-1].date - observations[0].date).total_seconds()
     fps = (len(observations) - 1) / duration if duration > 0 else 1.0
-    frames = _video_frames(observations, crop, plot, padding)
+    frames = _video_frames(observations, plot, padding)
     try:
         with tempfile.TemporaryDirectory(prefix="aidetector-media-") as directory:
             raw = _RawVideo.from_frames(Path(directory) / "frames.bgr", frames, fps)

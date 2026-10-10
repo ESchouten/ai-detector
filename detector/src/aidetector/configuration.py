@@ -25,7 +25,6 @@ PaddingRatio = Annotated[float, Field(ge=0)]
 PositiveInt = Annotated[int, Field(gt=0)]
 NonEmptyString = Annotated[str, Field(min_length=1, pattern=r"\S")]
 ClockTime = Annotated[str, Field(pattern=r"^([01]\d|2[0-3]):[0-5]\d$")]
-StringList = Annotated[list[NonEmptyString], Field(min_length=1)]
 SourceList = Annotated[
     list[NonEmptyString], Field(min_length=1, json_schema_extra={"uniqueItems": True})
 ]
@@ -276,7 +275,7 @@ class ExportersConfig(_ConfigModel):
     )
     @classmethod
     def normalize_disk(cls, value: object) -> object:
-        return [value] if isinstance(value, DiskConfig) else _sequence(value)
+        return _sequence(value)
 
     @field_validator(
         "telegram",
@@ -285,7 +284,7 @@ class ExportersConfig(_ConfigModel):
     )
     @classmethod
     def normalize_telegram(cls, value: object) -> object:
-        return [value] if isinstance(value, TelegramConfig) else _sequence(value)
+        return _sequence(value)
 
     @field_validator(
         "webhook",
@@ -294,7 +293,7 @@ class ExportersConfig(_ConfigModel):
     )
     @classmethod
     def normalize_webhook(cls, value: object) -> object:
-        return [value] if isinstance(value, WebhookConfig) else _sequence(value)
+        return _sequence(value)
 
 
 class HealthcheckConfig(HttpConfig):
@@ -318,7 +317,7 @@ class DetectorConfig(_ConfigModel):
     )
     @classmethod
     def normalize_vlm(cls, value: object) -> object:
-        return [value] if isinstance(value, VLMConfig) else _sequence(value)
+        return _sequence(value)
 
     @field_validator(
         "exporters", mode="before", json_schema_input_type=ExportersConfig | None

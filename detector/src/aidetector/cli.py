@@ -220,9 +220,6 @@ def _run(
     except KeyboardInterrupt:
         logger.info("Shutdown completed")
         return 0
-    except ConfigurationError as error:
-        logger.error("%s", error)
-        return 2
     except MpsInferenceError:
         logger.exception(
             "Detector stopped after an Apple GPU error; exiting with code 75"

@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 def _rule_reporter(report_status: ReportStatus, rule_id: str) -> ReportStatus:
     def report(event: StatusEvent) -> None:
-        if event.kind in {"preparing", "preparation_failed", "notice"}:
+        if event.kind in {"preparing", "preparation_failed"}:
             logger.log(
                 logging.ERROR if event.kind == "preparation_failed" else logging.INFO,
                 "%s: %s",

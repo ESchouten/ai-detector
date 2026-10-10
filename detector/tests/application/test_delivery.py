@@ -133,9 +133,9 @@ def test_cooldown_prevents_repeated_validation_calls(caplog):
     caplog.set_level("INFO")
     validator = Validator(ValidationStatus.APPROVED)
     delivery = EventDelivery((), Cooldown(10), validator)
-    assert not delivery.deliver(event(0)).skipped
-    assert delivery.deliver(event(9)).skipped
-    assert not delivery.deliver(event(10)).skipped
+    assert delivery.deliver(event(0)).result is not None
+    assert delivery.deliver(event(9)).result is None
+    assert delivery.deliver(event(10)).result is not None
     assert validator.calls == 2
     assert caplog.messages.count("Event skipped: cooldown is still active") == 1
     assert caplog.messages.count("Event validation: approved") == 2
@@ -164,7 +164,7 @@ def test_delivery_failure_does_not_undo_acceptance_cooldown(verified):
     repeated = delivery.deliver(event(1))
 
     assert first.failures[0].destination == "webhook"
-    assert repeated.skipped
+    assert repeated.result is None
     assert len(exporter.results) == 1
 
 

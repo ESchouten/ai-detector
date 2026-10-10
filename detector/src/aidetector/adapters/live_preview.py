@@ -1,6 +1,5 @@
 """Publish bounded latest observations for viewers through the shared data folder."""
 
-import hashlib
 import json
 import logging
 import re
@@ -12,6 +11,7 @@ from threading import Event, Lock, Thread
 from time import monotonic, time
 from uuid import uuid4
 
+from aidetector.adapters import operational_status
 from aidetector.application.ports import PublishObservation
 from aidetector.domain.models import Observation
 
@@ -39,7 +39,6 @@ class LivePreview:
         self.run_id = uuid4().hex
         self._sources: dict[str, str] = {}
         self._pending: dict[tuple[str, str], Observation] = {}
-        self._published: dict[tuple[str, str], float] = {}
         self._active: set[str] = set()
         self._lock = Lock()
         self._stop = Event()
@@ -49,7 +48,7 @@ class LivePreview:
     def observer(self, rule_id: str, sources: Sequence[str]) -> PublishObservation:
         """Register configured sources before open(); return a nonblocking callback."""
         source_keys = {
-            source: hashlib.sha256(source.encode()).hexdigest() for source in sources
+            source: operational_status.source_key(source) for source in sources
         }
         self._sources.update(source_keys)
 
@@ -75,7 +74,6 @@ class LivePreview:
         try:
             frames = self.directory / "frames"
             frames.mkdir(parents=True, exist_ok=True)
-            (self.directory / "leases").mkdir(exist_ok=True)
             for file in frames.iterdir():
                 if _FRAME_NAME.fullmatch(file.name):
                     file.unlink(missing_ok=True)
@@ -114,20 +112,15 @@ class LivePreview:
 
     def _poll(self) -> None:
         active = {key for key in self._sources.values() if self._has_viewer(key)}
-        now = monotonic()
         with self._lock:
             self._active = active
             ready = {
                 key: observation
                 for key, observation in self._pending.items()
                 if key[0] in active
-                and now - self._published.get(key, -self.interval) >= self.interval
             }
-            self._pending = {
-                key: observation
-                for key, observation in self._pending.items()
-                if key[0] in active and key not in ready
-            }
+            self._pending.clear()
+        now = monotonic()
         if now - self._heartbeat >= 1.0:
             _atomic_json(
                 self.directory / "session.json",
@@ -143,7 +136,6 @@ class LivePreview:
                 break
             try:
                 self._write_frame(source_key, rule_id, observation)
-                self._published[(source_key, rule_id)] = monotonic()
                 self._failure = None
             except OSError as error:
                 self._report_failure(error)
@@ -161,7 +153,7 @@ class LivePreview:
                 and isinstance(lease.get("expiresAt"), (int, float))
                 and time() < lease["expiresAt"] <= time() + 30
             )
-        except (FileNotFoundError, ValueError, KeyError, TypeError):
+        except (FileNotFoundError, ValueError):
             return False
 
     def _write_frame(
@@ -188,7 +180,7 @@ class LivePreview:
                 for box in observation.boxes
             ],
         }
-        if self._has_viewer(source_key) and not self._stop.is_set():
+        if self._has_viewer(source_key):
             _atomic_json(
                 self.directory / "frames" / f"{source_key}.{rule_id}.json", record
             )

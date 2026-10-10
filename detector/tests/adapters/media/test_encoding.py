@@ -32,8 +32,8 @@ def observation(*boxes):
 def test_crop_union_and_plot_preserve_the_original_pixels():
     original = observation(BoundingBox(10, 20, 30, 40), BoundingBox(50, 5, 80, 70))
     assert original.enclosing_box == BoundingBox(10, 5, 80, 70)
-    crop = crop_observation(original, aspect_ratio=None, padding=0, plot=False)
-    assert crop.shape == (65, 70, 3)
+    crop = crop_observation(original, padding=0, plot=False)
+    assert crop.shape == (65, 116, 3)
     plotted = draw_boxes(original)
     assert np.any(plotted != original.image)
     assert not np.any(original.image)

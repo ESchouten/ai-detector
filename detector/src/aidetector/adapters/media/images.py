@@ -12,6 +12,7 @@ from aidetector.adapters.media import MediaError
 from aidetector.domain.models import BoundingBox, Observation
 
 Image = NDArray[np.uint8]
+_ASPECT_RATIO = 16 / 9
 
 
 def even_width(value: int) -> int:
@@ -75,7 +76,6 @@ def _centered_range(center: float, size: int, limit: int) -> tuple[int, int]:
 def crop_observation(
     observation: Observation,
     region: BoundingBox | None = None,
-    aspect_ratio: float | None = 16 / 9,
     padding: float = 0.1,
     plot: bool = True,
     plot_boxes: Sequence[BoundingBox] | None = None,
@@ -91,16 +91,15 @@ def crop_observation(
     x2, y2 = min(width, region.x2 + pad_x), min(height, region.y2 + pad_y)
     if x2 <= x1 or y2 <= y1:
         return None
-    if aspect_ratio is not None:
-        target_width, target_height = x2 - x1, y2 - y1
-        if target_width / target_height < aspect_ratio:
-            target_width = round(target_height * aspect_ratio)
-        else:
-            target_height = round(target_width / aspect_ratio)
-        # Clamp each dimension independently: fitting the preferred aspect ratio
-        # must not cut away part of the detection when the image is too narrow.
-        x1, x2 = _centered_range((x1 + x2) / 2, target_width, width)
-        y1, y2 = _centered_range((y1 + y2) / 2, target_height, height)
+    target_width, target_height = x2 - x1, y2 - y1
+    if target_width / target_height < _ASPECT_RATIO:
+        target_width = round(target_height * _ASPECT_RATIO)
+    else:
+        target_height = round(target_width / _ASPECT_RATIO)
+    # Clamp each dimension independently: fitting the preferred aspect ratio
+    # must not cut away part of the detection when the image is too narrow.
+    x1, x2 = _centered_range((x1 + x2) / 2, target_width, width)
+    y1, y2 = _centered_range((y1 + y2) / 2, target_height, height)
     return image[y1:y2, x1:x2]
 
 

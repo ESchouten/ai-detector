@@ -9,7 +9,6 @@ from aidetector.configuration import (
     ConfigurationError,
     DetectorConfig,
     DiskConfig,
-    ExportersConfig,
     HealthcheckConfig,
     SourceConfig,
     TelegramConfig,
@@ -48,19 +47,6 @@ def test_scalar_and_list_representations_normalize_at_boundary():
     )
     assert one == many
     assert one.vlm[0].model == ("provider/model",)
-
-
-def test_explicit_models_can_be_composed_without_json_conversion():
-    detector = DetectorConfig(
-        detection=SourceConfig(source=("0",)),
-        vlm=VLMConfig(model=("model",), prompt="Detect?"),
-        exporters=ExportersConfig(
-            disk=DiskConfig(),
-            telegram=TelegramConfig(token="secret", chat="chat"),
-            webhook=WebhookConfig(url="https://example.test"),
-        ),
-    )
-    assert len(detector.exporters.telegram) == 1
 
 
 @pytest.mark.parametrize(

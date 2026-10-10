@@ -39,10 +39,6 @@ class DeliveryReport:
     delivered: tuple[str, ...] = ()
     failures: tuple[DeliveryFailure, ...] = ()
 
-    @property
-    def skipped(self) -> bool:
-        return self.result is None
-
 
 class EventDelivery:
     """Validate and deliver events in order through domain policies."""

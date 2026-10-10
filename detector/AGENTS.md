@@ -12,7 +12,7 @@ Scope: the Python detector, its schemas, tests, packaging, and documentation. Pr
 - Keep configuration and event metadata compatible with the documented schema. Schema generation must be deterministic and independent of local config or hardware.
 - Tests describe public behavior and real integration contracts. Do not construct partially initialized objects with __new__, monkeypatch private application methods, weaken assertions to fit code, or use sleeps to test domain time rules.
 - Every new abstraction must isolate an actual I/O boundary or simplify a current use case. Prefer ordinary functions, dataclasses, and explicit constructors.
-- Keep the README's reading path and change-to-test map current. Tests follow production responsibilities; subprocess and model-building helpers belong in tests/support. Module moves must update imports, patch targets, mutation selectors and executable smoke entrypoints together.
+- Keep the README's reading path and ARCHITECTURE.md's table of where a change belongs current. Tests follow production responsibilities; subprocess and model-building helpers belong in tests/support. Module moves must update imports, patch targets, mutation selectors and executable smoke entrypoints together.
 - Run Ruff, formatting checks, ty, the behavioral suite, schema checks, and the local media/reference-flow checks. State which hardware-specific checks were not executable locally.
 - Never use real camera credentials, AI keys, Telegram bots, or webhooks in tests. Use temporary directories for runtime output.
 - Remove superseded implementation and update documentation when a replacement is verified. Do not leave permanent migration shims.

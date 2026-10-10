@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="420" viewBox="0 0 660 420">
+  <title>Install AI Detector</title>
+  <rect width="660" height="420" fill="#fafafa"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, Helvetica Neue, sans-serif" text-anchor="middle">
+    <text x="330" y="61" font-size="28" font-weight="600" fill="#18181b">Install AI Detector</text>
+    <text x="330" y="94" font-size="16" fill="#52525b">Drag the app into the Applications folder.</text>
+    <text x="330" y="353" font-size="16" font-weight="500" fill="#18181b">Then open AI Detector from Applications.</text>
+    <text x="330" y="379" font-size="14" fill="#71717a">Setup opens in your browser.</text>
+  </g>
+  <path d="M287 210h86m-16-16 16 16-16 16" fill="none" stroke="#a1a1aa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M44 320h572" fill="none" stroke="#e4e4e7"/>
+</svg>

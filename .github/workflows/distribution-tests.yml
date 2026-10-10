@@ -1,0 +1,82 @@
+name: Desktop distribution tests
+
+on:
+  pull_request:
+    # UI-only changes still build/test the web server; native packaging is also
+    # checked on every preview/release build by application.yml.
+    paths:
+      - 'distribution/**'
+      - 'web/**'
+      - '!web/src/**/*.svelte'
+      - '!web/src/**/*.css'
+      - '!web/tests/**'
+      - '!web/*.md'
+      - 'config/**'
+      - 'ruff.toml'
+      - 'detector/.python-version'
+      - 'detector/pyproject.toml'
+      - 'detector/uv.lock'
+      - '.github/**'
+      - '.gitattributes'
+  push:
+    branches: ['main']
+    # UI-only changes still build/test the web server; native packaging is also
+    # checked on every preview/release build by application.yml.
+    paths:
+      - 'distribution/**'
+      - 'web/**'
+      - '!web/src/**/*.svelte'
+      - '!web/src/**/*.css'
+      - '!web/tests/**'
+      - '!web/*.md'
+      - 'config/**'
+      - 'ruff.toml'
+      - 'detector/.python-version'
+      - 'detector/pyproject.toml'
+      - 'detector/uv.lock'
+      - '.github/**'
+      - '.gitattributes'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: distribution-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workflows:
+    uses: ./.github/workflows/workflow-tests.yml
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-distribution
+        with:
+          dotnet: 'true'
+      - name: Compile desktop web executable
+        run: python distribution/build.py web --skip-dependencies
+      - uses: ./.github/actions/build-launcher
+        with:
+          dotnet-tests: 'true'
+      - uses: ./.github/actions/test-distribution
+        with:
+          web-executable: ${{ github.workspace }}/web/dist/ai-detector-web${{ runner.os == 'Windows' && '.exe' || '' }}
+      - name: Upload distribution diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: distribution-diagnostics-${{ runner.os }}
+          path: .reports/
+          include-hidden-files: true
+          retention-days: 7

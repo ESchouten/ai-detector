@@ -1,0 +1,204 @@
+import assert from 'node:assert/strict';
+import { test, type TestContext } from 'node:test';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { setTimeout } from 'node:timers/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import ffmpeg from 'ffmpeg-static';
+import { createPreviewStream } from '../src/lib/server/stream-preview.ts';
+import { PreviewPool } from '../src/lib/server/preview-pool.ts';
+import { sanitizeTextForLogs } from '../src/lib/server/runtime-logs.ts';
+
+const executable = fileURLToPath(new URL('./fixtures/preview.mjs', import.meta.url));
+const posixOnly = { skip: process.platform === 'win32' };
+
+test(
+	'viewers share one preview process, which stays a while for whoever comes back',
+	posixOnly,
+	async (t) => {
+		const { directory, source } = await fixture(t);
+		const pool = new PreviewPool(300);
+		t.after(() => pool.close());
+		const first = pool.open(source, executable, new AbortController().signal).getReader();
+		const second = pool.open(source, executable, new AbortController().signal).getReader();
+		assert.deepEqual((await first.read()).value, (await second.read()).value);
+		const pid = Number(await readStartedFile(path.join(directory, 'pid')));
+		assert.equal(await readFile(path.join(directory, 'starts'), 'utf8'), `${pid}\n`);
+		await first.cancel();
+		assert.doesNotThrow(() => process.kill(pid, 0));
+		await second.cancel();
+		// Someone who returns in time sees the running capture, not a new one that must wait for
+		// the camera's next keyframe.
+		const returning = pool.open(source, executable, new AbortController().signal).getReader();
+		await setTimeout(400);
+		assert.doesNotThrow(() => process.kill(pid, 0));
+		assert.equal(await readFile(path.join(directory, 'starts'), 'utf8'), `${pid}\n`);
+		await returning.cancel();
+		await waitForExit(pid);
+	}
+);
+
+test('real camera previews sample frames without filling timestamp gaps with duplicates', async (t) => {
+	const ffmpegPath = ffmpeg;
+	assert.ok(ffmpegPath);
+	const directory = await mkdtemp(path.join(tmpdir(), 'detector-preview-timestamps-'));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	for (const gap of [0, 60]) {
+		await t.test(`${gap}-second gap`, async () => {
+			const source = path.join(directory, `camera-${gap}.nut`);
+			await promisify(execFile)(ffmpegPath, [
+				'-hide_banner',
+				'-loglevel',
+				'error',
+				'-f',
+				'lavfi',
+				'-i',
+				'testsrc2=size=160x120:rate=16',
+				'-vf',
+				`setpts='PTS+gte(N,16)*${gap}/TB'`,
+				'-frames:v',
+				'32',
+				'-fps_mode',
+				'passthrough',
+				'-c:v',
+				'ffv1',
+				source
+			]);
+			const reader = createPreviewStream(source, ffmpegPath).getReader();
+			let pictures = 0;
+			await assert.rejects(async () => {
+				while (true) {
+					const { value, done } = await reader.read();
+					if (done) break;
+					const jpeg = picture(value);
+					assert.deepEqual([...jpeg.subarray(0, 2)], [0xff, 0xd8]);
+					pictures++;
+				}
+			}, /Live stream ended/);
+			assert.ok(pictures > 0, 'The live preview must produce pictures');
+			// The latest-picture stream may drop frames, but must never synthesize extras.
+			assert.ok(pictures <= 16, `Expected at most 16 sampled pictures, received ${pictures}`);
+		});
+	}
+});
+
+function picture(chunk: Uint8Array | undefined): Uint8Array {
+	assert.ok(chunk);
+	return chunk;
+}
+
+async function fixture(
+	t: TestContext,
+	settings: { ignoreTerm?: boolean; flood?: boolean; endOutput?: boolean } = {}
+) {
+	const directory = await mkdtemp(path.join(tmpdir(), 'detector-preview-'));
+	const source = path.join(directory, 'source.json');
+	await writeFile(source, JSON.stringify(settings));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	return { directory, source };
+}
+
+async function waitForExit(pid: number): Promise<void> {
+	for (let i = 0; i < 150; i++) {
+		try {
+			process.kill(pid, 0);
+		} catch {
+			return;
+		}
+		await setTimeout(20);
+	}
+	assert.fail(`Preview process ${pid} did not exit`);
+}
+
+async function readStartedFile(file: string): Promise<string> {
+	for (let i = 0; i < 100; i++) {
+		try {
+			return await readFile(file, 'utf8');
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+		}
+		await setTimeout(20);
+	}
+	assert.fail(`Preview did not create ${path.basename(file)}`);
+}
+
+test('cancellation kills a preview that ignores SIGTERM', posixOnly, async (t) => {
+	const { directory, source } = await fixture(t, { ignoreTerm: true });
+	const reader = createPreviewStream(source, executable).getReader();
+	t.after(() => reader.cancel());
+	assert.equal(new TextDecoder().decode(picture((await reader.read()).value)), 'preview frame');
+	const pid = Number(await readStartedFile(path.join(directory, 'pid')));
+	await reader.cancel();
+	assert.equal(await readFile(path.join(directory, 'terminated'), 'utf8'), 'SIGTERM');
+	assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
+});
+
+test(
+	'preview EOF closes the response and stops a producer that has not exited',
+	posixOnly,
+	async (t) => {
+		const { directory, source } = await fixture(t, { endOutput: true });
+		const reader = createPreviewStream(source, executable).getReader();
+		assert.equal(new TextDecoder().decode(picture((await reader.read()).value)), 'preview frame');
+		const pid = Number(await readStartedFile(path.join(directory, 'pid')));
+		await assert.rejects(reader.read(), /Live stream ended/);
+		await waitForExit(pid);
+		assert.equal(await readFile(path.join(directory, 'terminated'), 'utf8'), 'SIGTERM');
+	}
+);
+
+test(
+	'a slow browser receives the latest whole picture without blocking camera capture',
+	posixOnly,
+	async (t) => {
+		const { directory, source } = await fixture(t, { flood: true });
+		const reader = createPreviewStream(source, executable).getReader();
+		t.after(() => reader.cancel());
+		// More than the parser's default 1,000-part / 41 MiB upload limits:
+		// an ongoing camera stream must not stop at an upload-oriented limit.
+		assert.equal(await readStartedFile(path.join(directory, 'frames')), '1500');
+		const { value, done } = await reader.read();
+		assert.equal(done, false);
+		const body = picture(value);
+		assert.equal(body.byteLength, 64 * 1024);
+		assert.ok(Number(new TextDecoder().decode(body.subarray(0, 4))) >= 1499);
+		await reader.cancel();
+	}
+);
+
+test('an already aborted preview never starts a process', posixOnly, async (t) => {
+	const { directory, source } = await fixture(t);
+	const reader = new PreviewPool().open(source, executable, AbortSignal.abort()).getReader();
+	assert.equal((await reader.read()).done, true);
+	await assert.rejects(readFile(path.join(directory, 'pid')), { code: 'ENOENT' });
+});
+
+test('runtime diagnostics redact both stream and HTTP credentials', () => {
+	const text =
+		'rtsp://farmer:secret@camera/live?api_key=private https://host/check?password=hidden';
+	const safe = sanitizeTextForLogs(text);
+	for (const credential of ['farmer', 'secret', 'private', 'hidden'])
+		assert.ok(!safe.includes(credential));
+	assert.ok(safe.includes('camera/live'));
+});
+
+test('runtime diagnostics redact partial URL parameters and non-HTTP source credentials', () => {
+	const text =
+		'Request failed: ?api_key=secret/with/slashes&quality=high ftp://farmer:password@host/file';
+	const safe = sanitizeTextForLogs(text);
+	for (const credential of ['secret', 'with/slashes', 'farmer', 'password'])
+		assert.ok(!safe.includes(credential));
+	assert.ok(safe.includes('quality=high'));
+	assert.ok(safe.includes('host/file'));
+});
+
+test('a missing preview executable fails the response without an unhandled process error', async (t) => {
+	const { source, directory } = await fixture(t);
+	const warning = t.mock.method(console, 'warn', () => {});
+	const reader = createPreviewStream(source, path.join(directory, 'missing-ffmpeg')).getReader();
+	await assert.rejects(reader.read(), /Live stream unavailable/);
+	assert.ok(warning.mock.calls.length > 0);
+});

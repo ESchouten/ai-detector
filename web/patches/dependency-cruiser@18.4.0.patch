@@ -1,0 +1,13 @@
+diff --git a/src/extract/transpile/svelte-wrap.mjs b/src/extract/transpile/svelte-wrap.mjs
+index 3b28badf9f10074e91d5b5b79cad176c6c758e23..20a4de17516b61c40ac9b1d077f8e1fe7ff545d6 100644
+--- a/src/extract/transpile/svelte-wrap.mjs
++++ b/src/extract/transpile/svelte-wrap.mjs
+@@ -24,7 +24,7 @@ function getTranspiler(pTranspilerWrapper) {
+ 		// lest it throws because it's accessing a property
+ 		// in it. In svelte 4 (which also takes compiler
+ 		// options there) this isn't necessary.
+-		return compile(lPreProcessedSource, {}).js.code;
++		return compile(lPreProcessedSource, { experimental: { async: true } }).js.code;
+ 	};
+ }
+ 

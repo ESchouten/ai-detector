@@ -1,29 +1,36 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import type { WithoutChildren } from '$lib/utils';
 	import type { ComponentProps } from 'svelte';
-	import type { NavItem } from './types';
+	import { isActive, isSettingsArea, type NavItem } from '$lib/navigation';
 
 	let {
-		title,
 		items,
-		size = 'default',
 		...restProps
 	}: {
-		title: string;
 		items: NavItem[];
-		size?: 'lg' | 'default' | 'sm';
 	} & WithoutChildren<ComponentProps<typeof Sidebar.Group>> = $props();
 </script>
 
 <Sidebar.Group {...restProps}>
-	<Sidebar.GroupLabel>{title}</Sidebar.GroupLabel>
 	<Sidebar.Menu>
-		{#each items as item (item.title)}
+		{#each items as item (item.href)}
+			{@const active =
+				item.area === 'settings'
+					? isSettingsArea(page.url.pathname)
+					: isActive(item, page.url.pathname)}
+			{@const external = item.href.startsWith('http')}
 			<Sidebar.MenuItem>
-				<Sidebar.MenuButton {size}>
+				<Sidebar.MenuButton isActive={active} class="h-9 gap-2.5 px-2.5">
 					{#snippet child({ props })}
-						<a href={item.url} {...props}>
+						<a
+							href={item.href}
+							{...props}
+							aria-current={active ? 'page' : undefined}
+							target={external ? '_blank' : undefined}
+							rel={external ? 'noreferrer' : undefined}
+						>
 							<item.icon />
 							<span>{item.title}</span>
 						</a>

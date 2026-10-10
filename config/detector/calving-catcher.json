@@ -3,7 +3,7 @@
         "interval": 1
     },
     "yolo": {
-        "model": "https://github.com/CowCatcherAI/CalvingCatcherAI/releases/download/CalvingcatcherV1/CalvingcatcherV7.1.pt",
+        "model": "https://github.com/CowCatcherAI/CalvingCatcherAI/releases/download/CalvingcatcherV1/calvingcatcherV10.pt",
         "confidence": {
             "waterbag": 0.5,
             "legs": 0.5,
@@ -25,5 +25,10 @@
         "disk": {
             "directory": "calvings"
         }
+    },
+    "vlm": {
+        "key": null,
+        "prompt": "Does the footage show visible signs of a cow giving birth: a water bag, calf legs, head or body emerging, or a newly born calf beside the cow? Set detected to true only when such a sign is visible.",
+        "strategy": "VIDEO"
     }
 }

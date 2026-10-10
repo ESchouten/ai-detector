@@ -1,0 +1,62 @@
+name: Web and setup tests
+
+on:
+  pull_request:
+    paths: ['web/**', 'config/**', 'distribution/**', 'Dockerfile', '.dockerignore', 'compose.yml', 'example/compose*.yml', 'detector/pyproject.toml', '.github/**', '.gitattributes']
+  push:
+    branches: ['main']
+    paths: ['web/**', 'config/**', 'distribution/**', 'Dockerfile', '.dockerignore', 'compose.yml', 'example/compose*.yml', 'detector/pyproject.toml', '.github/**', '.gitattributes']
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: web-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')) }}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Web / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-web
+      - name: Static checks
+        if: runner.os == 'Linux'
+        run: pnpm quality:static
+        working-directory: web
+      - name: Web and desktop behavior
+        shell: bash
+        run: |
+          mkdir -p .reports
+          pnpm test 2>&1 | tee .reports/web-tests.log
+          pnpm test:desktop 2>&1 | tee .reports/desktop-tests.log
+        working-directory: web
+      - name: Build production server
+        if: runner.os == 'Linux'
+        run: pnpm --dir web build
+      - name: Test production server
+        if: runner.os == 'Linux'
+        run: pnpm --dir web test:production
+      - name: Validate Docker Compose deployments
+        if: runner.os == 'Linux'
+        run: |
+          docker compose -f compose.yml config --quiet
+          docker compose -f example/compose.yml config --quiet
+          docker compose -f example/compose.jetson.yml config --quiet
+      - name: Upload test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: web-test-diagnostics-${{ runner.os }}
+          path: web/.reports/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn

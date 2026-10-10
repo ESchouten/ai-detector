@@ -1,0 +1,46 @@
+[importlinter]
+root_package = aidetector
+include_external_packages = True
+exclude_type_checking_imports = False
+
+[importlinter:contract:layers]
+name = Dependencies point toward use cases and domain rules
+type = layers
+containers = aidetector
+layers =
+    __main__
+    cli | schema
+    bootstrap
+    runtime | adapters
+    application
+    domain | configuration | version
+exhaustive = True
+
+[importlinter:contract:configuration]
+name = Use cases and runtime do not depend on configuration or build metadata
+type = forbidden
+source_modules =
+    aidetector.application
+    aidetector.runtime
+forbidden_modules =
+    aidetector.configuration
+    aidetector.version
+
+[importlinter:contract:adapters]
+name = Adapters receive build settings through explicit arguments
+type = forbidden
+source_modules = aidetector.adapters
+forbidden_modules = aidetector.version
+
+[importlinter:contract:adapter-groups]
+name = Source, inference and exporter adapters are independent
+type = independence
+modules =
+    aidetector.adapters.sources
+    aidetector.adapters.inference
+    aidetector.adapters.exporters
+
+[importlinter:contract:cycles]
+name = Packages and their descendants have no sibling dependency cycles
+type = acyclic_siblings
+ancestors = aidetector

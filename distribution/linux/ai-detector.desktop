@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=AI Detector
+Comment=Open camera monitoring and recordings
+Exec="/opt/ai-detector/AI Detector"
+TryExec=/opt/ai-detector/AI Detector
+Terminal=false
+Categories=AudioVideo;Video;
+StartupNotify=false
+Actions=Quit;
+
+[Desktop Action Quit]
+Name=Quit AI Detector
+Exec="/opt/ai-detector/AI Detector" --quit

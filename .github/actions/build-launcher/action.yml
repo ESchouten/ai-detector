@@ -1,0 +1,33 @@
+name: Build and test desktop launcher
+description: Compile the native launcher and run its applicable .NET tests.
+inputs:
+  version:
+    description: Application version embedded in the launcher
+    default: '0.0.0'
+  dotnet-tests:
+    description: Run portable update tests; requires the .NET SDK
+    default: 'false'
+  tests:
+    description: Run the launcher's tests after compiling it
+    default: 'true'
+runs:
+  using: composite
+  steps:
+    - name: Compile native launcher
+      if: runner.os != 'Linux'
+      shell: bash
+      env:
+        APP_VERSION: ${{ inputs.version }}
+      run: python distribution/build.py launcher --version "$APP_VERSION" --output "$RUNNER_TEMP"
+    - name: Windows tray tests
+      if: runner.os == 'Windows' && inputs.tests == 'true'
+      shell: bash
+      run: |
+        dotnet restore distribution/windows/launcher-tests/Launcher.Tests.csproj --locked-mode
+        dotnet test distribution/windows/launcher-tests/Launcher.Tests.csproj --no-restore --configuration Release
+    - name: Portable update recovery tests
+      if: inputs.tests == 'true' && inputs.dotnet-tests == 'true'
+      shell: bash
+      run: |
+        dotnet restore distribution/windows/update-tests/Update.Tests.csproj --locked-mode
+        dotnet test distribution/windows/update-tests/Update.Tests.csproj --no-restore --configuration Release

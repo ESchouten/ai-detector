@@ -1,24 +1,41 @@
 [project]
 name = "aidetector"
 version = "0.1.0"
-description = "Add your description here"
+description = "Video event detection with optional AI verification and configurable delivery"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "certifi>=2026.6.17",
     "imageio-ffmpeg>=0.6.0",
     "litellm>=1.81.6",
-    "opencv-stubs>=0.1.1",
+    "numpy>=1.26",
+    "opencv-python>=4.10",
+    "openai>=2,<3",
     "pydantic>=2.12.5",
-    "tiktoken[openai]>=0.12.0",
-    "ultralytics>=8.4.10",
-    "typing-extensions>=4.15.0",
+    "requests>=2.32",
+    "ultralytics>=8.4.80,<9",
+    "lap>=0.5.12",
 ]
 
 [project.optional-dependencies]
 default = [
+    "torch",
+    "torchvision",
     "onnx>=1.20.1",
     "onnxslim>=0.1.87",
     "onnxruntime>=1.24.1",
+]
+nvidia = [
+    "filelock>=3.29.4",
+    # Keep Windows on CUDA 12.8. Newer Torch/ORT releases default to CUDA 13.
+    "torch; sys_platform != 'win32'",
+    "torchvision; sys_platform != 'win32'",
+    "torch==2.11.0; sys_platform == 'win32'",
+    "torchvision==0.26.0; sys_platform == 'win32'",
+    "onnx>=1.20.1",
+    "onnxslim>=0.1.87",
+    "onnxruntime-gpu>=1.24.1; sys_platform != 'win32'",
+    "onnxruntime-gpu>=1.24.1,<1.27; sys_platform == 'win32'",
 ]
 windowsml = [
     "onnx>=1.20.1",
@@ -28,24 +45,122 @@ windowsml = [
     "wasdk-microsoft-windows-applicationmodel-dynamicdependency-bootstrap>=1.8.260209005",
 ]
 
+[tool.uv]
+required-version = "==0.12.19"
+conflicts = [[{ extra = "default" }, { extra = "nvidia" }, { extra = "windowsml" }]]
+
+[tool.uv.sources]
+tensorrt-cu12-libs = { index = "nvidia" }
+torch = [
+    { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
+    { index = "pytorch-cu128", extra = "nvidia", marker = "sys_platform == 'win32'" },
+    { index = "pypi", extra = "nvidia", marker = "sys_platform != 'win32'" },
+]
+torchvision = [
+    { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
+    { index = "pytorch-cu128", extra = "nvidia", marker = "sys_platform == 'win32'" },
+    { index = "pypi", extra = "nvidia", marker = "sys_platform != 'win32'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "nvidia"
+url = "https://pypi.nvidia.com"
+explicit = true
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-main = "aidetector:main"
-generate-schema = "aidetector.utils.generate_schema:main"
+main = "aidetector.cli:main"
+aidetector = "aidetector.cli:main"
+generate-schema = "aidetector.schema:main"
 
 [dependency-groups]
+# Optional Windows optimization, installed after the working CUDA environment.
+tensorrt = [
+    "tensorrt-cu12==10.16.1.11; sys_platform == 'win32'",
+    "tensorrt-cu12-libs==10.16.1.11; sys_platform == 'win32'",
+]
 dev = [
     "ruff>=0.14.14",
     "ty>=0.0.14",
     "pyinstaller>=6.18.0",
     "pytest>=9.1.1",
+    "psutil>=7.2.2",
+    "trustme>=1.2.1",
+    "opencv-stubs>=0.1.1",
+    "jsonschema>=4.23",
+    "radon>=6.0.1,<7",
+    "coverage[toml]>=7.10.6,<8",
+    "import-linter>=2.15,<3",
+    "grimp>=3.17,<4",
+    "mutmut>=3.8,<4; sys_platform != 'win32'",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = ["error::pytest.PytestUnhandledThreadExceptionWarning"]
+
+[tool.mutmut]
+source_paths = ["src/"]
+only_mutate = [
+    "src/aidetector/domain/events.py",
+    "src/aidetector/domain/policy.py",
+    "src/aidetector/domain/models.py",
+]
+pytest_add_cli_args_test_selection = [
+    "tests/domain/test_events.py",
+    "tests/domain/test_policy.py",
+    "tests/domain/test_models.py",
+    "tests/application/test_delivery.py",
+]
+pytest_add_cli_args = ["-q"]
+use_setproctitle = false
+on_dependency_change = "rerun"
+
+[tool.coverage.run]
+branch = true
+# Measure the checkout, not same-named packages in temporary analysis snapshots.
+source = ["src/aidetector"]
+# Include the CLI and import checks executed in child Python processes.
+parallel = true
+patch = ["subprocess"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+precision = 1
+
+[tool.coverage.html]
+directory = ".reports/coverage"
+
+[tool.coverage.xml]
+output = ".reports/coverage.xml"
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aidetector"]
+
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "src/aidetector", "pyproject.toml", "uv.lock", "README.md", "LICENSE",
+    "ARCHITECTURE.md", "MIGRATION.md", "QUALITY.md", "PERFORMANCE.md", "LIVE_PREVIEW.md", ".importlinter",
+]

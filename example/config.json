@@ -8,7 +8,7 @@
                 ]
             },
             "yolo": {
-                "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/modelv-14/cowcatcherV15.pt",
+                "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/model-V16/cowcatcherV17.2.pt",
                 "confidence": 0.8,
                 "time_max": 30,
                 "timeout": 6,
@@ -18,9 +18,12 @@
                 "prompt": "Do you see cows that are mounting each other?",
                 "key": "<your_llm_api_key>",
                 "model": [
-                    "gemini/gemini-3-flash-preview",
-                    "gemini/gemini-2.5-flash-lite",
-                    "gemini/gemini-2.5-flash"
+                    "gemini/gemini-3.8-flash",
+                    "gemini/gemini-3.7-flash",
+                    "gemini/gemini-3.6-flash",
+                    "gemini/gemini-3.5-flash",
+                    "gemini/gemini-3.5-flash-lite",
+                    "gemini/gemini-3.1-flash-lite"
                 ]
             },
             "exporters": {

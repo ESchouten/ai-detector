@@ -1,0 +1,27 @@
+# AI Detector on a Jetson Orin or Thor with JetPack 7.2: PyTorch on the GPU, then TensorRT once
+# its engines are prepared. Checked on an Orin Nano, not on a Thor: see detector/MIGRATION.md.
+services:
+  aidetector:
+    image: "ghcr.io/eschouten/ai-detector:latest"
+    restart: unless-stopped
+    runtime: nvidia
+    # The host's network, so cameras on it can be found.
+    network_mode: host
+    environment:
+      PORT: 80
+
+    ipc: host
+    ulimits:
+      memlock: -1
+      stack: 67108864
+
+    volumes:
+      - .:/data
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]

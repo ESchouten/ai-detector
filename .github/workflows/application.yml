@@ -1,0 +1,449 @@
+name: Application download
+
+on:
+  push:
+    tags: ['app/v*', 'app/test-*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # Both channels publish one combined feed. Keep releases ordered across channels.
+  group: application-releases
+  cancel-in-progress: false
+
+jobs:
+  configuration:
+    name: Release configuration
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      build_version: ${{ steps.release.outputs.build_version }}
+      tag: ${{ steps.release.outputs.tag }}
+      channel: ${{ steps.release.outputs.channel }}
+      feed_tag: ${{ steps.release.outputs.feed_tag }}
+      feed_url: ${{ steps.release.outputs.feed_url }}
+      channels_url: ${{ steps.release.outputs.channels_url }}
+      release_url: ${{ steps.release.outputs.release_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Choose version and update channel
+        id: release
+        run: python distribution/release_config.py
+      - name: Check required secrets and public key
+        # Only presence flags reach this job. Keys stay in the signing steps below.
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY != '' }}
+          SPARKLE_PUBLIC_KEY: ${{ vars.SPARKLE_PUBLIC_KEY != '' }}
+        run: |
+          python - <<'PY'
+          import os
+          import sys
+
+          required = (
+              'SPARKLE_PRIVATE_KEY', 'SPARKLE_PUBLIC_KEY',
+          )
+          missing = [name for name in required if os.environ[name] != 'true']
+          for name in missing:
+              kind = 'variable' if name == 'SPARKLE_PUBLIC_KEY' else 'secret'
+              print(f'::error::Missing repository {kind}: {name}')
+          sys.exit(bool(missing))
+          PY
+
+  web-checks:
+    needs: configuration
+    uses: ./.github/workflows/web-tests.yml
+
+  detector-checks:
+    needs: configuration
+    uses: ./.github/workflows/detector-tests.yml
+
+  native-windows:
+    name: Windows binaries
+    needs: configuration
+    runs-on: windows-latest
+    timeout-minutes: 120
+    permissions: &native-permissions
+      contents: read
+      # Find and download the detector an earlier build froze from the same sources.
+      actions: read
+    defaults:
+      run:
+        shell: bash
+    env: &release-environment
+      APP_VERSION: ${{ needs.configuration.outputs.version }}
+      APP_BUILD_VERSION: ${{ needs.configuration.outputs.build_version }}
+      UPDATE_CHANNEL: ${{ needs.configuration.outputs.channel }}
+      CHANNELS_URL: ${{ needs.configuration.outputs.channels_url }}
+      UPDATE_FEED: ${{ needs.configuration.outputs.feed_url }}
+      RELEASE_URL: ${{ needs.configuration.outputs.release_url }}
+      SPARKLE_PUBLIC_KEY: ${{ vars.SPARKLE_PUBLIC_KEY }}
+      LITELLM_LOCAL_MODEL_COST_MAP: 'true'
+      YOLO_AUTOINSTALL: 'false'
+      ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS: '1'
+    steps: &native-steps
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-distribution
+        with:
+          dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+      - uses: ./.github/actions/build-launcher
+        with:
+          version: ${{ env.APP_VERSION }}
+          # The launcher's tests run beside packaging, in the desktop test job.
+          tests: 'false'
+      - name: Look for a detector already frozen from these sources
+        # Freezing takes most of this job and depends only on the files hashed here.
+        # A build that froze and tested them leaves a marker with this name.
+        id: detector
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MARKER: detector-${{ env.PLATFORM }}-${{ hashFiles('detector/src/**', 'detector/pyproject.toml', 'detector/uv.lock', 'detector/.python-version', 'distribution/build.py', 'distribution/nvidia_runtime.py', 'distribution/nvidia/**', 'distribution/pyinstaller-hooks/**', '.github/workflows/application.yml', '.github/actions/setup-distribution/action.yml') }}
+        run: |
+          echo "marker=$MARKER" >> "$GITHUB_OUTPUT"
+          # Official releases are always frozen afresh.
+          if [ "$UPDATE_CHANNEL" = preview ]; then
+            python distribution/tested_detector.py "$MARKER" | tee -a "$GITHUB_OUTPUT"
+          fi
+      - name: Download that build's binaries
+        id: earlier
+        if: steps.detector.outputs.run-id != ''
+        continue-on-error: true
+        uses: actions/download-artifact@v7
+        with:
+          name: native-build-${{ env.PLATFORM }}
+          run-id: ${{ steps.detector.outputs.run-id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/earlier-build
+      - name: Reuse its detector under this build's version
+        id: reuse
+        if: steps.earlier.outcome == 'success'
+        continue-on-error: true
+        run: |
+          # Git Bash tar needs a POSIX path, not RUNNER_TEMP's Windows drive path.
+          runner_temp=$(cd "$RUNNER_TEMP" && pwd)
+          tar -xf "$runner_temp/earlier-build/native-build.tar" 'detector/dist/${{ env.DETECTOR_FOLDER }}'
+          rm -rf "$runner_temp/earlier-build"
+          python distribution/build.py stamp-detector 'detector/dist/${{ env.DETECTOR_FOLDER }}' --version "$GITHUB_REF_NAME"
+          executable="detector/dist/${{ env.DETECTOR_FOLDER }}/aidetector${{ env.EXE_SUFFIX }}"
+          if [ '${{ runner.os }}' = macOS ]; then executable="detector/dist/${{ env.DETECTOR_FOLDER }}/Contents/MacOS/aidetector"; fi
+          # The detector must start and report this build, or it is frozen again below.
+          reported=$("$executable" --version)
+          echo "$reported"
+          [[ "$reported" == *"$GITHUB_REF_NAME"* ]]
+          echo "reused=true" >> "$GITHUB_OUTPUT"
+      - name: Build detector
+        if: steps.reuse.outputs.reused != 'true'
+        run: |
+          mkdir -p .reports
+          python distribution/build.py detector --platform '${{ env.PLATFORM }}' --version "$GITHUB_REF_NAME" 2>&1 | tee .reports/detector-build.log
+      - name: Smoke test packaged detector
+        if: steps.reuse.outputs.reused != 'true'
+        working-directory: detector
+        run: |
+          executable="dist/${{ env.DETECTOR_FOLDER }}/aidetector${{ env.EXE_SUFFIX }}"
+          if [ '${{ runner.os }}' = macOS ]; then executable="dist/${{ env.DETECTOR_FOLDER }}/Contents/MacOS/aidetector"; fi
+          uv run --no-sync python -m tests.support.smoke_package "$executable" 2>&1 | tee ../.reports/detector-smoke-onnx.log
+          uv run --no-sync python -m tests.support.smoke_package "$executable" --model-format pt 2>&1 | tee ../.reports/detector-smoke-pt.log
+          if [ '${{ runner.os }}' = Windows ]; then
+            uv run --no-sync python -m tests.support.smoke_package "$executable" --windows-ml 2>&1 | tee ../.reports/detector-smoke-windowsml.log
+          fi
+      - name: Build web executable
+        run: |
+          mkdir -p .reports
+          python distribution/build.py web --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --skip-dependencies 2>&1 | tee .reports/web-build.log
+      - name: Archive binaries for packaging and testing
+        # Tar preserves executable permissions and macOS framework symlinks.
+        run: |
+          export COPYFILE_DISABLE=1
+          # Git Bash tar needs a POSIX path, not RUNNER_TEMP's Windows drive path.
+          runner_temp=$(cd "$RUNNER_TEMP" && pwd)
+          ffmpeg=$(cd web && node -p 'require("ffmpeg-static")')
+          cp "$ffmpeg" "ffmpeg${{ env.EXE_SUFFIX }}"
+          tar -cf native-build.tar 'detector/dist/${{ env.DETECTOR_FOLDER }}' "web/dist/ai-detector-web${{ env.EXE_SUFFIX }}" "ffmpeg${{ env.EXE_SUFFIX }}"
+          if [ '${{ runner.os }}' = macOS ]; then
+            tar -rf native-build.tar -C "$runner_temp" mac-launcher sparkle/bin sparkle/Sparkle.framework sparkle/LICENSE
+          fi
+          if [ '${{ runner.os }}' = Windows ]; then
+            tar -rf native-build.tar -C "$runner_temp" windows-launcher
+          fi
+      - name: Upload binaries
+        uses: actions/upload-artifact@v7
+        with:
+          name: native-build-${{ env.PLATFORM }}
+          path: native-build.tar
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 7
+      - name: Mark this build's detector as reusable
+        # Only now: the detector started, was smoke-tested here or in the build it came
+        # from, and its binaries are uploaded. The marker expires together with them.
+        if: steps.detector.outputs.marker != ''
+        run: echo "$GITHUB_SHA" > detector-marker.txt
+      - uses: actions/upload-artifact@v7
+        if: steps.detector.outputs.marker != ''
+        with:
+          name: ${{ steps.detector.outputs.marker }}
+          path: detector-marker.txt
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 7
+
+      - name: Upload build diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-diagnostics-${{ env.PLATFORM }}
+          path: |
+            .reports/
+            detector/build/aidetector/warn-*.txt
+            detector/build/aidetector/xref-*.html
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
+
+  native-macos:
+    name: macOS binaries
+    needs: configuration
+    runs-on: macos-latest
+    timeout-minutes: 120
+    permissions: *native-permissions
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps: *native-steps
+
+  native-linux:
+    name: Linux binaries
+    needs: configuration
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    permissions: *native-permissions
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps: *native-steps
+
+  # Packaging does not wait for these: they run beside it, and publication needs both.
+  tests-windows:
+    name: Windows desktop tests
+    needs: [configuration, native-windows]
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    env: *release-environment
+    steps: &desktop-test-steps
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-distribution
+        with:
+          dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+      - name: Download this build's binaries
+        uses: actions/download-artifact@v7
+        with:
+          name: native-build-${{ env.PLATFORM }}
+      - name: Unpack the compiled web application
+        run: |
+          tar -xf native-build.tar "web/dist/ai-detector-web${{ env.EXE_SUFFIX }}"
+          rm native-build.tar
+      - uses: ./.github/actions/build-launcher
+        with:
+          version: ${{ env.APP_VERSION }}
+          dotnet-tests: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+      - uses: ./.github/actions/test-distribution
+        with:
+          web-executable: ${{ github.workspace }}/web/dist/ai-detector-web${{ env.EXE_SUFFIX }}
+      - name: Upload test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-diagnostics-${{ env.PLATFORM }}
+          path: .reports/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
+
+  tests-macos:
+    name: macOS desktop tests
+    needs: [configuration, native-macos]
+    runs-on: macos-latest
+    timeout-minutes: 30
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps: *desktop-test-steps
+
+  tests-linux:
+    name: Linux desktop tests
+    needs: [configuration, native-linux]
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps: *desktop-test-steps
+
+  installer-windows:
+    name: Windows installer
+    needs: [configuration, native-windows]
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    env: *release-environment
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/package-application
+        with:
+          signing-key: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+
+  installer-macos:
+    name: macOS installer
+    needs: [configuration, native-macos]
+    runs-on: macos-latest
+    timeout-minutes: 60
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/package-application
+        with:
+          signing-key: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+
+  installer-linux:
+    name: Linux installer
+    needs: [configuration, native-linux]
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    defaults: {run: {shell: bash}}
+    env: *release-environment
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/package-application
+
+  nvidia-checks:
+    name: NVIDIA runtime installation
+    needs: configuration
+    runs-on: windows-latest
+    timeout-minutes: 40
+    defaults: {run: {shell: bash}}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-distribution
+        with:
+          web: 'false'
+      - uses: ./.github/actions/setup-web
+        with:
+          runtime-only: 'true'
+      - name: Stage the shipped NVIDIA bootstrap
+        run: python distribution/nvidia_runtime.py "$RUNNER_TEMP/nvidia-runtime" --version "$GITHUB_REF_NAME"
+      - name: Test a fresh CUDA and TensorRT installation
+        working-directory: web
+        env:
+          NVIDIA_RUNTIME_BUNDLE: ${{ runner.temp }}/nvidia-runtime
+        run: |
+          mkdir -p .reports
+          node --test tests/nvidia-runtime-installed.test.ts 2>&1 | tee .reports/nvidia-runtime.log
+      - name: Upload NVIDIA diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nvidia-runtime-diagnostics
+          path: web/.reports/
+          include-hidden-files: true
+          retention-days: 7
+
+  workflow-checks:
+    uses: ./.github/workflows/workflow-tests.yml
+
+  release:
+    needs: [configuration, workflow-checks, web-checks, detector-checks, nvidia-checks, tests-windows, tests-macos, tests-linux, installer-windows, installer-macos, installer-linux]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Download installers
+        uses: actions/download-artifact@v7
+        with:
+          pattern: AI-Detector-*
+          path: downloads
+          merge-multiple: true
+      - name: Download updater files
+        uses: actions/download-artifact@v7
+        with:
+          pattern: update-files-*
+          path: downloads
+          merge-multiple: true
+      - name: Keep updater feeds separate from versioned downloads
+        run: |
+          mkdir update-feeds
+          mv downloads/appcast.xml downloads/releases.win.json update-feeds/
+          mv downloads/channel-updates update-feeds/channels
+      - name: Zip the Windows installer for download
+        working-directory: downloads
+        run: |
+          for installer in *-windows-x64-setup.exe; do
+            python3 -m zipfile --create "${installer%.exe}.zip" "$installer"
+            rm "$installer"
+          done
+      - uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
+          tag_name: ${{ needs.configuration.outputs.tag }}
+          # Existing tags already identify the tested commit. Only branch runs create a tag.
+          target_commitish: ${{ github.event_name == 'workflow_dispatch' && github.sha || '' }}
+          name: AI Detector ${{ needs.configuration.outputs.version }} (${{ needs.configuration.outputs.channel }})
+          prerelease: ${{ needs.configuration.outputs.channel == 'preview' }}
+          make_latest: ${{ needs.configuration.outputs.channel == 'stable' }}
+          files: downloads/*
+          draft: true
+          body: |
+            Update channel: **${{ needs.configuration.outputs.channel }}**. Use **Include preview updates** in the desktop menu to receive both previews and official releases. Turn it off for official releases only. Windows can return to an older official release; macOS waits for a newer official release.
+
+            Install the download for your computer: extract the Windows ZIP and run its setup program, open the macOS disk image and drag AI Detector to Applications, or install the Ubuntu desktop package. Open **AI Detector** and follow the setup. Python, the web server and FFmpeg are included.
+
+            Closing the browser leaves monitoring active. Pause explicitly when you want monitoring to stay paused. Desktop startup runs after you sign in; monitoring before login is not promised.
+
+            Updates are authenticated using AI Detector’s own signing key. These downloads have no Windows publisher certificate or Apple notarization; OS warnings or execution restrictions can apply. Packaging targets: Windows 10 22H2+ / Windows 11 x64, macOS 14+ Apple Silicon, Ubuntu 22.04/24.04 amd64. Windows downloads CUDA dependencies on first use when a supported NVIDIA GPU is present. GPU and camera qualification remains specific to the tested hardware.
+
+            Choose one download: `*-windows-x64-setup.zip`, `*-macos-arm64.dmg`, or `*-linux-amd64.deb`. The `.nupkg` and `.delta` assets are used by automatic updates; you do not need to download them yourself.
+      - name: Publish application before promoting update feeds
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.configuration.outputs.tag }}
+          UPDATE_FEED_TAG: ${{ needs.configuration.outputs.feed_tag }}
+          UPDATE_CHANNEL: ${{ needs.configuration.outputs.channel }}
+        run: |
+          gh release edit "$RELEASE_TAG" --draft=false
+          if ! gh release view "$UPDATE_FEED_TAG" >/dev/null 2>&1; then
+            gh release create "$UPDATE_FEED_TAG" --title "Application $UPDATE_CHANNEL update feeds" --notes "Signed $UPDATE_CHANNEL desktop updater metadata. Installers are attached to versioned application releases." --prerelease --latest=false
+          fi
+          gh release upload "$UPDATE_FEED_TAG" update-feeds/appcast.xml update-feeds/releases.win.json --clobber
+          if ! gh release view app-update-channels >/dev/null 2>&1; then
+            gh release create app-update-channels --title "Application update channels" --notes "Signed desktop updater metadata for official and preview releases." --prerelease --latest=false
+          fi
+          gh release upload app-update-channels update-feeds/channels/appcast.xml update-feeds/channels/releases.win.json --clobber
+
+  summary:
+    name: Build summary
+    if: always()
+    needs: [configuration, workflow-checks, web-checks, detector-checks, nvidia-checks, tests-windows, tests-macos, tests-linux, installer-windows, installer-macos, installer-linux, release]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v6
+      - name: Summarize results, durations and downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+          APP_VERSION: ${{ needs.configuration.outputs.version }}
+          APP_BUILD_VERSION: ${{ needs.configuration.outputs.build_version }}
+          UPDATE_CHANNEL: ${{ needs.configuration.outputs.channel }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs?filter=latest&per_page=100" > "$RUNNER_TEMP/jobs.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/artifacts.json"
+          python distribution/build_report.py "$RUNNER_TEMP/jobs.json" "$RUNNER_TEMP/artifacts.json" >> "$GITHUB_STEP_SUMMARY"

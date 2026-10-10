@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/state';
+	import PageError from '$lib/components/page-error.svelte';
 </script>
 
-<h1>Something went wrong!</h1>
-<p>{page.error?.message}</p>
+<PageError />

@@ -1,95 +1,87 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import type * as Monaco from 'monaco-editor';
+	import { mode } from 'mode-watcher';
+	import * as Alert from '$lib/components/ui/alert';
+
 	let {
 		value = $bindable(''),
 		schema,
 		height = 420,
-		hasErrors = $bindable(false)
+		ariaLabel = 'JSON configuration',
+		readonly = false
 	}: {
 		value?: string;
 		schema?: Record<string, unknown>;
 		height?: number | string;
-		hasErrors?: boolean;
+		ariaLabel?: string;
+		readonly?: boolean;
 	} = $props();
 
-	let container = $state<HTMLDivElement | null>(null);
-	let issues = $state<string[]>([]);
-	let monaco: any;
-	let editor: any;
-	let model: any;
-	const modelUri = 'inmemory://model/editor.json';
-	const schemaUri = 'inmemory://schema/editor.schema.json';
-
-	const syncMarkers = () => {
-		if (!monaco || !model) return;
-		const markers = monaco.editor.getModelMarkers({ resource: model.uri });
-		hasErrors = markers.some((marker: any) => marker.severity === monaco.MarkerSeverity.Error);
-		issues = markers
-			.filter((marker: any) => marker.severity >= monaco.MarkerSeverity.Warning)
-			.map((marker: any) => `Line ${marker.startLineNumber}: ${marker.message}`);
-	};
+	const id = $props.id();
+	let container: HTMLDivElement;
+	let loadError = $state('');
+	let editor = $state.raw<Monaco.editor.IStandaloneCodeEditor>();
+	let setTheme = $state.raw<(theme: string) => void>();
+	const theme = $derived(mode.current === 'dark' ? 'vs-dark' : 'vs');
+	$effect(() => setTheme?.(theme));
 
 	$effect(() => {
-		const nextValue = value ?? '';
-		if (!editor) {
-			return;
-		}
-
-		if (editor.hasWidgetFocus()) {
-			return;
-		}
-
-		if (nextValue === editor.getValue()) {
-			return;
-		}
-
-		editor.setValue(nextValue);
+		editor?.updateOptions({ readOnly: readonly });
+		if (editor && !editor.hasWidgetFocus() && value !== editor.getValue()) editor.setValue(value);
 	});
 
 	onMount(() => {
-		let cleanup = () => {};
-
-		void (async () => {
-			const [{ default: editorWorker }, { default: jsonWorker }, monacoModule] = await Promise.all([
+		let cancelled = false;
+		let dispose = () => {};
+		async function createEditor() {
+			const [{ default: EditorWorker }, { default: JsonWorker }, monaco] = await Promise.all([
 				import('monaco-editor/esm/vs/editor/editor.worker?worker'),
 				import('monaco-editor/esm/vs/language/json/json.worker?worker'),
-				import('monaco-editor'),
-				import('monaco-editor/esm/vs/language/json/monaco.contribution.js')
+				import('monaco-editor')
 			]);
-
-			monaco = monacoModule;
-			(self as any).MonacoEnvironment = {
-				getWorker(_: string, label: string) {
-					if (label === 'json') {
-						return new jsonWorker();
-					}
-
-					return new editorWorker();
-				}
+			if (cancelled) return;
+			self.MonacoEnvironment = {
+				getWorker: (_, label) => (label === 'json' ? new JsonWorker() : new EditorWorker())
 			};
-
-			(monaco.languages.json as any).jsonDefaults.setDiagnosticsOptions({
-				validate: true,
-				allowComments: false,
-				enableSchemaRequest: false,
-				schemas: schema
-					? [
-							{
-								uri: schemaUri,
-								fileMatch: [modelUri],
-								schema: JSON.parse(JSON.stringify(schema))
-							}
-						]
-					: []
-			});
-
-			if (!container) {
-				return;
+			const uri = monaco.Uri.parse(`inmemory://model/${encodeURIComponent(id)}.json`);
+			let registeredSchema = '';
+			function configureSchema() {
+				let schemaUri = `inmemory://schema/${encodeURIComponent(id)}.json`;
+				try {
+					const declared = JSON.parse(value)?.$schema;
+					if (typeof declared === 'string') schemaUri = declared;
+				} catch {
+					// Keep the current schema while an incomplete edit is being typed.
+					if (registeredSchema) return;
+				}
+				if (schemaUri === registeredSchema) return;
+				registeredSchema = schemaUri;
+				// Monaco gives $schema precedence over fileMatch. Bind that URI to the
+				// bundled schema too, so suggestions and diagnostics remain offline.
+				monaco.json.jsonDefaults.setDiagnosticsOptions({
+					validate: true,
+					schemaValidation: 'error',
+					allowComments: false,
+					enableSchemaRequest: false,
+					schemas: schema
+						? [
+								{
+									uri: schemaUri,
+									fileMatch: [uri.toString()],
+									schema: $state.snapshot(schema)
+								}
+							]
+						: []
+				});
 			}
-
-			model = monaco.editor.createModel(value ?? '', 'json', monaco.Uri.parse(modelUri));
+			configureSchema();
+			const model = monaco.editor.createModel(value, 'json', uri);
+			setTheme = monaco.editor.setTheme;
 			editor = monaco.editor.create(container, {
 				model,
+				theme,
+				ariaLabel,
 				automaticLayout: true,
 				formatOnPaste: true,
 				formatOnType: true,
@@ -99,58 +91,39 @@
 				insertSpaces: true,
 				wordWrap: 'on'
 			});
-
-			const contentSubscription = editor.onDidChangeModelContent((event: any) => {
-				if (!model) {
-					return;
-				}
-
-				if (event.isFlush) {
-					syncMarkers();
-					return;
-				}
-
+			const contentSubscription = editor.onDidChangeModelContent(() => {
 				value = model.getValue();
-				syncMarkers();
+				configureSchema();
 			});
-			const modelUriString = model.uri.toString();
-
-			const markerSubscription = monaco.editor.onDidChangeMarkers((resources: any[]) => {
-				if (resources.some((resource: any) => resource.toString() === modelUriString)) {
-					syncMarkers();
-				}
-			});
-
-			syncMarkers();
-
-			cleanup = () => {
+			dispose = () => {
 				contentSubscription.dispose();
-				markerSubscription.dispose();
 				editor?.dispose();
-				model?.dispose();
+				model.dispose();
 			};
-		})();
-
+		}
+		void createEditor().catch(() => {
+			if (!cancelled) {
+				loadError = 'The editor could not load. Reload this page to try again.';
+			}
+		});
 		return () => {
-			cleanup();
+			cancelled = true;
+			dispose();
 		};
 	});
 </script>
 
-<div class="space-y-2">
+<div class="flex flex-col gap-2">
 	<div
 		bind:this={container}
-		class="overflow-hidden rounded-md border border-input"
+		class="overflow-hidden rounded-xl border"
 		style:height={typeof height === 'number' ? `${height}px` : height}
 	></div>
-
-	{#if issues.length > 0}
-		<div
-			class="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"
+	{#if loadError}
+		<Alert.Root variant="destructive"
+			><Alert.Title>Editor unavailable</Alert.Title><Alert.Description
+				>{loadError}</Alert.Description
+			></Alert.Root
 		>
-			{#each issues as issue, index (index)}
-				<p>{issue}</p>
-			{/each}
-		</div>
 	{/if}
 </div>

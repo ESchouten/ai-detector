@@ -1,205 +1,195 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { Badge } from '$lib/components/ui/badge';
+	import { untrack } from 'svelte';
+	import { ArrowRight, Plus } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
+	import CameraAdd from '$lib/components/camera-add.svelte';
+	import CameraPicture from '$lib/components/camera-picture.svelte';
+	import CategoryDot from '$lib/components/category-dot.svelte';
+	import DetectorEditor from '$lib/components/detector-editor.svelte';
+	import ImportInstallation from '$lib/components/import-installation.svelte';
+	import SetupFinish from '$lib/components/setup-finish.svelte';
+	import SetupSteps from '$lib/components/setup-steps.svelte';
+	import { plural } from '$lib/format';
+	import { getCameras } from '$lib/remote/camera.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
-	import { getTelegrams } from '$lib/remote/exporter.remote';
-	import { getStreams } from '$lib/remote/stream.remote';
-	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
-	import BellIcon from '@lucide/svelte/icons/bell';
-	import CheckIcon from '@lucide/svelte/icons/check';
-	import CircleCheckIcon from '@lucide/svelte/icons/circle-check';
-	import CircleIcon from '@lucide/svelte/icons/circle';
-	import PlusIcon from '@lucide/svelte/icons/plus';
-	import TvIcon from '@lucide/svelte/icons/tv';
-	import WrenchIcon from '@lucide/svelte/icons/wrench';
-	import type { Component } from 'svelte';
+	import { setupStep } from '$lib/setup';
 
-	type Step = {
-		title: string;
-		description: string;
-		icon: Component;
-		status: 'complete' | 'recommended' | 'available';
-		badge: string;
-		count: number;
-		countLabel: string;
-		href: string;
-		viewHref: string;
-		action: string;
+	const choices = $derived(await Promise.all([getCameras(), getDetectors()]));
+	const cameras = $derived(choices[0]);
+	const detectors = $derived(choices[1]);
+	const step = $derived(
+		setupStep(page.url.searchParams.get('step'), cameras.length, detectors.length)
+	);
+	// The first camera and detector open their form directly; later visits show what is saved.
+	let addingCamera = $state(untrack(() => cameras.length === 0));
+	let addingDetector = $state(untrack(() => detectors.length === 0));
+	let editingDetector = $state<string>();
+	let importing = $state(false);
+	let savingDetector = $state(false);
+	const edited = $derived(detectors.find((item) => item.meta.label === editingDetector));
+
+	const headings = {
+		cameras: {
+			title: 'Connect your cameras',
+			description:
+				'AI Detector looks for cameras on your network. Keep this computer on the same network as the cameras.'
+		},
+		detectors: {
+			title: 'Choose what to detect',
+			description:
+				'Pick a preset and the cameras it should watch. You can add more detectors later.'
+		},
+		finish: {
+			title: 'Start monitoring',
+			description:
+				'Each camera is checked once. Monitoring then keeps running in the background, also when this page is closed.'
+		}
 	};
 
-	const streams = await getStreams();
-	const telegrams = await getTelegrams();
-	const detectors = await getDetectors();
-	const complete = $derived(page.url.searchParams.has('complete'));
-	const hasStreams = $derived(streams.length > 0);
-	const hasTelegrams = $derived(telegrams.length > 0);
-	const hasDetectors = $derived(detectors.length > 0);
-	const setupDone = $derived(hasStreams && hasDetectors);
-	const nextStep = $derived(!hasStreams ? 'streams' : !hasDetectors ? 'detector' : 'done');
-	const steps = $derived<Step[]>([
-		{
-			title: 'Streams',
-			description: 'Camera labels and RTSP sources.',
-			icon: TvIcon,
-			status: hasStreams ? 'complete' : 'recommended',
-			badge: hasStreams ? 'Done' : 'Recommended',
-			count: streams.length,
-			countLabel: streams.length === 1 ? 'stream' : 'streams',
-			href: '/streams/add?setup=1',
-			viewHref: '/streams',
-			action: hasStreams ? 'Add another' : 'Add stream'
-		},
-		{
-			title: 'Telegram',
-			description: 'Optional bot token and chat channel for alerts.',
-			icon: BellIcon,
-			status: hasTelegrams ? 'complete' : 'available',
-			badge: hasTelegrams ? 'Done' : 'Optional',
-			count: telegrams.length,
-			countLabel: telegrams.length === 1 ? 'channel' : 'channels',
-			href: '/notifications/add?setup=1',
-			viewHref: '/notifications',
-			action: hasTelegrams ? 'Add another' : 'Add Telegram'
-		},
-		{
-			title: 'Detector',
-			description: 'Streams, alerts, model, and thresholds.',
-			icon: WrenchIcon,
-			status: hasDetectors ? 'complete' : hasStreams ? 'recommended' : 'available',
-			badge: hasDetectors ? 'Done' : hasStreams ? 'Recommended' : 'Available',
-			count: detectors.length,
-			countLabel: detectors.length === 1 ? 'detector' : 'detectors',
-			href: '/detectors/add?setup=1',
-			viewHref: '/detectors',
-			action: hasDetectors ? 'Add another' : 'Add detector'
-		}
-	]);
-	const current = $derived(steps.find((step) => step.status === 'recommended') ?? steps[2]);
-	const primaryHref = $derived(
-		nextStep === 'done'
-			? '/detectors'
-			: nextStep === 'streams'
-				? '/streams/add?setup=1'
-				: '/detectors/add?setup=1'
-	);
-	const primaryLabel = $derived(
-		nextStep === 'done'
-			? 'View detectors'
-			: nextStep === 'streams'
-				? 'Add first stream'
-				: 'Add detector'
-	);
-	const primaryIcon = $derived(
-		nextStep === 'done' ? CheckIcon : nextStep === 'streams' ? TvIcon : WrenchIcon
-	);
-	const CurrentIcon = $derived(setupDone ? CircleCheckIcon : current.icon);
-	const PrimaryIcon = $derived(primaryIcon);
+	async function show(next: 'detectors' | 'finish') {
+		await goto(resolve(`/setup?step=${next}`));
+	}
+	// Navigate first: the editors finish updating before they are taken off the page.
+	async function camerasAdded() {
+		await show('detectors');
+		addingCamera = false;
+	}
+	async function detectorSaved() {
+		await show('finish');
+		addingDetector = false;
+		editingDetector = undefined;
+	}
+	async function imported() {
+		importing = false;
+		addingCamera = false;
+		addingDetector = false;
+		await Promise.all([getCameras().refresh(), getDetectors().refresh()]);
+		await goto(resolve('/setup?step=cameras&imported=1'));
+	}
 </script>
 
-<section class="max-w-5xl space-y-6">
-	<header class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-		<div class="space-y-1">
-			<h1 class="text-2xl font-semibold tracking-tight">Setup</h1>
-			<p class="text-sm text-muted-foreground">
-				Open the existing setup screens from one place and complete them in the order you need.
-			</p>
-		</div>
-		<div class="flex flex-wrap gap-2">
-			<Badge variant={hasStreams ? 'default' : 'secondary'}>{streams.length} streams</Badge>
-			<Badge variant={hasTelegrams ? 'default' : 'secondary'}>{telegrams.length} telegrams</Badge>
-			<Badge variant={hasDetectors ? 'default' : 'secondary'}>{detectors.length} detectors</Badge>
-		</div>
-	</header>
+<svelte:head><title>Set up · AI Detector</title></svelte:head>
 
-	{#if complete}
-		<div class="flex items-start gap-3 rounded-md border p-4">
-			<CircleCheckIcon class="mt-0.5 size-5 text-primary" />
-			<div class="space-y-1">
-				<h2 class="font-medium">Setup saved</h2>
-				<p class="text-sm text-muted-foreground">
-					Restart the detector service for the new configuration to take effect.
-				</p>
-			</div>
-		</div>
+<section class="mx-auto flex w-full max-w-3xl flex-col gap-8">
+	<SetupSteps
+		current={step}
+		hasCameras={cameras.length > 0}
+		disabled={importing || savingDetector}
+	/>
+
+	{#if !importing}
+		<header class="flex flex-col gap-2">
+			<h1 class="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
+				{headings[step].title}
+			</h1>
+			<p class="max-w-prose leading-relaxed text-pretty text-muted-foreground">
+				{headings[step].description}
+			</p>
+		</header>
 	{/if}
 
-	<section class="rounded-md border">
-		<div class="grid gap-4 p-4 lg:grid-cols-[1fr_auto] lg:items-center">
-			<div class="flex min-w-0 gap-3">
-				<div
-					class="flex size-10 shrink-0 items-center justify-center rounded-md border bg-background"
-				>
-					<CurrentIcon class="size-5" />
+	{#if page.url.searchParams.has('imported')}
+		<p role="status" class="rounded-xl border bg-card px-4 py-3 text-sm">
+			Your existing setup is here to review. Previous recordings are in Recordings. Monitoring is
+			stopped until you start it in the last step.
+		</p>
+	{/if}
+
+	{#if step === 'cameras'}
+		{#if addingCamera}
+			{#if !importing}
+				<CameraAdd
+					onDone={camerasAdded}
+					onCancel={cameras.length ? () => void (addingCamera = false) : undefined}
+				/>
+			{/if}
+			{#if !cameras.length}
+				<div class={importing ? '' : 'border-t pt-6'}>
+					<ImportInstallation bind:opened={importing} oncomplete={imported} />
 				</div>
-				<div class="min-w-0 space-y-1">
-					<div class="flex flex-wrap items-center gap-2">
-						<h2 class="text-lg font-medium">
-							{setupDone ? 'Configuration is ready' : `Recommended: ${current.title}`}
-						</h2>
-						<Badge variant={setupDone ? 'default' : 'outline'}>
-							{setupDone ? 'Ready' : 'Recommended'}
-						</Badge>
-					</div>
-					<p class="text-sm text-muted-foreground">
-						{setupDone
-							? 'Review the detector or add more cameras, Telegram channels, and detectors as needed.'
-							: current.description}
-					</p>
-				</div>
-			</div>
-			<div class="flex flex-wrap gap-2 lg:justify-end">
-				<Button href={primaryHref}>
-					<PrimaryIcon />
-					{primaryLabel}
-					<ArrowRightIcon />
+			{/if}
+		{:else}
+			<ul class="grid gap-4 sm:grid-cols-2">
+				{#each cameras as camera (camera.id)}
+					<li>
+						<CameraPicture id={camera.id} label={camera.label} monitored={camera.monitored} />
+					</li>
+				{/each}
+			</ul>
+			<div class="flex flex-wrap gap-3">
+				<Button size="lg" href={resolve('/setup?step=detectors')}>
+					Continue<ArrowRight data-icon="inline-end" aria-hidden="true" />
+				</Button>
+				<Button size="lg" variant="outline" onclick={() => (addingCamera = true)}>
+					<Plus data-icon="inline-start" aria-hidden="true" />Add more cameras
 				</Button>
 			</div>
-		</div>
-	</section>
-
-	<section class="space-y-2">
-		{#each steps as step, index (step.title)}
-			<div class="grid gap-3 rounded-md border p-4 md:grid-cols-[2rem_1fr_auto] md:items-center">
-				<div
-					class="flex size-8 items-center justify-center rounded-md border bg-background"
-					class:border-primary={step.status === 'complete'}
-				>
-					{#if step.status === 'complete'}
-						<CheckIcon class="size-4" />
-					{:else if step.status === 'recommended'}
-						<step.icon class="size-4" />
-					{:else}
-						<CircleIcon class="size-4" />
-					{/if}
-				</div>
-				<div class="min-w-0 space-y-1">
-					<div class="flex flex-wrap items-center gap-2">
-						<h2 class="font-medium">{index + 1}. {step.title}</h2>
-						<Badge
-							variant={step.status === 'complete'
-								? 'default'
-								: step.status === 'recommended'
-									? 'outline'
-									: 'secondary'}
-						>
-							{step.badge}
-						</Badge>
-						<span class="text-xs text-muted-foreground">
-							{step.count}
-							{step.countLabel}
-						</span>
-					</div>
-					<p class="text-sm text-muted-foreground">{step.description}</p>
-				</div>
-				<div class="flex flex-wrap gap-2 md:justify-end">
-					<Button href={step.viewHref} variant="outline">View</Button>
-					<Button href={step.href}>
-						<PlusIcon />
-						{step.action}
+		{/if}
+	{:else if step === 'detectors'}
+		{#if addingDetector || edited}
+			{#key editingDetector}
+				<DetectorEditor
+					bind:pending={savingDetector}
+					originalLabel={edited?.meta.label ?? ''}
+					initial={edited?.detector}
+					initialPreset={edited?.meta.preset}
+					initialAutoUpdate={edited?.meta.autoUpdate !== false}
+					initialConnection={edited?.meta.llmConnection}
+					onDone={detectorSaved}
+					onCancel={detectors.length
+						? async () => {
+								addingDetector = false;
+								editingDetector = undefined;
+							}
+						: undefined}
+				/>
+			{/key}
+			{#if !detectors.length}
+				<div class="border-t pt-6">
+					<Button variant="ghost" disabled={savingDetector} href={resolve('/setup?step=finish')}>
+						Skip — use the cameras for live viewing only
 					</Button>
 				</div>
+			{/if}
+		{:else}
+			<ul class="panel divide-y">
+				{#each detectors as { detector, meta } (meta.label)}
+					<li class="flex items-center gap-3 px-4 py-3.5">
+						<CategoryDot seed={meta.preset ?? meta.label} />
+						<div class="flex min-w-0 flex-1 flex-col">
+							<p class="text-sm font-medium">{meta.label}</p>
+							<p class="text-sm text-muted-foreground">
+								{plural(detector.detection.source.length, ['# camera', '# cameras'])} ·
+								{detector.detection.source
+									.map(
+										(source) =>
+											cameras.find((camera) => camera.source === source)?.label ?? 'Custom source'
+									)
+									.join(', ')}
+							</p>
+						</div>
+						<Button
+							variant="outline"
+							size="sm"
+							aria-label={`Edit ${meta.label}`}
+							onclick={() => (editingDetector = meta.label)}>Edit</Button
+						>
+					</li>
+				{/each}
+			</ul>
+			<div class="flex flex-wrap gap-3">
+				<Button size="lg" href={resolve('/setup?step=finish')}>
+					Continue<ArrowRight data-icon="inline-end" aria-hidden="true" />
+				</Button>
+				<Button size="lg" variant="outline" onclick={() => (addingDetector = true)}>
+					<Plus data-icon="inline-start" aria-hidden="true" />Add another detector
+				</Button>
 			</div>
-		{/each}
-	</section>
+		{/if}
+	{:else}
+		<SetupFinish configured={detectors.length > 0} />
+	{/if}
 </section>

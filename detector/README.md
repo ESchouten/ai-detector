@@ -1,308 +1,178 @@
-# AI Detector
+# AI Detector: the detector
 
-Watches one or more video streams or files, and sends you an alert the moment something is detected — a person, an animal, a vehicle, whatever your model is trained to find.
+The Python detector reads cameras or recorded media, groups YOLO observations into events, optionally verifies them with a vision language model, and delivers them to disk, Telegram or HTTP endpoints.
 
-Detection works in two stages:
-1. **YOLO** — a fast AI model that scans every frame looking for objects.
-2. **VLM** *(optional)* — a smarter AI (like Gemini or GPT-5) that double-checks the detection by looking at the footage and answering a question you define, e.g. *"Is there really a cow mounting another cow?"*. This dramatically reduces false alerts.
+Most people use it through the [complete application](../README.md). This guide is for running it by itself and for working on it. Read [MIGRATION.md](MIGRATION.md) before replacing an existing installation.
 
-Confirmed detections can be sent to **Telegram**, saved to **disk**, or posted to a **webhook**.
+## Run it
 
----
+Use [uv](https://docs.astral.sh/uv/), which selects the Python version pinned in [`.python-version`](.python-version). All commands run from `detector/`.
 
-## Getting Started
-
-### Option 1 — Windows Executable (recommended for most users)
-
-👉 **[Download from the Releases page](https://github.com/ESchouten/ai-detector/releases)**
-
-Pick the right file for your hardware:
-
-| File | GPU |
-| :--- | :-- |
-| `aidetector-winml-<version>.exe` | Windows 11 with any GPU |
-| `aidetector-cuda130-<version>.exe` | Windows 10 with NVIDIA RTX 3000 series or newer |
-| `aidetector-cuda126-<version>.exe` | Windows 10 with NVIDIA RTX 2000 series or older |
-| `aidetector-osx-<version>` | macOS (CPU / Apple Silicon) |
-
-> **Not sure which to pick?** Start with `winml` on Windows. Use a `cuda` build only if you know your NVIDIA setup matches that CUDA version.
-
-**Setup:**
-1. Create a folder, e.g. `C:\aidetector`, and move the downloaded `.exe` into it.
-2. In that same folder, create a `config.json` file (see [Configuration](#configuration) below).
-3. Double-click the `.exe` — a terminal window opens showing detection logs.
-
-On first run with no `config.json` present, a template is generated automatically. Fill it in and run again.
-
-> **Tip:** Keep the terminal window open while the detector is running. If it closes immediately, there is an error in your `config.json` — check for missing quotes `"` or commas `,`.
-
-### Option 2 — Docker
-
-Useful if you are on Linux, a NAS, or want the detector to restart automatically after a reboot. From the `example/` folder:
-
-```bash
-cd example
-docker compose up -d
-docker compose logs -f aidetector web
+```sh
+uv sync --locked --no-dev --extra default
+uv run --no-sync aidetector --init-config   # writes config.json; edit it
+uv run --no-sync aidetector --check-config
+uv run --no-sync aidetector
 ```
 
-The example Compose stack also starts the web UI on [http://localhost](http://localhost).
+Install exactly one runtime extra per environment. They share the `onnxruntime` import name, so never combine them or use `--all-extras`.
 
-> **Don't have Docker?** [Download Docker Desktop](https://www.docker.com/products/docker-desktop/) — it's free.
+| Extra | Runtime |
+| --- | --- |
+| `default` | Apple GPU on macOS for `.pt` models; CPU Torch on Linux; standard ONNX Runtime |
+| `nvidia` | PyTorch with CUDA and ONNX Runtime GPU; needs matching NVIDIA drivers |
+| `windowsml` | Windows ML runtime and Windows App SDK bindings |
 
-### Option 3 — Development (advanced)
+| Flag | Effect |
+| --- | --- |
+| `--init-config` | Writes a template; refuses to overwrite a file. A normal run never creates or repairs configuration. |
+| `--check-config` | Validates fields, bounds and source syntax without loading models, opening sources or making requests. |
+| `--config FILE --data-dir FOLDER` | Keeps runtime data apart from the program. Relative input and model paths resolve against the configuration's folder; the data folder defaults to it and holds `detections/`, `models/` and `logs/`. |
+| `--live-preview` | Publishes the detection boxes of the latest analysed picture for the web application, which must share the data folder. See the [protocol](LIVE_PREVIEW.md). |
+| `--test-vlm FILE` | Checks a verifier connection with generated media, without starting detection. |
+| `--control-stdin` | Stops gracefully on a line `stop` or on EOF from the parent. |
+| `--log-level` | `WARNING` hides routine activity; `DEBUG` adds per-batch details. |
 
-```bash
-# Install dependencies
-uv sync --extra default
+**Executables and Docker.** [Releases](https://github.com/ESchouten/ai-detector/releases) carry the application installers, and the detector inside them takes the same flags; `--version` reports the build and runtime type. The [container image](../README.md#docker) holds the detector together with the web application that starts it; `docker run --rm IMAGE python3 -m aidetector …` runs the detector by itself from `/data`. A package that passes its smoke test has not shown that every GPU provider works on every machine.
 
-# Run the detector (config.json must be in the current directory)
-uv run --extra default main
+**Jetson.** The ARM64 image is for Orin and Thor with JetPack 7.2. GPU inference and TensorRT have been verified on an Orin Nano; a Thor is untested. JetPack 6 images are no longer built. See [Jetson](MIGRATION.md#jetson).
 
-# Sync JSON schema with the Pydantic data models
-uv run generate-schema
-```
+**Stopping and exit codes.** Ctrl+C or SIGTERM stops acquisition, flushes eligible events and drains accepted deliveries. Exit `0` is success or a graceful stop, `1` an application, verification or delivery failure, `2` a configuration error, and `75` an Apple GPU error that a supervisor may answer with a restart. The detector does not restart itself.
 
----
+**Logs.** Console and `logs/detector.log` in the data folder, rotating at 2 MiB with five backups. Lines name detectors by position (`[detector-2-delivery]`) and cameras by a 12-character ID, never by address. Credentials are masked, also in tracebacks; images, prompts and request bodies are never logged.
 
 ## Configuration
 
-All settings go in `config.json`. The file supports JSON Schema, so if you use VS Code it will give you autocomplete and describe every option as you type.
-
-You can run multiple independent detectors in the same file — useful if you have several cameras or want different alert rules per camera.
+A minimal configuration that archives detections from a local file:
 
 ```json
 {
-  "onnx":   { ... },
-  "health": { ... },
   "detectors": [
     {
-      "detection": { ... },
-      "yolo":      { ... },
-      "vlm":       { ... },
-      "exporters": { ... }
+      "detection": {"source": "video.mp4"},
+      "yolo": {"model": "yolo11n.pt", "confidence": 0.5, "frames_min": 3},
+      "exporters": {"disk": {}}
     }
   ]
 }
 ```
 
----
+All options are in [`config.schema.json`](../config/config.schema.json). Sources, verifier entries, model names and exporters accept one value or a list. Unknown fields, empty required lists, duplicate sources, negative durations and invalid confidence ranges fail validation.
 
-### Top-level fields
+### Input
 
-| Field       | Default      | Description |
-| :---------- | :----------- | :---------- |
-| `detectors` | **Required** | List of detector definitions. Each detector can watch one or more sources and use its own YOLO/VLM/exporter settings. |
-| `onnx`      |              | Optional ONNX Runtime configuration. Lets you pin a provider and control Windows ML registration. |
-| `health`    |              | Optional HTTP healthcheck pinger. Useful for watchdogs, uptime tools, or Home Assistant-style monitoring. |
+| Setting | Default | Meaning |
+| --- | --- | --- |
+| `detection.source` | required | Local image or video, HTTP video, RTSP/HTTP stream, or a camera index as a string such as `"0"` |
+| `detection.interval` | `0` | Minimum seconds between sampled frames; files use media time and are not paced |
+| `detection.frame_retention` | `15` | Unread sampled frames kept per live source while inference is busy; the latest is evaluated, earlier ones give context |
+| `detection.frames_width` | `1280` | Maximum input width; aspect ratio is kept and smaller frames are not upscaled |
+| `pending_events` | `8` | Completed events waiting for verification and delivery per detector; a full queue applies backpressure |
 
----
+- Detectors that name the **same live source string** share one camera connection and its decoded frames. Each keeps its own sampling, frame size, tracking and event rules.
+- Use separate detectors for files and live streams. Files in one detector are processed in order, and each file's end closes its own event. Live captures reconnect after expected failures.
 
-### `detection` — What to watch
+### Detection and events
 
-| Field             | Default      | Description |
-| :---------------- | :----------- | :---------- |
-| `source`          | **Required** | Path to a video file, or an RTSP/HTTP stream URL. Use a list `[ ]` for multiple sources. |
-| `interval`        | `0`          | How many seconds to wait between processed frames. Set to `0` to process every frame. Useful to reduce load on slow machines. |
-| `frame_retention` | `30`         | How many recent frames to keep in memory per source so detections can include earlier context. |
+| `yolo` setting | Default | Meaning |
+| --- | --- | --- |
+| `model` | required | Local `.pt`, `.onnx` or `.engine` file, stock Ultralytics weight name, or HTTP(S) model URL |
+| `task` | `"detect"` | `"detect"` or `"segment"`; must match the model |
+| `confidence` | `0` | Minimum score, or a class map such as `{"person": 0.8}`; a map selects only those classes |
+| `imgsz` | `640` | Inference input size |
+| `frames_min` | `3` | Matching observations an event needs; they need not be consecutive |
+| `time_max` | `60` | Event duration limit, from the first matching observation |
+| `timeout` | `5` | Inactivity limit since the last match; `0` disables it |
+| `include_trailing_time` | `1` | Maximum trailing context after the last match |
+| `cooldown` | `0` | Per-source cooldown after acceptance, in seconds or a class map |
+| `tracking` | `false` | Persistent Ultralytics tracking |
+| `tracker`, `iou` | unset | `"botsort.yaml"` or `"bytetrack.yaml"`, and the overlap threshold; unset keeps the SDK default |
 
-**Examples:**
-```json
-"source": "rtsp://192.168.1.10/stream"
-"source": ["rtsp://camera1", "rtsp://camera2"]
-"source": "videos/clip.mp4"
+- Standard names such as `yolo11n.pt` are downloaded by Ultralytics; model URLs are downloaded once into the cache. Prepared ONNX models and TensorRT engines are cached under `models/prepared/`, which can be deleted while detection is stopped. See [inference backends](ARCHITECTURE.md#inference-backends).
+- An event may proceed when at least one detected class is outside its cooldown. Approved and deliberately unvalidated events consume cooldown; rejected and failed ones do not.
+- Without `yolo`, each sampled frame goes straight to the verifier and the exporters, and disk files it under `unclassified` unless `directory` is set.
+
+### Verification
+
+`vlm` takes one entry or an ordered list. Only entries with a non-null `key` run; clearing the keys switches verification off and keeps prompts and models.
+
+| Field | Default | Meaning |
+| --- | --- | --- |
+| `prompt` | required | The question |
+| `model` | required with a key | A LiteLLM model name or an ordered list |
+| `key` | `null` | Provider API key. `""` means an unauthenticated local service, without environment-key lookup |
+| `url`, `headers` | unset | Provider endpoint and extra request headers |
+| `strategy` | `"VIDEO"` | `"VIDEO"` sends the event clip, `"IMAGE"` the best cropped frame |
+| `crop_padding` | `0.1` | Extra crop margin |
+| `timeout`, `attempts` | `30`, `3` | Request timeout in seconds, and attempts per model for transient failures |
+
+The answer must be exactly one Boolean field, `detected`; a valid negative answer is final. Transient failures retry, invalid answers and permanent errors move to the next model, and a media encoding failure moves to the next entry. Media sent for verification has no overlays.
+
+The outcomes are **approved**, **rejected**, **unvalidated** (no verifier) and **failed** (no verifier could answer). A failed verification sends no notification; disk can keep it under `unvalidated` with `validation_error`.
+
+### Delivery
+
+Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected`, which defaults to true for disk and false for Telegram and webhooks. Destinations are attempted independently, without hidden retries.
+
+**Disk.** `directory` is one category name under `detections/` (default: the best class); `strategy` is `"BEST"` or `"ALL"`, which also writes every event frame. An archive is `best.jpg`, `clean.jpg`, `video.mp4` and `metadata.json` under `detections/<category>/<approved|rejected|unvalidated>/<timestamp>/`. Files are published together and an existing event is never overwritten. `metadata.json` names the camera by its 12-character ID from the logs, never by its address. The web application adds a person's `review` to `metadata.json`; the detector never writes it.
+
+**Telegram.** Needs `token` and `chat`. `alert_every` (`1`) plays the sound on every Nth alert. `quiet` takes a `start` and `end` such as `"22:00"` and `"06:00"`, in the computer's local time: alerts in that period arrive without sound. Photos are limited to 10 MB and videos to 12 MB. Alerts carry 👍 and 👎 buttons tied to the event's `event_id`; the web application receives the reviews.
+
+**Webhook.** Needs `url`; defaults to `method: "POST"` and `data_type: "binary"` (form fields and files), with `base64` (JSON) and `none` as alternatives. `headers` adds headers, `token` becomes the `Authorization` value, `body` replaces the generated content, and `data_max` limits each attachment. Payloads carry `confidence`, `timestamp`, `duration` and `validated`.
+
+| Field | Telegram | Webhook |
+| --- | --- | --- |
+| `include_image` (clean full frame) | `false` | `false` |
+| `include_plot` (annotated full frame) | `false` | `false` |
+| `include_crop` (annotated crop) | `false` | `true` |
+| `include_video` | `true` | `false` |
+| `video_width`, `video_crf` | `1280`, `28` | `1280`, `28` |
+| `timeout` | `30` | `30` |
+
+### Runtime and health
+
+- `onnx.provider` requests an installed execution provider; `onnx.winml` (`true`) registers Windows ML providers in Windows ML builds; `onnx.opset` (`20`) is used for model export.
+- `health` takes a `url`, `method` (`GET`), `interval` (`60`), `timeout` (`5`), and optional `headers` and `body`. Failed pings are warnings.
+
+## Working on it
+
+```sh
+uv sync --locked --extra default
+uv run --no-sync pytest tests/test_reference_flow.py
 ```
 
----
+That test follows one event from a temporary video to a real archive, with deterministic inference and verification. It needs no camera, model download, credentials or network, and is the best place to start reading. Follow the same event through the code:
 
-### `yolo` — Object detection model
+1. [CLI](src/aidetector/cli.py) and [bootstrap](src/aidetector/bootstrap.py): arguments, configuration, and construction of sources, models and destinations.
+2. [Runtime](src/aidetector/runtime.py): supervises processing and delivery, including failure and shutdown.
+3. [Pipeline](src/aidetector/application/pipeline.py) and [event assembler](src/aidetector/domain/events.py): batches become observations and events.
+4. [Delivery](src/aidetector/application/delivery.py): cooldown, verification and destinations.
+5. [Disk archive](src/aidetector/adapters/exporters/disk.py): the files the web application reads.
 
-This is the fast first-pass AI that scans every frame. Without a YOLO model, the detector simply passes all frames through to the VLM or exporters.
+[ARCHITECTURE.md](ARCHITECTURE.md) has the structure, the ownership rules and a table of [where each kind of change belongs](ARCHITECTURE.md#where-a-change-belongs). Read [AGENTS.md](AGENTS.md) before editing. A change to configuration or archive metadata needs regenerated schemas, and a note in [MIGRATION.md](MIGRATION.md) when someone upgrading must act.
 
-| Field                   | Default      | Description |
-| :---------------------- | :----------- | :---------- |
-| `model`                 | **Required** | URL or local path to a YOLO model file (`.pt` or `.onnx`). |
-| `task`                  | `"detect"`   | YOLO task to run: `"detect"` for detection models or `"segment"` for segmentation models. |
-| `confidence`            | `0`          | How confident YOLO must be (0–1) before counting something as a detection. `0.8` means 80% sure. You can also set different thresholds per class — see tip below. |
-| `time_max`              | `60`         | Maximum duration in seconds to group frames into one event. If a detection runs longer than this, a new event starts. |
-| `timeout`               | `5`          | Seconds of no detections before the current event is considered over. |
-| `cooldown`              | `0`          | Seconds to wait after finishing one event before starting a new one. Prevents repeat alerts for the same ongoing situation. Can be set per class. |
-| `include_trailing_time` | `1`          | Seconds of extra footage to include after the last detected frame so the event does not end too abruptly. |
-| `frames_min`            | `6` / `3`    | How many frames in a row must match before the event counts. Default is `6` when `torch.cuda.is_available()` is true, otherwise `3`. |
-| `imgsz`                 | `640`        | The image size fed into the model. Higher values are more accurate but slower. Most models expect `640`. |
-| `strategy`              | `"LATEST"`   | Which frames to evaluate: `"LATEST"` uses only the most recent, `"ALL"` evaluates every frame. |
+Tests use temporary media, local stand-ins for external services and a generated ONNX graph, so they exercise real OpenCV, FFmpeg, Ultralytics and ONNX behaviour without downloads. Fake only external SDK and I/O boundaries. While editing, this selection imports no model runtime:
 
-> **Tip — per-class confidence thresholds:**
-> Instead of a single number, you can give each class its own threshold:
-> ```json
-> "confidence": { "person": 0.85, "car": 0.6 }
-> ```
-> Only the classes you list are evaluated — everything else is ignored.
-
-> **Tip — per-class cooldowns:**
-> ```json
-> "cooldown": { "person": 60, "car": 30 }
-> ```
-
----
-
-### `vlm` *(optional)* — AI double-check
-
-After YOLO flags something, a Vision Language Model looks at the footage and answers a question you write. Only if the answer seems positive does the detection get exported. This step is optional but greatly reduces false alarms.
-
-Can be a single object or a list. If you provide a list, the VLMs are tried in order until one succeeds.
-
-| Field      | Default      | Description |
-| :--------- | :----------- | :---------- |
-| `prompt`   | **Required** | The question to ask about the footage, e.g. `"Is there a person in this video?"` |
-| `model`    | **Required** | The AI model to use, e.g. `"gemini/gemini-2.0-flash"`. Can also be a list of model names for provider fallback. Supports any model from [LiteLLM](https://docs.litellm.ai/docs/providers). |
-| `key`      |              | API key for the model provider (Gemini, OpenAI, etc.). |
-| `url`      |              | Custom API endpoint, if you're running a local model. |
-| `strategy` | `"VIDEO"`    | `"VIDEO"` — sends the full detection clip to the AI. `"IMAGE"` — sends only a single frame. Video is more accurate but costs more tokens. |
-
----
-
-### `exporters` *(optional)* — Where to send alerts
-
-You can combine multiple exporters. Each exporter key can be either a single object or a list of objects if you want to send to multiple Telegram chats, webhooks, or disk destinations.
-
-`confidence` on any exporter can be either:
-- a single number such as `0.7`
-- a per-class map such as `{ "person": 0.8, "car": 0.6 }`
-
-#### 💾 Disk (`disk`)
-
-Saves detection images or frames to a folder on your machine.
-
-| Field             | Default      | Description |
-| :---------------- | :----------- | :---------- |
-| `directory`       |              | Folder path under `detections/` to save files into, e.g. `"mounts"`. If omitted, the exporter uses the best-matching class name as the directory. |
-| `strategy`        | `"BEST"`     | `"BEST"` saves only the highest-confidence frame. `"ALL"` saves every frame from the event. |
-| `confidence`      |              | Minimum confidence required to save. Leave empty to save everything. |
-| `export_rejected` | `true`       | Whether to also save detections that were rejected by the VLM. |
-
-#### 📱 Telegram (`telegram`)
-
-Sends an alert to a Telegram chat. The bot can include images or a video clip.
-
-> **How to get a bot token:** Talk to [@BotFather](https://t.me/BotFather) on Telegram and follow the steps to create a bot. It gives you a token.
->
-> **How to get your chat ID:** Add your bot to a chat, send it a message, then open `https://api.telegram.org/bot<YOUR_TOKEN>/getUpdates` in your browser — the `chat.id` field is your chat ID.
-
-| Field             | Default      | Description |
-| :---------------- | :----------- | :---------- |
-| `token`           | **Required** | Your Telegram bot token. |
-| `chat`            | **Required** | The Telegram chat or user ID to send alerts to. |
-| `confidence`      |              | Minimum confidence required to send. Leave empty to always send. |
-| `alert_every`     | `1`          | Only send a notification sound every Nth detection. `1` = every time, `5` = every 5th. |
-| `include_plot`    | `false`      | Include the full frame with a detection box drawn on it. |
-| `include_crop`    | `false`      | Include a cropped image of just the detected object. |
-| `include_video`   | `true`       | Include an MP4 clip of the detection sequence. |
-| `video_width`     | `1280`       | Width of the video clip in pixels. Height is calculated automatically. |
-| `video_crf`       | `28`         | Video quality (0–51). Lower = better quality, larger file. `28` is a good default. |
-| `export_rejected` | `false`      | Whether to also send detections rejected by the VLM. |
-
-#### 🔗 Webhook (`webhook`)
-
-Posts detection data to an HTTP endpoint. Useful for integrating with other systems.
-
-| Field             | Default      | Description |
-| :---------------- | :----------- | :---------- |
-| `url`             | **Required** | The URL to call when a detection occurs. |
-| `method`          | `"POST"`     | HTTP method to use: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, or `HEAD`. |
-| `headers`         |              | Optional HTTP headers map. |
-| `body`            |              | Optional raw request body. When set, this is sent instead of the generated detection payload. |
-| `timeout`         |              | Optional request timeout in seconds. |
-| `token`           |              | Authorization token sent in the request headers. |
-| `confidence`      |              | Minimum confidence required to trigger. Leave empty to always trigger. |
-| `data_type`       | `"binary"`   | How image/video data is sent: `"binary"`, `"base64"`, or `"none"` for no generated body/files. |
-| `data_max`        |              | Maximum payload size in bytes. The image is compressed if it exceeds this. |
-| `include_plot`    | `false`      | Include the full frame with detection overlay. |
-| `include_crop`    | `true`       | Include a cropped image of the detected area. |
-| `include_video`   | `false`      | Include an MP4 clip of the detection sequence. |
-| `video_width`     | `1280`       | Width of the video clip in pixels. |
-| `video_crf`       | `28`         | Video quality (0–51). Lower = better quality, larger file. |
-| `export_rejected` | `false`      | Whether to also POST detections rejected by the VLM. |
-
----
-
-### `health` *(optional)* — External heartbeat
-
-Sends a simple periodic HTTP request while the detector is running. This is useful if another system wants to verify that the process is still alive.
-
-| Field      | Default      | Description |
-| :--------- | :----------- | :---------- |
-| `url`      | **Required** | The URL to ping. |
-| `method`   | `"GET"`      | HTTP method to use: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, or `HEAD`. |
-| `interval` | `60`         | Seconds between pings. |
-| `timeout`  | `5`          | Request timeout in seconds. |
-| `headers`  |              | Optional HTTP headers map. |
-| `body`     |              | Optional request body sent as raw text. |
-
----
-
-### `onnx` *(optional)* — ONNX Runtime behavior
-
-These settings control how the executable configures ONNX Runtime before loading a YOLO model.
-
-| Field      | Default  | Description |
-| :--------- | :------- | :---------- |
-| `provider` |          | Optional provider name to force, e.g. `"CUDAExecutionProvider"` or `"CPUExecutionProvider"`. If omitted, ONNX Runtime uses its normal provider order. |
-| `winml`    | `true`   | Only relevant for the `windowsml` build. If `true`, the app tries to register Windows ML execution providers automatically. |
-| `opset`    | `20`     | ONNX opset used when exporting a `.pt` model to ONNX. Lower values can improve compatibility with some runtimes. |
-
----
-
-### Full example
-
-```json
-{
-  "onnx": {
-    "winml": true
-  },
-  "health": {
-    "url": "https://example.com/health/aidetector",
-    "interval": 60
-  },
-  "detectors": [
-    {
-      "detection": {
-        "source": ["rtsp://camera1", "rtsp://camera2"]
-      },
-      "yolo": {
-        "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/model-V16/cowcatcherV15.pt",
-        "confidence": 0.8,
-        "frames_min": 3
-      },
-      "vlm": {
-        "prompt": "Do you see cows that are mounting each other?",
-        "model": [
-          "gemini/gemini-3-flash-preview",
-          "gemini/gemini-2.5-flash-lite",
-          "gemini/gemini-2.5-flash"
-        ],
-        "key": "<your_api_key>"
-      },
-      "exporters": {
-        "disk": { "directory": "mounts" },
-        "telegram": {
-          "token": "<your_bot_token>",
-          "chat": "<your_chat_id>"
-        }
-      }
-    }
-  ]
-}
+```sh
+uv run --no-sync pytest -q tests/domain tests/application tests/test_configuration.py tests/test_schemas.py
 ```
 
----
+### Development checks
 
-## Built With
+```sh
+uv run --no-sync ruff check src/aidetector tests tools
+uv run --no-sync ruff format --check src/aidetector tests tools
+uv run --no-sync ty check src/aidetector tools
+uv run --no-sync lint-imports --no-cache
+uv run --no-sync pytest
+uv run --no-sync generate-schema --check
+uv build
+```
 
-- **[Ultralytics YOLO](https://github.com/ultralytics/ultralytics)** — Fast, accurate object detection.
-- **[LiteLLM](https://docs.litellm.ai/)** — Connects to any AI model provider (Gemini, OpenAI, Anthropic, and more).
-- **[Pydantic](https://docs.pydantic.dev/)** — Validates your config file and gives clear error messages when something is wrong.
+CI runs the full suite on Linux, Windows and macOS. [QUALITY.md](QUALITY.md) covers coverage and mutation testing, and [PERFORMANCE.md](PERFORMANCE.md) how to measure inference. VS Code has matching tasks: **Detector: check**, **Detector: core tests (fast)** and **Detector: debug reference flow**.
+
+Executables are built with [distribution/build.py](../distribution/build.py). After building one, `uv run --no-sync python -m tests.support.smoke_package /path/to/executable` runs it through a model download, tracking, verification, archives, delivery and shutdown; `--model-format pt` also checks a Torch checkpoint.
 
 ## License
 
-This project is licensed under the AGPL (see [LICENSE](LICENSE)).
+AGPL; see [LICENSE](LICENSE).

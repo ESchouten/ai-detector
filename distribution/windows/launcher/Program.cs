@@ -1,0 +1,73 @@
+using System;
+using System.IO;
+using System.Threading;
+using System.Windows.Forms;
+using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
+using Velopack;
+
+namespace AIDetector.Desktop;
+
+internal static class Program
+{
+    [STAThread]
+    private static int Main()
+    {
+        bool firstRun = false;
+        // Installer hooks must run before creating windows or starting monitoring.
+        VelopackApp.Build().SetAutoApplyOnStartup(false)
+            .OnBeforeUninstallFastCallback(_ => SetStartup(false))
+            .OnFirstRun(_ => firstRun = true).Run();
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        if (Environment.OSVersion.Version < new Version(10, 0, 19045))
+        {
+            MessageBox.Show("AI Detector requires Windows 10 version 22H2 or newer. Update Windows before opening AI Detector.", "AI Detector", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return 1;
+        }
+        if (firstRun) ConfigureStartup();
+        var web = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ai-detector-web.exe");
+        // One menu per person: opening AI Detector again shows the dashboard of the one that runs.
+        using var menu = new Mutex(true, @"Local\AI Detector menu", out bool firstMenu);
+        if (!firstMenu)
+        {
+            using var running = new DesktopProcess(web);
+            running.OpenDashboard();
+            return 0;
+        }
+        using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
+        var preference = new StartupPreference(key, Application.ExecutablePath);
+        var metadata = JObject.Parse(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "application.json")));
+        var feed = (string)metadata["updateFeed"];
+        var updateCache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AI Detector", "updates");
+        using var updatePreferences = Registry.CurrentUser.CreateSubKey(@"Software\AI Detector");
+        var channel = (string)metadata["updateChannel"];
+        bool previews = Convert.ToInt32(updatePreferences.GetValue("IncludePreviewUpdates", channel == "preview" ? 1 : 0)) != 0;
+        // Persist the initial choice so installing a different channel cannot reset it.
+        updatePreferences.SetValue("IncludePreviewUpdates", previews ? 1 : 0);
+        var policy = feed == null ? null : new UpdateChannelPolicy((string)metadata["updateBuild"], channel, previews);
+        var updater = feed == null ? null : new VerifiedUpdateManager(
+            new SignedUpdateSource(feed, (string)metadata["updatePublicKey"], SignedUpdateSource.CachePath(updateCache, feed), policy));
+        using var desktop = new TrayApplication(preference, web, updater,
+            enabled => updatePreferences.SetValue("IncludePreviewUpdates", enabled ? 1 : 0));
+        Application.Run(desktop);
+        return desktop.ExitCode;
+    }
+
+    private static void SetStartup(bool enabled)
+    {
+        using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
+        new StartupPreference(key, Application.ExecutablePath).Enabled = enabled;
+    }
+
+    private static void ConfigureStartup()
+    {
+        using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
+        var startup = new StartupPreference(key, Application.ExecutablePath);
+        if (startup.Enabled) return;
+        if (MessageBox.Show(
+            "Open AI Detector when you sign in? Once you start monitoring in setup, it resumes automatically whenever you sign in, unless you pause it in the dashboard.",
+            "AI Detector", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            startup.Enabled = true;
+    }
+}

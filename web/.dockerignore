@@ -1,9 +1,0 @@
-node_modules
-build
-.svelte-kit
-detections
-config.json
-app.json
-dist
-.vscode
-.DS_Store

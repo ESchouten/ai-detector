@@ -1,0 +1,54 @@
+name: Set up distribution toolchain
+description: Shared tools for desktop builds and tests, with optional web compilation tools.
+inputs:
+  web:
+    description: Set up web compilation tools and install web dependencies
+    default: 'true'
+  dotnet:
+    description: Install the build/test SDK for the Windows launcher
+    default: 'false'
+runs:
+  using: composite
+  steps:
+    - id: versions
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        python - <<'PY'
+        import json
+        import os
+        from pathlib import Path
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+            for name, version in json.loads(Path('distribution/toolchain.json').read_text()).items():
+                output.write(f'{name}={version}\n')
+        PY
+    - uses: astral-sh/setup-uv@v7
+      with:
+        working-directory: detector
+        version-file: pyproject.toml
+        activate-environment: true
+        venv-path: ${{ runner.temp }}/distribution-venv
+        enable-cache: true
+        # Caches are private to the tag that wrote them; a tag build can only read main's.
+        save-cache: ${{ github.ref_type != 'tag' }}
+        cache-dependency-glob: |
+          uv.lock
+          ../distribution/requirements.txt
+    - uses: ./.github/actions/setup-web
+      if: inputs.web == 'true'
+    - uses: actions/setup-dotnet@v5
+      if: inputs.dotnet == 'true'
+      with:
+        dotnet-version: ${{ steps.versions.outputs.dotnet }}
+        cache: true
+        cache-dependency-path: distribution/windows/**/packages.lock.json
+    - name: Select native build target
+      shell: bash
+      env:
+        PLATFORM: ${{ runner.os == 'Windows' && 'windows-x64' || runner.os == 'macOS' && 'macos-arm64' || 'linux-x64' }}
+        EXE_SUFFIX: ${{ runner.os == 'Windows' && '.exe' || '' }}
+        DETECTOR_FOLDER: ${{ runner.os == 'macOS' && 'aidetector.app' || 'aidetector' }}
+      run: |
+        echo "PLATFORM=$PLATFORM" >> "$GITHUB_ENV"
+        echo "EXE_SUFFIX=$EXE_SUFFIX" >> "$GITHUB_ENV"
+        echo "DETECTOR_FOLDER=$DETECTOR_FOLDER" >> "$GITHUB_ENV"

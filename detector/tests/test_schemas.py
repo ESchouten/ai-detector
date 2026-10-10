@@ -1,0 +1,151 @@
+import json
+from pathlib import Path
+
+import pytest
+from jsonschema import Draft202012Validator, ValidationError
+
+from aidetector.cli import initial_config
+from aidetector.configuration import Config
+from aidetector.schema import schemas
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def test_schema_validates_example_and_offline_template():
+    schema = schemas()["config.schema.json"]
+    Draft202012Validator.check_schema(schema)
+    validator = Draft202012Validator(schema)
+    for document in (
+        initial_config(),
+        json.loads((ROOT / "example/config.json").read_text()),
+    ):
+        validator.validate(document)
+        Config.model_validate(document)
+
+
+@pytest.mark.parametrize(
+    "settings, active",
+    [
+        ({}, False),
+        ({"key": None}, False),
+        ({"key": None, "model": "openai/vision"}, False),
+        ({"key": "test-key", "model": "openai/vision"}, True),
+        ({"key": "", "model": "openai/local"}, True),
+    ],
+)
+def test_schema_and_runtime_agree_on_verification_keys(settings, active):
+    document = {
+        "detectors": [
+            {
+                "detection": {"source": "video.mp4"},
+                "vlm": {"prompt": "Check?", **settings},
+            }
+        ]
+    }
+    Draft202012Validator(schemas()["config.schema.json"]).validate(document)
+    assert bool(Config.model_validate(document).detectors[0].active_vlm) is active
+
+
+@pytest.mark.parametrize(
+    "settings",
+    [
+        {"key": "test-key"},
+        {"key": "", "model": []},
+        {"enabled": False},
+    ],
+)
+def test_schema_rejects_connected_verifier_without_model_and_removed_flags(settings):
+    with pytest.raises(ValidationError):
+        Draft202012Validator(schemas()["config.schema.json"]).validate(
+            {
+                "detectors": [
+                    {
+                        "detection": {"source": "video.mp4"},
+                        "vlm": {"prompt": "Check?", **settings},
+                    }
+                ]
+            }
+        )
+
+
+@pytest.mark.parametrize(
+    "path",
+    sorted((ROOT / "config" / "detector").glob("*.json")),
+    ids=lambda path: path.stem,
+)
+def test_detector_presets_satisfy_the_canonical_contract_after_source_binding(path):
+    preset = json.loads(path.read_text(encoding="utf-8"))
+    document = {
+        "detectors": [
+            {
+                **preset,
+                "detection": {
+                    **preset.get("detection", {}),
+                    "source": ["rtsp://preset.invalid/stream"],
+                },
+            }
+        ]
+    }
+    Draft202012Validator(schemas()["config.schema.json"]).validate(document)
+    Config.model_validate(document)
+
+
+@pytest.mark.parametrize("source", [[], "", " ", ["camera", "camera"]])
+def test_schema_rejects_invalid_sources_at_the_external_boundary(source):
+    validator = Draft202012Validator(schemas()["config.schema.json"])
+    with pytest.raises(ValidationError):
+        validator.validate({"detectors": [{"detection": {"source": source}}]})
+
+
+@pytest.mark.parametrize(
+    "directory",
+    [
+        "",
+        " ",
+        ".",
+        "..",
+        "/absolute",
+        "nested/category",
+        r"nested\category",
+        "C:category",
+    ],
+)
+def test_schema_rejects_disk_paths_that_break_archive_discovery(directory):
+    validator = Draft202012Validator(schemas()["config.schema.json"])
+    with pytest.raises(ValidationError):
+        validator.validate(
+            {
+                "detectors": [
+                    {
+                        "detection": {"source": "video.mp4"},
+                        "exporters": {"disk": {"directory": directory}},
+                    }
+                ]
+            }
+        )
+
+
+def test_schema_describes_real_event_metadata_and_accepts_existing_records():
+    schema = schemas()["metadata.schema.json"]
+    Draft202012Validator.check_schema(schema)
+    validator = Draft202012Validator(schema)
+    validator.validate(
+        {
+            "timestamp": "2026-01-01T12-00-00",
+            "validated": True,
+            "confidence": 0.9,
+            "confidences": {"cow": 0.9},
+            "detections": 3,
+            "start": "2026-01-01T12:00:00",
+            "end": "2026-01-01T12:00:01",
+            "duration": 1,
+            "crop": {"x1": 10, "y1": 10, "x2": 40, "y2": 40},
+        }
+    )
+    with pytest.raises(ValidationError):
+        validator.validate({"unrelated_provider_metadata": "value"})
+
+
+def test_committed_schemas_match_their_authoritative_python_models():
+    for filename, schema in schemas().items():
+        assert json.loads((ROOT / "config" / filename).read_text()) == schema

@@ -1,0 +1,325 @@
+"""Prepare delta inputs and publish framework-generated feeds to immutable release assets."""
+
+import argparse
+import json
+import os
+import re
+import shutil
+import subprocess
+import urllib.error
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+SPARKLE = "http://www.andymatuschak.org/xml-namespaces/sparkle"
+# Mac releases a delta is generated from. Each one is a full disk image to download,
+# unpack and compare, which dominates packaging time. Previews are built several times
+# a day and installed one after another, so the previous build is enough for them.
+DELTA_BASES = {"stable": 2, "preview": 1}
+
+
+def numeric_version(value: str) -> tuple[int, ...]:
+    if not re.fullmatch(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)", value):
+        raise ValueError("Version must be numeric X.Y.Z, for example 1.2.3")
+    return tuple(map(int, value.split(".")))
+
+
+def newer_than(version: str, previous: list[str]) -> None:
+    current = numeric_version(version)
+    if any(current <= numeric_version(old) for old in previous):
+        raise ValueError("An update must be newer than every version in its channel")
+
+
+def fetch_feed(url: str) -> bytes | None:
+    try:
+        with urllib.request.urlopen(url, timeout=60) as response:
+            return response.read()
+    except urllib.error.HTTPError as error:
+        # The first release has no feed. Network/server errors must fail the build.
+        if error.code != 404:
+            raise
+        error.close()
+        return None
+
+
+def download(url: str, destination: Path) -> bool:
+    """Retrieve an optional delta base; deleted releases need a full update instead."""
+    try:
+        with (
+            urllib.request.urlopen(url, timeout=60) as response,
+            destination.open("wb") as output,
+        ):
+            shutil.copyfileobj(response, output)
+    except urllib.error.HTTPError as error:
+        if error.code != 404:
+            raise
+        error.close()
+        print(f"Previous archive was removed; skipping delta base: {url}")
+        return False
+    return True
+
+
+def mac_items(feed: bytes) -> list[tuple[str, ET.Element]]:
+    result = []
+    for item in ET.fromstring(feed).findall("./channel/item"):
+        enclosure = item.find("enclosure")
+        version = item.findtext(f"{{{SPARKLE}}}version")
+        if enclosure is not None:
+            version = version or enclosure.get(f"{{{SPARKLE}}}version")
+            result.append((version, enclosure))
+    return sorted(result, key=lambda item: numeric_version(item[0]), reverse=True)
+
+
+def prepare_macos(feed: bytes, folder: Path, version: str, bases: int = 2) -> None:
+    items = mac_items(feed)
+    newer_than(version, [old for old, _ in items])
+    available: set[str] = set()
+    urls = list(dict.fromkeys(enclosure.attrib["url"] for _, enclosure in items))
+    # Independent release archives can download together; keep only the delta bases.
+    with ThreadPoolExecutor(max_workers=2) as downloads:
+        while urls and len(available) < bases:
+            wanted = bases - len(available)
+            batch, urls = urls[:wanted], urls[wanted:]
+            pending = {
+                url: downloads.submit(
+                    download,
+                    url,
+                    folder
+                    / Path(urllib.parse.unquote(urllib.parse.urlparse(url).path)).name,
+                )
+                for url in batch
+            }
+            available.update(url for url, future in pending.items() if future.result())
+
+    # This is a build input. Sparkle generates and signs the published feed later.
+    # Do not carry deleted or unstaged archives into that new feed.
+    tree = ET.fromstring(feed)
+    channel = tree.find("channel")
+    for item in channel.findall("item"):
+        enclosure = item.find("enclosure")
+        if enclosure is not None and enclosure.get("url") not in available:
+            channel.remove(item)
+    ET.register_namespace("sparkle", SPARKLE)
+    (folder / "appcast.xml").write_bytes(ET.tostring(tree, encoding="utf-8"))
+
+
+def prepare(
+    output: Path,
+    platform: str,
+    version: str,
+    feed_url: str,
+    public_key: str = "",
+    channel: str = "stable",
+) -> None:
+    numeric_version(version)
+    name = "appcast.xml" if platform == "macos-arm64" else "releases.win.json"
+    feed = fetch_feed(feed_url.rstrip("/") + "/" + name)
+    folder = output / (
+        "macos-updates" if platform == "macos-arm64" else "windows-updates"
+    )
+    folder.mkdir(parents=True, exist_ok=True)
+    if feed is None:
+        return
+    if platform == "macos-arm64":
+        prepare_macos(feed, folder, version, DELTA_BASES[channel])
+    else:
+        from release_signatures import verify_feed
+
+        feed = verify_feed(feed, public_key)
+        assets = json.loads(feed)["Assets"]
+        newer_than(version, [asset["Version"] for asset in assets])
+        # Windows downloads the signed full archive, so only release history is
+        # needed here. Downloading an old multi-GB package cannot improve this build.
+        (output / "previous-windows-feed.json").write_bytes(feed)
+
+
+def generate_macos_feed(
+    folder: Path, version: str, release_url: str, sparkle: Path, bases: int = 2
+) -> None:
+    feed = folder / "appcast.xml"
+    previous = (
+        {
+            item.findtext(f"{{{SPARKLE}}}version"): item
+            for item in ET.parse(feed).findall("./channel/item")
+        }
+        if feed.exists()
+        else {}
+    )
+    subprocess.run(
+        [
+            str(sparkle / "bin/generate_appcast"),
+            "--ed-key-file",
+            "-",
+            "--versions",
+            version,
+            "--maximum-versions",
+            str(bases + 1),
+            "--maximum-deltas",
+            str(bases),
+            "--delta-compression",
+            "lzfse",
+            "--download-url-prefix",
+            release_url.rstrip("/") + "/",
+            str(folder),
+        ],
+        input=os.environ["SPARKLE_PRIVATE_KEY"],
+        text=True,
+        check=True,
+    )
+    items = mac_items(feed.read_bytes())
+    if (
+        not items
+        or items[0][0] != version
+        or not items[0][1].get(f"{{{SPARKLE}}}edSignature")
+    ):
+        raise ValueError(
+            "Sparkle did not produce a signed update for this version; check the public/private key pair"
+        )
+
+    # GitHub renames spaces in uploaded assets. Choose stable names before upload.
+    delta_names = {}
+    for delta in folder.glob("*.delta"):
+        name = delta.name.replace(" ", "-")
+        delta_names[delta.name] = name
+        delta.rename(delta.with_name(name))
+
+    tree = ET.parse(feed)
+    channel = tree.find("channel")
+    for index, item in enumerate(channel):
+        if item.tag != "item":
+            continue
+        item_version = item.findtext(f"{{{SPARKLE}}}version")
+        if item_version != version:
+            # generate_appcast applies the new release URL to old archives too.
+            channel.remove(item)
+            channel.insert(index, previous[item_version])
+            continue
+        for enclosure in item.findall(f"./{{{SPARKLE}}}deltas/enclosure"):
+            url = enclosure.attrib["url"]
+            name = urllib.parse.unquote(url.rsplit("/", 1)[1])
+            enclosure.set(
+                "url",
+                url.rsplit("/", 1)[0] + "/" + urllib.parse.quote(delta_names[name]),
+            )
+    ET.register_namespace("sparkle", SPARKLE)
+    tree.write(feed, encoding="utf-8", xml_declaration=True)
+    subprocess.run(
+        [str(sparkle / "bin/sign_update"), "--ed-key-file", "-", str(feed)],
+        input=os.environ["SPARKLE_PRIVATE_KEY"],
+        text=True,
+        check=True,
+    )
+
+
+def macos(
+    output: Path,
+    version: str,
+    release_url: str,
+    sparkle: Path,
+    build_version: str | None = None,
+    channel: str = "stable",
+) -> None:
+    folder = output / "macos-updates"
+    folder.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(output / f"AI-Detector-{version}-macos-arm64.dmg", folder)
+    generate_macos_feed(
+        folder, build_version or version, release_url, sparkle, DELTA_BASES[channel]
+    )
+    shutil.copy2(folder / "appcast.xml", output)
+    for delta in folder.glob("*.delta"):
+        shutil.copy2(delta, output)
+
+
+def windows(
+    output: Path,
+    version: str,
+    release_url: str,
+    private_key: str,
+    public_key: str,
+    build_version: str | None = None,
+    channel: str = "stable",
+) -> None:
+    from release_signatures import sign_feed
+
+    folder = output / "windows-updates"
+    generated = json.loads((folder / "releases.win.json").read_text())
+    previous = output / "previous-windows-feed.json"
+    assets = json.loads(previous.read_text())["Assets"] if previous.exists() else []
+    newer_than(version, [asset["Version"] for asset in assets])
+    if build_version:
+        newer_than(build_version, [asset["BuildVersion"] for asset in assets])
+    current = [asset for asset in generated["Assets"] if asset["Version"] == version]
+    if not current:
+        raise ValueError("Velopack did not produce a full package for this version")
+    for asset in current:
+        name = asset["FileName"]
+        shutil.copy2(folder / name, output / name)
+        # SimpleWebSource supports absolute package URLs; feed hosting stays independent.
+        asset["FileName"] = release_url.rstrip("/") + "/" + urllib.parse.quote(name)
+        asset["BuildVersion"] = build_version or version
+        asset["ReleaseChannel"] = channel
+    assets += current
+    versions = sorted(
+        {asset["Version"] for asset in assets}, key=numeric_version, reverse=True
+    )[:3]
+    feed = {"Assets": [asset for asset in assets if asset["Version"] in versions]}
+    for asset in feed["Assets"]:
+        if (
+            asset["PackageId"] != "AIDetector"
+            or not re.fullmatch(r"[a-fA-F0-9]{64}", asset["SHA256"])
+            or asset["Size"] <= 0
+        ):
+            raise ValueError(
+                "Every signed package must have its identity, size and SHA256"
+            )
+    (output / "releases.win.json").write_bytes(
+        sign_feed(json.dumps(feed).encode(), private_key, public_key)
+    )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("command", choices=["prepare", "publish"])
+    parser.add_argument(
+        "--platform", choices=["macos-arm64", "windows-x64"], required=True
+    )
+    parser.add_argument("--output", type=Path, default=Path("application-dist"))
+    parser.add_argument("--version", required=True)
+    parser.add_argument("--build-version")
+    parser.add_argument("--channel", choices=["stable", "preview"], default="stable")
+    parser.add_argument("--feed-url")
+    parser.add_argument("--release-url")
+    parser.add_argument("--sparkle", type=Path)
+    args = parser.parse_args()
+    if args.command == "prepare":
+        prepare(
+            args.output,
+            args.platform,
+            (args.build_version or args.version)
+            if args.platform == "macos-arm64"
+            else args.version,
+            args.feed_url,
+            os.environ.get("SPARKLE_PUBLIC_KEY", ""),
+            args.channel,
+        )
+    elif args.platform == "macos-arm64":
+        macos(
+            args.output,
+            args.version,
+            args.release_url,
+            args.sparkle,
+            args.build_version,
+            args.channel,
+        )
+    else:
+        windows(
+            args.output,
+            args.version,
+            args.release_url,
+            os.environ["SPARKLE_PRIVATE_KEY"],
+            os.environ["SPARKLE_PUBLIC_KEY"],
+            args.build_version,
+            args.channel,
+        )

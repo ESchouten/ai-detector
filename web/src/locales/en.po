@@ -445,10 +445,6 @@ msgid "Connection failed."
 msgstr "Connection failed."
 
 #: src/lib/server/runtime-status.ts
-msgid "A recording could not be saved."
-msgstr "A recording could not be saved."
-
-#: src/lib/server/runtime-status.ts
 msgid "No recent camera frames. Waiting for the connection to recover."
 msgstr "No recent camera frames. Waiting for the connection to recover."
 
@@ -3751,3 +3747,7 @@ msgstr "Choose a preset. It supplies everything needed to recognise that kind of
 #: src/routes/(admin)/advanced/settings-editor.svelte
 msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
 msgstr "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
+
+#: src/lib/server/runtime-status.ts
+msgid "A recording could not be saved. Check free disk space and the storage folder."
+msgstr "A recording could not be saved. Check free disk space and the storage folder."

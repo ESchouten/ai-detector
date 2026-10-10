@@ -445,10 +445,6 @@ msgid "Connection failed."
 msgstr "Verbinding mislukt."
 
 #: src/lib/server/runtime-status.ts
-msgid "A recording could not be saved."
-msgstr "Een opname kon niet worden opgeslagen."
-
-#: src/lib/server/runtime-status.ts
 msgid "No recent camera frames. Waiting for the connection to recover."
 msgstr "Geen recente camerabeelden. Wachten tot de verbinding terugkomt."
 
@@ -3751,3 +3747,7 @@ msgstr "Kies een voorinstelling. Die bevat alles wat nodig is om dat soort gebeu
 #: src/routes/(admin)/advanced/settings-editor.svelte
 msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
 msgstr "Alles in config.json: per detector het model, de prompts, drempelwaarden en opname-opties, plus health en onnx voor de hele installatie. Bij het opslaan worden de wijzigingen toegepast op de lopende bewaking."
+
+#: src/lib/server/runtime-status.ts
+msgid "A recording could not be saved. Check free disk space and the storage folder."
+msgstr "Een opname kon niet worden opgeslagen. Controleer de vrije ruimte op de schijf en de opslagmap."

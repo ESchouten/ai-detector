@@ -13,12 +13,12 @@ def test_protocol_is_versioned_hides_credentials_and_throttles_frame_traffic():
     source = "rtsp://farmer:password@camera.example.test/live?token=secret"
     for _ in range(30):
         report(StatusEvent("frame", source))
-    report(StatusEvent("recording", source))
+    report(StatusEvent("delivery", source))
     records = [
         json.loads(line.removeprefix(STATUS_PREFIX))
         for line in output.getvalue().splitlines()
     ]
-    assert [record["event"] for record in records] == ["frame", "recording"]
+    assert [record["event"] for record in records] == ["frame", "delivery"]
     assert all(record["version"] == 1 for record in records)
     assert all(
         record["sourceKey"] == hashlib.sha256(source.encode()).hexdigest()
@@ -52,7 +52,7 @@ def test_shared_camera_does_not_throttle_one_rules_inference_behind_another():
     report(StatusEvent("inference", "camera", rule_id="detector-2"))
     report(
         StatusEvent(
-            "recording_failed", "camera", rule_id="detector-1", destination_id="disk-2"
+            "delivery_failed", "camera", rule_id="detector-1", destination_id="disk-2"
         )
     )
     records = [

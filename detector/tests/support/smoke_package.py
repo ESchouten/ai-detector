@@ -56,15 +56,15 @@ def run_executable(
     assert all(record["version"] == 1 for record in records)
     sources = {record["sourceKey"] for record in records if record["event"] == "frame"}
     assert len(sources) == 2, process.stdout + process.stderr
-    for kind in ("inference", "recording"):
-        observations = [record for record in records if record["event"] == kind]
+    inferences = [record for record in records if record["event"] == "inference"]
+    recordings = [
+        record
+        for record in records
+        if record["event"] == "delivery" and record["destinationId"] == "disk-1"
+    ]
+    for observations in (inferences, recordings):
         assert {record["sourceKey"] for record in observations} == sources
         assert all(record["ruleId"] == "detector-1" for record in observations)
-    assert all(
-        record["destinationId"] == "disk-1"
-        for record in records
-        if record["event"] == "recording"
-    )
     return process
 
 

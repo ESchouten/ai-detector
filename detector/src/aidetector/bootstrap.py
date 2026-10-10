@@ -79,23 +79,14 @@ def _resolved_sources(settings: SourceConfig, directory: Path) -> tuple[str, ...
 
 
 def build_destinations(
-    config: ExportersConfig,
-    directory: Path,
-    media: EventMedia,
-    report_status: ReportStatus = ignore_status,
+    config: ExportersConfig, directory: Path, media: EventMedia
 ) -> tuple[Destination, ...]:
     destinations: list[Destination] = []
     for index, settings in enumerate(config.disk):
         destinations.append(
             Destination(
                 f"disk-{index + 1}",
-                DiskExporter(
-                    settings,
-                    directory / "detections",
-                    media,
-                    report_status,
-                    f"disk-{index + 1}",
-                ),
+                DiskExporter(settings, directory / "detections", media),
                 ExportPolicy(
                     settings.confidence,
                     settings.export_rejected,
@@ -240,9 +231,7 @@ def run_application(
             )
             pipeline = DetectionPipeline(detector, event_policy, rule_status, publish)
             delivery = EventDelivery(
-                build_destinations(
-                    settings.exporters, data_directory, media, rule_status
-                ),
+                build_destinations(settings.exporters, data_directory, media),
                 cooldown,
                 validator,
                 rule_status,

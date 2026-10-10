@@ -86,13 +86,19 @@ test('camera readiness requires actual frames and processing; recordings remain 
 	assert.equal(ready.cameras[0].label, 'Barn');
 	assert.equal(ready.cameras[0].lastRecordingAt, null);
 	assert.ok(!JSON.stringify(ready).includes('secret'));
-	record(state, 'recording_failed', 'Disk is full');
+	record(
+		state,
+		'delivery_failed',
+		'Delivery failed. Check the connection and see Logs for details.'
+	);
 	assert.equal(state.snapshot(now).readiness, 'degraded');
 	assert.equal(state.snapshot(now).cameras[0].state, 'monitoring');
-	assert.match(state.snapshot(now).cameras[0].recordingError!, /Disk is full/);
-	record(state, 'recording');
+	assert.match(state.snapshot(now).cameras[0].recordingError!, /Check free disk space/);
+	assert.deepEqual(state.issues, []);
+	record(state, 'delivery');
 	assert.equal(state.snapshot(now).readiness, 'monitoring');
 	assert.equal(state.snapshot(now).cameras[0].recordingError, undefined);
+	assert.equal(Date.parse(state.snapshot(now).cameras[0].lastRecordingAt!), now);
 });
 
 test('preparation failures remain actionable until a new run resets progress', () => {
@@ -281,11 +287,14 @@ test('recording failures remain attached to their rule and destination until tha
 	record(state, 'frame');
 	record(state, 'processed');
 	record(state, 'processed', undefined, now, { ruleId: 'detector-2' });
-	record(state, 'recording_failed', 'Disk is full');
-	record(state, 'recording', undefined, now, { ruleId: 'detector-2' });
-	record(state, 'recording', undefined, now, { destinationId: 'disk-2' });
+	record(state, 'delivery_failed');
+	record(state, 'delivery', undefined, now, { ruleId: 'detector-2' });
+	record(state, 'delivery', undefined, now, { destinationId: 'disk-2' });
 	assert.equal(state.snapshot(now).readiness, 'degraded');
-	assert.match(state.snapshot(now).cameras[0].recordingError!, /Calving: Disk is full/);
-	record(state, 'recording');
+	assert.match(
+		state.snapshot(now).cameras[0].recordingError!,
+		/^Calving: A recording could not be saved/
+	);
+	record(state, 'delivery');
 	assert.equal(state.snapshot(now).readiness, 'monitoring');
 });

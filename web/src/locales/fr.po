@@ -445,10 +445,6 @@ msgid "Connection failed."
 msgstr "Échec de la connexion."
 
 #: src/lib/server/runtime-status.ts
-msgid "A recording could not be saved."
-msgstr "Un enregistrement n’a pas pu être sauvegardé."
-
-#: src/lib/server/runtime-status.ts
 msgid "No recent camera frames. Waiting for the connection to recover."
 msgstr "Aucune image récente de la caméra. En attente du rétablissement de la connexion."
 
@@ -3765,3 +3761,7 @@ msgstr "Choisissez un préréglage. Il fournit tout ce qu’il faut pour reconna
 #: src/routes/(admin)/advanced/settings-editor.svelte
 msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
 msgstr "Tout le contenu de config.json : le modèle, les prompts, les seuils et les options d’enregistrement de chaque détecteur, ainsi que health et onnx pour toute l’installation. L’enregistrement applique les modifications à la surveillance en cours."
+
+#: src/lib/server/runtime-status.ts
+msgid "A recording could not be saved. Check free disk space and the storage folder."
+msgstr "Un enregistrement n’a pas pu être sauvegardé. Vérifiez l’espace libre sur le disque et le dossier de stockage."

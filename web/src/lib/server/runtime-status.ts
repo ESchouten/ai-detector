@@ -14,9 +14,7 @@ const eventSchema = v.object({
 		'frame',
 		'inference',
 		'processed',
-		'recording',
 		'offline',
-		'recording_failed',
 		'notice',
 		'backend',
 		'validation',
@@ -72,6 +70,14 @@ function destinationName(id: string): string {
 	const [kind, ordinal] = id.split('-');
 	const name = kind === 'telegram' ? 'Telegram alert' : kind === 'webhook' ? 'Webhook' : id;
 	return ordinal && ordinal !== '1' ? `${name} ${ordinal}` : name;
+}
+
+/** A delivery to disk is a recording, which belongs to its camera rather than to a connection. */
+function isConnection(event: ProgressEvent): boolean {
+	return (
+		['backend', 'validation', 'validation_failed'].includes(event.event) ||
+		(event.event.startsWith('delivery') && !event.destinationId?.startsWith('disk-'))
+	);
 }
 
 /** Only these structured observations can establish camera readiness. */
@@ -147,11 +153,7 @@ export class RuntimeProgress {
 			this.observeWorker(event);
 			return event;
 		}
-		if (
-			['backend', 'validation', 'validation_failed', 'delivery', 'delivery_failed'].includes(
-				event.event
-			)
-		) {
+		if (isConnection(event)) {
 			this.observeConnection(event);
 			return event;
 		}
@@ -198,7 +200,7 @@ export class RuntimeProgress {
 			return;
 		}
 		const destination = event.event.startsWith('validation') ? 'Validator' : event.destinationId;
-		if (!destination || destination.startsWith('disk-')) return;
+		if (!destination) return;
 		const key = `${event.ruleId}/${destination}`;
 		if (event.event.endsWith('_failed'))
 			this.failures.set(key, event.message ?? 'Connection failed.');
@@ -231,13 +233,13 @@ export class RuntimeProgress {
 			camera.lastProcessedAt = event.at;
 			if (event.event === 'inference') camera.lastInferenceAt = event.at;
 		} else if (event.destinationId && rule.recordings.has(event.destinationId)) {
-			if (event.event === 'recording') {
+			if (event.event === 'delivery') {
 				camera.lastRecordingAt = event.at;
 				rule.recordings.set(event.destinationId, undefined);
-			} else if (event.event === 'recording_failed') {
+			} else if (event.event === 'delivery_failed') {
 				rule.recordings.set(
 					event.destinationId,
-					event.message || 'A recording could not be saved.'
+					'A recording could not be saved. Check free disk space and the storage folder.'
 				);
 			}
 		}

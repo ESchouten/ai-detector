@@ -445,10 +445,6 @@ msgid "Connection failed."
 msgstr "Verbindung fehlgeschlagen."
 
 #: src/lib/server/runtime-status.ts
-msgid "A recording could not be saved."
-msgstr "Eine Aufnahme konnte nicht gespeichert werden."
-
-#: src/lib/server/runtime-status.ts
 msgid "No recent camera frames. Waiting for the connection to recover."
 msgstr "Keine aktuellen Kamerabilder. Warten, bis die Verbindung wieder steht."
 
@@ -3751,3 +3747,7 @@ msgstr "Wählen Sie eine Voreinstellung. Sie enthält alles, was nötig ist, um 
 #: src/routes/(admin)/advanced/settings-editor.svelte
 msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
 msgstr "Alles in config.json: Modell, Prompts, Schwellenwerte und Aufnahmeoptionen jedes Detektors sowie health und onnx für die gesamte Installation. Beim Speichern werden die Änderungen auf die laufende Überwachung angewendet."
+
+#: src/lib/server/runtime-status.ts
+msgid "A recording could not be saved. Check free disk space and the storage folder."
+msgstr "Eine Aufnahme konnte nicht gespeichert werden. Prüfen Sie den freien Speicherplatz und den Speicherordner."

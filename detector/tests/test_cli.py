@@ -225,11 +225,7 @@ def test_launcher_status_reports_real_capture_processing_and_archive_outcome(
     assert events[:2] == ["preparing", "ready"]
     assert events[2:4] == ["frame", "processed"]
     assert "inference" not in events
-    assert events[-2:] == (
-        ["recording_failed", "delivery_failed"]
-        if blocked_archive
-        else ["recording", "delivery"]
-    )
+    assert events[-1] == ("delivery_failed" if blocked_archive else "delivery")
     assert records[3]["ruleId"] == "detector-1"
     assert records[-1]["ruleId"] == "detector-1"
     assert records[-1]["destinationId"] == "disk-1"
@@ -276,7 +272,7 @@ def test_launcher_inference_status_follows_real_onnx_prediction(
         if line.startswith("AIDETECTOR_STATUS ")
     ]
     events = [record["event"] for record in records]
-    assert events.index("frame") < events.index("inference") < events.index("recording")
+    assert events.index("frame") < events.index("inference") < events.index("delivery")
     assert "processed" not in events
     logs = process.stdout + process.stderr
     operation = "Track" if tracking else "Predict"
@@ -329,12 +325,12 @@ def test_launcher_keeps_shared_camera_rule_and_archive_failures_distinct(tmp_pat
     outcomes = {
         (record["event"], record["ruleId"], record["destinationId"])
         for record in records
-        if record["event"].startswith("recording")
+        if record["event"].startswith("delivery")
     }
     assert outcomes == {
-        ("recording_failed", "detector-1", "disk-1"),
-        ("recording", "detector-1", "disk-2"),
-        ("recording", "detector-2", "disk-1"),
+        ("delivery_failed", "detector-1", "disk-1"),
+        ("delivery", "detector-1", "disk-2"),
+        ("delivery", "detector-2", "disk-1"),
     }
 
 

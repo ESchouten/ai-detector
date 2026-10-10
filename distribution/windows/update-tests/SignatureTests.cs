@@ -190,22 +190,13 @@ public sealed class SignatureTests
     }
 
     [Test]
-    public async Task SwitchingChannelsCannotReuseThePreviousChannelsCachedFeed()
+    public async Task FirstCheckRequestsThePublishedFeedAndSavesItInANewFolder()
     {
-        const string stableUrl = "https://example.invalid/app-updates";
-        const string previewUrl = "https://example.invalid/app-preview-updates";
-        var stableCache = SignedUpdateSource.CachePath(root, stableUrl);
-        var previewCache = SignedUpdateSource.CachePath(root, previewUrl);
-        Assert.That(stableCache, Is.EqualTo(SignedUpdateSource.CachePath(root, stableUrl + "/")));
-        Assert.That(previewCache, Is.Not.EqualTo(stableCache));
-        var stable = new SignedUpdateSource(stableUrl, publicKey, stableCache, stablePolicy, downloader);
-        await stable.GetReleaseFeed(new NullVelopackLogger(), "AIDetector", "win");
-        var preview = new SignedUpdateSource(previewUrl, publicKey, previewCache, stablePolicy, downloader);
-        Assert.Throws<DirectoryNotFoundException>(() => preview.ReadCachedFeed());
-        await preview.GetReleaseFeed(new NullVelopackLogger(), "AIDetector", "win");
-        Assert.That(downloader.LastFeedUrl, Is.EqualTo(previewUrl + "/releases.win.json"));
-        Assert.That(File.ReadAllText(stableCache), Is.EqualTo(envelope));
-        Assert.That(preview.ReadCachedFeed().Assets.Length, Is.EqualTo(2));
+        var saved = Path.Combine(root, "updates", "releases.win.json");
+        var first = new SignedUpdateSource("https://example.invalid/updates", publicKey, saved, stablePolicy, downloader);
+        await new VerifiedUpdateManager(first, Locator()).CheckForUpdatesAsync();
+        Assert.That(downloader.LastFeedUrl, Is.EqualTo("https://example.invalid/updates/releases.win.json"));
+        Assert.That(File.ReadAllText(saved), Is.EqualTo(envelope));
     }
 
     [TestCase("0.0.51", "51.0.0", "preview", "2.0.0", "50.0.0", "stable")]

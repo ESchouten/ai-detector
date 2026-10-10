@@ -23,9 +23,7 @@ internal sealed class UpdateChannelPolicy(string installedBuild, string installe
         var channel = (string)target["ReleaseChannel"];
         return new JObject
         {
-            ["Assets"] = new JArray(assets.Where(asset => (string)asset["ReleaseChannel"] == channel &&
-                // Delta chains are generated within a channel, never across channels.
-                (channel == installedChannel || (string)asset["Type"] == "Full")))
+            ["Assets"] = new JArray(assets.Where(asset => (string)asset["ReleaseChannel"] == channel))
         };
     }
 

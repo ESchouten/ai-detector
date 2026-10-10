@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Velopack;
 
 namespace AIDetector.Desktop;
 
@@ -20,7 +19,7 @@ internal sealed class UpdateMenuItem : ToolStripMenuItem
         this.shutdownThen = shutdownThen;
         this.notify = notify;
         Image = MenuIcon.Create("\uE72C");
-        Enabled = updater?.IsInstalled == true && !updater.IsPortable;
+        Enabled = updater?.IsInstalled == true;
         if (!Enabled) Text = "Updates available in installed releases";
         else RefreshText();
         if (Enabled)

@@ -21,9 +21,8 @@ internal sealed class DesktopProcess(string executable) : IDisposable
             ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AI Detector"),
         "logs", "launcher.log");
 
-    private static void Log(string line)
+    internal static void Log(string line)
     {
-        Console.Error.WriteLine(line);
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(LogPath));
@@ -85,10 +84,7 @@ internal sealed class DesktopProcess(string executable) : IDisposable
         var errors = CopyErrorsAsync(process.StandardError);
         string line;
         while ((line = await process.StandardOutput.ReadLineAsync()) != null)
-        {
             if (line == "AI_DETECTOR_READY") ready();
-            else Console.Out.WriteLine(line);
-        }
         await Task.Run(() => process.WaitForExit());
         await errors;
         return process.ExitCode;

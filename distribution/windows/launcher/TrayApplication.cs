@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
-using Velopack;
 
 namespace AIDetector.Desktop;
 
@@ -22,11 +21,7 @@ internal sealed class TrayApplication : ApplicationContext
         web = new DesktopProcess(executable);
         using var artwork = Assembly.GetExecutingAssembly().GetManifestResourceStream("app.ico");
         icon = new Icon(artwork, 32, 32);
-        menu = new TrayMenu(startup, command =>
-        {
-            if (command == "open") web.OpenDashboard();
-            else Stop();
-        });
+        menu = new TrayMenu(startup, web.OpenDashboard, Stop);
         tray = new NotifyIcon { Icon = icon, Text = "AI Detector — Starting…", ContextMenuStrip = menu, Visible = true };
         updates = new UpdateMenuItem(updater, apply => { afterShutdown = apply; Stop(); }, () =>
             tray.ShowBalloonTip(5000, "AI Detector update available", "Choose Check for Updates in the AI Detector menu.", ToolTipIcon.Info), savePreviewPreference);
@@ -54,7 +49,7 @@ internal sealed class TrayApplication : ApplicationContext
         }
         catch (Exception error)
         {
-            Console.Error.WriteLine(error);
+            DesktopProcess.Log(error.ToString());
             ExitCode = 1;
             MessageBox.Show("AI Detector could not start or restart. Reopen the application to retry. Your settings and recordings are preserved.", "AI Detector", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }

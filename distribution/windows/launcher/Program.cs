@@ -16,7 +16,7 @@ internal static class Program
         bool firstRun = false;
         // Installer hooks must run before creating windows or starting monitoring.
         VelopackApp.Build().SetAutoApplyOnStartup(false)
-            .OnBeforeUninstallFastCallback(_ => SetStartup(false))
+            .OnBeforeUninstallFastCallback(_ => RemoveStartup())
             .OnFirstRun(_ => firstRun = true).Run();
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
@@ -25,7 +25,9 @@ internal static class Program
             MessageBox.Show("AI Detector requires Windows 10 version 22H2 or newer. Update Windows before opening AI Detector.", "AI Detector", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return 1;
         }
-        if (firstRun) ConfigureStartup();
+        using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
+        var preference = new StartupPreference(key, Application.ExecutablePath);
+        if (firstRun) ConfigureStartup(preference);
         var web = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ai-detector-web.exe");
         // One menu per person: opening AI Detector again shows the dashboard of the one that runs.
         using var menu = new Mutex(true, @"Local\AI Detector menu", out bool firstMenu);
@@ -35,11 +37,9 @@ internal static class Program
             running.OpenDashboard();
             return 0;
         }
-        using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
-        var preference = new StartupPreference(key, Application.ExecutablePath);
         var metadata = JObject.Parse(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "application.json")));
         var feed = (string)metadata["updateFeed"];
-        var updateCache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AI Detector", "updates");
+        var updateCache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AI Detector", "updates", "releases.win.json");
         using var updatePreferences = Registry.CurrentUser.CreateSubKey(@"Software\AI Detector");
         var channel = (string)metadata["updateChannel"];
         bool previews = Convert.ToInt32(updatePreferences.GetValue("IncludePreviewUpdates", channel == "preview" ? 1 : 0)) != 0;
@@ -47,23 +47,21 @@ internal static class Program
         updatePreferences.SetValue("IncludePreviewUpdates", previews ? 1 : 0);
         var policy = feed == null ? null : new UpdateChannelPolicy((string)metadata["updateBuild"], channel, previews);
         var updater = feed == null ? null : new VerifiedUpdateManager(
-            new SignedUpdateSource(feed, (string)metadata["updatePublicKey"], SignedUpdateSource.CachePath(updateCache, feed), policy));
+            new SignedUpdateSource(feed, (string)metadata["updatePublicKey"], updateCache, policy));
         using var desktop = new TrayApplication(preference, web, updater,
             enabled => updatePreferences.SetValue("IncludePreviewUpdates", enabled ? 1 : 0));
         Application.Run(desktop);
         return desktop.ExitCode;
     }
 
-    private static void SetStartup(bool enabled)
+    private static void RemoveStartup()
     {
         using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
-        new StartupPreference(key, Application.ExecutablePath).Enabled = enabled;
+        new StartupPreference(key, Application.ExecutablePath).Enabled = false;
     }
 
-    private static void ConfigureStartup()
+    private static void ConfigureStartup(StartupPreference startup)
     {
-        using var key = Registry.CurrentUser.CreateSubKey(StartupPreference.RegistryPath);
-        var startup = new StartupPreference(key, Application.ExecutablePath);
         if (startup.Enabled) return;
         if (MessageBox.Show(
             "Open AI Detector when you sign in? Once you start monitoring in setup, it resumes automatically whenever you sign in, unless you pause it in the dashboard.",

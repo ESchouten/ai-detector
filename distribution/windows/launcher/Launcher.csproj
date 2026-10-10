@@ -11,7 +11,6 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Content Include="ThirdPartyNotices.txt" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="../artwork/app.ico" LogicalName="app.ico" />

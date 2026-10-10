@@ -10,10 +10,10 @@ internal sealed class TrayMenu : ContextMenuStrip
     private readonly StartupPreference startup;
     private readonly ToolStripMenuItem login;
 
-    public TrayMenu(StartupPreference startup, Action<string> send)
+    public TrayMenu(StartupPreference startup, Action openDashboard, Action stop)
     {
         this.startup = startup;
-        var open = new ToolStripMenuItem("Open dashboard", MenuIcon.Create("\uE80F"), (_, _) => send("open"));
+        var open = new ToolStripMenuItem("Open dashboard", MenuIcon.Create("\uE80F"), (_, _) => openDashboard());
         Items.Add(open);
         Items.Add(new ToolStripSeparator());
         login = new ToolStripMenuItem("Open at login", MenuIcon.Create("\uE77B"), (_, _) => ToggleStartup());
@@ -24,7 +24,7 @@ internal sealed class TrayMenu : ContextMenuStrip
         {
             quit.Text = "Stopping monitoring…";
             quit.Enabled = false;
-            send("quit");
+            stop();
         };
         Items.Add(quit);
         Opening += (_, _) => UpdateStartup(() => login.Checked = startup.Enabled);

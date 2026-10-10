@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Velopack;
 using Velopack.Logging;
@@ -15,12 +13,6 @@ internal sealed class SignedUpdateSource(string url, string publicKey, string ca
     : SimpleWebSource(url, downloader)
 {
     public UpdateChannelPolicy Policy { get; } = policy;
-    public static string CachePath(string directory, string feedUrl)
-    {
-        using var hash = SHA256.Create();
-        var name = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(feedUrl.TrimEnd('/')))).Replace("-", "");
-        return Path.Combine(directory, name, "releases.win.json");
-    }
 
     public override async Task<VelopackAssetFeed> GetReleaseFeed(IVelopackLogger logger, string appId, string channel,
         Guid? stagingId = null, VelopackAsset latestLocalRelease = null)

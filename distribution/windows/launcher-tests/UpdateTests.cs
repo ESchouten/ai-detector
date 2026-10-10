@@ -97,7 +97,6 @@ public sealed class UpdateTests
         public int Checks { get; private set; }
         public VelopackAsset Pending { get; set; }
         public override bool IsInstalled => true;
-        public override bool IsPortable => false;
         public override VelopackAsset UpdatePendingRestart => Pending;
         public override Task<UpdateInfo> CheckForUpdatesAsync() { Checks++; return Check.Task; }
         public override Task DownloadUpdatesAsync(UpdateInfo update, Action<int> progress = null, CancellationToken cancelToken = default)

@@ -5,7 +5,6 @@ from pathlib import Path
 from PIL import Image
 
 assets = Path(__file__).parent / "artwork"
-assets.mkdir(exist_ok=True)
 with Image.open(assets.parent.parent / "macos" / "AI Detector.icns") as source:
     icon = source.convert("RGBA")
 

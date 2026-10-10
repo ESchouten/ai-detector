@@ -1,7 +1,8 @@
 import path from 'node:path';
 import { readJson, writeJson } from './json-file.ts';
+import { serialQueue } from './serial.ts';
 
-const writers = new Map<string, Promise<unknown>>();
+const queues = new Map<string, ReturnType<typeof serialQueue>>();
 
 /**
  * One whole-file replacement at a time. The settings store and the detector launcher both
@@ -9,13 +10,9 @@ const writers = new Map<string, Promise<unknown>>();
  */
 export function exclusiveWrite<T>(file: string, operation: () => Promise<T>): Promise<T> {
 	const key = path.resolve(file);
-	const result = (writers.get(key) ?? Promise.resolve()).then(operation);
-	const settled = result.catch(() => undefined);
-	writers.set(key, settled);
-	void settled.then(() => {
-		if (writers.get(key) === settled) writers.delete(key);
-	});
-	return result;
+	const queue = queues.get(key) ?? serialQueue();
+	queues.set(key, queue);
+	return queue(operation);
 }
 
 /**

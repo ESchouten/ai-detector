@@ -1,4 +1,4 @@
-import { mkdir, readFile, unlink } from 'node:fs/promises';
+import { mkdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 import * as v from 'valibot';
 import writeFileAtomic from 'write-file-atomic';
@@ -9,6 +9,7 @@ import {
 	type LivePreviewStatus
 } from '../live-preview.ts';
 import type { Config, AppConfig } from '../schema.ts';
+import { readJson } from './json-file.ts';
 
 export interface LivePreviewRule {
 	id: string;
@@ -57,14 +58,6 @@ const sessionSchema = v.object({
 	runId: v.string(),
 	updatedAt: v.pipe(v.string(), v.isoTimestamp())
 });
-
-async function json(file: string): Promise<unknown> {
-	return JSON.parse(await readFile(file, 'utf8'));
-}
-
-function missing(error: unknown): boolean {
-	return error instanceof Error && 'code' in error && error.code === 'ENOENT';
-}
 
 interface Lease {
 	viewers: number;
@@ -125,9 +118,9 @@ function acquireLease(file: string): { check: () => void; release: () => Promise
 			lease.pending = lease.pending.then(async () => {
 				if (lease.viewers) return;
 				try {
-					await unlink(file);
+					await rm(file, { force: true });
 				} catch (error) {
-					if (!missing(error)) console.error('Could not remove live preview lease', error);
+					console.error('Could not remove live preview lease', error);
 				} finally {
 					if (!lease.viewers) leases.delete(file);
 				}
@@ -146,12 +139,8 @@ function status(rule: LivePreviewRule): PreviewEvent {
 }
 
 async function readSession(directory: string) {
-	try {
-		return v.parse(sessionSchema, await json(path.join(directory, 'session.json')));
-	} catch (error) {
-		if (missing(error)) return null;
-		throw error;
-	}
+	const saved = await readJson(path.join(directory, 'session.json'));
+	return saved === null ? null : v.parse(sessionSchema, saved);
 }
 
 function changedEvents(
@@ -184,7 +173,7 @@ async function readPreview(
 	try {
 		const frame = v.parse(
 			frameSchema,
-			await json(path.join(directory, 'frames', `${sourceKey}.${rule.id}.json`))
+			await readJson(path.join(directory, 'frames', `${sourceKey}.${rule.id}.json`))
 		);
 		const age = Date.now() - Date.parse(frame.publishedAt);
 		if (
@@ -201,27 +190,18 @@ async function readPreview(
 	}
 }
 
-/** All visible camera cards share one connection, leaving room for video and navigation. */
+/**
+ * All visible camera cards share one connection, leaving room for video and navigation.
+ * Slow clients skip intermediate results instead of accumulating them.
+ */
 export function createCameraOverlayStream(
 	directory: string,
 	cameras: LivePreviewCamera[],
 	signal: AbortSignal
 ): ReadableStream<Uint8Array> {
-	return previewStream(
-		directory,
-		cameras.flatMap((camera) =>
-			camera.rules.map((rule) => ({ cameraId: camera.id, sourceKey: camera.sourceKey, rule }))
-		),
-		signal
+	const targets: PreviewTarget[] = cameras.flatMap((camera) =>
+		camera.rules.map((rule) => ({ cameraId: camera.id, sourceKey: camera.sourceKey, rule }))
 	);
-}
-
-/** Slow clients skip intermediate results instead of accumulating them. */
-function previewStream(
-	directory: string,
-	targets: PreviewTarget[],
-	signal: AbortSignal
-): ReadableStream<Uint8Array> {
 	const encoder = new TextEncoder();
 	let close: (cancelled?: boolean) => Promise<void> = async () => {};
 	return new ReadableStream({
@@ -241,11 +221,7 @@ function previewStream(
 				clearInterval(timer);
 				signal.removeEventListener('abort', abort);
 				if (!cancelled) controller.close();
-				try {
-					await Promise.all(leases.map((lease) => lease.release()));
-				} catch (error) {
-					console.error('Could not remove live preview lease', error);
-				}
+				await Promise.all(leases.map((lease) => lease.release()));
 			};
 			async function poll() {
 				if (stopped || polling || (controller.desiredSize ?? 0) <= 0) return;

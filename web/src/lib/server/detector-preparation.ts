@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
-import { mkdir, rm } from 'node:fs/promises';
+import { rm } from 'node:fs/promises';
 import path from 'node:path';
 import { createInterface } from 'node:readline';
 import type { Config, LlmConnection } from '../schema.ts';
@@ -32,7 +32,6 @@ export class DetectorPreparation {
 		this.report = report;
 	}
 	async validate(config: unknown, signal?: AbortSignal): Promise<void> {
-		await mkdir(this.options.dataDirectory, { recursive: true });
 		const file = path.join(this.options.dataDirectory, `check-${randomUUID()}.json`);
 		try {
 			await writeJson(file, config);
@@ -66,23 +65,7 @@ export class DetectorPreparation {
 	}
 
 	async command(config: Config, signal: AbortSignal): Promise<DetectorCommand> {
-		const command = await this.nativeCommand(config, signal);
-		return {
-			...command,
-			args: [
-				...command.args,
-				'--config',
-				path.join(this.options.dataDirectory, 'config.json'),
-				'--data-dir',
-				this.options.dataDirectory,
-				'--control-stdin',
-				'--status-json',
-				'--live-preview'
-			]
-		};
-	}
-
-	private async nativeCommand(config: Config, signal: AbortSignal): Promise<DetectorCommand> {
+		let command: DetectorCommand = { file: this.options.executable, args: [] };
 		const bundleDirectory = path.join(path.dirname(this.options.executable), 'nvidia-runtime');
 		if (needsNvidiaRuntime(config, process.platform) && existsSync(bundleDirectory)) {
 			const device = await discoverNvidia(signal);
@@ -91,7 +74,7 @@ export class DetectorPreparation {
 					`Selected NVIDIA acceleration on ${device.name}; CUDA with optional direct TensorRT\n`
 				);
 				try {
-					return await prepareNvidiaRuntime({
+					command = await prepareNvidiaRuntime({
 						bundleDirectory,
 						dataDirectory: this.options.dataDirectory,
 						device,
@@ -112,7 +95,19 @@ export class DetectorPreparation {
 				}
 			}
 		}
-		return { file: this.options.executable, args: [] };
+		return {
+			...command,
+			args: [
+				...command.args,
+				'--config',
+				path.join(this.options.dataDirectory, 'config.json'),
+				'--data-dir',
+				this.options.dataDirectory,
+				'--control-stdin',
+				'--status-json',
+				'--live-preview'
+			]
+		};
 	}
 
 	private runCheck(

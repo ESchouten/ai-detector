@@ -16,14 +16,11 @@ import {
 import { serialQueue } from './serial.ts';
 import { webLog } from './web-log.ts';
 
-export { isArchiveSegment } from '../detections.ts';
-
 export class ArchivePathError extends Error {}
 class ArchiveDataError extends Error {}
 
 const validateMetadata = new Ajv().compile<Metadata>(metadataSchema);
 const savedReview = v.nullish(manualReviewSchema);
-/** Where a review lived before it became part of metadata.json. */
 const REVIEW_READS = 32;
 
 export function isMissingFile(error: unknown): boolean {
@@ -45,19 +42,6 @@ export async function archivePath(root: string, ...segments: string[]): Promise<
 	return file;
 }
 
-async function folders(directory: string): Promise<string[]> {
-	try {
-		const entries = await readdir(directory, { withFileTypes: true });
-		return entries
-			.filter((entry) => entry.isDirectory())
-			.map((entry) => entry.name)
-			.sort();
-	} catch (error) {
-		if (isMissingFile(error)) return [];
-		throw error;
-	}
-}
-
 export interface ArchiveLocation {
 	type: string;
 	stage: Stage;
@@ -74,7 +58,7 @@ export class DetectionArchive {
 	private directories = new Map<string, { modified: number; names: string[] }>();
 	private reviews = new Map<string, { checked: number; review: ManualReview | null }>();
 	private eventIds = new Map<string, string | undefined>();
-	private warnings = new Map<string, string>();
+	private warnings = new Set<string>();
 
 	constructor(directory: string) {
 		this.directory = directory;
@@ -89,7 +73,11 @@ export class DetectionArchive {
 			const { mtimeMs } = await stat(directory);
 			const cached = this.directories.get(directory);
 			if (cached?.modified === mtimeMs) return cached.names;
-			const names = await folders(directory);
+			const entries = await readdir(directory, { withFileTypes: true });
+			const names = entries
+				.filter((entry) => entry.isDirectory())
+				.map((entry) => entry.name)
+				.sort();
 			this.directories.set(directory, { modified: mtimeMs, names });
 			return names;
 		} catch (error) {
@@ -119,9 +107,12 @@ export class DetectionArchive {
 		)
 			throw error;
 		const key = this.addressKey(address);
-		const message = `Could not read recording ${address.type}/${address.archiveStage}/${address.timestamp}. Other recordings remain available.`;
-		if (!this.warnings.has(key)) webLog.warn(message, error);
-		this.warnings.set(key, message);
+		if (!this.warnings.has(key))
+			webLog.warn(
+				`Could not read recording ${address.type}/${address.archiveStage}/${address.timestamp}. Other recordings remain available.`,
+				error
+			);
+		this.warnings.add(key);
 	}
 
 	async page({ type, stage, offset, limit }: DetectionFilter): Promise<DetectionPage> {
@@ -140,7 +131,7 @@ export class DetectionArchive {
 			items,
 			nextOffset,
 			hasMore: nextOffset < locations.length,
-			warnings: Array.from(this.warnings.values())
+			warnings: this.warnings.size
 		};
 	}
 

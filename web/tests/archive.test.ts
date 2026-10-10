@@ -110,7 +110,7 @@ test('an unreadable review excludes that recording with a warning instead of los
 	await writeFile(path.join(event, 'metadata.json'), damaged);
 	const page = await archive.page({ offset: 0, limit: 24 });
 	assert.equal(page.items.length, 0);
-	assert.equal(page.warnings?.length, 1);
+	assert.equal(page.warnings, 1);
 	await assert.rejects(archive.readReview(address));
 	// Reviewing again must not silently replace what could not be understood.
 	await assert.rejects(archive.review(address, true, 'web'));
@@ -189,17 +189,17 @@ test('a damaged recording leaves other recordings readable and reports a warning
 	await writeFile(path.join(other, 'metadata.json'), JSON.stringify(metadata));
 	const first = await archive.page({ offset: 0, limit: 24 });
 	assert.equal(first.items.length, 1);
-	assert.equal(first.warnings?.length, 1);
+	assert.equal(first.warnings, 1);
 	assert.equal(first.nextOffset, 2);
 	await writeFile(
 		path.join(event, 'metadata.json'),
 		JSON.stringify({ ...metadata, duration: 'invalid' })
 	);
-	assert.equal((await archive.page({ offset: 0, limit: 24 })).warnings?.length, 1);
+	assert.equal((await archive.page({ offset: 0, limit: 24 })).warnings, 1);
 	await writeFile(path.join(event, 'metadata.json'), JSON.stringify(metadata));
 	const repaired = await archive.page({ offset: 0, limit: 24 });
 	assert.equal(repaired.items.length, 2);
-	assert.deepEqual(repaired.warnings, []);
+	assert.equal(repaired.warnings, 0);
 });
 
 test('publishing a new recording between offset pages does not duplicate displayed detections', async (t) => {

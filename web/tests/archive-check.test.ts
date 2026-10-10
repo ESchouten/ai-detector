@@ -55,7 +55,7 @@ test('archive check saves and decodes in every destination without creating dete
 		items: [],
 		nextOffset: 0,
 		hasMore: false,
-		warnings: []
+		warnings: 0
 	});
 });
 

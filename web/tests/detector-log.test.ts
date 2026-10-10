@@ -3,7 +3,8 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { DetectorLog, readLogTail } from '../src/lib/server/detector-log.ts';
+import { readLogTail } from '../src/lib/server/bounded-log.ts';
+import { DetectorLog } from '../src/lib/server/detector-log.ts';
 import { searchLog } from '../src/lib/log-search.ts';
 
 test('startup survives noisy inference, and the bounded redacted log survives reopening', async (t) => {

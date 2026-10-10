@@ -218,11 +218,6 @@ msgstr "Ouvrez directement le tableau de bord pour effectuer des modifications."
 msgid "Connect this device to AI Detector first."
 msgstr "Connectez d’abord cet appareil à AI Detector."
 
-#. 0: address.type; 1: address.archiveStage; 2: address.timestamp
-#: src/lib/server/archive.ts
-msgid "Could not read recording {0}/{1}/{2}. Other recordings remain available."
-msgstr "Impossible de lire l’enregistrement {0}/{1}/{2}. Les autres enregistrements restent disponibles."
-
 #: src/lib/detections.ts
 #: src/lib/server/archive.ts
 msgid "Invalid category."

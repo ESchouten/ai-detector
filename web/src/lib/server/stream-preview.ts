@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import { MultipartParser, type MultipartPart } from '@remix-run/multipart-parser';
-import { getCameraInputArgs, sanitizeSourceForLogs, sanitizeTextForLogs } from './ffmpeg.ts';
+import { getCameraInputArgs } from './ffmpeg.ts';
+import { sanitizeSourceForLogs, sanitizeTextForLogs } from './runtime-logs.ts';
 
 const MJPEG_BOUNDARY = 'frame';
 const FIRST_FRAME_TIMEOUT_MS = 20_000;

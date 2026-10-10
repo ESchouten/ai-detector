@@ -56,7 +56,7 @@
 	let reviewVersion = 0;
 	let hasNewRecordings = $state(false);
 	let refreshError = $state(false);
-	let archiveWarnings = $state<string[]>([]);
+	let archiveWarnings = $state(0);
 	let viewing = $state<string | null>(null);
 
 	const detectionsByDay = $derived.by(() => {
@@ -128,7 +128,7 @@
 				return;
 			}
 
-			archiveWarnings = result.warnings ?? [];
+			archiveWarnings = result.warnings;
 			const current = new Set(entries.map(detectionKey));
 			entries = reset
 				? result.items
@@ -279,9 +279,9 @@
 	</PageHeader>
 	<MonitoringBanner configured={cameras.some((camera) => camera.monitored)} />
 
-	{#if archiveWarnings.length}
+	{#if archiveWarnings}
 		<p role="status" class="flex flex-wrap items-center gap-3 text-sm text-danger-foreground">
-			{plural(archiveWarnings.length, [
+			{plural(archiveWarnings, [
 				'One recording could not be read. The others are shown below.',
 				'# recordings could not be read. The others are shown below.'
 			])}

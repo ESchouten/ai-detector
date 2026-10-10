@@ -4,8 +4,6 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 import ffmpegStatic from 'ffmpeg-static';
 
-export { sanitizeSourceForLogs, sanitizeTextForLogs } from './runtime-logs.ts';
-
 const execute = promisify(execFile);
 let cachedPath: string | undefined;
 let pendingPath: Promise<string | null> | undefined;

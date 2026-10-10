@@ -15,11 +15,6 @@ import { RuntimeProgress, STATUS_PREFIX } from './runtime-status.ts';
 import { SetupError } from './runtime-platform.ts';
 import { serialQueue } from './serial.ts';
 
-/** Whether monitoring resumes with the application: `monitoring` in app.json. */
-interface Settings {
-	enabled: boolean;
-}
-
 const INITIAL_RESTART_DELAY_MS = 2000;
 const MAX_RESTART_DELAY_MS = 30000;
 const STABLE_RUN_MS = 10 * 60 * 1000;
@@ -33,7 +28,8 @@ export class ManagedDetector {
 	private readonly enqueue = serialQueue();
 	private startup = new AbortController();
 	private restartDelay = INITIAL_RESTART_DELAY_MS;
-	private settings: Settings = { enabled: false };
+	/** Whether monitoring resumes with the application: `monitoring` in app.json. */
+	private enabled = false;
 	private state: RuntimeStatus;
 	private readonly appPath: string;
 	private readonly preparation: DetectorPreparation;
@@ -98,8 +94,8 @@ export class ManagedDetector {
 	initialize(): Promise<void> {
 		const signal = this.startup.signal;
 		return this.enqueue(async () => {
-			this.settings = { enabled: await monitoringEnabled(this.appPath) };
-			if (this.settings.enabled) {
+			this.enabled = await monitoringEnabled(this.appPath);
+			if (this.enabled) {
 				await this.log.resume();
 				await this.startChild(signal, true);
 			}
@@ -123,7 +119,7 @@ export class ManagedDetector {
 
 	whileStopped<T>(operation: () => Promise<T>): Promise<T> {
 		return this.enqueue(() => {
-			if (this.settings.enabled || this.child)
+			if (this.enabled || this.child)
 				throw new SetupError('Pause monitoring before clearing the model cache.');
 			return operation();
 		});
@@ -152,7 +148,7 @@ export class ManagedDetector {
 			signal.throwIfAborted();
 			const command = await this.preparation.command(config, signal);
 			signal.throwIfAborted();
-			this.settings = { enabled: true };
+			this.enabled = true;
 			await setMonitoringEnabled(this.appPath, true);
 			signal.throwIfAborted();
 			this.launch(command, signal);
@@ -162,7 +158,7 @@ export class ManagedDetector {
 				this.state.message = 'Start cancelled.';
 			} else {
 				this.fail(error);
-				if (this.settings.enabled) this.scheduleRestart(signal);
+				if (this.enabled) this.scheduleRestart(signal);
 			}
 		}
 	}
@@ -234,7 +230,7 @@ export class ManagedDetector {
 				records.close();
 				this.log.append(`${new Date().toISOString()} Detector exited: ${exitSignal ?? code}\n`);
 				this.child = null;
-				if (this.settings.enabled && !this.stoppingChild && !signal.aborted) {
+				if (this.enabled && !this.stoppingChild && !signal.aborted) {
 					if (Date.now() - startedAt >= STABLE_RUN_MS) this.restartDelay = INITIAL_RESTART_DELAY_MS;
 					if (this.state.phase !== 'failed')
 						this.fail(
@@ -291,7 +287,7 @@ export class ManagedDetector {
 		this.startup = new AbortController();
 		return this.enqueue(async () => {
 			this.log.append(`${new Date().toISOString()} Stop requested: ${reason}\n`);
-			if (disable) this.settings.enabled = false;
+			if (disable) this.enabled = false;
 			try {
 				if (disable) await setMonitoringEnabled(this.appPath, false);
 			} finally {
@@ -337,7 +333,7 @@ export class ManagedDetector {
 	}
 
 	private async restartChild(signal: AbortSignal, reason: string): Promise<void> {
-		if (!this.settings.enabled || signal.aborted) return;
+		if (!this.enabled || signal.aborted) return;
 		this.log.append(`${new Date().toISOString()} Restart requested: ${reason}\n`);
 		try {
 			await this.stopChild();

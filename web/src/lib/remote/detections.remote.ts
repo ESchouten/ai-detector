@@ -1,10 +1,14 @@
 import { command, query } from '$app/server';
 import * as v from 'valibot';
 import { STAGES } from '$lib/schema';
-import { isArchiveSegment } from '$lib/server/archive';
 import { recordings as archive } from '$lib/server/recordings';
 import { configuration } from '$lib/server/configuration';
-import { recordingPresets, recordingExportInput, reviewDetectionInput } from '$lib/detections';
+import {
+	isArchiveSegment,
+	recordingPresets,
+	recordingExportInput,
+	reviewDetectionInput
+} from '$lib/detections';
 
 export const reviewDetection = command(reviewDetectionInput, ({ validated, ...address }) =>
 	archive.review(address, validated, 'web')

@@ -92,7 +92,8 @@ export interface DetectionPage {
 	items: Detection[];
 	hasMore: boolean;
 	nextOffset: number;
-	warnings?: string[];
+	/** How many recordings could not be read. */
+	warnings: number;
 }
 
 export interface DetectionFilter {

@@ -4,7 +4,7 @@ import { constants } from 'node:fs';
 import { copyFile, lstat, mkdir, realpath, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import { isArchiveSegment } from '../archive.ts';
+import { isArchiveSegment } from '../../detections.ts';
 import { CameraConnectionError, cameraStorageFailure } from './connection.ts';
 
 const execute = promisify(execFile);

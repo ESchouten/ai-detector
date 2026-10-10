@@ -1,8 +1,6 @@
 import path from 'node:path';
 import { BoundedLog } from './bounded-log.ts';
 
-export { readLogTail } from './bounded-log.ts';
-
 export class DetectorLog extends BoundedLog {
 	constructor(directory: string) {
 		super(path.join(directory, 'logs', 'application.log'));

@@ -218,11 +218,6 @@ msgstr "Open het dashboard rechtstreeks om wijzigingen te maken."
 msgid "Connect this device to AI Detector first."
 msgstr "Koppel dit apparaat eerst aan AI Detector."
 
-#. 0: address.type; 1: address.archiveStage; 2: address.timestamp
-#: src/lib/server/archive.ts
-msgid "Could not read recording {0}/{1}/{2}. Other recordings remain available."
-msgstr "Opname {0}/{1}/{2} kon niet worden gelezen. De andere opnamen blijven beschikbaar."
-
 #: src/lib/detections.ts
 #: src/lib/server/archive.ts
 msgid "Invalid category."

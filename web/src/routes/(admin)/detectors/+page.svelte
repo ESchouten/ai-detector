@@ -31,7 +31,7 @@
 			{/if}
 		{/snippet}
 	</PageHeader>
-	<MonitoringBanner configured={detectors.length > 0} />
+	<MonitoringBanner />
 
 	{#if detectors.length}
 		<ul class="flex flex-col gap-3">

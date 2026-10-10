@@ -44,13 +44,9 @@ test('a recording shows who decided its outcome, and a failed AI check is not a 
 		null
 	);
 	assert.deepEqual(recordingVerdict({ stage: 'approved', review: null, validation_error: null }), {
-		tone: 'ok',
-		label: 'Confirmed',
 		source: 'Checked by AI'
 	});
 	assert.deepEqual(recordingVerdict({ stage: 'approved', review, validation_error: null }), {
-		tone: 'ok',
-		label: 'Confirmed',
 		source: 'Reviewed in Telegram'
 	});
 	assert.deepEqual(
@@ -59,10 +55,10 @@ test('a recording shows who decided its outcome, and a failed AI check is not a 
 			review: { ...review, validated: false, source: 'web' },
 			validation_error: 'Timed out'
 		}),
-		{ tone: 'neutral', label: 'False alarm', source: 'Reviewed by you' }
+		{ source: 'Reviewed by you' }
 	);
 	assert.deepEqual(
 		recordingVerdict({ stage: 'unvalidated', review: null, validation_error: 'Timed out' }),
-		{ tone: 'warn', label: 'AI check failed', source: 'Not checked', detail: 'Timed out' }
+		{ source: 'Not checked', failure: 'Timed out' }
 	);
 });

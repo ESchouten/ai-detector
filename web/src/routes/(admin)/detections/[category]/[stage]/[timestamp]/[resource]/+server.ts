@@ -4,4 +4,3 @@ import { archiveMedia } from '$lib/server/archive-media';
 
 export const GET: RequestHandler = ({ params, request }) =>
 	archiveMedia(DETECTIONS_DIR, params, request);
-export const HEAD = GET;

@@ -5,13 +5,19 @@
 	import MonitoringControl from './monitoring-control.svelte';
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import { monitoringSummary } from '$lib/monitoring';
+	import { getInstallation } from '$lib/remote/camera-setup.remote';
 
 	// Quiet while monitoring works; says so on the page when cameras are not protected.
-	let { configured }: { configured: boolean } = $props();
 	const monitor = useRuntimeStatus();
 	const initial = monitor.query.current ?? (await monitor.query);
 	const runtime = $derived(monitor.query.current ?? initial);
-	const summary = $derived(monitoringSummary(runtime, { stale: monitor.stale, configured }));
+	// The count the navigation follows, so the two cannot say different things.
+	const counts = getInstallation();
+	const initialCounts = counts.current ?? (await counts);
+	const installation = $derived(counts.current ?? initialCounts);
+	const summary = $derived(
+		monitoringSummary(runtime, { stale: monitor.stale, configured: installation.detectors > 0 })
+	);
 </script>
 
 {#if summary.attention}

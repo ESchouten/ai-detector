@@ -16,7 +16,8 @@ msgstr "Connexion impossible. Vérifiez les identifiants et le réseau de cette 
 msgid "The camera check could not finish. Please try again."
 msgstr "La vérification de la caméra n’a pas pu se terminer. Veuillez réessayer."
 
-#: src/lib/detections.ts
+#: src/routes/(admin)/detections/recording-card.svelte
+#: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "AI check failed"
 msgstr "Échec de la vérification par IA"
 
@@ -582,10 +583,6 @@ msgstr "Connexion à cette caméra impossible. Vérifiez que l’accès local à
 msgid "The test recording could not be saved. Check that AI Detector’s data folder is writable, or repair the installation."
 msgstr "L’enregistrement de test n’a pas pu être sauvegardé. Vérifiez que le dossier de données d’AI Detector est accessible en écriture, ou réparez l’installation."
 
-#: src/routes/pair/+page.server.ts
-msgid "Phone or computer"
-msgstr "Téléphone ou ordinateur"
-
 #: src/lib/server/configuration/advanced.ts
 msgid "Each AI connection needs a unique name."
 msgstr "Chaque connexion IA doit avoir un nom unique."
@@ -915,10 +912,6 @@ msgstr "Cette caméra n’a pas d’emplacement d’enregistrement local à vér
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "Check the camera picture again. The test recording has expired."
 msgstr "Vérifiez à nouveau l’image de la caméra. L’enregistrement de test a expiré."
-
-#: src/routes/(admin)/cameras/pictures/+server.ts
-msgid "Camera preview software is unavailable. Repair or reinstall AI Detector."
-msgstr "Le logiciel d’aperçu de la caméra est indisponible. Réparez ou réinstallez AI Detector."
 
 #: src/routes/(admin)/camera-checks/[id]/picture.jpg/+server.ts
 msgid "This camera check has expired. Check the camera again."
@@ -3367,10 +3360,6 @@ msgstr "Ce lien de connexion Telegram a expiré. Créez un nouveau lien et ouvre
 #: src/lib/server/telegram-pairing.ts
 msgid "This Telegram connection was cancelled. Create a new link to try again."
 msgstr "Cette connexion Telegram a été annulée. Créez un nouveau lien pour réessayer."
-
-#: src/routes/(admin)/storage/+page.server.ts
-msgid "Choose today or an earlier date."
-msgstr "Choisissez aujourd’hui ou une date antérieure."
 
 #: src/routes/(admin)/detections/+page.svelte
 msgid "One recording could not be read. The others are shown below."

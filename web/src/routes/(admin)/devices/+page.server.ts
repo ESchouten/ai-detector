@@ -40,6 +40,5 @@ export const actions: Actions = {
 		if (id === locals.deviceId)
 			return fail(400, { message: 'Use another connected device to remove this browser.' });
 		await access.revoke(id);
-		return { removed: true };
 	}
 };

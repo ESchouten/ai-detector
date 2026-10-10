@@ -1,5 +1,6 @@
-import { json, type RequestHandler } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import * as v from 'valibot';
+import type { RequestHandler } from './$types';
 import { ConfigurationError } from '$lib/configuration';
 import {
 	cameraChecks,
@@ -21,7 +22,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 			return json({ message: 'The recording check request was not valid.' }, { status: 400 });
 		const { camera, categories, signature } = cameraArchiveSelection(
 			await configuration.read(),
-			params.id!
+			params.id
 		);
 		if (!categories.length)
 			throw new CameraConnectionError('This camera has no local recording destination to check.');
@@ -39,7 +40,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 			);
 		await verifyCameraArchive(
 			DATA_DIRECTORY,
-			params.id!,
+			params.id,
 			clip,
 			categories,
 			executable,
@@ -47,7 +48,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 		);
 		request.signal.throwIfAborted();
 		const verifiedAt = new Date().toISOString();
-		await configuration.recordArchiveCheck(params.id!, signature, verifiedAt);
+		await configuration.recordArchiveCheck(params.id, signature, verifiedAt);
 		return json({ verifiedAt }, { headers: { 'Cache-Control': 'no-store' } });
 	} catch (cause) {
 		if (request.signal.aborted) return new Response(null, { status: 499 });

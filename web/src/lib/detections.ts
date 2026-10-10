@@ -12,7 +12,7 @@ export function isArchiveSegment(value: string): boolean {
 	return value.length > 0 && value !== '.' && value !== '..' && !/[/\\\0]/.test(value);
 }
 
-const calendarDate = v.pipe(
+export const calendarDate = v.pipe(
 	v.string(),
 	v.isoDate(() => 'Enter a date in YYYY-MM-DD format.'),
 	v.check(
@@ -104,11 +104,10 @@ export interface DetectionFilter {
 }
 
 export interface Verdict {
-	tone: 'ok' | 'neutral' | 'warn';
-	label: string;
 	/** Who decided: the validator, or a person here or in Telegram. */
 	source: string;
-	detail?: string;
+	/** Why the AI check gave no answer. */
+	failure?: string;
 }
 
 /** The outcome shown on a recording; unreviewed recordings have none. */
@@ -116,16 +115,9 @@ export function recordingVerdict(
 	entry: Pick<Detection, 'stage' | 'review' | 'validation_error'>
 ): Verdict | null {
 	if (!entry.review && entry.validation_error)
-		return {
-			tone: 'warn',
-			label: 'AI check failed',
-			source: 'Not checked',
-			detail: entry.validation_error
-		};
+		return { source: 'Not checked', failure: entry.validation_error };
 	if (entry.stage === 'unvalidated') return null;
 	return {
-		tone: entry.stage === 'approved' ? 'ok' : 'neutral',
-		label: stageLabel(entry.stage),
 		source: !entry.review
 			? 'Checked by AI'
 			: entry.review.source === 'telegram'

@@ -35,7 +35,7 @@
 			{/if}
 		{/snippet}
 	</PageHeader>
-	<MonitoringBanner configured={cameras.some((camera) => camera.monitored)} />
+	<MonitoringBanner />
 	{#if presetWarning}
 		<Alert.Root variant="destructive">
 			<Alert.Title>Monitoring preset names are unavailable</Alert.Title>

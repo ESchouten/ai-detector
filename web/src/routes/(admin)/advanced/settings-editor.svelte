@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { beforeNavigate, refreshAll } from '$app/navigation';
-	import { tick, untrack } from 'svelte';
 	import { Check, RotateCcw, Save } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import FilterChips from '$lib/components/filter-chips.svelte';
@@ -12,9 +11,8 @@
 
 	const initial = await getSettings('config');
 	let target = $state<SettingsDocument>('config');
-	let selected = $state<SettingsDocument>('config');
-	let saved = $state(untrack(() => initial));
-	let draft = $state(untrack(() => initial.value));
+	let saved = $state(initial);
+	let draft = $state(initial.value);
 	let busy = $state(false);
 	let failure = $state('');
 	let message = $state('');
@@ -41,11 +39,7 @@
 		if (dirty && (willUnload || !window.confirm('Discard unsaved JSON changes?'))) cancel();
 	});
 	async function load(next: SettingsDocument) {
-		await tick();
-		if (dirty && !window.confirm('Discard unsaved JSON changes?')) {
-			selected = target;
-			return;
-		}
+		if (dirty && !window.confirm('Discard unsaved JSON changes?')) return;
 		busy = true;
 		failure = '';
 		message = '';
@@ -57,7 +51,6 @@
 		} catch (cause) {
 			failure = errorMessage(cause, 'Could not load settings.');
 		} finally {
-			selected = target;
 			busy = false;
 		}
 	}
@@ -85,12 +78,10 @@
 	<FilterChips
 		label="Settings file"
 		options={documents}
-		value={selected}
+		value={target}
 		required
 		onchange={(next) => {
-			if (!next || busy) return;
-			selected = next;
-			void load(next);
+			if (next && !busy) void load(next);
 		}}
 	/>
 	<p class="max-w-prose text-sm leading-relaxed text-muted-foreground">{descriptions[target]}</p>

@@ -10,5 +10,3 @@ export const GET: RequestHandler = async ({ params, request }) => {
 	response.headers.set('Cache-Control', 'no-store');
 	return response;
 };
-
-export const HEAD = GET;

@@ -60,8 +60,8 @@
 			<div class="flex flex-wrap items-center gap-x-2 gap-y-1">
 				<time datetime={entry.start} class="text-sm font-semibold tabular-nums">{time}</time>
 				<Pill tone="category" seed={colorSeed ?? entry.type}>{categoryName(entry.type)}</Pill>
-				{#if verdict?.tone === 'warn'}
-					<Pill tone="warn" title={verdict.detail}>{verdict.label}</Pill>
+				{#if verdict?.failure}
+					<Pill tone="warn" title={verdict.failure}>AI check failed</Pill>
 				{/if}
 			</div>
 			<!-- Separate pieces, so each is a whole phrase to translate; the gaps supply the spaces. -->

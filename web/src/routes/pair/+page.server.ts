@@ -12,7 +12,7 @@ export const actions: Actions = {
 		const form = await request.formData();
 		const code = String(form.get('code') ?? '').trim();
 		try {
-			const token = await access.pair(code, String(form.get('name') ?? 'Phone or computer'));
+			const token = await access.pair(code, String(form.get('name') ?? ''));
 			cookies.set(ACCESS_COOKIE, token, sessionCookie(url.protocol === 'https:'));
 		} catch (error) {
 			if (error instanceof PairingError) return fail(400, { message: error.message });

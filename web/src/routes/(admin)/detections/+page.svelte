@@ -15,7 +15,8 @@
 		mergeDetections,
 		reviewedStage,
 		stageLabel,
-		type Detection
+		type Detection,
+		type ManualReview
 	} from '$lib/detections';
 	import { resolve } from '$app/paths';
 	import { onMount, untrack } from 'svelte';
@@ -24,7 +25,6 @@
 	import MonitoringBanner from '$lib/components/monitoring-banner.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import { dayHeading, plural } from '$lib/format';
-	import { getCameras } from '$lib/remote/camera.remote';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { Action } from 'svelte/action';
@@ -43,8 +43,8 @@
 
 	const type = $derived(page.url.searchParams.get('type') || undefined);
 	const stage = $derived(STAGES.find((value) => value === page.url.searchParams.get('stage')));
-	const [types, cameras, recordingPresets] = $derived(
-		await Promise.all([getTypes(), getCameras(), getRecordingPresets()])
+	const [types, recordingPresets] = $derived(
+		await Promise.all([getTypes(), getRecordingPresets()])
 	);
 
 	let entries = $state<Detection[]>([]);
@@ -71,24 +71,28 @@
 		return Array.from(dayDetections.entries());
 	});
 
-	function reviewed(updated: Detection) {
-		reviewVersion += 1;
+	// Loaded recordings take the review found for them; undefined leaves one as it is. A
+	// recording that no longer matches the stage filter leaves the list.
+	function applyReviews(reviewFor: (entry: Detection) => ManualReview | null | undefined) {
 		const before = entries.length;
 		entries = entries
 			.map((entry) => {
-				if (
-					detectionKey(entry) !== detectionKey(updated) &&
-					(!updated.event_id || entry.event_id !== updated.event_id)
-				)
-					return entry;
-				return {
-					...entry,
-					review: updated.review,
-					stage: reviewedStage(entry.archiveStage, updated.review)
-				};
+				const review = reviewFor(entry);
+				if (review === undefined) return entry;
+				return { ...entry, review, stage: reviewedStage(entry.archiveStage, review) };
 			})
 			.filter((entry) => !stage || entry.stage === stage);
 		nextOffset -= before - entries.length;
+	}
+
+	function reviewed(updated: Detection) {
+		reviewVersion += 1;
+		applyReviews((entry) =>
+			detectionKey(entry) === detectionKey(updated) ||
+			(updated.event_id && entry.event_id === updated.event_id)
+				? updated.review
+				: undefined
+		);
 	}
 
 	function removed(gone: Detection) {
@@ -108,7 +112,6 @@
 			entries = [];
 			nextOffset = 0;
 			hasMore = true;
-			errorMessage = null;
 		}
 		const version = requestVersion;
 
@@ -166,19 +169,7 @@
 			const result = await query;
 			if (version !== requestVersion || reviewsVersion !== reviewVersion) return;
 			const byAddress = new Map(reviews.map((entry) => [detectionKey(entry), entry.review]));
-			const before = entries.length;
-			entries = entries
-				.map((entry) => {
-					if (!byAddress.has(detectionKey(entry))) return entry;
-					const review = byAddress.get(detectionKey(entry)) ?? null;
-					return {
-						...entry,
-						review,
-						stage: reviewedStage(entry.archiveStage, review)
-					};
-				})
-				.filter((entry) => !stage || entry.stage === stage);
-			nextOffset -= before - entries.length;
+			applyReviews((entry) => byAddress.get(detectionKey(entry)));
 			const current = new Set(entries.map(detectionKey));
 			const added = result.items.filter((item) => !current.has(detectionKey(item)));
 			refreshError = false;
@@ -277,7 +268,7 @@
 	<PageHeader title="Recordings">
 		{#snippet actions()}<ExportRecordings {type} {stage} />{/snippet}
 	</PageHeader>
-	<MonitoringBanner configured={cameras.some((camera) => camera.monitored)} />
+	<MonitoringBanner />
 
 	{#if archiveWarnings}
 		<p role="status" class="flex flex-wrap items-center gap-3 text-sm text-danger-foreground">

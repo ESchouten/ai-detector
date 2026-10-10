@@ -16,7 +16,8 @@ msgstr "Could not connect. Check this camera’s login and network."
 msgid "The camera check could not finish. Please try again."
 msgstr "The camera check could not finish. Please try again."
 
-#: src/lib/detections.ts
+#: src/routes/(admin)/detections/recording-card.svelte
+#: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "AI check failed"
 msgstr "AI check failed"
 
@@ -582,10 +583,6 @@ msgstr "Could not connect to this camera. Check that local camera access is enab
 msgid "The test recording could not be saved. Check that AI Detector’s data folder is writable, or repair the installation."
 msgstr "The test recording could not be saved. Check that AI Detector’s data folder is writable, or repair the installation."
 
-#: src/routes/pair/+page.server.ts
-msgid "Phone or computer"
-msgstr "Phone or computer"
-
 #: src/lib/server/configuration/advanced.ts
 msgid "Each AI connection needs a unique name."
 msgstr "Each AI connection needs a unique name."
@@ -915,10 +912,6 @@ msgstr "This camera has no local recording destination to check."
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "Check the camera picture again. The test recording has expired."
 msgstr "Check the camera picture again. The test recording has expired."
-
-#: src/routes/(admin)/cameras/pictures/+server.ts
-msgid "Camera preview software is unavailable. Repair or reinstall AI Detector."
-msgstr "Camera preview software is unavailable. Repair or reinstall AI Detector."
 
 #: src/routes/(admin)/camera-checks/[id]/picture.jpg/+server.ts
 msgid "This camera check has expired. Check the camera again."
@@ -3356,10 +3349,6 @@ msgstr "This Telegram connection link expired. Create a new link and open it in 
 #: src/lib/server/telegram-pairing.ts
 msgid "This Telegram connection was cancelled. Create a new link to try again."
 msgstr "This Telegram connection was cancelled. Create a new link to try again."
-
-#: src/routes/(admin)/storage/+page.server.ts
-msgid "Choose today or an earlier date."
-msgstr "Choose today or an earlier date."
 
 #: src/routes/(admin)/detections/+page.svelte
 msgid "One recording could not be read. The others are shown below."

@@ -1,4 +1,5 @@
 import { fail } from '@sveltejs/kit';
+import { calendarDate } from '$lib/detections';
 import { plural } from '$lib/format';
 import * as v from 'valibot';
 import { DATA_DIRECTORY } from '$lib/server/application-paths';
@@ -14,14 +15,8 @@ import {
 import type { Actions, PageServerLoad } from './$types';
 
 const beforeDate = v.pipe(
-	v.string(),
-	v.isoDate(),
-	v.check(
-		(value) =>
-			new Date(value).toJSON()?.slice(0, 10) === value &&
-			value <= new Date().toISOString().slice(0, 10),
-		() => 'Choose today or an earlier date.'
-	)
+	calendarDate,
+	v.check((value) => value <= new Date().toISOString().slice(0, 10))
 );
 export const load: PageServerLoad = async () => ({
 	space: await diskSpace(recordings.directory),

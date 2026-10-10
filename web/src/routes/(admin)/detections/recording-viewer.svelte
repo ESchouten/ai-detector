@@ -62,7 +62,6 @@
 		if (next) selected = detectionKey(next);
 	}
 	function keydown(event: KeyboardEvent) {
-		if (event.target instanceof HTMLInputElement) return;
 		if (event.key === 'ArrowLeft') step(-1);
 		else if (event.key === 'ArrowRight') step(1);
 		else return;
@@ -89,7 +88,7 @@
 					<Pill tone="category" seed={colorSeeds[entry.type] ?? entry.type}>
 						{categoryName(entry.type)}
 					</Pill>
-					{#if verdict?.tone === 'warn'}<Pill tone="warn">{verdict.label}</Pill>{/if}
+					{#if verdict?.failure}<Pill tone="warn">AI check failed</Pill>{/if}
 				</Dialog.Title>
 				<Dialog.Description>
 					<span class="flex flex-wrap gap-x-1">
@@ -98,7 +97,7 @@
 						<span aria-hidden="true">·</span>
 						<span>{clipLength(entry.duration)}</span>
 					</span>
-					{#if verdict?.detail}<span class="block break-words">{verdict.detail}</span>{/if}
+					{#if verdict?.failure}<span class="block break-words">{verdict.failure}</span>{/if}
 				</Dialog.Description>
 			</Dialog.Header>
 			{#key selected}

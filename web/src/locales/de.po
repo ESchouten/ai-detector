@@ -16,7 +16,8 @@ msgstr "Verbindung fehlgeschlagen. Prüfen Sie die Zugangsdaten und das Netzwerk
 msgid "The camera check could not finish. Please try again."
 msgstr "Die Kameraprüfung konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut."
 
-#: src/lib/detections.ts
+#: src/routes/(admin)/detections/recording-card.svelte
+#: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "AI check failed"
 msgstr "KI-Prüfung fehlgeschlagen"
 
@@ -582,10 +583,6 @@ msgstr "Verbindung zu dieser Kamera fehlgeschlagen. Prüfen Sie, ob der lokale K
 msgid "The test recording could not be saved. Check that AI Detector’s data folder is writable, or repair the installation."
 msgstr "Die Testaufnahme konnte nicht gespeichert werden. Prüfen Sie, ob der Datenordner von AI Detector beschreibbar ist, oder reparieren Sie die Installation."
 
-#: src/routes/pair/+page.server.ts
-msgid "Phone or computer"
-msgstr "Handy oder Computer"
-
 #: src/lib/server/configuration/advanced.ts
 msgid "Each AI connection needs a unique name."
 msgstr "Jede KI-Verbindung braucht einen eindeutigen Namen."
@@ -915,10 +912,6 @@ msgstr "Diese Kamera hat keinen lokalen Aufnahmeort, der geprüft werden kann."
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "Check the camera picture again. The test recording has expired."
 msgstr "Prüfen Sie das Kamerabild erneut. Die Testaufnahme ist abgelaufen."
-
-#: src/routes/(admin)/cameras/pictures/+server.ts
-msgid "Camera preview software is unavailable. Repair or reinstall AI Detector."
-msgstr "Die Software für die Kameravorschau ist nicht verfügbar. Reparieren Sie AI Detector oder installieren Sie es neu."
 
 #: src/routes/(admin)/camera-checks/[id]/picture.jpg/+server.ts
 msgid "This camera check has expired. Check the camera again."
@@ -3356,10 +3349,6 @@ msgstr "Dieser Telegram-Verbindungslink ist abgelaufen. Erstellen Sie einen neue
 #: src/lib/server/telegram-pairing.ts
 msgid "This Telegram connection was cancelled. Create a new link to try again."
 msgstr "Diese Telegram-Verbindung wurde abgebrochen. Erstellen Sie einen neuen Link, um es erneut zu versuchen."
-
-#: src/routes/(admin)/storage/+page.server.ts
-msgid "Choose today or an earlier date."
-msgstr "Wählen Sie heute oder ein früheres Datum."
 
 #: src/routes/(admin)/detections/+page.svelte
 msgid "One recording could not be read. The others are shown below."

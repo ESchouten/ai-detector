@@ -17,9 +17,7 @@
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { setupStep } from '$lib/setup';
 
-	const choices = $derived(await Promise.all([getCameras(), getDetectors()]));
-	const cameras = $derived(choices[0]);
-	const detectors = $derived(choices[1]);
+	const [cameras, detectors] = $derived(await Promise.all([getCameras(), getDetectors()]));
 	const step = $derived(
 		setupStep(page.url.searchParams.get('step'), cameras.length, detectors.length)
 	);

@@ -1,1 +1,1 @@
-<!-- The server load redirects to setup or detections. -->
+<!-- The server load always redirects. -->

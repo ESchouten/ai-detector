@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { resolve } from '$app/paths';
-	import { ArrowDown, Download } from '@lucide/svelte';
+	import { ArrowDown, Download, Search } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { Search } from '@lucide/svelte';
 	import * as InputGroup from '$lib/components/ui/input-group';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import PageHeader from '$lib/components/page-header.svelte';

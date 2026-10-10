@@ -76,8 +76,6 @@ def windows(folder: Path, version: str) -> Path:
         str((ASSETS / "windows/artwork/app.ico").resolve()),
         "--shortcuts",
         "Desktop,StartMenuRoot",
-        "--exclude",
-        r"START HERE\.txt",
         "--noPortable",
         "--delta",
         "None",

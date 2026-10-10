@@ -18,8 +18,14 @@ from unittest.mock import patch
 from fixtures.keys import PRIVATE_KEY, PUBLIC_KEY
 from package import macos_bundle
 from sign_macos import sign_app
-from update_channels import merge_macos, sparkle_signature
-from updates import SPARKLE, generate_macos_feed, mac_items, prepare_macos
+from update_channels import merge_macos
+from updates import (
+    SPARKLE,
+    generate_macos_feed,
+    mac_items,
+    prepare_macos,
+    sparkle_signature,
+)
 
 
 @unittest.skipUnless(

@@ -2,20 +2,14 @@
 
 import os
 import shutil
-import socket
 import subprocess
 import tempfile
-import time
 import unittest
 import urllib.error
 import urllib.request
 from pathlib import Path
 
-from fixtures.processes import cleanup_process, wait_for
-
-FIXTURE = (
-    Path(__file__).resolve().parent.parent / "web/desktop/fixtures/runtime-server.ts"
-)
+from fixtures.processes import RUNTIME_SERVER, cleanup_process, free_port, wait_for
 
 
 @unittest.skipUnless(
@@ -29,9 +23,7 @@ class LauncherTest(unittest.TestCase):
                 tempfile.TemporaryDirectory(prefix="ai-host-") as temporary,
             ):
                 folder = Path(temporary)
-                with socket.socket() as listener:
-                    listener.bind(("127.0.0.1", 0))
-                    port = listener.getsockname()[1]
+                port = free_port()
                 env = {
                     **os.environ,
                     "AIDETECTOR_DATA_DIR": str(folder / "data"),
@@ -43,7 +35,7 @@ class LauncherTest(unittest.TestCase):
                 log_path = folder / "launcher.log"
                 log = log_path.open("w")
                 process = subprocess.Popen(
-                    [shutil.which("bun"), str(FIXTURE)],
+                    [shutil.which("bun"), str(RUNTIME_SERVER)],
                     env=env,
                     stdin=subprocess.PIPE,
                     stdout=log,
@@ -76,7 +68,7 @@ class LauncherTest(unittest.TestCase):
                         ) as response:
                             self.assertEqual(response.read(), b"fixture dashboard")
                         with subprocess.Popen(
-                            [shutil.which("bun"), str(FIXTURE), "--quit"],
+                            [shutil.which("bun"), str(RUNTIME_SERVER), "--quit"],
                             env=env,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,
@@ -102,9 +94,7 @@ class LauncherTest(unittest.TestCase):
     ):
         with tempfile.TemporaryDirectory(prefix="ai-launcher-") as temporary:
             folder = Path(temporary)
-            with socket.socket() as listener:
-                listener.bind(("127.0.0.1", 0))
-                port = listener.getsockname()[1]
+            port = free_port()
             env = {
                 **os.environ,
                 "AIDETECTOR_DATA_DIR": str(folder / "data"),
@@ -112,22 +102,13 @@ class LauncherTest(unittest.TestCase):
                 "PORT": str(port),
                 "OPEN_BROWSER": "false",
             }
-            arguments = [shutil.which("bun"), str(FIXTURE)]
-            with (folder / "log").open("w+") as log:
+            arguments = [shutil.which("bun"), str(RUNTIME_SERVER)]
+            with (folder / "log").open("w") as log:
                 process = subprocess.Popen(arguments, env=env, stdout=log, stderr=log)
                 try:
-                    deadline = time.monotonic() + 15
                     starts = folder / "data/starts"
-                    while (
-                        not starts.exists()
-                        and process.poll() is None
-                        and time.monotonic() < deadline
-                    ):
-                        time.sleep(0.05)
-                    self.assertTrue(
-                        starts.exists(),
-                        "Startup must initialize without a browser request",
-                    )
+                    # Startup must initialize without a browser request.
+                    wait_for(process, starts.exists, folder / "log")
                     second = subprocess.run(
                         [*arguments, "--background"],
                         env=env,
@@ -153,12 +134,4 @@ class LauncherTest(unittest.TestCase):
                     self.assertEqual((folder / "data/drained").read_text(), "200")
                     self.assertFalse((folder / "data/desktop-instance.json").exists())
                 finally:
-                    if process.poll() is None:
-                        process.terminate()
-                        try:
-                            process.wait(timeout=5)
-                        except subprocess.TimeoutExpired:
-                            process.kill()
-                            process.wait()
-                    log.seek(0)
-                    print(log.read())
+                    cleanup_process(process)

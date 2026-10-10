@@ -95,7 +95,7 @@ uv run --project detector --extra default --with-requirements distribution/requi
 
 It checks the host, the tools and the output folder before compiling. Previews have version `0.0.0` and updates disabled, and the command never installs the result. Use `--output` for another empty folder and `--detector PATH` to reuse an already frozen detector. Run one build at a time per checkout.
 
-CI runs the stages separately: `build.py detector --platform PLATFORM`, `web --platform PLATFORM` and `launcher --platform PLATFORM --output DIRECTORY`. `build.py stamp-detector FOLDER --version REF` writes a new version into an already frozen detector, which CI uses to skip freezing when the detector's sources did not change. `build.py archive FOLDER` makes a portable ZIP for troubleshooting; releases do not publish one.
+CI runs the stages separately: `build.py detector`, `web` and `launcher --output DIRECTORY`. `build.py stamp-detector FOLDER --version REF` writes a new version into an already frozen detector, which CI uses to skip freezing when the detector's sources did not change. `build.py archive FOLDER` makes a portable ZIP for troubleshooting; releases do not publish one.
 
 Install one inference extra at a time: `default`, `nvidia` or `windowsml`. On Linux, `default` takes Torch from PyTorch's CPU index, which keeps several gigabytes of unused CUDA libraries out of the installer. Linux packages are compressed with Zstandard level 9 and Mac deltas with LZFSE: both give a slightly larger download for a much shorter build.
 

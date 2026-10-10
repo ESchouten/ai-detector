@@ -15,7 +15,7 @@ import urllib.request
 from pathlib import Path
 
 from build import ROOT, TARGETS, native_platform, warm_windows_compiler
-from fixtures.processes import cleanup_process, wait_for
+from fixtures.processes import cleanup_process, free_port, wait_for
 
 
 @unittest.skipUnless(
@@ -53,9 +53,7 @@ class CompiledDesktopTest(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.data = Path(temporary.name)
         self.log = self.data / "desktop.log"
-        with socket.socket() as listener:
-            listener.bind(("127.0.0.1", 0))
-            self.port = listener.getsockname()[1]
+        self.port = free_port()
 
     def launch(self, open_browser=False, host="127.0.0.1", **fixture_options):
         (self.data / "config.json").write_text(

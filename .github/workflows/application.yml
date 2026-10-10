@@ -138,7 +138,7 @@ jobs:
         if: steps.reuse.outputs.reused != 'true'
         run: |
           mkdir -p .reports
-          python distribution/build.py detector --platform '${{ env.PLATFORM }}' --version "$GITHUB_REF_NAME" 2>&1 | tee .reports/detector-build.log
+          python distribution/build.py detector --version "$GITHUB_REF_NAME" 2>&1 | tee .reports/detector-build.log
       - name: Smoke test packaged detector
         if: steps.reuse.outputs.reused != 'true'
         working-directory: detector
@@ -153,7 +153,7 @@ jobs:
       - name: Build web executable
         run: |
           mkdir -p .reports
-          python distribution/build.py web --platform '${{ env.PLATFORM }}' --version "$APP_VERSION" --skip-dependencies 2>&1 | tee .reports/web-build.log
+          python distribution/build.py web --version "$APP_VERSION" --skip-dependencies 2>&1 | tee .reports/web-build.log
       - name: Archive binaries for packaging and testing
         # Tar preserves executable permissions and macOS framework symlinks.
         run: |

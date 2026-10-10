@@ -13,7 +13,15 @@ from pathlib import Path
 from fixtures.keys import PRIVATE_KEY, PUBLIC_KEY
 from release_config import release_config
 from release_signatures import sign_feed, verify_feed
-from updates import download, mac_items, newer_than, numeric_version, prepare, windows
+from updates import (
+    SPARKLE,
+    download,
+    mac_items,
+    newer_than,
+    numeric_version,
+    prepare,
+    windows,
+)
 
 
 class ReleaseHandler(http.server.SimpleHTTPRequestHandler):
@@ -41,6 +49,21 @@ class UpdateFeedTest(unittest.TestCase):
         self.addCleanup(worker.join)
         self.addCleanup(server.shutdown)
         self.url = f"http://127.0.0.1:{server.server_port}"
+
+    def host_appcast(self, host: Path, url: str, versions, available=None) -> str:
+        items = []
+        for version in versions:
+            name = f"AI-Detector-{version}.dmg"
+            if available is None or version in available:
+                (host / name).write_bytes(version.encode())
+            items.append(
+                f'<item><sparkle:version>{version}</sparkle:version><enclosure url="{url}/{name}" /></item>'
+            )
+        feed = (
+            f'<rss xmlns:sparkle="{SPARKLE}"><channel>{"".join(items)}</channel></rss>'
+        )
+        (host / "appcast.xml").write_text(feed)
+        return feed
 
     def test_numeric_versions_cannot_downgrade_or_promote_prereleases(self):
         newer_than("1.10.0", ["1.9.0"])
@@ -89,6 +112,7 @@ class UpdateFeedTest(unittest.TestCase):
             "PackageId": "AIDetector",
             "Size": len(content),
             "Version": "1.0.0",
+            "BuildVersion": "41.0.0",
             "Type": "Full",
             "FileName": self.url + "/old.nupkg",
             "SHA256": hashlib.sha256(content).hexdigest(),
@@ -119,6 +143,7 @@ class UpdateFeedTest(unittest.TestCase):
             "https://github.com/example/app/releases/download/app/v1.0.1",
             PRIVATE_KEY,
             PUBLIC_KEY,
+            "42.0.0",
         )
         result = json.loads(
             verify_feed((self.output / "releases.win.json").read_bytes(), PUBLIC_KEY)
@@ -171,7 +196,14 @@ class UpdateFeedTest(unittest.TestCase):
                     }
                 )
             )
-            windows(output, release["version"], self.url, PRIVATE_KEY, PUBLIC_KEY)
+            windows(
+                output,
+                release["version"],
+                self.url,
+                PRIVATE_KEY,
+                PUBLIC_KEY,
+                release["build_version"],
+            )
             (self.host / name).write_bytes(content)
             (preview / "releases.win.json").write_bytes(
                 (output / "releases.win.json").read_bytes()
@@ -185,19 +217,7 @@ class UpdateFeedTest(unittest.TestCase):
         self.assertEqual((stable / "releases.win.json").read_bytes(), sentinel)
 
     def test_sparkle_preserves_old_feed_urls_and_downloads_only_two_bases(self):
-        items = []
-        for version in ("1.0.0", "1.2.0", "1.1.0"):
-            name = f"AI-Detector-{version}.dmg"
-            (self.host / name).write_bytes(version.encode())
-            items.append(
-                f'<item><sparkle:version>{version}</sparkle:version><enclosure url="{self.url}/{name}" /></item>'
-            )
-        feed = (
-            '<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"><channel>'
-            + "".join(items)
-            + "</channel></rss>"
-        )
-        (self.host / "appcast.xml").write_text(feed)
+        feed = self.host_appcast(self.host, self.url, ("1.0.0", "1.2.0", "1.1.0"))
         prepare(self.output, "macos-arm64", "1.3.0", self.url)
         folder = self.output / "macos-updates"
         self.assertEqual(
@@ -217,18 +237,7 @@ class UpdateFeedTest(unittest.TestCase):
         )
 
     def test_previews_stage_only_the_previous_release_as_a_delta_base(self):
-        items = []
-        for version in ("1.0.0", "1.1.0", "1.2.0"):
-            name = f"AI-Detector-{version}.dmg"
-            (self.host / name).write_bytes(version.encode())
-            items.append(
-                f'<item><sparkle:version>{version}</sparkle:version><enclosure url="{self.url}/{name}" /></item>'
-            )
-        (self.host / "appcast.xml").write_text(
-            '<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"><channel>'
-            + "".join(items)
-            + "</channel></rss>"
-        )
+        self.host_appcast(self.host, self.url, ("1.0.0", "1.1.0", "1.2.0"))
         prepare(self.output, "macos-arm64", "1.3.0", self.url, channel="preview")
         folder = self.output / "macos-updates"
         self.assertEqual(
@@ -247,21 +256,10 @@ class UpdateFeedTest(unittest.TestCase):
             with self.subTest(available=available):
                 host = self.host / f"case-{len(available)}"
                 host.mkdir()
-                items = []
-                for version in ("1.2.0", "1.1.0", "1.0.0"):
-                    name = f"AI-Detector-{version}.dmg"
-                    if version in available:
-                        (host / name).write_bytes(version.encode())
-                    items.append(
-                        f'<item><sparkle:version>{version}</sparkle:version><enclosure url="{self.url}/{host.name}/{name}" /></item>'
-                    )
-                (host / "appcast.xml").write_text(
-                    '<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"><channel>'
-                    + "".join(items)
-                    + "</channel></rss>"
-                )
+                url = f"{self.url}/{host.name}"
+                self.host_appcast(host, url, ("1.2.0", "1.1.0", "1.0.0"), available)
                 output = self.output / host.name
-                prepare(output, "macos-arm64", "1.3.0", f"{self.url}/{host.name}")
+                prepare(output, "macos-arm64", "1.3.0", url)
                 folder = output / "macos-updates"
                 self.assertEqual(
                     {path.name for path in folder.glob("*.dmg")},

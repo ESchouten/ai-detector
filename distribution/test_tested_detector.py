@@ -77,7 +77,3 @@ class TestedDetectorTest(unittest.TestCase):
                 [artifact(1, "2026-10-03T10:00:00Z", expired=True)], {1: run(1)}
             )
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

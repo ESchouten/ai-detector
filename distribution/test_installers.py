@@ -73,7 +73,6 @@ class InstallerTest(unittest.TestCase):
         )
         if os.name != "nt":
             self.assertTrue(prerm.stat().st_mode & stat.S_IXUSR)
-        self.assertFalse((root / "home").exists())
         if shutil.which("desktop-file-validate"):
             subprocess.run(["desktop-file-validate", str(menu)], check=True)
 

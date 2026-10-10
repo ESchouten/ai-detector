@@ -9,6 +9,7 @@ from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+from fixtures.processes import cleanup_process
 from smoke import stop_application, wait_for_detection, wait_for_setup
 
 
@@ -49,9 +50,7 @@ class SmokeTest(unittest.TestCase):
             with self.assertRaisesRegex(TimeoutError, "graceful shutdown"):
                 stop_application(process, timeout=0.1)
         finally:
-            process.kill()
-            process.wait(timeout=5)
-            process.stdin.close()
+            cleanup_process(process)
 
     def test_waits_for_setup_after_a_temporary_http_failure(self):
         requests = []

@@ -13,19 +13,6 @@ from pathlib import Path
 
 from updates import numeric_version
 
-INSTRUCTIONS = """AI Detector
-
-Open AI Detector and follow the setup in your browser.
-Closing the browser leaves monitoring active. Open AI Detector again to return.
-Pause monitoring in the dashboard only when you want it to stay paused.
-Quitting the application stops monitoring until you open it again; enabled monitoring resumes.
-Keep this computer awake while monitoring is needed.
-
-Settings and recordings are stored in your user account, outside this application.
-The dashboard shows their location. Updates and uninstalling the program preserve them.
-Automatic opening at desktop login is different from monitoring before login.
-"""
-
 
 def archive(folder: Path) -> Path:
     if not folder.is_dir():
@@ -74,12 +61,6 @@ def macos_bundle(
         shutil.copy2(sparkle / "LICENSE", resources / "Sparkle.LICENSE")
     updates = {}
     if update_feed:
-        if not sparkle or not sparkle_public_key:
-            raise ValueError(
-                "Sparkle releases require the framework and public EdDSA key"
-            )
-        if len(base64.b64decode(sparkle_public_key, validate=True)) != 32:
-            raise ValueError("Sparkle public key must contain 32 bytes")
         updates = {
             "SUFeedURL": update_feed.rstrip("/") + "/appcast.xml",
             "AIUpdateChannel": update_channel,
@@ -148,8 +129,6 @@ def validate_inputs(inputs: PackageInputs) -> None:
     numeric_version(inputs.version)
     if inputs.build_version:
         numeric_version(inputs.build_version)
-    if inputs.update_channel not in {"stable", "preview"}:
-        raise ValueError("Update channel must be stable or preview")
     if inputs.update_feed and not inputs.update_feed.startswith("https://"):
         raise ValueError("Release update feeds must use HTTPS")
     if inputs.update_feed and (
@@ -227,7 +206,6 @@ def assemble_package(inputs: PackageInputs) -> Path:
     folder = inputs.output / f"AI-Detector-{inputs.platform}"
     folder.mkdir()
     assemble(inputs, folder)
-    (folder / "START HERE.txt").write_text(INSTRUCTIONS, encoding="utf-8")
     return folder
 
 

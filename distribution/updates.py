@@ -67,7 +67,6 @@ def mac_items(feed: bytes) -> list[tuple[str, ET.Element]]:
         enclosure = item.find("enclosure")
         version = item.findtext(f"{{{SPARKLE}}}version")
         if enclosure is not None:
-            version = version or enclosure.get(f"{{{SPARKLE}}}version")
             result.append((version, enclosure))
     return sorted(result, key=lambda item: numeric_version(item[0]), reverse=True)
 
@@ -133,6 +132,21 @@ def prepare(
         # Windows downloads the signed full archive, so only release history is
         # needed here. Downloading an old multi-GB package cannot improve this build.
         (output / "previous-windows-feed.json").write_bytes(feed)
+
+
+def sparkle_signature(sdk: Path, feed: Path, *, verify: bool = False) -> None:
+    subprocess.run(
+        [
+            str(sdk / "bin/sign_update"),
+            "--ed-key-file",
+            "-",
+            *(["--verify"] if verify else []),
+            str(feed),
+        ],
+        input=os.environ["SPARKLE_PRIVATE_KEY"],
+        text=True,
+        check=True,
+    )
 
 
 def generate_macos_feed(
@@ -205,12 +219,7 @@ def generate_macos_feed(
             )
     ET.register_namespace("sparkle", SPARKLE)
     tree.write(feed, encoding="utf-8", xml_declaration=True)
-    subprocess.run(
-        [str(sparkle / "bin/sign_update"), "--ed-key-file", "-", str(feed)],
-        input=os.environ["SPARKLE_PRIVATE_KEY"],
-        text=True,
-        check=True,
-    )
+    sparkle_signature(sparkle, feed)
 
 
 def macos(
@@ -218,14 +227,14 @@ def macos(
     version: str,
     release_url: str,
     sparkle: Path,
-    build_version: str | None = None,
+    build_version: str,
     channel: str = "stable",
 ) -> None:
     folder = output / "macos-updates"
     folder.mkdir(parents=True, exist_ok=True)
     shutil.copy2(output / f"AI-Detector-{version}-macos-arm64.dmg", folder)
     generate_macos_feed(
-        folder, build_version or version, release_url, sparkle, DELTA_BASES[channel]
+        folder, build_version, release_url, sparkle, DELTA_BASES[channel]
     )
     shutil.copy2(folder / "appcast.xml", output)
     for delta in folder.glob("*.delta"):
@@ -238,7 +247,7 @@ def windows(
     release_url: str,
     private_key: str,
     public_key: str,
-    build_version: str | None = None,
+    build_version: str,
     channel: str = "stable",
 ) -> None:
     from release_signatures import sign_feed
@@ -248,8 +257,7 @@ def windows(
     previous = output / "previous-windows-feed.json"
     assets = json.loads(previous.read_text())["Assets"] if previous.exists() else []
     newer_than(version, [asset["Version"] for asset in assets])
-    if build_version:
-        newer_than(build_version, [asset["BuildVersion"] for asset in assets])
+    newer_than(build_version, [asset["BuildVersion"] for asset in assets])
     current = [asset for asset in generated["Assets"] if asset["Version"] == version]
     if not current:
         raise ValueError("Velopack did not produce a full package for this version")
@@ -258,7 +266,7 @@ def windows(
         shutil.copy2(folder / name, output / name)
         # SimpleWebSource supports absolute package URLs; feed hosting stays independent.
         asset["FileName"] = release_url.rstrip("/") + "/" + urllib.parse.quote(name)
-        asset["BuildVersion"] = build_version or version
+        asset["BuildVersion"] = build_version
         asset["ReleaseChannel"] = channel
     assets += current
     versions = sorted(
@@ -287,7 +295,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("--output", type=Path, default=Path("application-dist"))
     parser.add_argument("--version", required=True)
-    parser.add_argument("--build-version")
+    parser.add_argument("--build-version", required=True)
     parser.add_argument("--channel", choices=["stable", "preview"], default="stable")
     parser.add_argument("--feed-url")
     parser.add_argument("--release-url")
@@ -297,9 +305,7 @@ if __name__ == "__main__":
         prepare(
             args.output,
             args.platform,
-            (args.build_version or args.version)
-            if args.platform == "macos-arm64"
-            else args.version,
+            args.build_version if args.platform == "macos-arm64" else args.version,
             args.feed_url,
             os.environ.get("SPARKLE_PUBLIC_KEY", ""),
             args.channel,

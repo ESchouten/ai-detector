@@ -7,7 +7,7 @@ import tempfile
 import threading
 import time
 import unittest
-from contextlib import ExitStack, contextmanager
+from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
@@ -57,9 +57,7 @@ def webapp(*, ready_after=0):
 )
 class LinuxStartupTest(unittest.TestCase):
     def setUp(self):
-        self.contexts = ExitStack()
-        self.addCleanup(self.contexts.close)
-        temporary = self.contexts.enter_context(tempfile.TemporaryDirectory())
+        temporary = self.enterContext(tempfile.TemporaryDirectory())
         self.root = Path(temporary) / 'Farm computer $ ` " % \\ café'
         self.root.mkdir()
         self.compose = self.root / "compose.yml"
@@ -95,7 +93,7 @@ class LinuxStartupTest(unittest.TestCase):
                 "    sys.exit(1)\n"
             )
             executable.chmod(0o755)
-        self.contexts.enter_context(
+        self.enterContext(
             patch.dict(
                 os.environ,
                 {

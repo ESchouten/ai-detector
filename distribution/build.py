@@ -103,8 +103,7 @@ def build_detector(args) -> Path:
             "--osx-bundle-identifier",
             "io.github.eschouten.ai-detector.detector",
         ]
-    reference = os.environ.get("GITHUB_REF_NAME", args.version)
-    metadata = f"TYPE = {target.extra!r}\nREF_NAME = {reference!r}\n"
+    metadata = f"TYPE = {target.extra!r}\nREF_NAME = {args.version!r}\n"
     with build_metadata(ROOT / "detector/src/aidetector/version.py", metadata):
         run(
             "uv",
@@ -128,7 +127,7 @@ def build_detector(args) -> Path:
     artifact = "aidetector.app" if args.platform == "macos-arm64" else "aidetector"
     destination = ROOT / "detector/dist" / artifact
     if args.platform == "windows-x64":
-        stage_nvidia_runtime(ROOT, destination / "nvidia-runtime", reference)
+        stage_nvidia_runtime(ROOT, destination / "nvidia-runtime", args.version)
     return destination
 
 
@@ -308,12 +307,7 @@ def required_tools(args) -> set[str]:
 
 
 def preflight(args) -> None:
-    native = native_platform()
-    args.platform = args.platform or native
-    if args.platform != native:
-        raise ValueError(
-            f"Build {args.platform} on its matching machine; this machine builds {native}."
-        )
+    args.platform = native_platform()
     if args.stage in {"launcher", "all"}:
         args.output = args.output.resolve()
     if args.stage == "all" and args.detector:
@@ -359,7 +353,6 @@ def validate_preview(args) -> None:
 
 def parse_arguments(argv: list[str] | None = None):
     common = argparse.ArgumentParser(add_help=False)
-    common.add_argument("--platform", choices=TARGETS)
     common.add_argument("--version", default="0.0.0")
     dependencies = argparse.ArgumentParser(add_help=False)
     dependencies.add_argument(

@@ -3,7 +3,6 @@
 import os
 import shutil
 import signal
-import socket
 import subprocess
 import sys
 import tempfile
@@ -12,7 +11,7 @@ import unittest
 import urllib.request
 from pathlib import Path
 
-from fixtures.processes import cleanup_process, wait_for
+from fixtures.processes import RUNTIME_SERVER, cleanup_process, free_port, wait_for
 
 
 @unittest.skipUnless(
@@ -46,16 +45,10 @@ class MacProcessTest(unittest.TestCase):
         temporary = tempfile.TemporaryDirectory(prefix="ai-mac-data-")
         self.addCleanup(temporary.cleanup)
         self.data = Path(temporary.name)
-        with socket.socket() as listener:
-            listener.bind(("127.0.0.1", 0))
-            self.port = listener.getsockname()[1]
+        self.port = free_port()
         self.addCleanup(self.stop_background)
 
     def launch(self, fail_shutdown=False):
-        fixture = (
-            Path(__file__).resolve().parent.parent
-            / "web/desktop/fixtures/runtime-server.ts"
-        )
         log_path = self.data / "launcher.log"
         log = log_path.open("w")
         self.addCleanup(log.close)
@@ -68,7 +61,7 @@ class MacProcessTest(unittest.TestCase):
             "FIXTURE_FAIL_SHUTDOWN": str(fail_shutdown).lower(),
         }
         process = subprocess.Popen(
-            [str(self.launcher), shutil.which("bun"), str(fixture)],
+            [str(self.launcher), shutil.which("bun"), str(RUNTIME_SERVER)],
             env=self.environment,
             stdin=subprocess.PIPE,
             stdout=log,
@@ -82,14 +75,7 @@ class MacProcessTest(unittest.TestCase):
         if not (self.data / "desktop-instance.json").exists():
             return
         subprocess.run(
-            [
-                shutil.which("bun"),
-                str(
-                    Path(__file__).resolve().parent.parent
-                    / "web/desktop/fixtures/runtime-server.ts"
-                ),
-                "--quit",
-            ],
+            [shutil.which("bun"), str(RUNTIME_SERVER), "--quit"],
             env=self.environment,
             capture_output=True,
             timeout=50,

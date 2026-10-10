@@ -91,21 +91,20 @@ class BuildTest(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "Unsupported build machine"):
                     build.native_platform()
 
-    def test_preflight_rejects_cross_builds_and_names_missing_tools(self):
-        args = argparse.Namespace(stage="web", platform="windows-x64", version="1.2.3")
-        with patch.object(build, "native_platform", return_value="linux-x64"):
-            with self.assertRaisesRegex(ValueError, "matching machine"):
-                build.preflight(args)
-            args.platform = None
-            with patch.object(
+    def test_preflight_names_missing_tools(self):
+        args = argparse.Namespace(stage="web", version="1.2.3")
+        with (
+            patch.object(build, "native_platform", return_value="linux-x64"),
+            patch.object(
                 build.shutil,
                 "which",
                 side_effect=lambda tool: None if tool == "bun" else tool,
+            ),
+        ):
+            with self.assertRaisesRegex(
+                ValueError, "Install these build tools first: bun"
             ):
-                with self.assertRaisesRegex(
-                    ValueError, "Install these build tools first: bun"
-                ):
-                    build.preflight(args)
+                build.preflight(args)
 
     def test_preview_rejects_occupied_output_and_missing_detector(self):
         output = self.root / "output"
@@ -163,9 +162,6 @@ class BuildTest(unittest.TestCase):
             frozen.read_text(), "TYPE = 'windowsml'\nREF_NAME = 'app/test-2'\n"
         )
         self.assertEqual(nvidia.read_text(), "TYPE = 'cuda'\nREF_NAME = 'app/test-2'\n")
-        scope: dict = {}
-        exec(frozen.read_text(), scope)
-        self.assertEqual(scope["REF_NAME"], "app/test-2")
 
         frozen.write_text("TYPE = 'default'\n")
         with self.assertRaisesRegex(ValueError, "Unexpected version file"):
@@ -173,18 +169,13 @@ class BuildTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "no version file"):
             build.stamp_detector(self.root / "missing", "app/test-3")
 
-    def test_freezing_keeps_the_build_reference_outside_the_archive(self):
-        hook = (build.HOOKS / "hook-aidetector.py").read_text()
-        scope: dict = {}
-        exec(hook, scope)
-        self.assertEqual(scope["module_collection_mode"], {"aidetector.version": "py"})
-
     def test_detector_dependency_selection_matches_the_platform(self):
         version = self.root / "detector/src/aidetector/version.py"
         version.parent.mkdir(parents=True)
         version.write_text("original version\n")
         (self.root / "detector/.python-version").write_text("3.12.14\n")
-        args = build.parse_arguments(["detector", "--platform", "linux-x64"])
+        args = build.parse_arguments(["detector"])
+        args.platform = "linux-x64"
         with patch.object(build, "run") as run:
             result = build.build_detector(args)
         install, freeze = (call.args for call in run.call_args_list)

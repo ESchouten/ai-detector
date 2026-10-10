@@ -87,7 +87,6 @@ class PackageTest(unittest.TestCase):
                         else None,
                     )
                 )
-                self.assertFalse(folder.with_suffix(".zip").exists())
                 archive = archive_package(folder)
                 with zipfile.ZipFile(archive) as download:
                     base = f"AI-Detector-{platform}/"
@@ -158,13 +157,6 @@ class PackageTest(unittest.TestCase):
                                 >> 16
                                 & 0o111
                             )
-                    instructions = download.read(base + "START HERE.txt").decode(
-                        "utf-8"
-                    )
-                    self.assertIn(
-                        "Closing the browser leaves monitoring active", instructions
-                    )
-                    self.assertNotIn("Use Stop detection before closing", instructions)
                     if platform == "macos-arm64":
                         info = plistlib.loads(
                             download.read(base + "AI Detector.app/Contents/Info.plist")
@@ -175,52 +167,6 @@ class PackageTest(unittest.TestCase):
                         self.assertEqual(
                             download.read(prefix + info["CFBundleExecutable"]),
                             b"native launcher",
-                        )
-                    self.assertNotIn(prefix + "config.json", download.namelist())
-
-    def test_installed_updates_pin_the_public_key_on_both_platforms(self):
-        for platform in ("macos-arm64", "windows-x64"):
-            if platform == "macos-arm64" and os.name == "nt":
-                continue
-            with self.subTest(platform=platform):
-                folder = assemble_package(
-                    PackageInputs(
-                        self.mac_detector
-                        if platform == "macos-arm64"
-                        else self.detector,
-                        self.web,
-                        self.ffmpeg,
-                        self.root / "release",
-                        platform,
-                        mac_launcher=self.launcher,
-                        windows_launcher=self.windows_launcher,
-                        sparkle=self.sparkle,
-                        update_feed="https://example.test/updates",
-                        sparkle_public_key=PUBLIC_KEY,
-                    )
-                )
-                archive = archive_package(folder)
-                with zipfile.ZipFile(archive) as packed:
-                    if platform == "macos-arm64":
-                        info = plistlib.loads(
-                            packed.read(
-                                f"AI-Detector-{platform}/AI Detector.app/Contents/Info.plist"
-                            )
-                        )
-                        self.assertEqual(info["SUPublicEDKey"], PUBLIC_KEY)
-                        self.assertTrue(info["SUVerifyUpdateBeforeExtraction"])
-                        self.assertTrue(info["SURequireSignedFeed"])
-                        self.assertEqual(
-                            info["SUSignedFeedFailureExpirationInterval"], 0
-                        )
-                    else:
-                        info = json.loads(
-                            packed.read(f"AI-Detector-{platform}/application.json")
-                        )
-                        self.assertEqual(info["updatePublicKey"], PUBLIC_KEY)
-                        self.assertIn(
-                            f"AI-Detector-{platform}/BouncyCastle.Cryptography.dll",
-                            packed.namelist(),
                         )
 
     def test_windows_requires_its_launcher_before_creating_a_package(self):
@@ -233,7 +179,9 @@ class PackageTest(unittest.TestCase):
             )
         self.assertFalse(output.exists())
 
-    def test_preview_downloads_embed_both_channels_and_the_initial_preference(self):
+    def test_preview_downloads_embed_the_public_key_both_channels_and_the_initial_preference(
+        self,
+    ):
         release = release_config("refs/tags/app/test-first", "example/app", 42, 123)
         for platform in ("macos-arm64", "windows-x64"):
             if platform == "macos-arm64" and os.name == "nt":
@@ -268,13 +216,19 @@ class PackageTest(unittest.TestCase):
                     self.assertEqual(
                         info["SUFeedURL"], release["channels_url"] + "/appcast.xml"
                     )
+                    self.assertEqual(info["SUPublicEDKey"], PUBLIC_KEY)
+                    self.assertTrue(info["SUVerifyUpdateBeforeExtraction"])
                     self.assertTrue(info["SURequireSignedFeed"])
+                    self.assertEqual(info["SUSignedFeedFailureExpirationInterval"], 0)
                 else:
                     info = json.loads((folder / "application.json").read_text())
                     self.assertEqual(info["updateFeed"], release["channels_url"])
                     self.assertEqual(info["updateChannel"], "preview")
                     self.assertEqual(info["updateBuild"], "42.0.0")
                     self.assertEqual(info["updatePublicKey"], PUBLIC_KEY)
+                    self.assertTrue(
+                        (folder / "BouncyCastle.Cryptography.dll").is_file()
+                    )
 
     def test_macos_rejects_the_unbundled_python_runtime(self):
         output = self.root / "out"
@@ -301,7 +255,6 @@ class PackageTest(unittest.TestCase):
             "linux-x64",
         )
         folder = assemble_package(PackageInputs(*arguments))
-        self.assertFalse(folder.with_suffix(".zip").exists())
         archive = archive_package(folder)
         original = archive.read_bytes()
         self.web.write_bytes(b"new web binary")

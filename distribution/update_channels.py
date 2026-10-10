@@ -7,27 +7,11 @@ from. Launchers read the combined feed; the native updaters own installation.
 import argparse
 import json
 import os
-import subprocess
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from release_signatures import sign_feed, verify_feed
-from updates import SPARKLE, fetch_feed, numeric_version
-
-
-def sparkle_signature(sdk: Path, feed: Path, *, verify: bool = False) -> None:
-    subprocess.run(
-        [
-            str(sdk / "bin/sign_update"),
-            "--ed-key-file",
-            "-",
-            *(["--verify"] if verify else []),
-            str(feed),
-        ],
-        input=os.environ["SPARKLE_PRIVATE_KEY"],
-        text=True,
-        check=True,
-    )
+from updates import SPARKLE, fetch_feed, numeric_version, sparkle_signature
 
 
 def merge_macos(current: bytes, other: bytes | None, channel: str) -> bytes:

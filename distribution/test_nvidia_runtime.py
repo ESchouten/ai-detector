@@ -21,9 +21,11 @@ class NvidiaRuntimeTest(unittest.TestCase):
         uv = shutil.which("uv")
         if uv is None:
             self.skipTest("Requires the repository's pinned uv executable")
+        project = tomllib.loads((ROOT / "detector/pyproject.toml").read_text())
+        pinned = project["tool"]["uv"]["required-version"].removeprefix("==")
         version = subprocess.check_output([uv, "--version"], text=True)
-        if version.split()[1] != "0.12.19":
-            self.skipTest("Requires uv 0.12.19, matching the shipped bootstrap")
+        if version.split()[1] != pinned:
+            self.skipTest(f"Requires uv {pinned}, matching the shipped bootstrap")
         python = (ROOT / "detector/.python-version").read_text().strip()
         abi = "cp" + "".join(python.split(".")[:2])
         with tempfile.TemporaryDirectory(prefix="nvidia stage ") as temporary:

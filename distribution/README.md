@@ -4,25 +4,19 @@ One application release contains the browser application, the native detector an
 
 ## Installation and data
 
-| Target | Installer | Desktop integration |
-| --- | --- | --- |
-| macOS 14+ Apple Silicon | `AI-Detector-VERSION-macos-arm64.dmg` | Drag to Applications. Menu bar: Open dashboard, Open at login, Check for Updates, Quit. |
-| Windows 10 22H2+ / Windows 11 x64 | `AI-Detector-VERSION-windows-x64-setup.zip` | Extract and run the setup EXE; it installs for the current user. Tray: Open dashboard, Open at login, Check for Updates, Quit. |
-| Ubuntu 22.04/24.04 amd64 | `AI-Detector-VERSION-linux-amd64.deb` | Installs under `/opt/ai-detector` with an Applications and a login entry. Upgrade with the package manager. |
+The [user guide](../README.md#install) lists the supported systems and the download for each. What each installer sets up:
+
+- **macOS**: a menu-bar menu with Open dashboard, Open at login, Check for Updates and Quit.
+- **Windows**: the program for the current user, in `%LOCALAPPDATA%\AIDetector\current`, and a tray menu with the same entries.
+- **Ubuntu**: the program under `/opt/ai-detector`, with an Applications and a login entry.
 
 Login startup runs after login, under that user's account. It is not a service that monitors before anyone signs in.
 
 Releases are not notarized by Apple or signed with a Windows publisher certificate, so macOS may ask for approval in Privacy & Security and Windows may show SmartScreen or block the installer under Smart App Control. The first download must therefore come from the official repository. Updates after that are verified against a key built into the installed copy; see [how updates are trusted](#how-updates-are-trusted).
 
-Settings, models and recordings live outside the installed program, and updates and uninstallers leave them alone:
+Settings, models and recordings live in the [data folder](../README.md#good-to-know), outside the installed program, and updates and uninstallers leave them alone. On Linux that folder follows `$XDG_DATA_HOME`, and `AIDETECTOR_DATA_DIR` selects another folder on every system.
 
-- macOS: `~/Library/Application Support/AI Detector`
-- Windows: `%LOCALAPPDATA%\AI Detector` (the program itself is in `%LOCALAPPDATA%\AIDetector\current`)
-- Linux: `$XDG_DATA_HOME/ai-detector`, by default `~/.local/share/ai-detector`
-
-`AIDETECTOR_DATA_DIR` selects another folder.
-
-The released detector and web executables kept `config.json`, `app.json` and `detections/` beside the program. To move such an installation, keep that whole folder, install the application, choose **Use existing setup** in its first setup step and select the old folder. See the [import guide](../web/README.md#bring-an-existing-installation-into-setup). Do not delete the old folder before importing.
+The released detector and web executables kept `config.json`, `app.json` and `detections/` beside the program; the [import guide](../web/README.md#bring-an-existing-installation-into-setup) moves such a folder into the application.
 
 ## Updates
 
@@ -162,6 +156,6 @@ Before the first real pair of versions, try a signed update on a Mac and on Wind
 
 ## Existing Linux Docker startup
 
-`linux_startup.py` is a separate helper for an existing Docker Engine installation on a systemd desktop; see the [command](../README.md#start-automatically-on-a-jetson-or-linux-desktop). It enables Docker at boot, starts the Compose project and installs a login entry that waits for the dashboard and opens the browser. Uninstalling removes only those startup files.
+`linux_startup.py` is a separate helper for an existing Docker Engine installation on a systemd desktop. The [user guide](../README.md#start-automatically-on-a-jetson-or-linux-desktop) has the command and what it sets up; the login entry waits for the dashboard before it opens the browser.
 
 The Linux package grants `cap_net_bind_service` to `/opt/ai-detector/AI Detector` so that the dashboard can use port 80 without running as root. Portable and source deployments must choose another port or arrange that themselves.

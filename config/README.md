@@ -2,7 +2,7 @@
 
 ## Who owns which file
 
-Settings live in the application's data folder, outside the installed program. The [distribution guide](../distribution/README.md#installation-and-data) lists its location per system.
+Settings live in the application's data folder, outside the installed program. The [user guide](../README.md#good-to-know) lists its location per system.
 
 | File or folder | Holds | Owner |
 | --- | --- | --- |
@@ -60,9 +60,10 @@ A preset can prepare verification without choosing a provider. The question wait
 
 Applying a preset copies its settings into the saved detector, which then follows that preset. Before monitoring starts, and once a day while the application runs, the application looks for the preset's newest version: in the installation's own `presets/` folder when it has one, otherwise in [`config/detector/` on the `main` branch](https://github.com/ESchouten/ai-detector/tree/main/config/detector). When its detection settings have changed, as when it names a newer model, and that model can be downloaded, the detector takes them and monitoring restarts with them. Its cameras, delivery settings, AI connection and question stay as saved. Without an internet connection nothing changes, and renaming or removing a preset file changes nothing that is saved.
 
-Publishing is therefore a change to a file in `config/detector/` on `main`: every installation that follows that preset has it within a day, without a new release. A preset that some version of the application cannot use is ignored by that version, and the released application reads the same folder when a detector is added. Test builds and development keep the presets they were built with. `AIDETECTOR_PRESETS_URL` names another folder listing in GitHub's format, or nothing to switch this off.
+Publishing is therefore a change to a file in `config/detector/` on `main`: every detector that follows that preset and updates automatically has it within a day, without a new release. A preset that some version of the application cannot use is ignored by that version, and the released application reads the same folder when a detector is added. Test builds and development keep the presets they were built with. `AIDETECTOR_PRESETS_URL` names another folder listing in GitHub's format, or nothing to switch this off.
 
 - A detector keeps following its preset when its own name, cameras or delivery settings change. Changing its detection settings, in the editor, under Advanced or in `config.json` itself, makes it a custom detector: it keeps its settings and no preset updates it. Choosing the preset again makes it follow once more.
+- **Update automatically** in the detector editor switches following off for one detector: `autoUpdate: false` in `app.json` keeps it on the settings it has. It stays linked to its preset and follows again when the switch is turned back on.
 - `presetVersion` in `app.json` records which detection settings the preset gave. It is how the application tells a detector that still follows from one that was changed.
 - A new detector takes the preset's recording and delivery defaults. An existing detector keeps its delivery settings when another preset is applied.
 - A detector can watch several cameras, and a camera can be watched by several detectors. Telegram recipients are assigned to detectors and apply to every camera of that detector.

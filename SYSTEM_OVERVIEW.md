@@ -86,20 +86,7 @@ flowchart TB
     FileSource -->|Frames| Mode
 ```
 
-`StreamPool` shares live pictures between detectors in one Python process, by exactly the same source string. Each detector keeps its own model, tracking, sampling, event windows and cooldown. File readers stay independent.
-
-`DetectionPipeline` creates and owns its `EventAssembler`, with a fixed `EventPolicy`. An event can hold several pictures, including context without a score. Only observations with matching class scores count toward the minimum number of matches. The time window, inactivity, the end of a file or shutting down decide when the event is completed. Without YOLO the pipeline makes one unscored event from the latest frame of each source.
-
-Each detector has one owner for assembling events and one separate delivery thread, joined by the bounded queue. The delivery thread handles verification and output in order, using the domain rules for cooldown and export.
-
-| Verification outcome | Consumes cooldown? | Output |
-| --- | --- | --- |
-| `APPROVED` | Yes | According to each destination's policy. |
-| `UNVALIDATED` | Yes | No verification is configured; the normal output policy applies. |
-| `REJECTED` | No | Only to destinations that accept rejected events. |
-| `FAILED` | No | May be archived with the error; no ordinary external alert. |
-
-Cooldown is kept per source and class, on the best observation. An event without class scores has no class cooldown. A failed delivery does not undo acceptance. Each destination's confidence filter still applies.
+The detector's architecture guide has the rules behind each step: [resource ownership](detector/ARCHITECTURE.md#resource-ownership) for the shared captures, the two threads and the queue between them; [event rules](detector/ARCHITECTURE.md#event-rules) for when an event starts and closes and which verification outcomes consume the cooldown; [verification and delivery](detector/ARCHITECTURE.md#verification-and-delivery) for what reaches each destination. An event without class scores has no class cooldown.
 
 ## 3. What do the main domain objects mean?
 
@@ -140,13 +127,11 @@ classDiagram
     Observation --> "0..*" BoundingBox : boxes
 ```
 
-A `Frame` is a picture with a time, before inference. An `Observation` adds class scores and possibly bounding boxes. Context pictures can have no scores and still carry boxes for display. `BoundingBox.label`, `BoundingBox.confidence` and `ValidationResult.error` are optional.
-
-`DetectionEvent` bundles the observations of one completed event. `EventResult` joins that event to its verification outcome. What actually happened during delivery is kept separately, in the application layer's `DeliveryReport`.
+`BoundingBox.label`, `BoundingBox.confidence` and `ValidationResult.error` are optional. The detector's [vocabulary](detector/ARCHITECTURE.md#vocabulary) says what each term means.
 
 ## 4. How are the parts connected in the code?
 
-`run_application` builds one worker per detector configuration, with a source, a pipeline and a delivery. The arrows mean "uses". The pipeline creates its own assembler.
+`run_application` builds one worker per detector configuration, with a source, a pipeline and a delivery. The arrows mean "uses". The pipeline creates its own assembler, with a fixed `EventPolicy`.
 
 ```mermaid
 flowchart LR
@@ -160,26 +145,11 @@ flowchart LR
     Delivery --> Cooldown["Cooldown"]
 ```
 
-Model and platform resources are managed by two context functions. [`inference_runtime`](detector/src/aidetector/adapters/inference/onnx.py) manages the provider libraries and temporary ONNX settings for the whole application. [`open_detector`](detector/src/aidetector/adapters/inference/yolo.py) yields a ready `YoloDetector` and releases its predictor and tracking pictures together. At shutdown, processing stops first; then the shared captures, the detectors and the platform resources close.
-
-Each rule has one owner:
-
-| Responsibility | Owner in the code |
-| --- | --- |
-| Starting, extending and closing events | [`EventAssembler`](detector/src/aidetector/domain/events.py) |
-| Cooldown, and admission per destination | [`Cooldown` and `ExportPolicy`](detector/src/aidetector/domain/policy.py) |
-| Inference, event assembly, and processing without YOLO | [`DetectionPipeline`](detector/src/aidetector/application/pipeline.py) |
-| Verifying, and handling destinations | [`EventDelivery`](detector/src/aidetector/application/delivery.py) |
-| Threads, queue, failures and shutdown | [`DetectorWorker` and `run_detectors`](detector/src/aidetector/runtime.py) |
-| Turning configuration into concrete parts | [`run_application`](detector/src/aidetector/bootstrap.py) |
+The detector's table of [where a change belongs](detector/ARCHITECTURE.md#where-a-change-belongs) names the file and the tests of each part, and [resource ownership](detector/ARCHITECTURE.md#resource-ownership) says what opens the models and closes them at shutdown.
 
 ## Reading the code from here
 
-Start at [bootstrap.py](detector/src/aidetector/bootstrap.py), where one configuration becomes sources, models, policies, adapters and workers. Then follow `DetectionPipeline` and `EventDelivery`. Open an adapter only when you want to know how one integration works.
-
-Dependencies point inward: the application layer uses domain objects and small protocols; adapters implement the integrations; bootstrap connects them. The domain imports no application services, configuration models or inference frameworks. Import rules also keep sources, inference and exporters from using one another; the [package map](detector/ARCHITECTURE.md#dependency-direction) shows that structure. Together the layers are one model of event processing, not separate bounded contexts.
-
-The [detector architecture](detector/ARCHITECTURE.md) has the exact time rules, the resource owners and the failure handling.
+The detector's [reading path](detector/README.md#working-on-it) follows one event through the code, from bootstrap to the archive. Its [architecture guide](detector/ARCHITECTURE.md) has the dependency rules, the exact time rules and the failure handling.
 
 ## Keeping this up to date
 

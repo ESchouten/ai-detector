@@ -11,7 +11,7 @@ The repository has three deployable responsibilities. The web app owns setup and
 
 ## Local setup
 
-Use uv, Node 24, pnpm 9.15.9 and Bun 1.3.9. Python 3.12 is the minimum supported version; uv selects the exact development and build version from [`detector/.python-version`](detector/.python-version). CI and the downloadable Windows CUDA runtime use the same pin. Other desktop tools are recorded in `distribution/toolchain.json`. From the repository root:
+Use uv, Node, pnpm and Bun. `distribution/toolchain.json` pins Node, Bun and the other desktop tools, and `web/package.json` pins pnpm. Python 3.12 is the minimum supported version; uv selects the exact development and build version from [`detector/.python-version`](detector/.python-version). CI and the downloadable Windows CUDA runtime use the same pin. From the repository root:
 
 ```sh
 uv sync --project detector --locked --extra default
@@ -46,12 +46,12 @@ Python tools discover the root `ruff.toml` from either the repository or compone
 
 ## Changing a feature
 
-Follow one request through the relevant feature before adding files. In the web app, a page calls a remote handler, which validates the request and delegates to a concrete server service. In the detector, bootstrap connects the pure event rules to adapters. Keep new behavior with its existing owner; create a module when it isolates a real responsibility, not to match a diagram.
+Follow one request through the relevant feature before adding files: the [web architecture](web/ARCHITECTURE.md) and the [detector reading path](detector/README.md#working-on-it) show the route. Keep new behavior with its existing owner; create a module when it isolates a real responsibility, not to match a diagram.
 
-The Python-generated schemas in `config/` are shared contracts. After changing Python configuration or archive metadata, regenerate the schemas, run `pnpm --dir web schema:generate`, and check both applications. The web app uses these schemas for Ajv validation and generated TypeScript declarations in `web/src/lib/generated/`. Edit the Python models rather than those generated files. `pnpm --dir web quality` checks that the declarations are current. Web-only labels are stored in `app.json`.
+The Python-generated schemas in `config/` are shared contracts. After changing Python configuration or archive metadata, regenerate them as the [configuration guide](config/README.md#who-owns-which-file) describes, and check both applications.
 
-Keep `web/src/lib/components/ui` as published by shadcn-svelte, including components the app does not use yet, so `pnpm --dir web shadcn` can update them. Change the look through the theme tokens in `web/src/routes/layout.css`, classes at the call site, or an application component that wraps the shadcn one; see `pill.svelte` for an example. Do not add variants inside that folder. ESLint skips it; formatting and Svelte checks still cover it, so an update may need its newer dependencies installed before `pnpm check` passes.
+Keep `web/src/lib/components/ui` as published by shadcn-svelte, including components the app does not use yet, and change the look outside that folder: with classes at the call site, or as [appearance and the shadcn components](web/ARCHITECTURE.md#appearance-and-the-shadcn-components) describes. ESLint skips the folder; formatting and Svelte checks still cover it, so an update may need its newer dependencies installed before `pnpm check` passes.
 
-The interface is translated (English, Dutch, German, French). After adding or changing text in `web/src`, run `pnpm --dir web i18n` and translate the new entries in `web/src/locales/*.po`; `pnpm --dir web quality` fails while a catalog is incomplete. Write whole sentences a farmer would understand, use `plural()` for counts, and keep text in `.ts` files inside functions. The [web architecture guide](web/ARCHITECTURE.md#languages) has the rules and what stays in English.
+The interface is translated (English, Dutch, German, French). After adding or changing text in `web/src`, run `pnpm --dir web i18n` and translate the new entries, in sentences a farmer would understand. [Languages](web/ARCHITECTURE.md#languages) in the web architecture guide has the rules that keep text translatable and what stays in English.
 
 Before handing off a change, state what behavior changed, which tests establish it, and what still requires a target machine. A passing CPU smoke test does not establish GPU acceleration, live camera behavior or signed installer support.

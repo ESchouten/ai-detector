@@ -11,6 +11,8 @@ import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
+from updates import numeric_version
+
 INSTRUCTIONS = """AI Detector
 
 Open AI Detector and follow the setup in your browser.
@@ -44,24 +46,6 @@ def archive(folder: Path) -> Path:
     return result
 
 
-def version_number(version: str) -> str:
-    # Detector-only builds do not use packaging dependencies.
-    from semver import Version
-
-    value = (
-        version.removeprefix("app/v")
-        if version.startswith("app/v")
-        else version.removeprefix("v")
-    )
-    try:
-        parsed = Version.parse(value)
-    except ValueError:
-        raise ValueError(
-            "Version must be a semantic version, for example 1.2.3 or app/v1.2.3"
-        ) from None
-    return f"{parsed.major}.{parsed.minor}.{parsed.patch}"
-
-
 def macos_bundle(
     folder: Path,
     launcher: Path,
@@ -79,8 +63,6 @@ def macos_bundle(
     (binary / "AI Detector").chmod(0o755)
     resources = contents / "Resources"
     resources.mkdir()
-    (resources / "application.json").write_text("{}\n", encoding="utf-8")
-    (binary / "application.json").symlink_to("../Resources/application.json")
     for asset in ("AI Detector.icns", "Lucide.LICENSE"):
         shutil.copy2(Path(__file__).parent / "macos" / asset, resources)
     if sparkle:
@@ -118,8 +100,8 @@ def macos_bundle(
                 "CFBundleExecutable": "AI Detector",
                 "CFBundleIconFile": "AI Detector.icns",
                 "CFBundlePackageType": "APPL",
-                "CFBundleShortVersionString": version_number(version),
-                "CFBundleVersion": version_number(build_version or version),
+                "CFBundleShortVersionString": version,
+                "CFBundleVersion": build_version or version,
                 "LSMinimumSystemVersion": "14.0",
                 "LSUIElement": True,
                 "NSHighResolutionCapable": True,
@@ -163,9 +145,9 @@ def validate_inputs(inputs: PackageInputs) -> None:
         validate_macos_inputs(inputs)
     if inputs.platform == "windows-x64" and inputs.windows_launcher is None:
         raise ValueError("Windows packages require the compiled native launcher")
-    version_number(inputs.version)
+    numeric_version(inputs.version)
     if inputs.build_version:
-        version_number(inputs.build_version)
+        numeric_version(inputs.build_version)
     if inputs.update_channel not in {"stable", "preview"}:
         raise ValueError("Update channel must be stable or preview")
     if inputs.update_feed and not inputs.update_feed.startswith("https://"):
@@ -208,6 +190,15 @@ def assemble_windows(inputs: PackageInputs, folder: Path) -> None:
     shutil.copytree(inputs.detector, folder / "detector", symlinks=True)
     copy_windows_launcher(inputs.windows_launcher, folder)
     copy_payload_files(inputs, folder, "ai-detector-web.exe", "ffmpeg.exe")
+    metadata = {}
+    if inputs.update_feed:
+        metadata["updateFeed"] = inputs.update_feed
+        metadata["updatePublicKey"] = inputs.sparkle_public_key
+        metadata["updateChannel"] = inputs.update_channel
+        metadata["updateBuild"] = inputs.build_version or inputs.version
+    (folder / "application.json").write_text(
+        json.dumps(metadata) + "\n", encoding="utf-8"
+    )
 
 
 def assemble_linux(inputs: PackageInputs, folder: Path) -> None:
@@ -223,15 +214,6 @@ def copy_payload_files(
     (payload / "bin").mkdir()
     shutil.copy2(inputs.ffmpeg, payload / "bin" / encoder)
     (payload / "bin" / encoder).chmod(0o755)
-    metadata = {}
-    if inputs.update_feed and inputs.platform == "windows-x64":
-        metadata["updateFeed"] = inputs.update_feed
-        metadata["updatePublicKey"] = inputs.sparkle_public_key
-        metadata["updateChannel"] = inputs.update_channel
-        metadata["updateBuild"] = version_number(inputs.build_version or inputs.version)
-    (payload / "application.json").write_text(
-        json.dumps(metadata) + "\n", encoding="utf-8"
-    )
 
 
 def assemble_package(inputs: PackageInputs) -> Path:

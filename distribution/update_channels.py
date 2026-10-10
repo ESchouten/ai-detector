@@ -45,17 +45,10 @@ def merge_macos(current: bytes, other: bytes | None, channel: str) -> bytes:
     return ET.tostring(tree, encoding="utf-8", xml_declaration=True)
 
 
-def merge_windows(current: bytes, other: bytes | None, channel: str) -> bytes:
+def merge_windows(current: bytes, other: bytes | None) -> bytes:
     feed = json.loads(current)
-    for asset in feed["Assets"]:
-        asset["ReleaseChannel"] = channel
-        asset.setdefault("BuildVersion", "0.0.0")
     if other:
-        for asset in json.loads(other)["Assets"]:
-            asset["ReleaseChannel"] = "preview" if channel == "stable" else "stable"
-            asset.setdefault("BuildVersion", "0.0.0")
-            feed["Assets"].append(asset)
-    feed["Assets"] = [asset for asset in feed["Assets"] if asset["Type"] == "Full"]
+        feed["Assets"] += json.loads(other)["Assets"]
     return json.dumps(feed).encode()
 
 
@@ -99,14 +92,13 @@ def publish(
         current = verify_feed(current, public_key)
         other = verify_feed(other, public_key) if other else None
         if other and any(
-            numeric_version(asset.get("BuildVersion", "0.0.0"))
-            >= numeric_version(build_version)
+            numeric_version(asset["BuildVersion"]) >= numeric_version(build_version)
             for asset in json.loads(other)["Assets"]
         ):
             raise ValueError("Build version must advance across both update channels")
         (destination / name).write_bytes(
             sign_feed(
-                merge_windows(current, other, channel),
+                merge_windows(current, other),
                 os.environ["SPARKLE_PRIVATE_KEY"],
                 public_key,
             )

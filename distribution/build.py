@@ -14,7 +14,8 @@ from pathlib import Path
 from time import perf_counter
 
 from nvidia_runtime import stage_nvidia_runtime
-from package import PackageInputs, archive, assemble_package, version_number
+from package import PackageInputs, archive, assemble_package
+from updates import numeric_version
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -325,7 +326,7 @@ def preflight(args) -> None:
             f"Install these build tools first: {', '.join(missing)}. See distribution/README.md."
         )
     if args.stage in {"web", "launcher", "all"}:
-        args.version = version_number(args.version)
+        numeric_version(args.version)
     if args.stage == "all":
         validate_preview(args)
         if args.platform == "macos-arm64" and find_spec("dmgbuild") is None:

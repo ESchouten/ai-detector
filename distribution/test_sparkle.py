@@ -28,15 +28,12 @@ from updates import SPARKLE, generate_macos_feed, mac_items, prepare_macos
 )
 class SparkleTest(unittest.TestCase):
     def test_signed_delta_reconstructs_the_complete_app(self):
-        self.check_delta("1.0.0", "1.0.1", "app-updates")
-
-    def test_preview_delta_preserves_its_channel(self):
-        self.check_delta("0.0.41", "0.0.42", "app-preview-updates")
+        self.check_delta("1.0.0", "1.0.1")
 
     def test_a_newer_preview_can_follow_an_official_display_version(self):
-        self.check_delta("2.0.0", "0.0.43", "app-update-channels", ("42.0.0", "43.0.0"))
+        self.check_delta("2.0.0", "0.0.43", ("42.0.0", "43.0.0"))
 
-    def check_delta(self, previous: str, current: str, channel: str, builds=None):
+    def check_delta(self, previous: str, current: str, builds=None):
         builds = builds or (previous, current)
         sdk = Path(os.environ["SPARKLE_SDK"])
         with tempfile.TemporaryDirectory(prefix="ai-detector-sparkle-") as temporary:
@@ -55,7 +52,7 @@ class SparkleTest(unittest.TestCase):
                     launcher,
                     version,
                     sdk,
-                    f"https://example.test/{channel}",
+                    "https://example.test/updates",
                     PUBLIC_KEY,
                     build_version=build,
                 )
@@ -162,7 +159,7 @@ class SparkleTest(unittest.TestCase):
             self.assertEqual(
                 (applied / "Contents/Resources/web.txt").read_text(), current
             )
-            self.check_bundle(applied, builds[1], current, channel)
+            self.check_bundle(applied, builds[1], current)
             self.check_rejected_delta(
                 sdk, key, artifact, delta.attrib[f"{{{SPARKLE}}}edSignature"]
             )
@@ -198,13 +195,11 @@ class SparkleTest(unittest.TestCase):
             server.server_close()
             worker.join()
 
-    def check_bundle(self, applied, build, version, channel):
+    def check_bundle(self, applied, build, version):
         info = plistlib.loads((applied / "Contents/Info.plist").read_bytes())
         self.assertEqual(info["CFBundleVersion"], build)
         self.assertEqual(info["CFBundleShortVersionString"], version)
-        self.assertEqual(
-            info["SUFeedURL"], f"https://example.test/{channel}/appcast.xml"
-        )
+        self.assertEqual(info["SUFeedURL"], "https://example.test/updates/appcast.xml")
         self.assertTrue(
             (
                 applied / "Contents/Frameworks/Sparkle.framework/Versions/Current"

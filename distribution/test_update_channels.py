@@ -39,19 +39,16 @@ class ChannelFeedTest(unittest.TestCase):
                     "archive-signature",
                 )
 
-    def test_windows_combines_signed_channels_and_keeps_legacy_official_releases(self):
+    def test_windows_combines_signed_channels_and_keeps_official_releases(self):
         stable = {
             "Assets": [
                 {
                     "Version": "2.0.0",
                     "Type": "Full",
+                    "BuildVersion": "42.0.0",
+                    "ReleaseChannel": "stable",
                     "FileName": "https://example.test/stable.nupkg",
-                },
-                {
-                    "Version": "2.0.0",
-                    "Type": "Delta",
-                    "FileName": "https://example.test/stable-delta.nupkg",
-                },
+                }
             ]
         }
         preview = {
@@ -60,6 +57,7 @@ class ChannelFeedTest(unittest.TestCase):
                     "Version": "0.0.43",
                     "Type": "Full",
                     "BuildVersion": "43.0.0",
+                    "ReleaseChannel": "preview",
                     "FileName": "https://example.test/preview.nupkg",
                 }
             ]
@@ -103,7 +101,7 @@ class ChannelFeedTest(unittest.TestCase):
             )["Assets"]
             self.assertEqual(
                 [(asset["ReleaseChannel"], asset["BuildVersion"]) for asset in assets],
-                [("preview", "43.0.0"), ("stable", "0.0.0")],
+                [("preview", "43.0.0"), ("stable", "42.0.0")],
             )
             self.assertEqual(assets[1]["FileName"], stable["Assets"][0]["FileName"])
 

@@ -77,7 +77,7 @@ class PackageTest(unittest.TestCase):
                         self.ffmpeg,
                         self.root / "out",
                         platform,
-                        version="app/v1.2.3",
+                        version="1.2.3",
                         mac_launcher=self.launcher
                         if platform == "macos-arm64"
                         else None,
@@ -139,20 +139,11 @@ class PackageTest(unittest.TestCase):
                             self.assertEqual(
                                 download.read(prefix + name).decode(), name
                             )
+                        self.assertEqual(
+                            json.loads(download.read(prefix + "application.json")), {}
+                        )
                     self.assertEqual(
                         download.read(prefix + "bin/" + encoder), b"ffmpeg"
-                    )
-                    metadata = prefix + "application.json"
-                    if platform == "macos-arm64":
-                        self.assertEqual(
-                            download.read(metadata), b"../Resources/application.json"
-                        )
-                        metadata = (
-                            base + "AI Detector.app/Contents/Resources/application.json"
-                        )
-                    self.assertEqual(
-                        json.loads(download.read(metadata)),
-                        {},
                     )
                     if os.name != "nt":
                         for executable in (

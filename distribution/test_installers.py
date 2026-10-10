@@ -9,8 +9,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from installers import linux, linux_tree, macos
-from package import archive, macos_bundle, version_number
+from installers import build_installer, linux, linux_tree, macos
+from package import archive, macos_bundle
 
 
 class InstallerTest(unittest.TestCase):
@@ -140,7 +140,7 @@ class InstallerTest(unittest.TestCase):
     def test_macos_layout_targets_a_real_application_executable(self):
         launcher = self.root / "launcher"
         launcher.write_bytes(b"native menu bar executable")
-        binary = macos_bundle(self.payload, launcher, "app/v2.3.4-rc.1")
+        binary = macos_bundle(self.payload, launcher, "2.3.4")
         info = plistlib.loads((binary.parent / "Info.plist").read_bytes())
         self.assertEqual(info["CFBundleIdentifier"], "io.github.eschouten.ai-detector")
         self.assertEqual(info["CFBundleVersion"], "2.3.4")
@@ -211,27 +211,7 @@ class InstallerTest(unittest.TestCase):
             self.assertEqual(packed.read(info), b"Versions/A")
 
     def test_invalid_versions_fail_before_packaging(self):
-        for value in (
-            "main",
-            "1.2",
-            "1.2.3\nInjected=command",
-            "../1.2.3",
-            "01.2.3",
-            "1.2.3-alpha_beta",
-            "1.2.3-01",
-            "1.2.3-alpha..1",
-            "app/vv1.2.3",
-        ):
+        for value in ("main", "1.2", "1.2.3\nInjected=command", "../1.2.3", "01.2.3"):
             with self.subTest(value=value), self.assertRaises(ValueError):
-                version_number(value)
-
-    def test_semantic_versions_map_to_numeric_installer_versions(self):
-        for value in (
-            "1.2.3",
-            "v1.2.3",
-            "app/v1.2.3",
-            "1.2.3-rc.1+build.2",
-            "app/v1.2.3+build.02",
-        ):
-            with self.subTest(value=value):
-                self.assertEqual(version_number(value), "1.2.3")
+                build_installer(self.payload, "linux-x64", value)
+        self.assertFalse((self.root / "debian").exists())

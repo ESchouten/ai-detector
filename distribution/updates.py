@@ -22,7 +22,7 @@ DELTA_BASES = {"stable": 2, "preview": 1}
 
 def numeric_version(value: str) -> tuple[int, ...]:
     if not re.fullmatch(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)", value):
-        raise ValueError("Application updates require a numeric X.Y.Z version")
+        raise ValueError("Version must be numeric X.Y.Z, for example 1.2.3")
     return tuple(map(int, value.split(".")))
 
 
@@ -249,15 +249,9 @@ def windows(
     assets = json.loads(previous.read_text())["Assets"] if previous.exists() else []
     newer_than(version, [asset["Version"] for asset in assets])
     if build_version:
-        newer_than(
-            build_version, [asset.get("BuildVersion", "0.0.0") for asset in assets]
-        )
-    current = [
-        asset
-        for asset in generated["Assets"]
-        if asset["Version"] == version and asset["Type"] == "Full"
-    ]
-    if not any(asset["Type"] == "Full" for asset in current):
+        newer_than(build_version, [asset["BuildVersion"] for asset in assets])
+    current = [asset for asset in generated["Assets"] if asset["Version"] == version]
+    if not current:
         raise ValueError("Velopack did not produce a full package for this version")
     for asset in current:
         name = asset["FileName"]
@@ -270,15 +264,7 @@ def windows(
     versions = sorted(
         {asset["Version"] for asset in assets}, key=numeric_version, reverse=True
     )[:3]
-    # Omit historical deltas too: already-installed launchers must use the same
-    # full-archive path to obtain this fix without a failed reconstruction first.
-    feed = {
-        "Assets": [
-            asset
-            for asset in assets
-            if asset["Version"] in versions and asset["Type"] == "Full"
-        ]
-    }
+    feed = {"Assets": [asset for asset in assets if asset["Version"] in versions]}
     for asset in feed["Assets"]:
         if (
             asset["PackageId"] != "AIDetector"

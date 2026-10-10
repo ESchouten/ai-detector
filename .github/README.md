@@ -38,7 +38,7 @@ Python is pinned once in [`detector/.python-version`](../detector/.python-versio
 | Action | Does |
 | --- | --- |
 | [setup-web](actions/setup-web/action.yml) | Node, pnpm, Bun, caches and the locked web installation |
-| [setup-distribution](actions/setup-distribution/action.yml) | Python and uv, build dependencies, optional .NET, and the web setup |
+| [setup-distribution](actions/setup-distribution/action.yml) | Python and uv, optional .NET, and the web setup |
 | [build-launcher](actions/build-launcher/action.yml) | Compiles the native launcher and runs its tests |
 | [test-distribution](actions/test-distribution/action.yml) | Packaging and process lifecycle checks against the compiled web application |
 | [package-application](actions/package-application/action.yml) | Assembles tested binaries, smoke-tests the application, creates installers and update feeds |

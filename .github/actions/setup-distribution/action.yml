@@ -33,11 +33,7 @@ runs:
         save-cache: ${{ github.ref_type != 'tag' }}
         cache-dependency-glob: |
           uv.lock
-          ../distribution/*requirements.txt
-    - name: Install build dependencies
-      shell: bash
-      working-directory: ${{ github.workspace }}
-      run: uv pip install --requirement distribution/build-requirements.txt
+          ../distribution/requirements.txt
     - uses: ./.github/actions/setup-web
       if: inputs.web == 'true'
     - uses: actions/setup-dotnet@v5

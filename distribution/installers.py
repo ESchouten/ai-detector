@@ -5,7 +5,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from package import version_number
+from updates import numeric_version
 
 ASSETS = Path(__file__).parent
 
@@ -147,10 +147,11 @@ def linux(folder: Path, version: str) -> Path:
 
 
 def build_installer(folder: Path, platform: str, version: str) -> Path:
+    numeric_version(version)
     builder = {"macos-arm64": macos, "windows-x64": windows, "linux-x64": linux}[
         platform
     ]
-    return builder(folder, version_number(version))
+    return builder(folder, version)
 
 
 if __name__ == "__main__":

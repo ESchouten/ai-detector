@@ -82,28 +82,7 @@ class UpdateFeedTest(unittest.TestCase):
             self.assertEqual(error.exception.code, code)
             self.assertFalse((self.output / "previous.dmg").exists())
 
-    def test_windows_release_history_does_not_require_old_packages_to_be_available(
-        self,
-    ):
-        asset = {
-            "Version": "1.0.0",
-            "Type": "Full",
-            "FileName": "removed.nupkg",
-            "SHA256": "0" * 64,
-        }
-        (self.host / "releases.win.json").write_bytes(
-            sign_feed(json.dumps({"Assets": [asset]}).encode(), PRIVATE_KEY, PUBLIC_KEY)
-        )
-        prepare(self.output, "windows-x64", "1.0.1", self.url, PUBLIC_KEY)
-        self.assertEqual(list((self.output / "windows-updates").iterdir()), [])
-        self.assertEqual(
-            json.loads((self.output / "previous-windows-feed.json").read_bytes()),
-            {"Assets": [asset]},
-        )
-
-    def test_windows_keeps_immutable_full_packages_without_downloading_delta_bases(
-        self,
-    ):
+    def test_windows_keeps_published_packages_and_stages_the_new_one(self):
         content = b"previous full package"
         (self.host / "old.nupkg").write_bytes(content)
         previous = {
@@ -116,32 +95,23 @@ class UpdateFeedTest(unittest.TestCase):
         }
         (self.host / "releases.win.json").write_bytes(
             sign_feed(
-                json.dumps(
-                    {"Assets": [previous, {**previous, "Type": "Delta"}]}
-                ).encode(),
-                PRIVATE_KEY,
-                PUBLIC_KEY,
+                json.dumps({"Assets": [previous]}).encode(), PRIVATE_KEY, PUBLIC_KEY
             )
         )
         prepare(self.output, "windows-x64", "1.0.1", self.url, PUBLIC_KEY)
         folder = self.output / "windows-updates"
         self.assertEqual(list(folder.iterdir()), [])
-        current = []
-        for kind in ("Full", "Delta"):
-            name = f"1.0.1-{kind}.nupkg"
-            (folder / name).write_bytes(kind.encode())
-            current.append(
-                {
-                    "PackageId": "AIDetector",
-                    "Version": "1.0.1",
-                    "Type": kind,
-                    "FileName": name,
-                    "SHA256": hashlib.sha256(kind.encode()).hexdigest(),
-                    "Size": len(kind),
-                }
-            )
+        (folder / "1.0.1-Full.nupkg").write_bytes(b"Full")
+        current = {
+            "PackageId": "AIDetector",
+            "Version": "1.0.1",
+            "Type": "Full",
+            "FileName": "1.0.1-Full.nupkg",
+            "SHA256": hashlib.sha256(b"Full").hexdigest(),
+            "Size": len(b"Full"),
+        }
         (folder / "releases.win.json").write_text(
-            json.dumps({"Assets": [previous, *current]})
+            json.dumps({"Assets": [previous, current]})
         )
         windows(
             self.output,
@@ -155,17 +125,11 @@ class UpdateFeedTest(unittest.TestCase):
         )["Assets"]
         self.assertEqual(result[0], previous)
         self.assertTrue(
-            all(
-                asset["FileName"].startswith(
-                    "https://github.com/example/app/releases/download/app/v1.0.1/"
-                )
-                for asset in result[1:]
+            result[1]["FileName"].startswith(
+                "https://github.com/example/app/releases/download/app/v1.0.1/"
             )
         )
-        self.assertFalse((self.output / "old.nupkg").exists())
-        self.assertEqual([asset["Type"] for asset in result], ["Full", "Full"])
         self.assertEqual((self.output / "1.0.1-Full.nupkg").read_bytes(), b"Full")
-        self.assertFalse((self.output / "1.0.1-Delta.nupkg").exists())
 
     def test_preview_feed_advances_without_reading_or_changing_the_stable_feed(self):
         stable = self.host / "app-updates"
@@ -219,9 +183,6 @@ class UpdateFeedTest(unittest.TestCase):
             [asset["Version"] for asset in feed["Assets"]], ["0.0.42", "0.0.43"]
         )
         self.assertEqual((stable / "releases.win.json").read_bytes(), sentinel)
-        self.assertFalse(
-            (self.root / "43/windows-updates/AIDetector-0.0.42-full.nupkg").exists()
-        )
 
     def test_sparkle_preserves_old_feed_urls_and_downloads_only_two_bases(self):
         items = []

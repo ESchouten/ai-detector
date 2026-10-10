@@ -100,7 +100,7 @@ jobs:
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
-          MARKER: detector-${{ env.PLATFORM }}-${{ hashFiles('detector/src/**', 'detector/pyproject.toml', 'detector/uv.lock', 'detector/.python-version', 'distribution/build.py', 'distribution/nvidia_runtime.py', 'distribution/nvidia/**', 'distribution/pyinstaller-hooks/**', 'distribution/build-requirements.txt', '.github/workflows/application.yml', '.github/actions/setup-distribution/action.yml') }}
+          MARKER: detector-${{ env.PLATFORM }}-${{ hashFiles('detector/src/**', 'detector/pyproject.toml', 'detector/uv.lock', 'detector/.python-version', 'distribution/build.py', 'distribution/nvidia_runtime.py', 'distribution/nvidia/**', 'distribution/pyinstaller-hooks/**', '.github/workflows/application.yml', '.github/actions/setup-distribution/action.yml') }}
         run: |
           echo "marker=$MARKER" >> "$GITHUB_OUTPUT"
           # Official releases are always frozen afresh.

@@ -67,7 +67,7 @@
 		onCancel?: () => Promise<void>;
 		pending?: boolean;
 	} = $props();
-	// Settings keys this editor by identity; each visit starts a separate draft.
+	// The pages key this editor by detector, so these starting values are read once.
 	let label = $state(untrack(() => originalLabel));
 	let suggestedLabel = $state('');
 	let detector = $state(untrack(() => createDetectorDraft(initial)));
@@ -92,12 +92,8 @@
 	const canTest = $derived(choices[4]);
 	const existingDetectors = $derived(choices[5]);
 	let suggestValidator = $state(untrack(() => !initial));
-	let selectedInitialCamera = $state(false);
-	$effect(() => {
-		if (!selectedInitialCamera) {
-			selectedInitialCamera = true;
-			if (!initial && cameras.length === 1) detector.detection.source = [cameras[0].source];
-		}
+	untrack(() => {
+		if (!initial && cameras.length === 1) detector.detection.source = [cameras[0].source];
 	});
 	let keepDelivery = $state(untrack(() => Boolean(initial)));
 	let error = $state('');

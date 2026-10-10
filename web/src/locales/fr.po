@@ -920,7 +920,7 @@ msgstr "Vérifiez à nouveau l’image de la caméra. L’enregistrement de test
 msgid "Camera preview software is unavailable. Repair or reinstall AI Detector."
 msgstr "Le logiciel d’aperçu de la caméra est indisponible. Réparez ou réinstallez AI Detector."
 
-#: src/routes/(admin)/camera-checks/[id]/[resource]/+server.ts
+#: src/routes/(admin)/camera-checks/[id]/picture.jpg/+server.ts
 msgid "This camera check has expired. Check the camera again."
 msgstr "Cette vérification de caméra a expiré. Vérifiez à nouveau la caméra."
 
@@ -1120,11 +1120,6 @@ msgstr "Mot de passe de la caméra"
 msgid "Select cameras that share this login."
 msgstr "Sélectionnez des caméras qui partagent ces identifiants."
 
-#. 0: selected.length > 1 ? 'Select cameras that share this login.' \\: ''
-#: src/lib/components/camera-add.svelte
-msgid "The camera’s own login, which may differ from its phone app. {0}"
-msgstr "Les identifiants propres à la caméra, qui peuvent différer de ceux de son application mobile. {0}"
-
 #: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-picture.svelte
 #: src/lib/components/monitoring-control.svelte
@@ -1144,6 +1139,7 @@ msgid "RTSP URL"
 msgstr "URL RTSP"
 
 #: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
 msgid "Paste the full stream URL, including the username and password if the camera needs them."
 msgstr "Collez l’URL complète du flux, avec le nom d’utilisateur et le mot de passe si la caméra les exige."
 
@@ -1340,10 +1336,7 @@ msgstr "Paramètres de la caméra"
 msgid "Camera selected: {0}"
 msgstr "Caméra sélectionnée : {0}"
 
-#: src/lib/components/camera-settings.svelte
-msgid "Paste the full stream URL, including the username and password if required."
-msgstr "Collez l’URL complète du flux, avec le nom d’utilisateur et le mot de passe si nécessaire."
-
+#: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
 msgid "The camera’s own login, which may differ from its phone app."
 msgstr "Les identifiants propres à la caméra, qui peuvent différer de ceux de son application mobile."
@@ -3423,6 +3416,7 @@ msgstr "Mon canal Telegram"
 msgid "Choose your previous AI Detector folder"
 msgstr "Choisissez le dossier de votre précédent AI Detector"
 
+#: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
 msgid "Example: Calving pen"
 msgstr "Exemple : Box de vêlage"
@@ -3450,6 +3444,7 @@ msgid "Calling the saved address"
 msgstr "Appelle l’adresse enregistrée"
 
 #: src/lib/components/notification-editor.svelte
+#: src/routes/pair/+page.svelte
 msgid "Example: My phone"
 msgstr "Exemple : Mon téléphone"
 

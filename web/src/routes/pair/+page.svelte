@@ -63,7 +63,7 @@
 				<Field.Label for="device-name">
 					Name for this device <span class="font-normal text-muted-foreground">(optional)</span>
 				</Field.Label>
-				<Input id="device-name" name="name" placeholder="e.g. My phone" maxlength={80} />
+				<Input id="device-name" name="name" placeholder="Example: My phone" maxlength={80} />
 			</Field.Field>
 		</Field.Group>
 		{#if form?.message}

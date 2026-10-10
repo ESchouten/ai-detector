@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
 	import { HeartPulse } from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
 	import * as v from 'valibot';
@@ -16,8 +15,8 @@
 	let { managed }: { managed: boolean } = $props();
 	const saved = $derived(await getHeartbeat());
 	let editing = $state(false);
-	let url = $state(untrack(() => saved?.url ?? ''));
-	let interval = $state(untrack(() => saved?.interval ?? 60));
+	let url = $state('');
+	let interval = $state(60);
 	let pending = $state(false);
 	let error = $state('');
 	const host = $derived.by(() => {

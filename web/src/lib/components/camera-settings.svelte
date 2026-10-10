@@ -41,7 +41,7 @@
 	let streamUri = $state(untrack(() => initial.source));
 	let profiles = $state<{ token: string; name: string }[]>([]);
 	let profileToken = $state(untrack(() => initial.connection?.profileToken ?? ''));
-	let verifiedConnection = $state<StreamMeta['connection']>(untrack(() => initial.connection));
+	let verifiedConnection: StreamMeta['connection'];
 	let manualAddress = $state(false);
 	let changingConnection = $state(false);
 	let candidates = $state<Awaited<ReturnType<typeof discoverCameras>>['cameras']>([]);
@@ -73,11 +73,6 @@
 		profiles = [];
 		profileToken = '';
 		invalidateCheck();
-	}
-	function chooseChannelAgain() {
-		source = '';
-		verifiedConnection = undefined;
-		connectionChangedInput();
 	}
 	function selectCamera(value: string) {
 		address = value;
@@ -239,7 +234,8 @@
 							aria-describedby="camera-stream-help"
 						/>
 						<Field.Description id="camera-stream-help">
-							Paste the full stream URL, including the username and password if required.
+							Paste the full stream URL, including the username and password if the camera needs
+							them.
 						</Field.Description>
 					</Field.Field>
 				{:else if address}
@@ -277,11 +273,10 @@
 						<Field.Label for="camera-profile">Camera channel or stream</Field.Label>
 						<NativeSelect.Root
 							id="camera-profile"
-							bind:value={profileToken}
+							value={profileToken}
 							disabled={checking || saving}
 							onchange={(event) => {
 								profileToken = event.currentTarget.value;
-								invalidateCheck();
 								void connect();
 							}}
 						>
@@ -296,7 +291,7 @@
 						size="sm"
 						class="self-start"
 						disabled={checking || saving}
-						onclick={chooseChannelAgain}>Choose camera channel again</Button
+						onclick={connectionChangedInput}>Choose camera channel again</Button
 					>
 				{/if}
 			</div>

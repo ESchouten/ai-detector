@@ -304,9 +304,10 @@
 								/>
 							</Field.Field>
 						</Field.Group>
+						<!-- The first sentence is its own piece, so it is translated once for both camera forms. -->
 						<Field.Description>
-							The camera’s own login, which may differ from its phone app.
-							{selected.length > 1 ? 'Select cameras that share this login.' : ''}
+							<span>The camera’s own login, which may differ from its phone app.</span>
+							{#if selected.length > 1}Select cameras that share this login.{/if}
 						</Field.Description>
 					</Field.Group>
 				{/if}
@@ -425,7 +426,7 @@
 									bind:value={camera.name}
 									disabled={busy || camera.state === 'saved'}
 									required
-									placeholder="e.g. Calving pen"
+									placeholder="Example: Calving pen"
 								/>
 							</Field.Field>
 						{:else}

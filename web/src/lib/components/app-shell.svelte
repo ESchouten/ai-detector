@@ -9,7 +9,6 @@
 	import { readRuntime, useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import { monitoringSummary } from '$lib/monitoring';
 	import { getInstallation } from '$lib/remote/camera-setup.remote';
-	import { version } from '$lib/version';
 
 	// Navigation and the monitoring state that is visible from every page.
 	let { children }: { children: Snippet } = $props();
@@ -20,7 +19,7 @@
 	const [initialRuntime, initialCounts] = await Promise.all([readRuntime(monitor.query), counts]);
 	const runtime = $derived(monitor.query.current ?? initialRuntime);
 	const installation = $derived(counts.current ?? initialCounts);
-	// Saving a camera or detector ends with a navigation; pick up the new counts then.
+	// Saving a camera or detector ends with a navigation; pick up the new count then.
 	afterNavigate(({ type }) => {
 		if (type !== 'enter') void counts.refresh();
 	});
@@ -30,7 +29,7 @@
 </script>
 
 <Sidebar.Provider>
-	<AppSidebar {summary} {version} />
+	<AppSidebar {summary} />
 	<div class="flex min-w-0 flex-1 flex-col">
 		<MobileHeader {summary} />
 		<main class="flex-1 px-4 pt-5 pb-28 md:px-8 md:pt-8 md:pb-12">

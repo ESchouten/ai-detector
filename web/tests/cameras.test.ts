@@ -338,7 +338,6 @@ test(
 		cache.assert(result.checkId, result.source);
 		assert.throws(() => cache.assert(result.checkId, 'rtsp://changed'), /camera address changed/);
 		assert.ok(!result.previewUrl.includes(address));
-		assert.equal(cache.file(result.checkId, '../sample.mp4'), null);
 		const recording = cache.file(result.checkId, 'recording.mp4');
 		const picture = cache.file(result.checkId, 'picture.jpg');
 		assert.ok(recording && picture);

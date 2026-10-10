@@ -142,12 +142,10 @@ export class CameraChecks {
 		return new Date(check.checkedAt).toISOString();
 	}
 
-	file(id: string, resource: string): string | null {
+	file(id: string, resource: 'picture.jpg' | 'recording.mp4'): string | null {
 		const check = this.checks.get(id);
 		if (!check || this.now() - check.checkedAt >= LIFETIME_MS) return null;
-		return ['picture.jpg', 'recording.mp4'].includes(resource)
-			? path.join(check.directory, resource)
-			: null;
+		return path.join(check.directory, resource);
 	}
 
 	private async prune(): Promise<void> {

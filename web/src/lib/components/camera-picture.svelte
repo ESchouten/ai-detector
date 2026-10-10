@@ -9,23 +9,17 @@
 	import { Button } from '$lib/components/ui/button';
 	import CameraDetections from './camera-detections.svelte';
 	import { cameraPreviewSlots } from '$lib/preview-slots';
-	import { cn } from '$lib/utils';
 	let {
 		id,
 		label,
 		monitored = false,
-		caption,
-		corner,
-		class: className
+		caption
 	}: {
 		id: string;
 		label: string;
 		monitored?: boolean;
 		/** Replaces the camera name along the bottom of the picture. */
 		caption?: Snippet;
-		/** Controls in the top corner, above the picture. */
-		corner?: Snippet;
-		class?: string;
 	} = $props();
 	let failed = $state(false);
 	let picture = $state<string>();
@@ -73,10 +67,7 @@
 
 <div
 	bind:this={container}
-	class={cn(
-		'relative aspect-video overflow-hidden rounded-xl bg-media text-media-foreground',
-		className
-	)}
+	class="relative aspect-video overflow-hidden rounded-xl bg-media text-media-foreground"
 >
 	{#if active && picture && !failed}
 		<img src={picture} alt={`${label} live picture`} class="size-full object-contain" />
@@ -116,7 +107,4 @@
 			<p class="min-w-0 truncate text-sm font-medium">{label}</p>
 		{/if}
 	</div>
-	{#if corner}
-		<div class="absolute top-2.5 right-2.5 z-20">{@render corner()}</div>
-	{/if}
 </div>

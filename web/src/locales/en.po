@@ -920,7 +920,7 @@ msgstr "Check the camera picture again. The test recording has expired."
 msgid "Camera preview software is unavailable. Repair or reinstall AI Detector."
 msgstr "Camera preview software is unavailable. Repair or reinstall AI Detector."
 
-#: src/routes/(admin)/camera-checks/[id]/[resource]/+server.ts
+#: src/routes/(admin)/camera-checks/[id]/picture.jpg/+server.ts
 msgid "This camera check has expired. Check the camera again."
 msgstr "This camera check has expired. Check the camera again."
 
@@ -1120,11 +1120,6 @@ msgstr "Camera password"
 msgid "Select cameras that share this login."
 msgstr "Select cameras that share this login."
 
-#. 0: selected.length > 1 ? 'Select cameras that share this login.' \\: ''
-#: src/lib/components/camera-add.svelte
-msgid "The camera’s own login, which may differ from its phone app. {0}"
-msgstr "The camera’s own login, which may differ from its phone app. {0}"
-
 #: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-picture.svelte
 #: src/lib/components/monitoring-control.svelte
@@ -1144,6 +1139,7 @@ msgid "RTSP URL"
 msgstr "RTSP URL"
 
 #: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
 msgid "Paste the full stream URL, including the username and password if the camera needs them."
 msgstr "Paste the full stream URL, including the username and password if the camera needs them."
 
@@ -1340,10 +1336,7 @@ msgstr "Camera settings"
 msgid "Camera selected: {0}"
 msgstr "Camera selected: {0}"
 
-#: src/lib/components/camera-settings.svelte
-msgid "Paste the full stream URL, including the username and password if required."
-msgstr "Paste the full stream URL, including the username and password if required."
-
+#: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
 msgid "The camera’s own login, which may differ from its phone app."
 msgstr "The camera’s own login, which may differ from its phone app."
@@ -3411,6 +3404,7 @@ msgstr "My Telegram channel"
 msgid "Choose your previous AI Detector folder"
 msgstr "Choose your previous AI Detector folder"
 
+#: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
 msgid "Example: Calving pen"
 msgstr "Example: Calving pen"
@@ -3436,6 +3430,7 @@ msgid "Calling the saved address"
 msgstr "Calling the saved address"
 
 #: src/lib/components/notification-editor.svelte
+#: src/routes/pair/+page.svelte
 msgid "Example: My phone"
 msgstr "Example: My phone"
 

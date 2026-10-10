@@ -48,7 +48,8 @@ export default defineConfig(
 			'src/lib/components/nav-main.svelte',
 			'src/lib/components/page-header.svelte'
 		],
-		// Reusable link components receive already resolved hrefs from their callers.
+		// Reusable link components receive already resolved hrefs from their callers; the guided
+		// header links to GitHub.
 		rules: { 'svelte/no-navigation-without-resolve': ['error', { ignoreLinks: true }] }
 	},
 	{

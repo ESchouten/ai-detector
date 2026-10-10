@@ -920,7 +920,7 @@ msgstr "Controleer het camerabeeld opnieuw. De testopname is verlopen."
 msgid "Camera preview software is unavailable. Repair or reinstall AI Detector."
 msgstr "De software voor het camerabeeld is niet beschikbaar. Herstel AI Detector of installeer het opnieuw."
 
-#: src/routes/(admin)/camera-checks/[id]/[resource]/+server.ts
+#: src/routes/(admin)/camera-checks/[id]/picture.jpg/+server.ts
 msgid "This camera check has expired. Check the camera again."
 msgstr "Deze cameracontrole is verlopen. Controleer de camera opnieuw."
 
@@ -1120,11 +1120,6 @@ msgstr "Wachtwoord van de camera"
 msgid "Select cameras that share this login."
 msgstr "Kies camera’s die dezelfde inloggegevens gebruiken."
 
-#. 0: selected.length > 1 ? 'Select cameras that share this login.' \\: ''
-#: src/lib/components/camera-add.svelte
-msgid "The camera’s own login, which may differ from its phone app. {0}"
-msgstr "De eigen inloggegevens van de camera; die kunnen anders zijn dan in de telefoon-app. {0}"
-
 #: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-picture.svelte
 #: src/lib/components/monitoring-control.svelte
@@ -1144,6 +1139,7 @@ msgid "RTSP URL"
 msgstr "RTSP-URL"
 
 #: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
 msgid "Paste the full stream URL, including the username and password if the camera needs them."
 msgstr "Plak de volledige stream-URL, met gebruikersnaam en wachtwoord als de camera die nodig heeft."
 
@@ -1340,10 +1336,7 @@ msgstr "Camera-instellingen"
 msgid "Camera selected: {0}"
 msgstr "Camera gekozen: {0}"
 
-#: src/lib/components/camera-settings.svelte
-msgid "Paste the full stream URL, including the username and password if required."
-msgstr "Plak de volledige stream-URL, met gebruikersnaam en wachtwoord als die nodig zijn."
-
+#: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
 msgid "The camera’s own login, which may differ from its phone app."
 msgstr "De eigen inloggegevens van de camera; die kunnen anders zijn dan in de telefoon-app."
@@ -3411,6 +3404,7 @@ msgstr "Mijn Telegram-kanaal"
 msgid "Choose your previous AI Detector folder"
 msgstr "Kies de map van je vorige AI Detector"
 
+#: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
 msgid "Example: Calving pen"
 msgstr "Voorbeeld: Afkalfstal"
@@ -3436,6 +3430,7 @@ msgid "Calling the saved address"
 msgstr "Roept het opgeslagen adres aan"
 
 #: src/lib/components/notification-editor.svelte
+#: src/routes/pair/+page.svelte
 msgid "Example: My phone"
 msgstr "Voorbeeld: Mijn telefoon"
 

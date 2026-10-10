@@ -25,13 +25,13 @@ export const getSetupStatus = query(() =>
 	})
 );
 
-/** Counts for navigation; unreadable settings are reported by the page that needs them. */
+/** The detector count for navigation; unreadable settings are reported by the page that needs them. */
 export const getInstallation = query(async () => {
 	try {
-		const { app, config } = await configuration.read();
-		return { cameras: app.streams.length, detectors: config.detectors.length };
+		const { config } = await configuration.read();
+		return { detectors: config.detectors.length };
 	} catch {
-		return { cameras: 0, detectors: 0 };
+		return { detectors: 0 };
 	}
 });
 

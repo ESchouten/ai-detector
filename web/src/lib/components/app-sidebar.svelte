@@ -10,8 +10,9 @@
 	import ThemeToggle from './theme-toggle.svelte';
 	import type { MonitoringSummary } from '$lib/monitoring';
 	import { mainNavigation, settingsHome, REPOSITORY_URL } from '$lib/navigation';
+	import { version } from '$lib/version';
 
-	let { summary, version }: { summary: MonitoringSummary; version: string } = $props();
+	let { summary }: { summary: MonitoringSummary } = $props();
 	const statusPage = resolve('/status');
 </script>
 

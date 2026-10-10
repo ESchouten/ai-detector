@@ -163,7 +163,7 @@
 	<div class="mt-6">
 		<ConfirmRemove
 			trigger="Remove this connection…"
-			title={`Remove ${initial.label}?`}
+			title={`Remove “${initial.label}”?`}
 			description="Connections assigned to detectors must be unassigned first."
 			keep="Cancel"
 			confirm="Remove connection"

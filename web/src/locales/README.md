@@ -10,7 +10,7 @@ The reader is a dairy farmer, not a technician. Write what a local farm-software
 - A plural entry needs every form of the language: two for Dutch and German, three for French (`one`, `many`, `other`; give `many` the text of `other`).
 - Use the name a button or page has here whenever a sentence refers to it: "Settings → Storage" is "Instellingen → Opslag".
 - Buttons inside Telegram keep Telegram's own names (**Start**).
-- Leave product and technical names alone: AI Detector, Telegram, BotFather, Google Gemini, Docker, NVIDIA, TensorRT, RTSP, JSON, ZIP, file names, and the presets Cow Catcher and Calving Catcher.
+- Leave product and technical names alone: AI Detector, Telegram, BotFather, Google Gemini, NVIDIA, TensorRT, RTSP, JSON, ZIP, Heartbeat, Webhook and file names.
 - Dutch addresses the reader as **je**, German as **Sie**, French as **vous**. Buttons use the infinitive ("Camera toevoegen", "Kamera hinzufügen", "Ajouter une caméra"). French puts a non-breaking space before `: ; ? !` and inside « ».
 
 ## Terms

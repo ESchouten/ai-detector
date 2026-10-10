@@ -68,7 +68,7 @@ export class ManagedDetector {
 		}));
 		const message =
 			readiness === 'monitoring'
-				? plural(cameras.length, ['Monitoring # camera.', 'Monitoring # cameras.'])
+				? plural(cameras.length, ['Watching # camera.', 'Watching # cameras.'])
 				: readiness === 'degraded'
 					? 'Monitoring needs attention.'
 					: readiness === 'failed'

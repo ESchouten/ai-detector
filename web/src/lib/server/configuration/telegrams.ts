@@ -15,14 +15,13 @@ export function saveTelegram(
 	const index = input.original
 		? app.telegrams.findIndex((item) => item.label === input.original)
 		: -1;
-	if (input.original && index < 0)
-		throw new ConfigurationError('This notification channel no longer exists.');
+	if (input.original && index < 0) throw new ConfigurationError('This recipient no longer exists.');
 	if (
 		app.telegrams.some(
 			(item, i) => i !== index && (item.label === input.label || sameTelegram(item, input))
 		)
 	) {
-		throw new ConfigurationError('This notification channel or name already exists.');
+		throw new ConfigurationError('This recipient or name already exists.');
 	}
 	const previous = app.telegrams[index];
 	const telegram = { label: input.label, token: input.token, chat: input.chat, quiet: input.quiet };
@@ -41,7 +40,7 @@ export function saveTelegram(
 
 export function deleteTelegram({ config, app }: Configuration, label: string): void {
 	const telegram = app.telegrams.find((item) => item.label === label);
-	if (!telegram) throw new ConfigurationError('This notification channel no longer exists.');
+	if (!telegram) throw new ConfigurationError('This recipient no longer exists.');
 	app.telegrams = app.telegrams.filter((item) => item !== telegram);
 	for (const detector of config.detectors) {
 		if (detector.exporters?.telegram)

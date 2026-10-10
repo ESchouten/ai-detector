@@ -129,14 +129,14 @@
 										: 'Checking the picture…'
 									: 'Waiting to be checked…'}
 							{:else if waiting}
-								Waiting for the first analysed picture…
+								Waiting for the first analyzed picture…
 							{:else if camera.monitored && camera.monitoring}
 								Monitoring
 							{:else}
 								{camera.archiveDestinations
 									? 'Picture and recording location checked'
 									: 'Picture checked'}{#if !camera.monitored}
-									· Live viewing only{/if}
+									· Live view only{/if}
 							{/if}
 						</p>
 					</div>
@@ -162,7 +162,7 @@
 			<li class="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3.5">
 				{#if alerts.length}
 					<Bell class="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
-					<p class="min-w-0 flex-1 text-sm">Alerts go to {alerts.join(', ')}</p>
+					<p class="min-w-0 flex-1 text-sm">Alerts go to {alerts.join(', ')}.</p>
 				{:else}
 					<BellOff class="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
 					<p class="min-w-0 flex-1 basis-48 text-sm text-muted-foreground">

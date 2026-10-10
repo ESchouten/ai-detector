@@ -33,7 +33,7 @@
 				next === null ? 'Review removed' : next ? 'Confirmed' : 'Marked as a false alarm'
 			);
 		} catch {
-			toast.error('Could not save the review. Please try again.');
+			toast.error('Could not save this review. Please try again.');
 		} finally {
 			saving = false;
 		}

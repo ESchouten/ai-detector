@@ -24,17 +24,16 @@ const catalogs = path.join(import.meta.dirname, '../src/locales');
 
 interface Entry {
 	msgid: string;
-	plural?: string;
 	translations: string[];
 }
 
 /** The catalogs as Wuchale writes them: entries separated by blank lines, strings JSON-quoted. */
-async function readCatalog(locale: string): Promise<{ header: string; entries: Entry[] }> {
-	const [header, ...blocks] = (await readFile(path.join(catalogs, `${locale}.po`), 'utf8'))
+async function readCatalog(locale: string): Promise<Entry[]> {
+	const [, ...blocks] = (await readFile(path.join(catalogs, `${locale}.po`), 'utf8'))
 		.replaceAll('\r\n', '\n')
 		.trim()
 		.split('\n\n');
-	const entries = blocks.map((block) => {
+	return blocks.map((block) => {
 		const fields: Record<string, string> = {};
 		let field = '';
 		for (const line of block.split('\n')) {
@@ -45,17 +44,12 @@ async function readCatalog(locale: string): Promise<{ header: string; entries: E
 		}
 		return {
 			msgid: fields.msgid,
-			plural: fields.msgid_plural,
 			translations: Object.keys(fields)
 				.filter((name) => name.startsWith('msgstr'))
-				.sort()
 				.map((name) => fields[name])
 		};
 	});
-	return { header, entries };
 }
-
-const placeholders = (text: string) => (text.match(/\{\d+\}|<\/?\d+\/?>/g) ?? []).sort();
 
 async function fixture(t: TestContext, requested?: Locale) {
 	const saved: (Locale | undefined)[] = [];
@@ -84,33 +78,28 @@ test('every language has a catalog, its own name, and nothing left untranslated'
 	const files = (await readdir(catalogs)).filter((name) => name.endsWith('.po')).sort();
 	assert.deepEqual(files, LOCALES.map((locale) => `${locale}.po`).sort());
 	const source = await readCatalog('en');
-	assert.ok(source.entries.length > 500);
+	assert.ok(source.length > 500);
 	for (const locale of LOCALES) {
 		assert.ok(LANGUAGE_NAMES[locale]);
-		const { header, entries } = await readCatalog(locale);
-		const forms = Number(/nplurals=(\d+)/.exec(header)?.[1]);
+		const entries = await readCatalog(locale);
+		// `pnpm i18n:check` compares placeholders and plural forms, but accepts a message that
+		// is missing or empty.
 		assert.deepEqual(
 			entries.map((entry) => entry.msgid),
-			source.entries.map((entry) => entry.msgid),
+			source.map((entry) => entry.msgid),
 			`${locale}.po does not list the same messages as en.po; run pnpm i18n`
 		);
-		for (const entry of entries) {
-			const where = `${locale}.po: ${JSON.stringify(entry.msgid)}`;
-			assert.equal(entry.translations.length, entry.plural ? forms : 1, where);
-			for (const translation of entry.translations) {
-				assert.ok(translation.trim(), `${where} is not translated`);
-				// Placeholders may move, never change. A singular may spell its number out.
-				if (!entry.plural)
-					assert.deepEqual(placeholders(translation), placeholders(entry.msgid), where);
-			}
-		}
+		for (const entry of entries)
+			assert.ok(
+				entry.translations.length && entry.translations.every((text) => text.trim()),
+				`${locale}.po: ${JSON.stringify(entry.msgid)} is not translated`
+			);
 	}
 });
 
 test('messages thrown to the person using the application are translated too', async () => {
 	// Wuchale skips `throw` statements unless wuchale.config.js keeps teaching it otherwise.
-	const { entries } = await readCatalog('en');
-	const messages = new Set(entries.map((entry) => entry.msgid));
+	const messages = new Set((await readCatalog('en')).map((entry) => entry.msgid));
 	assert.ok(messages.has('A detector with this name already exists.'));
 	assert.ok(messages.has('Choose a preset for this detector.'));
 	// Log lines, header names and text the code itself matches on stay out of the catalogs.

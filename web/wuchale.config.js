@@ -24,7 +24,8 @@ const patterns = [
 
 /**
  * Text that looks like a sentence but is not shown to anyone: header names, file names,
- * and lines written to the logs, which stay in English for support.
+ * and lines written to the logs. Those stay in English for support, apart from a status or
+ * error message they quote, which keeps the language it was shown in.
  * @param {import('wuchale').Text} text
  */
 function technical(text) {

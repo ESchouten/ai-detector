@@ -298,7 +298,7 @@
 		<Field.Set>
 			<Field.Legend>What do you want to detect?</Field.Legend>
 			<Field.Description>
-				Choose a preset. It supplies everything needed to recognise that kind of event.
+				Choose a preset. It supplies everything needed to recognize that kind of event.
 			</Field.Description>
 			{#if presets.length}
 				<RadioGroup.Root

@@ -506,6 +506,7 @@ msgid "This chat is not connected to AI Detector."
 msgstr "Dieser Chat ist nicht mit AI Detector verbunden."
 
 #: src/lib/server/telegram-reviews.ts
+#: src/routes/(admin)/detections/review-buttons.svelte
 msgid "Could not save this review. Please try again."
 msgstr "Diese Bewertung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut."
 
@@ -707,15 +708,6 @@ msgstr "Dieser Kamerakanal ist nicht mehr verfügbar. Verbinden Sie erneut und w
 #: src/lib/server/cameras/discovery.ts
 msgid "The camera did not return a stream address."
 msgstr "Die Kamera hat keine Stream-Adresse geliefert."
-
-#: src/lib/server/configuration/telegrams.ts
-#: src/lib/server/configuration/telegrams.ts
-msgid "This notification channel no longer exists."
-msgstr "Dieser Empfänger existiert nicht mehr."
-
-#: src/lib/server/configuration/telegrams.ts
-msgid "This notification channel or name already exists."
-msgstr "Dieser Empfänger oder Name existiert bereits."
 
 #: src/lib/server/configuration/telegrams.ts
 msgid "Confirm that you received the test alert before enabling new or changed connection details."
@@ -1365,7 +1357,9 @@ msgstr "Verbindung ändern"
 
 #. 0: initial.label
 #. 0: initial.label
+#. 0: initial.label
 #: src/lib/components/camera-settings.svelte
+#: src/lib/components/llm-connection-editor.svelte
 #: src/lib/components/notification-editor.svelte
 msgid "Remove “{0}”?"
 msgstr "„{0}“ entfernen?"
@@ -1844,11 +1838,6 @@ msgstr "Verbindung speichern"
 msgid "{0} Detectors waiting for a validator start using this connection. You can turn it off for each detector."
 msgstr "{0} Detektoren, die auf eine KI-Prüfung warten, verwenden dann diese Verbindung. Sie können das für jeden Detektor ausschalten."
 
-#. 0: initial.label
-#: src/lib/components/llm-connection-editor.svelte
-msgid "Remove {0}?"
-msgstr "{0} entfernen?"
-
 #: src/lib/components/llm-connection-editor.svelte
 msgid "Connections assigned to detectors must be unassigned first."
 msgstr "Verbindungen, die Detektoren zugewiesen sind, müssen zuerst gelöst werden."
@@ -2072,17 +2061,8 @@ msgid "Waiting to be checked…"
 msgstr "Wartet auf die Prüfung…"
 
 #: src/lib/components/setup-finish.svelte
-msgid "Waiting for the first analysed picture…"
-msgstr "Warten auf das erste analysierte Bild…"
-
-#: src/lib/components/setup-finish.svelte
 msgid "Open camera"
 msgstr "Kamera öffnen"
-
-#. 0: alerts.join(', ')
-#: src/lib/components/setup-finish.svelte
-msgid "Alerts go to {0}"
-msgstr "Benachrichtigungen gehen an {0}"
 
 #: src/lib/components/setup-finish.svelte
 msgid "No phone alerts. Recordings still appear in this app."
@@ -2714,10 +2694,6 @@ msgid "Review removed"
 msgstr "Bewertung entfernt"
 
 #: src/routes/(admin)/detections/review-buttons.svelte
-msgid "Could not save the review. Please try again."
-msgstr "Die Bewertung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut."
-
-#: src/routes/(admin)/detections/review-buttons.svelte
 #: src/routes/(admin)/storage/+page.svelte
 msgid "Review"
 msgstr "Bewerten"
@@ -3042,7 +3018,9 @@ msgstr "Diese Kamera dient nur dem Livebild. Fügen Sie sie einem Detektor hinzu
 msgid "Detectors on this camera"
 msgstr "Detektoren auf dieser Kamera"
 
+#. 0: alerts.join(', ')
 #. 0: camera.alerts.join(', ')
+#: src/lib/components/setup-finish.svelte
 #: src/routes/(admin)/streams/[id]/+page.svelte
 msgid "Alerts go to {0}."
 msgstr "Benachrichtigungen gehen an {0}."
@@ -3175,14 +3153,9 @@ msgstr[0] "# Kamera offline."
 msgstr[1] "# Kameras offline."
 
 #: src/lib/monitoring.ts
+#: src/lib/server/managed-detector.ts
 msgid "Watching # camera."
 msgid_plural "Watching # cameras."
-msgstr[0] "# Kamera überwacht."
-msgstr[1] "# Kameras überwacht."
-
-#: src/lib/server/managed-detector.ts
-msgid "Monitoring # camera."
-msgid_plural "Monitoring # cameras."
 msgstr[0] "# Kamera überwacht."
 msgstr[1] "# Kameras überwacht."
 
@@ -3423,10 +3396,6 @@ msgstr "Bild und Aufnahmeort geprüft"
 msgid "Picture checked"
 msgstr "Bild geprüft"
 
-#: src/lib/components/setup-finish.svelte
-msgid "· Live viewing only"
-msgstr "· Nur Livebild"
-
 #. 0: meta.llmConnection
 #: src/routes/(admin)/detectors/+page.svelte
 msgid "Checked by {0}"
@@ -3554,7 +3523,7 @@ msgstr "Ruhezeiten"
 
 #: src/lib/components/notification-editor.svelte
 msgid "Alerts between these times still arrive, but without sound. Leave both empty for sound at any hour."
-msgstr "Meldungen zwischen diesen Uhrzeiten kommen weiterhin an, aber ohne Ton. Lassen Sie beide leer, damit zu jeder Zeit ein Ton erklingt."
+msgstr "Benachrichtigungen zwischen diesen Uhrzeiten kommen weiterhin an, aber ohne Ton. Lassen Sie beide leer, damit zu jeder Zeit ein Ton erklingt."
 
 #: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "Recording deleted"
@@ -3662,10 +3631,6 @@ msgstr "Automatisch aktualisieren"
 msgid "When a newer model is published for this preset, this detector takes it by itself, at start and once a day."
 msgstr "Erscheint für diese Voreinstellung ein neueres Modell, übernimmt dieser Detektor es von selbst, beim Start und einmal täglich."
 
-#: src/lib/components/detector-editor.svelte
-msgid "Choose a preset. It supplies everything needed to recognise that kind of event."
-msgstr "Wählen Sie eine Voreinstellung. Sie enthält alles, was nötig ist, um diese Art von Ereignis zu erkennen."
-
 #: src/routes/(admin)/advanced/settings-editor.svelte
 msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
 msgstr "Alles in config.json: Modell, Prompts, Schwellenwerte und Aufnahmeoptionen jedes Detektors sowie health und onnx für die gesamte Installation. Beim Speichern werden die Änderungen auf die laufende Überwachung angewendet."
@@ -3712,3 +3677,24 @@ msgstr ""
 #: src/lib/format.ts
 msgid "{0} MB"
 msgstr "{0} MB"
+
+#: src/lib/server/configuration/telegrams.ts
+#: src/lib/server/configuration/telegrams.ts
+msgid "This recipient no longer exists."
+msgstr "Dieser Empfänger existiert nicht mehr."
+
+#: src/lib/server/configuration/telegrams.ts
+msgid "This recipient or name already exists."
+msgstr "Dieser Empfänger oder Name existiert bereits."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset. It supplies everything needed to recognize that kind of event."
+msgstr "Wählen Sie eine Voreinstellung. Sie enthält alles, was nötig ist, um diese Art von Ereignis zu erkennen."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Waiting for the first analyzed picture…"
+msgstr "Warten auf das erste analysierte Bild…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "· Live view only"
+msgstr "· Nur Livebild"

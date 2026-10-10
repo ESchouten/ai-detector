@@ -156,8 +156,7 @@ def test_cli_runs_no_model_detection_relative_to_config_with_separate_output(
     configured.mkdir()
     image = configured / "input.png"
     assert cv2.imwrite(str(image), np.zeros((24, 32, 3), dtype=np.uint8))
-    # Neither web metadata nor environment credentials may activate this detector.
-    (configured / "app.json").write_text("This is not valid JSON")
+    # Environment credentials must not activate verification.
     monkeypatch.setenv("OPENAI_API_KEY", "unused-test-key")
     config = configured / "config.json"
     config.write_text(

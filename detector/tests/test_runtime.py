@@ -27,8 +27,6 @@ class FiniteSource:
         self.count = count
         self.closed = False
         self.read = 0
-        self.third_frame = Event()
-        self.fourth_frame = Event()
 
     def batches(self):
         try:
@@ -36,10 +34,6 @@ class FiniteSource:
                 if self.closed:
                     return
                 self.read += 1
-                if self.read == 3:
-                    self.third_frame.set()
-                if self.read == 4:
-                    self.fourth_frame.set()
                 yield SourceBatch(
                     {
                         "camera": (

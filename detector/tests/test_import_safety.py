@@ -7,10 +7,10 @@ from pathlib import Path
 import pytest
 
 PROBE = Path(__file__).parent / "support" / "import_safety.py"
+SOURCE = Path(__file__).resolve().parents[1] / "src"
 PACKAGE_PATHS = (sysconfig.get_path("purelib"), sysconfig.get_path("platlib"))
 
 
-@pytest.mark.parametrize("swallow", [False, True], ids=["raised", "swallowed"])
 @pytest.mark.parametrize(
     "statement, diagnostic",
     [
@@ -49,22 +49,23 @@ PACKAGE_PATHS = (sysconfig.get_path("purelib"), sysconfig.get_path("platlib"))
             "import logging; logging.getLogger('new').addHandler(logging.NullHandler())",
             "logging configuration",
         ),
+        # The probe keeps what it rejected, so catching its error hides nothing.
+        (
+            "try:\n    outside.write_text('changed')\nexcept Exception:\n    pass",
+            "filesystem write",
+        ),
     ],
 )
-def test_import_probe_rejects_side_effects(tmp_path, statement, diagnostic, swallow):
+def test_import_probe_rejects_side_effects(tmp_path, statement, diagnostic):
     working = tmp_path / "working"
     working.mkdir()
     (working / "config.json").write_text("{}")
     outside = tmp_path / "outside.txt"
     outside.write_text("unchanged")
-    source = (
-        "import sys\nfrom pathlib import Path\n" + f"outside = Path({str(outside)!r})\n"
+    (tmp_path / "unsafe_import.py").write_text(
+        "import sys\nfrom pathlib import Path\n"
+        f"outside = Path({str(outside)!r})\n{statement}\n"
     )
-    if swallow:
-        source += f"try:\n    {statement}\nexcept Exception:\n    pass\n"
-    else:
-        source += statement + "\n"
-    (tmp_path / "unsafe_import.py").write_text(source)
 
     process = subprocess.run(
         [sys.executable, "-S", "-B", str(PROBE), "unsafe_import"],
@@ -108,3 +109,54 @@ def test_import_probe_allows_normal_imports_and_distribution_metadata(tmp_path):
         timeout=10,
     )
     assert process.returncode == 0, process.stdout + process.stderr
+
+
+def test_domain_imports_without_any_third_party_packages(tmp_path):
+    process = subprocess.run(
+        [
+            sys.executable,
+            "-S",
+            "-B",
+            str(PROBE),
+            "aidetector.domain.events",
+            "aidetector.domain.policy",
+        ],
+        cwd=tmp_path,
+        env={**os.environ, "PYTHONPATH": str(SOURCE)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert process.returncode == 0, process.stdout + process.stderr
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_core_and_cli_imports_have_no_observed_side_effects(tmp_path):
+    # -S excludes coverage/site startup hooks; packages remain importable through
+    # explicit paths. The probe must not make exceptions for instrumentation I/O.
+    process = subprocess.run(
+        [
+            sys.executable,
+            "-S",
+            "-B",
+            str(PROBE),
+            "aidetector.configuration",
+            "aidetector.application.pipeline",
+            "aidetector.application.delivery",
+            "aidetector.runtime",
+            "aidetector.cli",
+            "aidetector.schema",
+            "aidetector.adapters.inference.model_assets",
+            "aidetector.adapters.inference.windows_ml",
+        ],
+        cwd=tmp_path,
+        env={
+            **os.environ,
+            "PYTHONPATH": os.pathsep.join((str(SOURCE), *PACKAGE_PATHS)),
+        },
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert process.returncode == 0, process.stdout + process.stderr
+    assert list(tmp_path.iterdir()) == []

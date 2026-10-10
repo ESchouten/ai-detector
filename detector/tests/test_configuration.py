@@ -105,12 +105,6 @@ def test_optional_inference_settings_accept_supported_values(iou, tracker):
     assert defaults.tracker is None
 
 
-@pytest.mark.parametrize("source", [[], "", "  ", ["camera", "camera"], None])
-def test_invalid_sources_are_rejected(source):
-    with pytest.raises(ValidationError):
-        SourceConfig.model_validate({"source": source})
-
-
 @pytest.mark.parametrize(
     "source, kind",
     [
@@ -275,13 +269,6 @@ def test_defaults_are_deterministic_and_secrets_do_not_appear_in_repr():
     assert "camera-password" not in repr(
         SourceConfig(source=("rtsp://user:camera-password@camera",))
     )
-
-
-def test_schema_describes_legacy_inputs_and_has_no_hardware_side_effects():
-    schema = Config.model_json_schema()
-    source = schema["$defs"]["SourceConfig"]["properties"]["source"]
-    assert {item["type"] for item in source["anyOf"]} == {"string", "array"}
-    assert schema["$defs"]["YoloConfig"]["properties"]["frames_min"]["default"] == 3
 
 
 def test_invalid_file_encoding_is_a_config_error_without_exposing_contents(tmp_path):

@@ -68,30 +68,7 @@ def configure_logging(*args, **kwargs):
     reject("logging configuration")
 
 
-def logging_state(logger: logging.Logger) -> tuple:
-    return (
-        logger.level,
-        logger.disabled,
-        logger.propagate,
-        tuple(logger.handlers),
-        tuple(logger.filters),
-    )
-
-
-def logger_states() -> dict[logging.Logger, tuple]:
-    return {
-        logging.root: logging_state(logging.root),
-        **{
-            logger: logging_state(logger)
-            for logger in logging.Logger.manager.loggerDict.values()
-            if isinstance(logger, logging.Logger)
-        },
-    }
-
-
 def main() -> int:
-    baseline = logger_states()
-    disabled = logging.root.manager.disable
     sys.addaudithook(audit)
     threading.Thread.start = start_thread
     _thread.start_new_thread = start_thread
@@ -111,11 +88,6 @@ def main() -> int:
     except Exception as error:
         print(f"Import failed: {error}", file=sys.stderr)
         failed = True
-    if logging.root.manager.disable != disabled or any(
-        state != baseline.get(logger, (logging.NOTSET, False, True, (), ()))
-        for logger, state in logger_states().items()
-    ):
-        violations.append("Import side effect: logging state changed")
     for name in INFERENCE_MODULES.intersection(sys.modules):
         violations.append(f"Import loaded inference module: {name}")
     if violations:

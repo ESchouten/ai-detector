@@ -4,9 +4,7 @@ import numpy as np
 import pytest
 
 from aidetector.domain.events import EventAssembler
-from aidetector.domain.models import (
-    Observation,
-)
+from aidetector.domain.models import Observation
 from aidetector.domain.policy import EventPolicy
 
 START = datetime(2026, 1, 1)

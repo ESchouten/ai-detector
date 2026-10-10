@@ -16,8 +16,6 @@ def write_windows_ml_sdk(directory: Path, providers: list[tuple[str, str]]) -> P
         from threading import Event
         from types import SimpleNamespace
 
-        import winrt.runtime
-
         assert "onnxruntime" not in sys.modules, "The helper must not load ONNX Runtime"
         assert "torch" not in sys.modules, "The helper must not load Torch"
 
@@ -74,7 +72,6 @@ def write_windows_ml_sdk(directory: Path, providers: list[tuple[str, str]]) -> P
     """)
     modules = {
         "_test_windows_ml.py": implementation,
-        "winrt/runtime.py": "",
         "winrt/windows/foundation/__init__.py": (
             "from types import SimpleNamespace\n"
             'AsyncStatus = SimpleNamespace(STARTED="started")\n'

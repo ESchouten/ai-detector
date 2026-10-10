@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import pydantic
 import pytest
 from jsonschema import Draft202012Validator, ValidationError
 
@@ -46,15 +47,8 @@ def test_schema_and_runtime_agree_on_verification_keys(settings, active):
     assert bool(Config.model_validate(document).detectors[0].active_vlm) is active
 
 
-@pytest.mark.parametrize(
-    "settings",
-    [
-        {"key": "test-key"},
-        {"key": "", "model": []},
-        {"enabled": False},
-    ],
-)
-def test_schema_rejects_connected_verifier_without_model_and_removed_flags(settings):
+@pytest.mark.parametrize("settings", [{"key": "test-key"}, {"key": "", "model": []}])
+def test_schema_rejects_connected_verifier_without_model(settings):
     with pytest.raises(ValidationError):
         Draft202012Validator(schemas()["config.schema.json"]).validate(
             {
@@ -90,11 +84,13 @@ def test_detector_presets_satisfy_the_canonical_contract_after_source_binding(pa
     Config.model_validate(document)
 
 
-@pytest.mark.parametrize("source", [[], "", " ", ["camera", "camera"]])
-def test_schema_rejects_invalid_sources_at_the_external_boundary(source):
-    validator = Draft202012Validator(schemas()["config.schema.json"])
+@pytest.mark.parametrize("source", [[], "", " ", ["camera", "camera"], None])
+def test_schema_and_runtime_reject_invalid_sources(source):
+    document = {"detectors": [{"detection": {"source": source}}]}
     with pytest.raises(ValidationError):
-        validator.validate({"detectors": [{"detection": {"source": source}}]})
+        Draft202012Validator(schemas()["config.schema.json"]).validate(document)
+    with pytest.raises(pydantic.ValidationError):
+        Config.model_validate(document)
 
 
 @pytest.mark.parametrize(

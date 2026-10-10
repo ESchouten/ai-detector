@@ -15,7 +15,7 @@
 	import SecretInput from './secret-input.svelte';
 	import type { StreamMeta } from '$lib/schema';
 	import { checkCameraRecording } from '$lib/camera-check';
-	import { cameraDraftAddress, cameraEditConnection } from '$lib/cameras';
+	import { cameraUsername } from '$lib/cameras';
 	import {
 		discoverCameras,
 		getCameraConnection,
@@ -35,9 +35,8 @@
 	} = $props();
 	let label = $state(untrack(() => initial.label));
 	let source = $state(untrack(() => initial.source));
-	const editing = untrack(() => cameraEditConnection(initial.source));
 	let address = $state(untrack(() => initial.connection?.address ?? ''));
-	let username = $state(editing.username);
+	let username = $state(untrack(() => cameraUsername(initial.source)));
 	let password = $state('');
 	let streamUri = $state(untrack(() => initial.source));
 	let profiles = $state<{ token: string; name: string }[]>([]);
@@ -91,11 +90,7 @@
 		try {
 			const result = await discoverCameras();
 			candidates = result.cameras;
-			discoveryMessage =
-				result.message ??
-				(candidates.length
-					? ''
-					: 'No cameras were found. Enter the stream URL, or check that the camera and this computer use the same network.');
+			discoveryMessage = result.message ?? '';
 		} catch (cause) {
 			if (!address) manualAddress = true;
 			discoveryMessage = errorMessage(
@@ -151,7 +146,6 @@
 				label,
 				source,
 				id: initial.id,
-				mode: 'keep',
 				checkId: check?.checkId,
 				...(changingConnection ? { connection: verifiedConnection ?? null } : {})
 			}).updates(getCameras(), getDetectors());
@@ -229,7 +223,7 @@
 						connectionChangedInput();
 					}}
 				/>
-				{#if cameraDraftAddress(address) && !manualAddress && !candidates.some((camera) => camera.address === address)}
+				{#if address && !manualAddress && !candidates.some((camera) => camera.address === address)}
 					<p class="text-sm break-all text-muted-foreground">Camera selected: {address}</p>
 				{/if}
 				{#if manualAddress}

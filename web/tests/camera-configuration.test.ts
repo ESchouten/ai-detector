@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import * as v from 'valibot';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
-import { alertsInput, cameraInput } from '../src/lib/configuration.ts';
+import { alertsInput } from '../src/lib/configuration.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
 
 async function fixture(t: TestContext) {
@@ -29,8 +29,7 @@ test('legacy identities are stable across reads, persistence, rename and passwor
 	await store.saveCamera({
 		id: original,
 		label: 'New name',
-		source: 'rtsp://user:changed@first.example.test/live',
-		mode: 'keep'
+		source: 'rtsp://user:changed@first.example.test/live'
 	});
 	const reopened = await new ConfigurationStore(files).read();
 	assert.equal(reopened.app.streams[0].id, original);
@@ -255,19 +254,4 @@ test('a recipient can be connected before detectors exist and later disconnected
 	const saved = await store.read();
 	assert.deepEqual(saved.app.telegrams, [recipient]);
 	assert.deepEqual(saved.config.detectors[0].exporters?.telegram, []);
-});
-
-test('camera requests cannot create or copy detectors', () => {
-	for (const mode of ['preset', 'copy']) {
-		assert.equal(
-			v.safeParse(cameraInput, {
-				label: 'Camera',
-				source: first,
-				mode,
-				preset: 'general',
-				copyFromCameraId: 'existing'
-			}).success,
-			false
-		);
-	}
 });

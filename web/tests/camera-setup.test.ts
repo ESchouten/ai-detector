@@ -44,7 +44,7 @@ test('camera progress and non-secret ONVIF details survive reopening and renamin
 	const { files, store } = await fixture(t);
 	const camera = await readyCamera(store);
 	await store.finishSetup(async () => new Set([camera.id]));
-	await store.saveCamera({ id: camera.id, label: 'Main yard', source, mode: 'keep' });
+	await store.saveCamera({ id: camera.id, label: 'Main yard', source });
 	const reopened = await new ConfigurationStore(files).read();
 	assert.equal(reopened.app.streams[0].id, camera.id);
 	assert.deepEqual(reopened.app.streams[0].connection, connection);
@@ -71,12 +71,12 @@ test('setup can finish without phone alerts but still requires real current moni
 
 test('view-only setup can finish after picture confirmation without monitoring, alerts or an archive test', async (t) => {
 	const { store } = await fixture(t);
-	const camera = await store.saveCamera({ label: 'Yard', source, mode: 'view-only' });
+	const camera = await store.saveCamera({ label: 'Yard', source });
 	await assert.rejects(
 		store.finishSetup(async () => new Set()),
 		/Confirm the picture/
 	);
-	await store.saveCamera({ id: camera.id, label: 'Yard', source, mode: 'keep' }, verifiedAt);
+	await store.saveCamera({ id: camera.id, label: 'Yard', source }, verifiedAt);
 	await store.finishSetup(async () => new Set());
 	const progress = cameraSetupStatus(await store.read(), camera.id);
 	assert.equal(progress.monitored, false);
@@ -89,8 +89,7 @@ test('finishing all cameras is atomic and still requires every camera check and 
 	const first = await readyCamera(store);
 	const second = await store.saveCamera({
 		label: 'Entrance',
-		source: 'rtsp://camera.test/entrance',
-		mode: 'view-only'
+		source: 'rtsp://camera.test/entrance'
 	});
 	const before = await readFile(files.app, 'utf8');
 	await assert.rejects(
@@ -100,7 +99,7 @@ test('finishing all cameras is atomic and still requires every camera check and 
 	assert.equal(await readFile(files.app, 'utf8'), before);
 	assert.equal(cameraSetupStatus(await store.read(), first.id).completedAt, undefined);
 	await store.saveCamera(
-		{ id: second.id, label: 'Entrance', source: 'rtsp://camera.test/entrance', mode: 'keep' },
+		{ id: second.id, label: 'Entrance', source: 'rtsp://camera.test/entrance' },
 		verifiedAt
 	);
 	await assert.rejects(
@@ -141,7 +140,7 @@ test('password or source changes preserve camera identity but invalidate earlier
 	const updatedSource = 'rtsp://farmer:new-password@camera.test/yard';
 	const nextCheck = '2026-09-22T11:00:00.000Z';
 	await store.saveCamera(
-		{ id: camera.id, label: 'Yard', source: updatedSource, mode: 'keep', connection },
+		{ id: camera.id, label: 'Yard', source: updatedSource, connection },
 		nextCheck
 	);
 	const updated = await store.read();
@@ -152,7 +151,7 @@ test('password or source changes preserve camera identity but invalidate earlier
 	assert.equal(progress.archiveVerifiedAt, undefined);
 	assert.equal(progress.completedAt, undefined);
 	// An address saved without a new picture check keeps neither the earlier check nor its connection.
-	await store.saveCamera({ id: camera.id, label: 'Yard', source, mode: 'keep' });
+	await store.saveCamera({ id: camera.id, label: 'Yard', source });
 	const unchecked = await store.read();
 	assert.equal(unchecked.app.streams[0].connection, undefined);
 	assert.equal(cameraSetupStatus(unchecked, camera.id).pictureVerifiedAt, undefined);
@@ -248,7 +247,7 @@ test('failed progress persistence does not claim completion and retry succeeds',
 });
 
 test('client camera input cannot forge progress and rejects secrets in reusable connection metadata', () => {
-	const input = { label: 'Yard', source, mode: 'view-only', connection };
+	const input = { label: 'Yard', source, connection };
 	assert.equal(v.safeParse(cameraInput, input).success, true);
 	for (const address of [
 		'http://farmer:secret@camera.test/onvif',
@@ -270,7 +269,7 @@ test('camera edits and completion do not depend on preset files', async (t) => {
 	await store.finishSetup(async () => new Set([camera.id]));
 	const original = await store.read();
 	const reopened = new ConfigurationStore(files);
-	await reopened.saveCamera({ id: camera.id, label: 'Main entrance', source, mode: 'keep' });
+	await reopened.saveCamera({ id: camera.id, label: 'Main entrance', source });
 	const saved = await reopened.read();
 	assert.deepEqual(saved.config.detectors, original.config.detectors);
 	assert.equal(

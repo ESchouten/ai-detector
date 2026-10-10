@@ -24,10 +24,7 @@ test('recording check sends the resolved source and reads the checked camera res
 	const result = {
 		source,
 		checkId: 'checked-camera',
-		checkedAt: new Date().toISOString(),
-		previewUrl: '/camera-checks/checked-camera/picture.jpg',
-		recordingUrl: '/camera-checks/checked-camera/recording.mp4',
-		profiles: []
+		previewUrl: '/camera-checks/checked-camera/picture.jpg'
 	};
 	const endpoint = await serve(t, async (request, response) => {
 		assert.equal(request.method, 'POST');
@@ -53,10 +50,7 @@ test('a checked connection keeps what the camera answered and takes the source t
 	const check = {
 		source: 'rtsp://camera.example.test/live?transport=tcp',
 		checkId: 'checked-camera',
-		checkedAt: new Date().toISOString(),
-		previewUrl: '/camera-checks/checked-camera/picture.jpg',
-		recordingUrl: '/camera-checks/checked-camera/recording.mp4',
-		profiles: []
+		previewUrl: '/camera-checks/checked-camera/picture.jpg'
 	};
 	let requests = 0;
 	const endpoint = await serve(t, (_request, response) => {

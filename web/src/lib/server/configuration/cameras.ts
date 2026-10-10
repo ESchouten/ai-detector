@@ -38,12 +38,6 @@ function updateCameraMetadata(
 	if (input.connection === null) delete camera.connection;
 	else if (input.connection) camera.connection = input.connection;
 	if (pictureVerifiedAt) camera.setup = { ...camera.setup, pictureVerifiedAt };
-	if (camera.setup && input.mode !== 'keep') {
-		delete camera.setup.archiveVerifiedAt;
-		delete camera.setup.archiveSignature;
-		delete camera.setup.completedAt;
-		delete camera.setup.completionSignature;
-	}
 	Object.assign(camera, { label: input.label, source: input.source });
 }
 
@@ -60,8 +54,6 @@ export function saveCamera(
 		throw new ConfigurationError('This camera is already saved. Edit it from Cameras.');
 	if (document.app.streams.some((stream) => stream !== existing && stream.label === input.label))
 		throw new ConfigurationError('A camera with this name already exists. Choose another name.');
-	if (!existing && input.mode === 'keep')
-		throw new ConfigurationError('Choose an existing camera to edit.');
 	const camera: StreamMeta = existing ?? { source: input.source };
 	const previousSource = camera.source;
 	updateCameraMetadata(camera, input, pictureVerifiedAt);
@@ -71,13 +63,7 @@ export function saveCamera(
 		detector.detection.source = detector.detection.source.map((source) =>
 			source === previousSource ? input.source : source
 		);
-	if (input.mode === 'view-only') detachCamera(document, input.source);
-	return {
-		id: camera.id!,
-		monitored: document.config.detectors.some((detector) =>
-			detector.detection.source.includes(input.source)
-		)
-	};
+	return { id: camera.id! };
 }
 
 export function removeCamera(document: Configuration, id: string): void {

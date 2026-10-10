@@ -34,10 +34,7 @@ const connection: CheckedConnection = {
 	check: {
 		source,
 		checkId: 'checked-camera',
-		checkedAt: '2026-09-22T10:00:00.000Z',
-		previewUrl: '/camera-checks/checked-camera/picture.jpg',
-		recordingUrl: '/camera-checks/checked-camera/recording.mp4',
-		profiles: []
+		previewUrl: '/camera-checks/checked-camera/picture.jpg'
 	}
 };
 

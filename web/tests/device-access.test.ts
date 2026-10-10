@@ -68,7 +68,7 @@ test('pairing and settings edits share a queue and do not overwrite each other',
 	const [token] = await Promise.all([
 		access.pair(pairing.code, 'Phone'),
 		store.saveAdvanced('connections', [{ label: 'Validator', model: 'openai/vision' }], revision),
-		store.saveCamera({ label: 'Barn', source: 'rtsp://camera.local/live', mode: 'view-only' })
+		store.saveCamera({ label: 'Barn', source: 'rtsp://camera.local/live' })
 	]);
 	assert.ok(await access.identify(token));
 	const saved = await store.read();
@@ -136,7 +136,7 @@ test('recovering settings preserves current access without reviving a revoked br
 	await store.replace({ config: { detectors: [] }, app: {} });
 	const access = new DeviceAccess(store);
 	const oldToken = await access.pair(access.createPairing().code, 'Old phone');
-	await store.saveCamera({ label: 'Barn', source: 'rtsp://camera.local/live', mode: 'view-only' });
+	await store.saveCamera({ label: 'Barn', source: 'rtsp://camera.local/live' });
 	const snapshot = JSON.parse(await readFile(`${files.config}.last-valid`, 'utf8'));
 	assert.equal(snapshot.app.devices, undefined);
 	await access.revoke((await access.identify(oldToken))!.id);

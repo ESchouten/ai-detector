@@ -9,6 +9,7 @@ import { test, type TestContext } from 'node:test';
 import { promisify } from 'node:util';
 import ffmpeg from 'ffmpeg-static';
 import onvif, { type DiscoveryProbeOptions, type ProbeCallback } from 'onvif';
+import { cameraUsername } from '../src/lib/cameras.ts';
 import {
 	cameraAddress,
 	cameraStream,
@@ -82,6 +83,14 @@ test('manual stream URLs preserve their embedded login without separate credenti
 	);
 });
 
+test('changing a saved camera login starts from its username', () => {
+	assert.equal(
+		cameraUsername('rtsp://farm%40home:private%23%2F%3F@camera.local:554/stream'),
+		'farm@home'
+	);
+	assert.equal(cameraUsername('invalid'), '');
+});
+
 test('camera check waits for a keyframe even when the stream starts with undecodable frames', async (t) => {
 	assert.ok(ffmpeg);
 	const dir = await directory(t);
@@ -114,7 +123,7 @@ test('camera check waits for a keyframe even when the stream starts with undecod
 		response.end(stream);
 	});
 	const cache = new CameraChecks(path.join(dir, 'checks'));
-	const result = await cache.check(address, ffmpeg, []);
+	const result = await cache.check(address, ffmpeg);
 	const picture = await readFile(cache.file(result.checkId, 'picture.jpg')!);
 	assert.equal(picture.subarray(0, 2).toString('hex'), 'ffd8');
 	const { stdout } = await execute(ffmpeg, [
@@ -278,7 +287,7 @@ test(
 		]);
 		const handshakeCount = requests.length;
 		const resolvedFirst = await resolveCameraStream({ ...input, streamUri: first.source });
-		await assert.rejects(cache.check(resolvedFirst.source, ffmpeg, []), CameraConnectionError);
+		await assert.rejects(cache.check(resolvedFirst.source, ffmpeg), CameraConnectionError);
 		assert.equal(requests.length, handshakeCount, 'recording uses the resolved stream directly');
 		assert.deepEqual(await readdir(path.join(dir, 'checks')), []);
 
@@ -286,7 +295,7 @@ test(
 		assert.equal(selected.source, `${address}/yard`);
 		const selectedHandshakes = requests.length;
 		const resolvedSelected = await resolveCameraStream({ ...input, streamUri: selected.source });
-		const check = await cache.check(resolvedSelected.source, ffmpeg, []);
+		const check = await cache.check(resolvedSelected.source, ffmpeg);
 		cache.assert(check.checkId, selected.source);
 		assert.equal(requests.length, selectedHandshakes);
 		assert.ok(cache.file(check.checkId, 'picture.jpg'));
@@ -325,7 +334,7 @@ test(
 		});
 		let now = Date.now();
 		const cache = new CameraChecks(path.join(dir, 'checks'), () => now);
-		const result = await cache.check(`${address}/camera`, ffmpeg, []);
+		const result = await cache.check(`${address}/camera`, ffmpeg);
 		cache.assert(result.checkId, result.source);
 		assert.throws(() => cache.assert(result.checkId, 'rtsp://changed'), /camera address changed/);
 		assert.ok(!result.previewUrl.includes(address));
@@ -345,7 +354,7 @@ test(
 		now += 15 * 60 * 1000;
 		assert.throws(() => cache.assert(result.checkId, result.source), /expired/);
 		assert.equal(cache.file(result.checkId, 'picture.jpg'), null);
-		await cache.check(`${address}/camera`, ffmpeg, []);
+		await cache.check(`${address}/camera`, ffmpeg);
 		assert.deepEqual(
 			(await readdir(path.join(dir, 'checks'))).filter((id) => id === result.checkId),
 			[]
@@ -361,7 +370,7 @@ test(
 		const dir = await directory(t);
 		const cache = new CameraChecks(dir);
 		await assert.rejects(
-			cache.check('http://127.0.0.1/invalid', path.join(dir, 'missing-ffmpeg'), []),
+			cache.check('http://127.0.0.1/invalid', path.join(dir, 'missing-ffmpeg')),
 			/software is missing/
 		);
 		assert.deepEqual(await readdir(dir), []);
@@ -371,9 +380,9 @@ test(
 			started = resolve;
 		});
 		const address = await server(t, () => started());
-		const pending = cache.check(address, ffmpeg, [], controller.signal);
+		const pending = cache.check(address, ffmpeg, controller.signal);
 		await connected;
-		const waiting = cache.check(address, path.join(dir, 'missing-ffmpeg'), []);
+		const waiting = cache.check(address, path.join(dir, 'missing-ffmpeg'));
 		controller.abort(new Error('Setup cancelled'));
 		await Promise.all([
 			assert.rejects(pending, /Setup cancelled/),
@@ -469,10 +478,7 @@ test('invalid video is not diagnosed from timeout flags or credentials in the FF
 	url.username = 'farmer';
 	url.password = '401';
 	const checks = new CameraChecks(directoryPath);
-	await assert.rejects(
-		checks.check(url.href, ffmpeg, []),
-		/did not provide a supported video stream/
-	);
+	await assert.rejects(checks.check(url.href, ffmpeg), /did not provide a supported video stream/);
 	assert.deepEqual(await readdir(directoryPath), []);
 });
 
@@ -483,7 +489,7 @@ test('unwritable test storage reports repair guidance and keeps the original fai
 	await writeFile(occupied, 'An existing file must not be overwritten.');
 	const checks = new CameraChecks(path.join(occupied, 'checks'));
 	t.mock.method(console, 'warn', () => {});
-	await assert.rejects(checks.check('rtsp://camera', ffmpeg, []), /data folder is writable/);
+	await assert.rejects(checks.check('rtsp://camera', ffmpeg), /data folder is writable/);
 	assert.equal(await readFile(occupied, 'utf8'), 'An existing file must not be overwritten.');
 });
 

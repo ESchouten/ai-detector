@@ -356,7 +356,7 @@ test('existing destination recordings and setups are never replaced, including c
 	await assert.rejects(importer.inspect(source), /will not overwrite/);
 	await rm(path.join(destination, 'detections'), { recursive: true });
 	const summary = await importer.inspect(source);
-	await store.saveCamera({ label: 'New camera', source: '0', mode: 'view-only' });
+	await store.saveCamera({ label: 'New camera', source: '0' });
 	await importer.start(summary.id, false);
 	await importer.settled();
 	assert.match((await importer.getStatus()).message!, /already has a setup/);

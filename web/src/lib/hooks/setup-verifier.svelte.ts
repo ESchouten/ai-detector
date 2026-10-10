@@ -124,7 +124,6 @@ export class SetupVerifier {
 			id,
 			label: camera.label,
 			source: check.source,
-			mode: 'keep',
 			checkId: check.checkId
 		}).updates(getCameras());
 		this.#checks[id] = check.checkId;

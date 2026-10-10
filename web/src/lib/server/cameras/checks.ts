@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, readdir, rm, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import type { CameraConnectionResult, CameraProfile } from '../../cameras.ts';
+import type { CameraConnectionResult } from '../../cameras.ts';
 import { getCameraInputArgs } from '../ffmpeg.ts';
 import { CameraConnectionError, cameraStorageFailure, connectionFailure } from './connection.ts';
 import { webLog } from '../web-log.ts';
@@ -100,13 +100,8 @@ export class CameraChecks {
 	}
 
 	/** Checks run one at a time; setup connects several cameras at once, so the others wait. */
-	check(
-		source: string,
-		executable: string,
-		profiles: CameraProfile[],
-		signal?: AbortSignal
-	): Promise<CameraConnectionResult> {
-		const check = this.last.then(() => this.record(source, executable, profiles, signal));
+	check(source: string, executable: string, signal?: AbortSignal): Promise<CameraConnectionResult> {
+		const check = this.last.then(() => this.record(source, executable, signal));
 		this.last = check.catch(() => {});
 		return check;
 	}
@@ -114,7 +109,6 @@ export class CameraChecks {
 	private async record(
 		source: string,
 		executable: string,
-		profiles: CameraProfile[],
 		signal?: AbortSignal
 	): Promise<CameraConnectionResult> {
 		const id = randomUUID();
@@ -123,16 +117,8 @@ export class CameraChecks {
 			await this.prune();
 			await mkdir(directory, { recursive: true, mode: 0o700 });
 			await recordCameraTest(source, executable, directory, signal);
-			const checkedAt = this.now();
-			this.checks.set(id, { source, checkedAt, directory });
-			return {
-				source,
-				checkId: id,
-				checkedAt: new Date(checkedAt).toISOString(),
-				profiles,
-				previewUrl: `/camera-checks/${id}/picture.jpg`,
-				recordingUrl: `/camera-checks/${id}/recording.mp4`
-			};
+			this.checks.set(id, { source, checkedAt: this.now(), directory });
+			return { source, checkId: id, previewUrl: `/camera-checks/${id}/picture.jpg` };
 		} catch (cause) {
 			try {
 				await rm(directory, { recursive: true, force: true });

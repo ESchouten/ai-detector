@@ -67,7 +67,7 @@ async function fixture(
 test('missing saved settings preserve recovery across restarts, including camera metadata', async (t) => {
 	for (const missing of ['config', 'app'] as const) {
 		const { files, store } = await fixture(t);
-		await store.saveCamera({ label: 'Barn', source: other, mode: 'view-only' });
+		await store.saveCamera({ label: 'Barn', source: other });
 		const original = await store.read();
 		const snapshot = await readFile(`${files.config}.last-valid`, 'utf8');
 		await rm(files[missing]);
@@ -494,7 +494,7 @@ test('a committed detector save succeeds while an apply failure is reported to r
 	assert.equal(saved.app.streams[0].id, camera.id);
 	assert.deepEqual(saved.config.detectors[0].detection.source, [source]);
 	assert.equal(saved.app.streams.length, 1);
-	await store.saveCamera({ id: camera.id, source, label: 'Renamed barn', mode: 'keep' });
+	await store.saveCamera({ id: camera.id, source, label: 'Renamed barn' });
 	assert.deepEqual(reported, [failure]);
 	assert.equal((await store.read()).app.streams[0].label, 'Renamed barn');
 });
@@ -544,8 +544,8 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 		}
 	}));
 	const camera = (await store.read()).app.streams[0];
-	await store.saveCamera({ source: other, label: 'Unused camera', mode: 'view-only' });
-	await store.saveCamera({ id: camera.id, source, label: 'Renamed camera', mode: 'keep' });
+	await store.saveCamera({ source: other, label: 'Unused camera' });
+	await store.saveCamera({ id: camera.id, source, label: 'Renamed camera' });
 	await store.saveTelegram({ label: 'Unused channel', token: 'other', chat: 'other' });
 	await store.saveTelegram({ original: 'chat', label: 'Renamed channel', ...telegram });
 	const { config } = await store.read();
@@ -571,8 +571,7 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 	await store.saveCamera({
 		id: camera.id,
 		source: replacement,
-		label: 'Renamed camera',
-		mode: 'keep'
+		label: 'Renamed camera'
 	});
 	await store.saveTelegram({
 		original: 'Renamed channel',
@@ -669,7 +668,7 @@ test('renaming or changing delivery settings keeps the monitoring preset and cam
 test('metadata-only first save still creates the missing empty configuration', async (t) => {
 	const { files, store } = await fixture(t);
 	await rm(files.config);
-	await store.saveCamera({ source, label: 'First camera', mode: 'view-only' });
+	await store.saveCamera({ source, label: 'First camera' });
 	assert.deepEqual(JSON.parse(await readFile(files.config, 'utf8')), {
 		$schema: DEFAULT_SCHEMA_URL,
 		detectors: []
@@ -933,19 +932,18 @@ test('a changed camera address reaches every detector that uses it, and duplicat
 	await store.saveCamera({
 		id: camera.id,
 		source: replacement,
-		label: 'Renamed camera',
-		mode: 'keep'
+		label: 'Renamed camera'
 	});
 	assert.deepEqual(
 		(await store.read()).config.detectors.map((item) => item.detection.source),
 		[[replacement], [replacement, other]]
 	);
 	await assert.rejects(
-		store.saveCamera({ id: camera.id, source: other, label: 'Duplicate', mode: 'keep' }),
+		store.saveCamera({ id: camera.id, source: other, label: 'Duplicate' }),
 		/already saved/
 	);
 	await assert.rejects(
-		store.saveCamera({ id: second.id, source: other, label: 'Renamed camera', mode: 'keep' }),
+		store.saveCamera({ id: second.id, source: other, label: 'Renamed camera' }),
 		/name already exists/
 	);
 	assert.deepEqual(

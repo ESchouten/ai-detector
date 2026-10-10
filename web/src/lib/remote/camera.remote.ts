@@ -13,7 +13,6 @@ import { managedDetector, watchHistory } from '$lib/server/detector-service';
 import { recordings } from '$lib/server/recordings';
 import { sourceKey } from '$lib/server/source-key';
 import { configuration } from '$lib/server/configuration';
-import { cameraSetupStatus } from '$lib/server/configuration/camera-setup';
 import { configurationAction } from '$lib/server/configuration/request';
 
 export const discoverCameras = command(() => discover());
@@ -32,7 +31,6 @@ export const getCameras = query(async () => {
 		);
 		return {
 			...camera,
-			setupComplete: !!cameraSetupStatus({ app, config }, camera.id!).completedAt,
 			id: camera.id!,
 			label: camera.label ?? 'Camera',
 			monitored: rules.length > 0,

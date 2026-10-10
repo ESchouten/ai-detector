@@ -32,16 +32,12 @@ export const telegramInput = v.object({
 	original: v.optional(v.string())
 });
 
-const cameraDetails = {
+export const cameraInput = v.object({
 	label: text,
 	source: text,
 	checkId: v.optional(text),
-	connection: v.optional(v.nullable(cameraConnectionMeta))
-};
-export const cameraInput = v.object({
-	...cameraDetails,
-	id: v.optional(text),
-	mode: v.picklist(['view-only', 'keep'])
+	connection: v.optional(v.nullable(cameraConnectionMeta)),
+	id: v.optional(text)
 });
 
 /** The part of `health` shown on the Monitoring page; other options stay as set in Advanced. */

@@ -102,7 +102,7 @@ test('invalid and stale saves leave both files untouched', async (t) => {
 	});
 	const saved = await store.read();
 	const revision = settingsRevision(saved);
-	await store.saveCamera({ source: 'other.mp4', label: 'Other camera', mode: 'view-only' });
+	await store.saveCamera({ source: 'other.mp4', label: 'Other camera' });
 	const before = await Promise.all([readFile(files.config), readFile(files.app)]);
 	await assert.rejects(
 		store.saveAdvanced('config', { detectors: [] }, revision),
@@ -179,7 +179,7 @@ test('editing detector credentials detaches only that shared connection', async 
 test('saving settings keeps the launcher’s resume flag, which never appears in settings, backups or revisions', async (t) => {
 	const { files, store } = await fixture(t);
 	const source = 'rtsp://camera.example.test/barn';
-	await store.saveCamera({ label: 'Barn', source, mode: 'view-only' });
+	await store.saveCamera({ label: 'Barn', source });
 	await setMonitoringEnabled(files.app, true);
 	const loaded = await store.read();
 	assert.equal('monitoring' in loaded.app, false);
@@ -189,8 +189,7 @@ test('saving settings keeps the launcher’s resume flag, which never appears in
 	await store.saveCamera({
 		id: loaded.app.streams[0].id,
 		label: 'Barn north',
-		source,
-		mode: 'keep'
+		source
 	});
 	assert.equal(await monitoringEnabled(files.app), true);
 	await store.saveDetector({
@@ -222,8 +221,7 @@ test('the launcher and the settings store can replace app.json at the same time 
 	const saves = Array.from({ length: 6 }, (_, index) =>
 		store.saveCamera({
 			label: `Camera ${index + 1}`,
-			source: `rtsp://camera.example.test/${index}`,
-			mode: 'view-only'
+			source: `rtsp://camera.example.test/${index}`
 		})
 	);
 	const toggles = [true, false, true, false, true].map((enabled) =>

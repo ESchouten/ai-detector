@@ -10,12 +10,7 @@ import { getFfmpegPathWithFallback } from '$lib/server/ffmpeg';
 
 const inputSchema = v.object({ checkId: v.optional(v.string()) });
 
-export const POST: RequestHandler = async ({ request, params, url }) => {
-	if (request.headers.get('origin') !== url.origin)
-		return json(
-			{ message: 'Open AI Detector again before checking the recording location.' },
-			{ status: 403 }
-		);
+export const POST: RequestHandler = async ({ request, params }) => {
 	try {
 		const input = v.safeParse(inputSchema, await request.json());
 		if (!input.success)
@@ -34,10 +29,7 @@ export const POST: RequestHandler = async ({ request, params, url }) => {
 		let checkId = input.output.checkId;
 		if (checkId) cameraChecks.assert(checkId, camera.source);
 		else {
-			const result = await connectCamera(
-				{ address: '', username: '', password: '', streamUri: camera.source },
-				request.signal
-			);
+			const result = await connectCamera(camera.source, request.signal);
 			checkId = result.checkId;
 		}
 		const clip = cameraChecks.file(checkId, 'recording.mp4');

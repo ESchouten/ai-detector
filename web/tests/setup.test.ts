@@ -28,8 +28,8 @@ test('cameras are saved first, shared by detectors later, and stay assigned afte
 	const store = new ConfigurationStore(files);
 	const entrance = 'rtsp://camera-one.example.test/live';
 	const yard = 'rtsp://camera-two.example.test/live';
-	const one = await store.saveCamera({ label: 'Entrance', source: entrance, mode: 'view-only' });
-	await store.saveCamera({ label: 'Yard', source: yard, mode: 'view-only' });
+	const one = await store.saveCamera({ label: 'Entrance', source: entrance });
+	await store.saveCamera({ label: 'Yard', source: yard });
 	let saved = await new ConfigurationStore(files).read();
 	assert.equal(saved.app.streams.length, 2);
 	assert.deepEqual(saved.config.detectors, []);
@@ -47,8 +47,7 @@ test('cameras are saved first, shared by detectors later, and stay assigned afte
 	await store.saveCamera({
 		id: one.id,
 		label: 'Front entrance',
-		source: updatedSource,
-		mode: 'keep'
+		source: updatedSource
 	});
 	saved = await new ConfigurationStore(files).read();
 	assert.deepEqual(

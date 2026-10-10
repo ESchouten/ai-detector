@@ -25,6 +25,6 @@ export async function addMonitoredCamera(
 	presetId: string,
 	verifiedAt?: string
 ) {
-	await store.saveCamera({ ...camera, mode: 'view-only' }, verifiedAt);
+	await store.saveCamera(camera, verifiedAt);
 	return addPresetDetector(store, camera, presetId);
 }

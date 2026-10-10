@@ -676,10 +676,6 @@ msgstr "This camera is already saved. Edit it from Cameras."
 msgid "A camera with this name already exists. Choose another name."
 msgstr "A camera with this name already exists. Choose another name."
 
-#: src/lib/server/configuration/cameras.ts
-msgid "Choose an existing camera to edit."
-msgstr "Choose an existing camera to edit."
-
 #: src/lib/server/cameras/checks.ts
 msgid "The camera check took too long. Try again or choose another camera channel."
 msgstr "The camera check took too long. Try again or choose another camera channel."
@@ -864,10 +860,6 @@ msgid "A local {0} file is missing: {1}. Restore it before importing."
 msgstr "A local {0} file is missing: {1}. Restore it before importing."
 
 #: src/routes/(admin)/camera-checks/+server.ts
-msgid "Open AI Detector again before checking the camera."
-msgstr "Open AI Detector again before checking the camera."
-
-#: src/routes/(admin)/camera-checks/+server.ts
 msgid "Choose a camera stream before checking its picture."
 msgstr "Choose a camera stream before checking its picture."
 
@@ -967,10 +959,6 @@ msgstr "The cache could not be cleared."
 #: src/routes/(admin)/cameras/pictures/+server.ts
 msgid "Camera not found."
 msgstr "Camera not found."
-
-#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
-msgid "Open AI Detector again before checking the recording location."
-msgstr "Open AI Detector again before checking the recording location."
 
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
@@ -1146,10 +1134,6 @@ msgstr "Connected"
 #: src/lib/components/camera-add.svelte
 msgid "Added"
 msgstr "Added"
-
-#: src/lib/components/camera-add.svelte
-msgid "No cameras were found. Check that the camera and this computer use the same network, or enter its stream URL."
-msgstr "No cameras were found. Check that the camera and this computer use the same network, or enter its stream URL."
 
 #: src/lib/components/camera-add.svelte
 #: src/lib/components/camera-settings.svelte
@@ -1392,10 +1376,6 @@ msgstr "Select all cameras"
 #: src/lib/components/camera-selection.svelte
 msgid "Choose at least one camera to continue."
 msgstr "Choose at least one camera to continue."
-
-#: src/lib/components/camera-settings.svelte
-msgid "No cameras were found. Enter the stream URL, or check that the camera and this computer use the same network."
-msgstr "No cameras were found. Enter the stream URL, or check that the camera and this computer use the same network."
 
 #: src/lib/components/camera-settings.svelte
 msgid "Could not connect to the camera. Check its connection details."

@@ -84,11 +84,7 @@
 				selected = candidates
 					.map((camera) => camera.address)
 					.filter((address) => !known.has(address));
-			discoveryMessage =
-				result.message ??
-				(candidates.length
-					? ''
-					: 'No cameras were found. Check that the camera and this computer use the same network, or enter its stream URL.');
+			discoveryMessage = result.message ?? '';
 		} catch (cause) {
 			manual = true;
 			discoveryMessage = errorMessage(
@@ -222,7 +218,6 @@
 				const saved = await saveCamera({
 					label: camera.name.trim(),
 					source: connection.source,
-					mode: 'view-only',
 					checkId: connection.check.checkId,
 					connection: connection.connection
 				});

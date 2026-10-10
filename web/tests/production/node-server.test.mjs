@@ -545,7 +545,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 					exporters: { disk: { directory: 'safety' } }
 				})
 			);
-			const cameraInput = { label: 'Workshop camera', source, mode: 'view-only' };
+			const cameraInput = { label: 'Workshop camera', source };
 			const host = deployment === 'LAN HTTP' ? 'barn.local:8080' : new URL(base).host;
 			const origin = publicOrigin ?? `http://${host}`;
 			const browserHeaders = { Host: host };
@@ -709,11 +709,7 @@ test(
 			assert.equal(response.status, 200, await response.clone().text());
 			return response.json();
 		}
-		const unverified = await command('saveCamera', {
-			label: 'Pen',
-			source,
-			mode: 'view-only'
-		});
+		const unverified = await command('saveCamera', { label: 'Pen', source });
 		assert.equal(unverified.type, 'error');
 		assert.equal(unverified.status, 400);
 		await assert.rejects(readFile(path.join(directory, 'config.json')), { code: 'ENOENT' });
@@ -738,18 +734,13 @@ test(
 				.toString('hex'),
 			'ffd8'
 		);
-		const clip = await send(base + result.recordingUrl, { headers: { range: 'bytes=0-15' } });
-		assert.equal(clip.status, 206);
-		assert.equal((await clip.arrayBuffer()).byteLength, 16);
 		const saved = await command('saveCamera', {
 			label: 'Pen',
 			source: result.source,
-			mode: 'view-only',
 			checkId: result.checkId
 		});
 		assert.equal(saved.type, 'result', JSON.stringify(saved));
 		const id = parse(saved.result).id;
-		assert.equal(parse(saved.result).monitored, false);
 		assert.deepEqual(
 			JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8')).detectors,
 			[]
@@ -778,8 +769,7 @@ test(
 		const renamed = await command('saveCamera', {
 			id,
 			label: 'Calving pen',
-			source: result.source,
-			mode: 'keep'
+			source: result.source
 		});
 		assert.equal(renamed.type, 'result', JSON.stringify(renamed));
 		const other = await checkCamera(source + '-yard');
@@ -788,7 +778,6 @@ test(
 				await command('saveCamera', {
 					label: 'Yard',
 					source: other.source,
-					mode: 'view-only',
 					checkId: other.checkId
 				})
 			).type,
@@ -1029,12 +1018,12 @@ test(
 				'x-sveltekit-pathname': `/streams/${cameraId}`,
 				'x-sveltekit-search': ''
 			},
-			body: commandBody({ id: cameraId, label: 'Main workshop', source, mode: 'keep' })
+			body: commandBody({ id: cameraId, label: 'Main workshop', source })
 		});
 		assert.equal(renamed.status, 200, await renamed.clone().text());
 		const result = await renamed.json();
 		assert.equal(result.type, 'result', JSON.stringify(result));
-		assert.deepEqual(parse(result.result), { id: cameraId, monitored: true });
+		assert.deepEqual(parse(result.result), { id: cameraId });
 		assert.equal(await readFile(configPath, 'utf8'), configText);
 		const app = JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8'));
 		assert.deepEqual(app.streams, [{ id: cameraId, label: 'Main workshop', source }]);

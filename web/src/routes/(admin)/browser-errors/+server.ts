@@ -14,8 +14,7 @@ let written = 0;
 
 // What goes wrong in the browser is invisible to the server; pages report it here so a
 // diagnostics download shows it.
-export const POST: RequestHandler = async ({ request, url }) => {
-	if (request.headers.get('origin') !== url.origin) return new Response(null, { status: 403 });
+export const POST: RequestHandler = async ({ request }) => {
 	const input = v.safeParse(report, await request.json().catch(() => null));
 	if (!input.success) return new Response(null, { status: 400 });
 	const now = Math.floor(Date.now() / 60000);

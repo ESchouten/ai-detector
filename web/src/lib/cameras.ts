@@ -10,34 +10,12 @@ export const cameraConnectionInput = v.object({
 
 export type CameraConnectionInput = v.InferOutput<typeof cameraConnectionInput>;
 
-/** Keep setup drafts free of pasted logins and URL tokens. */
-export function cameraDraftAddress(value: string): string | undefined {
+/** The username in a saved camera's stream address, to start from when its login is changed. */
+export function cameraUsername(source: string): string {
 	try {
-		const address = new URL(value.includes('://') ? value : `http://${value}`);
-		if (
-			!['http:', 'https:'].includes(address.protocol) ||
-			address.username ||
-			address.password ||
-			address.search ||
-			address.hash
-		)
-			return undefined;
-		return value;
+		return decodeURIComponent(new URL(source).username);
 	} catch {
-		return undefined;
-	}
-}
-
-/** Fill editable fields from saved server data, without putting credentials into draft storage. */
-export function cameraEditConnection(source: string): { username: string; streamUri: string } {
-	try {
-		const stream = new URL(source);
-		const username = decodeURIComponent(stream.username);
-		stream.username = '';
-		stream.password = '';
-		return { username, streamUri: stream.toString() };
-	} catch {
-		return { username: '', streamUri: '' };
+		return '';
 	}
 }
 
@@ -54,8 +32,5 @@ export interface CameraProfile {
 export interface CameraConnectionResult {
 	source: string;
 	checkId: string;
-	checkedAt: string;
 	previewUrl: string;
-	recordingUrl: string;
-	profiles: CameraProfile[];
 }

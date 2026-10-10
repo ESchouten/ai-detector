@@ -4,9 +4,7 @@ import { connectCamera, CameraConnectionError } from '$lib/server/cameras';
 
 const checkInput = v.object({ source: v.pipe(v.string(), v.trim(), v.minLength(1)) });
 
-export const POST: RequestHandler = async ({ request, url }) => {
-	if (request.headers.get('origin') !== url.origin)
-		return json({ message: 'Open AI Detector again before checking the camera.' }, { status: 403 });
+export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const input = v.safeParse(checkInput, await request.json());
 		if (!input.success)
@@ -14,10 +12,7 @@ export const POST: RequestHandler = async ({ request, url }) => {
 				{ message: 'Choose a camera stream before checking its picture.' },
 				{ status: 400 }
 			);
-		const result = await connectCamera(
-			{ address: '', username: '', password: '', streamUri: input.output.source },
-			request.signal
-		);
+		const result = await connectCamera(input.output.source, request.signal);
 		return json(result, { headers: { 'Cache-Control': 'no-store' } });
 	} catch (cause) {
 		if (request.signal.aborted) return new Response(null, { status: 499 });

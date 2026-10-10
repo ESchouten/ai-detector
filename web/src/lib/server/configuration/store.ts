@@ -149,7 +149,6 @@ export class ConfigurationStore {
 
 	private async persist(input: Configuration): Promise<void> {
 		const { config, app } = identifyCameras(normalizeConfiguration(input.config, input.app));
-		app.devices = await this.files.devices();
 		this.keepLanguage(app);
 		const previous = await this.files.savedConfig();
 		const configChanged =

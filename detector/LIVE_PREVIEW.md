@@ -2,7 +2,7 @@
 
 `aidetector --live-preview` enables an optional local file transport shared with the web application. Managed launches enable it automatically; standalone launches must opt in and share the same data directory with the web application. It creates no HTTP server and uses no extra camera connection.
 
-`DetectionPipeline` calls its `PublishObservation` callback after successful inference, before event aggregation. The callback receives the latest analyzed observation, including its original image and bounding boxes. Snapshot rules publish their current image with empty boxes. It does not create an event, change event scores, or depend on whether an event meets recording or notification thresholds. Track IDs are optional, scoped to a tracking run, and have no identity meaning.
+`DetectionPipeline` calls its `PublishObservation` callback after successful inference, before event aggregation. The callback receives the latest analyzed observation, including its original image and bounding boxes. Snapshot rules publish with empty boxes. It does not create an event, change event scores, or depend on whether an event meets recording or notification thresholds. Track IDs are optional, scoped to a tracking run, and have no identity meaning.
 
 The live adapter owns one thread. Its callback only replaces the latest pending observation for each configured source/rule pair when a viewer is active. Filesystem work happens on the thread, at most eight times per second per pair. A slow disk cannot accumulate a frame history or block inference. The adapter writes the size of the analyzed picture and its boxes, never the pixels: the web application shows its own camera pictures.
 
@@ -22,7 +22,7 @@ Each rule/source pair has one retained record. Starting a publisher removes prev
 
 * `frame` contains the version 1 record plus the camera ID, current rule label and optional preset. Boxes scale from its image size to the independently playing camera video, with letterboxing preserved. They represent the latest analyzed result, so moving objects can move beyond their boxes between inferences.
 * `status` contains the camera ID and rule ID that have no current result, and clears their boxes; `{}` clears every box when the stream fails. An empty detection result also clears previous boxes for that rule.
-* `heartbeat` contains `{}` when neither pictures nor statuses changed. The browser can distinguish an unchanged picture from a stalled connection.
+* `heartbeat` contains `{}` when neither frames nor statuses changed. The browser can distinguish an unchanged result from a stalled connection.
 
 The server accepts a frame only for the current session and matching source/rule. A session becomes unavailable after six seconds without a heartbeat. A frame becomes unavailable after the larger of fifteen seconds or three configured inference intervals plus five seconds. Freshness uses publication time; file footage may have historical capture timestamps. A changed run ID closes the stream so reconnecting resolves current configuration and labels. Slow consumers skip intermediate records instead of building an unbounded response queue.
 

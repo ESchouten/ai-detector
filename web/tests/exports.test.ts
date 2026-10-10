@@ -315,7 +315,7 @@ test('settings backup preserves cameras, detector options and alerts, and import
 		files.app,
 		JSON.stringify({
 			streams: [{ id: 'barn', source, label: 'Barn' }],
-			detectors: [{ label: 'Activity', preset: 'general' }],
+			detectors: [{ label: 'Activity' }],
 			telegrams: [{ label: 'Phone', token: 'private-token', chat: '1234' }]
 		})
 	);

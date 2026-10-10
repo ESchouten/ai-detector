@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { badgeHue } from '$lib/badge-colors';
-	import { detectionBoxLabel, type CameraOverlayFrame } from '$lib/live-preview';
+	import { detectionBoxLabel, type LivePreviewFrame } from '$lib/live-preview';
 	let {
 		frame,
 		displayWidth
 	}: {
-		frame: Omit<CameraOverlayFrame, 'cameraId'>;
+		frame: LivePreviewFrame;
 		displayWidth: number;
 	} = $props();
 	const fontSize = $derived(Math.max(14, (frame.image.width / Math.max(1, displayWidth)) * 12));

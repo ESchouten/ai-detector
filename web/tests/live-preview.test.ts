@@ -250,7 +250,7 @@ test(
 );
 
 test(
-	'camera overlays multiplex cameras and rules without sending a second image stream',
+	'camera overlays multiplex cameras and rules, and a stale frame clears only its own camera',
 	{ timeout: 5000 },
 	async (t) => {
 		const { directory, session, frame, open } = await fixture(t);

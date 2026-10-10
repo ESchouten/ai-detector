@@ -80,7 +80,6 @@ export default defineConfig({
 				ignore: [
 					'src/**/*.svelte.{js,ts}',
 					'src/**/*.d.ts',
-					'src/lib/generated/**',
 					// Vendor components raise developer errors here; their visible text is in .svelte files.
 					'src/lib/components/ui/**'
 				]

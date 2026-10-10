@@ -5,11 +5,6 @@ yarn.lock
 bun.lock
 bun.lockb
 
-# Compiled translation catalogs
-/src/locales/.wuchale/
-/src/locales/data.js
-/src/locales/plural.js
-
 # Miscellaneous
 /static/
 
@@ -18,5 +13,3 @@ bun.lockb
 /app.json
 /detections/
 /models/
-
-.reports/

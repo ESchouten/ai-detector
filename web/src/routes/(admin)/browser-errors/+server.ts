@@ -21,7 +21,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	if (now !== minute) [minute, written] = [now, 0];
 	if (written++ < PER_MINUTE) {
 		const { message, stack, page } = input.output;
-		webLog.warn(/* @wc-ignore */ `Browser error on ${page}: ${message}\n${stack}`);
+		webLog.warn(`Browser error on ${page}: ${message}\n${stack}`);
 	}
 	return new Response(null, { status: 204 });
 };

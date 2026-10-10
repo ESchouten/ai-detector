@@ -94,7 +94,6 @@ pnpm test:production
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
 | `AIDETECTOR_DATA_DIR`          | Folder with `config.json`, `app.json` and recordings. Development uses the working directory.                        |
 | `AIDETECTOR_EXECUTABLE`        | Detector to start and supervise. Without it the server is only an interface to a detector that is managed elsewhere. |
-| `AIDETECTOR_PRESETS`           | Folder of preset files, instead of `presets/` in the data folder or the bundled ones.                                |
 | `AIDETECTOR_PRESETS_URL`       | Where newer presets are published, as a folder listing in GitHub's format. Empty switches following them off.        |
 | `FFMPEG_PATH`                  | FFmpeg for camera checks and live pictures.                                                                          |
 | `HOST`, `PORT`, `OPEN_BROWSER` | Listening address and port, and whether a browser opens. `HOST=127.0.0.1` also turns network discovery off.          |

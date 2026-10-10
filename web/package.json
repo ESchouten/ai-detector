@@ -16,7 +16,6 @@
 		"schema:check": "node tools/generate-schema-types.mjs --check",
 		"i18n": "wuchale --clean",
 		"i18n:check": "wuchale check --full",
-		"i18n:status": "wuchale status",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"shadcn": "pnpx shadcn-svelte@latest update --all --yes && pnpm format",
@@ -26,10 +25,8 @@
 		"test:production": "node --test tests/production/*.test.mjs",
 		"architecture": "svelte-kit sync && wuchale && depcruise src desktop --config .dependency-cruiser.cjs",
 		"architecture:graph": "svelte-kit sync && node -e \"require('node:fs').mkdirSync('.reports', {recursive:true})\" && depcruise src/lib/server --config .dependency-cruiser.cjs --include-only \"^(src/|../config/)\" --output-type mermaid --output-to .reports/dependencies.mmd",
-		"test:coverage": "node --test --experimental-test-coverage --test-coverage-include=\"src/lib/**/*.ts\" tests/*.test.ts",
 		"quality:static": "pnpm schema:check && pnpm lint && pnpm i18n:check && pnpm check && pnpm check:desktop && pnpm architecture",
-		"quality": "pnpm quality:static && pnpm test && pnpm test:desktop",
-		"architecture:metrics": "svelte-kit sync && depcruise src --config .dependency-cruiser.cjs --output-type metrics"
+		"quality": "pnpm quality:static && pnpm test && pnpm test:desktop"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.4.1",

@@ -9,7 +9,7 @@ export async function configurationAction<T>(operation: () => T | Promise<T>): P
 		return await operation();
 	} catch (failure) {
 		if (failure instanceof ConfigurationError || isValiError(failure)) {
-			webLog.info(/* @wc-ignore */ `Refused: ${failure.message}`);
+			webLog.info(`Refused: ${failure.message}`);
 			error(400, failure.message);
 		}
 		throw failure;

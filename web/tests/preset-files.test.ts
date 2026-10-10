@@ -23,7 +23,7 @@ test('preset files supply sorted IDs and readable names without a separate regis
 	await writeFile(path.join(directory, 'README.md'), 'Instructions');
 	await mkdir(path.join(directory, 'nested.json'));
 	await writeFile(path.join(directory, 'nested.json', 'ignored.json'), '{}');
-	assert.deepEqual(await readPresetChoices(() => loadPresets(directory)), {
+	assert.deepEqual(await readPresetChoices(() => loadPresets(directory, {})), {
 		presets: [
 			{ id: 'calving-catcher', name: 'Calving Catcher' },
 			{ id: 'cow-catcher', name: 'Cow Catcher' },
@@ -34,7 +34,7 @@ test('preset files supply sorted IDs and readable names without a separate regis
 
 test('bundled preset files preserve their models, options and recording destinations', async () => {
 	const directory = fileURLToPath(new URL('../../config/detector/', import.meta.url));
-	const presets = await loadPresets(directory);
+	const presets = await loadPresets(directory, {});
 	assert.deepEqual(
 		presets.map(({ id }) => id),
 		['calving-catcher-tailup', 'calving-catcher', 'cow-catcher', 'general']
@@ -60,7 +60,7 @@ test('adding, editing and removing local files changes the choices on the next r
 		exporters: { disk: { directory: 'safety' }, webhook: { url: 'https://example.test/events' } }
 	};
 	await writeFile(file, JSON.stringify(detector));
-	const original = await loadPresets(directory);
+	const original = await loadPresets(directory, {});
 	assert.equal(original[0].name, 'Workshop Safety');
 	assert.deepEqual(original[0].detector.yolo, detector.yolo);
 	assert.deepEqual(original[0].detector.detection, { interval: 2, source: [] });
@@ -70,7 +70,7 @@ test('adding, editing and removing local files changes the choices on the next r
 		path.join(directory, 'entry.json'),
 		JSON.stringify({ yolo: { model: 'entry.pt' } })
 	);
-	const updated = await loadPresets(directory);
+	const updated = await loadPresets(directory, {});
 	assert.deepEqual(
 		updated.map(({ id }) => id),
 		['entry', 'workshop-safety']
@@ -80,7 +80,7 @@ test('adding, editing and removing local files changes the choices on the next r
 	assert.deepEqual(original[0].detector.yolo, detector.yolo);
 	await rm(file);
 	assert.deepEqual(
-		(await loadPresets(directory)).map(({ id }) => id),
+		(await loadPresets(directory, {})).map(({ id }) => id),
 		['entry']
 	);
 });
@@ -113,13 +113,8 @@ test('bundled files are used only when the optional local folder is absent', asy
 	);
 });
 
-test('a missing explicit directory or a file used as a directory is a configuration error', async (t) => {
-	const directory = await fixture(t);
-	await assert.rejects(
-		loadPresets(path.join(directory, 'missing')),
-		/Could not read preset folder/
-	);
-	const file = path.join(directory, 'file.json');
+test('a file used as the preset folder is a configuration error', async (t) => {
+	const file = path.join(await fixture(t), 'file.json');
 	await writeFile(file, '{}');
 	await assert.rejects(loadPresets(file, { 'general.json': {} }), /Could not read preset folder/);
 });

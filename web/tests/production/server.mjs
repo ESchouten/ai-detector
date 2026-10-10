@@ -30,7 +30,6 @@ export async function startServer(t, origin, prepare, presetsUrl = '') {
 		'HOST_HEADER',
 		'PORT_HEADER',
 		'SOCKET_PATH',
-		'AIDETECTOR_PRESETS',
 		'LISTEN_PID',
 		'LISTEN_FDS'
 	])

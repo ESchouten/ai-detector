@@ -79,7 +79,7 @@ async function recordCameraTest(
 		const failure = cause as NodeJS.ErrnoException & { stderr?: string; killed?: boolean };
 		// What FFmpeg itself said: the person is told what to do, the log keeps why.
 		webLog.warn(
-			/* @wc-ignore */ `Camera check of ${source} failed: ${failure.killed ? 'no picture within the time limit' : failure.stderr?.trim() || failure.code}`
+			`Camera check of ${source} failed: ${failure.killed ? 'no picture within the time limit' : failure.stderr?.trim() || failure.code}`
 		);
 		if (failure.code === 'ENOENT') throw cameraSoftwareMissing();
 		if (failure.killed)

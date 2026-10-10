@@ -71,13 +71,13 @@ async function readPresetFile(file: string): Promise<DetectorPreset> {
 
 export async function loadPresets(
 	directory: string,
-	bundled?: Record<string, unknown>
+	bundled: Record<string, unknown>
 ): Promise<DetectorPreset[]> {
 	let entries;
 	try {
 		entries = await readdir(directory, { withFileTypes: true });
 	} catch (cause) {
-		if ((cause as NodeJS.ErrnoException).code === 'ENOENT' && bundled) {
+		if ((cause as NodeJS.ErrnoException).code === 'ENOENT') {
 			return Object.entries(bundled)
 				.sort(([a], [b]) => a.localeCompare(b, 'en'))
 				.map(([file, input]) => presetFromFile(file, input));

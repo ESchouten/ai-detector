@@ -30,7 +30,7 @@ module.exports = {
 			name: 'browser-code-does-not-import-server',
 			severity: 'error',
 			from: { path: '^src/(lib/(components|hooks)/|routes/.*\\.svelte$)' },
-			to: { path: '^(src/lib/server/|node:)' }
+			to: { path: '^src/lib/server/' }
 		},
 		{
 			name: 'browser-and-remote-code-do-not-import-node',
@@ -56,8 +56,8 @@ module.exports = {
 			to: {
 				couldNotResolve: true,
 				path: '^(src/|\\$lib/|\\.\\.?/)',
-				// SvelteKit/Vite resolve these virtual imports during check/build.
-				pathNot: '^(\\$app/|\\$env/)|\\$types$|\\?worker$'
+				// SvelteKit generates each route's ./$types during check/build.
+				pathNot: '\\$types$'
 			}
 		}
 	],

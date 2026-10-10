@@ -19,8 +19,7 @@ const bundledConfigurations = import.meta.glob('../../../../../config/detector/*
 	eager: true,
 	import: 'default'
 });
-const override = process.env.AIDETECTOR_PRESETS;
-const directory = override ? path.resolve(override) : path.join(DATA_DIRECTORY, 'presets');
+const directory = path.join(DATA_DIRECTORY, 'presets');
 /**
  * Where newer presets are published; empty for none. Development and test builds keep the
  * presets they were built with, which may be ahead of the published ones.
@@ -32,11 +31,11 @@ let published: DetectorPreset[] = [];
 
 /** A folder of this installation's own presets replaces the bundled and the published ones. */
 function hasOwnPresets(): boolean {
-	return Boolean(override) || existsSync(directory);
+	return existsSync(directory);
 }
 
 export async function readPresets(): Promise<DetectorPreset[]> {
-	const presets = await loadPresets(directory, override ? undefined : bundledConfigurations);
+	const presets = await loadPresets(directory, bundledConfigurations);
 	return hasOwnPresets() ? presets : withPublished(presets, published);
 }
 

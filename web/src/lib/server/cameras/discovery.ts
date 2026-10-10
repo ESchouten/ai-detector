@@ -168,7 +168,7 @@ async function scanCameras(): Promise<CameraDiscovery> {
 		const known = new Set(cameras.map(({ address }) => new URL(address).hostname));
 		cameras.push(...asked.filter(({ address }) => !known.has(new URL(address).hostname)));
 		webLog.info(
-			/* @wc-ignore */ `Camera search on ${local.length} connection(s): ${announced.flat().length} announced, ${asked.length} answered when asked, ${cameras.length} listed`
+			`Camera search on ${local.length} connection(s): ${announced.flat().length} announced, ${asked.length} answered when asked, ${cameras.length} listed`
 		);
 		return {
 			cameras,
@@ -186,7 +186,7 @@ async function scanCameras(): Promise<CameraDiscovery> {
 /** The person is told what to do; the log keeps what the camera or the SDK said. */
 function logFailure(host: string, status: number, cause: unknown): void {
 	webLog.warn(
-		/* @wc-ignore */ `Camera at ${host} did not connect (${status ? `HTTP ${status}` : 'no answer'}): ${(cause as Error).message}`,
+		`Camera at ${host} did not connect (${status ? `HTTP ${status}` : 'no answer'}): ${(cause as Error).message}`,
 		cause
 	);
 }

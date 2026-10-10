@@ -6,8 +6,7 @@ import sys
 from contextlib import suppress
 from importlib import import_module
 from pathlib import Path
-from threading import Event
-from time import monotonic
+from time import monotonic, sleep
 from types import SimpleNamespace
 
 import psutil
@@ -147,7 +146,7 @@ def test_blocked_helper_is_killed_and_reaped_with_its_diagnostics(
                 deadline = monotonic() + 10
                 while not (trace.exists() and "wait:" + PROVIDER in trace.read_text()):
                     assert monotonic() < deadline, "Windows ML fixture did not start"
-                    Event().wait(0.01)
+                    sleep(0.01)
                 timeout = 0.1
             return communicate(input=input, timeout=timeout)
 

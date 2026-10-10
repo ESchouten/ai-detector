@@ -6,7 +6,7 @@ from contextlib import nullcontext
 from dataclasses import replace
 from pathlib import Path
 from threading import Event
-from time import monotonic
+from time import monotonic, sleep
 from types import SimpleNamespace
 
 import cv2
@@ -160,7 +160,7 @@ def test_background_completion_requires_a_new_engine_and_waits_for_failed_builds
             while (
                 caplog.text.count("TensorRT preparation unavailable") != 2
             ) and monotonic() < deadline:
-                Event().wait(0.01)
+                sleep(0.01)
             assert caplog.text.count("TensorRT preparation unavailable") == 2
             assert not completed.wait(0.1)
     assert len(gpu_builder.processes) == 2
@@ -462,7 +462,7 @@ def test_helper_dumps_repeated_stacks_during_a_blocked_inference_import(tmp_path
                 if diagnostic.count("Timeout (") >= 2:
                     break
                 assert process.poll() is None, diagnostic
-                Event().wait(0.01)
+                sleep(0.01)
             assert diagnostic.count("Timeout (") >= 2, diagnostic
             assert "TensorRT preparation: importing NumPy" in diagnostic
             assert "tensorrt_stalled_import.py" in diagnostic

@@ -51,7 +51,6 @@ jobs:
           docker compose -f compose.yml config --quiet
           docker compose -f example/compose.yml config --quiet
           docker compose -f example/compose.jetson.yml config --quiet
-          docker compose -f example/compose.jetpack6.yml config --quiet
       - name: Upload test diagnostics
         if: failure()
         uses: actions/upload-artifact@v7

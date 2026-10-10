@@ -253,7 +253,7 @@ def build_launcher(platform: str, output: Path, version: str) -> dict:
         return {"sparkle": sdk, "mac_launcher": launcher}
     if platform == "windows-x64":
         launcher = output / "windows-launcher"
-        run("dotnet", "tool", "restore")
+        run("dotnet", "tool", "restore", cwd=ROOT / "distribution/windows")
         project = ROOT / "distribution/windows/launcher/Launcher.csproj"
         run("dotnet", "restore", project, "--locked-mode")
         run(

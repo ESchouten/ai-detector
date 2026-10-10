@@ -51,7 +51,6 @@ Open `http://<computer-IP>/`. Settings, models and recordings live in the folder
 | --- | --- |
 | Linux PC with an NVIDIA GPU | [`example/compose.yml`](example/compose.yml) |
 | Jetson Orin or Thor with JetPack 7.2 | [`example/compose.jetson.yml`](example/compose.jetson.yml); not yet checked on a board, see [Jetson](detector/MIGRATION.md#jetson) |
-| Jetson with JetPack 6, existing installation | [`example/compose.jetpack6.yml`](example/compose.jetpack6.yml); its two images get no updates |
 
 ### Start automatically on a Jetson or Linux desktop
 

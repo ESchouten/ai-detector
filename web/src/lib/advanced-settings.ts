@@ -42,7 +42,7 @@ const validators = {
 	connections: ajv.compile(settingsSchemas.connections)
 };
 
-/** Use the same bundled schemas in the editor and at the save boundary. */
+/** What the editor checks before it offers to save; the store checks every save itself. */
 export function parseSettings(document: SettingsDocument, text: string): unknown {
 	const value: unknown = JSON.parse(text);
 	const validate = validators[document];

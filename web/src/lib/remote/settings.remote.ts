@@ -1,7 +1,6 @@
 import { command, query } from '$app/server';
 import { error } from '@sveltejs/kit';
 import * as v from 'valibot';
-import { parseSettings } from '$lib/advanced-settings';
 import { heartbeatInput } from '$lib/configuration';
 import { configuration } from '$lib/server/configuration';
 import { settingsRevision } from '$lib/server/configuration/advanced';
@@ -22,9 +21,9 @@ export const saveSettings = command(
 	async ({ target, text, revision }) => {
 		let value: unknown;
 		try {
-			value = parseSettings(target, text);
-		} catch (cause) {
-			error(400, cause instanceof Error ? cause.message : 'Invalid JSON.');
+			value = JSON.parse(text);
+		} catch {
+			error(400, 'Invalid JSON.');
 		}
 		await configurationAction(() => configuration.saveAdvanced(target, value, revision));
 	}

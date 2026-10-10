@@ -7,7 +7,6 @@
 	const cameras = () => goto(resolve('/streams'));
 </script>
 
-<svelte:head><title>Add camera · AI Detector</title></svelte:head>
 <section class="page-narrow">
 	<PageHeader
 		back={{ href: resolve('/streams'), label: 'Cameras' }}

@@ -7,10 +7,6 @@
 	const missing = $derived(page.status === 404);
 </script>
 
-<svelte:head
-	><title>{missing ? 'Page not found' : 'Needs attention'} · AI Detector</title></svelte:head
->
-
 <section class="page-narrow">
 	<PageHeader
 		title={missing ? 'Page not found' : 'This page needs attention'}

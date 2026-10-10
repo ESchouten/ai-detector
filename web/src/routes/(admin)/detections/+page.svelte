@@ -273,8 +273,6 @@
 	});
 </script>
 
-<svelte:head><title>Recordings · AI Detector</title></svelte:head>
-
 <section class="page">
 	<PageHeader title="Recordings">
 		{#snippet actions()}<ExportRecordings {type} {stage} />{/snippet}

@@ -15,7 +15,6 @@
 	const back = { href: resolve('/streams'), label: 'Cameras' };
 </script>
 
-<svelte:head><title>{camera?.label ?? 'Camera'} · AI Detector</title></svelte:head>
 <section class="page">
 	{#if !camera}
 		<PageHeader {back} title="Camera not found" />

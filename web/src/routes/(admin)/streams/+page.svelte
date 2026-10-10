@@ -25,7 +25,6 @@
 	let view = $state<'live' | 'history'>('live');
 </script>
 
-<svelte:head><title>Cameras · AI Detector</title></svelte:head>
 <section class="page">
 	<PageHeader title="Cameras">
 		{#snippet actions()}

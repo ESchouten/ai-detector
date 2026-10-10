@@ -3,14 +3,14 @@
 	import { onDestroy, onMount, untrack } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { toast } from 'svelte-sonner';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import * as Field from '$lib/components/ui/field';
 	import * as Alert from '$lib/components/ui/alert';
-	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import * as NativeSelect from '$lib/components/ui/native-select';
 	import CameraDiscovery from './camera-discovery.svelte';
 	import CameraPicture from './camera-picture.svelte';
+	import ConfirmRemove from './confirm-remove.svelte';
 	import Pill from './pill.svelte';
 	import SecretInput from './secret-input.svelte';
 	import type { StreamMeta } from '$lib/schema';
@@ -356,32 +356,14 @@
 			{/if}
 		</div>
 
-		<div class="flex flex-col items-start gap-2 border-t pt-5">
-			<AlertDialog.Root>
-				<AlertDialog.Trigger
-					type="button"
-					class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
-						' -ml-2.5 text-danger-foreground hover:text-danger-foreground'}
-					disabled={saving}>Remove this camera…</AlertDialog.Trigger
-				>
-				<AlertDialog.Content>
-					<AlertDialog.Header>
-						<AlertDialog.Title>Remove “{initial.label}”?</AlertDialog.Title>
-						<AlertDialog.Description>
-							Monitoring and alerts for this camera will stop. Its existing recordings stay on this
-							computer.
-						</AlertDialog.Description>
-					</AlertDialog.Header>
-					<AlertDialog.Footer>
-						<AlertDialog.Cancel type="button">Keep camera</AlertDialog.Cancel>
-						<AlertDialog.Action
-							type="button"
-							class={buttonVariants({ variant: 'destructive' })}
-							onclick={remove}>Remove camera</AlertDialog.Action
-						>
-					</AlertDialog.Footer>
-				</AlertDialog.Content>
-			</AlertDialog.Root>
-		</div>
+		<ConfirmRemove
+			trigger="Remove this camera…"
+			title={`Remove “${initial.label}”?`}
+			description="Monitoring and alerts for this camera will stop. Its existing recordings stay on this computer."
+			keep="Keep camera"
+			confirm="Remove camera"
+			disabled={saving}
+			onconfirm={remove}
+		/>
 	</form>
 </div>

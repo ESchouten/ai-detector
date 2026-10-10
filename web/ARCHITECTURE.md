@@ -120,7 +120,7 @@ After regenerating the Python schemas, run `pnpm schema:generate`.
 
 ### Appearance and the shadcn components
 
-`routes/layout.css` holds the theme. The components in `lib/components/ui` are the published shadcn-svelte files and are not restyled or extended, so `pnpm shadcn` can replace them. Application variants live beside the feature components: `pill.svelte`, `filter-chips.svelte`, `link-rows.svelte`, `page-header.svelte`.
+`routes/layout.css` holds the theme. The components in `lib/components/ui` are the published shadcn-svelte files and are not restyled or extended, so `pnpm shadcn` can replace them. Application variants live beside the feature components: `pill.svelte`, `filter-chips.svelte`, `link-rows.svelte`, `page-header.svelte`, `confirm-remove.svelte`.
 
 ### Languages
 

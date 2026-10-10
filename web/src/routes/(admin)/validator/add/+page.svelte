@@ -12,7 +12,6 @@
 	const back = { href: resolve('/validator'), label: 'Validator' };
 </script>
 
-<svelte:head><title>{initial?.label ?? 'Connect validator'} · AI Detector</title></svelte:head>
 <section class="page-narrow">
 	{#if label && !initial}
 		<PageHeader {back} title="Connection not found" />

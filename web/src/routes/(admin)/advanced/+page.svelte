@@ -4,7 +4,6 @@
 	import SettingsEditor from './settings-editor.svelte';
 </script>
 
-<svelte:head><title>Advanced · AI Detector</title></svelte:head>
 <section class="page max-w-6xl">
 	<PageHeader
 		back={{ href: resolve('/settings'), label: 'Settings' }}

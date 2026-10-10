@@ -29,8 +29,6 @@
 	const pageName = 'Monitoring';
 </script>
 
-<svelte:head><title>Monitoring · AI Detector</title></svelte:head>
-
 <section class="page-narrow">
 	<PageHeader
 		title={pageName}

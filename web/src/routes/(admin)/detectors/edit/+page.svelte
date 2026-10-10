@@ -14,7 +14,6 @@
 	const done = async () => void (await goto(resolve('/detectors')));
 </script>
 
-<svelte:head><title>{saved?.meta.label ?? 'Detector'} · AI Detector</title></svelte:head>
 <section class="page-narrow">
 	{#if !saved}
 		<PageHeader {back} title="Detector not found" />

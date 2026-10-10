@@ -12,7 +12,6 @@
 	const used = $derived(data.space.total - data.space.available);
 </script>
 
-<svelte:head><title>Storage · AI Detector</title></svelte:head>
 <section class="page-narrow">
 	<PageHeader
 		back={{ href: resolve('/settings'), label: 'Settings' }}

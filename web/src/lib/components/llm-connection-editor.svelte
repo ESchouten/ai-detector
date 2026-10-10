@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 	import { ExternalLink } from '@lucide/svelte';
+	import ConfirmRemove from './confirm-remove.svelte';
 	import SecretInput from './secret-input.svelte';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import * as Field from '$lib/components/ui/field';
 	import { resolve } from '$app/paths';
 	import * as Alert from '$lib/components/ui/alert';
-	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { AI_STUDIO_KEYS, GEMINI_MODELS } from '$lib/llm';
 	import type { LlmConnection } from '$lib/schema';
 	import { errorMessage } from '$lib/remote-errors';
@@ -47,7 +47,6 @@
 	);
 	let busy = $state(false);
 	let message = $state('');
-	let confirmRemove = $state(false);
 
 	async function save(event: SubmitEvent) {
 		event.preventDefault();
@@ -74,7 +73,6 @@
 	}
 	async function remove() {
 		if (!initial) return;
-		confirmRemove = false;
 		busy = true;
 		message = '';
 		try {
@@ -162,27 +160,16 @@
 	</div>
 </form>
 {#if initial}
-	<div class="mt-6 border-t pt-5">
-		<AlertDialog.Root bind:open={confirmRemove}>
-			<AlertDialog.Trigger
-				class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
-					' -ml-2.5 text-danger-foreground hover:text-danger-foreground'}
-				disabled={busy}>Remove this connection…</AlertDialog.Trigger
-			>
-			<AlertDialog.Content>
-				<AlertDialog.Header>
-					<AlertDialog.Title>Remove {initial.label}?</AlertDialog.Title>
-					<AlertDialog.Description>
-						Connections assigned to detectors must be unassigned first.
-					</AlertDialog.Description>
-				</AlertDialog.Header>
-				<AlertDialog.Footer>
-					<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-					<AlertDialog.Action class={buttonVariants({ variant: 'destructive' })} onclick={remove}
-						>Remove connection</AlertDialog.Action
-					>
-				</AlertDialog.Footer>
-			</AlertDialog.Content>
-		</AlertDialog.Root>
+	<!-- Outside the form, so its gap does not reach here. -->
+	<div class="mt-6">
+		<ConfirmRemove
+			trigger="Remove this connection…"
+			title={`Remove ${initial.label}?`}
+			description="Connections assigned to detectors must be unassigned first."
+			keep="Cancel"
+			confirm="Remove connection"
+			disabled={busy}
+			onconfirm={remove}
+		/>
 	</div>
 {/if}

@@ -1,16 +1,15 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Bell, ChevronRight, Plus } from '@lucide/svelte';
+	import { Bell, Plus } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Empty from '$lib/components/ui/empty';
+	import LinkRows from '$lib/components/link-rows.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import { getTelegrams } from '$lib/remote/alerts.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
 	const [detectors, telegrams] = $derived(await Promise.all([getDetectors(), getTelegrams()]));
 </script>
-
-<svelte:head><title>Alerts · AI Detector</title></svelte:head>
 
 <section class="page-narrow">
 	<PageHeader
@@ -27,36 +26,19 @@
 		{/snippet}
 	</PageHeader>
 	{#if telegrams.length}
-		<ul class="panel divide-y overflow-hidden">
-			{#each telegrams as telegram (telegram.label)}
-				{@const assigned = recipientDetectorLabels(detectors, telegram)}
-				<li>
-					<a
-						href={resolve(`/notifications/add?label=${encodeURIComponent(telegram.label)}`)}
-						aria-label={`Edit recipient ${telegram.label}`}
-						class="group flex items-center gap-4 px-4 py-3.5 transition-colors outline-none hover:bg-accent/60 focus-visible:bg-accent"
-					>
-						<span
-							class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-secondary-foreground"
-						>
-							<Bell class="size-[1.125rem]" aria-hidden="true" />
-						</span>
-						<span class="flex min-w-0 flex-1 flex-col">
-							<span class="text-sm font-medium">{telegram.label}</span>
-							<span class="text-sm text-muted-foreground">
-								{assigned.length
-									? `Alerts from ${assigned.join(', ')}`
-									: 'Not used by a detector yet'}
-							</span>
-						</span>
-						<ChevronRight
-							class="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
-							aria-hidden="true"
-						/>
-					</a>
-				</li>
-			{/each}
-		</ul>
+		<LinkRows
+			items={telegrams.map((telegram) => {
+				const assigned = recipientDetectorLabels(detectors, telegram);
+				return {
+					title: telegram.label,
+					href: resolve(`/notifications/add?label=${encodeURIComponent(telegram.label)}`),
+					icon: Bell,
+					description: assigned.length
+						? `Alerts from ${assigned.join(', ')}`
+						: 'Not used by a detector yet'
+				};
+			})}
+		/>
 	{:else}
 		<Empty.Root class="border border-dashed">
 			<Empty.Header>

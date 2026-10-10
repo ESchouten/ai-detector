@@ -57,8 +57,6 @@
 	});
 </script>
 
-<svelte:head><title>Logs · AI Detector</title></svelte:head>
-
 <section class="page">
 	<PageHeader
 		back={{ href: resolve('/settings'), label: 'Settings' }}

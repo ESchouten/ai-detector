@@ -13,7 +13,6 @@
 	let creating = $state(false);
 </script>
 
-<svelte:head><title>Devices · AI Detector</title></svelte:head>
 <section class="page-narrow">
 	<PageHeader
 		back={{ href: resolve('/settings'), label: 'Settings' }}

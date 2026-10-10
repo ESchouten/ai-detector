@@ -18,7 +18,6 @@
 	const unwatched = $derived(cameras.filter((camera) => !camera.monitored));
 </script>
 
-<svelte:head><title>Detectors · AI Detector</title></svelte:head>
 <section class="page-narrow">
 	<PageHeader
 		title="Detectors"

@@ -7,6 +7,7 @@
 		back,
 		actions
 	}: {
+		/** Also names the browser tab. */
 		title: string;
 		description?: string;
 		/** A resolved link to the page this one belongs to. */
@@ -14,6 +15,8 @@
 		actions?: Snippet;
 	} = $props();
 </script>
+
+<svelte:head><title>{title} · AI Detector</title></svelte:head>
 
 <header class="flex flex-col gap-3">
 	{#if back}

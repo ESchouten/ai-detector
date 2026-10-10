@@ -6,19 +6,19 @@
 	import { toast } from 'svelte-sonner';
 	import { Bell, Plus } from '@lucide/svelte';
 	import CameraSelection from '$lib/components/camera-selection.svelte';
+	import ConfirmRemove from '$lib/components/confirm-remove.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import NotificationEditor from '$lib/components/notification-editor.svelte';
 	import LlmConnectionEditor from '$lib/components/llm-connection-editor.svelte';
 	import DetectorVerification from '$lib/components/detector-verification.svelte';
 	import { getLlmConnections, canTestLlm } from '$lib/remote/llm.remote';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Field from '$lib/components/ui/field';
 	import * as RadioGroup from '$lib/components/ui/radio-group';
 	import * as Alert from '$lib/components/ui/alert';
-	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import {
 		chooseConnection,
 		choosePreset,
@@ -443,33 +443,15 @@
 		</div>
 
 		{#if originalLabel}
-			<div class="border-t pt-5">
-				<AlertDialog.Root>
-					<AlertDialog.Trigger
-						type="button"
-						class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
-							' -ml-2.5 text-danger-foreground hover:text-danger-foreground'}
-						disabled={pending}>Delete this detector…</AlertDialog.Trigger
-					>
-					<AlertDialog.Content>
-						<AlertDialog.Header>
-							<AlertDialog.Title>Delete “{originalLabel}”?</AlertDialog.Title>
-							<AlertDialog.Description>
-								This stops this detector on all of its cameras. Other detectors, camera connections
-								and saved recordings are kept. This cannot be undone.
-							</AlertDialog.Description>
-						</AlertDialog.Header>
-						<AlertDialog.Footer>
-							<AlertDialog.Cancel type="button">Keep detector</AlertDialog.Cancel>
-							<AlertDialog.Action
-								type="button"
-								class={buttonVariants({ variant: 'destructive' })}
-								onclick={remove}>Delete detector</AlertDialog.Action
-							>
-						</AlertDialog.Footer>
-					</AlertDialog.Content>
-				</AlertDialog.Root>
-			</div>
+			<ConfirmRemove
+				trigger="Delete this detector…"
+				title={`Delete “${originalLabel}”?`}
+				description="This stops this detector on all of its cameras. Other detectors, camera connections and saved recordings are kept. This cannot be undone."
+				keep="Keep detector"
+				confirm="Delete detector"
+				disabled={pending}
+				onconfirm={remove}
+			/>
 		{/if}
 	</form>
 </div>

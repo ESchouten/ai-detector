@@ -29,7 +29,6 @@
 	});
 </script>
 
-<svelte:head><title>Settings · AI Detector</title></svelte:head>
 <section class="page-narrow">
 	<PageHeader title="Settings" />
 

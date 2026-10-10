@@ -3,12 +3,11 @@
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Field from '$lib/components/ui/field';
 	import * as Alert from '$lib/components/ui/alert';
-	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import {
 		deleteTelegram,
 		saveAlerts,
@@ -20,6 +19,7 @@
 	import { sameTelegram } from '$lib/configuration';
 	import { errorMessage } from '$lib/remote-errors';
 	import type { TelegramMeta } from '$lib/schema';
+	import ConfirmRemove from './confirm-remove.svelte';
 	import TelegramConnection from './telegram-connection.svelte';
 
 	let {
@@ -217,32 +217,14 @@
 		{/if}
 	</div>
 	{#if initial}
-		<div class="border-t pt-5">
-			<AlertDialog.Root>
-				<AlertDialog.Trigger
-					type="button"
-					class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
-						' -ml-2.5 text-danger-foreground hover:text-danger-foreground'}
-					disabled={pending || connecting}>Remove this recipient…</AlertDialog.Trigger
-				>
-				<AlertDialog.Content>
-					<AlertDialog.Header>
-						<AlertDialog.Title>Remove “{originalLabel}”?</AlertDialog.Title>
-						<AlertDialog.Description>
-							Every detector will stop sending alerts to this recipient. Monitoring and saved
-							recordings are kept. You can reconnect the recipient later.
-						</AlertDialog.Description>
-					</AlertDialog.Header>
-					<AlertDialog.Footer>
-						<AlertDialog.Cancel type="button">Keep recipient</AlertDialog.Cancel>
-						<AlertDialog.Action
-							type="button"
-							class={buttonVariants({ variant: 'destructive' })}
-							onclick={remove}>Remove recipient</AlertDialog.Action
-						>
-					</AlertDialog.Footer>
-				</AlertDialog.Content>
-			</AlertDialog.Root>
-		</div>
+		<ConfirmRemove
+			trigger="Remove this recipient…"
+			title={`Remove “${originalLabel}”?`}
+			description="Every detector will stop sending alerts to this recipient. Monitoring and saved recordings are kept. You can reconnect the recipient later."
+			keep="Keep recipient"
+			confirm="Remove recipient"
+			disabled={pending || connecting}
+			onconfirm={remove}
+		/>
 	{/if}
 </form>

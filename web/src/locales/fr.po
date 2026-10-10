@@ -166,7 +166,6 @@ msgstr "Démarrage…"
 msgid "Nothing is detected or recorded while monitoring is paused."
 msgstr "Rien n’est détecté ni enregistré tant que la surveillance est en pause."
 
-#: src/lib/components/page-error.svelte
 #: src/lib/monitoring.ts
 msgid "Needs attention"
 msgstr "Attention requise"
@@ -196,7 +195,6 @@ msgstr "Message de test envoyé."
 #: src/lib/remote/camera.remote.ts
 #: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
-#: src/routes/(admin)/streams/[id]/+page.svelte
 msgid "Camera"
 msgstr "Caméra"
 
@@ -868,7 +866,6 @@ msgid "The camera check request was not valid. Please try again."
 msgstr "La demande de vérification de la caméra n’était pas valide. Veuillez réessayer."
 
 #: src/lib/components/page-error.svelte
-#: src/lib/components/page-error.svelte
 #: src/routes/(admin)/[...catchall]/+page.ts
 msgid "Page not found"
 msgstr "Page introuvable"
@@ -1064,16 +1061,8 @@ msgstr "Connexion…"
 msgid "Connect device"
 msgstr "Connecter l’appareil"
 
-#. 0: missing ? 'Page not found' \\: 'Needs attention'
-#. 0: saved?.meta.label ?? 'Detector'
-#. 0: saved?.label ?? 'Add recipient'
-#. 0: camera?.label ?? 'Camera'
-#. 0: initial?.label ?? 'Connect validator'
-#: src/lib/components/page-error.svelte
-#: src/routes/(admin)/detectors/edit/+page.svelte
-#: src/routes/(admin)/notifications/add/+page.svelte
-#: src/routes/(admin)/streams/[id]/+page.svelte
-#: src/routes/(admin)/validator/add/+page.svelte
+#. 0: title
+#: src/lib/components/page-header.svelte
 msgid "{0} · AI Detector"
 msgstr "{0} · AI Detector"
 
@@ -1336,7 +1325,6 @@ msgstr "Ajouter une autre connexion"
 
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/detector-verification.svelte
-#: src/routes/(admin)/validator/add/+page.svelte
 #: src/routes/(admin)/validator/add/+page.svelte
 msgid "Connect validator"
 msgstr "Connecter la vérification par IA"
@@ -2364,10 +2352,6 @@ msgstr "<0/> J’ai reçu le test sur le téléphone ou le chat prévu"
 msgid "Send test again"
 msgstr "Renvoyer le test"
 
-#: src/routes/(admin)/advanced/+page.svelte
-msgid "Advanced · AI Detector"
-msgstr "Avancé · AI Detector"
-
 #: src/lib/navigation.ts
 #: src/routes/(admin)/advanced/+page.svelte
 #: src/routes/(admin)/devices/+page.svelte
@@ -2461,10 +2445,6 @@ msgstr "JSON valide"
 msgid "<0/>Discard changes"
 msgstr "<0/>Abandonner les modifications"
 
-#: src/routes/(admin)/devices/+page.svelte
-msgid "Devices · AI Detector"
-msgstr "Appareils · AI Detector"
-
 #: src/lib/navigation.ts
 #: src/routes/(admin)/devices/+page.svelte
 msgid "Devices"
@@ -2548,10 +2528,6 @@ msgstr "Ce tableau de bord utilise HTTP ; utilisez-le donc sur un réseau de co
 msgid "Failed to load recordings."
 msgstr "Impossible de charger les enregistrements."
 
-#: src/routes/(admin)/detections/+page.svelte
-msgid "Recordings · AI Detector"
-msgstr "Enregistrements · AI Detector"
-
 #: src/lib/navigation.ts
 #: src/routes/(admin)/detections/+page.svelte
 msgid "Recordings"
@@ -2623,10 +2599,6 @@ msgid "Automatic"
 msgstr "Automatique"
 
 #: src/routes/(admin)/settings/+page.svelte
-msgid "Settings · AI Detector"
-msgstr "Paramètres · AI Detector"
-
-#: src/routes/(admin)/settings/+page.svelte
 #: src/routes/(admin)/settings/+page.svelte
 msgid "Appearance"
 msgstr "Apparence"
@@ -2663,10 +2635,6 @@ msgstr "Assistance"
 #: src/routes/(admin)/settings/+page.svelte
 msgid "AI Detector version {0}"
 msgstr "AI Detector version {0}"
-
-#: src/routes/(admin)/status/+page.svelte
-msgid "Monitoring · AI Detector"
-msgstr "Surveillance · AI Detector"
 
 #: src/routes/(admin)/status/+page.svelte
 msgid "Whether your cameras are being watched right now, and what needs attention if they are not."
@@ -2772,10 +2740,8 @@ msgstr "Source personnalisée"
 
 #. 0: meta.label
 #. 0: meta.label
-#. 0: connection.label
 #: src/routes/(admin)/detectors/+page.svelte
 #: src/routes/(admin)/setup/+page.svelte
-#: src/routes/(admin)/validator/+page.svelte
 msgid "Edit {0}"
 msgstr "Modifier {0}"
 
@@ -2786,10 +2752,6 @@ msgstr "Modifier"
 #: src/routes/(admin)/setup/+page.svelte
 msgid "<0/>Add another detector"
 msgstr "<0/>Ajouter un autre détecteur"
-
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Alerts · AI Detector"
-msgstr "Alertes · AI Detector"
 
 #: src/lib/navigation.ts
 #: src/routes/(admin)/notifications/+page.svelte
@@ -2804,11 +2766,6 @@ msgstr "Lorsqu’un détecteur voit quelque chose, le clip est envoyé à ces pe
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "<0/>Add recipient"
 msgstr "<0/>Ajouter un destinataire"
-
-#. 0: telegram.label
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Edit recipient {0}"
-msgstr "Modifier le destinataire {0}"
 
 #. 0: assigned.join(', ')
 #: src/routes/(admin)/notifications/+page.svelte
@@ -2882,10 +2839,6 @@ msgstr "Fausse alerte selon l’IA. Marquer vous-même"
 msgid "False alarm"
 msgstr "Fausse alerte"
 
-#: src/routes/(admin)/detectors/+page.svelte
-msgid "Detectors · AI Detector"
-msgstr "Détecteurs · AI Detector"
-
 #: src/lib/navigation.ts
 #: src/routes/(admin)/detectors/+page.svelte
 #: src/routes/(admin)/detectors/add/+page.svelte
@@ -2939,10 +2892,6 @@ msgstr "Ajouter une caméra"
 #: src/routes/(admin)/logs/+page.svelte
 msgid "Log unavailable"
 msgstr "Journal indisponible"
-
-#: src/routes/(admin)/logs/+page.svelte
-msgid "Logs · AI Detector"
-msgstr "Journaux · AI Detector"
 
 #: src/lib/navigation.ts
 #: src/routes/(admin)/logs/+page.svelte
@@ -2998,10 +2947,6 @@ msgid "<0/>Latest"
 msgstr "<0/>Les plus récents"
 
 #: src/routes/(admin)/validator/+page.svelte
-msgid "Validator · AI Detector"
-msgstr "Vérification par IA · AI Detector"
-
-#: src/routes/(admin)/validator/+page.svelte
 msgid "An AI model looks at each clip before an alert is sent and filters out false alarms. Your presets supply the question it answers."
 msgstr "Un modèle d’IA regarde chaque clip avant l’envoi d’une alerte et écarte les fausses alertes. Vos préréglages fournissent la question à laquelle il répond."
 
@@ -3029,10 +2974,6 @@ msgstr "Facultatif. Sans elle, chaque détection est enregistrée et signalée t
 #: src/routes/(admin)/validator/+page.svelte
 msgid "Connect Google Gemini"
 msgstr "Connecter Google Gemini"
-
-#: src/routes/(admin)/storage/+page.svelte
-msgid "Storage · AI Detector"
-msgstr "Stockage · AI Detector"
 
 #: src/lib/navigation.ts
 #: src/routes/(admin)/storage/+page.svelte
@@ -3098,10 +3039,6 @@ msgid "Clear model cache"
 msgstr "Vider le cache des modèles"
 
 #: src/routes/(admin)/streams/+page.svelte
-msgid "Cameras · AI Detector"
-msgstr "Caméras · AI Detector"
-
-#: src/routes/(admin)/streams/+page.svelte
 msgid "<0/>Add camera"
 msgstr "<0/>Ajouter une caméra"
 
@@ -3131,14 +3068,6 @@ msgstr "Connectez une caméra pour voir son image en direct et choisir ce qu’i
 msgid "Add your first camera"
 msgstr "Ajoutez votre première caméra"
 
-#: src/routes/(admin)/detectors/add/+page.svelte
-msgid "Add detector · AI Detector"
-msgstr "Ajouter un détecteur · AI Detector"
-
-#: src/routes/(admin)/detectors/edit/+page.svelte
-msgid "Detector"
-msgstr "Détecteur"
-
 #: src/routes/(admin)/detectors/edit/+page.svelte
 #: src/routes/(admin)/detectors/edit/+page.svelte
 msgid "Detector not found"
@@ -3147,10 +3076,6 @@ msgstr "Détecteur introuvable"
 #: src/routes/(admin)/detectors/edit/+page.svelte
 msgid "This detector may have been removed or renamed."
 msgstr "Ce détecteur a peut-être été supprimé ou renommé."
-
-#: src/routes/(admin)/notifications/add/+page.svelte
-msgid "Add recipient"
-msgstr "Ajouter un destinataire"
 
 #: src/routes/(admin)/notifications/add/+page.svelte
 msgid "Recipient not found"
@@ -3247,10 +3172,6 @@ msgstr "Plus ancien (→)"
 #: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "{0} of {1}"
 msgstr "{0} sur {1}"
-
-#: src/routes/(admin)/streams/add/+page.svelte
-msgid "Add camera · AI Detector"
-msgstr "Ajouter une caméra · AI Detector"
 
 #: src/routes/(admin)/streams/add/+page.svelte
 msgid "Add cameras"

@@ -11,8 +11,6 @@
 	const back = { href: resolve('/notifications'), label: 'Alerts' };
 </script>
 
-<svelte:head><title>{saved?.label ?? 'Add recipient'} · AI Detector</title></svelte:head>
-
 <section class="page-narrow">
 	{#if label && !saved}
 		<PageHeader {back} title="Recipient not found" />

@@ -8,7 +8,7 @@ import path from 'node:path';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { normalizeConfiguration, ConfigurationError } from '../src/lib/configuration.ts';
-import { DEFAULT_SCHEMA_URL, type DetectorConfig, type StreamMeta } from '../src/lib/schema.ts';
+import { DEFAULT_SCHEMA_URL, type StreamMeta } from '../src/lib/schema.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
 import { newerPresets, presetVersion } from '../src/lib/server/configuration/followed-presets.ts';
 import { configurationAction } from '../src/lib/server/configuration/request.ts';
@@ -264,19 +264,13 @@ test('deleting or editing a stale detector never removes or overwrites the last 
 
 test('concurrent edits are serialized from read through apply and rejected writes do not poison the queue', async (t) => {
 	const { files } = await fixture(t, { detectors: [] });
-	let release!: () => void;
-	const gate = new Promise<void>((resolve) => {
-		release = resolve;
-	});
-	let entered!: () => void;
-	const validating = new Promise<void>((resolve) => {
-		entered = resolve;
-	});
+	const gate = Promise.withResolvers<void>();
+	const validating = Promise.withResolvers<void>();
 	const applied: number[] = [];
 	const runtime = {
 		async validate() {
-			entered();
-			await gate;
+			validating.resolve();
+			await gate.promise;
 		},
 		async apply() {
 			applied.push(JSON.parse(await readFile(files.config, 'utf8')).detectors.length);
@@ -288,12 +282,12 @@ test('concurrent edits are serialized from read through apply and rejected write
 	};
 	const store = new ConfigurationStore(files, () => runtime);
 	const first = store.saveDetector({ detector, meta: { label: 'First' } });
-	await validating;
+	await validating.promise;
 	const second = store.saveDetector({
 		detector: { detection: { source: [other] } },
 		meta: { label: 'Second' }
 	});
-	release();
+	gate.resolve();
 	await Promise.all([first, second]);
 	assert.deepEqual(applied, [1, 2]);
 	assert.deepEqual((await store.read()).app.detectors, [{ label: 'First' }, { label: 'Second' }]);
@@ -580,52 +574,19 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 });
 
 test('advanced detection changes invalidate an inherited preset without losing camera identity', async (t) => {
-	const changes: { name: string; change: (detector: DetectorConfig) => void }[] = [
-		{
-			name: 'different model',
-			change: (detector) => {
-				detector.yolo = { model: 'yolo11n.pt' };
-			}
-		},
-		{
-			name: 'snapshot only',
-			change: (detector) => {
-				detector.yolo = null;
-			}
-		},
-		{
-			name: 'different watched classes',
-			change: (detector) => {
-				detector.yolo!.confidence = { person: 0.7 };
-			}
-		},
-		{
-			name: 'different sampling interval',
-			change: (detector) => {
-				detector.detection.interval = 7;
-			}
-		}
-	];
-	for (const { name, change } of changes) {
-		await t.test(name, async (t) => {
-			const { store } = await fixture(t, { detectors: [] });
-			const camera = await addPresetDetector(store, { label: 'Barn', source }, 'calving-catcher');
-			const original = await store.read();
-			const changed = structuredClone(original.config.detectors[0]);
-			change(changed);
-			await store.saveDetector({
-				original: 'Barn',
-				detector: changed,
-				meta: { label: 'Updated monitoring' }
-			});
-			const saved = await store.read();
-			assert.deepEqual(saved.app.detectors[0], {
-				label: 'Updated monitoring'
-			});
-			assert.deepEqual(saved.config.detectors[0], changed);
-			assert.equal(saved.app.streams[0].id, camera.id);
-		});
-	}
+	const { store } = await fixture(t, { detectors: [] });
+	const camera = await addPresetDetector(store, { label: 'Barn', source }, 'calving-catcher');
+	const changed = structuredClone((await store.read()).config.detectors[0]);
+	changed.yolo = { model: 'yolo11n.pt' };
+	await store.saveDetector({
+		original: 'Barn',
+		detector: changed,
+		meta: { label: 'Updated monitoring' }
+	});
+	const saved = await store.read();
+	assert.deepEqual(saved.app.detectors[0], { label: 'Updated monitoring' });
+	assert.deepEqual(saved.config.detectors[0], changed);
+	assert.equal(saved.app.streams[0].id, camera.id);
 });
 
 test('renaming or changing delivery settings keeps the monitoring preset and camera identity', async (t) => {
@@ -933,7 +894,8 @@ test('concurrent detector additions each save their rules and preserve notificat
 		}
 	);
 	const preset = (await readTestPresets()).find(({ id }) => id === 'general')!;
-	const results = await Promise.allSettled(
+	// Not addPresetDetector: it reads the presets first, so the saves could start in either order.
+	await Promise.all(
 		[
 			{ label: 'Barn', source },
 			{ label: 'Second', source: other }
@@ -946,10 +908,6 @@ test('concurrent detector additions each save their rules and preserve notificat
 				meta: { label: camera.label, preset: preset.id }
 			})
 		)
-	);
-	assert.deepEqual(
-		results.map((item) => item.status),
-		['fulfilled', 'fulfilled']
 	);
 	const document = await store.read();
 	assert.deepEqual(

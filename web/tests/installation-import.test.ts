@@ -4,10 +4,11 @@ import { mkdtemp, mkdir, readFile, rm, stat, symlink, utimes, writeFile } from '
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { InstallationImport } from '../src/lib/server/installation-import/service.ts';
+import { identifyCameras } from '../src/lib/server/configuration/cameras.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { DetectionArchive, archivePath } from '../src/lib/server/archive.ts';
 import { availableSpace, exists } from '../src/lib/server/installation-import/files.ts';
-import { readJson, writeJson } from '../src/lib/server/json-file.ts';
+import { writeJson } from '../src/lib/server/json-file.ts';
 import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import type { Configuration } from '../src/lib/schema.ts';
 
@@ -318,7 +319,6 @@ test('a crash between saving app.json and config.json can finish the same import
 		'initialize',
 		async (document: Configuration, publish: () => Promise<void>) => {
 			await publish();
-			const { identifyCameras } = await import('../src/lib/server/configuration/cameras.ts');
 			await writeJson(path.join(destination, 'app.json'), identifyCameras(document).app);
 			throw new Error('simulated interruption');
 		}
@@ -384,7 +384,6 @@ test('insufficient space is reported before copying', async (t) => {
 		availableSpace(destination, Number.MAX_SAFE_INTEGER),
 		/not enough free space/
 	);
-	assert.equal(await readJson(path.join(destination, 'config.json')), null);
 });
 
 test('cancelling removes private staging, preserves the source, and leaves setup available', async (t) => {

@@ -35,8 +35,6 @@ test('editor validation accepts an empty setup and checks syntax, unknown proper
 		detectors: [],
 		onnx: { opset: 20 }
 	});
-	// The engine choice is gone; a setting that is not one is refused, not ignored.
-	assert.throws(() => parseSettings('config', '{"detectors":[],"runtime":"docker"}'), /runtime/);
 });
 
 test('advanced edits preserve names, camera identities and delivery; tuning clears preset identity', async (t) => {

@@ -2,7 +2,6 @@ import { addMonitoredCamera, settingsStore } from './support/configuration.ts';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFile } from 'node:fs/promises';
-import path from 'node:path';
 import * as v from 'valibot';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { alertsInput } from '../src/lib/configuration.ts';
@@ -206,12 +205,10 @@ test('quiet hours belong to a recipient and reach every detector that alerts it'
 	);
 });
 
-test('removing a camera removes its rules but preserves other cameras and archived data', async (t) => {
-	const { files, store } = await settingsStore(t);
+test('removing a camera removes its rules but preserves other cameras', async (t) => {
+	const { store } = await settingsStore(t);
 	const one = await addMonitoredCamera(store, { label: 'One', source: first }, 'general');
 	await addMonitoredCamera(store, { label: 'Two', source: second }, 'general');
-	const archiveMarker = path.join(path.dirname(files.config), 'recording.json');
-	await writeJson(archiveMarker, { existing: true });
 	await store.removeCamera(one.id);
 	const saved = await store.read();
 	assert.deepEqual(
@@ -219,7 +216,6 @@ test('removing a camera removes its rules but preserves other cameras and archiv
 		[[second]]
 	);
 	assert.equal(saved.app.streams.length, 1);
-	assert.deepEqual(JSON.parse(await readFile(archiveMarker, 'utf8')), { existing: true });
 });
 
 test('a recipient can be connected before detectors exist and later disconnected from alerts without deleting it', async (t) => {

@@ -7,16 +7,6 @@ import {
 	type CheckedConnection
 } from '../src/lib/camera-batch.ts';
 
-function deferred<T>() {
-	let resolve!: (value: T) => void;
-	let reject!: (cause: Error) => void;
-	const promise = new Promise<T>((yes, no) => {
-		resolve = yes;
-		reject = no;
-	});
-	return { promise, resolve, reject };
-}
-
 const found = (address: string) => ({ address, name: address });
 function camera(address: string): BatchCamera {
 	return { ...found(address), state: 'waiting' };
@@ -40,7 +30,7 @@ const connection: CheckedConnection = {
 
 test('batch connections are bounded, keep independent successes and retain channel choices', async () => {
 	const queue = [camera('one'), camera('two'), camera('three')];
-	const jobs = queue.map(() => deferred<CheckedConnection>());
+	const jobs = queue.map(() => Promise.withResolvers<CheckedConnection>());
 	const started: string[] = [];
 	const result = new Map<string, BatchCamera>();
 	const work = connectCameraBatch(
@@ -70,7 +60,6 @@ test('batch connections are bounded, keep independent successes and retain chann
 	assert.equal(result.get('two')?.state, 'failed');
 	assert.equal(result.get('two')?.error, 'Check the second camera login.');
 	assert.equal(result.get('three')?.state, 'ready');
-	assert.ok([...result.values()].every((camera) => camera.state !== 'saved'));
 });
 
 test('retry only connects failures and keeps ready and saved cameras untouched', async () => {
@@ -109,7 +98,7 @@ test('retry only connects failures and keeps ready and saved cameras untouched',
 });
 
 test('leaving batch setup ignores late connections and does not start the remaining queue', async () => {
-	const pending = deferred<CheckedConnection>();
+	const pending = Promise.withResolvers<CheckedConnection>();
 	const controller = new AbortController();
 	const started: string[] = [];
 	const updates: BatchCamera[] = [];

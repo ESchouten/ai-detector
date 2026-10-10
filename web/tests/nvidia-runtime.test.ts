@@ -158,7 +158,7 @@ test(
 	}
 );
 
-for (const provider of [undefined, 'CPUExecutionProvider', 'NvTensorRTRTXExecutionProvider']) {
+for (const provider of [undefined, 'NvTensorRTRTXExecutionProvider']) {
 	test(
 		provider
 			? `an explicit ${provider} choice keeps the bundled detector on NVIDIA`

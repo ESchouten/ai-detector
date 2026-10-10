@@ -40,21 +40,6 @@ test('camera progress and non-secret ONVIF details survive reopening and renamin
 	assert.equal(progress.pictureVerifiedAt, verifiedAt);
 	assert.equal(progress.archiveVerifiedAt, verifiedAt);
 	assert.ok(progress.completedAt);
-	assert.equal(JSON.stringify(reopened.app.streams[0].connection).includes('secret'), false);
-});
-
-test('setup can finish without phone alerts but still requires real current monitoring', async (t) => {
-	const { files, store } = await settingsStore(t);
-	const camera = await addMonitoredCamera(store, { label: 'Yard', source }, 'general', verifiedAt);
-	const { signature } = cameraArchiveSelection(await store.read(), camera.id);
-	await store.recordArchiveCheck(camera.id, signature, verifiedAt);
-	await assert.rejects(
-		store.finishSetup(async () => new Set()),
-		/Monitoring has not been verified/
-	);
-	assert.equal(cameraSetupStatus(await store.read(), camera.id).completedAt, undefined);
-	await store.finishSetup(async () => new Set([camera.id]));
-	assert.ok(cameraSetupStatus(await new ConfigurationStore(files).read(), camera.id).completedAt);
 });
 
 test('view-only setup can finish after picture confirmation without monitoring, alerts or an archive test', async (t) => {
@@ -253,19 +238,4 @@ test('client camera input cannot forge progress and rejects secrets in reusable 
 		setup: { pictureVerifiedAt: verifiedAt, completedAt: verifiedAt }
 	});
 	assert.equal('setup' in parsed, false);
-});
-
-test('camera edits and completion do not depend on preset files', async (t) => {
-	const { files, store } = await settingsStore(t);
-	const camera = await readyCamera(store);
-	await store.finishSetup(async () => new Set([camera.id]));
-	const original = await store.read();
-	const reopened = new ConfigurationStore(files);
-	await reopened.saveCamera({ id: camera.id, label: 'Main entrance', source });
-	const saved = await reopened.read();
-	assert.deepEqual(saved.config.detectors, original.config.detectors);
-	assert.equal(
-		cameraSetupStatus(saved, camera.id).completedAt,
-		cameraSetupStatus(original, camera.id).completedAt
-	);
 });

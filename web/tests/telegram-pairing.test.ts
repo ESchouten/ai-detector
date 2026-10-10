@@ -214,19 +214,16 @@ test('expiry rejects old sessions, frees a token and never accepts an expired ma
 test('concurrent begins reserve a token before identity lookup and manual discovery cannot compete', async (t) => {
 	const f = fixture(t);
 	const valid = f.replies.getMe;
-	let release!: () => void;
-	const gate = new Promise<void>((resolve) => {
-		release = resolve;
-	});
+	const gate = Promise.withResolvers<void>();
 	f.replies.getMe = async (request) => {
-		await gate;
+		await gate.promise;
 		return valid(request);
 	};
 	const beginning = f.begin();
 	await assert.rejects(f.begin(' fixture-token '), /connection in progress/);
 	await assert.rejects(f.pairings.discoverChats('fixture-token'), /connection in progress/);
 	assert.equal(f.calls.length, 1);
-	release();
+	gate.resolve();
 	await beginning;
 });
 
@@ -256,18 +253,15 @@ test('late replies after cancellation cannot match, and ownership stays reserved
 	const f = fixture(t);
 	const pairing = await f.begin();
 	const code = new URL(pairing.url).searchParams.get('start')!;
-	let release!: () => void;
-	const gate = new Promise<void>((resolve) => {
-		release = resolve;
-	});
+	const gate = Promise.withResolvers<void>();
 	f.replies.getUpdates = async () => {
-		await gate;
+		await gate.promise;
 		return [start(1, code)];
 	};
 	const pending = assert.rejects(f.pairings.poll(pairing.id), /cancelled/);
 	const cancelled = f.pairings.cancel(pairing.id);
 	await assert.rejects(f.begin(), /connection in progress/);
-	release();
+	gate.resolve();
 	await Promise.all([pending, cancelled]);
 	await f.begin();
 });
@@ -275,18 +269,15 @@ test('late replies after cancellation cannot match, and ownership stays reserved
 test('begin expiry during network lookup cannot publish a live link or leak its token reservation', async (t) => {
 	const f = fixture(t);
 	const valid = f.replies.getMe;
-	let release!: () => void;
-	const gate = new Promise<void>((resolve) => {
-		release = resolve;
-	});
+	const gate = Promise.withResolvers<void>();
 	f.replies.getMe = async (request) => {
-		await gate;
+		await gate.promise;
 		return valid(request);
 	};
 	const pending = assert.rejects(f.begin(), /expired/);
 	f.advance(5 * 60 * 1000);
 	await assert.rejects(f.begin(), /connection in progress/);
-	release();
+	gate.resolve();
 	await pending;
 	f.replies.getMe = valid;
 	await f.begin();
@@ -320,18 +311,15 @@ test('external polling conflict gives manual setup guidance and never changes th
 
 test('manual discovery owns its update request and keeps review callbacks enabled', async (t) => {
 	const f = fixture(t);
-	let release!: () => void;
-	const gate = new Promise<void>((resolve) => {
-		release = resolve;
-	});
+	const gate = Promise.withResolvers<void>();
 	f.replies.getUpdates = async () => {
-		await gate;
+		await gate.promise;
 		return [start(1, 'hello')];
 	};
 	const discovery = f.pairings.discoverChats('fixture-token');
 	await assert.rejects(f.begin(), /connection in progress/);
 	await assert.rejects(f.pairings.discoverChats('fixture-token'), /connection in progress/);
-	release();
+	gate.resolve();
 	assert.deepEqual(await discovery, [{ id: '123', name: 'Farmer One' }]);
 	assert.deepEqual(f.calls[0].body, {
 		timeout: 3,

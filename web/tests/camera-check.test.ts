@@ -1,23 +1,8 @@
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
-import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-import { test, type TestContext } from 'node:test';
+import { test } from 'node:test';
 import { checkCameraRecording, checkConnection } from '../src/lib/camera-check.ts';
-
-async function serve(
-	t: TestContext,
-	handler: (request: IncomingMessage, response: ServerResponse) => void
-) {
-	const server = createServer(handler).listen(0, '127.0.0.1');
-	await once(server, 'listening');
-	t.after(async () => {
-		server.closeAllConnections();
-		await new Promise<void>((resolve) => server.close(() => resolve()));
-	});
-	const address = server.address();
-	assert.ok(address && typeof address !== 'string');
-	return `http://127.0.0.1:${address.port}/camera-checks`;
-}
+import { server } from './support/http.ts';
 
 test('recording check sends the resolved source and reads the checked camera result', async (t) => {
 	const source = 'rtsp://camera.example.test/live';
@@ -26,7 +11,7 @@ test('recording check sends the resolved source and reads the checked camera res
 		checkId: 'checked-camera',
 		previewUrl: '/camera-checks/checked-camera/picture.jpg'
 	};
-	const endpoint = await serve(t, async (request, response) => {
+	const endpoint = await server(t, async (request, response) => {
 		assert.equal(request.method, 'POST');
 		assert.equal(request.headers['content-type'], 'application/json');
 		const chunks = [];
@@ -53,7 +38,7 @@ test('a checked connection keeps what the camera answered and takes the source t
 		previewUrl: '/camera-checks/checked-camera/picture.jpg'
 	};
 	let requests = 0;
-	const endpoint = await serve(t, (_request, response) => {
+	const endpoint = await server(t, (_request, response) => {
 		requests++;
 		response.writeHead(200, { 'Content-Type': 'application/json' });
 		response.end(JSON.stringify(check));
@@ -72,7 +57,7 @@ test('a checked connection keeps what the camera answered and takes the source t
 
 test('recording check displays expected camera errors and a useful message for server failures', async (t) => {
 	let status = 400;
-	const endpoint = await serve(t, (_request, response) => {
+	const endpoint = await server(t, (_request, response) => {
 		response.writeHead(status, {
 			'Content-Type': status === 400 ? 'application/json' : 'text/html'
 		});
@@ -96,25 +81,19 @@ test(
 	'cancelling the recording check closes its real HTTP request before the server replies',
 	{ timeout: 5000 },
 	async (t) => {
-		let connected!: () => void;
-		let disconnected!: () => void;
-		const started = new Promise<void>((resolve) => {
-			connected = resolve;
-		});
-		const closed = new Promise<void>((resolve) => {
-			disconnected = resolve;
-		});
-		const endpoint = await serve(t, async (request, response) => {
-			response.once('close', disconnected);
+		const started = Promise.withResolvers<void>();
+		const closed = Promise.withResolvers<void>();
+		const endpoint = await server(t, async (request, response) => {
+			response.once('close', closed.resolve);
 			request.resume();
 			await once(request, 'end');
-			connected();
+			started.resolve();
 		});
 		const controller = new AbortController();
 		const pending = checkCameraRecording('rtsp://camera/live', controller.signal, endpoint);
-		await started;
+		await started.promise;
 		controller.abort();
 		await assert.rejects(pending, { name: 'AbortError' });
-		await closed;
+		await closed.promise;
 	}
 );

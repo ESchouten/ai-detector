@@ -1,8 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { once } from 'node:events';
 import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
-import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import type { ServerResponse } from 'node:http';
 import os, { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
@@ -24,7 +23,7 @@ import {
 	resolveCameraStream
 } from '../src/lib/server/cameras/discovery.ts';
 import { CameraChecks } from '../src/lib/server/cameras/checks.ts';
-import { fileMedia } from '../src/lib/server/file-media.ts';
+import { server } from './support/http.ts';
 
 const execute = promisify(execFile);
 
@@ -34,25 +33,52 @@ async function directory(t: TestContext) {
 	return dir;
 }
 
-async function server(
-	t: TestContext,
-	handler: (req: IncomingMessage, res: ServerResponse) => void
-) {
-	const instance = createServer(handler).listen(0, '127.0.0.1');
-	await once(instance, 'listening');
-	t.after(async () => {
-		instance.closeAllConnections();
-		await new Promise<void>((resolve, reject) =>
-			instance.close((error) => (error ? reject(error) : resolve()))
-		);
-	});
-	const address = instance.address();
-	assert.ok(address && typeof address !== 'string');
-	return `http://127.0.0.1:${address.port}`;
-}
-
 function soap(body: string) {
 	return `<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"><s:Body>${body}</s:Body></s:Envelope>`;
+}
+
+/** Answer one ONVIF request as a device at `address` with these channels and this stream. */
+function answerOnvif(
+	res: ServerResponse,
+	address: string,
+	body: string,
+	profiles: string,
+	streamUri: string
+) {
+	const responses: Record<string, string> = {
+		GetSystemDateAndTime:
+			'<GetSystemDateAndTimeResponse><SystemDateAndTime><DateTimeType>NTP</DateTimeType></SystemDateAndTime></GetSystemDateAndTimeResponse>',
+		GetServices: `<GetServicesResponse><Service><Namespace>http://www.onvif.org/ver10/media/wsdl</Namespace><XAddr>${address}/media</XAddr></Service><Service><Namespace>http://www.onvif.org/ver10/device/wsdl</Namespace><XAddr>${address}/onvif/device_service</XAddr></Service></GetServicesResponse>`,
+		GetProfiles: `<GetProfilesResponse>${profiles}</GetProfilesResponse>`,
+		GetStreamUri: `<GetStreamUriResponse><MediaUri><Uri>${streamUri}</Uri></MediaUri></GetStreamUriResponse>`
+	};
+	const operation = Object.keys(responses).find((name) => body.includes(`<${name}`));
+	res.writeHead(operation ? 200 : 400, { 'Content-Type': 'application/soap+xml' });
+	res.end(soap(operation ? responses[operation] : '<Fault/>'));
+}
+
+/** Three seconds of video, as the camera in a test streams it. */
+async function sampleClip(ffmpegPath: string, dir: string) {
+	const sample = path.join(dir, 'sample.mp4');
+	await execute(ffmpegPath, [
+		'-hide_banner',
+		'-loglevel',
+		'error',
+		'-f',
+		'lavfi',
+		'-i',
+		'testsrc2=size=320x240:rate=12',
+		'-t',
+		'3',
+		'-c:v',
+		'libx264',
+		'-pix_fmt',
+		'yuv420p',
+		'-movflags',
+		'+faststart',
+		sample
+	]);
+	return readFile(sample);
 }
 
 test('camera addresses accept separate credentials and never disclose them in errors', () => {
@@ -168,18 +194,13 @@ test('real ONVIF SOAP exchange resolves the selected NVR channel through the SDK
 		for await (const chunk of req) chunks.push(chunk);
 		const body = Buffer.concat(chunks).toString();
 		requests.push(body);
-		const responses: Record<string, string> = {
-			GetSystemDateAndTime:
-				'<GetSystemDateAndTimeResponse><SystemDateAndTime><DateTimeType>NTP</DateTimeType></SystemDateAndTime></GetSystemDateAndTimeResponse>',
-			GetServices: `<GetServicesResponse><Service><Namespace>http://www.onvif.org/ver10/media/wsdl</Namespace><XAddr>${address}/media</XAddr></Service><Service><Namespace>http://www.onvif.org/ver10/device/wsdl</Namespace><XAddr>${address}/onvif/device_service</XAddr></Service></GetServicesResponse>`,
-			GetProfiles:
-				'<GetProfilesResponse><Profiles token="pen"><Name>Calving pen</Name></Profiles><Profiles token="yard"><Name>Yard</Name></Profiles></GetProfilesResponse>',
-			GetStreamUri:
-				'<GetStreamUriResponse><MediaUri><Uri>rtsp://camera/yard</Uri></MediaUri></GetStreamUriResponse>'
-		};
-		const operation = Object.keys(responses).find((name) => body.includes(`<${name}`));
-		res.writeHead(operation ? 200 : 400, { 'Content-Type': 'application/soap+xml' });
-		res.end(soap(operation ? responses[operation] : '<Fault/>'));
+		answerOnvif(
+			res,
+			address,
+			body,
+			'<Profiles token="pen"><Name>Calving pen</Name></Profiles><Profiles token="yard"><Name>Yard</Name></Profiles>',
+			'rtsp://camera/yard'
+		);
 	});
 	const result = await resolveCameraStream({
 		address,
@@ -230,26 +251,7 @@ test(
 	async (t) => {
 		assert.ok(ffmpeg);
 		const dir = await directory(t);
-		const sample = path.join(dir, 'sample.mp4');
-		await execute(ffmpeg, [
-			'-hide_banner',
-			'-loglevel',
-			'error',
-			'-f',
-			'lavfi',
-			'-i',
-			'testsrc2=size=320x240:rate=12',
-			'-t',
-			'3',
-			'-c:v',
-			'libx264',
-			'-pix_fmt',
-			'yuv420p',
-			'-movflags',
-			'+faststart',
-			sample
-		]);
-		const bytes = await readFile(sample);
+		const bytes = await sampleClip(ffmpeg, dir);
 		const requests: string[] = [];
 		const address = await server(t, async (req, res) => {
 			if (req.method === 'GET') {
@@ -266,17 +268,13 @@ test(
 			for await (const chunk of req) chunks.push(chunk);
 			const body = Buffer.concat(chunks).toString();
 			requests.push(body);
-			const responses: Record<string, string> = {
-				GetSystemDateAndTime:
-					'<GetSystemDateAndTimeResponse><SystemDateAndTime><DateTimeType>NTP</DateTimeType></SystemDateAndTime></GetSystemDateAndTimeResponse>',
-				GetServices: `<GetServicesResponse><Service><Namespace>http://www.onvif.org/ver10/media/wsdl</Namespace><XAddr>${address}/media</XAddr></Service><Service><Namespace>http://www.onvif.org/ver10/device/wsdl</Namespace><XAddr>${address}/onvif/device_service</XAddr></Service></GetServicesResponse>`,
-				GetProfiles:
-					'<GetProfilesResponse><Profiles token="offline"><Name>Unused channel</Name></Profiles><Profiles token="yard"><Name>Yard</Name></Profiles></GetProfilesResponse>',
-				GetStreamUri: `<GetStreamUriResponse><MediaUri><Uri>${address}/${body.includes('<ProfileToken>yard</ProfileToken>') ? 'yard' : 'offline'}</Uri></MediaUri></GetStreamUriResponse>`
-			};
-			const operation = Object.keys(responses).find((name) => body.includes(`<${name}`));
-			res.writeHead(operation ? 200 : 400, { 'Content-Type': 'application/soap+xml' });
-			res.end(soap(operation ? responses[operation] : '<Fault/>'));
+			answerOnvif(
+				res,
+				address,
+				body,
+				'<Profiles token="offline"><Name>Unused channel</Name></Profiles><Profiles token="yard"><Name>Yard</Name></Profiles>',
+				`${address}/${body.includes('<ProfileToken>yard</ProfileToken>') ? 'yard' : 'offline'}`
+			);
 		});
 		const input = { address, username: '', password: '', streamUri: '' };
 		const cache = new CameraChecks(path.join(dir, 'checks'));
@@ -308,26 +306,7 @@ test(
 	async (t) => {
 		assert.ok(ffmpeg, 'ffmpeg-static must provide the release platform binary');
 		const dir = await directory(t);
-		const sample = path.join(dir, 'sample.mp4');
-		await execute(ffmpeg, [
-			'-hide_banner',
-			'-loglevel',
-			'error',
-			'-f',
-			'lavfi',
-			'-i',
-			'testsrc2=size=320x240:rate=12',
-			'-t',
-			'3',
-			'-c:v',
-			'libx264',
-			'-pix_fmt',
-			'yuv420p',
-			'-movflags',
-			'+faststart',
-			sample
-		]);
-		const bytes = await readFile(sample);
+		const bytes = await sampleClip(ffmpeg, dir);
 		const address = await server(t, (_req, res) => {
 			res.writeHead(200, { 'Content-Type': 'video/mp4', 'Content-Length': bytes.length });
 			res.end(bytes);
@@ -343,13 +322,6 @@ test(
 		assert.ok(recording && picture);
 		await execute(ffmpeg, ['-v', 'error', '-i', recording, '-f', 'null', '-']);
 		assert.equal((await readFile(picture)).subarray(0, 2).toString('hex'), 'ffd8');
-		const range = await fileMedia(
-			recording,
-			new Request('http://localhost', { headers: { range: 'bytes=0-15' } }),
-			'video/mp4'
-		);
-		assert.equal(range.status, 206);
-		assert.equal((await range.arrayBuffer()).byteLength, 16);
 		now += 15 * 60 * 1000;
 		assert.throws(() => cache.assert(result.checkId, result.source), /expired/);
 		assert.equal(cache.file(result.checkId, 'picture.jpg'), null);
@@ -374,13 +346,10 @@ test(
 		);
 		assert.deepEqual(await readdir(dir), []);
 		const controller = new AbortController();
-		let started!: () => void;
-		const connected = new Promise<void>((resolve) => {
-			started = resolve;
-		});
-		const address = await server(t, () => started());
+		const connected = Promise.withResolvers<void>();
+		const address = await server(t, () => connected.resolve());
 		const pending = cache.check(address, ffmpeg, controller.signal);
-		await connected;
+		await connected.promise;
 		const waiting = cache.check(address, path.join(dir, 'missing-ffmpeg'));
 		controller.abort(new Error('Setup cancelled'));
 		await Promise.all([

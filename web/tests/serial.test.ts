@@ -6,12 +6,11 @@ test('queued operations run one at a time in the order given, and a failure stop
 	const enqueue = serialQueue();
 	const other = serialQueue();
 	const events: string[] = [];
-	let release!: () => void;
-	const blocked = new Promise<void>((resolve) => (release = resolve));
+	const blocked = Promise.withResolvers<void>();
 
 	const first = enqueue(async () => {
 		events.push('first starts');
-		await blocked;
+		await blocked.promise;
 		events.push('first ends');
 		return 1;
 	});
@@ -28,7 +27,7 @@ test('queued operations run one at a time in the order given, and a failure stop
 	assert.equal(await other(async () => 'independent'), 'independent');
 	assert.deepEqual(events, ['first starts']);
 
-	release();
+	blocked.resolve();
 	assert.equal(await first, 1);
 	await assert.rejects(second, (error) => error === failure);
 	assert.equal(await third, 3);

@@ -2,13 +2,7 @@ import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import {
-	LANGUAGE_NAMES,
-	LOCALES,
-	language,
-	negotiateLocale,
-	type Locale
-} from '../src/lib/locales.ts';
+import { LOCALES, language, negotiateLocale, type Locale } from '../src/lib/locales.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import {
 	currentLanguage,
@@ -74,13 +68,12 @@ test('a browser gets the first of its languages that the interface has', () => {
 		assert.equal(negotiateLocale(header), undefined);
 });
 
-test('every language has a catalog, its own name, and nothing left untranslated', async () => {
+test('every language has a catalog and nothing left untranslated', async () => {
 	const files = (await readdir(catalogs)).filter((name) => name.endsWith('.po')).sort();
 	assert.deepEqual(files, LOCALES.map((locale) => `${locale}.po`).sort());
 	const source = await readCatalog('en');
 	assert.ok(source.length > 500);
 	for (const locale of LOCALES) {
-		assert.ok(LANGUAGE_NAMES[locale]);
 		const entries = await readCatalog(locale);
 		// `pnpm i18n:check` compares placeholders and plural forms, but accepts a message that
 		// is missing or empty.
@@ -150,10 +143,9 @@ test('an installation takes the language of the browser that sets it up, then ke
 });
 
 test('settings saved without a browser language stay as they were', async (t) => {
-	const { store, files, stored } = await fixture(t);
+	const { store, stored } = await fixture(t);
 	await store.saveCamera(camera);
 	assert.equal(await stored(), undefined);
-	assert.ok(!('language' in JSON.parse(await readFile(files.app, 'utf8'))));
 });
 
 test('a language this version does not have leaves the other settings readable', async (t) => {

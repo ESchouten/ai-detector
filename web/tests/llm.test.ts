@@ -1,4 +1,3 @@
-import { awaitsConnection, suggestedConnection } from '../src/lib/llm.ts';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFile } from 'node:fs/promises';
@@ -9,9 +8,11 @@ import {
 } from '../src/lib/configuration.ts';
 import {
 	assignConnection,
+	awaitsConnection,
 	clearVerificationKeys,
 	connectionMatches,
-	GEMINI_MODELS
+	GEMINI_MODELS,
+	suggestedConnection
 } from '../src/lib/llm.ts';
 import * as v from 'valibot';
 import { llmConnection, type LlmConnection } from '../src/lib/schema.ts';
@@ -191,7 +192,6 @@ test('one connection updates multiple detectors without changing their questions
 		assert.equal(first.prompt, `Question for ${index === 0 ? 'First' : 'Second'}`);
 		assert.equal(first.key, 'changed-key');
 		assert.equal(first.model, 'openai/new');
-		assert.equal(first.key, 'changed-key');
 		assert.deepEqual(second, fallback);
 	}
 	await assert.rejects(store.deleteLlm('Renamed AI'), /in use/);

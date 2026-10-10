@@ -98,37 +98,6 @@ async function until(read: () => Promise<boolean>): Promise<void> {
 }
 
 test(
-	'one camera preserves every rule, image coordinates and tracking IDs without exposing source credentials',
-	{ timeout: 5000 },
-	async (t) => {
-		const { session, frame, open, lease } = await fixture(t);
-		await session();
-		await frame('detector-1');
-		await frame('detector-2');
-		const { reader } = open();
-		const output = await chunk(reader);
-		const frames = output
-			.split('\n')
-			.filter((line) => line.startsWith('data: '))
-			.map((line) => JSON.parse(line.slice(6)));
-		assert.deepEqual(
-			frames.map((frame) => frame.ruleLabel),
-			['People', 'Vehicles']
-		);
-		assert.equal(frames[0].boxes[0].trackId, 17);
-		assert.equal(frames[0].rulePreset, 'people');
-		assert.equal(frames[0].image.width, 24);
-		assert.ok(!output.includes('secret'));
-		await until(
-			async () =>
-				JSON.parse(await readFile(lease, 'utf8').catch(() => '{}')).expiresAt > Date.now() / 1000
-		);
-		await reader.cancel();
-		await assert.rejects(readFile(lease), { code: 'ENOENT' });
-	}
-);
-
-test(
 	'multiple viewers share their lease and reader cancellation cleans the last lease',
 	{ timeout: 5000 },
 	async (t) => {
@@ -270,15 +239,15 @@ test(
 			.filter((line) => line.startsWith('data: '))
 			.map((line) => JSON.parse(line.slice(6)));
 		assert.deepEqual(
-			frames.map(({ cameraId, ruleId }) => [cameraId, ruleId]),
+			frames.map(({ cameraId, ruleId, ruleLabel }) => [cameraId, ruleId, ruleLabel]),
 			[
-				['shed', 'detector-1'],
-				['shed', 'detector-2'],
-				['pen', 'detector-1']
+				['shed', 'detector-1', 'People'],
+				['shed', 'detector-2', 'Vehicles'],
+				['pen', 'detector-1', 'People']
 			]
 		);
 		assert.deepEqual(frames[0].image, { width: 24, height: 16 });
-		assert.equal(frames[0].boxes[0].label, 'cow');
+		assert.deepEqual(frames[0].boxes, [box]);
 		assert.equal(frames[0].rulePreset, 'people');
 		assert.deepEqual(frames[2].boxes, []);
 		assert.ok(!output.includes('secret'));

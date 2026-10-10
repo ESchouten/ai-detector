@@ -11,13 +11,7 @@ const FORCE_KILL_DELAY_MS = 2_000;
  * The camera's pictures as JPEG files, about eight a second. Owns one preview process until it
  * exits, including when the reader cancels.
  */
-export function createPreviewStream(source: string, executable: string, signal: AbortSignal) {
-	if (signal.aborted)
-		return new ReadableStream<Uint8Array>({
-			start(controller) {
-				controller.close();
-			}
-		});
+export function createPreviewStream(source: string, executable: string) {
 	// Named here and not in the function that uses them: the translation tool leaves text inside
 	// a nested function without the means to translate it, and reading it there throws.
 	const stalled = 'Live stream stopped receiving frames.';
@@ -104,7 +98,6 @@ export function createPreviewStream(source: string, executable: string, signal: 
 		child.once('close', (code) => {
 			clearTimeout(readTimer);
 			clearTimeout(killTimer);
-			signal.removeEventListener('abort', onAbort);
 			if (!stopping && code !== 0)
 				console.warn('FFmpeg preview failed', {
 					source: sanitizeSourceForLogs(source),
@@ -129,17 +122,11 @@ export function createPreviewStream(source: string, executable: string, signal: 
 		return finished;
 	}
 
-	function finish(error?: Error): void {
+	function finish(error: Error): void {
 		if (responseClosed) return;
 		responseClosed = true;
 		latest = undefined;
-		if (error) controller.error(error);
-		else controller.close();
-	}
-
-	function onAbort(): void {
-		finish();
-		void stop();
+		controller.error(error);
 	}
 
 	function armReadTimeout(delay: number): void {
@@ -163,8 +150,6 @@ export function createPreviewStream(source: string, executable: string, signal: 
 			start(value) {
 				controller = value;
 				armReadTimeout(FIRST_FRAME_TIMEOUT_MS);
-				if (signal.aborted) onAbort();
-				else signal.addEventListener('abort', onAbort, { once: true });
 			},
 			pull() {
 				waiting = true;

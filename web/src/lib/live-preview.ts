@@ -1,18 +1,16 @@
 import * as v from 'valibot';
 
 const coordinate = v.pipe(v.number(), v.finite());
-/** One actual analyzed frame, with coordinates in the included image's pixels. */
+/** The boxes of one analyzed picture, with coordinates in pixels of the given image size. */
 export const frameSchema = v.object({
 	version: v.literal(1),
 	runId: v.string(),
 	sourceKey: v.string(),
 	ruleId: v.string(),
-	capturedAt: v.string(),
 	publishedAt: v.pipe(v.string(), v.isoTimestamp()),
 	image: v.object({
 		width: v.pipe(v.number(), v.integer(), v.minValue(1)),
-		height: v.pipe(v.number(), v.integer(), v.minValue(1)),
-		jpeg: v.pipe(v.string(), v.minLength(1))
+		height: v.pipe(v.number(), v.integer(), v.minValue(1))
 	}),
 	boxes: v.array(
 		v.object({
@@ -33,11 +31,8 @@ export type LivePreviewFrame = v.InferOutput<typeof frameSchema> & {
 	rulePreset?: string;
 };
 
-/** Geometry only: camera cards keep playing their independent live video. */
-export type CameraOverlayFrame = Omit<LivePreviewFrame, 'image'> & {
-	cameraId: string;
-	image: { width: number; height: number };
-};
+/** One connection carries the frames of every visible camera, so each names its camera. */
+export type CameraOverlayFrame = LivePreviewFrame & { cameraId: string };
 
 export function detectionBoxLabel(box: LivePreviewFrame['boxes'][number]): string {
 	return [
@@ -49,12 +44,8 @@ export function detectionBoxLabel(box: LivePreviewFrame['boxes'][number]): strin
 		.join(' · ');
 }
 
+/** Clears the boxes of one camera's rule, or of every camera when it names none. */
 export interface LivePreviewStatus {
-	version: 1;
-	state: 'waiting' | 'unavailable';
-	message: string;
 	ruleId?: string;
-	ruleLabel?: string;
-	rulePreset?: string;
 	cameraId?: string;
 }

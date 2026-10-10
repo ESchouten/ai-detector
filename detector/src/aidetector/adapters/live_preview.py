@@ -1,6 +1,5 @@
 """Publish bounded latest observations for viewers through the shared data folder."""
 
-import base64
 import hashlib
 import json
 import logging
@@ -13,8 +12,6 @@ from threading import Event, Lock, Thread
 from time import monotonic, time
 from uuid import uuid4
 
-from aidetector.adapters.media import MediaError
-from aidetector.adapters.media.images import encode_jpeg
 from aidetector.application.ports import PublishObservation
 from aidetector.domain.models import Observation
 
@@ -34,7 +31,7 @@ def _atomic_json(path: Path, record: dict) -> None:
 
 
 class LivePreview:
-    """Own one encoder thread; inference only replaces pending immutable observations."""
+    """Own one publishing thread; inference only replaces pending immutable observations."""
 
     def __init__(self, directory: Path, interval: float = 0.125):
         self.directory = directory
@@ -85,7 +82,7 @@ class LivePreview:
             while not self._stop.is_set():
                 try:
                     self._poll()
-                except (OSError, MediaError) as error:
+                except OSError as error:
                     self._report_failure(error)
                 self._stop.wait(self.interval)
         except Exception:
@@ -148,7 +145,7 @@ class LivePreview:
                 self._write_frame(source_key, rule_id, observation)
                 self._published[(source_key, rule_id)] = monotonic()
                 self._failure = None
-            except (OSError, MediaError) as error:
+            except OSError as error:
                 self._report_failure(error)
 
     def _has_viewer(self, source_key: str) -> bool:
@@ -176,15 +173,8 @@ class LivePreview:
             "runId": self.run_id,
             "sourceKey": source_key,
             "ruleId": rule_id,
-            "capturedAt": observation.date.isoformat(),
             "publishedAt": datetime.now(UTC).isoformat(),
-            "image": {
-                "width": width,
-                "height": height,
-                "jpeg": base64.b64encode(
-                    encode_jpeg(observation.image, quality=75)
-                ).decode("ascii"),
-            },
+            "image": {"width": width, "height": height},
             "boxes": [
                 {
                     "x1": box.x1,

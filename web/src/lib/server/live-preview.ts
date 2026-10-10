@@ -141,22 +141,8 @@ type PreviewEvent =
 	| { event: 'frame'; data: LivePreviewFrame }
 	| { event: 'status'; data: LivePreviewStatus };
 
-function status(
-	rule: LivePreviewRule,
-	state: LivePreviewStatus['state'],
-	message: string
-): PreviewEvent {
-	return {
-		event: 'status',
-		data: {
-			version: 1,
-			state,
-			message,
-			ruleId: rule.id,
-			ruleLabel: rule.label,
-			rulePreset: rule.preset
-		}
-	};
+function status(rule: LivePreviewRule): PreviewEvent {
+	return { event: 'status', data: { ruleId: rule.id } };
 }
 
 async function readSession(directory: string) {
@@ -170,19 +156,15 @@ async function readSession(directory: string) {
 
 function changedEvents(
 	events: { target: PreviewTarget; event: PreviewEvent }[],
-	sent: Map<string, string>,
-	seen: Set<string>
+	sent: Map<string, string>
 ): string {
 	let chunk = '';
 	for (const { target, event } of events) {
 		const key = targetKey(target);
-		if (event.event === 'frame') seen.add(key);
-		let data: CameraOverlayFrame | LivePreviewStatus;
-		if (event.event === 'frame') {
-			// Do not send a second video stream just to draw boxes on the live camera.
-			const { width, height } = event.data.image;
-			data = { ...event.data, cameraId: target.cameraId, image: { width, height } };
-		} else data = { ...event.data, cameraId: target.cameraId };
+		const data: CameraOverlayFrame | LivePreviewStatus = {
+			...event.data,
+			cameraId: target.cameraId
+		};
 		const value = JSON.stringify(data);
 		if (sent.get(key) === value) continue;
 		sent.set(key, value);
@@ -191,37 +173,31 @@ function changedEvents(
 	return chunk || 'event: heartbeat\ndata: {}\n\n';
 }
 
+/** A frame counts only from the running detector, for this camera and rule, while it is fresh. */
 async function readPreview(
 	directory: string,
 	sourceKey: string,
 	rule: LivePreviewRule,
 	session: v.InferOutput<typeof sessionSchema> | null
 ): Promise<PreviewEvent> {
-	if (!session)
-		return status(rule, 'waiting', 'Waiting for the detector to publish a live picture.');
-	if (Date.now() - Date.parse(session.updatedAt) > 6000)
-		return status(rule, 'unavailable', 'The detector is no longer publishing live pictures.');
+	if (!session || Date.now() - Date.parse(session.updatedAt) > 6000) return status(rule);
 	try {
 		const frame = v.parse(
 			frameSchema,
 			await json(path.join(directory, 'frames', `${sourceKey}.${rule.id}.json`))
 		);
-		if (frame.runId !== session.runId)
-			return status(rule, 'waiting', 'Waiting for a picture from the current detector run.');
-		if (frame.sourceKey !== sourceKey || frame.ruleId !== rule.id)
-			return status(rule, 'unavailable', 'The live picture does not match this camera and rule.');
 		const age = Date.now() - Date.parse(frame.publishedAt);
-		if (age < -5000 || age > Math.max(15000, rule.interval * 3000 + 5000))
-			return status(
-				rule,
-				'unavailable',
-				'No recent analyzed picture. Check the camera and monitoring status.'
-			);
+		if (
+			frame.runId !== session.runId ||
+			frame.sourceKey !== sourceKey ||
+			frame.ruleId !== rule.id ||
+			age < -5000 ||
+			age > Math.max(15000, rule.interval * 3000 + 5000)
+		)
+			return status(rule);
 		return { event: 'frame', data: { ...frame, ruleLabel: rule.label, rulePreset: rule.preset } };
-	} catch (error) {
-		return missing(error)
-			? status(rule, 'waiting', 'Waiting for this rule to analyze a picture.')
-			: status(rule, 'unavailable', 'The live picture could not be read.');
+	} catch {
+		return status(rule);
 	}
 }
 
@@ -247,10 +223,6 @@ function previewStream(
 	signal: AbortSignal
 ): ReadableStream<Uint8Array> {
 	const encoder = new TextEncoder();
-	// Named here and not where they are used: the translation tool leaves text inside the nested
-	// functions without the means to translate it, and reading it there throws.
-	const notPublishing = 'The detector is no longer publishing live pictures.';
-	const unavailable = 'Live detection preview is unavailable. Close it and try again.';
 	let close: (cancelled?: boolean) => Promise<void> = async () => {};
 	return new ReadableStream({
 		start(controller) {
@@ -258,7 +230,6 @@ function previewStream(
 				acquireLease(path.join(directory, 'leases', `${key}.json`))
 			);
 			const sent = new Map<string, string>();
-			const seen = new Set<string>();
 			let stopped = false;
 			let polling = false;
 			let runId: string | undefined;
@@ -291,23 +262,15 @@ function previewStream(
 					const events = await Promise.all(
 						targets.map(async (target) => ({
 							target,
-							event:
-								!session && seen.has(targetKey(target))
-									? status(target.rule, 'unavailable', notPublishing)
-									: await readPreview(directory, target.sourceKey, target.rule, session)
+							event: await readPreview(directory, target.sourceKey, target.rule, session)
 						}))
 					);
 					if (stopped) return;
-					controller.enqueue(encoder.encode(changedEvents(events, sent, seen)));
+					controller.enqueue(encoder.encode(changedEvents(events, sent)));
 				} catch (error) {
 					if (stopped) return;
 					console.error('Live detection preview unavailable', error);
-					const data: LivePreviewStatus = {
-						version: 1,
-						state: 'unavailable',
-						message: unavailable
-					};
-					controller.enqueue(encoder.encode(`event: status\ndata: ${JSON.stringify(data)}\n\n`));
+					controller.enqueue(encoder.encode('event: status\ndata: {}\n\n'));
 					await close();
 				} finally {
 					polling = false;

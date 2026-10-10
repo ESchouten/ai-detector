@@ -16,6 +16,7 @@ const rules = [
 	{ id: 'detector-2', label: 'Vehicles', interval: 1 }
 ];
 const sourceKey = keyOf('rtsp://user:secret@camera/live', '/data');
+const box = { x1: 1, y1: 2, x2: 10, y2: 12, label: 'cow', confidence: 0.9, trackId: 17 };
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-live-'));
@@ -41,10 +42,9 @@ async function fixture(t: TestContext) {
 				runId: 'run-1',
 				sourceKey: key,
 				ruleId,
-				capturedAt: '2020-01-01T00:00:00',
 				publishedAt: new Date().toISOString(),
-				image: { width: 24, height: 16, jpeg: Buffer.from('encoded-image').toString('base64') },
-				boxes: [{ x1: 1, y1: 2, x2: 10, y2: 12, label: 'cow', confidence: 0.9, trackId: 17 }],
+				image: { width: 24, height: 16 },
+				boxes: [box],
 				...changes
 			})
 		);
@@ -58,6 +58,11 @@ async function fixture(t: TestContext) {
 	};
 	const lease = path.join(directory, 'leases', `${sourceKey}.json`);
 	return { directory, session, frame, open, lease };
+}
+
+/** The event that clears the boxes of one rule on the camera `shed`. */
+function status(ruleId: string): string {
+	return `event: status\ndata: {"ruleId":"${ruleId}","cameraId":"shed"}\n\n`;
 }
 
 async function chunk(reader: ReadableStreamDefaultReader<Uint8Array>): Promise<string> {
@@ -113,7 +118,6 @@ test(
 		assert.equal(frames[0].boxes[0].trackId, 17);
 		assert.equal(frames[0].rulePreset, 'people');
 		assert.equal(frames[0].image.width, 24);
-		assert.equal(frames[0].image.jpeg, undefined);
 		assert.ok(!output.includes('secret'));
 		await until(
 			async () =>
@@ -131,7 +135,7 @@ test(
 		const { open, lease } = await fixture(t);
 		const first = open();
 		const second = open();
-		assert.match(await chunk(first.reader), /Waiting for the detector/);
+		assert.equal(await chunk(first.reader), status('detector-1') + status('detector-2'));
 		await chunk(second.reader);
 		await until(
 			async () => JSON.parse(await readFile(lease, 'utf8').catch(() => '{}')).version === 1
@@ -175,10 +179,7 @@ test(
 		assert.match(await chunk(reader), /event: frame/);
 		assert.match(await chunk(reader), /event: heartbeat/);
 		await frame('detector-1', { publishedAt: new Date(Date.now() - 16000).toISOString() });
-		const stale = await nextUpdate(reader);
-		assert.match(stale, /No recent analyzed picture/);
-		assert.match(stale, /People/);
-		assert.ok(!stale.includes('Vehicles'));
+		assert.equal(await nextUpdate(reader), status('detector-1'));
 	}
 );
 
@@ -192,7 +193,7 @@ test(
 		const { reader } = open();
 		assert.match(await chunk(reader), /event: frame/);
 		await rm(path.join(directory, 'session.json'));
-		assert.match(await nextUpdate(reader), /no longer publishing/);
+		assert.equal(await nextUpdate(reader), status('detector-1'));
 		await session('run-2');
 		await closed(reader);
 	}
@@ -207,10 +208,7 @@ test(
 		await frame('detector-1', { runId: 'previous-run' });
 		await frame('detector-2', { image: null });
 		const { reader } = open();
-		const output = await chunk(reader);
-		assert.match(output, /current detector run/);
-		assert.match(output, /could not be read/);
-		assert.ok(!output.includes('event: frame'));
+		assert.equal(await chunk(reader), status('detector-1') + status('detector-2'));
 		await reader.cancel();
 		assert.equal((await readdir(path.join(directory, 'leases'))).length, 0);
 	}
@@ -225,9 +223,9 @@ test(
 		await frame('detector-1');
 		const { reader } = open();
 		await delay(700);
-		await frame('detector-1', { capturedAt: 'intermediate' });
+		await frame('detector-1', { boxes: [{ ...box, label: 'intermediate' }] });
 		await delay(700);
-		await frame('detector-1', { capturedAt: 'newest' });
+		await frame('detector-1', { boxes: [{ ...box, label: 'newest' }] });
 		assert.ok(!(await chunk(reader)).includes('intermediate'));
 		assert.match(await nextUpdate(reader), /newest/);
 	}
@@ -247,9 +245,7 @@ test(
 		await session('run-1', new Date(Date.now() - 7000).toISOString());
 		await frame('detector-1');
 		const { reader } = open();
-		const output = await chunk(reader);
-		assert.match(output, /no longer publishing/);
-		assert.ok(!output.includes('event: frame'));
+		assert.equal(await chunk(reader), status('detector-1') + status('detector-2'));
 	}
 );
 
@@ -285,7 +281,6 @@ test(
 		assert.equal(frames[0].boxes[0].label, 'cow');
 		assert.equal(frames[0].rulePreset, 'people');
 		assert.deepEqual(frames[2].boxes, []);
-		assert.ok(!output.includes('jpeg'));
 		assert.ok(!output.includes('secret'));
 		await until(async () => (await readdir(path.join(directory, 'leases'))).length === 2);
 		await frame('detector-1', { publishedAt: new Date(Date.now() - 16000).toISOString() });

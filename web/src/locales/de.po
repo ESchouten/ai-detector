@@ -283,39 +283,6 @@ msgstr "Der Speicher ist fast voll ({0} GB frei). Geben Sie unter Einstellungen 
 msgid "This web server uses a separately managed detector. Download the complete application to start and stop it here."
 msgstr "Dieser Webserver verwendet einen separat verwalteten Detektor. Laden Sie die vollständige Anwendung herunter, um ihn hier zu starten und zu stoppen."
 
-#: src/lib/server/live-preview.ts
-msgid "Waiting for the detector to publish a live picture."
-msgstr "Warten, bis der Detektor ein Livebild liefert."
-
-#: src/lib/server/live-preview.ts
-#: src/lib/server/live-preview.ts
-msgid "The detector is no longer publishing live pictures."
-msgstr "Der Detektor liefert keine Livebilder mehr."
-
-#: src/lib/server/live-preview.ts
-msgid "Waiting for a picture from the current detector run."
-msgstr "Warten auf ein Bild aus dem aktuellen Detektorlauf."
-
-#: src/lib/server/live-preview.ts
-msgid "The live picture does not match this camera and rule."
-msgstr "Das Livebild passt nicht zu dieser Kamera und diesem Detektor."
-
-#: src/lib/server/live-preview.ts
-msgid "No recent analyzed picture. Check the camera and monitoring status."
-msgstr "Kein aktuell analysiertes Bild. Prüfen Sie die Kamera und den Status der Überwachung."
-
-#: src/lib/server/live-preview.ts
-msgid "Waiting for this rule to analyze a picture."
-msgstr "Warten, bis dieser Detektor ein Bild analysiert."
-
-#: src/lib/server/live-preview.ts
-msgid "The live picture could not be read."
-msgstr "Das Livebild konnte nicht gelesen werden."
-
-#: src/lib/server/live-preview.ts
-msgid "Live detection preview is unavailable. Close it and try again."
-msgstr "Die Live-Vorschau der Erkennung ist nicht verfügbar. Schließen Sie sie und versuchen Sie es erneut."
-
 #: src/lib/server/managed-detector.ts
 msgid "Ready to set up your camera."
 msgstr "Bereit, Ihre Kamera einzurichten."

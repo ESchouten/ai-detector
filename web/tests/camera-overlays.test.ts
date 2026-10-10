@@ -18,7 +18,6 @@ class Connection extends EventTarget {
 					ruleLabel: ruleId,
 					runId: 'run-1',
 					sourceKey: cameraId,
-					capturedAt: new Date().toISOString(),
 					publishedAt: new Date().toISOString(),
 					image: { width: 960, height: 540 },
 					boxes
@@ -29,13 +28,7 @@ class Connection extends EventTarget {
 	status(cameraId?: string, ruleId?: string) {
 		this.dispatchEvent(
 			new MessageEvent('status', {
-				data: JSON.stringify({
-					version: 1,
-					state: 'unavailable',
-					message: 'Stopped',
-					cameraId,
-					ruleId
-				})
+				data: JSON.stringify({ cameraId, ruleId })
 			})
 		);
 	}

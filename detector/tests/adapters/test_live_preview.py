@@ -1,16 +1,12 @@
-import base64
 import hashlib
 import json
 from datetime import datetime
 from threading import Event
 from time import monotonic, time
 
-import cv2
 import numpy as np
 
-from aidetector.adapters.live_preview import LivePreview
-from aidetector.adapters.media import MediaError
-from aidetector.adapters.media.images import encode_jpeg
+from aidetector.adapters.live_preview import LivePreview, _atomic_json
 from aidetector.domain.models import BoundingBox, Observation
 
 
@@ -43,25 +39,16 @@ def lease(directory, source, value=None):
     return source_key
 
 
-def observation(value=0):
+def observation(track_id=17):
     return Observation(
         datetime(2026, 1, 1),
-        np.full((16, 24, 3), value, dtype=np.uint8),
+        np.zeros((16, 24, 3), dtype=np.uint8),
         {"cow": 0.9},
-        (BoundingBox(1, 2, 10, 12, "cow", 0.9, 17),),
+        (BoundingBox(1, 2, 10, 12, "cow", 0.9, track_id),),
     )
 
 
-def test_no_encoding_without_a_valid_viewer_and_late_viewer_works(
-    tmp_path, monkeypatch
-):
-    encoded = []
-
-    def encode(image, quality):
-        encoded.append(image)
-        return encode_jpeg(image, quality)
-
-    monkeypatch.setattr("aidetector.adapters.live_preview.encode_jpeg", encode)
+def test_nothing_is_published_without_a_valid_viewer_and_late_viewer_works(tmp_path):
     publisher = LivePreview(tmp_path)
     publish = publisher.observer("detector-1", ("camera",))
     key = lease(tmp_path, "camera", ["malformed lease"])
@@ -70,7 +57,7 @@ def test_no_encoding_without_a_valid_viewer_and_late_viewer_works(
         wait_for(lambda: read_record(tmp_path / "session.json"))
         publish("camera", observation())
         Event().wait(0.3)
-        assert encoded == []
+        assert not file.exists()
         lease(tmp_path, "camera")
 
         def publish_until_visible():
@@ -82,7 +69,7 @@ def test_no_encoding_without_a_valid_viewer_and_late_viewer_works(
     assert not (tmp_path / "session.json").exists()
 
 
-def test_multiple_rules_publish_matching_frame_and_boxes_and_overwrite(tmp_path):
+def test_multiple_rules_publish_picture_size_and_boxes_and_overwrite(tmp_path):
     key = lease(tmp_path, "rtsp://user:secret@camera/live")
     publisher = LivePreview(tmp_path, interval=0.01)
     first = publisher.observer("detector-1", ("rtsp://user:secret@camera/live",))
@@ -103,15 +90,10 @@ def test_multiple_rules_publish_matching_frame_and_boxes_and_overwrite(tmp_path)
                 "y2": 12,
                 "label": "cow",
                 "confidence": 0.9,
-                "trackId": 17,
+                "trackId": 20,
             }
         ]
-        image = cv2.imdecode(
-            np.frombuffer(base64.b64decode(record["image"]["jpeg"]), np.uint8),
-            cv2.IMREAD_COLOR,
-        )
-        assert image.shape == (16, 24, 3)
-        assert np.all(image == 20)
+        assert record["image"] == {"width": 24, "height": 16}
         assert "secret" not in json.dumps(record)
         first("rtsp://user:secret@camera/live", observation(120))
         updated = wait_for(
@@ -121,30 +103,26 @@ def test_multiple_rules_publish_matching_frame_and_boxes_and_overwrite(tmp_path)
                 and result
             )
         )
-        assert updated["image"]["jpeg"] != record["image"]["jpeg"]
-        replacement = cv2.imdecode(
-            np.frombuffer(base64.b64decode(updated["image"]["jpeg"]), np.uint8),
-            cv2.IMREAD_COLOR,
-        )
-        assert np.all(replacement == 120)
+        assert updated["boxes"][0]["trackId"] == 120
         assert len(list((tmp_path / "frames").iterdir())) == 2
 
 
-def test_slow_encoder_does_not_block_inference_and_keeps_only_latest_pending(
+def test_slow_write_does_not_block_inference_and_keeps_only_latest_pending(
     tmp_path, monkeypatch
 ):
     key = lease(tmp_path, "camera")
     entered, release = Event(), Event()
     values = []
 
-    def encode(image, quality):
-        values.append(int(image[0, 0, 0]))
-        if len(values) == 1:
-            entered.set()
-            assert release.wait(5)
-        return encode_jpeg(image, quality)
+    def write(path, record):
+        if "ruleId" in record:
+            values.append(record["boxes"][0]["trackId"])
+            if len(values) == 1:
+                entered.set()
+                assert release.wait(5)
+        _atomic_json(path, record)
 
-    monkeypatch.setattr("aidetector.adapters.live_preview.encode_jpeg", encode)
+    monkeypatch.setattr("aidetector.adapters.live_preview._atomic_json", write)
     publisher = LivePreview(tmp_path, interval=0.01)
     publish = publisher.observer("detector-1", ("camera",))
     with publisher.open():
@@ -160,17 +138,17 @@ def test_slow_encoder_does_not_block_inference_and_keeps_only_latest_pending(
         assert read_record(tmp_path / "frames" / f"{key}.detector-1.json")
 
 
-def test_encoder_failure_does_not_starve_other_rules_and_disconnect_stops_publication(
+def test_write_failure_does_not_starve_other_rules_and_disconnect_stops_publication(
     tmp_path, monkeypatch, caplog
 ):
     key = lease(tmp_path, "camera")
 
-    def encode(image, quality):
-        if image[0, 0, 0] == 1:
-            raise MediaError("Invalid preview image")
-        return encode_jpeg(image, quality)
+    def write(path, record):
+        if record.get("ruleId") == "detector-1":
+            raise OSError("Preview folder is full")
+        _atomic_json(path, record)
 
-    monkeypatch.setattr("aidetector.adapters.live_preview.encode_jpeg", encode)
+    monkeypatch.setattr("aidetector.adapters.live_preview._atomic_json", write)
     publisher = LivePreview(tmp_path, interval=0.01)
     first = publisher.observer("detector-1", ("camera",))
     second = publisher.observer("detector-2", ("camera",))
@@ -180,7 +158,7 @@ def test_encoder_failure_does_not_starve_other_rules_and_disconnect_stops_public
         first("camera", observation(1))
         second("camera", observation(2))
         record = wait_for(lambda: read_record(file))
-        assert "Invalid preview image" in caplog.text
+        assert "Preview folder is full" in caplog.text
         (tmp_path / "leases" / f"{key}.json").unlink()
         second("camera", observation(3))
         Event().wait(0.5)

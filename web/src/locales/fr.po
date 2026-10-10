@@ -283,39 +283,6 @@ msgstr "Le stockage est presque plein ({0} Go libres). Libérez de l’espace da
 msgid "This web server uses a separately managed detector. Download the complete application to start and stop it here."
 msgstr "Ce serveur web utilise un détecteur géré séparément. Téléchargez l’application complète pour le démarrer et l’arrêter ici."
 
-#: src/lib/server/live-preview.ts
-msgid "Waiting for the detector to publish a live picture."
-msgstr "En attente d’une image en direct du détecteur."
-
-#: src/lib/server/live-preview.ts
-#: src/lib/server/live-preview.ts
-msgid "The detector is no longer publishing live pictures."
-msgstr "Le détecteur ne fournit plus d’images en direct."
-
-#: src/lib/server/live-preview.ts
-msgid "Waiting for a picture from the current detector run."
-msgstr "En attente d’une image de la session actuelle du détecteur."
-
-#: src/lib/server/live-preview.ts
-msgid "The live picture does not match this camera and rule."
-msgstr "L’image en direct ne correspond pas à cette caméra et à ce détecteur."
-
-#: src/lib/server/live-preview.ts
-msgid "No recent analyzed picture. Check the camera and monitoring status."
-msgstr "Aucune image analysée récemment. Vérifiez la caméra et l’état de la surveillance."
-
-#: src/lib/server/live-preview.ts
-msgid "Waiting for this rule to analyze a picture."
-msgstr "En attente de l’analyse d’une image par ce détecteur."
-
-#: src/lib/server/live-preview.ts
-msgid "The live picture could not be read."
-msgstr "L’image en direct n’a pas pu être lue."
-
-#: src/lib/server/live-preview.ts
-msgid "Live detection preview is unavailable. Close it and try again."
-msgstr "L’aperçu en direct de la détection est indisponible. Fermez-le et réessayez."
-
 #: src/lib/server/managed-detector.ts
 msgid "Ready to set up your camera."
 msgstr "Prêt à configurer votre caméra."

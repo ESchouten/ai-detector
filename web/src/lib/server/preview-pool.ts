@@ -34,7 +34,7 @@ export class PreviewPool {
 		if (!preview) {
 			preview = {
 				viewers: new Set(),
-				reader: createPreviewStream(source, executable, new AbortController().signal).getReader()
+				reader: createPreviewStream(source, executable).getReader()
 			};
 			this.previews.set(key, preview);
 			void this.broadcast(key, preview);

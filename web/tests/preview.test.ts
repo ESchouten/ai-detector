@@ -47,7 +47,7 @@ test('real camera previews sample frames without filling timestamp gaps with dup
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-preview-timestamps-'));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	for (const gap of [0, 60]) {
-		await t.test(`${gap}-second gap`, async (t) => {
+		await t.test(`${gap}-second gap`, async () => {
 			const source = path.join(directory, `camera-${gap}.nut`);
 			await promisify(execFile)(ffmpegPath, [
 				'-hide_banner',
@@ -67,9 +67,7 @@ test('real camera previews sample frames without filling timestamp gaps with dup
 				'ffv1',
 				source
 			]);
-			const abort = new AbortController();
-			t.after(() => abort.abort());
-			const reader = createPreviewStream(source, ffmpegPath, abort.signal).getReader();
+			const reader = createPreviewStream(source, ffmpegPath).getReader();
 			let pictures = 0;
 			await assert.rejects(async () => {
 				while (true) {
@@ -127,33 +125,23 @@ async function readStartedFile(file: string): Promise<string> {
 	assert.fail(`Preview did not create ${path.basename(file)}`);
 }
 
-for (const cancel of ['response', 'request'] as const) {
-	test(`${cancel} cancellation kills a preview that ignores SIGTERM`, posixOnly, async (t) => {
-		const { directory, source } = await fixture(t, { ignoreTerm: true });
-		const abort = new AbortController();
-		const reader = createPreviewStream(source, executable, abort.signal).getReader();
-		t.after(() => reader.cancel());
-		assert.equal(new TextDecoder().decode(picture((await reader.read()).value)), 'preview frame');
-		const pid = Number(await readStartedFile(path.join(directory, 'pid')));
-		if (cancel === 'response') await reader.cancel();
-		else {
-			abort.abort();
-			assert.equal((await reader.read()).done, true);
-			await waitForExit(pid);
-		}
-		assert.equal(await readFile(path.join(directory, 'terminated'), 'utf8'), 'SIGTERM');
-		assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
-	});
-}
+test('cancellation kills a preview that ignores SIGTERM', posixOnly, async (t) => {
+	const { directory, source } = await fixture(t, { ignoreTerm: true });
+	const reader = createPreviewStream(source, executable).getReader();
+	t.after(() => reader.cancel());
+	assert.equal(new TextDecoder().decode(picture((await reader.read()).value)), 'preview frame');
+	const pid = Number(await readStartedFile(path.join(directory, 'pid')));
+	await reader.cancel();
+	assert.equal(await readFile(path.join(directory, 'terminated'), 'utf8'), 'SIGTERM');
+	assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
+});
 
 test(
 	'preview EOF closes the response and stops a producer that has not exited',
 	posixOnly,
 	async (t) => {
 		const { directory, source } = await fixture(t, { endOutput: true });
-		const abort = new AbortController();
-		t.after(() => abort.abort());
-		const reader = createPreviewStream(source, executable, abort.signal).getReader();
+		const reader = createPreviewStream(source, executable).getReader();
 		assert.equal(new TextDecoder().decode(picture((await reader.read()).value)), 'preview frame');
 		const pid = Number(await readStartedFile(path.join(directory, 'pid')));
 		await assert.rejects(reader.read(), /Live stream ended/);
@@ -167,11 +155,7 @@ test(
 	posixOnly,
 	async (t) => {
 		const { directory, source } = await fixture(t, { flood: true });
-		const reader = createPreviewStream(
-			source,
-			executable,
-			new AbortController().signal
-		).getReader();
+		const reader = createPreviewStream(source, executable).getReader();
 		t.after(() => reader.cancel());
 		// More than the parser's default 1,000-part / 41 MiB upload limits:
 		// an ongoing camera stream must not stop at an upload-oriented limit.
@@ -187,7 +171,7 @@ test(
 
 test('an already aborted preview never starts a process', posixOnly, async (t) => {
 	const { directory, source } = await fixture(t);
-	const reader = createPreviewStream(source, executable, AbortSignal.abort()).getReader();
+	const reader = new PreviewPool().open(source, executable, AbortSignal.abort()).getReader();
 	assert.equal((await reader.read()).done, true);
 	await assert.rejects(readFile(path.join(directory, 'pid')), { code: 'ENOENT' });
 });
@@ -214,11 +198,7 @@ test('runtime diagnostics redact partial URL parameters and non-HTTP source cred
 test('a missing preview executable fails the response without an unhandled process error', async (t) => {
 	const { source, directory } = await fixture(t);
 	const warning = t.mock.method(console, 'warn', () => {});
-	const reader = createPreviewStream(
-		source,
-		path.join(directory, 'missing-ffmpeg'),
-		new AbortController().signal
-	).getReader();
+	const reader = createPreviewStream(source, path.join(directory, 'missing-ffmpeg')).getReader();
 	await assert.rejects(reader.read(), /Live stream unavailable/);
 	assert.ok(warning.mock.calls.length > 0);
 });

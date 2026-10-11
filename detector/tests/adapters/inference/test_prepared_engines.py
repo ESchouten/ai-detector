@@ -91,12 +91,8 @@ def cuda_monitoring(tmp_path, monkeypatch, gpu_builder, sizes, gpu_available):
     )
 
 
-def test_background_builds_wait_for_start_and_publish_reusable_engines_serially(
-    tmp_path, gpu_builder
-):
-    cache = tmp_path / "cache"
-    completed = Event()
-    notices = []
+def notice_recorder(gpu_builder):
+    completed, notices = Event(), []
 
     def report(event):
         notices.append(
@@ -104,6 +100,14 @@ def test_background_builds_wait_for_start_and_publish_reusable_engines_serially(
         )
         completed.set()
 
+    return report, completed, notices
+
+
+def test_background_builds_wait_for_start_and_publish_reusable_engines_serially(
+    tmp_path, gpu_builder
+):
+    cache = tmp_path / "cache"
+    report, completed, notices = notice_recorder(gpu_builder)
     engines = EnginePreparation(cache, report_status=report)
     configs = [
         YoloConfig(model=str(gpu_builder.source), imgsz=size) for size in (64, 96)
@@ -134,15 +138,7 @@ def test_background_completion_requires_a_new_engine_and_waits_for_failed_builds
 ):
     gpu_builder.outcomes.extend(["ready" if successful_first else "failed", "failed"])
     cache = tmp_path / "cache"
-    completed = Event()
-    notices = []
-
-    def report(event):
-        notices.append(
-            (event.kind, [process.poll() for process in gpu_builder.processes])
-        )
-        completed.set()
-
+    report, completed, notices = notice_recorder(gpu_builder)
     engines = EnginePreparation(cache, report_status=report)
     for size in (64, 96):
         engines.prepare(

@@ -68,11 +68,14 @@ export function clipLength(seconds: number): string {
 	return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
 }
 
-/** Megabytes below one gigabyte, where gigabytes would read as 0.0 GB. */
+/**
+ * Megabytes below one gigabyte, where gigabytes would read as 0.0 GB. One decimal below 100,
+ * so that the amount copied during an import is seen to move.
+ */
 export function dataSize(bytes: number): string {
 	const small = bytes < 1024 ** 3;
 	const value = bytes / 1024 ** (small ? 2 : 3);
-	const digits = value < 10 ? 1 : 0;
+	const digits = value < 100 ? 1 : 0;
 	const amount = new Intl.NumberFormat(language(), {
 		minimumFractionDigits: digits,
 		maximumFractionDigits: digits

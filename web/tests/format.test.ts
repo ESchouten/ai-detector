@@ -21,6 +21,7 @@ test('clip lengths, sizes and counts are short and unambiguous', () => {
 	assert.equal(clipLength(-1), '0:00');
 	assert.equal(dataSize(350 * 1024 ** 2), '350 MB');
 	assert.equal(dataSize(1.5 * 1024 ** 3), '1.5 GB');
+	assert.equal(dataSize(12.34 * 1024 ** 3), '12.3 GB');
 	assert.equal(dataSize(137.4 * 1024 ** 3), '137 GB');
 	assert.equal(percent(0.624), '62%');
 	assert.equal(plural(1, ['# camera', '# cameras']), '1 camera');

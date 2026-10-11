@@ -12,7 +12,7 @@ export function isArchiveSegment(value: string): boolean {
 	return value.length > 0 && value !== '.' && value !== '..' && !/[/\\\0]/.test(value);
 }
 
-export const calendarDate = v.pipe(
+export const calendarDateInput = v.pipe(
 	v.string(),
 	v.isoDate(() => 'Enter a date in YYYY-MM-DD format.'),
 	v.check(
@@ -30,8 +30,8 @@ export const recordingExportInput = v.pipe(
 			)
 		),
 		stage: v.optional(v.picklist(STAGES)),
-		from: v.optional(calendarDate),
-		to: v.optional(calendarDate),
+		from: v.optional(calendarDateInput),
+		to: v.optional(calendarDateInput),
 		/** Only the picture without boxes and the event's details, to share for training a model. */
 		content: v.optional(v.literal('photos'))
 	}),

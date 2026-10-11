@@ -1,5 +1,5 @@
 import { fail } from '@sveltejs/kit';
-import { calendarDate } from '$lib/detections';
+import { calendarDateInput } from '$lib/detections';
 import { plural } from '$lib/format';
 import * as v from 'valibot';
 import { DATA_DIRECTORY } from '$lib/server/application-paths';
@@ -15,7 +15,7 @@ import {
 import type { Actions, PageServerLoad } from './$types';
 
 const beforeDate = v.pipe(
-	calendarDate,
+	calendarDateInput,
 	v.check((value) => value <= new Date().toISOString().slice(0, 10))
 );
 export const load: PageServerLoad = async () => ({

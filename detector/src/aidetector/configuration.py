@@ -117,8 +117,6 @@ class YoloConfig(_ConfigModel):
     include_trailing_time: Duration = 1
     frames_min: PositiveInt = 3
     imgsz: PositiveInt = 640
-    iou: Probability | None = None
-    tracker: Literal["botsort.yaml", "bytetrack.yaml"] | None = None
 
 
 class SourceConfig(_ConfigModel):
@@ -306,7 +304,6 @@ class DetectorConfig(_ConfigModel):
     yolo: YoloConfig | None = None
     vlm: tuple[VLMConfig, ...] = ()
     exporters: ExportersConfig = Field(default_factory=ExportersConfig)
-    pending_events: PositiveInt = 8
 
     @property
     def active_vlm(self) -> tuple[VLMConfig, ...]:

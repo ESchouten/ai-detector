@@ -17,11 +17,9 @@ from aidetector.domain.models import Frame
 from tests.support.onnx_model import write_detection_model
 
 
-@pytest.mark.parametrize(
-    "tracking, tracker", [(False, None), (True, None), (True, "bytetrack.yaml")]
-)
+@pytest.mark.parametrize("tracking", [False, True])
 def test_real_onnx_yolo_batching_tracking_and_session_lifetime(
-    tmp_path, monkeypatch, tracking, tracker, caplog
+    tmp_path, monkeypatch, tracking, caplog
 ):
     caplog.set_level(logging.INFO, logger="aidetector.adapters.inference.yolo")
     path = tmp_path / "detector.onnx"
@@ -36,8 +34,6 @@ def test_real_onnx_yolo_batching_tracking_and_session_lifetime(
                         "imgsz": 64,
                         "confidence": {"cow": 0.5},
                         "tracking": tracking,
-                        "tracker": tracker,
-                        "iou": 0.45,
                     },
                 }
             ],

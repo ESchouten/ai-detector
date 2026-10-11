@@ -130,7 +130,7 @@ test('invalid local configuration identifies the file and options without exposi
 			{
 				...detector,
 				identity: { key: 'private-identity-key' },
-				yolo: { model: 'model.pt', tracker: 'custom-private-tracker.yaml' },
+				yolo: { model: 'model.pt', task: 'custom-private-task' },
 				exporters: { sse: [{ token: 'private-exporter-token' }] }
 			}
 		]
@@ -141,10 +141,10 @@ test('invalid local configuration identifies the file and options without exposi
 		assert.ok(error.message.includes(files.config));
 		assert.match(error.message, /detectors\/0 has unsupported property "identity"/);
 		assert.match(error.message, /exporters has unsupported property "sse"/);
-		assert.match(error.message, /yolo\/tracker must be one of "botsort.yaml", "bytetrack.yaml"/);
+		assert.match(error.message, /yolo\/task must be one of "detect", "segment"/);
 		assert.doesNotMatch(
 			error.message,
-			/private-identity-key|private-exporter-token|custom-private-tracker/
+			/private-identity-key|private-exporter-token|custom-private-task/
 		);
 		return true;
 	});

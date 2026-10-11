@@ -152,27 +152,6 @@ def test_tracking_preserves_source_slots_when_camera_is_temporarily_absent():
     assert all(call["persist"] and call["batch"] == 2 for call in model.calls)
 
 
-@pytest.mark.parametrize("tracking", [False, True])
-@pytest.mark.parametrize("specified", [False, True])
-def test_optional_nms_and_tracker_settings_preserve_sdk_defaults(tracking, specified):
-    model = Model()
-    settings = {"iou": 0.45, "tracker": "bytetrack.yaml"} if specified else {}
-    detector = YoloDetector(
-        model,
-        YoloConfig(model="model.onnx", tracking=tracking, **settings),
-        ("one",),
-        InferenceOptions(),
-    )
-    detector.detect({"one": (frame(),)})
-    arguments = model.calls[0]
-    assert ("iou" in arguments) is specified
-    if specified:
-        assert arguments["iou"] == 0.45
-    assert ("tracker" in arguments) is (specified and tracking)
-    if specified and tracking:
-        assert arguments["tracker"] == "bytetrack.yaml"
-
-
 def test_unknown_model_class_fails_with_available_names():
     with pytest.raises(ValueError, match="Unknown YOLO classes: chicken"):
         resolve_classes({0: "cow"}, {"chicken": 0.8})

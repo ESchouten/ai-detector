@@ -44,12 +44,6 @@
               "type": "null"
             }
           ]
-        },
-        "pending_events": {
-          "default": 8,
-          "exclusiveMinimum": 0,
-          "title": "Pending Events",
-          "type": "integer"
         }
       },
       "required": [
@@ -882,36 +876,6 @@
           "exclusiveMinimum": 0,
           "title": "Imgsz",
           "type": "integer"
-        },
-        "iou": {
-          "anyOf": [
-            {
-              "maximum": 1,
-              "minimum": 0,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Iou"
-        },
-        "tracker": {
-          "anyOf": [
-            {
-              "enum": [
-                "botsort.yaml",
-                "bytetrack.yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Tracker"
         }
       },
       "required": [

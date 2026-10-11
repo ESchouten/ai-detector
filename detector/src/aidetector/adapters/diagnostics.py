@@ -166,7 +166,6 @@ def log_detector_configuration(
         "capture": settings.detection.model_dump(
             include={"interval", "frames_width", "frame_retention"}
         ),
-        "pending_events": settings.pending_events,
         "yolo": None
         if settings.yolo is None
         else {
@@ -181,8 +180,6 @@ def log_detector_configuration(
                     "include_trailing_time",
                     "frames_min",
                     "imgsz",
-                    "iou",
-                    "tracker",
                 }
             ),
             "model": resource_label(settings.yolo.model),

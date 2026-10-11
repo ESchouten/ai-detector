@@ -134,10 +134,6 @@ class YoloDetector:
             "rect": options.rectangular,
             "verbose": logger.isEnabledFor(logging.DEBUG),
         }
-        if config.iou is not None:
-            self._arguments["iou"] = config.iou
-        if config.tracker is not None and config.tracking:
-            self._arguments["tracker"] = config.tracker
         self._last_frames: dict[str, NDArray[np.uint8]] = {}
         # One line per batch would push everything else out of the log within a
         # day, so routine timing is summarised.

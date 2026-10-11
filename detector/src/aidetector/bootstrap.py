@@ -248,7 +248,6 @@ def run_application(
                     source,
                     pipeline,
                     delivery,
-                    pending_events=settings.pending_events,
                     name=f"detector-{index}",
                     report_status=rule_status,
                 )

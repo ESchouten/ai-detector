@@ -29,7 +29,7 @@ A preset contains only detector settings: model, watched classes, event rules an
 
 Create a `presets/` folder in the data folder, beside `config.json`, and put detector JSON files directly in it; then reload the editor. The data folder is shown on the monitoring status page under **Technical details**.
 
-A local folder replaces the bundled and the published choices: copy the bundled files into it to keep them. Such copies are yours, and nothing published updates them. An empty folder gives an empty list, and no folder gives the bundled presets. `AIDETECTOR_PRESETS` names another folder, which must exist. An invalid file is reported by name; it is never replaced by something else.
+A local folder replaces the bundled and the published choices: copy the bundled files into it to keep them. Such copies are yours, and nothing published updates them. An empty folder gives an empty list, and no folder gives the bundled presets. An invalid file is reported by name; it is never replaced by something else.
 
 For example, `presets/entrance-activity.json` adds **Entrance Activity**:
 

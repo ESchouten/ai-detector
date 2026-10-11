@@ -15,7 +15,6 @@ Install the tools with `uv sync --locked --extra default` from `detector/`. They
 | Import side effects | `tests/test_import_safety.py` | Required in CI |
 | Unsupervised thread failures | Pytest thread-exception warnings are errors | Required in CI |
 | Executed lines and branches | Coverage.py with pytest | Reported; no percentage gate |
-| Changes, nesting and coupling | `tools/quality_report.py` (Radon, Grimp, Git) | Advisory report in CI |
 | Test sensitivity | mutmut on the domain | Ubuntu CI; survivors reported for review, an incomplete run fails |
 
 Parameter and return counts are deliberately not gated: a few keyword options and clear early returns read better than a configuration object or nested conditionals added to silence a rule. Radon's maintainability index is not used either; its formula rewards comments and smaller files without the design improving.
@@ -36,22 +35,6 @@ uv run --no-sync radon cc --show-complexity --show-closures --min B src/aidetect
 Erasing first keeps stale runs out of the result. Child processes are measured too, so CLI tests count; each process writes its own data and `coverage combine` merges it. Open `.reports/coverage/index.html` for missing lines and branch destinations. Linux CI collects branch coverage and publishes it with the Radon output as the `detector-quality` artifact; Windows and macOS run the same tests without instrumentation, and their results are not merged.
 
 `tests/integration/` holds the expensive real SDK exports. They run by default and in every CI run. Keep one real check per boundary and cover input variants at the cheapest layer that owns the behavior; do not replace real resource cleanup with mock-only assertions.
-
-## Reviewing a change
-
-```sh
-uv run --no-sync lint-imports --no-cache
-uv run --no-sync python tools/quality_report.py --base HEAD --output .reports/quality
-```
-
-`.reports/quality.md` summarizes and `.reports/quality.json` lists everything, comparing the working tree, including untracked files, with the given revision. Use a branch or commit to review a larger change; `--base empty` reports everything as new. The report shows:
-
-- complexity and nesting per function, with the change for functions that already existed;
-- module fan-in, fan-out and added or removed dependency edges. Bootstrap importing much and domain records being imported by many is expected; there is no coupling limit;
-- added, removed, modified and renamed modules;
-- how often each file was touched in the last 100 non-merge commits to the detector's Python source. Paths are exact, so a renamed or new file starts at zero, which says nothing about its risk.
-
-There is no composite score. CI compares a pull request with its base and a push with the previous commit, and shows the summary on the workflow run.
 
 ## Does the structure fit?
 

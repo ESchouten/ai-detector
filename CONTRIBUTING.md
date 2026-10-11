@@ -6,7 +6,7 @@ The repository has three deployable responsibilities. The web app owns setup and
 | --- | --- | --- |
 | [Web architecture](web/ARCHITECTURE.md) | Svelte pages, validated configuration, process control, archive playback | `cd web && pnpm quality && pnpm build && pnpm test:production` |
 | [Detector reading path](detector/README.md) | Sources, models, events, validation and delivery | VS Code **Detector: check** or the commands in its README |
-| [Distribution](distribution/README.md) | Native ZIP layouts, boot setup and release smoke tests | VS Code **Distribution: tests**, including its isolated release dependencies |
+| [Distribution](distribution/README.md) | Installers, update feeds, native launchers and release smoke tests | VS Code **Distribution: tests**, including its isolated release dependencies |
 | [System overview](SYSTEM_OVERVIEW.md) | How the running programs and files connect | Update when a process boundary or public contract changes |
 
 ## Local setup

@@ -70,7 +70,8 @@
         "--no-sync",
         "pytest",
         "-q",
-        "tests/test_architecture.py"
+        "tests/test_architecture.py",
+        "tests/test_import_safety.py"
       ],
       "problemMatcher": []
     },

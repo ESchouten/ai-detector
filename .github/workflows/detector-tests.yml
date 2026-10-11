@@ -131,9 +131,9 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: uv run --no-sync generate-schema --check
 
-      - name: Build wheel and source distribution
+      - name: Build wheel
         if: matrix.os == 'ubuntu-latest'
-        run: uv build
+        run: uv build --wheel
 
       - name: Upload test diagnostics
         if: failure()

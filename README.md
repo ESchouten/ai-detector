@@ -4,7 +4,7 @@ AI Detector watches your cameras on your own computer, records what a detector r
 
 ## Install
 
-Download the application for your computer from an **AI Detector app/** [release](https://github.com/ESchouten/ai-detector/releases).
+Download the application for your computer from the latest **AI Detector** [release](https://github.com/ESchouten/ai-detector/releases).
 
 | Computer | Download | Detection runs on |
 | --- | --- | --- |

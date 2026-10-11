@@ -65,6 +65,17 @@ def fit_crops(crops, rules):
     return fit
 
 
+def empty_moments(record):
+    """The seconds of a recorded video's pictures in which the application drew no box.
+
+    The source hands over one picture every `detection.interval` seconds of the preset.
+    """
+    interval = record["preset"]["detection"]["interval"]
+    occupied = {box["seconds"] for box in record["boxes"]}
+    moments = (float(step * interval) for step in range(record["frames"]))
+    return [seconds for seconds in moments if seconds not in occupied]
+
+
 def name_crops(crops, scores, classes, rules, empty_frames=()):
     """The cow shown on every crop (None when unknown), in the order of `crops`.
 

@@ -11,7 +11,7 @@ from pathlib import Path
 
 import numpy as np
 
-from app_policy import Rules, funnel, name_crops
+from app_policy import Rules, empty_moments, funnel, name_crops
 from ethz import DISPUTED, frame_labels
 from video_eval import associate, tally
 
@@ -67,14 +67,7 @@ def paired(run, frames_directory, labels_root):
 def replay(run, classes, scores, rules):
     """The name and the stage the rules give every recorded box, judged or not."""
     boxes = [{**box, "box": box["app_box"], "frame_size": box["app_size"]} for box in run["boxes"]]
-    occupied = {box["seconds"] for box in run["boxes"]}
-    return name_crops(
-        boxes,
-        scores,
-        classes,
-        rules,
-        [float(step) for step in range(run["frames"]) if float(step) not in occupied],
-    )
+    return name_crops(boxes, scores, classes, rules, empty_moments(run))
 
 
 def score_run(path, frames_directory, labels_root, withheld, ignored=frozenset()):

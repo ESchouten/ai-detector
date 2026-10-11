@@ -50,7 +50,9 @@ def main():
             original = cv2.imread(str(arguments.frames / sampled["file"]))
             image = shrink_image(original, settings.detection.frames_width)
             scale = original.shape[1] / image.shape[1]
-            frame = Frame(start + timedelta(seconds=step), image)
+            # The source hands the detector one frame every `interval` seconds.
+            moment = step * settings.detection.interval
+            frame = Frame(start + timedelta(seconds=moment), image)
             started = time.perf_counter()
             observation = detector.detect({SOURCE: (frame,)})[SOURCE][-1]
             seconds.append(time.perf_counter() - started)
@@ -59,7 +61,7 @@ def main():
                     {
                         "index": sampled["index"],
                         "file": sampled["file"],
-                        "seconds": float(step),
+                        "seconds": float(moment),
                         "app_box": [box.x1, box.y1, box.x2, box.y2],
                         "app_size": [image.shape[1], image.shape[0]],
                         "box": [value * scale for value in (box.x1, box.y1, box.x2, box.y2)],

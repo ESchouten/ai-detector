@@ -17,7 +17,7 @@ from pathlib import Path
 
 import numpy as np
 
-from app_policy import Rules, funnel, name_crops
+from app_policy import Rules, empty_moments, funnel, name_crops
 from ethz import DISPUTED, frame_labels
 from video_eval import associate, tally
 
@@ -38,11 +38,10 @@ def tracked_run(track_path, frames_root, labels_root):
     partner, visible, located, around = associate(
         boxes, frames, lambda index: frame_labels(labels_root, video, index, width, height)
     )
-    occupied = {box["seconds"] for box in boxes}
     return {
         "video": video,
         "boxes": [{**box, "box": box["app_box"], "frame_size": box["app_size"]} for box in boxes],
-        "empty": [float(step) for step in range(track["frames"]) if float(step) not in occupied],
+        "empty": empty_moments(track),
         "infrared": boxes[0]["infrared"],
         "partner": partner,
         "visible": visible,

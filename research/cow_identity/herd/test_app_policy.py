@@ -1,6 +1,7 @@
 import numpy as np
 
 from collections import Counter
+from dataclasses import replace
 
 from app_policy import Rules, fit_crops, funnel, name_crops
 
@@ -83,6 +84,26 @@ def test_a_confirmed_name_is_held_through_weaker_crops_unless_someone_claims_it(
         [*crops, rival], np.array([CLEAR_A, CLEAR_A, weaker, weaker, CLEAR_A]), [7, 8], rules
     )
     assert names == [None, 7, 7, None, None]
+
+
+def test_a_name_can_be_kept_for_a_moment_on_a_box_that_touches_the_edge():
+    # A cow walks out of the picture: from the third second her box touches its lower edge.
+    whole, cut = (100, 100, 300, 300), (100, 400, 300, 600)
+    crops = [
+        crop(second, box, 1)
+        for second, box in ((0, whole), (1, whole), (2, cut), (3, cut), (5, cut))
+    ]
+    scores = np.array([CLEAR_A] * 5)
+    as_it_is = Rules(0.5, 0.3, min_observations=2, hold=10, whole_animal=True)
+
+    assert name_crops(crops, scores, [7, 8], as_it_is)[0] == [None, 7, None, None, None]
+    assert name_crops(crops, scores, [7, 8], replace(as_it_is, kept_unfit=2))[0] == [
+        None,
+        7,
+        7,
+        7,
+        None,
+    ]
 
 
 def test_a_track_missing_from_one_frame_keeps_its_agreement_as_in_the_application():

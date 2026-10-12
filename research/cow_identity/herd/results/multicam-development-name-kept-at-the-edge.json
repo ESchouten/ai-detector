@@ -1,0 +1,45 @@
+{
+ "rules_changed": {
+  "kept_unfit": 2.0
+ },
+ "videos": [
+  {
+   "video": "multicam-16-cam1",
+   "as_the_application_is": {
+    "coverage": 0.29318181818181815,
+    "precision": 1.0,
+    "named_correctly": 129,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 5
+   },
+   "changed": {
+    "coverage": 0.45454545454545453,
+    "precision": 1.0,
+    "named_correctly": 200,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 43
+   }
+  },
+  {
+   "video": "multicam-16-cam2",
+   "as_the_application_is": {
+    "coverage": 0.15316455696202533,
+    "precision": 0.9958847736625515,
+    "named_correctly": 242,
+    "strangers_named": 0,
+    "wrongly_named": 1,
+    "names_that_cannot_be_judged": 33
+   },
+   "changed": {
+    "coverage": 0.160126582278481,
+    "precision": 0.9960629921259843,
+    "named_correctly": 253,
+    "strangers_named": 0,
+    "wrongly_named": 1,
+    "names_that_cannot_be_judged": 94
+   }
+  }
+ ]
+}

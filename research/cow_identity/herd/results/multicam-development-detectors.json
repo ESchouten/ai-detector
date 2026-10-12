@@ -1,0 +1,1502 @@
+{
+ "track-m-1280-multicam-16-cam1": {
+  "video": "multicam-16-cam1",
+  "detector_weights_sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1280
+  },
+  "visible": 641,
+  "located": 0.8705148205928237,
+  "fit": 0.7113884555382215,
+  "could_carry_a_name": 0.5678627145085804,
+  "boxes": 870,
+  "boxes_without_annotation": 312,
+  "tracks_on_annotated_animals": 26,
+  "tracks_covering_two_animals": 1,
+  "detect_seconds": {
+   "mean": 0.1628203835452044,
+   "p95": 0.20072329626418645,
+   "max": 0.3147709588520229
+  },
+  "per_cow": {
+   "9": {
+    "visible": 35,
+    "located": 34,
+    "fit": 32
+   },
+   "11": {
+    "visible": 18,
+    "located": 17,
+    "fit": 12
+   },
+   "20": {
+    "visible": 18,
+    "located": 14,
+    "fit": 8
+   },
+   "22": {
+    "visible": 22,
+    "located": 22,
+    "fit": 16
+   },
+   "24": {
+    "visible": 21,
+    "located": 21,
+    "fit": 13
+   },
+   "25": {
+    "visible": 18,
+    "located": 16,
+    "fit": 11
+   },
+   "37": {
+    "visible": 57,
+    "located": 53,
+    "fit": 51
+   },
+   "43": {
+    "visible": 41,
+    "located": 36,
+    "fit": 36
+   },
+   "45": {
+    "visible": 27,
+    "located": 24,
+    "fit": 19
+   },
+   "46": {
+    "visible": 18,
+    "located": 17,
+    "fit": 12
+   },
+   "47": {
+    "visible": 19,
+    "located": 11,
+    "fit": 6
+   },
+   "52": {
+    "visible": 46,
+    "located": 44,
+    "fit": 42
+   },
+   "53": {
+    "visible": 22,
+    "located": 22,
+    "fit": 13
+   },
+   "54": {
+    "visible": 20,
+    "located": 13,
+    "fit": 8
+   },
+   "56": {
+    "visible": 21,
+    "located": 21,
+    "fit": 13
+   },
+   "57": {
+    "visible": 37,
+    "located": 37,
+    "fit": 23
+   },
+   "64": {
+    "visible": 74,
+    "located": 65,
+    "fit": 65
+   },
+   "66": {
+    "visible": 23,
+    "located": 22,
+    "fit": 17
+   },
+   "71": {
+    "visible": 24,
+    "located": 12,
+    "fit": 11
+   },
+   "79": {
+    "visible": 19,
+    "located": 10,
+    "fit": 7
+   },
+   "81": {
+    "visible": 20,
+    "located": 11,
+    "fit": 10
+   },
+   "83": {
+    "visible": 20,
+    "located": 17,
+    "fit": 15
+   },
+   "84": {
+    "visible": 21,
+    "located": 19,
+    "fit": 16
+   }
+  }
+ },
+ "track-m-1280-multicam-16-cam2": {
+  "video": "multicam-16-cam2",
+  "detector_weights_sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1280
+  },
+  "visible": 1650,
+  "located": 0.5375757575757576,
+  "fit": 0.5242424242424243,
+  "could_carry_a_name": 0.46424242424242423,
+  "boxes": 2188,
+  "boxes_without_annotation": 1301,
+  "tracks_on_annotated_animals": 29,
+  "tracks_covering_two_animals": 2,
+  "detect_seconds": {
+   "mean": 0.060618215998211086,
+   "p95": 0.06586466250009834,
+   "max": 0.0900972499512136
+  },
+  "per_cow": {
+   "2": {
+    "visible": 132,
+    "located": 102,
+    "fit": 101
+   },
+   "6": {
+    "visible": 812,
+    "located": 342,
+    "fit": 342
+   },
+   "13": {
+    "visible": 45,
+    "located": 31,
+    "fit": 18
+   },
+   "16": {
+    "visible": 28,
+    "located": 16,
+    "fit": 16
+   },
+   "17": {
+    "visible": 25,
+    "located": 23,
+    "fit": 23
+   },
+   "19": {
+    "visible": 28,
+    "located": 18,
+    "fit": 18
+   },
+   "26": {
+    "visible": 20,
+    "located": 14,
+    "fit": 14
+   },
+   "28": {
+    "visible": 16,
+    "located": 4,
+    "fit": 4
+   },
+   "34": {
+    "visible": 26,
+    "located": 19,
+    "fit": 19
+   },
+   "40": {
+    "visible": 26,
+    "located": 21,
+    "fit": 21
+   },
+   "41": {
+    "visible": 22,
+    "located": 18,
+    "fit": 18
+   },
+   "65": {
+    "visible": 110,
+    "located": 37,
+    "fit": 36
+   },
+   "77": {
+    "visible": 25,
+    "located": 18,
+    "fit": 16
+   },
+   "78": {
+    "visible": 13,
+    "located": 10,
+    "fit": 10
+   },
+   "89": {
+    "visible": 322,
+    "located": 214,
+    "fit": 209
+   }
+  }
+ },
+ "track-m-640-multicam-16-cam1": {
+  "video": "multicam-16-cam1",
+  "detector_weights_sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 640
+  },
+  "visible": 641,
+  "located": 0.8221528861154446,
+  "fit": 0.6474258970358814,
+  "could_carry_a_name": 0.4960998439937597,
+  "boxes": 775,
+  "boxes_without_annotation": 248,
+  "tracks_on_annotated_animals": 26,
+  "tracks_covering_two_animals": 1,
+  "detect_seconds": {
+   "mean": 0.06839219244636197,
+   "p95": 0.12911811245139673,
+   "max": 0.36570979095995426
+  },
+  "per_cow": {
+   "9": {
+    "visible": 35,
+    "located": 34,
+    "fit": 31
+   },
+   "11": {
+    "visible": 18,
+    "located": 18,
+    "fit": 13
+   },
+   "20": {
+    "visible": 18,
+    "located": 15,
+    "fit": 9
+   },
+   "22": {
+    "visible": 22,
+    "located": 20,
+    "fit": 14
+   },
+   "24": {
+    "visible": 21,
+    "located": 14,
+    "fit": 8
+   },
+   "25": {
+    "visible": 18,
+    "located": 14,
+    "fit": 11
+   },
+   "37": {
+    "visible": 57,
+    "located": 38,
+    "fit": 38
+   },
+   "43": {
+    "visible": 41,
+    "located": 36,
+    "fit": 27
+   },
+   "45": {
+    "visible": 27,
+    "located": 20,
+    "fit": 17
+   },
+   "46": {
+    "visible": 18,
+    "located": 17,
+    "fit": 9
+   },
+   "47": {
+    "visible": 19,
+    "located": 9,
+    "fit": 4
+   },
+   "52": {
+    "visible": 46,
+    "located": 43,
+    "fit": 39
+   },
+   "53": {
+    "visible": 22,
+    "located": 21,
+    "fit": 12
+   },
+   "54": {
+    "visible": 20,
+    "located": 17,
+    "fit": 12
+   },
+   "56": {
+    "visible": 21,
+    "located": 21,
+    "fit": 15
+   },
+   "57": {
+    "visible": 37,
+    "located": 35,
+    "fit": 26
+   },
+   "64": {
+    "visible": 74,
+    "located": 63,
+    "fit": 56
+   },
+   "66": {
+    "visible": 23,
+    "located": 22,
+    "fit": 17
+   },
+   "71": {
+    "visible": 24,
+    "located": 11,
+    "fit": 10
+   },
+   "79": {
+    "visible": 19,
+    "located": 16,
+    "fit": 9
+   },
+   "81": {
+    "visible": 20,
+    "located": 12,
+    "fit": 9
+   },
+   "83": {
+    "visible": 20,
+    "located": 16,
+    "fit": 14
+   },
+   "84": {
+    "visible": 21,
+    "located": 15,
+    "fit": 15
+   }
+  }
+ },
+ "track-m-640-multicam-16-cam2": {
+  "video": "multicam-16-cam2",
+  "detector_weights_sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 640
+  },
+  "visible": 1650,
+  "located": 0.6224242424242424,
+  "fit": 0.6218181818181818,
+  "could_carry_a_name": 0.5533333333333333,
+  "boxes": 2244,
+  "boxes_without_annotation": 1217,
+  "tracks_on_annotated_animals": 31,
+  "tracks_covering_two_animals": 4,
+  "detect_seconds": {
+   "mean": 0.04063589196717585,
+   "p95": 0.06566335004754364,
+   "max": 0.09433887479826808
+  },
+  "per_cow": {
+   "2": {
+    "visible": 132,
+    "located": 79,
+    "fit": 79
+   },
+   "6": {
+    "visible": 812,
+    "located": 490,
+    "fit": 490
+   },
+   "13": {
+    "visible": 45,
+    "located": 31,
+    "fit": 31
+   },
+   "16": {
+    "visible": 28,
+    "located": 19,
+    "fit": 19
+   },
+   "17": {
+    "visible": 25,
+    "located": 13,
+    "fit": 13
+   },
+   "19": {
+    "visible": 28,
+    "located": 24,
+    "fit": 24
+   },
+   "26": {
+    "visible": 20,
+    "located": 11,
+    "fit": 11
+   },
+   "28": {
+    "visible": 16,
+    "located": 9,
+    "fit": 9
+   },
+   "34": {
+    "visible": 26,
+    "located": 19,
+    "fit": 19
+   },
+   "40": {
+    "visible": 26,
+    "located": 22,
+    "fit": 22
+   },
+   "41": {
+    "visible": 22,
+    "located": 17,
+    "fit": 17
+   },
+   "65": {
+    "visible": 110,
+    "located": 43,
+    "fit": 43
+   },
+   "77": {
+    "visible": 25,
+    "located": 12,
+    "fit": 12
+   },
+   "78": {
+    "visible": 13,
+    "located": 10,
+    "fit": 10
+   },
+   "89": {
+    "visible": 322,
+    "located": 228,
+    "fit": 227
+   }
+  }
+ },
+ "track-m-960-multicam-16-cam1": {
+  "video": "multicam-16-cam1",
+  "detector_weights_sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 960
+  },
+  "visible": 641,
+  "located": 0.84399375975039,
+  "fit": 0.641185647425897,
+  "could_carry_a_name": 0.5195007800312013,
+  "boxes": 861,
+  "boxes_without_annotation": 320,
+  "tracks_on_annotated_animals": 25,
+  "tracks_covering_two_animals": 1,
+  "detect_seconds": {
+   "mean": 0.11455318680902114,
+   "p95": 0.19937664619646955,
+   "max": 0.432245709002018
+  },
+  "per_cow": {
+   "9": {
+    "visible": 35,
+    "located": 32,
+    "fit": 32
+   },
+   "11": {
+    "visible": 18,
+    "located": 18,
+    "fit": 13
+   },
+   "20": {
+    "visible": 18,
+    "located": 11,
+    "fit": 5
+   },
+   "22": {
+    "visible": 22,
+    "located": 22,
+    "fit": 15
+   },
+   "24": {
+    "visible": 21,
+    "located": 13,
+    "fit": 8
+   },
+   "25": {
+    "visible": 18,
+    "located": 14,
+    "fit": 10
+   },
+   "37": {
+    "visible": 57,
+    "located": 51,
+    "fit": 49
+   },
+   "43": {
+    "visible": 41,
+    "located": 36,
+    "fit": 29
+   },
+   "45": {
+    "visible": 27,
+    "located": 26,
+    "fit": 18
+   },
+   "46": {
+    "visible": 18,
+    "located": 18,
+    "fit": 11
+   },
+   "47": {
+    "visible": 19,
+    "located": 9,
+    "fit": 4
+   },
+   "52": {
+    "visible": 46,
+    "located": 44,
+    "fit": 40
+   },
+   "53": {
+    "visible": 22,
+    "located": 22,
+    "fit": 13
+   },
+   "54": {
+    "visible": 20,
+    "located": 17,
+    "fit": 12
+   },
+   "56": {
+    "visible": 21,
+    "located": 20,
+    "fit": 12
+   },
+   "57": {
+    "visible": 37,
+    "located": 37,
+    "fit": 17
+   },
+   "64": {
+    "visible": 74,
+    "located": 55,
+    "fit": 51
+   },
+   "66": {
+    "visible": 23,
+    "located": 23,
+    "fit": 16
+   },
+   "71": {
+    "visible": 24,
+    "located": 13,
+    "fit": 11
+   },
+   "79": {
+    "visible": 19,
+    "located": 11,
+    "fit": 4
+   },
+   "81": {
+    "visible": 20,
+    "located": 11,
+    "fit": 8
+   },
+   "83": {
+    "visible": 20,
+    "located": 17,
+    "fit": 15
+   },
+   "84": {
+    "visible": 21,
+    "located": 21,
+    "fit": 18
+   }
+  }
+ },
+ "track-m-960-multicam-16-cam2": {
+  "video": "multicam-16-cam2",
+  "detector_weights_sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 960
+  },
+  "visible": 1650,
+  "located": 0.6448484848484849,
+  "fit": 0.6309090909090909,
+  "could_carry_a_name": 0.5690909090909091,
+  "boxes": 2484,
+  "boxes_without_annotation": 1420,
+  "tracks_on_annotated_animals": 28,
+  "tracks_covering_two_animals": 1,
+  "detect_seconds": {
+   "mean": 0.041102211879111554,
+   "p95": 0.05002308934926986,
+   "max": 0.06922991620376706
+  },
+  "per_cow": {
+   "2": {
+    "visible": 132,
+    "located": 98,
+    "fit": 96
+   },
+   "6": {
+    "visible": 812,
+    "located": 500,
+    "fit": 500
+   },
+   "13": {
+    "visible": 45,
+    "located": 38,
+    "fit": 24
+   },
+   "16": {
+    "visible": 28,
+    "located": 15,
+    "fit": 15
+   },
+   "17": {
+    "visible": 25,
+    "located": 22,
+    "fit": 22
+   },
+   "19": {
+    "visible": 28,
+    "located": 11,
+    "fit": 11
+   },
+   "26": {
+    "visible": 20,
+    "located": 15,
+    "fit": 15
+   },
+   "28": {
+    "visible": 16,
+    "located": 5,
+    "fit": 5
+   },
+   "34": {
+    "visible": 26,
+    "located": 20,
+    "fit": 20
+   },
+   "40": {
+    "visible": 26,
+    "located": 23,
+    "fit": 23
+   },
+   "41": {
+    "visible": 22,
+    "located": 17,
+    "fit": 16
+   },
+   "65": {
+    "visible": 110,
+    "located": 41,
+    "fit": 41
+   },
+   "77": {
+    "visible": 25,
+    "located": 18,
+    "fit": 18
+   },
+   "78": {
+    "visible": 13,
+    "located": 11,
+    "fit": 11
+   },
+   "89": {
+    "visible": 322,
+    "located": 230,
+    "fit": 224
+   }
+  }
+ },
+ "track-x-1280-multicam-16-cam1": {
+  "video": "multicam-16-cam1",
+  "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1280
+  },
+  "visible": 641,
+  "located": 0.7769110764430577,
+  "fit": 0.5819032761310452,
+  "could_carry_a_name": 0.48205928237129486,
+  "boxes": 932,
+  "boxes_without_annotation": 434,
+  "tracks_on_annotated_animals": 25,
+  "tracks_covering_two_animals": 2,
+  "detect_seconds": {
+   "mean": 0.13186116470335468,
+   "p95": 0.13834428950212896,
+   "max": 0.16374608408659697
+  },
+  "per_cow": {
+   "9": {
+    "visible": 35,
+    "located": 35,
+    "fit": 32
+   },
+   "11": {
+    "visible": 18,
+    "located": 15,
+    "fit": 10
+   },
+   "20": {
+    "visible": 18,
+    "located": 6,
+    "fit": 1
+   },
+   "22": {
+    "visible": 22,
+    "located": 20,
+    "fit": 13
+   },
+   "24": {
+    "visible": 21,
+    "located": 14,
+    "fit": 9
+   },
+   "25": {
+    "visible": 18,
+    "located": 10,
+    "fit": 6
+   },
+   "37": {
+    "visible": 57,
+    "located": 54,
+    "fit": 53
+   },
+   "43": {
+    "visible": 41,
+    "located": 32,
+    "fit": 24
+   },
+   "45": {
+    "visible": 27,
+    "located": 24,
+    "fit": 14
+   },
+   "46": {
+    "visible": 18,
+    "located": 6,
+    "fit": 4
+   },
+   "47": {
+    "visible": 19,
+    "located": 13,
+    "fit": 10
+   },
+   "52": {
+    "visible": 46,
+    "located": 38,
+    "fit": 29
+   },
+   "53": {
+    "visible": 22,
+    "located": 22,
+    "fit": 14
+   },
+   "54": {
+    "visible": 20,
+    "located": 14,
+    "fit": 9
+   },
+   "56": {
+    "visible": 21,
+    "located": 17,
+    "fit": 12
+   },
+   "57": {
+    "visible": 37,
+    "located": 37,
+    "fit": 17
+   },
+   "64": {
+    "visible": 74,
+    "located": 55,
+    "fit": 53
+   },
+   "66": {
+    "visible": 23,
+    "located": 21,
+    "fit": 17
+   },
+   "71": {
+    "visible": 24,
+    "located": 18,
+    "fit": 10
+   },
+   "79": {
+    "visible": 19,
+    "located": 11,
+    "fit": 5
+   },
+   "81": {
+    "visible": 20,
+    "located": 6,
+    "fit": 3
+   },
+   "83": {
+    "visible": 20,
+    "located": 10,
+    "fit": 10
+   },
+   "84": {
+    "visible": 21,
+    "located": 20,
+    "fit": 18
+   }
+  }
+ },
+ "track-x-1280-multicam-16-cam2": {
+  "video": "multicam-16-cam2",
+  "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 1280
+  },
+  "visible": 1650,
+  "located": 0.7666666666666667,
+  "fit": 0.7472727272727273,
+  "could_carry_a_name": 0.7036363636363636,
+  "boxes": 2934,
+  "boxes_without_annotation": 1669,
+  "tracks_on_annotated_animals": 30,
+  "tracks_covering_two_animals": 1,
+  "detect_seconds": {
+   "mean": 0.13185185465983498,
+   "p95": 0.13804500179830936,
+   "max": 0.21136562526226044
+  },
+  "per_cow": {
+   "2": {
+    "visible": 132,
+    "located": 110,
+    "fit": 107
+   },
+   "6": {
+    "visible": 812,
+    "located": 653,
+    "fit": 653
+   },
+   "13": {
+    "visible": 45,
+    "located": 38,
+    "fit": 18
+   },
+   "16": {
+    "visible": 28,
+    "located": 23,
+    "fit": 23
+   },
+   "17": {
+    "visible": 25,
+    "located": 23,
+    "fit": 23
+   },
+   "19": {
+    "visible": 28,
+    "located": 21,
+    "fit": 21
+   },
+   "26": {
+    "visible": 20,
+    "located": 15,
+    "fit": 15
+   },
+   "28": {
+    "visible": 16,
+    "located": 9,
+    "fit": 9
+   },
+   "34": {
+    "visible": 26,
+    "located": 19,
+    "fit": 19
+   },
+   "40": {
+    "visible": 26,
+    "located": 23,
+    "fit": 23
+   },
+   "41": {
+    "visible": 22,
+    "located": 17,
+    "fit": 15
+   },
+   "65": {
+    "visible": 110,
+    "located": 50,
+    "fit": 48
+   },
+   "77": {
+    "visible": 25,
+    "located": 15,
+    "fit": 15
+   },
+   "78": {
+    "visible": 13,
+    "located": 10,
+    "fit": 10
+   },
+   "89": {
+    "visible": 322,
+    "located": 239,
+    "fit": 234
+   }
+  }
+ },
+ "track-x-640-multicam-16-cam1": {
+  "video": "multicam-16-cam1",
+  "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 640
+  },
+  "visible": 641,
+  "located": 0.84399375975039,
+  "fit": 0.6224648985959438,
+  "could_carry_a_name": 0.5085803432137286,
+  "boxes": 940,
+  "boxes_without_annotation": 399,
+  "tracks_on_annotated_animals": 24,
+  "tracks_covering_two_animals": 1,
+  "detect_seconds": {
+   "mean": 0.12910995077525567,
+   "p95": 0.16607042497489602,
+   "max": 0.26019441708922386
+  },
+  "per_cow": {
+   "9": {
+    "visible": 35,
+    "located": 35,
+    "fit": 33
+   },
+   "11": {
+    "visible": 18,
+    "located": 18,
+    "fit": 13
+   },
+   "20": {
+    "visible": 18,
+    "located": 6,
+    "fit": 1
+   },
+   "22": {
+    "visible": 22,
+    "located": 22,
+    "fit": 14
+   },
+   "24": {
+    "visible": 21,
+    "located": 21,
+    "fit": 13
+   },
+   "25": {
+    "visible": 18,
+    "located": 10,
+    "fit": 6
+   },
+   "37": {
+    "visible": 57,
+    "located": 55,
+    "fit": 53
+   },
+   "43": {
+    "visible": 41,
+    "located": 39,
+    "fit": 26
+   },
+   "45": {
+    "visible": 27,
+    "located": 24,
+    "fit": 19
+   },
+   "46": {
+    "visible": 18,
+    "located": 17,
+    "fit": 13
+   },
+   "47": {
+    "visible": 19,
+    "located": 13,
+    "fit": 8
+   },
+   "52": {
+    "visible": 46,
+    "located": 44,
+    "fit": 33
+   },
+   "53": {
+    "visible": 22,
+    "located": 22,
+    "fit": 13
+   },
+   "54": {
+    "visible": 20,
+    "located": 17,
+    "fit": 11
+   },
+   "56": {
+    "visible": 21,
+    "located": 21,
+    "fit": 12
+   },
+   "57": {
+    "visible": 37,
+    "located": 37,
+    "fit": 21
+   },
+   "64": {
+    "visible": 74,
+    "located": 54,
+    "fit": 47
+   },
+   "66": {
+    "visible": 23,
+    "located": 21,
+    "fit": 16
+   },
+   "71": {
+    "visible": 24,
+    "located": 15,
+    "fit": 10
+   },
+   "79": {
+    "visible": 19,
+    "located": 11,
+    "fit": 5
+   },
+   "81": {
+    "visible": 20,
+    "located": 7,
+    "fit": 3
+   },
+   "83": {
+    "visible": 20,
+    "located": 12,
+    "fit": 12
+   },
+   "84": {
+    "visible": 21,
+    "located": 20,
+    "fit": 17
+   }
+  }
+ },
+ "track-x-640-multicam-16-cam2": {
+  "video": "multicam-16-cam2",
+  "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 640
+  },
+  "visible": 1650,
+  "located": 0.7181818181818181,
+  "fit": 0.7036363636363636,
+  "could_carry_a_name": 0.6587878787878788,
+  "boxes": 2767,
+  "boxes_without_annotation": 1582,
+  "tracks_on_annotated_animals": 28,
+  "tracks_covering_two_animals": 2,
+  "detect_seconds": {
+   "mean": 0.046930067364537593,
+   "p95": 0.05557209362741558,
+   "max": 0.07897433312609792
+  },
+  "per_cow": {
+   "2": {
+    "visible": 132,
+    "located": 107,
+    "fit": 107
+   },
+   "6": {
+    "visible": 812,
+    "located": 605,
+    "fit": 605
+   },
+   "13": {
+    "visible": 45,
+    "located": 23,
+    "fit": 4
+   },
+   "16": {
+    "visible": 28,
+    "located": 22,
+    "fit": 22
+   },
+   "17": {
+    "visible": 25,
+    "located": 22,
+    "fit": 22
+   },
+   "19": {
+    "visible": 28,
+    "located": 23,
+    "fit": 23
+   },
+   "26": {
+    "visible": 20,
+    "located": 11,
+    "fit": 11
+   },
+   "28": {
+    "visible": 16,
+    "located": 5,
+    "fit": 5
+   },
+   "34": {
+    "visible": 26,
+    "located": 19,
+    "fit": 19
+   },
+   "40": {
+    "visible": 26,
+    "located": 23,
+    "fit": 23
+   },
+   "41": {
+    "visible": 22,
+    "located": 20,
+    "fit": 20
+   },
+   "65": {
+    "visible": 110,
+    "located": 52,
+    "fit": 52
+   },
+   "77": {
+    "visible": 25,
+    "located": 16,
+    "fit": 16
+   },
+   "78": {
+    "visible": 13,
+    "located": 6,
+    "fit": 6
+   },
+   "89": {
+    "visible": 322,
+    "located": 231,
+    "fit": 226
+   }
+  }
+ },
+ "track-x-960-multicam-16-cam1": {
+  "video": "multicam-16-cam1",
+  "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 960
+  },
+  "visible": 641,
+  "located": 0.8237129485179407,
+  "fit": 0.6177847113884556,
+  "could_carry_a_name": 0.5132605304212169,
+  "boxes": 961,
+  "boxes_without_annotation": 433,
+  "tracks_on_annotated_animals": 25,
+  "tracks_covering_two_animals": 1,
+  "detect_seconds": {
+   "mean": 0.20552824612529358,
+   "p95": 0.25460042480845,
+   "max": 0.39243258396163583
+  },
+  "per_cow": {
+   "9": {
+    "visible": 35,
+    "located": 35,
+    "fit": 35
+   },
+   "11": {
+    "visible": 18,
+    "located": 16,
+    "fit": 11
+   },
+   "20": {
+    "visible": 18,
+    "located": 6,
+    "fit": 1
+   },
+   "22": {
+    "visible": 22,
+    "located": 22,
+    "fit": 15
+   },
+   "24": {
+    "visible": 21,
+    "located": 15,
+    "fit": 10
+   },
+   "25": {
+    "visible": 18,
+    "located": 10,
+    "fit": 5
+   },
+   "37": {
+    "visible": 57,
+    "located": 55,
+    "fit": 55
+   },
+   "43": {
+    "visible": 41,
+    "located": 33,
+    "fit": 20
+   },
+   "45": {
+    "visible": 27,
+    "located": 18,
+    "fit": 12
+   },
+   "46": {
+    "visible": 18,
+    "located": 13,
+    "fit": 10
+   },
+   "47": {
+    "visible": 19,
+    "located": 13,
+    "fit": 8
+   },
+   "52": {
+    "visible": 46,
+    "located": 45,
+    "fit": 34
+   },
+   "53": {
+    "visible": 22,
+    "located": 22,
+    "fit": 14
+   },
+   "54": {
+    "visible": 20,
+    "located": 18,
+    "fit": 12
+   },
+   "56": {
+    "visible": 21,
+    "located": 21,
+    "fit": 14
+   },
+   "57": {
+    "visible": 37,
+    "located": 37,
+    "fit": 17
+   },
+   "64": {
+    "visible": 74,
+    "located": 60,
+    "fit": 56
+   },
+   "66": {
+    "visible": 23,
+    "located": 21,
+    "fit": 16
+   },
+   "71": {
+    "visible": 24,
+    "located": 18,
+    "fit": 12
+   },
+   "79": {
+    "visible": 19,
+    "located": 11,
+    "fit": 5
+   },
+   "81": {
+    "visible": 20,
+    "located": 6,
+    "fit": 3
+   },
+   "83": {
+    "visible": 20,
+    "located": 15,
+    "fit": 15
+   },
+   "84": {
+    "visible": 21,
+    "located": 18,
+    "fit": 16
+   }
+  }
+ },
+ "track-x-960-multicam-16-cam2": {
+  "video": "multicam-16-cam2",
+  "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+  "yolo": {
+   "model": "yolo26x-seg.pt",
+   "confidence": {
+    "cow": 0.1
+   },
+   "tracking": true,
+   "tracker": "bytetrack.yaml",
+   "frames_min": 3,
+   "time_max": 30,
+   "imgsz": 960
+  },
+  "visible": 1650,
+  "located": 0.7709090909090909,
+  "fit": 0.7533333333333333,
+  "could_carry_a_name": 0.7206060606060606,
+  "boxes": 3047,
+  "boxes_without_annotation": 1775,
+  "tracks_on_annotated_animals": 24,
+  "tracks_covering_two_animals": 2,
+  "detect_seconds": {
+   "mean": 0.08077996134567993,
+   "p95": 0.08578261658549309,
+   "max": 0.1327932090498507
+  },
+  "per_cow": {
+   "2": {
+    "visible": 132,
+    "located": 109,
+    "fit": 107
+   },
+   "6": {
+    "visible": 812,
+    "located": 683,
+    "fit": 683
+   },
+   "13": {
+    "visible": 45,
+    "located": 37,
+    "fit": 16
+   },
+   "16": {
+    "visible": 28,
+    "located": 22,
+    "fit": 22
+   },
+   "17": {
+    "visible": 25,
+    "located": 24,
+    "fit": 24
+   },
+   "19": {
+    "visible": 28,
+    "located": 13,
+    "fit": 13
+   },
+   "26": {
+    "visible": 20,
+    "located": 13,
+    "fit": 13
+   },
+   "28": {
+    "visible": 16,
+    "located": 5,
+    "fit": 5
+   },
+   "34": {
+    "visible": 26,
+    "located": 20,
+    "fit": 20
+   },
+   "40": {
+    "visible": 26,
+    "located": 24,
+    "fit": 24
+   },
+   "41": {
+    "visible": 22,
+    "located": 20,
+    "fit": 19
+   },
+   "65": {
+    "visible": 110,
+    "located": 51,
+    "fit": 51
+   },
+   "77": {
+    "visible": 25,
+    "located": 5,
+    "fit": 5
+   },
+   "78": {
+    "visible": 13,
+    "located": 8,
+    "fit": 8
+   },
+   "89": {
+    "visible": 322,
+    "located": 238,
+    "fit": 233
+   }
+  }
+ }
+}

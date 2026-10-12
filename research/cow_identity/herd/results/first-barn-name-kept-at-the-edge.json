@@ -1,0 +1,83 @@
+{
+ "rules_changed": {
+  "kept_unfit": 2.0
+ },
+ "videos": [
+  {
+   "video": "video1",
+   "as_the_application_is": {
+    "coverage": 0.6790431988575508,
+    "precision": 1.0,
+    "named_correctly": 1902,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 5
+   },
+   "changed": {
+    "coverage": 0.6790431988575508,
+    "precision": 1.0,
+    "named_correctly": 1902,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 5
+   }
+  },
+  {
+   "video": "video2",
+   "as_the_application_is": {
+    "coverage": 0.7793153678077204,
+    "precision": 1.0,
+    "named_correctly": 1070,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   },
+   "changed": {
+    "coverage": 0.7793153678077204,
+    "precision": 1.0,
+    "named_correctly": 1070,
+    "strangers_named": 0,
+    "wrongly_named": 0,
+    "names_that_cannot_be_judged": 0
+   }
+  },
+  {
+   "video": "video5",
+   "as_the_application_is": {
+    "coverage": 0.7179357592093442,
+    "precision": 0.9904710257204834,
+    "named_correctly": 12785,
+    "strangers_named": 0,
+    "wrongly_named": 123,
+    "names_that_cannot_be_judged": 21
+   },
+   "changed": {
+    "coverage": 0.7328167115902965,
+    "precision": 0.9891609186689911,
+    "named_correctly": 13050,
+    "strangers_named": 0,
+    "wrongly_named": 143,
+    "names_that_cannot_be_judged": 32
+   }
+  },
+  {
+   "video": "video6",
+   "as_the_application_is": {
+    "coverage": 0.5044108851674641,
+    "precision": 0.9992594786729858,
+    "named_correctly": 13494,
+    "strangers_named": 2,
+    "wrongly_named": 8,
+    "names_that_cannot_be_judged": 222
+   },
+   "changed": {
+    "coverage": 0.5050463516746412,
+    "precision": 0.9992604097330079,
+    "named_correctly": 13511,
+    "strangers_named": 2,
+    "wrongly_named": 8,
+    "names_that_cannot_be_judged": 226
+   }
+  }
+ ]
+}

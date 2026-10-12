@@ -1,0 +1,503 @@
+{
+ "visible_enrolled": 440,
+ "visible_withheld": 201,
+ "located_enrolled": 363,
+ "located_withheld": 165,
+ "correct": 129,
+ "wrong_enrolled": 0,
+ "named_withheld": 0,
+ "named_unannotated": 23,
+ "unpaired_on_named": 18,
+ "unpaired_on_other": 0,
+ "unpaired_on_withheld": 0,
+ "unpaired_elsewhere": 0,
+ "unpaired_unjudged": 5,
+ "coverage": 0.29318181818181815,
+ "precision": 1.0,
+ "precision_conservative": 0.8486842105263158,
+ "withheld_named": 0.0,
+ "localization_recall": 0.8237129485179407,
+ "per_cow": {
+  "9": {
+   "visible": 35,
+   "located": 35,
+   "correct": 4
+  },
+  "11": {
+   "visible": 18,
+   "located": 16,
+   "correct": 7
+  },
+  "20": {
+   "visible": 18,
+   "located": 6
+  },
+  "22": {
+   "visible": 22,
+   "located": 22,
+   "correct": 11
+  },
+  "24": {
+   "visible": 21,
+   "located": 15
+  },
+  "25": {
+   "visible": 18,
+   "located": 10,
+   "correct": 5
+  },
+  "37": {
+   "visible": 57,
+   "located": 55
+  },
+  "43": {
+   "visible": 41,
+   "located": 33,
+   "correct": 9
+  },
+  "45": {
+   "visible": 27,
+   "located": 18,
+   "correct": 11
+  },
+  "46": {
+   "visible": 18,
+   "located": 13,
+   "correct": 4
+  },
+  "47": {
+   "visible": 19,
+   "located": 13,
+   "correct": 7
+  },
+  "52": {
+   "visible": 46,
+   "located": 45
+  },
+  "53": {
+   "visible": 22,
+   "located": 22,
+   "correct": 9
+  },
+  "54": {
+   "visible": 20,
+   "located": 18,
+   "correct": 9
+  },
+  "56": {
+   "visible": 21,
+   "located": 21
+  },
+  "57": {
+   "visible": 37,
+   "located": 37,
+   "correct": 13
+  },
+  "64": {
+   "visible": 74,
+   "located": 60
+  },
+  "66": {
+   "visible": 23,
+   "located": 21,
+   "correct": 12
+  },
+  "71": {
+   "visible": 24,
+   "located": 18,
+   "correct": 9
+  },
+  "79": {
+   "visible": 19,
+   "located": 11,
+   "correct": 5
+  },
+  "81": {
+   "visible": 20,
+   "located": 6,
+   "correct": 3
+  },
+  "83": {
+   "visible": 20,
+   "located": 15,
+   "correct": 11
+  },
+  "84": {
+   "visible": 21,
+   "located": 18
+  }
+ },
+ "replay_matches_application": true,
+ "replay_differences": 0,
+ "stages": {
+  "visible": 440,
+  "located": 363,
+  "fit_crop": 265,
+  "resembles_itself": 257,
+  "accepted_candidate": 180,
+  "unchallenged": 179,
+  "shown": 129
+ },
+ "stages_per_cow": {
+  "9": {
+   "visible": 35,
+   "located": 35,
+   "fit_crop": 35,
+   "resembles_itself": 35,
+   "accepted_candidate": 9,
+   "unchallenged": 9,
+   "shown": 4
+  },
+  "11": {
+   "visible": 18,
+   "located": 16,
+   "fit_crop": 11,
+   "resembles_itself": 11,
+   "accepted_candidate": 11,
+   "unchallenged": 11,
+   "shown": 7
+  },
+  "22": {
+   "visible": 22,
+   "located": 22,
+   "fit_crop": 15,
+   "resembles_itself": 15,
+   "accepted_candidate": 15,
+   "unchallenged": 15,
+   "shown": 11
+  },
+  "25": {
+   "visible": 18,
+   "located": 10,
+   "fit_crop": 5,
+   "resembles_itself": 5,
+   "accepted_candidate": 5,
+   "unchallenged": 5,
+   "shown": 5
+  },
+  "37": {
+   "visible": 57,
+   "located": 55,
+   "fit_crop": 55,
+   "resembles_itself": 47,
+   "accepted_candidate": 4,
+   "unchallenged": 4,
+   "shown": 0
+  },
+  "43": {
+   "visible": 41,
+   "located": 33,
+   "fit_crop": 20,
+   "resembles_itself": 20,
+   "accepted_candidate": 12,
+   "unchallenged": 12,
+   "shown": 9
+  },
+  "45": {
+   "visible": 27,
+   "located": 18,
+   "fit_crop": 12,
+   "resembles_itself": 12,
+   "accepted_candidate": 12,
+   "unchallenged": 12,
+   "shown": 11
+  },
+  "46": {
+   "visible": 18,
+   "located": 13,
+   "fit_crop": 10,
+   "resembles_itself": 10,
+   "accepted_candidate": 10,
+   "unchallenged": 10,
+   "shown": 4
+  },
+  "47": {
+   "visible": 19,
+   "located": 13,
+   "fit_crop": 8,
+   "resembles_itself": 8,
+   "accepted_candidate": 8,
+   "unchallenged": 8,
+   "shown": 7
+  },
+  "53": {
+   "visible": 22,
+   "located": 22,
+   "fit_crop": 14,
+   "resembles_itself": 14,
+   "accepted_candidate": 14,
+   "unchallenged": 14,
+   "shown": 9
+  },
+  "54": {
+   "visible": 20,
+   "located": 18,
+   "fit_crop": 12,
+   "resembles_itself": 12,
+   "accepted_candidate": 12,
+   "unchallenged": 12,
+   "shown": 9
+  },
+  "57": {
+   "visible": 37,
+   "located": 37,
+   "fit_crop": 17,
+   "resembles_itself": 17,
+   "accepted_candidate": 17,
+   "unchallenged": 17,
+   "shown": 13
+  },
+  "66": {
+   "visible": 23,
+   "located": 21,
+   "fit_crop": 16,
+   "resembles_itself": 16,
+   "accepted_candidate": 16,
+   "unchallenged": 16,
+   "shown": 12
+  },
+  "71": {
+   "visible": 24,
+   "located": 18,
+   "fit_crop": 12,
+   "resembles_itself": 12,
+   "accepted_candidate": 12,
+   "unchallenged": 12,
+   "shown": 9
+  },
+  "79": {
+   "visible": 19,
+   "located": 11,
+   "fit_crop": 5,
+   "resembles_itself": 5,
+   "accepted_candidate": 5,
+   "unchallenged": 5,
+   "shown": 5
+  },
+  "81": {
+   "visible": 20,
+   "located": 6,
+   "fit_crop": 3,
+   "resembles_itself": 3,
+   "accepted_candidate": 3,
+   "unchallenged": 3,
+   "shown": 3
+  },
+  "83": {
+   "visible": 20,
+   "located": 15,
+   "fit_crop": 15,
+   "resembles_itself": 15,
+   "accepted_candidate": 15,
+   "unchallenged": 14,
+   "shown": 11
+  }
+ },
+ "names_on_other_animals": {
+  "unannotated shown as 39": 1,
+  "unannotated shown as 11": 1,
+  "unannotated shown as 43": 2,
+  "unannotated shown as 25": 1,
+  "unannotated shown as 83": 2,
+  "unannotated shown as 45": 5,
+  "unannotated shown as 81": 6,
+  "unannotated shown as 47": 1,
+  "unannotated shown as 79": 2,
+  "unannotated shown as 57": 2
+ },
+ "tracking": {
+  "tracks_on_annotated_animals": 25,
+  "tracks_covering_two_animals": 1
+ },
+ "video": "multicam-16-cam1",
+ "enrolled": [
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11,
+  13,
+  14,
+  15,
+  17,
+  18,
+  19,
+  21,
+  22,
+  23,
+  25,
+  26,
+  27,
+  29,
+  30,
+  31,
+  33,
+  34,
+  35,
+  37,
+  38,
+  39,
+  41,
+  42,
+  43,
+  45,
+  46,
+  47,
+  49,
+  50,
+  51,
+  53,
+  54,
+  55,
+  57,
+  58,
+  59,
+  61,
+  62,
+  63,
+  65,
+  66,
+  67,
+  69,
+  70,
+  71,
+  73,
+  74,
+  75,
+  77,
+  78,
+  79,
+  81,
+  82,
+  83,
+  85,
+  86,
+  87,
+  89
+ ],
+ "confirmed_photographs": 2110,
+ "confirmations": 264,
+ "photographs_per_cow": {
+  "1": 32,
+  "2": 32,
+  "3": 32,
+  "5": 32,
+  "6": 30,
+  "7": 32,
+  "9": 32,
+  "10": 32,
+  "11": 32,
+  "13": 32,
+  "14": 32,
+  "15": 32,
+  "17": 32,
+  "18": 32,
+  "19": 32,
+  "21": 32,
+  "22": 32,
+  "23": 16,
+  "25": 32,
+  "26": 32,
+  "27": 32,
+  "29": 32,
+  "30": 32,
+  "31": 32,
+  "33": 32,
+  "34": 32,
+  "35": 32,
+  "37": 32,
+  "38": 32,
+  "39": 32,
+  "41": 32,
+  "42": 32,
+  "43": 32,
+  "45": 32,
+  "46": 32,
+  "47": 32,
+  "49": 32,
+  "50": 32,
+  "51": 32,
+  "53": 32,
+  "54": 32,
+  "55": 32,
+  "57": 32,
+  "58": 32,
+  "59": 32,
+  "61": 32,
+  "62": 32,
+  "63": 32,
+  "65": 32,
+  "66": 32,
+  "67": 32,
+  "69": 32,
+  "70": 32,
+  "71": 32,
+  "73": 32,
+  "74": 32,
+  "75": 32,
+  "77": 32,
+  "78": 32,
+  "79": 32,
+  "81": 32,
+  "82": 32,
+  "83": 32,
+  "85": 32,
+  "86": 32,
+  "87": 32,
+  "89": 16
+ },
+ "latest_photograph": "20230815140132",
+ "device": "mps",
+ "learning_seconds": 3.820525999646634,
+ "frames": 3000,
+ "seconds_per_frame": {
+  "detect_and_track": {
+   "mean": 0.0822755482543048,
+   "p95": 0.11510290422011167,
+   "max": 0.13072166685014963
+  },
+  "identify": {
+   "mean": 0.009710418219276295,
+   "p95": 0.065621245582588,
+   "max": 0.10977954184636474
+  },
+  "total": {
+   "mean": 0.09198596647358111,
+   "p95": 0.18083821621257803,
+   "max": 0.2190477498807013
+  }
+ },
+ "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+ "herd_weights_sha256": "0d3f66d8b2a364bd5e4284eb3d0105033e2e021e745b2949bfff0d1d1471e245",
+ "animal_weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
+ "withheld": [
+  4,
+  8,
+  12,
+  16,
+  20,
+  24,
+  28,
+  32,
+  36,
+  40,
+  44,
+  48,
+  52,
+  56,
+  60,
+  64,
+  68,
+  72,
+  76,
+  80,
+  84,
+  88,
+  90
+ ],
+ "ignored": []
+}

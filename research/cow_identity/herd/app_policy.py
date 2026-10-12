@@ -37,6 +37,9 @@ class Rules:
     forget_absent: bool = False
     # The limit in pictures taken under infrared light; unset, `min_similarity`.
     min_similarity_infrared: float | None = None
+    # Seconds a confirmed name stays on a track whose box is no evidence, counted from its
+    # last whole view. The application drops the name at once.
+    kept_unfit: float = 0
 
 
 def fit_crops(crops, rules):
@@ -97,6 +100,7 @@ def name_crops(crops, scores, classes, rules, empty_frames=()):
     stages = [None] * len(crops)
     labels = [str(cow) for cow in classes] + [OTHER]
     followed = set()
+    whole, named = {}, {}
 
     def cow(match):
         return None if match.identity_id is None else classes[labels.index(match.identity_id)]
@@ -136,13 +140,15 @@ def name_crops(crops, scores, classes, rules, empty_frames=()):
         claimed = {candidate.identity_id for candidate in candidates}
         for position, candidate, match in zip(positions, candidates, resolved, strict=True):
             likeness = labels[int(scores[position].argmax())]
-            shown = agreement.update(
-                "camera",
-                crops[position]["track"],
-                at,
-                match,
-                likeness if fit[position] and likeness not in claimed else None,
-            )
+            track = crops[position]["track"]
+            if fit[position]:
+                resembles = likeness if likeness not in claimed else None
+                whole[track] = at
+            else:
+                recent = track in whole and (at - whole[track]).total_seconds() <= rules.kept_unfit
+                resembles = named.get(track) if recent else None
+            shown = agreement.update("camera", track, at, match, resembles)
+            named[track] = shown.identity_id
             names[position] = cow(shown)
             likeness = int(scores[position][: len(classes)].argmax())
             stages[position] = {

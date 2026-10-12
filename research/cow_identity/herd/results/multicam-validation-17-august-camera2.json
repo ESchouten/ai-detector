@@ -1,0 +1,889 @@
+{
+ "visible_enrolled": 1966,
+ "visible_withheld": 983,
+ "located_enrolled": 1059,
+ "located_withheld": 743,
+ "correct": 761,
+ "wrong_enrolled": 0,
+ "named_withheld": 0,
+ "named_unannotated": 1077,
+ "unpaired_on_named": 613,
+ "unpaired_on_other": 9,
+ "unpaired_on_withheld": 2,
+ "unpaired_elsewhere": 0,
+ "unpaired_unjudged": 453,
+ "coverage": 0.38708036622583925,
+ "precision": 0.9857512953367875,
+ "precision_conservative": 0.41403699673558214,
+ "withheld_named": 0.002034587995930824,
+ "localization_recall": 0.6110545947778908,
+ "per_cow": {
+  "1": {
+   "visible": 17,
+   "located": 0
+  },
+  "2": {
+   "visible": 20,
+   "located": 3
+  },
+  "4": {
+   "visible": 34,
+   "located": 14
+  },
+  "5": {
+   "visible": 18,
+   "located": 10
+  },
+  "6": {
+   "visible": 16,
+   "located": 10
+  },
+  "7": {
+   "visible": 5,
+   "located": 2
+  },
+  "8": {
+   "visible": 22,
+   "located": 9
+  },
+  "11": {
+   "visible": 121,
+   "located": 100,
+   "correct": 95
+  },
+  "12": {
+   "visible": 31,
+   "located": 17
+  },
+  "13": {
+   "visible": 21,
+   "located": 2
+  },
+  "14": {
+   "visible": 32,
+   "located": 25,
+   "correct": 21
+  },
+  "15": {
+   "visible": 21,
+   "located": 15
+  },
+  "16": {
+   "visible": 20,
+   "located": 13
+  },
+  "17": {
+   "visible": 17,
+   "located": 7
+  },
+  "18": {
+   "visible": 20,
+   "located": 9,
+   "correct": 5
+  },
+  "19": {
+   "visible": 20,
+   "located": 12,
+   "correct": 8
+  },
+  "21": {
+   "visible": 22,
+   "located": 19,
+   "correct": 15
+  },
+  "22": {
+   "visible": 9,
+   "located": 8
+  },
+  "23": {
+   "visible": 22,
+   "located": 12,
+   "correct": 6
+  },
+  "24": {
+   "visible": 21,
+   "located": 17
+  },
+  "26": {
+   "visible": 17,
+   "located": 4,
+   "correct": 2
+  },
+  "27": {
+   "visible": 20,
+   "located": 7,
+   "correct": 3
+  },
+  "28": {
+   "visible": 18,
+   "located": 9
+  },
+  "29": {
+   "visible": 23,
+   "located": 14,
+   "correct": 6
+  },
+  "31": {
+   "visible": 146,
+   "located": 112,
+   "correct": 87
+  },
+  "32": {
+   "visible": 220,
+   "located": 161
+  },
+  "33": {
+   "visible": 407,
+   "located": 162,
+   "correct": 148
+  },
+  "34": {
+   "visible": 76,
+   "located": 65,
+   "correct": 48
+  },
+  "35": {
+   "visible": 101,
+   "located": 58,
+   "correct": 50
+  },
+  "36": {
+   "visible": 21,
+   "located": 14
+  },
+  "38": {
+   "visible": 24,
+   "located": 18,
+   "correct": 9
+  },
+  "39": {
+   "visible": 54,
+   "located": 31,
+   "correct": 23
+  },
+  "40": {
+   "visible": 20,
+   "located": 14
+  },
+  "41": {
+   "visible": 23,
+   "located": 0
+  },
+  "42": {
+   "visible": 264,
+   "located": 115,
+   "correct": 107
+  },
+  "43": {
+   "visible": 20,
+   "located": 13,
+   "correct": 4
+  },
+  "45": {
+   "visible": 21,
+   "located": 12,
+   "correct": 7
+  },
+  "46": {
+   "visible": 27,
+   "located": 22,
+   "correct": 17
+  },
+  "47": {
+   "visible": 33,
+   "located": 17,
+   "correct": 12
+  },
+  "48": {
+   "visible": 15,
+   "located": 13
+  },
+  "50": {
+   "visible": 78,
+   "located": 43,
+   "correct": 40
+  },
+  "51": {
+   "visible": 14,
+   "located": 6,
+   "correct": 2
+  },
+  "53": {
+   "visible": 25,
+   "located": 10,
+   "correct": 6
+  },
+  "56": {
+   "visible": 403,
+   "located": 343
+  },
+  "59": {
+   "visible": 22,
+   "located": 10,
+   "correct": 4
+  },
+  "61": {
+   "visible": 23,
+   "located": 16,
+   "correct": 4
+  },
+  "62": {
+   "visible": 24,
+   "located": 12,
+   "correct": 3
+  },
+  "63": {
+   "visible": 36,
+   "located": 16,
+   "correct": 8
+  },
+  "66": {
+   "visible": 25,
+   "located": 17
+  },
+  "79": {
+   "visible": 17,
+   "located": 10,
+   "correct": 4
+  },
+  "81": {
+   "visible": 23,
+   "located": 13,
+   "correct": 8
+  },
+  "84": {
+   "visible": 20,
+   "located": 16
+  },
+  "86": {
+   "visible": 20,
+   "located": 6
+  },
+  "88": {
+   "visible": 138,
+   "located": 103
+  },
+  "89": {
+   "visible": 22,
+   "located": 16,
+   "correct": 9
+  }
+ },
+ "replay_matches_application": true,
+ "replay_differences": 0,
+ "stages": {
+  "visible": 1966,
+  "located": 1059,
+  "fit_crop": 1022,
+  "resembles_itself": 1021,
+  "accepted_candidate": 713,
+  "unchallenged": 711,
+  "shown": 761
+ },
+ "stages_per_cow": {
+  "1": {
+   "visible": 17,
+   "located": 0,
+   "fit_crop": 0,
+   "resembles_itself": 0,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "2": {
+   "visible": 20,
+   "located": 3,
+   "fit_crop": 3,
+   "resembles_itself": 3,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "5": {
+   "visible": 18,
+   "located": 10,
+   "fit_crop": 10,
+   "resembles_itself": 10,
+   "accepted_candidate": 9,
+   "unchallenged": 9,
+   "shown": 0
+  },
+  "6": {
+   "visible": 16,
+   "located": 10,
+   "fit_crop": 10,
+   "resembles_itself": 9,
+   "accepted_candidate": 2,
+   "unchallenged": 2,
+   "shown": 0
+  },
+  "7": {
+   "visible": 5,
+   "located": 2,
+   "fit_crop": 2,
+   "resembles_itself": 2,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "11": {
+   "visible": 121,
+   "located": 100,
+   "fit_crop": 100,
+   "resembles_itself": 100,
+   "accepted_candidate": 100,
+   "unchallenged": 100,
+   "shown": 95
+  },
+  "13": {
+   "visible": 21,
+   "located": 2,
+   "fit_crop": 2,
+   "resembles_itself": 2,
+   "accepted_candidate": 2,
+   "unchallenged": 2,
+   "shown": 0
+  },
+  "14": {
+   "visible": 32,
+   "located": 25,
+   "fit_crop": 25,
+   "resembles_itself": 25,
+   "accepted_candidate": 7,
+   "unchallenged": 7,
+   "shown": 21
+  },
+  "15": {
+   "visible": 21,
+   "located": 15,
+   "fit_crop": 15,
+   "resembles_itself": 15,
+   "accepted_candidate": 10,
+   "unchallenged": 10,
+   "shown": 0
+  },
+  "17": {
+   "visible": 17,
+   "located": 7,
+   "fit_crop": 6,
+   "resembles_itself": 6,
+   "accepted_candidate": 6,
+   "unchallenged": 6,
+   "shown": 0
+  },
+  "18": {
+   "visible": 20,
+   "located": 9,
+   "fit_crop": 9,
+   "resembles_itself": 9,
+   "accepted_candidate": 7,
+   "unchallenged": 7,
+   "shown": 5
+  },
+  "19": {
+   "visible": 20,
+   "located": 12,
+   "fit_crop": 12,
+   "resembles_itself": 12,
+   "accepted_candidate": 12,
+   "unchallenged": 12,
+   "shown": 8
+  },
+  "21": {
+   "visible": 22,
+   "located": 19,
+   "fit_crop": 19,
+   "resembles_itself": 19,
+   "accepted_candidate": 19,
+   "unchallenged": 19,
+   "shown": 15
+  },
+  "22": {
+   "visible": 9,
+   "located": 8,
+   "fit_crop": 8,
+   "resembles_itself": 8,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "23": {
+   "visible": 22,
+   "located": 12,
+   "fit_crop": 10,
+   "resembles_itself": 10,
+   "accepted_candidate": 7,
+   "unchallenged": 7,
+   "shown": 6
+  },
+  "26": {
+   "visible": 17,
+   "located": 4,
+   "fit_crop": 4,
+   "resembles_itself": 4,
+   "accepted_candidate": 4,
+   "unchallenged": 4,
+   "shown": 2
+  },
+  "27": {
+   "visible": 20,
+   "located": 7,
+   "fit_crop": 7,
+   "resembles_itself": 7,
+   "accepted_candidate": 7,
+   "unchallenged": 7,
+   "shown": 3
+  },
+  "29": {
+   "visible": 23,
+   "located": 14,
+   "fit_crop": 14,
+   "resembles_itself": 14,
+   "accepted_candidate": 14,
+   "unchallenged": 14,
+   "shown": 6
+  },
+  "31": {
+   "visible": 146,
+   "located": 112,
+   "fit_crop": 108,
+   "resembles_itself": 108,
+   "accepted_candidate": 51,
+   "unchallenged": 51,
+   "shown": 87
+  },
+  "33": {
+   "visible": 407,
+   "located": 162,
+   "fit_crop": 161,
+   "resembles_itself": 161,
+   "accepted_candidate": 98,
+   "unchallenged": 98,
+   "shown": 148
+  },
+  "34": {
+   "visible": 76,
+   "located": 65,
+   "fit_crop": 59,
+   "resembles_itself": 59,
+   "accepted_candidate": 32,
+   "unchallenged": 31,
+   "shown": 48
+  },
+  "35": {
+   "visible": 101,
+   "located": 58,
+   "fit_crop": 54,
+   "resembles_itself": 54,
+   "accepted_candidate": 31,
+   "unchallenged": 31,
+   "shown": 50
+  },
+  "38": {
+   "visible": 24,
+   "located": 18,
+   "fit_crop": 15,
+   "resembles_itself": 15,
+   "accepted_candidate": 15,
+   "unchallenged": 15,
+   "shown": 9
+  },
+  "39": {
+   "visible": 54,
+   "located": 31,
+   "fit_crop": 31,
+   "resembles_itself": 31,
+   "accepted_candidate": 30,
+   "unchallenged": 30,
+   "shown": 23
+  },
+  "41": {
+   "visible": 23,
+   "located": 0,
+   "fit_crop": 0,
+   "resembles_itself": 0,
+   "accepted_candidate": 0,
+   "unchallenged": 0,
+   "shown": 0
+  },
+  "42": {
+   "visible": 264,
+   "located": 115,
+   "fit_crop": 114,
+   "resembles_itself": 114,
+   "accepted_candidate": 58,
+   "unchallenged": 58,
+   "shown": 107
+  },
+  "43": {
+   "visible": 20,
+   "located": 13,
+   "fit_crop": 13,
+   "resembles_itself": 13,
+   "accepted_candidate": 11,
+   "unchallenged": 11,
+   "shown": 4
+  },
+  "45": {
+   "visible": 21,
+   "located": 12,
+   "fit_crop": 11,
+   "resembles_itself": 11,
+   "accepted_candidate": 11,
+   "unchallenged": 11,
+   "shown": 7
+  },
+  "46": {
+   "visible": 27,
+   "located": 22,
+   "fit_crop": 22,
+   "resembles_itself": 22,
+   "accepted_candidate": 19,
+   "unchallenged": 19,
+   "shown": 17
+  },
+  "47": {
+   "visible": 33,
+   "located": 17,
+   "fit_crop": 16,
+   "resembles_itself": 16,
+   "accepted_candidate": 15,
+   "unchallenged": 15,
+   "shown": 12
+  },
+  "50": {
+   "visible": 78,
+   "located": 43,
+   "fit_crop": 43,
+   "resembles_itself": 43,
+   "accepted_candidate": 42,
+   "unchallenged": 42,
+   "shown": 40
+  },
+  "51": {
+   "visible": 14,
+   "located": 6,
+   "fit_crop": 4,
+   "resembles_itself": 4,
+   "accepted_candidate": 1,
+   "unchallenged": 1,
+   "shown": 2
+  },
+  "53": {
+   "visible": 25,
+   "located": 10,
+   "fit_crop": 10,
+   "resembles_itself": 10,
+   "accepted_candidate": 10,
+   "unchallenged": 10,
+   "shown": 6
+  },
+  "59": {
+   "visible": 22,
+   "located": 10,
+   "fit_crop": 10,
+   "resembles_itself": 10,
+   "accepted_candidate": 7,
+   "unchallenged": 7,
+   "shown": 4
+  },
+  "61": {
+   "visible": 23,
+   "located": 16,
+   "fit_crop": 14,
+   "resembles_itself": 14,
+   "accepted_candidate": 6,
+   "unchallenged": 6,
+   "shown": 4
+  },
+  "62": {
+   "visible": 24,
+   "located": 12,
+   "fit_crop": 11,
+   "resembles_itself": 11,
+   "accepted_candidate": 10,
+   "unchallenged": 9,
+   "shown": 3
+  },
+  "63": {
+   "visible": 36,
+   "located": 16,
+   "fit_crop": 16,
+   "resembles_itself": 16,
+   "accepted_candidate": 13,
+   "unchallenged": 13,
+   "shown": 8
+  },
+  "66": {
+   "visible": 25,
+   "located": 17,
+   "fit_crop": 11,
+   "resembles_itself": 11,
+   "accepted_candidate": 11,
+   "unchallenged": 11,
+   "shown": 0
+  },
+  "79": {
+   "visible": 17,
+   "located": 10,
+   "fit_crop": 10,
+   "resembles_itself": 10,
+   "accepted_candidate": 4,
+   "unchallenged": 4,
+   "shown": 4
+  },
+  "81": {
+   "visible": 23,
+   "located": 13,
+   "fit_crop": 13,
+   "resembles_itself": 13,
+   "accepted_candidate": 12,
+   "unchallenged": 12,
+   "shown": 8
+  },
+  "86": {
+   "visible": 20,
+   "located": 6,
+   "fit_crop": 6,
+   "resembles_itself": 6,
+   "accepted_candidate": 6,
+   "unchallenged": 6,
+   "shown": 0
+  },
+  "89": {
+   "visible": 22,
+   "located": 16,
+   "fit_crop": 14,
+   "resembles_itself": 14,
+   "accepted_candidate": 14,
+   "unchallenged": 14,
+   "shown": 9
+  }
+ },
+ "names_on_other_animals": {
+  "unannotated shown as 29": 6,
+  "unannotated shown as 18": 8,
+  "unannotated shown as 27": 12,
+  "unannotated shown as 34": 1,
+  "unannotated shown as 26": 14,
+  "unannotated shown as 21": 9,
+  "unannotated shown as 35": 45,
+  "unannotated shown as 51": 2,
+  "unannotated shown as 19": 7,
+  "unannotated shown as 31": 48,
+  "unannotated shown as 17": 1,
+  "unannotated shown as 89": 1,
+  "unannotated shown as 61": 1,
+  "unannotated shown as 46": 8,
+  "unannotated shown as 79": 9,
+  "unannotated shown as 42": 161,
+  "unannotated shown as 11": 28,
+  "unannotated shown as 39": 11,
+  "unannotated shown as 50": 38,
+  "unannotated shown as 2": 1,
+  "unannotated shown as 59": 4,
+  "unannotated shown as 14": 10,
+  "unannotated shown as 63": 370,
+  "unannotated shown as 33": 244,
+  "unannotated shown as 45": 4,
+  "unannotated shown as 53": 10,
+  "unannotated shown as 43": 6,
+  "unannotated shown as 81": 3,
+  "unannotated shown as 47": 15
+ },
+ "tracking": {
+  "tracks_on_annotated_animals": 59,
+  "tracks_covering_two_animals": 3
+ },
+ "video": "multicam-17-cam2",
+ "enrolled": [
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11,
+  13,
+  14,
+  15,
+  17,
+  18,
+  19,
+  21,
+  22,
+  23,
+  25,
+  26,
+  27,
+  29,
+  30,
+  31,
+  33,
+  34,
+  35,
+  37,
+  38,
+  39,
+  41,
+  42,
+  43,
+  45,
+  46,
+  47,
+  49,
+  50,
+  51,
+  53,
+  54,
+  55,
+  57,
+  58,
+  59,
+  61,
+  62,
+  63,
+  65,
+  66,
+  67,
+  69,
+  70,
+  71,
+  73,
+  74,
+  75,
+  77,
+  78,
+  79,
+  81,
+  82,
+  83,
+  85,
+  86,
+  87,
+  89
+ ],
+ "confirmed_photographs": 2990,
+ "confirmations": 374,
+ "photographs_per_cow": {
+  "1": 48,
+  "2": 48,
+  "3": 48,
+  "5": 48,
+  "6": 46,
+  "7": 48,
+  "9": 48,
+  "10": 32,
+  "11": 48,
+  "13": 48,
+  "14": 32,
+  "15": 48,
+  "17": 48,
+  "18": 32,
+  "19": 48,
+  "21": 48,
+  "22": 48,
+  "23": 32,
+  "25": 48,
+  "26": 48,
+  "27": 48,
+  "29": 48,
+  "30": 48,
+  "31": 48,
+  "33": 48,
+  "34": 48,
+  "35": 48,
+  "37": 48,
+  "38": 48,
+  "39": 32,
+  "41": 48,
+  "42": 48,
+  "43": 48,
+  "45": 48,
+  "46": 48,
+  "47": 48,
+  "49": 48,
+  "50": 48,
+  "51": 48,
+  "53": 48,
+  "54": 48,
+  "55": 48,
+  "57": 48,
+  "58": 48,
+  "59": 48,
+  "61": 48,
+  "62": 48,
+  "63": 48,
+  "65": 48,
+  "66": 48,
+  "67": 32,
+  "69": 32,
+  "70": 48,
+  "71": 48,
+  "73": 32,
+  "74": 32,
+  "75": 32,
+  "77": 48,
+  "78": 48,
+  "79": 48,
+  "81": 48,
+  "82": 48,
+  "83": 48,
+  "85": 32,
+  "86": 32,
+  "87": 32,
+  "89": 32
+ },
+ "latest_photograph": "20230816140321",
+ "device": "mps",
+ "learning_seconds": 3.8201910411007702,
+ "frames": 25481,
+ "seconds_per_frame": {
+  "detect_and_track": {
+   "mean": 0.08106419861886788,
+   "p95": 0.10695197898894548,
+   "max": 0.17269741697236896
+  },
+  "identify": {
+   "mean": 0.006344147625092127,
+   "p95": 0.06401341641321778,
+   "max": 0.2170864581130445
+  },
+  "total": {
+   "mean": 0.08740834624396,
+   "p95": 0.17745858361013234,
+   "max": 0.3230930413119495
+  }
+ },
+ "detector_weights_sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3",
+ "herd_weights_sha256": "0d3f66d8b2a364bd5e4284eb3d0105033e2e021e745b2949bfff0d1d1471e245",
+ "animal_weights_sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348",
+ "withheld": [
+  4,
+  8,
+  12,
+  16,
+  20,
+  24,
+  28,
+  32,
+  36,
+  40,
+  44,
+  48,
+  52,
+  56,
+  60,
+  64,
+  68,
+  72,
+  76,
+  80,
+  84,
+  88,
+  90
+ ],
+ "ignored": []
+}

@@ -1,0 +1,30 @@
+{
+ "multicam-16-cam1": {
+  "pictures_of_enrolled_cows": 440,
+  "pictures_that_carry_her_name": 200,
+  "enrolled_cows_that_walk_by": 17,
+  "named_as_herself": 16,
+  "named_as_another_cow": 0,
+  "never_found": 0,
+  "not_named": [
+   37
+  ],
+  "unknown_cows_that_walk_by": 6,
+  "unknown_cows_named": []
+ },
+ "multicam-16-cam2": {
+  "pictures_of_enrolled_cows": 1580,
+  "pictures_that_carry_her_name": 253,
+  "enrolled_cows_that_walk_by": 12,
+  "named_as_herself": 9,
+  "named_as_another_cow": 0,
+  "never_found": 0,
+  "not_named": [
+   2,
+   6,
+   77
+  ],
+  "unknown_cows_that_walk_by": 3,
+  "unknown_cows_named": []
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "title": "The application on the camera footage of a passage: MultiCamCows2024",
+ "dataset": {
+  "doi": "10.5523/bris.2inu67jru7a6821kkgehxg3cv2",
+  "pictures": "The publisher's cut-outs of 14 to 18 August 2023, cameras 1 and 2",
+  "footage": "The clips of cameras 1 and 2 of 14 to 18 August 2023; those of 19 and 20 August were not fetched"
+ },
+ "cameras": "The two cameras over the race. The third, over the holding area, is left out.",
+ "videos": {
+  "development": [
+   "multicam-16-cam1",
+   "multicam-16-cam2"
+  ],
+  "validation": [
+   "multicam-17-cam1",
+   "multicam-17-cam2",
+   "multicam-18-cam1",
+   "multicam-18-cam2"
+  ],
+  "test": [
+   "multicam-19-cam1",
+   "multicam-19-cam2",
+   "multicam-20-cam1",
+   "multicam-20-cam2"
+  ]
+ },
+ "enrolled": "Every cow that is not withheld and walks by on the photograph days: 67",
+ "withheld": "Every fourth cow by the publisher's number, and cow 90, who first walks by on 19 August",
+ "confirmed_photographs": "Eight pictures of every walk of an enrolled cow under the two cameras on earlier days, from 14 to 16 August, spread over the walk and cut out of their frames by the label's box at the application's size (multicam.py photographs)",
+ "sampling": "Five pictures a second over the whole session, shrunk as the application's camera source shrinks them (multicam.py frames)",
+ "labels": "The publisher's pictures placed in the footage (multicam_locate.py, multicam_fill.py); a cow's label is the upright box around her picture lengthened by 0.35 of its length towards her head (multicam.py labels)",
+ "system": {
+  "preset": "research/cow_identity/herd/passage.json",
+  "preset_sha256": "1b3cfffe6c49644fb70dcdfca1ccc3ddd60da58237f97530887cbee8dea1f2ad",
+  "detector_weights": {
+   "name": "yolo26x-seg.pt",
+   "sha256": "92b3de0065766a17180d6219858717dc9d03cdce8a3ca9576c97fd75aabb64f3"
+  },
+  "cattle_weights": {
+   "name": "DINOv2-small taught SideViewCows2026 alone (auxiliary.py --sources sideview)",
+   "sha256": "0d3f66d8b2a364bd5e4284eb3d0105033e2e021e745b2949bfff0d1d1471e245"
+  },
+  "animal_weights": {
+   "name": "conservationxlabs/miewid-msv3 model.safetensors",
+   "revision": "4f1d7f2b521149e5fe34bb85f377248ce9971a7d",
+   "sha256": "adff92b39678f37eb74861c6399a741639a8907ec2382738e903d6120727b348"
+  },
+  "device": "Apple GPU (MPS)"
+ },
+ "scoring": {
+  "pairing_overlap": 0.5,
+  "unpaired_box_lies_on_overlap": 0.25,
+  "judged": "Every picture of a session"
+ },
+ "criteria": {
+  "precision_min": 0.99,
+  "coverage_min": 0.6,
+  "withheld_named_max": 0.01,
+  "p95_seconds_per_frame_max": 0.2
+ },
+ "test": "Not run. Validation did not meet the coverage criterion, and the last two days stay unseen."
+}

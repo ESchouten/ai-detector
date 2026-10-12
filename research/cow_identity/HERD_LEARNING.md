@@ -13,7 +13,7 @@ What is shown here is one barn with thirteen cows, whose cameras see a cow whole
 
 **On a second farm it does not work.** Taken afterwards to another public pen, where a cow is half as large in the picture and the herd lies side by side in the cubicles, the application named 12% of the animals in validation video, 4–23% by camera, and no unknown cow. Two in three lying cows are not found there, and the cows that are found are not told apart; a sharper picture helps with neither. That farm's test hours were not run ([a second farm](#a-second-farm)).
 
-**Seen from the ceiling, a herd of real size is told apart.** On a third public farm, in the publisher's own cut-outs of ninety cows that walk by under three ceiling cameras, a herd of 67 is told apart almost as well as a herd of twelve: 98% of the pictures of two later days resemble their own cow most, 85% are similar enough for a name, none is taken for another cow, and one in 3,697 pictures of unknown cows passes. That is not yet the application, which found and followed nothing there, and a cow that walks by in five seconds needs more pictures a second than the preset takes ([a third farm](#a-third-farm)).
+**Seen from the ceiling, a herd of real size is told apart, and a passage is not a barn.** On a third public farm, in the publisher's own cut-outs of ninety cows that walk by under ceiling cameras, a herd of 67 is told apart almost as well as a herd of twelve: 98% of the pictures of two later days resemble their own cow most, none is taken for another cow, and one in 3,697 pictures of unknown cows passes. Run on that farm's footage of the race at five pictures a second, the application named a cow as herself 151 of the 208 times one walked by on two validation days, as another cow once, and no unknown cow. But a name stood on 29% to 51% of her pictures where the protocol asks for 60%, and where the cows queue a held name wandered onto a neighbour. Validation fails there, and that farm's two test days were not run ([a third farm](#a-third-farm)).
 
 The rest of this document is the record: how the method was developed, the protocol it was frozen under, and the test in detail. Work done after the test is marked as such. Three parts of it changed what the application does: the recordings of other detectors carry the names of the cows in them ([names](#names-on-another-rules-events)); a cow is scored by a share of her photographs instead of a fixed two, with the limits that follow ([the number of photographs](#the-number-of-photographs)); and the photographs to review are taken over the hours instead of at once ([how many to start](#how-many-photographs-to-start)). No unseen video of the first barn is left to test any of that on.
 
@@ -494,7 +494,7 @@ A steeper view is also a nearer one in this pen, so the table does not tell the 
 
 ## A third farm
 
-Added after the test. The second farm's cameras look across the cows. This section goes to a public farm whose cameras look straight down on them and whose herd is of real size: every measurement before this had ten or twelve cows enrolled. **So far it uses the publisher's own cut-outs of the cows, not the application on that farm's footage.** It says how well a herd is told apart once every cow is found and followed, and nothing yet about finding and following them.
+Added after the test. The second farm's cameras look across the cows. This section goes to a public farm whose cameras look straight down on them and whose herd is of real size: every measurement before this had ten or twelve cows enrolled. It first uses the publisher's own cut-outs of the cows, which say how well a herd is told apart once every cow is found and followed. It then runs the application on the footage of the two cameras over the race, where **validation fails and the two test days were not run.**
 
 ### The passage
 
@@ -552,23 +552,113 @@ A cow is under one of these cameras for four to five seconds, typically: 20 to 2
 | 30 cows | 144 | 75, 143 | none | none | 44%, 83% |
 | 67 cows | 312 | 151, 300 | none | none | 42%, 82% |
 
-At one picture a second half of the walks end before five pictures have agreed, and four in ten pictures carry a name where the criteria ask for six. At five a second nearly every walk is named. The preset as shipped suits cows that stay in view. A camera over a passage needs about five pictures a second, and the preset's detector alone takes 0.2 seconds for one on the computer used here.
+At one picture a second half of the walks end before five pictures have agreed, and four in ten pictures carry a name where the criteria ask for six. At five a second nearly every walk is named. The preset as shipped suits cows that stay in view. A camera over a passage needs about five pictures a second, which leaves 0.2 seconds for one; with the preset's detector at its 1280 pixels the application needs more than that for one picture in twenty ([below](#development-on-the-third-day)).
 
 ### Fewer photographs
 
 With two photographs of each walk instead of eight, 12 to 18 of a cow, the herd of 67 is still sorted: 97% of the pictures resemble their own cow most, none passes as another cow, and no withheld cow's picture passes. But only 53% are similar enough, and at five pictures a second 222 of 312 walks are named, with 53% of the pictures carrying a name ([file](herd/results/multicam-herd-of-67-two-photographs-a-walk.json)). A camera that sees every cow alike still needs dozens of photographs of each.
 
+### The footage
+
+The cut-outs say who a cow is, not where in the cameras' footage she was cut from, so a name shown on the footage could not be judged. A cut-out is the frame's own pixels, turned. [`multicam_locate.py`](herd/multicam_locate.py) matches the details of a picture with those of every frame in which something as large as a cow has changed, fits a turn and a shift to them, lays the frame under the picture and compares the two grey level by grey level: a picture differs from the frame it was cut from by five to eight levels. A cow that stands still fits a row of frames, so every close fit is kept, and [`multicam_fill.py`](herd/multicam_fill.py) gives each walk's pictures frames that rise in the order they were taken, their own frames first, and looks for the rest between their neighbours.
+
+**Cameras.** The first two cameras look down on the race, where the cows walk one behind the other. The third looks down on the area behind it, where the herd stands packed. When this was set up the [trial guide](README.md#try-the-existing-appearance-gallery-preset) gave a camera over a passage as its example, so the two race cameras are the test. That was decided before the application was run on any of them, and the third camera's pictures were not placed.
+
+**What was found again.** Of the 28,960 pictures of those two cameras on the five days that may be opened, 28,401 get a frame of their own, 95% to 100% by camera and day, and every walk of every cow has at least one ([file](herd/results/multicam-pictures-placed.json)). The footage of the last two days was not fetched.
+
+**Labels.** A cut-out ends at the cow's shoulders. Her label is the upright box around it, lengthened by a third of its length towards her head. A name is judged as in the first barn ([how a name is scored](#how-a-name-is-scored)), in every picture of a session. A cow whom the publisher did not cut out of a frame, mostly because another overlapped her, has no label there.
+
+**Photographs.** Eight pictures of every walk under the two cameras, spread over the walk and cut out of their frames by that box, as large as the application sees them. The validation days learn from the first three days, 2,990 photographs of 67 cows, 32 to 48 of each. The development day learns from the two days before it, 2,110 photographs, 16 to 32 of each.
+
+**Five pictures a second.** [`passage.json`](herd/passage.json) is the shipped preset with three settings changed: a picture every 0.2 seconds, every one of them a sample for the identity, and the detector's input at 960 pixels instead of 1280. The research scripts took a picture a second whatever the preset said; they now take the preset's interval, and with the shipped preset reproduce the first barn's recorded scores exactly.
+
+### Development on the third day
+
+The busiest ten minutes under each camera on 16 August, 3,000 pictures each, were used to settle that preset.
+
+**The detector.** Stock detectors of two sizes at three inputs, through the application's tracker ([file](herd/results/multicam-development-detectors.json)). Found is the share of labelled cows with a tracked box on them. Could carry a name is the share of her pictures that come after five fit pictures in a row and before her box touches the picture's edge, which is where the application's rules let a name stand if she is recognised at once.
+
+| Detector and input | Camera 1: found, with a fit box, could carry a name | Camera 2: found, with a fit box, could carry a name |
+| --- | --- | --- |
+| Medium, 640 pixels | 82%, 65%, 50% | 62%, 62%, 55% |
+| Medium, 960 | 84%, 64%, 52% | 65%, 63%, 57% |
+| Medium, 1280 | 87%, 71%, 57% | 54%, 52%, 46% |
+| Large, 640 | 84%, 62%, 51% | 72%, 70%, 66% |
+| Large, 960 | 82%, 62%, 51% | 77%, 75%, 72% |
+| Large, 1280, the preset's | 78%, 58%, 48% | 77%, 75%, 70% |
+
+The second camera's picture is hazy, and there the large detector finds far more cows than the medium one. The large one at 960 pixels is taken. At 1280 the application needed more than 0.2 seconds for one picture in twenty under the second camera ([file](herd/results/multicam-development-camera2-detector-at-1280.json)). The tracker passes from one cow to the next in one or two of some 25 tracks; at a picture a second another branch of this repository had seen that in three of eight.
+
+**The application** with that preset ([camera 1](herd/results/multicam-development-camera1.json), [camera 2](herd/results/multicam-development-camera2.json), [walk by walk](herd/results/multicam-development-walks.json)). The replay reproduced every shown name.
+
+| | Camera 1 | Camera 2 |
+| --- | --- | --- |
+| Pictures of enrolled cows | 440 | 1,580 |
+| Found | 363 | 1,221 |
+| With a box fit to be evidence | 265 | 1,192 |
+| Resembling their own cow most | 257 | 969 |
+| Similar enough for a name | 180 | 234 |
+| Carrying her name | 129 (29%) | 242 (15%) |
+| Carrying another cow's name | 0 | 0, and 1 on a box without a partner |
+| Pictures of unknown cows, of which named | 201, 0 | 70, 0 |
+| Enrolled cows that walk by: named as herself, as another cow | 17: 16, 0 | 12: 9, 0 |
+| Unknown cows that walk by, of which named | 6, 0 | 3, 0 |
+| Seconds a picture: mean, 95th percentile | 0.09, 0.18 | 0.12, 0.20 |
+
+Nearly every cow that walks by is named, and none wrongly. But a name stands on 29% and 15% of her pictures, where the criteria ask for 60%. Three things account for it.
+
+- **The rules were made for cows that stay.** A cow is in view for four to five seconds. Her name is shown after five agreeing pictures and dropped when her box touches the picture's edge, as it does on her way out. Under the first camera that leaves half of her pictures in which a name could stand at all.
+- **One cow that stands still outweighs a herd that walks.** Under the second camera cows queue. Cow 6, whose back is all black, stood there for 812 of the 1,580 pictures; she was found in 683 of them and never similar enough for a name.
+- **Two days of photographs are few.** Of the fit pictures under the first camera, 97% resemble their own cow most but 68% are similar enough.
+
+**A name kept at the edge.** [`app_what_if.py`](herd/app_what_if.py) replays a run with a rule changed. Keeping a confirmed name for two seconds after the last whole view of a cow, instead of dropping it at the edge, puts a name on 45% of her pictures under the first camera instead of 29%, with no name wrong and no unknown cow named ([file](herd/results/multicam-development-name-kept-at-the-edge.json)). It is no rule for a barn: replayed over the first barn's four application runs, it names 73.3% instead of 71.8% of the animals in the daylight test video, and 143 wrongly instead of 123, which takes the precision from 99.05% to 98.92% ([file](herd/results/first-barn-name-kept-at-the-edge.json)). The application was not changed.
+
+### Validation on the fourth and fifth day
+
+The whole sessions of 17 and 18 August under both cameras ran through the application's code with that preset, alone on the Apple GPU, with a herd learned from the first three days in thirteen minutes ([17 August, camera 1](herd/results/multicam-validation-17-august-camera1.json), [camera 2](herd/results/multicam-validation-17-august-camera2.json), [18 August, camera 1](herd/results/multicam-validation-18-august-camera1.json), [camera 2](herd/results/multicam-validation-18-august-camera2.json), [walk by walk](herd/results/multicam-validation-walks.json), [judged](herd/results/multicam-validation.json) against [`protocol-passage.json`](herd/protocol-passage.json)). The replay reproduced every shown name in all four.
+
+| | 17 August, camera 1 | 17 August, camera 2 | 18 August, camera 1 | 18 August, camera 2 |
+| --- | --- | --- | --- | --- |
+| Pictures of the session | 20,965 | 25,481 | 21,482 | 25,008 |
+| Pictures of enrolled cows | 906 | 1,966 | 2,007 | 3,957 |
+| Found | 643 (71%) | 1,059 (54%) | 1,554 (77%) | 2,935 (74%) |
+| With a box fit to be evidence | 493 | 1,022 | 1,307 | 2,814 |
+| Resembling their own cow most | 489 | 1,021 | 1,287 | 2,708 |
+| Similar enough for a name | 417 | 713 | 1,006 | 1,866 |
+| Carrying her name | 266 (**29.4%**) | 761 (**38.7%**) | 818 (**40.8%**) | 2,006 (**50.7%**) |
+| Carrying another cow's name | 0 | 0 | 0 | 73 |
+| Pictures of unknown cows, of which named | 312, 0 | 983, 0 | 995, 0 | 1,351, 0 |
+| Names on boxes without a partner | 36: 29 on the named cow, 7 that cannot be judged | 1,077: 613 on the named cow, 9 wrong, 2 on an unknown cow, 453 that cannot be judged | 195: 62 on the named cow, 1 wrong, 132 that cannot be judged | 1,866: 579 on the named cow, 289 wrong, 4 on an unknown cow, 994 that cannot be judged |
+| Precision | 100% | 98.58% | 99.88% | **84.57%** |
+| Enrolled cows that walk by | 42 | 42 | 62 | 62 |
+| named as herself | 33 | 30 | 47 | 41 |
+| named as another cow | 0 | 0 | 0 | 1 |
+| Unknown cows that walk by, of which named | 13, 0 | 13, 0 | 20, 0 | 20, 0 |
+| Seconds a picture: mean, 95th percentile, slowest | 0.09, 0.16, 0.51 | 0.09, 0.18, 0.32 | 0.12, **0.21**, 0.37 | 0.09, 0.19, 0.34 |
+| Tracks on labelled cows, of which cover two | 60, 1 | 59, 3 | 89, 3 | 83, 6 |
+
+**It fails**: in every session on the share of pictures that carry a name, 29% to 51% where 60% is asked, and in three of the four on something else as well. The two test days were therefore not run, and their footage was not fetched. The 174 published pictures of enrolled cows that got no frame are not among those counted; taken as unnamed they lower a session's share by 1.6 points at most.
+
+**Over the race it names three cows in four and none wrongly.** Under the first camera 80 of the 104 cows that walked by on the two days were named as themselves, none as another cow, and none of the 33 unknown cows that walked by. Of the names on paired boxes none was wrong. Of the crops fit to be evidence 99% and 98% resemble their own cow most on the two days, as in the cut-outs, and 85% and 77% are similar enough for a name. Cows 1, 6 and 7, whose backs are all white or all black, were named in none of the four sessions.
+
+**Where the cows queue, a name wanders.** Under the second camera the cows stand packed at the end of the race, and there the tracker slides from a cow onto her neighbour: 9 of its 142 tracks cover two cows. On 18 August a track that had been named cow 42 slid onto cow 37 beside her. Her crops resembled cow 42 more than any other cow, though far too little for a name, and the five-minute hold kept the name on her: 73 pictures of cow 37 carry it, and 289 names on boxes without a partner are wrong as well. That session's precision is 84.6%. Replayed without the hold it names 8 pictures wrongly instead of 362, and 35% instead of 51% ([file](herd/results/multicam-validation-without-the-hold.json)): the hold is also what names a cow that stands in a queue.
+
+**The time is tight.** At five pictures a second 0.2 seconds are available for one. The session that needed 0.21 for one picture in twenty had animals in the pens beside the race in view throughout: 15,942 of its 20,209 boxes lie left of the race, followed all session and never named (counted in the run, which is not kept here). The application cannot be told to leave a part of the picture out.
+
+**What the share of pictures measures here.** A cow is under a camera for four to five seconds. She is named a second after she is found and loses the name when her box touches the edge on her way out, so about half of her pictures could carry a name at all. With the name kept for two seconds at the edge, the first camera's sessions come to 42% and 51% with no more wrong names; the second camera's gain two points at most, and on 17 August eight wrong names and six on unknown cows more ([file](herd/results/multicam-validation-name-kept-at-the-edge.json)).
+
 ### What follows
 
-- **Seen from above, the method holds for a herd of real size**, in cut-outs that a person checked. That is the camera the [second farm](#what-follows) pointed to, on a farm that was chosen for its cameras before the method was run on it.
-- **The whole herd has to be confirmed, and the plain cows first of all.** With twelve of 89 cows confirmed, one unknown cow's picture in six passed as a confirmed cow; with 67, one in 3,697.
-- **A passage needs more pictures a second than the preset takes**, and so a lighter detector than the preset's.
-- **This is not yet the application.** The publisher found the cows, followed them, turned them to walk to the right and threw out the pictures in which a cow was cut off or overlapped another. The application draws upright boxes around cows that walk nose to tail, with whatever its own detector and tracker make of a herd seen from straight above, and another branch of this repository saw the tracker pass from one cow to the next there at one picture a second. All of it is daylight.
-- **The footage can probably be judged.** In a first trial on one clip of the first day, not kept in this record, the publisher's pictures of the twelve cows that walk by in it were found again in the footage, pixel for pixel: laid back into its frame, each differs from the frame by 5 to 8 grey levels on average, and three wrong matches by 51 to 65. Names that the application shows on that footage could then be scored against the publisher's numbers. That is the next step, and the last two days stay unseen for it.
+- **Seen from above, a herd of real size is told apart**: 98% of the publisher's cut-outs resemble their own cow most with 67 cows enrolled, and so do 96% to 100% of the crops that the application itself cuts from the footage. That is the camera the [second farm](#what-follows) pointed to, on a farm chosen for its cameras before the method was run on it.
+- **A camera over a passage tells who walked by.** Of 208 times an enrolled cow walked by under a camera on the two validation days she was named as herself 151 times, as another cow once, and of 66 times an unknown cow walked by she was named in none.
+- **It does not meet the criteria there, and as the application is it cannot.** The share of pictures that carry a name was made for cows that stay in view. A cow that walks by is named for a second or two of her four.
+- **A passage needs what the application does not have.** Five pictures a second, which a preset can ask for. A name that outlasts the picture's edge for a moment, which helps over the race and harms in a barn. A hold that does not outlast a cow's stay where cows stand packed. A way to leave pens beside the passage out of the picture. And photographs taken walk by walk: the application takes sixteen an hour at most, and a herd of ninety walks by in one.
+- **The whole herd has to be confirmed, and the plain cows first of all.** With twelve of 89 cows confirmed, one unknown cow's picture in six passed as a confirmed cow in the cut-outs; with 67, one in 3,697. Plain cows are named less whatever is confirmed, and the stock detector finds them less often from above.
+- **Two days of this farm are unseen**, and their footage has not been fetched. They are for a version that passes this validation first.
 
 ## Limits
 
-- **One barn where it comes close, one pen where it does not, and cut-outs of a third herd.** Thirteen and sixteen Holstein cows, fixed cameras. In the first barn a cow is 220–320 pixels long in the analysed picture and seldom behind another; there the method named 72% of the animals by day and 50% at night. In the second she is 110–180 pixels long and lies between her neighbours; there it names 12% ([above](#a-second-farm)). A herd of 67 seen from the ceiling is told apart in the publisher's own cut-outs ([above](#a-third-farm)); the application has not been run there. Nothing here says how it does with another breed.
+- **One barn where it comes close, one pen where it does not, and a passage where it names who walks by.** Thirteen, sixteen and ninety Holstein cows, fixed cameras. In the first barn a cow is 220–320 pixels long in the analysed picture and seldom behind another; there the method named 72% of the animals by day and 50% at night. In the second she is 110–180 pixels long and lies between her neighbours; there it names 12% ([above](#a-second-farm)). A herd of 67 seen from the ceiling is told apart, and over a race the application named three in four of the cows that walked by, each for a second or two ([above](#a-third-farm)). Nothing here says how it does with another breed.
 - **Most of the herd was enrolled.** Ten of thirteen. Every unknown animal is a chance of a wrong name, and the margin against strangers was measured with three. On the third farm, with twelve of 89 cows enrolled, one picture in six of the unknown cows passed as an enrolled cow.
 - **Photographs from many occasions**, over several days, by day and by night and on every camera, which a farmer has to confirm: fifty of a cow from dozens of occasions name most animals, hundreds from one afternoon almost none ([above](#how-many-photographs-to-start)). The test used the publisher's crops, which are spread like that. The application now spreads its photographs over the hours, and a herd collected by it over days has not been tried.
 - **A cow that is not found is not named.** Cows in the far row behind cubicle rails are missed even by the largest stock detector, and a box that touches the picture's edge is not used. On the first validation video that leaves two of ten enrolled cows unnamed for the whole video. In the second pen the detector finds a third of the cows that lie down, at any input size.
@@ -578,7 +668,7 @@ With two photographs of each walk instead of eight, 12 to 18 of a cow, the herd 
 - **Learning needs a GPU and time.** After every change to the confirmed photographs the networks are taught again, which takes ten minutes to half an hour on an Apple GPU, and no name is shown meanwhile. The largest stock detector and the four networks together take about half a second per picture there. A processor alone needs hours to learn and seconds per picture, and no other kind of GPU has been tried ([above](#a-processor-alone)).
 - **Names on other rules' events were simulated.** No mounting video with known cows was available; see [above](#names-on-another-rules-events).
 - **Weights.** The cattle starting weights were taught from datasets that forbid commercial use and are not published anywhere; the preset names an address that does not exist, so it cannot learn a herd as it stands. Without them the method names far fewer animals at night ([above](#the-cattle-starting-weights)). MIEWid is downloaded from its publisher, whose model card and repository state no licence.
-- **Held out, not untouched, and now used.** Earlier work in this repository had scored another method on short windows of the test videos. The development figures for the second kind of network came from a trial script, not the application's code; the validation and test figures come from the application's code. Both test videos have now been seen by this method: a later version cannot be tested on them as on unseen video. Of the second farm two hours remain that no version has been shown.
+- **Held out, not untouched, and now used.** Earlier work in this repository had scored another method on short windows of the test videos. The development figures for the second kind of network came from a trial script, not the application's code; the validation and test figures come from the application's code. Both test videos have now been seen by this method: a later version cannot be tested on them as on unseen video. Of the second farm two hours remain that no version has been shown, and of the third two days.
 
 ## Reproduce
 
@@ -623,6 +713,28 @@ $python $herd/herd_size.py $M/MultiCamCows2024Root --cows 67 \
   --preset config/detector/cow-identity.json --herd-weights cattle-sideview.safetensors \
   --animal-weights miewid-msv3.safetensors --work $W/multicam/work-67 \
   --output $herd/results/multicam-herd-of-67.json
+
+# The same farm's footage: fetch a day, place the publisher's pictures in it, cut the
+# photographs, write a session's pictures and labels, run the application and score it.
+$python $herd/multicam.py fetch $W/multicam/videos --days 2023Aug17
+$python $herd/multicam_locate.py $M/MultiCamCows2024Root $W/multicam/videos --day 2023Aug17 \
+  --camera 1 --output $W/multicam/located/2023Aug17-cam1.json
+$python $herd/multicam_fill.py $W/multicam/located/2023Aug17-cam1.json $M/MultiCamCows2024Root \
+  $W/multicam/videos --output $W/multicam/placed/2023Aug17-cam1.json
+$python $herd/multicam.py photographs $W/multicam/placed/2023Aug1[456]-cam[12].json \
+  --footage $W/multicam/videos --output $W/multicam/photographs
+$python $herd/multicam.py frames multicam-17-cam1 $W/multicam/frames/multicam-17-cam1 \
+  --footage $W/multicam/videos
+$python $herd/multicam.py labels $W/multicam/frames/multicam-17-cam1 \
+  --located $W/multicam/placed/2023Aug17-cam1.json --labels $W/multicam/labels
+$python $herd/multicam.py run $W/multicam/photographs/classification.json --video multicam-17-cam1 \
+  --frames $W/multicam/frames/multicam-17-cam1 --enrolled $(seq 1 89 | awk '$1 % 4') \
+  --preset $herd/passage.json --detector-weights yolo26x-seg.pt \
+  --herd-weights cattle-sideview.safetensors --animal-weights miewid-msv3.safetensors \
+  --data $W/multicam/data --output $W/multicam/run-multicam-17-cam1.json
+$python $herd/multicam.py score $W/multicam/run-multicam-17-cam1.json \
+  --frames $W/multicam/frames/multicam-17-cam1 --labels $W/multicam/labels \
+  --withheld $(seq 4 4 88) 90 --output $herd/results/multicam-validation-17-august-camera1.json
 ```
 
-The cattle starting weights come from [`auxiliary.py`](herd/auxiliary.py), which gathers the other farms' photographs, and [`pretrain.py`](herd/pretrain.py). Development used [`app_track.py`](herd/app_track.py) and [`app_scores.py`](herd/app_scores.py) for the rotations (`--either-side`), [`tune.py`](herd/tune.py) for the rules, [`app_localization.py`](herd/app_localization.py) for the detectors and [`similarity_study.py`](herd/similarity_study.py) for the ways of scoring. [`app_smoke.py`](herd/app_smoke.py) starts the whole application on a short clip. [`parts.py`](herd/parts.py) and [`parts_compare.py`](herd/parts_compare.py) compare ways of building the herd model, and [`app_describe.py`](herd/app_describe.py) with [`rescore.py`](herd/rescore.py) score a finished run another way. [`event_names.py`](herd/event_names.py) simulates the names on another rule's events from a run that `app_run.py` wrote, and [`mounting_live.py`](herd/mounting_live.py) plays the mounting example to the whole application as a camera. For the second farm, [`app_limits.py`](herd/app_limits.py) replays a run at other limits, `mmcows.py postures` and `mmcows.py occasions` read the publisher's record of what each cow did, `mmcows.py angles` how steeply each camera looks down on her, [`mmcows_boxes.py`](herd/mmcows_boxes.py) asks the networks about the publisher's own boxes, and [`mmcows_outlines.py`](herd/mmcows_outlines.py) cuts the crops by the detector's boxes and outlines. For the third farm, `herd_size.py --per-walk` confirms fewer photographs of each walk and `multicam.py fetch` brings the cameras' footage. The tests beside the scripts run with `pytest` in that folder.
+The cattle starting weights come from [`auxiliary.py`](herd/auxiliary.py), which gathers the other farms' photographs, and [`pretrain.py`](herd/pretrain.py). Development used [`app_track.py`](herd/app_track.py) and [`app_scores.py`](herd/app_scores.py) for the rotations (`--either-side`), [`tune.py`](herd/tune.py) for the rules, [`app_localization.py`](herd/app_localization.py) for the detectors and [`similarity_study.py`](herd/similarity_study.py) for the ways of scoring. [`app_smoke.py`](herd/app_smoke.py) starts the whole application on a short clip. [`parts.py`](herd/parts.py) and [`parts_compare.py`](herd/parts_compare.py) compare ways of building the herd model, and [`app_describe.py`](herd/app_describe.py) with [`rescore.py`](herd/rescore.py) score a finished run another way. [`event_names.py`](herd/event_names.py) simulates the names on another rule's events from a run that `app_run.py` wrote, and [`mounting_live.py`](herd/mounting_live.py) plays the mounting example to the whole application as a camera. For the second farm, [`app_limits.py`](herd/app_limits.py) replays a run at other limits, `mmcows.py postures` and `mmcows.py occasions` read the publisher's record of what each cow did, `mmcows.py angles` how steeply each camera looks down on her, [`mmcows_boxes.py`](herd/mmcows_boxes.py) asks the networks about the publisher's own boxes, and [`mmcows_outlines.py`](herd/mmcows_outlines.py) cuts the crops by the detector's boxes and outlines. For the third farm, `herd_size.py --per-walk` confirms fewer photographs of each walk, [`multicam_walks.py`](herd/multicam_walks.py) counts a run walk by walk, [`app_what_if.py`](herd/app_what_if.py) replays a run with a rule changed, and `app_localization.py` counts what a detector finds and how much of it could carry a name. The tests beside the scripts run with `pytest` in that folder.

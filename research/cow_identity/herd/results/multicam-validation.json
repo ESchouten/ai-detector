@@ -1,0 +1,165 @@
+{
+ "criteria": {
+  "precision_min": 0.99,
+  "coverage_min": 0.6,
+  "withheld_named_max": 0.01,
+  "p95_seconds_per_frame_max": 0.2
+ },
+ "videos": {
+  "multicam-17-cam1": {
+   "visible_enrolled": 906,
+   "visible_withheld": 312,
+   "located_enrolled": 643,
+   "located_withheld": 232,
+   "correct": 266,
+   "wrong_enrolled": 0,
+   "named_withheld": 0,
+   "named_unannotated": 36,
+   "unpaired_on_named": 29,
+   "unpaired_on_other": 0,
+   "unpaired_on_withheld": 0,
+   "unpaired_elsewhere": 0,
+   "unpaired_unjudged": 7,
+   "coverage": 0.293598233995585,
+   "precision": 1.0,
+   "precision_conservative": 0.8807947019867549,
+   "withheld_named": 0.0,
+   "seconds_per_frame": {
+    "mean": 0.09025161070064727,
+    "p95": 0.15923178731463847,
+    "max": 0.5115947918966413
+   },
+   "replay_matches_application": true,
+   "meets": {
+    "precision": true,
+    "coverage": false,
+    "unknown": true,
+    "real_time": true
+   },
+   "passes": false
+  },
+  "multicam-17-cam2": {
+   "visible_enrolled": 1966,
+   "visible_withheld": 983,
+   "located_enrolled": 1059,
+   "located_withheld": 743,
+   "correct": 761,
+   "wrong_enrolled": 0,
+   "named_withheld": 0,
+   "named_unannotated": 1077,
+   "unpaired_on_named": 613,
+   "unpaired_on_other": 9,
+   "unpaired_on_withheld": 2,
+   "unpaired_elsewhere": 0,
+   "unpaired_unjudged": 453,
+   "coverage": 0.38708036622583925,
+   "precision": 0.9857512953367875,
+   "precision_conservative": 0.41403699673558214,
+   "withheld_named": 0.002034587995930824,
+   "seconds_per_frame": {
+    "mean": 0.08740834624396,
+    "p95": 0.17745858361013234,
+    "max": 0.3230930413119495
+   },
+   "replay_matches_application": true,
+   "meets": {
+    "precision": false,
+    "coverage": false,
+    "unknown": true,
+    "real_time": true
+   },
+   "passes": false
+  },
+  "multicam-18-cam1": {
+   "visible_enrolled": 2007,
+   "visible_withheld": 995,
+   "located_enrolled": 1554,
+   "located_withheld": 826,
+   "correct": 818,
+   "wrong_enrolled": 0,
+   "named_withheld": 0,
+   "named_unannotated": 195,
+   "unpaired_on_named": 62,
+   "unpaired_on_other": 1,
+   "unpaired_on_withheld": 0,
+   "unpaired_elsewhere": 0,
+   "unpaired_unjudged": 132,
+   "coverage": 0.4075734927752865,
+   "precision": 0.9987789987789988,
+   "precision_conservative": 0.807502467917078,
+   "withheld_named": 0.0,
+   "seconds_per_frame": {
+    "mean": 0.12108686112389475,
+    "p95": 0.20520924988668413,
+    "max": 0.3684075423516333
+   },
+   "replay_matches_application": true,
+   "meets": {
+    "precision": true,
+    "coverage": false,
+    "unknown": true,
+    "real_time": false
+   },
+   "passes": false
+  },
+  "multicam-18-cam2": {
+   "visible_enrolled": 3957,
+   "visible_withheld": 1351,
+   "located_enrolled": 2935,
+   "located_withheld": 1114,
+   "correct": 2006,
+   "wrong_enrolled": 73,
+   "named_withheld": 0,
+   "named_unannotated": 1866,
+   "unpaired_on_named": 579,
+   "unpaired_on_other": 287,
+   "unpaired_on_withheld": 4,
+   "unpaired_elsewhere": 2,
+   "unpaired_unjudged": 994,
+   "coverage": 0.5069497093757898,
+   "precision": 0.845699831365936,
+   "precision_conservative": 0.5084917617237009,
+   "withheld_named": 0.0029607698001480384,
+   "seconds_per_frame": {
+    "mean": 0.09089847154927552,
+    "p95": 0.18791905622929317,
+    "max": 0.33784433314576745
+   },
+   "replay_matches_application": true,
+   "meets": {
+    "precision": false,
+    "coverage": false,
+    "unknown": true,
+    "real_time": true
+   },
+   "passes": false
+  }
+ },
+ "pooled": {
+  "visible_enrolled": 8836,
+  "visible_withheld": 3641,
+  "located_enrolled": 6191,
+  "located_withheld": 2915,
+  "correct": 3851,
+  "wrong_enrolled": 73,
+  "named_withheld": 0,
+  "named_unannotated": 3174,
+  "unpaired_on_named": 1283,
+  "unpaired_on_other": 297,
+  "unpaired_on_withheld": 6,
+  "unpaired_elsewhere": 2,
+  "unpaired_unjudged": 1586,
+  "coverage": 0.43583069262109553,
+  "precision": 0.9106171671790021,
+  "precision_conservative": 0.5425471963933503,
+  "withheld_named": 0.0016478989288656962,
+  "localization_recall": 0.7298228740883225,
+  "meets": {
+   "precision": false,
+   "coverage": false,
+   "unknown": true
+  },
+  "passes": false
+ },
+ "passes": false
+}

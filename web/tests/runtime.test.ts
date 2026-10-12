@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { executable, managedDetector } from './support/detector.ts';
-import { mockTimeouts, waitFor } from './support/timers.ts';
+import { mockTimeouts, realDelay, waitFor } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
 import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
@@ -319,5 +319,70 @@ test(
 		t.mock.timers.tick(600000);
 		assert.equal(detector.status().phase, 'stopped');
 		assert.equal(await readFile(path.join(directory, 'starts.txt'), 'utf8'), 'started\nstarted\n');
+	}
+);
+
+test(
+	'a detector that reports nothing for a minute is stopped by force and restarted; waking from sleep postpones it',
+	posixOnly,
+	async (t) => {
+		const { detector, directory } = await managedDetector(t);
+		t.mock.timers.enable({ apis: ['setInterval', 'setTimeout', 'Date'], now: Date.now() });
+		const sourceKey = createHash('sha256')
+			.update(config.detectors[0].detection.source)
+			.digest('hex');
+		const nextStartReportsIn = (seconds: number, extra = {}) =>
+			writeJson(path.join(directory, 'fixture-options.json'), {
+				...extra,
+				statusEvents: ['ready', 'frame', 'inference'].map((event) => ({
+					version: 1,
+					event,
+					ruleId: 'detector-1',
+					sourceKey,
+					at: new Date(Date.now() + seconds * 1000).toISOString()
+				}))
+			});
+		// The watchdog looks every five seconds; one longer tick is a pause to it.
+		const watch = (seconds: number) => {
+			for (let elapsed = 0; elapsed < seconds; elapsed += 5) t.mock.timers.tick(5000);
+		};
+		const restarts = async () => {
+			await realDelay(0);
+			const log = await detector.log.read();
+			return (log.match(/Restart requested: the detector reported nothing for a minute/g) ?? [])
+				.length;
+		};
+		await writeJson(path.join(directory, 'config.json'), config);
+		// Ten real seconds to stop outlasts the limit on this test's clock, as a frozen detector
+		// would, and still ends by itself should the test fail first.
+		await nextStartReportsIn(0, { stopDelayMs: 10000 });
+		await detector.start();
+		await waitFor(() => detector.status().readiness === 'monitoring');
+		await nextStartReportsIn(60 + 5 + 30);
+
+		watch(60);
+		assert.equal(await restarts(), 0);
+		watch(5);
+		await waitFor(() => detector.status().phase === 'stopping');
+		assert.match(detector.status().message, /stopped responding/);
+		t.mock.timers.tick(30000);
+		await waitFor(() => detector.status().readiness === 'monitoring');
+		const log = await detector.log.read();
+		assert.match(log, /Detector exited: SIGKILL/);
+		assert.doesNotMatch(log, /stopped processing fresh camera frames/);
+		assert.equal(await restarts(), 1);
+
+		// An hour asleep, then two minutes for the detector to report again.
+		await nextStartReportsIn(3600 + 120);
+		t.mock.timers.tick(3600000);
+		watch(115);
+		assert.equal(await restarts(), 1);
+		watch(5);
+		await waitFor(() => detector.status().readiness === 'monitoring');
+		assert.equal(await restarts(), 2);
+		assert.equal(
+			await readFile(path.join(directory, 'starts.txt'), 'utf8'),
+			'started\nstarted\nstarted\n'
+		);
 	}
 );

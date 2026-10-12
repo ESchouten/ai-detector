@@ -83,6 +83,7 @@ function isConnection(event: ProgressEvent): boolean {
 /** Only these structured observations can establish camera readiness. */
 export class RuntimeProgress {
 	private prepared = false;
+	private lastRecordAt = 0;
 	private cameras = new Map<string, CameraProgress>();
 	private failures = new Map<string, string>();
 	private engines = new Map<string, string>();
@@ -139,6 +140,7 @@ export class RuntimeProgress {
 		const parsed = v.safeParse(eventSchema, value);
 		if (!parsed.success) return;
 		const event = parsed.output;
+		this.lastRecordAt = Date.parse(event.at);
 		if (event.event === 'waiting_delivery' || event.event === 'processing_resumed') {
 			this.observeWorker(event);
 			return event;
@@ -294,6 +296,11 @@ export class RuntimeProgress {
 				if (now - last > Math.max(120000, rule.timeout * 3)) return rule.label;
 			}
 		}
+	}
+
+	/** A detector that reaches no camera still reports every 11 seconds; a silent minute is a freeze. */
+	silentDetector(now = Date.now()): boolean {
+		return this.prepared && now - this.lastRecordAt > 60000;
 	}
 
 	snapshot(now = Date.now()): { cameras: CameraRuntimeStatus[]; readiness: RuntimeReadiness } {

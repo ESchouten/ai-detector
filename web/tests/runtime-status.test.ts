@@ -148,6 +148,18 @@ test('stall recovery waits for readiness and fresh frames, and does not restart 
 	assert.equal(state.stalledDetector(now + 300000), undefined);
 });
 
+test('a ready detector that reports nothing for a minute counts as frozen; an unreachable camera still reports', () => {
+	const state = progress();
+	record(state, 'preparing', 'Downloading the detection model…');
+	assert.equal(state.silentDetector(now + 600000), false, 'Model preparation may be slow');
+	record(state, 'ready');
+	assert.equal(state.silentDetector(now + 60000), false);
+	assert.equal(state.silentDetector(now + 61000), true);
+	record(state, 'offline', 'Camera could not be reached. Reconnecting…', now + 55000);
+	assert.equal(state.silentDetector(now + 115000), false);
+	assert.equal(state.silentDetector(now + 116000), true);
+});
+
 test('validator and delivery failures remain visible until that connection succeeds', () => {
 	const state = progress();
 	record(state, 'frame');

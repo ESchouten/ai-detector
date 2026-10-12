@@ -184,12 +184,20 @@ export class ManagedDetector {
 			if (now - lastCheck > 30000) resumeGraceUntil = now + 120000;
 			lastCheck = now;
 			if (recovering || this.stoppingChild || signal.aborted || now < resumeGraceUntil) return;
+			const silent = this.progress.silentDetector(now);
 			const stalled = this.progress.stalledDetector(now);
-			if (!stalled) return;
+			if (!silent && !stalled) return;
 			recovering = true;
 			void this.enqueue(async () => {
-				if (this.child === child && !this.stoppingChild)
-					// The reason is written to the log, which stays in English.
+				if (this.child !== child || this.stoppingChild) return;
+				// The reason is written to the log, which stays in English.
+				if (silent)
+					await this.restartChild(
+						signal,
+						'the detector reported nothing for a minute',
+						'The detector stopped responding. Restarting monitoring…'
+					);
+				else
 					await this.restartChild(
 						signal,
 						/* @wc-ignore */ `${stalled} stopped processing fresh camera frames`
@@ -300,12 +308,12 @@ export class ManagedDetector {
 		});
 	}
 
-	private async stopChild(): Promise<void> {
+	private async stopChild(message?: string): Promise<void> {
 		const child = this.child;
 		if (!child) return;
 		this.stoppingChild = true;
 		this.state.phase = 'stopping';
-		this.state.message = 'Finishing detections and stopping…';
+		this.state.message = message ?? 'Finishing detections and stopping…';
 		child.stdin.end('stop\n');
 		let timedOut = false;
 		const timer = setTimeout(() => {
@@ -332,11 +340,11 @@ export class ManagedDetector {
 		});
 	}
 
-	private async restartChild(signal: AbortSignal, reason: string): Promise<void> {
+	private async restartChild(signal: AbortSignal, reason: string, message?: string): Promise<void> {
 		if (!this.enabled || signal.aborted) return;
 		this.log.append(`${new Date().toISOString()} Restart requested: ${reason}\n`);
 		try {
-			await this.stopChild();
+			await this.stopChild(message);
 		} catch (error) {
 			this.fail(error);
 		}

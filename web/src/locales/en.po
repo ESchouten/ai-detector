@@ -3698,3 +3698,7 @@ msgstr "Waiting for the first analyzed picture…"
 #: src/lib/components/setup-finish.svelte
 msgid "· Live view only"
 msgstr "· Live view only"
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector stopped responding. Restarting monitoring…"
+msgstr "The detector stopped responding. Restarting monitoring…"

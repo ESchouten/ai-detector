@@ -15,25 +15,34 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 		detectors: [
 			{
 				source: 'rtsp://farmer:camera-secret@192.168.1.2/feed',
-				vlm: { key: 'vision-secret', headers: { Authorization: 'Bearer header-secret' } }
+				vlm: {
+					key: 'vision-secret',
+					url: 'https://vision.example/v1',
+					headers: { Authorization: 'Bearer header-secret' }
+				}
 			}
-		]
+		],
+		health: { url: 'https://ping.example/health-secret' }
 	});
 	await writeJson(path.join(directory, 'app.json'), {
-		telegrams: [{ token: 'telegram-secret' }],
+		telegrams: [{ token: 'telegram-secret', chat: '1234567890' }],
 		devices: [{ name: 'Private phone', hash: 'device-access-hash' }]
 	});
 	await mkdir(path.join(directory, 'logs'));
 	await writeFile(
 		path.join(directory, 'logs', 'detector.log.1'),
-		'vision-secret telegram-secret Bearer header-secret rtsp://farmer:camera-secret@192.168.1.2/feed'
+		'vision-secret telegram-secret Bearer header-secret rtsp://farmer:camera-secret@192.168.1.2/feed chat 1234567890 https://ping.example/health-secret'
 	);
 	const build = path.join(directory, 'models', 'prepared', 'tensorrt', 'a'.repeat(64));
 	await mkdir(build, { recursive: true });
 	await writeFile(path.join(build, 'build.log'), 'Exporting model\nCompilation timeout\n');
 	await writeFile(path.join(directory, 'logs', 'secret.json'), '{"private": true}');
 	const files = [];
-	for await (const file of diagnosticFiles(directory, { phase: 'running' })) files.push(file);
+	for await (const file of diagnosticFiles(directory, {
+		phase: 'running',
+		message: 'No answer from https://ping.example/health-secret for 1234567890'
+	}))
+		files.push(file);
 	assert.ok(files.some((file) => file.name === 'logs/detector.log.1'));
 	assert.ok(
 		files.some(
@@ -49,12 +58,30 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 		'telegram-secret',
 		'header-secret',
 		'camera-secret',
+		'1234567890',
+		'health-secret',
 		'device-access-hash',
 		'Private phone',
 		'secret.json'
 	])
 		assert.ok(!text.includes(secret), secret);
 	assert.ok(text.includes('192.168.1.2'));
+	assert.ok(text.includes('https://vision.example/v1'));
+});
+
+test('the system details stay valid JSON when a camera is named by its own address', async (t) => {
+	const directory = await mkdtemp(path.join(tmpdir(), 'detector-diagnostics-'));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const files = [];
+	for await (const file of diagnosticFiles(directory, {
+		cameras: [{ label: 'rtsp://farmer:camera-secret@192.168.1.2/stream_sub', state: 'online' }]
+	}))
+		files.push(file);
+	const system = files.find((file) => file.name === 'system.json');
+	assert.ok(system && 'content' in system);
+	assert.deepEqual(JSON.parse(system.content).runtime.cameras, [
+		{ label: 'rtsp://***:***@192.168.1.2/stream_sub', state: 'online' }
+	]);
 });
 
 test('archive warnings and web failure details survive restart and reach the support bundle', async (t) => {

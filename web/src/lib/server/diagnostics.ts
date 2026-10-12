@@ -7,12 +7,12 @@ import { readJson } from './json-file.ts';
 import { sanitizeTextForLogs } from './runtime-logs.ts';
 import type { ZipEntry } from './zip-download.ts';
 
-const SECRET_FIELD = /^(?:key|token|password|secret|headers|authorization)$/i;
+const SECRET_FIELD = /^(?:key|token|password|secret|headers|authorization|chat)$/i;
 
 /** Redact structured settings and the same credentials wherever a library printed them. */
 function diagnosticRedactor(...documents: unknown[]) {
 	const secrets = new Set<string>();
-	function settings(value: unknown, sensitive = false): unknown {
+	function settings(value: unknown, sensitive = false, parent?: string): unknown {
 		if (typeof value === 'string') {
 			if (sensitive) {
 				if (value.length >= 4) secrets.add(value);
@@ -27,7 +27,12 @@ function diagnosticRedactor(...documents: unknown[]) {
 			return Object.fromEntries(
 				Object.entries(value).map(([key, item]) => [
 					key,
-					settings(item, sensitive || SECRET_FIELD.test(key))
+					settings(
+						item,
+						// Whoever has the health check's address can ping it.
+						sensitive || SECRET_FIELD.test(key) || (parent === 'health' && key === 'url'),
+						key
+					)
 				])
 			);
 		return value;
@@ -76,22 +81,21 @@ export async function* diagnosticFiles(
 	};
 	yield {
 		name: 'system.json',
-		content: redact.text(
-			JSON.stringify(
-				{
-					version,
-					preview,
-					platform: platform(),
-					release: release(),
-					architecture: arch(),
-					cpu: cpus()[0]?.model,
-					memory: totalmem(),
-					node: process.version,
-					runtime
-				},
-				null,
-				2
-			)
+		content: JSON.stringify(
+			{
+				version,
+				preview,
+				platform: platform(),
+				release: release(),
+				architecture: arch(),
+				cpu: cpus()[0]?.model,
+				memory: totalmem(),
+				node: process.version,
+				runtime
+			},
+			// Each value on its own: in the finished text an address runs on into the JSON after it.
+			(_, value) => (typeof value === 'string' ? redact.text(value) : value),
+			2
 		)
 	};
 	for (const [index, name] of ['config.json', 'app.json'].entries())

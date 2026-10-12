@@ -71,6 +71,13 @@ def cpu_provider_only(monkeypatch):
     )
 
 
+@pytest.fixture
+def mps_memory_fractions(monkeypatch):
+    fractions = []
+    monkeypatch.setattr(torch.mps, "set_per_process_memory_fraction", fractions.append)
+    return fractions
+
+
 def test_optional_windows_provider_failure_falls_back_to_real_cpu_inference(
     tmp_path, unavailable_windows_ml
 ):
@@ -368,7 +375,9 @@ def test_native_cuda_models_do_not_load_onnx_runtime(monkeypatch):
 @pytest.mark.parametrize(
     "model_path", ["model.pt", "https://example.test/model.pt?signature=fake"]
 )
-def test_available_mps_skips_onnx_setup_for_native_checkpoints(monkeypatch, model_path):
+def test_available_mps_skips_onnx_setup_for_native_checkpoints(
+    monkeypatch, mps_memory_fractions, model_path
+):
     monkeypatch.setattr(sys, "platform", "darwin")
     monkeypatch.setattr(torch.backends.mps, "is_available", lambda: True)
     monkeypatch.setitem(sys.modules, "onnxruntime", None)
@@ -394,7 +403,7 @@ def test_native_checkpoints_keep_onnx_when_mps_is_not_available_on_mac(
 
 @pytest.mark.parametrize("explicit_provider", [False, True])
 def test_mixed_models_keep_onnx_and_explicit_provider_overrides_mps(
-    monkeypatch, cpu_provider_only, explicit_provider
+    monkeypatch, cpu_provider_only, mps_memory_fractions, explicit_provider
 ):
     calls = []
     monkeypatch.setattr(sys, "platform", "darwin")
@@ -427,6 +436,37 @@ def test_unavailable_explicit_onnx_provider_is_not_replaced_by_available_mps(
         ),
     ):
         pytest.fail("An explicit provider must not silently become native MPS")
+
+
+@pytest.mark.parametrize(
+    "build_type, provider, model_paths, mps_available, fractions",
+    [
+        ("default", None, ("model.pt",), True, [0.5]),
+        ("default", None, ("model.pt", "model.onnx"), True, [0.5]),
+        ("default", None, ("model.pt",), False, []),
+        ("default", None, ("model.onnx",), True, []),
+        ("default", "CPUExecutionProvider", ("model.pt",), True, []),
+        ("cuda", None, ("model.pt",), True, []),
+    ],
+)
+def test_only_the_apple_gpu_path_lowers_the_memory_ceiling_of_pytorch(
+    monkeypatch,
+    cpu_provider_only,
+    mps_memory_fractions,
+    build_type,
+    provider,
+    model_paths,
+    mps_available,
+    fractions,
+):
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(torch.backends.mps, "is_available", lambda: mps_available)
+    models = tuple(
+        ModelRequirements(path, image_size=640, batch_size=1) for path in model_paths
+    )
+    with inference_runtime(OnnxConfig(provider=provider), models, build_type):
+        pass
+    assert mps_memory_fractions == fractions
 
 
 def test_device_selection_prefers_openvino_gpu_and_puts_provider_last():

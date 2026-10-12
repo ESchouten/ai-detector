@@ -242,6 +242,12 @@ def inference_runtime(
             and any(_model_suffix(model.path) == ".pt" for model in models)
             and _mps_available()
         )
+        if native_mps:
+            import torch
+
+            # PyTorch's default ceiling exceeds the machine's memory, and a leak
+            # can then freeze the process before PyTorch refuses.
+            torch.mps.set_per_process_memory_fraction(0.5)
         onnx_models = tuple(
             model
             for model in models

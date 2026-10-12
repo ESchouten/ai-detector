@@ -89,6 +89,12 @@
       "license": "Non-Commercial Government Licence for public sector information",
       "use": "The publisher's cut-outs of 14 to 18 August 2023 as photographs and validation for herds of 12, 30 and 67 cows (herd/multicam.py, herd/herd_size.py), and the footage of the two cameras over the race on those days, with the cut-outs placed in it, for the application at five pictures a second (herd/multicam_locate.py, herd/multicam_fill.py, herd/passage.json, herd/protocol-passage.json); both start from the weights taught SideViewCows2026 alone; 19 and 20 August are kept unseen and their footage was not fetched; nothing taught from it is distributed"
     },
+    "localization_ceiling_cameras": {
+      "name": "MooTrack360",
+      "source": "https://zenodo.org/records/20287681",
+      "license": "CC BY-NC-SA 4.0",
+      "use": "The publisher's boxes in 1,497 of its 1,500 annotated pictures, to count which cows the application's detector and tracker find from fisheye cameras in the ceilings of two commercial barns (herd/mootrack.py); no identities, nothing taught from it, no picture of it distributed"
+    },
     "cattle_starting_weights": {
       "use": "DINOv2-small taught 26,236 photographs of 287 cows of other farms (herd/auxiliary.py, herd/pretrain.py); local file, not distributed",
       "datasets": [

@@ -15,6 +15,8 @@ What is shown here is one barn with thirteen cows, whose cameras see a cow whole
 
 **Seen from the ceiling, a herd of real size is told apart, and a passage is not a barn.** On a third public farm, in the publisher's own cut-outs of ninety cows that walk by under ceiling cameras, a herd of 67 is told apart almost as well as a herd of twelve: 98% of the pictures of two later days resemble their own cow most, none is taken for another cow, and one in 3,697 pictures of unknown cows passes. Run on that farm's footage of the race at five pictures a second, the application named a cow as herself 151 of the 208 times one walked by on two validation days, as another cow once, and no unknown cow. But a name stood on 29% to 51% of her pictures where the protocol asks for 60%, and where the cows queue a held name wandered onto a neighbour. Validation fails there, and that farm's two test days were not run ([a third farm](#a-third-farm)).
 
+**Where cows stay, public footage says where the cows are and not who they are.** No public footage is left on which a name could be judged at a camera where cows stay. In 1,497 pictures of two commercial barns, taken by fisheye cameras in the ceiling and boxed by their publisher, the application finds 41% of the cows as those cameras hang. Where the same pictures show a cow as an ordinary camera would, at an angle from above with the far side of the barn at the top of the picture, it finds 91% of the standing and 86% of the lying cows; straight below the camera 72%, and where the barn stands on its head in the picture 41% and 27% ([a ceiling camera where cows stay](#a-ceiling-camera-where-cows-stay)).
+
 The rest of this document is the record: how the method was developed, the protocol it was frozen under, and the test in detail. Work done after the test is marked as such. Three parts of it changed what the application does: the recordings of other detectors carry the names of the cows in them ([names](#names-on-another-rules-events)); a cow is scored by a share of her photographs instead of a fixed two, with the limits that follow ([the number of photographs](#the-number-of-photographs)); and the photographs to review are taken over the hours instead of at once ([how many to start](#how-many-photographs-to-start)). No unseen video of the first barn is left to test any of that on.
 
 ## What changed against the earlier trials
@@ -488,7 +490,7 @@ A steeper view is also a nearer one in this pen, so the table does not tell the 
 ### What follows
 
 - **The method is for a camera that looks down on each cow and sees her whole and apart from the others.** The first barn's cameras do; a camera in the corner of a pen, looking across the cubicles, does not. Barn cameras often hang where the second farm's do, so this difference matters more than any figure in this record. As a rule of thumb that both farms fit and neither proves: more than thirty degrees above the horizontal, which is a cow no farther away along the floor than one and a half times the camera's height above her back.
-- **Lying cows need a detector that was taught to find them.** The stock one does not find them at any input size. None was trained here: this pen's own morning boxes could teach one, but a farmer has no boxes to give, and with the publisher's boxes the cows were still not told apart.
+- **Lying cows need a detector that was taught to find them.** The stock one does not find them at any input size. None was trained here: this pen's own morning boxes could teach one, but a farmer has no boxes to give, and with the publisher's boxes the cows were still not told apart. Measured since: seen at an angle from above, the stock detector finds 86% of the lying cows of two other barns, so it is the view across the cows that loses them here ([a ceiling camera where cows stay](#a-ceiling-camera-where-cows-stay)).
 - **A herd's own photographs give such a camera away.** With each cow's latest fifth of photographs held back and one network taught the rest, 92% and 93% of the held-back photographs resemble their own cow most in the first barn's two validation herds, and 75% in this pen ([`held_back.py`](herd/held_back.py); [night herd](herd/results/held-back-video2.json), [day herd](herd/results/held-back-video1.json), [this pen](herd/results/held-back-mmcows.json)). That takes no video and no labels beyond the farmer's confirmations, one learning each; a second learning of the night herd gave 94%, so a point or two of it is chance. The application does not work it out. It could, when it learns a herd, and say that a camera does not show the cows well enough.
 - **Two hours of this farm are unseen.** They are for a version that passes this validation first.
 
@@ -656,12 +658,92 @@ The whole sessions of 17 and 18 August under both cameras ran through the applic
 - **The whole herd has to be confirmed, and the plain cows first of all.** With twelve of 89 cows confirmed, one unknown cow's picture in six passed as a confirmed cow in the cut-outs; with 67, one in 3,697. Plain cows are named less whatever is confirmed, and the stock detector finds them less often from above.
 - **Two days of this farm are unseen**, and their footage has not been fetched. They are for a version that passes this validation first.
 
+## A ceiling camera where cows stay
+
+Added after the third farm. Whether a name still holds on a later day can only be judged on footage that says who each cow is, at a camera where she stays, on days after her photographs were taken. This section first records what public footage there is of that kind: none that had not been used already. It then takes the footage that comes closest, ceiling cameras in two commercial barns, for the one thing it can say without names: **what the application finds there.**
+
+### What public footage there is
+
+Searched on 12 October 2026: the dataset registries of DataCite, Zenodo and Hugging Face, two lists of public datasets ([animal re-identification](https://github.com/DariaKern/IndividualAnimalRe-IDDatasets), [livestock](https://arxiv.org/abs/2406.10628)), and the papers of 2025 and 2026 that these led to.
+
+| Source | Cameras | Says who is who | What is left of it |
+| --- | --- | --- | --- |
+| [ETH barn](https://doi.org/10.3929/ethz-c-000796658) | Over the cubicles of thirteen cows | For three weeks | Nothing: it is the [test](#results) |
+| [MmCows](https://huggingface.co/datasets/neis-lab/mmcows) | In the corners of a pen of sixteen | For one day | Two hours, at cameras that look across the cows ([above](#a-second-farm)) |
+| [MultiCamCows2024](https://data.bris.ac.uk/data/dataset/2inu67jru7a6821kkgehxg3cv2) | Over a passage, ninety cows | For seven days | Two days, at a passage ([above](#a-third-farm)) |
+| [MooTrack360](https://zenodo.org/records/20287681), CC BY-NC-SA 4.0 | Sixteen in the ceilings of two commercial barns, of 181 and 325 cows | For eight cows of one pen during one hour. Boxes without names in 1,500 pictures. About eleven hours with no label at all | Used [below](#the-barns) for what is found |
+| [JerCCows](https://huggingface.co/datasets/MaeNidhi/JerCCows), CC BY-NC-SA 4.0 | Eight around one barn, some twenty Jersey cows in view | Within six scenes of 96 to 300 pictures | A scene is too short to learn a herd in and come back to, and the breed has no patches |
+| [CoBRA youngstock](https://zenodo.org/records/15018518), CC BY 4.0 | One in the roof over a pen of eight heifers; six groups in two years | For 11,438 cut-outs of 48 heifers | No cut-out says when it was taken, so photographs cannot be kept a day apart from what is asked; no footage |
+| [Cows near a milking robot](https://zenodo.org/records/3981400), CC BY 4.0 | One beside a milking robot: 253 clips of a few minutes over two months | No | |
+| [A barn with position tags](https://zenodo.org/records/3900340), CC BY 4.0 | Five in one barn, on two single days | Only where the study read a collared cow's place from the video by hand | |
+| [8-Calves](https://huggingface.co/datasets/tonyFang04/8-calves), CC BY 4.0 | One over a pen | For eight calves during one hour | Used in this repository as a smoke test |
+
+Other public sets that name cattle were taken at passages, scales and parlour doors, as the third farm's was: Cows2021, OpenCows2020, CowDepth2023, BECA, SideViewCows2026, and the [pictures of 383 cows](https://doi.org/10.34894/7M108F) that leave a milking station at Dairy Campus in Leeuwarden, which are in the public domain. Three studies describe the footage that is wanted and have published none that could be found: a camera at the feeders of a barn in Wisconsin, with 49 cows named by the feeders' tag readers on four days ([paper](https://doi.org/10.3168/jds.2025-28109)); nine days of a waiting area before milking, of which the code is online ([paper](https://arxiv.org/abs/2602.15962)); and seven cameras in a tie-stall barn, whose clips are given on request ([paper](https://doi.org/10.1101/2025.11.13.688203)). No barn livestream could be confirmed to be running, and none would say who is who.
+
+So no public footage is left on which a name could be judged at a camera where cows stay. What a later day does to a name has to come from a farm.
+
+### The barns
+
+[MooTrack360](https://zenodo.org/records/20287681) ([paper](https://openaccess.thecvf.com/content/WACV2026/html/Christiansen_MooTrack360_A_Novel_Fisheye_Camera_Dataset_for_Robust_Multi_Diary_WACV_2026_paper.html)), under CC BY-NC-SA 4.0, films two commercial Danish dairy barns, of 181 and 325 Holstein cows, with sixteen fisheye cameras in the ceiling, 4.0 to 5.6 m above cubicles, feed fences, alleys and milking robots. A camera's picture is 2,944 pixels square and takes in everything below the ceiling. In 1,500 pictures, of forty days between July 2024 and January 2025 and of every hour of the day, the publisher drew a box around every cow in the camera's own part of the barn, 103,384 boxes, and says of each cow whether she stands or lies: half do each, and a picture holds seventy cows.
+
+Nothing of the method was developed on these barns, and nothing was chosen on them: the preset is the shipped one, with the stock detector. Of the 1,500 pictures 1,497 could be matched with their labels by name.
+
+### How it was measured
+
+**A still picture.** [`mootrack.py`](herd/mootrack.py) hands a picture to the application's detector and tracker as the first picture of a camera. A tracker that has seen nothing follows at once what the detector reports with a confidence of 0.25 or more, the confidence that starts a track; that is also what it settles on where nothing moves. A cow is **found** when a followed box overlaps the publisher's box of her by half or more, paired one to one, and her box is **fit** when the application would use it as evidence.
+
+**Two sizes.** The application analyses a picture 1,280 pixels wide. *Whole* is the camera as it hangs: its picture shrunk to that width, a cow under the camera some 150 pixels long. It was run on all 1,497 pictures. *Near* is the same picture in nine windows of 1,280 pixels at the camera's own sharpness, a cow under the camera some 340 pixels long, each window handed over as a picture of its own. It was run on 587 of the pictures, the first to arrive of a download in random order; a run on all of them takes five hours and was stopped.
+
+**Angle.** By the publisher's calibration of one of the cameras a point at an angle off the lens's axis lies 2 × 722 × tan(angle / 2) pixels from the middle of the picture, and the lens looks straight down. A cow's angle off straight down is read from the middle of her box, for every camera by that one calibration. At 45° she is as far away along the floor as the camera hangs above her; at 60°, one and three quarter times as far, and seen from thirty degrees above the horizontal.
+
+**Turn.** That calibration is of a lens that keeps the shape of what it shows, so a window shows about what an ordinary camera aimed at that part of the barn would. But an ordinary camera draws what lies further away above what lies nearer. A fisheye in the ceiling does so only straight above the middle of its picture; to the sides the barn lies on its side, and below the middle it stands on its head. Each picture is therefore shown four times, a quarter turn further each time, so that every cow is seen once with the barn within 45° of upright around her, once on its head and twice on its side.
+
+**What a still picture leaves out.** The tracker keeps following a cow at a confidence down to 0.10 once it follows her. In a still picture a cow whom the detector reports at 0.10 to 0.25 is never followed; before a live camera she is from the first moment her confidence reaches 0.25. The figures are therefore a floor for cows that move, and about right for a cow that lies still for hours.
+
+### What is found
+
+Shares of the publisher's boxed cows that the application finds ([file](herd/results/mootrack-found.json)). A found cow's box is fit to be evidence 97% to 100% of the time, so the tables give the share found.
+
+**As an ordinary camera would show them.** The windows at the camera's own sharpness, each cow counted in the turn that has the barn upright around her:
+
+| A cow seen | Standing | Lying |
+| --- | --- | --- |
+| At an angle from above, 40° to 60° off straight down | 91.2% of 4,332 | 85.8% of 4,225 |
+| Flatter than that, 60° to 90° off | 73.9% of 15,365 | 50.5% of 12,745 |
+| From nearly straight above, within 40°, counted in all four turns | 72.2% of 794 | 72.4% of 3,173 |
+
+**The barn has to be the right way up.** The same cows at 40° to 60°, by how far the barn is turned around them in the picture:
+
+| The barn in the picture | Standing | Lying |
+| --- | --- | --- |
+| Upright, within 45° | 91.2% | 85.8% |
+| On its side, 45° to 90° | 66.6% | 58.8% |
+| On its side, 90° to 135° | 52.7% | 50.3% |
+| On its head | 40.8% | 27.4% |
+
+Every cow is in every row once, so the rows do not differ in where the barns keep their cubicles.
+
+**Straight below the camera a smaller picture finds more.** Within 40° of straight down, 72% of the cows are found at the camera's own sharpness. In the same pictures shrunk, 90.2% of the standing and 87.6% of the lying cows are. Seen at an angle with the barn upright, the size makes no difference: 92.1% and 86.8% shrunk against 91.2% and 85.8%. Flatter than 60° the smaller picture finds fewer, 62.6% and 44.4% against 73.9% and 50.5%.
+
+**The camera as it hangs.** One fisheye shows a whole part of the barn, and the application shrinks its picture. Of the 103,229 boxed cows in 1,497 pictures it finds 41.5%: 44.0% of the standing and 39.0% of the lying ones. Seven in ten of those cows are more than 60° off straight down, where it finds 31.6% and 20.1%. A cow shorter than 64 pixels in the analysed picture is found 6% of the time, one of 128 pixels or more 81% to 91%.
+
+**Under infrared light fewer are found.** In the pictures as the cameras hang, 35.3% of the standing and 23.3% of the lying cows in a picture without colour, against 44.6% and 40.9% by daylight or lamps.
+
+### What follows
+
+- **More than thirty degrees above the horizontal holds for finding a cow too.** That was the [second farm's](#what-follows) rule of thumb for telling cows apart. Seen from thirty to fifty degrees above the horizontal, which is from a little nearer along the floor than the camera hangs above her to one and three quarter times as far, the stock detector finds 91% of the standing and 86% of the lying cows. Seen flatter it finds 74% and 51%.
+- **From straight overhead it finds fewer:** 72%, and more only when the cow is shown smaller. A camera should look at the cows from the side above.
+- **The stock detector finds lying cows.** In cubicles seen at an angle from above it finds 86% of them. The second farm's lying cows are lost to a view across cows that lie side by side, not to their lying.
+- **The picture has to be upright.** The stock detector was taught photographs in which the ground is at the bottom. An ordinary camera that looks down at an angle shows the barn so. A camera that looks straight down, fisheye or not, does so only above the middle of its picture.
+- **One fisheye for a whole barn does not suit this preset.** Four in ten cows are found, and a cow is 70 to 150 pixels long in its picture, the size at which the second farm's cows were not told apart.
+- **Not measured here.** Whether a name is right: no public footage says who these cows are. What a live camera adds to a still picture. And what a detector taught pictures from a ceiling would find: the publisher's boxes would teach one, under a licence that forbids commercial use.
+
 ## Limits
 
 - **One barn where it comes close, one pen where it does not, and a passage where it names who walks by.** Thirteen, sixteen and ninety Holstein cows, fixed cameras. In the first barn a cow is 220–320 pixels long in the analysed picture and seldom behind another; there the method named 72% of the animals by day and 50% at night. In the second she is 110–180 pixels long and lies between her neighbours; there it names 12% ([above](#a-second-farm)). A herd of 67 seen from the ceiling is told apart, and over a race the application named three in four of the cows that walked by, each for a second or two ([above](#a-third-farm)). Nothing here says how it does with another breed.
 - **Most of the herd was enrolled.** Ten of thirteen. Every unknown animal is a chance of a wrong name, and the margin against strangers was measured with three. On the third farm, with twelve of 89 cows enrolled, one picture in six of the unknown cows passed as an enrolled cow.
 - **Photographs from many occasions**, over several days, by day and by night and on every camera, which a farmer has to confirm: fifty of a cow from dozens of occasions name most animals, hundreds from one afternoon almost none ([above](#how-many-photographs-to-start)). The test used the publisher's crops, which are spread like that. The application now spreads its photographs over the hours, and a herd collected by it over days has not been tried.
-- **A cow that is not found is not named.** Cows in the far row behind cubicle rails are missed even by the largest stock detector, and a box that touches the picture's edge is not used. On the first validation video that leaves two of ten enrolled cows unnamed for the whole video. In the second pen the detector finds a third of the cows that lie down, at any input size.
+- **A cow that is not found is not named.** Cows in the far row behind cubicle rails are missed even by the largest stock detector, and a box that touches the picture's edge is not used. On the first validation video that leaves two of ten enrolled cows unnamed for the whole video. In the second pen the detector finds a third of the cows that lie down, at any input size. In still pictures of two commercial barns the stock detector finds nine in ten cows that are seen at an angle from above with the barn upright in the picture, seven in ten straight below the camera, and four in ten when one fisheye in the ceiling shows the whole barn ([above](#a-ceiling-camera-where-cows-stay)).
 - **Night is harder.** Infrared light hides red-and-white patterns. At night the test named half of the animals, and the limit that kept unknown animals out did so by a small margin.
 - **The limits were tested with a score that depends on how many photographs are confirmed.** They were set with two to three and a half thousand and held, narrowly, with four to six thousand. The score now used does not move with that number between 100 and 760 photographs a cow; with fewer than 100 it does, and nothing was measured beyond 760.
 - **Names on animals the publisher did not box cannot be judged.** They are left out of the precision and counted in the conservative one.
@@ -735,6 +817,17 @@ $python $herd/multicam.py run $W/multicam/photographs/classification.json --vide
 $python $herd/multicam.py score $W/multicam/run-multicam-17-cam1.json \
   --frames $W/multicam/frames/multicam-17-cam1 --labels $W/multicam/labels \
   --withheld $(seq 4 4 88) 90 --output $herd/results/multicam-validation-17-august-camera1.json
+
+# Two commercial barns from the ceiling: what the application finds in MooTrack360's boxed
+# pictures, as the cameras hang and in windows at their own sharpness. $T holds the
+# publisher's raw pictures and normalized_annotations_06_12.json.
+for view in whole near; do
+  $python $herd/mootrack.py found $T/normalized_annotations_06_12.json $T/raw --view $view \
+    --preset config/detector/cow-identity.json --detector-weights yolo26x-seg.pt \
+    --output $W/mootrack/$view.json
+done
+$python $herd/mootrack.py summary $W/mootrack/whole.json $W/mootrack/near.json \
+  --output $herd/results/mootrack-found.json
 ```
 
 The cattle starting weights come from [`auxiliary.py`](herd/auxiliary.py), which gathers the other farms' photographs, and [`pretrain.py`](herd/pretrain.py). Development used [`app_track.py`](herd/app_track.py) and [`app_scores.py`](herd/app_scores.py) for the rotations (`--either-side`), [`tune.py`](herd/tune.py) for the rules, [`app_localization.py`](herd/app_localization.py) for the detectors and [`similarity_study.py`](herd/similarity_study.py) for the ways of scoring. [`app_smoke.py`](herd/app_smoke.py) starts the whole application on a short clip. [`parts.py`](herd/parts.py) and [`parts_compare.py`](herd/parts_compare.py) compare ways of building the herd model, and [`app_describe.py`](herd/app_describe.py) with [`rescore.py`](herd/rescore.py) score a finished run another way. [`event_names.py`](herd/event_names.py) simulates the names on another rule's events from a run that `app_run.py` wrote, and [`mounting_live.py`](herd/mounting_live.py) plays the mounting example to the whole application as a camera. For the second farm, [`app_limits.py`](herd/app_limits.py) replays a run at other limits, `mmcows.py postures` and `mmcows.py occasions` read the publisher's record of what each cow did, `mmcows.py angles` how steeply each camera looks down on her, [`mmcows_boxes.py`](herd/mmcows_boxes.py) asks the networks about the publisher's own boxes, and [`mmcows_outlines.py`](herd/mmcows_outlines.py) cuts the crops by the detector's boxes and outlines. For the third farm, `herd_size.py --per-walk` confirms fewer photographs of each walk, [`multicam_walks.py`](herd/multicam_walks.py) counts a run walk by walk, [`app_what_if.py`](herd/app_what_if.py) replays a run with a rule changed, and `app_localization.py` counts what a detector finds and how much of it could carry a name. The tests beside the scripts run with `pytest` in that folder.

@@ -8,7 +8,7 @@ The automatic TensorRT route has functional checks but has not been benchmarked 
 
 At the default `INFO` level each detector logs a summary every thirty seconds: frames, batches, average time per frame and the slowest batch, and on the Apple GPU the memory held by PyTorch and by the whole process. `--log-level DEBUG` adds a line per prediction with total wall time, time spent waiting for the shared MPS lock, Ultralytics' preprocessing, inference and postprocessing per image, result mapping (which includes moving boxes to CPU memory) and the input shapes. Wall time includes SDK overhead and need not equal the sum of the stages.
 
-On the Apple GPU, PyTorch refuses memory once the whole process holds half of what macOS recommends for the GPU, about 5.9 GiB on a 16 GB Mac. The detector then stops with `MPS backend out of memory` and exit code `1`, and the application restarts it by itself: the screen shows "The detector stopped unexpectedly (1)." and "Starting…" until the cameras are connected again.
+On the Apple GPU, PyTorch refuses memory once the whole process holds half of what macOS recommends for the GPU, about 5.9 GiB on a 16 GB Mac. The detector then stops with `MPS backend out of memory` and exit code `1`, and the application restarts it by itself: the screen shows "Starting…" with "The detector stopped unexpectedly (1)." for a few seconds, then "Preparing…" and "Connecting cameras…" until the cameras are connected again.
 
 Every thirty seconds each camera logs decoded frames per second, average read time and average resize and publication time. Read time includes waiting for the camera or network; it is not CPU decoding time. None of these lines measures how old an image was inside the camera's buffer, or delay in the browser.
 

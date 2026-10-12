@@ -25,7 +25,7 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 		health: { url: 'https://ping.example/health-secret' }
 	});
 	await writeJson(path.join(directory, 'app.json'), {
-		telegrams: [{ token: 'telegram-secret', chat: '1234567890' }],
+		telegrams: [{ label: '1234567890', token: 'telegram-secret', chat: '1234567890' }],
 		devices: [{ name: 'Private phone', hash: 'device-access-hash' }]
 	});
 	await mkdir(path.join(directory, 'logs'));

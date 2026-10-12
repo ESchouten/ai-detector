@@ -8,7 +8,8 @@ import torch
 from safetensors.torch import save_file
 
 from aidetector.adapters.identity_catalog import Catalog, IdentityCatalog
-from aidetector.adapters.inference.herd_gallery import prepare_herd
+from aidetector.adapters.inference import herd_gallery
+from aidetector.adapters.inference.herd_gallery import cattle_weights, prepare_herd
 from aidetector.adapters.inference.herd_model import (
     AnimalNetwork,
     CattleNetwork,
@@ -178,3 +179,24 @@ def test_learning_stops_when_the_application_shuts_down(herd, starts, tmp_path):
     with pytest.raises(CancelledError, match="Herd learning stopped"):
         prepare(store, confirm(store, 1, identities), starts, tmp_path, stopped)
     assert not (tmp_path / "herd" / "herd.json").exists()
+
+
+def test_starting_weights_on_disk_are_taken_from_beside_the_configuration(tmp_path):
+    (tmp_path / "cattle.safetensors").touch()
+
+    weights = cattle_weights("cattle.safetensors", tmp_path, tmp_path / "cache")
+
+    assert weights == (tmp_path / "cattle.safetensors").resolve()
+
+
+def test_starting_weights_that_cannot_be_fetched_are_an_identity_failure(
+    monkeypatch, tmp_path
+):
+    def unreachable(*_):
+        raise RuntimeError("Model download failed: The model server returned HTTP 404.")
+
+    monkeypatch.setattr(herd_gallery, "resolve_model_path", unreachable)
+
+    # An OSError makes identification wait and try again; anything else stops the detector.
+    with pytest.raises(OSError, match="Herd weights download failed.*HTTP 404"):
+        cattle_weights("https://example.org/cattle.safetensors", tmp_path, tmp_path)

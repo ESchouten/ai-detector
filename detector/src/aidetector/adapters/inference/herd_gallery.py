@@ -22,6 +22,7 @@ from aidetector.adapters.inference.herd_model import (
     learn,
 )
 from aidetector.adapters.inference.identity_gallery import PreparedGallery
+from aidetector.adapters.inference.model_assets import resolve_model_path
 
 logger = logging.getLogger(__name__)
 # Changes whenever learning itself changes, so that saved models are retaught.
@@ -34,6 +35,18 @@ NEIGHBOURS = 2
 # fixed number would score every animal higher, strangers too, as she gains
 # photographs, and the limits would hold for one size of herd only.
 SHARE = 0.02
+
+
+def cattle_weights(value: str, config_directory: Path, cache: Path) -> Path:
+    """The weights the cattle networks start from: a file, or an address fetched once.
+
+    A download that fails is an identity failure like any other: identification
+    waits and tries again, and detection carries on.
+    """
+    try:
+        return Path(resolve_model_path(value, config_directory, cache))
+    except RuntimeError as error:
+        raise OSError(f"Herd weights download failed: {error}") from error
 
 
 def prepare_herd(

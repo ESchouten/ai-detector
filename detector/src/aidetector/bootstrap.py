@@ -444,7 +444,10 @@ def _identity_resources(
     def learn_herd(
         weights: str, herd: Catalog, stopped: Event | None
     ) -> PreparedGallery:
-        from aidetector.adapters.inference.herd_gallery import prepare_herd
+        from aidetector.adapters.inference.herd_gallery import (
+            cattle_weights,
+            prepare_herd,
+        )
         from aidetector.adapters.inference.miewid import published_weights
 
         # Both are fetched when the first herd is learned, not at every start.
@@ -452,10 +455,8 @@ def _identity_resources(
             herd,
             stopped,
             store=catalog,
-            cattle_start=Path(
-                resolve_model_path(
-                    weights, config_directory, directory / "models" / "identity"
-                )
+            cattle_start=cattle_weights(
+                weights, config_directory, directory / "models" / "identity"
             ),
             animal_start=published_weights(directory / "models" / "identity"),
             directory=directory / "identities" / "herd",

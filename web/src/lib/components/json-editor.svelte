@@ -36,8 +36,8 @@
 		let dispose = () => {};
 		async function createEditor() {
 			const [{ default: EditorWorker }, { default: JsonWorker }, monaco] = await Promise.all([
-				import('monaco-editor/esm/vs/editor/editor.worker?worker'),
-				import('monaco-editor/esm/vs/language/json/json.worker?worker'),
+				import('monaco-editor/editor/editor.worker?worker'),
+				import('monaco-editor/language/json/json.worker?worker'),
 				import('monaco-editor')
 			]);
 			if (cancelled) return;

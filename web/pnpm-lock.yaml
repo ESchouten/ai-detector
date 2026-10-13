@@ -23,8 +23,8 @@ importers:
         specifier: ^0.1.7
         version: 0.1.7(patch_hash=ltgm7hts3fqxxq7vt3cdlnumvi)(typescript@5.9.3)
       '@remix-run/multipart-parser':
-        specifier: 0.16.5
-        version: 0.16.5
+        specifier: 1.0.0
+        version: 1.0.0
       ajv:
         specifier: ^8.17.1
         version: 8.20.0
@@ -38,8 +38,8 @@ importers:
         specifier: ^1.46.0
         version: 1.46.0
       monaco-editor:
-        specifier: ^0.55.1
-        version: 0.55.1
+        specifier: ^0.57.0
+        version: 0.57.0
       onvif:
         specifier: 0.8.3
         version: 0.8.3
@@ -47,8 +47,8 @@ importers:
         specifier: 1.5.4
         version: 1.5.4
       write-file-atomic:
-        specifier: ^7.0.1
-        version: 7.0.1
+        specifier: ^8.0.0
+        version: 8.0.0
     devDependencies:
       '@eslint/compat':
         specifier: ^2.1.1
@@ -563,11 +563,11 @@ packages:
   '@poppinss/macroable@1.1.0':
     resolution: {integrity: sha512-y/YKzZDuG8XrpXpM7Z1RdQpiIc0MAKyva24Ux1PB4aI7RiSI/79K8JVDcdyubriTm7vJ1LhFs8CrZpmPnx/8Pw==}
 
-  '@remix-run/headers@0.21.2':
-    resolution: {integrity: sha512-M5KagifodhXZglUiYjf16TrqxYce8N7h3pKt7FUX47Vgy7mYG7PSrGN7HtJg7VX7HbOhY3bd2CuRwOojwnNDHg==}
+  '@remix-run/headers@1.0.0':
+    resolution: {integrity: sha512-EhZ8V2eqrRWZym4FwGRaEw21w9b8EgwnZ5NA8RCY/V4X/COKTyoEthUcH/w0wVgzIn+PeWgp+YLHq+9r4pqEUQ==}
 
-  '@remix-run/multipart-parser@0.16.5':
-    resolution: {integrity: sha512-Pt4JxLl10z8xSYw7Fo9VNCCajzNbNXoWNPeOb2JlWSsAcdWV8LoWiUmUu3sLvWsKHoDl7oqErVzp4DYcPElRQg==}
+  '@remix-run/multipart-parser@1.0.0':
+    resolution: {integrity: sha512-ZrS2qvE5AfgOJmsZzILy3bCUTPoMXom1NVO58qZOg2R+3qOGnKjQxUP/JHfFnTWA/CcmFEtiGCsTuPpTPgGUfg==}
 
   '@rollup/plugin-commonjs@29.0.0':
     resolution: {integrity: sha512-U2YHaxR2cU/yAiwKJtJRhnyLk7cifnQw0zUpISsocBDoHDJn+HTV74ABqnwr5bEgWUwFZC9oFL6wLe21lHu5eQ==}
@@ -1439,8 +1439,8 @@ packages:
   dlv@1.1.3:
     resolution: {integrity: sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==}
 
-  dompurify@3.2.7:
-    resolution: {integrity: sha512-WhL/YuveyGXJaerVlMYGWhvQswa7myDG17P7Vu65EWC05o8vfeNbvNf4d/BOvH99+ZW+LlQsc1GDKMa1vNK6dw==}
+  dompurify@3.4.15:
+    resolution: {integrity: sha512-EUBjM+B+lkDE41iE82DDSCfkoPGfXx8IxFxPMjNzm/Uk4xDet77rTN9wqlxlVg71kK7XGuUMv6wUxJUwwv+Xyw==}
 
   effect@3.19.17:
     resolution: {integrity: sha512-MChgn9z0y3KJ2DJ+VsZt1bdVDJ0bDIZt9zm4s3iPpRLzgcEGDOIP8pwADjAWifaP0S672nlRE5rZPBbyDcjn1g==}
@@ -1984,8 +1984,8 @@ packages:
     peerDependencies:
       svelte: ^5.27.0
 
-  monaco-editor@0.55.1:
-    resolution: {integrity: sha512-jz4x+TJNFHwHtwuV9vA9rMujcZRb0CEilTEwG2rRSpe/A7Jdkuj8xPKttCgOh+v/lkHy7HsZ64oj+q3xoAFl9A==}
+  monaco-editor@0.57.0:
+    resolution: {integrity: sha512-5BkI9KGoqrNvBGUe15/QlZq3OooZ8WLg1AxTpaqHRCP3HNpzPPZKE2EDz8M7c+VRmCeUw1Brp4cx/PWm3kI/5A==}
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -2708,9 +2708,9 @@ packages:
     resolution: {integrity: sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==}
     engines: {node: '>=8'}
 
-  write-file-atomic@7.0.1:
-    resolution: {integrity: sha512-OTIk8iR8/aCRWBqvxrzxR0hgxWpnYBblY1S5hDWBQfk/VFmJwzmJgQFN3WsoUKHISv2eAwe+PpbUzyL1CKTLXg==}
-    engines: {node: ^20.17.0 || >=22.9.0}
+  write-file-atomic@8.0.0:
+    resolution: {integrity: sha512-dYwyZredl67GyLLIHJnRM3h2PcOmN5SkcgC7eM5DPDEOEl6dLFqVrMg3F1Ea32usj4VSVZtd2H4MtKTNOf6nPg==}
+    engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
 
   wuchale@0.26.7:
     resolution: {integrity: sha512-G9V612ezxLmXQ8vm6R3kETsBOCubvN1yxYv9I3GoU7uIVXPpCThgGrRyxD8ZZPJUOizz0IljZp6UgSlKPyILsQ==}
@@ -3063,11 +3063,11 @@ snapshots:
   '@poppinss/macroable@1.1.0':
     optional: true
 
-  '@remix-run/headers@0.21.2': {}
+  '@remix-run/headers@1.0.0': {}
 
-  '@remix-run/multipart-parser@0.16.5':
+  '@remix-run/multipart-parser@1.0.0':
     dependencies:
-      '@remix-run/headers': 0.21.2
+      '@remix-run/headers': 1.0.0
 
   '@rollup/plugin-commonjs@29.0.0(rollup@4.57.1)':
     dependencies:
@@ -3908,7 +3908,7 @@ snapshots:
   dlv@1.1.3:
     optional: true
 
-  dompurify@3.2.7:
+  dompurify@3.4.15:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -4480,9 +4480,9 @@ snapshots:
       svelte: 5.57.2(@typescript-eslint/types@8.71.2)
       svelte-toolbelt: 0.7.1(svelte@5.57.2(@typescript-eslint/types@8.71.2))
 
-  monaco-editor@0.55.1:
+  monaco-editor@0.57.0:
     dependencies:
-      dompurify: 3.2.7
+      dompurify: 3.4.15
       marked: 14.0.0
 
   mri@1.2.0: {}
@@ -5130,7 +5130,7 @@ snapshots:
       string-width: 4.2.3
       strip-ansi: 6.0.1
 
-  write-file-atomic@7.0.1:
+  write-file-atomic@8.0.0:
     dependencies:
       signal-exit: 4.1.0
 

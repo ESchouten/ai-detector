@@ -109,9 +109,11 @@ msgstr "A detector cannot use the same source more than once."
 msgid "Detector {0}"
 msgstr "Detector {0}"
 
+#. 0: index + 1
 #. 0: streams.size + 1
 #. 0: parsed.output.$.token
 #. 0: this.cameras.size + 1
+#: src/lib/configuration.ts
 #: src/lib/configuration.ts
 #: src/lib/server/cameras/discovery.ts
 #: src/lib/server/runtime-status.ts
@@ -3723,6 +3725,7 @@ msgstr "Not watched: {0} (since {1}). Open AI Detector to see why."
 #: src/lib/server/outage-alerts.ts
 msgid "Still not watched: {0}."
 msgstr "Still not watched: {0}."
+
 #: src/lib/components/detector-editor.svelte
 msgid "Mode"
 msgstr "Mode"

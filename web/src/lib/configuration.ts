@@ -158,7 +158,13 @@ export function normalizeConfiguration(configInput: unknown, appInput: unknown):
 		if (!connection || !settings || !connectionMatches(settings, connection))
 			delete meta.llmConnection;
 	}
-	const streams = new Map(app.streams.map((stream) => [stream.source, stream]));
+	// The released application named a camera after its address, login details included.
+	const streams = new Map(
+		app.streams.map((stream, index) => [
+			stream.source,
+			stream.label === stream.source ? { ...stream, label: `Camera ${index + 1}` } : stream
+		])
+	);
 	for (const source of config.detectors.flatMap((detector) => detector.detection.source)) {
 		if (!streams.has(source)) streams.set(source, { label: `Camera ${streams.size + 1}`, source });
 	}

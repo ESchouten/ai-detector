@@ -109,9 +109,11 @@ msgstr "Een detector kan dezelfde bron maar één keer gebruiken."
 msgid "Detector {0}"
 msgstr "Detector {0}"
 
+#. 0: index + 1
 #. 0: streams.size + 1
 #. 0: parsed.output.$.token
 #. 0: this.cameras.size + 1
+#: src/lib/configuration.ts
 #: src/lib/configuration.ts
 #: src/lib/server/cameras/discovery.ts
 #: src/lib/server/runtime-status.ts
@@ -3723,6 +3725,7 @@ msgstr "Niet bewaakt: {0} (sinds {1}). Open AI Detector om te zien waarom."
 #: src/lib/server/outage-alerts.ts
 msgid "Still not watched: {0}."
 msgstr "Nog steeds niet bewaakt: {0}."
+
 #: src/lib/components/detector-editor.svelte
 msgid "Mode"
 msgstr "Modus"

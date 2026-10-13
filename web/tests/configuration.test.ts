@@ -169,6 +169,24 @@ test('source whitespace normalization preserves one camera identity and rejects 
 	);
 });
 
+test('a camera the released application named after its address gets a name without its login', () => {
+	const address = 'rtsp://farmer:secret@192.168.1.20:554/stream';
+	const document = normalizeConfiguration(
+		{ detectors: [{ detection: { source: [source, address] } }] },
+		{
+			streams: [
+				{ label: 'Barn', source },
+				{ label: address, source: address }
+			]
+		}
+	);
+	assert.deepEqual(document.app.streams, [
+		{ label: 'Barn', source },
+		{ label: 'Camera 2', source: address }
+	]);
+	assert.deepEqual(normalizeConfiguration(document.config, document.app), document);
+});
+
 test('loaded notification identities match their exporters without silently changing credentials', () => {
 	const telegram = { token: ' token ', chat: ' chat ' };
 	const document = normalizeConfiguration(

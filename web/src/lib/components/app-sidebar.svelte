@@ -3,7 +3,7 @@
 	import { resolve } from '$app/paths';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { ChevronRight } from '@lucide/svelte';
-	import GithubIcon from '@lucide/svelte/icons/github';
+	import LifeBuoyIcon from '@lucide/svelte/icons/life-buoy';
 	import BrandMark from './brand-mark.svelte';
 	import NavMain from './nav-main.svelte';
 	import StatusDot from './status-dot.svelte';
@@ -51,7 +51,7 @@
 		<NavMain items={mainNavigation()} />
 		<NavMain
 			class="mt-auto"
-			items={[{ title: 'Help on GitHub', href: REPOSITORY_URL, icon: GithubIcon }]}
+			items={[{ title: 'Help on GitHub', href: REPOSITORY_URL, icon: LifeBuoyIcon }]}
 		/>
 	</Sidebar.Content>
 	<Sidebar.Footer class="flex-row items-center justify-between border-t border-sidebar-border px-4">

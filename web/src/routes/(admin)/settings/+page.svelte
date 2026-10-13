@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { Activity, Archive, Monitor, Moon, Sun } from '@lucide/svelte';
-	import GithubIcon from '@lucide/svelte/icons/github';
+	import LifeBuoyIcon from '@lucide/svelte/icons/life-buoy';
 	import { setMode, userPrefersMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button';
 	import HomeScreenGuide from '$lib/components/home-screen-guide.svelte';
@@ -117,7 +117,7 @@
 				{
 					title: 'Help on GitHub',
 					href: REPOSITORY_URL,
-					icon: GithubIcon,
+					icon: LifeBuoyIcon,
 					description: 'Guides, questions and bug reports.'
 				}
 			]}

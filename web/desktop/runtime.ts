@@ -87,6 +87,11 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 	}
 	instance.publish(server.port!);
 	process.once('exit', () => instance.remove());
+	// The native shell keeps the computer awake while monitoring is on.
+	if (process.env.AIDETECTOR_DESKTOP_HOST === '1')
+		process.on('aidetector:monitoring', (monitoring: boolean) =>
+			console.error(`AI_DETECTOR_MONITORING ${monitoring ? 'on' : 'off'}`)
+		);
 	try {
 		handler = await initialize();
 	} catch (error) {
@@ -108,6 +113,8 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 
 /** A reopened native menu controls the existing server through its authenticated endpoint. */
 async function attachDesktopHost(instance: DesktopInstance, port: number): Promise<void> {
+	// That server cannot tell this shell whether it is monitoring, so the computer stays awake.
+	console.error('AI_DETECTOR_MONITORING on');
 	const finished = new AbortController();
 	let shutdown: Promise<void> | undefined;
 	const close = connectDesktopHost(

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace AIDetector.Desktop;
 
-// The web process retains ownership of the instance lock and detector shutdown.
-internal sealed class DesktopProcess(string executable) : IDisposable
+// The web process retains ownership of the instance lock and detector shutdown. It says when
+// monitoring is switched on and off.
+internal sealed class DesktopProcess(string executable, Action<bool> monitoring = null) : IDisposable
 {
     private Process process;
     private bool stopping;
@@ -98,6 +99,8 @@ internal sealed class DesktopProcess(string executable) : IDisposable
         {
             if (line.StartsWith(prefix, StringComparison.Ordinal)) ErrorMessage = line.Substring(prefix.Length);
             if (line == "AI_DETECTOR_STOPPING") stopping = true;
+            if (line == "AI_DETECTOR_MONITORING on") monitoring?.Invoke(true);
+            if (line == "AI_DETECTOR_MONITORING off") monitoring?.Invoke(false);
             Log(line);
         }
     }

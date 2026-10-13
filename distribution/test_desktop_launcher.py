@@ -89,6 +89,65 @@ class LauncherTest(unittest.TestCase):
                     cleanup_process(process)
                     log.close()
 
+    def test_only_a_native_shell_is_told_whether_monitoring_is_on(self):
+        for host in ("1", ""):
+            with (
+                self.subTest(host=host),
+                tempfile.TemporaryDirectory(prefix="ai-awake-") as temporary,
+            ):
+                folder = Path(temporary)
+                port = free_port()
+                log_path = folder / "launcher.log"
+                with log_path.open("w") as log:
+                    process = subprocess.Popen(
+                        [shutil.which("bun"), str(RUNTIME_SERVER)],
+                        env={
+                            **os.environ,
+                            "AIDETECTOR_DATA_DIR": str(folder / "data"),
+                            "AIDETECTOR_DESKTOP_HOST": host,
+                            "HOST": "127.0.0.1",
+                            "PORT": str(port),
+                            "OPEN_BROWSER": "false",
+                        },
+                        stdin=subprocess.PIPE,
+                        stdout=log,
+                        stderr=log,
+                    )
+                    try:
+                        wait_for(
+                            process,
+                            lambda log_path=log_path: (
+                                "AI Detector is ready" in log_path.read_text()
+                            ),
+                            log_path,
+                        )
+                        for path in ("monitoring-on", "monitoring-off", ""):
+                            urllib.request.urlopen(
+                                f"http://127.0.0.1:{port}/{path}", timeout=2
+                            ).close()
+                        # The last request's own line follows whatever the first two said.
+                        wait_for(
+                            process,
+                            lambda log_path=log_path: (
+                                log_path.read_text().count("Dashboard request received")
+                                == 3
+                            ),
+                            log_path,
+                        )
+                        told = [
+                            line
+                            for line in log_path.read_text().splitlines()
+                            if line.startswith("AI_DETECTOR_MONITORING")
+                        ]
+                        self.assertEqual(
+                            told,
+                            ["AI_DETECTOR_MONITORING on", "AI_DETECTOR_MONITORING off"]
+                            if host
+                            else [],
+                        )
+                    finally:
+                        cleanup_process(process)
+
     def test_second_launch_does_not_initialize_another_server_and_quit_is_graceful(
         self,
     ):

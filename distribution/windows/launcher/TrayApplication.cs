@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace AIDetector.Desktop;
@@ -16,9 +17,19 @@ internal sealed class TrayApplication : ApplicationContext
     private Action afterShutdown;
     public int ExitCode { get; private set; }
 
+    internal const uint Continuous = 0x80000000, SystemRequired = 0x00000001;
+
+    [DllImport("kernel32.dll")]
+    internal static extern uint SetThreadExecutionState(uint flags);
+
+    // While monitoring is on, Windows must not go to sleep by itself. The request belongs to the
+    // thread that makes it: the menu's, which lives as long as the application.
+    internal static void StayAwake(bool monitoring) =>
+        SetThreadExecutionState(monitoring ? Continuous | SystemRequired : Continuous);
+
     public TrayApplication(StartupPreference startup, string executable, VerifiedUpdateManager updater, Action<bool> savePreviewPreference)
     {
-        web = new DesktopProcess(executable);
+        web = new DesktopProcess(executable, StayAwake);
         using var artwork = Assembly.GetExecutingAssembly().GetManifestResourceStream("app.ico");
         icon = new Icon(artwork, 32, 32);
         menu = new TrayMenu(startup, web.OpenDashboard, Stop);
@@ -43,12 +54,15 @@ internal sealed class TrayApplication : ApplicationContext
                 updateTimer.Start();
                 _ = updates.CheckInBackgroundAsync();
             });
+            // Nothing is monitored any more, also while a message below waits to be read.
+            StayAwake(false);
             // Start Velopack's exit wait only after the detector has finished draining.
             if (ExitCode == 0) afterShutdown?.Invoke();
             else MessageBox.Show(web.ErrorMessage ?? "AI Detector stopped unexpectedly. Reopen it to resume monitoring.", "AI Detector", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         catch (Exception error)
         {
+            StayAwake(false);
             DesktopProcess.Log(error.ToString());
             ExitCode = 1;
             MessageBox.Show("AI Detector could not start or restart. Reopen the application to retry. Your settings and recordings are preserved.", "AI Detector", MessageBoxButtons.OK, MessageBoxIcon.Error);

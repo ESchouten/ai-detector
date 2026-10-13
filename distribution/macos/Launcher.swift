@@ -61,7 +61,7 @@ final class Application: NSObject, NSApplicationDelegate, SPUUpdaterDelegate, NS
             UserDefaults.standard.set(true, forKey: "askedAboutLogin")
             let alert = NSAlert()
             alert.messageText = "Open AI Detector when you log in?"
-            alert.informativeText = "Recommended for daily monitoring. Once you start monitoring in setup, it resumes automatically whenever you log in, unless you pause it in the dashboard. This computer must stay awake."
+            alert.informativeText = "Recommended for daily monitoring. Once you start monitoring in setup, it resumes automatically whenever you log in, unless you pause it in the dashboard. While monitoring is on, this Mac does not go to sleep by itself."
             alert.addButton(withTitle: "Enable")
             alert.addButton(withTitle: "Not now")
             if alert.runModal() == .alertFirstButtonReturn { toggleLogin() }

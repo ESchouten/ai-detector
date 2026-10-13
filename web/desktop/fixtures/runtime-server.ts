@@ -16,8 +16,12 @@ await startDesktop(async () => {
 		if (process.env.FIXTURE_FAIL_SHUTDOWN === 'true')
 			throw new Error('The test detector could not finish.');
 	});
-	return () => {
+	return (request) => {
 		console.error('Dashboard request received');
+		const monitoring = /\/monitoring-(on|off)$/.exec(new URL(request.url).pathname)?.[1];
+		if (monitoring)
+			for (const listener of process.rawListeners('aidetector:monitoring'))
+				listener.call(process, monitoring === 'on');
 		return new Response('fixture dashboard');
 	};
 });

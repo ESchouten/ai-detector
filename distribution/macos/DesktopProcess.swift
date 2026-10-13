@@ -14,6 +14,9 @@ final class DesktopProcess: @unchecked Sendable {
     private var current: Run?
     private var active = false
     private var stopping = false
+    // Held while monitoring is on, so that this Mac does not go to sleep by itself. Only the
+    // worker touches it.
+    private var awake: NSObjectProtocol?
 
     var isRunning: Bool {
         condition.lock()
@@ -27,7 +30,7 @@ final class DesktopProcess: @unchecked Sendable {
             var run = first
             var delay: TimeInterval = 2
             while true {
-                let diagnostic = Self.readDiagnostic(run.errors.fileHandleForReading)
+                let diagnostic = Self.readDiagnostic(run.errors.fileHandleForReading, monitoring: stayAwake)
                 run.process.waitUntilExit()
                 condition.lock()
                 run.commands.fileHandleForWriting.closeFile()
@@ -83,8 +86,17 @@ final class DesktopProcess: @unchecked Sendable {
         return run
     }
 
+    private func stayAwake(_ monitoring: Bool) {
+        if monitoring, awake == nil {
+            awake = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: "Monitoring cameras")
+        } else if !monitoring, let held = awake {
+            ProcessInfo.processInfo.endActivity(held)
+            awake = nil
+        }
+    }
+
     /// Drain stderr continuously; only the private shutdown marker suppresses recovery.
-    private static func readDiagnostic(_ input: FileHandle) -> (message: String?, shutdown: Bool) {
+    private static func readDiagnostic(_ input: FileHandle, monitoring: (Bool) -> Void) -> (message: String?, shutdown: Bool) {
         defer { input.closeFile() }
         let prefix = "AI_DETECTOR_ERROR "
         var pending = Data()
@@ -99,6 +111,8 @@ final class DesktopProcess: @unchecked Sendable {
                 let line = String(decoding: pending[..<newline], as: UTF8.self)
                 if line.hasPrefix(prefix) { message = String(line.dropFirst(prefix.count)) }
                 if line == "AI_DETECTOR_STOPPING" { shutdown = true }
+                if line == "AI_DETECTOR_MONITORING on" { monitoring(true) }
+                if line == "AI_DETECTOR_MONITORING off" { monitoring(false) }
                 pending.removeSubrange(...newline)
             }
             if pending.count > 16_384 { pending.removeAll(keepingCapacity: true) }

@@ -1,5 +1,6 @@
 using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -101,6 +102,30 @@ public sealed class DesktopProcessTests
             Assert.That(await running, Is.EqualTo(exitCode));
             Assert.That(web.ErrorMessage, Is.EqualTo(exitCode == 0 ? null : "The test detector could not finish."));
             Assert.That(File.ReadAllText(Path.Combine(folder, "drained")), Is.EqualTo("yes"));
+        }
+        finally { Directory.Delete(folder, recursive: true); }
+    }
+
+    [Test]
+    public async Task TheWebProcessSaysWhenMonitoringIsSwitchedOnAndOff()
+    {
+        var folder = Path.Combine(Path.GetTempPath(), "ai-monitoring-" + Guid.NewGuid());
+        Directory.CreateDirectory(folder);
+        try
+        {
+            var executable = CompileFixture(folder, @"using System;
+                class Web {
+                    static void Main() {
+                        Console.Error.WriteLine(""AI_DETECTOR_MONITORING on"");
+                        Console.Error.WriteLine(""AI_DETECTOR_MONITORING off"");
+                        Console.Error.WriteLine(""AI_DETECTOR_STOPPING"");
+                    }
+                }");
+            var said = new List<bool>();
+            using var web = new DesktopProcess(executable, said.Add);
+            var running = web.RunAsync(() => { });
+            Assert.That(await Task.WhenAny(running, Task.Delay(15000)), Is.SameAs(running));
+            Assert.That(said, Is.EqualTo(new[] { true, false }));
         }
         finally { Directory.Delete(folder, recursive: true); }
     }

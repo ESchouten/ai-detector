@@ -105,7 +105,9 @@ Services take their dependencies as constructor arguments and are tested with No
 - An outage whose warning arrived is noted in `app.json`, so a restart of the application neither repeats the warning nor forgets to report the return. Anything else starts afresh: a warning that had not arrived is given again.
 - `outageDelivery` sends each recipient their notices in order and tries one that fails again every minute for a day, because what stops the cameras often stops the internet too.
 
-**Desktop.** `desktop/runtime.ts` binds the port before SvelteKit starts, owns the parent pipe and shutdown, and announces `aidetector.local`. The announcing library is patched (`patches/@homebridge__ciao@1.3.12.patch`): on current macOS it took a connected Wi-Fi network for a disconnected one and announced the name to this computer only, and it promised an IPv6 address the announcement does not have, which made every lookup wait five seconds. Native menus and installers are in `distribution/`. Request handlers do not own the desktop lifecycle.
+The same timer raises `aidetector:monitoring`, with the state as it is ten seconds after the start and after every change.
+
+**Desktop.** `desktop/runtime.ts` binds the port before SvelteKit starts, owns the parent pipe and shutdown, and announces `aidetector.local`. It passes the server's `aidetector:monitoring` event on to the native shell, which keeps the computer awake while monitoring is on; a shell attached to a server that was already running cannot hear it and is told to stay awake. The announcing library is patched (`patches/@homebridge__ciao@1.3.12.patch`): on current macOS it took a connected Wi-Fi network for a disconnected one and announced the name to this computer only, and it promised an IPv6 address the announcement does not have, which made every lookup wait five seconds. Native menus and installers are in `distribution/`. Request handlers do not own the desktop lifecycle.
 
 ## Settings save boundary
 

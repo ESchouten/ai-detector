@@ -22,7 +22,7 @@ Open **AI Detector**. Setup opens in your browser, in English, Dutch, German or 
 2. **Detection.** Choose a preset, such as Cow Catcher, and the cameras it watches. Phone alerts and the Validator can be added here or later.
 3. **Start.** Every camera is checked, and **Start monitoring** opens Recordings once the cameras are really being analysed.
 
-Monitoring keeps running when you close the browser. Keep the computer awake while you need it. The [application guide](web/README.md) describes everything after setup.
+Monitoring keeps running when you close the browser. While it is on, the Windows and Mac applications keep the computer from going to sleep by itself. Closing a laptop's lid still puts it to sleep, and so can a Windows laptop running on its battery; on Linux, switch automatic suspend off yourself. The [application guide](web/README.md) describes everything after setup.
 
 ## Good to know
 

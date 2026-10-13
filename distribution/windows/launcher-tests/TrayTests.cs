@@ -29,6 +29,18 @@ public sealed class TrayTests
     }
 
     [Test]
+    public void MonitoringAsksWindowsNotToSleepAndPausingLetsItSleepAgain()
+    {
+        // Each call answers with what this thread had asked for until then.
+        uint Asked() => TrayApplication.SetThreadExecutionState(TrayApplication.Continuous) & TrayApplication.SystemRequired;
+        TrayApplication.StayAwake(true);
+        Assert.That(Asked(), Is.EqualTo(TrayApplication.SystemRequired));
+        TrayApplication.StayAwake(true);
+        TrayApplication.StayAwake(false);
+        Assert.That(Asked(), Is.EqualTo(0u));
+    }
+
+    [Test]
     public void StartupQuotesTheExecutableAndPreservesOtherEntries()
     {
         key.SetValue("Other application", "untouched");

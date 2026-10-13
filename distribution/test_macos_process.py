@@ -88,6 +88,31 @@ class MacProcessTest(unittest.TestCase):
         self.assertEqual(process.wait(timeout=15), 0)
         self.assertFalse((self.data / "desktop-instance.json").exists())
 
+    def keeps_awake(self, process):
+        assertions = subprocess.run(
+            ["pmset", "-g", "assertions"], capture_output=True, text=True, check=True
+        ).stdout
+        return any(
+            f"pid {process.pid}(" in line and "PreventUserIdleSystemSleep" in line
+            for line in assertions.splitlines()
+        )
+
+    def test_this_mac_stays_awake_only_while_monitoring_is_on(self):
+        process = self.launch()
+        self.assertFalse(self.keeps_awake(process))
+        for monitoring in ("on", "off"):
+            urllib.request.urlopen(
+                f"http://127.0.0.1:{self.port}/monitoring-{monitoring}", timeout=2
+            ).close()
+            wait_for(
+                process,
+                lambda monitoring=monitoring: (
+                    self.keeps_awake(process) == (monitoring == "on")
+                ),
+                self.data / "launcher.log",
+            )
+        self.quit(process)
+
     def test_quit_waits_for_monitoring_to_drain(self):
         self.quit(self.launch())
         self.assertEqual((self.data / "drained").read_text(), "200")
@@ -134,6 +159,12 @@ class MacProcessTest(unittest.TestCase):
         replacement = self.launch()
         self.assertEqual((self.data / "desktop-instance.json").read_text(), identity)
         self.assertEqual((self.data / "starts").read_text(), "started\n")
+        # The menu cannot hear the server it found running, so it keeps this Mac awake.
+        wait_for(
+            replacement,
+            lambda: self.keeps_awake(replacement),
+            self.data / "launcher.log",
+        )
         self.quit(replacement)
         self.assertEqual((self.data / "drained").read_text(), "200")
         self.assertEqual(

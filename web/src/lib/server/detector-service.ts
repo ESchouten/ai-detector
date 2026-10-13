@@ -51,8 +51,9 @@ async function keepHistory(): Promise<Date | undefined> {
 }
 
 /**
- * The people who get a camera's alerts hear when it is not watched. `known` are the settings as
- * read at the start, and `stopped` is when the application last ran.
+ * While monitoring is on, the native shell keeps the computer awake, and the people who get a
+ * camera's alerts hear when it is not watched. `known` are the settings as read at the start,
+ * and `stopped` is when the application last ran.
  */
 async function followMonitoring(
 	monitored: ManagedDetector,
@@ -78,7 +79,15 @@ async function followMonitoring(
 		// The time the application did not run is an outage only if monitoring was switched on.
 		notes.monitoring === true ? stopped?.getTime() : undefined
 	);
+	// Unknown at first, so that a shell that outlived an earlier server always hears the state.
+	let awake: boolean | undefined;
 	const timer = setInterval(() => {
+		const monitoring = monitored.monitoring;
+		if (monitoring !== awake) {
+			awake = monitoring;
+			for (const listener of process.rawListeners('aidetector:monitoring'))
+				listener.call(process, monitoring);
+		}
 		// Whatever goes wrong with a notice must not take monitoring down with it.
 		try {
 			sample();

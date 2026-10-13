@@ -131,8 +131,7 @@ function acquireLease(file: string): { check: () => void; release: () => Promise
 }
 
 type PreviewEvent =
-	| { event: 'frame'; data: LivePreviewFrame }
-	| { event: 'status'; data: LivePreviewStatus };
+	{ event: 'frame'; data: LivePreviewFrame } | { event: 'status'; data: LivePreviewStatus };
 
 function status(rule: LivePreviewRule): PreviewEvent {
 	return { event: 'status', data: { ruleId: rule.id } };

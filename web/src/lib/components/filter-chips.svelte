@@ -23,7 +23,7 @@
 <div
 	role="group"
 	aria-label={label}
-	class="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0"
+	class="-mx-4 flex [scrollbar-width:none] gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0"
 >
 	{#each options as option (option.value)}
 		{@const selected = option.value === value}

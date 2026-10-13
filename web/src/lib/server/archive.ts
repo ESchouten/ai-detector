@@ -98,14 +98,12 @@ export class DetectionArchive {
 	}
 
 	private unavailable(address: RecordingAddress, error: unknown): void {
-		if (
-			!(
-				error instanceof SyntaxError ||
-				error instanceof ArchiveDataError ||
-				error instanceof v.ValiError ||
-				isMissingFile(error)
-			)
-		)
+		if (!(
+			error instanceof SyntaxError ||
+			error instanceof ArchiveDataError ||
+			error instanceof v.ValiError ||
+			isMissingFile(error)
+		))
 			throw error;
 		const key = this.addressKey(address);
 		if (!this.warnings.has(key))
@@ -245,9 +243,11 @@ export class DetectionArchive {
 			const { metadata } = await this.readMetadata(address);
 			review = v.parse(savedReview, metadata.review) ?? null;
 		} catch (error) {
-			if (
-				!(isMissingFile(error) || error instanceof SyntaxError || error instanceof ArchiveDataError)
-			)
+			if (!(
+				isMissingFile(error) ||
+				error instanceof SyntaxError ||
+				error instanceof ArchiveDataError
+			))
 				throw error;
 		}
 		this.reviews.set(this.addressKey(address), { checked: Date.now(), review });

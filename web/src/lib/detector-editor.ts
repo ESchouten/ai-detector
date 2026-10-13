@@ -224,8 +224,7 @@ export function chooseConnection(
 
 /** What the editor has to tell the person after choosing a preset or a connection. */
 export type DetectorEditProblem =
-	| { kind: 'preset' | 'question'; cause: unknown }
-	| { kind: 'no-question' };
+	{ kind: 'preset' | 'question'; cause: unknown } | { kind: 'no-question' };
 
 /**
  * Bring an unfinished edit back from the choices kept in the browser. Cameras, recipients and

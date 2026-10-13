@@ -35,6 +35,8 @@ export class ManagedDetector {
 	private readonly preparation: DetectorPreparation;
 	private readonly options: DetectorOptions;
 	private progress = new RuntimeProgress();
+	/** Why the detector last failed, from the fifth failure in a row until one is ready again. */
+	private failing: string | undefined;
 
 	constructor(options: DetectorOptions) {
 		this.options = options;
@@ -80,6 +82,7 @@ export class ManagedDetector {
 			readiness,
 			cameras,
 			preparation: readiness === 'preparing' ? this.progress.preparation : undefined,
+			failing: this.enabled ? this.failing : undefined,
 			notice: this.progress.notice,
 			issues: this.progress.issues,
 			backends: this.progress.backends
@@ -112,7 +115,10 @@ export class ManagedDetector {
 	start(): Promise<void> {
 		const signal = this.startup.signal;
 		return this.enqueue(() => {
-			if (!this.child) this.restartDelay = INITIAL_RESTART_DELAY_MS;
+			if (!this.child) {
+				this.restartDelay = INITIAL_RESTART_DELAY_MS;
+				this.failing = undefined;
+			}
 			return this.startChild(signal);
 		});
 	}
@@ -215,6 +221,7 @@ export class ManagedDetector {
 				return;
 			}
 			const event = this.progress.accept(line);
+			if (event?.event === 'ready') this.failing = undefined;
 			if (event?.event === 'models_ready')
 				void this.enqueue(async () => {
 					// Ignore duplicate/stale requests from a process already being replaced.
@@ -238,13 +245,16 @@ export class ManagedDetector {
 				records.close();
 				this.log.append(`${new Date().toISOString()} Detector exited: ${exitSignal ?? code}\n`);
 				this.child = null;
+				// A good run however it ended: a restart for new settings is not a stop in a row.
+				if (Date.now() - startedAt >= STABLE_RUN_MS) this.restartDelay = INITIAL_RESTART_DELAY_MS;
 				if (this.enabled && !this.stoppingChild && !signal.aborted) {
-					if (Date.now() - startedAt >= STABLE_RUN_MS) this.restartDelay = INITIAL_RESTART_DELAY_MS;
 					if (this.state.phase !== 'failed')
 						this.fail(
 							new SetupError(
 								this.progress.preparationFailure ??
-									`The detector stopped unexpectedly (${exitSignal ?? code}).`
+									(this.repeated
+										? `The detector keeps stopping unexpectedly (${exitSignal ?? code}). Restart this computer. If it keeps happening, download the diagnostics in Settings → Logs and ask for help.`
+										: `The detector stopped unexpectedly (${exitSignal ?? code}).`)
 							)
 						);
 					this.scheduleRestart(signal);
@@ -263,7 +273,13 @@ export class ManagedDetector {
 		);
 	}
 
+	/** The fifth failure in a row is the first to wait the longest; none has been ready since. */
+	private get repeated(): boolean {
+		return this.failing !== undefined || this.restartDelay === MAX_RESTART_DELAY_MS;
+	}
+
 	private scheduleRestart(signal: AbortSignal): void {
+		if (this.repeated) this.failing = this.state.message;
 		const wait = this.restartDelay;
 		this.restartDelay = Math.min(wait * 2, MAX_RESTART_DELAY_MS);
 		this.progress = new RuntimeProgress();

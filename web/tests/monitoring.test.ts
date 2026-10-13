@@ -90,6 +90,33 @@ test('starting and stopping are in progress, not problems', () => {
 	assert.equal(monitoringSummary({ ...runtime, phase: 'stopping' }, scope).tone, 'busy');
 });
 
+test('a detector that keeps stopping is a problem in every step of its next attempt', () => {
+	const failing = 'The detector keeps stopping unexpectedly (1). Restart this computer.';
+	for (const phase of ['starting', 'checking', 'running'] as const) {
+		const summary = monitoringSummary(
+			{
+				...runtime,
+				phase,
+				failing,
+				readiness: 'preparing',
+				cameras: [],
+				message: 'Checking this computer…'
+			},
+			scope
+		);
+		assert.deepEqual(
+			[summary.tone, summary.label, summary.detail, summary.attention, summary.action],
+			['bad', 'Monitoring stopped', failing, true, 'pause'],
+			phase
+		);
+	}
+	// On its way down it is stopping, whatever came before.
+	assert.equal(
+		monitoringSummary({ ...runtime, phase: 'stopping', failing }, scope).label,
+		'Stopping…'
+	);
+});
+
 test('a lost connection outranks the last known state; missing detectors and external detectors are not alarms', () => {
 	const stale = monitoringSummary(runtime, { stale: true, configured: true });
 	assert.deepEqual([stale.label, stale.attention, stale.action], ['Connection lost', true, null]);

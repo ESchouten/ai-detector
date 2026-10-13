@@ -31,6 +31,15 @@ test('camera badges distinguish connection, processing and recording problems', 
 		cameraStatusBadge(undefined, { ...runtime, readiness: 'failed' }, false).label,
 		'Detection stopped'
 	);
+	// Between the attempts of a detector that keeps stopping, the cameras are not listed at all.
+	assert.deepEqual(
+		cameraStatusBadge(
+			undefined,
+			{ ...runtime, readiness: 'preparing', failing: 'The detector keeps stopping.' },
+			false
+		),
+		{ label: 'Detection stopped', tone: 'bad' }
+	);
 });
 
 test('paused and unknown status never claim monitoring or an old camera failure', () => {

@@ -20,6 +20,8 @@ export interface CameraRuntimeStatus {
 export interface RuntimeStatus {
 	managed: boolean;
 	phase: RuntimePhase;
+	/** Why the detector last failed, from the fifth failure in a row until one is ready again. */
+	failing?: string;
 	message: string;
 	helpUrl?: string;
 	dataDirectory: string;

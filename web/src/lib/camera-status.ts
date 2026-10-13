@@ -4,12 +4,13 @@ export type CameraTone = 'neutral' | 'ok' | 'warn' | 'bad';
 
 export function cameraStatusBadge(
 	camera: CameraRuntimeStatus | undefined,
-	runtime: Pick<RuntimeStatus, 'managed' | 'readiness'>,
+	runtime: Pick<RuntimeStatus, 'managed' | 'readiness' | 'failing'>,
 	stale: boolean
 ): { label: string; tone: CameraTone } {
 	if (stale || !runtime.managed) return { label: 'Status unavailable', tone: 'warn' };
 	if (runtime.readiness === 'idle') return { label: 'Paused', tone: 'neutral' };
-	if (runtime.readiness === 'failed') return { label: 'Detection stopped', tone: 'bad' };
+	if (runtime.readiness === 'failed' || runtime.failing)
+		return { label: 'Detection stopped', tone: 'bad' };
 	if (!camera) return { label: 'Preparing', tone: 'neutral' };
 	if (camera.state === 'paused') return { label: 'Paused', tone: 'neutral' };
 	if (camera.state === 'failed') return { label: 'Detection stopped', tone: 'bad' };

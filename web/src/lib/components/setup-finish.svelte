@@ -26,6 +26,8 @@
 	const external = $derived(configured && !runtime.managed);
 	const starting = $derived(saving || finishing);
 	const alerts = $derived([...new Set(verifier.cameras.flatMap((camera) => camera.alerts))]);
+	// A detector that keeps stopping is still being started: say so, and finish if it comes up.
+	const problem = $derived(message || (finishing ? runtime.failing : undefined));
 	const rows = $derived(
 		verifier.cameras.map((camera) => ({
 			camera,
@@ -184,16 +186,16 @@
 			Detection runs separately from this app. Restart your detector so it uses these settings.
 		</p>
 	{/if}
-	{#if finishing && !message}
+	{#if finishing && !problem}
 		<p role="status" class="flex items-center gap-2 text-sm text-muted-foreground">
 			<LoaderCircle class="size-4 shrink-0 animate-spin" aria-hidden="true" />
 			{runtime.preparation ?? runtime.message}
 		</p>
 	{/if}
-	{#if message}
+	{#if problem}
 		<Alert.Root variant="destructive">
 			<Alert.Title>Setup needs attention</Alert.Title>
-			<Alert.Description>{message}</Alert.Description>
+			<Alert.Description>{problem}</Alert.Description>
 		</Alert.Root>
 	{/if}
 

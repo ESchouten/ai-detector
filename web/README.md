@@ -11,6 +11,7 @@ There are three main pages, **Recordings**, **Cameras** and **Detectors**; every
 - A camera counts as monitored only when fresh pictures are being analysed by every detector assigned to it. A started program is not proof.
 - Closing the browser leaves monitoring running. **Pause monitoring** also keeps it paused at the next launch.
 - **Heartbeat** on the status page is an address the detector calls while it runs, so a service such as Healthchecks.io can warn you when the computer stops.
+- A detector that stops is started again by itself. From the fifth failure in a row until a detector has started properly, every page shows that monitoring has stopped, and Recordings, Cameras, Detectors, the status page and setup say why; for a stop without a known cause they also say what to do. The attempts continue meanwhile.
 - Alert and Validator failures stay visible in the status until a later attempt succeeds.
 
 ### Cameras

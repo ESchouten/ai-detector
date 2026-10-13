@@ -17,7 +17,7 @@ export interface MonitoringSummary {
 
 type Runtime = Pick<
 	RuntimeStatus,
-	'managed' | 'phase' | 'readiness' | 'message' | 'preparation' | 'cameras' | 'issues'
+	'managed' | 'phase' | 'failing' | 'readiness' | 'message' | 'preparation' | 'cameras' | 'issues'
 >;
 
 /** Whether a camera is analysed and recorded right now. */
@@ -64,7 +64,7 @@ function unavailable(
 		};
 }
 
-/** The process is not running, or is on its way up or down. */
+/** The process is not running, is on its way up or down, or keeps failing. */
 function lifecycle(runtime: Runtime): MonitoringSummary | undefined {
 	if (runtime.phase === 'stopping')
 		return {
@@ -81,6 +81,15 @@ function lifecycle(runtime: Runtime): MonitoringSummary | undefined {
 			detail: runtime.message,
 			attention: true,
 			action: 'retry'
+		};
+	// Another attempt after five that failed is not a start worth waiting for.
+	if (runtime.failing)
+		return {
+			tone: 'bad',
+			label: 'Monitoring stopped',
+			detail: runtime.failing,
+			attention: true,
+			action: 'pause'
 		};
 	if (runtime.phase === 'checking' || runtime.phase === 'starting')
 		return {

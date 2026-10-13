@@ -9,7 +9,8 @@ import { test } from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
 import { parse, stringify } from 'devalue';
 import { unzipSync } from 'fflate';
-import { manifest } from '../../build/server/manifest.js';
+// The adapter bundles the manifest into a chunk with a hashed name; this is the one it bundled.
+import { manifest } from '../../.svelte-kit/output/server/manifest.js';
 import { cameraSource, startServer } from './server.mjs';
 
 const names = [
@@ -50,6 +51,11 @@ function command(base, name, input, headers) {
 			refreshes: []
 		})
 	});
+}
+
+/** What a remote command returned, decoded from SvelteKit's wire format. */
+function returned(answer) {
+	return parse(answer.data)._;
 }
 
 /** What app.json records for a detector that follows a preset; takes its detection settings as ordered JSON. */
@@ -321,7 +327,7 @@ test(
 		assert.equal(remoteError.status, 403);
 		const inspected = await command(base, 'inspectInstallation', previous);
 		assert.equal(inspected.status, 200, await inspected.clone().text());
-		const summary = parse((await inspected.json()).result);
+		const summary = returned(await inspected.json());
 		assert.equal(summary.cameras, 1);
 		assert.equal(summary.detectors, 1);
 		const started = await command(base, 'importInstallation', {
@@ -595,7 +601,7 @@ test(
 			checkId: result.checkId
 		});
 		assert.equal(saved.type, 'result', JSON.stringify(saved));
-		const id = parse(saved.result).id;
+		const id = returned(saved).id;
 		assert.deepEqual(
 			JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8')).detectors,
 			[]
@@ -880,7 +886,7 @@ test(
 		assert.equal(renamed.status, 200, await renamed.clone().text());
 		const result = await renamed.json();
 		assert.equal(result.type, 'result', JSON.stringify(result));
-		assert.deepEqual(parse(result.result), { id: cameraId });
+		assert.deepEqual(returned(result), { id: cameraId });
 		assert.equal(await readFile(configPath, 'utf8'), configText);
 		const app = JSON.parse(await readFile(path.join(directory, 'app.json'), 'utf8'));
 		assert.deepEqual(app.streams, [{ id: cameraId, label: 'Main workshop', source }]);

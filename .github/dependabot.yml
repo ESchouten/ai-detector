@@ -1,0 +1,66 @@
+# Keeps packages from falling months behind: every Monday one pull request with the minor and
+# patch updates of everything below, and one for the detector's lock file.
+#
+# Major versions are left to people. Each one is work of its own, and several wait for
+# something else; CONTRIBUTING.md lists those and says how to find new ones.
+version: 2
+
+multi-ecosystem-groups:
+  weekly:
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Amsterdam
+
+updates:
+  - package-ecosystem: npm
+    directory: /web
+    patterns: ["*"]
+    multi-ecosystem-group: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      # Follows the Bun version in distribution/toolchain.json.
+      - dependency-name: "@types/bun"
+      # The chart component shadcn-svelte publishes is written for this pre-release.
+      - dependency-name: layerchart
+
+  - package-ecosystem: pip
+    directory: /distribution
+    patterns: ["*"]
+    multi-ecosystem-group: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: nuget
+    directory: /distribution/windows
+    patterns: ["*"]
+    multi-ecosystem-group: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directories: ["/", "/.github/actions/*"]
+    patterns: ["*"]
+    multi-ecosystem-group: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # The detector's lock file as `uv lock --upgrade` writes it: the versions pinned in
+  # pyproject.toml, such as PyTorch for CUDA 12.8 on Windows, stay where they are. Apart from
+  # the others, so that a refusal of the uv version the project requires leaves those alone.
+  - package-ecosystem: uv
+    directory: /detector
+    versioning-strategy: lockfile-only
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Amsterdam
+    groups:
+      detector:
+        patterns: ["*"]

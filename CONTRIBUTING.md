@@ -44,6 +44,23 @@ To build a complete desktop preview with the same stages used in CI, follow the 
 
 Python tools discover the root `ruff.toml` from either the repository or component directory. Do not copy its rules into another project file. The [configuration guide](config/README.md) identifies each settings file's owner; the [distribution guide](distribution/README.md) identifies build outputs and tool versions.
 
+## Keeping packages current
+
+[Dependabot](.github/dependabot.yml) opens one pull request every Monday with the minor and patch updates of the web packages, the release tools, the Windows launcher's packages and the GitHub Actions, and one for the detector's lock file. Merge them when the checks pass. Updates of PyTorch, ONNX Runtime, Ultralytics or OpenCV also need a look on real hardware, as the last paragraph of this guide says: CI has no graphics card.
+
+Major versions are not proposed. List them with `pnpm --dir web outdated` and `uv lock --project detector --upgrade --dry-run`, and take them one at a time. These wait for something else:
+
+| Package | Stays at | Until |
+| --- | --- | --- |
+| PyTorch, torchvision, ONNX Runtime and TensorRT on Windows with NVIDIA | The versions pinned in `detector/pyproject.toml` | The application moves to CUDA 13, which needs a newer NVIDIA driver on every such computer |
+| `@sveltejs/kit`, `@sveltejs/adapter-node`, `devalue` | SvelteKit 2 | `@jesterkit/exe-sveltekit`, which builds the desktop executable, supports SvelteKit 3 |
+| `typescript` | 6 | `svelte-check` and `typescript-eslint` accept 7 |
+| `@types/node`, `@types/bun` | Node 24 and the Bun version in `distribution/toolchain.json` | Those runtimes move |
+| `@tanstack/table-core`, `sveltekit-superforms`, `layerchart` | What the components in `web/src/lib/components/ui` are written for | shadcn-svelte publishes them for the newer versions |
+| Container base images in the `Dockerfile` | Their pinned digests | Someone qualifies a newer one, as the comments there say |
+
+An update of Ultralytics deserves a comparison of detections before and after on recorded pictures: between 8.4.80 and 8.4.177 it changed which head of a model it runs by default, how a prepared backend is reused and how models are downloaded, each without a failing test of its own.
+
 ## Changing a feature
 
 Follow one request through the relevant feature before adding files: the [web architecture](web/ARCHITECTURE.md) and the [detector reading path](detector/README.md#working-on-it) show the route. Keep new behavior with its existing owner; create a module when it isolates a real responsibility, not to match a diagram.

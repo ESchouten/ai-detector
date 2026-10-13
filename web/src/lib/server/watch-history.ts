@@ -33,10 +33,14 @@ export class WatchHistory {
 	private async changes(name: string): Promise<WatchChange[]> {
 		try {
 			const text = await readFile(this.file(`${name}.jsonl`), 'utf8');
-			return text
-				.split('\n')
-				.filter(Boolean)
-				.map((line) => JSON.parse(line) as WatchChange);
+			// A power cut can leave the last line cut short; the rest of the day still reads.
+			return text.split('\n').flatMap((line) => {
+				try {
+					return line ? [JSON.parse(line) as WatchChange] : [];
+				} catch {
+					return [];
+				}
+			});
 		} catch (error) {
 			if (isMissingFile(error)) return [];
 			throw error;
@@ -45,15 +49,20 @@ export class WatchHistory {
 
 	private async alive(): Promise<Date | undefined> {
 		try {
-			return new Date(await readFile(this.file('alive'), 'utf8'));
+			const at = new Date(await readFile(this.file('alive'), 'utf8'));
+			// A power cut can leave the file empty.
+			return Number.isNaN(at.getTime()) ? undefined : at;
 		} catch (error) {
 			if (isMissingFile(error)) return undefined;
 			throw error;
 		}
 	}
 
-	/** Close what was open when the application last stopped, however it stopped. */
-	async start(): Promise<void> {
+	/**
+	 * Close what was open when the application last stopped, however it stopped, and say when
+	 * that was.
+	 */
+	async start(): Promise<Date | undefined> {
 		await mkdir(this.directory, { recursive: true });
 		const stopped = await this.alive();
 		if (!stopped) return;
@@ -64,6 +73,7 @@ export class WatchHistory {
 			Array.from(this.states.keys(), (camera) => ({ camera, state: 'stopped' as const })),
 			stopped
 		);
+		return stopped;
 	}
 
 	/** Keep the state of every camera at this moment; cameras no longer listed have stopped. */

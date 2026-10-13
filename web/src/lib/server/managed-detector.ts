@@ -89,6 +89,14 @@ export class ManagedDetector {
 		};
 	}
 
+	/**
+	 * Whether monitoring is switched on: from the moment someone starts it, through a first
+	 * preparation that can take half an hour, and while the detector restarts or cannot start.
+	 */
+	get monitoring(): boolean {
+		return this.enabled || this.state.phase === 'checking';
+	}
+
 	async refreshMetadata(): Promise<void> {
 		const app = await readJson<AppConfig>(this.appPath);
 		if (app) this.progress.updateMetadata(app);

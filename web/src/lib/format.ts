@@ -41,6 +41,20 @@ export function weekday(value: string | number | Date): string {
 		: String(value);
 }
 
+/** A moment as it is read now: 21:12 when it was today, Sun, Oct 11, 9:12 PM when it was not. */
+export function recentMoment(value: string | number | Date, now = new Date()): string {
+	const date = parse(value);
+	if (!date) return String(value);
+	if (calendarDay(date) === calendarDay(now)) return timeOfDay(date);
+	return dateFormat(language(), {
+		weekday: 'short',
+		day: 'numeric',
+		month: 'short',
+		hour: 'numeric',
+		minute: '2-digit'
+	}).format(date);
+}
+
 /** 2026-10-03: the local calendar day of a moment, as in the names of recordings. */
 export function calendarDay(date: Date): string {
 	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;

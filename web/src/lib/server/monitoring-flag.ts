@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { isDeepStrictEqual } from 'node:util';
 import { readJson, writeJson } from './json-file.ts';
 import { serialQueue } from './serial.ts';
 
@@ -16,21 +17,41 @@ export function exclusiveWrite<T>(file: string, operation: () => Promise<T>): Pr
 }
 
 /**
- * `monitoring` in app.json: whether monitoring resumes when the application starts. It belongs
- * to the detector launcher and stays with this installation, like paired devices: the settings
- * store carries it over untouched and never exports, imports or recovers it.
+ * What the detector launcher notes in app.json: `monitoring`, whether monitoring resumes when
+ * the application starts, and `outages`, the cameras people were warned about and since when.
+ * Both stay with this installation, like paired devices: the settings store carries them over
+ * untouched and never exports, imports or recovers them.
  */
-export async function monitoringEnabled(appFile: string): Promise<boolean> {
-	return (await readJson<{ monitoring?: unknown }>(appFile))?.monitoring === true;
+export async function launcherNotes(
+	appFile: string
+): Promise<{ monitoring?: unknown; outages?: unknown }> {
+	const { monitoring, outages } = (await readJson<Record<string, unknown>>(appFile)) ?? {};
+	return {
+		...(monitoring !== undefined && { monitoring }),
+		...(outages !== undefined && { outages })
+	};
 }
 
-export function setMonitoringEnabled(appFile: string, enabled: boolean): Promise<void> {
+export async function monitoringEnabled(appFile: string): Promise<boolean> {
+	return (await launcherNotes(appFile)).monitoring === true;
+}
+
+function note(appFile: string, key: 'monitoring' | 'outages', value: unknown): Promise<void> {
 	return exclusiveWrite(appFile, async () => {
 		const app = (await readJson<Record<string, unknown>>(appFile)) ?? {};
 		// Nothing to change; in particular, a new installation gets no settings file for "off".
-		if ((app.monitoring === true) === enabled) return;
-		if (enabled) app.monitoring = true;
-		else delete app.monitoring;
+		if (isDeepStrictEqual(app[key], value)) return;
+		if (value === undefined) delete app[key];
+		else app[key] = value;
 		await writeJson(appFile, app);
 	});
+}
+
+export function setMonitoringEnabled(appFile: string, enabled: boolean): Promise<void> {
+	return note(appFile, 'monitoring', enabled ? true : undefined);
+}
+
+/** Each camera people were warned about, with the moment it was last watched. */
+export function noteOutages(appFile: string, outages: Record<string, string>): Promise<void> {
+	return note(appFile, 'outages', Object.keys(outages).length ? outages : undefined);
 }

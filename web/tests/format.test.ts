@@ -1,6 +1,14 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { clipLength, dataSize, dayHeading, percent, plural } from '../src/lib/format.ts';
+import {
+	clipLength,
+	dataSize,
+	dayHeading,
+	percent,
+	plural,
+	recentMoment,
+	timeOfDay
+} from '../src/lib/format.ts';
 import { recordingVerdict } from '../src/lib/detections.ts';
 
 test('recent days read as words and older days keep their date', () => {
@@ -13,6 +21,18 @@ test('recent days read as words and older days keep their date', () => {
 	assert.equal(dayHeading('not-a-day', now), 'not-a-day');
 	// Yesterday crosses month boundaries.
 	assert.equal(dayHeading('2026-09-30', new Date(2026, 9, 1, 0, 5)), 'Yesterday');
+});
+
+test('a moment today is its time, and a moment on another day names that day', () => {
+	const now = new Date(2026, 9, 12, 6, 31);
+	const night = new Date(2026, 9, 12, 2, 10);
+	assert.equal(recentMoment(night, now), timeOfDay(night));
+	const evening = recentMoment(new Date(2026, 9, 11, 22, 10), now);
+	assert.match(evening, /Sun/);
+	assert.match(evening, /Oct/);
+	assert.match(evening, /11/);
+	assert.match(evening, /10:10/);
+	assert.doesNotMatch(evening, /2026/);
 });
 
 test('clip lengths, sizes and counts are short and unambiguous', () => {

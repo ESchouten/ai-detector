@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { sendTelegramTest } from '../src/lib/server/telegram.ts';
+import { sendTelegramNotice, sendTelegramTest } from '../src/lib/server/telegram.ts';
 import { TelegramInbox } from '../src/lib/server/telegram-inbox.ts';
 
 test('chat discovery returns unique recipient names without exposing message bodies', async (t) => {
@@ -43,6 +43,27 @@ test('a test alert is clearly labelled and Telegram rejection reaches the caller
 	await assert.rejects(sendTelegramTest('fixture-token', 'fixture-chat'), /Chat not found/);
 	assert.match(body, /setup test/);
 	assert.match(body, /confirm receipt/);
+});
+
+test('a notice of the application goes to its chat, without sound when asked, and a refusal reaches the caller', async (t) => {
+	const bodies: Record<string, unknown>[] = [];
+	let accepted = true;
+	t.mock.method(globalThis, 'fetch', async (url: string, init: RequestInit) => {
+		assert.match(String(url), /\/botfixture-token\/sendMessage$/);
+		bodies.push(JSON.parse(String(init.body)));
+		return new Response(JSON.stringify({ ok: accepted, description: 'Chat not found' }));
+	});
+	await sendTelegramNotice('fixture-token', 'fixture-chat', 'Not watched: Barn.', true);
+	await sendTelegramNotice('fixture-token', 'fixture-chat', 'Watched again: Barn.', false);
+	assert.deepEqual(bodies, [
+		{ chat_id: 'fixture-chat', text: 'Not watched: Barn.', disable_notification: true },
+		{ chat_id: 'fixture-chat', text: 'Watched again: Barn.', disable_notification: false }
+	]);
+	accepted = false;
+	await assert.rejects(
+		sendTelegramNotice('fixture-token', 'fixture-chat', 'Not watched: Barn.', false),
+		/Chat not found/
+	);
 });
 
 test('unavailable Telegram gives internet guidance without exposing request credentials', async (t) => {

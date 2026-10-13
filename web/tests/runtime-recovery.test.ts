@@ -148,6 +148,7 @@ test(
 				detector.status().message,
 				`${attempt >= 5 ? keepsStopping : 'The detector stopped unexpectedly (75).'} Restarting monitoring in ${waits[attempt - 1] / 1000} seconds…`
 			);
+			assert.equal(detector.monitoring, true);
 			t.mock.timers.tick(waits[attempt - 1] - 1);
 			await realDelay(0);
 			assert.equal(await starts(), attempt);
@@ -305,6 +306,7 @@ for (const disable of [true, false]) {
 		await detector.stop(disable);
 		assert.equal(detector.status().phase, 'stopped');
 		assert.equal(detector.status().readiness, 'idle');
+		assert.equal(detector.monitoring, !disable);
 		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), !disable);
 		t.mock.timers.tick(2100);
 		await realDelay(0);

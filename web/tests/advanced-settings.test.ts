@@ -6,7 +6,12 @@ import * as v from 'valibot';
 import { parseSettings } from '../src/lib/advanced-settings.ts';
 import { heartbeatInput } from '../src/lib/configuration.ts';
 import { settingsRevision } from '../src/lib/server/configuration/advanced.ts';
-import { monitoringEnabled, setMonitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
+import {
+	launcherNotes,
+	monitoringEnabled,
+	noteOutages,
+	setMonitoringEnabled
+} from '../src/lib/server/monitoring-flag.ts';
 import { backupSettings } from '../src/lib/server/settings-backup.ts';
 import { unzipSync } from 'fflate';
 
@@ -160,13 +165,16 @@ test('editing detector credentials detaches only that shared connection', async 
 	assert.equal(next.config.detectors[0].vlm![0].key, 'detector-specific');
 });
 
-test('saving settings keeps the launcher’s resume flag, which never appears in settings, backups or revisions', async (t) => {
+test('saving settings keeps the launcher’s notes, which never appear in settings, backups or revisions', async (t) => {
 	const { files, store } = await settingsStore(t);
 	const source = 'rtsp://camera.example.test/barn';
 	await store.saveCamera({ label: 'Barn', source });
 	await setMonitoringEnabled(files.app, true);
+	const outages = { 'camera-a': '2026-10-12T00:10:00.000Z' };
+	await noteOutages(files.app, outages);
 	const loaded = await store.read();
 	assert.equal('monitoring' in loaded.app, false);
+	assert.equal('outages' in loaded.app, false);
 	const revision = settingsRevision(loaded);
 
 	// Metadata-only, two-file and device writes each replace app.json.
@@ -185,19 +193,25 @@ test('saving settings keeps the launcher’s resume flag, which never appears in
 		{ id: 'phone', name: 'Phone', hash: 'hash', created: 1, expires: 2 }
 	]);
 	assert.equal(await monitoringEnabled(files.app), true);
+	assert.deepEqual(await launcherNotes(files.app), { monitoring: true, outages });
 	assert.equal((await store.readDevices()).length, 1);
 
 	const response = await backupSettings(store, new Request('http://localhost/setup/backup'));
 	const backup = unzipSync(new Uint8Array(await response.arrayBuffer()));
-	assert.equal('monitoring' in JSON.parse(Buffer.from(backup['app.json']).toString()), false);
+	const saved = JSON.parse(Buffer.from(backup['app.json']).toString());
+	assert.deepEqual(['monitoring' in saved, 'outages' in saved], [false, false]);
 	const snapshot = JSON.parse(await readFile(`${files.config}.last-valid`, 'utf8'));
-	assert.equal('monitoring' in snapshot.app, false);
+	assert.deepEqual(['monitoring' in snapshot.app, 'outages' in snapshot.app], [false, false]);
 
 	// Pausing is not a settings change: an open Advanced draft stays valid.
 	const beforePause = settingsRevision(await store.read());
 	await setMonitoringEnabled(files.app, false);
 	assert.equal(settingsRevision(await store.read()), beforePause);
 	assert.notEqual(beforePause, revision);
+	// Nothing left to remember leaves no trace in the file.
+	await noteOutages(files.app, {});
+	assert.deepEqual(await launcherNotes(files.app), {});
+	assert.equal('outages' in JSON.parse(await readFile(files.app, 'utf8')), false);
 });
 
 test('the launcher and the settings store can replace app.json at the same time without losing either change', async (t) => {

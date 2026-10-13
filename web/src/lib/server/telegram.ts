@@ -211,6 +211,16 @@ export async function sendTelegramTest(token: string, chat: string): Promise<voi
 	);
 }
 
+/** A message of the application's own, such as a camera that is no longer watched. */
+export async function sendTelegramNotice(
+	token: string,
+	chat: string,
+	text: string,
+	silent: boolean
+): Promise<void> {
+	await request(api(token).sendMessage(chat, text, { disable_notification: silent }));
+}
+
 // Only posting is needed in channels. Groups must already include the bot.
 const channelRights: ChatAdministratorRights = {
 	is_anonymous: false,

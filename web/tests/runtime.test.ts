@@ -82,9 +82,11 @@ test(
 		const { detector, directory } = await managedDetector(t);
 		await writeJson(path.join(directory, 'config.json'), config);
 		await detector.initialize();
+		assert.equal(detector.monitoring, false);
 		await Promise.all([detector.start(), detector.start()]);
 		await waitFor(async () => (await detector.log.read()).includes('camera.local'));
 		assert.equal(detector.status().phase, 'running');
+		assert.equal(detector.monitoring, true);
 		await assert.rejects(
 			detector.whileStopped(() => assert.fail('Cannot clear a running model cache')),
 			/Pause monitoring/
@@ -175,9 +177,13 @@ test(
 		await writeJson(path.join(directory, 'fixture-options.json'), { holdCheck: true });
 		const starting = detector.start();
 		await waitFor(() => detector.status().phase === 'checking');
+		// Switched on from the first moment, though nothing resumes it yet if this start fails.
+		assert.equal(detector.monitoring, true);
+		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
 		await detector.stop();
 		await starting;
 		assert.equal(detector.status().phase, 'stopped');
+		assert.equal(detector.monitoring, false);
 		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
 		await assert.rejects(readFile(path.join(directory, 'starts.txt')), { code: 'ENOENT' });
 	}

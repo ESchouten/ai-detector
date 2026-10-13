@@ -41,13 +41,13 @@ test('a state lasts until the next change, and only changes are written', async 
 test('time the application was not running is not counted as watched', async (t) => {
 	const dir = await directory(t);
 	const before = new WatchHistory(dir);
-	await before.start();
+	assert.equal(await before.start(), undefined);
 	await before.sample([{ id: 'barn', state: 'watched' }], at(6, 8));
 	await before.sample([{ id: 'barn', state: 'watched' }], at(6, 9));
 
 	// The computer was switched off at nine and started again at eleven.
 	const after = new WatchHistory(dir);
-	await after.start();
+	assert.deepEqual(await after.start(), at(6, 9));
 	await after.sample([{ id: 'barn', state: 'watched' }], at(6, 11));
 	await after.sample([{ id: 'barn', state: 'watched' }], at(6, 12));
 
@@ -55,6 +55,25 @@ test('time the application was not running is not counted as watched', async (t)
 		[at(6, 8).getTime(), at(6, 9).getTime(), 'watched'],
 		[at(6, 9).getTime(), at(6, 11).getTime(), 'stopped'],
 		[at(6, 11).getTime(), at(6, 12).getTime(), 'watched']
+	]);
+});
+
+test('files damaged by a power cut do not end the history', async (t) => {
+	const dir = await directory(t);
+	const line = (hour: number, state: string) =>
+		JSON.stringify({ at: at(6, hour).toISOString(), camera: 'barn', state });
+	// A line cut short between two whole ones, and the file of the last moment left empty.
+	await writeFile(
+		path.join(dir, '2026-10-06.jsonl'),
+		[line(8, 'watched'), '{"at":"2026-10-06T0', line(10, 'offline'), ''].join('\n')
+	);
+	await writeFile(path.join(dir, 'alive'), '');
+	const history = new WatchHistory(dir);
+	assert.equal(await history.start(), undefined);
+	await history.sample([{ id: 'barn', state: 'watched' }], at(6, 11));
+	assert.deepEqual(shape((await history.read(at(6, 0), at(6, 23))).get('barn')), [
+		[at(6, 8).getTime(), at(6, 10).getTime(), 'watched'],
+		[at(6, 10).getTime(), at(6, 11).getTime(), 'offline']
 	]);
 });
 

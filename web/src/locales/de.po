@@ -3708,3 +3708,18 @@ msgstr "Der Detektor reagiert nicht mehr. Die Überwachung wird neu gestartet…
 #: src/lib/server/managed-detector.ts
 msgid "The detector keeps stopping unexpectedly ({0}). Restart this computer. If it keeps happening, download the diagnostics in Settings → Logs and ask for help."
 msgstr "Der Detektor wird immer wieder unerwartet beendet ({0}). Starten Sie diesen Computer neu. Wenn das weiter passiert, laden Sie die Diagnosedaten unter Einstellungen → Protokolle herunter und bitten Sie um Hilfe."
+
+#. 0: names(together); 1: moment(since); 2: moment(until)
+#: src/lib/server/outage-alerts.ts
+msgid "Watched again: {0}. Not watched from {1} to {2}."
+msgstr "Wieder überwacht: {0}. Nicht überwacht von {1} bis {2}."
+
+#. 0: names(stopped); 1: moment(since)
+#: src/lib/server/outage-alerts.ts
+msgid "Not watched: {0} (since {1}). Open AI Detector to see why."
+msgstr "Nicht überwacht: {0} (seit {1}). Öffnen Sie AI Detector, um den Grund zu sehen."
+
+#. 0: names(still)
+#: src/lib/server/outage-alerts.ts
+msgid "Still not watched: {0}."
+msgstr "Weiterhin nicht überwacht: {0}."

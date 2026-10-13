@@ -9,7 +9,7 @@ import {
 	type PairedDevice
 } from '../../schema.ts';
 import { readJson, writeJson } from '../json-file.ts';
-import { exclusiveWrite, monitoringEnabled } from '../monitoring-flag.ts';
+import { exclusiveWrite, launcherNotes } from '../monitoring-flag.ts';
 import { webLog } from '../web-log.ts';
 import { settingsRevision } from './advanced.ts';
 import { identifyCameras } from './cameras.ts';
@@ -82,14 +82,14 @@ export class SettingsFiles {
 	}
 
 	/**
-	 * Replace app.json, and config.json unless only metadata changed. The launcher's `monitoring`
-	 * flag is not part of these documents; whatever app.json holds at this moment is kept.
+	 * Replace app.json, and config.json unless only metadata changed. The launcher's notes are
+	 * not part of these documents; whatever app.json holds of them at this moment is kept.
 	 */
 	write(document: Configuration, config = true): Promise<void> {
 		return exclusiveWrite(this.paths.app, async () => {
-			// Unreadable settings are being replaced; a running launcher writes its flag again.
-			const resumes = await monitoringEnabled(this.paths.app).catch(() => false);
-			const app = resumes ? { ...document.app, monitoring: true } : document.app;
+			// Unreadable settings are being replaced, and the notes go with them.
+			const notes = await launcherNotes(this.paths.app).catch(() => ({}));
+			const app = { ...document.app, ...notes };
 			if (config) await writeConfiguration(this.paths, { config: document.config, app });
 			else await writeJson(this.paths.app, app);
 		});

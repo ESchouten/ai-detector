@@ -159,8 +159,9 @@ const pairedDevice = v.object({
 	created: v.number(),
 	expires: v.number()
 });
-// app.json also holds `monitoring`, the detector launcher's resume flag (see monitoring-flag.ts).
-// It is deliberately absent here, so settings documents, backups and revisions never contain it.
+// app.json also holds the detector launcher's notes, `monitoring` and `outages` (see
+// monitoring-flag.ts). They are deliberately absent here, so settings documents, backups and
+// revisions never contain them.
 export const appSchema = v.object({
 	// The interface language of this installation; absent until setup or a choice records one.
 	// A value this version does not know must not make the other settings unreadable.

@@ -1,10 +1,19 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import { DATA_DIRECTORY, EXECUTABLE_DIRECTORY, PACKAGED } from './application-paths';
+import {
+	APP_CONFIG_PATH,
+	DATA_DIRECTORY,
+	EXECUTABLE_DIRECTORY,
+	PACKAGED
+} from './application-paths';
 import { ManagedDetector } from './managed-detector';
+import { launcherNotes, noteOutages } from './monitoring-flag';
 import type { RuntimeStatus } from '../runtime';
+import type { Configuration } from '../schema';
+import { outageWatch } from './outage-alerts';
 import { diskSpace } from './storage';
 import { recordings } from './recordings';
+import { sendTelegramNotice } from './telegram';
 import { webLog } from './web-log';
 import { WatchHistory } from './watch-history';
 import { watchState } from '../camera-history';
@@ -16,9 +25,10 @@ let storageWarning: string | undefined;
 export const watchHistory = new WatchHistory(path.join(DATA_DIRECTORY, 'history'));
 
 /** Every ten seconds is as precisely as a gap in the history is known. */
-async function keepHistory(): Promise<void> {
+async function keepHistory(): Promise<Date | undefined> {
+	let stopped: Date | undefined;
 	try {
-		await watchHistory.start();
+		stopped = await watchHistory.start();
 	} catch (error) {
 		webLog.warn('Could not open the camera history', error);
 		return;
@@ -37,13 +47,55 @@ async function keepHistory(): Promise<void> {
 		}
 	}, 10000);
 	timer.unref();
+	return stopped;
 }
 
-export function initializeDetector(prepareConfiguration: () => Promise<unknown>): Promise<void> {
+/**
+ * The people who get a camera's alerts hear when it is not watched. `known` are the settings as
+ * read at the start, and `stopped` is when the application last ran.
+ */
+async function followMonitoring(
+	monitored: ManagedDetector,
+	settings: () => Promise<Configuration>,
+	known: Configuration | undefined,
+	stopped: Date | undefined
+): Promise<void> {
+	// Settings that cannot be read are reported where they are edited.
+	const notes: Awaited<ReturnType<typeof launcherNotes>> = await launcherNotes(
+		APP_CONFIG_PATH
+	).catch(() => ({}));
+	const sample = outageWatch(
+		{
+			monitored,
+			directory: DATA_DIRECTORY,
+			noted: notes.outages,
+			note: (outages) => noteOutages(APP_CONFIG_PATH, outages),
+			settings,
+			send: ({ token, chat }, text, silent) => sendTelegramNotice(token, chat, text, silent),
+			warn: (message, error) => webLog.warn(message, error)
+		},
+		known,
+		// The time the application did not run is an outage only if monitoring was switched on.
+		notes.monitoring === true ? stopped?.getTime() : undefined
+	);
+	const timer = setInterval(() => {
+		// Whatever goes wrong with a notice must not take monitoring down with it.
+		try {
+			sample();
+		} catch (error) {
+			webLog.warn('Could not follow the cameras for outage notices', error);
+		}
+	}, 10000);
+	timer.unref();
+}
+
+export function initializeDetector(
+	prepareConfiguration: () => Promise<Configuration>
+): Promise<void> {
 	return (initialization ??= initialize(prepareConfiguration));
 }
 
-async function initialize(prepareConfiguration: () => Promise<unknown>): Promise<void> {
+async function initialize(prepareConfiguration: () => Promise<Configuration>): Promise<void> {
 	const executable =
 		process.env.AIDETECTOR_EXECUTABLE ??
 		path.join(
@@ -53,14 +105,15 @@ async function initialize(prepareConfiguration: () => Promise<unknown>): Promise
 		);
 	if (!process.env.AIDETECTOR_EXECUTABLE && (!PACKAGED || !existsSync(executable))) return;
 	detector = new ManagedDetector({ executable, dataDirectory: DATA_DIRECTORY });
+	let known: Configuration | undefined;
 	try {
-		await prepareConfiguration();
+		known = await prepareConfiguration();
 		// The server must remain available while a first model is being prepared.
 		void detector.initialize().catch((error) => detector?.fail(error));
 	} catch (error) {
 		detector.fail(error);
 	}
-	await keepHistory();
+	await followMonitoring(detector, prepareConfiguration, known, await keepHistory());
 	process.once('sveltekit:shutdown', (reason?: string) => detector?.stop(false, reason));
 	process.once('aidetector:launcher-disconnected', () => {
 		detector?.log.append(

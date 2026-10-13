@@ -5,7 +5,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test, type TestContext } from 'node:test';
 import { ConfigurationError } from '../src/lib/configuration.ts';
-import { loadPresets, readPresetChoices } from '../src/lib/server/configuration/preset-files.ts';
+import {
+	loadPresets,
+	presetFile,
+	readPresetChoices
+} from '../src/lib/server/configuration/preset-files.ts';
+import type { DetectorConfig } from '../src/lib/schema.ts';
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-presets-'));
@@ -32,12 +37,35 @@ test('preset files supply sorted IDs and readable names without a separate regis
 	});
 });
 
+test('a preset’s efficient mode is chosen with it, and an efficient file alone is a preset', async (t) => {
+	const directory = await fixture(t);
+	for (const name of ['calving-catcher', 'calving-catcher.efficient', 'yard.efficient'])
+		await writeFile(
+			path.join(directory, `${name}.json`),
+			JSON.stringify({ yolo: { model: 'custom.pt' } })
+		);
+	assert.deepEqual(await readPresetChoices(() => loadPresets(directory, {})), {
+		presets: [
+			{ id: 'calving-catcher', name: 'Calving Catcher', efficient: true },
+			{ id: 'yard.efficient', name: 'Yard Efficient' }
+		]
+	});
+	assert.equal(presetFile('calving-catcher'), 'calving-catcher');
+	assert.equal(presetFile('calving-catcher', true), 'calving-catcher.efficient');
+});
+
 test('bundled preset files preserve their models, options and recording destinations', async () => {
 	const directory = fileURLToPath(new URL('../../config/detector/', import.meta.url));
 	const presets = await loadPresets(directory, {});
 	assert.deepEqual(
 		presets.map(({ id }) => id),
-		['calving-catcher-tailup', 'calving-catcher', 'cow-catcher', 'general']
+		[
+			'calving-catcher-tailup',
+			'calving-catcher.efficient',
+			'calving-catcher',
+			'cow-catcher',
+			'general'
+		]
 	);
 	for (const preset of presets) {
 		const raw = JSON.parse(await readFile(path.join(directory, `${preset.id}.json`), 'utf8'));
@@ -49,6 +77,31 @@ test('bundled preset files preserve their models, options and recording destinat
 		presets.find(({ id }) => id === 'calving-catcher-tailup')!.detector.yolo?.model,
 		presets.find(({ id }) => id === 'calving-catcher')!.detector.yolo?.model
 	);
+});
+
+test('an efficient mode differs from its preset only in how often it looks and how much it needs to see', async () => {
+	const presets = await loadPresets(
+		fileURLToPath(new URL('../../config/detector/', import.meta.url)),
+		{}
+	);
+	const modes = presets.flatMap((preset) => {
+		const efficient = presets.find(({ id }) => id === presetFile(preset.id, true));
+		return efficient ? [[preset.detector, efficient.detector]] : [];
+	});
+	assert.equal(modes.length, 1);
+	// A newer model, another question or a changed threshold must reach both modes.
+	const shared = (detector: DetectorConfig) => ({
+		...detector,
+		detection: { ...detector.detection, interval: undefined },
+		yolo: { ...detector.yolo, frames_min: undefined }
+	});
+	for (const [performance, efficient] of modes) {
+		assert.deepEqual(shared(efficient), shared(performance));
+		assert.ok(efficient.detection.interval! > performance.detection.interval!);
+	}
+	const [[performance, efficient]] = modes;
+	assert.deepEqual([performance.detection.interval, performance.yolo?.frames_min], [1, 10]);
+	assert.deepEqual([efficient.detection.interval, efficient.yolo?.frames_min], [5, 5]);
 });
 
 test('adding, editing and removing local files changes the choices on the next read', async (t) => {

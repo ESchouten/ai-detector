@@ -3723,3 +3723,22 @@ msgstr "Niet bewaakt: {0} (sinds {1}). Open AI Detector om te zien waarom."
 #: src/lib/server/outage-alerts.ts
 msgid "Still not watched: {0}."
 msgstr "Nog steeds niet bewaakt: {0}."
+#: src/lib/components/detector-editor.svelte
+msgid "Mode"
+msgstr "Modus"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Performance"
+msgstr "Prestaties"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Looks at the picture most often."
+msgstr "Kijkt het vaakst naar het beeld."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Efficient"
+msgstr "Zuinig"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Looks less often and asks less of this computer."
+msgstr "Kijkt minder vaak en vraagt minder van deze computer."

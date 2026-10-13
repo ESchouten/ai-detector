@@ -3736,3 +3736,22 @@ msgstr "Sans surveillance : {0} (depuis {1}). Ouvrez AI Detector pour voir pour
 #: src/lib/server/outage-alerts.ts
 msgid "Still not watched: {0}."
 msgstr "Toujours sans surveillance : {0}."
+#: src/lib/components/detector-editor.svelte
+msgid "Mode"
+msgstr "Mode"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Performance"
+msgstr "Performance"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Looks at the picture most often."
+msgstr "Regarde l’image le plus souvent."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Efficient"
+msgstr "Économe"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Looks less often and asks less of this computer."
+msgstr "Regarde moins souvent et sollicite moins cet ordinateur."

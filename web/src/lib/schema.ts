@@ -41,6 +41,8 @@ const text = v.pipe(v.string(), v.trim(), v.minLength(1));
 export const detectorMeta = v.object({
 	label: text,
 	preset: v.optional(text),
+	/** Present only when the detector follows its preset's efficient mode. */
+	efficient: v.optional(v.literal(true)),
 	/** Which settings the preset gave, to tell whether the detector still follows it. */
 	presetVersion: v.optional(text),
 	/** Present only when the person switched off taking the preset's newer settings by itself. */
@@ -180,12 +182,17 @@ export type TelegramMeta = v.InferOutput<typeof telegramMeta>;
 export type LlmConnection = v.InferOutput<typeof llmConnection>;
 export type StreamMeta = v.InferOutput<typeof streamMeta>;
 
+/** A preset to choose in the detector editor. */
 export interface PresetInfo {
 	id: string;
 	name: string;
+	/** Present when the preset also comes in an efficient mode, which looks less often. */
+	efficient?: true;
 }
 
-export interface DetectorPreset extends PresetInfo {
+export interface DetectorPreset {
+	id: string;
+	name: string;
 	detector: DetectorConfig;
 }
 

@@ -19,7 +19,7 @@ import type {
 export function detectorDraftMeta(
 	detector: DetectorConfig,
 	label: string,
-	preset: { id: string; settings: string; autoUpdate: boolean },
+	preset: { id: string; efficient: boolean; settings: string; autoUpdate: boolean },
 	connection?: LlmConnection
 ): DetectorMeta {
 	const [verification] = detector.vlm ?? [];
@@ -27,6 +27,7 @@ export function detectorDraftMeta(
 	return {
 		label,
 		preset: followed,
+		efficient: followed && preset.efficient ? true : undefined,
 		autoUpdate: followed && !preset.autoUpdate ? false : undefined,
 		llmConnection:
 			connection && verification && connectionMatches(verification, connection)
@@ -92,6 +93,8 @@ export interface DetectorEdit {
 	suggestedLabel: string;
 	detector: DetectorDraft;
 	preset: string;
+	/** Whether the preset's efficient mode is chosen. */
+	efficient: boolean;
 	/** The settings the chosen preset gave, to tell whether the rule still follows it. */
 	presetSettings: string;
 	/** The saved AI connection in use, by name; empty for none. */
@@ -124,13 +127,14 @@ function followedPreset(edit: DetectorEdit, presets: PresetInfo[]): PresetInfo |
  * only, never camera addresses, bot tokens or connection keys.
  */
 export function detectorChoices(
-	edit: Pick<DetectorEdit, 'label' | 'preset' | 'detector' | 'connection'>,
+	edit: Pick<DetectorEdit, 'label' | 'preset' | 'efficient' | 'detector' | 'connection'>,
 	options: Pick<DetectorOptions, 'cameras' | 'telegrams'>
 ): DetectorChoices {
 	const channels = edit.detector.exporters.telegram ?? [];
 	return {
 		label: edit.label,
 		preset: edit.preset,
+		efficient: edit.efficient,
 		cameras: options.cameras
 			.filter((camera) => edit.detector.detection.source.includes(camera.source))
 			.map((camera) => camera.id),
@@ -172,12 +176,12 @@ function presetLabel(edit: DetectorEdit, id: string, options: DetectorOptions): 
 }
 
 /**
- * The edit after choosing a preset: its detection settings, its name unless one was typed, and
- * a connection for its question when one is in use or may be suggested.
+ * The edit after choosing a preset or its other mode: its detection settings, its name unless one
+ * was typed, and a connection for its question when one is in use or may be suggested.
  */
 export function choosePreset(
 	edit: DetectorEdit,
-	preset: { id: string; detector: DetectorConfig },
+	preset: { id: string; efficient: boolean; detector: DetectorConfig },
 	options: DetectorOptions,
 	{ keepDelivery, suggestConnection }: { keepDelivery: boolean; suggestConnection: boolean }
 ): DetectorEdit {
@@ -194,6 +198,7 @@ export function choosePreset(
 		suggestedLabel: label ?? edit.suggestedLabel,
 		detector: connection ? assignConnection(next, connection) : next,
 		preset: preset.id,
+		efficient: preset.efficient,
 		presetSettings: JSON.stringify(detectorSettings(next)),
 		connection: connection?.label ?? ''
 	};
@@ -232,14 +237,15 @@ export async function restoreDetectorChoices(
 	choices: DetectorChoices,
 	options: DetectorOptions,
 	{ savedPreset, keepDelivery }: { savedPreset?: string; keepDelivery: boolean },
-	presetDetector: (id: string) => Promise<DetectorConfig>
+	presetDetector: (id: string, efficient: boolean) => Promise<DetectorConfig>
 ): Promise<{ edit: DetectorEdit; problem?: DetectorEditProblem }> {
 	let problem: DetectorEditProblem | undefined;
-	if (choices.preset && choices.preset !== savedPreset) {
+	const { preset: id, efficient } = choices;
+	if (id && (id !== savedPreset || efficient !== edit.efficient)) {
 		try {
 			edit = choosePreset(
 				edit,
-				{ id: choices.preset, detector: await presetDetector(choices.preset) },
+				{ id, efficient, detector: await presetDetector(id, efficient) },
 				options,
 				{ keepDelivery, suggestConnection: false }
 			);
@@ -265,7 +271,7 @@ export async function restoreDetectorChoices(
 			edit = chooseConnection(
 				edit,
 				connection,
-				template ? await presetDetector(template) : undefined
+				template ? await presetDetector(template, edit.efficient) : undefined
 			);
 			if (lacksQuestion(edit.detector)) problem = { kind: 'no-question' };
 		} catch (cause) {

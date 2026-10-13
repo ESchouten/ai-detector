@@ -3723,3 +3723,22 @@ msgstr "Not watched: {0} (since {1}). Open AI Detector to see why."
 #: src/lib/server/outage-alerts.ts
 msgid "Still not watched: {0}."
 msgstr "Still not watched: {0}."
+#: src/lib/components/detector-editor.svelte
+msgid "Mode"
+msgstr "Mode"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Performance"
+msgstr "Performance"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Looks at the picture most often."
+msgstr "Looks at the picture most often."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Efficient"
+msgstr "Efficient"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Looks less often and asks less of this computer."
+msgstr "Looks less often and asks less of this computer."

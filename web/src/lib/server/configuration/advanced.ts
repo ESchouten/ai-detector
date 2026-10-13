@@ -3,6 +3,7 @@ import { isDeepStrictEqual } from 'node:util';
 import * as v from 'valibot';
 import { ConfigurationError, detectorSettings, normalizeConfig } from '../../configuration.ts';
 import { llmConnection, type Configuration } from '../../schema.ts';
+import { forgetPreset } from './followed-presets.ts';
 import { saveLlm, deleteLlm } from './llms.ts';
 
 export function settingsRevision(document: Configuration): string {
@@ -33,10 +34,8 @@ export function replaceDetectorConfig(document: Configuration, input: unknown): 
 		if (match < 0) return { label: `Detector ${index + 1}` };
 		used.add(match);
 		const meta = { ...document.app.detectors[match] };
-		if (!isDeepStrictEqual(detectorSettings(previous[match]), detectorSettings(detector))) {
-			delete meta.preset;
-			delete meta.presetVersion;
-		}
+		if (!isDeepStrictEqual(detectorSettings(previous[match]), detectorSettings(detector)))
+			forgetPreset(meta);
 		return meta;
 	});
 	document.config = next;

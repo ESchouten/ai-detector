@@ -54,7 +54,7 @@ for (const editing of [false, true]) {
 		const { files, store } = await settingsStore(t);
 		if (editing) await store.saveLlm(connection);
 		const presets = (await readTestPresets()).filter(({ detector }) => detector.vlm?.length);
-		assert.equal(presets.length, 3);
+		assert.equal(presets.length, 4);
 		for (const { id, name, detector } of presets) {
 			await store.saveDetector({
 				meta: { label: name, preset: id },

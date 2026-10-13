@@ -4,6 +4,7 @@ import * as v from 'valibot';
 const choicesSchema = v.object({
 	label: v.string(),
 	preset: v.string(),
+	efficient: v.boolean(),
 	cameras: v.array(v.string()),
 	telegrams: v.array(v.string()),
 	connection: v.string(),

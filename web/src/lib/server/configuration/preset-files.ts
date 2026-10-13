@@ -4,13 +4,32 @@ import * as v from 'valibot';
 import { ConfigurationError, normalizeConfig } from '../../configuration.ts';
 import type { DetectorConfig, DetectorPreset, PresetInfo } from '../../schema.ts';
 
+const EFFICIENT = '.efficient';
+
+/** The preset file a detector follows: its preset's, or that of the preset's efficient mode. */
+export function presetFile(id: string, efficient?: boolean): string {
+	return efficient ? id + EFFICIENT : id;
+}
+
+/** A preset's efficient mode is chosen with the preset, not beside it. */
+function presetChoices(presets: DetectorPreset[]): PresetInfo[] {
+	const ids = new Set(presets.map(({ id }) => id));
+	return presets
+		.filter(({ id }) => !(id.endsWith(EFFICIENT) && ids.has(id.slice(0, -EFFICIENT.length))))
+		.map(({ id, name }) => ({
+			id,
+			name,
+			...(ids.has(presetFile(id, true)) && { efficient: true as const })
+		}));
+}
+
 /** Invalid templates must not prevent editing a detector's saved settings. */
 export async function readPresetChoices(read: () => Promise<DetectorPreset[]>): Promise<{
 	presets: PresetInfo[];
 	warning?: string;
 }> {
 	try {
-		return { presets: (await read()).map(({ id, name }) => ({ id, name })) };
+		return { presets: presetChoices(await read()) };
 	} catch (cause) {
 		if (!(cause instanceof ConfigurationError)) throw cause;
 		return { presets: [], warning: cause.message };
@@ -41,7 +60,7 @@ function detectorTemplate(input: unknown): DetectorConfig {
 export function presetFromFile(file: string, input: unknown): DetectorPreset {
 	const id = path.basename(file, '.json');
 	const name = id
-		.split(/[-_\s]+/)
+		.split(/[-_.\s]+/)
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 		.join(' ');
 	try {

@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { detectorSettings } from '../../configuration.ts';
-import type { Configuration, DetectorConfig, DetectorPreset } from '../../schema.ts';
+import type { Configuration, DetectorConfig, DetectorMeta, DetectorPreset } from '../../schema.ts';
+import { presetFile } from './preset-files.ts';
 
 /** Object keys in order, so that two spellings of the same settings are one version. */
 function ordered(_key: string, value: unknown): unknown {
@@ -23,15 +24,24 @@ export function presetVersion(detector: DetectorConfig): string {
 		.digest('hex');
 }
 
+/** A detector with settings of its own follows no preset. */
+export function forgetPreset(meta: DetectorMeta): void {
+	delete meta.preset;
+	delete meta.efficient;
+	delete meta.presetVersion;
+}
+
 /** A detector whose detection settings were changed outside this application follows no preset. */
 export function forgetChangedPresets(document: Configuration): Configuration {
 	for (const [index, meta] of document.app.detectors.entries()) {
-		if (meta.preset && meta.presetVersion !== presetVersion(document.config.detectors[index])) {
-			delete meta.preset;
-			delete meta.presetVersion;
-		}
+		if (meta.preset && meta.presetVersion !== presetVersion(document.config.detectors[index]))
+			forgetPreset(meta);
 	}
 	return document;
+}
+
+function follows(meta: DetectorMeta, preset: DetectorPreset): boolean {
+	return meta.preset !== undefined && presetFile(meta.preset, meta.efficient) === preset.id;
 }
 
 /** The presets that would change a detector that follows them. */
@@ -39,7 +49,7 @@ export function newerPresets({ app }: Configuration, presets: DetectorPreset[]):
 	return presets.filter((preset) =>
 		app.detectors.some(
 			(meta) =>
-				meta.preset === preset.id &&
+				follows(meta, preset) &&
 				meta.autoUpdate !== false &&
 				meta.presetVersion !== presetVersion(preset.detector)
 		)
@@ -54,7 +64,7 @@ export function newerPresets({ app }: Configuration, presets: DetectorPreset[]):
 export function followPresets({ config, app }: Configuration, presets: DetectorPreset[]): string[] {
 	const updated: string[] = [];
 	for (const [index, meta] of app.detectors.entries()) {
-		const preset = presets.find(({ id }) => id === meta.preset)?.detector;
+		const preset = presets.find((item) => follows(meta, item))?.detector;
 		if (!preset || meta.autoUpdate === false || presetVersion(preset) === meta.presetVersion)
 			continue;
 		const saved = config.detectors[index];

@@ -8,7 +8,7 @@ import {
 } from '../../configuration.ts';
 import type { Configuration } from '../../schema.ts';
 import { assignConnection } from '../../llm.ts';
-import { presetVersion } from './followed-presets.ts';
+import { forgetPreset, presetVersion } from './followed-presets.ts';
 
 export function saveDetector(
 	{ config, app }: Configuration,
@@ -36,10 +36,15 @@ export function saveDetector(
 		!input.meta.preset &&
 		isDeepStrictEqual(detectorSettings(config.detectors[index]), detectorSettings(normalized));
 	const meta = kept
-		? { ...input.meta, preset: previous.preset, autoUpdate: previous.autoUpdate }
+		? {
+				...input.meta,
+				preset: previous.preset,
+				efficient: previous.efficient,
+				autoUpdate: previous.autoUpdate
+			}
 		: { ...input.meta };
 	if (meta.preset) meta.presetVersion = presetVersion(normalized);
-	else delete meta.presetVersion;
+	else forgetPreset(meta);
 	const position = index < 0 ? config.detectors.length : index;
 	config.detectors[position] = normalized;
 	app.detectors[position] = meta;

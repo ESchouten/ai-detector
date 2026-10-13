@@ -274,7 +274,13 @@ def test_connected_model_lists_fall_back_to_another_key(event, monkeypatch, fail
 
 
 @pytest.mark.parametrize(
-    "preset_name", ["cow-catcher", "calving-catcher", "calving-catcher-tailup"]
+    "preset_name",
+    [
+        "cow-catcher",
+        "calving-catcher",
+        "calving-catcher.efficient",
+        "calving-catcher-tailup",
+    ],
 )
 def test_preset_question_and_video_reach_provider(preset_name, event, monkeypatch):
     preset_path = (

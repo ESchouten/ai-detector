@@ -52,6 +52,7 @@
 		originalLabel,
 		initial,
 		initialPreset,
+		initialEfficient = false,
 		initialAutoUpdate = true,
 		initialConnection,
 		onDone,
@@ -61,6 +62,7 @@
 		originalLabel: string;
 		initial?: DetectorConfig;
 		initialPreset?: string;
+		initialEfficient?: boolean;
 		initialAutoUpdate?: boolean;
 		initialConnection?: string;
 		onDone: () => Promise<void>;
@@ -98,6 +100,7 @@
 	let keepDelivery = $state(untrack(() => Boolean(initial)));
 	let error = $state('');
 	let preset = $state(untrack(() => initialPreset ?? ''));
+	let efficient = $state(untrack(() => initialEfficient));
 	let autoUpdate = $state(untrack(() => initialAutoUpdate));
 	let presetSettings = $state(
 		untrack(() => (initial ? JSON.stringify(detectorSettings(initial)) : ''))
@@ -123,22 +126,27 @@
 			suggestedLabel,
 			detector: $state.snapshot(detector),
 			preset,
+			efficient,
 			presetSettings,
 			connection: llmLabel
 		};
 	}
 	function show(edit: DetectorEdit) {
-		({ label, suggestedLabel, detector, preset, presetSettings } = edit);
+		({ label, suggestedLabel, detector, preset, efficient, presetSettings } = edit);
 		llmLabel = edit.connection;
 	}
-	const presetDetector = (id: string) => getDetectorPreset({ id });
+	const presetDetector = (id: string, inEfficientMode: boolean) =>
+		getDetectorPreset({ id, efficient: inEfficientMode });
 
 	const draftKey = untrack(() => `detector-draft:${originalLabel || 'new'}`);
 	let draftLoaded = $state(false);
 	let restoredDraft = $state(false);
 	let initialChoices = '';
 	const draftChoices = () =>
-		detectorChoices({ label, preset, detector, connection: llmLabel }, { cameras, telegrams });
+		detectorChoices(
+			{ label, preset, efficient, detector, connection: llmLabel },
+			{ cameras, telegrams }
+		);
 
 	onMount(() => {
 		initialChoices = JSON.stringify(draftChoices());
@@ -187,12 +195,18 @@
 		else showError(problem.cause, 'Could not load the preset question.');
 	}
 
-	async function loadPreset(id: string) {
+	/** A preset is first chosen in its performance mode. */
+	async function loadPreset(id: string, mode = 'performance') {
 		if (!id) return;
 		pending = true;
 		error = '';
 		try {
-			const chosen = { id, detector: await presetDetector(id) };
+			const inEfficientMode = mode === 'efficient';
+			const chosen = {
+				id,
+				efficient: inEfficientMode,
+				detector: await presetDetector(id, inEfficientMode)
+			};
 			show(
 				choosePreset(edited(), chosen, options, {
 					keepDelivery,
@@ -211,7 +225,7 @@
 		error = '';
 		try {
 			const template = questionPreset(edited(), presets);
-			const question = template ? await presetDetector(template) : undefined;
+			const question = template ? await presetDetector(template, efficient) : undefined;
 			show(chooseConnection(edited(), connection, question));
 			if (lacksQuestion(detector)) showProblem({ kind: 'no-question' });
 		} catch (cause) {
@@ -245,7 +259,7 @@
 				meta: detectorDraftMeta(
 					valid,
 					savedLabel,
-					{ id: preset, settings: presetSettings, autoUpdate },
+					{ id: preset, efficient, settings: presetSettings, autoUpdate },
 					connection
 				)
 			}).updates(getDetectors(), getCameras());
@@ -318,6 +332,38 @@
 							<CategoryDot seed={item.id} />
 						</label>
 					{/each}
+				</RadioGroup.Root>
+			{/if}
+			{#if selectedPreset?.efficient}
+				<RadioGroup.Root
+					value={efficient ? 'efficient' : 'performance'}
+					onValueChange={(mode) => loadPreset(preset, mode)}
+					disabled={pending}
+					aria-label="Mode"
+					class="-mx-2 gap-0"
+				>
+					<label
+						for="mode-performance"
+						class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2.5 hover:bg-accent"
+					>
+						<RadioGroup.Item id="mode-performance" value="performance" />
+						<span class="flex min-w-0 flex-col">
+							<span class="text-sm font-medium">Performance</span>
+							<span class="text-sm text-muted-foreground">Looks at the picture most often.</span>
+						</span>
+					</label>
+					<label
+						for="mode-efficient"
+						class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2.5 hover:bg-accent"
+					>
+						<RadioGroup.Item id="mode-efficient" value="efficient" />
+						<span class="flex min-w-0 flex-col">
+							<span class="text-sm font-medium">Efficient</span>
+							<span class="text-sm text-muted-foreground">
+								Looks less often and asks less of this computer.
+							</span>
+						</span>
+					</label>
 				</RadioGroup.Root>
 			{/if}
 			{#if selectedPreset}

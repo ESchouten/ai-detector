@@ -16,8 +16,6 @@ from threading import Thread
 from time import sleep
 from urllib.parse import urlsplit
 
-import psutil
-
 from aidetector.adapters.operational_status import source_key
 from aidetector.configuration import Config, DetectorConfig, source_kind
 
@@ -233,6 +231,8 @@ def log_detector_configuration(
 
 def log_mac_memory() -> None:
     """What the Mac has left, and what Apple's GPU compiler and Metal's cache hold."""
+    import psutil
+
     memory = psutil.virtual_memory()
     compilers = [
         process.info["memory_info"].rss
@@ -266,6 +266,7 @@ def log_mac_memory() -> None:
 
 def follow_mac_memory() -> None:
     """A leak in macOS's GPU system outlives the detector; the log shows where it sits."""
+    import psutil
 
     def follow() -> None:
         while True:

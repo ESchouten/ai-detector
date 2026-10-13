@@ -2,6 +2,7 @@ import json
 import logging
 from types import SimpleNamespace
 
+import psutil
 import pytest
 
 from aidetector.adapters import diagnostics
@@ -187,15 +188,16 @@ def test_mac_memory_line_names_what_a_gpu_leak_would_take(
         (cache / "libraries.data").write_bytes(bytes(size * 2**20))
     (tmp_path / "org.example.other").mkdir()
     gib = 2**30
-    monkeypatch.setattr(diagnostics.os, "confstr", lambda name: str(tmp_path))
+    # Windows has no confstr; only a Mac logs this line.
     monkeypatch.setattr(
-        diagnostics.psutil,
+        diagnostics.os, "confstr", lambda name: str(tmp_path), raising=False
+    )
+    monkeypatch.setattr(
+        psutil,
         "virtual_memory",
         lambda: SimpleNamespace(available=3 * gib, total=16 * gib, wired=5 * gib),
     )
-    monkeypatch.setattr(
-        diagnostics.psutil, "swap_memory", lambda: SimpleNamespace(used=2 * gib)
-    )
+    monkeypatch.setattr(psutil, "swap_memory", lambda: SimpleNamespace(used=2 * gib))
     processes = [
         {"name": "MTLCompilerService", "memory_info": SimpleNamespace(rss=40 * 2**20)},
         {"name": "MTLCompilerService", "memory_info": SimpleNamespace(rss=24 * 2**20)},
@@ -204,7 +206,7 @@ def test_mac_memory_line_names_what_a_gpu_leak_would_take(
         {"name": "aidetector", "memory_info": SimpleNamespace(rss=gib)},
     ]
     monkeypatch.setattr(
-        diagnostics.psutil,
+        psutil,
         "process_iter",
         lambda attributes: [SimpleNamespace(info=info) for info in processes],
     )

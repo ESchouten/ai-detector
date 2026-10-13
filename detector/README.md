@@ -37,7 +37,7 @@ Install exactly one runtime extra per environment. They share the `onnxruntime` 
 
 **Jetson.** The ARM64 image is for Orin and Thor with JetPack 7.2. GPU inference and TensorRT have been verified on an Orin Nano; a Thor is untested. JetPack 6 images are no longer built. See [Jetson](MIGRATION.md#jetson).
 
-**Stopping and exit codes.** Ctrl+C or SIGTERM stops acquisition, flushes eligible events and drains accepted deliveries. Exit `0` is success or a graceful stop, `1` an application, verification or delivery failure, `2` a configuration error, and `75` an Apple GPU error that a supervisor may answer with a restart. The detector does not restart itself.
+**Stopping and exit codes.** Ctrl+C or SIGTERM stops acquisition, flushes eligible events and drains accepted deliveries. Exit `0` is success or a graceful stop, `1` an application, verification or delivery failure, `2` a configuration error, and `75` an Apple GPU error or leak that a supervisor may answer with a restart. The detector does not restart itself.
 
 **Logs.** Console and `logs/detector.log` in the data folder, rotating at 2 MiB with five backups. Lines name detectors by position (`[detector-2-delivery]`) and cameras by a 12-character ID, never by address. Credentials are masked, also in tracebacks; images, prompts and request bodies are never logged.
 

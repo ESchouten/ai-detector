@@ -26,6 +26,46 @@ from aidetector.domain.models import BoundingBox, Frame, Observation
 logger = logging.getLogger(__name__)
 _MPS_LOCK = Lock()
 
+LEAK_WARM_UP_SECONDS = 600
+LEAK_SECONDS = 60
+LEAK_BYTES_PER_CALL = 16 * 2**10
+LEAK_BYTES = 128 * 2**20
+
+
+class _MpsLeak:
+    """Tells when Apple GPU memory has started to grow with every inference call.
+
+    On an M6 with macOS 27 each call leaves about 1 KiB behind in the process's GPU
+    memory, outside what PyTorch holds, and from call 131072 on about 64 KiB. Only
+    a fresh process starts over. Memory that grows while cameras connect and
+    their models warm up, or once when a camera joins later, is not a leak.
+    """
+
+    def __init__(self) -> None:
+        self.calls = 0
+        self._sampled: tuple[float, int] | None = None
+        self._judged_from = 0.0
+        self._growing_since: tuple[float, int] | None = None
+
+    def growing(self, memory: int) -> bool:
+        now = perf_counter()
+        # Detectors report moments apart; growth shows only over a whole period.
+        if self._sampled and now - self._sampled[0] < SUMMARY_SECONDS:
+            return False
+        sampled, self._sampled = self._sampled, (now, memory)
+        calls, self.calls = self.calls, 0
+        if sampled is None:
+            self._judged_from = now + LEAK_WARM_UP_SECONDS
+            return False
+        if now < self._judged_from or memory - sampled[1] < LEAK_BYTES_PER_CALL * calls:
+            self._growing_since = None
+            return False
+        since, start = self._growing_since = self._growing_since or sampled
+        return now - since >= LEAK_SECONDS and memory - start >= LEAK_BYTES
+
+
+_MPS_LEAK = _MpsLeak()
+
 if TYPE_CHECKING:
     from aidetector.adapters.inference.prepared_engines import EnginePreparation
 
@@ -37,6 +77,7 @@ def _mps_inference() -> Iterator[None]:
     import torch
 
     with _MPS_LOCK:
+        _MPS_LEAK.calls += 1
         try:
             yield
             torch.mps.synchronize()
@@ -44,6 +85,25 @@ def _mps_inference() -> Iterator[None]:
             raise MpsInferenceError(
                 "Apple GPU inference failed; a fresh detector process is required."
             ) from error
+
+
+def _check_mps_memory() -> None:
+    import torch
+
+    # The process total is what the Apple GPU limit is held against.
+    with _MPS_LOCK:
+        memory = torch.mps.driver_allocated_memory()
+        leaking = _MPS_LEAK.growing(memory)
+    logger.info(
+        "Apple GPU memory: %.0f MiB held by PyTorch, %.0f MiB by the whole process",
+        torch.mps.current_allocated_memory() / 2**20,
+        memory / 2**20,
+    )
+    if leaking:
+        raise MpsInferenceError(
+            "Apple GPU memory keeps growing with every picture; a fresh detector "
+            "process is required."
+        )
 
 
 class InMemoryStreamBatch(LoadStreams):
@@ -218,15 +278,7 @@ class YoloDetector:
                 self._slowest_ms,
             )
             if self._inference_scope is _mps_inference:
-                import torch
-
-                # The process total is what the Apple GPU limit is held against.
-                logger.info(
-                    "Apple GPU memory: %.0f MiB held by PyTorch, %.0f MiB by the "
-                    "whole process",
-                    torch.mps.current_allocated_memory() / 2**20,
-                    torch.mps.driver_allocated_memory() / 2**20,
-                )
+                _check_mps_memory()
             self._summarised_at = perf_counter()
             self._batches = self._frames = 0
             self._busy_ms = self._slowest_ms = 0.0

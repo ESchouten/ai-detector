@@ -133,7 +133,7 @@ Configuration owns source syntax and the finite-or-live distinction through a pu
 
 Shutdown attempts every registered stop before joining, so one failed stop cannot block the others, and each worker logs its own unexpected failure before it propagates. Expected live-source failures reconnect with an interruptible delay; invalid configuration and programming errors do not loop.
 
-A `torch.AcceleratorError` during native MPS inference becomes `MpsInferenceError`, and the CLI exits with code 75 after draining. It never retries inside the damaged GPU context or switches to CPU; restarting belongs to whoever supervises the process (see [desktop integration](#desktop-integration)).
+A `torch.AcceleratorError` during native MPS inference becomes `MpsInferenceError`, and so does GPU memory that keeps growing with every call (see [performance](PERFORMANCE.md#timings-in-the-running-application)); the CLI exits with code 75 after draining. It never retries inside the damaged GPU context or switches to CPU; restarting belongs to whoever supervises the process (see [desktop integration](#desktop-integration)).
 
 ## Inference backends
 

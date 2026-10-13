@@ -10,6 +10,10 @@ At the default `INFO` level each detector logs a summary every thirty seconds: f
 
 On the Apple GPU, PyTorch refuses memory once the whole process holds half of what macOS recommends for the GPU, about 5.9 GiB on a 16 GB Mac. The detector then stops with `MPS backend out of memory` and exit code `1`, and the application restarts it by itself: the screen shows "Starting…" with "The detector stopped unexpectedly (1)." for a few seconds, then "Preparing…" and "Connecting cameras…" until the cameras are connected again.
 
+A Mac that leaks GPU memory with every picture is stopped long before that. So far this is an M6 with macOS 27: each inference call leaves about 1 KiB behind outside what PyTorch holds, and from call 131072 on about 64 KiB. Once the process's GPU memory has grown by at least 16 KiB per call for a minute, and by 128 MiB in all, the detector exits with code `75` and the application restarts it; the screen shows "The detector stopped unexpectedly (75)." The first ten minutes are not judged, because memory also grows while cameras connect and models warm up. On that Mac this is a restart about every 33 minutes, at 1.6 GiB.
+
+On a Mac the log also says every five minutes what the leak could be taking from the computer itself: memory available and wired, swap in use, the number and size of Apple's GPU compiler processes (`MTLCompilerService`), and the size of Metal's cache on disk with the application that has the most of it. After enough leaked memory macOS stops compiling for the GPU, the detector aborts at every start with `Unable to reach MTLCompilerService`, and only restarting the Mac helps; these figures are there to show what fills up before that happens.
+
 Every thirty seconds each camera logs decoded frames per second, average read time and average resize and publication time. Read time includes waiting for the camera or network; it is not CPU decoding time. None of these lines measures how old an image was inside the camera's buffer, or delay in the browser.
 
 Detectors that share a source and a frame width share one resize per decoded frame, with identical pixels.

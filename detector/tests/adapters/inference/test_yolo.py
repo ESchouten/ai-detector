@@ -343,3 +343,111 @@ def test_inference_timing_is_summarised_instead_of_logged_per_batch(
         detector.detect({"one": (frame(1),)})
     [summary] = caplog.messages
     assert summary.startswith("Inference: 2 frame(s) in 2 batch(es)")
+
+
+MIB = 2**20
+
+
+@pytest.fixture
+def clock(monkeypatch):
+    now = [0.0]
+    monkeypatch.setattr(yolo, "perf_counter", lambda: now[0])
+    return now
+
+
+def reports(clock, watch, memory, count, *, per_call, calls=2000):
+    """What a detector reports every half minute, and whether memory is leaking."""
+    verdicts = []
+    for _ in range(count):
+        clock[0] += yolo.SUMMARY_SECONDS
+        watch.calls += calls
+        memory += per_call * calls
+        verdicts.append(watch.growing(memory))
+    return memory, verdicts
+
+
+@pytest.mark.parametrize("calls, reports_until_fresh", [(2000, 2), (30, 69)])
+def test_apple_gpu_memory_that_grows_with_every_call_asks_for_a_fresh_process(
+    clock, calls, reports_until_fresh
+):
+    watch = yolo._MpsLeak()
+    assert watch.growing(1236 * MIB) is False
+    # An M6 with macOS 27 loses about 1 KiB per call, and 64 KiB from call 131072 on.
+    memory, slow = reports(clock, watch, 1236 * MIB, 64, per_call=2**10, calls=calls)
+    assert not any(slow)
+    _, fast = reports(clock, watch, memory, 80, per_call=2**16, calls=calls)
+    # A minute of it, and 128 MiB, tell a leak from a camera that joined.
+    assert fast.index(True) + 1 == reports_until_fresh
+
+
+def test_memory_that_grows_while_models_warm_up_or_only_once_is_not_a_leak(clock):
+    watch = yolo._MpsLeak()
+    assert watch.growing(0) is False
+    # Cameras connect one after another, each with pictures of another size.
+    memory, warming = reports(clock, watch, 0, 19, per_call=2**16)
+    assert not any(warming)
+    memory, settled = reports(clock, watch, memory, 10, per_call=0)
+    # A camera that joins a day later adds its share once.
+    memory, joined = reports(clock, watch, memory, 1, per_call=2**18)
+    _, after = reports(clock, watch, memory, 10, per_call=0)
+    assert not any(settled + joined + after)
+
+
+def test_detectors_that_report_together_are_judged_once_per_period(clock):
+    watch = yolo._MpsLeak()
+    watch.growing(0)
+    clock[0] = yolo.LEAK_WARM_UP_SECONDS
+    memory = 0
+    for _ in range(4):
+        clock[0] += yolo.SUMMARY_SECONDS
+        watch.calls += 2000
+        memory += 2000 * 2**16
+        first = watch.growing(memory)
+        # The second detector reports a moment later, when nothing has grown yet.
+        clock[0] += 0.1
+        watch.calls += 5
+        assert watch.growing(memory) is False
+    assert first is True
+
+
+@pytest.mark.parametrize("calls_per_report, leaking", [(1, True), (20000, False)])
+def test_a_leaking_apple_gpu_stops_the_detector_for_a_fresh_process(
+    monkeypatch, clock, caplog, calls_per_report, leaking
+):
+    memory = [1236 * MIB]
+
+    def grow():
+        memory[0] += 200 * MIB
+        return memory[0]
+
+    monkeypatch.setattr(torch.mps, "synchronize", lambda: None)
+    monkeypatch.setattr(torch.mps, "current_allocated_memory", lambda: 121 * MIB)
+    monkeypatch.setattr(torch.mps, "driver_allocated_memory", grow)
+    monkeypatch.setattr(yolo, "_MPS_LEAK", yolo._MpsLeak())
+    monkeypatch.setattr(yolo, "LEAK_WARM_UP_SECONDS", 0)
+    detector = YoloDetector(
+        Model(),
+        YoloConfig(model="model.pt"),
+        ("one",),
+        InferenceOptions(native_mps=True),
+    )
+
+    def report():
+        # Between reports the detector analyses pictures without summarising them.
+        for _ in range(calls_per_report - 1):
+            detector.detect({"one": (frame(),)})
+        clock[0] += yolo.SUMMARY_SECONDS
+        detector.detect({"one": (frame(),)})
+
+    with caplog.at_level(logging.INFO, logger=yolo.__name__):
+        report()
+        report()
+        if leaking:
+            with pytest.raises(MpsInferenceError, match="keeps growing"):
+                report()
+        else:
+            # 200 MiB over twenty thousand pictures is what a healthy Mac may add.
+            report()
+    assert caplog.messages[-1] == (
+        "Apple GPU memory: 121 MiB held by PyTorch, 1836 MiB by the whole process"
+    )

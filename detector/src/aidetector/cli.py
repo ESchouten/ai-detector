@@ -8,7 +8,11 @@ from pathlib import Path
 from threading import Event, Thread
 from typing import TextIO
 
-from aidetector.adapters.diagnostics import diagnostic_logging, log_environment
+from aidetector.adapters.diagnostics import (
+    diagnostic_logging,
+    follow_mac_memory,
+    log_environment,
+)
 from aidetector.adapters.inference import MpsInferenceError
 from aidetector.application.status import ReportStatus, ignore_status
 from aidetector.configuration import Config, ConfigurationError, load_config
@@ -175,6 +179,8 @@ def _run(
             # Matplotlib stores bundled font paths relatively, so reuse is safe.
             os.environ["MPLCONFIGDIR"] = str(directory / "cache" / "matplotlib")
         log_environment()
+        if sys.platform == "darwin":
+            follow_mac_memory()
         logger.info(
             "Execution settings: provider=%s; windows_ml=%s; opset=%d; live_preview=%s; launcher_control=%s; health=%s",
             config.onnx.provider or "automatic",

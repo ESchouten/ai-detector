@@ -46,6 +46,7 @@ export async function writeConfiguration(
 				throw new AggregateError(
 					[failure, rollbackFailure],
 					`Settings could not be saved or restored. Recovery is required: ${hadApp ? `restore ${files.app} from ${previousApp}` : `remove the newly created ${files.app}`}.`,
+					// eslint-disable-next-line preserve-caught-error -- both failures are in the aggregate; the first one set this off
 					{ cause: failure }
 				);
 			}

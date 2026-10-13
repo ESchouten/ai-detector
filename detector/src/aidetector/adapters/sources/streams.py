@@ -1,6 +1,6 @@
 import logging
 from collections import deque
-from collections.abc import Generator, Iterator
+from collections.abc import Generator
 from contextlib import contextmanager
 from datetime import datetime
 from threading import Condition, Event, Thread
@@ -139,7 +139,7 @@ class StreamPool:
         return subscription
 
     @contextmanager
-    def open(self) -> Iterator[None]:
+    def open(self) -> Generator[None]:
         try:
             for index, source in enumerate(self._subscribers):
                 thread = Thread(

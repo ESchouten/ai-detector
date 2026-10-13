@@ -75,6 +75,7 @@ def test_conversion_passes_the_onnx_format_and_settings_to_the_sdk(model_sdk):
                 "imgsz": 128,
                 "simplify": True,
                 "opset": 19,
+                "nms": False,
             }
         ]
 
@@ -148,9 +149,9 @@ def test_real_mps_checkpoint_inference_without_export_or_download(tmp_path, trac
     assert detector.model.predictor is None
 
 
-@pytest.mark.parametrize("half, dtype", [(False, torch.float32), (True, torch.float16)])
+@pytest.mark.parametrize("half", [False, True])
 def test_real_native_model_uses_the_requested_precision_without_downloading_weights(
-    tmp_path, half, dtype
+    tmp_path, half
 ):
     checkpoint = tmp_path / "fixture.pt"
     YOLO("yolo11n.yaml").save(checkpoint)
@@ -162,9 +163,34 @@ def test_real_native_model_uses_the_requested_precision_without_downloading_weig
         InferenceOptions(half=half),
     ) as detector:
         model = detector.model
-        assert model.predictor.model.fp16 is half
-        assert next(model.model.parameters()).dtype is dtype
+        assert model.predictor.args.quantize == (16 if half else None)
+        # The SDK keeps full precision on a processor, whatever was asked.
+        fp16 = half and torch.cuda.is_available()
+        assert model.predictor.model.fp16 is fp16
+        assert next(model.model.parameters()).dtype is (
+            torch.float16 if fp16 else torch.float32
+        )
     assert model.predictor is None
+
+
+def test_real_model_with_a_head_without_suppression_keeps_using_it(tmp_path):
+    checkpoint = tmp_path / "fixture.pt"
+    YOLO("yolo26n.yaml").save(checkpoint)
+    with open_detector(
+        YoloConfig(model=str(checkpoint), imgsz=64),
+        OnnxConfig(),
+        ("0",),
+        "cuda",
+        InferenceOptions(),
+    ) as detector:
+        predictor = detector.model.predictor
+        assert predictor.model.end2end is True
+        frame = Frame(datetime(2026, 1, 1), np.zeros((64, 64, 3), dtype=np.uint8))
+        detector.detect({"0": (frame,)})
+        # Left to itself the SDK builds a second backend with the other head, whose
+        # confidences differ from the ones a model's thresholds were chosen with.
+        assert detector.model.predictor is predictor
+        assert detector.model.predictor.model.end2end is True
 
 
 def test_sdk_loads_a_foreign_checkpoint_path_and_pathlib_is_restored(tmp_path):

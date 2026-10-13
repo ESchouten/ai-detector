@@ -7,7 +7,7 @@ import platform
 import re
 import ssl
 import sys
-from collections.abc import Iterator
+from collections.abc import Generator
 from contextlib import contextmanager
 from importlib.metadata import PackageNotFoundError, version
 from logging.handlers import RotatingFileHandler
@@ -80,7 +80,7 @@ class DiagnosticFormatter(logging.Formatter):
 
 
 @contextmanager
-def diagnostic_logging(config: Config, directory: Path, level: str) -> Iterator[None]:
+def diagnostic_logging(config: Config, directory: Path, level: str) -> Generator[None]:
     root = logging.getLogger()
     previous_level = root.level
     formatter = DiagnosticFormatter(_secrets(config))

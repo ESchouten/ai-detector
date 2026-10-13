@@ -152,7 +152,8 @@ Backend selection lives in the inference adapters; the domain and application ne
 
 Decisions about the libraries, with their reasons:
 
-- Model downloads use Ultralytics' own downloader, with one attempt, because its curl fallback would expose URLs through subprocess output.
+- A model named by URL is downloaded by the detector itself, in one attempt, and trusts the certificates in `SSL_CERT_FILE` like the rest of the application. A failure is reported by its kind, never with the transport's own text, which can hold the URL's credentials. Only standard model names are left to Ultralytics' downloader.
+- Inference and export ask the SDK for the head without suppression (`nms: False`) where a model has one, as CowCatcher's do: its confidences are what a preset's thresholds were chosen with, and the SDK no longer picks it by itself. Precision and device live in the model's own overrides, because a prediction that names other ones makes the SDK build a second backend.
 - The predictor is prepared once: asking an exported model for its class names otherwise creates a second, disposable ONNX session.
 - Result mapping moves boxes to the CPU once (`Boxes.cpu()`); reading GPU scalars one by one synchronizes the device each time.
 - `inference_runtime` temporarily wraps the ONNX session factory, because Ultralytics does not expose the Windows ML device and session options, and restores it on exit. Worker spinning is disabled so idle ONNX workers sleep.

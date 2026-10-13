@@ -3,7 +3,7 @@
 import json
 import logging
 import re
-from collections.abc import Iterator, Sequence
+from collections.abc import Generator, Sequence
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
@@ -61,7 +61,7 @@ class LivePreview:
         return publish
 
     @contextmanager
-    def open(self) -> Iterator[None]:
+    def open(self) -> Generator[None]:
         thread = Thread(target=self._supervise, name="live-preview")
         thread.start()
         try:

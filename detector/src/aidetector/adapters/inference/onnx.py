@@ -6,7 +6,7 @@ import logging
 import os
 import sys
 import tempfile
-from collections.abc import Iterator
+from collections.abc import Generator
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, replace
 from importlib import import_module, util
@@ -219,7 +219,7 @@ def inference_runtime(
     models: tuple[ModelRequirements, ...],
     build_type: str,
     report_status: ReportStatus = ignore_status,
-) -> Iterator[InferenceOptions]:
+) -> Generator[InferenceOptions]:
     """Keep provider libraries, session hooks and environment in one cleanup scope."""
     with ExitStack() as resources:
         # Installed dependencies belong to the distribution, never to an

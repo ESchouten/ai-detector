@@ -1,14 +1,11 @@
-"""Resolve model paths and cache URL assets transferred by Ultralytics."""
+"""Resolve model paths and cache the models that are named by URL."""
 
 import hashlib
 import logging
-import socket
-import ssl
+import os
 import tempfile
 from pathlib import Path, PurePosixPath
-from threading import get_ident
 from time import perf_counter
-from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 
 from aidetector.adapters.diagnostics import resource_label
@@ -23,46 +20,49 @@ MODEL_DOWNLOAD_HELP = (
 )
 
 
-def _download_failure(error: ConnectionError) -> str:
-    # Ultralytics chains its transport error, whose text can contain credentials.
-    cause = error.__cause__
-    if isinstance(cause, HTTPError):
-        return f"The model server returned HTTP {cause.code}. Try again later or check the model URL."
-    if isinstance(cause, URLError):
-        cause = cause.reason
-    if isinstance(cause, ssl.SSLCertVerificationError):
+def _download_failure(error: Exception) -> str:
+    # The transport error's own text can contain credentials from the URL.
+    import requests
+    from urllib3.exceptions import NameResolutionError
+
+    if isinstance(error, requests.HTTPError) and error.response is not None:
+        return f"The model server returned HTTP {error.response.status_code}. Try again later or check the model URL."
+    if isinstance(error, requests.exceptions.SSLError):
         return (
             "The model server's HTTPS certificate could not be verified. "
             "Check this computer's date and time and update AI Detector."
         )
-    if isinstance(cause, socket.gaierror):
-        return "The model server's address could not be resolved. Check the internet connection and model URL."
-    if isinstance(cause, TimeoutError):
+    if isinstance(error, requests.Timeout):
         return "The connection to the model server timed out. Check the internet connection and try again."
+    refused = error.args[0] if error.args else None
+    if isinstance(getattr(refused, "reason", None), NameResolutionError):
+        return "The model server's address could not be resolved. Check the internet connection and model URL."
     return (
         "Check the model URL and this computer's internet connection, then try again."
     )
 
 
 def _download(url: str, target: Path, report_status: ReportStatus) -> None:
-    # Keep offline path resolution and module imports free of inference SDK setup.
-    from ultralytics.utils.downloads import safe_download
+    # Keep offline path resolution and module imports free of the HTTP library.
+    import requests
 
-    sdk_logger = logging.getLogger("ultralytics")
-    thread = get_ident()
-
-    def other_threads(record: logging.LogRecord) -> bool:
-        return record.thread != thread
-
-    # The SDK can log credentials embedded in URLs or transport exceptions.
-    sdk_logger.addFilter(other_threads)
     try:
-        # A single urllib attempt avoids the SDK's curl fallback, whose stderr
-        # bypasses Python logging. Leave transfer and completeness checks to it.
-        safe_download(
-            url, file=target, unzip=False, progress=False, retry=0, min_bytes=0
-        )
-    except ConnectionError as error:
+        with requests.get(
+            url,
+            stream=True,
+            # A stalled transfer ends; a slow one may take as long as it needs.
+            timeout=(30, 300),
+            # requests has a variable of its own for this; the application has one.
+            verify=os.environ.get("SSL_CERT_FILE", True),
+        ) as response:
+            response.raise_for_status()
+            with target.open("wb") as file:
+                for chunk in response.iter_content(2**20):
+                    file.write(chunk)
+    except requests.exceptions.ChunkedEncodingError:
+        # The server sent less than it announced.
+        target.unlink(missing_ok=True)
+    except requests.RequestException as error:
         reason = _download_failure(error)
         report_status(
             StatusEvent(
@@ -71,8 +71,6 @@ def _download(url: str, target: Path, report_status: ReportStatus) -> None:
             )
         )
         raise RuntimeError(f"Model download failed: {reason}") from None
-    finally:
-        sdk_logger.removeFilter(other_threads)
 
 
 def resolve_model_path(
@@ -107,8 +105,7 @@ def resolve_model_path(
             "Model download started: %s; cache=%s", resource_label(value), target
         )
         _download(value, pending, report_status)
-        # The SDK may return without a file after rejecting an empty/partial body.
-        if not pending.is_file():
+        if not pending.is_file() or not pending.stat().st_size:
             report_status(
                 StatusEvent(
                     "preparation_failed",

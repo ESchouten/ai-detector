@@ -24,6 +24,9 @@ def export_arguments(
         "imgsz": config.imgsz,
         "simplify": True,
         "opset": onnx.opset,
+        # The head without suppression, where a model has one: what its confidence
+        # thresholds were chosen with. The SDK no longer picks it by itself.
+        "nms": False,
     }
 
 

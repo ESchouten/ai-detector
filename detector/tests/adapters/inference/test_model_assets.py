@@ -1,23 +1,20 @@
-import io
 import json
-import logging
 import os
 import socket
 import sys
 import traceback
-import urllib.request
-from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
-from urllib.error import URLError
 
 import certifi
 import cv2
 import numpy as np
 import pytest
+import requests
 from ultralytics.utils import downloads
+from urllib3.exceptions import MaxRetryError, NameResolutionError
 
 from aidetector.adapters.inference.model_assets import resolve_model_path
 from aidetector.bootstrap import run_application
@@ -45,8 +42,6 @@ def full_traceback(failure):
 def asset_server(monkeypatch, tmp_path, request):
     assets: dict[str, Asset] = {}
     requests: list[str] = []
-    # urllib caches its first TLS context; each test has an independent test CA.
-    monkeypatch.setattr(urllib.request, "_opener", None)
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
@@ -69,8 +64,6 @@ def asset_server(monkeypatch, tmp_path, request):
         return _CONNECT(connection, address)
 
     monkeypatch.setattr(socket.socket, "connect", connect_local)
-    # Do not let the SDK's error diagnostic probe Internet connectivity.
-    monkeypatch.setattr(downloads, "is_online", lambda: True)
     with ThreadingHTTPServer(("127.0.0.1", 0), Handler) as server:
         if request.param == "https":
             certificate = tmp_path / "server-ca.pem"
@@ -118,7 +111,7 @@ def test_stock_model_path_keeps_ultralytics_automatic_asset_download(
     assert Path(model).read_bytes() == b"checkpoint"
 
 
-def test_sdk_download_reuses_cache_and_separates_urls_with_the_same_filename(
+def test_download_reuses_cache_and_separates_urls_with_the_same_filename(
     tmp_path, asset_server
 ):
     base, assets, requests = asset_server
@@ -139,7 +132,7 @@ def test_sdk_download_reuses_cache_and_separates_urls_with_the_same_filename(
 
 
 @pytest.mark.parametrize("asset", [Asset(b""), Asset(b"partial", declared_size=100)])
-def test_sdk_rejects_empty_and_partial_downloads_without_caching(
+def test_empty_and_partial_downloads_are_rejected_without_caching(
     tmp_path, asset_server, asset
 ):
     base, assets, requests = asset_server
@@ -152,7 +145,7 @@ def test_sdk_rejects_empty_and_partial_downloads_without_caching(
     assert not list(cache.rglob("download-*"))
 
 
-def test_failed_sdk_download_can_be_retried_without_reusing_a_partial_file(
+def test_failed_download_can_be_retried_without_reusing_a_partial_file(
     tmp_path, asset_server
 ):
     base, assets, requests = asset_server
@@ -253,19 +246,33 @@ def test_untrusted_https_certificate_is_rejected_with_a_useful_diagnostic(
 
 
 @pytest.mark.parametrize(
-    "cause, diagnostic",
+    "error, diagnostic",
     [
-        (socket.gaierror(-2, "secret-host"), "address could not be resolved"),
-        (TimeoutError("secret-url"), "timed out"),
+        (
+            requests.ConnectionError(
+                MaxRetryError(
+                    None,
+                    "secret-url",
+                    NameResolutionError(
+                        "secret-host",
+                        None,
+                        socket.gaierror(-2, "secret-host"),
+                    ),
+                )
+            ),
+            "address could not be resolved",
+        ),
+        (requests.ConnectTimeout("secret-url"), "timed out"),
+        (requests.ConnectionError("secret-url"), "Check the model URL"),
     ],
 )
 def test_download_reports_transport_failures_without_exposing_credentials(
-    tmp_path, monkeypatch, cause, diagnostic
+    tmp_path, monkeypatch, error, diagnostic
 ):
     def fail(*args, **kwargs):
-        raise ConnectionError("secret-url") from URLError(cause)
+        raise error
 
-    monkeypatch.setattr(downloads, "safe_download", fail)
+    monkeypatch.setattr(requests, "get", fail)
     observations = []
     with pytest.raises(RuntimeError, match=diagnostic) as failure:
         resolve_model_path(
@@ -277,37 +284,3 @@ def test_download_reports_transport_failures_without_exposing_credentials(
     assert diagnostic in observations[-1].message
     assert "secret" not in repr(observations)
     assert "secret" not in full_traceback(failure)
-
-
-def test_sdk_diagnostics_hide_credentials_without_muting_other_threads(
-    tmp_path, monkeypatch
-):
-    sdk_logger = logging.getLogger("ultralytics")
-    original_filters = list(sdk_logger.filters)
-    output = io.StringIO()
-    handler = logging.StreamHandler(output)
-    sdk_logger.addHandler(handler)
-
-    def fail(*args, **kwargs):
-        sdk_logger.warning("https://user:secret@host/model.onnx?token=secret")
-        with ThreadPoolExecutor(max_workers=1) as pool:
-            pool.submit(sdk_logger.warning, "Other detector diagnostic").result(
-                timeout=2
-            )
-        raise ConnectionError("Download failed for user:secret and token=secret")
-
-    monkeypatch.setattr(downloads, "safe_download", fail)
-    try:
-        with pytest.raises(RuntimeError, match="download failed") as failure:
-            resolve_model_path(
-                "https://user:secret@host/model.onnx?token=secret",
-                tmp_path,
-                tmp_path / "models",
-            )
-    finally:
-        sdk_logger.removeHandler(handler)
-    assert sdk_logger.filters == original_filters
-    assert "Other detector diagnostic" in output.getvalue()
-    diagnostic = output.getvalue() + full_traceback(failure)
-    assert "secret" not in diagnostic
-    assert not list((tmp_path / "models").rglob("*.onnx"))

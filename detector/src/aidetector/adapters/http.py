@@ -1,4 +1,5 @@
 from collections.abc import Mapping
+from typing import Any
 
 import requests
 
@@ -15,7 +16,7 @@ def send_request(
     headers: Mapping[str, str] | None = None,
     data: str | Mapping[str, object] | None = None,
     files: Files | None = None,
-    json_body: Mapping[str, object] | None = None,
+    json_body: Mapping[str, Any] | None = None,
 ) -> requests.Response:
     try:
         response = requests.request(

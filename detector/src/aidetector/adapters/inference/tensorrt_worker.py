@@ -8,6 +8,10 @@ import sys
 from pathlib import Path
 from threading import Thread
 from time import sleep
+from typing import TYPE_CHECKING, cast
+
+if TYPE_CHECKING:
+    from ultralytics.engine.results import Results
 
 logger = logging.getLogger(__name__)
 TRACE_INTERVAL = 60.0
@@ -69,8 +73,17 @@ def build_and_test(request: dict) -> None:
                 images = [
                     np.zeros((height, size, 3), dtype=np.uint8) for _ in range(count)
                 ]
-                results = model.predict(
-                    images, device=0, imgsz=size, batch=count, rect=True, verbose=False
+                # Only a request for embeddings returns tensors instead of results.
+                results = cast(
+                    "list[Results]",
+                    model.predict(
+                        images,
+                        device=0,
+                        imgsz=size,
+                        batch=count,
+                        rect=True,
+                        verbose=False,
+                    ),
                 )
                 if len(results) != count or any(
                     result.boxes is None

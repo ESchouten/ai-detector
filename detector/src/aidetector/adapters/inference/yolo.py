@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import pathlib
-from collections.abc import Iterator
+from collections.abc import Generator
 from contextlib import contextmanager, nullcontext
 from threading import Lock
 from time import perf_counter
@@ -71,7 +71,7 @@ if TYPE_CHECKING:
 
 
 @contextmanager
-def _mps_inference() -> Iterator[None]:
+def _mps_inference() -> Generator[None]:
     # PyTorch's MPS command encoders are shared across models and are not safe
     # under concurrent dispatch: https://github.com/pytorch/pytorch/issues/197805
     import torch
@@ -232,10 +232,14 @@ class YoloDetector:
             else:
                 sources = tuple(frames)
                 images = [frames[source][-1].image for source in sources]
-                results = list(
-                    self.model.predict(
-                        source=images, batch=len(images), **self._arguments
-                    )
+                # Only a request for embeddings returns tensors instead of results.
+                results = cast(
+                    list[Results],
+                    list(
+                        self.model.predict(
+                            source=images, batch=len(images), **self._arguments
+                        )
+                    ),
                 )
             predicted = perf_counter()
             mapped = {
@@ -303,7 +307,7 @@ def resolve_classes(
 
 
 @contextmanager
-def _restore_path_classes() -> Iterator[None]:
+def _restore_path_classes() -> Generator[None]:
     # Ultralytics converts cross-platform checkpoint paths but leaves pathlib
     # mutated afterwards. Restore both platform classes after model preparation.
     windows, posix = pathlib.WindowsPath, pathlib.PosixPath
@@ -323,7 +327,7 @@ def open_detector(
     cache_directory: pathlib.Path | None = None,
     report_status: ReportStatus = ignore_status,
     engines: EnginePreparation | None = None,
-) -> Iterator[YoloDetector]:
+) -> Generator[YoloDetector]:
     """Prepare inference and own its model and tracking frames until shutdown."""
     loaded: YOLO | None = None
     detector: YoloDetector | None = None
@@ -429,10 +433,14 @@ def initialize_predictor(
     """Initialize the SDK backend once, for runtime inference or its benchmark."""
     # Ultralytics' .names property otherwise creates a temporary second backend.
     # Keep SDK-specific predictor setup here; open_detector owns its cleanup.
-    overrides = {
-        **model.overrides,
-        "quantize": 16 if native_mps or options.half else None,
-    }
+    # Every prediction repeats the model's overrides, and one that names another
+    # precision or device makes the SDK build a second backend. The SDK annotates
+    # them as strings and keeps numbers there itself.
+    overrides = cast(dict[str, Any], model.overrides)
+    overrides["quantize"] = 16 if native_mps or options.half else None
+    # The head without suppression, where a model has one: what its confidence
+    # thresholds were chosen with. The SDK no longer picks it by itself.
+    overrides["nms"] = False
     if native_mps:
         overrides["device"] = "mps"
         logger.info("MPS inference shares one GPU dispatch lock across detectors")

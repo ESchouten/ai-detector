@@ -8,7 +8,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from functools import partial
 from importlib.metadata import PackageNotFoundError, version
@@ -67,7 +67,7 @@ class EnginePreparation:
         )
 
     @contextmanager
-    def running(self) -> Iterator[None]:
+    def running(self) -> Generator[None]:
         if not self._pending:
             yield
             return

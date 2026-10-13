@@ -87,6 +87,12 @@ def build_detector(args) -> Path:
         "--exclude-module=onnx.reference",
         "--exclude-module=onnxruntime.quantization",
     ]
+    # LiteLLM installs the AWS SDK for a provider this application does not offer.
+    flags += [
+        "--exclude-module=boto3",
+        "--exclude-module=botocore",
+        "--exclude-module=s3transfer",
+    ]
     if target.extra == "windowsml":
         # Windows ML's ORT helpers modify sys.path and import sibling .py files.
         # The upstream DLL hook alone cannot collect those dynamic imports.

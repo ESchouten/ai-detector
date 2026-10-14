@@ -70,12 +70,16 @@ tensorrt-cu12-libs = { index = "nvidia" }
 tensorrt-cu13-libs = { index = "nvidia" }
 torch = [
     { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
+    # The 2.15 release candidate raises an error when the Apple GPU drops a job,
+    # where 2.14 returns stale results: on an M6 every picture became certain.
+    { index = "pytorch-test", extra = "default", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu132", extra = "nvidia", marker = "sys_platform == 'win32'" },
     { index = "pypi", extra = "nvidia", marker = "sys_platform != 'win32'" },
     { index = "pytorch-cu126", extra = "nvidia-cuda12", marker = "sys_platform == 'win32'" },
 ]
 torchvision = [
     { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
+    { index = "pytorch-test", extra = "default", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu132", extra = "nvidia", marker = "sys_platform == 'win32'" },
     { index = "pypi", extra = "nvidia", marker = "sys_platform != 'win32'" },
     { index = "pytorch-cu126", extra = "nvidia-cuda12", marker = "sys_platform == 'win32'" },
@@ -89,6 +93,11 @@ explicit = true
 [[tool.uv.index]]
 name = "pytorch-cu126"
 url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-test"
+url = "https://download.pytorch.org/whl/test"
 explicit = true
 
 [[tool.uv.index]]

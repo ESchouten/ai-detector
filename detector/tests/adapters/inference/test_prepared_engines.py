@@ -40,6 +40,8 @@ def gpu_builder(tmp_path, monkeypatch):
     source.write_bytes(b"checkpoint")
     gpu = SimpleNamespace(name="RTX fixture", major=8, minor=6, total_memory=8 << 30)
     monkeypatch.setattr(torch.cuda, "get_device_properties", lambda _index: gpu)
+    # CI installs PyTorch without CUDA, also on Windows.
+    monkeypatch.setattr(torch.version, "cuda", "13.2")
     monkeypatch.setattr(prepared_engines, "version", lambda _name: "1.0")
     monkeypatch.setenv("AI_DETECTOR_NVIDIA_DRIVER", "580.88")
     processes, commands, outcomes = [], [], []

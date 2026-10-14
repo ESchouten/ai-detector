@@ -20,7 +20,8 @@ Install exactly one runtime extra per environment. They share the `onnxruntime` 
 | Extra | Runtime |
 | --- | --- |
 | `default` | Apple GPU on macOS for `.pt` models; CPU Torch on Linux; standard ONNX Runtime |
-| `nvidia` | PyTorch with CUDA and ONNX Runtime GPU; needs matching NVIDIA drivers |
+| `nvidia` | PyTorch with CUDA 13 and ONNX Runtime GPU; needs NVIDIA driver branch 580 or newer |
+| `nvidia-cuda12` | Windows only: PyTorch with CUDA 12.6 and ONNX Runtime GPU 1.20, for an older driver |
 | `windowsml` | Windows ML runtime and Windows App SDK bindings |
 
 | Flag | Effect |

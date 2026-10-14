@@ -52,7 +52,8 @@ Major versions are not proposed. List them with `pnpm --dir web outdated` and `u
 
 | Package | Stays at | Until |
 | --- | --- | --- |
-| PyTorch, torchvision, ONNX Runtime and TensorRT on Windows with NVIDIA | The versions pinned in `detector/pyproject.toml` | The application moves to CUDA 13, which needs a newer NVIDIA driver on every such computer |
+| ONNX Runtime GPU in the `nvidia-cuda12` extra | 1.20, the last release that runs on CUDA 12.6 | PyTorch stops building for CUDA 12.6 and that extra goes |
+| TensorRT on Windows with NVIDIA | The version pinned in `detector/pyproject.toml` | Someone checks a newer one on an NVIDIA computer |
 | `@sveltejs/kit`, `@sveltejs/adapter-node`, `devalue` | SvelteKit 2 | `@jesterkit/exe-sveltekit`, which builds the desktop executable, supports SvelteKit 3 |
 | `typescript` | 6 | `svelte-check` and `typescript-eslint` accept 7 |
 | `@types/node`, `@types/bun` | Node 24 and the Bun version in `distribution/toolchain.json` | Those runtimes move |

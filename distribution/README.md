@@ -53,14 +53,14 @@ The SvelteKit executable adapter carries a small patch: upstream has no applicat
 
 ## Windows NVIDIA runtime
 
-The Windows installer carries no GPU binaries. When automatic inference finds an NVIDIA device with compute capability 7.5 or newer, the web application's process manager downloads a CUDA environment into the data folder and runs the same detector source in it. That device needs driver branch 572 or newer: with an older driver, starting stops with a request to update the driver, and does not fall back to Windows ML. An explicit ONNX provider and a configuration without a YOLO model bypass the download; a computer without such a device uses the bundled Windows ML build.
+The Windows installer carries no GPU binaries. When automatic inference finds an NVIDIA device with compute capability 7.5 or newer, the web application's process manager downloads a CUDA environment into the data folder and runs the same detector source in it. With driver branch 580 or newer that environment uses CUDA 13.2. An older driver from branch 560 on gets CUDA 12.6, except on Blackwell cards such as the RTX 50 series, which CUDA 12.6 predates. Otherwise starting stops with a request to update the driver, and does not fall back to Windows ML. An explicit ONNX provider and a configuration without a YOLO model bypass the download; a computer without such a device uses the bundled Windows ML build.
 
-- The build stages `detector/nvidia-runtime/`: the detector source, an entry script, uv, a `runtime.json` naming the Python version, and two locks exported from the detector's lockfile, `pylock.toml` for CUDA and `pylock.tensorrt.toml` for the optional TensorRT group. Every package is pinned by URL and SHA-256.
-- uv installs Python and the packages under `runtimes/nvidia/<hash>/`, with its cache in `cache/uv/`. The hash covers the Python version and the lock, not the application version, so an application update reuses the environment and runs its own newer detector source in it.
+- The build stages `detector/nvidia-runtime/`: the detector source, an entry script, uv, a `runtime.json` naming the Python version, and four locks exported from the detector's lockfile: `pylock.cuda13.toml` and `pylock.cuda12.toml` from the `nvidia` and `nvidia-cuda12` extras, and `pylock.tensorrt-cuda13.toml` and `pylock.tensorrt-cuda12.toml` from the optional TensorRT groups. Every package is pinned by URL and SHA-256.
+- uv installs Python and the packages under `runtimes/nvidia/<hash>/`, with its cache in `cache/uv/`. The hash covers the Python version and the lock, not the application version, so an application update reuses the environment and runs its own newer detector source in it. A driver update across branch 580 prepares the other environment once.
 - A GPU check must pass before `ready.json` marks the environment complete, and runs again at every launch. An interrupted download is retried; a failure stays visible and never silently falls back to the CPU. Pause and quit stop a running preparation.
 - On compute capability 8.0 and newer, TensorRT is installed after the CUDA check. If that fails, CUDA stays in use and the attempt is deferred for 24 hours. Engines are built on the user's GPU by the detector (see [inference backends](../detector/ARCHITECTURE.md#inference-backends)) and are never shipped.
 
-`test_nvidia_runtime.py` checks the staged payload and resolves both locks without downloading GPU binaries. CI installs the real packages on a Windows runner; it has no GPU, so GPU speed and model accuracy still need an NVIDIA machine with representative footage.
+`test_nvidia_runtime.py` checks the staged payload and resolves every lock without downloading GPU binaries. CI installs the real packages of both CUDA versions on a Windows runner; it has no GPU, so GPU speed and model accuracy still need an NVIDIA machine with representative footage.
 
 ## Code map
 
@@ -92,7 +92,7 @@ It checks the host, the tools and the output folder before compiling. Previews h
 
 CI runs the stages separately: `build.py detector`, `web` and `launcher --output DIRECTORY`. `build.py stamp-detector FOLDER --version REF` writes a new version into an already frozen detector, which CI uses to skip freezing when the detector's sources did not change. `build.py archive FOLDER` makes a portable ZIP for troubleshooting; releases do not publish one.
 
-Install one inference extra at a time: `default`, `nvidia` or `windowsml`. On Linux, `default` takes Torch from PyTorch's CPU index, which keeps several gigabytes of unused CUDA libraries out of the installer. Linux packages are compressed with Zstandard level 9 and Mac deltas with LZFSE: both give a slightly larger download for a much shorter build.
+Install one inference extra at a time: `default`, `nvidia`, `nvidia-cuda12` or `windowsml`. On Linux, `default` takes Torch from PyTorch's CPU index, which keeps several gigabytes of unused CUDA libraries out of the installer. Linux packages are compressed with Zstandard level 9 and Mac deltas with LZFSE: both give a slightly larger download for a much shorter build.
 
 Fast checks:
 

@@ -18,9 +18,12 @@ def stage_nvidia_runtime(root: Path, destination: Path, reference: str) -> None:
         encoding="utf-8",
     )
     shutil.copy2(uv, destination / "uv.exe")
+    # The process manager picks CUDA 13 or, for an older driver, CUDA 12.
     for filename, selection in (
-        ("pylock.toml", ["--extra", "nvidia", "--no-dev"]),
-        ("pylock.tensorrt.toml", ["--only-group", "tensorrt"]),
+        ("pylock.cuda13.toml", ["--extra", "nvidia", "--no-dev"]),
+        ("pylock.tensorrt-cuda13.toml", ["--only-group", "tensorrt-cuda13"]),
+        ("pylock.cuda12.toml", ["--extra", "nvidia-cuda12", "--no-dev"]),
+        ("pylock.tensorrt-cuda12.toml", ["--only-group", "tensorrt-cuda12"]),
     ):
         subprocess.run(
             [

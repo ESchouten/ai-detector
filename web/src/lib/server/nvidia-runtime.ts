@@ -82,10 +82,17 @@ export async function discoverNvidia(signal: AbortSignal): Promise<NvidiaDevice 
 	}
 }
 
+/** CUDA 13 needs driver branch 580. CUDA 12.6 serves older drivers, but predates Blackwell. */
+function selectCuda(device: NvidiaDevice): 12 | 13 | undefined {
+	if (device.driver >= 580) return 13;
+	if (device.driver >= 560 && device.capability < 10) return 12;
+}
+
 /** uv owns downloads/installations; a completion marker is published only after a GPU check. */
 export async function prepareNvidiaRuntime(options: Preparation): Promise<DetectorCommand> {
 	const { bundleDirectory, dataDirectory, device, signal, run, report } = options;
-	if (device.driver < 572) {
+	const cuda = selectCuda(device);
+	if (!cuda) {
 		throw new SetupError(
 			'Update the NVIDIA graphics driver, then try again to enable GPU acceleration.',
 			NVIDIA_DRIVER_HELP
@@ -94,7 +101,7 @@ export async function prepareNvidiaRuntime(options: Preparation): Promise<Detect
 	const manifest = await readJson<{ python: string }>(path.join(bundleDirectory, 'runtime.json'));
 	if (!manifest)
 		throw new SetupError('The NVIDIA runtime files are missing. Reinstall AI Detector.');
-	const lock = path.join(bundleDirectory, 'pylock.toml');
+	const lock = path.join(bundleDirectory, `pylock.cuda${cuda}.toml`);
 	const identity = createHash('sha256')
 		.update(manifest.python)
 		.update(await readFile(lock))
@@ -145,7 +152,10 @@ export async function prepareNvidiaRuntime(options: Preparation): Promise<Detect
 	await run(command.file, [...command.args, '--check-cuda'], 60000, env);
 	signal.throwIfAborted();
 	if (!prepared) await writeJson(ready, { python: manifest.python });
-	if (device.capability >= 8 && (await prepareTensorRt(options, command, uv, directory, env))) {
+	if (
+		device.capability >= 8 &&
+		(await prepareTensorRt(options, cuda, command, uv, directory, env))
+	) {
 		command.args.push('--prefer-tensorrt');
 	}
 	return command;
@@ -154,12 +164,13 @@ export async function prepareNvidiaRuntime(options: Preparation): Promise<Detect
 /** Optional optimization: an unavailable TensorRT installation never disables working CUDA. */
 async function prepareTensorRt(
 	{ bundleDirectory, device, signal, run, report }: Preparation,
+	cuda: 12 | 13,
 	command: DetectorCommand,
 	uv: string,
 	directory: string,
 	env: NodeJS.ProcessEnv
 ): Promise<boolean> {
-	const lock = path.join(bundleDirectory, 'pylock.tensorrt.toml');
+	const lock = path.join(bundleDirectory, `pylock.tensorrt-cuda${cuda}.toml`);
 	const marker = path.join(directory, 'tensorrt.json');
 	let identity: string | undefined;
 	try {
@@ -193,7 +204,7 @@ async function prepareTensorRt(
 					'--only-binary',
 					':all:',
 					'--no-binary',
-					'tensorrt-cu12',
+					`tensorrt-cu${cuda}`,
 					'-r',
 					lock
 				],

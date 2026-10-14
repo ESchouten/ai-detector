@@ -45,81 +45,19 @@ class NvidiaRuntimeTest(unittest.TestCase):
             self.assertIn(
                 "TYPE = 'cuda'", (folder / "app/aidetector/version.py").read_text()
             )
-            lock = folder / "pylock.toml"
-            packages = tomllib.loads(lock.read_text())["packages"]
-            torch = next(item for item in packages if item["version"] == "2.11.0+cu128")
-            self.assertEqual(torch["name"], "torch")
-            wheels = [
-                item
-                for item in torch["wheels"]
-                if f"{abi}-{abi}-win_amd64" in item["url"]
-            ]
-            self.assertEqual(len(wheels), 1)
-            self.assertEqual(len(wheels[0]["hashes"]["sha256"]), 64)
             self.assertFalse(
                 list(folder.rglob("*.dll")), "GPU DLLs must stay out of the installer"
             )
-            result = subprocess.run(
-                [
-                    uv,
-                    "pip",
-                    "sync",
-                    "--dry-run",
-                    "--python-version",
-                    python,
-                    "--python-platform",
-                    "x86_64-pc-windows-msvc",
-                    "--target",
-                    str(Path(temporary) / "environment"),
-                    "--only-binary",
-                    ":all:",
-                    "--require-hashes",
-                    str(lock),
-                ],
-                capture_output=True,
-                text=True,
-                timeout=60,
-            )
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn("torch==2.11.0+cu128", result.stderr)
-            self.assertIn("onnxruntime-gpu==1.26.", result.stderr)
-            tensor_rt_lock = folder / "pylock.tensorrt.toml"
-            tensor_rt_packages = tomllib.loads(tensor_rt_lock.read_text())["packages"]
-            self.assertEqual(
-                {package["name"] for package in tensor_rt_packages},
-                {"tensorrt-cu12", "tensorrt-cu12-bindings", "tensorrt-cu12-libs"},
-            )
-            self.assertTrue(
-                all(
-                    package["version"] == "10.16.1.11" for package in tensor_rt_packages
-                )
-            )
-            result = subprocess.run(
-                [
-                    uv,
-                    "pip",
-                    "install",
-                    "--dry-run",
-                    "--python-version",
-                    python,
-                    "--python-platform",
-                    "x86_64-pc-windows-msvc",
-                    "--target",
-                    str(Path(temporary) / "environment"),
-                    "--only-binary",
-                    ":all:",
-                    "--no-binary",
-                    "tensorrt-cu12",
-                    "--require-hashes",
-                    "-r",
-                    str(tensor_rt_lock),
-                ],
-                capture_output=True,
-                text=True,
-                timeout=60,
-            )
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn("tensorrt-cu12-libs==10.16.1.11", result.stderr)
+            for cuda, local, onnxruntime in (
+                # ONNX Runtime is built with CUDA 13 from 1.27 on. From 1.21 on, its
+                # CUDA 12 builds need 12.8, more than PyTorch's CUDA 12.6 brings.
+                (13, "+cu132", lambda version: version >= (1, 27)),
+                (12, "+cu126", lambda version: version[:2] == (1, 20)),
+            ):
+                with self.subTest(cuda=cuda):
+                    self.assert_windows_wheels(
+                        folder, temporary, python, abi, cuda, local, onnxruntime
+                    )
             subprocess.run(
                 [
                     sys.executable,
@@ -131,3 +69,79 @@ class NvidiaRuntimeTest(unittest.TestCase):
                 ],
                 check=True,
             )
+
+    def assert_windows_wheels(
+        self, folder, temporary, python, abi, cuda, local, onnxruntime
+    ):
+        uv = shutil.which("uv")
+        lock = folder / f"pylock.cuda{cuda}.toml"
+        packages = tomllib.loads(lock.read_text())["packages"]
+        torch = next(item for item in packages if item["version"].endswith(local))
+        self.assertEqual(torch["name"], "torch")
+        wheels = [
+            item for item in torch["wheels"] if f"{abi}-{abi}-win_amd64" in item["url"]
+        ]
+        self.assertEqual(len(wheels), 1)
+        self.assertEqual(len(wheels[0]["hashes"]["sha256"]), 64)
+        runtime = next(item for item in packages if item["name"] == "onnxruntime-gpu")
+        self.assertTrue(onnxruntime(tuple(map(int, runtime["version"].split(".")))))
+        result = subprocess.run(
+            [
+                uv,
+                "pip",
+                "sync",
+                "--dry-run",
+                "--python-version",
+                python,
+                "--python-platform",
+                "x86_64-pc-windows-msvc",
+                "--target",
+                str(Path(temporary) / f"environment-{cuda}"),
+                "--only-binary",
+                ":all:",
+                "--require-hashes",
+                str(lock),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(f"torch=={torch['version']}", result.stderr)
+        self.assertIn(f"onnxruntime-gpu=={runtime['version']}", result.stderr)
+        tensor_rt = f"tensorrt-cu{cuda}"
+        tensor_rt_lock = folder / f"pylock.tensorrt-cuda{cuda}.toml"
+        tensor_rt_packages = tomllib.loads(tensor_rt_lock.read_text())["packages"]
+        self.assertEqual(
+            {package["name"] for package in tensor_rt_packages},
+            {tensor_rt, f"{tensor_rt}-bindings", f"{tensor_rt}-libs"},
+        )
+        self.assertTrue(
+            all(package["version"] == "10.16.1.11" for package in tensor_rt_packages)
+        )
+        result = subprocess.run(
+            [
+                uv,
+                "pip",
+                "install",
+                "--dry-run",
+                "--python-version",
+                python,
+                "--python-platform",
+                "x86_64-pc-windows-msvc",
+                "--target",
+                str(Path(temporary) / f"environment-{cuda}"),
+                "--only-binary",
+                ":all:",
+                "--no-binary",
+                tensor_rt,
+                "--require-hashes",
+                "-r",
+                str(tensor_rt_lock),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(f"{tensor_rt}-libs==10.16.1.11", result.stderr)

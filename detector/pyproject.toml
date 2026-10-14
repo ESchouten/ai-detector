@@ -28,15 +28,23 @@ default = [
 ]
 nvidia = [
     "filelock>=3.29.4",
-    # Keep Windows on CUDA 12.8. Newer Torch/ORT releases default to CUDA 13.
-    "torch; sys_platform != 'win32'",
-    "torchvision; sys_platform != 'win32'",
-    "torch==2.11.0; sys_platform == 'win32'",
-    "torchvision==0.26.0; sys_platform == 'win32'",
+    "torch",
+    "torchvision",
     "onnx>=1.20.1",
     "onnxslim>=0.1.87",
     "onnxruntime-gpu>=1.24.1; sys_platform != 'win32'",
-    "onnxruntime-gpu>=1.24.1,<1.27; sys_platform == 'win32'",
+    # Built with CUDA 13 from this release on, as PyTorch is on Windows.
+    "onnxruntime-gpu>=1.27; sys_platform == 'win32'",
+]
+# Windows with an NVIDIA driver older than CUDA 13's branch 580.
+nvidia-cuda12 = [
+    "filelock>=3.29.4",
+    "torch; sys_platform == 'win32'",
+    "torchvision; sys_platform == 'win32'",
+    "onnx>=1.20.1",
+    "onnxslim>=0.1.87",
+    # Later releases are built with CUDA 12.8 and refuse PyTorch's CUDA 12.6.
+    "onnxruntime-gpu>=1.20,<1.21; sys_platform == 'win32'",
 ]
 windowsml = [
     "onnx>=1.20.1",
@@ -48,24 +56,39 @@ windowsml = [
 
 [tool.uv]
 required-version = "==0.12.19"
-conflicts = [[{ extra = "default" }, { extra = "nvidia" }, { extra = "windowsml" }]]
+conflicts = [
+    [
+        { extra = "default" },
+        { extra = "nvidia" },
+        { extra = "nvidia-cuda12" },
+        { extra = "windowsml" },
+    ],
+]
 
 [tool.uv.sources]
 tensorrt-cu12-libs = { index = "nvidia" }
+tensorrt-cu13-libs = { index = "nvidia" }
 torch = [
     { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
-    { index = "pytorch-cu128", extra = "nvidia", marker = "sys_platform == 'win32'" },
+    { index = "pytorch-cu132", extra = "nvidia", marker = "sys_platform == 'win32'" },
     { index = "pypi", extra = "nvidia", marker = "sys_platform != 'win32'" },
+    { index = "pytorch-cu126", extra = "nvidia-cuda12", marker = "sys_platform == 'win32'" },
 ]
 torchvision = [
     { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
-    { index = "pytorch-cu128", extra = "nvidia", marker = "sys_platform == 'win32'" },
+    { index = "pytorch-cu132", extra = "nvidia", marker = "sys_platform == 'win32'" },
     { index = "pypi", extra = "nvidia", marker = "sys_platform != 'win32'" },
+    { index = "pytorch-cu126", extra = "nvidia-cuda12", marker = "sys_platform == 'win32'" },
 ]
 
 [[tool.uv.index]]
-name = "pytorch-cu128"
-url = "https://download.pytorch.org/whl/cu128"
+name = "pytorch-cu132"
+url = "https://download.pytorch.org/whl/cu132"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
 explicit = true
 
 [[tool.uv.index]]
@@ -94,7 +117,11 @@ generate-schema = "aidetector.schema:main"
 
 [dependency-groups]
 # Optional Windows optimization, installed after the working CUDA environment.
-tensorrt = [
+tensorrt-cuda13 = [
+    "tensorrt-cu13==10.16.1.11; sys_platform == 'win32'",
+    "tensorrt-cu13-libs==10.16.1.11; sys_platform == 'win32'",
+]
+tensorrt-cuda12 = [
     "tensorrt-cu12==10.16.1.11; sys_platform == 'win32'",
     "tensorrt-cu12-libs==10.16.1.11; sys_platform == 'win32'",
 ]

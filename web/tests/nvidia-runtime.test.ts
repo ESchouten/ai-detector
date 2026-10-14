@@ -85,8 +85,13 @@ async function fixture(t: TestContext) {
 	);
 	await writeJson(path.join(bundle, 'runtime.json'), { python: '3.12.14' });
 	await writeJson(path.join(bundle, 'fixture.json'), {});
-	await writeFile(path.join(bundle, 'pylock.toml'), 'locked GPU dependencies');
-	await writeFile(path.join(bundle, 'pylock.tensorrt.toml'), 'locked TensorRT dependencies');
+	for (const cuda of [12, 13]) {
+		await writeFile(path.join(bundle, `pylock.cuda${cuda}.toml`), `CUDA ${cuda} dependencies`);
+		await writeFile(
+			path.join(bundle, `pylock.tensorrt-cuda${cuda}.toml`),
+			`TensorRT for CUDA ${cuda}`
+		);
+	}
 	const messages: string[] = [];
 	const options = {
 		bundleDirectory: bundle,
@@ -252,7 +257,7 @@ test(
 			await readJson(path.join(path.dirname(path.dirname(first.file)), 'ready.json')),
 			{ python: '3.12.14' }
 		);
-		await writeFile(path.join(bundle, 'pylock.toml'), 'new pinned dependencies');
+		await writeFile(path.join(bundle, 'pylock.cuda13.toml'), 'new pinned dependencies');
 		const changed = await prepareNvidiaRuntime(options);
 		assert.notEqual(changed.file, first.file);
 		assert.equal((await readdir(path.join(data, 'runtimes/nvidia'))).length, 2);
@@ -297,18 +302,44 @@ test(
 	}
 );
 
-test(
-	'an old NVIDIA driver gives upgrade guidance before downloading anything',
-	posixOnly,
-	async (t) => {
-		const { data, options } = await fixture(t);
-		await assert.rejects(
-			prepareNvidiaRuntime({ ...options, device: { ...device, driver: 560 } }),
-			/Update the NVIDIA graphics driver/
-		);
-		assert.deepEqual(await readdir(data), []);
-	}
-);
+for (const [card, capability, driver] of [
+	['RTX 3060', 8.6, 559],
+	['RTX 5060', 12, 579]
+] as const) {
+	test(
+		`an ${card} with driver ${driver} gets upgrade guidance before downloading anything`,
+		posixOnly,
+		async (t) => {
+			const { data, options } = await fixture(t);
+			await assert.rejects(
+				prepareNvidiaRuntime({ ...options, device: { ...device, capability, driver } }),
+				/Update the NVIDIA graphics driver/
+			);
+			assert.deepEqual(await readdir(data), []);
+		}
+	);
+}
+
+for (const [driver, cuda] of [
+	[580, 13],
+	[560, 12]
+] as const) {
+	test(`driver ${driver} installs CUDA ${cuda} and its TensorRT`, posixOnly, async (t) => {
+		const { bundle, options } = await fixture(t);
+		const command = await prepareNvidiaRuntime({
+			...options,
+			device: { ...device, name: 'RTX 3060', capability: 8.6, driver }
+		});
+		assert.ok(command.args.includes('--prefer-tensorrt'));
+		const [, sync, install] = (await readFile(path.join(bundle, 'commands.jsonl'), 'utf8'))
+			.trim()
+			.split('\n')
+			.map((line) => JSON.parse(line).args);
+		assert.equal(sync.at(-1), path.join(bundle, `pylock.cuda${cuda}.toml`));
+		assert.equal(install.at(-1), path.join(bundle, `pylock.tensorrt-cuda${cuda}.toml`));
+		assert.ok(install.includes(`tensorrt-cu${cuda}`));
+	});
+}
 
 for (const failure of ['tensorRtInstallFailure', 'tensorRtCheckFailure']) {
 	test(`${failure} preserves CUDA and defers the optional optimization`, posixOnly, async (t) => {
@@ -346,7 +377,10 @@ for (const change of ['retry time', 'dependencies', 'driver']) {
 				retryAfter: 0
 			});
 		} else if (change === 'dependencies') {
-			await writeFile(path.join(bundle, 'pylock.tensorrt.toml'), 'updated optional dependencies');
+			await writeFile(
+				path.join(bundle, 'pylock.tensorrt-cuda13.toml'),
+				'updated optional dependencies'
+			);
 		} else {
 			options.device = { ...device, driverVersion: '581.04' };
 		}
@@ -369,12 +403,12 @@ test('older CUDA GPUs do not download TensorRT', posixOnly, async (t) => {
 	});
 	assert.ok(!command.args.includes('--prefer-tensorrt'));
 	const commands = await readFile(path.join(bundle, 'commands.jsonl'), 'utf8');
-	assert.doesNotMatch(commands, /pylock.tensorrt.toml/);
+	assert.doesNotMatch(commands, /pylock\.tensorrt/);
 });
 
 test('missing optional payload does not disable working CUDA', posixOnly, async (t) => {
 	const { bundle, options, messages } = await fixture(t);
-	await rm(path.join(bundle, 'pylock.tensorrt.toml'));
+	await rm(path.join(bundle, 'pylock.tensorrt-cuda13.toml'));
 	const command = await prepareNvidiaRuntime(options);
 	assert.ok(!command.args.includes('--prefer-tensorrt'));
 	assert.match(messages.join('\n'), /TensorRT could not be prepared/);

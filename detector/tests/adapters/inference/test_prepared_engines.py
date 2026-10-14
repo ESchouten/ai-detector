@@ -261,13 +261,19 @@ def test_successful_engine_is_published_once_without_modifying_checkpoint(
 
 
 @pytest.mark.parametrize(
-    ("system", "package"), [("win32", "tensorrt-cu12"), ("linux", "tensorrt")]
+    ("system", "cuda", "package"),
+    [
+        ("win32", "13.2", "tensorrt-cu13"),
+        ("win32", "12.6", "tensorrt-cu12"),
+        ("linux", "13.0", "tensorrt"),
+    ],
 )
 def test_engine_identity_reads_the_tensorrt_package_of_the_platform(
-    gpu_builder, monkeypatch, system, package
+    gpu_builder, monkeypatch, system, cuda, package
 ):
     names = []
     monkeypatch.setattr(sys, "platform", system)
+    monkeypatch.setattr(torch.version, "cuda", cuda)
     monkeypatch.setattr(
         prepared_engines, "version", lambda name: names.append(name) or "1.0"
     )

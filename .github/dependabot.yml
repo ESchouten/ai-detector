@@ -51,7 +51,7 @@ updates:
         update-types: ["version-update:semver-major"]
 
   # The detector's lock file as `uv lock --upgrade` writes it: the versions pinned in
-  # pyproject.toml, such as PyTorch for CUDA 12.8 on Windows, stay where they are. Apart from
+  # pyproject.toml, such as TensorRT on Windows, stay where they are. Apart from
   # the others, so that a refusal of the uv version the project requires leaves those alone.
   - package-ecosystem: uv
     directory: /detector

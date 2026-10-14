@@ -117,8 +117,11 @@ def engine_identity(source: Path, task: str, arguments: dict) -> str:
         "libraries": {
             name: version(name)
             for name in (
-                # The Windows wheel and the JetPack package have different names.
-                "tensorrt-cu12" if sys.platform == "win32" else "tensorrt",
+                # The Windows wheels are named after their CUDA version, unlike the
+                # JetPack package.
+                f"tensorrt-cu{torch.version.cuda.split('.')[0]}"
+                if sys.platform == "win32"
+                else "tensorrt",
                 "torch",
                 "ultralytics",
                 "onnx",

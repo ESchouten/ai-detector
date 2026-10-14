@@ -93,6 +93,9 @@ def build_detector(args) -> Path:
         "--exclude-module=botocore",
         "--exclude-module=s3transfer",
     ]
+    # torchvision 0.29 loads its operators from _C_stable by file path, and the
+    # upstream hook still names the former _C.
+    flags += ["--hidden-import=torchvision._C_stable"]
     if target.extra == "windowsml":
         # Windows ML's ORT helpers modify sys.path and import sibling .py files.
         # The upstream DLL hook alone cannot collect those dynamic imports.

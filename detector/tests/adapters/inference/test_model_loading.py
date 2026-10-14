@@ -80,33 +80,57 @@ def test_conversion_passes_the_onnx_format_and_settings_to_the_sdk(model_sdk):
         ]
 
 
-def test_native_mps_model_skips_export_and_uses_fp16(model_sdk, tmp_path):
+def test_core_ml_model_is_prepared_once_and_loaded_instead_of_the_checkpoint(
+    model_sdk, monkeypatch, tmp_path
+):
+    prepared = []
+
+    def prepare_core_ml(config, cache, report_status):
+        prepared.append((config.model, cache))
+        return tmp_path / "model.mlpackage"
+
+    monkeypatch.setattr(
+        "aidetector.adapters.inference.prepared_models.prepare_core_ml",
+        prepare_core_ml,
+    )
     cache = tmp_path / "prepared"
     with open_detector(
         YoloConfig(model="weights.pt"),
         OnnxConfig(),
-        ("0",),
+        ("camera-1", "camera-2"),
         "default",
-        InferenceOptions(native_mps=True),
+        InferenceOptions(core_ml=True),
         cache_directory=cache,
     ) as detector:
-        assert detector.model.model == "weights.pt"
-        assert detector.model.predictor.args.device == "mps"
-        assert detector.model.predictor.args.quantize == 16
-        assert len(model_sdk.created) == 1
+        assert prepared == [("weights.pt", cache)]
+        assert model_sdk.created == [str(tmp_path / "model.mlpackage")]
         assert model_sdk.exports == []
-        assert not cache.exists()
-    assert detector.model.predictor is None
+        # The model itself is half precision; the SDK picks Core ML's processors.
+        assert detector.model.predictor.args.device is None
+        assert detector.model.predictor.args.quantize is None
+
+
+def test_core_ml_without_a_cache_passes_its_settings_to_the_sdk(model_sdk):
+    with open_detector(
+        YoloConfig(model="weights.pt", imgsz=320),
+        OnnxConfig(),
+        ("camera-1", "camera-2"),
+        "default",
+        InferenceOptions(core_ml=True),
+    ):
+        assert model_sdk.exports == [
+            {"format": "coreml", "batch": 1, "quantize": 16, "imgsz": 320, "nms": False}
+        ]
 
 
 @pytest.mark.parametrize("suffix", ["onnx", "engine"])
-def test_exported_model_is_not_redirected_to_mps(model_sdk, suffix):
+def test_exported_model_is_not_converted_for_core_ml(model_sdk, suffix):
     with open_detector(
         YoloConfig(model=f"weights.{suffix}"),
         OnnxConfig(),
         ("0",),
         "default",
-        InferenceOptions(native_mps=True),
+        InferenceOptions(core_ml=True),
     ) as detector:
         assert detector.model.model == f"weights.{suffix}"
         assert detector.model.predictor.args.device is None
@@ -114,14 +138,11 @@ def test_exported_model_is_not_redirected_to_mps(model_sdk, suffix):
         assert model_sdk.exports == []
 
 
-@pytest.mark.skipif(
-    sys.platform != "darwin" or not torch.backends.mps.is_available(),
-    reason="Requires an available Apple MPS device",
-)
+@pytest.mark.skipif(sys.platform != "darwin", reason="Core ML runs on a Mac")
 @pytest.mark.parametrize("tracking", [False, True])
-def test_real_mps_checkpoint_inference_without_export_or_download(tmp_path, tracking):
+def test_real_checkpoint_runs_on_core_ml_on_a_mac(tmp_path, tracking):
     checkpoint = tmp_path / "fixture.pt"
-    YOLO("yolo11n.yaml").save(checkpoint)
+    YOLO("yolo26n.yaml").save(checkpoint)
     settings = YoloConfig(model=str(checkpoint), imgsz=64, tracking=tracking)
     onnx = OnnxConfig()
     models = (ModelRequirements(str(checkpoint), image_size=64, batch_size=1),)
@@ -132,20 +153,15 @@ def test_real_mps_checkpoint_inference_without_export_or_download(tmp_path, trac
             settings, onnx, ("0",), "default", options, cache_directory=cache
         ) as detector,
     ):
-        assert options.native_mps is True
+        assert options.core_ml is True
         predictor = detector.model.predictor
-        backend = predictor.model
-        assert backend.device.type == "mps"
-        assert backend.fp16 is True
+        assert predictor.model.format == "coreml"
         frame = Frame(datetime(2026, 1, 1), np.zeros((64, 64, 3), dtype=np.uint8))
         [observation] = detector.detect({"0": (frame,)})["0"]
         assert detector.model.predictor is predictor
-        assert detector.model.predictor.model.device.type == "mps"
-        assert detector.model.predictor.model.fp16 is True
         assert observation.date == frame.date
         assert observation.image is frame.image
-        assert not cache.exists()
-        assert list(tmp_path.glob("*.onnx")) == []
+        assert [path.name for path in cache.glob("*/*")] == ["model.mlpackage"]
     assert detector.model.predictor is None
 
 

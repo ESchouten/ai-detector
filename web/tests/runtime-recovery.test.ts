@@ -103,7 +103,7 @@ test('invalid model completion records cannot request a restart', posixOnly, asy
 });
 
 test(
-	'an MPS failure starts a fresh process and retains diagnostics without stale readiness',
+	'an inference failure starts a fresh process and retains diagnostics without stale readiness',
 	posixOnly,
 	async (t) => {
 		const { detector, directory, pid, starts } = await fixture(t);

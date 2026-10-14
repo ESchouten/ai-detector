@@ -1,12 +1,14 @@
-"""Real SDK exports: topology, Torch-weight lifetime, and the prepared ONNX cache."""
+"""Real SDK exports: topology, Torch-weight lifetime, and the prepared model cache."""
 
 import gc
+import sys
 from datetime import datetime
 from weakref import ref
 
 import numpy as np
 import onnx
 import onnxruntime
+import pytest
 from ultralytics import YOLO
 
 from aidetector.adapters.inference.onnx import (
@@ -73,6 +75,49 @@ def test_real_torch_checkpoint_is_exported_once_and_cached_onnx_runs_on_reopen(
                 assert detector.model.model.endswith(".onnx")
     assert len(exports) == 1
     assert not checkpoint.with_suffix(".onnx").exists()
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="Core ML runs on a Mac")
+def test_real_yolo26_checkpoint_is_exported_once_and_runs_on_core_ml(
+    tmp_path, monkeypatch
+):
+    checkpoint = tmp_path / "fixture.pt"
+    YOLO("yolo26n.yaml").save(checkpoint)
+    config = YoloConfig(model=str(checkpoint), imgsz=64)
+    onnx = OnnxConfig()
+    requirements = (ModelRequirements(str(checkpoint), image_size=64, batch_size=2),)
+    frame = Frame(datetime(2026, 1, 1), np.zeros((64, 64, 3), dtype=np.uint8))
+    exports, engines = [], []
+    original_export = YOLO.export
+
+    def export(self, **arguments):
+        exports.append(arguments["format"])
+        return original_export(self, **arguments)
+
+    monkeypatch.setattr(YOLO, "export", export)
+    for _ in range(2):
+        with (
+            inference_runtime(onnx, requirements, "default") as options,
+            open_detector(
+                config,
+                onnx,
+                ("camera-1", "camera-2"),
+                "default",
+                options,
+                tmp_path / "cache",
+                lambda event: (
+                    engines.append(event.message) if event.kind == "backend" else None
+                ),
+            ) as detector,
+        ):
+            assert options.core_ml is True
+            assert detector.model.predictor.model.format == "coreml"
+            # Two cameras pass through a model that takes one picture at a time.
+            observations = detector.detect({"camera-1": (frame,), "camera-2": (frame,)})
+            assert observations["camera-2"][0].date == frame.date
+    assert exports == ["coreml"]
+    assert engines == ["Core ML", "Core ML"]
+    assert not checkpoint.with_suffix(".mlpackage").exists()
 
 
 def test_real_checkpoint_export_releases_weights_and_runs_the_onnx_model(

@@ -9,7 +9,7 @@ Download the application for your computer from the latest **AI Detector** [rele
 | Computer | Download | Detection runs on |
 | --- | --- | --- |
 | Windows 10 22H2+ or Windows 11, x64 | `AI-Detector-VERSION-windows-x64-setup.zip` (extract, then run the setup) | A supported NVIDIA GPU when present, otherwise Windows ML |
-| macOS 14+, Apple Silicon | `AI-Detector-VERSION-macos-arm64.dmg` (drag to Applications) | The Apple GPU |
+| macOS 14+, Apple Silicon | `AI-Detector-VERSION-macos-arm64.dmg` (drag to Applications) | The Neural Engine |
 | Ubuntu 22.04 or 24.04, amd64 | `AI-Detector-VERSION-linux-amd64.deb` | The CPU; for an NVIDIA GPU use [Docker](#docker) |
 
 The downloads are not signed with an Apple or Windows publisher certificate, so the system may ask for approval. Intel Macs, Windows on ARM and Jetson have no installer; use [Docker](#docker) or run the [detector](detector/README.md) by itself.

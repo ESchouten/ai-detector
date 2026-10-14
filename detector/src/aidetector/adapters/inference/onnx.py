@@ -25,11 +25,11 @@ REGISTRATION_TRACE_DELAY = 150.0
 
 @dataclass(frozen=True)
 class InferenceOptions:
-    """Prepared inference options; native MPS applies only to .pt checkpoints."""
+    """Prepared inference options; Core ML applies only to .pt checkpoints."""
 
     half: bool = False
     rectangular: bool = True
-    native_mps: bool = False
+    core_ml: bool = False
 
 
 @dataclass(frozen=True)
@@ -205,14 +205,6 @@ def _model_suffix(model: str) -> str:
     return Path(path).suffix
 
 
-def _mps_available() -> bool:
-    if sys.platform != "darwin":
-        return False
-    import torch
-
-    return torch.backends.mps.is_available()
-
-
 @contextmanager
 def inference_runtime(
     config: OnnxConfig,
@@ -236,25 +228,16 @@ def inference_runtime(
             yield InferenceOptions(half=True)
             return
 
-        native_mps = (
-            not uses_cuda
-            and config.provider is None
-            and any(_model_suffix(model.path) == ".pt" for model in models)
-            and _mps_available()
-        )
-        if native_mps:
-            import torch
-
-            # PyTorch's default ceiling exceeds the machine's memory, and a leak
-            # can then freeze the process before PyTorch refuses.
-            torch.mps.set_per_process_memory_fraction(0.5)
+        # A Mac runs checkpoints through Core ML, on the processor and the
+        # Neural Engine, unless an ONNX provider is chosen for everything.
+        core_ml = sys.platform == "darwin" and config.provider is None
         onnx_models = tuple(
             model
             for model in models
-            if not (native_mps and _model_suffix(model.path) == ".pt")
+            if not (core_ml and _model_suffix(model.path) == ".pt")
         )
         if not onnx_models:
-            yield InferenceOptions(native_mps=True)
+            yield InferenceOptions(core_ml=True)
             return
 
         import onnxruntime as ort
@@ -268,7 +251,7 @@ def inference_runtime(
             "ONNX execution providers: %s; CPU worker spinning disabled",
             providers.names,
         )
-        yield replace(providers.inference_options, native_mps=native_mps)
+        yield replace(providers.inference_options, core_ml=core_ml)
 
 
 def _providers(

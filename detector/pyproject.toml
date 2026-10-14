@@ -11,7 +11,6 @@ dependencies = [
     "numpy>=1.26",
     "opencv-python>=5",
     "openai>=2,<3",
-    "psutil>=7.2.2",
     "pydantic>=2.12.5",
     "requests>=2.32",
     "ultralytics>=8.4.80,<9",
@@ -25,6 +24,10 @@ default = [
     "onnx>=1.20.1",
     "onnxslim>=0.1.87",
     "onnxruntime>=1.24.1",
+    # Exports checkpoints for Core ML, which runs them on a Mac. Its converter
+    # fails on NumPy 2.4.
+    "coremltools>=9.0; sys_platform == 'darwin'",
+    "numpy<2.4; sys_platform == 'darwin'",
 ]
 nvidia = [
     "filelock>=3.29.4",
@@ -70,16 +73,12 @@ tensorrt-cu12-libs = { index = "nvidia" }
 tensorrt-cu13-libs = { index = "nvidia" }
 torch = [
     { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
-    # The 2.15 release candidate raises an error when the Apple GPU drops a job,
-    # where 2.14 returns stale results: on an M6 every picture became certain.
-    { index = "pytorch-test", extra = "default", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu132", extra = "nvidia", marker = "sys_platform == 'win32'" },
     { index = "pypi", extra = "nvidia", marker = "sys_platform != 'win32'" },
     { index = "pytorch-cu126", extra = "nvidia-cuda12", marker = "sys_platform == 'win32'" },
 ]
 torchvision = [
     { index = "pytorch-cpu", extra = "default", marker = "sys_platform == 'linux'" },
-    { index = "pytorch-test", extra = "default", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu132", extra = "nvidia", marker = "sys_platform == 'win32'" },
     { index = "pypi", extra = "nvidia", marker = "sys_platform != 'win32'" },
     { index = "pytorch-cu126", extra = "nvidia-cuda12", marker = "sys_platform == 'win32'" },
@@ -93,11 +92,6 @@ explicit = true
 [[tool.uv.index]]
 name = "pytorch-cu126"
 url = "https://download.pytorch.org/whl/cu126"
-explicit = true
-
-[[tool.uv.index]]
-name = "pytorch-test"
-url = "https://download.pytorch.org/whl/test"
 explicit = true
 
 [[tool.uv.index]]

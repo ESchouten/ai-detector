@@ -111,6 +111,8 @@ def build_detector(args) -> Path:
             "--windowed",
             "--osx-bundle-identifier",
             "io.github.eschouten.ai-detector.detector",
+            # Prepared Core ML models are named after the converter's version.
+            "--copy-metadata=coremltools",
         ]
     metadata = f"TYPE = {target.extra!r}\nREF_NAME = {args.version!r}\n"
     with build_metadata(ROOT / "detector/src/aidetector/version.py", metadata):

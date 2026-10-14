@@ -30,6 +30,17 @@ def export_arguments(
     }
 
 
+def core_ml_arguments(config: YoloConfig) -> dict[str, Any]:
+    return {
+        "format": "coreml",
+        # A fixed square picture: the SDK hands Core ML a batch as several of them.
+        "batch": 1,
+        "quantize": 16,
+        "imgsz": config.imgsz,
+        "nms": False,
+    }
+
+
 def content_key(identity: dict[str, Any], source: Path) -> str:
     """Name a prepared model after what produced it and the checkpoint's bytes."""
     digest = hashlib.sha256(json.dumps(identity, sort_keys=True).encode())

@@ -3,8 +3,7 @@ from __future__ import annotations
 import logging
 import pathlib
 from collections.abc import Generator
-from contextlib import contextmanager, nullcontext
-from threading import Lock
+from contextlib import contextmanager
 from time import perf_counter
 from typing import TYPE_CHECKING, Any, cast
 
@@ -14,8 +13,10 @@ from ultralytics import YOLO
 from ultralytics.data.loaders import LoadStreams, SourceTypes
 from ultralytics.engine.results import Results
 
-from aidetector.adapters.inference import MpsInferenceError
-from aidetector.adapters.inference.export_settings import export_arguments
+from aidetector.adapters.inference.export_settings import (
+    core_ml_arguments,
+    export_arguments,
+)
 from aidetector.adapters.inference.model_assets import MODEL_DOWNLOAD_HELP
 from aidetector.adapters.inference.onnx import InferenceOptions
 from aidetector.application.ports import Frames
@@ -24,86 +25,9 @@ from aidetector.configuration import OnnxConfig, YoloConfig
 from aidetector.domain.models import BoundingBox, Frame, Observation
 
 logger = logging.getLogger(__name__)
-_MPS_LOCK = Lock()
-
-LEAK_WARM_UP_SECONDS = 600
-LEAK_SECONDS = 60
-LEAK_BYTES_PER_CALL = 16 * 2**10
-LEAK_BYTES = 128 * 2**20
-
-
-class _MpsLeak:
-    """Tells when Apple GPU memory has started to grow with every inference call.
-
-    On an M6 with macOS 27 each call leaves about 1 KiB behind in the process's GPU
-    memory, outside what PyTorch holds, and from call 131072 on about 64 KiB. Only
-    a fresh process starts over. Memory that grows while cameras connect and
-    their models warm up, or once when a camera joins later, is not a leak.
-    """
-
-    def __init__(self) -> None:
-        self.calls = 0
-        self._sampled: tuple[float, int] | None = None
-        self._judged_from = 0.0
-        self._growing_since: tuple[float, int] | None = None
-
-    def growing(self, memory: int) -> bool:
-        now = perf_counter()
-        # Detectors report moments apart; growth shows only over a whole period.
-        if self._sampled and now - self._sampled[0] < SUMMARY_SECONDS:
-            return False
-        sampled, self._sampled = self._sampled, (now, memory)
-        calls, self.calls = self.calls, 0
-        if sampled is None:
-            self._judged_from = now + LEAK_WARM_UP_SECONDS
-            return False
-        if now < self._judged_from or memory - sampled[1] < LEAK_BYTES_PER_CALL * calls:
-            self._growing_since = None
-            return False
-        since, start = self._growing_since = self._growing_since or sampled
-        return now - since >= LEAK_SECONDS and memory - start >= LEAK_BYTES
-
-
-_MPS_LEAK = _MpsLeak()
 
 if TYPE_CHECKING:
     from aidetector.adapters.inference.prepared_engines import EnginePreparation
-
-
-@contextmanager
-def _mps_inference() -> Generator[None]:
-    # PyTorch's MPS command encoders are shared across models and are not safe
-    # under concurrent dispatch: https://github.com/pytorch/pytorch/issues/197805
-    import torch
-
-    with _MPS_LOCK:
-        _MPS_LEAK.calls += 1
-        try:
-            yield
-            torch.mps.synchronize()
-        except torch.AcceleratorError as error:
-            raise MpsInferenceError(
-                "Apple GPU inference failed; a fresh detector process is required."
-            ) from error
-
-
-def _check_mps_memory() -> None:
-    import torch
-
-    # The process total is what the Apple GPU limit is held against.
-    with _MPS_LOCK:
-        memory = torch.mps.driver_allocated_memory()
-        leaking = _MPS_LEAK.growing(memory)
-    logger.info(
-        "Apple GPU memory: %.0f MiB held by PyTorch, %.0f MiB by the whole process",
-        torch.mps.current_allocated_memory() / 2**20,
-        memory / 2**20,
-    )
-    if leaking:
-        raise MpsInferenceError(
-            "Apple GPU memory keeps growing with every picture; a fresh detector "
-            "process is required."
-        )
 
 
 class InMemoryStreamBatch(LoadStreams):
@@ -179,11 +103,6 @@ class YoloDetector:
         options: InferenceOptions,
     ):
         self.model = model
-        self._inference_scope = (
-            _mps_inference
-            if options.native_mps and config.model.endswith(".pt")
-            else nullcontext
-        )
         self.tracking = config.tracking
         self.sources = sources
         self.classes = resolve_classes(model.names, config.confidence)
@@ -205,59 +124,54 @@ class YoloDetector:
 
     def detect(self, frames: Frames) -> dict[str, tuple[Observation, ...]]:
         started = perf_counter()
-        with self._inference_scope():
-            acquired = perf_counter()
-            if self.tracking:
-                sources = self.sources
-                placeholder = np.zeros_like(next(iter(frames.values()))[-1].image)
-                for source, batch in frames.items():
-                    self._last_frames[source] = batch[-1].image
-                images = [
-                    self._last_frames.get(source, placeholder) for source in sources
-                ]
-                source_batch = InMemoryStreamBatch(
-                    [f"source-{index}" for index in range(len(sources))], images
+        if self.tracking:
+            sources = self.sources
+            placeholder = np.zeros_like(next(iter(frames.values()))[-1].image)
+            for source, batch in frames.items():
+                self._last_frames[source] = batch[-1].image
+            images = [self._last_frames.get(source, placeholder) for source in sources]
+            source_batch = InMemoryStreamBatch(
+                [f"source-{index}" for index in range(len(sources))], images
+            )
+            results = list(
+                self.model.track(
+                    # The SDK annotation omits LoadStreams instances, which its
+                    # loader dispatch accepts. Keep the mismatch at this boundary.
+                    source=cast(Any, source_batch),
+                    persist=True,
+                    stream=True,
+                    batch=len(sources),
+                    **self._arguments,
                 )
-                results = list(
-                    self.model.track(
-                        # The SDK annotation omits LoadStreams instances, which its
-                        # loader dispatch accepts. Keep the mismatch at this boundary.
-                        source=cast(Any, source_batch),
-                        persist=True,
-                        stream=True,
-                        batch=len(sources),
-                        **self._arguments,
+            )
+        else:
+            sources = tuple(frames)
+            images = [frames[source][-1].image for source in sources]
+            # Only a request for embeddings returns tensors instead of results.
+            results = cast(
+                list[Results],
+                list(
+                    self.model.predict(
+                        source=images, batch=len(images), **self._arguments
                     )
-                )
-            else:
-                sources = tuple(frames)
-                images = [frames[source][-1].image for source in sources]
-                # Only a request for embeddings returns tensors instead of results.
-                results = cast(
-                    list[Results],
-                    list(
-                        self.model.predict(
-                            source=images, batch=len(images), **self._arguments
-                        )
-                    ),
-                )
-            predicted = perf_counter()
-            mapped = {
-                source: map_observations(result, frames[source], self.classes)
-                for source, result in zip(sources, results, strict=True)
-                if source in frames
-            }
-            mapping_ms = (perf_counter() - predicted) * 1000
+                ),
+            )
+        predicted = perf_counter()
+        mapped = {
+            source: map_observations(result, frames[source], self.classes)
+            for source, result in zip(sources, results, strict=True)
+            if source in frames
+        }
+        mapping_ms = (perf_counter() - predicted) * 1000
         elapsed_ms = (perf_counter() - started) * 1000
         logger.debug(
             "%s time: %.1fms for %d frame(s), %.1fms/frame (%d active source(s)); "
-            "GPU lock wait=%.1fms; SDK ms/frame=%s; result mapping=%.1fms; input shapes=%s",
+            "SDK ms/frame=%s; result mapping=%.1fms; input shapes=%s",
             "Track" if self.tracking else "Predict",
             elapsed_ms,
             len(images),
             elapsed_ms / len(images),
             len(mapped),
-            (acquired - started) * 1000,
             {
                 stage: round(duration, 1)
                 for stage, duration in results[0].speed.items()
@@ -281,8 +195,6 @@ class YoloDetector:
                 self._busy_ms / self._frames,
                 self._slowest_ms,
             )
-            if self._inference_scope is _mps_inference:
-                _check_mps_memory()
             self._summarised_at = perf_counter()
             self._batches = self._frames = 0
             self._busy_ms = self._slowest_ms = 0.0
@@ -334,19 +246,23 @@ def open_detector(
     try:
         with _restore_path_classes():
             model_path = config.model
-            native_mps = options.native_mps and model_path.endswith(".pt")
             if engines is not None and model_path.endswith(".pt"):
                 engine = engines.prepare(config, onnx, len(sources), options)
                 if engine is not None:
                     loaded = _load_prepared_engine(
                         engine, config.task, options, report_status
                     )
-            export = _needs_export(model_path, build_type, native_mps)
+            export = _needs_export(model_path, build_type)
             if export and cache_directory is not None and model_path.endswith(".pt"):
-                from aidetector.adapters.inference.prepared_models import prepare_onnx
+                from aidetector.adapters.inference.prepared_models import (
+                    prepare_core_ml,
+                    prepare_onnx,
+                )
 
-                model_path = str(
-                    prepare_onnx(
+                prepared = (
+                    prepare_core_ml(config, cache_directory, report_status)
+                    if options.core_ml
+                    else prepare_onnx(
                         config,
                         onnx,
                         len(sources),
@@ -355,6 +271,7 @@ def open_detector(
                         report_status,
                     )
                 )
+                model_path = str(prepared)
                 export = False
             if loaded is None:
                 loaded = _load_model(model_path, config.task, report_status)
@@ -365,11 +282,15 @@ def open_detector(
                     )
                 )
                 exported = loaded.export(
-                    **export_arguments(config, onnx, len(sources), options)
+                    **(
+                        core_ml_arguments(config)
+                        if options.core_ml
+                        else export_arguments(config, onnx, len(sources), options)
+                    )
                 )
                 loaded = YOLO(str(exported), task=config.task)
             if loaded.predictor is None:
-                initialize_predictor(loaded, options, native_mps, report_status)
+                initialize_predictor(loaded, options, report_status)
         detector = YoloDetector(loaded, config, sources, options)
         yield detector
     finally:
@@ -389,7 +310,7 @@ def _load_prepared_engine(
 
     model = _load_model(str(path), task, report_status)
     try:
-        initialize_predictor(model, options, False, report_status)
+        initialize_predictor(model, options, report_status)
         return model
     except (RuntimeError, ImportError, OSError) as error:
         model.predictor = None
@@ -404,10 +325,8 @@ def _load_prepared_engine(
         return None
 
 
-def _needs_export(path: str, build_type: str, native_mps: bool) -> bool:
-    return not (
-        path.endswith((".onnx", ".engine")) or build_type == "cuda" or native_mps
-    )
+def _needs_export(path: str, build_type: str) -> bool:
+    return not (path.endswith((".onnx", ".engine")) or build_type == "cuda")
 
 
 def _load_model(path: str, task: str, report_status: ReportStatus) -> YOLO:
@@ -427,7 +346,6 @@ def _load_model(path: str, task: str, report_status: ReportStatus) -> YOLO:
 def initialize_predictor(
     model: YOLO,
     options: InferenceOptions,
-    native_mps: bool,
     report_status: ReportStatus = ignore_status,
 ) -> None:
     """Initialize the SDK backend once, for runtime inference or its benchmark."""
@@ -437,13 +355,10 @@ def initialize_predictor(
     # precision or device makes the SDK build a second backend. The SDK annotates
     # them as strings and keeps numbers there itself.
     overrides = cast(dict[str, Any], model.overrides)
-    overrides["quantize"] = 16 if native_mps or options.half else None
+    overrides["quantize"] = 16 if options.half else None
     # The head without suppression, where a model has one: what its confidence
     # thresholds were chosen with. The SDK no longer picks it by itself.
     overrides["nms"] = False
-    if native_mps:
-        overrides["device"] = "mps"
-        logger.info("MPS inference shares one GPU dispatch lock across detectors")
     model.predictor = model._smart_load("predictor")(
         overrides=overrides, _callbacks=model.callbacks
     )
@@ -465,9 +380,12 @@ def initialize_predictor(
         "FP16" if backend.fp16 else "FP32",
     )
 
-    engine = (
-        ", ".join(backend.session.get_providers())
-        if backend.format == "onnx"
-        else f"{backend.format.upper()} on {backend.device}"
-    )
+    if backend.format == "onnx":
+        engine = ", ".join(backend.session.get_providers())
+    elif backend.format == "coreml":
+        # The SDK runs it on the processor and the Neural Engine; its tensors
+        # stay on the processor.
+        engine = "Core ML"
+    else:
+        engine = f"{backend.format.upper()} on {backend.device}"
     report_status(StatusEvent("backend", message=engine))

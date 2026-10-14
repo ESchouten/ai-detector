@@ -133,8 +133,8 @@ def benchmark_model(path: Path, config: YoloConfig, frames: Frames, args) -> dic
     cast(dict[str, Any], model.overrides).update(
         device=args.device, quantize=16 if half else None
     )
-    options = InferenceOptions(half=half, native_mps=args.device == "mps")
-    initialize_predictor(model, options, options.native_mps and path.suffix == ".pt")
+    options = InferenceOptions(half=half)
+    initialize_predictor(model, options)
     detector = YoloDetector(
         model,
         config.model_copy(update={"model": str(path)}),

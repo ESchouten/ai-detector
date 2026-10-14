@@ -1,11 +1,8 @@
 import json
 import logging
-from types import SimpleNamespace
 
-import psutil
 import pytest
 
-from aidetector.adapters import diagnostics
 from aidetector.adapters.diagnostics import (
     diagnostic_logging,
     log_detector_configuration,
@@ -177,43 +174,3 @@ def test_unwritable_log_directory_keeps_console_diagnostics(
     output = capsys.readouterr().err
     assert "Could not open diagnostic log" in output
     assert "Monitoring can still start" in output
-
-
-def test_mac_memory_line_names_what_a_gpu_leak_would_take(
-    tmp_path, monkeypatch, caplog
-):
-    for application, size in (("org.example.viewer", 2), ("org.example.detector", 5)):
-        cache = tmp_path / application / "com.apple.metal" / "32024"
-        cache.mkdir(parents=True)
-        (cache / "libraries.data").write_bytes(bytes(size * 2**20))
-    (tmp_path / "org.example.other").mkdir()
-    gib = 2**30
-    # Windows has no confstr; only a Mac logs this line.
-    monkeypatch.setattr(
-        diagnostics.os, "confstr", lambda name: str(tmp_path), raising=False
-    )
-    monkeypatch.setattr(
-        psutil,
-        "virtual_memory",
-        lambda: SimpleNamespace(available=3 * gib, total=16 * gib, wired=5 * gib),
-    )
-    monkeypatch.setattr(psutil, "swap_memory", lambda: SimpleNamespace(used=2 * gib))
-    processes = [
-        {"name": "MTLCompilerService", "memory_info": SimpleNamespace(rss=40 * 2**20)},
-        {"name": "MTLCompilerService", "memory_info": SimpleNamespace(rss=24 * 2**20)},
-        # Another user's process shows its name only.
-        {"name": "MTLCompilerService", "memory_info": None},
-        {"name": "aidetector", "memory_info": SimpleNamespace(rss=gib)},
-    ]
-    monkeypatch.setattr(
-        psutil,
-        "process_iter",
-        lambda attributes: [SimpleNamespace(info=info) for info in processes],
-    )
-    with caplog.at_level(logging.INFO, logger=diagnostics.__name__):
-        diagnostics.log_mac_memory()
-    assert caplog.messages == [
-        "Mac memory: 3.0 of 16.0 GiB available, 5.0 GiB wired, 2.0 GiB swap in use; "
-        "GPU compiler: 2 process(es) holding 64 MiB; Metal cache on disk: 7 MiB, "
-        "of which 5 MiB for org.example.detector"
-    ]

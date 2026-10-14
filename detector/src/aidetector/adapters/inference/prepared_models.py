@@ -1,9 +1,11 @@
-"""Reuse portable ONNX exports of the same checkpoint and conversion settings."""
+"""Reuse ONNX and Core ML exports of the same checkpoint and conversion settings."""
 
 import errno
 import logging
 import shutil
 import tempfile
+from collections.abc import Callable
+from importlib.metadata import version
 from pathlib import Path
 from time import perf_counter
 
@@ -15,7 +17,11 @@ from onnxruntime.transformers.onnx_model import OnnxModel
 from ultralytics import YOLO
 from ultralytics.utils.downloads import attempt_download_asset
 
-from aidetector.adapters.inference.export_settings import content_key, export_arguments
+from aidetector.adapters.inference.export_settings import (
+    content_key,
+    core_ml_arguments,
+    export_arguments,
+)
 from aidetector.adapters.inference.model_assets import (
     MODEL_DOWNLOAD_HELP,
     MODEL_DOWNLOADING,
@@ -27,7 +33,9 @@ from aidetector.configuration import OnnxConfig, YoloConfig
 logger = logging.getLogger(__name__)
 
 
-def _cache_key(source: Path, task: str, arguments: dict) -> str:
+def _cache_key(
+    source: Path, task: str, arguments: dict, libraries: dict[str, str]
+) -> str:
     identity = {
         "version": 1,
         "task": task,
@@ -35,8 +43,7 @@ def _cache_key(source: Path, task: str, arguments: dict) -> str:
         "libraries": {
             "ultralytics": ultralytics.__version__,
             "torch": torch.__version__,
-            "onnx": onnx.__version__,
-            "onnxslim": onnxslim.__version__,
+            **libraries,
         },
     }
     return content_key(identity, source)
@@ -50,6 +57,51 @@ def prepare_onnx(
     cache: Path,
     report_status: ReportStatus = ignore_status,
 ) -> Path:
+    def validate(exported: Path) -> None:
+        if options.half:
+            # CPU FP16 conversion appends input casts after their consumers.
+            # Use ORT's sorter; preserve external tensors and SDK metadata.
+            logger.info("Ordering FP16 ONNX graph before validation")
+            graph = onnx.load(exported, load_external_data=False)
+            OnnxModel(graph).topological_sort()
+            onnx.save(graph, exported)
+        # Keep external tensor files beside the graph.
+        onnx.checker.check_model(str(exported))
+
+    return _prepare(
+        config,
+        export_arguments(config, onnx_config, batch, options),
+        {"onnx": onnx.__version__, "onnxslim": onnxslim.__version__},
+        "model.onnx",
+        validate,
+        cache,
+        report_status,
+    )
+
+
+def prepare_core_ml(
+    config: YoloConfig, cache: Path, report_status: ReportStatus = ignore_status
+) -> Path:
+    return _prepare(
+        config,
+        core_ml_arguments(config),
+        {"coremltools": version("coremltools")},
+        "model.mlpackage",
+        lambda _exported: None,
+        cache,
+        report_status,
+    )
+
+
+def _prepare(
+    config: YoloConfig,
+    arguments: dict,
+    libraries: dict[str, str],
+    name: str,
+    validate: Callable[[Path], None],
+    cache: Path,
+    report_status: ReportStatus,
+) -> Path:
     # Stock weights still use Ultralytics' asset downloader. Explicit model URLs
     # have already been resolved by model_assets before entering this boundary.
     if not Path(config.model).is_file():
@@ -59,14 +111,13 @@ def prepare_onnx(
     except ConnectionError:
         report_status(StatusEvent("preparation_failed", message=MODEL_DOWNLOAD_HELP))
         raise
-    arguments = export_arguments(config, onnx_config, batch, options)
-    destination = cache / _cache_key(source, config.task, arguments)
-    model_path = destination / "model.onnx"
-    if model_path.is_file():
+    destination = cache / _cache_key(source, config.task, arguments, libraries)
+    model_path = destination / name
+    if model_path.exists():
         logger.info("Prepared model cache hit: %s", model_path)
         return model_path
     started = perf_counter()
-    logger.info("Preparing ONNX model: %s; export settings=%s", source.name, arguments)
+    logger.info("Preparing %s: %s; export settings=%s", name, source.name, arguments)
     report_status(
         StatusEvent(
             "preparing",
@@ -80,16 +131,9 @@ def prepare_onnx(
         shutil.copyfile(source, checkpoint)
         model = YOLO(str(checkpoint), task=config.task)
         exported = Path(model.export(**arguments))
-        if options.half:
-            # CPU FP16 conversion appends input casts after their consumers.
-            # Use ORT's sorter; preserve external tensors and SDK metadata.
-            logger.info("Ordering FP16 ONNX graph before validation")
-            graph = onnx.load(exported, load_external_data=False)
-            OnnxModel(graph).topological_sort()
-            onnx.save(graph, exported)
-        # Validate before publication and keep external tensor files beside the
-        # graph. A failed/interrupted export never becomes a reusable cache hit.
-        onnx.checker.check_model(str(exported))
+        # Validate before publication. A failed/interrupted export never becomes
+        # a reusable cache hit.
+        validate(exported)
         checkpoint.unlink()
         try:
             pending.rename(destination)
@@ -97,7 +141,5 @@ def prepare_onnx(
             # Another application process may have finished the same export.
             if error.errno not in (errno.EEXIST, errno.ENOTEMPTY):
                 raise
-    logger.info(
-        "ONNX model prepared in %.2fs: %s", perf_counter() - started, model_path
-    )
+    logger.info("%s prepared in %.2fs: %s", name, perf_counter() - started, model_path)
     return model_path

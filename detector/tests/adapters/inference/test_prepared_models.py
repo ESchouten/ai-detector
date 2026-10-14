@@ -5,7 +5,7 @@ import pytest
 
 from aidetector.adapters.inference import prepared_models
 from aidetector.adapters.inference.onnx import InferenceOptions
-from aidetector.adapters.inference.prepared_models import prepare_onnx
+from aidetector.adapters.inference.prepared_models import prepare_core_ml, prepare_onnx
 from aidetector.configuration import OnnxConfig, YoloConfig
 from tests.support.onnx_model import write_detection_model
 
@@ -23,6 +23,12 @@ def prepared_checkpoint(tmp_path, monkeypatch):
 
         def export(self, **arguments):
             calls.append(arguments)
+            if arguments["format"] == "coreml":
+                # A Core ML package is a directory.
+                output = self.path.with_suffix(".mlpackage")
+                output.mkdir()
+                (output / "Manifest.json").write_bytes(b"{}")
+                return str(output)
             output = self.path.with_suffix(".onnx")
             write_detection_model(output)
             return str(output)
@@ -166,3 +172,26 @@ def test_export_with_missing_input_is_rejected_without_publishing_cache(
             cache,
         )
     assert list(cache.iterdir()) == []
+
+
+def test_core_ml_package_is_reused_and_kept_apart_from_onnx_and_other_converters(
+    tmp_path, prepared_checkpoint, monkeypatch
+):
+    source, calls = prepared_checkpoint
+    monkeypatch.setattr(prepared_models, "version", lambda _name: "9.0")
+    config = YoloConfig(model=str(source), imgsz=64)
+    cache = tmp_path / "cache"
+    first = prepare_core_ml(config, cache)
+    assert prepare_core_ml(config, cache) == first
+    assert first.name == "model.mlpackage"
+    assert (first / "Manifest.json").is_file()
+    assert not first.with_suffix(".pt").exists()
+    assert calls == [
+        {"format": "coreml", "batch": 1, "quantize": 16, "imgsz": 64, "nms": False}
+    ]
+    assert prepare_onnx(config, OnnxConfig(), 1, InferenceOptions(), cache).parent != (
+        first.parent
+    )
+    monkeypatch.setattr(prepared_models, "version", lambda _name: "9.1")
+    assert prepare_core_ml(config, cache) != first
+    assert len(calls) == 3

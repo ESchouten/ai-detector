@@ -54,6 +54,7 @@ Major versions are not proposed. List them with `pnpm --dir web outdated` and `u
 | --- | --- | --- |
 | ONNX Runtime GPU in the `nvidia-cuda12` extra | 1.20, the last release that runs on CUDA 12.6 | PyTorch stops building for CUDA 12.6 and that extra goes |
 | TensorRT on Windows with NVIDIA | The version pinned in `detector/pyproject.toml` | Someone checks a newer one on an NVIDIA computer |
+| NumPy on macOS | 2.3, the last that coremltools 9 converts models with | coremltools converts with NumPy 2.4 |
 | `@sveltejs/kit`, `@sveltejs/adapter-node`, `devalue` | SvelteKit 2 | `@jesterkit/exe-sveltekit`, which builds the desktop executable, supports SvelteKit 3 |
 | `typescript` | 6 | `svelte-check` and `typescript-eslint` accept 7 |
 | `@types/node`, `@types/bun` | Node 24 and the Bun version in `distribution/toolchain.json` | Those runtimes move |

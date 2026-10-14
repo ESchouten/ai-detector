@@ -10,7 +10,6 @@ import cv2
 import numpy as np
 import pytest
 
-from aidetector.adapters.inference import MpsInferenceError
 from aidetector.cli import main
 from tests.support.status import status_records
 
@@ -56,25 +55,21 @@ def test_invalid_and_missing_config_have_actionable_exit_status(tmp_path):
     assert path.read_text() == '{"detectors": []}'
 
 
-@pytest.mark.parametrize(
-    "error_type, code", [(MpsInferenceError, 75), (RuntimeError, 1)]
-)
-def test_launcher_can_distinguish_mps_failure_without_parsing_logs(
-    tmp_path, monkeypatch, error_type, code
+def test_application_failure_is_logged_with_its_traceback_and_exit_code_one(
+    tmp_path, monkeypatch
 ):
     config = tmp_path / "config.json"
     document = json.dumps({"detectors": [{"detection": {"source": "video.mp4"}}]})
     config.write_text(document)
 
     def run_application(*args, **kwargs):
-        raise error_type("injected inference failure")
+        raise RuntimeError("injected inference failure")
 
     monkeypatch.setattr("aidetector.bootstrap.run_application", run_application)
-    assert main(["--config", str(config)]) == code
+    assert main(["--config", str(config)]) == 1
     saved = (tmp_path / "logs/detector.log").read_text()
     assert "injected inference failure" in saved
     assert "Traceback (most recent call last)" in saved
-    assert ("exiting with code 75" in saved) is (code == 75)
     assert config.read_text() == document
 
 

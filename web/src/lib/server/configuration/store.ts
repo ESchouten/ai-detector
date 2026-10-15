@@ -190,8 +190,12 @@ export class ConfigurationStore {
 		return this.update((document) => removeCamera(document, id));
 	}
 
-	saveAlerts(input: v.InferOutput<typeof alertsInput>): Promise<void> {
-		return this.update((document) => saveAlerts(document, input));
+	/** `presets` give the Telegram settings of the detectors that follow them. */
+	saveAlerts(
+		input: v.InferOutput<typeof alertsInput>,
+		presets: DetectorPreset[] = []
+	): Promise<void> {
+		return this.update((document) => saveAlerts(document, input, presets));
 	}
 
 	saveLlm(input: LlmConnection & { original?: string }): Promise<void> {
@@ -242,8 +246,12 @@ export class ConfigurationStore {
 		});
 	}
 
-	saveDetector(input: v.InferOutput<typeof detectorInput>): Promise<void> {
-		return this.update((document) => saveDetector(document, input));
+	/** `presets` give the Telegram settings of a detector that follows one. */
+	saveDetector(
+		input: v.InferOutput<typeof detectorInput>,
+		presets: DetectorPreset[] = []
+	): Promise<void> {
+		return this.update((document) => saveDetector(document, input, presets));
 	}
 
 	/**

@@ -21,6 +21,10 @@
         "disk": {
             "directory": "dry cows",
             "strategy": "BEST"
+        },
+        "telegram": {
+            "include_video": false,
+            "include_plot": true
         }
     },
     "vlm": {

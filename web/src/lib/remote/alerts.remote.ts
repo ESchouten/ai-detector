@@ -2,6 +2,7 @@ import { configurationAction } from '$lib/server/configuration/request';
 import { command, query } from '$app/server';
 import * as v from 'valibot';
 import { configuration } from '$lib/server/configuration';
+import { readPresetsForSaving } from '$lib/server/configuration/presets';
 import { alertsInput, telegramInput } from '$lib/configuration';
 import { telegramMeta } from '$lib/schema';
 import { sendTelegramTest } from '$lib/server/telegram';
@@ -25,7 +26,7 @@ export const cancelTelegramPairing = command(pairingInput, ({ id }) =>
 );
 
 export const saveAlerts = command(alertsInput, (input) =>
-	configurationAction(() => configuration.saveAlerts(input))
+	configurationAction(async () => configuration.saveAlerts(input, await readPresetsForSaving()))
 );
 export const discoverTelegramChats = command(tokenInput, ({ token }) =>
 	configurationAction(() => pairings.discoverChats(token))

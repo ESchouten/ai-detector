@@ -34,6 +34,8 @@ A mode file without a preset of that name is an ordinary preset, and the release
 
 A preset contains only detector settings: model, watched classes, event rules and delivery defaults. Cameras are added first, and selecting them in the detector step supplies `detection.source`. Everything else follows the [configuration schema](config.schema.json).
 
+`exporters.telegram` in a preset is a single object and may set only some Telegram settings, such as `{ "include_video": false, "alert_every": 3 }`. Each Telegram alert of a detector that follows the preset takes them in place of the defaults. `token`, `chat` and `quiet` belong to each recipient and cannot be in a preset. A detector takes them when it is saved in the editor, when it is given a recipient under Alerts, and when the preset changes them, even if nothing else in the preset changed.
+
 ### Presets of one installation
 
 Create a `presets/` folder in the data folder, beside `config.json`, and put detector JSON files directly in it; then reload the editor. The data folder is shown on the monitoring status page under **Technical details**.

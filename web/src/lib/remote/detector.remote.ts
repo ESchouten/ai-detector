@@ -5,7 +5,7 @@ import * as v from 'valibot';
 import { configuration } from '$lib/server/configuration';
 import { detectorInput } from '$lib/configuration';
 import { detectorMeta } from '$lib/schema';
-import { readPresets } from '$lib/server/configuration/presets';
+import { readPresets, readPresetsForSaving } from '$lib/server/configuration/presets';
 import { presetFile, readPresetChoices } from '$lib/server/configuration/preset-files';
 
 export const getDetectorPresets = query(() => readPresetChoices(readPresets));
@@ -27,7 +27,7 @@ export const getDetectors = query(async () => {
 });
 
 export const saveDetector = command(detectorInput, (input) =>
-	configurationAction(() => configuration.saveDetector(input))
+	configurationAction(async () => configuration.saveDetector(input, await readPresetsForSaving()))
 );
 export const deleteDetector = command(detectorMeta, ({ label }) =>
 	configurationAction(() => configuration.deleteDetector(label))

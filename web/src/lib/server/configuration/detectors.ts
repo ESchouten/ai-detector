@@ -6,13 +6,19 @@ import {
 	detectorSettings,
 	normalizeConfig
 } from '../../configuration.ts';
-import type { Configuration } from '../../schema.ts';
+import type { Configuration, DetectorPreset } from '../../schema.ts';
 import { assignConnection } from '../../llm.ts';
-import { forgetPreset, presetVersion } from './followed-presets.ts';
+import {
+	forgetPreset,
+	presetTelegram,
+	presetVersion,
+	withPresetTelegram
+} from './followed-presets.ts';
 
 export function saveDetector(
 	{ config, app }: Configuration,
-	input: v.InferOutput<typeof detectorInput>
+	input: v.InferOutput<typeof detectorInput>,
+	presets: DetectorPreset[]
 ): void {
 	const index = input.original
 		? app.detectors.findIndex((item) => item.label === input.original)
@@ -43,8 +49,10 @@ export function saveDetector(
 				autoUpdate: previous.autoUpdate
 			}
 		: { ...input.meta };
-	if (meta.preset) meta.presetVersion = presetVersion(normalized);
-	else forgetPreset(meta);
+	if (meta.preset) {
+		meta.presetVersion = presetVersion(normalized);
+		normalized = withPresetTelegram(normalized, presetTelegram(meta, presets));
+	} else forgetPreset(meta);
 	const position = index < 0 ? config.detectors.length : index;
 	config.detectors[position] = normalized;
 	app.detectors[position] = meta;

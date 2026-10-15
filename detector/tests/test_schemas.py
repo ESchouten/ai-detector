@@ -67,8 +67,16 @@ def test_schema_rejects_connected_verifier_without_model(settings):
     sorted((ROOT / "config" / "detector").glob("*.json")),
     ids=lambda path: path.stem,
 )
-def test_detector_presets_satisfy_the_canonical_contract_after_source_binding(path):
+def test_detector_presets_satisfy_the_canonical_contract_after_binding(path):
     preset = json.loads(path.read_text(encoding="utf-8"))
+    exporters = dict(preset.get("exporters", {}))
+    if "telegram" in exporters:
+        # Each recipient brings its own bot and chat; a preset sets the rest.
+        exporters["telegram"] = {
+            **exporters["telegram"],
+            "token": "preset",
+            "chat": "preset",
+        }
     document = {
         "detectors": [
             {
@@ -77,6 +85,7 @@ def test_detector_presets_satisfy_the_canonical_contract_after_source_binding(pa
                     **preset.get("detection", {}),
                     "source": ["rtsp://preset.invalid/stream"],
                 },
+                "exporters": exporters,
             }
         ]
     }

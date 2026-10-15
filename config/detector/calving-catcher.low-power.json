@@ -24,6 +24,10 @@
     "exporters": {
         "disk": {
             "directory": "calvings"
+        },
+        "telegram": {
+            "include_video": false,
+            "include_plot": true
         }
     },
     "vlm": {

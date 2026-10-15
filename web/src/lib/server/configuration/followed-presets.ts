@@ -1,6 +1,13 @@
 import { createHash } from 'node:crypto';
+import { isDeepStrictEqual } from 'node:util';
 import { detectorSettings } from '../../configuration.ts';
-import type { Configuration, DetectorConfig, DetectorMeta, DetectorPreset } from '../../schema.ts';
+import type {
+	Configuration,
+	DetectorConfig,
+	DetectorMeta,
+	DetectorPreset,
+	TelegramSettings
+} from '../../schema.ts';
 import { presetFile } from './preset-files.ts';
 
 /** Object keys in order, so that two spellings of the same settings are one version. */
@@ -44,37 +51,74 @@ function follows(meta: DetectorMeta, preset: DetectorPreset): boolean {
 	return meta.preset !== undefined && presetFile(meta.preset, meta.mode) === preset.id;
 }
 
+/** What the preset a detector follows sets for its Telegram alerts. */
+export function presetTelegram(
+	meta: DetectorMeta,
+	presets: DetectorPreset[]
+): TelegramSettings | undefined {
+	return presets.find((preset) => follows(meta, preset))?.telegram;
+}
+
+/** The detector with what its preset sets for Telegram alerts in place of their defaults. */
+export function withPresetTelegram(
+	detector: DetectorConfig,
+	telegram?: TelegramSettings
+): DetectorConfig {
+	const recipients = detector.exporters?.telegram;
+	if (!telegram || !recipients) return detector;
+	return {
+		...detector,
+		exporters: {
+			...detector.exporters,
+			telegram: recipients.map((recipient) => ({ ...recipient, ...telegram }))
+		}
+	};
+}
+
+/** Whether the preset has detection or Telegram settings that the detector lacks. */
+function behind(meta: DetectorMeta, detector: DetectorConfig, preset: DetectorPreset): boolean {
+	return (
+		meta.presetVersion !== presetVersion(preset.detector) ||
+		!isDeepStrictEqual(withPresetTelegram(detector, preset.telegram), detector)
+	);
+}
+
 /** The presets that would change a detector that follows them. */
-export function newerPresets({ app }: Configuration, presets: DetectorPreset[]): DetectorPreset[] {
+export function newerPresets(
+	{ config, app }: Configuration,
+	presets: DetectorPreset[]
+): DetectorPreset[] {
 	return presets.filter((preset) =>
 		app.detectors.some(
-			(meta) =>
+			(meta, index) =>
 				follows(meta, preset) &&
 				meta.autoUpdate !== false &&
-				meta.presetVersion !== presetVersion(preset.detector)
+				behind(meta, config.detectors[index], preset)
 		)
 	);
 }
 
 /**
- * Give each detector that follows a preset the preset's current detection settings, unless the
- * person switched that off for it. Its cameras, delivery and verification stay as saved. Returns
- * the names of the detectors that changed.
+ * Give each detector that follows a preset the preset's current detection and Telegram settings,
+ * unless the person switched that off for it. Its cameras, recipients, other delivery and
+ * verification stay as saved. Returns the names of the detectors that changed.
  */
 export function followPresets({ config, app }: Configuration, presets: DetectorPreset[]): string[] {
 	const updated: string[] = [];
 	for (const [index, meta] of app.detectors.entries()) {
-		const preset = presets.find((item) => follows(meta, item))?.detector;
-		if (!preset || meta.autoUpdate === false || presetVersion(preset) === meta.presetVersion)
-			continue;
+		const preset = presets.find((item) => follows(meta, item));
 		const saved = config.detectors[index];
-		config.detectors[index] = {
-			...preset,
-			detection: { ...preset.detection, source: saved.detection.source },
-			vlm: saved.vlm,
-			exporters: saved.exporters
-		};
-		meta.presetVersion = presetVersion(preset);
+		if (!preset || meta.autoUpdate === false || !behind(meta, saved, preset)) continue;
+		config.detectors[index] = withPresetTelegram(
+			{
+				...preset.detector,
+				detection: { ...preset.detector.detection, source: saved.detection.source },
+				vlm: saved.vlm,
+				exporters: saved.exporters
+			},
+			preset.telegram
+		);
+		meta.presetVersion = presetVersion(preset.detector);
 		updated.push(meta.label);
 	}
 	return updated;

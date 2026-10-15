@@ -6,7 +6,8 @@ import {
 	telegramExporter,
 	telegramInput
 } from '../../configuration.ts';
-import type { Configuration } from '../../schema.ts';
+import type { Configuration, DetectorPreset } from '../../schema.ts';
+import { presetTelegram } from './followed-presets.ts';
 
 export function saveTelegram(
 	{ config, app }: Configuration,
@@ -53,7 +54,8 @@ export function deleteTelegram({ config, app }: Configuration, label: string): v
 /** Alert assignments change delivery only; detector definitions and sources stay intact. */
 export function saveAlerts(
 	document: Configuration,
-	input: v.InferOutput<typeof alertsInput>
+	input: v.InferOutput<typeof alertsInput>,
+	presets: DetectorPreset[]
 ): void {
 	const previous = document.app.telegrams.find((item) => item.label === input.original);
 	if (!input.received && (!previous || !sameTelegram(previous, input)))
@@ -65,12 +67,16 @@ export function saveAlerts(
 		throw new ConfigurationError('A selected detector no longer exists.');
 	saveTelegram(document, input);
 	for (const [index, detector] of document.config.detectors.entries()) {
+		const meta = document.app.detectors[index];
 		const channels = detector.exporters?.telegram ?? [];
 		const assigned = channels.some((channel) => sameTelegram(channel, input));
-		if (selected.has(document.app.detectors[index].label)) {
+		if (selected.has(meta.label)) {
 			if (!assigned) {
 				detector.exporters ??= {};
-				detector.exporters.telegram = [...channels, telegramExporter(input)];
+				detector.exporters.telegram = [
+					...channels,
+					{ ...telegramExporter(input), ...presetTelegram(meta, presets) }
+				];
 			}
 		} else if (assigned) {
 			detector.exporters!.telegram = channels.filter((channel) => !sameTelegram(channel, input));

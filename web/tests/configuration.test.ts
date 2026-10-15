@@ -770,6 +770,59 @@ test('a detector in one of its preset’s modes follows that mode until it has s
 	assert.deepEqual((await store.read()).app.detectors[0], { label: 'Pen' });
 });
 
+test('a preset’s Telegram settings replace the defaults in the alerts of detectors that follow it', async (t) => {
+	const { store } = await fixture(t, { detectors: [] });
+	const presets = await readTestPresets();
+	const calving = presets.find(({ id }) => id === 'calving-catcher')!;
+	calving.telegram = { include_video: false, include_image: true };
+	const phone = { token: 'fixture-token', chat: '123' };
+	await store.saveDetector(
+		{
+			detector: {
+				...calving.detector,
+				detection: { ...calving.detector.detection, source: [source] },
+				exporters: { telegram: [phone] }
+			},
+			meta: { label: 'Calving pen', preset: 'calving-catcher' }
+		},
+		presets
+	);
+	await store.saveDetector({ detector, meta: { label: 'Yard' } }, presets);
+	assert.deepEqual((await store.read()).config.detectors[0].exporters?.telegram, [
+		{ ...phone, include_video: false, include_image: true }
+	]);
+
+	// A recipient given to detectors on the Alerts page keeps its own quiet hours.
+	const quiet = { start: '22:00', end: '06:00' };
+	const group = { token: 'group-token', chat: '456', quiet };
+	await store.saveAlerts(
+		{ label: 'Group', ...group, detectorLabels: ['Calving pen', 'Yard'], received: true },
+		presets
+	);
+	const assigned = (await store.read()).config.detectors;
+	assert.deepEqual(assigned[0].exporters?.telegram?.[1], {
+		...group,
+		include_video: false,
+		include_image: true
+	});
+	assert.deepEqual(assigned[1].exporters?.telegram, [group]);
+
+	// Changed Telegram settings alone are followed, over what the preset set before.
+	calving.telegram = { include_video: true, alert_every: 3 };
+	assert.deepEqual(
+		newerPresets(await store.read(), presets).map(({ id }) => id),
+		['calving-catcher']
+	);
+	assert.deepEqual(await store.followPresets(presets), ['Calving pen']);
+	const followed = await store.read();
+	assert.deepEqual(followed.config.detectors[0].exporters?.telegram, [
+		{ ...phone, include_video: true, include_image: true, alert_every: 3 },
+		{ ...group, include_video: true, include_image: true, alert_every: 3 }
+	]);
+	assert.deepEqual(followed.config.detectors[1], assigned[1]);
+	assert.deepEqual(newerPresets(followed, presets), []);
+});
+
 test('a detector whose automatic updates are switched off keeps its model until they are on again', async (t) => {
 	const { store } = await fixture(t, { detectors: [] });
 	await addPresetDetector(store, { label: 'Barn', source }, 'cow-catcher');

@@ -3747,3 +3747,7 @@ msgstr "Mode"
 #: src/lib/components/detector-editor.svelte
 msgid "Default"
 msgstr "Par défaut"
+
+#: src/lib/server/configuration/preset-files.ts
+msgid "Telegram settings in a preset leave out token, chat and quiet: each recipient has its own."
+msgstr "Les paramètres Telegram d’un préréglage omettent token, chat et quiet : chaque destinataire a les siens."

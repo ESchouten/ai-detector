@@ -190,10 +190,15 @@ export interface PresetInfo {
 	modes?: { id: string; name: string }[];
 }
 
+/** What a preset sets for its Telegram alerts. The bot, chat and quiet hours are the recipient's. */
+export type TelegramSettings = Omit<Partial<Input.TelegramConfig>, 'token' | 'chat' | 'quiet'>;
+
 export interface DetectorPreset {
 	id: string;
 	name: string;
 	detector: DetectorConfig;
+	/** Replaces the defaults in each Telegram alert of a detector that follows the preset. */
+	telegram?: TelegramSettings;
 }
 
 export interface Configuration {

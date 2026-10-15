@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { dev } from '$app/environment';
+import { ConfigurationError } from '../../configuration.ts';
 import type { DetectorPreset } from '../../schema.ts';
 import { preview } from '../../version.ts';
 import { DATA_DIRECTORY } from '../application-paths.ts';
@@ -37,6 +38,16 @@ function hasOwnPresets(): boolean {
 export async function readPresets(): Promise<DetectorPreset[]> {
 	const presets = await loadPresets(directory, bundledConfigurations);
 	return hasOwnPresets() ? presets : withPublished(presets, published);
+}
+
+/** What saving a detector takes from presets; none while a preset file is invalid. */
+export async function readPresetsForSaving(): Promise<DetectorPreset[]> {
+	try {
+		return await readPresets();
+	} catch (cause) {
+		if (!(cause instanceof ConfigurationError)) throw cause;
+		return [];
+	}
 }
 
 /** The presets detectors follow: this installation's own, else the published ones, fetched now. */

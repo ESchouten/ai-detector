@@ -2,7 +2,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import * as v from 'valibot';
 import { ConfigurationError, normalizeConfig } from '../../configuration.ts';
-import type { DetectorConfig, DetectorPreset, PresetInfo } from '../../schema.ts';
+import type { DetectorPreset, PresetInfo, TelegramSettings } from '../../schema.ts';
 
 /** A file name as people read it: `cow-catcher` is Cow Catcher, `low-power` is Low Power. */
 function readableName(id: string): string {
@@ -50,31 +50,50 @@ export async function readPresetChoices(read: () => Promise<DetectorPreset[]>): 
 	}
 }
 
-function detectorTemplate(input: unknown): DetectorConfig {
-	const parsed = v.safeParse(v.looseObject({ detection: v.optional(v.looseObject({})) }), input);
+/** Each recipient's own; a preset sets the rest of its Telegram alerts. */
+const RECIPIENT = ['token', 'chat', 'quiet'];
+
+function presetSettings(input: unknown): Pick<DetectorPreset, 'detector' | 'telegram'> {
+	const parsed = v.safeParse(
+		v.looseObject({
+			detection: v.optional(v.looseObject({})),
+			exporters: v.optional(v.looseObject({ telegram: v.optional(v.looseObject({})) }))
+		}),
+		input
+	);
+	const raw = input as { detection?: unknown; exporters?: { telegram?: unknown } };
 	if (
 		!parsed.success ||
-		Array.isArray(input) ||
-		Array.isArray((input as { detection?: unknown }).detection)
+		[input, raw.detection, raw.exporters, raw.exporters?.telegram].some(Array.isArray)
 	)
 		throw new ConfigurationError('A preset must contain a detector configuration.');
-	// Bind a source only for canonical validation; choosing a camera supplies its real source.
+	const { telegram, ...exporters } = parsed.output.exporters ?? {};
+	if (telegram && RECIPIENT.some((key) => key in telegram))
+		throw new ConfigurationError(
+			'Telegram settings in a preset leave out token, chat and quiet: each recipient has its own.'
+		);
+	// Bind a source and a recipient only for canonical validation; choosing a camera supplies its
+	// real source, and each recipient its own bot and chat.
 	const detector = normalizeConfig({
 		detectors: [
 			{
 				...parsed.output,
-				detection: { ...parsed.output.detection, source: ['rtsp://preset.invalid/stream'] }
+				detection: { ...parsed.output.detection, source: ['rtsp://preset.invalid/stream'] },
+				exporters: telegram
+					? { ...exporters, telegram: { ...telegram, token: 'preset', chat: 'preset' } }
+					: exporters
 			}
 		]
 	}).detectors[0];
 	detector.detection.source = [];
-	return detector;
+	delete detector.exporters?.telegram;
+	return { detector, ...(telegram && { telegram: telegram as TelegramSettings }) };
 }
 
 export function presetFromFile(file: string, input: unknown): DetectorPreset {
 	const id = path.basename(file, '.json');
 	try {
-		return { id, name: readableName(id), detector: detectorTemplate(input) };
+		return { id, name: readableName(id), ...presetSettings(input) };
 	} catch (cause) {
 		if (!(cause instanceof ConfigurationError)) throw cause;
 		throw new ConfigurationError(`Invalid preset "${file}": ${cause.message}`, { cause });

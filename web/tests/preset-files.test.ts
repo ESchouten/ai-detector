@@ -83,6 +83,7 @@ test('bundled preset files preserve their models, options and recording destinat
 		const raw = JSON.parse(await readFile(path.join(directory, `${preset.id}.json`), 'utf8'));
 		assert.deepEqual(preset.detector.yolo, raw.yolo);
 		assert.deepEqual(preset.detector.exporters?.disk, [raw.exporters.disk]);
+		assert.deepEqual(preset.telegram, raw.exporters.telegram);
 		assert.deepEqual(preset.detector.detection, { ...raw.detection, source: [] });
 	}
 	assert.equal(
@@ -98,10 +99,11 @@ test('the low-power mode differs from its preset only in how often it looks and 
 	);
 	const modes = presets.flatMap((preset) => {
 		const lowPower = presets.find(({ id }) => id === presetFile(preset.id, 'low-power'));
+		if (lowPower) assert.deepEqual(lowPower.telegram, preset.telegram);
 		return lowPower ? [[preset.detector, lowPower.detector]] : [];
 	});
 	assert.equal(modes.length, 1);
-	// A newer model, another question or a changed threshold must reach both modes.
+	// A newer model, another question, a changed threshold or Telegram setting must reach both.
 	const shared = (detector: DetectorConfig) => ({
 		...detector,
 		detection: { ...detector.detection, interval: undefined },
@@ -114,6 +116,34 @@ test('the low-power mode differs from its preset only in how often it looks and 
 	const [[byDefault, lowPower]] = modes;
 	assert.deepEqual([byDefault.detection.interval, byDefault.yolo?.frames_min], [1, 10]);
 	assert.deepEqual([lowPower.detection.interval, lowPower.yolo?.frames_min], [5, 5]);
+});
+
+test('a preset’s Telegram object sets part of its alerts, never the recipient', async (t) => {
+	const directory = await fixture(t);
+	const file = path.join(directory, 'calving.json');
+	const preset = (telegram: unknown) =>
+		writeFile(
+			file,
+			JSON.stringify({ yolo: { model: 'custom.pt' }, exporters: { disk: {}, telegram } })
+		);
+	await preset({ include_video: false, alert_every: 3 });
+	const [loaded] = await loadPresets(directory, {});
+	assert.deepEqual(loaded.telegram, { include_video: false, alert_every: 3 });
+	assert.deepEqual(loaded.detector.exporters, { disk: [{}] });
+	for (const telegram of [
+		{ token: 'fixture-token' },
+		{ chat: '123' },
+		{ quiet: { start: '22:00', end: '06:00' } },
+		{ alert_every: 0 },
+		{ unexpected: true },
+		[{ include_video: false }]
+	]) {
+		await preset(telegram);
+		await assert.rejects(
+			loadPresets(directory, {}),
+			(cause) => cause instanceof ConfigurationError && cause.message.includes(file)
+		);
+	}
 });
 
 test('adding, editing and removing local files changes the choices on the next read', async (t) => {

@@ -27,7 +27,7 @@ export function presetVersion(detector: DetectorConfig): string {
 /** A detector with settings of its own follows no preset. */
 export function forgetPreset(meta: DetectorMeta): void {
 	delete meta.preset;
-	delete meta.efficient;
+	delete meta.mode;
 	delete meta.presetVersion;
 }
 
@@ -41,7 +41,7 @@ export function forgetChangedPresets(document: Configuration): Configuration {
 }
 
 function follows(meta: DetectorMeta, preset: DetectorPreset): boolean {
-	return meta.preset !== undefined && presetFile(meta.preset, meta.efficient) === preset.id;
+	return meta.preset !== undefined && presetFile(meta.preset, meta.mode) === preset.id;
 }
 
 /** The presets that would change a detector that follows them. */

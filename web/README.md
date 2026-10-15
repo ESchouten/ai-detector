@@ -27,7 +27,7 @@ A detector made from a preset follows it. When a newer model is published for th
 
 **Update automatically** in a detector's settings switches this off for that detector: it then keeps the model it has until you switch it on again or choose the preset anew.
 
-A preset can come in two modes, chosen under the preset in a detector's settings. **Performance** looks at the picture most often. **Efficient** looks less often: it asks less of the computer and can notice an event later. A detector follows the mode it is in.
+A preset can come in more than one mode, chosen under the preset in a detector's settings. **Default** is the preset's own settings. Calving Catcher also has **Low Power**, which looks less often: it asks less of the computer and can notice an event later. A detector follows the mode it is in.
 
 A detector whose detection settings you changed keeps them and is not updated. Choose the preset again to follow it.
 

@@ -3727,21 +3727,10 @@ msgid "Still not watched: {0}."
 msgstr "Weiterhin nicht überwacht: {0}."
 
 #: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-editor.svelte
 msgid "Mode"
 msgstr "Modus"
 
 #: src/lib/components/detector-editor.svelte
-msgid "Performance"
-msgstr "Leistung"
-
-#: src/lib/components/detector-editor.svelte
-msgid "Looks at the picture most often."
-msgstr "Sieht sich das Bild am häufigsten an."
-
-#: src/lib/components/detector-editor.svelte
-msgid "Efficient"
-msgstr "Sparsam"
-
-#: src/lib/components/detector-editor.svelte
-msgid "Looks less often and asks less of this computer."
-msgstr "Sieht seltener hin und verlangt diesem Computer weniger ab."
+msgid "Default"
+msgstr "Standard"

@@ -11,6 +11,7 @@
 	import NotificationEditor from '$lib/components/notification-editor.svelte';
 	import LlmConnectionEditor from '$lib/components/llm-connection-editor.svelte';
 	import DetectorVerification from '$lib/components/detector-verification.svelte';
+	import SegmentedControl from '$lib/components/segmented-control.svelte';
 	import { getLlmConnections, canTestLlm } from '$lib/remote/llm.remote';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -52,7 +53,7 @@
 		originalLabel,
 		initial,
 		initialPreset,
-		initialEfficient = false,
+		initialMode = '',
 		initialAutoUpdate = true,
 		initialConnection,
 		onDone,
@@ -62,7 +63,7 @@
 		originalLabel: string;
 		initial?: DetectorConfig;
 		initialPreset?: string;
-		initialEfficient?: boolean;
+		initialMode?: string;
 		initialAutoUpdate?: boolean;
 		initialConnection?: string;
 		onDone: () => Promise<void>;
@@ -100,7 +101,7 @@
 	let keepDelivery = $state(untrack(() => Boolean(initial)));
 	let error = $state('');
 	let preset = $state(untrack(() => initialPreset ?? ''));
-	let efficient = $state(untrack(() => initialEfficient));
+	let mode = $state(untrack(() => initialMode));
 	let autoUpdate = $state(untrack(() => initialAutoUpdate));
 	let presetSettings = $state(
 		untrack(() => (initial ? JSON.stringify(detectorSettings(initial)) : ''))
@@ -109,6 +110,10 @@
 	const selectedPreset = $derived(
 		matchesPreset ? presets.find((item) => item.id === preset) : undefined
 	);
+	const modeChoices = $derived([
+		{ value: '', label: 'Default' },
+		...(selectedPreset?.modes ?? []).map(({ id, name }) => ({ value: id, label: name }))
+	]);
 	const selectedChannels = $derived(detector.exporters.telegram ?? []);
 	const options = $derived<DetectorOptions>({
 		cameras,
@@ -126,17 +131,17 @@
 			suggestedLabel,
 			detector: $state.snapshot(detector),
 			preset,
-			efficient,
+			mode,
 			presetSettings,
 			connection: llmLabel
 		};
 	}
 	function show(edit: DetectorEdit) {
-		({ label, suggestedLabel, detector, preset, efficient, presetSettings } = edit);
+		({ label, suggestedLabel, detector, preset, mode, presetSettings } = edit);
 		llmLabel = edit.connection;
 	}
-	const presetDetector = (id: string, inEfficientMode: boolean) =>
-		getDetectorPreset({ id, efficient: inEfficientMode });
+	const presetDetector = (id: string, presetMode: string) =>
+		getDetectorPreset({ id, mode: presetMode });
 
 	const draftKey = untrack(() => `detector-draft:${originalLabel || 'new'}`);
 	let draftLoaded = $state(false);
@@ -144,7 +149,7 @@
 	let initialChoices = '';
 	const draftChoices = () =>
 		detectorChoices(
-			{ label, preset, efficient, detector, connection: llmLabel },
+			{ label, preset, mode, detector, connection: llmLabel },
 			{ cameras, telegrams }
 		);
 
@@ -195,18 +200,13 @@
 		else showError(problem.cause, 'Could not load the preset question.');
 	}
 
-	/** A preset is first chosen in its performance mode. */
-	async function loadPreset(id: string, mode = 'performance') {
+	/** A preset is first chosen with its own settings, in none of its modes. */
+	async function loadPreset(id: string, presetMode = '') {
 		if (!id) return;
 		pending = true;
 		error = '';
 		try {
-			const inEfficientMode = mode === 'efficient';
-			const chosen = {
-				id,
-				efficient: inEfficientMode,
-				detector: await presetDetector(id, inEfficientMode)
-			};
+			const chosen = { id, mode: presetMode, detector: await presetDetector(id, presetMode) };
 			show(
 				choosePreset(edited(), chosen, options, {
 					keepDelivery,
@@ -225,7 +225,7 @@
 		error = '';
 		try {
 			const template = questionPreset(edited(), presets);
-			const question = template ? await presetDetector(template, efficient) : undefined;
+			const question = template ? await presetDetector(template, mode) : undefined;
 			show(chooseConnection(edited(), connection, question));
 			if (lacksQuestion(detector)) showProblem({ kind: 'no-question' });
 		} catch (cause) {
@@ -259,7 +259,7 @@
 				meta: detectorDraftMeta(
 					valid,
 					savedLabel,
-					{ id: preset, efficient, settings: presetSettings, autoUpdate },
+					{ id: preset, mode, settings: presetSettings, autoUpdate },
 					connection
 				)
 			}).updates(getDetectors(), getCameras());
@@ -334,49 +334,33 @@
 					{/each}
 				</RadioGroup.Root>
 			{/if}
-			{#if selectedPreset?.efficient}
-				<RadioGroup.Root
-					value={efficient ? 'efficient' : 'performance'}
-					onValueChange={(mode) => loadPreset(preset, mode)}
-					disabled={pending}
-					aria-label="Mode"
-					class="-mx-2 gap-0"
-				>
-					<label
-						for="mode-performance"
-						class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2.5 hover:bg-accent"
-					>
-						<RadioGroup.Item id="mode-performance" value="performance" />
-						<span class="flex min-w-0 flex-col">
-							<span class="text-sm font-medium">Performance</span>
-							<span class="text-sm text-muted-foreground">Looks at the picture most often.</span>
-						</span>
-					</label>
-					<label
-						for="mode-efficient"
-						class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2.5 hover:bg-accent"
-					>
-						<RadioGroup.Item id="mode-efficient" value="efficient" />
-						<span class="flex min-w-0 flex-col">
-							<span class="text-sm font-medium">Efficient</span>
-							<span class="text-sm text-muted-foreground">
-								Looks less often and asks less of this computer.
-							</span>
-						</span>
-					</label>
-				</RadioGroup.Root>
-			{/if}
 			{#if selectedPreset}
-				<Field.Field orientation="horizontal">
-					<Switch id="detector-auto-update" bind:checked={autoUpdate} disabled={pending} />
-					<Field.Content>
-						<Field.Label for="detector-auto-update">Update automatically</Field.Label>
-						<Field.Description>
-							When a newer model is published for this preset, this detector takes it by itself, at
-							start and once a day.
-						</Field.Description>
-					</Field.Content>
-				</Field.Field>
+				<div class="panel divide-y">
+					{#if selectedPreset.modes}
+						<div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3.5">
+							<p class="text-sm font-medium">Mode</p>
+							<SegmentedControl
+								label="Mode"
+								options={modeChoices}
+								value={mode}
+								onchange={(chosen) => loadPreset(preset, chosen)}
+								disabled={pending}
+							/>
+						</div>
+					{/if}
+					<div class="flex items-center justify-between gap-6 px-4 py-3.5">
+						<div class="flex min-w-0 flex-col">
+							<label for="detector-auto-update" class="text-sm font-medium">
+								Update automatically
+							</label>
+							<p class="text-sm text-muted-foreground">
+								When a newer model is published for this preset, this detector takes it by itself,
+								at start and once a day.
+							</p>
+						</div>
+						<Switch id="detector-auto-update" bind:checked={autoUpdate} disabled={pending} />
+					</div>
+				</div>
 			{/if}
 			{#if !selectedPreset && (initial || preset)}
 				<p class="text-sm text-muted-foreground">
@@ -421,25 +405,27 @@
 			<Field.Description>
 				Send a Telegram message with the clip when this detector sees something.
 			</Field.Description>
-			<Field.Group class="gap-1">
-				{#each telegrams as channel, index (channel.label)}
-					<label
-						for={`channel-${index}`}
-						class="-mx-2 flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 hover:bg-accent"
-					>
-						<Checkbox
-							id={`channel-${index}`}
-							disabled={pending}
-							checked={selectedChannels.some((item) => sameTelegram(item, channel))}
-							onCheckedChange={(checked) => {
-								detector.exporters.telegram = selectTelegram(selectedChannels, channel, checked);
-								keepDelivery = true;
-							}}
-						/>
-						<span class="text-sm font-medium">{channel.label}</span>
-					</label>
-				{/each}
-			</Field.Group>
+			{#if telegrams.length}
+				<div class="panel divide-y overflow-hidden">
+					{#each telegrams as channel, index (channel.label)}
+						<label
+							for={`channel-${index}`}
+							class="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors hover:bg-accent/60"
+						>
+							<Checkbox
+								id={`channel-${index}`}
+								disabled={pending}
+								checked={selectedChannels.some((item) => sameTelegram(item, channel))}
+								onCheckedChange={(checked) => {
+									detector.exporters.telegram = selectTelegram(selectedChannels, channel, checked);
+									keepDelivery = true;
+								}}
+							/>
+							<span class="text-sm font-medium">{channel.label}</span>
+						</label>
+					{/each}
+				</div>
+			{/if}
 			<Button
 				variant="outline"
 				class="self-start"

@@ -729,29 +729,29 @@ test('a detector that follows a preset takes its new model and keeps what the pe
 	assert.deepEqual(await written(), saved);
 });
 
-test('a detector in its preset’s efficient mode follows that mode until it has settings of its own', async (t) => {
+test('a detector in one of its preset’s modes follows that mode until it has settings of its own', async (t) => {
 	const { files, store } = await fixture(t, { detectors: [] });
 	const presets = await readTestPresets();
-	const efficient = presets.find(({ id }) => id === 'calving-catcher.efficient')!.detector;
-	const meta = { label: 'Calving pen', preset: 'calving-catcher', efficient: true as const };
+	const lowPower = presets.find(({ id }) => id === 'calving-catcher.low-power')!.detector;
+	const meta = { label: 'Calving pen', preset: 'calving-catcher', mode: 'low-power' };
 	await store.saveDetector({
-		detector: { ...efficient, detection: { ...efficient.detection, source: [source] } },
+		detector: { ...lowPower, detection: { ...lowPower.detection, source: [source] } },
 		meta
 	});
 	// The preset itself looks more often, and that is not something to take.
 	assert.deepEqual(newerPresets(await store.read(), presets), []);
-	efficient.yolo = { ...efficient.yolo!, model: 'https://models.example.test/calvingV9.pt' };
+	lowPower.yolo = { ...lowPower.yolo!, model: 'https://models.example.test/calvingV9.pt' };
 	assert.deepEqual(
 		newerPresets(await store.read(), presets).map(({ id }) => id),
-		['calving-catcher.efficient']
+		['calving-catcher.low-power']
 	);
 	assert.deepEqual(await store.followPresets(presets), ['Calving pen']);
 	const followed = await store.read();
-	assert.equal(followed.config.detectors[0].yolo?.model, efficient.yolo.model);
+	assert.equal(followed.config.detectors[0].yolo?.model, lowPower.yolo.model);
 	assert.equal(followed.config.detectors[0].detection.interval, 5);
 	assert.deepEqual(followed.app.detectors[0], {
 		...meta,
-		presetVersion: presetVersion(efficient)
+		presetVersion: presetVersion(lowPower)
 	});
 
 	// Another name keeps the mode; settings of its own, here changed in the file, end it.

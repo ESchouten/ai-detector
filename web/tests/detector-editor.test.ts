@@ -189,7 +189,7 @@ const blank = (): DetectorEdit => ({
 	suggestedLabel: '',
 	detector: createDetectorDraft(),
 	preset: '',
-	efficient: false,
+	mode: '',
 	presetSettings: '',
 	connection: ''
 });
@@ -199,7 +199,7 @@ const presetDetector = async (id: string) => {
 };
 
 test('a preset names an unnamed rule, connects its question when asked to, and leaves a typed name alone', () => {
-	const chosen = { id: 'calving', efficient: false, detector: calving };
+	const chosen = { id: 'calving', mode: '', detector: calving };
 	const suggested = choosePreset(blank(), chosen, options, {
 		keepDelivery: false,
 		suggestConnection: true
@@ -219,57 +219,52 @@ test('a preset names an unnamed rule, connects its question when asked to, and l
 	assert.equal(typed.connection, '');
 	assert.equal(typed.detector.vlm?.[0].key, undefined);
 	// Choosing again renames a suggested name, never a typed one.
-	const again = choosePreset(
-		suggested,
-		{ id: 'general', efficient: false, detector: calving },
-		options,
-		{
-			keepDelivery: true,
-			suggestConnection: false
-		}
-	);
+	const again = choosePreset(suggested, { id: 'general', mode: '', detector: calving }, options, {
+		keepDelivery: true,
+		suggestConnection: false
+	});
 	assert.equal(again.label, 'General');
 });
 
-test('the efficient mode of a preset keeps the rule’s name and is saved with the preset it belongs to', () => {
+test('a mode of a preset keeps the rule’s name and is saved with the preset it belongs to', () => {
 	const settings = { keepDelivery: false, suggestConnection: false };
-	const performance = choosePreset(
+	const byDefault = choosePreset(
 		blank(),
-		{ id: 'general', efficient: false, detector: calving },
+		{ id: 'general', mode: '', detector: calving },
 		options,
 		settings
 	);
 	const seldom = { ...calving, detection: { source: [], interval: 10 } };
-	const efficient = choosePreset(
-		performance,
-		{ id: 'general', efficient: true, detector: seldom },
+	const lowPower = choosePreset(
+		byDefault,
+		{ id: 'general', mode: 'low-power', detector: seldom },
 		options,
 		settings
 	);
-	assert.equal(efficient.label, 'General');
-	assert.equal(efficient.detector.detection.interval, 10);
-	assert.deepEqual(detectorChoices(efficient, options), {
-		...detectorChoices(performance, options),
-		efficient: true
+	assert.equal(lowPower.label, 'General');
+	assert.equal(lowPower.detector.detection.interval, 10);
+	assert.deepEqual(detectorChoices(lowPower, options), {
+		...detectorChoices(byDefault, options),
+		mode: 'low-power'
 	});
-	const followed = { id: 'general', settings: efficient.presetSettings, autoUpdate: true };
-	const saved = (mode: boolean, detector = efficient.detector) =>
-		detectorDraftMeta(detector, 'General', { ...followed, efficient: mode });
-	assert.deepEqual(saved(true), {
+	const followed = { id: 'general', settings: lowPower.presetSettings, autoUpdate: true };
+	const saved = (mode: string, detector = lowPower.detector) =>
+		detectorDraftMeta(detector, 'General', { ...followed, mode });
+	assert.deepEqual(saved('low-power'), {
 		label: 'General',
 		preset: 'general',
-		efficient: true,
+		mode: 'low-power',
 		autoUpdate: undefined,
 		llmConnection: undefined
 	});
-	assert.equal(saved(false).efficient, undefined);
-	// A rule with settings of its own follows no preset, in either mode.
-	const own = { ...efficient.detector, detection: { source: [], interval: 3 } };
-	assert.equal(saved(true, own).preset, undefined);
-	assert.equal(saved(true, own).efficient, undefined);
+	assert.equal(saved('').mode, undefined);
+	// A rule with settings of its own follows no preset, in any mode.
+	const own = { ...lowPower.detector, detection: { source: [], interval: 3 } };
+	assert.equal(saved('low-power', own).preset, undefined);
+	assert.equal(saved('low-power', own).mode, undefined);
 });
 
-test('an unfinished choice of the other mode is fetched again for a saved rule', async () => {
+test('an unfinished choice of another mode is fetched again for a saved rule', async () => {
 	const saved: DetectorEdit = {
 		...blank(),
 		label: 'Calving',
@@ -279,16 +274,16 @@ test('an unfinished choice of the other mode is fetched again for a saved rule',
 	};
 	const { edit: restored, problem } = await restoreDetectorChoices(
 		saved,
-		{ ...detectorChoices(saved, options), efficient: true },
+		{ ...detectorChoices(saved, options), mode: 'low-power' },
 		options,
 		{ savedPreset: 'calving', keepDelivery: true },
-		async (id, efficient) => {
-			assert.deepEqual([id, efficient], ['calving', true]);
+		async (id, mode) => {
+			assert.deepEqual([id, mode], ['calving', 'low-power']);
 			return { ...calving, detection: { source: [], interval: 10 } };
 		}
 	);
 	assert.equal(problem, undefined);
-	assert.equal(restored.efficient, true);
+	assert.equal(restored.mode, 'low-power');
 	assert.equal(restored.detector.detection.interval, 10);
 	assert.ok(followsPreset(restored.detector, restored.presetSettings));
 });
@@ -300,7 +295,7 @@ test('an unfinished edit comes back from references alone, in the order it was m
 	const draft = {
 		label: 'North pen',
 		preset: 'calving',
-		efficient: false,
+		mode: '',
 		cameras: [yard.id, 'camera-removed'],
 		telegrams: ['Phone', 'Removed recipient'],
 		connection: 'Gemini',
@@ -345,7 +340,7 @@ test('a paused validator stays paused, and a rule without recipients gains no em
 		{
 			label: 'Calving',
 			preset: 'calving',
-			efficient: false,
+			mode: '',
 			cameras: [barn.id],
 			telegrams: [],
 			connection: 'Gemini',
@@ -369,7 +364,7 @@ test('a preset that cannot be fetched is reported and the other choices still re
 		{
 			label: 'North pen',
 			preset: 'calving',
-			efficient: false,
+			mode: '',
 			cameras: [barn.id],
 			telegrams: ['Phone'],
 			connection: 'Gemini',
@@ -392,7 +387,7 @@ test('a preset that cannot be fetched is reported and the other choices still re
 		{
 			label: '',
 			preset: 'calving',
-			efficient: false,
+			mode: '',
 			cameras: [],
 			telegrams: [],
 			connection: '',

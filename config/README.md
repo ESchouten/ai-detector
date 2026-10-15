@@ -23,14 +23,14 @@ Add `--check` to the first command, or run `pnpm --dir web schema:check`, to ver
 
 Each JSON file in [detector/](detector/) is a preset. The filename without `.json` is its ID, and dashes, underscores, dots and spaces separate the words of its name: `cow-catcher.json` appears as **Cow Catcher**. There is no catalogue, description or default; adding a bundled preset means adding a file.
 
-A second file named after a preset, with `.efficient` before `.json`, is that preset's efficient mode. It is not listed as a preset of its own: the detector editor offers **Performance** and **Efficient** under the preset. Performance is the preset's own file, and a new detector starts in it. The efficient file differs only in `detection.interval` and `yolo.frames_min`: it analyses a picture less often, which asks less of the computer and notices an event later. Every other setting, the model first of all, is changed in both files together; a test compares them.
+A second file named after a preset, with a mode before `.json`, is one of that preset's modes, named the way presets are: `calving-catcher.low-power.json` is Calving Catcher's **Low Power** mode. It is not listed as a preset of its own: the detector editor offers **Default** and the preset's modes under the preset. Default is the preset's own file, and a new detector starts in it. The low-power file differs only in `detection.interval` and `yolo.frames_min`: it analyses a picture less often, which asks less of the computer and notices an event later. Every other setting, the model first of all, is changed in both files together; a test compares them.
 
 | Calving Catcher | File | A picture every | Matching pictures an event needs |
 | --- | --- | --- | --- |
-| Performance | `calving-catcher.json` | second | 10 |
-| Efficient | `calving-catcher.efficient.json` | 5 seconds | 5 |
+| Default | `calving-catcher.json` | second | 10 |
+| Low Power | `calving-catcher.low-power.json` | 5 seconds | 5 |
 
-An `.efficient` file without a preset of that name is an ordinary preset, and the released application, which knows no modes, lists every efficient file as one.
+A mode file without a preset of that name is an ordinary preset, and the released application, which knows no modes, lists every mode file as one.
 
 A preset contains only detector settings: model, watched classes, event rules and delivery defaults. Cameras are added first, and selecting them in the detector step supplies `detection.source`. Everything else follows the [configuration schema](config.schema.json).
 
@@ -73,7 +73,7 @@ Publishing is therefore a change to a file in `config/detector/` on `main`: ever
 
 - A detector keeps following its preset when its own name, cameras or delivery settings change. Changing its detection settings, in the editor, under Advanced or in `config.json` itself, makes it a custom detector: it keeps its settings and no preset updates it. Choosing the preset again makes it follow once more.
 - **Update automatically** in the detector editor switches following off for one detector: `autoUpdate: false` in `app.json` keeps it on the settings it has. It stays linked to its preset and follows again when the switch is turned back on.
-- `efficient: true` in `app.json` says that the detector follows its preset's efficient mode: it takes newer settings from the `.efficient` file. A detector that no longer follows its preset loses it.
+- `mode` in `app.json`, such as `low-power`, says that the detector follows that mode of its preset: it takes newer settings from the mode's file. A detector that no longer follows its preset loses it.
 - `presetVersion` in `app.json` records which detection settings the preset gave. It is how the application tells a detector that still follows from one that was changed.
 - A new detector takes the preset's recording and delivery defaults. An existing detector keeps its delivery settings when another preset is applied.
 - A detector can watch several cameras, and a camera can be watched by several detectors. Telegram recipients are assigned to detectors and apply to every camera of that detector.

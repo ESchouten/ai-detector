@@ -37,21 +37,33 @@ test('preset files supply sorted IDs and readable names without a separate regis
 	});
 });
 
-test('a preset’s efficient mode is chosen with it, and an efficient file alone is a preset', async (t) => {
+test('a preset’s modes are chosen with it and named like presets, and a mode file alone is a preset', async (t) => {
 	const directory = await fixture(t);
-	for (const name of ['calving-catcher', 'calving-catcher.efficient', 'yard.efficient'])
+	for (const name of [
+		'calving-catcher',
+		'calving-catcher.low-power',
+		'calving-catcher.night_watch',
+		'yard.low-power'
+	])
 		await writeFile(
 			path.join(directory, `${name}.json`),
 			JSON.stringify({ yolo: { model: 'custom.pt' } })
 		);
 	assert.deepEqual(await readPresetChoices(() => loadPresets(directory, {})), {
 		presets: [
-			{ id: 'calving-catcher', name: 'Calving Catcher', efficient: true },
-			{ id: 'yard.efficient', name: 'Yard Efficient' }
+			{
+				id: 'calving-catcher',
+				name: 'Calving Catcher',
+				modes: [
+					{ id: 'low-power', name: 'Low Power' },
+					{ id: 'night_watch', name: 'Night Watch' }
+				]
+			},
+			{ id: 'yard.low-power', name: 'Yard Low Power' }
 		]
 	});
 	assert.equal(presetFile('calving-catcher'), 'calving-catcher');
-	assert.equal(presetFile('calving-catcher', true), 'calving-catcher.efficient');
+	assert.equal(presetFile('calving-catcher', 'low-power'), 'calving-catcher.low-power');
 });
 
 test('bundled preset files preserve their models, options and recording destinations', async () => {
@@ -61,8 +73,8 @@ test('bundled preset files preserve their models, options and recording destinat
 		presets.map(({ id }) => id),
 		[
 			'calving-catcher-tailup',
-			'calving-catcher.efficient',
 			'calving-catcher',
+			'calving-catcher.low-power',
 			'cow-catcher',
 			'general'
 		]
@@ -79,14 +91,14 @@ test('bundled preset files preserve their models, options and recording destinat
 	);
 });
 
-test('an efficient mode differs from its preset only in how often it looks and how much it needs to see', async () => {
+test('the low-power mode differs from its preset only in how often it looks and how much it needs to see', async () => {
 	const presets = await loadPresets(
 		fileURLToPath(new URL('../../config/detector/', import.meta.url)),
 		{}
 	);
 	const modes = presets.flatMap((preset) => {
-		const efficient = presets.find(({ id }) => id === presetFile(preset.id, true));
-		return efficient ? [[preset.detector, efficient.detector]] : [];
+		const lowPower = presets.find(({ id }) => id === presetFile(preset.id, 'low-power'));
+		return lowPower ? [[preset.detector, lowPower.detector]] : [];
 	});
 	assert.equal(modes.length, 1);
 	// A newer model, another question or a changed threshold must reach both modes.
@@ -95,13 +107,13 @@ test('an efficient mode differs from its preset only in how often it looks and h
 		detection: { ...detector.detection, interval: undefined },
 		yolo: { ...detector.yolo, frames_min: undefined }
 	});
-	for (const [performance, efficient] of modes) {
-		assert.deepEqual(shared(efficient), shared(performance));
-		assert.ok(efficient.detection.interval! > performance.detection.interval!);
+	for (const [byDefault, lowPower] of modes) {
+		assert.deepEqual(shared(lowPower), shared(byDefault));
+		assert.ok(lowPower.detection.interval! > byDefault.detection.interval!);
 	}
-	const [[performance, efficient]] = modes;
-	assert.deepEqual([performance.detection.interval, performance.yolo?.frames_min], [1, 10]);
-	assert.deepEqual([efficient.detection.interval, efficient.yolo?.frames_min], [5, 5]);
+	const [[byDefault, lowPower]] = modes;
+	assert.deepEqual([byDefault.detection.interval, byDefault.yolo?.frames_min], [1, 10]);
+	assert.deepEqual([lowPower.detection.interval, lowPower.yolo?.frames_min], [5, 5]);
 });
 
 test('adding, editing and removing local files changes the choices on the next read', async (t) => {

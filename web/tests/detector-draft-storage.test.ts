@@ -5,7 +5,7 @@ import { readDetectorChoices, writeDetectorChoices } from '../src/lib/detector-d
 const choices = {
 	label: 'Barn',
 	preset: 'activity',
-	efficient: false,
+	mode: '',
 	cameras: ['camera-id'],
 	telegrams: ['Phone'],
 	connection: 'Validator',

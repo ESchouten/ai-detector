@@ -9,6 +9,7 @@
 	import LanguageMenu from '$lib/components/language-menu.svelte';
 	import LinkRows from '$lib/components/link-rows.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
+	import SegmentedControl from '$lib/components/segmented-control.svelte';
 	import SettingsBackup from '$lib/components/settings-backup.svelte';
 	import { deviceHoldsOnlyShortcut, deviceLacksHomeScreenIcon } from '$lib/home-screen';
 	import { logsNavigation, settingsNavigation, REPOSITORY_URL } from '$lib/navigation';
@@ -51,18 +52,12 @@
 					<p class="text-sm font-medium">Appearance</p>
 					<p class="text-sm text-muted-foreground">Automatic follows this device.</p>
 				</div>
-				<div role="group" aria-label="Appearance" class="flex rounded-lg border bg-muted/60 p-0.5">
-					{#each themes as theme (theme.value)}
-						<button
-							type="button"
-							aria-pressed={userPrefersMode.current === theme.value}
-							onclick={() => setMode(theme.value)}
-							class="flex h-8 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-xs"
-						>
-							<theme.icon class="size-4" aria-hidden="true" />{theme.label}
-						</button>
-					{/each}
-				</div>
+				<SegmentedControl
+					label="Appearance"
+					options={themes}
+					value={userPrefersMode.current}
+					onchange={setMode}
+				/>
 			</div>
 			{#if homeScreen && shortcutOnly}
 				<div class="flex flex-col px-4 py-3.5">

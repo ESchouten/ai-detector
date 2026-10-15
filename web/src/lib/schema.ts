@@ -41,8 +41,8 @@ const text = v.pipe(v.string(), v.trim(), v.minLength(1));
 export const detectorMeta = v.object({
 	label: text,
 	preset: v.optional(text),
-	/** Present only when the detector follows its preset's efficient mode. */
-	efficient: v.optional(v.literal(true)),
+	/** Present only when the detector follows one of its preset's modes, such as `low-power`. */
+	mode: v.optional(text),
 	/** Which settings the preset gave, to tell whether the detector still follows it. */
 	presetVersion: v.optional(text),
 	/** Present only when the person switched off taking the preset's newer settings by itself. */
@@ -186,8 +186,8 @@ export type StreamMeta = v.InferOutput<typeof streamMeta>;
 export interface PresetInfo {
 	id: string;
 	name: string;
-	/** Present when the preset also comes in an efficient mode, which looks less often. */
-	efficient?: true;
+	/** The preset's modes, from files named `<preset>.<mode>.json`, with names like the preset's. */
+	modes?: { id: string; name: string }[];
 }
 
 export interface DetectorPreset {

@@ -278,7 +278,7 @@ def test_connected_model_lists_fall_back_to_another_key(event, monkeypatch, fail
     [
         "cow-catcher",
         "calving-catcher",
-        "calving-catcher.efficient",
+        "calving-catcher.low-power",
         "calving-catcher-tailup",
     ],
 )

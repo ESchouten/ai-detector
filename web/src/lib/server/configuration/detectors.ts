@@ -39,7 +39,7 @@ export function saveDetector(
 		? {
 				...input.meta,
 				preset: previous.preset,
-				efficient: previous.efficient,
+				mode: previous.mode,
 				autoUpdate: previous.autoUpdate
 			}
 		: { ...input.meta };

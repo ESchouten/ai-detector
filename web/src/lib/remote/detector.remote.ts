@@ -11,10 +11,10 @@ import { presetFile, readPresetChoices } from '$lib/server/configuration/preset-
 export const getDetectorPresets = query(() => readPresetChoices(readPresets));
 
 export const getDetectorPreset = query(
-	v.object({ id: v.string(), efficient: v.boolean() }),
-	({ id, efficient }) =>
+	v.object({ id: v.string(), mode: v.string() }),
+	({ id, mode }) =>
 		configurationAction(async () => {
-			const file = presetFile(id, efficient);
+			const file = presetFile(id, mode);
 			const preset = (await readPresets()).find((preset) => preset.id === file);
 			if (!preset) error(404, 'This preset is no longer available. Choose another preset.');
 			return structuredClone(preset.detector);

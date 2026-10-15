@@ -4,23 +4,37 @@ import * as v from 'valibot';
 import { ConfigurationError, normalizeConfig } from '../../configuration.ts';
 import type { DetectorConfig, DetectorPreset, PresetInfo } from '../../schema.ts';
 
-const EFFICIENT = '.efficient';
-
-/** The preset file a detector follows: its preset's, or that of the preset's efficient mode. */
-export function presetFile(id: string, efficient?: boolean): string {
-	return efficient ? id + EFFICIENT : id;
+/** A file name as people read it: `cow-catcher` is Cow Catcher, `low-power` is Low Power. */
+function readableName(id: string): string {
+	return id
+		.split(/[-_.\s]+/)
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
 }
 
-/** A preset's efficient mode is chosen with the preset, not beside it. */
+/** The preset file a detector follows: its preset's, or that of one of the preset's modes. */
+export function presetFile(id: string, mode?: string): string {
+	return mode ? `${id}.${mode}` : id;
+}
+
+/** A file `<preset>.<mode>` beside its preset is one of that preset's modes. */
+function presetMode(id: string, ids: Set<string>): { preset: string; mode: string } | undefined {
+	const { name, ext } = path.parse(id);
+	return ext && ids.has(name) ? { preset: name, mode: ext.slice(1) } : undefined;
+}
+
+/** A preset's modes are chosen with the preset, not beside it. */
 function presetChoices(presets: DetectorPreset[]): PresetInfo[] {
 	const ids = new Set(presets.map(({ id }) => id));
+	const modes = presets.flatMap(({ id }) => presetMode(id, ids) ?? []);
 	return presets
-		.filter(({ id }) => !(id.endsWith(EFFICIENT) && ids.has(id.slice(0, -EFFICIENT.length))))
-		.map(({ id, name }) => ({
-			id,
-			name,
-			...(ids.has(presetFile(id, true)) && { efficient: true as const })
-		}));
+		.filter(({ id }) => !presetMode(id, ids))
+		.map(({ id, name }) => {
+			const own = modes
+				.filter(({ preset }) => preset === id)
+				.map(({ mode }) => ({ id: mode, name: readableName(mode) }));
+			return { id, name, ...(own.length > 0 && { modes: own }) };
+		});
 }
 
 /** Invalid templates must not prevent editing a detector's saved settings. */
@@ -59,12 +73,8 @@ function detectorTemplate(input: unknown): DetectorConfig {
 
 export function presetFromFile(file: string, input: unknown): DetectorPreset {
 	const id = path.basename(file, '.json');
-	const name = id
-		.split(/[-_.\s]+/)
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(' ');
 	try {
-		return { id, name, detector: detectorTemplate(input) };
+		return { id, name: readableName(id), detector: detectorTemplate(input) };
 	} catch (cause) {
 		if (!(cause instanceof ConfigurationError)) throw cause;
 		throw new ConfigurationError(`Invalid preset "${file}": ${cause.message}`, { cause });

@@ -28,7 +28,7 @@
 				originalLabel={label}
 				initial={saved.detector}
 				initialPreset={saved.meta.preset}
-				initialEfficient={saved.meta.efficient}
+				initialMode={saved.meta.mode}
 				initialAutoUpdate={saved.meta.autoUpdate !== false}
 				initialConnection={saved.meta.llmConnection}
 				onDone={done}

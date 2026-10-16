@@ -124,10 +124,7 @@ export class CameraChecks {
 			try {
 				await rm(directory, { recursive: true, force: true });
 			} catch (cleanupError) {
-				console.warn(
-					'Could not remove an incomplete camera check:',
-					(cleanupError as NodeJS.ErrnoException).code
-				);
+				webLog.warn('Could not remove an incomplete camera check', cleanupError);
 			}
 			throw cameraStorageFailure(cause) ?? cause;
 		}

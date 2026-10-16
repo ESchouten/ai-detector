@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 	import { Button } from '$lib/components/ui/button';
-	let { initiallyOpen = true }: { initiallyOpen?: boolean } = $props();
+	let { initiallyOpen }: { initiallyOpen: boolean } = $props();
 	let open = $state(untrack(() => initiallyOpen));
 	let copied = $state('');
 	async function copyCommand() {

@@ -1,14 +1,13 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { axisTicks, watchedTime } from '../src/lib/camera-history.ts';
 import { WatchHistory } from '../src/lib/server/watch-history.ts';
+import { temporaryDirectory } from './support/files.ts';
 
 async function directory(t: TestContext): Promise<string> {
-	const dir = await mkdtemp(path.join(tmpdir(), 'watch-history-'));
-	t.after(() => rm(dir, { recursive: true, force: true }));
+	const dir = await temporaryDirectory(t, 'watch-history-');
 	return dir;
 }
 // Local times, as the files are kept by this computer's calendar days.

@@ -63,11 +63,7 @@
 		description="Startup and recent activity, to help find what went wrong. The diagnostics download bundles this with system details for support."
 	>
 		{#snippet actions()}
-			<Button
-				href={resolve('/logs/diagnostics')}
-				download="AI-Detector-diagnostics.zip"
-				variant="outline"
-			>
+			<Button href={resolve('/logs/diagnostics')} download variant="outline">
 				<Download data-icon="inline-start" aria-hidden="true" />Download diagnostics
 			</Button>
 		{/snippet}

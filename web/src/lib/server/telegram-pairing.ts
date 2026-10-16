@@ -2,11 +2,11 @@ import { randomBytes, randomInt } from 'node:crypto';
 import QRCode from 'qrcode';
 import { ConfigurationError } from '../configuration.ts';
 import type {
-	TelegramPairing,
-	TelegramPairingState,
-	TelegramRecipient,
-	TelegramDestination
-} from '../telegram.ts';
+	TelegramDestination,
+	TelegramPairingPoll,
+	TelegramPairingSession,
+	TelegramRecipient
+} from '../telegram-pairing.ts';
 import {
 	assertTelegramPollingAvailable,
 	getTelegramBot,
@@ -43,7 +43,7 @@ interface Session {
 	user?: number;
 	messageId?: number;
 	confirmed: boolean;
-	polling?: Promise<TelegramPairingState>;
+	polling?: Promise<TelegramPairingPoll>;
 }
 
 function privateMessage(update: TelegramUpdate) {
@@ -84,8 +84,7 @@ export class TelegramPairings {
 		this.inbox = inbox;
 	}
 
-	async begin(input: string, destination: TelegramDestination): Promise<TelegramPairing> {
-		const token = input.trim();
+	async begin(token: string, destination: TelegramDestination): Promise<TelegramPairingSession> {
 		this.expire();
 		this.assertAvailable(token);
 		const session: Session = {
@@ -122,7 +121,7 @@ export class TelegramPairings {
 		}
 	}
 
-	async poll(id: string): Promise<TelegramPairingState> {
+	async poll(id: string): Promise<TelegramPairingPoll> {
 		const session = this.sessions.get(id);
 		if (!session) throw new ConfigurationError(expired());
 		this.assertActive(session);
@@ -141,8 +140,7 @@ export class TelegramPairings {
 		await session.polling?.catch(() => undefined);
 	}
 
-	async discoverChats(input: string): Promise<TelegramRecipient[]> {
-		const token = input.trim();
+	async discoverChats(token: string): Promise<TelegramRecipient[]> {
 		this.expire();
 		this.assertAvailable(token);
 		this.discoveries.add(token);
@@ -156,7 +154,7 @@ export class TelegramPairings {
 		}
 	}
 
-	private async receive(session: Session): Promise<TelegramPairingState> {
+	private async receive(session: Session): Promise<TelegramPairingPoll> {
 		await this.inbox.receive(session.token, session.controller.signal, async (update) => {
 			this.assertActive(session);
 			if (!session.confirmed) await this.receiveUpdate(session, update);
@@ -214,7 +212,7 @@ export class TelegramPairings {
 		}
 	}
 
-	private state(session: Session): TelegramPairingState {
+	private state(session: Session): TelegramPairingPoll {
 		if (session.chat)
 			return { state: session.confirmed ? 'matched' : 'confirming', chat: session.chat };
 		return { state: session.user ? 'choosing' : 'waiting' };

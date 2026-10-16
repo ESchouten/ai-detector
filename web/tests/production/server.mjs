@@ -13,7 +13,7 @@ const adapter = new URL('../../build/index.js', import.meta.url).href;
 const executable = fileURLToPath(new URL('../fixtures/detector.mjs', import.meta.url));
 
 /** `env` adds to or replaces the server's environment, such as another detector. */
-export async function startServer(t, origin, prepare, presetsUrl = '', env = {}) {
+export async function startServer(t, { origin, prepare, env } = {}) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-node-production-'));
 	await prepare?.(directory);
 	const environment = {
@@ -23,7 +23,7 @@ export async function startServer(t, origin, prepare, presetsUrl = '', env = {})
 		AIDETECTOR_DATA_DIR: directory,
 		AIDETECTOR_EXECUTABLE: executable,
 		// No test asks the published presets on GitHub; one names a stand-in for them.
-		AIDETECTOR_PRESETS_URL: presetsUrl,
+		AIDETECTOR_PRESETS_URL: '',
 		SHUTDOWN_TIMEOUT: '2',
 		...env
 	};

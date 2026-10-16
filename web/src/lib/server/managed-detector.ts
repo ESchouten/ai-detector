@@ -4,13 +4,14 @@ import { createInterface } from 'node:readline';
 import { setTimeout as delay } from 'node:timers/promises';
 import { plural } from '../format.ts';
 import type { RuntimeStatus } from '../runtime.ts';
-import type { AppConfig, Config, LlmConnection } from '../schema.ts';
+import * as v from 'valibot';
+import { normalizeConfig } from '../configuration.ts';
+import { appSchema, type AppConfig, type LlmConnection } from '../schema.ts';
 import { readJson } from './json-file.ts';
-import { monitoringEnabled, setMonitoringEnabled } from './monitoring-flag.ts';
-import { DetectorLog } from './detector-log.ts';
+import { monitoringEnabled, setMonitoringEnabled } from './launcher-notes.ts';
+import { DetectorLog, sanitizeTextForLogs as redact } from './logs.ts';
 import type { DetectorCommand } from './nvidia-runtime.ts';
 import { DetectorPreparation, type DetectorOptions } from './detector-preparation.ts';
-import { sanitizeTextForLogs as redact } from './runtime-logs.ts';
 import { RuntimeProgress, STATUS_PREFIX } from './runtime-status.ts';
 import { SetupError } from './setup-error.ts';
 import { serialQueue } from './serial.ts';
@@ -98,8 +99,13 @@ export class ManagedDetector {
 	}
 
 	async refreshMetadata(): Promise<void> {
-		const app = await readJson<AppConfig>(this.appPath);
-		if (app) this.progress.updateMetadata(app);
+		this.progress.updateMetadata(await this.readApp());
+	}
+
+	/** Camera and detector names; until app.json is readable, the status shows its own names. */
+	private async readApp(): Promise<AppConfig> {
+		const parsed = v.safeParse(appSchema, (await readJson(this.appPath)) ?? {});
+		return parsed.success ? parsed.output : v.parse(appSchema, {});
 	}
 
 	initialize(): Promise<void> {
@@ -150,15 +156,11 @@ export class ManagedDetector {
 			message: 'Checking this computer…'
 		};
 		try {
-			const config = await readJson<Config>(path.join(this.options.dataDirectory, 'config.json'));
-			if (!config) throw new SetupError('Add a camera and choose what to detect first.');
+			const saved = await readJson(path.join(this.options.dataDirectory, 'config.json'));
+			if (!saved) throw new SetupError('Add a camera and choose what to detect first.');
+			const config = normalizeConfig(saved);
 			await this.validate(config, signal);
-			const app = await readJson<AppConfig>(this.appPath);
-			this.progress.configure(
-				config,
-				app ?? { streams: [], telegrams: [], llms: [], detectors: [] },
-				this.options.dataDirectory
-			);
+			this.progress.configure(config, await this.readApp(), this.options.dataDirectory);
 			signal.throwIfAborted();
 			const command = await this.preparation.command(config, signal);
 			signal.throwIfAborted();

@@ -1,15 +1,14 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { test } from 'node:test';
 import { DetectionArchive } from '../src/lib/server/archive.ts';
 import { clearModelCache, recordingCleanup, removeRecordings } from '../src/lib/server/storage.ts';
+import { temporaryDirectory } from './support/files.ts';
 
 test('recording cleanup requires an unchanged preview and preserves recent and unfinished events', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-cleanup-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'detector-cleanup-');
 	const archive = new DetectionArchive(directory);
 	const old = 'activity/approved/2026-01-01T12-00-00';
 	const recent = 'activity/rejected/2026-02-01T12-00-00';
@@ -38,8 +37,7 @@ test('recording cleanup requires an unchanged preview and preserves recent and u
 });
 
 test('model cleanup removes prepared and unused downloads while keeping referenced originals and custom models', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-model-cleanup-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'detector-model-cleanup-');
 	const url = 'https://models.example.test/detection.pt';
 	const current = createHash('sha256').update(url).digest('hex').slice(0, 16);
 	const unused = 'b'.repeat(16);

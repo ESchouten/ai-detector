@@ -6,14 +6,14 @@ import {
 	appSchema,
 	type Config,
 	type Configuration,
+	type LoadedConfiguration,
 	type PairedDevice
 } from '../../schema.ts';
-import { readJson, writeJson } from '../json-file.ts';
-import { exclusiveWrite, launcherNotes } from '../monitoring-flag.ts';
+import { isMissingFile, readJson, writeJson } from '../json-file.ts';
+import { exclusiveWrite, launcherNotes } from '../launcher-notes.ts';
 import { webLog } from '../web-log.ts';
 import { settingsRevision } from './advanced.ts';
 import { identifyCameras } from './cameras.ts';
-import { writeConfiguration } from './files.ts';
 import { forgetChangedPresets } from './followed-presets.ts';
 
 export interface SettingsPaths {
@@ -40,7 +40,7 @@ export class SettingsFiles {
 	}
 
 	/** Both files as one valid document, which becomes the snapshot to recover from. */
-	async load(): Promise<Configuration> {
+	async load(): Promise<LoadedConfiguration> {
 		const [config, app] = await Promise.all([
 			this.saved(this.paths.config),
 			this.saved(this.paths.app)
@@ -84,14 +84,15 @@ export class SettingsFiles {
 	/**
 	 * Replace app.json, and config.json unless only metadata changed. The launcher's notes are
 	 * not part of these documents; whatever app.json holds of them at this moment is kept.
+	 * config.json goes first: should app.json then fail, its detectors still load, as those of
+	 * a config.json without app.json do.
 	 */
 	write(document: Configuration, config = true): Promise<void> {
 		return exclusiveWrite(this.paths.app, async () => {
 			// Unreadable settings are being replaced, and the notes go with them.
 			const notes = await launcherNotes(this.paths.app).catch(() => ({}));
-			const app = { ...document.app, ...notes };
-			if (config) await writeConfiguration(this.paths, { config: document.config, app });
-			else await writeJson(this.paths.app, app);
+			if (config) await writeJson(this.paths.config, document.config);
+			await writeJson(this.paths.app, { ...document.app, ...notes });
 		});
 	}
 
@@ -128,7 +129,7 @@ export class SettingsFiles {
 				await copyFile(file, backup);
 				await chmod(backup, 0o600);
 			} catch (error) {
-				if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+				if (!isMissingFile(error)) throw error;
 			}
 		}
 	}

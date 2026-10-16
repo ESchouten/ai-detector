@@ -2,19 +2,8 @@ import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 import type { RecordingExportFilter } from '../detections.ts';
 import { archivePath, type ArchiveLocation, type DetectionArchive } from './archive.ts';
+import { MEDIA_TYPES } from './file-media.ts';
 import { zipDownload, type ZipEntry } from './zip-download.ts';
-
-const MEDIA_EXTENSIONS = new Set([
-	'.jpg',
-	'.jpeg',
-	'.png',
-	'.gif',
-	'.webp',
-	'.bmp',
-	'.mp4',
-	'.webm',
-	'.mov'
-]);
 
 const PHOTO_FILES = new Set(['clean.jpg', 'metadata.json']);
 
@@ -65,7 +54,7 @@ This export does not include application settings or camera login details.
 			if (!entry.isFile() || (photosOnly && !PHOTO_FILES.has(entry.name))) continue;
 			if (
 				entry.name !== 'metadata.json' &&
-				!MEDIA_EXTENSIONS.has(path.extname(entry.name).toLowerCase())
+				!(path.extname(entry.name).toLowerCase() in MEDIA_TYPES)
 			)
 				continue;
 			yield {

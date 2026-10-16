@@ -1,22 +1,20 @@
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test, type TestContext } from 'node:test';
 import { ConfigurationError } from '../src/lib/configuration.ts';
 import {
+	bundledPresets,
 	loadPresets,
 	presetFile,
 	readPresetChoices
 } from '../src/lib/server/configuration/preset-files.ts';
 import type { DetectorConfig } from '../src/lib/schema.ts';
+import { readTestPresets } from './support/configuration.ts';
+import { temporaryDirectory } from './support/files.ts';
 
-async function fixture(t: TestContext) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-presets-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	return directory;
-}
+const fixture = (t: TestContext) => temporaryDirectory(t, 'detector-presets-');
 
 test('preset files supply sorted IDs and readable names without a separate registration file', async (t) => {
 	const directory = await fixture(t);
@@ -28,7 +26,7 @@ test('preset files supply sorted IDs and readable names without a separate regis
 	await writeFile(path.join(directory, 'README.md'), 'Instructions');
 	await mkdir(path.join(directory, 'nested.json'));
 	await writeFile(path.join(directory, 'nested.json', 'ignored.json'), '{}');
-	assert.deepEqual(await readPresetChoices(() => loadPresets(directory, {})), {
+	assert.deepEqual(await readPresetChoices(() => loadPresets(directory)), {
 		presets: [
 			{ id: 'calving-catcher', name: 'Calving Catcher' },
 			{ id: 'cow-catcher', name: 'Cow Catcher' },
@@ -49,7 +47,7 @@ test('a preset’s modes are chosen with it and named like presets, and a mode f
 			path.join(directory, `${name}.json`),
 			JSON.stringify({ yolo: { model: 'custom.pt' } })
 		);
-	assert.deepEqual(await readPresetChoices(() => loadPresets(directory, {})), {
+	assert.deepEqual(await readPresetChoices(() => loadPresets(directory)), {
 		presets: [
 			{
 				id: 'calving-catcher',
@@ -68,7 +66,7 @@ test('a preset’s modes are chosen with it and named like presets, and a mode f
 
 test('bundled preset files preserve their models, options and recording destinations', async () => {
 	const directory = fileURLToPath(new URL('../../config/detector/', import.meta.url));
-	const presets = await loadPresets(directory, {});
+	const presets = await loadPresets(directory);
 	assert.deepEqual(
 		presets.map(({ id }) => id),
 		[
@@ -93,10 +91,7 @@ test('bundled preset files preserve their models, options and recording destinat
 });
 
 test('the low-power mode differs from its preset only in how often it looks and how much it needs to see', async () => {
-	const presets = await loadPresets(
-		fileURLToPath(new URL('../../config/detector/', import.meta.url)),
-		{}
-	);
+	const presets = await readTestPresets();
 	const modes = presets.flatMap((preset) => {
 		const lowPower = presets.find(({ id }) => id === presetFile(preset.id, 'low-power'));
 		if (lowPower) assert.deepEqual(lowPower.telegram, preset.telegram);
@@ -127,7 +122,7 @@ test('a preset’s Telegram object sets part of its alerts, never the recipient'
 			JSON.stringify({ yolo: { model: 'custom.pt' }, exporters: { disk: {}, telegram } })
 		);
 	await preset({ include_video: false, alert_every: 3 });
-	const [loaded] = await loadPresets(directory, {});
+	const [loaded] = await loadPresets(directory);
 	assert.deepEqual(loaded.telegram, { include_video: false, alert_every: 3 });
 	assert.deepEqual(loaded.detector.exporters, { disk: [{}] });
 	for (const telegram of [
@@ -140,7 +135,7 @@ test('a preset’s Telegram object sets part of its alerts, never the recipient'
 	]) {
 		await preset(telegram);
 		await assert.rejects(
-			loadPresets(directory, {}),
+			loadPresets(directory),
 			(cause) => cause instanceof ConfigurationError && cause.message.includes(file)
 		);
 	}
@@ -155,7 +150,7 @@ test('adding, editing and removing local files changes the choices on the next r
 		exporters: { disk: { directory: 'safety' }, webhook: { url: 'https://example.test/events' } }
 	};
 	await writeFile(file, JSON.stringify(detector));
-	const original = await loadPresets(directory, {});
+	const original = await loadPresets(directory);
 	assert.equal(original[0].name, 'Workshop Safety');
 	assert.deepEqual(original[0].detector.yolo, detector.yolo);
 	assert.deepEqual(original[0].detector.detection, { interval: 2, source: [] });
@@ -165,7 +160,7 @@ test('adding, editing and removing local files changes the choices on the next r
 		path.join(directory, 'entry.json'),
 		JSON.stringify({ yolo: { model: 'entry.pt' } })
 	);
-	const updated = await loadPresets(directory, {});
+	const updated = await loadPresets(directory);
 	assert.deepEqual(
 		updated.map(({ id }) => id),
 		['entry', 'workshop-safety']
@@ -175,43 +170,33 @@ test('adding, editing and removing local files changes the choices on the next r
 	assert.deepEqual(original[0].detector.yolo, detector.yolo);
 	await rm(file);
 	assert.deepEqual(
-		(await loadPresets(directory, {})).map(({ id }) => id),
+		(await loadPresets(directory)).map(({ id }) => id),
 		['entry']
 	);
 });
 
-test('bundled files are used only when the optional local folder is absent', async (t) => {
-	const directory = path.join(await fixture(t), 'presets');
+test('bundled presets are named after their files, in file order, and leave the files as they were', () => {
 	const bundled = {
 		'config/detector/yard-watch.json': { yolo: { model: 'yard.pt' } },
 		'config/detector/entry.json': { yolo: { model: 'entry.pt' } }
 	};
 	const before = structuredClone(bundled);
-	const presets = await loadPresets(directory, bundled);
 	assert.deepEqual(
-		presets.map(({ id, name }) => ({ id, name })),
+		bundledPresets(bundled).map(({ id, name }) => ({ id, name })),
 		[
 			{ id: 'entry', name: 'Entry' },
 			{ id: 'yard-watch', name: 'Yard Watch' }
 		]
 	);
 	assert.deepEqual(bundled, before);
-	await mkdir(directory);
-	assert.deepEqual(await loadPresets(directory, bundled), []);
-	await writeFile(
-		path.join(directory, 'custom.json'),
-		JSON.stringify({ yolo: { model: 'custom.pt' } })
-	);
-	assert.deepEqual(
-		(await loadPresets(directory, bundled)).map(({ id }) => id),
-		['custom']
-	);
 });
 
-test('a file used as the preset folder is a configuration error', async (t) => {
-	const file = path.join(await fixture(t), 'file.json');
+test('a missing preset folder, or a file in its place, is a configuration error', async (t) => {
+	const directory = await fixture(t);
+	const file = path.join(directory, 'file.json');
 	await writeFile(file, '{}');
-	await assert.rejects(loadPresets(file, { 'general.json': {} }), /Could not read preset folder/);
+	for (const folder of [path.join(directory, 'presets'), file])
+		await assert.rejects(loadPresets(folder), /Could not read preset folder/);
 });
 
 test('invalid preset files identify the problem file and never fall back to another model', async (t) => {
@@ -227,7 +212,7 @@ test('invalid preset files identify the problem file and never fall back to anot
 		'{"unexpected":true}'
 	]) {
 		await writeFile(file, contents);
-		const read = () => loadPresets(directory, { 'general.json': {} });
+		const read = () => loadPresets(directory);
 		const choices = await readPresetChoices(read);
 		assert.deepEqual(choices.presets, []);
 		assert.ok(choices.warning?.includes(file));

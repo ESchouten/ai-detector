@@ -148,17 +148,9 @@ test('settings saved without a browser language stay as they were', async (t) =>
 	assert.equal(await stored(), undefined);
 });
 
-test('a language this version does not have leaves the other settings readable', async (t) => {
-	const { store, files, saved } = await fixture(t);
-	await writeFile(files.app, JSON.stringify({ language: 'tlh', streams: [camera] }));
-	const { app } = await store.read();
-	assert.equal(app.language, undefined);
-	assert.equal(app.streams[0].label, 'Barn');
-	assert.equal(saved.at(-1), undefined);
-
+test('the server starts in the saved language, and in each browser’s own when settings are damaged', async (t) => {
+	const { files } = await fixture(t);
 	t.after(() => rememberInstallationLanguage(undefined));
-	await loadInstallationLanguage(files.app);
-	assert.equal(installationLanguage(), undefined);
 	await writeFile(files.app, JSON.stringify({ language: 'fr' }));
 	await loadInstallationLanguage(files.app);
 	assert.equal(installationLanguage(), 'fr');

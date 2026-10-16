@@ -9,9 +9,9 @@
 	// own review; pressing your own choice again removes it and restores the validator's result.
 	let {
 		entry,
-		onreview,
+		onReview,
 		labels = false
-	}: { entry: Detection; onreview: (entry: Detection) => void; labels?: boolean } = $props();
+	}: { entry: Detection; onReview: (entry: Detection) => void; labels?: boolean } = $props();
 	let saving = $state(false);
 	const confirmed = $derived(entry.stage === 'approved');
 	const dismissed = $derived(entry.stage === 'rejected');
@@ -21,7 +21,7 @@
 		const next = entry.review?.validated === validated ? null : validated;
 		saving = true;
 		try {
-			onreview(
+			onReview(
 				await reviewDetection({
 					type: entry.type,
 					archiveStage: entry.archiveStage,

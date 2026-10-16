@@ -162,12 +162,11 @@ const pairedDevice = v.object({
 	expires: v.number()
 });
 // app.json also holds the detector launcher's notes, `monitoring` and `outages` (see
-// monitoring-flag.ts). They are deliberately absent here, so settings documents, backups and
+// launcher-notes.ts). They are deliberately absent here, so settings documents, backups and
 // revisions never contain them.
 export const appSchema = v.object({
 	// The interface language of this installation; absent until setup or a choice records one.
-	// A value this version does not know must not make the other settings unreadable.
-	language: v.fallback(v.optional(v.picklist(LOCALES)), undefined),
+	language: v.optional(v.picklist(LOCALES)),
 	streams: v.optional(v.array(streamMeta), []),
 	telegrams: v.optional(v.array(telegramMeta), []),
 	llms: v.optional(v.array(llmConnection), []),
@@ -204,4 +203,12 @@ export interface DetectorPreset {
 export interface Configuration {
 	config: Config;
 	app: AppConfig;
+}
+
+/** A camera as the settings store hands it out: with its id. */
+export type Camera = StreamMeta & { id: string };
+
+/** Settings as the store hands them out, once every camera has its id. */
+export interface LoadedConfiguration extends Configuration {
+	app: Omit<AppConfig, 'streams'> & { streams: Camera[] };
 }

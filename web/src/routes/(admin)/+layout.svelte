@@ -5,7 +5,9 @@
 	import { createRuntimeStatus, provideRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 
 	let { children } = $props();
-	provideRuntimeStatus(createRuntimeStatus());
+	const monitor = createRuntimeStatus();
+	provideRuntimeStatus(monitor);
+	await monitor.load();
 	// First-run setup is one guided task; the rest of the app has nothing to show yet.
 	const guided = $derived(page.route.id?.startsWith('/(admin)/setup') ?? false);
 </script>

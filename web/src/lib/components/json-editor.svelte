@@ -7,14 +7,10 @@
 	let {
 		value = $bindable(''),
 		schema,
-		height,
-		ariaLabel,
 		readonly = false
 	}: {
 		value?: string;
 		schema: Record<string, unknown>;
-		height: string;
-		ariaLabel: string;
 		readonly?: boolean;
 	} = $props();
 
@@ -75,7 +71,7 @@
 			editor = monaco.editor.create(container, {
 				model,
 				theme,
-				ariaLabel,
+				ariaLabel: 'Advanced settings JSON',
 				automaticLayout: true,
 				formatOnPaste: true,
 				formatOnType: true,
@@ -108,7 +104,7 @@
 </script>
 
 <div class="flex flex-col gap-2">
-	<div bind:this={container} class="overflow-hidden rounded-xl border" style:height></div>
+	<div bind:this={container} class="h-[min(60dvh,640px)] overflow-hidden rounded-xl border"></div>
 	{#if loadError}
 		<Alert.Root variant="destructive"
 			><Alert.Title>Editor unavailable</Alert.Title><Alert.Description

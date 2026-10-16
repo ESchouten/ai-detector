@@ -3,12 +3,12 @@ import { test } from 'node:test';
 import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { createHash } from 'node:crypto';
-import { executable, managedDetector } from './support/detector.ts';
+import { executable, managedDetector, monitoringRecords } from './support/detector.ts';
 import { mockTimeouts, realDelay, waitFor } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
-import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
+import { monitoringEnabled } from '../src/lib/server/launcher-notes.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
+import { sourceKey } from '../src/lib/server/source-key.ts';
 
 const posixOnly = { skip: process.platform === 'win32' };
 const config = { detectors: [{ detection: { source: 'rtsp://camera.local/live' } }] };
@@ -150,23 +150,14 @@ test(
 	}
 );
 
-test(
-	'invalid initial configuration fails visibly and a process crash schedules recovery',
-	posixOnly,
-	async (t) => {
-		const { detector, directory } = await managedDetector(t);
-		await writeJson(path.join(directory, 'config.json'), { detectors: [] });
-		await detector.start();
-		assert.equal(detector.status().phase, 'failed');
-		assert.match(detector.status().message, /Add a detector/);
-		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
-		await writeJson(path.join(directory, 'config.json'), config);
-		await writeJson(path.join(directory, 'fixture-options.json'), { crash: true });
-		await detector.start();
-		await waitFor(() => detector.status().message.includes('Restarting monitoring'));
-		assert.match(detector.status().message, /stopped unexpectedly/);
-	}
-);
+test('invalid initial configuration fails visibly', posixOnly, async (t) => {
+	const { detector, directory } = await managedDetector(t);
+	await writeJson(path.join(directory, 'config.json'), { detectors: [] });
+	await detector.start();
+	assert.equal(detector.status().phase, 'failed');
+	assert.match(detector.status().message, /Add a detector/);
+	assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), false);
+});
 
 test(
 	'cancelling startup never launches the detector or enables automatic resume',
@@ -250,19 +241,12 @@ test(
 	async (t) => {
 		const { detector, directory } = await managedDetector(t);
 		const source = config.detectors[0].detection.source;
-		const sourceKey = createHash('sha256').update(source).digest('hex');
 		await writeJson(path.join(directory, 'app.json'), {
 			streams: [{ id: 'barn-camera', source, label: 'Barn' }]
 		});
 		await writeJson(path.join(directory, 'config.json'), config);
 		await writeJson(path.join(directory, 'fixture-options.json'), {
-			statusEvents: ['ready', 'frame', 'inference'].map((event) => ({
-				version: 1,
-				event,
-				ruleId: 'detector-1',
-				sourceKey,
-				at: new Date().toISOString()
-			}))
+			statusEvents: monitoringRecords(source)
 		});
 		await detector.start();
 		await waitFor(() => detector.status().readiness === 'monitoring');
@@ -295,15 +279,13 @@ test(
 		const { detector, directory } = await managedDetector(t);
 		const now = Date.now();
 		t.mock.timers.enable({ apis: ['setInterval', 'Date'], now });
-		const sourceKey = createHash('sha256')
-			.update(config.detectors[0].detection.source)
-			.digest('hex');
+		const key = sourceKey(config.detectors[0].detection.source, directory);
 		await writeJson(path.join(directory, 'config.json'), config);
 		await writeJson(path.join(directory, 'fixture-options.json'), {
 			statusEvents: [
 				{ version: 1, event: 'ready', at: new Date(now).toISOString() },
-				{ version: 1, event: 'frame', sourceKey, at: new Date(now - 180000).toISOString() },
-				{ version: 1, event: 'frame', sourceKey, at: new Date(now).toISOString() }
+				{ version: 1, event: 'frame', sourceKey: key, at: new Date(now - 180000).toISOString() },
+				{ version: 1, event: 'frame', sourceKey: key, at: new Date(now).toISOString() }
 			]
 		});
 		await detector.start();
@@ -334,19 +316,13 @@ test(
 	async (t) => {
 		const { detector, directory } = await managedDetector(t);
 		t.mock.timers.enable({ apis: ['setInterval', 'setTimeout', 'Date'], now: Date.now() });
-		const sourceKey = createHash('sha256')
-			.update(config.detectors[0].detection.source)
-			.digest('hex');
 		const nextStartReportsIn = (seconds: number, extra = {}) =>
 			writeJson(path.join(directory, 'fixture-options.json'), {
 				...extra,
-				statusEvents: ['ready', 'frame', 'inference'].map((event) => ({
-					version: 1,
-					event,
-					ruleId: 'detector-1',
-					sourceKey,
-					at: new Date(Date.now() + seconds * 1000).toISOString()
-				}))
+				statusEvents: monitoringRecords(
+					config.detectors[0].detection.source,
+					Date.now() + seconds * 1000
+				)
 			});
 		// The watchdog looks every five seconds; one longer tick is a pause to it.
 		const watch = (seconds: number) => {

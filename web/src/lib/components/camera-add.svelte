@@ -9,18 +9,17 @@
 	import * as Field from '$lib/components/ui/field';
 	import * as NativeSelect from '$lib/components/ui/native-select';
 	import Pill from './pill.svelte';
-	import SecretInput from './secret-input.svelte';
+	import CameraConnectionFields from './camera-connection-fields.svelte';
 	import {
 		connectCameraBatch,
 		type BatchCamera,
 		type CameraLogin,
 		type CheckedConnection
 	} from '$lib/camera-batch';
-	import { checkConnection } from '$lib/camera-check';
-	import type { DiscoveredCamera } from '$lib/cameras';
+	import { checkConnection, type DiscoveredCamera } from '$lib/cameras';
 	import { uniqueLabel } from '$lib/configuration';
 	import { plural } from '$lib/format';
-	import { errorMessage } from '$lib/remote-errors';
+	import { errorMessage, refresh } from '$lib/remote-calls';
 	import {
 		discoverCameras,
 		getCameraConnection,
@@ -227,7 +226,7 @@
 			}
 		}
 		try {
-			await getCameras().refresh();
+			await refresh(getCameras());
 		} finally {
 			saving = false;
 		}
@@ -282,34 +281,11 @@
 					{/each}
 				</ul>
 				{#if selected.length && askLogin}
-					<Field.Group class="border-t pt-5">
-						<Field.Group class="grid gap-4 sm:grid-cols-2">
-							<Field.Field>
-								<Field.Label for="camera-username">Camera username</Field.Label>
-								<Input
-									id="camera-username"
-									bind:value={username}
-									disabled={busy}
-									autocomplete="off"
-								/>
-							</Field.Field>
-							<Field.Field>
-								<Field.Label for="camera-password">Camera password</Field.Label>
-								<Input
-									id="camera-password"
-									type="password"
-									bind:value={password}
-									disabled={busy}
-									autocomplete="off"
-								/>
-							</Field.Field>
-						</Field.Group>
-						<!-- The first sentence is its own piece, so it is translated once for both camera forms. -->
-						<Field.Description>
-							<span>The camera’s own login, which may differ from its phone app.</span>
+					<div class="border-t pt-5">
+						<CameraConnectionFields manual={false} bind:username bind:password disabled={busy}>
 							{#if selected.length > 1}Select cameras that share this login.{/if}
-						</Field.Description>
-					</Field.Group>
+						</CameraConnectionFields>
+					</div>
 				{/if}
 				<div class="flex flex-wrap items-center gap-2">
 					<Button disabled={busy || finding || !selected.length} onclick={connect}>
@@ -334,20 +310,7 @@
 				onsubmit={connectManual}
 			>
 				<h2 id="camera-manual-title" class="text-base font-semibold">Enter a stream URL</h2>
-				<Field.Field>
-					<Field.Label for="camera-stream">RTSP URL</Field.Label>
-					<SecretInput
-						id="camera-stream"
-						name="stream URL"
-						bind:value={streamUri}
-						disabled={busy}
-						placeholder="rtsp://192.168.1.50/stream"
-						aria-describedby="camera-stream-help"
-					/>
-					<Field.Description id="camera-stream-help">
-						Paste the full stream URL, including the username and password if the camera needs them.
-					</Field.Description>
-				</Field.Field>
+				<CameraConnectionFields manual bind:streamUri disabled={busy} />
 				{#if manualError}
 					<Alert.Root variant="destructive">
 						<Alert.Title>Camera needs attention</Alert.Title>
@@ -486,9 +449,9 @@
 				</Button>
 			{/if}
 			{#if queue.some((camera) => camera.state === 'saved')}
-				<Button variant="ghost" disabled={busy} onclick={onDone}>Done</Button>
+				<Button variant="outline" disabled={busy} onclick={onDone}>Done</Button>
 			{:else if onCancel}
-				<Button variant="ghost" disabled={saving} onclick={onCancel}>Cancel</Button>
+				<Button variant="outline" disabled={saving} onclick={onCancel}>Cancel</Button>
 			{/if}
 		</div>
 	{/if}

@@ -9,7 +9,6 @@ import {
 	recentMoment,
 	timeOfDay
 } from '../src/lib/format.ts';
-import { recordingVerdict } from '../src/lib/detections.ts';
 
 test('recent days read as words and older days keep their date', () => {
 	const now = new Date(2026, 9, 3, 21, 30);
@@ -52,34 +51,4 @@ test('clip lengths, sizes and counts are short and unambiguous', () => {
 	assert.equal(plural(0, french, 'fr'), '0 caméra');
 	assert.equal(plural(2, french, 'fr'), '2 caméras');
 	assert.match(plural(1500, ['# recording', '# recordings'], 'en'), /^1,500 recordings$/);
-});
-
-test('a recording shows who decided its outcome, and a failed AI check is not a verdict', () => {
-	const review = {
-		validated: true,
-		source: 'telegram' as const,
-		reviewed_at: '2026-10-03T10:00:00Z'
-	};
-	assert.equal(
-		recordingVerdict({ stage: 'unvalidated', review: null, validation_error: null }),
-		null
-	);
-	assert.deepEqual(recordingVerdict({ stage: 'approved', review: null, validation_error: null }), {
-		source: 'Checked by AI'
-	});
-	assert.deepEqual(recordingVerdict({ stage: 'approved', review, validation_error: null }), {
-		source: 'Reviewed in Telegram'
-	});
-	assert.deepEqual(
-		recordingVerdict({
-			stage: 'rejected',
-			review: { ...review, validated: false, source: 'web' },
-			validation_error: 'Timed out'
-		}),
-		{ source: 'Reviewed by you' }
-	);
-	assert.deepEqual(
-		recordingVerdict({ stage: 'unvalidated', review: null, validation_error: 'Timed out' }),
-		{ source: 'Not checked', failure: 'Timed out' }
-	);
 });

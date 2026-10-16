@@ -26,10 +26,7 @@ export async function launcherNotes(
 	appFile: string
 ): Promise<{ monitoring?: unknown; outages?: unknown }> {
 	const { monitoring, outages } = (await readJson<Record<string, unknown>>(appFile)) ?? {};
-	return {
-		...(monitoring !== undefined && { monitoring }),
-		...(outages !== undefined && { outages })
-	};
+	return { monitoring, outages };
 }
 
 export async function monitoringEnabled(appFile: string): Promise<boolean> {

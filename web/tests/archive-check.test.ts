@@ -1,38 +1,16 @@
 import assert from 'node:assert/strict';
-import { execFile } from 'node:child_process';
-import { mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { mkdir, readFile, readdir, symlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
-import { promisify } from 'node:util';
 import ffmpeg from 'ffmpeg-static';
 import { DetectionArchive } from '../src/lib/server/archive.ts';
 import { verifyCameraArchive } from '../src/lib/server/cameras/archive-check.ts';
-
-const execute = promisify(execFile);
+import { sampleClip, temporaryDirectory } from './support/files.ts';
 
 async function fixture(t: TestContext) {
 	assert.ok(ffmpeg);
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-archive-check-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const clip = path.join(directory, 'camera.mp4');
-	await execute(ffmpeg, [
-		'-hide_banner',
-		'-loglevel',
-		'error',
-		'-f',
-		'lavfi',
-		'-i',
-		'testsrc2=size=160x120:rate=4',
-		'-t',
-		'1',
-		'-c:v',
-		'libx264',
-		'-pix_fmt',
-		'yuv420p',
-		clip
-	]);
-	return { directory, clip, executable: ffmpeg };
+	const directory = await temporaryDirectory(t, 'ai-archive-check-');
+	return { directory, clip: await sampleClip(directory), executable: ffmpeg };
 }
 
 test('archive check saves and decodes in every destination without creating detection events', async (t) => {

@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { resolve } from '$app/paths';
-	import { CameraOverlays } from '$lib/camera-overlays';
+	import { CameraOverlays } from '$lib/camera-pictures';
 	const overlays = new CameraOverlays(() => resolve('/cameras/live'));
 </script>
 

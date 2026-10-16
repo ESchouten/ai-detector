@@ -8,18 +8,14 @@
 	import PageHeader from '$lib/components/page-header.svelte';
 	import Pill from '$lib/components/pill.svelte';
 	import StatusDot from '$lib/components/status-dot.svelte';
-	import { cameraStatusBadge } from '$lib/camera-status';
 	import { clockTime } from '$lib/format';
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
-	import { monitoringSummary } from '$lib/monitoring';
-	import { getDetectors } from '$lib/remote/detector.remote';
+	import { cameraStatusBadge } from '$lib/monitoring';
 
 	const monitor = useRuntimeStatus();
-	const initial = monitor.query.current ?? (await monitor.query);
-	const runtime = $derived(monitor.query.current ?? initial);
-	const detectors = $derived(await getDetectors());
+	const runtime = $derived(monitor.runtime);
 	const stale = $derived(monitor.stale);
-	const summary = $derived(monitoringSummary(runtime, { stale, configured: detectors.length > 0 }));
+	const summary = $derived(monitor.summary);
 	const notes = $derived(
 		[runtime.storageWarning, ...(runtime.issues ?? [])].filter((note): note is string => !!note)
 	);
@@ -47,7 +43,7 @@
 				</div>
 			</div>
 			<MonitoringControl action={summary.action} />
-			{#if !detectors.length}
+			{#if !monitor.detectors}
 				<Button href={resolve('/detectors/add')}>Add a detector</Button>
 			{/if}
 		</div>
@@ -139,12 +135,7 @@
 				<Button href={resolve('/logs')} variant="outline" size="sm">
 					<ScrollText data-icon="inline-start" aria-hidden="true" />View logs
 				</Button>
-				<Button
-					href={resolve('/logs/diagnostics')}
-					download="AI-Detector-diagnostics.zip"
-					variant="outline"
-					size="sm"
-				>
+				<Button href={resolve('/logs/diagnostics')} download variant="outline" size="sm">
 					<Download data-icon="inline-start" aria-hidden="true" />Download diagnostics
 				</Button>
 				{#if runtime.helpUrl}

@@ -1,6 +1,23 @@
 import { open } from 'node:fs/promises';
+import path from 'node:path';
 import { Readable } from 'node:stream';
-import { isMissingFile } from './archive.ts';
+import { STAGES } from '../schema.ts';
+import { archivePath, ArchivePathError } from './archive.ts';
+import { isMissingFile } from './json-file.ts';
+
+/** The pictures and clips a recording can hold, by extension. */
+export const MEDIA_TYPES: Record<string, string> = {
+	'.jpg': 'image/jpeg',
+	'.jpeg': 'image/jpeg',
+	'.png': 'image/png',
+	'.gif': 'image/gif',
+	'.webp': 'image/webp',
+	'.bmp': 'image/bmp',
+	'.mp4': 'video/mp4',
+	'.webm': 'video/webm',
+	'.mov': 'video/quicktime'
+};
+const ARCHIVE_TYPES: Record<string, string> = { ...MEDIA_TYPES, '.json': 'application/json' };
 
 /** Unsupported multipart ranges are served in full; an unsatisfiable range gets 416. */
 function byteRange(
@@ -64,6 +81,28 @@ export async function fileMedia(
 		});
 	} catch (error) {
 		await file.close();
+		throw error;
+	}
+}
+
+export async function archiveMedia(
+	directory: string,
+	location: { category: string; stage: string; timestamp: string; resource: string },
+	request: Request
+): Promise<Response> {
+	const { category, stage, timestamp, resource } = location;
+	const contentType = ARCHIVE_TYPES[path.extname(resource).toLowerCase()];
+	if (!STAGES.some((value) => value === stage) || !contentType)
+		return new Response(/* @wc-ignore */ 'Not found', { status: 404 });
+	try {
+		return await fileMedia(
+			await archivePath(directory, category, stage, timestamp, resource),
+			request,
+			contentType
+		);
+	} catch (error) {
+		if (error instanceof ArchivePathError || isMissingFile(error))
+			return new Response(/* @wc-ignore */ 'Not found', { status: 404 });
 		throw error;
 	}
 }

@@ -1,7 +1,6 @@
 import { resolve } from '$app/paths';
-import { checkCameraRecording } from '../camera-check';
-import { errorMessage } from '../remote-errors';
-import { refresh } from '../remote-refresh';
+import { checkCameraPicture } from '../cameras';
+import { errorMessage, refresh } from '../remote-calls';
 import { finishSetup, getSetupStatus } from '../remote/camera-setup.remote';
 import { getCameras, saveCamera } from '../remote/camera.remote';
 
@@ -115,7 +114,7 @@ export class SetupVerifier {
 	async #checkPicture(id: string): Promise<void> {
 		const camera = (await getCameras()).find((item) => item.id === id);
 		if (!camera) return;
-		const check = await checkCameraRecording(
+		const check = await checkCameraPicture(
 			camera.source,
 			this.#controller.signal,
 			resolve('/camera-checks')

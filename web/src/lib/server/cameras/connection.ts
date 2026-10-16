@@ -1,5 +1,5 @@
 import { ConfigurationError } from '../../configuration.ts';
-import { sanitizeTextForLogs } from '../runtime-logs.ts';
+import { sanitizeTextForLogs } from '../logs.ts';
 
 export class CameraConnectionError extends ConfigurationError {}
 

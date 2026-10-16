@@ -4,8 +4,7 @@
 	import { Button, type ButtonSize } from '$lib/components/ui/button';
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import type { MonitoringAction } from '$lib/monitoring';
-	import { errorMessage } from '$lib/remote-errors';
-	import { refresh } from '$lib/remote-refresh';
+	import { errorMessage, refresh } from '$lib/remote-calls';
 	import { startDetector, stopDetector } from '$lib/remote/runtime.remote';
 
 	let {

@@ -15,9 +15,13 @@
 		discoverTelegramChats,
 		testTelegram
 	} from '$lib/remote/alerts.remote';
-	import { TelegramPairing, type TelegramPairingState } from '$lib/telegram-pairing';
-	import type { TelegramDestination, TelegramRecipient } from '$lib/telegram';
-	import { errorMessage } from '$lib/remote-errors';
+	import {
+		TelegramPairing,
+		type TelegramDestination,
+		type TelegramPairingState,
+		type TelegramRecipient
+	} from '$lib/telegram-pairing';
+	import { errorMessage } from '$lib/remote-calls';
 	import type { TelegramMeta } from '$lib/schema';
 	import TelegramBotHelp from './telegram-bot-help.svelte';
 
@@ -134,7 +138,7 @@
 </script>
 
 <div class="flex flex-col gap-4">
-	{#if !editing && initial}
+	{#if !editing}
 		<div class="flex flex-wrap items-center justify-between gap-3">
 			<p class="flex items-center gap-2 text-sm">
 				<CircleCheck class="size-5 shrink-0 text-status-ok" aria-hidden="true" />
@@ -319,14 +323,14 @@
 	{/if}
 	{#if (manual || !editing) && chat && token && !received && !testSent}
 		<Button
-			variant={!editing && initial ? 'outline' : 'default'}
+			variant={editing ? 'default' : 'outline'}
 			class="self-start"
 			disabled={busy}
 			onclick={sendTest}>{testing ? 'Sending test…' : 'Send test alert'}</Button
 		>
 	{/if}
 	{#if testSent && !received}
-		{#if !editing && initial}
+		{#if !editing}
 			<p role="status" class="text-sm">Test alert sent.</p>
 		{:else}
 			<label for="alert-received" class="flex cursor-pointer items-center gap-3 text-sm">

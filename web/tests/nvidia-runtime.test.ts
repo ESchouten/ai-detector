@@ -21,7 +21,7 @@ import {
 } from '../src/lib/server/nvidia-runtime.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
-import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
+import { monitoringEnabled } from '../src/lib/server/launcher-notes.ts';
 import { waitFor } from './support/timers.ts';
 
 const execute = promisify(execFile);

@@ -5,7 +5,13 @@ import * as v from 'valibot';
 import writeFileAtomic from 'write-file-atomic';
 import metadataSchema from '../../../../config/metadata.schema.json' with { type: 'json' };
 import { STAGES, type Metadata, type Stage } from '../schema.ts';
-import type { Detection, DetectionFilter, DetectionPage } from '../detections.ts';
+import {
+	detectionKey,
+	type Detection,
+	type DetectionFilter,
+	type DetectionPage,
+	type RecordingAddress
+} from '../detections.ts';
 import {
 	isArchiveSegment,
 	manualReviewSchema,
@@ -14,6 +20,7 @@ import {
 	type RecordingExportFilter
 } from '../detections.ts';
 import { calendarDay } from '../format.ts';
+import { isMissingFile } from './json-file.ts';
 import { serialQueue } from './serial.ts';
 import { webLog } from './web-log.ts';
 
@@ -23,10 +30,6 @@ class ArchiveDataError extends Error {}
 const validateMetadata = new Ajv().compile<Metadata>(metadataSchema);
 const savedReview = v.nullish(manualReviewSchema);
 const REVIEW_READS = 32;
-
-export function isMissingFile(error: unknown): boolean {
-	return ['ENOENT', 'ENOTDIR'].includes((error as NodeJS.ErrnoException).code ?? '');
-}
 
 /** Keep decoded URL segments and symbolic links inside the recording directory. */
 export async function archivePath(root: string, ...segments: string[]): Promise<string> {
@@ -50,8 +53,6 @@ export interface ArchiveLocation {
 	timestamp: string;
 	review: ManualReview | null;
 }
-
-export type RecordingAddress = Pick<ArchiveLocation, 'type' | 'archiveStage' | 'timestamp'>;
 
 export class DetectionArchive {
 	readonly directory: string;
@@ -105,7 +106,7 @@ export class DetectionArchive {
 			isMissingFile(error)
 		))
 			throw error;
-		const key = this.addressKey(address);
+		const key = detectionKey(address);
 		if (!this.warnings.has(key))
 			webLog.warn(
 				`Could not read recording ${address.type}/${address.archiveStage}/${address.timestamp}. Other recordings remain available.`,
@@ -215,17 +216,13 @@ export class DetectionArchive {
 			throw new ArchiveDataError(
 				/* @wc-ignore */ `Invalid archive metadata: ${location.type}/${location.stage}/${location.timestamp}`
 			);
-		this.eventIds.set(this.addressKey(location), metadata.event_id ?? undefined);
-		this.warnings.delete(this.addressKey(location));
+		this.eventIds.set(detectionKey(location), metadata.event_id ?? undefined);
+		this.warnings.delete(detectionKey(location));
 		return { ...metadata, ...location };
 	}
 
-	private addressKey(address: RecordingAddress): string {
-		return JSON.stringify([address.type, address.archiveStage, address.timestamp]);
-	}
-
 	private cachedReview(address: RecordingAddress): Promise<ManualReview | null> {
-		const cached = this.reviews.get(this.addressKey(address));
+		const cached = this.reviews.get(detectionKey(address));
 		return cached && Date.now() - cached.checked < 30000
 			? Promise.resolve(cached.review)
 			: this.readReview(address);
@@ -250,7 +247,7 @@ export class DetectionArchive {
 			))
 				throw error;
 		}
-		this.reviews.set(this.addressKey(address), { checked: Date.now(), review });
+		this.reviews.set(detectionKey(address), { checked: Date.now(), review });
 		return review;
 	}
 
@@ -325,7 +322,7 @@ export class DetectionArchive {
 	private async findEvent(id: string): Promise<Detection[]> {
 		const matches: Detection[] = [];
 		for (const location of await this.locations({})) {
-			const key = this.addressKey(location);
+			const key = detectionKey(location);
 			if (this.eventIds.has(key) && this.eventIds.get(key) !== id) continue;
 			try {
 				const recording = await this.read(location);
@@ -360,6 +357,6 @@ export class DetectionArchive {
 		else delete metadata.review;
 		// No mode is given, so the file keeps the permissions the detector gave it.
 		await writeFileAtomic(file, JSON.stringify(metadata));
-		this.reviews.set(this.addressKey(address), { checked: Date.now(), review });
+		this.reviews.set(detectionKey(address), { checked: Date.now(), review });
 	}
 }

@@ -1,3 +1,18 @@
+<script lang="ts" module>
+	import { resolve } from '$app/paths';
+	import type { RecordingAddress } from '$lib/detections';
+
+	/** Media keeps its original archive location, whatever the current review says. */
+	export function recordingMedia(
+		entry: RecordingAddress,
+		resource: 'best.jpg' | 'video.mp4'
+	): string {
+		return resolve(
+			`/detections/${[entry.type, entry.archiveStage, entry.timestamp, resource].map(encodeURIComponent).join('/')}`
+		);
+	}
+</script>
+
 <script lang="ts">
 	import { ChevronLeft, ChevronRight, Trash2 } from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
@@ -5,26 +20,25 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Pill from '$lib/components/pill.svelte';
-	import { detectionKey, recordingVerdict, type Detection } from '$lib/detections';
+	import { categoryName, detectionKey, recordingVerdict, type Detection } from '$lib/detections';
 	import { clipLength, dayHeading, percent, timeOfDay } from '$lib/format';
 	import { removeDetection } from '$lib/remote/detections.remote';
 	import ReviewButtons from './review-buttons.svelte';
-	import { categoryName, recordingMedia } from './media';
 
 	// One recording at a time, with the neighbours a key press away.
 	let {
 		entries,
 		selected = $bindable(),
 		colorSeeds,
-		onreview,
-		onremove
+		onReview,
+		onRemove
 	}: {
 		entries: Detection[];
 		/** Key of the open recording, or null when closed. */
 		selected: string | null;
 		colorSeeds: Record<string, string>;
-		onreview: (entry: Detection) => void;
-		onremove: (entry: Detection) => void;
+		onReview: (entry: Detection) => void;
+		onRemove: (entry: Detection) => void;
 	} = $props();
 	let confirmRemove = $state(false);
 	let removing = $state(false);
@@ -36,7 +50,7 @@
 		try {
 			const { type, archiveStage, timestamp } = entry;
 			await removeDetection({ type, archiveStage, timestamp });
-			onremove(entry);
+			onRemove(entry);
 			toast.success('Recording deleted');
 		} catch {
 			toast.error('Could not delete the recording. Please try again.');
@@ -135,7 +149,7 @@
 					</span>
 				</div>
 				<div class="flex items-center gap-2">
-					<ReviewButtons {entry} {onreview} labels />
+					<ReviewButtons {entry} {onReview} labels />
 					<AlertDialog.Root bind:open={confirmRemove}>
 						<AlertDialog.Trigger
 							class={buttonVariants({ variant: 'ghost', size: 'icon-sm' })}

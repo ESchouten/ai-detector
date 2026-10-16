@@ -54,8 +54,6 @@ export const POST: RequestHandler = async ({ request, params }) => {
 		if (request.signal.aborted) return new Response(null, { status: 499 });
 		if (cause instanceof ConfigurationError)
 			return json({ message: cause.message }, { status: 400 });
-		if (cause instanceof SyntaxError)
-			return json({ message: 'The recording check request was not valid.' }, { status: 400 });
 		throw cause;
 	}
 };

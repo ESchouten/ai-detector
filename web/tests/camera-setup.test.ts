@@ -1,4 +1,4 @@
-import { addMonitoredCamera, settingsStore } from './support/configuration.ts';
+import { addMonitoredCamera, fakeRuntime, settingsStore } from './support/configuration.ts';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { readFile } from 'node:fs/promises';
@@ -6,6 +6,7 @@ import { promisify } from 'node:util';
 import { test } from 'node:test';
 import * as v from 'valibot';
 import { cameraInput } from '../src/lib/configuration.ts';
+import { setupStep } from '../src/lib/setup.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import {
 	cameraArchiveSelection,
@@ -27,6 +28,16 @@ async function readyCamera(store: ConfigurationStore) {
 	await store.recordArchiveCheck(camera.id, signature, verifiedAt);
 	return camera;
 }
+
+test('setup resumes from saved configuration and always connects cameras first', () => {
+	for (const requested of [null, 'cameras', 'detectors', 'finish', 'unknown'])
+		assert.equal(setupStep(requested, 0, 0), 'cameras');
+	assert.equal(setupStep(null, 2, 0), 'detectors');
+	assert.equal(setupStep(null, 2, 1), 'finish');
+	assert.equal(setupStep('cameras', 2, 1), 'cameras');
+	assert.equal(setupStep('detectors', 2, 1), 'detectors');
+	assert.equal(setupStep('finish', 2, 0), 'finish');
+});
 
 test('camera progress and non-secret ONVIF details survive reopening and renaming', async (t) => {
 	const { files, store } = await settingsStore(t);
@@ -175,14 +186,12 @@ test('Finish checks runtime after a queued rule change has restarted monitoring'
 	const camera = await readyCamera(store);
 	let monitoring = true;
 	let callbackCalled = false;
-	const queued = new ConfigurationStore(files, () => ({
-		validate: async () => {},
+	const { runtime } = fakeRuntime({
 		apply: async () => {
 			monitoring = false;
-		},
-		stop: async () => {},
-		fail: () => {}
-	}));
+		}
+	});
+	const queued = new ConfigurationStore(files, runtime);
 	const document = await queued.read();
 	const update = queued.saveDetector({
 		original: document.app.detectors[0].label,

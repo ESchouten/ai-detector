@@ -160,7 +160,7 @@ test('production downloads export filtered recordings and a separate settings ba
 	])
 		assert.equal((await send(`${base}/detections/export?${query}`)).status, 400);
 	assert.equal((await send(`${base}/detections/export?to=2025-01-01`)).status, 404);
-	const backup = await send(`${base}/setup/backup`);
+	const backup = await send(`${base}/settings/backup`);
 	assert.equal(backup.status, 200);
 	assert.equal(backup.headers.get('cache-control'), 'no-store');
 	const settings = unzipSync(new Uint8Array(await backup.arrayBuffer()));
@@ -227,6 +227,7 @@ async function fileWritten(file) {
 		}
 		await delay(20);
 	}
+	assert.fail(`${path.basename(file)} was not written`);
 }
 
 function restoreSettings(base, headers) {
@@ -429,7 +430,7 @@ for (const deployment of ['local HTTP', 'LAN HTTP', 'HTTPS proxy']) {
 		async (t) => {
 			const publicOrigin =
 				deployment === 'HTTPS proxy' ? 'https://detector.example.test' : undefined;
-			const { directory, base, stop, logs } = await startServer(t, publicOrigin);
+			const { directory, base, stop, logs } = await startServer(t, { origin: publicOrigin });
 			const source = await cameraSource(t, directory);
 			await mkdir(path.join(directory, 'presets'));
 			await writeFile(
@@ -675,44 +676,46 @@ test(
 	{ skip: process.platform === 'win32', timeout: 20000 },
 	async (t) => {
 		const source = 'rtsp://camera.example.test/workshop';
-		const { directory, base } = await startServer(t, undefined, async (directory) => {
-			await mkdir(path.join(directory, 'presets'));
-			await Promise.all([
-				// The preset as a new release brings it, with the second model.
-				writeFile(
-					path.join(directory, 'presets', 'workshop.json'),
-					JSON.stringify({ detection: { interval: 2 }, yolo: { model: 'workshop-v2.onnx' } })
-				),
-				writeFile(
-					path.join(directory, 'config.json'),
-					JSON.stringify({
-						detectors: [
-							{
-								detection: { source: [source], interval: 2 },
-								yolo: { model: 'workshop-v1.onnx' },
-								exporters: { disk: [{ directory: 'workshop' }] }
-							}
-						]
-					})
-				),
-				writeFile(
-					path.join(directory, 'app.json'),
-					JSON.stringify({
-						streams: [{ id: 'workshop-camera', label: 'Workshop camera', source }],
-						detectors: [
-							{
-								label: 'Workshop rule',
-								preset: 'workshop',
-								// As recorded when the preset still gave the first model.
-								presetVersion: presetVersion(
-									'{"detection":{"interval":2},"yolo":{"model":"workshop-v1.onnx"}}'
-								)
-							}
-						],
-						telegrams: []
-					})
-				)
-			]);
+		const { directory, base } = await startServer(t, {
+			prepare: async (directory) => {
+				await mkdir(path.join(directory, 'presets'));
+				await Promise.all([
+					// The preset as a new release brings it, with the second model.
+					writeFile(
+						path.join(directory, 'presets', 'workshop.json'),
+						JSON.stringify({ detection: { interval: 2 }, yolo: { model: 'workshop-v2.onnx' } })
+					),
+					writeFile(
+						path.join(directory, 'config.json'),
+						JSON.stringify({
+							detectors: [
+								{
+									detection: { source: [source], interval: 2 },
+									yolo: { model: 'workshop-v1.onnx' },
+									exporters: { disk: [{ directory: 'workshop' }] }
+								}
+							]
+						})
+					),
+					writeFile(
+						path.join(directory, 'app.json'),
+						JSON.stringify({
+							streams: [{ id: 'workshop-camera', label: 'Workshop camera', source }],
+							detectors: [
+								{
+									label: 'Workshop rule',
+									preset: 'workshop',
+									// As recorded when the preset still gave the first model.
+									presetVersion: presetVersion(
+										'{"detection":{"interval":2},"yolo":{"model":"workshop-v1.onnx"}}'
+									)
+								}
+							],
+							telegrams: []
+						})
+					)
+				]);
+			}
 		});
 		assert.equal((await send(`${base}/detectors`)).status, 200);
 		const config = JSON.parse(await readFile(path.join(directory, 'config.json'), 'utf8'));
@@ -786,12 +789,18 @@ test(
 		};
 
 		// The preset names a model that is not there yet: the detector keeps what works.
-		const early = await startServer(t, undefined, prepare, `${published}/folder`);
+		const early = await startServer(t, {
+			prepare,
+			env: { AIDETECTOR_PRESETS_URL: `${published}/folder` }
+		});
 		assert.deepEqual(await detectors(early), [saved]);
 		assert.match(early.logs(), /The model of preset "Workshop" cannot be downloaded now/);
 
 		modelPublished = true;
-		const later = await startServer(t, undefined, prepare, `${published}/folder`);
+		const later = await startServer(t, {
+			prepare,
+			env: { AIDETECTOR_PRESETS_URL: `${published}/folder` }
+		});
 		assert.deepEqual(await detectors(later), [{ ...saved, yolo: { model: `${published}/v2.pt` } }]);
 		assert.match(
 			await (await send(`${later.base}/logs/output`)).text(),
@@ -840,10 +849,11 @@ test(
 		assert.ok((await before.text()).includes('Workshop'));
 		await writeFile(templatePath, '{"yolo":');
 		for (const [route, savedValue, expectedContent] of [
-			['/streams', 'Workshop camera', /Monitoring preset names are unavailable/],
+			// The Cameras page shows the detector's saved name in place of its preset's.
+			['/streams', 'Workshop camera', /Workshop rule/],
 			[`/streams/${cameraId}`, 'Workshop camera', /Camera name[\s\S]*Save changes/],
 			[
-				'/detectors/edit?label=Workshop%20rule',
+				'/detectors/add?label=Workshop%20rule',
 				'workshop-safety.onnx',
 				/Monitoring presets are unavailable/
 			],
@@ -855,23 +865,12 @@ test(
 			assert.match(html, expectedContent, route);
 			assert.ok(html.includes(savedValue), `${route} must retain ${savedValue}`);
 		}
-		// A bookmark to a detector from the released web application opens its editor.
-		for (const [oldPath, destination] of [
-			['/detectors/add?label=Workshop%20rule', '/detectors/edit?label=Workshop%20rule'],
-			['/detectors/add?label=Pen%20%26%20yard', '/detectors/edit?label=Pen%20%26%20yard']
-		]) {
-			const response = await send(base + oldPath);
-			assert.equal(response.status, 302, oldPath);
-			assert.equal(
-				new URL(response.headers.get('location'), base + oldPath).href,
-				base + destination
-			);
-		}
 		for (const [route, title] of [
 			['/streams/add', 'Add cameras'],
 			['/detectors/add', 'Add a detector'],
+			['/detectors/add?label=Workshop%20rule', 'Workshop rule'],
 			['/streams/missing', 'Camera not found'],
-			['/detectors/edit?label=missing', 'Detector not found']
+			['/detectors/add?label=missing', 'Detector not found']
 		]) {
 			const response = await send(base + route);
 			assert.equal(response.status, 200, route);
@@ -963,9 +962,11 @@ test('damaged app settings do not prevent server startup or local recovery', asy
 		config: { detectors: [] },
 		app: { streams: [], detectors: [], telegrams: [], llms: [] }
 	};
-	const { base, logs } = await startServer(t, undefined, async (directory) => {
-		await writeFile(path.join(directory, 'app.json'), '{broken');
-		await writeFile(path.join(directory, 'config.json.last-valid'), JSON.stringify(saved));
+	const { base, logs } = await startServer(t, {
+		prepare: async (directory) => {
+			await writeFile(path.join(directory, 'app.json'), '{broken');
+			await writeFile(path.join(directory, 'config.json.last-valid'), JSON.stringify(saved));
+		}
 	});
 	assert.match(logs(), /Could not load connected devices from app.json/);
 	assert.equal((await send(base + '/logs/diagnostics')).status, 200);

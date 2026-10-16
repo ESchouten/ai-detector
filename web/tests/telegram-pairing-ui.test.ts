@@ -1,14 +1,15 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { TelegramPairing, type TelegramPairingState } from '../src/lib/telegram-pairing.ts';
-import type {
-	TelegramPairing as Session,
-	TelegramPairingState as PollResult
-} from '../src/lib/telegram.ts';
+import {
+	TelegramPairing,
+	type TelegramPairingPoll,
+	type TelegramPairingSession,
+	type TelegramPairingState
+} from '../src/lib/telegram-pairing.ts';
 import { recipientDetectorLabels } from '../src/lib/alert-recipients.ts';
 
 const flush = () => new Promise<void>((resolve) => setImmediate(resolve));
-const session = (id: string): Session => ({
+const session = (id: string): TelegramPairingSession => ({
 	id,
 	bot: { name: 'Farm', username: 'farm_bot' },
 	url: 'https://t.me/farm_bot?start=fixture',
@@ -36,7 +37,7 @@ test('recipient selections distinguish detectors that watch the same cameras', (
 
 test('abandoning a pending begin cancels its eventual server session without updating the screen', async (t) => {
 	t.mock.timers.enable({ apis: ['setTimeout'] });
-	const begin = Promise.withResolvers<Session>();
+	const begin = Promise.withResolvers<TelegramPairingSession>();
 	const cancelled: string[] = [];
 	const states: TelegramPairingState[] = [];
 	const pairing = new TelegramPairing(
@@ -64,7 +65,7 @@ test('abandoning a pending begin cancels its eventual server session without upd
 
 test('navigation or switching to manual setup retires an in-flight poll result', async (t) => {
 	t.mock.timers.enable({ apis: ['setTimeout'] });
-	const poll = Promise.withResolvers<PollResult>();
+	const poll = Promise.withResolvers<TelegramPairingPoll>();
 	const states: TelegramPairingState[] = [];
 	const cancelled: string[] = [];
 	const pairing = new TelegramPairing(
@@ -117,7 +118,7 @@ test('a matched phone stops polling and releases the session exactly once', asyn
 
 test('slow polling does not overlap and replacing a session waits for cancellation', async (t) => {
 	t.mock.timers.enable({ apis: ['setTimeout'] });
-	const firstPoll = Promise.withResolvers<PollResult>();
+	const firstPoll = Promise.withResolvers<TelegramPairingPoll>();
 	const cancellation = Promise.withResolvers<void>();
 	let polls = 0;
 	const beginnings: string[] = [];

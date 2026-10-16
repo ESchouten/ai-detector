@@ -3,7 +3,7 @@ import path from 'node:path';
 import type { RequestHandler } from './$types';
 import { DATA_DIRECTORY } from '$lib/server/application-paths';
 import { managedDetector } from '$lib/server/detector-service';
-import { readLogTail } from '$lib/server/bounded-log';
+import { readLogTail } from '$lib/server/logs';
 import { webLog } from '$lib/server/web-log';
 
 export const GET: RequestHandler = async ({ request }) => {

@@ -10,8 +10,7 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import { AI_STUDIO_KEYS, GEMINI_MODELS } from '$lib/llm';
 	import type { LlmConnection } from '$lib/schema';
-	import { errorMessage } from '$lib/remote-errors';
-	import { refresh } from '$lib/remote-refresh';
+	import { errorMessage, refresh } from '$lib/remote-calls';
 	import {
 		saveLlmConnection,
 		deleteLlmConnection,
@@ -69,12 +68,11 @@
 			busy = false;
 		}
 	}
-	async function remove() {
-		if (!initial) return;
+	async function remove(connection: LlmConnection) {
 		busy = true;
 		message = '';
 		try {
-			await deleteLlmConnection(initial.label);
+			await deleteLlmConnection(connection.label);
 			await refresh(getLlmConnections(), getDetectors());
 			onCancel();
 		} catch (cause) {
@@ -143,7 +141,7 @@
 		{canTest
 			? 'The key is checked with a test image before it is saved.'
 			: 'Connection testing is available in the desktop application. Save settings here for your separate detector.'}
-		Detectors waiting for a validator start using this connection. You can turn it off for each detector.
+		Detectors waiting for an AI check start using this connection. You can turn it off for each detector.
 	</p>
 	{#if message}
 		<Alert.Root variant="destructive">
@@ -159,16 +157,17 @@
 	</div>
 </form>
 {#if initial}
+	{@const connection = initial}
 	<!-- Outside the form, so its gap does not reach here. -->
 	<div class="mt-6">
 		<ConfirmRemove
 			trigger="Remove this connection…"
-			title={`Remove “${initial.label}”?`}
-			description="Connections assigned to detectors must be unassigned first."
-			keep="Cancel"
+			title={`Remove “${connection.label}”?`}
+			description="A detector that uses this connection must be given another one, or none, first."
+			keep="Keep connection"
 			confirm="Remove connection"
 			disabled={busy}
-			onconfirm={remove}
+			onConfirm={() => remove(connection)}
 		/>
 	</div>
 {/if}

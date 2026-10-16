@@ -6,14 +6,13 @@ import path from 'node:path';
 import { createInterface } from 'node:readline';
 import type { Config, LlmConnection } from '../schema.ts';
 import { writeJson } from './json-file.ts';
-import type { DetectorLog } from './detector-log.ts';
+import { type DetectorLog, sanitizeTextForLogs as redact } from './logs.ts';
 import {
 	discoverNvidia,
 	needsNvidiaRuntime,
 	prepareNvidiaRuntime,
 	type DetectorCommand
 } from './nvidia-runtime.ts';
-import { sanitizeTextForLogs as redact } from './runtime-logs.ts';
 import { SetupError } from './setup-error.ts';
 
 export interface DetectorOptions {

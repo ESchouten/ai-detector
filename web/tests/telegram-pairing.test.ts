@@ -1,32 +1,12 @@
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
 import { ConfigurationError } from '../src/lib/configuration.ts';
-import type { TelegramDestination } from '../src/lib/telegram.ts';
+import type { TelegramDestination } from '../src/lib/telegram-pairing.ts';
 import { TelegramPairings } from '../src/lib/server/telegram-pairing.ts';
-
-type Request = { method: string; body: Record<string, unknown>; signal: AbortSignal };
-type Reply = (request: Request) => unknown | Promise<unknown>;
+import { confirmation, start, telegramApi } from './support/telegram.ts';
 
 function fixture(t: TestContext) {
-	const calls: Request[] = [];
-	const replies: Record<string, Reply> = {
-		getMe: () => ({ is_bot: true, first_name: 'Farm alerts', username: 'FarmAlertsBot' }),
-		getWebhookInfo: () => ({ url: '' }),
-		getUpdates: () => [],
-		sendMessage: () => ({ message_id: 50 }),
-		answerCallbackQuery: () => true
-	};
-	t.mock.method(globalThis, 'fetch', async (input: string, init: RequestInit) => {
-		const method = new URL(input).pathname.split('/').at(-1)!;
-		assert.equal(new URL(input).origin, 'https://api.telegram.org');
-		assert.equal(init.method, 'POST');
-		assert.ok(init.signal instanceof AbortSignal);
-		const request = { method, body: JSON.parse(String(init.body)), signal: init.signal };
-		calls.push(request);
-		assert.ok(replies[method], `Unexpected Telegram method: ${method}`);
-		const result = await replies[method](request);
-		return result instanceof Response ? result : Response.json({ ok: true, result });
-	});
+	const api = telegramApi(t);
 	let now = 1_800_000_000_000;
 	const pairings = new TelegramPairings(() => now);
 	const ids: string[] = [];
@@ -34,8 +14,7 @@ function fixture(t: TestContext) {
 		for (const id of ids) await pairings.cancel(id);
 	});
 	return {
-		calls,
-		replies,
+		...api,
 		pairings,
 		advance(milliseconds: number) {
 			now += milliseconds;
@@ -44,29 +23,6 @@ function fixture(t: TestContext) {
 			const pairing = await pairings.begin(token, destination);
 			ids.push(pairing.id);
 			return pairing;
-		}
-	};
-}
-
-function start(update: number, code: string, chat = 123) {
-	return {
-		update_id: update,
-		message: {
-			text: `/start ${code}`,
-			from: { id: chat, is_bot: false },
-			chat: { id: chat, type: 'private', first_name: 'Farmer', last_name: 'One' }
-		}
-	};
-}
-
-function confirmation(update: number, code: string, user = 123, chat = 123, message = 50) {
-	return {
-		update_id: update,
-		callback_query: {
-			id: 'callback-' + update,
-			data: code,
-			from: { id: user, is_bot: false },
-			message: { message_id: message, chat: { id: chat, type: chat > 0 ? 'private' : 'channel' } }
 		}
 	};
 }
@@ -220,7 +176,7 @@ test('concurrent begins reserve a token before identity lookup and manual discov
 		return valid(request);
 	};
 	const beginning = f.begin();
-	await assert.rejects(f.begin(' fixture-token '), /connection in progress/);
+	await assert.rejects(f.begin(), /connection in progress/);
 	await assert.rejects(f.pairings.discoverChats('fixture-token'), /connection in progress/);
 	assert.equal(f.calls.length, 1);
 	gate.resolve();
@@ -329,6 +285,47 @@ test('manual discovery owns its update request and keeps review callbacks enable
 	await f.begin();
 });
 
+test('background polling yields to pairing and cached chats remain discoverable', async (t) => {
+	const f = fixture(t);
+	f.replies.getUpdates = () => [start(1, 'hello')];
+	await f.pairings.receiveReviews('fixture-token', new AbortController().signal);
+	f.replies.getUpdates = () => [];
+	assert.deepEqual(await f.pairings.discoverChats('fixture-token'), [
+		{ id: '123', name: 'Farmer One' }
+	]);
+	await f.begin();
+	const count = f.calls.length;
+	await f.pairings.receiveReviews('fixture-token', new AbortController().signal);
+	assert.equal(f.calls.length, count);
+});
+
+test('starting setup waits for an existing background poll instead of competing with it', async (t) => {
+	const f = fixture(t);
+	const entered = Promise.withResolvers<void>();
+	const release = Promise.withResolvers<void>();
+	let polling = false;
+	f.replies.getUpdates = async () => {
+		assert.equal(polling, false);
+		polling = true;
+		entered.resolve();
+		await release.promise;
+		polling = false;
+		return [];
+	};
+	const valid = f.replies.getMe;
+	f.replies.getMe = (request) => {
+		assert.equal(polling, false, 'Pairing begins after the background poll settles');
+		return valid(request);
+	};
+	const background = f.pairings.receiveReviews('fixture-token', new AbortController().signal);
+	await entered.promise;
+	const starting = f.begin();
+	await assert.rejects(f.begin(), /connection in progress/);
+	release.resolve();
+	await starting;
+	await background;
+});
+
 test('malformed Telegram method results produce plain retry feedback, not schema internals', async (t) => {
 	const f = fixture(t);
 	const valid = f.replies.getMe;
@@ -336,7 +333,12 @@ test('malformed Telegram method results produce plain retry feedback, not schema
 	await assert.rejects(f.begin(), ConfigurationError);
 	f.replies.getMe = valid;
 	const pairing = await f.begin();
-	for (const invalid of [null, {}, [{ update_id: 1, message: { chat: { id: 'invalid' } } }]]) {
+	for (const invalid of [
+		null,
+		{},
+		[{ update_id: 1, message: { chat: { id: 'invalid' } } }],
+		new Response('<h1>Service unavailable</h1>')
+	]) {
 		f.replies.getUpdates = () => invalid;
 		await assert.rejects(f.pairings.poll(pairing.id), /unexpected reply.*try again later/);
 	}

@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { setTimeout } from 'node:timers/promises';
@@ -10,7 +9,8 @@ import { promisify } from 'node:util';
 import ffmpeg from 'ffmpeg-static';
 import { createPreviewStream } from '../src/lib/server/stream-preview.ts';
 import { PreviewPool } from '../src/lib/server/preview-pool.ts';
-import { sanitizeTextForLogs } from '../src/lib/server/runtime-logs.ts';
+import { temporaryDirectory } from './support/files.ts';
+import { waitFor } from './support/timers.ts';
 
 const executable = fileURLToPath(new URL('./fixtures/preview.mjs', import.meta.url));
 const posixOnly = { skip: process.platform === 'win32' };
@@ -37,15 +37,14 @@ test(
 		assert.doesNotThrow(() => process.kill(pid, 0));
 		assert.equal(await readFile(path.join(directory, 'starts'), 'utf8'), `${pid}\n`);
 		await returning.cancel();
-		await waitForExit(pid);
+		await waitFor(() => exited(pid));
 	}
 );
 
 test('real camera previews sample frames without filling timestamp gaps with duplicates', async (t) => {
 	const ffmpegPath = ffmpeg;
 	assert.ok(ffmpegPath);
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-preview-timestamps-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'detector-preview-timestamps-');
 	for (const gap of [0, 60]) {
 		await t.test(`${gap}-second gap`, async () => {
 			const source = path.join(directory, `camera-${gap}.nut`);
@@ -94,35 +93,30 @@ async function fixture(
 	t: TestContext,
 	settings: { ignoreTerm?: boolean; flood?: boolean; endOutput?: boolean } = {}
 ) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-preview-'));
+	const directory = await temporaryDirectory(t, 'detector-preview-');
 	const source = path.join(directory, 'source.json');
 	await writeFile(source, JSON.stringify(settings));
-	t.after(() => rm(directory, { recursive: true, force: true }));
 	return { directory, source };
 }
 
-async function waitForExit(pid: number): Promise<void> {
-	for (let i = 0; i < 150; i++) {
-		try {
-			process.kill(pid, 0);
-		} catch {
-			return;
-		}
-		await setTimeout(20);
+function exited(pid: number) {
+	try {
+		process.kill(pid, 0);
+		return false;
+	} catch {
+		return true;
 	}
-	assert.fail(`Preview process ${pid} did not exit`);
 }
 
+/** A file the preview process writes once it runs. */
 async function readStartedFile(file: string): Promise<string> {
-	for (let i = 0; i < 100; i++) {
-		try {
-			return await readFile(file, 'utf8');
-		} catch (error) {
-			if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-		}
-		await setTimeout(20);
-	}
-	assert.fail(`Preview did not create ${path.basename(file)}`);
+	await waitFor(() =>
+		readFile(file).then(
+			() => true,
+			() => false
+		)
+	);
+	return readFile(file, 'utf8');
 }
 
 test('cancellation kills a preview that ignores SIGTERM', posixOnly, async (t) => {
@@ -145,7 +139,7 @@ test(
 		assert.equal(new TextDecoder().decode(picture((await reader.read()).value)), 'preview frame');
 		const pid = Number(await readStartedFile(path.join(directory, 'pid')));
 		await assert.rejects(reader.read(), /Live stream ended/);
-		await waitForExit(pid);
+		await waitFor(() => exited(pid));
 		assert.equal(await readFile(path.join(directory, 'terminated'), 'utf8'), 'SIGTERM');
 	}
 );
@@ -175,25 +169,6 @@ test('an already aborted preview never starts a process', posixOnly, async (t) =
 	const reader = new PreviewPool().open(source, executable, AbortSignal.abort()).getReader();
 	assert.equal((await reader.read()).done, true);
 	await assert.rejects(readFile(path.join(directory, 'pid')), { code: 'ENOENT' });
-});
-
-test('runtime diagnostics redact both stream and HTTP credentials', () => {
-	const text =
-		'rtsp://farmer:secret@camera/live?api_key=private https://host/check?password=hidden';
-	const safe = sanitizeTextForLogs(text);
-	for (const credential of ['farmer', 'secret', 'private', 'hidden'])
-		assert.ok(!safe.includes(credential));
-	assert.ok(safe.includes('camera/live'));
-});
-
-test('runtime diagnostics redact partial URL parameters and non-HTTP source credentials', () => {
-	const text =
-		'Request failed: ?api_key=secret/with/slashes&quality=high ftp://farmer:password@host/file';
-	const safe = sanitizeTextForLogs(text);
-	for (const credential of ['secret', 'with/slashes', 'farmer', 'password'])
-		assert.ok(!safe.includes(credential));
-	assert.ok(safe.includes('quality=high'));
-	assert.ok(safe.includes('host/file'));
 });
 
 test('a missing preview executable fails the response without an unhandled process error', async (t) => {

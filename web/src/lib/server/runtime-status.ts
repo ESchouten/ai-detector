@@ -52,8 +52,7 @@ interface CameraProgress {
 }
 
 function ruleProgress(detector: DetectorConfig, index: number): RuleProgress {
-	const disk = detector.exporters?.disk;
-	const recordings = disk === undefined ? [] : Array.isArray(disk) ? disk : [disk];
+	const recordings = detector.exporters?.disk ?? [];
 	return {
 		index,
 		label: `Detector ${index + 1}`,
@@ -93,8 +92,7 @@ export class RuntimeProgress {
 
 	configure(config: Config, app: AppConfig, directory: string): void {
 		for (const [index, detector] of config.detectors.entries()) {
-			const sources = detector.detection.source;
-			for (const source of typeof sources === 'string' ? [sources] : sources) {
+			for (const source of detector.detection.source) {
 				const key = sourceKey(source, directory);
 				let camera = this.cameras.get(key);
 				if (!camera) {
@@ -120,13 +118,13 @@ export class RuntimeProgress {
 
 	updateMetadata(app: AppConfig): void {
 		for (const camera of this.cameras.values()) {
-			const meta = app.streams?.find((stream) => stream.source === camera.source);
+			const meta = app.streams.find((stream) => stream.source === camera.source);
 			if (meta) {
 				camera.status.id = meta.id ?? camera.status.id;
 				camera.status.label = meta.label || camera.status.label;
 			}
 			for (const rule of camera.rules.values())
-				rule.label = app.detectors?.[rule.index]?.label || rule.label;
+				rule.label = app.detectors[rule.index]?.label || rule.label;
 		}
 	}
 
@@ -191,7 +189,7 @@ export class RuntimeProgress {
 			if (event.message) this.engines.set(event.ruleId, event.message);
 			return;
 		}
-		const destination = event.event.startsWith('validation') ? 'Validator' : event.destinationId;
+		const destination = event.event.startsWith('validation') ? 'AI check' : event.destinationId;
 		if (!destination) return;
 		const key = `${event.ruleId}/${destination}`;
 		if (event.event.endsWith('_failed'))

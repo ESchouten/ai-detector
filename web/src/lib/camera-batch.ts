@@ -1,6 +1,6 @@
 import type { CameraProfile, DiscoveredCamera, CameraConnectionResult } from './cameras.ts';
 import type { StreamMeta } from './schema.ts';
-import { errorMessage } from './remote-errors.ts';
+import { errorMessage } from './remote-calls.ts';
 
 export interface CameraLogin {
 	username: string;

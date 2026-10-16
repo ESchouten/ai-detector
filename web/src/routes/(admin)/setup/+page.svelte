@@ -12,10 +12,11 @@
 	import ImportInstallation from '$lib/components/import-installation.svelte';
 	import SetupFinish from '$lib/components/setup-finish.svelte';
 	import SetupSteps from '$lib/components/setup-steps.svelte';
-	import { plural } from '$lib/format';
 	import { getCameras } from '$lib/remote/camera.remote';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { setupStep } from '$lib/setup';
+	import { refresh } from '$lib/remote-calls';
+	import { cameraSummary } from '$lib/cameras';
 
 	const [cameras, detectors] = $derived(await Promise.all([getCameras(), getDetectors()]));
 	const step = $derived(
@@ -64,7 +65,7 @@
 		importing = false;
 		addingCamera = false;
 		addingDetector = false;
-		await Promise.all([getCameras().refresh(), getDetectors().refresh()]);
+		await refresh(getCameras(), getDetectors());
 		await goto(resolve('/setup?step=cameras&imported=1'));
 	}
 </script>
@@ -106,7 +107,7 @@
 			{/if}
 			{#if !cameras.length}
 				<div class={importing ? '' : 'border-t pt-6'}>
-					<ImportInstallation bind:opened={importing} oncomplete={imported} />
+					<ImportInstallation bind:opened={importing} onComplete={imported} />
 				</div>
 			{/if}
 		{:else}
@@ -131,12 +132,7 @@
 			{#key editingDetector}
 				<DetectorEditor
 					bind:pending={savingDetector}
-					originalLabel={edited?.meta.label ?? ''}
-					initial={edited?.detector}
-					initialPreset={edited?.meta.preset}
-					initialMode={edited?.meta.mode}
-					initialAutoUpdate={edited?.meta.autoUpdate !== false}
-					initialConnection={edited?.meta.llmConnection}
+					initial={edited}
 					onDone={detectorSaved}
 					onCancel={detectors.length
 						? async () => {
@@ -161,13 +157,7 @@
 						<div class="flex min-w-0 flex-1 flex-col">
 							<p class="text-sm font-medium">{meta.label}</p>
 							<p class="text-sm text-muted-foreground">
-								{plural(detector.detection.source.length, ['# camera', '# cameras'])} ·
-								{detector.detection.source
-									.map(
-										(source) =>
-											cameras.find((camera) => camera.source === source)?.label ?? 'Custom source'
-									)
-									.join(', ')}
+								{cameraSummary(detector.detection.source, cameras)}
 							</p>
 						</div>
 						<Button

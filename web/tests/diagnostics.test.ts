@@ -7,10 +7,10 @@ import { diagnosticFiles } from '../src/lib/server/diagnostics.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
 import { DetectionArchive } from '../src/lib/server/archive.ts';
 import { webLog } from '../src/lib/server/web-log.ts';
+import { temporaryDirectory } from './support/files.ts';
 
 test('support bundles include rotated and TensorRT logs while redacting saved credentials and excluding recordings', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-diagnostics-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'detector-diagnostics-');
 	await writeJson(path.join(directory, 'config.json'), {
 		detectors: [
 			{
@@ -70,8 +70,7 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 });
 
 test('the system details stay valid JSON when a camera is named by its own address', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-diagnostics-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'detector-diagnostics-');
 	const files = [];
 	for await (const file of diagnosticFiles(directory, {
 		cameras: [{ label: 'rtsp://farmer:camera-secret@192.168.1.2/stream_sub', state: 'online' }]

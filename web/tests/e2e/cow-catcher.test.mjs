@@ -36,9 +36,8 @@ test(
 	async (t) => {
 		const telegram = await fakeTelegram(t);
 		const camera = await rtspCamera(t);
-		const { directory, base, logs } = await startServer(t, undefined, undefined, '', {
-			AIDETECTOR_EXECUTABLE: detector,
-			...telegram.env
+		const { directory, base, logs } = await startServer(t, {
+			env: { AIDETECTOR_EXECUTABLE: detector, ...telegram.env }
 		});
 		const browser = await chromium.launch({ channel: 'chrome' });
 		t.after(() => browser.close());

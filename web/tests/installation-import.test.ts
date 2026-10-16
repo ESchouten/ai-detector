@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
-import { mkdtemp, mkdir, readFile, rm, stat, symlink, utimes, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { mkdir, readFile, rm, stat, symlink, utimes, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { InstallationImport } from '../src/lib/server/installation-import/service.ts';
 import { identifyCameras } from '../src/lib/server/configuration/cameras.ts';
@@ -9,25 +8,18 @@ import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { DetectionArchive, archivePath } from '../src/lib/server/archive.ts';
 import { availableSpace, exists } from '../src/lib/server/installation-import/files.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
-import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
+import { monitoringEnabled } from '../src/lib/server/launcher-notes.ts';
 import type { Configuration } from '../src/lib/schema.ts';
+import { fakeRuntime } from './support/configuration.ts';
+import { recordingMetadata, temporaryDirectory } from './support/files.ts';
+import { waitFor } from './support/timers.ts';
 
 const camera = 'rtsp://farmer:private-password@camera.example.test/live';
 const event = path.join('detections', 'mounting', 'approved', '2025-01-02T12-00-00');
-const metadata = {
-	timestamp: '2025-01-02T12-00-00',
-	validated: true,
-	confidence: 0.9,
-	confidences: { mounting: 0.9 },
-	detections: 2,
-	start: '2025-01-02T12:00:00',
-	end: '2025-01-02T12:00:02',
-	duration: 2
-};
+const metadata = recordingMetadata('2025-01-02T12-00-00');
 
 async function fixture(t: TestContext) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'installation-import-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'installation-import-');
 	const source = path.join(directory, 'previous');
 	const destination = path.join(directory, 'new');
 	await mkdir(path.join(source, event), { recursive: true });
@@ -61,32 +53,24 @@ async function fixture(t: TestContext) {
 	await writeJson(path.join(source, event, 'metadata.json'), metadata);
 	await writeFile(path.join(source, event, 'best.jpg'), 'original picture');
 	await writeFile(path.join(source, event, 'video.mp4'), 'original recording');
-	const calls: string[] = [];
+	const { calls, runtime } = fakeRuntime();
 	const store = new ConfigurationStore(
 		{ config: path.join(destination, 'config.json'), app: path.join(destination, 'app.json') },
-		() => ({
-			validate: async () => {
-				calls.push('validate');
-			},
-			apply: async () => {
-				calls.push('apply');
-			},
-			stop: async () => {
-				calls.push('stop');
-			},
-			fail: () => {
-				calls.push('fail');
-			}
-		})
+		runtime
 	);
 	const importer = new InstallationImport(destination, store);
 	return { source, destination, config, app, calls, store, importer };
 }
 
-async function finish(importer: InstallationImport, id: string, keepRecordings = false) {
+/** Starts the import and waits until it has finished or failed. */
+async function run(importer: InstallationImport, id: string, keepRecordings = false) {
 	await importer.start(id, keepRecordings);
-	await importer.settled();
-	const status = await importer.getStatus();
+	await waitFor(async () => (await importer.getStatus()).phase !== 'copying');
+	return importer.getStatus();
+}
+
+async function finish(importer: InstallationImport, id: string, keepRecordings = false) {
+	const status = await run(importer, id, keepRecordings);
 	assert.equal(status.phase, 'complete', status.message);
 	return status;
 }
@@ -238,9 +222,7 @@ test('source changes are caught before publishing and the user can select the fo
 	const summary = await importer.inspect(source);
 	config.detectors[0].detection.interval = 10;
 	await writeJson(path.join(source, 'config.json'), config);
-	await importer.start(summary.id, false);
-	await importer.settled();
-	const status = await importer.getStatus();
+	const status = await run(importer, summary.id);
 	assert.equal(status.phase, 'failed');
 	assert.match(status.message!, /old installation changed/);
 	assert.equal(status.canRestart, true);
@@ -255,9 +237,7 @@ test('an interrupted copy resumes across application restarts without copying co
 	const model = path.join(source, 'custom.pt');
 	const original = await stat(model);
 	await rm(model);
-	await importer.start(summary.id, false);
-	await importer.settled();
-	assert.equal((await importer.getStatus()).phase, 'failed');
+	assert.equal((await run(importer, summary.id)).phase, 'failed');
 	const stagedVideo = path.join(destination, '.installation-import', 'files', event, 'video.mp4');
 	const before = await stat(stagedVideo);
 	await writeFile(model, 'original model');
@@ -300,9 +280,7 @@ test('publication interrupted before settings commit resumes without losing the 
 			throw new Error('simulated interruption');
 		}
 	);
-	await importer.start(summary.id, false);
-	await importer.settled();
-	assert.equal((await importer.getStatus()).phase, 'failed');
+	assert.equal((await run(importer, summary.id)).phase, 'failed');
 	assert.equal((await importer.getStatus()).canRestart, false);
 	assert.equal(await exists(path.join(destination, event, 'video.mp4')), true);
 	assert.equal(await exists(path.join(destination, 'config.json')), false);
@@ -323,8 +301,7 @@ test('a crash between saving app.json and config.json can finish the same import
 			throw new Error('simulated interruption');
 		}
 	);
-	await importer.start(summary.id, false);
-	await importer.settled();
+	await run(importer, summary.id);
 	interruption.mock.restore();
 	await finish(new InstallationImport(destination, store), summary.id);
 	assert.equal((await store.read()).config.detectors.length, 1);
@@ -343,8 +320,7 @@ test('an already committed import is recognized after a restart and does not res
 			throw new Error('simulated interruption after commit');
 		}
 	);
-	await importer.start(summary.id, false);
-	await importer.settled();
+	await run(importer, summary.id);
 	interruption.mock.restore();
 	await finish(new InstallationImport(destination, store), summary.id);
 	assert.deepEqual(calls, ['validate']);
@@ -357,9 +333,7 @@ test('existing destination recordings and setups are never replaced, including c
 	await rm(path.join(destination, 'detections'), { recursive: true });
 	const summary = await importer.inspect(source);
 	await store.saveCamera({ label: 'New camera', source: '0' });
-	await importer.start(summary.id, false);
-	await importer.settled();
-	assert.match((await importer.getStatus()).message!, /already has a setup/);
+	assert.match((await run(importer, summary.id)).message!, /already has a setup/);
 	assert.equal((await store.read()).app.streams[0].label, 'New camera');
 	assert.equal(await exists(path.join(destination, 'detections')), false);
 	await assert.rejects(importer.inspect(source), /already has a setup/);
@@ -390,9 +364,7 @@ test('cancelling removes private staging, preserves the source, and leaves setup
 	const { source, destination, importer, store } = await fixture(t);
 	const summary = await importer.inspect(source);
 	await rm(path.join(source, 'custom.pt'));
-	await importer.start(summary.id, false);
-	await importer.settled();
-	assert.equal((await importer.getStatus()).phase, 'failed');
+	assert.equal((await run(importer, summary.id)).phase, 'failed');
 	await importer.cancel();
 	assert.equal((await importer.getStatus()).phase, 'idle');
 	assert.equal(await exists(path.join(destination, '.installation-import')), false);

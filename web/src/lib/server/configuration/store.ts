@@ -5,6 +5,7 @@ import type {
 	Configuration,
 	DetectorPreset,
 	LlmConnection,
+	LoadedConfiguration,
 	PairedDevice
 } from '../../schema.ts';
 import type { Locale } from '../../locales.ts';
@@ -27,6 +28,7 @@ import { saveLlm, deleteLlm } from './llms.ts';
 import { replaceConnections, replaceDetectorConfig, settingsRevision } from './advanced.ts';
 import { recordArchiveCheck, finishCameraSetup } from './camera-setup.ts';
 import { followPresets, forgetChangedPresets } from './followed-presets.ts';
+import type { SettingsDocument } from '../../advanced-settings.ts';
 
 interface Runtime {
 	validate(config: Config): Promise<void>;
@@ -63,7 +65,7 @@ export class ConfigurationStore {
 		this.language = language;
 	}
 
-	private async load(): Promise<Configuration> {
+	private async load(): Promise<LoadedConfiguration> {
 		const document = await this.files.load();
 		this.language?.saved(document.app.language);
 		return document;
@@ -103,7 +105,7 @@ export class ConfigurationStore {
 		});
 	}
 
-	read(): Promise<Configuration> {
+	read(): Promise<LoadedConfiguration> {
 		return this.enqueue(() => this.load());
 	}
 
@@ -173,7 +175,7 @@ export class ConfigurationStore {
 		}
 	}
 
-	private update<T>(change: (document: Configuration) => T | Promise<T>): Promise<T> {
+	private update<T>(change: (document: LoadedConfiguration) => T | Promise<T>): Promise<T> {
 		return this.enqueue(async () => {
 			const document = await this.load();
 			const result = await change(document);
@@ -216,12 +218,12 @@ export class ConfigurationStore {
 				throw new ConfigurationError('Add a camera before finishing setup.');
 			const monitored = await monitoring();
 			for (const camera of document.app.streams) {
-				finishCameraSetup(document, camera.id!, monitored.has(camera.id!));
+				finishCameraSetup(document, camera.id, monitored.has(camera.id));
 			}
 		});
 	}
 
-	saveAdvanced(target: 'config' | 'connections', value: unknown, revision: string): Promise<void> {
+	saveAdvanced(target: SettingsDocument, value: unknown, revision: string): Promise<void> {
 		return this.update((document) => {
 			if (settingsRevision(document) !== revision)
 				throw new ConfigurationError(

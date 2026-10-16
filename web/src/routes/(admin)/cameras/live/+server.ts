@@ -9,9 +9,9 @@ export const GET: RequestHandler = async ({ url, request }) => {
 	const { app, config } = await configuration.read();
 	const ids = new Set(url.searchParams.getAll('camera'));
 	const cameras = app.streams
-		.filter((camera) => camera.id && ids.has(camera.id))
+		.filter((camera) => ids.has(camera.id))
 		.map((camera) => ({
-			id: camera.id!,
+			id: camera.id,
 			sourceKey: sourceKey(camera.source, DATA_DIRECTORY),
 			rules: livePreviewRules(camera.source, config, app)
 		}));

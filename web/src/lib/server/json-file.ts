@@ -2,11 +2,15 @@ import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import writeFileAtomic from 'write-file-atomic';
 
+export function isMissingFile(error: unknown): boolean {
+	return ['ENOENT', 'ENOTDIR'].includes((error as NodeJS.ErrnoException).code ?? '');
+}
+
 export async function readJson<T>(file: string, missing: T | null = null): Promise<T | null> {
 	try {
 		return JSON.parse(await readFile(file, 'utf8')) as T;
 	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === 'ENOENT') return missing;
+		if (isMissingFile(error)) return missing;
 		throw error;
 	}
 }

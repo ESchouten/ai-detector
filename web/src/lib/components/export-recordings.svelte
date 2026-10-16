@@ -8,7 +8,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Field from '$lib/components/ui/field';
-	import { recordingExportInput, stageLabel } from '$lib/detections';
+	import { categoryName, recordingExportInput, stageLabel } from '$lib/detections';
 	import { plural } from '$lib/format';
 	import { getExportCount } from '$lib/remote/detections.remote';
 	import type { Stage } from '$lib/schema';
@@ -44,7 +44,7 @@
 			</Dialog.Description>
 		</Dialog.Header>
 		<p class="text-sm">
-			{type ?? 'All categories'} · {stage ? stageLabel(stage) : 'All results'}
+			{type ? categoryName(type) : 'All categories'} · {stage ? stageLabel(stage) : 'All results'}
 		</p>
 		<Field.Group>
 			<Field.Group class="sm:flex-row">

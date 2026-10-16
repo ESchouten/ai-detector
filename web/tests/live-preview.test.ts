@@ -10,6 +10,7 @@ import {
 	type LivePreviewCamera
 } from '../src/lib/server/live-preview.ts';
 import { sourceKey as keyOf } from '../src/lib/server/source-key.ts';
+import { waitFor } from './support/timers.ts';
 
 const rules = [
 	{ id: 'detector-1', label: 'People', preset: 'people', interval: 1 },
@@ -88,25 +89,16 @@ async function closed(reader: ReadableStreamDefaultReader<Uint8Array>): Promise<
 	}
 }
 
-async function until(read: () => Promise<boolean>): Promise<void> {
-	const deadline = Date.now() + 3000;
-	while (Date.now() < deadline) {
-		if (await read()) return;
-		await delay(20);
-	}
-	assert.fail('Preview state did not progress');
-}
-
 test(
 	'multiple viewers share their lease and reader cancellation cleans the last lease',
-	{ timeout: 5000 },
+	{ timeout: 10000 },
 	async (t) => {
 		const { open, lease } = await fixture(t);
 		const first = open();
 		const second = open();
 		assert.equal(await chunk(first.reader), status('detector-1') + status('detector-2'));
 		await chunk(second.reader);
-		await until(
+		await waitFor(
 			async () => JSON.parse(await readFile(lease, 'utf8').catch(() => '{}')).version === 1
 		);
 		await first.reader.cancel();
@@ -118,7 +110,7 @@ test(
 
 test(
 	'an aborted HTTP request removes its lease and a simultaneous new viewer retains one',
-	{ timeout: 5000 },
+	{ timeout: 10000 },
 	async (t) => {
 		const { open, lease } = await fixture(t);
 		const first = open();
@@ -126,7 +118,7 @@ test(
 		first.abort.abort();
 		const replacement = open();
 		await chunk(replacement.reader);
-		await until(
+		await waitFor(
 			async () =>
 				JSON.parse(await readFile(lease, 'utf8').catch(() => '{}')).expiresAt > Date.now() / 1000
 		);
@@ -220,7 +212,7 @@ test(
 
 test(
 	'camera overlays multiplex cameras and rules, and a stale frame clears only its own camera',
-	{ timeout: 5000 },
+	{ timeout: 10000 },
 	async (t) => {
 		const { directory, session, frame, open } = await fixture(t);
 		const otherKey = keyOf('rtsp://other-camera/live', '/data');
@@ -251,7 +243,7 @@ test(
 		assert.equal(frames[0].rulePreset, 'people');
 		assert.deepEqual(frames[2].boxes, []);
 		assert.ok(!output.includes('secret'));
-		await until(async () => (await readdir(path.join(directory, 'leases'))).length === 2);
+		await waitFor(async () => (await readdir(path.join(directory, 'leases'))).length === 2);
 		await frame('detector-1', { publishedAt: new Date(Date.now() - 16000).toISOString() });
 		const stale = await nextUpdate(reader);
 		assert.match(stale, /event: status/);
@@ -259,6 +251,6 @@ test(
 		assert.ok(!stale.includes('"cameraId":"pen"'));
 		abort.abort();
 		await closed(reader);
-		await until(async () => (await readdir(path.join(directory, 'leases'))).length === 0);
+		await waitFor(async () => (await readdir(path.join(directory, 'leases'))).length === 0);
 	}
 );

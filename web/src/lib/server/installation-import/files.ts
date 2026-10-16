@@ -13,6 +13,7 @@ import {
 import path from 'node:path';
 import { ConfigurationError } from '../../configuration.ts';
 import type { ReferencedFile } from './configuration.ts';
+import { isMissingFile } from '../json-file.ts';
 
 export interface ImportFile extends ReferencedFile {
 	bytes: number;
@@ -44,7 +45,7 @@ export async function collectFiles(root: string, relative: string): Promise<Impo
 			);
 		entries = await readdir(directory, { withFileTypes: true });
 	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === 'ENOENT') return [];
+		if (isMissingFile(error)) return [];
 		throw error;
 	}
 	const files: ImportFile[] = [];
@@ -75,7 +76,7 @@ export async function exists(file: string): Promise<boolean> {
 		await lstat(file);
 		return true;
 	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === 'ENOENT') return false;
+		if (isMissingFile(error)) return false;
 		throw error;
 	}
 }

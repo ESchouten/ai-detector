@@ -12,12 +12,12 @@ msgstr ""
 msgid "Could not connect. Check this camera’s login and network."
 msgstr "Verbindung fehlgeschlagen. Prüfen Sie die Zugangsdaten und das Netzwerk dieser Kamera."
 
-#: src/lib/camera-check.ts
+#: src/lib/cameras.ts
 msgid "The camera check could not finish. Please try again."
 msgstr "Die Kameraprüfung konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut."
 
+#: src/lib/components/recording-viewer.svelte
 #: src/routes/(admin)/detections/recording-card.svelte
-#: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "AI check failed"
 msgstr "KI-Prüfung fehlgeschlagen"
 
@@ -37,48 +37,48 @@ msgstr "In Telegram bewertet"
 msgid "Reviewed by you"
 msgstr "Von Ihnen bewertet"
 
-#: src/lib/camera-status.ts
 #: src/lib/components/setup-finish.svelte
+#: src/lib/monitoring.ts
 msgid "Status unavailable"
 msgstr "Status nicht verfügbar"
 
-#: src/lib/camera-status.ts
-#: src/lib/camera-status.ts
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
 #: src/lib/monitoring.ts
 #: src/routes/(admin)/streams/camera-history.svelte
 msgid "Paused"
 msgstr "Pausiert"
 
-#: src/lib/camera-status.ts
-#: src/lib/camera-status.ts
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
 msgid "Detection stopped"
 msgstr "Erkennung gestoppt"
 
-#: src/lib/camera-status.ts
-#: src/lib/camera-status.ts
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
 msgid "Preparing"
 msgstr "Wird vorbereitet"
 
-#: src/lib/camera-status.ts
+#: src/lib/monitoring.ts
 #: src/routes/(admin)/streams/camera-history.svelte
 msgid "Camera offline"
 msgstr "Kamera offline"
 
-#: src/lib/camera-status.ts
+#: src/lib/monitoring.ts
 msgid "Recording failed"
 msgstr "Aufnahme fehlgeschlagen"
 
-#: src/lib/camera-status.ts
+#: src/lib/monitoring.ts
 msgid "Detection delayed"
 msgstr "Erkennung verzögert"
 
-#: src/lib/camera-status.ts
 #: src/lib/components/setup-finish.svelte
+#: src/lib/monitoring.ts
 #: src/lib/monitoring.ts
 msgid "Monitoring"
 msgstr "Überwachung aktiv"
 
-#: src/lib/camera-status.ts
+#: src/lib/monitoring.ts
 #: src/routes/(admin)/streams/camera-history.svelte
 msgid "Connecting"
 msgstr "Verbindung wird hergestellt"
@@ -396,13 +396,6 @@ msgstr "Webhook"
 msgid "Model preparation failed. Check the details and try again."
 msgstr "Die Vorbereitung des Modells ist fehlgeschlagen. Sehen Sie sich die Details an und versuchen Sie es erneut."
 
-#: src/lib/navigation.ts
-#: src/lib/server/runtime-status.ts
-#: src/routes/(admin)/validator/+page.svelte
-#: src/routes/(admin)/validator/add/+page.svelte
-msgid "Validator"
-msgstr "KI-Prüfung"
-
 #: src/lib/server/runtime-status.ts
 msgid "Connection failed."
 msgstr "Verbindung fehlgeschlagen."
@@ -508,18 +501,18 @@ msgstr "Verbunden. Kehren Sie zu AI Detector zurück, um Ihre Einstellungen zu s
 msgid "This chat is not connected to AI Detector."
 msgstr "Dieser Chat ist nicht mit AI Detector verbunden."
 
+#: src/lib/components/review-buttons.svelte
 #: src/lib/server/telegram-reviews.ts
-#: src/routes/(admin)/detections/review-buttons.svelte
 msgid "Could not save this review. Please try again."
 msgstr "Diese Bewertung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut."
 
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 #: src/lib/detections.ts
-#: src/routes/(admin)/detections/review-buttons.svelte
-#: src/routes/(admin)/detections/review-buttons.svelte
 msgid "Confirmed"
 msgstr "Bestätigt"
 
-#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 msgid "Marked as a false alarm"
 msgstr "Als Fehlalarm markiert"
 
@@ -632,11 +625,6 @@ msgstr "Kameraprüfung fehlgeschlagen"
 #: src/lib/server/cameras/checks.ts
 msgid "Check the camera picture again before saving. The previous check has expired or the camera address changed."
 msgstr "Prüfen Sie das Kamerabild erneut, bevor Sie speichern. Die vorherige Prüfung ist abgelaufen oder die Kameraadresse hat sich geändert."
-
-#. 0: hadApp ? `restore ${files.app} from ${previousApp}` \\: `remove the newly created ${files.app}`
-#: src/lib/server/configuration/files.ts
-msgid "Settings could not be saved or restored. Recovery is required: {0}."
-msgstr "Die Einstellungen konnten weder gespeichert noch wiederhergestellt werden. Eine Wiederherstellung ist nötig: {0}."
 
 #: src/lib/server/configuration/llms.ts
 #: src/lib/server/configuration/llms.ts
@@ -799,10 +787,6 @@ msgstr "Eine lokale {0}-Datei fehlt: {1}. Stellen Sie sie wieder her, bevor Sie 
 msgid "Choose a camera stream before checking its picture."
 msgstr "Wählen Sie einen Kamerastream, bevor Sie das Bild prüfen."
 
-#: src/routes/(admin)/camera-checks/+server.ts
-msgid "The camera check request was not valid. Please try again."
-msgstr "Die Anfrage zur Kameraprüfung war ungültig. Bitte versuchen Sie es erneut."
-
 #: src/lib/components/page-error.svelte
 #: src/routes/(admin)/[...catchall]/+page.ts
 msgid "Page not found"
@@ -895,7 +879,6 @@ msgstr "Der Cache konnte nicht geleert werden."
 msgid "Camera not found."
 msgstr "Kamera nicht gefunden."
 
-#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 #: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
 msgid "The recording check request was not valid."
 msgstr "Die Anfrage zur Aufnahmeprüfung war ungültig."
@@ -1094,13 +1077,11 @@ msgstr "Kameras werden gesucht…"
 msgid "Already added"
 msgstr "Bereits hinzugefügt"
 
-#: src/lib/components/camera-add.svelte
-#: src/lib/components/camera-settings.svelte
+#: src/lib/components/camera-connection-fields.svelte
 msgid "Camera username"
 msgstr "Benutzername der Kamera"
 
-#: src/lib/components/camera-add.svelte
-#: src/lib/components/camera-settings.svelte
+#: src/lib/components/camera-connection-fields.svelte
 msgid "Camera password"
 msgstr "Passwort der Kamera"
 
@@ -1121,13 +1102,11 @@ msgstr "Erneut versuchen"
 msgid "Enter a stream URL instead"
 msgstr "Stattdessen eine Stream-URL eingeben"
 
-#: src/lib/components/camera-add.svelte
-#: src/lib/components/camera-settings.svelte
+#: src/lib/components/camera-connection-fields.svelte
 msgid "RTSP URL"
 msgstr "RTSP-URL"
 
-#: src/lib/components/camera-add.svelte
-#: src/lib/components/camera-settings.svelte
+#: src/lib/components/camera-connection-fields.svelte
 msgid "Paste the full stream URL, including the username and password if the camera needs them."
 msgstr "Fügen Sie die vollständige Stream-URL ein, einschließlich Benutzername und Passwort, falls die Kamera sie benötigt."
 
@@ -1204,15 +1183,14 @@ msgid "Done"
 msgstr "Fertig"
 
 #: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/llm-connection-editor.svelte
-#: src/lib/components/llm-connection-editor.svelte
 #: src/lib/components/monitoring-control.svelte
 #: src/lib/components/notification-editor.svelte
-#: src/lib/components/notification-editor.svelte
+#: src/lib/components/recording-viewer.svelte
 #: src/lib/components/setup-finish.svelte
-#: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -1248,16 +1226,6 @@ msgstr "Erkennungen prüfen mit"
 #: src/lib/components/detector-verification.svelte
 msgid "Add another connection"
 msgstr "Weitere Verbindung hinzufügen"
-
-#: src/lib/components/detector-editor.svelte
-#: src/lib/components/detector-verification.svelte
-#: src/routes/(admin)/validator/add/+page.svelte
-msgid "Connect validator"
-msgstr "KI-Prüfung verbinden"
-
-#: src/lib/components/detector-verification.svelte
-msgid "Validator <0>(optional)</0>"
-msgstr "KI-Prüfung <0>(optional)</0>"
 
 #: src/lib/components/detector-verification.svelte
 msgid "Let AI look at each clip before an alert is sent, to filter out false alarms. The preset supplies the question."
@@ -1304,10 +1272,6 @@ msgid "The camera could not be saved. Your choices are still here."
 msgstr "Die Kamera konnte nicht gespeichert werden. Ihre Angaben sind noch vorhanden."
 
 #: src/lib/components/camera-settings.svelte
-msgid "Camera removed."
-msgstr "Kamera entfernt."
-
-#: src/lib/components/camera-settings.svelte
 msgid "Could not remove this camera."
 msgstr "Diese Kamera konnte nicht entfernt werden."
 
@@ -1323,11 +1287,6 @@ msgstr "Kameraeinstellungen"
 #: src/lib/components/camera-settings.svelte
 msgid "Camera selected: {0}"
 msgstr "Kamera ausgewählt: {0}"
-
-#: src/lib/components/camera-add.svelte
-#: src/lib/components/camera-settings.svelte
-msgid "The camera’s own login, which may differ from its phone app."
-msgstr "Die eigenen Zugangsdaten der Kamera; sie können sich von denen der Handy-App unterscheiden."
 
 #: src/lib/components/camera-settings.svelte
 msgid "Choose camera channel again"
@@ -1359,9 +1318,11 @@ msgid "Change connection"
 msgstr "Verbindung ändern"
 
 #. 0: initial.label
-#. 0: initial.label
+#. 0: originalLabel
+#. 0: connection.label
 #. 0: initial.label
 #: src/lib/components/camera-settings.svelte
+#: src/lib/components/detector-editor.svelte
 #: src/lib/components/llm-connection-editor.svelte
 #: src/lib/components/notification-editor.svelte
 msgid "Remove “{0}”?"
@@ -1432,24 +1393,12 @@ msgid "The preset could not be loaded."
 msgstr "Die Voreinstellung konnte nicht geladen werden."
 
 #: src/lib/components/detector-editor.svelte
-msgid "Choose a preset to use its AI verification question."
-msgstr "Wählen Sie eine Voreinstellung, um deren Frage für die KI-Prüfung zu verwenden."
-
-#: src/lib/components/detector-editor.svelte
 msgid "Could not load the preset question."
 msgstr "Die Frage der Voreinstellung konnte nicht geladen werden."
 
 #: src/lib/components/detector-editor.svelte
-msgid "Choose at least one camera for this detector."
-msgstr "Wählen Sie mindestens eine Kamera für diesen Detektor."
-
-#: src/lib/components/detector-editor.svelte
 msgid "Choose a preset for this detector."
 msgstr "Wählen Sie eine Voreinstellung für diesen Detektor."
-
-#: src/lib/components/detector-editor.svelte
-msgid "Choose a preset that supplies an AI verification question."
-msgstr "Wählen Sie eine Voreinstellung, die eine Frage für die KI-Prüfung enthält."
 
 #. 0: savedLabel
 #: src/lib/components/detector-editor.svelte
@@ -1459,10 +1408,6 @@ msgstr "Detektor „{0}“ gespeichert."
 #: src/lib/components/detector-editor.svelte
 msgid "The detector could not be saved."
 msgstr "Der Detektor konnte nicht gespeichert werden."
-
-#: src/lib/components/detector-editor.svelte
-msgid "The detector could not be deleted."
-msgstr "Der Detektor konnte nicht gelöscht werden."
 
 #: src/lib/components/detector-editor.svelte
 msgid "Your unsaved choices were restored. Review them before saving."
@@ -1519,11 +1464,6 @@ msgstr "Detektor konnte nicht aktualisiert werden"
 msgid "Save detector"
 msgstr "Detektor speichern"
 
-#. 0: originalLabel
-#: src/lib/components/detector-editor.svelte
-msgid "Delete “{0}”?"
-msgstr "„{0}“ löschen?"
-
 #: src/lib/components/detector-editor.svelte
 msgid "This stops this detector on all of its cameras. Other detectors, camera connections and saved recordings are kept. This cannot be undone."
 msgstr "Damit wird dieser Detektor auf allen seinen Kameras beendet. Andere Detektoren, Kameraverbindungen und gespeicherte Aufnahmen bleiben erhalten. Dies kann nicht rückgängig gemacht werden."
@@ -1531,14 +1471,6 @@ msgstr "Damit wird dieser Detektor auf allen seinen Kameras beendet. Andere Dete
 #: src/lib/components/detector-editor.svelte
 msgid "Keep detector"
 msgstr "Detektor behalten"
-
-#: src/lib/components/detector-editor.svelte
-msgid "Delete detector"
-msgstr "Detektor löschen"
-
-#: src/lib/components/detector-editor.svelte
-msgid "Delete this detector…"
-msgstr "Diesen Detektor löschen…"
 
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/detector-editor.svelte
@@ -1832,15 +1764,6 @@ msgstr "Verbinden"
 msgid "Save connection"
 msgstr "Verbindung speichern"
 
-#. 0: canTest ? 'The key is checked with a test image before it is saved.' \\: 'Connection testing is available in the desktop application. Save settings here for your separate detector.'
-#: src/lib/components/llm-connection-editor.svelte
-msgid "{0} Detectors waiting for a validator start using this connection. You can turn it off for each detector."
-msgstr "{0} Detektoren, die auf eine KI-Prüfung warten, verwenden dann diese Verbindung. Sie können das für jeden Detektor ausschalten."
-
-#: src/lib/components/llm-connection-editor.svelte
-msgid "Connections assigned to detectors must be unassigned first."
-msgstr "Verbindungen, die Detektoren zugewiesen sind, müssen zuerst gelöst werden."
-
 #: src/lib/components/llm-connection-editor.svelte
 msgid "Remove connection"
 msgstr "Verbindung entfernen"
@@ -1952,28 +1875,28 @@ msgstr "{0} verbergen"
 msgid "Show {0}"
 msgstr "{0} anzeigen"
 
-#: src/lib/components/settings-backup.svelte
+#: src/routes/(admin)/settings/+page.svelte
 #: src/routes/(admin)/settings/+page.svelte
 msgid "Back up settings"
 msgstr "Einstellungen sichern"
 
-#: src/lib/components/settings-backup.svelte
+#: src/routes/(admin)/settings/+page.svelte
 msgid "Save your cameras, detectors and alert settings in one ZIP."
 msgstr "Speichern Sie Ihre Kameras, Detektoren und Einstellungen für Benachrichtigungen in einer ZIP-Datei."
 
-#: src/lib/components/settings-backup.svelte
+#: src/routes/(admin)/settings/+page.svelte
 msgid "<0/>Download backup"
 msgstr "<0/>Sicherung herunterladen"
 
-#: src/lib/components/settings-backup.svelte
+#: src/routes/(admin)/settings/+page.svelte
 msgid "Includes saved passwords and tokens. Keep this backup private."
 msgstr "Enthält gespeicherte Passwörter und Tokens. Halten Sie diese Sicherung privat."
 
-#: src/lib/components/settings-backup.svelte
+#: src/routes/(admin)/settings/+page.svelte
 msgid "Recordings and model files are not included. To restore, extract the ZIP and choose Use existing setup in a new installation."
 msgstr "Aufnahmen und Modelldateien sind nicht enthalten. Zum Wiederherstellen entpacken Sie die ZIP-Datei und wählen in einer neuen Installation Vorhandene Einrichtung verwenden."
 
-#: src/lib/components/settings-backup.svelte
+#: src/routes/(admin)/settings/+page.svelte
 msgid "<0/>Back up"
 msgstr "<0/>Sichern"
 
@@ -1987,7 +1910,7 @@ msgid "Cameras"
 msgstr "Kameras"
 
 #: src/lib/components/setup-steps.svelte
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Detection"
 msgstr "Erkennung"
 
@@ -2275,72 +2198,72 @@ msgstr "Alles, was die Voreinstellungen für Sie festlegen, als JSON: Schwellenw
 msgid "Switch light or dark theme"
 msgstr "Zwischen hell und dunkel wechseln"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Enter valid JSON."
 msgstr "Geben Sie gültiges JSON ein."
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "AI connections"
 msgstr "KI-Verbindungen"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Shared AI connections in app.json. Use a LiteLLM model name, API key, optional URL and headers. Changes apply to assigned detectors. Unassign a connection before removing or renaming it here."
 msgstr "Gemeinsame KI-Verbindungen in app.json. Verwenden Sie einen LiteLLM-Modellnamen, einen API-Schlüssel sowie optional URL und Header. Änderungen gelten für die zugewiesenen Detektoren. Lösen Sie eine Verbindung, bevor Sie sie hier entfernen oder umbenennen."
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Discard unsaved JSON changes?"
 msgstr "Nicht gespeicherte JSON-Änderungen verwerfen?"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Could not load settings."
 msgstr "Die Einstellungen konnten nicht geladen werden."
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Settings saved."
 msgstr "Einstellungen gespeichert."
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Could not save settings."
 msgstr "Die Einstellungen konnten nicht gespeichert werden."
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Settings file"
 msgstr "Einstellungsdatei"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/lib/components/json-editor.svelte
 msgid "Advanced settings JSON"
 msgstr "JSON der erweiterten Einstellungen"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Correct the JSON before saving"
 msgstr "Korrigieren Sie das JSON vor dem Speichern"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Settings need attention"
 msgstr "Einstellungen brauchen Ihre Aufmerksamkeit"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Please wait…"
 msgstr "Bitte warten…"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Save"
 msgstr "Speichern"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Invalid JSON"
 msgstr "Ungültiges JSON"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Valid · Unsaved changes"
 msgstr "Gültig · Nicht gespeicherte Änderungen"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Valid JSON"
 msgstr "Gültiges JSON"
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "<0/>Discard changes"
 msgstr "<0/>Änderungen verwerfen"
 
@@ -2463,10 +2386,6 @@ msgstr "Noch keine Aufnahmen"
 #: src/routes/(admin)/detections/+page.svelte
 msgid "Try another category or result."
 msgstr "Versuchen Sie eine andere Kategorie oder Bewertung."
-
-#: src/routes/(admin)/detections/+page.svelte
-msgid "When a detector sees something, the clip appears here and stays until you remove it."
-msgstr "Wenn ein Detektor etwas erkennt, erscheint der Clip hier und bleibt, bis Sie ihn entfernen."
 
 #: src/routes/(admin)/detections/+page.svelte
 msgid "Show everything"
@@ -2632,8 +2551,7 @@ msgstr "<0/>Weitere Kameras hinzufügen"
 msgid "Skip — use the cameras for live viewing only"
 msgstr "Überspringen — Kameras nur für das Livebild nutzen"
 
-#: src/routes/(admin)/detectors/+page.svelte
-#: src/routes/(admin)/setup/+page.svelte
+#: src/lib/cameras.ts
 msgid "Custom source"
 msgstr "Eigene Quelle"
 
@@ -2684,56 +2602,55 @@ msgstr "Verbinden Sie Telegram, um jedes Ereignis aufs Handy zu bekommen. Überw
 msgid "Connect your phone"
 msgstr "Handy verbinden"
 
-#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 msgid "Review removed"
 msgstr "Bewertung entfernt"
 
-#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 #: src/routes/(admin)/storage/+page.svelte
 msgid "Review"
 msgstr "Bewerten"
 
-#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 msgid "Confirmed. Remove your review"
 msgstr "Bestätigt. Ihre Bewertung entfernen"
 
-#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 msgid "Confirmed by AI. Confirm it yourself"
 msgstr "Von KI bestätigt. Selbst bestätigen"
 
-#: src/routes/(admin)/detections/review-buttons.svelte
-#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 msgid "Confirm: this is real"
 msgstr "Bestätigen: Das stimmt"
 
-#: src/routes/(admin)/detections/review-buttons.svelte
-#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 msgid "Remove your review"
 msgstr "Ihre Bewertung entfernen"
 
-#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 msgid "Confirm"
 msgstr "Bestätigen"
 
-#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 msgid "False alarm. Remove your review"
 msgstr "Fehlalarm. Ihre Bewertung entfernen"
 
-#: src/routes/(admin)/detections/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 msgid "False alarm according to AI. Mark it yourself"
 msgstr "Fehlalarm laut KI. Selbst markieren"
 
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
 #: src/lib/detections.ts
-#: src/routes/(admin)/detections/review-buttons.svelte
-#: src/routes/(admin)/detections/review-buttons.svelte
-#: src/routes/(admin)/detections/review-buttons.svelte
 msgid "False alarm"
 msgstr "Fehlalarm"
 
 #: src/lib/navigation.ts
 #: src/routes/(admin)/detectors/+page.svelte
 #: src/routes/(admin)/detectors/add/+page.svelte
-#: src/routes/(admin)/detectors/edit/+page.svelte
 msgid "Detectors"
 msgstr "Detektoren"
 
@@ -2851,14 +2768,6 @@ msgid "Checks {0}"
 msgstr "Prüft {0}"
 
 #: src/routes/(admin)/validator/+page.svelte
-msgid "Turn the validator on or off for each detector under <0>Detectors</0>."
-msgstr "Schalten Sie die KI-Prüfung für jeden Detektor unter <0>Detektoren</0> ein oder aus."
-
-#: src/routes/(admin)/validator/+page.svelte
-msgid "No validator connected"
-msgstr "Keine KI-Prüfung verbunden"
-
-#: src/routes/(admin)/validator/+page.svelte
 msgid "Optional. Without it, every detection is recorded and alerted as it is."
 msgstr "Optional. Ohne sie wird jede Erkennung unverändert aufgenommen und gemeldet."
 
@@ -2933,15 +2842,6 @@ msgstr "Modell-Cache leeren"
 msgid "<0/>Add camera"
 msgstr "<0/>Kamera hinzufügen"
 
-#: src/routes/(admin)/streams/+page.svelte
-msgid "Monitoring preset names are unavailable"
-msgstr "Namen der Voreinstellungen sind nicht verfügbar"
-
-#. 0: presetWarning
-#: src/routes/(admin)/streams/+page.svelte
-msgid "{0} Cameras below show their saved detector names. Their settings are unchanged."
-msgstr "{0} Die Kameras unten zeigen die gespeicherten Namen ihrer Detektoren. Ihre Einstellungen sind unverändert."
-
 #. 0: camera.label
 #: src/routes/(admin)/streams/+page.svelte
 msgid "Open {0}"
@@ -2959,26 +2859,13 @@ msgstr "Verbinden Sie eine Kamera, um ihr Livebild zu sehen und zu wählen, was 
 msgid "Add your first camera"
 msgstr "Erste Kamera hinzufügen"
 
-#: src/routes/(admin)/detectors/edit/+page.svelte
-#: src/routes/(admin)/detectors/edit/+page.svelte
+#: src/routes/(admin)/detectors/add/+page.svelte
 msgid "Detector not found"
 msgstr "Detektor nicht gefunden"
-
-#: src/routes/(admin)/detectors/edit/+page.svelte
-msgid "This detector may have been removed or renamed."
-msgstr "Dieser Detektor wurde möglicherweise entfernt oder umbenannt."
 
 #: src/routes/(admin)/notifications/add/+page.svelte
 msgid "Recipient not found"
 msgstr "Empfänger nicht gefunden"
-
-#: src/routes/(admin)/notifications/add/+page.svelte
-msgid "Alert recipient not found"
-msgstr "Empfänger der Benachrichtigungen nicht gefunden"
-
-#: src/routes/(admin)/notifications/add/+page.svelte
-msgid "Return to Alerts to select a saved recipient."
-msgstr "Kehren Sie zu Benachrichtigungen zurück, um einen gespeicherten Empfänger auszuwählen."
 
 #: src/routes/(admin)/notifications/add/+page.svelte
 msgid "Connect alerts"
@@ -2993,13 +2880,8 @@ msgid "Connect a phone, group or channel in Telegram, then choose which detector
 msgstr "Verbinden Sie ein Handy, eine Gruppe oder einen Kanal in Telegram und wählen Sie dann, welche Detektoren dorthin benachrichtigen."
 
 #: src/routes/(admin)/streams/[id]/+page.svelte
-#: src/routes/(admin)/streams/[id]/+page.svelte
 msgid "Camera not found"
 msgstr "Kamera nicht gefunden"
-
-#: src/routes/(admin)/streams/[id]/+page.svelte
-msgid "This camera may have been removed."
-msgstr "Diese Kamera wurde möglicherweise entfernt."
 
 #: src/routes/(admin)/streams/[id]/+page.svelte
 msgid "A detector decides what is recorded and who is alerted."
@@ -3029,40 +2911,35 @@ msgid "Choose a detector"
 msgstr "Detektor wählen"
 
 #: src/routes/(admin)/validator/add/+page.svelte
-#: src/routes/(admin)/validator/add/+page.svelte
 msgid "Connection not found"
 msgstr "Verbindung nicht gefunden"
-
-#: src/routes/(admin)/validator/add/+page.svelte
-msgid "Return to Validator and select an existing connection."
-msgstr "Kehren Sie zu KI-Prüfung zurück und wählen Sie eine vorhandene Verbindung."
 
 #: src/routes/(admin)/validator/add/+page.svelte
 msgid "Connect Google Gemini to check detections before alerts are sent."
 msgstr "Verbinden Sie Google Gemini, um Erkennungen zu prüfen, bevor Benachrichtigungen gesendet werden."
 
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "<0/> Your browser cannot play this video."
 msgstr "<0/> Ihr Browser kann dieses Video nicht abspielen."
 
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "Newer recording"
 msgstr "Neuere Aufnahme"
 
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "Newer (←)"
 msgstr "Neuer (←)"
 
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "Older recording"
 msgstr "Ältere Aufnahme"
 
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "Older (→)"
 msgstr "Älter (→)"
 
 #. 0: index + 1; 1: entries.length
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "{0} of {1}"
 msgstr "{0} von {1}"
 
@@ -3193,9 +3070,8 @@ msgstr "Die Sprache konnte nicht geändert werden. Versuchen Sie es erneut."
 msgid "Language"
 msgstr "Sprache"
 
+#: src/lib/cameras.ts
 #: src/lib/components/import-installation.svelte
-#: src/routes/(admin)/detectors/+page.svelte
-#: src/routes/(admin)/setup/+page.svelte
 msgid "# camera"
 msgid_plural "# cameras"
 msgstr[0] "# Kamera"
@@ -3396,10 +3272,6 @@ msgstr "Bild geprüft"
 msgid "Checked by {0}"
 msgstr "Geprüft von {0}"
 
-#: src/routes/(admin)/detectors/+page.svelte
-msgid "Checked by a custom validator"
-msgstr "Geprüft von einer eigenen KI-Prüfung"
-
 #. 0: amount
 #: src/lib/format.ts
 msgid "{0} GB"
@@ -3412,8 +3284,8 @@ msgstr "Überwachung"
 
 #. 0: percent(entry.confidence)
 #. 0: percent(entry.confidence)
+#: src/lib/components/recording-viewer.svelte
 #: src/routes/(admin)/detections/recording-card.svelte
-#: src/routes/(admin)/detections/recording-viewer.svelte
 msgid "{0} confidence"
 msgstr "{0} Sicherheit"
 
@@ -3520,25 +3392,25 @@ msgstr "Ruhezeiten"
 msgid "Alerts between these times still arrive, but without sound. Leave both empty for sound at any hour."
 msgstr "Benachrichtigungen zwischen diesen Uhrzeiten kommen weiterhin an, aber ohne Ton. Lassen Sie beide leer, damit zu jeder Zeit ein Ton erklingt."
 
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "Recording deleted"
 msgstr "Aufnahme gelöscht"
 
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "Could not delete the recording. Please try again."
 msgstr "Die Aufnahme konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
 
-#: src/routes/(admin)/detections/recording-viewer.svelte
-#: src/routes/(admin)/detections/recording-viewer.svelte
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "Delete recording"
 msgstr "Aufnahme löschen"
 
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "Delete this recording?"
 msgstr "Diese Aufnahme löschen?"
 
-#: src/routes/(admin)/detections/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
 msgid "Its pictures and video are removed from this computer and cannot be brought back."
 msgstr "Die Bilder und das Video werden von diesem Computer entfernt und lassen sich nicht wiederherstellen."
 
@@ -3626,7 +3498,7 @@ msgstr "Automatisch aktualisieren"
 msgid "When a newer model is published for this preset, this detector takes it by itself, at start and once a day."
 msgstr "Erscheint für diese Voreinstellung ein neueres Modell, übernimmt dieser Detektor es von selbst, beim Start und einmal täglich."
 
-#: src/routes/(admin)/advanced/settings-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
 msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
 msgstr "Alles in config.json: Modell, Prompts, Schwellenwerte und Aufnahmeoptionen jedes Detektors sowie health und onnx für die gesamte Installation. Beim Speichern werden die Änderungen auf die laufende Überwachung angewendet."
 
@@ -3738,3 +3610,83 @@ msgstr "Senden Sie eine Telegram-Nachricht mit den Aufnahmen, wenn dieser Detekt
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "When a detector sees something, the footage is sent to these people in Telegram. They can confirm it or mark it as a false alarm right there."
 msgstr "Wenn ein Detektor etwas erkennt, werden die Aufnahmen in Telegram an diese Personen gesendet. Sie können die Erkennung dort direkt bestätigen oder als Fehlalarm markieren."
+
+#: src/lib/navigation.ts
+#: src/lib/server/runtime-status.ts
+#: src/routes/(admin)/validator/+page.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "AI check"
+msgstr "KI-Prüfung"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "The camera’s own login, which may differ from its phone app. <0/>"
+msgstr "Die eigenen Zugangsdaten der Kamera; sie können sich von denen der Handy-App unterscheiden. <0/>"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-verification.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Connect AI check"
+msgstr "KI-Prüfung verbinden"
+
+#: src/lib/components/detector-verification.svelte
+msgid "AI check <0>(optional)</0>"
+msgstr "KI-Prüfung <0>(optional)</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset to use its AI check question."
+msgstr "Wählen Sie eine Voreinstellung, um deren Frage für die KI-Prüfung zu verwenden."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset that supplies an AI check question."
+msgstr "Wählen Sie eine Voreinstellung, die eine Frage für die KI-Prüfung enthält."
+
+#: src/lib/components/detector-editor.svelte
+msgid "The detector could not be removed."
+msgstr "Der Detektor konnte nicht entfernt werden."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Remove this detector…"
+msgstr "Diesen Detektor entfernen…"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Remove detector"
+msgstr "Detektor entfernen"
+
+#. 0: canTest ? 'The key is checked with a test image before it is saved.' \\: 'Connection testing is available in the desktop application. Save settings here for your separate detector.'
+#: src/lib/components/llm-connection-editor.svelte
+msgid "{0} Detectors waiting for an AI check start using this connection. You can turn it off for each detector."
+msgstr "{0} Detektoren, die auf eine KI-Prüfung warten, verwenden dann diese Verbindung. Sie können das für jeden Detektor ausschalten."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "A detector that uses this connection must be given another one, or none, first."
+msgstr "Geben Sie Detektoren, die diese Verbindung verwenden, zuerst eine andere Verbindung oder keine."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Keep connection"
+msgstr "Verbindung behalten"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "When a detector sees something, the recording appears here and stays until you remove it."
+msgstr "Wenn ein Detektor etwas erkennt, erscheint die Aufnahme hier und bleibt, bis Sie sie entfernen."
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Checked with custom settings"
+msgstr "Mit eigenen Einstellungen geprüft"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Turn the AI check on or off for each detector under <0>Detectors</0>."
+msgstr "Schalten Sie die KI-Prüfung für jeden Detektor unter <0>Detektoren</0> ein oder aus."
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "No AI check connected"
+msgstr "Keine KI-Prüfung verbunden"
+
+#: src/routes/(admin)/detectors/add/+page.svelte
+#: src/routes/(admin)/notifications/add/+page.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "It may have been removed or renamed."
+msgstr "Möglicherweise wurde er entfernt oder umbenannt."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "It may have been removed."
+msgstr "Möglicherweise wurde sie entfernt."

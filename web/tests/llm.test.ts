@@ -16,8 +16,7 @@ import {
 } from '../src/lib/llm.ts';
 import * as v from 'valibot';
 import { llmConnection, type LlmConnection } from '../src/lib/schema.ts';
-import { settingsStore } from './support/configuration.ts';
-import { readTestPresets } from './support/presets.ts';
+import { addPresetDetector, readTestPresets, settingsStore } from './support/configuration.ts';
 
 const connection: LlmConnection = {
 	label: 'Shared AI',
@@ -55,12 +54,8 @@ for (const editing of [false, true]) {
 		if (editing) await store.saveLlm(connection);
 		const presets = (await readTestPresets()).filter(({ detector }) => detector.vlm?.length);
 		assert.equal(presets.length, 4);
-		for (const { id, name, detector } of presets) {
-			await store.saveDetector({
-				meta: { label: name, preset: id },
-				detector: { ...detector, detection: { ...detector.detection, source: ['video.mp4'] } }
-			});
-		}
+		for (const { id, name } of presets)
+			await addPresetDetector(store, { label: name, source: 'video.mp4' }, id);
 		const before = await store.read();
 		for (const detector of before.config.detectors) {
 			assert.equal(detector.vlm![0].key, null);

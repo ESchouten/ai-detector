@@ -10,6 +10,7 @@ import {
 	cameraSoftwareMissing,
 	cameraStorageFailure
 } from './connection.ts';
+import { isMissingFile } from '../json-file.ts';
 
 const execute = promisify(execFile);
 
@@ -96,7 +97,7 @@ export async function verifyCameraArchive(
 		}
 	} catch (cause) {
 		signal?.throwIfAborted();
-		if ((cause as NodeJS.ErrnoException).code === 'ENOENT')
+		if (isMissingFile(cause))
 			throw new CameraConnectionError(
 				'The camera test recording is no longer available. Check its picture again.'
 			);

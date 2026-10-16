@@ -6,7 +6,8 @@ import {
 	webConfigurationSchema
 } from './configuration.ts';
 
-export type SettingsDocument = 'config' | 'connections';
+export const SETTINGS_DOCUMENTS = ['config', 'connections'] as const;
+export type SettingsDocument = (typeof SETTINGS_DOCUMENTS)[number];
 
 const { model, key, url, headers } = configurationSchema.$defs.VLMConfig.properties;
 export const settingsSchemas: Record<SettingsDocument, Record<string, unknown>> = {

@@ -3,9 +3,9 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { readLogTail } from '../src/lib/server/bounded-log.ts';
-import { DetectorLog } from '../src/lib/server/detector-log.ts';
+import { DetectorLog, readLogTail, sanitizeTextForLogs } from '../src/lib/server/logs.ts';
 import { searchLog } from '../src/lib/log-search.ts';
+import { temporaryDirectory } from './support/files.ts';
 
 test('startup survives noisy inference, and the bounded redacted log survives reopening', async (t) => {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-log-'));
@@ -49,8 +49,7 @@ test('search keeps multiline error details and is literal, case insensitive and 
 });
 
 test('missing logs are empty, existing Python logs are bounded, and invalid paths stay visible', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-log-read-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'detector-log-read-');
 	const file = path.join(directory, 'detector.log');
 	assert.equal(await readLogTail(file), '');
 	await writeFile(file, 'x'.repeat(600000) + '\nFinal error\n');
@@ -59,4 +58,23 @@ test('missing logs are empty, existing Python logs are bounded, and invalid path
 	assert.ok(text.endsWith('Final error\n'));
 	// Node rejects null bytes before accessing the OS; directory errors vary by platform.
 	await assert.rejects(readLogTail(`${file}\0`), { code: 'ERR_INVALID_ARG_VALUE' });
+});
+
+test('runtime diagnostics redact both stream and HTTP credentials', () => {
+	const text =
+		'rtsp://farmer:secret@camera/live?api_key=private https://host/check?password=hidden';
+	const safe = sanitizeTextForLogs(text);
+	for (const credential of ['farmer', 'secret', 'private', 'hidden'])
+		assert.ok(!safe.includes(credential));
+	assert.ok(safe.includes('camera/live'));
+});
+
+test('runtime diagnostics redact partial URL parameters and non-HTTP source credentials', () => {
+	const text =
+		'Request failed: ?api_key=secret/with/slashes&quality=high ftp://farmer:password@host/file';
+	const safe = sanitizeTextForLogs(text);
+	for (const credential of ['secret', 'with/slashes', 'farmer', 'password'])
+		assert.ok(!safe.includes(credential));
+	assert.ok(safe.includes('quality=high'));
+	assert.ok(safe.includes('host/file'));
 });

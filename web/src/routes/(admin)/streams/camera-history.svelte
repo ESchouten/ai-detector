@@ -3,11 +3,11 @@
 	import { badgeHue } from '$lib/badge-colors';
 	import { axisTicks, watchedTime, type WatchState } from '$lib/camera-history';
 	import FilterChips from '$lib/components/filter-chips.svelte';
-	import { detectionKey, type Detection } from '$lib/detections';
+	import { categoryName, detectionKey, type Detection } from '$lib/detections';
 	import { percent, timeOfDay, weekday } from '$lib/format';
 	import { getCameraHistory } from '$lib/remote/camera.remote';
 	import { getRecordingPresets } from '$lib/remote/detections.remote';
-	import RecordingViewer from '../detections/recording-viewer.svelte';
+	import RecordingViewer from '$lib/components/recording-viewer.svelte';
 
 	// When each camera was really watched, with what it recorded on the same line: a gap in the
 	// green is time nothing would have been noticed.
@@ -79,7 +79,7 @@
 				{ value: '24', label: 'Last 24 hours' },
 				{ value: '168', label: 'Last 7 days' }
 			]}
-			onchange={(value) => (hours = value === '1' ? 1 : value === '168' ? 168 : 24)}
+			onChange={(value) => (hours = value === '1' ? 1 : value === '168' ? 168 : 24)}
 		/>
 		{#if history.recorded}
 			<ul class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
@@ -126,7 +126,7 @@
 						></div>
 					{/each}
 					{#each shown(row.detections) as detection (detectionKey(detection))}
-						{@const label = `${moment(detection.start)} · ${detection.type} · ${percent(detection.confidence)}`}
+						{@const label = `${moment(detection.start)} · ${categoryName(detection.type)} · ${percent(detection.confidence)}`}
 						<button
 							type="button"
 							class={[
@@ -159,8 +159,8 @@
 	{entries}
 	bind:selected
 	{colorSeeds}
-	onreview={(entry) => (reviewed[detectionKey(entry)] = entry)}
-	onremove={(entry) => removed.push(detectionKey(entry))}
+	onReview={(entry) => (reviewed[detectionKey(entry)] = entry)}
+	onRemove={(entry) => removed.push(detectionKey(entry))}
 />
 
 <style>

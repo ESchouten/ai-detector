@@ -1,13 +1,12 @@
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
+import { temporaryDirectory } from './support/files.ts';
 
 async function fixture(t: TestContext) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-settings-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'ai-settings-');
 	return directory;
 }
 

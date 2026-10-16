@@ -21,6 +21,15 @@ export const getDetectorPreset = query(
 		})
 );
 
+/** For navigation; unreadable settings are reported by the page that needs them. */
+export const getDetectorCount = query(async () => {
+	try {
+		return (await configuration.read()).config.detectors.length;
+	} catch {
+		return 0;
+	}
+});
+
 export const getDetectors = query(async () => {
 	const { config, app } = await configuration.read();
 	return config.detectors.map((detector, index) => ({ detector, meta: app.detectors[index] }));

@@ -10,6 +10,7 @@ import {
 } from '../live-preview.ts';
 import type { Config, AppConfig } from '../schema.ts';
 import { readJson } from './json-file.ts';
+import { webLog } from './web-log.ts';
 
 export interface LivePreviewRule {
 	id: string;
@@ -120,7 +121,7 @@ function acquireLease(file: string): { check: () => void; release: () => Promise
 				try {
 					await rm(file, { force: true });
 				} catch (error) {
-					console.error('Could not remove live preview lease', error);
+					webLog.error('Could not remove live preview lease', error);
 				} finally {
 					if (!lease.viewers) leases.delete(file);
 				}
@@ -244,7 +245,7 @@ export function createCameraOverlayStream(
 					controller.enqueue(encoder.encode(changedEvents(events, sent)));
 				} catch (error) {
 					if (stopped) return;
-					console.error('Live detection preview unavailable', error);
+					webLog.error('Live detection preview unavailable', error);
 					controller.enqueue(encoder.encode('event: status\ndata: {}\n\n'));
 					await close();
 				} finally {

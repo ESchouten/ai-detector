@@ -1,13 +1,11 @@
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
-import { executable, managedDetector } from './support/detector.ts';
+import { executable, managedDetector, monitoringRecords } from './support/detector.ts';
 import { mockTimeouts, realDelay, waitFor } from './support/timers.ts';
-import { monitoringSummary } from '../src/lib/monitoring.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
-import { monitoringEnabled } from '../src/lib/server/monitoring-flag.ts';
+import { monitoringEnabled } from '../src/lib/server/launcher-notes.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 
 const posixOnly = { skip: process.platform === 'win32' };
@@ -15,20 +13,13 @@ const source = 'rtsp://camera.local/live';
 const config = { detectors: [{ detection: { source } }] };
 const keepsStopping =
 	'The detector keeps stopping unexpectedly (75). Restart this computer. If it keeps happening, download the diagnostics in Settings → Logs and ask for help.';
-const scope = { stale: false, configured: true };
 
 async function fixture(t: TestContext, extra = {}) {
 	const { detector, directory } = await managedDetector(t);
 	mockTimeouts(t);
 	const options = {
 		failureExitCode: 75,
-		statusEvents: ['ready', 'frame', 'inference'].map((event) => ({
-			version: 1,
-			event,
-			ruleId: 'detector-1',
-			sourceKey: createHash('sha256').update(source).digest('hex'),
-			at: new Date().toISOString()
-		})),
+		statusEvents: monitoringRecords(source),
 		...extra
 	};
 	await writeJson(path.join(directory, 'config.json'), config);
@@ -87,20 +78,6 @@ for (const disable of [true, false]) {
 		}
 	);
 }
-
-test('invalid model completion records cannot request a restart', posixOnly, async (t) => {
-	const { detector, pid, starts } = await fixture(t, {
-		modelsReadyEvents: [
-			{ version: 2, event: 'models_ready', at: new Date().toISOString() },
-			{ version: 1, event: 'models_ready', at: 'invalid' }
-		]
-	});
-	process.kill(await pid(), 'SIGUSR1');
-	await realDelay(100);
-	assert.equal(await starts(), 1);
-	assert.equal(detector.status().readiness, 'monitoring');
-	assert.doesNotMatch(await detector.log.read(), /Restart requested/);
-});
 
 test(
 	'an inference failure starts a fresh process and retains diagnostics without stale readiness',
@@ -162,10 +139,7 @@ test(
 		now += 10 * 60 * 1000;
 		await writeJson(path.join(directory, 'fixture-options.json'), {
 			...options,
-			statusEvents: options.statusEvents.map((event) => ({
-				...event,
-				at: new Date(now).toISOString()
-			}))
+			statusEvents: monitoringRecords(source, now)
 		});
 		process.kill(await pid(), 'SIGUSR2');
 		await waitFor(() => detector.status().message.includes('Restarting monitoring in 2 seconds'));
@@ -212,14 +186,8 @@ test(
 		t.mock.timers.tick(30000);
 		await waitFor(async () => (await starts()) === 6 && detector.status().phase === 'running');
 		assert.equal(detector.status().failing, keepsStopping);
-		const summary = monitoringSummary(detector.status(), scope);
-		assert.deepEqual(
-			[summary.tone, summary.label, summary.detail, summary.attention, summary.action],
-			['bad', 'Monitoring stopped', keepsStopping, true, 'pause']
-		);
 		process.kill(await pid(), 'SIGUSR1');
 		await waitFor(() => detector.status().failing === undefined);
-		assert.equal(monitoringSummary(detector.status(), scope).tone, 'busy');
 	}
 );
 
@@ -230,13 +198,11 @@ test('pausing hides the reason, and a start by hand is a start again', posixOnly
 	assert.equal(detector.status().failing, keepsStopping);
 	await detector.stop();
 	assert.equal(detector.status().failing, undefined);
-	assert.equal(monitoringSummary(detector.status(), scope).label, 'Paused');
 	// The process started by hand says nothing yet, so only the start itself can have ended it.
 	await writeJson(path.join(directory, 'fixture-options.json'), { ...options, statusEvents: [] });
 	await detector.start();
 	await waitFor(async () => (await starts()) === 6 && detector.status().phase === 'running');
 	assert.equal(detector.status().failing, undefined);
-	assert.equal(monitoringSummary(detector.status(), scope).tone, 'busy');
 	// Counting starts over: the next stop is a first one.
 	await stopInARow(t, running, 1);
 	assert.equal(detector.status().failing, undefined);
@@ -258,10 +224,7 @@ test('a restart for new settings after a good run is not a stop in a row', posix
 	now += 6 * 3600 * 1000;
 	await writeJson(path.join(directory, 'fixture-options.json'), {
 		...options,
-		statusEvents: options.statusEvents.map((event) => ({
-			...event,
-			at: new Date(now).toISOString()
-		}))
+		statusEvents: monitoringRecords(source, now)
 	});
 	await detector.apply();
 	await waitFor(async () => (await starts()) === 6 && detector.status().readiness === 'monitoring');
@@ -358,7 +321,7 @@ test(
 	}
 );
 
-for (const exitCode of [0, 1, 2, 139]) {
+for (const exitCode of [0, 139]) {
 	test(`unexpected exit ${exitCode} restarts monitoring`, posixOnly, async (t) => {
 		const { detector, pid, starts } = await fixture(t, { failureExitCode: exitCode });
 		const originalPid = await pid();

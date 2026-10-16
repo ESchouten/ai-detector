@@ -3,8 +3,8 @@ import { arch, cpus, platform, release, totalmem } from 'node:os';
 import path from 'node:path';
 import { stripVTControlCharacters } from 'node:util';
 import { preview, version } from '../version.ts';
-import { readJson } from './json-file.ts';
-import { sanitizeTextForLogs } from './runtime-logs.ts';
+import { isMissingFile, readJson } from './json-file.ts';
+import { sanitizeTextForLogs } from './logs.ts';
 import type { ZipEntry } from './zip-download.ts';
 
 const SECRET_FIELD = /^(?:key|token|password|secret|headers|authorization|chat)$/i;
@@ -56,7 +56,7 @@ async function entries(directory: string) {
 	try {
 		return await readdir(directory, { withFileTypes: true });
 	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === 'ENOENT') return [];
+		if (isMissingFile(error)) return [];
 		throw error;
 	}
 }
@@ -120,7 +120,7 @@ export async function* diagnosticFiles(
 			const info = await lstat(file);
 			if (info.isFile()) builds.push({ file, name: entry.name, modified: info.mtimeMs });
 		} catch (error) {
-			if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+			if (!isMissingFile(error)) throw error;
 		}
 	}
 	for (const build of builds.sort((a, b) => b.modified - a.modified).slice(0, 8))

@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { ReadStream } from 'node:fs';
-import { mkdtemp, mkdir, readFile, rm, symlink, truncate, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { mkdir, readFile, symlink, truncate, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
@@ -15,10 +14,11 @@ import { zipDownload } from '../src/lib/server/zip-download.ts';
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { InstallationImport } from '../src/lib/server/installation-import/service.ts';
 import { settingsStore } from './support/configuration.ts';
+import { recordingMetadata, temporaryDirectory } from './support/files.ts';
+import { waitFor } from './support/timers.ts';
 
 async function fixture(t: TestContext) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-export-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'detector-export-');
 	const root = path.join(directory, 'detections');
 	const archive = new DetectionArchive(root);
 	return { directory, root, archive };
@@ -27,17 +27,7 @@ async function fixture(t: TestContext) {
 async function event(root: string, category: string, stage: string, timestamp: string) {
 	const folder = path.join(root, category, stage, timestamp);
 	await mkdir(folder, { recursive: true });
-	const metadata = {
-		timestamp,
-		validated: true,
-		confidence: 0.9,
-		confidences: { activity: 0.9 },
-		detections: 1,
-		start: '2026-09-22T12:00:00',
-		end: '2026-09-22T12:00:02',
-		duration: 2
-	};
-	await writeFile(path.join(folder, 'metadata.json'), JSON.stringify(metadata));
+	await writeFile(path.join(folder, 'metadata.json'), JSON.stringify(recordingMetadata(timestamp)));
 	await writeFile(path.join(folder, 'video.mp4'), `original video ${timestamp}`);
 	return folder;
 }
@@ -266,7 +256,7 @@ for (const cancellation of ['request', 'body'] as const) {
 			const response = zipDownload('recordings.zip', [{ name: 'large.mp4', file }], request);
 			const reader = response.body!.getReader();
 			await reader.read();
-			while (!streams.length) await delay(5);
+			await waitFor(() => streams.length > 0);
 			await delay(30);
 			assert.ok(
 				streams[0].bytesRead < 2 * 1024 * 1024,
@@ -277,7 +267,7 @@ for (const cancellation of ['request', 'body'] as const) {
 				controller.abort();
 				await assert.rejects(reader.closed, { name: 'AbortError' });
 			}
-			while (!streams[0].closed) await delay(5);
+			await waitFor(() => streams[0].closed);
 			assert.ok(streams[0].destroyed);
 		}
 	);
@@ -344,7 +334,6 @@ test('settings backup preserves cameras, detector options and alerts, and import
 	const importer = new InstallationImport(destination, restored);
 	const summary = await importer.inspect(extracted);
 	await importer.start(summary.id, false);
-	await importer.settled();
-	assert.equal((await importer.getStatus()).phase, 'complete');
+	await waitFor(async () => (await importer.getStatus()).phase === 'complete');
 	assert.deepEqual(await restored.read(), expected);
 });

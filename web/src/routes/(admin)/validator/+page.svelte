@@ -15,7 +15,7 @@
 <section class="page-narrow">
 	<PageHeader
 		back={{ href: resolve('/settings'), label: 'Settings' }}
-		title="Validator"
+		title="AI check"
 		description="An AI model looks at each clip before an alert is sent and filters out false alarms. Your presets supply the question it answers."
 	>
 		{#snippet actions()}
@@ -41,7 +41,7 @@
 			})}
 		/>
 		<p class="text-sm text-muted-foreground">
-			Turn the validator on or off for each detector under
+			Turn the AI check on or off for each detector under
 			<a
 				href={resolve('/detectors')}
 				class="font-medium text-foreground underline underline-offset-4">Detectors</a
@@ -51,7 +51,7 @@
 		<Empty.Root class="border border-dashed">
 			<Empty.Header>
 				<Empty.Media variant="icon"><Sparkles aria-hidden="true" /></Empty.Media>
-				<Empty.Title>No validator connected</Empty.Title>
+				<Empty.Title>No AI check connected</Empty.Title>
 				<Empty.Description>
 					Optional. Without it, every detection is recorded and alerted as it is.
 				</Empty.Description>

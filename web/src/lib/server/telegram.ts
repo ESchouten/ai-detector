@@ -2,14 +2,8 @@ import { Api, GrammyError, HttpError } from 'grammy/web';
 import type { ChatAdministratorRights, InlineKeyboardMarkup, Update } from 'grammy/types';
 import * as v from 'valibot';
 import { ConfigurationError } from '../configuration.ts';
-import type { TelegramDestination, TelegramRecipient } from '../telegram.ts';
+import type { TelegramDestination, TelegramRecipient } from '../telegram-pairing.ts';
 
-const responseSchema = v.object({
-	ok: v.boolean(),
-	description: v.optional(v.string()),
-	error_code: v.optional(v.number()),
-	result: v.optional(v.unknown())
-});
 const chatSchema = v.object({
 	id: v.number(),
 	type: v.string(),
@@ -67,12 +61,7 @@ function api(token: string, signal?: AbortSignal): Api {
 	const client = new Api(token, { fetch: globalThis.fetch, timeoutSeconds: 10 });
 	// grammy/web uses native signals; its declarations still name the Node polyfill.
 	const sdkSignal = signal as Parameters<Api['getMe']>[0];
-	// The SDK supplies API types; validate external replies at the integration boundary.
-	client.config.use(async (previous, method, payload) => {
-		const reply = await previous(method, payload, sdkSignal);
-		result(responseSchema, reply);
-		return reply;
-	});
+	client.config.use((previous, method, payload) => previous(method, payload, sdkSignal));
 	return client;
 }
 

@@ -1,5 +1,5 @@
 import { getTelegramUpdates, telegramChats, type TelegramUpdate } from './telegram.ts';
-import type { TelegramRecipient } from '../telegram.ts';
+import type { TelegramRecipient } from '../telegram-pairing.ts';
 
 type ReceiveUpdate = (token: string, update: TelegramUpdate, signal?: AbortSignal) => Promise<void>;
 

@@ -9,7 +9,7 @@
 		keep,
 		confirm,
 		disabled,
-		onconfirm
+		onConfirm
 	}: {
 		trigger: string;
 		title: string;
@@ -17,7 +17,7 @@
 		keep: string;
 		confirm: string;
 		disabled: boolean;
-		onconfirm: () => void;
+		onConfirm: () => void;
 	} = $props();
 	let open = $state(false);
 </script>
@@ -42,7 +42,7 @@
 					class={buttonVariants({ variant: 'destructive' })}
 					onclick={() => {
 						open = false;
-						onconfirm();
+						onConfirm();
 					}}>{confirm}</AlertDialog.Action
 				>
 			</AlertDialog.Footer>

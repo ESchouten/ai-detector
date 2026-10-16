@@ -3,6 +3,7 @@ import { mkdir, readdir, rm, statfs } from 'node:fs/promises';
 import path from 'node:path';
 import type { Config } from '../schema.ts';
 import { archivePath, type DetectionArchive } from './archive.ts';
+import { isMissingFile } from './json-file.ts';
 
 export async function diskSpace(directory: string) {
 	await mkdir(directory, { recursive: true });
@@ -71,7 +72,7 @@ export async function clearModelCache(directory: string, config: Config): Promis
 	try {
 		entries = await readdir(models, { withFileTypes: true });
 	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === 'ENOENT') return;
+		if (isMissingFile(error)) return;
 		throw error;
 	}
 	for (const entry of entries) {

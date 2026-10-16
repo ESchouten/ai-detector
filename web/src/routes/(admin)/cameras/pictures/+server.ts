@@ -9,8 +9,8 @@ export const GET: RequestHandler = async ({ url, request }) => {
 	const { app } = await configuration.read();
 	const ids = new Set(url.searchParams.getAll('camera'));
 	const cameras = app.streams
-		.filter((camera) => camera.id && ids.has(camera.id))
-		.map((camera) => ({ id: camera.id!, source: camera.source }));
+		.filter((camera) => ids.has(camera.id))
+		.map((camera) => ({ id: camera.id, source: camera.source }));
 	if (!cameras.length) error(404, 'Camera not found.');
 	const executable = await getFfmpegPathWithFallback();
 	if (!executable) error(503, cameraSoftwareMissing().message);

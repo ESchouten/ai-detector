@@ -3,7 +3,6 @@
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { ChevronRight } from '@lucide/svelte';
-	import * as Alert from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import CameraSettings from '$lib/components/camera-settings.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
@@ -17,11 +16,7 @@
 
 <section class="page">
 	{#if !camera}
-		<PageHeader {back} title="Camera not found" />
-		<Alert.Root variant="destructive" class="max-w-3xl">
-			<Alert.Title>Camera not found</Alert.Title>
-			<Alert.Description>This camera may have been removed.</Alert.Description>
-		</Alert.Root>
+		<PageHeader {back} title="Camera not found" description="It may have been removed." />
 	{:else}
 		<PageHeader {back} title={camera.label} />
 		{#key camera.id}
@@ -44,7 +39,7 @@
 					{#each camera.rules as rule (rule.label)}
 						<li>
 							<a
-								href={resolve(`/detectors/edit?label=${encodeURIComponent(rule.label)}`)}
+								href={resolve(`/detectors/add?label=${encodeURIComponent(rule.label)}`)}
 								class="flex items-center gap-3 px-4 py-3 outline-none hover:bg-accent focus-visible:bg-accent"
 							>
 								<span class="flex min-w-0 flex-1">

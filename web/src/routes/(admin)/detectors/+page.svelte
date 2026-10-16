@@ -7,10 +7,10 @@
 	import MonitoringBanner from '$lib/components/monitoring-banner.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import { sameTelegram } from '$lib/configuration';
-	import { plural } from '$lib/format';
 	import { getDetectors, getDetectorPresets } from '$lib/remote/detector.remote';
 	import { getTelegrams } from '$lib/remote/alerts.remote';
 	import { getCameras } from '$lib/remote/camera.remote';
+	import { cameraSummary } from '$lib/cameras';
 
 	const [detectors, cameras, telegrams, { presets }] = $derived(
 		await Promise.all([getDetectors(), getCameras(), getTelegrams(), getDetectorPresets()])
@@ -36,9 +36,6 @@
 	{#if detectors.length}
 		<ul class="flex flex-col gap-3">
 			{#each detectors as { detector, meta } (meta.label)}
-				{@const watched = detector.detection.source.map(
-					(source) => cameras.find((camera) => camera.source === source)?.label ?? 'Custom source'
-				)}
 				{@const recipients = telegrams.filter((channel) =>
 					detector.exporters?.telegram?.some((item) => sameTelegram(item, channel))
 				)}
@@ -46,7 +43,7 @@
 				{@const validated = detector.vlm?.some((step) => step.key != null)}
 				<li>
 					<a
-						href={resolve(`/detectors/edit?label=${encodeURIComponent(meta.label)}`)}
+						href={resolve(`/detectors/add?label=${encodeURIComponent(meta.label)}`)}
 						aria-label={`Edit ${meta.label}`}
 						class="panel group flex items-center gap-4 px-5 py-4 transition-colors outline-none hover:bg-accent/60 focus-visible:ring-[3px] focus-visible:ring-ring/50"
 					>
@@ -59,7 +56,7 @@
 								{/if}
 							</div>
 							<p class="text-sm text-muted-foreground">
-								{plural(watched.length, ['# camera', '# cameras'])} · {watched.join(', ')}
+								{cameraSummary(detector.detection.source, cameras)}
 							</p>
 							<div class="flex flex-wrap gap-x-5 gap-y-1.5 text-sm">
 								<span class="flex items-center gap-1.5">
@@ -76,7 +73,7 @@
 										<Sparkles class="size-4 text-muted-foreground" aria-hidden="true" />
 										{meta.llmConnection
 											? `Checked by ${meta.llmConnection}`
-											: 'Checked by a custom validator'}
+											: 'Checked with custom settings'}
 									</span>
 								{/if}
 							</div>

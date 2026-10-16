@@ -8,7 +8,7 @@ import { DATA_DIRECTORY } from '../application-paths.ts';
 import { webLog } from '../web-log.ts';
 import { newerPresets } from './followed-presets.ts';
 import { configuration } from './index.ts';
-import { loadPresets } from './preset-files.ts';
+import { bundledPresets, loadPresets } from './preset-files.ts';
 import {
 	modelAvailable,
 	PUBLISHED_PRESETS,
@@ -36,8 +36,9 @@ function hasOwnPresets(): boolean {
 }
 
 export async function readPresets(): Promise<DetectorPreset[]> {
-	const presets = await loadPresets(directory, bundledConfigurations);
-	return hasOwnPresets() ? presets : withPublished(presets, published);
+	return hasOwnPresets()
+		? loadPresets(directory)
+		: withPublished(bundledPresets(bundledConfigurations), published);
 }
 
 /** What saving a detector takes from presets; none while a preset file is invalid. */

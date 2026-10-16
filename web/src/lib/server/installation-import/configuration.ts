@@ -5,6 +5,7 @@ import { homedir } from 'node:os';
 import * as v from 'valibot';
 import { ConfigurationError, normalizeConfiguration } from '../../configuration.ts';
 import type { Configuration } from '../../schema.ts';
+import { isMissingFile } from '../json-file.ts';
 
 const legacySchema = v.looseObject({
 	detectors: v.array(
@@ -26,7 +27,7 @@ async function readDocument(file: string, optional = false): Promise<unknown> {
 	try {
 		content = await readFile(file, 'utf8');
 	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+		if (!isMissingFile(error)) throw error;
 		if (optional) return {};
 		throw new ConfigurationError('Choose the old application folder containing config.json.');
 	}
@@ -72,11 +73,7 @@ export async function readLegacyConfiguration(source: string): Promise<{
 			await access(file);
 		} catch (error) {
 			// Standard YOLO model names can be downloaded by Ultralytics on first use.
-			if (
-				model &&
-				path.basename(value) === value &&
-				(error as NodeJS.ErrnoException).code === 'ENOENT'
-			) {
+			if (model && path.basename(value) === value && isMissingFile(error)) {
 				notes.push(
 					`The model ${value} is not in the old folder. Ultralytics will try to download it when monitoring starts.`
 				);
@@ -98,7 +95,7 @@ export async function readLegacyConfiguration(source: string): Promise<{
 				await access(`${resolved}.data`);
 				files.set(`${relative}.data`, { source: `${resolved}.data`, relative: `${relative}.data` });
 			} catch (error) {
-				if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+				if (!isMissingFile(error)) throw error;
 			}
 		}
 		return relative;

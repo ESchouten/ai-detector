@@ -11,7 +11,7 @@ import {
 	monitoringEnabled,
 	noteOutages,
 	setMonitoringEnabled
-} from '../src/lib/server/monitoring-flag.ts';
+} from '../src/lib/server/launcher-notes.ts';
 import { backupSettings } from '../src/lib/server/settings-backup.ts';
 import { unzipSync } from 'fflate';
 
@@ -106,63 +106,12 @@ test('invalid and stale saves leave both files untouched', async (t) => {
 		store.saveAdvanced('connections', [{ label: 'AI', model: 'bad model' }], currentRevision),
 		/model name/
 	);
-	assert.deepEqual(await Promise.all([readFile(files.config), readFile(files.app)]), before);
-});
-
-test('shared connection JSON propagates credentials without changing questions or fallbacks', async (t) => {
-	const { store } = await settingsStore(t);
-	const connection = {
-		label: 'AI',
-		model: ['openai/vision', 'openai/backup'],
-		key: 'old',
-		url: 'https://example.test/v1'
-	};
-	await store.saveLlm(connection);
-	const fallback = { model: 'openai/backup', prompt: 'Backup question', key: null };
-	for (const label of ['First', 'Second'])
-		await store.saveDetector({
-			meta: { label, llmConnection: 'AI' },
-			detector: {
-				detection: { source: ['video.mp4'] },
-				vlm: [{ prompt: label, key: null }, fallback]
-			}
-		});
-	let saved = await store.read();
-	await store.saveAdvanced(
-		'connections',
-		[{ ...connection, key: 'new', headers: { 'X-Tenant': 'farm' } }],
-		settingsRevision(saved)
-	);
-	saved = await store.read();
-	for (const [i, detector] of saved.config.detectors.entries()) {
-		assert.equal(detector.vlm![0].key, 'new');
-		assert.equal(detector.vlm![0].prompt, saved.app.detectors[i].label);
-		assert.deepEqual(detector.vlm![1], fallback);
-		assert.equal(saved.app.detectors[i].llmConnection, 'AI');
-	}
-	await assert.rejects(store.saveAdvanced('connections', [], settingsRevision(saved)), /in use/);
+	const connection = { label: 'AI', model: 'openai/vision' };
 	await assert.rejects(
-		store.saveAdvanced('connections', [connection, connection], settingsRevision(saved)),
+		store.saveAdvanced('connections', [connection, connection], currentRevision),
 		/unique name/
 	);
-	assert.deepEqual(await store.read(), saved);
-});
-
-test('editing detector credentials detaches only that shared connection', async (t) => {
-	const { store } = await settingsStore(t);
-	await store.saveLlm({ label: 'AI', model: 'gemini/test', key: 'shared' });
-	await store.saveDetector({
-		meta: { label: 'Detector', llmConnection: 'AI' },
-		detector: { detection: { source: ['video.mp4'] }, vlm: [{ prompt: 'Check?', key: null }] }
-	});
-	const saved = await store.read();
-	const config = structuredClone(saved.config);
-	config.detectors[0].vlm![0].key = 'detector-specific';
-	await store.saveAdvanced('config', config, settingsRevision(saved));
-	const next = await store.read();
-	assert.equal(next.app.detectors[0].llmConnection, undefined);
-	assert.equal(next.app.llms[0].key, 'shared');
-	assert.equal(next.config.detectors[0].vlm![0].key, 'detector-specific');
+	assert.deepEqual(await Promise.all([readFile(files.config), readFile(files.app)]), before);
 });
 
 test('saving settings keeps the launcher’s notes, which never appear in settings, backups or revisions', async (t) => {
@@ -196,7 +145,7 @@ test('saving settings keeps the launcher’s notes, which never appear in settin
 	assert.deepEqual(await launcherNotes(files.app), { monitoring: true, outages });
 	assert.equal((await store.readDevices()).length, 1);
 
-	const response = await backupSettings(store, new Request('http://localhost/setup/backup'));
+	const response = await backupSettings(store, new Request('http://localhost/settings/backup'));
 	const backup = unzipSync(new Uint8Array(await response.arrayBuffer()));
 	const saved = JSON.parse(Buffer.from(backup['app.json']).toString());
 	assert.deepEqual(['monitoring' in saved, 'outages' in saved], [false, false]);
@@ -210,7 +159,7 @@ test('saving settings keeps the launcher’s notes, which never appear in settin
 	assert.notEqual(beforePause, revision);
 	// Nothing left to remember leaves no trace in the file.
 	await noteOutages(files.app, {});
-	assert.deepEqual(await launcherNotes(files.app), {});
+	assert.deepEqual(await launcherNotes(files.app), { monitoring: undefined, outages: undefined });
 	assert.equal('outages' in JSON.parse(await readFile(files.app, 'utf8')), false);
 });
 

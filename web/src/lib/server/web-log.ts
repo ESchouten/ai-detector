@@ -1,6 +1,5 @@
 import path from 'node:path';
-import { BoundedLog } from './bounded-log.ts';
-import { sanitizeTextForLogs } from './runtime-logs.ts';
+import { BoundedLog, sanitizeTextForLogs } from './logs.ts';
 
 /**
  * What the web application did and what went wrong, kept for diagnostics. An exception is

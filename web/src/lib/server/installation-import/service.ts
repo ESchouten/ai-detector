@@ -162,11 +162,6 @@ export class InstallationImport {
 		});
 	}
 
-	/** Lets tests wait for the current transfer. */
-	async settled(): Promise<void> {
-		await this.work;
-	}
-
 	private async requireEmptySetup(): Promise<void> {
 		const { config, app } = await this.configuration.read();
 		if (config.detectors.length || app.streams.length || app.telegrams.length || app.llms.length)

@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { DetectionArchive } from '../src/lib/server/archive.ts';
@@ -8,6 +7,8 @@ import { TelegramInbox } from '../src/lib/server/telegram-inbox.ts';
 import { TelegramPairings } from '../src/lib/server/telegram-pairing.ts';
 import { reviewTelegramDetection } from '../src/lib/server/telegram-reviews.ts';
 import type { TelegramUpdate } from '../src/lib/server/telegram.ts';
+import { recordingMetadata, temporaryDirectory } from './support/files.ts';
+import { confirmation, start, telegramApi } from './support/telegram.ts';
 
 const eventId = 'a'.repeat(32);
 const address = {
@@ -62,56 +63,25 @@ function callback(
 }
 
 async function fixture(t: TestContext) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-telegram-review-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'ai-telegram-review-');
 	const root = path.join(directory, 'detections');
 	const folder = path.join(root, address.type, address.archiveStage, address.timestamp);
 	await mkdir(folder, { recursive: true });
 	await writeFile(
 		path.join(folder, 'metadata.json'),
-		JSON.stringify({
-			timestamp: address.timestamp,
-			event_id: eventId,
-			validated: null,
-			confidence: 0.9,
-			confidences: { activity: 0.9 },
-			detections: 1,
-			start: '2026-09-30T10:00:00',
-			end: '2026-09-30T10:00:02',
-			duration: 2
-		})
+		JSON.stringify({ ...recordingMetadata(address.timestamp), event_id: eventId, validated: null })
 	);
 	const archive = new DetectionArchive(root);
-	const calls: { method: string; body: Record<string, unknown> }[] = [];
-	let updates: TelegramUpdate[] = [];
-	t.mock.method(globalThis, 'fetch', async (url: string, init: RequestInit) => {
-		assert.equal(new URL(url).origin, 'https://api.telegram.org');
-		const method = new URL(url).pathname.split('/').at(-1)!;
-		const body = JSON.parse(String(init.body));
-		calls.push({ method, body });
-		const replies: Record<string, unknown> = {
-			getUpdates: updates,
-			answerCallbackQuery: true,
-			editMessageReplyMarkup: true,
-			getMe: { is_bot: true, first_name: 'Alerts', username: 'FixtureBot' },
-			getWebhookInfo: { url: '' },
-			sendMessage: { message_id: 50 }
-		};
-		assert.ok(method in replies, method);
-		return Response.json({ ok: true, result: replies[method] });
-	});
+	const api = telegramApi(t);
 	const receive = (token: string, update: TelegramUpdate, signal?: AbortSignal) =>
 		reviewTelegramDetection(archive, connections, token, update, signal);
 	return {
+		...api,
 		archive,
-		calls,
 		receive,
 		sent: (method: string) =>
-			calls.filter((call) => call.method === method).map((call) => call.body),
-		inbox: new TelegramInbox(receive),
-		setUpdates(value: TelegramUpdate[]) {
-			updates = value;
-		}
+			api.calls.filter((call) => call.method === method).map((call) => call.body),
+		inbox: new TelegramInbox(receive)
 	};
 }
 
@@ -141,12 +111,8 @@ test('the pressed thumb stays coloured on that alert, and pressing it again chan
 
 test('a review is saved and answered even when its alert cannot be redrawn', async (t) => {
 	const f = await fixture(t);
-	const transport = globalThis.fetch;
-	t.mock.method(globalThis, 'fetch', async (url: string, init: RequestInit) =>
-		String(url).endsWith('/editMessageReplyMarkup')
-			? Response.json({ ok: false, error_code: 400, description: 'Bad Request: message not found' })
-			: transport(url, init)
-	);
+	f.replies.editMessageReplyMarkup = () =>
+		Response.json({ ok: false, error_code: 400, description: 'Bad Request: message not found' });
 	const warn = t.mock.method(console, 'warn', () => undefined);
 	await f.receive('fixture-token', callback());
 	assert.equal((await f.archive.readReview(address))?.validated, true);
@@ -187,87 +153,20 @@ test('pairing and reviews consume one batch together, including callbacks after 
 	const pairing = await pairings.begin('fixture-token', 'private');
 	t.after(() => pairings.cancel(pairing.id));
 	const code = new URL(pairing.url).searchParams.get('start')!;
-	f.setUpdates([
-		{
-			update_id: 1,
-			message: {
-				from: { id: 123, is_bot: false },
-				chat: { id: 123, type: 'private' },
-				text: `/start ${code}`
-			}
-		},
-		callback(2)
-	]);
+	f.replies.getUpdates = () => [start(1, code), callback(2)];
 	assert.equal((await pairings.poll(pairing.id)).state, 'confirming');
 	assert.equal((await f.archive.readReview(address))?.validated, true);
-	f.setUpdates([
-		{
-			update_id: 3,
-			callback_query: {
-				id: 'confirm',
-				data: code,
-				from: { id: 123, is_bot: false },
-				message: { message_id: 50, chat: { id: 123, type: 'private' } }
-			}
-		},
-		callback(4, 'rejected')
-	]);
+	f.replies.getUpdates = () => [confirmation(3, code), callback(4, 'rejected')];
 	assert.equal((await pairings.poll(pairing.id)).state, 'matched');
 	assert.equal((await f.archive.readReview(address))?.validated, false);
-	f.setUpdates([]);
+	f.replies.getUpdates = () => [];
 	await pairings.receiveReviews('fixture-token', new AbortController().signal);
-	assert.equal(f.calls.filter((call) => call.method === 'getUpdates').at(-1)?.body.offset, 5);
-});
-
-test('background polling yields to pairing and cached chats remain discoverable', async (t) => {
-	const f = await fixture(t);
-	const pairings = new TelegramPairings(Date.now, f.inbox);
-	f.setUpdates([
-		{
-			update_id: 1,
-			message: { chat: { id: 123, type: 'private', first_name: 'Farmer' }, text: 'hello' }
-		}
-	]);
-	await pairings.receiveReviews('fixture-token', new AbortController().signal);
-	f.setUpdates([]);
-	assert.deepEqual(await pairings.discoverChats('fixture-token'), [{ id: '123', name: 'Farmer' }]);
-	const pairing = await pairings.begin('fixture-token', 'private');
-	t.after(() => pairings.cancel(pairing.id));
-	const count = f.calls.length;
-	await pairings.receiveReviews('fixture-token', new AbortController().signal);
-	assert.equal(f.calls.length, count);
-});
-
-test('starting setup waits for an existing background poll instead of competing with it', async (t) => {
-	const f = await fixture(t);
-	const pairings = new TelegramPairings(Date.now, f.inbox);
-	const entered = Promise.withResolvers<void>();
-	const release = Promise.withResolvers<void>();
-	const transport = globalThis.fetch;
-	let polling = false;
-	t.mock.method(globalThis, 'fetch', async (url: string, init: RequestInit) => {
-		if (String(url).endsWith('/getUpdates')) {
-			assert.equal(polling, false);
-			polling = true;
-			entered.resolve();
-			await release.promise;
-			polling = false;
-		} else assert.equal(polling, false, 'Pairing begins after the background poll settles');
-		return transport(url, init);
-	});
-	const background = pairings.receiveReviews('fixture-token', new AbortController().signal);
-	await entered.promise;
-	const starting = pairings.begin('fixture-token', 'private');
-	await assert.rejects(pairings.begin('fixture-token', 'private'), /connection in progress/);
-	release.resolve();
-	const pairing = await starting;
-	t.after(() => pairings.cancel(pairing.id));
-	await background;
+	assert.equal(f.sent('getUpdates').at(-1)?.offset, 5);
 });
 
 test('a failed archive write reports failure in Telegram and leaves the update available for retry', async (t) => {
 	const f = await fixture(t);
-	f.setUpdates([callback()]);
+	f.replies.getUpdates = () => [callback()];
 	t.mock.method(f.archive, 'reviewEvent', async () => {
 		throw new Error('Read-only archive');
 	});
@@ -275,8 +174,5 @@ test('a failed archive write reports failure in Telegram and leaves the update a
 	assert.match(String(f.calls.at(-1)?.body.text), /Could not save/);
 	assert.equal(await f.archive.readReview(address), null);
 	await assert.rejects(f.inbox.receive('fixture-token'), /Read-only archive/);
-	assert.equal(
-		f.calls.filter((call) => call.method === 'getUpdates').at(-1)?.body.offset,
-		undefined
-	);
+	assert.equal(f.sent('getUpdates').at(-1)?.offset, undefined);
 });

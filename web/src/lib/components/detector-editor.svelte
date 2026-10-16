@@ -37,9 +37,8 @@
 		type DetectorOptions
 	} from '$lib/detector-editor';
 	import { detectorSettings, sameTelegram } from '$lib/configuration';
-	import { errorMessage } from '$lib/remote-errors';
-	import { refresh } from '$lib/remote-refresh';
-	import type { DetectorConfig, LlmConnection } from '$lib/schema';
+	import { errorMessage, refresh } from '$lib/remote-calls';
+	import type { DetectorConfig, DetectorMeta, LlmConnection } from '$lib/schema';
 	import {
 		deleteDetector,
 		getDetectorPreset,
@@ -51,31 +50,24 @@
 	import { getTelegrams } from '$lib/remote/alerts.remote';
 
 	let {
-		originalLabel,
 		initial,
-		initialPreset,
-		initialMode = '',
-		initialAutoUpdate = true,
-		initialConnection,
 		onDone,
 		onCancel,
 		pending = $bindable(false)
 	}: {
-		originalLabel: string;
-		initial?: DetectorConfig;
-		initialPreset?: string;
-		initialMode?: string;
-		initialAutoUpdate?: boolean;
-		initialConnection?: string;
+		/** The saved detector to edit; without one, a detector is added. */
+		initial?: { detector: DetectorConfig; meta: DetectorMeta };
 		onDone: () => Promise<void>;
 		onCancel?: () => Promise<void>;
 		pending?: boolean;
 	} = $props();
 	// The pages key this editor by detector, so these starting values are read once.
-	let label = $state(untrack(() => originalLabel));
+	const saved = untrack(() => initial);
+	const originalLabel = saved?.meta.label ?? '';
+	let label = $state(originalLabel);
 	let suggestedLabel = $state('');
-	let detector = $state(untrack(() => createDetectorDraft(initial)));
-	let llmLabel = $state(untrack(() => initialConnection ?? ''));
+	let detector = $state(createDetectorDraft(saved?.detector));
+	let llmLabel = $state(saved?.meta.llmConnection ?? '');
 	let addingRecipient = $state(false);
 	let addingConnection = $state(false);
 	const choices = $derived(
@@ -95,18 +87,16 @@
 	const llms = $derived(choices[3]);
 	const canTest = $derived(choices[4]);
 	const existingDetectors = $derived(choices[5]);
-	let suggestValidator = $state(untrack(() => !initial));
+	let suggestValidator = $state(!saved);
 	untrack(() => {
-		if (!initial && cameras.length === 1) detector.detection.source = [cameras[0].source];
+		if (!saved && cameras.length === 1) detector.detection.source = [cameras[0].source];
 	});
-	let keepDelivery = $state(untrack(() => Boolean(initial)));
+	let keepDelivery = $state(Boolean(saved));
 	let error = $state('');
-	let preset = $state(untrack(() => initialPreset ?? ''));
-	let mode = $state(untrack(() => initialMode));
-	let autoUpdate = $state(untrack(() => initialAutoUpdate));
-	let presetSettings = $state(
-		untrack(() => (initial ? JSON.stringify(detectorSettings(initial)) : ''))
-	);
+	let preset = $state(saved?.meta.preset ?? '');
+	let mode = $state(saved?.meta.mode ?? '');
+	let autoUpdate = $state(saved?.meta.autoUpdate !== false);
+	let presetSettings = $state(saved ? JSON.stringify(detectorSettings(saved.detector)) : '');
 	const matchesPreset = $derived(followsPreset(detector, presetSettings));
 	const selectedPreset = $derived(
 		matchesPreset ? presets.find((item) => item.id === preset) : undefined
@@ -144,7 +134,7 @@
 	const presetDetector = (id: string, presetMode: string) =>
 		getDetectorPreset({ id, mode: presetMode });
 
-	const draftKey = untrack(() => `detector-draft:${originalLabel || 'new'}`);
+	const draftKey = `detector-draft:${originalLabel || 'new'}`;
 	let draftLoaded = $state(false);
 	let restoredDraft = $state(false);
 	let initialChoices = '';
@@ -166,7 +156,7 @@
 					edited(),
 					draft,
 					options,
-					{ savedPreset: initialPreset, keepDelivery },
+					{ savedPreset: saved?.meta.preset, keepDelivery },
 					presetDetector
 				);
 				show(restored.edit);
@@ -195,8 +185,7 @@
 		error = errorMessage(cause, fallback);
 	}
 	function showProblem(problem: DetectorEditProblem) {
-		if (problem.kind === 'no-question')
-			error = 'Choose a preset to use its AI verification question.';
+		if (problem.kind === 'no-question') error = 'Choose a preset to use its AI check question.';
 		else if (problem.kind === 'preset') showError(problem.cause, 'The preset could not be loaded.');
 		else showError(problem.cause, 'Could not load the preset question.');
 	}
@@ -237,12 +226,10 @@
 	}
 
 	function validateSetup() {
-		if (!detector.detection.source.length)
-			throw new Error('Choose at least one camera for this detector.');
 		if (detector.yolo && !detector.yolo.model.trim())
 			throw new Error('Choose a preset for this detector.');
 		if (detector.vlm?.some((step) => step.key != null && !step.prompt.trim())) {
-			throw new Error('Choose a preset that supplies an AI verification question.');
+			throw new Error('Choose a preset that supplies an AI check question.');
 		}
 	}
 
@@ -284,7 +271,7 @@
 			forgetDraft();
 			await onDone();
 		} catch (cause) {
-			showError(cause, 'The detector could not be deleted.');
+			showError(cause, 'The detector could not be removed.');
 		} finally {
 			pending = false;
 		}
@@ -346,7 +333,7 @@
 								label="Mode"
 								options={modeChoices}
 								value={mode}
-								onchange={(chosen) => loadPreset(preset, chosen)}
+								onChange={(chosen) => loadPreset(preset, chosen)}
 								disabled={pending}
 							/>
 						</div>
@@ -365,7 +352,7 @@
 					</div>
 				</div>
 			{/if}
-			{#if !selectedPreset && (initial || preset)}
+			{#if !selectedPreset && (saved || preset)}
 				<p class="text-sm text-muted-foreground">
 					This detector uses its own settings and does not get new models automatically. Choosing a
 					preset replaces them.
@@ -475,13 +462,13 @@
 
 		{#if originalLabel}
 			<ConfirmRemove
-				trigger="Delete this detector…"
-				title={`Delete “${originalLabel}”?`}
+				trigger="Remove this detector…"
+				title={`Remove “${originalLabel}”?`}
 				description="This stops this detector on all of its cameras. Other detectors, camera connections and saved recordings are kept. This cannot be undone."
 				keep="Keep detector"
-				confirm="Delete detector"
+				confirm="Remove detector"
 				disabled={pending}
-				onconfirm={remove}
+				onConfirm={remove}
 			/>
 		{/if}
 	</form>
@@ -490,7 +477,7 @@
 <Dialog.Root bind:open={addingConnection}>
 	<Dialog.Content class="max-h-[90dvh] overflow-y-auto sm:max-w-xl">
 		<Dialog.Header>
-			<Dialog.Title>Connect validator</Dialog.Title>
+			<Dialog.Title>Connect AI check</Dialog.Title>
 			<Dialog.Description>
 				Your detector changes stay here until you save the detector.
 			</Dialog.Description>

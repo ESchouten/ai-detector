@@ -1,12 +1,17 @@
-import { mkdtemp, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
 import path from 'node:path';
 import type { TestContext } from 'node:test';
+import { fileURLToPath } from 'node:url';
+import { loadPresets } from '../../src/lib/server/configuration/preset-files.ts';
 import { ConfigurationStore } from '../../src/lib/server/configuration/store.ts';
 import type { StreamMeta } from '../../src/lib/schema.ts';
-import { readTestPresets } from './presets.ts';
+import { temporaryDirectory } from './files.ts';
 
 type StoreArguments = ConstructorParameters<typeof ConfigurationStore>;
+type Runtime = NonNullable<ReturnType<NonNullable<StoreArguments[1]>>>;
+
+export function readTestPresets() {
+	return loadPresets(fileURLToPath(new URL('../../../config/detector/', import.meta.url)));
+}
 
 /** A store over settings files in a folder of its own, which is removed after the test. */
 export async function settingsStore(
@@ -14,13 +19,25 @@ export async function settingsStore(
 	runtime?: StoreArguments[1],
 	language?: StoreArguments[2]
 ) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'detector-settings-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'detector-settings-');
 	const files = {
 		config: path.join(directory, 'config.json'),
 		app: path.join(directory, 'app.json')
 	};
 	return { directory, files, store: new ConfigurationStore(files, runtime, language) };
+}
+
+/** A detector runtime that notes each step the store asks of it; tests replace what they check. */
+export function fakeRuntime(steps: Partial<Runtime> = {}) {
+	const calls: string[] = [];
+	const runtime: Runtime = {
+		validate: async () => void calls.push('validate'),
+		apply: async () => void calls.push('apply'),
+		stop: async () => void calls.push('stop'),
+		fail: () => void calls.push('fail'),
+		...steps
+	};
+	return { calls, runtime: () => runtime };
 }
 
 export async function addPresetDetector(

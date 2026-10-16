@@ -1,31 +1,16 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { afterNavigate } from '$app/navigation';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import AppSidebar from './app-sidebar.svelte';
 	import HomeScreenHint from './home-screen-hint.svelte';
 	import MobileHeader from './mobile-header.svelte';
 	import MobileNav from './mobile-nav.svelte';
-	import { readRuntime, useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
-	import { monitoringSummary } from '$lib/monitoring';
-	import { getInstallation } from '$lib/remote/camera-setup.remote';
+	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 
 	// Navigation and the monitoring state that is visible from every page.
 	let { children }: { children: Snippet } = $props();
 	const monitor = useRuntimeStatus();
-	const counts = getInstallation();
-	// Read once, then follow the queries' current values. Awaiting a polled query reactively
-	// would hold back every other update on the page until it answers.
-	const [initialRuntime, initialCounts] = await Promise.all([readRuntime(monitor.query), counts]);
-	const runtime = $derived(monitor.query.current ?? initialRuntime);
-	const installation = $derived(counts.current ?? initialCounts);
-	// Saving a camera or detector ends with a navigation; pick up the new count then.
-	afterNavigate(({ type }) => {
-		if (type !== 'enter') void counts.refresh();
-	});
-	const summary = $derived(
-		monitoringSummary(runtime, { stale: monitor.stale, configured: installation.detectors > 0 })
-	);
+	const summary = $derived(monitor.summary);
 </script>
 
 <Sidebar.Provider>

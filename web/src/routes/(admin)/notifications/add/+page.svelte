@@ -1,23 +1,24 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import NotificationEditor from '$lib/components/notification-editor.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
-	import * as Alert from '$lib/components/ui/alert';
 	import { getTelegrams } from '$lib/remote/alerts.remote';
 	const label = $derived(page.url.searchParams.get('label') ?? '');
 	const recipients = $derived(await getTelegrams());
 	const saved = $derived(recipients.find((recipient) => recipient.label === label));
 	const back = { href: resolve('/notifications'), label: 'Alerts' };
+	const done = () => void goto(resolve('/notifications'));
 </script>
 
 <section class="page-narrow">
 	{#if label && !saved}
-		<PageHeader {back} title="Recipient not found" />
-		<Alert.Root variant="destructive">
-			<Alert.Title>Alert recipient not found</Alert.Title>
-			<Alert.Description>Return to Alerts to select a saved recipient.</Alert.Description>
-		</Alert.Root>
+		<PageHeader
+			{back}
+			title="Recipient not found"
+			description="It may have been removed or renamed."
+		/>
 	{:else}
 		<PageHeader
 			{back}
@@ -27,7 +28,7 @@
 				: 'Connect a phone, group or channel in Telegram, then choose which detectors alert it.'}
 		/>
 		{#key label}
-			<NotificationEditor initial={saved} />
+			<NotificationEditor initial={saved} onSaved={done} onCancel={done} />
 		{/key}
 	{/if}
 </section>

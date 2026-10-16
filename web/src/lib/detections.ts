@@ -8,6 +8,11 @@ export function stageLabel(stage: Stage): string {
 	return stage === 'rejected' ? 'False alarm' : 'Unreviewed';
 }
 
+/** A recording category as people read it: its folder name, capitalised. */
+export function categoryName(type: string): string {
+	return type.charAt(0).toUpperCase() + type.slice(1);
+}
+
 export function isArchiveSegment(value: string): boolean {
 	return value.length > 0 && value !== '.' && value !== '..' && !/[/\\\0]/.test(value);
 }
@@ -96,12 +101,14 @@ export interface DetectionPage {
 	warnings: number;
 }
 
-export interface DetectionFilter {
-	type?: string;
-	stage?: Stage;
-	offset: number;
-	limit: number;
-}
+export const detectionFilterInput = v.object({
+	type: v.optional(v.pipe(v.string(), v.check(isArchiveSegment))),
+	stage: v.optional(v.picklist(STAGES)),
+	offset: v.pipe(v.number(), v.integer(), v.minValue(0)),
+	limit: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))
+});
+
+export type DetectionFilter = v.InferOutput<typeof detectionFilterInput>;
 
 export interface Verdict {
 	/** Who decided: the validator, or a person here or in Telegram. */
@@ -126,10 +133,11 @@ export function recordingVerdict(
 	};
 }
 
-export function detectionKey(
-	detection: Pick<Detection, 'type' | 'archiveStage' | 'timestamp'>
-): string {
-	return JSON.stringify([detection.type, detection.archiveStage, detection.timestamp]);
+/** Where a recording is kept: its category, the stage folder and its timestamp. */
+export type RecordingAddress = Pick<Detection, 'type' | 'archiveStage' | 'timestamp'>;
+
+export function detectionKey(address: RecordingAddress): string {
+	return JSON.stringify([address.type, address.archiveStage, address.timestamp]);
 }
 
 /** New recordings can shift offset pages; keep each archive entry once. */

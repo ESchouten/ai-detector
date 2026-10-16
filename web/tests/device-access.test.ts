@@ -5,7 +5,7 @@ import { DeviceAccess, PairingError, localDashboard } from '../src/lib/server/de
 import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { settingsRevision } from '../src/lib/server/configuration/advanced.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
-import { settingsStore } from './support/configuration.ts';
+import { fakeRuntime, settingsStore } from './support/configuration.ts';
 
 function fixture(t: TestContext) {
 	return settingsStore(t, () => {
@@ -94,15 +94,13 @@ test(
 		const { files } = await fixture(t);
 		const applying = Promise.withResolvers<void>();
 		const resume = Promise.withResolvers<void>();
-		const store = new ConfigurationStore(files, () => ({
-			validate: async () => {},
+		const { runtime } = fakeRuntime({
 			apply: async () => {
 				applying.resolve();
 				await resume.promise;
-			},
-			stop: async () => {},
-			fail: () => assert.fail('Runtime should succeed')
-		}));
+			}
+		});
+		const store = new ConfigurationStore(files, runtime);
 		const access = new DeviceAccess(store);
 		const token = await access.pair(access.createPairing().code, 'Phone');
 		const saving = store.saveDetector({

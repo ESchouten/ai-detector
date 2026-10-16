@@ -43,7 +43,7 @@ export function settingsNavigation(): NavItem[] {
 			description: 'Who gets a Telegram message when something is detected.'
 		},
 		{
-			title: 'Validator',
+			title: 'AI check',
 			href: resolve('/validator'),
 			icon: SparklesIcon,
 			description: 'Let AI double-check detections before an alert is sent.'

@@ -1,12 +1,14 @@
 import { command, query } from '$app/server';
 import { error } from '@sveltejs/kit';
 import * as v from 'valibot';
+import { SETTINGS_DOCUMENTS } from '$lib/advanced-settings';
 import { heartbeatInput } from '$lib/configuration';
+import { LOCALES } from '$lib/locales';
 import { configuration } from '$lib/server/configuration';
 import { settingsRevision } from '$lib/server/configuration/advanced';
 import { configurationAction } from '$lib/server/configuration/request';
 
-const target = v.picklist(['config', 'connections']);
+const target = v.picklist(SETTINGS_DOCUMENTS);
 
 export const getSettings = query(target, async (target) => {
 	const document = await configuration.read();
@@ -36,4 +38,9 @@ export const getHeartbeat = query(async () => {
 
 export const saveHeartbeat = command(heartbeatInput, (input) =>
 	configurationAction(() => configuration.saveHeartbeat(input))
+);
+
+/** The language of this installation: every device, and the replies sent to Telegram. */
+export const setLanguage = command(v.picklist(LOCALES), (language) =>
+	configurationAction(() => configuration.saveLanguage(language))
 );

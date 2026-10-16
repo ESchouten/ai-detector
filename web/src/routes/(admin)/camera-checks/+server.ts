@@ -18,11 +18,6 @@ export const POST: RequestHandler = async ({ request }) => {
 		if (request.signal.aborted) return new Response(null, { status: 499 });
 		if (cause instanceof CameraConnectionError)
 			return json({ message: cause.message }, { status: 400 });
-		if (cause instanceof SyntaxError)
-			return json(
-				{ message: 'The camera check request was not valid. Please try again.' },
-				{ status: 400 }
-			);
 		throw cause;
 	}
 };

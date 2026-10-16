@@ -15,12 +15,12 @@
 	} from '$lib/remote/installation-import.remote';
 	import type { ImportStatus } from '$lib/installation-import';
 	import { dataSize, plural } from '$lib/format';
-	import { errorMessage } from '$lib/remote-errors';
+	import { errorMessage } from '$lib/remote-calls';
 
 	let {
-		oncomplete,
+		onComplete,
 		opened = $bindable(false)
-	}: { oncomplete: () => Promise<void>; opened?: boolean } = $props();
+	}: { onComplete: () => Promise<void>; opened?: boolean } = $props();
 	let manual = $state(false);
 	let folder = $state('');
 	let busy = $state(false);
@@ -41,7 +41,7 @@
 		status = response.status;
 		if (status.keepRecordings !== undefined) keepRecordings = status.keepRecordings;
 		if (status.phase !== 'idle') opened = true;
-		if (status.phase === 'complete') await oncomplete();
+		if (status.phase === 'complete') await onComplete();
 	}
 
 	onMount(() => {

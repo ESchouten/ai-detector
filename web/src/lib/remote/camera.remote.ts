@@ -25,10 +25,9 @@ export const getCameraConnection = command(cameraConnectionInput, (input) =>
 export const getCameras = query(async () => {
 	const { app, config } = await configuration.read();
 	return app.streams.map((camera) => {
-		const { monitored, alerts } = cameraSetupStatus({ app, config }, camera.id!);
+		const { monitored, alerts } = cameraSetupStatus({ app, config }, camera.id);
 		return {
 			...camera,
-			id: camera.id!,
 			label: camera.label ?? 'Camera',
 			monitored,
 			rules: app.detectors.filter((_, index) =>
@@ -68,9 +67,9 @@ export const getCameraHistory = query(v.picklist([1, 24, 168]), async (hours) =>
 	const cameras: CameraHistory[] = app.streams.map((camera) => {
 		const key = sourceKey(camera.source, DATA_DIRECTORY).slice(0, 12);
 		return {
-			id: camera.id!,
+			id: camera.id,
 			label: camera.label ?? 'Camera',
-			stretches: watched.get(camera.id!) ?? [],
+			stretches: watched.get(camera.id) ?? [],
 			detections: detections.filter((detection) => detection.camera === key)
 		};
 	});

@@ -3,23 +3,21 @@
 	import { Cctv, Plus } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Empty from '$lib/components/ui/empty';
-	import * as Alert from '$lib/components/ui/alert';
 	import CameraPicture from '$lib/components/camera-picture.svelte';
 	import FilterChips from '$lib/components/filter-chips.svelte';
 	import MonitoringBanner from '$lib/components/monitoring-banner.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import Pill from '$lib/components/pill.svelte';
 	import StatusDot from '$lib/components/status-dot.svelte';
-	import { cameraStatusBadge } from '$lib/camera-status';
+	import { cameraStatusBadge } from '$lib/monitoring';
 	import { getCameras } from '$lib/remote/camera.remote';
 	import { getDetectorPresets } from '$lib/remote/detector.remote';
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import CameraHistory from './camera-history.svelte';
 	const cameras = $derived(await getCameras());
-	const { presets, warning: presetWarning } = await getDetectorPresets();
+	const { presets } = await getDetectorPresets();
 	const monitor = useRuntimeStatus();
-	const initial = monitor.query.current ?? (await monitor.query);
-	const runtime = $derived(monitor.query.current ?? initial);
+	const runtime = $derived(monitor.runtime);
 	const stale = $derived(monitor.stale);
 	const dots = { ok: 'ok', warn: 'warn', bad: 'bad', neutral: 'idle' } as const;
 	let view = $state<'live' | 'history'>('live');
@@ -36,14 +34,6 @@
 		{/snippet}
 	</PageHeader>
 	<MonitoringBanner />
-	{#if presetWarning}
-		<Alert.Root variant="destructive">
-			<Alert.Title>Monitoring preset names are unavailable</Alert.Title>
-			<Alert.Description>
-				{presetWarning} Cameras below show their saved detector names. Their settings are unchanged.
-			</Alert.Description>
-		</Alert.Root>
-	{/if}
 	{#if cameras.length}
 		<FilterChips
 			label="View"
@@ -53,7 +43,7 @@
 				{ value: 'live', label: 'Live' },
 				{ value: 'history', label: 'History' }
 			]}
-			onchange={(value) => (view = value ?? 'live')}
+			onChange={(value) => (view = value ?? 'live')}
 		/>
 	{/if}
 	{#if cameras.length && view === 'history'}

@@ -1,17 +1,20 @@
 import { createHash } from 'node:crypto';
 import type * as v from 'valibot';
 import { ConfigurationError, type cameraInput } from '../../configuration.ts';
-import type { Configuration, StreamMeta } from '../../schema.ts';
+import type { Camera, Configuration, LoadedConfiguration, StreamMeta } from '../../schema.ts';
 
-export function identifyCameras(document: Configuration): Configuration {
-	for (const stream of document.app.streams) {
-		stream.id ??= createHash('sha256').update(stream.source).digest('hex');
-	}
+/** A camera's id comes from its first address and stays when the address changes. */
+function cameraId(source: string): string {
+	return createHash('sha256').update(source).digest('hex');
+}
+
+export function identifyCameras(document: Configuration): LoadedConfiguration {
+	for (const stream of document.app.streams) stream.id ??= cameraId(stream.source);
 	if (new Set(document.app.streams.map((stream) => stream.id)).size !== document.app.streams.length)
 		throw new ConfigurationError(
 			'Camera identities are duplicated. Restore your camera settings from a backup.'
 		);
-	return document;
+	return document as LoadedConfiguration;
 }
 
 function detachCamera(document: Configuration, source: string): void {
@@ -42,7 +45,7 @@ function updateCameraMetadata(
 }
 
 export function saveCamera(
-	document: Configuration,
+	document: LoadedConfiguration,
 	input: v.InferOutput<typeof cameraInput>,
 	pictureVerifiedAt?: string
 ) {
@@ -54,16 +57,15 @@ export function saveCamera(
 		throw new ConfigurationError('This camera is already saved. Edit it from Cameras.');
 	if (document.app.streams.some((stream) => stream !== existing && stream.label === input.label))
 		throw new ConfigurationError('A camera with this name already exists. Choose another name.');
-	const camera: StreamMeta = existing ?? { source: input.source };
+	const camera: Camera = existing ?? { id: cameraId(input.source), source: input.source };
 	const previousSource = camera.source;
 	updateCameraMetadata(camera, input, pictureVerifiedAt);
 	if (!existing) document.app.streams.push(camera);
-	identifyCameras(document);
 	for (const detector of document.config.detectors)
 		detector.detection.source = detector.detection.source.map((source) =>
 			source === previousSource ? input.source : source
 		);
-	return { id: camera.id! };
+	return { id: camera.id };
 }
 
 export function removeCamera(document: Configuration, id: string): void {

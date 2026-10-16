@@ -4,8 +4,8 @@
 	import { Button, type ButtonVariant } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { LANGUAGE_NAMES, LOCALES, language, type Locale } from '$lib/locales';
-	import { errorMessage } from '$lib/remote-errors';
-	import { setLanguage } from '$lib/remote/language.remote';
+	import { errorMessage } from '$lib/remote-calls';
+	import { setLanguage } from '$lib/remote/settings.remote';
 
 	let { variant = 'ghost' }: { variant?: ButtonVariant } = $props();
 	const current = $derived(language() as Locale);

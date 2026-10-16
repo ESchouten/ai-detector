@@ -7,16 +7,14 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import { SetupVerifier } from '$lib/hooks/setup-verifier.svelte';
-	import { errorMessage } from '$lib/remote-errors';
-	import { refresh } from '$lib/remote-refresh';
+	import { errorMessage, refresh } from '$lib/remote-calls';
 	import { getSetupStatus } from '$lib/remote/camera-setup.remote';
 	import { startDetector, stopDetector } from '$lib/remote/runtime.remote';
 
 	// The last step: check every camera, start monitoring, and leave once it is really running.
 	let { configured }: { configured: boolean } = $props();
 	const monitor = useRuntimeStatus();
-	const initialRuntime = monitor.query.current ?? (await monitor.query);
-	const runtime = $derived(monitor.query.current ?? initialRuntime);
+	const runtime = $derived(monitor.runtime);
 	const verifier = new SetupVerifier(await getSetupStatus());
 	const destination = $derived(configured ? resolve('/detections') : resolve('/streams'));
 	let finishing = $state(false);
@@ -56,8 +54,7 @@
 		try {
 			await verifier.finish();
 			if (verifier.stopped) return;
-			if (configured) await goto(resolve('/detections'));
-			else await goto(resolve('/streams'));
+			await goto(destination);
 		} catch (cause) {
 			finishing = false;
 			message = errorMessage(cause, 'Your progress could not be saved. Try again.');

@@ -1,21 +1,21 @@
 <script lang="ts">
 	import { Play } from '@lucide/svelte';
 	import Pill from '$lib/components/pill.svelte';
-	import { recordingVerdict, type Detection } from '$lib/detections';
+	import { categoryName, recordingVerdict, type Detection } from '$lib/detections';
 	import { clipLength, percent, timeOfDay } from '$lib/format';
-	import ReviewButtons from './review-buttons.svelte';
-	import { categoryName, recordingMedia } from './media';
+	import ReviewButtons from '$lib/components/review-buttons.svelte';
+	import { recordingMedia } from '$lib/components/recording-viewer.svelte';
 
 	let {
 		entry,
 		colorSeed,
-		onopen,
-		onreview
+		onOpen,
+		onReview
 	}: {
 		entry: Detection;
 		colorSeed?: string;
-		onopen: () => void;
-		onreview: (entry: Detection) => void;
+		onOpen: () => void;
+		onReview: (entry: Detection) => void;
 	} = $props();
 	const verdict = $derived(recordingVerdict(entry));
 	const time = $derived(timeOfDay(entry.start));
@@ -25,7 +25,7 @@
 <article class="flex min-w-0 flex-col gap-2.5">
 	<button
 		type="button"
-		onclick={onopen}
+		onclick={onOpen}
 		aria-label={`Play ${categoryName(entry.type)} recording from ${time}`}
 		class="group relative aspect-video overflow-hidden rounded-xl bg-media outline-none focus-visible:ring-[3px] focus-visible:ring-ring/60"
 	>
@@ -70,6 +70,6 @@
 				<span>{percent(entry.confidence)} confidence</span>
 			</p>
 		</div>
-		<ReviewButtons {entry} {onreview} />
+		<ReviewButtons {entry} {onReview} />
 	</div>
 </article>

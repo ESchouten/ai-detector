@@ -4,6 +4,7 @@ import { TelegramInbox } from './telegram-inbox.ts';
 import { TelegramPairings } from './telegram-pairing.ts';
 import { reviewTelegramDetection, telegramConnections } from './telegram-reviews.ts';
 import { ConfigurationError } from '../configuration.ts';
+import { webLog } from './web-log.ts';
 
 const inbox = new TelegramInbox(async (token, update, signal) => {
 	if (!update.callback_query?.data?.startsWith('review:')) return;
@@ -42,19 +43,21 @@ export function startTelegramReviews(): void {
 					} catch (error) {
 						retries.set(token, Date.now() + 30000);
 						if (!controller.signal.aborted)
-							console.warn(
-								'Telegram reviews will retry in 30 seconds:',
-								error instanceof ConfigurationError
-									? error.message
-									: 'Could not read or save a review.'
+							webLog.warn(
+								`Telegram reviews will retry in 30 seconds: ${
+									error instanceof ConfigurationError
+										? error.message
+										: 'Could not read or save a review.'
+								}`,
+								error
 							);
 					}
 				})
 			);
-		} catch {
+		} catch (error) {
 			delay = 30000;
 			if (!controller.signal.aborted)
-				console.warn('Telegram reviews: could not read settings; retrying in 30 seconds.');
+				webLog.warn('Telegram reviews could not read the settings; retrying in 30 seconds.', error);
 		}
 		if (!controller.signal.aborted) {
 			timer = setTimeout(poll, delay);

@@ -19,21 +19,11 @@ export const getSetupStatus = query(() =>
 		const [document, runtime] = await Promise.all([configuration.read(), detectorStatus()]);
 		const monitoring = monitoringCameras(runtime);
 		return document.app.streams.map((camera) => ({
-			...cameraSetupStatus(document, camera.id!),
-			monitoring: monitoring.has(camera.id!)
+			...cameraSetupStatus(document, camera.id),
+			monitoring: monitoring.has(camera.id)
 		}));
 	})
 );
-
-/** The detector count for navigation; unreadable settings are reported by the page that needs them. */
-export const getInstallation = query(async () => {
-	try {
-		const { config } = await configuration.read();
-		return { detectors: config.detectors.length };
-	} catch {
-		return { detectors: 0 };
-	}
-});
 
 export const finishSetup = command(() =>
 	configurationAction(() =>

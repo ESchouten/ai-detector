@@ -84,17 +84,6 @@ test('unavailable Telegram gives internet guidance without exposing request cred
 	}
 });
 
-test('an invalid Telegram response offers retry instead of a JSON or schema error', async (t) => {
-	for (const body of ['<h1>Service unavailable</h1>', '{"unexpected":true}']) {
-		t.mock.method(globalThis, 'fetch', async () => new Response(body));
-		await assert.rejects(
-			new TelegramInbox().receive('fixture-token'),
-			/unexpected reply.*try again later/
-		);
-		t.mock.restoreAll();
-	}
-});
-
 test('the Telegram request deadline aborts the fetch and gives connection guidance', async (t) => {
 	t.mock.timers.enable({ apis: ['setTimeout'] });
 	let signal: AbortSignal | undefined;

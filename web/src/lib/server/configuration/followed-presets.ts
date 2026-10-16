@@ -39,7 +39,7 @@ export function forgetPreset(meta: DetectorMeta): void {
 }
 
 /** A detector whose detection settings were changed outside this application follows no preset. */
-export function forgetChangedPresets(document: Configuration): Configuration {
+export function forgetChangedPresets<T extends Configuration>(document: T): T {
 	for (const [index, meta] of document.app.detectors.entries()) {
 		if (meta.preset && meta.presetVersion !== presetVersion(document.config.detectors[index]))
 			forgetPreset(meta);

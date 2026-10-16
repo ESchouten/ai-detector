@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { mkdtemp, readdir, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { test } from 'node:test';
 import { promisify } from 'node:util';
 import { prepareNvidiaRuntime } from '../src/lib/server/nvidia-runtime.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
+import { temporaryDirectory } from './support/files.ts';
 
 const bundle = process.env.NVIDIA_RUNTIME_BUNDLE;
 const execute = promisify(execFile);
@@ -23,8 +23,7 @@ for (const { cuda, version, capability, driverVersion } of [
 			timeout: 18 * 60 * 1000
 		},
 		async (t) => {
-			const data = await mkdtemp(path.join(tmpdir(), 'nvidia-bootstrap-'));
-			t.after(() => rm(data, { recursive: true, force: true }));
+			const data = await temporaryDirectory(t, 'nvidia-bootstrap-');
 			const directory = path.resolve(bundle!);
 			const abort = new AbortController();
 			const run = async (file: string, args: string[], timeout: number, env: NodeJS.ProcessEnv) => {

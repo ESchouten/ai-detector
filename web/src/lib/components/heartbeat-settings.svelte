@@ -8,8 +8,7 @@
 	import * as Field from '$lib/components/ui/field';
 	import SecretInput from './secret-input.svelte';
 	import { heartbeatInput } from '$lib/configuration';
-	import { errorMessage } from '$lib/remote-errors';
-	import { refresh } from '$lib/remote-refresh';
+	import { errorMessage, refresh } from '$lib/remote-calls';
 	import { getHeartbeat, saveHeartbeat } from '$lib/remote/settings.remote';
 
 	// An outside service notices when this computer stops: the detector calls it while it runs.

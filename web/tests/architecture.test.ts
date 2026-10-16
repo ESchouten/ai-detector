@@ -1,19 +1,18 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { cp, mkdir, mkdtemp, rm, symlink, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { cp, mkdir, symlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
+import { temporaryDirectory } from './support/files.ts';
 
 const web = fileURLToPath(new URL('..', import.meta.url));
 const command = path.join(web, 'node_modules/dependency-cruiser/bin/dependency-cruiser.mjs');
 const exec = promisify(execFile);
 
 test('architecture rules reject cycles, reverse dependencies, aliases and dynamic imports', async (t) => {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-architecture-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'ai-architecture-');
 	await cp(
 		path.join(web, '.dependency-cruiser.cjs'),
 		path.join(directory, '.dependency-cruiser.cjs')

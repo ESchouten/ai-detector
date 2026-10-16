@@ -1,14 +1,21 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { once } from 'node:events';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import type { ServerResponse } from 'node:http';
-import os, { tmpdir } from 'node:os';
+import os from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
+import { setImmediate } from 'node:timers/promises';
 import { promisify } from 'node:util';
 import ffmpeg from 'ffmpeg-static';
 import onvif, { type DiscoveryProbeOptions, type ProbeCallback } from 'onvif';
-import { cameraUsername } from '../src/lib/cameras.ts';
+import {
+	connectCameraBatch,
+	type BatchCamera,
+	type CheckedConnection
+} from '../src/lib/camera-batch.ts';
+import { cameraUsername, checkCameraPicture, checkConnection } from '../src/lib/cameras.ts';
 import {
 	cameraAddress,
 	cameraStream,
@@ -23,15 +30,11 @@ import {
 	resolveCameraStream
 } from '../src/lib/server/cameras/discovery.ts';
 import { CameraChecks } from '../src/lib/server/cameras/checks.ts';
+import { sampleClip, temporaryDirectory } from './support/files.ts';
 import { server } from './support/http.ts';
 
 const execute = promisify(execFile);
-
-async function directory(t: TestContext) {
-	const dir = await mkdtemp(path.join(tmpdir(), 'ai-camera-check-'));
-	t.after(() => rm(dir, { recursive: true, force: true }));
-	return dir;
-}
+const directory = (t: TestContext) => temporaryDirectory(t, 'ai-camera-check-');
 
 function soap(body: string) {
 	return `<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"><s:Body>${body}</s:Body></s:Envelope>`;
@@ -55,30 +58,6 @@ function answerOnvif(
 	const operation = Object.keys(responses).find((name) => body.includes(`<${name}`));
 	res.writeHead(operation ? 200 : 400, { 'Content-Type': 'application/soap+xml' });
 	res.end(soap(operation ? responses[operation] : '<Fault/>'));
-}
-
-/** Three seconds of video, as the camera in a test streams it. */
-async function sampleClip(ffmpegPath: string, dir: string) {
-	const sample = path.join(dir, 'sample.mp4');
-	await execute(ffmpegPath, [
-		'-hide_banner',
-		'-loglevel',
-		'error',
-		'-f',
-		'lavfi',
-		'-i',
-		'testsrc2=size=320x240:rate=12',
-		'-t',
-		'3',
-		'-c:v',
-		'libx264',
-		'-pix_fmt',
-		'yuv420p',
-		'-movflags',
-		'+faststart',
-		sample
-	]);
-	return readFile(sample);
 }
 
 test('camera addresses accept separate credentials and never disclose them in errors', () => {
@@ -166,25 +145,36 @@ test('camera check waits for a keyframe even when the stream starts with undecod
 	assert.equal(stdout.split('\n').filter((line) => line && !line.startsWith('#')).length, 24);
 });
 
-test('discovery ignores malformed external replies, decodes names and deduplicates devices', () => {
-	const reply = (XAddrs: string, scopes = '') => ({
+test('discovery ignores malformed replies, decodes names, deduplicates devices and accepts scopes with XML attributes', () => {
+	const reply = (XAddrs: string, scopes: unknown = '') => ({
 		probeMatches: { probeMatch: { XAddrs, scopes } }
 	});
-	assert.deepEqual(
-		discoveredCameras([
-			reply(
-				'file:///invalid http://192.168.1.20/onvif/device_service',
-				'onvif://www.onvif.org/name/Calving%20pen'
-			),
-			reply('http://192.168.1.20/onvif/device_service', 'onvif://www.onvif.org/name/Calving%20pen'),
-			reply('http://192.168.1.21/onvif/device_service'),
-			{ malformed: true }
-		]),
+	const pen = 'onvif://www.onvif.org/name/Calving%20pen';
+	for (const [replies, cameras] of [
 		[
-			{ address: 'http://192.168.1.21/onvif/device_service', name: '192.168.1.21' },
-			{ address: 'http://192.168.1.20/onvif/device_service', name: 'Calving pen' }
+			[
+				reply('file:///invalid http://192.168.1.20/onvif/device_service', pen),
+				reply('http://192.168.1.20/onvif/device_service', pen),
+				reply('http://192.168.1.21/onvif/device_service'),
+				{ malformed: true }
+			],
+			[
+				{ address: 'http://192.168.1.21/onvif/device_service', name: '192.168.1.21' },
+				{ address: 'http://192.168.1.20/onvif/device_service', name: 'Calving pen' }
+			]
+		],
+		[
+			[
+				reply('http://192.168.1.20', { _: pen, $: { MatchBy: 'rfc3986' } }),
+				reply('http://192.168.1.21', 'onvif://www.onvif.org/name/%broken')
+			],
+			[
+				{ address: 'http://192.168.1.21/', name: '192.168.1.21' },
+				{ address: 'http://192.168.1.20/', name: 'Calving pen' }
+			]
 		]
-	);
+	])
+		assert.deepEqual(discoveredCameras(replies), cameras);
 });
 
 test('real ONVIF SOAP exchange resolves the selected NVR channel through the SDK', async (t) => {
@@ -251,7 +241,7 @@ test(
 	async (t) => {
 		assert.ok(ffmpeg);
 		const dir = await directory(t);
-		const bytes = await sampleClip(ffmpeg, dir);
+		const bytes = await readFile(await sampleClip(dir));
 		const requests: string[] = [];
 		const address = await server(t, async (req, res) => {
 			if (req.method === 'GET') {
@@ -306,7 +296,7 @@ test(
 	async (t) => {
 		assert.ok(ffmpeg, 'ffmpeg-static must provide the release platform binary');
 		const dir = await directory(t);
-		const bytes = await sampleClip(ffmpeg, dir);
+		const bytes = await readFile(await sampleClip(dir));
 		const address = await server(t, (_req, res) => {
 			res.writeHead(200, { 'Content-Type': 'video/mp4', 'Content-Length': bytes.length });
 			res.end(bytes);
@@ -359,33 +349,6 @@ test(
 		assert.deepEqual(await readdir(dir), []);
 	}
 );
-
-test('ONVIF scopes with XML attributes and malformed display names still expose the camera', () => {
-	assert.deepEqual(
-		discoveredCameras([
-			{
-				probeMatches: {
-					probeMatch: {
-						XAddrs: 'http://192.168.1.20',
-						scopes: { _: 'onvif://www.onvif.org/name/Calving%20pen', $: { MatchBy: 'rfc3986' } }
-					}
-				}
-			},
-			{
-				probeMatches: {
-					probeMatch: {
-						XAddrs: 'http://192.168.1.21',
-						scopes: 'onvif://www.onvif.org/name/%broken'
-					}
-				}
-			}
-		]),
-		[
-			{ address: 'http://192.168.1.21/', name: '192.168.1.21' },
-			{ address: 'http://192.168.1.20/', name: 'Calving pen' }
-		]
-	);
-});
 
 // One connection, on a network that is not a home or farm network, so nothing is asked directly.
 function oneConnection(t: TestContext) {
@@ -516,4 +479,213 @@ test('only the addresses beside this computer on a home or farm network are aske
 	assert.ok(hosts.includes('192.168.1.27') && !hosts.includes('192.168.1.115'));
 	assert.deepEqual(neighbours('172.20.4.9').slice(0, 2), ['172.20.4.1', '172.20.4.2']);
 	assert.deepEqual(neighbours('203.0.113.5'), []);
+});
+
+test('picture check sends the resolved source and reads the checked camera result', async (t) => {
+	const source = 'rtsp://camera.example.test/live';
+	const result = {
+		source,
+		checkId: 'checked-camera',
+		previewUrl: '/camera-checks/checked-camera/picture.jpg'
+	};
+	const endpoint = await server(t, async (request, response) => {
+		assert.equal(request.method, 'POST');
+		assert.equal(request.headers['content-type'], 'application/json');
+		const chunks = [];
+		for await (const chunk of request) chunks.push(chunk);
+		assert.deepEqual(JSON.parse(Buffer.concat(chunks).toString()), { source });
+		response.writeHead(200, { 'Content-Type': 'application/json' });
+		response.end(JSON.stringify(result));
+	});
+	assert.deepEqual(
+		await checkCameraPicture(source, new AbortController().signal, endpoint),
+		result
+	);
+});
+
+test('a checked connection keeps what the camera answered and takes the source that worked', async (t) => {
+	const answered = {
+		source: 'rtsp://camera.example.test/live',
+		profiles: [{ token: 'main', name: 'Main stream' }],
+		connection: { address: 'http://camera.example.test/onvif' }
+	};
+	const check = {
+		source: 'rtsp://camera.example.test/live?transport=tcp',
+		checkId: 'checked-camera',
+		previewUrl: '/camera-checks/checked-camera/picture.jpg'
+	};
+	let requests = 0;
+	const endpoint = await server(t, (_request, response) => {
+		requests++;
+		response.writeHead(200, { 'Content-Type': 'application/json' });
+		response.end(JSON.stringify(check));
+	});
+	assert.deepEqual(await checkConnection(answered, new AbortController().signal, endpoint), {
+		...answered,
+		source: check.source,
+		check
+	});
+	// Leaving the page between the camera's answer and its picture check starts no check.
+	const left = new AbortController();
+	left.abort();
+	await assert.rejects(checkConnection(answered, left.signal, endpoint), { name: 'AbortError' });
+	assert.equal(requests, 1);
+});
+
+test('picture check displays expected camera errors and a useful message for server failures', async (t) => {
+	let status = 400;
+	const endpoint = await server(t, (_request, response) => {
+		response.writeHead(status, {
+			'Content-Type': status === 400 ? 'application/json' : 'text/html'
+		});
+		response.end(
+			status === 400 ? JSON.stringify({ message: 'Camera login rejected.' }) : '<h1>Error</h1>'
+		);
+	});
+	const signal = new AbortController().signal;
+	await assert.rejects(
+		checkCameraPicture('rtsp://camera/live', signal, endpoint),
+		/Camera login rejected/
+	);
+	status = 500;
+	await assert.rejects(
+		checkCameraPicture('rtsp://camera/live', signal, endpoint),
+		/check could not finish/
+	);
+});
+
+test(
+	'cancelling the picture check closes its real HTTP request before the server replies',
+	{ timeout: 5000 },
+	async (t) => {
+		const started = Promise.withResolvers<void>();
+		const closed = Promise.withResolvers<void>();
+		const endpoint = await server(t, async (request, response) => {
+			response.once('close', closed.resolve);
+			request.resume();
+			await once(request, 'end');
+			started.resolve();
+		});
+		const controller = new AbortController();
+		const pending = checkCameraPicture('rtsp://camera/live', controller.signal, endpoint);
+		await started.promise;
+		controller.abort();
+		await assert.rejects(pending, { name: 'AbortError' });
+		await closed.promise;
+	}
+);
+
+const found = (address: string) => ({ address, name: address });
+function camera(address: string): BatchCamera {
+	return { ...found(address), state: 'waiting' };
+}
+
+const login = { username: 'camera-user', password: 'fixture-password' };
+const source = 'rtsp://camera-user:fixture-password@camera.test/stream';
+const connection: CheckedConnection = {
+	source,
+	profiles: [
+		{ token: 'first', name: 'Entrance' },
+		{ token: 'second', name: 'Yard' }
+	],
+	connection: { address: 'http://camera.test/onvif', profileToken: 'first' },
+	check: {
+		source,
+		checkId: 'checked-camera',
+		previewUrl: '/camera-checks/checked-camera/picture.jpg'
+	}
+};
+
+test('batch connections are bounded, keep independent successes and retain channel choices', async () => {
+	const queue = [camera('one'), camera('two'), camera('three')];
+	const jobs = queue.map(() => Promise.withResolvers<CheckedConnection>());
+	const started: string[] = [];
+	const result = new Map<string, BatchCamera>();
+	const work = connectCameraBatch(
+		queue,
+		login,
+		({ address }) => {
+			started.push(address);
+			return jobs[queue.findIndex((camera) => camera.address === address)].promise;
+		},
+		(camera) => result.set(camera.address, camera),
+		new AbortController().signal
+	);
+	assert.deepEqual(started, ['one', 'two']);
+	jobs[0].resolve(connection);
+	await setImmediate();
+	assert.deepEqual(started, ['one', 'two', 'three']);
+	jobs[1].reject(new Error('Check the second camera login.'));
+	jobs[2].resolve(connection);
+	await work;
+	// A connected camera keeps its picture check, its other streams and the login that reached it.
+	assert.deepEqual(result.get('one'), {
+		...camera('one'),
+		state: 'ready',
+		connection: { ...connection, login },
+		error: undefined
+	});
+	assert.equal(result.get('two')?.state, 'failed');
+	assert.equal(result.get('two')?.error, 'Check the second camera login.');
+	assert.equal(result.get('three')?.state, 'ready');
+});
+
+test('retry only connects failures and keeps ready and saved cameras untouched', async () => {
+	const ready: BatchCamera = { ...found('ready'), state: 'ready', connection };
+	const saved: BatchCamera = { ...found('saved'), state: 'saved', connection };
+	// A camera whose refreshed picture failed still shows the one that worked before.
+	const failed: BatchCamera = {
+		...found('failed'),
+		state: 'failed',
+		connection,
+		error: 'Could not check this picture. Try again.'
+	};
+	const queue: BatchCamera[] = [ready, saved, failed];
+	const before = structuredClone(queue);
+	const updates: BatchCamera[] = [];
+	const retryLogin = { ...login, password: 'corrected-password' };
+	await connectCameraBatch(
+		queue,
+		retryLogin,
+		async (input) => {
+			assert.deepEqual(input, { ...retryLogin, address: 'failed' });
+			return connection;
+		},
+		(camera) => updates.push(camera),
+		new AbortController().signal
+	);
+	assert.deepEqual(
+		updates.map((camera) => [camera.address, camera.state, camera.error, !!camera.connection]),
+		[
+			['failed', 'connecting', undefined, true],
+			['failed', 'ready', undefined, true]
+		]
+	);
+	assert.deepEqual(updates[1].connection?.login, retryLogin);
+	assert.deepEqual(queue, before);
+});
+
+test('leaving batch setup ignores late connections and does not start the remaining queue', async () => {
+	const pending = Promise.withResolvers<CheckedConnection>();
+	const controller = new AbortController();
+	const started: string[] = [];
+	const updates: BatchCamera[] = [];
+	const work = connectCameraBatch(
+		[camera('one'), camera('two'), camera('three')],
+		login,
+		({ address }) => {
+			started.push(address);
+			return pending.promise;
+		},
+		(camera) => updates.push(camera),
+		controller.signal
+	);
+	controller.abort();
+	pending.resolve(connection);
+	await work;
+	assert.deepEqual(started, ['one', 'two']);
+	assert.deepEqual(
+		updates.map((camera) => camera.state),
+		['connecting', 'connecting']
+	);
 });

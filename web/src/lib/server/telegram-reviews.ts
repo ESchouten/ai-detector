@@ -7,6 +7,7 @@ import {
 	type PressedMessage,
 	type TelegramUpdate
 } from './telegram.ts';
+import { webLog } from './web-log.ts';
 
 export function telegramConnections({
 	config,
@@ -100,8 +101,8 @@ async function showReview(
 	if (coloured?.callback_data === pressed) return;
 	try {
 		await showTelegramButtons(token, message.chat.id, message.message_id, buttons, signal);
-	} catch {
-		if (!signal?.aborted) console.warn('Telegram review could not be shown on the alert.');
+	} catch (error) {
+		if (!signal?.aborted) webLog.warn('Telegram review could not be shown on the alert.', error);
 	}
 }
 
@@ -114,7 +115,8 @@ async function confirmReview(
 	// An expired callback must not replay a saved review over a later web decision.
 	try {
 		await answerTelegramReview(token, callbackId, answer, signal);
-	} catch {
-		if (!signal?.aborted) console.warn('Telegram review confirmation could not be delivered.');
+	} catch (error) {
+		if (!signal?.aborted)
+			webLog.warn('Telegram review confirmation could not be delivered.', error);
 	}
 }

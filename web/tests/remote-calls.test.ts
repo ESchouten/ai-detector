@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { error } from '@sveltejs/kit';
-import { errorMessage } from '../src/lib/remote-errors.ts';
+import { errorMessage } from '../src/lib/remote-calls.ts';
 
 test('remote HttpError responses preserve actionable server guidance in the browser', () => {
 	try {

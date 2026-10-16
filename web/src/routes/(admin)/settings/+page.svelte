@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
-	import { Activity, Archive, Monitor, Moon, Sun } from '@lucide/svelte';
+	import { Activity, Archive, Download, Monitor, Moon, Sun } from '@lucide/svelte';
 	import LifeBuoyIcon from '@lucide/svelte/icons/life-buoy';
 	import { setMode, userPrefersMode } from 'mode-watcher';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import * as Dialog from '$lib/components/ui/dialog';
 	import HomeScreenGuide from '$lib/components/home-screen-guide.svelte';
 	import LanguageMenu from '$lib/components/language-menu.svelte';
 	import LinkRows from '$lib/components/link-rows.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import SegmentedControl from '$lib/components/segmented-control.svelte';
-	import SettingsBackup from '$lib/components/settings-backup.svelte';
 	import { deviceHoldsOnlyShortcut, deviceLacksHomeScreenIcon } from '$lib/home-screen';
 	import { logsNavigation, settingsNavigation, REPOSITORY_URL } from '$lib/navigation';
 	import { version } from '$lib/version';
@@ -56,7 +56,7 @@
 					label="Appearance"
 					options={themes}
 					value={userPrefersMode.current}
-					onchange={setMode}
+					onChange={setMode}
 				/>
 			</div>
 			{#if homeScreen && shortcutOnly}
@@ -93,7 +93,29 @@
 						</p>
 					</div>
 				</div>
-				<SettingsBackup />
+				<Dialog.Root>
+					<Dialog.Trigger class={buttonVariants({ variant: 'outline', size: 'sm' })}>
+						<Download data-icon="inline-start" aria-hidden="true" />Back up
+					</Dialog.Trigger>
+					<Dialog.Content>
+						<Dialog.Header>
+							<Dialog.Title>Back up settings</Dialog.Title>
+							<Dialog.Description>
+								Save your cameras, detectors and alert settings in one ZIP.
+							</Dialog.Description>
+						</Dialog.Header>
+						<p class="text-sm">Includes saved passwords and tokens. Keep this backup private.</p>
+						<p class="text-sm text-muted-foreground">
+							Recordings and model files are not included. To restore, extract the ZIP and choose
+							Use existing setup in a new installation.
+						</p>
+						<Dialog.Footer>
+							<Button href={resolve('/settings/backup')} download data-sveltekit-reload>
+								<Download data-icon="inline-start" aria-hidden="true" />Download backup
+							</Button>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Root>
 			</div>
 		</div>
 	</section>

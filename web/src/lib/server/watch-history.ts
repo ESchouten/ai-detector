@@ -7,7 +7,7 @@ import {
 	type WatchStretch
 } from '../camera-history.ts';
 import { calendarDay } from '../format.ts';
-import { isMissingFile } from './archive.ts';
+import { isMissingFile } from './json-file.ts';
 
 const DAYS_KEPT = 30;
 

@@ -48,7 +48,7 @@
 {#if settings?.prompt.trim()}
 	<Field.Set>
 		<Field.Legend>
-			Validator <span class="font-normal text-muted-foreground">(optional)</span>
+			AI check <span class="font-normal text-muted-foreground">(optional)</span>
 		</Field.Legend>
 		<Field.Description>
 			Let AI look at each clip before an alert is sent, to filter out false alarms. The preset
@@ -79,7 +79,7 @@
 		<Button variant="outline" class="self-start" onclick={addConnection} {disabled}>
 			<Sparkles data-icon="inline-start" aria-hidden="true" />{connections.length
 				? 'Add another connection'
-				: 'Connect validator'}
+				: 'Connect AI check'}
 		</Button>
 	</Field.Set>
 {/if}

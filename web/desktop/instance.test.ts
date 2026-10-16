@@ -8,6 +8,7 @@ import { once } from 'node:events';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { DesktopInstance, CONTROL_PATH } from './instance.ts';
+import { instanceServer } from './fixtures/instance-server.ts';
 
 async function fixture(t: { after(fn: () => Promise<unknown> | void): void }) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'ai-instance-'));
@@ -18,20 +19,9 @@ async function fixture(t: { after(fn: () => Promise<unknown> | void): void }) {
 	const quitRequested = new Promise<void>((resolve) => {
 		resolveQuit = resolve;
 	});
-	const server = createServer(async (request, response) => {
-		const result =
-			instance.respond(
-				new Request(`http://localhost${request.url}`, {
-					method: request.method,
-					headers: request.headers as Record<string, string>
-				}),
-				() => {
-					quits++;
-					resolveQuit();
-				}
-			) ?? new Response(null, { status: 404 });
-		response.writeHead(result.status, Object.fromEntries(result.headers));
-		response.end(await result.text());
+	const server = instanceServer(instance, () => {
+		quits++;
+		resolveQuit();
 	});
 	await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
 	t.after(

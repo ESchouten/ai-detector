@@ -11,6 +11,7 @@
 	} from '$lib/remote/detections.remote';
 	import { STAGES } from '$lib/schema';
 	import {
+		categoryName,
 		detectionKey,
 		mergeDetections,
 		reviewedStage,
@@ -29,8 +30,7 @@
 	import { page } from '$app/state';
 	import type { Action } from 'svelte/action';
 	import RecordingCard from './recording-card.svelte';
-	import RecordingViewer from './recording-viewer.svelte';
-	import { categoryName } from './media';
+	import RecordingViewer from '$lib/components/recording-viewer.svelte';
 	import { SvelteMap, SvelteURLSearchParams } from 'svelte/reactivity';
 
 	const PAGE_SIZE = 24;
@@ -60,15 +60,12 @@
 	let viewing = $state<string | null>(null);
 
 	const detectionsByDay = $derived.by(() => {
-		const dayDetections = new SvelteMap<string, Detection[]>();
+		const days = new SvelteMap<string, Detection[]>();
 		for (const detection of entries) {
-			const day = String(detection.timestamp).split('T')[0];
-			if (!dayDetections.has(day)) {
-				dayDetections.set(day, []);
-			}
-			dayDetections.set(day, [...(dayDetections.get(day) ?? []), detection]);
+			const day = detection.timestamp.split('T')[0];
+			days.set(day, [...(days.get(day) ?? []), detection]);
 		}
-		return Array.from(dayDetections.entries());
+		return [...days];
 	});
 
 	// Loaded recordings take the review found for them; undefined leaves one as it is. A
@@ -206,31 +203,14 @@
 
 	async function updateSearchParams(type?: string, stage?: string) {
 		const searchParams = new SvelteURLSearchParams(page.url.searchParams);
-
-		if (type) {
-			searchParams.set('type', type);
-		} else {
-			searchParams.delete('type');
+		for (const [name, value] of Object.entries({ type, stage })) {
+			if (value) searchParams.set(name, value);
+			else searchParams.delete(name);
 		}
-
-		if (stage) {
-			searchParams.set('stage', stage);
-		} else {
-			searchParams.delete('stage');
-		}
-
 		const search = searchParams.toString();
-		const nextUrl = resolve(`/detections${search ? `?${search}` : ''}`);
-		const currentUrl = `${page.url.pathname}${page.url.search}`;
-
-		if (nextUrl !== currentUrl) {
-			await goto(nextUrl, {
-				replaceState: true,
-				noScroll: true,
-				keepFocus: true,
-				invalidateAll: false
-			});
-		}
+		const next = resolve(`/detections${search ? `?${search}` : ''}`);
+		if (next !== `${page.url.pathname}${page.url.search}`)
+			await goto(next, { replaceState: true, noScroll: true, keepFocus: true });
 	}
 
 	const infiniteTrigger: Action<HTMLDivElement> = (node) => {
@@ -288,14 +268,14 @@
 				label="Category"
 				value={type}
 				options={types.map((value) => ({ value, label: categoryName(value) }))}
-				onchange={(value) => updateSearchParams(value, stage)}
+				onChange={(value) => updateSearchParams(value, stage)}
 			/>
 		{/if}
 		<FilterChips
 			label="Review result"
 			value={stage}
 			options={STAGES.map((value) => ({ value, label: stageLabel(value), ...stageIcons[value] }))}
-			onchange={(value) => updateSearchParams(type, value)}
+			onChange={(value) => updateSearchParams(type, value)}
 		/>
 	</div>
 
@@ -335,7 +315,7 @@
 				<Empty.Description>
 					{type || stage
 						? 'Try another category or result.'
-						: 'When a detector sees something, the clip appears here and stays until you remove it.'}
+						: 'When a detector sees something, the recording appears here and stays until you remove it.'}
 				</Empty.Description>
 			</Empty.Header>
 			{#if type || stage}
@@ -357,8 +337,8 @@
 							<RecordingCard
 								{entry}
 								colorSeed={recordingPresets[entry.type]}
-								onopen={() => (viewing = detectionKey(entry))}
-								onreview={reviewed}
+								onOpen={() => (viewing = detectionKey(entry))}
+								onReview={reviewed}
 							/>
 						{/each}
 					</div>
@@ -391,6 +371,6 @@
 	{entries}
 	bind:selected={viewing}
 	colorSeeds={recordingPresets}
-	onreview={reviewed}
-	onremove={removed}
+	onReview={reviewed}
+	onRemove={removed}
 />

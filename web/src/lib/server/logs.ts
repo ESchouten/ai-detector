@@ -2,7 +2,34 @@ import { mkdir, open } from 'node:fs/promises';
 import path from 'node:path';
 import { stripVTControlCharacters } from 'node:util';
 import writeFileAtomic from 'write-file-atomic';
-import { sanitizeTextForLogs } from './runtime-logs.ts';
+import { isMissingFile } from './json-file.ts';
+
+function sanitizeParameters(text: string): string {
+	return text.replace(
+		/((?:^|[?&;/])(?:user(?:name)?|pass(?:word)?|pwd|token|key|api_key)=)([^&;\s]+)/gi,
+		'$1***'
+	);
+}
+
+export function sanitizeSourceForLogs(source: string): string {
+	const sanitized = sanitizeParameters(source);
+
+	try {
+		const url = new URL(sanitized);
+		url.username = url.username ? '***' : '';
+		url.password = url.password ? '***' : '';
+		return url.toString();
+	} catch {
+		return sanitized;
+	}
+}
+
+export function sanitizeTextForLogs(text: string): string {
+	return sanitizeParameters(text)
+		.replace(/(pairing code:\s*)\d{6}/gi, '$1***')
+		.replace(/\bbot\d+:[A-Za-z0-9_-]+/g, 'bot***')
+		.replace(/\b[a-z][a-z0-9+.-]*:\/\/[^\s\r\n]+/gi, (source) => sanitizeSourceForLogs(source));
+}
 
 const START_LIMIT = 32 * 1024;
 const RECENT_LIMIT = 96 * 1024;
@@ -75,7 +102,7 @@ export async function readLogTail(file: string): Promise<string> {
 	try {
 		handle = await open(file, 'r');
 	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === 'ENOENT') return '';
+		if (isMissingFile(error)) return '';
 		throw error;
 	}
 	try {
@@ -85,5 +112,22 @@ export async function readLogTail(file: string): Promise<string> {
 		return sanitizeTextForLogs(stripVTControlCharacters(buffer.subarray(0, bytesRead).toString()));
 	} finally {
 		await handle.close();
+	}
+}
+
+/** The transcript of the current monitoring attempt. */
+export class DetectorLog extends BoundedLog {
+	constructor(directory: string) {
+		super(path.join(directory, 'logs', 'application.log'));
+	}
+
+	async resume(): Promise<void> {
+		await this.restore();
+		this.append(`${new Date().toISOString()} Resuming monitoring after application startup\n`);
+	}
+
+	begin(): void {
+		this.clear();
+		this.append(`${new Date().toISOString()} Starting monitoring\n`);
 	}
 }

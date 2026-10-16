@@ -1,10 +1,27 @@
-import { errorMessage } from './remote-errors.ts';
-import type {
-	TelegramPairing as TelegramPairingSession,
-	TelegramRecipient,
-	TelegramDestination,
-	TelegramPairingState as PairingResult
-} from './telegram.ts';
+import { errorMessage } from './remote-calls.ts';
+
+export type TelegramDestination = 'private' | 'group' | 'channel';
+
+export interface TelegramRecipient {
+	id: string;
+	name: string;
+}
+
+/** A pairing link the server opened, until it expires. */
+export interface TelegramPairingSession {
+	id: string;
+	bot: { name: string; username: string };
+	url: string;
+	expiresAt: number;
+	qrDataUrl: string;
+}
+
+/** What the server has seen of a pairing so far. */
+export type TelegramPairingPoll =
+	| { state: 'waiting' | 'choosing' }
+	| { state: 'confirming'; chat: TelegramRecipient }
+	| { state: 'matched'; chat: TelegramRecipient };
+
 export type TelegramPairingState =
 	| { state: 'idle' | 'starting' }
 	| { state: 'waiting' | 'choosing' | 'confirming'; session: TelegramPairingSession }
@@ -16,7 +33,7 @@ interface PairingApi {
 		token: string;
 		destination: TelegramDestination;
 	}): Promise<TelegramPairingSession>;
-	poll(input: { id: string }): Promise<PairingResult>;
+	poll(input: { id: string }): Promise<TelegramPairingPoll>;
 	cancel(input: { id: string }): Promise<unknown>;
 }
 

@@ -10,13 +10,13 @@
 		options,
 		value,
 		required = false,
-		onchange
+		onChange
 	}: {
 		label: string;
 		options: { value: Value; label: string; icon?: Component; iconClass?: string }[];
 		value: Value | undefined;
 		required?: boolean;
-		onchange: (value: Value | undefined) => void;
+		onChange: (value: Value | undefined) => void;
 	} = $props();
 </script>
 
@@ -30,7 +30,7 @@
 		<button
 			type="button"
 			aria-pressed={selected}
-			onclick={() => onchange(selected && !required ? undefined : option.value)}
+			onclick={() => onChange(selected && !required ? undefined : option.value)}
 			class={[
 				'inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium whitespace-nowrap transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50',
 				selected

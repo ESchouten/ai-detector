@@ -1,12 +1,10 @@
 import assert from 'node:assert/strict';
 import {
 	chmod,
-	mkdtemp,
 	mkdir,
 	open,
 	readdir,
 	readFile,
-	rm,
 	stat,
 	symlink,
 	truncate,
@@ -14,25 +12,16 @@ import {
 	type FileHandle
 } from 'node:fs/promises';
 import { once, type EventEmitter } from 'node:events';
-import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { DetectionArchive, ArchivePathError } from '../src/lib/server/archive.ts';
-import { archiveMedia } from '../src/lib/server/archive-media.ts';
+import { archiveMedia } from '../src/lib/server/file-media.ts';
 import { detectionKey, mergeDetections } from '../src/lib/detections.ts';
+import { recordingMetadata, temporaryDirectory } from './support/files.ts';
 
 const timestamp = '2026-09-22T10-00-00.000000';
 const location = { category: 'cow', stage: 'approved', timestamp, resource: 'video.mp4' };
-const metadata = {
-	timestamp,
-	validated: true,
-	confidence: 0.9,
-	confidences: { cow: 0.9 },
-	detections: 1,
-	start: '2026-09-22T10:00:00',
-	end: '2026-09-22T10:00:02',
-	duration: 2
-};
+const metadata = recordingMetadata(timestamp);
 
 test('manual review overrides filtering, survives restart and can restore the original validator result', async (t) => {
 	const { root, event, archive } = await fixture(t);
@@ -130,8 +119,7 @@ test(
 );
 
 async function fixture(t: TestContext) {
-	const directory = await mkdtemp(path.join(tmpdir(), 'ai-archive-'));
-	t.after(() => rm(directory, { recursive: true, force: true }));
+	const directory = await temporaryDirectory(t, 'ai-archive-');
 	const root = path.join(directory, 'detections');
 	const event = path.join(root, location.category, location.stage, timestamp);
 	await mkdir(event, { recursive: true });

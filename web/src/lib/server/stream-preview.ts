@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
 import { MultipartParser } from '@remix-run/multipart-parser';
 import { getCameraInputArgs } from './ffmpeg.ts';
-import { sanitizeSourceForLogs, sanitizeTextForLogs } from './runtime-logs.ts';
+import { webLog } from './web-log.ts';
 
 const MJPEG_BOUNDARY = 'frame';
 const FIRST_FRAME_TIMEOUT_MS = 20_000;
@@ -90,19 +90,13 @@ export function createPreviewStream(source: string, executable: string) {
 	child.stderr.on('data', (chunk: Buffer) => {
 		stderr = (stderr + chunk.toString()).slice(-4000);
 	});
-	child.once('error', (error) => {
-		console.warn('Could not start FFmpeg preview:', sanitizeTextForLogs(error.message));
-	});
+	child.once('error', (error) => webLog.warn('Could not start FFmpeg preview', error));
 	const finished = new Promise<void>((resolve) =>
 		child.once('close', (code) => {
 			clearTimeout(readTimer);
 			clearTimeout(killTimer);
 			if (!stopping && code !== 0)
-				console.warn('FFmpeg preview failed', {
-					source: sanitizeSourceForLogs(source),
-					code,
-					stderr: sanitizeTextForLogs(stderr.trim())
-				});
+				webLog.warn(`FFmpeg preview of ${source} ended with code ${code}:\n${stderr.trim()}`);
 			resolve();
 		})
 	);

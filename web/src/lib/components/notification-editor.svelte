@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -17,8 +15,7 @@
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
 	import { sameTelegram } from '$lib/configuration';
-	import { errorMessage } from '$lib/remote-errors';
-	import { refresh } from '$lib/remote-refresh';
+	import { errorMessage, refresh } from '$lib/remote-calls';
 	import type { TelegramMeta } from '$lib/schema';
 	import ConfirmRemove from './confirm-remove.svelte';
 	import TelegramConnection from './telegram-connection.svelte';
@@ -29,10 +26,11 @@
 		onSaved,
 		onCancel
 	}: {
-		inline?: boolean;
-		onSaved?: (recipient: TelegramMeta) => void;
-		onCancel?: () => void;
 		initial?: TelegramMeta;
+		/** Only connect a recipient, inside an editor that chooses its detectors itself. */
+		inline?: boolean;
+		onSaved: (recipient: TelegramMeta) => void | Promise<void>;
+		onCancel: () => void;
 	} = $props();
 	const detectors = await getDetectors();
 	const recipients = await getTelegrams();
@@ -62,15 +60,15 @@
 	const connectionUnchanged = $derived(initial && token === initial.token && chat === initial.chat);
 	const readyForDetectors = $derived(Boolean(connectionUnchanged || received));
 	const canSave = $derived(label.trim() && token && chat && (connectionUnchanged || received));
-	const back = resolve('/notifications');
 	async function save(event: SubmitEvent) {
 		event.preventDefault();
+		// Enter in the token field submits before there is anything to save.
 		if (!canSave) return;
 		pending = true;
 		error = '';
 		try {
 			if (inline && existing) {
-				onSaved?.(existing);
+				await onSaved(existing);
 				return;
 			}
 			await (inline
@@ -87,25 +85,21 @@
 						received
 					}));
 			await refresh(getDetectors(), getTelegrams());
-			if (inline) onSaved?.({ label, token, chat });
-			else {
-				toast.success('Alert settings saved.');
-				await goto(back);
-			}
+			if (!inline) toast.success('Alert settings saved.');
+			await onSaved({ label, token, chat });
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not save alerts. Your choices are still here.');
 		} finally {
 			pending = false;
 		}
 	}
-	async function remove() {
-		if (!initial) return;
+	async function remove(recipient: TelegramMeta) {
 		pending = true;
 		error = '';
 		try {
-			await deleteTelegram({ label: initial.label });
+			await deleteTelegram({ label: recipient.label });
 			await refresh(getDetectors(), getTelegrams());
-			await goto(back);
+			onCancel();
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not remove this recipient.');
 		} finally {
@@ -210,13 +204,10 @@
 							: 'Save recipient'}
 			</Button>
 		{/if}
-		{#if inline}
-			<Button onclick={onCancel} disabled={pending} variant="outline">Cancel</Button>
-		{:else}
-			<Button href={back} disabled={pending} variant="outline">Cancel</Button>
-		{/if}
+		<Button onclick={onCancel} disabled={pending} variant="outline">Cancel</Button>
 	</div>
 	{#if initial}
+		{@const recipient = initial}
 		<ConfirmRemove
 			trigger="Remove this recipient…"
 			title={`Remove “${initial.label}”?`}
@@ -224,7 +215,7 @@
 			keep="Keep recipient"
 			confirm="Remove recipient"
 			disabled={pending || connecting}
-			onconfirm={remove}
+			onConfirm={() => remove(recipient)}
 		/>
 	{/if}
 </form>

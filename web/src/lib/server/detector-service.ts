@@ -7,7 +7,7 @@ import {
 	PACKAGED
 } from './application-paths';
 import { ManagedDetector } from './managed-detector';
-import { launcherNotes, noteOutages } from './monitoring-flag';
+import { launcherNotes, noteOutages } from './launcher-notes';
 import type { RuntimeStatus } from '../runtime';
 import type { Configuration } from '../schema';
 import { outageWatch } from './outage-alerts';

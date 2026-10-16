@@ -117,19 +117,18 @@ async function readPresetFile(file: string): Promise<DetectorPreset> {
 	return presetFromFile(file, input);
 }
 
-export async function loadPresets(
-	directory: string,
-	bundled: Record<string, unknown>
-): Promise<DetectorPreset[]> {
+/** The presets built into the application, by file name. */
+export function bundledPresets(files: Record<string, unknown>): DetectorPreset[] {
+	return Object.entries(files)
+		.sort(([a], [b]) => a.localeCompare(b, 'en'))
+		.map(([file, input]) => presetFromFile(file, input));
+}
+
+export async function loadPresets(directory: string): Promise<DetectorPreset[]> {
 	let entries;
 	try {
 		entries = await readdir(directory, { withFileTypes: true });
 	} catch (cause) {
-		if ((cause as NodeJS.ErrnoException).code === 'ENOENT') {
-			return Object.entries(bundled)
-				.sort(([a], [b]) => a.localeCompare(b, 'en'))
-				.map(([file, input]) => presetFromFile(file, input));
-		}
 		throw new ConfigurationError(`Could not read preset folder "${directory}".`, { cause });
 	}
 	const files = entries

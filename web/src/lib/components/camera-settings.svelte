@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { errorMessage } from '$lib/remote-errors';
-	import { refresh } from '$lib/remote-refresh';
+	import { errorMessage, refresh } from '$lib/remote-calls';
 	import { onDestroy, onMount, untrack } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { toast } from 'svelte-sonner';
@@ -13,10 +12,9 @@
 	import CameraPicture from './camera-picture.svelte';
 	import ConfirmRemove from './confirm-remove.svelte';
 	import Pill from './pill.svelte';
-	import SecretInput from './secret-input.svelte';
+	import CameraConnectionFields from './camera-connection-fields.svelte';
 	import type { StreamMeta } from '$lib/schema';
-	import { checkCameraRecording } from '$lib/camera-check';
-	import { cameraUsername } from '$lib/cameras';
+	import { cameraUsername, checkCameraPicture } from '$lib/cameras';
 	import {
 		discoverCameras,
 		getCameraConnection,
@@ -55,7 +53,7 @@
 	$effect(() => {
 		if (error) errorPanel?.focus();
 	});
-	let check = $state<Awaited<ReturnType<typeof checkCameraRecording>>>();
+	let check = $state<Awaited<ReturnType<typeof checkCameraPicture>>>();
 	let checkController: AbortController | undefined;
 	onDestroy(() => checkController?.abort());
 	const connectionChanged = $derived(changingConnection && !check);
@@ -114,7 +112,7 @@
 			profiles = connection.profiles;
 			verifiedConnection = connection.connection;
 			profileToken ||= profiles[0]?.token ?? '';
-			check = await checkCameraRecording(
+			check = await checkCameraPicture(
 				connection.source,
 				controller.signal,
 				resolve('/camera-checks')
@@ -134,7 +132,6 @@
 			await connect();
 			return;
 		}
-		if (!canSave) return;
 		saving = true;
 		error = '';
 		try {
@@ -159,7 +156,6 @@
 		try {
 			await removeCamera(initial.id);
 			await refresh(getCameras(), getDetectors());
-			toast.success('Camera removed.');
 			await onDone();
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not remove this camera.');
@@ -224,52 +220,15 @@
 				{#if address && !manualAddress && !candidates.some((camera) => camera.address === address)}
 					<p class="text-sm break-all text-muted-foreground">Camera selected: {address}</p>
 				{/if}
-				{#if manualAddress}
-					<Field.Field>
-						<Field.Label for="camera-stream">RTSP URL</Field.Label>
-						<SecretInput
-							id="camera-stream"
-							name="stream URL"
-							bind:value={streamUri}
-							oninput={connectionChangedInput}
-							disabled={checking || saving}
-							placeholder="rtsp://192.168.1.50/stream"
-							aria-describedby="camera-stream-help"
-						/>
-						<Field.Description id="camera-stream-help">
-							Paste the full stream URL, including the username and password if the camera needs
-							them.
-						</Field.Description>
-					</Field.Field>
-				{:else if address}
-					<Field.Group>
-						<Field.Group class="grid gap-4 sm:grid-cols-2">
-							<Field.Field>
-								<Field.Label for="camera-username">Camera username</Field.Label>
-								<Input
-									id="camera-username"
-									bind:value={username}
-									oninput={invalidateCheck}
-									disabled={checking || saving}
-									autocomplete="off"
-								/>
-							</Field.Field>
-							<Field.Field>
-								<Field.Label for="camera-password">Camera password</Field.Label>
-								<Input
-									id="camera-password"
-									type="password"
-									bind:value={password}
-									oninput={invalidateCheck}
-									disabled={checking || saving}
-									autocomplete="off"
-								/>
-							</Field.Field>
-						</Field.Group>
-						<Field.Description>
-							The camera’s own login, which may differ from its phone app.
-						</Field.Description>
-					</Field.Group>
+				{#if manualAddress || address}
+					<CameraConnectionFields
+						manual={manualAddress}
+						bind:streamUri
+						bind:username
+						bind:password
+						disabled={checking || saving}
+						oninput={manualAddress ? connectionChangedInput : invalidateCheck}
+					/>
 				{/if}
 				{#if !manualAddress && profiles.length > 1}
 					<Field.Field>
@@ -350,6 +309,7 @@
 							if (!candidates.length) void find();
 						}}>Change connection</Button
 					>
+					<Button variant="outline" disabled={saving} onclick={onDone}>Cancel</Button>
 				{/if}
 			{/if}
 		</div>
@@ -361,7 +321,7 @@
 			keep="Keep camera"
 			confirm="Remove camera"
 			disabled={saving}
-			onconfirm={remove}
+			onConfirm={remove}
 		/>
 	</form>
 </div>

@@ -1,10 +1,9 @@
 import { command, query } from '$app/server';
 import * as v from 'valibot';
-import { STAGES } from '$lib/schema';
 import { recordings as archive } from '$lib/server/recordings';
 import { configuration } from '$lib/server/configuration';
 import {
-	isArchiveSegment,
+	detectionFilterInput,
 	recordingPresets,
 	recordingExportInput,
 	reviewDetectionInput
@@ -33,12 +32,4 @@ export const getExportCount = query(
 	async (filter) => (await archive.locations(filter)).length
 );
 
-export const getDetectionPage = query(
-	v.object({
-		type: v.optional(v.pipe(v.string(), v.check(isArchiveSegment))),
-		stage: v.optional(v.picklist(STAGES)),
-		offset: v.pipe(v.number(), v.integer(), v.minValue(0)),
-		limit: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))
-	}),
-	(filter) => archive.page(filter)
-);
+export const getDetectionPage = query(detectionFilterInput, (filter) => archive.page(filter));

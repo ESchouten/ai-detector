@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from contextlib import suppress
 from pathlib import Path
 
 import psutil
@@ -52,6 +53,9 @@ def test_hung_native_provider_is_killed_and_reaped(
     assert not probe_provider("DmlExecutionProvider")
     pid = int((probe_directory / "probe.pid").read_text())
     assert pid != os.getpid()
+    # Windows closes the virtualenv redirector's job before its child is reaped.
+    with suppress(psutil.NoSuchProcess):
+        psutil.Process(pid).wait(timeout=5)
     assert not psutil.pid_exists(pid)
     assert "timed out after 3 seconds" in caplog.text
 

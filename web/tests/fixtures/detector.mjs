@@ -34,7 +34,6 @@ if (process.argv.includes('--check-config')) {
 	}
 	process.exit(0);
 }
-appendFileSync('starts.txt', 'started\n');
 if (options.failureExitCode !== undefined) {
 	process.on('SIGUSR2', () => {
 		console.error('Injected inference failure');
@@ -48,6 +47,8 @@ process.on('SIGUSR1', () => {
 		console.log('AIDETECTOR_STATUS ' + JSON.stringify(event));
 });
 writeFileSync('pid.txt', String(process.pid));
+// A start is observable only after its signal handlers and PID are ready.
+appendFileSync('starts.txt', 'started\n');
 console.log('Camera rtsp://farmer:secret@camera.local/live?token=secret');
 for (const event of options.statusEvents ?? []) {
 	const record = 'AIDETECTOR_STATUS ' + JSON.stringify(event) + '\n';

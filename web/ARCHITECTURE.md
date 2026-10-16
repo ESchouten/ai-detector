@@ -57,7 +57,7 @@ Paths are relative to `src/` for code and `tests/` for tests.
 
 Services take their dependencies as constructor arguments and are tested with Node's test runner. The few singletons are composed in small files: `configuration/index.ts`, `detector-service.ts`, `recordings.ts`, `access.ts`, `telegram-service.ts`. There is no container.
 
-`pnpm test` runs source behavior, `pnpm test:desktop` the desktop host and `pnpm test:production` the built server over HTTP (`tests/production/`).
+`pnpm test` runs source behavior, `pnpm test:desktop` the desktop host and `pnpm test:production` the built server over HTTP (`tests/production/`). `pnpm test:e2e` (`tests/e2e/`) drives the built server in Chrome with the real detector: setup, a camera played over RTSP by mediamtx, Cow Catcher, two Telegram recipients, and the alerts the detector sends for a real mounting. Telegram is a stand-in behind a local HTTPS proxy with a test certificate authority, so neither the application nor the detector contacts Telegram; other sites, such as the model download, pass through.
 
 ## Rules
 

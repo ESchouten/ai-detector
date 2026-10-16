@@ -90,9 +90,10 @@ pnpm dev
 pnpm quality
 pnpm build
 pnpm test:production
+pnpm test:e2e
 ```
 
-`pnpm quality` runs the schema, formatting, lint, translation, type, dependency and unit checks. `pnpm test:production` exercises the built server over HTTP. The [architecture guide](ARCHITECTURE.md) maps the code and its rules. Interface text is written in English in the source and translated in `src/locales/*.po`; run `pnpm i18n` after changing it.
+`pnpm quality` runs the schema, formatting, lint, translation, type, dependency and unit checks. `pnpm test:production` exercises the built server over HTTP. `pnpm test:e2e` sets up Cow Catcher in Chrome on a fresh installation and waits for its alerts. It needs Google Chrome, the detector installed in `detector/.venv` (`uv sync --extra default`) and [mediamtx](https://github.com/bluenviron/mediamtx) on the `PATH`. mediamtx plays `example/sprong24.mp4` as an RTSP camera, and a local stand-in answers for Telegram. The [architecture guide](ARCHITECTURE.md) maps the code and its rules. Interface text is written in English in the source and translated in `src/locales/*.po`; run `pnpm i18n` after changing it.
 
 | Variable                       | Effect                                                                                                               |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------- |

@@ -12,10 +12,11 @@ const entry = new URL('../../node-server.mjs', import.meta.url).href;
 const adapter = new URL('../../build/index.js', import.meta.url).href;
 const executable = fileURLToPath(new URL('../fixtures/detector.mjs', import.meta.url));
 
-export async function startServer(t, origin, prepare, presetsUrl = '') {
+/** `env` adds to or replaces the server's environment, such as another detector. */
+export async function startServer(t, origin, prepare, presetsUrl = '', env = {}) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-node-production-'));
 	await prepare?.(directory);
-	const env = {
+	const environment = {
 		...process.env,
 		HOST: '127.0.0.1',
 		PORT: '0',
@@ -23,7 +24,8 @@ export async function startServer(t, origin, prepare, presetsUrl = '') {
 		AIDETECTOR_EXECUTABLE: executable,
 		// No test asks the published presets on GitHub; one names a stand-in for them.
 		AIDETECTOR_PRESETS_URL: presetsUrl,
-		SHUTDOWN_TIMEOUT: '2'
+		SHUTDOWN_TIMEOUT: '2',
+		...env
 	};
 	for (const name of [
 		'ORIGIN',
@@ -33,8 +35,8 @@ export async function startServer(t, origin, prepare, presetsUrl = '') {
 		'LISTEN_PID',
 		'LISTEN_FDS'
 	])
-		delete env[name];
-	if (origin) env.ORIGIN = origin;
+		delete environment[name];
+	if (origin) environment.ORIGIN = origin;
 	// Use the adapter's public server export to discover its OS-assigned test port.
 	const script = `
 		import { once } from 'node:events';
@@ -46,7 +48,7 @@ export async function startServer(t, origin, prepare, presetsUrl = '') {
 	`;
 	const child = spawn(process.execPath, ['--input-type=module', '--eval', script], {
 		cwd: directory,
-		env,
+		env: environment,
 		stdio: ['ignore', 'pipe', 'pipe', 'ipc']
 	});
 	let logs = '';

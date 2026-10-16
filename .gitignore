@@ -18,13 +18,17 @@ app.json
 __pycache__/
 .venv-test/
 
+# .NET build output of the Windows launcher and its tests
+/distribution/windows/**/bin/
+/distribution/windows/**/obj/
+/distribution/windows/**/TestResults/
+
 # Downloaded datasets and ordinary video recordings
 /datasets/
 /videos/
 /detector/videos/
 
-# Inference caches, replay output and local identity catalogs
-/detector/benchmark-cache/
+# Replay output and local identity catalogs
 /detector/passage-runs/
 /detector/identities/
 /web/identities

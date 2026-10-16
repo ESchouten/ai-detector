@@ -10,6 +10,7 @@ on:
       - '!web/src/**/*.svelte'
       - '!web/src/**/*.css'
       - '!web/tests/**'
+      - 'web/tests/fixtures/**'
       - '!web/*.md'
       - 'config/**'
       - 'ruff.toml'
@@ -47,13 +48,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-distribution
-        with:
-          dotnet: 'true'
       - name: Compile desktop web executable
         run: python distribution/build.py web --skip-dependencies
       - uses: ./.github/actions/build-launcher
-        with:
-          dotnet-tests: 'true'
       - uses: ./.github/actions/test-distribution
       - name: Upload distribution diagnostics
         if: failure()

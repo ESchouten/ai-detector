@@ -10,14 +10,9 @@ runs:
     - uses: ./.github/actions/setup-distribution
       with:
         web: 'false'
-        dotnet: ${{ runner.os == 'Windows' && 'true' || 'false' }}
     - name: Install packaging tools
       shell: bash
       run: uv pip install --requirement distribution/requirements.txt
-    - name: Restore Windows installer tool
-      if: runner.os == 'Windows'
-      shell: bash
-      run: dotnet tool restore --tool-manifest distribution/windows/dotnet-tools.json
     - name: Install Linux desktop tools
       if: runner.os == 'Linux'
       shell: bash

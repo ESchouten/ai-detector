@@ -7,10 +7,11 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
-from installers import build_installer, linux, linux_tree, macos
-from package import archive, macos_bundle
+from installers import build_installer, linux, linux_tree, macos, windows
+from package import macos_bundle
 
 
 class InstallerTest(unittest.TestCase):
@@ -196,21 +197,39 @@ class InstallerTest(unittest.TestCase):
                 ["hdiutil", "detach", str(mounted)], check=True, capture_output=True
             )
 
-    @unittest.skipIf(
-        os.name == "nt", "Unprivileged Windows fixtures cannot create symlinks"
-    )
-    def test_portable_archive_preserves_framework_symlinks(self):
-        import zipfile
-
-        (self.payload / "Current").symlink_to("Versions/A")
-        artifact = archive(self.payload)
-        with zipfile.ZipFile(artifact) as packed:
-            info = packed.getinfo("application/Current")
-            self.assertTrue(stat.S_ISLNK(info.external_attr >> 16))
-            self.assertEqual(packed.read(info), b"Versions/A")
-
     def test_invalid_versions_fail_before_packaging(self):
         for value in ("main", "1.2", "1.2.3\nInjected=command", "../1.2.3", "01.2.3"):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 build_installer(self.payload, "linux-x64", value)
         self.assertFalse((self.root / "debian").exists())
+
+
+@unittest.skipUnless(
+    os.name == "nt" and os.environ.get("WINDOWS_LAUNCHER"),
+    "Requires the Windows launcher and pinned vpk tool",
+)
+class VelopackTest(unittest.TestCase):
+    """Build real Velopack full updates; never install them on the runner."""
+
+    def test_full_update_preserves_the_runtime_and_replaces_changed_files(self):
+        with tempfile.TemporaryDirectory(prefix="ai-detector-velopack-") as temporary:
+            root = Path(temporary)
+            payload = root / "payload"
+            shutil.copytree(os.environ["WINDOWS_LAUNCHER"], payload)
+            (payload / "application.json").write_text("{}")
+            (payload / "runtime.bin").write_bytes(os.urandom(2 * 1024 * 1024))
+            (payload / "web.txt").write_text("old dashboard")
+            windows(payload, "1.0.0")
+            (payload / "web.txt").write_text("new dashboard")
+            windows(payload, "1.0.1")
+            updates = root / "windows-updates"
+            target = next(updates.glob("*1.0.1*-full.nupkg"))
+            self.assertEqual(list(updates.glob("*-delta.nupkg")), [])
+            with zipfile.ZipFile(target) as package:
+                for name in ("runtime.bin", "web.txt"):
+                    entry = next(
+                        entry
+                        for entry in package.namelist()
+                        if entry.endswith(f"/{name}")
+                    )
+                    self.assertEqual(package.read(entry), (payload / name).read_bytes())

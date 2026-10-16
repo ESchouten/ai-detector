@@ -3,12 +3,10 @@ import os
 import plistlib
 import tempfile
 import unittest
-import zipfile
 from pathlib import Path
 
 from fixtures.keys import PUBLIC_KEY
 from package import PackageInputs, assemble_package
-from package import archive as archive_package
 from release_config import release_config
 
 
@@ -59,7 +57,7 @@ class PackageTest(unittest.TestCase):
         self.ffmpeg.write_bytes(b"ffmpeg")
         self.ffmpeg.chmod(0o755)
 
-    def test_complete_portable_archive(self):
+    def test_complete_portable_package(self):
         for platform, launcher, encoder in (
             ("windows-x64", "ai-detector-web.exe", "ffmpeg.exe"),
             ("macos-arm64", "ai-detector-web", "ffmpeg"),
@@ -87,87 +85,66 @@ class PackageTest(unittest.TestCase):
                         else None,
                     )
                 )
-                archive = archive_package(folder)
-                with zipfile.ZipFile(archive) as download:
-                    base = f"AI-Detector-{platform}/"
-                    prefix = (
-                        base + "AI Detector.app/Contents/MacOS/"
-                        if platform == "macos-arm64"
-                        else base
-                    )
-                    if platform == "macos-arm64":
-                        detector = (
-                            base
-                            + "AI Detector.app/Contents/Helpers/Detector.app/Contents/"
-                        )
-                        self.assertEqual(
-                            download.read(prefix + "detector"),
-                            b"../Helpers/Detector.app/Contents/MacOS",
-                        )
-                        self.assertEqual(
-                            download.read(detector + "MacOS/aidetector"), b"detector"
-                        )
-                        self.assertEqual(
-                            download.read(detector + "Resources/library"),
-                            b"runtime dependency",
-                        )
-                    else:
-                        self.assertEqual(
-                            download.read(prefix + "detector/aidetector"), b"detector"
-                        )
-                        self.assertEqual(
-                            download.read(prefix + "detector/_internal/library"),
-                            b"runtime dependency",
-                        )
-                    self.assertEqual(download.read(prefix + launcher), b"web")
-                    if platform == "windows-x64":
-                        self.assertEqual(
-                            download.read(prefix + "AI Detector.exe"),
-                            b"native launcher",
-                        )
-                        self.assertIn(
-                            prefix + "AI Detector.exe.config",
-                            download.namelist(),
-                        )
-                        self.assertIn(prefix + "Lucide.LICENSE", download.namelist())
-                        for name in (
-                            "Velopack.dll",
-                            "Newtonsoft.Json.dll",
-                            "ThirdPartyNotices.txt",
-                        ):
-                            self.assertEqual(
-                                download.read(prefix + name).decode(), name
-                            )
-                        self.assertEqual(
-                            json.loads(download.read(prefix + "application.json")), {}
-                        )
+                payload = (
+                    folder / "AI Detector.app/Contents/MacOS"
+                    if platform == "macos-arm64"
+                    else folder
+                )
+                self.assertEqual(
+                    (payload / "detector/aidetector").read_bytes(), b"detector"
+                )
+                if platform == "macos-arm64":
                     self.assertEqual(
-                        download.read(prefix + "bin/" + encoder), b"ffmpeg"
+                        os.readlink(payload / "detector"),
+                        "../Helpers/Detector.app/Contents/MacOS",
                     )
-                    if os.name != "nt":
-                        for executable in (
-                            launcher,
-                            "detector"
-                            if platform == "macos-arm64"
-                            else "detector/aidetector",
-                            "bin/" + encoder,
-                        ):
-                            self.assertTrue(
-                                download.getinfo(prefix + executable).external_attr
-                                >> 16
-                                & 0o111
-                            )
-                    if platform == "macos-arm64":
-                        info = plistlib.loads(
-                            download.read(base + "AI Detector.app/Contents/Info.plist")
-                        )
-                        self.assertEqual(info["CFBundleShortVersionString"], "1.2.3")
-                        self.assertEqual(info["LSMinimumSystemVersion"], "14.0")
-                        self.assertTrue(info["LSUIElement"])
-                        self.assertEqual(
-                            download.read(prefix + info["CFBundleExecutable"]),
-                            b"native launcher",
-                        )
+                    self.assertEqual(
+                        (
+                            folder
+                            / "AI Detector.app/Contents/Helpers/Detector.app/Contents/Resources/library"
+                        ).read_bytes(),
+                        b"runtime dependency",
+                    )
+                else:
+                    self.assertEqual(
+                        (payload / "detector/_internal/library").read_bytes(),
+                        b"runtime dependency",
+                    )
+                self.assertEqual((payload / launcher).read_bytes(), b"web")
+                if platform == "windows-x64":
+                    self.assertEqual(
+                        (payload / "AI Detector.exe").read_bytes(), b"native launcher"
+                    )
+                    self.assertTrue((payload / "AI Detector.exe.config").is_file())
+                    self.assertTrue((payload / "Lucide.LICENSE").is_file())
+                    for name in (
+                        "Velopack.dll",
+                        "Newtonsoft.Json.dll",
+                        "ThirdPartyNotices.txt",
+                    ):
+                        self.assertEqual((payload / name).read_text(), name)
+                    self.assertEqual(
+                        json.loads((payload / "application.json").read_text()), {}
+                    )
+                self.assertEqual((payload / "bin" / encoder).read_bytes(), b"ffmpeg")
+                if os.name != "nt":
+                    for executable in (
+                        launcher,
+                        "detector/aidetector",
+                        "bin/" + encoder,
+                    ):
+                        self.assertTrue((payload / executable).stat().st_mode & 0o111)
+                if platform == "macos-arm64":
+                    info = plistlib.loads(
+                        (folder / "AI Detector.app/Contents/Info.plist").read_bytes()
+                    )
+                    self.assertEqual(info["CFBundleShortVersionString"], "1.2.3")
+                    self.assertEqual(info["LSMinimumSystemVersion"], "14.0")
+                    self.assertTrue(info["LSUIElement"])
+                    self.assertEqual(
+                        (payload / info["CFBundleExecutable"]).read_bytes(),
+                        b"native launcher",
+                    )
 
     def test_windows_requires_its_launcher_before_creating_a_package(self):
         output = self.root / "out"
@@ -255,12 +232,9 @@ class PackageTest(unittest.TestCase):
             "linux-x64",
         )
         folder = assemble_package(PackageInputs(*arguments))
-        archive = archive_package(folder)
-        original = archive.read_bytes()
         self.web.write_bytes(b"new web binary")
 
         with self.assertRaises(FileExistsError):
             assemble_package(PackageInputs(*arguments))
 
-        self.assertEqual(archive.read_bytes(), original)
-        self.assertEqual((archive.with_suffix("") / "AI Detector").read_bytes(), b"web")
+        self.assertEqual((folder / "AI Detector").read_bytes(), b"web")

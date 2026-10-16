@@ -14,7 +14,7 @@ from pathlib import Path
 from time import perf_counter
 
 from nvidia_runtime import stage_nvidia_runtime
-from package import PackageInputs, archive, assemble_package
+from package import PackageInputs, assemble_package
 from updates import numeric_version
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -114,7 +114,7 @@ def build_detector(args) -> Path:
             # Prepared Core ML models are named after the converter's version.
             "--copy-metadata=coremltools",
         ]
-    metadata = f"TYPE = {target.extra!r}\nREF_NAME = {args.version!r}\n"
+    metadata = f"TYPE = {target.extra!r}\nREF_NAME = {args.ref!r}\n"
     with build_metadata(ROOT / "detector/src/aidetector/version.py", metadata):
         run(
             "uv",
@@ -131,14 +131,13 @@ def build_detector(args) -> Path:
             "src",
             "--specpath",
             ROOT / "detector/build",
-            *(["--clean"] if args.clean else []),
             "--noconfirm",
             cwd=ROOT / "detector",
         )
     artifact = "aidetector.app" if args.platform == "macos-arm64" else "aidetector"
     destination = ROOT / "detector/dist" / artifact
     if args.platform == "windows-x64":
-        stage_nvidia_runtime(ROOT, destination / "nvidia-runtime", args.version)
+        stage_nvidia_runtime(ROOT, destination / "nvidia-runtime", args.ref)
     return destination
 
 
@@ -152,12 +151,8 @@ def stamp_detector(folder: Path, reference: str) -> None:
     versions = [
         path for path in folder.rglob("aidetector/version.py") if not path.is_symlink()
     ]
-    if not versions:
-        raise ValueError(f"This detector has no version file to stamp: {folder}")
     for version in versions:
         lines = version.read_text(encoding="utf-8").splitlines()
-        if sum(line.startswith("REF_NAME = ") for line in lines) != 1:
-            raise ValueError(f"Unexpected version file: {version}")
         version.write_text(
             "\n".join(
                 f"REF_NAME = {reference!r}" if line.startswith("REF_NAME = ") else line
@@ -203,8 +198,8 @@ def build_web(args) -> Path:
     }
     with build_metadata(
         ROOT / "web/src/lib/version.ts",
-        f"export const version = {json.dumps(os.environ.get('GITHUB_REF_NAME', args.version))};\n"
-        f"export const preview = {json.dumps(os.environ.get('UPDATE_CHANNEL') == 'preview')};\n",
+        f"export const version = {json.dumps(args.ref)};\n"
+        f"export const preview = {json.dumps(args.channel == 'preview')};\n",
     ):
         run("pnpm", "build", cwd=ROOT / "web", env=env)
     return ROOT / "web/dist" / f"ai-detector-web{target.suffix}"
@@ -363,63 +358,59 @@ def validate_preview(args) -> None:
 
 
 def parse_arguments(argv: list[str] | None = None):
-    common = argparse.ArgumentParser(add_help=False)
-    common.add_argument("--version", default="0.0.0")
+    version = argparse.ArgumentParser(add_help=False)
+    version.add_argument(
+        "--version", default="0.0.0", help="Numeric application version"
+    )
+    reference = argparse.ArgumentParser(add_help=False)
+    reference.add_argument(
+        "--ref", default="main", help="Git reference the programs report"
+    )
     dependencies = argparse.ArgumentParser(add_help=False)
     dependencies.add_argument(
         "--skip-dependencies",
         action="store_true",
         help="Dependencies are already installed",
     )
-    dependencies.add_argument(
-        "--clean",
-        action="store_true",
-        help="Discard PyInstaller's analysis and binary caches",
+    web = argparse.ArgumentParser(
+        add_help=False, parents=[version, reference, dependencies]
+    )
+    web.add_argument(
+        "--channel",
+        choices=["stable", "preview"],
+        default="stable",
+        help="A preview keeps the presets it was built with",
     )
     parser = argparse.ArgumentParser(description=__doc__)
     stages = parser.add_subparsers(dest="stage", required=True)
     full = stages.add_parser(
-        "all",
-        parents=[common, dependencies],
-        help="Build and smoke-test a complete preview installer",
+        "all", parents=[web], help="Build and smoke-test a complete preview installer"
     )
     full.add_argument("--output", type=Path, default=ROOT / "application-dist")
     full.add_argument("--detector", type=Path, help="Reuse an already frozen detector")
     stages.add_parser(
         "detector",
-        parents=[common, dependencies],
+        parents=[reference, dependencies],
         help="Freeze the detector using the shared hooks",
     )
-    stages.add_parser(
-        "web", parents=[common, dependencies], help="Compile the desktop web executable"
-    )
+    stages.add_parser("web", parents=[web], help="Compile the desktop web executable")
     launcher = stages.add_parser(
-        "launcher", parents=[common], help="Compile the native desktop launcher"
+        "launcher", parents=[version], help="Compile the native desktop launcher"
     )
     launcher.add_argument("--output", type=Path, required=True)
-    packed = stages.add_parser(
-        "archive", help="Archive a validated, assembled application"
-    )
-    packed.add_argument("folder", type=Path)
     stamp = stages.add_parser(
         "stamp-detector",
         help="Write a build reference into a detector frozen from the same sources",
     )
     stamp.add_argument("folder", type=Path)
-    stamp.add_argument("--version", required=True)
+    stamp.add_argument("--ref", required=True)
     return parser.parse_args(argv)
 
 
 if __name__ == "__main__":
     args = parse_arguments()
-    if args.stage == "archive":
-        print(archive(args.folder))
-        raise SystemExit(0)
     if args.stage == "stamp-detector":
-        try:
-            stamp_detector(args.folder, args.version)
-        except ValueError as error:
-            raise SystemExit(str(error)) from error
+        stamp_detector(args.folder, args.ref)
         raise SystemExit(0)
     try:
         preflight(args)

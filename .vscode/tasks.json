@@ -5,18 +5,6 @@
   },
   "tasks": [
     {
-      "label": "Detector: install dependencies",
-      "type": "process",
-      "command": "uv",
-      "args": [
-        "sync",
-        "--locked",
-        "--extra",
-        "default"
-      ],
-      "problemMatcher": []
-    },
-    {
       "label": "Detector: lint",
       "type": "process",
       "command": "uv",
@@ -26,8 +14,7 @@
         "ruff",
         "check",
         "src/aidetector",
-        "tests",
-        "tools"
+        "tests"
       ],
       "problemMatcher": []
     },
@@ -42,8 +29,7 @@
         "format",
         "--check",
         "src/aidetector",
-        "tests",
-        "tools"
+        "tests"
       ],
       "problemMatcher": []
     },
@@ -56,22 +42,7 @@
         "--no-sync",
         "ty",
         "check",
-        "src/aidetector",
-        "tools"
-      ],
-      "problemMatcher": []
-    },
-    {
-      "label": "Detector: architecture",
-      "type": "process",
-      "command": "uv",
-      "args": [
-        "run",
-        "--no-sync",
-        "pytest",
-        "-q",
-        "tests/test_architecture.py",
-        "tests/test_import_safety.py"
+        "src/aidetector"
       ],
       "problemMatcher": []
     },
@@ -88,22 +59,6 @@
       "problemMatcher": []
     },
     {
-      "label": "Detector: core tests (fast)",
-      "type": "process",
-      "command": "uv",
-      "args": [
-        "run",
-        "--no-sync",
-        "pytest",
-        "-q",
-        "tests/domain",
-        "tests/application",
-        "tests/test_configuration.py",
-        "tests/test_schemas.py"
-      ],
-      "problemMatcher": []
-    },
-    {
       "label": "Detector: tests",
       "type": "process",
       "command": "uv",
@@ -112,19 +67,6 @@
         "--no-sync",
         "pytest",
         "-q"
-      ],
-      "problemMatcher": []
-    },
-    {
-      "label": "Detector: reference flow",
-      "type": "process",
-      "command": "uv",
-      "args": [
-        "run",
-        "--no-sync",
-        "pytest",
-        "-q",
-        "tests/test_reference_flow.py::test_video_to_validated_archive_uses_real_media_and_flushes_at_eof"
       ],
       "problemMatcher": []
     },
@@ -138,19 +80,6 @@
         "Detector: schemas",
         "Detector: tests"
       ],
-      "problemMatcher": []
-    },
-    {
-      "label": "Web: install dependencies",
-      "type": "process",
-      "command": "pnpm",
-      "args": [
-        "install",
-        "--frozen-lockfile"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}/web"
-      },
       "problemMatcher": []
     },
     {
@@ -171,18 +100,6 @@
       "command": "pnpm",
       "args": [
         "build"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}/web"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Web: architecture graph",
-      "type": "process",
-      "command": "pnpm",
-      "args": [
-        "architecture:graph"
       ],
       "options": {
         "cwd": "${workspaceFolder}/web"

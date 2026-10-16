@@ -3,34 +3,12 @@
 import argparse
 import base64
 import json
-import os
 import plistlib
 import shutil
-import stat
-import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
 from updates import numeric_version
-
-
-def archive(folder: Path) -> Path:
-    if not folder.is_dir():
-        raise FileNotFoundError(f"Application folder does not exist: {folder}")
-    result = folder.with_suffix(".zip")
-    with zipfile.ZipFile(result, "w", zipfile.ZIP_DEFLATED) as output:
-        for directory, folders, files in os.walk(folder):
-            for name in sorted(folders + files):
-                file = Path(directory) / name
-                relative = file.relative_to(folder.parent).as_posix()
-                if file.is_symlink():
-                    info = zipfile.ZipInfo(relative)
-                    info.create_system = 3
-                    info.external_attr = (stat.S_IFLNK | 0o777) << 16
-                    output.writestr(info, os.readlink(file))
-                else:
-                    output.write(file, relative)
-    return result
 
 
 def macos_bundle(

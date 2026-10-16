@@ -90,7 +90,7 @@ uv run --project detector --extra default --with-requirements distribution/requi
 
 It checks the host, the tools and the output folder before compiling. Previews have version `0.0.0` and updates disabled, and the command never installs the result. Use `--output` for another empty folder and `--detector PATH` to reuse an already frozen detector. Run one build at a time per checkout.
 
-CI runs the stages separately: `build.py detector`, `web` and `launcher --output DIRECTORY`. `build.py stamp-detector FOLDER --version REF` writes a new version into an already frozen detector, which CI uses to skip freezing when the detector's sources did not change. `build.py archive FOLDER` makes a portable ZIP for troubleshooting; releases do not publish one.
+CI runs the stages separately: `build.py detector`, `web` and `launcher --output DIRECTORY`. `--version` is the numeric application version, `--ref` the Git reference the programs report, and `--channel preview` makes a test build that keeps the presets it was built with. `build.py stamp-detector FOLDER --ref REF` writes a new reference into an already frozen detector, which CI uses to skip freezing when the detector's sources did not change.
 
 Install one inference extra at a time: `default`, `nvidia`, `nvidia-cuda12` or `windowsml`. On Linux, `default` takes Torch from PyTorch's CPU index, which keeps several gigabytes of unused CUDA libraries out of the installer. Linux packages are compressed with Zstandard level 9 and Mac deltas with LZFSE: both give a slightly larger download for a much shorter build.
 
@@ -102,7 +102,7 @@ pnpm --dir web quality
 bun test ./web/desktop/host.test.ts
 ```
 
-Windows launcher checks:
+Windows launcher checks; the last two, the portable update tests, also run on macOS and Linux:
 
 ```sh
 dotnet tool restore --tool-manifest distribution/windows/dotnet-tools.json
@@ -138,7 +138,7 @@ A published build is never rebuilt. Retry a failed run; after a successful one, 
 
 Prefer a pushed tag when the branch changes workflow files. Creating the release tag from a manual run on such a branch needs a repository secret `RELEASE_TOKEN` with Contents and Workflows write permission, because GitHub's built-in token cannot be given the second.
 
-The [workflow guide](../.github/README.md) describes the jobs, their artifacts and how to debug a failure.
+[CI workflows](#ci-workflows) describes the jobs, their artifacts and how to debug a failure.
 
 ## Publishing a release
 
@@ -154,6 +154,43 @@ Two entries under **Settings → Secrets and variables → Actions** are require
 The production key is backed up in the maintainer's macOS login Keychain under account `io.github.eschouten.ai-detector`; `generate_keys --account io.github.eschouten.ai-detector -p` prints its public half. GitHub Secrets cannot be read back, so that Keychain entry is the backup. Never replace one half without the other: installed applications trust the public key they were built with. The public test keys in `fixtures/` must never sign a release.
 
 Before the first real pair of versions, try a signed update on a Mac and on Windows: leave monitoring running during the download, defer the restart, apply it, and confirm that monitoring resumes with the same settings, recordings and login preference. Also try an update that skips a version and one whose download was interrupted.
+
+## CI workflows
+
+| Workflow | Runs on | Does |
+| --- | --- | --- |
+| [Application download](../.github/workflows/application.yml) | `app/v*`, `app/test-*`, manual | Checks all three systems, builds and tests the native applications, then publishes signed official or preview updates; an official release also publishes the container image. |
+| [Detector Tests](../.github/workflows/detector-tests.yml) | Relevant pull requests and pushes to `main`, manual, and every application build | Lint, formatting and types; tests on three systems, with branch coverage on Linux; schemas and the wheel. |
+| [Web and setup tests](../.github/workflows/web-tests.yml) | The same | Unit tests on three systems; static checks, the production server and Compose checks on Linux. |
+| [Desktop distribution tests](../.github/workflows/distribution-tests.yml) | Relevant pull requests and pushes to `main`, manual | Native launchers, the compiled web process, installers and update packages. |
+| [End-to-end test](../.github/workflows/e2e-tests.yml) | Every pull request and push to `main`, manual | Sets up Cow Catcher in the browser, with a camera that plays the example clip, and receives its alerts. |
+| [Workflow syntax](../.github/workflows/workflow-tests.yml) | Every application build and distribution test run | Lints workflow files and their embedded scripts. |
+
+An application build runs the detector and web checks for the exact commit it releases. After the release configuration, these start together: native compilation per system, those checks, and a real installation of the Windows NVIDIA runtime. Each installer waits only for its own system's binaries, and the desktop tests for those binaries run beside packaging. Publication needs every installer, test and check to succeed. Runs are serialized across official and preview releases because both write the same update feeds.
+
+Freezing the detector is the slowest step, and its result depends only on the detector's sources, its locked dependencies and the build scripts. A preview build therefore first looks for an earlier application build of this repository that froze and smoke-tested the same inputs, takes that build's binaries, and writes its own reference into `aidetector/version.py`, which the freeze keeps as a plain file for this purpose. If none is found, or anything on that path fails, it freezes and smoke-tests as usual. Official `app/v*` releases always freeze afresh. Editing `application.yml`, `build.py` or the PyInstaller hooks changes those inputs, so the next build freezes again. `tested_detector.py` accepts an earlier build only from this repository's own tag or manual runs, never from a pull request.
+
+Artifacts of a run:
+
+- `native-build-PLATFORM`: the tested binaries, including the launcher, as a tar to keep executable permissions and macOS symlinks, kept seven days so a packaging retry can reuse them. A small `detector-PLATFORM-HASH` marker beside it names the detector inputs it contains.
+- `AI-Detector-PLATFORM`: one installer each, a Mac `.dmg`, a Windows setup `.exe` or a Linux `.deb`.
+- `update-files-PLATFORM` (Mac and Windows): update packages, deltas and signed feeds for the publishing job.
+
+An official release also builds `ghcr.io/eschouten/ai-detector` for amd64 and arm64 on native runners. It publishes the image as `X.Y.Z` and `latest` only after both architectures pass the container smoke check and the detector, web and workflow checks succeed. The image and the desktop release do not wait for each other.
+
+Python is pinned in [`detector/.python-version`](../detector/.python-version); the other tool versions are in `toolchain.json`, `web/package.json` and the lockfiles. The workflows call the same `build.py` stages as a local build, through these actions:
+
+| Action | Does |
+| --- | --- |
+| [setup-web](../.github/actions/setup-web/action.yml) | Node, pnpm, Bun, caches and the locked web installation |
+| [setup-detector](../.github/actions/setup-detector/action.yml) | uv, Python and the detector's locked dependencies |
+| [setup-distribution](../.github/actions/setup-distribution/action.yml) | Python and uv, the web setup, and on Windows .NET with the installer tool |
+| [build-launcher](../.github/actions/build-launcher/action.yml) | Compiles the native launcher |
+| [test-distribution](../.github/actions/test-distribution/action.yml) | Packaging and process lifecycle checks against the compiled web application, and the .NET tests on Windows |
+| [package-application](../.github/actions/package-application/action.yml) | Assembles tested binaries, smoke-tests the application, creates installers and update feeds |
+| [setup-container](../.github/actions/setup-container/action.yml) | Buildx, registry login, and disk cleanup when space is short |
+
+To debug a failure, open the first failing step, not the jobs skipped after it; `gh run view RUN_ID --log-failed` prints its log. Failure diagnostics are kept for seven days. Run the matching check locally: `actionlint` for the workflow files, and the [local checks](#local-builds-and-tests) for the rest.
 
 ## Existing Linux Docker startup
 

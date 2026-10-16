@@ -1,10 +1,12 @@
 """Build staging and preflight operate on disposable files, never a real checkout."""
 
 import argparse
+import json
 import os
 import subprocess
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from contextlib import chdir
 from pathlib import Path
 from unittest.mock import patch
@@ -23,25 +25,19 @@ class BuildTest(unittest.TestCase):
         self.version.write_bytes(b"original version\r\n")
 
     def test_the_web_build_knows_its_version_and_whether_it_is_a_test_build(self):
-        args = argparse.Namespace(
-            platform="linux-x64",
-            skip_dependencies=True,
-            version="1.2.3",
-        )
         built = []
         for channel in ("stable", "preview"):
-            with (
-                patch.dict(
-                    os.environ,
-                    {"GITHUB_REF_NAME": "app/v1.2.3", "UPDATE_CHANNEL": channel},
-                ),
-                patch.object(
-                    build,
-                    "run",
-                    side_effect=lambda *_a, **_k: built.append(
-                        self.version.read_text()
-                    ),
-                ),
+            args = argparse.Namespace(
+                platform="linux-x64",
+                skip_dependencies=True,
+                version="1.2.3",
+                ref="app/v1.2.3",
+                channel=channel,
+            )
+            with patch.object(
+                build,
+                "run",
+                side_effect=lambda *_a, **_k: built.append(self.version.read_text()),
             ):
                 build.build_web(args)
         self.assertEqual(
@@ -58,6 +54,8 @@ class BuildTest(unittest.TestCase):
             platform="linux-x64",
             skip_dependencies=True,
             version="1.2.3",
+            ref="main",
+            channel="stable",
         )
         with patch.object(
             build, "run", side_effect=subprocess.CalledProcessError(1, "pnpm build")
@@ -163,12 +161,6 @@ class BuildTest(unittest.TestCase):
         )
         self.assertEqual(nvidia.read_text(), "TYPE = 'cuda'\nREF_NAME = 'app/test-2'\n")
 
-        frozen.write_text("TYPE = 'default'\n")
-        with self.assertRaisesRegex(ValueError, "Unexpected version file"):
-            build.stamp_detector(folder, "app/test-3")
-        with self.assertRaisesRegex(ValueError, "no version file"):
-            build.stamp_detector(self.root / "missing", "app/test-3")
-
     def test_detector_dependency_selection_matches_the_platform(self):
         version = self.root / "detector/src/aidetector/version.py"
         version.parent.mkdir(parents=True)
@@ -186,3 +178,22 @@ class BuildTest(unittest.TestCase):
         )
         self.assertEqual(result, self.root / "detector/dist/aidetector")
         self.assertEqual(version.read_text(), "original version\n")
+
+
+class BuildConfigurationTest(unittest.TestCase):
+    """Contracts shared by separately executed build tools."""
+
+    def test_velopack_cli_matches_the_runtime_package(self):
+        tools = json.loads(
+            (build.ROOT / "distribution/windows/dotnet-tools.json").read_text()
+        )
+        packages = ET.parse(
+            build.ROOT / "distribution/windows/Directory.Packages.props"
+        )
+        runtime = packages.find(".//PackageVersion[@Include='Velopack']")
+        self.assertEqual(tools["tools"]["vpk"]["version"], runtime.attrib["Version"])
+
+    def test_bun_types_match_the_runtime_used_to_compile(self):
+        tools = json.loads((build.ROOT / "distribution/toolchain.json").read_text())
+        package = json.loads((build.ROOT / "web/package.json").read_text())
+        self.assertEqual(package["devDependencies"]["@types/bun"], tools["bun"])

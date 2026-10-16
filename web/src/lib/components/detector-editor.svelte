@@ -406,7 +406,7 @@
 				Phone alerts <span class="font-normal text-muted-foreground">(optional)</span>
 			</Field.Legend>
 			<Field.Description>
-				Send a Telegram message with the clip when this detector sees something.
+				Send a Telegram message with the footage when this detector sees something.
 			</Field.Description>
 			{#if telegrams.length}
 				<div class="panel divide-y overflow-hidden">

@@ -15,7 +15,7 @@
 	<PageHeader
 		back={{ href: resolve('/settings'), label: 'Settings' }}
 		title="Alerts"
-		description="When a detector sees something, the clip is sent to these people in Telegram. They can confirm it or mark it as a false alarm right there."
+		description="When a detector sees something, the footage is sent to these people in Telegram. They can confirm it or mark it as a false alarm right there."
 	>
 		{#snippet actions()}
 			{#if telegrams.length}

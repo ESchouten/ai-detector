@@ -1512,10 +1512,6 @@ msgid "Phone alerts <0>(optional)</0>"
 msgstr "Meldingen op je telefoon <0>(optioneel)</0>"
 
 #: src/lib/components/detector-editor.svelte
-msgid "Send a Telegram message with the clip when this detector sees something."
-msgstr "Stuur een Telegram-bericht met de clip wanneer deze detector iets ziet."
-
-#: src/lib/components/detector-editor.svelte
 msgid "Could not update detector"
 msgstr "Detector kon niet worden bijgewerkt"
 
@@ -2663,10 +2659,6 @@ msgid "Alerts"
 msgstr "Meldingen"
 
 #: src/routes/(admin)/notifications/+page.svelte
-msgid "When a detector sees something, the clip is sent to these people in Telegram. They can confirm it or mark it as a false alarm right there."
-msgstr "Wanneer een detector iets ziet, wordt de clip via Telegram naar deze mensen gestuurd. Zij kunnen de detectie daar meteen bevestigen of als vals alarm markeren."
-
-#: src/routes/(admin)/notifications/+page.svelte
 msgid "<0/>Add recipient"
 msgstr "<0/>Ontvanger toevoegen"
 
@@ -3738,3 +3730,11 @@ msgstr "Standaard"
 #: src/lib/server/configuration/preset-files.ts
 msgid "Telegram settings in a preset leave out token, chat and quiet: each recipient has its own."
 msgstr "Telegram-instellingen in een voorinstelling laten token, chat en quiet weg: elke ontvanger heeft die zelf."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Send a Telegram message with the footage when this detector sees something."
+msgstr "Stuur een Telegram-bericht met de beelden wanneer deze detector iets ziet."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "When a detector sees something, the footage is sent to these people in Telegram. They can confirm it or mark it as a false alarm right there."
+msgstr "Wanneer een detector iets ziet, worden de beelden via Telegram naar deze mensen gestuurd. Zij kunnen de detectie daar meteen bevestigen of als vals alarm markeren."

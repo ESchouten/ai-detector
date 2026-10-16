@@ -1,6 +1,15 @@
 /** Local launcher identity; never trust an arbitrary process occupying the dashboard port. */
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
-import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import {
+	closeSync,
+	fsyncSync,
+	mkdirSync,
+	openSync,
+	readFileSync,
+	renameSync,
+	rmSync,
+	writeFileSync
+} from 'node:fs';
 import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 
@@ -22,14 +31,14 @@ export class DesktopInstance {
 	private token = randomBytes(32).toString('hex');
 	private file: string;
 	private shutdownFile: string;
-	private portFile: string;
+	private appFile: string;
 	private connected?: SavedInstance;
 
 	constructor(directory: string) {
 		mkdirSync(directory, { recursive: true, mode: 0o700 });
 		this.file = path.join(directory, 'desktop-instance.json');
 		this.shutdownFile = path.join(directory, 'desktop-shutdown.json');
-		this.portFile = path.join(directory, 'desktop-port.json');
+		this.appFile = path.join(directory, 'app.json');
 	}
 
 	/** Publish only after successfully binding the server; the OS port is the instance lock. */
@@ -37,17 +46,25 @@ export class DesktopInstance {
 		writePrivate(this.file, { port, token: this.token, pid: process.pid });
 	}
 
-	/** The port the dashboard moved to when its usual one was taken. */
+	/** The port the dashboard moved to when its usual one was taken, noted in app.json. */
 	savedPort(): number | undefined {
-		try {
-			return JSON.parse(readFileSync(this.portFile, 'utf8')).port;
-		} catch (error) {
-			if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-		}
+		return this.settings()?.port as number | undefined;
 	}
 
+	/** Called before the web application starts, so nothing else is writing app.json. */
 	savePort(port: number): void {
-		writePrivate(this.portFile, { port });
+		const settings = this.settings();
+		// Unreadable settings are left for the dashboard to repair.
+		if (settings) writePrivate(this.appFile, { ...settings, port });
+	}
+
+	/** app.json, empty without one, and nothing while it cannot be read. */
+	private settings(): Record<string, unknown> | undefined {
+		try {
+			return JSON.parse(readFileSync(this.appFile, 'utf8'));
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code === 'ENOENT') return {};
+		}
 	}
 
 	/** A copy that published this port and still runs, even while it is too busy starting to answer. */
@@ -143,9 +160,16 @@ export class DesktopInstance {
 	}
 }
 
+/** Written as the settings store writes app.json: whole, on disk before it replaces the file. */
 function writePrivate(file: string, record: object): void {
 	const temporary = `${file}.${process.pid}.tmp`;
-	writeFileSync(temporary, JSON.stringify(record), { mode: 0o600 });
+	const descriptor = openSync(temporary, 'w', 0o600);
+	try {
+		writeFileSync(descriptor, JSON.stringify(record, null, 2) + '\n');
+		fsyncSync(descriptor);
+	} finally {
+		closeSync(descriptor);
+	}
 	renameSync(temporary, file);
 }
 

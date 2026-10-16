@@ -161,8 +161,8 @@ const pairedDevice = v.object({
 	created: v.number(),
 	expires: v.number()
 });
-// app.json also holds the detector launcher's notes, `monitoring` and `outages` (see
-// launcher-notes.ts). They are deliberately absent here, so settings documents, backups and
+// app.json also holds the installation's notes, `monitoring`, `outages` and `port` (see
+// installation-notes.ts). They are deliberately absent here, so settings documents, backups and
 // revisions never contain them.
 export const appSchema = v.object({
 	// The interface language of this installation; absent until setup or a choice records one.

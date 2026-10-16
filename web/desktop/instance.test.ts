@@ -158,3 +158,24 @@ test('a published copy that still runs keeps its port, even before it can answer
 	await writeFile(record, JSON.stringify({ port: 8080, token: 'crashed', pid: ended }));
 	assert.equal(instance.running(8080), false);
 });
+
+test('a port the dashboard moved to joins the settings in app.json, which stay readable', async (t) => {
+	const directory = await mkdtemp(path.join(tmpdir(), 'ai-instance-'));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const app = path.join(directory, 'app.json');
+	const instance = new DesktopInstance(directory);
+	assert.equal(instance.savedPort(), undefined);
+	await writeFile(app, JSON.stringify({ language: 'nl', monitoring: true }));
+	instance.savePort(8080);
+	assert.equal(new DesktopInstance(directory).savedPort(), 8080);
+	assert.deepEqual(JSON.parse(await readFile(app, 'utf8')), {
+		language: 'nl',
+		monitoring: true,
+		port: 8080
+	});
+	// Broken settings are the dashboard's to repair, not the desktop's to replace.
+	await writeFile(app, '{"language": ');
+	assert.equal(instance.savedPort(), undefined);
+	instance.savePort(8081);
+	assert.equal(await readFile(app, 'utf8'), '{"language": ');
+});

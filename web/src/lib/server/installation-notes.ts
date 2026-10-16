@@ -8,6 +8,7 @@ const queues = new Map<string, ReturnType<typeof serialQueue>>();
 /**
  * One whole-file replacement at a time. The settings store and the detector launcher both
  * rewrite app.json; each holds this only for its own file work, never while waiting for the other.
+ * The desktop runtime writes `port` before either of them starts.
  */
 export function exclusiveWrite<T>(file: string, operation: () => Promise<T>): Promise<T> {
 	const key = path.resolve(file);
@@ -17,20 +18,21 @@ export function exclusiveWrite<T>(file: string, operation: () => Promise<T>): Pr
 }
 
 /**
- * What the detector launcher notes in app.json: `monitoring`, whether monitoring resumes when
- * the application starts, and `outages`, the cameras people were warned about and since when.
- * Both stay with this installation, like paired devices: the settings store carries them over
- * untouched and never exports, imports or recovers them.
+ * What app.json notes about this installation: `monitoring`, whether monitoring resumes when the
+ * application starts, `outages`, the cameras people were warned about and since when, and
+ * `port`, where the desktop dashboard moved when another program had its port. They stay with
+ * this installation, like paired devices: the settings store carries them over untouched and
+ * never exports, imports or recovers them.
  */
-export async function launcherNotes(
+export async function installationNotes(
 	appFile: string
-): Promise<{ monitoring?: unknown; outages?: unknown }> {
-	const { monitoring, outages } = (await readJson<Record<string, unknown>>(appFile)) ?? {};
-	return { monitoring, outages };
+): Promise<{ monitoring?: unknown; outages?: unknown; port?: unknown }> {
+	const { monitoring, outages, port } = (await readJson<Record<string, unknown>>(appFile)) ?? {};
+	return { monitoring, outages, port };
 }
 
 export async function monitoringEnabled(appFile: string): Promise<boolean> {
-	return (await launcherNotes(appFile)).monitoring === true;
+	return (await installationNotes(appFile)).monitoring === true;
 }
 
 function note(appFile: string, key: 'monitoring' | 'outages', value: unknown): Promise<void> {

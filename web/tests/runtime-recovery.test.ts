@@ -5,7 +5,7 @@ import { test, type TestContext } from 'node:test';
 import { executable, managedDetector, monitoringRecords } from './support/detector.ts';
 import { mockTimeouts, realDelay, waitFor } from './support/timers.ts';
 import { ManagedDetector } from '../src/lib/server/managed-detector.ts';
-import { monitoringEnabled } from '../src/lib/server/launcher-notes.ts';
+import { monitoringEnabled } from '../src/lib/server/installation-notes.ts';
 import { readJson, writeJson } from '../src/lib/server/json-file.ts';
 
 const posixOnly = { skip: process.platform === 'win32' };

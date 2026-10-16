@@ -10,7 +10,7 @@ import {
 	type PairedDevice
 } from '../../schema.ts';
 import { isMissingFile, readJson, writeJson } from '../json-file.ts';
-import { exclusiveWrite, launcherNotes } from '../launcher-notes.ts';
+import { exclusiveWrite, installationNotes } from '../installation-notes.ts';
 import { webLog } from '../web-log.ts';
 import { settingsRevision } from './advanced.ts';
 import { identifyCameras } from './cameras.ts';
@@ -82,7 +82,7 @@ export class SettingsFiles {
 	}
 
 	/**
-	 * Replace app.json, and config.json unless only metadata changed. The launcher's notes are
+	 * Replace app.json, and config.json unless only metadata changed. The installation's notes are
 	 * not part of these documents; whatever app.json holds of them at this moment is kept.
 	 * config.json goes first: should app.json then fail, its detectors still load, as those of
 	 * a config.json without app.json do.
@@ -90,7 +90,7 @@ export class SettingsFiles {
 	write(document: Configuration, config = true): Promise<void> {
 		return exclusiveWrite(this.paths.app, async () => {
 			// Unreadable settings are being replaced, and the notes go with them.
-			const notes = await launcherNotes(this.paths.app).catch(() => ({}));
+			const notes = await installationNotes(this.paths.app).catch(() => ({}));
 			if (config) await writeJson(this.paths.config, document.config);
 			await writeJson(this.paths.app, { ...document.app, ...notes });
 		});

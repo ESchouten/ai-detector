@@ -8,7 +8,7 @@ import { ConfigurationStore } from '../src/lib/server/configuration/store.ts';
 import { DetectionArchive, archivePath } from '../src/lib/server/archive.ts';
 import { availableSpace, exists } from '../src/lib/server/installation-import/files.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
-import { monitoringEnabled } from '../src/lib/server/launcher-notes.ts';
+import { monitoringEnabled } from '../src/lib/server/installation-notes.ts';
 import type { Configuration } from '../src/lib/schema.ts';
 import { fakeRuntime } from './support/configuration.ts';
 import { recordingMetadata, temporaryDirectory } from './support/files.ts';

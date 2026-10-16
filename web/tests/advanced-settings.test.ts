@@ -1,17 +1,17 @@
 import { addMonitoredCamera, settingsStore } from './support/configuration.ts';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import * as v from 'valibot';
 import { parseSettings } from '../src/lib/advanced-settings.ts';
 import { heartbeatInput } from '../src/lib/configuration.ts';
 import { settingsRevision } from '../src/lib/server/configuration/advanced.ts';
 import {
-	launcherNotes,
+	installationNotes,
 	monitoringEnabled,
 	noteOutages,
 	setMonitoringEnabled
-} from '../src/lib/server/launcher-notes.ts';
+} from '../src/lib/server/installation-notes.ts';
 import { backupSettings } from '../src/lib/server/settings-backup.ts';
 import { unzipSync } from 'fflate';
 
@@ -114,16 +114,20 @@ test('invalid and stale saves leave both files untouched', async (t) => {
 	assert.deepEqual(await Promise.all([readFile(files.config), readFile(files.app)]), before);
 });
 
-test('saving settings keeps the launcher’s notes, which never appear in settings, backups or revisions', async (t) => {
+test('saving settings keeps the installation’s notes, which never appear in settings, backups or revisions', async (t) => {
 	const { files, store } = await settingsStore(t);
 	const source = 'rtsp://camera.example.test/barn';
 	await store.saveCamera({ label: 'Barn', source });
 	await setMonitoringEnabled(files.app, true);
 	const outages = { 'camera-a': '2026-10-12T00:10:00.000Z' };
 	await noteOutages(files.app, outages);
+	// The desktop runtime notes a port it moved to before the settings store starts.
+	const app = JSON.parse(await readFile(files.app, 'utf8'));
+	await writeFile(files.app, JSON.stringify({ ...app, port: 8080 }));
 	const loaded = await store.read();
 	assert.equal('monitoring' in loaded.app, false);
 	assert.equal('outages' in loaded.app, false);
+	assert.equal('port' in loaded.app, false);
 	const revision = settingsRevision(loaded);
 
 	// Metadata-only, two-file and device writes each replace app.json.
@@ -142,15 +146,21 @@ test('saving settings keeps the launcher’s notes, which never appear in settin
 		{ id: 'phone', name: 'Phone', hash: 'hash', created: 1, expires: 2 }
 	]);
 	assert.equal(await monitoringEnabled(files.app), true);
-	assert.deepEqual(await launcherNotes(files.app), { monitoring: true, outages });
+	assert.deepEqual(await installationNotes(files.app), { monitoring: true, outages, port: 8080 });
 	assert.equal((await store.readDevices()).length, 1);
 
 	const response = await backupSettings(store, new Request('http://localhost/settings/backup'));
 	const backup = unzipSync(new Uint8Array(await response.arrayBuffer()));
 	const saved = JSON.parse(Buffer.from(backup['app.json']).toString());
-	assert.deepEqual(['monitoring' in saved, 'outages' in saved], [false, false]);
+	assert.deepEqual(
+		['monitoring' in saved, 'outages' in saved, 'port' in saved],
+		[false, false, false]
+	);
 	const snapshot = JSON.parse(await readFile(`${files.config}.last-valid`, 'utf8'));
-	assert.deepEqual(['monitoring' in snapshot.app, 'outages' in snapshot.app], [false, false]);
+	assert.deepEqual(
+		['monitoring' in snapshot.app, 'outages' in snapshot.app, 'port' in snapshot.app],
+		[false, false, false]
+	);
 
 	// Pausing is not a settings change: an open Advanced draft stays valid.
 	const beforePause = settingsRevision(await store.read());
@@ -159,7 +169,11 @@ test('saving settings keeps the launcher’s notes, which never appear in settin
 	assert.notEqual(beforePause, revision);
 	// Nothing left to remember leaves no trace in the file.
 	await noteOutages(files.app, {});
-	assert.deepEqual(await launcherNotes(files.app), { monitoring: undefined, outages: undefined });
+	assert.deepEqual(await installationNotes(files.app), {
+		monitoring: undefined,
+		outages: undefined,
+		port: 8080
+	});
 	assert.equal('outages' in JSON.parse(await readFile(files.app, 'utf8')), false);
 });
 

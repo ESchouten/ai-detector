@@ -7,7 +7,7 @@ import {
 	PACKAGED
 } from './application-paths';
 import { ManagedDetector } from './managed-detector';
-import { launcherNotes, noteOutages } from './launcher-notes';
+import { installationNotes, noteOutages } from './installation-notes';
 import type { RuntimeStatus } from '../runtime';
 import type { Configuration } from '../schema';
 import { outageWatch } from './outage-alerts';
@@ -62,7 +62,7 @@ async function followMonitoring(
 	stopped: Date | undefined
 ): Promise<void> {
 	// Settings that cannot be read are reported where they are edited.
-	const notes: Awaited<ReturnType<typeof launcherNotes>> = await launcherNotes(
+	const notes: Awaited<ReturnType<typeof installationNotes>> = await installationNotes(
 		APP_CONFIG_PATH
 	).catch(() => ({}));
 	const sample = outageWatch(

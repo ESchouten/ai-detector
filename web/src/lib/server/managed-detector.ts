@@ -8,7 +8,7 @@ import * as v from 'valibot';
 import { normalizeConfig } from '../configuration.ts';
 import { appSchema, type AppConfig, type LlmConnection } from '../schema.ts';
 import { readJson } from './json-file.ts';
-import { monitoringEnabled, setMonitoringEnabled } from './launcher-notes.ts';
+import { monitoringEnabled, setMonitoringEnabled } from './installation-notes.ts';
 import { DetectorLog, sanitizeTextForLogs as redact } from './logs.ts';
 import type { DetectorCommand } from './nvidia-runtime.ts';
 import { DetectorPreparation, type DetectorOptions } from './detector-preparation.ts';

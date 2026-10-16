@@ -229,9 +229,9 @@ class LauncherTest(unittest.TestCase):
 
     def test_the_dashboard_keeps_its_port_and_leaves_one_another_program_took(self):
         data = self.data_folder()
-        saved = data / "desktop-port.json"
+        settings = data / "app.json"
         port = free_port()
-        saved.write_text(json.dumps({"port": port}))
+        settings.write_text(json.dumps({"language": "nl", "port": port}))
         process, log_path = self.start_without_port(data)
         wait_for(
             process, lambda: "AI Detector is ready" in log_path.read_text(), log_path
@@ -250,7 +250,9 @@ class LauncherTest(unittest.TestCase):
             )
             moved = published_port(data)
             self.assertNotEqual(moved, port)
-            self.assertEqual(json.loads(saved.read_text()), {"port": moved})
+            self.assertEqual(
+                json.loads(settings.read_text()), {"language": "nl", "port": moved}
+            )
             with urllib.request.urlopen(
                 f"http://127.0.0.1:{moved}/", timeout=2
             ) as response:
@@ -262,7 +264,7 @@ class LauncherTest(unittest.TestCase):
             occupied.bind(("127.0.0.1", 0))
             occupied.listen()
             port = occupied.getsockname()[1]
-            (data / "desktop-port.json").write_text(json.dumps({"port": port}))
+            (data / "app.json").write_text(json.dumps({"port": port}))
             # What a copy writes once it holds the port, before it can answer.
             (data / "desktop-instance.json").write_text(
                 json.dumps({"port": port, "token": "starting", "pid": os.getpid()})

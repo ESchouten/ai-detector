@@ -100,6 +100,7 @@ def _arguments(argv: list[str] | None) -> argparse.Namespace:
     action.add_argument(
         "--prepare-windows-ml", nargs="?", const="", help=argparse.SUPPRESS
     )
+    action.add_argument("--probe-onnx-provider", help=argparse.SUPPRESS)
     action.add_argument(
         "--test-vlm",
         type=Path,
@@ -134,6 +135,10 @@ def main(argv: list[str] | None = None) -> int:
         from aidetector.adapters.inference.windows_ml import run_helper
 
         return run_helper(args.prepare_windows_ml or None)
+    if args.probe_onnx_provider is not None:
+        from aidetector.adapters.inference.provider_probe import run_probe
+
+        return run_probe(args.probe_onnx_provider)
     if args.test_vlm is not None:
         from aidetector.adapters.vlm import run_check
 

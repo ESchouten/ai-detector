@@ -39,7 +39,11 @@ def run_executable(
         text=True,
         timeout=timeout,
     )
-    assert process.returncode == 0, process.stdout + process.stderr
+    assert process.returncode == 0, (
+        f"Detector exited with status {process.returncode}\n"
+        + process.stdout
+        + process.stderr
+    )
     saved_logs = (root / "logs/detector.log").read_text(encoding="utf-8")
     for diagnostic in (
         "Runtime: Python",

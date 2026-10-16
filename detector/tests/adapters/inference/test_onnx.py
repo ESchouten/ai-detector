@@ -29,6 +29,9 @@ ONNX_MODELS = (ModelRequirements("model.onnx", image_size=640, batch_size=1),)
 @pytest.fixture
 def windows_ml(monkeypatch, tmp_path):
     monkeypatch.setattr(
+        "aidetector.adapters.inference.onnx.probe_provider", lambda name: True
+    )
+    monkeypatch.setattr(
         ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
     )
     state = SimpleNamespace(libraries={}, lifecycle=[], watchdog=[])
@@ -291,6 +294,42 @@ def test_builtin_directml_survives_optional_windows_ml_failure(
     assert len(notices) == int(failure is not None and not explicit)
     if notices:
         assert "built-in hardware acceleration" in notices[0].message
+
+
+@pytest.mark.parametrize("explicit", [False, True])
+def test_unusable_builtin_directml_is_probed_before_entering_the_inference_process(
+    tmp_path, monkeypatch, windows_ml, explicit
+):
+    monkeypatch.setattr(
+        ort,
+        "get_available_providers",
+        lambda: ["DmlExecutionProvider", "CPUExecutionProvider"],
+    )
+    monkeypatch.setattr(
+        "aidetector.adapters.inference.onnx.probe_provider", lambda name: False
+    )
+    path = tmp_path / "model.onnx"
+    write_detection_model(path)
+    notices = []
+    runtime = inference_runtime(
+        OnnxConfig(provider="DmlExecutionProvider" if explicit else None),
+        ONNX_MODELS,
+        "windowsml",
+        notices.append,
+    )
+    if explicit:
+        with pytest.raises(RuntimeError, match="DirectML could not start"), runtime:
+            pytest.fail("An explicitly requested, unusable provider must fail visibly")
+    else:
+        with runtime as options:
+            assert options.half is False
+            session = ort.InferenceSession(str(path))
+            assert session.get_providers() == ["CPUExecutionProvider"]
+            outputs = session.run(
+                None, {"images": np.zeros((1, 3, 64, 64), dtype=np.float32)}
+            )
+            assert outputs[0].shape == (1, 1, 6)
+        assert any("DirectML could not start" in event.message for event in notices)
 
 
 @pytest.mark.parametrize("failure", [None, "directory", "registration"])

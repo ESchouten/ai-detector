@@ -15,6 +15,7 @@ from time import perf_counter
 from typing import Any
 from urllib.parse import urlsplit
 
+from aidetector.adapters.inference.provider_probe import probe_provider
 from aidetector.adapters.inference.windows_ml import prepare_windows_ml
 from aidetector.application.ports import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig
@@ -279,6 +280,18 @@ def _providers(
     registered: set[str] = set()
     available = ort.get_available_providers()
     logger.info("Built-in ONNX execution providers: %s", available)
+    if (
+        build_type == "windowsml"
+        and "DmlExecutionProvider" in available
+        and config.provider in {None, "DmlExecutionProvider"}
+        and not probe_provider("DmlExecutionProvider")
+    ):
+        message = "DirectML could not start on this computer. See the provider probe diagnostics in the log."
+        if config.provider is not None:
+            raise RuntimeError(message)
+        available = [name for name in available if name != "DmlExecutionProvider"]
+        logger.warning(message)
+        report_status(StatusEvent("notice", message=message))
     if build_type == "windowsml" and config.winml and config.provider not in available:
         try:
             registered = _register_windows_ml(

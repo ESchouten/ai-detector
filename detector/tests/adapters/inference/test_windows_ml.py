@@ -136,8 +136,9 @@ def test_failed_preparation_is_observable_and_other_providers_remain_available(
 @pytest.mark.parametrize("behavior", ["relative_ready", "relative_pending"])
 @pytest.mark.parametrize("explicit", [False, True])
 def test_helper_resolves_package_relative_dll_before_its_dependency_graph_closes(
-    sdk_directory, caplog, behavior, explicit
+    sdk_directory, caplog, monkeypatch, behavior, explicit
 ):
+    monkeypatch.setenv("PYTHONIOENCODING", "cp1252")
     trace = write_windows_ml_sdk(sdk_directory, [(PROVIDER, behavior)])
     libraries = prepare_windows_ml(PROVIDER if explicit else None)
     path = Path(libraries[PROVIDER])

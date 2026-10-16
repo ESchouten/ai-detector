@@ -5,9 +5,10 @@ import logging
 import subprocess
 import sys
 from importlib import import_module
+from io import TextIOWrapper
 from pathlib import Path
 from time import perf_counter
-from typing import Any
+from typing import Any, cast
 
 logger = logging.getLogger(__name__)
 PREPARATION_TIMEOUT = 120.0
@@ -159,6 +160,8 @@ def _prepare_provider(provider: Any, winml: Any, foundation: Any) -> None:
 
 def run_helper(requested: str | None) -> int:
     """Internal, config-free CLI action. stdout is JSON; diagnostics go to stderr."""
+    cast(TextIOWrapper, sys.stdout).reconfigure(encoding="utf-8")
+    cast(TextIOWrapper, sys.stderr).reconfigure(encoding="utf-8")
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s"
     )

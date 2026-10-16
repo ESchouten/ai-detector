@@ -24,7 +24,7 @@ def test_vendored_cutie_matches_audited_provenance_lock_and_model_resources():
     lock = tomllib.loads((ROOT / "uv.lock").read_text())
     package = next(item for item in lock["package"] if item["name"] == "cutie")
     assert package["version"] == SDK_VERSION
-    assert package["source"] == {"path": str(wheel.relative_to(ROOT))}
+    assert package["source"] == {"path": wheel.relative_to(ROOT).as_posix()}
     assert package["wheels"][0]["hash"] == f"sha256:{digest}"
     with zipfile.ZipFile(wheel) as archive:
         metadata = BytesParser().parsebytes(

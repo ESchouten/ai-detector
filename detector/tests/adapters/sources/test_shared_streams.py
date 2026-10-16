@@ -196,7 +196,13 @@ def test_sampling_one_camera_does_not_suppress_another_camera():
     assert len(batch.frames["0"]) == len(batch.frames["1"]) == 1
 
 
-def test_resized_frames_are_shared_by_width_without_changing_pixels(cameras):
+def test_resized_frames_are_shared_by_width_without_changing_pixels(
+    cameras, monkeypatch
+):
+    clock = [100.0]
+    monkeypatch.setattr(
+        "aidetector.adapters.sources.streams.monotonic", lambda: clock[0]
+    )
     streams = StreamPool()
     subscribers = [streams.subscribe(("0",), width=width) for width in (32, 33, 16)]
     batches = [source.batches() for source in subscribers]
@@ -208,9 +214,11 @@ def test_resized_frames_are_shared_by_width_without_changing_pixels(cameras):
         assert frames[0] is frames[1]
         assert all(frame.capture is frames[0].capture for frame in frames)
         assert frames[0].capture.sequence == 0
+        assert frames[0].capture.monotonic_at == 100.0
         for frame, width in zip(frames, (32, 33, 16), strict=True):
             np.testing.assert_array_equal(frame.image, shrink_image(image, width))
             assert not frame.image.flags.writeable
+        clock[0] = 100.1
         cameras["0"].inputs.put(np.full_like(image, 123))
         cameras["0"].flush()
         updated = next(batches[0]).frames["0"][0]
@@ -218,6 +226,7 @@ def test_resized_frames_are_shared_by_width_without_changing_pixels(cameras):
         assert updated.capture.epoch == frames[0].capture.epoch
         assert updated.capture.sequence == 1
         assert updated.capture.monotonic_at > frames[0].capture.monotonic_at
+        assert updated.capture.monotonic_at == 100.1
         assert np.all(updated.image == 123)
         np.testing.assert_array_equal(frames[0].image, shrink_image(image, 32))
 

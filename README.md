@@ -12,14 +12,14 @@ Download the application for your computer from the latest **AI Detector** [rele
 | macOS 14+, Apple Silicon | `AI-Detector-VERSION-macos-arm64.dmg` (drag to Applications) | The Neural Engine |
 | Ubuntu 22.04 or 24.04, amd64 | `AI-Detector-VERSION-linux-amd64.deb` | The CPU; for an NVIDIA GPU use [Docker](#docker) |
 
-The downloads are not signed with an Apple or Windows publisher certificate, so the system may ask for approval. Intel Macs, Windows on ARM and Jetson have no installer; use [Docker](#docker) or run the [detector](detector/README.md) by itself.
+The downloads are not signed with an Apple or Windows publisher certificate, so the system may ask for approval. Intel Macs and Windows on ARM are not supported. A Jetson runs the [container](#docker).
 
 ## Set up
 
 Open **AI Detector**. Setup opens in your browser, in English, Dutch, German or French. If no browser opens, go to [localhost](http://localhost/).
 
 1. **Cameras.** The cameras found on your network are already ticked; a camera that needs its own login asks for it. Or paste an RTSP address. Check each picture and give the cameras a name.
-2. **Detection.** Choose a preset, such as Cow Catcher, and the cameras it watches. Phone alerts and the Validator can be added here or later.
+2. **Detection.** Choose a preset, such as Cow Catcher, and the cameras it watches. Phone alerts and the AI check can be added here or later.
 3. **Start.** Every camera is checked, and **Start monitoring** opens Recordings once the cameras are really being analysed.
 
 Monitoring keeps running when you close the browser. While it is on, the Windows and Mac applications keep the computer from going to sleep by itself. Closing a laptop's lid still puts it to sleep, and so can a Windows laptop running on its battery; on Linux, switch automatic suspend off yourself. The [application guide](web/README.md) describes everything after setup.
@@ -69,6 +69,6 @@ It enables Docker at boot, starts the services and opens the application in the 
 | Use the application after setup | [web/README.md](web/README.md) |
 | Run or configure the detector by itself | [detector/README.md](detector/README.md) |
 | Write or publish a preset | [config/README.md](config/README.md) |
-| See how the parts fit together | [SYSTEM_OVERVIEW.md](SYSTEM_OVERVIEW.md) |
+| See how the parts fit together | [CONTRIBUTING.md](CONTRIBUTING.md#how-the-parts-connect) |
 | Change the code | [CONTRIBUTING.md](CONTRIBUTING.md), then the [web](web/ARCHITECTURE.md) and [detector](detector/ARCHITECTURE.md) architecture |
 | Build installers or release | [distribution/README.md](distribution/README.md) |

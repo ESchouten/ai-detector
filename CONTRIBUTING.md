@@ -1,13 +1,55 @@
 # Working on AI Detector
 
-The repository has three deployable responsibilities. The web app owns setup and reviewing recordings; the detector owns inference and event rules; distribution assembles those programs into one download. They exchange `config.json` and the detection archive, not Python imports or an internal HTTP API.
+The repository has three deployable responsibilities. The web app owns setup and reviewing recordings; the detector owns inference and event rules; distribution assembles those programs into one download.
 
 | Start here | Responsibility | Checks |
 | --- | --- | --- |
 | [Web architecture](web/ARCHITECTURE.md) | Svelte pages, validated configuration, process control, archive playback | `cd web && pnpm quality && pnpm build && pnpm test:production` |
 | [Detector reading path](detector/README.md) | Sources, models, events, validation and delivery | VS Code **Detector: check** or the commands in its README |
 | [Distribution](distribution/README.md) | Installers, update feeds, native launchers and release smoke tests | VS Code **Distribution: tests**, including its isolated release dependencies |
-| [System overview](SYSTEM_OVERVIEW.md) | How the running programs and files connect | Update when a process boundary or public contract changes |
+
+## How the parts connect
+
+```mermaid
+flowchart TB
+    User["Farmer in the browser"]
+    Sources["Cameras and video files"]
+
+    subgraph Installation["Installation on a PC or Jetson"]
+        Web["Web application · SvelteKit<br/>Setup, settings, live pictures and recordings"]
+        Config[("config.json")]
+        App[("app.json")]
+        Detector["Python detector"]
+        Archive[("detections/<br/>Metadata, pictures and video")]
+        Live[("live/<br/>Latest analysed boxes")]
+
+        Web -->|saves settings| Config
+        Web <-->|names, recipients, connections| App
+        Config -->|read at start| Detector
+        Detector -->|recordings| Archive
+        Detector -->|boxes| Live
+        Archive -->|recordings and reviews| Web
+        Live -->|boxes over live pictures| Web
+        Web -.->|starts and stops| Detector
+        Detector -.->|status records| Web
+    end
+
+    User <-->|HTTP| Web
+    Sources -->|pictures| Detector
+    Sources -->|live pictures| Web
+    Detector <-->|optional AI check| VLM["AI provider"]
+    Detector -->|alerts| Telegram["Telegram"]
+    Detector -->|alerts| Webhooks["Webhooks"]
+    Web <-->|pairing, review buttons, outage notices| Telegram
+    Web -->|newer presets, daily| GitHub["Presets on GitHub"]
+```
+
+The dotted arrows are the managed process: the web application starts the detector and reads the status records it prints. The detector offers no HTTP API; the settings files, `detections/`, `live/` and those records are the contract between the two. Model downloads and health checks are left out. Update the diagram when a process boundary or one of these exchanges changes.
+
+| Installation | Who starts and stops the detector? | Applying settings |
+| --- | --- | --- |
+| Complete application download, or the container image | The web application, through `ManagedDetector` | The running detector is restarted when settings are saved. |
+| The web server and the detector started separately, as in development | Whoever started the detector | The detector must be restarted after a configuration change. |
 
 ## Local setup
 
@@ -40,7 +82,7 @@ To build a complete desktop preview with the same stages used in CI, follow the 
 | `distribution/` | Build stages, native launchers, installers, toolchain pins and packaging tests |
 | `ruff.toml` | Shared Python formatting, import and complexity rules |
 | `.github/` | CI orchestration using those same build stages and quality tools |
-| `.vscode/` | Editor tasks and debug entry points into the existing commands |
+| `.vscode/` | Editor tasks that run the existing commands |
 
 Python tools discover the root `ruff.toml` from either the repository or component directory. Do not copy its rules into another project file. The [configuration guide](config/README.md) identifies each settings file's owner; the [distribution guide](distribution/README.md) identifies build outputs and tool versions.
 
@@ -61,7 +103,7 @@ Major versions are not proposed. List them with `pnpm --dir web outdated` and `u
 | `@tanstack/table-core`, `sveltekit-superforms`, `layerchart` | What the components in `web/src/lib/components/ui` are written for | shadcn-svelte publishes them for the newer versions |
 | Container base images in the `Dockerfile` | Their pinned digests | Someone qualifies a newer one, as the comments there say |
 
-An update of Ultralytics deserves a comparison of detections before and after on recorded pictures: between 8.4.80 and 8.4.177 it changed which head of a model it runs by default, how a prepared backend is reused and how models are downloaded, each without a failing test of its own.
+An update of Ultralytics deserves a comparison of detections before and after on recorded pictures: a release can change which head of a model it runs by default, how a prepared backend is reused or how models are downloaded, without any test failing.
 
 ## Changing a feature
 

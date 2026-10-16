@@ -26,7 +26,7 @@ The reader is a dairy farmer, not a technician. Write what a local farm-software
 | Monitoring (state)           | Bewaking actief        | Überwachung aktiv       | Surveillance active       |
 | Alert                        | Melding                | Benachrichtigung        | Alerte                    |
 | Recipient                    | Ontvanger              | Empfänger               | Destinataire              |
-| Validator                    | AI-controle            | KI-Prüfung              | Vérification par IA       |
+| AI check                     | AI-controle            | KI-Prüfung              | Vérification par IA       |
 | AI connection                | AI-verbinding          | KI-Verbindung           | Connexion IA              |
 | Confirmed / False alarm      | Bevestigd / Vals alarm | Bestätigt / Fehlalarm   | Confirmé / Fausse alerte  |
 | Review                       | Beoordeling            | Bewertung               | Évaluation                |

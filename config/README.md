@@ -7,7 +7,7 @@ Settings live in the application's data folder, outside the installed program. T
 | File or folder | Holds | Owner |
 | --- | --- | --- |
 | `config.json` | Sources, models, event rules, verification and delivery | Python [configuration models](../detector/src/aidetector/configuration.py); the web application validates with their generated schema |
-| `app.json` | Camera identities and names, setup progress, saved recipients and AI connections, and `language`. Also paired devices and `monitoring` (whether monitoring resumes at start), which stay with the installation and are never exported or recovered | Web [schema](../web/src/lib/schema.ts) and [settings store](../web/src/lib/server/configuration/store.ts) |
+| `app.json` | Camera identities and names, setup progress, saved recipients, AI connections and the language, and what stays with the installation, as the [web architecture](../web/ARCHITECTURE.md#rules) lists | Web [schema](../web/src/lib/schema.ts) and [settings store](../web/src/lib/server/configuration/store.ts) |
 | `presets/` | Optional presets of this installation | Web [preset files](../web/src/lib/server/configuration/preset-files.ts) |
 
 `config.schema.json` and `metadata.schema.json` in this folder are generated. Change the Python models, then from the repository root:
@@ -30,7 +30,7 @@ A second file named after a preset, with a mode before `.json`, is one of that p
 | Default | `calving-catcher.json` | second | 10 |
 | Low Power | `calving-catcher.low-power.json` | 5 seconds | 5 |
 
-A mode file without a preset of that name is an ordinary preset, and the released application, which knows no modes, lists every mode file as one.
+A mode file without a preset of that name is an ordinary preset. Versions from before presets had modes list every mode file as a preset of its own.
 
 A preset contains only detector settings: model, watched classes, event rules and delivery defaults. Cameras are added first, and selecting them in the detector step supplies `detection.source`. Everything else follows the [configuration schema](config.schema.json).
 
@@ -71,7 +71,7 @@ A preset can prepare verification without choosing a provider. The question wait
 
 Applying a preset copies its settings into the saved detector, which then follows that preset. Before monitoring starts, and once a day while the application runs, the application looks for the preset's newest version: in the installation's own `presets/` folder when it has one, otherwise in [`config/detector/` on the `main` branch](https://github.com/ESchouten/ai-detector/tree/main/config/detector). When its detection settings have changed, as when it names a newer model, and that model can be downloaded, the detector takes them and monitoring restarts with them. Its cameras, delivery settings, AI connection and question stay as saved. Without an internet connection nothing changes, and renaming or removing a preset file changes nothing that is saved.
 
-Publishing is therefore a change to a file in `config/detector/` on `main`: every detector that follows that preset and updates automatically has it within a day, without a new release. A preset that some version of the application cannot use is ignored by that version, and the released application reads the same folder when a detector is added. Test builds and development keep the presets they were built with. `AIDETECTOR_PRESETS_URL` names another folder listing in GitHub's format, or nothing to switch this off.
+Publishing is therefore a change to a file in `config/detector/` on `main`: every detector that follows that preset and updates automatically has it within a day, without a new release. A preset that some version of the application cannot use is ignored by that version. Versions from before presets were followed read the same folder when a detector is added. Test builds and development keep the presets they were built with. `AIDETECTOR_PRESETS_URL` names another folder listing in GitHub's format, or nothing to switch this off.
 
 - A detector keeps following its preset when its own name, cameras or delivery settings change. Changing its detection settings, in the editor, under Advanced or in `config.json` itself, makes it a custom detector: it keeps its settings and no preset updates it. Choosing the preset again makes it follow once more.
 - **Update automatically** in the detector editor switches following off for one detector: `autoUpdate: false` in `app.json` keeps it on the settings it has. It stays linked to its preset and follows again when the switch is turned back on.

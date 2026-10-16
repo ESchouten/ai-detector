@@ -38,6 +38,7 @@
 	} from '$lib/detector-editor';
 	import { detectorSettings, sameTelegram } from '$lib/configuration';
 	import { errorMessage } from '$lib/remote-errors';
+	import { refresh } from '$lib/remote-refresh';
 	import type { DetectorConfig, LlmConnection } from '$lib/schema';
 	import {
 		deleteDetector,
@@ -262,7 +263,8 @@
 					{ id: preset, mode, settings: presetSettings, autoUpdate },
 					connection
 				)
-			}).updates(getDetectors(), getCameras());
+			});
+			await refresh(getDetectors(), getCameras());
 			toast.success(`Detector '${savedLabel}' saved.`);
 			forgetDraft();
 			await onDone();
@@ -277,7 +279,8 @@
 		pending = true;
 		error = '';
 		try {
-			await deleteDetector({ label: originalLabel }).updates(getDetectors(), getCameras());
+			await deleteDetector({ label: originalLabel });
+			await refresh(getDetectors(), getCameras());
 			forgetDraft();
 			await onDone();
 		} catch (cause) {

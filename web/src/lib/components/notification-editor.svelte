@@ -18,6 +18,7 @@
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
 	import { sameTelegram } from '$lib/configuration';
 	import { errorMessage } from '$lib/remote-errors';
+	import { refresh } from '$lib/remote-refresh';
 	import type { TelegramMeta } from '$lib/schema';
 	import ConfirmRemove from './confirm-remove.svelte';
 	import TelegramConnection from './telegram-connection.svelte';
@@ -72,21 +73,20 @@
 				onSaved?.(existing);
 				return;
 			}
-			await (
-				inline
-					? connectTelegram({ label, token, chat })
-					: saveAlerts({
-							original: (initial ?? existing)?.label,
-							label: existing?.label ?? label,
-							token,
-							chat,
-							quiet,
-							detectorLabels: existing
-								? [...new Set([...recipientDetectorLabels(detectors, existing), ...detectorLabels])]
-								: detectorLabels,
-							received
-						})
-			).updates(getDetectors(), getTelegrams());
+			await (inline
+				? connectTelegram({ label, token, chat })
+				: saveAlerts({
+						original: (initial ?? existing)?.label,
+						label: existing?.label ?? label,
+						token,
+						chat,
+						quiet,
+						detectorLabels: existing
+							? [...new Set([...recipientDetectorLabels(detectors, existing), ...detectorLabels])]
+							: detectorLabels,
+						received
+					}));
+			await refresh(getDetectors(), getTelegrams());
 			if (inline) onSaved?.({ label, token, chat });
 			else {
 				toast.success('Alert settings saved.');
@@ -103,7 +103,8 @@
 		pending = true;
 		error = '';
 		try {
-			await deleteTelegram({ label: initial.label }).updates(getDetectors(), getTelegrams());
+			await deleteTelegram({ label: initial.label });
+			await refresh(getDetectors(), getTelegrams());
 			await goto(back);
 		} catch (cause) {
 			error = errorMessage(cause, 'Could not remove this recipient.');

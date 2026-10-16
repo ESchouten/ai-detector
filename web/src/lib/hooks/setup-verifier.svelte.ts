@@ -1,6 +1,7 @@
 import { resolve } from '$app/paths';
 import { checkCameraRecording } from '../camera-check';
 import { errorMessage } from '../remote-errors';
+import { refresh } from '../remote-refresh';
 import { finishSetup, getSetupStatus } from '../remote/camera-setup.remote';
 import { getCameras, saveCamera } from '../remote/camera.remote';
 
@@ -105,7 +106,8 @@ export class SetupVerifier {
 	}
 
 	async finish(): Promise<void> {
-		await finishSetup().updates(getSetupStatus(), getCameras());
+		await finishSetup();
+		await refresh(getSetupStatus(), getCameras());
 		this.cameras = await getSetupStatus();
 	}
 
@@ -123,7 +125,8 @@ export class SetupVerifier {
 			label: camera.label,
 			source: check.source,
 			checkId: check.checkId
-		}).updates(getCameras());
+		});
+		await refresh(getCameras());
 		this.#checks[id] = check.checkId;
 	}
 

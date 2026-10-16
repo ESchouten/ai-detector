@@ -7,6 +7,7 @@
 	import JsonEditor from '$lib/components/json-editor.svelte';
 	import { parseSettings, settingsSchemas, type SettingsDocument } from '$lib/advanced-settings';
 	import { errorMessage } from '$lib/remote-errors';
+	import { refresh } from '$lib/remote-refresh';
 	import { getSettings, saveSettings } from '$lib/remote/settings.remote';
 
 	const initial = await getSettings('config');
@@ -59,9 +60,8 @@
 		failure = '';
 		message = '';
 		try {
-			await saveSettings({ target, text: draft, revision: saved.revision }).updates(
-				getSettings(target)
-			);
+			await saveSettings({ target, text: draft, revision: saved.revision });
+			await refresh(getSettings(target));
 			saved = await getSettings(target);
 			draft = saved.value;
 			message = 'Settings saved.';

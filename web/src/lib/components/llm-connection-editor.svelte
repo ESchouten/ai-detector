@@ -11,6 +11,7 @@
 	import { AI_STUDIO_KEYS, GEMINI_MODELS } from '$lib/llm';
 	import type { LlmConnection } from '$lib/schema';
 	import { errorMessage } from '$lib/remote-errors';
+	import { refresh } from '$lib/remote-refresh';
 	import {
 		saveLlmConnection,
 		deleteLlmConnection,
@@ -59,10 +60,8 @@
 				...(isGemini ? { key: key.trim() } : {})
 			};
 			if (canTest) await testLlmConnection(saved);
-			await saveLlmConnection({ ...saved, original: initial?.label }).updates(
-				getLlmConnections(),
-				getDetectors()
-			);
+			await saveLlmConnection({ ...saved, original: initial?.label });
+			await refresh(getLlmConnections(), getDetectors());
 			await onSaved(saved);
 		} catch (cause) {
 			message = errorMessage(cause, 'Could not save this connection.');
@@ -75,7 +74,8 @@
 		busy = true;
 		message = '';
 		try {
-			await deleteLlmConnection(initial.label).updates(getLlmConnections(), getDetectors());
+			await deleteLlmConnection(initial.label);
+			await refresh(getLlmConnections(), getDetectors());
 			onCancel();
 		} catch (cause) {
 			message = errorMessage(cause, 'Could not remove this connection.');

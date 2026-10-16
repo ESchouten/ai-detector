@@ -9,6 +9,7 @@
 	import SecretInput from './secret-input.svelte';
 	import { heartbeatInput } from '$lib/configuration';
 	import { errorMessage } from '$lib/remote-errors';
+	import { refresh } from '$lib/remote-refresh';
 	import { getHeartbeat, saveHeartbeat } from '$lib/remote/settings.remote';
 
 	// An outside service notices when this computer stops: the detector calls it while it runs.
@@ -43,7 +44,8 @@
 		pending = true;
 		error = '';
 		try {
-			await saveHeartbeat(checked.output).updates(getHeartbeat());
+			await saveHeartbeat(checked.output);
+			await refresh(getHeartbeat());
 			toast.success(next ? 'Heartbeat saved.' : 'Heartbeat turned off.');
 			editing = false;
 		} catch (cause) {

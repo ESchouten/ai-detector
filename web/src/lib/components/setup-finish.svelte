@@ -8,6 +8,7 @@
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import { SetupVerifier } from '$lib/hooks/setup-verifier.svelte';
 	import { errorMessage } from '$lib/remote-errors';
+	import { refresh } from '$lib/remote-refresh';
 	import { getSetupStatus } from '$lib/remote/camera-setup.remote';
 	import { startDetector, stopDetector } from '$lib/remote/runtime.remote';
 
@@ -72,8 +73,10 @@
 				configured &&
 				runtime.managed &&
 				!['running', 'starting', 'checking'].includes(runtime.phase)
-			)
-				await startDetector().updates(monitor.query);
+			) {
+				await startDetector();
+				await refresh(monitor.query);
+			}
 			finishing = true;
 		} catch (cause) {
 			message = errorMessage(cause, 'Could not start monitoring. Try again.');
@@ -84,7 +87,8 @@
 	async function cancel() {
 		finishing = false;
 		try {
-			await stopDetector().updates(monitor.query);
+			await stopDetector();
+			await refresh(monitor.query);
 		} catch (cause) {
 			message = errorMessage(cause, 'Could not pause monitoring. Try again.');
 		}

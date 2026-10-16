@@ -5,6 +5,7 @@
 	import { useRuntimeStatus } from '$lib/hooks/runtime-status.svelte';
 	import type { MonitoringAction } from '$lib/monitoring';
 	import { errorMessage } from '$lib/remote-errors';
+	import { refresh } from '$lib/remote-refresh';
 	import { startDetector, stopDetector } from '$lib/remote/runtime.remote';
 
 	let {
@@ -27,7 +28,8 @@
 	async function run() {
 		pending = true;
 		try {
-			await (starts ? startDetector() : stopDetector()).updates(monitor.query);
+			await (starts ? startDetector() : stopDetector());
+			await refresh(monitor.query);
 		} catch (cause) {
 			toast.error(
 				errorMessage(

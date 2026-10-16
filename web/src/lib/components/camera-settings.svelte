@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { errorMessage } from '$lib/remote-errors';
+	import { refresh } from '$lib/remote-refresh';
 	import { onDestroy, onMount, untrack } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { toast } from 'svelte-sonner';
@@ -143,7 +144,8 @@
 				id: initial.id,
 				checkId: check?.checkId,
 				...(changingConnection ? { connection: verifiedConnection ?? null } : {})
-			}).updates(getCameras(), getDetectors());
+			});
+			await refresh(getCameras(), getDetectors());
 			toast.success('Camera saved.');
 			await onDone();
 		} catch (cause) {
@@ -155,7 +157,8 @@
 	async function remove() {
 		saving = true;
 		try {
-			await removeCamera(initial.id).updates(getCameras(), getDetectors());
+			await removeCamera(initial.id);
+			await refresh(getCameras(), getDetectors());
 			toast.success('Camera removed.');
 			await onDone();
 		} catch (cause) {

@@ -14,7 +14,7 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from aidetector.adapters.operational_status import source_key
+from aidetector.application.ports import camera_id, source_key
 from aidetector.configuration import Config, DetectorConfig, source_kind
 
 logger = logging.getLogger(__name__)
@@ -158,7 +158,7 @@ def log_detector_configuration(
     summary = {
         "sources": [
             {
-                "id": source_key(source)[:12],
+                "id": camera_id(source),
                 "kind": source_kind(source),
                 "address": resource_label(source),
             }

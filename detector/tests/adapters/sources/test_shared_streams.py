@@ -11,8 +11,8 @@ import pytest
 
 from aidetector.adapters.exporters.disk import DiskExporter
 from aidetector.adapters.media.images import shrink_image
-from aidetector.adapters.operational_status import source_key
 from aidetector.adapters.sources.streams import CapturedFrame, StreamPool, StreamSource
+from aidetector.application.ports import camera_id
 from aidetector.bootstrap import run_application
 from aidetector.configuration import Config
 from aidetector.domain.models import Frame
@@ -95,7 +95,7 @@ def test_capture_status_tracks_decoded_frames_and_disconnects(cameras):
             offline.set()
 
     streams = StreamPool(report)
-    streams.subscribe(("0",))
+    streams.subscribe(("0",), width=1280, retention=15, interval=0)
     with running(streams, cameras):
         camera = cameras["0"]
         camera.send(1)
@@ -111,8 +111,8 @@ def test_one_camera_feeds_fast_and_slow_detectors_without_consuming_each_others_
     cameras,
 ):
     streams = StreamPool()
-    fast = streams.subscribe(("0",), retention=2)
-    slow = streams.subscribe(("0",), retention=3)
+    fast = streams.subscribe(("0",), width=1280, retention=2, interval=0)
+    slow = streams.subscribe(("0",), width=1280, retention=3, interval=0)
     fast_batches, slow_batches = fast.batches(), slow.batches()
     camera = cameras["0"]
     with running(streams, cameras):
@@ -136,8 +136,8 @@ def test_overlapping_source_groups_open_each_camera_once_and_share_read_only_pix
     cameras,
 ):
     streams = StreamPool()
-    first = streams.subscribe(("0", "1"))
-    second = streams.subscribe(("1", "2"))
+    first = streams.subscribe(("0", "1"), width=1280, retention=15, interval=0)
+    second = streams.subscribe(("1", "2"), width=1280, retention=15, interval=0)
     with running(streams, cameras):
         for source, camera in cameras.items():
             camera.send(int(source))
@@ -183,7 +183,7 @@ def test_each_subscription_keeps_its_own_sampling_resolution_and_retention():
 
 
 def test_sampling_one_camera_does_not_suppress_another_camera():
-    source = StreamSource(("0", "1"), interval=2)
+    source = StreamSource(("0", "1"), width=1280, retention=15, interval=2)
     frame = CapturedFrame(
         Frame(datetime(2026, 1, 1), np.zeros((8, 8, 3), dtype=np.uint8))
     )
@@ -197,7 +197,10 @@ def test_sampling_one_camera_does_not_suppress_another_camera():
 
 def test_resized_frames_are_shared_by_width_without_changing_pixels(cameras):
     streams = StreamPool()
-    subscribers = [streams.subscribe(("0",), width=width) for width in (32, 33, 16)]
+    subscribers = [
+        streams.subscribe(("0",), width=width, retention=15, interval=0)
+        for width in (32, 33, 16)
+    ]
     batches = [source.batches() for source in subscribers]
     image = np.random.default_rng(42).integers(0, 256, (64, 96, 3), dtype=np.uint8)
     with running(streams, cameras):
@@ -225,7 +228,9 @@ def test_skipped_samples_do_not_resize_and_same_width_resizes_only_once(monkeypa
         return resize(image, size, **kwargs)
 
     monkeypatch.setattr(cv2, "resize", record_resize)
-    subscribers = [StreamSource(("0",), width=32, interval=1) for _ in range(2)]
+    subscribers = [
+        StreamSource(("0",), width=32, retention=15, interval=1) for _ in range(2)
+    ]
     for instant in (0, 0.5, 1):
         frame = CapturedFrame(
             Frame(datetime.now(), np.zeros((64, 64, 3), dtype=np.uint8))
@@ -245,7 +250,8 @@ def test_skipped_samples_do_not_resize_and_same_width_resizes_only_once(monkeypa
 
 def test_shared_capture_failure_reaches_every_subscriber(cameras):
     streams = StreamPool()
-    first, second = streams.subscribe(("0",)), streams.subscribe(("0",))
+    first = streams.subscribe(("0",), width=1280, retention=15, interval=0)
+    second = streams.subscribe(("0",), width=1280, retention=15, interval=0)
     with running(streams, cameras), ThreadPoolExecutor(max_workers=2) as workers:
         tasks = [workers.submit(next, source.batches()) for source in (first, second)]
         cameras["0"].inputs.put(TypeError("Decoder failed unexpectedly"))
@@ -258,7 +264,8 @@ def test_shared_capture_failure_reaches_every_subscriber(cameras):
 def test_reconnection_is_shared_by_subscribers(cameras, caplog):
     caplog.set_level("INFO")
     streams = StreamPool()
-    first, second = streams.subscribe(("0",)), streams.subscribe(("0",))
+    first = streams.subscribe(("0",), width=1280, retention=15, interval=0)
+    second = streams.subscribe(("0",), width=1280, retention=15, interval=0)
     left, right = first.batches(), second.batches()
     camera = cameras["0"]
     with running(streams, cameras):
@@ -279,7 +286,7 @@ def test_reconnection_is_shared_by_subscribers(cameras, caplog):
     assert len(openings) == 2
     assert "attempt=1" in openings[0]
     assert "attempt=2" in openings[1]
-    assert all(source_key("0")[:12] in message for message in openings)
+    assert all(camera_id("0") in message for message in openings)
     assert (
         sum(
             "receiving 64x64 frames; dtype=uint8" in message

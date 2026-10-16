@@ -27,7 +27,7 @@ from aidetector.adapters.inference.model_assets import (
     MODEL_DOWNLOADING,
 )
 from aidetector.adapters.inference.onnx import InferenceOptions
-from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
+from aidetector.application.ports import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig, YoloConfig
 
 logger = logging.getLogger(__name__)

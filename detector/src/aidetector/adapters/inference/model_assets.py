@@ -9,7 +9,7 @@ from time import perf_counter
 from urllib.parse import urlsplit
 
 from aidetector.adapters.diagnostics import resource_label
-from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
+from aidetector.application.ports import ReportStatus, StatusEvent, ignore_status
 
 logger = logging.getLogger(__name__)
 MODEL_DOWNLOADING = "Downloading the detection model. This may take a few minutes…"

@@ -78,7 +78,9 @@ class DiskExporter:
             ):
                 (pending / filename).write_bytes(self.media.image(event, kind))
             (pending / "video.mp4").write_bytes(
-                self.media.video(event, padding=self.config.crop_padding)
+                self.media.video(
+                    event, width=1280, crf=28, padding=self.config.crop_padding
+                )
             )
 
             # Whole directories are published atomically, so readers never see

@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from aidetector.domain.events import EventAssembler
-from aidetector.domain.models import Observation
+from aidetector.domain.models import BoundingBox, Observation
 from aidetector.domain.policy import EventPolicy
 
 START = datetime(2026, 1, 1)
@@ -176,3 +176,22 @@ def test_overlapping_context_does_not_discard_later_matches_in_the_same_batch():
     [event] = events.finish()
 
     assert [item.date.second for item in event.observations] == [0, 1, 2]
+
+
+@pytest.mark.parametrize(
+    "boxes, expected",
+    [
+        ((), None),
+        ((BoundingBox(10, 20, 30, 40, "cow", 0.9),), BoundingBox(10, 20, 30, 40)),
+        (
+            (
+                BoundingBox(10, 20, 30, 40, "cow", 0.9),
+                BoundingBox(50, 5, 80, 70, "horse", 0.8),
+                BoundingBox(-5, 30, 12, 60),
+            ),
+            BoundingBox(-5, 5, 80, 70),
+        ),
+    ],
+)
+def test_enclosing_region_covers_every_box_without_a_class_label(boxes, expected):
+    assert BoundingBox.enclosing(boxes) == expected

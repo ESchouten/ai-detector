@@ -16,7 +16,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from aidetector.adapters.inference.windows_ml import prepare_windows_ml
-from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
+from aidetector.application.ports import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig
 
 logger = logging.getLogger(__name__)
@@ -275,10 +275,7 @@ def _providers(
             # Windows-managed acceleration is optional in automatic mode. This
             # boundary runs before model loading, so model/configuration errors
             # are never swallowed as a hardware fallback.
-            if (
-                config.provider is not None
-                or "CPUExecutionProvider" not in ort.get_available_providers()
-            ):
+            if config.provider is not None:
                 raise
             message = "Hardware acceleration could not be prepared. Detection will use the CPU."
             logger.warning(message, exc_info=True)
@@ -296,6 +293,8 @@ def _install_sessions(
     ort: Any,
     selection: ProviderSelection,
 ) -> None:
+    # Ultralytics exposes neither session options nor Windows ML devices, so its
+    # sessions are created through this factory until the runtime scope ends.
     original_session = ort.InferenceSession
     scratch = Path(
         resources.enter_context(tempfile.TemporaryDirectory(prefix="aidetector-ort-"))

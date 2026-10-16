@@ -29,14 +29,14 @@ Install exactly one runtime extra per environment. They share the `onnxruntime` 
 | `--init-config` | Writes a template; refuses to overwrite a file. A normal run never creates or repairs configuration. |
 | `--check-config` | Validates fields, bounds and source syntax without loading models, opening sources or making requests. |
 | `--config FILE --data-dir FOLDER` | Keeps runtime data apart from the program. Relative input and model paths resolve against the configuration's folder; the data folder defaults to it and holds `detections/`, `models/` and `logs/`. |
-| `--live-preview` | Publishes the detection boxes of the latest analyzed picture for the web application, which must share the data folder. See the [protocol](LIVE_PREVIEW.md). |
+| `--live-preview` | Publishes the detection boxes of the latest analyzed picture for the web application, which must share the data folder. See the [protocol](ARCHITECTURE.md#live-analyzed-pictures). |
 | `--test-vlm FILE` | Checks a verifier connection with generated media, without starting detection. |
 | `--control-stdin` | Stops gracefully on a line `stop` or on EOF from the parent. |
 | `--log-level` | `WARNING` hides routine activity; `DEBUG` adds per-batch details. |
 
 **Executables and Docker.** [Releases](https://github.com/ESchouten/ai-detector/releases) carry the application installers, and the detector inside them takes the same flags; `--version` reports the build and runtime type. The [container image](../README.md#docker) holds the detector together with the web application that starts it; `docker run --rm IMAGE python3 -m aidetector …` runs the detector by itself from `/data`. A package that passes its smoke test has not shown that every GPU provider works on every machine.
 
-**Jetson.** The ARM64 image is for Orin and Thor with JetPack 7.2. GPU inference and TensorRT have been verified on an Orin Nano; a Thor is untested. JetPack 6 images are no longer built. See [Jetson](MIGRATION.md#jetson).
+**Jetson.** The ARM64 image is for Orin and Thor with JetPack 7.2. See [Jetson](MIGRATION.md#jetson) for what has been checked on that hardware and for JetPack 6 hosts.
 
 **Stopping and exit codes.** Ctrl+C or SIGTERM stops acquisition, flushes eligible events and drains accepted deliveries. Exit `0` is success or a graceful stop, `1` an application, verification or delivery failure, and `2` a configuration error. The detector does not restart itself.
 
@@ -159,16 +159,15 @@ uv run --no-sync pytest -q tests/domain tests/application tests/test_configurati
 ### Development checks
 
 ```sh
-uv run --no-sync ruff check src/aidetector tests tools
-uv run --no-sync ruff format --check src/aidetector tests tools
-uv run --no-sync ty check src/aidetector tools
-uv run --no-sync lint-imports --no-cache
+uv run --no-sync ruff check src/aidetector tests
+uv run --no-sync ruff format --check src/aidetector tests
+uv run --no-sync ty check src/aidetector
 uv run --no-sync pytest
 uv run --no-sync generate-schema --check
 uv build --wheel
 ```
 
-CI runs the full suite on Linux, Windows and macOS. [QUALITY.md](QUALITY.md) covers coverage and mutation testing, and [PERFORMANCE.md](PERFORMANCE.md) how to measure inference. VS Code has matching tasks: **Detector: check**, **Detector: core tests (fast)** and **Detector: debug reference flow**.
+In VS Code, the **Detector: check** task runs all but the wheel build. Ruff limits a function to complexity 10, 12 branches and 50 statements ([`ruff.toml`](../ruff.toml)); split one where that names a useful operation, never suppress the rule or raise the limit. CI runs the full suite on Linux, Windows and macOS and reports branch coverage on Linux (`coverage run -m pytest`, `coverage combine`, `coverage report`), without a percentage gate. [PERFORMANCE.md](PERFORMANCE.md) covers measuring inference.
 
 Executables are built with [distribution/build.py](../distribution/build.py). After building one, `uv run --no-sync python -m tests.support.smoke_package /path/to/executable` runs it through a model download, tracking, verification, archives, delivery and shutdown; `--model-format pt` also checks a Torch checkpoint.
 

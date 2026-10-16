@@ -1,4 +1,4 @@
-"""The SDK conversion contract shared by cached and direct model exports."""
+"""The SDK conversion contract shared by prepared models and TensorRT engines."""
 
 import hashlib
 import json
@@ -25,7 +25,7 @@ def export_arguments(
         "simplify": True,
         "opset": onnx.opset,
         # The head without suppression, where a model has one: what its confidence
-        # thresholds were chosen with. The SDK no longer picks it by itself.
+        # thresholds were chosen with. The SDK does not pick it by itself.
         "nms": False,
     }
 

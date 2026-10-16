@@ -1,4 +1,4 @@
-# Shared by detector source, tests, developer tools and distribution scripts.
+# Shared by detector source, tests and distribution scripts.
 target-version = "py312"
 src = ["detector", "detector/src", "distribution"]
 

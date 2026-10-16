@@ -1,20 +1,14 @@
 """Versioned launcher protocol. Human logs remain independent of these records."""
 
-import hashlib
 import json
 from datetime import UTC, datetime
 from threading import Lock
 from time import monotonic
 from typing import TextIO
 
-from aidetector.application.status import StatusEvent
+from aidetector.application.ports import StatusEvent, source_key
 
 STATUS_PREFIX = "AIDETECTOR_STATUS "
-
-
-def source_key(source: str) -> str:
-    """Stable identity for launcher records and human diagnostics."""
-    return hashlib.sha256(source.encode()).hexdigest()
 
 
 class JsonStatusReporter:

@@ -96,9 +96,7 @@ def test_optional_validation_exports_unvalidated_event(caplog):
     delivery = EventDelivery(
         (Destination("disk", exporter, ExportPolicy()),), Cooldown()
     )
-    report = delivery.deliver(event())
-    assert report.delivered == ("disk",)
-    assert report.failures == ()
+    assert delivery.deliver(event()).failures == 0
     assert exporter.results[0].validation.status is ValidationStatus.UNVALIDATED
     assert "Event collected: 1 frame(s) over 0.00s" in caplog.text
     assert "Event validation: unvalidated" in caplog.text
@@ -106,17 +104,17 @@ def test_optional_validation_exports_unvalidated_event(caplog):
 
 
 @pytest.mark.parametrize(
-    "threshold,rejected,expected",
+    "threshold,rejected,exports",
     [
-        (0.95, True, ()),
-        (0.5, False, ()),
-        (0.5, True, ("disk",)),
-        ({"horse": 0.5}, True, ()),
-        ({"cow": 0.9}, True, ("disk",)),
+        (0.95, True, 0),
+        (0.5, False, 0),
+        (0.5, True, 1),
+        ({"horse": 0.5}, True, 0),
+        ({"cow": 0.9}, True, 1),
     ],
 )
 def test_export_filters_combine_confidence_and_rejection_policy(
-    threshold, rejected, expected
+    threshold, rejected, exports
 ):
     exporter = RecordingExporter()
     delivery = EventDelivery(
@@ -124,9 +122,8 @@ def test_export_filters_combine_confidence_and_rejection_policy(
         Cooldown(),
         Validator(ValidationStatus.REJECTED),
     )
-    report = delivery.deliver(event())
-    assert report.delivered == expected
-    assert len(exporter.results) == len(expected)
+    delivery.deliver(event())
+    assert len(exporter.results) == exports
 
 
 def test_cooldown_prevents_repeated_validation_calls(caplog):
@@ -163,7 +160,7 @@ def test_delivery_failure_does_not_undo_acceptance_cooldown(verified):
     first = delivery.deliver(event(0))
     repeated = delivery.deliver(event(1))
 
-    assert first.failures[0].destination == "webhook"
+    assert first.failures == 1
     assert repeated.result is None
     assert len(exporter.results) == 1
 
@@ -178,8 +175,7 @@ def test_failed_validation_is_archived_but_does_not_notify():
         Cooldown(),
         Validator(ValidationUnavailable("All configured models are unavailable")),
     )
-    report = delivery.deliver(event())
-    assert report.delivered == ("disk",)
+    assert delivery.deliver(event()).failures == 0
     assert notification.results == []
     assert archive.results[0].validation.status is ValidationStatus.FAILED
     assert (
@@ -198,11 +194,8 @@ def test_failed_destination_does_not_prevent_independent_destination(caplog):
         ),
         Cooldown(),
     )
-    report = delivery.deliver(event())
-    assert report.delivered == ("disk",)
-    assert [(failure.destination, failure.message) for failure in report.failures] == [
-        ("webhook", "HTTP status 503")
-    ]
+    assert delivery.deliver(event()).failures == 1
+    assert len(working.results) == 1
     assert "Delivery to webhook failed: HTTP status 503" in caplog.text
     assert "Event delivered to webhook" not in caplog.text
     assert "Event delivered to disk" in caplog.text

@@ -6,9 +6,11 @@ from aidetector.application.ports import (
     DeliveryError,
     EventExporter,
     EventValidator,
+    ReportStatus,
+    StatusEvent,
     ValidationUnavailable,
+    ignore_status,
 )
-from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
 from aidetector.domain.models import (
     DetectionEvent,
     EventResult,
@@ -28,16 +30,9 @@ class Destination:
 
 
 @dataclass(frozen=True)
-class DeliveryFailure:
-    destination: str
-    message: str
-
-
-@dataclass(frozen=True)
 class DeliveryReport:
     result: EventResult | None
-    delivered: tuple[str, ...] = ()
-    failures: tuple[DeliveryFailure, ...] = ()
+    failures: int = 0
 
 
 class EventDelivery:
@@ -70,8 +65,7 @@ class EventDelivery:
         logger.info("Event validation: %s", validation.status.value)
         result = EventResult(event, validation, uuid4().hex)
         self.cooldown.record(result)
-        delivered: list[str] = []
-        failures: list[DeliveryFailure] = []
+        failures = 0
         first_unexpected: Exception | None = None
         for destination in self.destinations:
             if not destination.policy.accepts(event, validation):
@@ -83,7 +77,6 @@ class EventDelivery:
             try:
                 logger.info("Exporting event to %s", destination.name)
                 destination.exporter.export(result)
-                delivered.append(destination.name)
                 self.report_status(
                     StatusEvent(
                         "delivery", event.source, destination_id=destination.name
@@ -91,7 +84,7 @@ class EventDelivery:
                 )
                 logger.info("Event delivered to %s", destination.name)
             except DeliveryError as error:
-                failures.append(DeliveryFailure(destination.name, str(error)))
+                failures += 1
                 logger.error("Delivery to %s failed: %s", destination.name, error)
                 self.report_status(
                     StatusEvent(
@@ -108,7 +101,7 @@ class EventDelivery:
                     first_unexpected = error
         if first_unexpected is not None:
             raise first_unexpected
-        return DeliveryReport(result, tuple(delivered), tuple(failures))
+        return DeliveryReport(result, failures)
 
     def _validate(self, event: DetectionEvent) -> ValidationResult:
         if self.validator is None:

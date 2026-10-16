@@ -1,4 +1,3 @@
-import hashlib
 import json
 import logging
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
@@ -9,8 +8,15 @@ from threading import Event, Thread, current_thread
 
 from aidetector.application.delivery import DeliveryReport, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
-from aidetector.application.ports import FrameSource, HealthMonitor, SourceBatch
-from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
+from aidetector.application.ports import (
+    FrameSource,
+    HealthMonitor,
+    ReportStatus,
+    SourceBatch,
+    StatusEvent,
+    camera_id,
+    ignore_status,
+)
 from aidetector.domain.models import DetectionEvent, ValidationStatus
 
 logger = logging.getLogger(__name__)
@@ -20,7 +26,7 @@ def _batch_summary(batch: SourceBatch) -> str:
     return json.dumps(
         [
             {
-                "source": hashlib.sha256(source.encode()).hexdigest()[:12],
+                "source": camera_id(source),
                 "retained_frames": len(frames),
                 "latest_at": frames[-1].date.isoformat(),
                 "shape": list(frames[-1].image.shape),
@@ -47,7 +53,7 @@ class RunStats:
             self.skipped += 1
             return
         self.events += 1
-        self.delivery_failures += len(report.failures)
+        self.delivery_failures += report.failures
         if report.result.validation.status is ValidationStatus.FAILED:
             self.validation_failures += 1
 
@@ -152,7 +158,7 @@ class DetectorWorker:
             while (event := self._queue.get()) is not None:
                 logger.info(
                     "Delivering event: source=%s; started=%s",
-                    hashlib.sha256(event.source.encode()).hexdigest()[:12],
+                    camera_id(event.source),
                     event.start.isoformat(),
                 )
                 self.stats.record(self.delivery.deliver(event))
@@ -161,10 +167,7 @@ class DetectorWorker:
         except Exception as error:
             self._delivery_error = error
             self._stop.set()
-            try:
-                self.source.close()
-            except Exception:
-                logger.exception("Source cleanup failed after delivery worker failure")
+            self.source.close()
 
 
 def run_detectors(

@@ -1,22 +1,34 @@
+import gc
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from threading import Barrier
+from weakref import ref
 
+import cv2
 import numpy as np
+import onnxruntime as ort
 import pytest
+from ultralytics import YOLO
 from ultralytics.engine.results import Results
 
 from aidetector.adapters.inference import yolo
-from aidetector.adapters.inference.onnx import InferenceOptions
+from aidetector.adapters.inference.onnx import (
+    InferenceOptions,
+    ModelRequirements,
+    inference_runtime,
+)
 from aidetector.adapters.inference.yolo import (
     InMemoryStreamBatch,
     YoloDetector,
     map_observations,
+    open_detector,
     resolve_classes,
 )
-from aidetector.configuration import YoloConfig
+from aidetector.bootstrap import run_application
+from aidetector.configuration import Config, YoloConfig
 from aidetector.domain.models import Frame
+from tests.support.onnx_model import write_detection_model
 
 
 def result(boxes=(), *, tracking=False):
@@ -197,3 +209,99 @@ def test_inference_timing_is_summarised_instead_of_logged_per_batch(
         detector.detect({"one": (frame(1),)})
     [summary] = caplog.messages
     assert summary.startswith("Inference: 2 frame(s) in 2 batch(es)")
+
+
+@pytest.mark.parametrize("tracking", [False, True])
+def test_real_onnx_yolo_batching_tracking_and_session_lifetime(
+    tmp_path, monkeypatch, tracking, caplog
+):
+    caplog.set_level(logging.INFO, logger="aidetector.adapters.inference.yolo")
+    path = tmp_path / "detector.onnx"
+    write_detection_model(path)
+    config = Config.model_validate(
+        {
+            "detectors": [
+                {
+                    "detection": {"source": ["0", "1"]},
+                    "yolo": {
+                        "model": str(path),
+                        "imgsz": 64,
+                        "confidence": {"cow": 0.5},
+                        "tracking": tracking,
+                    },
+                }
+            ],
+            "onnx": {"provider": "CPUExecutionProvider"},
+        }
+    )
+    original = ort.InferenceSession
+    sessions = []
+
+    def count_sessions(*args, **kwargs):
+        session = original(*args, **kwargs)
+        sessions.append(session)
+        return session
+
+    monkeypatch.setattr(ort, "InferenceSession", count_sessions)
+    current = frame()
+    image_ref = ref(current.image)
+    later = Frame(current.date + timedelta(seconds=1), current.image)
+    settings = config.detectors[0].yolo
+    models = (ModelRequirements(str(path), image_size=64, batch_size=2),)
+    with inference_runtime(config.onnx, models, "default") as options:
+        with open_detector(
+            settings, config.onnx, ("0", "1"), "default", options, tmp_path
+        ) as detector:
+            first = detector.detect({"0": (current,), "1": (current,)})
+            second = detector.detect({"1": (later,)})
+            assert set(first) == {"0", "1"}
+            assert set(second) == {"1"}
+            assert first["0"][0].confidence == {"cow": pytest.approx(0.9)}
+            assert second["1"][0].date == later.date
+            assert second["1"][0].boxes[0].x1 == 10
+            assert (second["1"][0].boxes[0].track_id is not None) is tracking
+            assert len(sessions) == 1
+            assert "ONNX model providers: ['CPUExecutionProvider']" in caplog.text
+            assert "image tensor processing: cpu; I/O binding: False" in caplog.text
+            del current, later, first, second
+            gc.collect()
+            assert image_ref() is not None
+        assert detector.model.predictor is None
+        gc.collect()
+        assert image_ref() is None
+    assert ort.InferenceSession is count_sessions
+
+
+def test_failed_detector_startup_releases_the_loaded_predictor(tmp_path, monkeypatch):
+    model_path = tmp_path / "model.onnx"
+    write_detection_model(model_path)
+    assert cv2.imwrite(
+        str(tmp_path / "input.png"), np.zeros((64, 64, 3), dtype=np.uint8)
+    )
+    models = []
+
+    def record_model(*args, **kwargs):
+        model = YOLO(*args, **kwargs)
+        models.append(model)
+        return model
+
+    monkeypatch.setattr("aidetector.adapters.inference.yolo.YOLO", record_model)
+    config = Config.model_validate(
+        {
+            "detectors": [
+                {
+                    "detection": {"source": "input.png"},
+                    "yolo": {
+                        "model": str(model_path),
+                        "confidence": {"unknown": 0.5},
+                        "imgsz": 64,
+                    },
+                }
+            ],
+            "onnx": {"provider": "CPUExecutionProvider"},
+        }
+    )
+    with pytest.raises(ValueError, match="Unknown YOLO classes"):
+        run_application(config, tmp_path, tmp_path)
+    assert len(models) == 1
+    assert models[0].predictor is None

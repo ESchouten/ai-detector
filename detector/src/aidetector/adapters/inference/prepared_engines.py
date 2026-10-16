@@ -22,7 +22,7 @@ from ultralytics.utils.downloads import attempt_download_asset
 
 from aidetector.adapters.inference.export_settings import content_key, export_arguments
 from aidetector.adapters.inference.onnx import InferenceOptions
-from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
+from aidetector.application.ports import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig, YoloConfig
 
 logger = logging.getLogger(__name__)
@@ -143,7 +143,7 @@ def prepare_engine(
     batch: int,
     options: InferenceOptions,
     cache: Path,
-    stop_requested: Event | None = None,
+    stop_requested: Event,
     *,
     schedule: Callable[[Callable[[], Path | None]], None] | None = None,
 ) -> Path | None:
@@ -240,9 +240,7 @@ def _build_engine(source, task, arguments, engine, stop_requested):
     logger.info("Direct TensorRT engine prepared and GPU-tested: %s", engine)
 
 
-def run_preparation(
-    request: Path, log_path: Path, stop_requested: Event | None = None
-) -> None:
+def run_preparation(request: Path, log_path: Path, stop_requested: Event) -> None:
     # Source installs and the downloaded runtime both use this package root;
     # the latter intentionally does not install the app into site-packages.
     # Enter the standard-library-only worker directly so its diagnostics
@@ -258,7 +256,6 @@ def run_preparation(
         str(Path(__file__).resolve().parents[3]),
         str(request),
     ]
-    stopped = stop_requested if stop_requested is not None else Event()
     with (
         log_path.open("w", encoding="utf-8") as output,
         log_path.open(encoding="utf-8", errors="replace") as tail,
@@ -274,8 +271,8 @@ def run_preparation(
         ) as process:
             logger.info("TensorRT helper process started; pid=%d", process.pid)
             try:
-                _wait_for_preparation(process, tail, stopped)
-                if stopped.is_set():
+                _wait_for_preparation(process, tail, stop_requested)
+                if stop_requested.is_set():
                     raise KeyboardInterrupt
                 if process.returncode:
                     raise RuntimeError(

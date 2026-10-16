@@ -114,9 +114,9 @@ class EventMedia:
     def video(
         self,
         event: DetectionEvent,
-        width: int | None = 1280,
-        crf: int = 28,
-        padding: float = 0.1,
+        width: int | None,
+        crf: int,
+        padding: float,
         data_max: int | None = None,
         plot: bool = True,
     ) -> bytes:

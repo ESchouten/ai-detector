@@ -9,7 +9,7 @@ from aidetector.adapters.diagnostics import (
     log_environment,
     resource_label,
 )
-from aidetector.adapters.operational_status import source_key
+from aidetector.application.ports import camera_id
 from aidetector.configuration import Config
 
 
@@ -99,7 +99,7 @@ def test_configuration_and_error_logs_are_useful_and_redacted_on_disk_and_consol
         assert "Traceback (most recent call last)" in output
         assert "RuntimeError: Request failed https://example.test" in output
         assert "192.0.2.10:554" in output
-        assert source_key(settings.detection.source[0])[:12] in output
+        assert camera_id(settings.detection.source[0]) in output
         for secret in (
             "camera-user",
             "camera-password",

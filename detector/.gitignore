@@ -7,4 +7,3 @@ build/
 .coverage*
 .reports/
 .import_linter_cache/
-mutants/

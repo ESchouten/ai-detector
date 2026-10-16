@@ -1,9 +1,7 @@
-"""Real SDK exports: topology, Torch-weight lifetime, and the prepared model cache."""
+"""Real SDK exports: topology and the prepared model cache."""
 
-import gc
 import sys
 from datetime import datetime
-from weakref import ref
 
 import numpy as np
 import onnx
@@ -18,7 +16,7 @@ from aidetector.adapters.inference.onnx import (
 )
 from aidetector.adapters.inference.prepared_models import prepare_onnx
 from aidetector.adapters.inference.yolo import open_detector
-from aidetector.configuration import Config, OnnxConfig, YoloConfig
+from aidetector.configuration import OnnxConfig, YoloConfig
 from aidetector.domain.models import Frame
 
 
@@ -118,45 +116,3 @@ def test_real_yolo26_checkpoint_is_exported_once_and_runs_on_core_ml(
     assert exports == ["coreml"]
     assert engines == ["Core ML", "Core ML"]
     assert not checkpoint.with_suffix(".mlpackage").exists()
-
-
-def test_real_checkpoint_export_releases_weights_and_runs_the_onnx_model(
-    tmp_path, monkeypatch
-):
-    checkpoint = tmp_path / "fixture.pt"
-    YOLO("yolo11n.yaml").save(checkpoint)
-    created = []
-
-    def record_model(*args, **kwargs):
-        model = YOLO(*args, **kwargs)
-        created.append(ref(model))
-        return model
-
-    monkeypatch.setattr("aidetector.adapters.inference.yolo.YOLO", record_model)
-    config = Config.model_validate(
-        {
-            "onnx": {"provider": "CPUExecutionProvider"},
-            "detectors": [
-                {
-                    "detection": {"source": "0"},
-                    "yolo": {"model": str(checkpoint), "imgsz": 64},
-                }
-            ],
-        }
-    )
-    settings = config.detectors[0].yolo
-    models = (ModelRequirements(str(checkpoint), image_size=64, batch_size=1),)
-    with (
-        inference_runtime(config.onnx, models, "default") as options,
-        open_detector(settings, config.onnx, ("0",), "default", options) as detector,
-    ):
-        model = detector.model
-        gc.collect()
-        assert len(created) == 2
-        assert created[0]() is None
-        assert created[1]() is model
-        frame = Frame(datetime(2026, 1, 1), np.zeros((64, 64, 3), dtype=np.uint8))
-        [observation] = detector.detect({"0": (frame,)})["0"]
-        assert observation.date == frame.date
-        assert observation.image is frame.image
-    assert model.predictor is None

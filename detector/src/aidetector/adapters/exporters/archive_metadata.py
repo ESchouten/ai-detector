@@ -2,7 +2,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from aidetector.adapters.operational_status import source_key
+from aidetector.application.ports import camera_id
 from aidetector.domain.models import EventResult
 
 
@@ -52,7 +52,7 @@ class EventMetadata(BaseModel):
         return cls(
             timestamp=timestamp,
             event_id=result.id,
-            camera=source_key(event.source)[:12],
+            camera=camera_id(event.source),
             validated=result.validation.validated,
             confidence=best.score,
             confidences=dict(best.confidence),

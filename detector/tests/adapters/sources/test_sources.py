@@ -1,5 +1,6 @@
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from threading import Barrier, Event, Thread
 from types import SimpleNamespace
 
@@ -11,6 +12,7 @@ from aidetector.adapters.sources.files import FileSource
 from aidetector.adapters.sources.streams import StreamPool, StreamSource
 from aidetector.bootstrap import build_source
 from aidetector.configuration import SourceConfig
+from tests.support.media import write_video
 
 
 @pytest.mark.parametrize(
@@ -68,7 +70,7 @@ def test_closing_wakes_a_reader_whose_camera_cannot_be_opened(
         "aidetector.adapters.sources.streams.cv2.VideoCapture", unavailable
     )
     streams = StreamPool()
-    source = streams.subscribe((address,))
+    source = streams.subscribe((address,), width=1280, retention=15, interval=0)
     with streams.open(), ThreadPoolExecutor(max_workers=1) as pool:
         task = pool.submit(lambda: list(source.batches()))
         try:
@@ -99,7 +101,9 @@ def test_partial_capture_startup_stops_the_threads_that_already_started(monkeypa
     )
     monkeypatch.setattr("aidetector.adapters.sources.streams.Thread", create_thread)
     streams = StreamPool()
-    source = streams.subscribe(("rtsp://first", "rtsp://second"))
+    source = streams.subscribe(
+        ("rtsp://first", "rtsp://second"), width=1280, retention=15, interval=0
+    )
     with pytest.raises(RuntimeError, match="Cannot start another capture thread"):
         with streams.open():
             next(source.batches())
@@ -117,8 +121,31 @@ def test_concurrent_capture_failures_are_all_reported(monkeypatch, caplog):
         "aidetector.adapters.sources.streams.cv2.VideoCapture", broken_capture
     )
     streams = StreamPool()
-    source = streams.subscribe(("0", "1"))
+    source = streams.subscribe(("0", "1"), width=1280, retention=15, interval=0)
     with pytest.raises(TypeError, match="Capture [01] failed"), streams.open():
         next(source.batches())
     assert "Capture 0 failed" in caplog.text
     assert "Capture 1 failed" in caplog.text
+
+
+def test_file_sampling_uses_media_time_instead_of_sleeping(tmp_path):
+    video = tmp_path / "input.avi"
+    write_video(video, frames=12, fps=10)
+    source = FileSource(
+        (str(video),), width=1280, interval=0.5, started_at=datetime(2026, 1, 1)
+    )
+    dates = [
+        batch.frames[str(video)][0].date for batch in source.batches() if batch.frames
+    ]
+    assert [date.isoformat() for date in dates] == [
+        "2026-01-01T00:00:00",
+        "2026-01-01T00:00:00.500000",
+        "2026-01-01T00:00:01",
+    ]
+
+
+def test_sampling_at_the_frame_rate_does_not_drop_frames_to_rounding(tmp_path):
+    video = tmp_path / "input.avi"
+    write_video(video, frames=12, fps=10)
+    source = FileSource((str(video),), width=1280, interval=0.1)
+    assert len([batch for batch in source.batches() if batch.frames]) == 12

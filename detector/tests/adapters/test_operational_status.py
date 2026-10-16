@@ -3,7 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from io import StringIO
 
 from aidetector.adapters.operational_status import JsonStatusReporter
-from aidetector.application.status import StatusEvent
+from aidetector.application.ports import StatusEvent
 from tests.support.status import status_records
 
 

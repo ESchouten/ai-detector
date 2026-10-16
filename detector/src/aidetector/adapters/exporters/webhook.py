@@ -1,4 +1,5 @@
 import base64
+from typing import Any
 
 from aidetector.adapters.http import send_request
 from aidetector.adapters.media import MediaError
@@ -17,16 +18,17 @@ class WebhookExporter:
         headers = dict(self.config.headers or {})
         if self.config.token is not None:
             headers["Authorization"] = self.config.token
-        if self.config.body is not None or self.config.data_type == "none":
-            send_request(
-                self.config.method,
-                self.config.url,
-                timeout=self.config.timeout,
-                headers=headers,
-                data=self.config.body,
-            )
-            return
+        send_request(
+            self.config.method,
+            self.config.url,
+            timeout=self.config.timeout,
+            headers=headers,
+            **self._content(result),
+        )
 
+    def _content(self, result: EventResult) -> dict[str, Any]:
+        if self.config.body is not None or self.config.data_type == "none":
+            return {"data": self.config.body}
         event = result.event
         payload: dict[str, object] = {
             "confidence": event.best.score,
@@ -48,22 +50,11 @@ class WebhookExporter:
                 (item.name, base64.b64encode(item.content).decode("ascii"))
                 for item in attachments
             )
-            send_request(
-                self.config.method,
-                self.config.url,
-                timeout=self.config.timeout,
-                headers=headers,
-                json_body=payload,
-            )
-        else:
-            send_request(
-                self.config.method,
-                self.config.url,
-                timeout=self.config.timeout,
-                headers=headers,
-                data=payload,
-                files={
-                    item.name: (item.filename, item.content, item.content_type)
-                    for item in attachments
-                },
-            )
+            return {"json_body": payload}
+        return {
+            "data": payload,
+            "files": {
+                item.name: (item.filename, item.content, item.content_type)
+                for item in attachments
+            },
+        }

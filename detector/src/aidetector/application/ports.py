@@ -1,7 +1,8 @@
+import hashlib
 from collections.abc import Callable, Generator, Mapping
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Protocol
+from typing import Literal, Protocol
 
 from aidetector.domain.models import (
     DetectionEvent,
@@ -17,6 +18,51 @@ PublishObservation = Callable[[str, Observation], None]
 
 def ignore_observation(source: str, observation: Observation) -> None:
     pass
+
+
+@dataclass(frozen=True)
+class StatusEvent:
+    """An operational observation reported by an I/O boundary, apart from event rules."""
+
+    kind: Literal[
+        "preparing",
+        "preparation_failed",
+        "ready",
+        "models_ready",
+        "frame",
+        "inference",
+        "processed",
+        "offline",
+        "notice",
+        "backend",
+        "validation",
+        "validation_failed",
+        "delivery",
+        "delivery_failed",
+        "waiting_delivery",
+        "processing_resumed",
+    ]
+    source: str | None = None
+    message: str | None = None
+    rule_id: str | None = None
+    destination_id: str | None = None
+
+
+ReportStatus = Callable[[StatusEvent], None]
+
+
+def ignore_status(event: StatusEvent) -> None:
+    """Ordinary CLI callers need no machine-readable status channel."""
+
+
+def source_key(source: str) -> str:
+    """Name a source in status records and live pictures, never by its address."""
+    return hashlib.sha256(source.encode()).hexdigest()
+
+
+def camera_id(source: str) -> str:
+    """The short source key that names a camera in logs and archives."""
+    return source_key(source)[:12]
 
 
 @dataclass(frozen=True)

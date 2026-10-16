@@ -22,7 +22,7 @@ from aidetector.domain.models import Frame
 
 @pytest.fixture
 def model_sdk(monkeypatch):
-    created, exports = [], []
+    created = []
 
     class Predictor:
         def __init__(self, overrides, _callbacks):
@@ -46,38 +46,12 @@ def model_sdk(monkeypatch):
             self.predictor = None
             created.append(path)
 
-        def export(self, **options):
-            exports.append(options)
-            return "converted.onnx"
-
         def _smart_load(self, name):
             assert name == "predictor"
             return Predictor
 
     monkeypatch.setattr("aidetector.adapters.inference.yolo.YOLO", Model)
-    return SimpleNamespace(created=created, exports=exports)
-
-
-def test_conversion_passes_the_onnx_format_and_settings_to_the_sdk(model_sdk):
-    with open_detector(
-        YoloConfig(model="weights.pt", imgsz=128),
-        OnnxConfig(opset=19),
-        ("camera-1", "camera-2"),
-        "default",
-        InferenceOptions(half=True),
-    ):
-        assert model_sdk.exports == [
-            {
-                "format": "onnx",
-                "batch": 2,
-                "dynamic": True,
-                "quantize": 16,
-                "imgsz": 128,
-                "simplify": True,
-                "opset": 19,
-                "nms": False,
-            }
-        ]
+    return SimpleNamespace(created=created)
 
 
 def test_core_ml_model_is_prepared_once_and_loaded_instead_of_the_checkpoint(
@@ -104,38 +78,24 @@ def test_core_ml_model_is_prepared_once_and_loaded_instead_of_the_checkpoint(
     ) as detector:
         assert prepared == [("weights.pt", cache)]
         assert model_sdk.created == [str(tmp_path / "model.mlpackage")]
-        assert model_sdk.exports == []
         # The model itself is half precision; the SDK picks Core ML's processors.
         assert detector.model.predictor.args.device is None
         assert detector.model.predictor.args.quantize is None
 
 
-def test_core_ml_without_a_cache_passes_its_settings_to_the_sdk(model_sdk):
-    with open_detector(
-        YoloConfig(model="weights.pt", imgsz=320),
-        OnnxConfig(),
-        ("camera-1", "camera-2"),
-        "default",
-        InferenceOptions(core_ml=True),
-    ):
-        assert model_sdk.exports == [
-            {"format": "coreml", "batch": 1, "quantize": 16, "imgsz": 320, "nms": False}
-        ]
-
-
 @pytest.mark.parametrize("suffix", ["onnx", "engine"])
-def test_exported_model_is_not_converted_for_core_ml(model_sdk, suffix):
+def test_exported_model_is_not_converted_for_core_ml(model_sdk, tmp_path, suffix):
     with open_detector(
         YoloConfig(model=f"weights.{suffix}"),
         OnnxConfig(),
         ("0",),
         "default",
         InferenceOptions(core_ml=True),
+        tmp_path,
     ) as detector:
         assert detector.model.model == f"weights.{suffix}"
         assert detector.model.predictor.args.device is None
         assert detector.model.predictor.args.quantize is None
-        assert model_sdk.exports == []
 
 
 @pytest.mark.skipif(sys.platform != "darwin", reason="Core ML runs on a Mac")
@@ -177,6 +137,7 @@ def test_real_native_model_uses_the_requested_precision_without_downloading_weig
         ("0",),
         "cuda",
         InferenceOptions(half=half),
+        tmp_path,
     ) as detector:
         model = detector.model
         assert model.predictor.args.quantize == (16 if half else None)
@@ -198,6 +159,7 @@ def test_real_model_with_a_head_without_suppression_keeps_using_it(tmp_path):
         ("0",),
         "cuda",
         InferenceOptions(),
+        tmp_path,
     ) as detector:
         predictor = detector.model.predictor
         assert predictor.model.end2end is True
@@ -231,6 +193,7 @@ def test_sdk_loads_a_foreign_checkpoint_path_and_pathlib_is_restored(tmp_path):
         ("0",),
         "cuda",
         InferenceOptions(),
+        tmp_path,
     ) as detector:
         assert isinstance(detector.model.ckpt["training_path"], pathlib.Path)
         assert pathlib.WindowsPath is windows
@@ -238,7 +201,7 @@ def test_sdk_loads_a_foreign_checkpoint_path_and_pathlib_is_restored(tmp_path):
     assert detector.model.predictor is None
 
 
-def test_failed_checkpoint_load_restores_both_path_classes(monkeypatch):
+def test_failed_checkpoint_load_restores_both_path_classes(monkeypatch, tmp_path):
     windows, posix = pathlib.WindowsPath, pathlib.PosixPath
 
     def failed_load(*args, **kwargs):
@@ -255,6 +218,7 @@ def test_failed_checkpoint_load_restores_both_path_classes(monkeypatch):
             ("0",),
             "cuda",
             InferenceOptions(),
+            tmp_path,
         ),
     ):
         pytest.fail("The broken checkpoint must fail startup")

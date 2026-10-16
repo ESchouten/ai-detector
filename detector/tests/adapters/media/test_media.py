@@ -1,23 +1,27 @@
+import gc
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
+from weakref import ref
 
 import cv2
 import numpy as np
 import pytest
 
 from aidetector.adapters.media import MediaError
+from aidetector.adapters.media.event_media import EventMedia
 from aidetector.adapters.media.images import (
     compress_jpeg,
     crop_observation,
     draw_boxes,
+    encode_jpeg,
     shrink_image,
 )
 from aidetector.adapters.media.video import encode_video
-from aidetector.domain.models import BoundingBox, Observation
+from aidetector.domain.models import BoundingBox, DetectionEvent, Observation
 
 
 def observation(*boxes):
@@ -27,6 +31,23 @@ def observation(*boxes):
         {"cow": 0.9},
         boxes=boxes,
     )
+
+
+def event(color=0):
+    image = np.full((8, 8, 3), color, dtype=np.uint8)
+    return DetectionEvent("camera", (Observation(datetime(2026, 1, 1), image, {}),))
+
+
+@pytest.fixture
+def cropped_event():
+    image = np.zeros((64, 64, 3), dtype=np.uint8)
+    best = Observation(
+        datetime(2026, 1, 1),
+        image,
+        {"cow": 0.9},
+        (BoundingBox(10, 10, 40, 40, "cow", 0.9),),
+    )
+    return DetectionEvent("camera", (best,))
 
 
 def test_crop_union_and_plot_preserve_the_original_pixels():
@@ -125,7 +146,9 @@ def test_shrink_does_not_upscale_and_uses_even_dimensions():
 
 
 def test_video_with_identical_timestamps_is_encodable(tmp_path):
-    encoded = encode_video((observation(), observation()))
+    encoded = encode_video(
+        (observation(), observation()), width=None, crf=28, padding=0.1
+    )
     path = tmp_path / "event.mp4"
     path.write_bytes(encoded)
     capture = cv2.VideoCapture(str(path))
@@ -147,7 +170,7 @@ def test_ffmpeg_that_cannot_start_is_a_media_error(monkeypatch):
         "aidetector.adapters.media.video.get_ffmpeg_exe", lambda: "/nonexistent/ffmpeg"
     )
     with pytest.raises(MediaError, match="could not finish"):
-        encode_video((observation(),))
+        encode_video((observation(),), width=None, crf=28, padding=0.1)
 
 
 def test_ffmpeg_discovery_failure_is_a_media_error(monkeypatch):
@@ -156,7 +179,7 @@ def test_ffmpeg_discovery_failure_is_a_media_error(monkeypatch):
 
     monkeypatch.setattr("aidetector.adapters.media.video.get_ffmpeg_exe", unavailable)
     with pytest.raises(MediaError, match="FFmpeg is unavailable") as error:
-        encode_video((observation(),))
+        encode_video((observation(),), width=None, crf=28, padding=0.1)
     assert isinstance(error.value.__cause__, RuntimeError)
 
 
@@ -186,9 +209,12 @@ def test_video_size_limit_reuses_the_input_and_bounds_encoding_attempts(
     )
     if limit == 1:
         with pytest.raises(MediaError, match="cannot fit"):
-            encode_video((frame,), data_max=limit)
+            encode_video((frame,), width=None, crf=28, padding=0.1, data_max=limit)
     else:
-        assert len(encode_video((frame,), data_max=limit)) <= limit
+        assert (
+            len(encode_video((frame,), width=None, crf=28, padding=0.1, data_max=limit))
+            <= limit
+        )
     assert 1 < len(attempts) < 20
     assert attempts[-1] < attempts[0]
     assert all(raw == frame.image.tobytes() for raw in inputs)
@@ -202,5 +228,100 @@ def test_video_temporary_storage_errors_are_media_failures(monkeypatch):
         "aidetector.adapters.media.video.tempfile.TemporaryDirectory", unavailable
     )
     with pytest.raises(MediaError, match="Cannot prepare or read video data") as error:
-        encode_video((observation(),))
+        encode_video((observation(),), width=None, crf=28, padding=0.1)
     assert isinstance(error.value.__cause__, PermissionError)
+
+
+def test_media_cache_does_not_keep_a_completed_event_or_its_pixels_alive():
+    media = EventMedia()
+    current = event()
+    event_reference = ref(current)
+    image_reference = ref(current.best.image)
+    assert media.image(current, "original").startswith(b"\xff\xd8")
+
+    del current
+    gc.collect()
+
+    assert event_reference() is None
+    assert image_reference() is None
+
+
+def test_encodings_are_shared_within_an_event_and_replaced_for_the_next_one(
+    monkeypatch,
+):
+    encodings = []
+
+    def encode(image):
+        encodings.append(int(image[0, 0, 0]))
+        return bytes([image[0, 0, 0]])
+
+    monkeypatch.setattr("aidetector.adapters.media.event_media.encode_jpeg", encode)
+    media = EventMedia()
+    first, second = event(10), event(20)
+    assert media.image(first, "original") == media.image(first, "original") == b"\x0a"
+    assert media.image(second, "original") == b"\x14"
+    del first
+    gc.collect()
+    assert media.image(second, "original") == b"\x14"
+    assert encodings == [10, 20]
+
+
+@pytest.mark.parametrize("kind", ["original", "annotated"])
+@pytest.mark.parametrize("max_bytes", [None, 10_000])
+def test_uncropped_images_reuse_encoding_when_only_crop_options_change(
+    monkeypatch, cropped_event, kind, max_bytes
+):
+    encoder = Mock(wraps=encode_jpeg if max_bytes is None else compress_jpeg)
+    monkeypatch.setattr(
+        "aidetector.adapters.media.event_media."
+        + ("encode_jpeg" if max_bytes is None else "compress_jpeg"),
+        encoder,
+    )
+    media = EventMedia()
+    images = [
+        media.image(cropped_event, kind, padding=0.1, data_max=max_bytes),
+        media.image(cropped_event, kind, padding=0.3, data_max=max_bytes),
+        media.image(
+            cropped_event, kind, padding=0.3, data_max=max_bytes, plot_crop=False
+        ),
+    ]
+    assert images[0] == images[1] == images[2]
+    assert images[0].startswith(b"\xff\xd8")
+    assert encoder.call_count == 1
+
+
+def test_crops_keep_padding_and_annotation_variants_distinct(
+    monkeypatch, cropped_event
+):
+    encoder = Mock(wraps=encode_jpeg)
+    monkeypatch.setattr("aidetector.adapters.media.event_media.encode_jpeg", encoder)
+    media = EventMedia()
+    variants = [(0.1, True), (0.3, True), (0.3, False)]
+    images = [
+        media.image(cropped_event, "crop", padding=padding, plot_crop=plot)
+        for padding, plot in variants
+    ]
+    assert len(set(images)) == 3
+    for (padding, plot), image in zip(variants, images, strict=True):
+        assert (
+            media.image(cropped_event, "crop", padding=padding, plot_crop=plot) == image
+        )
+    assert encoder.call_count == 3
+
+
+def test_video_cache_reuses_compatible_limits_and_changes_with_the_event(monkeypatch):
+    encoder = Mock(side_effect=[b"first", b"second"])
+    monkeypatch.setattr("aidetector.adapters.media.event_media.encode_video", encoder)
+    media = EventMedia()
+    settings = {"width": 1280, "crf": 28, "padding": 0.1}
+    first, second = event(10), event(20)
+    assert (
+        media.video(first, **settings)
+        == media.video(first, **settings, data_max=10)
+        == b"first"
+    )
+    assert media.video(second, **settings) == b"second"
+    del first
+    gc.collect()
+    assert media.video(second, **settings, data_max=10) == b"second"
+    assert encoder.call_count == 2

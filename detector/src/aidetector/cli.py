@@ -9,7 +9,7 @@ from threading import Event, Thread
 from typing import TextIO
 
 from aidetector.adapters.diagnostics import diagnostic_logging, log_environment
-from aidetector.application.status import ReportStatus, ignore_status
+from aidetector.application.ports import ReportStatus, ignore_status
 from aidetector.configuration import Config, ConfigurationError, load_config
 from aidetector.version import REF_NAME, TYPE
 
@@ -135,7 +135,7 @@ def main(argv: list[str] | None = None) -> int:
 
         return run_helper(args.prepare_windows_ml or None)
     if args.test_vlm is not None:
-        from aidetector.adapters.vlm_check import run_check
+        from aidetector.adapters.vlm import run_check
 
         return run_check(args.test_vlm)
     config_path = args.config.expanduser().resolve()

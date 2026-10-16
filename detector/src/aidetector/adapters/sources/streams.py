@@ -10,11 +10,12 @@ import cv2
 
 from aidetector.adapters.diagnostics import resource_label
 from aidetector.adapters.media.images import even_width, shrink_image
-from aidetector.adapters.operational_status import source_key
-from aidetector.application.ports import SourceBatch, SourceError
-from aidetector.application.status import (
+from aidetector.application.ports import (
     ReportStatus,
+    SourceBatch,
+    SourceError,
     StatusEvent,
+    camera_id,
     ignore_status,
 )
 from aidetector.domain.models import Frame
@@ -50,11 +51,7 @@ class StreamSource:
     """One detector's bounded subscription to shared live captures."""
 
     def __init__(
-        self,
-        sources: tuple[str, ...],
-        width: int = 1280,
-        retention: int = 15,
-        interval: float = 0,
+        self, sources: tuple[str, ...], width: int, retention: int, interval: float
     ):
         self.sources = sources
         self.width = width
@@ -127,11 +124,7 @@ class StreamPool:
         self._threads: list[Thread] = []
 
     def subscribe(
-        self,
-        sources: tuple[str, ...],
-        width: int = 1280,
-        retention: int = 15,
-        interval: float = 0,
+        self, sources: tuple[str, ...], width: int, retention: int, interval: float
     ) -> StreamSource:
         subscription = StreamSource(sources, width, retention, interval)
         for source in sources:
@@ -163,7 +156,7 @@ class StreamPool:
                 subscriber.fail(error)
 
     def _capture(self, index: int, source: str) -> None:
-        identity = source_key(source)[:12]
+        identity = camera_id(source)
         attempt = 0
         while not self._stop.is_set():
             capture = None

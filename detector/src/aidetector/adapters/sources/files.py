@@ -9,11 +9,12 @@ import cv2
 
 from aidetector.adapters.diagnostics import resource_label
 from aidetector.adapters.media.images import shrink_image
-from aidetector.adapters.operational_status import source_key
-from aidetector.application.ports import SourceBatch, SourceError
-from aidetector.application.status import (
+from aidetector.application.ports import (
     ReportStatus,
+    SourceBatch,
+    SourceError,
     StatusEvent,
+    camera_id,
     ignore_status,
 )
 from aidetector.configuration import source_kind
@@ -26,8 +27,8 @@ class FileSource:
     def __init__(
         self,
         sources: tuple[str, ...],
-        width: int = 1280,
-        interval: float = 0,
+        width: int,
+        interval: float,
         started_at: datetime | None = None,
         report_status: ReportStatus = ignore_status,
     ):
@@ -46,7 +47,7 @@ class FileSource:
                 "Reading file source %d/%d [%s]: %s",
                 index + 1,
                 len(self.sources),
-                source_key(source)[:12],
+                camera_id(source),
                 resource_label(source),
             )
             started_at = self.started_at or datetime.now()

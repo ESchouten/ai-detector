@@ -137,6 +137,7 @@ def assert_core_dependencies(import_graph):
             "collections",
             "logging",
             "uuid",  # Delivery assigns an identity shared by independent exporters.
+            "hashlib",  # Sources are named outside the process by hash, not address.
             "aidetector.domain",
             "aidetector.application",
         },

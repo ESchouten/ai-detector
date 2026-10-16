@@ -52,7 +52,9 @@ def test_video_to_validated_archive_uses_real_media_and_flushes_at_eof(
 ):
     video = tmp_path / "input.avi"
     write_video(video)
-    source = FileSource((str(video),), started_at=datetime(2026, 1, 1))
+    source = FileSource(
+        (str(video),), width=1280, interval=0, started_at=datetime(2026, 1, 1)
+    )
     pipeline = DetectionPipeline(
         ScheduledDetector(),
         EventPolicy(min_frames=3, inactivity_timeout=2, trailing_time=0.2),
@@ -72,7 +74,7 @@ def test_video_to_validated_archive_uses_real_media_and_flushes_at_eof(
         source.close()
     assert pipeline.finish() == []
     assert len(completed) == 1
-    assert delivery.deliver(completed[0]).delivered == ("disk",)
+    assert delivery.deliver(completed[0]).failures == 0
 
     category_path = root / (category or "cow")
     [directory] = list((category_path / "approved").iterdir())
@@ -104,7 +106,9 @@ def test_video_to_validated_archive_uses_real_media_and_flushes_at_eof(
 def test_no_yolo_flow_archives_unclassified_frames_without_overwriting(tmp_path):
     video = tmp_path / "input.avi"
     write_video(video, frames=1)
-    source = FileSource((str(video),), started_at=datetime(2026, 1, 1))
+    source = FileSource(
+        (str(video),), width=1280, interval=0, started_at=datetime(2026, 1, 1)
+    )
     pipeline = DetectionPipeline()
     batch = next(source.batches())
     [event] = pipeline.process(batch)
@@ -117,8 +121,8 @@ def test_no_yolo_flow_archives_unclassified_frames_without_overwriting(tmp_path)
         ),
         Cooldown(),
     )
-    assert delivery.deliver(event).delivered == ("disk",)
-    assert delivery.deliver(event).delivered == ("disk",)
+    assert delivery.deliver(event).failures == 0
+    assert delivery.deliver(event).failures == 0
     directories = sorted((root / "unclassified" / "unvalidated").iterdir())
     assert len(directories) == 2
     assert directories[0].name != directories[1].name
@@ -133,7 +137,7 @@ def test_each_file_flushes_before_the_next_file_is_read(tmp_path):
     first, second = tmp_path / "first.avi", tmp_path / "second.avi"
     write_video(first, frames=4)
     write_video(second, frames=4)
-    source = FileSource((str(first), str(second)))
+    source = FileSource((str(first), str(second)), width=1280, interval=0)
     pipeline = DetectionPipeline(ScheduledDetector(), EventPolicy(min_frames=3))
     ended = []
     for batch in source.batches():

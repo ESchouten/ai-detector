@@ -40,14 +40,28 @@ adapters/
 ├── diagnostics.py log formatting, redaction, rotation, configuration summaries
 ├── http.py        transport shared by exporters and health
 ├── live_preview.py, operational_status.py   desktop integration
-└── vlm.py, vlm_check.py                     event verification and its connection check
+└── vlm.py         event verification and its connection check
 ```
 
 Exporters, sources and inference never import one another, directly or indirectly; bootstrap connects them through application ports. Media and HTTP are shared. Archive metadata sits beside the disk exporter because it defines the public archive format. Package initializers do not re-export their children: import the module that owns an operation.
 
-[`.importlinter`](.importlinter) declares the layers, the forbidden imports, adapter-group independence and acyclic siblings, including imports inside functions and type-checking-only imports. Two test files add what the contracts cannot see. `tests/test_architecture.py` checks that every source file is in the import graph; a folder without `__init__.py` would otherwise escape the rules. `tests/test_import_safety.py` imports the core in a child process and fails if that reads configuration, writes files, opens sockets, starts threads or processes, or loads an inference library. These checks establish structure, not that every responsibility is well placed; see [QUALITY.md](QUALITY.md).
+[`.importlinter`](.importlinter) declares the layers, the forbidden imports, adapter-group independence and acyclic siblings, including imports inside functions and type-checking-only imports. Two test files add what the contracts cannot see. `tests/test_architecture.py` checks that every source file is in the import graph; a folder without `__init__.py` would otherwise escape the rules. `tests/test_import_safety.py` imports the core in a child process and fails if that reads configuration, writes files, opens sockets, starts threads or processes, or loads an inference library. These checks establish structure, not that every responsibility is well placed.
 
 ## Where a change belongs
+
+`run_application` builds one worker per detector configuration, with a source, a pipeline and a delivery. The arrows mean "uses"; the pipeline creates its own assembler, with a fixed `EventPolicy`.
+
+```mermaid
+flowchart LR
+    Worker["DetectorWorker"] --> Source["FrameSource<br/>FileSource or StreamSource"]
+    Worker --> Pipeline["DetectionPipeline"]
+    Worker --> Delivery["EventDelivery"]
+    Pipeline --> Detector["ObjectDetector<br/>Optional: YoloDetector"]
+    Pipeline --> Assembler["EventAssembler"]
+    Delivery --> Validator["EventValidator<br/>Optional: VlmValidator"]
+    Delivery --> Destinations["Destination<br/>Exporter and ExportPolicy"]
+    Delivery --> Cooldown["Cooldown"]
+```
 
 Tests mirror the `domain`, `application` and `adapters` packages.
 
@@ -55,24 +69,24 @@ Tests mirror the `domain`, `application` and `adapters` packages.
 | --- | --- | --- |
 | Configuration fields or schema | [configuration](src/aidetector/configuration.py), [schema generation](src/aidetector/schema.py) | [configuration](tests/test_configuration.py), [schemas](tests/test_schemas.py) |
 | Event timing | [event assembler](src/aidetector/domain/events.py) | [events](tests/domain/test_events.py) |
-| Confidence, cooldown, or domain records | [policy](src/aidetector/domain/policy.py), [models](src/aidetector/domain/models.py) | [policy](tests/domain/test_policy.py), [models](tests/domain/test_models.py) |
+| Confidence, cooldown, or domain records | [policy](src/aidetector/domain/policy.py), [models](src/aidetector/domain/models.py) | [policy](tests/domain/test_policy.py), [events and records](tests/domain/test_events.py) |
 | Inference/verification sequencing or delivery policy | [pipeline](src/aidetector/application/pipeline.py), [delivery](src/aidetector/application/delivery.py), [ports](src/aidetector/application/ports.py) | [pipeline](tests/application/test_pipeline.py), [delivery](tests/application/test_delivery.py) |
 | Startup, shutdown, or worker supervision | [CLI](src/aidetector/cli.py), [bootstrap](src/aidetector/bootstrap.py), [runtime](src/aidetector/runtime.py) | [CLI](tests/test_cli.py), [runtime](tests/test_runtime.py) |
 | Managed process recovery | [CLI exit codes](src/aidetector/cli.py), [process manager](../web/src/lib/server/managed-detector.ts) | [CLI](tests/test_cli.py), [process recovery](../web/tests/runtime-recovery.test.ts) |
 | Support logs, safe configuration summaries, or log retention | [diagnostics](src/aidetector/adapters/diagnostics.py) | [diagnostics](tests/adapters/test_diagnostics.py), [CLI](tests/test_cli.py), [runtime](tests/test_runtime.py) |
-| Launcher readiness and camera health | [status contract](src/aidetector/application/status.py), [JSON status writer](src/aidetector/adapters/operational_status.py) | [status protocol](tests/adapters/test_operational_status.py), [CLI integration](tests/test_cli.py), [shared capture](tests/adapters/sources/test_shared_streams.py) |
-| Live analyzed pictures | [protocol](LIVE_PREVIEW.md), [live preview adapter](src/aidetector/adapters/live_preview.py), [pipeline](src/aidetector/application/pipeline.py) | [publisher lifecycle](tests/adapters/test_live_preview.py), [pipeline observations](tests/application/test_pipeline.py), [web bridge](../web/tests/live-preview.test.ts) |
-| Camera sharing or file sampling | [streams](src/aidetector/adapters/sources/streams.py), [files](src/aidetector/adapters/sources/files.py) | [shared streams](tests/adapters/sources/test_shared_streams.py), [sources](tests/adapters/sources/test_sources.py), [file sampling](tests/adapters/sources/test_files.py) |
-| YOLO, model assets, or ONNX providers | [inference adapters](src/aidetector/adapters/inference/) | [YOLO](tests/adapters/inference/test_yolo.py), [ONNX](tests/adapters/inference/test_onnx.py), [model assets](tests/adapters/inference/test_model_assets.py), [model loading](tests/adapters/inference/test_model_loading.py), [SDK lifetime](tests/adapters/inference/test_yolo_runtime.py) |
-| Inference performance comparisons | [benchmark](tools/benchmark_inference.py), [measurement guide](PERFORMANCE.md) | [benchmark integration](tests/test_benchmark_inference.py), [shared resize](tests/adapters/sources/test_shared_streams.py) |
+| Launcher readiness and camera health | [status contract](src/aidetector/application/ports.py), [JSON status writer](src/aidetector/adapters/operational_status.py) | [status protocol](tests/adapters/test_operational_status.py), [CLI integration](tests/test_cli.py), [shared capture](tests/adapters/sources/test_shared_streams.py) |
+| Live analyzed pictures | [protocol](#live-analyzed-pictures), [live preview adapter](src/aidetector/adapters/live_preview.py), [pipeline](src/aidetector/application/pipeline.py) | [publisher lifecycle](tests/adapters/test_live_preview.py), [pipeline observations](tests/application/test_pipeline.py), [web bridge](../web/tests/live-preview.test.ts) |
+| Camera sharing or file sampling | [streams](src/aidetector/adapters/sources/streams.py), [files](src/aidetector/adapters/sources/files.py) | [shared streams](tests/adapters/sources/test_shared_streams.py), [sources and file sampling](tests/adapters/sources/test_sources.py) |
+| YOLO, model assets, or ONNX providers | [inference adapters](src/aidetector/adapters/inference/) | [YOLO and SDK lifetime](tests/adapters/inference/test_yolo.py), [ONNX](tests/adapters/inference/test_onnx.py), [model assets](tests/adapters/inference/test_model_assets.py), [model loading](tests/adapters/inference/test_model_loading.py) |
+| Inference timing logs | [YOLO adapter](src/aidetector/adapters/inference/yolo.py), [streams](src/aidetector/adapters/sources/streams.py), [measurement guide](PERFORMANCE.md) | [timing summary](tests/adapters/inference/test_yolo.py), [shared resize](tests/adapters/sources/test_shared_streams.py) |
 | Windows ML startup or provider downloads | [Windows ML helper](src/aidetector/adapters/inference/windows_ml.py), [ONNX registration](src/aidetector/adapters/inference/onnx.py) | [process isolation and timeouts](tests/adapters/inference/test_windows_ml.py), [provider selection and lifetime](tests/adapters/inference/test_onnx.py) |
 | Downloaded Windows CUDA runtime | [distribution staging](../distribution/nvidia_runtime.py), [desktop preparation](../web/src/lib/server/nvidia-runtime.ts) | [payload and dependency checks](../distribution/test_nvidia_runtime.py), [process lifecycle](../web/tests/nvidia-runtime.test.ts), [Windows package installation](../web/tests/nvidia-runtime-installed.test.ts) |
 | Model conversion or prepared cache | [export settings](src/aidetector/adapters/inference/export_settings.py), [prepared models](src/aidetector/adapters/inference/prepared_models.py) | [conversion/cache contracts](tests/adapters/inference/test_prepared_models.py), [model loading](tests/adapters/inference/test_model_loading.py), [real SDK export](tests/integration/test_model_export.py) |
 | Automatic direct TensorRT | [GPU engine cache and background preparation](src/aidetector/adapters/inference/prepared_engines.py), [export worker](src/aidetector/adapters/inference/tensorrt_worker.py), [desktop preparation](../web/src/lib/server/nvidia-runtime.ts) | [preparation, concurrent monitoring, cancellation and fallback](tests/adapters/inference/test_prepared_engines.py), [runtime installation](../web/tests/nvidia-runtime.test.ts), [planned restart and shutdown](../web/tests/runtime-recovery.test.ts) |
-| Cropping, annotations, or encoded media | [media adapters](src/aidetector/adapters/media/) | [media encoding](tests/adapters/media/test_encoding.py), [event media](tests/adapters/media/test_event_media.py) |
-| VLM responses, fallback or connection check | [VLM adapter](src/aidetector/adapters/vlm.py), [connection check](src/aidetector/adapters/vlm_check.py) | [VLM validation](tests/adapters/test_vlm.py), [connection check](tests/adapters/test_vlm_check.py) |
+| Cropping, annotations, or encoded media | [media adapters](src/aidetector/adapters/media/) | [media](tests/adapters/media/test_media.py) |
+| VLM responses, fallback or connection check | [VLM adapter](src/aidetector/adapters/vlm.py) | [VLM validation and connection check](tests/adapters/test_vlm.py) |
 | Archive format or publication | [disk](src/aidetector/adapters/exporters/disk.py), [metadata](src/aidetector/adapters/exporters/archive_metadata.py) | [disk](tests/adapters/exporters/test_disk.py), [reference flow](tests/test_reference_flow.py), [schemas](tests/test_schemas.py) |
-| Telegram, webhooks, or health requests | [Telegram](src/aidetector/adapters/exporters/telegram.py), [webhook](src/aidetector/adapters/exporters/webhook.py), [health](src/aidetector/adapters/health.py) | [exporters](tests/adapters/exporters/test_exporters.py), [HTTP](tests/adapters/test_http.py), [health](tests/adapters/test_health.py) |
+| Telegram, webhooks, or health requests | [Telegram](src/aidetector/adapters/exporters/telegram.py), [webhook](src/aidetector/adapters/exporters/webhook.py), [health](src/aidetector/adapters/health.py) | [exporters and HTTP](tests/adapters/exporters/test_exporters.py), [health](tests/adapters/test_health.py) |
 
 ## Vocabulary
 
@@ -91,11 +105,89 @@ The detector has one model: turn footage from a source into a completed event, o
 | `EventResult` | An event, its verification outcome and its ID. Delivery outcomes belong to the application's `DeliveryReport`. |
 | Cooldown | The interval since an accepted event's best observation, per source and class within one detector. |
 
+How the main records relate, with a selection of their fields:
+
+```mermaid
+classDiagram
+    direction TB
+
+    class EventResult
+    class DetectionEvent {
+        str source
+        Observation best
+        float duration
+    }
+    class Observation {
+        datetime date
+        NDArray image
+        Mapping confidence
+        float score
+    }
+    class BoundingBox {
+        int x1
+        int y1
+        int x2
+        int y2
+        str label
+        float confidence
+    }
+    class ValidationResult {
+        ValidationStatus status
+        str error
+    }
+
+    EventResult --> "1" DetectionEvent : event
+    EventResult --> "1" ValidationResult : validation
+    DetectionEvent --> "1..*" Observation : observations
+    Observation --> "0..*" BoundingBox : boxes
+```
+
 Producers establish invariants once and consumers rely on them: sources and inference supply nonempty, ordered batches; images are `uint8` H×W×3 in BGR order; frozen records borrow arrays and score maps as read-only values. Consumers do not re-validate or copy.
 
 The archive is a public projection for the web application. `EventMetadata` keeps its field names (`detections` is the number of observations including context; `crop` is the best observation's enclosing box) so that internal names can improve without migrating archives.
 
 ## Event rules
+
+The order of processing inside one run. Arrows are data and decisions, not imports between modules; an event without class scores has no class cooldown.
+
+```mermaid
+flowchart TB
+    Camera["Live camera"] --> Pool["StreamPool<br/>One capture per distinct source"]
+    Pool --> Subscription["StreamSource<br/>Own sampling, size and buffer"]
+    Pool --> Other["Another detector's subscription"]
+    File["Video file or image"] --> FileSource["FileSource<br/>Own reader with media time"]
+
+    subgraph Worker["Per detector configuration"]
+        subgraph Pipeline["DetectionPipeline"]
+            Mode{"YOLO configured?"}
+            Inference["YoloDetector"]
+            Events["EventAssembler<br/>Context, minimum matches and time window"]
+            Snapshot["Latest frame per source<br/>Unscored event at once"]
+            Mode -->|yes| Inference
+            Inference -->|Observation| Events
+            Mode -->|no| Snapshot
+        end
+        Queue["Bounded queue<br/>Completed events"]
+        Allowed{"Cooldown.allows?"}
+        Skip["Skip"]
+        Verify["EventDelivery<br/>Optional verification and EventResult"]
+        Record["Cooldown.record<br/>Take the outcome into account"]
+        Policy["ExportPolicy<br/>Decision per destination"]
+        Export["Disk, Telegram and webhook<br/>Through the configured adapters"]
+
+        Events -->|DetectionEvent| Queue
+        Snapshot -->|DetectionEvent| Queue
+        Queue --> Allowed
+        Allowed -->|no| Skip
+        Allowed -->|yes| Verify
+        Verify -->|EventResult| Record
+        Record --> Policy
+        Policy -->|allowed destination| Export
+    end
+
+    Subscription -->|Frames| Mode
+    FileSource -->|Frames| Mode
+```
 
 - An event begins with a qualifying observation and may include context that preceded it in the same batch. Boxes alone do not make a frame qualify.
 - It closes at its maximum duration, after its inactivity timeout, at EOF, or when shutdown drains the detector. Trailing frames are kept only within the configured trailing time after the last qualifying observation.
@@ -142,31 +234,42 @@ Backend selection lives in the inference adapters; the domain and application ne
 - **Windows NVIDIA**: the web application's process manager prepares a separate CUDA Python environment and starts the same CLI in it (see [distribution](../distribution/README.md#windows-nvidia-runtime)). On compute capability 8.0+ it adds `--prefer-tensorrt`.
 - **Jetson container**: the ARM64 image starts the CLI with `--prefer-tensorrt` too. Without a CUDA device the preference is dropped with a warning and detection runs on the processor.
 - **TensorRT engines** (`prepared_engines.py`, `tensorrt_worker.py`): monitoring starts with a cached engine or with CUDA, and missing engines are built one at a time in the background by a short-lived helper process. The engine key includes checkpoint, settings, GPU, driver and runtime versions. When the queue finishes with at least one new engine, one `models_ready` status record asks the desktop to restart monitoring once. Predictors are never swapped in a running process. Only this automatic optimization may fall back to CUDA; an engine the user supplied may not.
-  - A failed build, or one cut off by a crash, leaves CUDA running and is tried again at a monitoring start at least 24 hours later. No timer retries it while monitoring runs. Pause and quit cancel a build without that delay.
+  - A failed build, one past its thirty-minute deadline, or one cut off by a crash leaves CUDA running and is tried again at a monitoring start at least 24 hours later. No timer retries it while monitoring runs. Pause and quit cancel a build without that delay.
   - Each attempt keeps `models/prepared/tensorrt/<identity>/build.log`; `failure.txt` beside it holds the reason.
   - The builder's 2 GiB workspace is scratch space, not a limit on GPU memory: weights and the running detectors come on top, and a build slows inference while it runs.
-  - The helper watches a parent-owned stdin pipe with non-blocking reads, because a blocking read deadlocks native NumPy imports on Windows, and has a thirty-minute deadline.
 - **Windows ML** (`windows_ml.py`): provider discovery and preparation run in a short-lived helper process, which keeps PyWinRT out of the inference process (a [documented conflict](https://ryzenai.docs.amd.com/en/latest/winml/troubleshooting.html) with TensorRT RTX registration). The helper has a 150-second deadline. Automatic selection skips providers that cannot be prepared and ends on CPU with a notice; an explicitly requested provider stays a visible failure.
-
-Decisions about the libraries, with their reasons:
-
-- A model named by URL is downloaded by the detector itself, in one attempt, and trusts the certificates in `SSL_CERT_FILE` like the rest of the application. A failure is reported by its kind, never with the transport's own text, which can hold the URL's credentials. Only standard model names are left to Ultralytics' downloader.
-- Inference and export ask the SDK for the head without suppression (`nms: False`) where a model has one, as CowCatcher's do: its confidences are what a preset's thresholds were chosen with, and the SDK no longer picks it by itself. Precision and device live in the model's own overrides, because a prediction that names other ones makes the SDK build a second backend.
-- The predictor is prepared once: asking an exported model for its class names otherwise creates a second, disposable ONNX session.
-- Result mapping moves boxes to the CPU once (`Boxes.cpu()`); reading GPU scalars one by one synchronizes the device each time.
-- `inference_runtime` temporarily wraps the ONNX session factory, because Ultralytics does not expose the Windows ML device and session options, and restores it on exit. Worker spinning is disabled so idle ONNX workers sleep.
-- The adapter restores `pathlib.WindowsPath` and `PosixPath` after loading a checkpoint, because the SDK can leave them patched.
-- After an FP16 export the graph is topologically sorted before validation: the CPU conversion can append casts after their consumers.
 
 ## Desktop integration
 
 The web application starts the detector and talks to it through four optional, separate channels. None of them reaches the domain.
 
 - `--control-stdin`: a line `stop`, or EOF on the parent's pipe, requests the normal stop-and-drain path on every OS. Ordinary runs do not read stdin.
-- `--status-json`: versioned records on stdout, prefixed `AIDETECTOR_STATUS `, carrying an event kind, a UTC time, a SHA-256 source key and the run-local identities of the rule (`detector-N`) and the destination (`disk-N`, `telegram-N`, `webhook-N`). They contain no camera address. `application/status.py` defines the kinds; `adapters/operational_status.py` writes them, limiting the frequent ones (frames, inference, processing, offline, waiting for delivery) to one per source and rule per second. The web application derives readiness from these records and their freshness, never from log text or from the process having started.
-- `--live-preview`: the latest analyzed frame per rule, published only while someone is watching. See [LIVE_PREVIEW.md](LIVE_PREVIEW.md).
+- `--status-json`: versioned records on stdout, prefixed `AIDETECTOR_STATUS `, carrying an event kind, a UTC time, a SHA-256 source key and the run-local identities of the rule (`detector-N`) and the destination (`disk-N`, `telegram-N`, `webhook-N`). They contain no camera address. `application/ports.py` defines the kinds and the source key; `adapters/operational_status.py` writes them, limiting the frequent ones (frames, inference, processing, offline, waiting for delivery) to one per source and rule per second. The web application derives readiness from these records and their freshness, never from log text or from the process having started.
+- `--live-preview`: the size and boxes of the latest analyzed picture per rule, published only while someone is watching; see [live analyzed pictures](#live-analyzed-pictures).
 - Reviews: the delivery use case gives each `EventResult` a UUID shared by all destinations. Disk stores it as `event_id`; Telegram puts it in the review buttons. Receiving reviews and writing them into `metadata.json` belongs to the web application.
 
 Managed monitoring is continuous: the web application restarts the detector after any unexpected exit. A standalone CLI run finishes at EOF and reports its exit status.
 
 Logs are for people and are a separate concern: the diagnostics adapter writes the console and a rotating `logs/detector.log`, redacts credentials in messages and tracebacks, and names cameras by the first 12 characters of the same source key.
+
+### Live analyzed pictures
+
+`--live-preview` is a file transport in the data folder shared with the web application. Managed launches enable it; a standalone run must opt in and share that folder. It creates no HTTP server and opens no extra camera connection. It assumes one detector publisher and one web process per data folder, as in managed installations and the supplied Compose files, and it is an operational view, not a recording or proof that recording and alerts succeeded.
+
+`DetectionPipeline` calls its `PublishObservation` callback after successful inference and before event assembly, with the latest analyzed observation; snapshot rules publish theirs with empty boxes. Publishing creates no event, changes no score and does not depend on recording or notification thresholds. Track IDs are optional, scoped to one tracking run, and identify nothing. The adapter owns one thread: the callback only replaces the pending observation of a source and rule while a viewer is active, and the thread writes at most eight times per second per pair, so a slow disk can neither block inference nor collect a frame history. It writes the size of the analyzed picture and its boxes, never pixels: the web application shows its own camera pictures.
+
+Version 1 files are under `DATA_DIR/live`. They name a source by its source key, never by its address or credentials.
+
+- `session.json`: `{version: 1, runId, updatedAt}`, with a unique ID per process run. The publisher replaces this heartbeat once per second and removes it on orderly shutdown.
+- `leases/<sourceKey>.json`: `{version: 1, expiresAt}`, in Unix seconds. The web process shares one lease between the viewers of a source, renews it every three seconds and removes it when the last viewer leaves; after a web crash it expires within twelve seconds. The detector ignores invalid or expired leases.
+- `frames/<sourceKey>.detector-<ordinal>.json`: `{version: 1, runId, sourceKey, ruleId, publishedAt, image, boxes}`. `image` is `{width, height}`, the analyzed picture's size in pixels; a box has pixel coordinates `x1, y1, x2, y2`, a nullable `label`, `confidence` and `trackId`. Each record is written to a temporary sibling and atomically replaced, so size and boxes stay coherent.
+
+Each rule and source pair keeps one record. A starting publisher removes the previous run's records and its known temporary files. A failed preview write is logged apart from event processing and does not stop other rules from publishing.
+
+The web server accepts a frame only from the current session and for the matching source and rule. A session is unavailable after six seconds without a heartbeat, and a frame after the larger of fifteen seconds or three inference intervals plus five seconds, counted from publication because file footage may carry historical timestamps. `GET /cameras/live?camera=<camera-id>`, with the parameter repeated per camera, streams same-origin server-sent events over one connection for all visible cameras ([shared contracts](../web/src/lib/live-preview.ts)):
+
+- `frame`: the version 1 record with the camera ID, the rule's current label and optional preset. Boxes scale from the record's image size onto the independently playing video, letterboxing included, so a moving object can leave its box between inferences.
+- `status`: a camera and rule without a current result, whose boxes are cleared; `{}` clears every box when the stream fails. An empty detection result also clears that rule's boxes.
+- `heartbeat`: `{}` when nothing changed, so the browser can tell an unchanged result from a stalled connection.
+
+A changed run ID closes the stream, so a reconnection resolves current settings and labels. A slow consumer skips intermediate records instead of queuing them.

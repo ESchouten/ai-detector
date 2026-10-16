@@ -127,11 +127,11 @@ def _encoding_attempts(width: int, crf: int) -> Iterator[tuple[int, int]]:
 
 def encode_video(
     observations: Sequence[Observation],
-    width: int | None = None,
-    crf: int = 28,
-    plot: bool = True,
+    width: int | None,
+    crf: int,
+    padding: float,
     data_max: int | None = None,
-    padding: float = 0.1,
+    plot: bool = True,
 ) -> bytes:
     try:
         executable = get_ffmpeg_exe()

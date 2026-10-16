@@ -136,33 +136,14 @@ dev = [
     "trustme>=1.2.1",
     "opencv-stubs>=0.1.1",
     "jsonschema>=4.23",
-    "radon>=6.0.1,<7",
     "coverage[toml]>=7.10.6,<8",
     "import-linter>=2.15,<3",
     "grimp>=3.17,<4",
-    "mutmut>=3.8,<4; sys_platform != 'win32'",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 filterwarnings = ["error::pytest.PytestUnhandledThreadExceptionWarning"]
-
-[tool.mutmut]
-source_paths = ["src/"]
-only_mutate = [
-    "src/aidetector/domain/events.py",
-    "src/aidetector/domain/policy.py",
-    "src/aidetector/domain/models.py",
-]
-pytest_add_cli_args_test_selection = [
-    "tests/domain/test_events.py",
-    "tests/domain/test_policy.py",
-    "tests/domain/test_models.py",
-    "tests/application/test_delivery.py",
-]
-pytest_add_cli_args = ["-q"]
-use_setproctitle = false
-on_dependency_change = "rerun"
 
 [tool.coverage.run]
 branch = true
@@ -179,9 +160,6 @@ precision = 1
 
 [tool.coverage.html]
 directory = ".reports/coverage"
-
-[tool.hatch.metadata]
-allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/aidetector"]

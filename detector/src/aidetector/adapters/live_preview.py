@@ -11,8 +11,7 @@ from threading import Event, Lock, Thread
 from time import monotonic, time
 from uuid import uuid4
 
-from aidetector.adapters import operational_status
-from aidetector.application.ports import PublishObservation
+from aidetector.application import ports
 from aidetector.domain.models import Observation
 
 logger = logging.getLogger(__name__)
@@ -45,11 +44,11 @@ class LivePreview:
         self._failure: str | None = None
         self._heartbeat = 0.0
 
-    def observer(self, rule_id: str, sources: Sequence[str]) -> PublishObservation:
+    def observer(
+        self, rule_id: str, sources: Sequence[str]
+    ) -> ports.PublishObservation:
         """Register configured sources before open(); return a nonblocking callback."""
-        source_keys = {
-            source: operational_status.source_key(source) for source in sources
-        }
+        source_keys = {source: ports.source_key(source) for source in sources}
         self._sources.update(source_keys)
 
         def publish(source: str, observation: Observation) -> None:

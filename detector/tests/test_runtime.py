@@ -7,7 +7,6 @@ from weakref import ref
 import numpy as np
 import pytest
 
-from aidetector.adapters.operational_status import source_key
 from aidetector.application.delivery import Destination, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import (
@@ -15,8 +14,9 @@ from aidetector.application.ports import (
     SourceBatch,
     SourceError,
     ValidationUnavailable,
+    camera_id,
+    ignore_status,
 )
-from aidetector.application.status import ignore_status
 from aidetector.domain.models import Frame
 from aidetector.domain.policy import Cooldown, ExportPolicy
 from aidetector.runtime import DetectorWorker, run_detectors
@@ -272,7 +272,7 @@ def test_failed_inference_reports_source_and_frame_metadata_without_pixels_or_cr
     assert record.threadName == "detector-2-processing"
     assert json.loads(record.message.removeprefix("Failed batch: ")) == [
         {
-            "source": source_key(address)[:12],
+            "source": camera_id(address),
             "retained_frames": 2,
             "latest_at": "2026-01-01T00:00:01",
             "shape": [20, 30, 3],

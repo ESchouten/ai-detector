@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from unittest.mock import Mock
 
 import cv2
 import numpy as np
@@ -8,6 +9,7 @@ import requests
 
 from aidetector.adapters.exporters.telegram import TelegramExporter
 from aidetector.adapters.exporters.webhook import WebhookExporter
+from aidetector.adapters.http import send_request
 from aidetector.adapters.media.event_media import EventMedia
 from aidetector.adapters.media.images import encode_jpeg
 from aidetector.application.delivery import Destination, EventDelivery
@@ -282,11 +284,9 @@ def test_transport_failure_keeps_independent_destinations_and_safe_diagnostics(
     report = delivery.deliver(result.event)
 
     assert calls == [telegram_url, webhook_url]
-    assert report.delivered == ("webhook",)
-    [failure] = report.failures
-    assert failure.destination == "telegram"
-    assert failure.message in caplog.text
-    assert "private-token" not in failure.message + caplog.text
+    assert report.failures == 1
+    assert "Delivery to telegram failed" in caplog.text
+    assert "private-token" not in caplog.text
 
 
 @pytest.mark.parametrize("album", [False, True])
@@ -352,3 +352,56 @@ def test_jpeg_codec_failure_is_a_delivery_error_every_time(
         with pytest.raises(DeliveryError, match="JPEG encoding failed"):
             exporter.export(result)
     assert requests_sent == []
+
+
+@pytest.mark.parametrize("status", [200, 204])
+def test_successful_request_returns_the_response_for_provider_validation(
+    monkeypatch, status
+):
+    response = requests.Response()
+    response.status_code = status
+    monkeypatch.setattr(requests, "request", Mock(return_value=response))
+
+    assert send_request("POST", "https://example.test", timeout=3) is response
+
+
+@pytest.mark.parametrize("status", [403, 503])
+def test_http_failure_reports_status_without_the_url_or_response_body(
+    monkeypatch, status
+):
+    response = requests.Response()
+    response.status_code = status
+    response.url = "https://example.test/private-token"
+    response._content = b"Request with secret-header was rejected"
+    monkeypatch.setattr(requests, "request", Mock(return_value=response))
+
+    with pytest.raises(DeliveryError) as failure:
+        send_request(
+            "POST",
+            response.url,
+            timeout=3,
+            headers={"Authorization": "secret-header"},
+        )
+
+    assert str(failure.value) == f"HTTP request returned status {status}"
+
+
+@pytest.mark.parametrize("error_type", [requests.ConnectionError, requests.Timeout])
+def test_request_exception_reports_its_kind_without_credential_details(
+    monkeypatch, error_type
+):
+    request = Mock(
+        side_effect=error_type("https://example.test/private-token secret-header")
+    )
+    monkeypatch.setattr(requests, "request", request)
+
+    with pytest.raises(DeliveryError) as failure:
+        send_request(
+            "POST",
+            "https://example.test/private-token",
+            timeout=3,
+            headers={"Authorization": "secret-header"},
+        )
+
+    assert str(failure.value) == f"HTTP request failed ({error_type.__name__})"
+    assert request.call_count == 1

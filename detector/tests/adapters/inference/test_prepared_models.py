@@ -63,6 +63,31 @@ def test_identical_checkpoint_reuses_prepared_model_without_export_or_source_mut
     assert not first.with_suffix(".pt").exists()
 
 
+def test_conversion_passes_the_onnx_format_and_settings_to_the_sdk(
+    tmp_path, prepared_checkpoint
+):
+    source, calls = prepared_checkpoint
+    prepare_onnx(
+        YoloConfig(model=str(source), imgsz=128),
+        OnnxConfig(opset=19),
+        2,
+        InferenceOptions(half=True),
+        tmp_path / "cache",
+    )
+    assert calls == [
+        {
+            "format": "onnx",
+            "batch": 2,
+            "dynamic": True,
+            "quantize": 16,
+            "imgsz": 128,
+            "simplify": True,
+            "opset": 19,
+            "nms": False,
+        }
+    ]
+
+
 def test_stock_download_failure_is_reported_and_not_misclassified_as_ready(
     tmp_path, monkeypatch
 ):

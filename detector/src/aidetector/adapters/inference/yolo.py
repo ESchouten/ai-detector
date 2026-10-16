@@ -11,16 +11,16 @@ import numpy as np
 from numpy.typing import NDArray
 from ultralytics import YOLO
 from ultralytics.data.loaders import LoadStreams, SourceTypes
-from ultralytics.engine.results import Results
+from ultralytics.engine.results import Boxes, Results
 
-from aidetector.adapters.inference.export_settings import (
-    core_ml_arguments,
-    export_arguments,
-)
 from aidetector.adapters.inference.model_assets import MODEL_DOWNLOAD_HELP
 from aidetector.adapters.inference.onnx import InferenceOptions
-from aidetector.application.ports import Frames
-from aidetector.application.status import ReportStatus, StatusEvent, ignore_status
+from aidetector.application.ports import (
+    Frames,
+    ReportStatus,
+    StatusEvent,
+    ignore_status,
+)
 from aidetector.configuration import OnnxConfig, YoloConfig
 from aidetector.domain.models import BoundingBox, Frame, Observation
 
@@ -64,21 +64,21 @@ def map_observations(
 ) -> tuple[Observation, ...]:
     boxes: list[BoundingBox] = []
     confidences: dict[str, float] = {}
-    if result.boxes is not None:
-        # Transfer once: reading individual GPU scalars repeatedly synchronizes MPS/CUDA.
-        for box in result.boxes.cpu():
-            class_id = int(box.cls.item())
-            configured = classes.get(class_id)
-            if configured is None:
-                continue
-            name, threshold = configured
-            score = float(box.conf.item())
-            if score < threshold:
-                continue
-            x1, y1, x2, y2 = map(int, box.xyxy[0])
-            track_id = int(box.id.item()) if box.id is not None else None
-            boxes.append(BoundingBox(x1, y1, x2, y2, name, score, track_id))
-            confidences[name] = max(confidences.get(name, 0), score)
+    # Detect and segment results always have boxes; the SDK annotation spans all tasks.
+    # Transfer once: reading individual GPU scalars repeatedly synchronizes MPS/CUDA.
+    for box in cast(Boxes, result.boxes).cpu():
+        class_id = int(box.cls.item())
+        configured = classes.get(class_id)
+        if configured is None:
+            continue
+        name, threshold = configured
+        score = float(box.conf.item())
+        if score < threshold:
+            continue
+        x1, y1, x2, y2 = map(int, box.xyxy[0])
+        track_id = int(box.id.item()) if box.id is not None else None
+        boxes.append(BoundingBox(x1, y1, x2, y2, name, score, track_id))
+        confidences[name] = max(confidences.get(name, 0), score)
     detected_boxes = tuple(boxes)
     context = tuple(
         Observation(frame.date, frame.image, {}, boxes=detected_boxes)
@@ -236,7 +236,7 @@ def open_detector(
     sources: tuple[str, ...],
     build_type: str,
     options: InferenceOptions,
-    cache_directory: pathlib.Path | None = None,
+    cache_directory: pathlib.Path,
     report_status: ReportStatus = ignore_status,
     engines: EnginePreparation | None = None,
 ) -> Generator[YoloDetector]:
@@ -252,8 +252,7 @@ def open_detector(
                     loaded = _load_prepared_engine(
                         engine, config.task, options, report_status
                     )
-            export = _needs_export(model_path, build_type)
-            if export and cache_directory is not None and model_path.endswith(".pt"):
+            if build_type != "cuda" and model_path.endswith(".pt"):
                 from aidetector.adapters.inference.prepared_models import (
                     prepare_core_ml,
                     prepare_onnx,
@@ -272,23 +271,8 @@ def open_detector(
                     )
                 )
                 model_path = str(prepared)
-                export = False
             if loaded is None:
                 loaded = _load_model(model_path, config.task, report_status)
-            if export:
-                report_status(
-                    StatusEvent(
-                        "preparing", message="Preparing the model for this computer…"
-                    )
-                )
-                exported = loaded.export(
-                    **(
-                        core_ml_arguments(config)
-                        if options.core_ml
-                        else export_arguments(config, onnx, len(sources), options)
-                    )
-                )
-                loaded = YOLO(str(exported), task=config.task)
             if loaded.predictor is None:
                 initialize_predictor(loaded, options, report_status)
         detector = YoloDetector(loaded, config, sources, options)
@@ -325,10 +309,6 @@ def _load_prepared_engine(
         return None
 
 
-def _needs_export(path: str, build_type: str) -> bool:
-    return not (path.endswith((".onnx", ".engine")) or build_type == "cuda")
-
-
 def _load_model(path: str, task: str, report_status: ReportStatus) -> YOLO:
     logger.info("Loading detection model: %s (task: %s)", pathlib.Path(path).name, task)
     report_status(
@@ -344,11 +324,9 @@ def _load_model(path: str, task: str, report_status: ReportStatus) -> YOLO:
 
 
 def initialize_predictor(
-    model: YOLO,
-    options: InferenceOptions,
-    report_status: ReportStatus = ignore_status,
+    model: YOLO, options: InferenceOptions, report_status: ReportStatus
 ) -> None:
-    """Initialize the SDK backend once, for runtime inference or its benchmark."""
+    """Initialize the SDK backend once."""
     # Ultralytics' .names property otherwise creates a temporary second backend.
     # Keep SDK-specific predictor setup here; open_detector owns its cleanup.
     # Every prediction repeats the model's overrides, and one that names another
@@ -357,7 +335,7 @@ def initialize_predictor(
     overrides = cast(dict[str, Any], model.overrides)
     overrides["quantize"] = 16 if options.half else None
     # The head without suppression, where a model has one: what its confidence
-    # thresholds were chosen with. The SDK no longer picks it by itself.
+    # thresholds were chosen with. The SDK does not pick it by itself.
     overrides["nms"] = False
     model.predictor = model._smart_load("predictor")(
         overrides=overrides, _callbacks=model.callbacks

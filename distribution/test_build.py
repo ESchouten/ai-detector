@@ -26,12 +26,16 @@ class BuildTest(unittest.TestCase):
 
     def test_the_web_build_knows_its_version_and_whether_it_is_a_test_build(self):
         built = []
-        for channel in ("stable", "preview"):
+        for ref, channel in (
+            ("app/v1.2.3", "stable"),
+            ("app/v1.2.3-rc.0", "preview"),
+            ("app/test-first", "preview"),
+        ):
             args = argparse.Namespace(
                 platform="linux-x64",
                 skip_dependencies=True,
                 version="1.2.3",
-                ref="app/v1.2.3",
+                ref=ref,
                 channel=channel,
             )
             with patch.object(
@@ -43,8 +47,9 @@ class BuildTest(unittest.TestCase):
         self.assertEqual(
             built,
             [
-                'export const version = "app/v1.2.3";\nexport const preview = false;\n',
-                'export const version = "app/v1.2.3";\nexport const preview = true;\n',
+                'export const version = "1.2.3";\nexport const preview = false;\n',
+                'export const version = "1.2.3-rc.0";\nexport const preview = true;\n',
+                'export const version = "app/test-first";\nexport const preview = true;\n',
             ],
         )
         self.assertEqual(self.version.read_bytes(), b"original version\r\n")

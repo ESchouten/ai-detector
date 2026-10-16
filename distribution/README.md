@@ -142,7 +142,9 @@ Prefer a pushed tag when the branch changes workflow files. Creating the release
 
 ## Publishing a release
 
-Push an increasing `app/vX.Y.Z` tag. Versions with a prerelease or build suffix are rejected on this channel.
+Push an increasing `app/vX.Y.Z` tag. A version with a build suffix is rejected.
+
+A version with a prerelease suffix, such as `app/v1.0.0-rc.0`, is a release candidate. It is published on the preview channel under that name, which the release page and the application's sidebar show. Windows, macOS and Linux show its preview version `0.0.N`, by which updaters order it among the previews, so test builds pushed after it still reach its installations. Its installations receive the official release as any preview installation does. Like any preview it keeps the presets it was built with and publishes no container image.
 
 The workflow reads the signed history of the channel, builds the Mac deltas and the Windows packages, and combines both channels into one newly signed feed. When every platform has succeeded it publishes the versioned release and promotes the feeds to the fixed **app-update-channels** release, which the launchers read; **app-updates** and **app-preview-updates** hold each channel's own history, from which the Mac deltas and the combined feed are built. Release runs are serialized because both channels write the same feeds. Never edit or delete a published version: installed applications and retained deltas refer to it.
 

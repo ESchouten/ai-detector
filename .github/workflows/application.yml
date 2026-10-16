@@ -21,6 +21,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       version: ${{ steps.release.outputs.version }}
+      name: ${{ steps.release.outputs.name }}
       build_version: ${{ steps.release.outputs.build_version }}
       tag: ${{ steps.release.outputs.tag }}
       channel: ${{ steps.release.outputs.channel }}
@@ -376,7 +377,7 @@ jobs:
           tag_name: ${{ needs.configuration.outputs.tag }}
           # Existing tags already identify the tested commit. Only branch runs create a tag.
           target_commitish: ${{ github.event_name == 'workflow_dispatch' && github.sha || '' }}
-          name: AI Detector ${{ needs.configuration.outputs.version }} (${{ needs.configuration.outputs.channel }})
+          name: AI Detector ${{ needs.configuration.outputs.name }} (${{ needs.configuration.outputs.channel }})
           prerelease: ${{ needs.configuration.outputs.channel == 'preview' }}
           make_latest: ${{ needs.configuration.outputs.channel == 'stable' }}
           files: downloads/*

@@ -60,11 +60,28 @@ class ReleaseConfigTest(unittest.TestCase):
         # Retrying a failed run keeps its identity rather than making another release.
         self.assertEqual(release, self.config("refs/heads/rework-stars"))
 
-    def test_unrelated_refs_and_non_numeric_stable_versions_are_rejected(self):
+    def test_release_candidates_are_previews_under_their_own_name(self):
+        candidate = self.config("refs/tags/app/v1.0.0-rc.0", run_number=44)
+        self.assertEqual(candidate["name"], "1.0.0-rc.0")
+        self.assertEqual(candidate["tag"], "app/v1.0.0-rc.0")
+        self.assertEqual(candidate["channel"], "preview")
+        self.assertEqual(candidate["feed_tag"], "app-preview-updates")
+        # Updaters order it among the previews, so later test builds still follow it.
+        self.assertEqual(candidate["version"], "0.0.44")
+        newer_than(
+            self.config("refs/tags/app/test-next", run_number=45)["version"],
+            [candidate["version"]],
+        )
+        self.assertEqual(self.config("refs/tags/app/v1.2.3")["name"], "1.2.3")
+        self.assertEqual(self.config("refs/tags/app/test-first")["name"], "0.0.42")
+
+    def test_unrelated_refs_and_malformed_versions_are_rejected(self):
         for ref in (
             "refs/tags/web/v1.0.0",
             "refs/pull/10/merge",
-            "refs/tags/app/v1.2.3-rc.1",
+            "refs/tags/app/v1.2.3+build.1",
+            "refs/tags/app/v1.2-rc.1",
+            "refs/tags/app/v1.2.3-",
         ):
             with self.subTest(ref=ref), self.assertRaises(ValueError):
                 self.config(ref)

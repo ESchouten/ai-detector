@@ -1,34 +1,45 @@
 """Resolve one application version and update channel for every release job."""
 
 import os
+import re
 from pathlib import Path
 from urllib.parse import quote
 
 from updates import numeric_version
 
+CANDIDATE = re.compile(
+    r"app/v((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)-[0-9A-Za-z.-]+)"
+)
+
 
 def release_config(
     ref: str, repository: str, run_number: int, run_id: int
 ) -> dict[str, str]:
-    if ref.startswith("refs/tags/app/v"):
-        tag = ref.removeprefix("refs/tags/")
-        version = tag.removeprefix("app/v")
+    tag = ref.removeprefix("refs/tags/")
+    if tag.startswith("app/v") and "-" not in tag:
+        version = name = tag.removeprefix("app/v")
         channel = "stable"
         feed_tag = "app-updates"
     else:
-        if ref.startswith("refs/tags/app/test-"):
-            tag = ref.removeprefix("refs/tags/")
+        version = name = f"0.0.{run_number}"
+        if tag.startswith("app/v"):
+            # A release candidate, such as app/v1.0.0-rc.0, is a preview under its own name.
+            candidate = CANDIDATE.fullmatch(tag)
+            if not candidate:
+                raise ValueError("Name a release candidate like app/v1.0.0-rc.0")
+            name = candidate[1]
         elif ref.startswith("refs/heads/"):
             tag = f"app/test-run-{run_id}"
-        else:
+        elif not tag.startswith("app/test-"):
             raise ValueError("Use an app/v* tag, an app/test-* tag or a branch run")
-        version = f"0.0.{run_number}"
         channel = "preview"
         feed_tag = "app-preview-updates"
     numeric_version(version)
     downloads = f"https://github.com/{repository}/releases/download/"
     return {
         "version": version,
+        # What people read on the release page and in the application.
+        "name": name,
         # One sequence across both channels; display versions remain independent.
         "build_version": f"{run_number}.0.0",
         "tag": tag,

@@ -196,4 +196,4 @@ To debug a failure, open the first failing step, not the jobs skipped after it; 
 
 `linux_startup.py` is a separate helper for an existing Docker Engine installation on a systemd desktop. The [user guide](../README.md#start-automatically-on-a-jetson-or-linux-desktop) has the command and what it sets up; the login entry waits for the dashboard before it opens the browser.
 
-The Linux package grants `cap_net_bind_service` to `/opt/ai-detector/AI Detector` so that the dashboard can use port 80 without running as root. Portable and source deployments must choose another port or arrange that themselves.
+The Linux package grants `cap_net_bind_service` to `/opt/ai-detector/AI Detector` so that the dashboard can use port 80 without running as root. Without that permission the dashboard takes port 8080 or the next free one.

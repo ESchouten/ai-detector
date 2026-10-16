@@ -1,7 +1,9 @@
 """Exercise the actual desktop runtime with a small local application fixture."""
 
+import json
 import os
 import shutil
+import socket
 import subprocess
 import tempfile
 import unittest
@@ -194,3 +196,82 @@ class LauncherTest(unittest.TestCase):
                     self.assertFalse((folder / "data/desktop-instance.json").exists())
                 finally:
                     cleanup_process(process)
+
+    def data_folder(self) -> Path:
+        temporary = tempfile.TemporaryDirectory(prefix="ai-port-")
+        self.addCleanup(temporary.cleanup)
+        data = Path(temporary.name) / "data"
+        data.mkdir()
+        return data
+
+    def start_without_port(self, data: Path) -> tuple[subprocess.Popen, Path]:
+        """Start the runtime as the native menu does, which leaves the port to it."""
+        log_path = data.parent / "launcher.log"
+        log = log_path.open("w")
+        self.addCleanup(log.close)
+        env = {
+            **os.environ,
+            "AIDETECTOR_DATA_DIR": str(data),
+            "AIDETECTOR_DESKTOP_HOST": "1",
+            "HOST": "127.0.0.1",
+            "OPEN_BROWSER": "false",
+        }
+        env.pop("PORT", None)
+        process = subprocess.Popen(
+            [shutil.which("bun"), str(RUNTIME_SERVER)],
+            env=env,
+            stdin=subprocess.PIPE,
+            stdout=log,
+            stderr=log,
+        )
+        self.addCleanup(cleanup_process, process)
+        return process, log_path
+
+    def test_the_dashboard_keeps_its_port_and_leaves_one_another_program_took(self):
+        data = self.data_folder()
+        saved = data / "desktop-port.json"
+        port = free_port()
+        saved.write_text(json.dumps({"port": port}))
+        process, log_path = self.start_without_port(data)
+        wait_for(
+            process, lambda: "AI Detector is ready" in log_path.read_text(), log_path
+        )
+        self.assertEqual(published_port(data), port)
+        cleanup_process(process)
+
+        with socket.socket() as occupied:
+            occupied.bind(("127.0.0.1", port))
+            occupied.listen()
+            process, log_path = self.start_without_port(data)
+            wait_for(
+                process,
+                lambda: "AI Detector is ready" in log_path.read_text(),
+                log_path,
+            )
+            moved = published_port(data)
+            self.assertNotEqual(moved, port)
+            self.assertEqual(json.loads(saved.read_text()), {"port": moved})
+            with urllib.request.urlopen(
+                f"http://127.0.0.1:{moved}/", timeout=2
+            ) as response:
+                self.assertEqual(response.read(), b"fixture dashboard")
+
+    def test_a_copy_that_is_still_starting_is_not_joined_by_a_second(self):
+        data = self.data_folder()
+        with socket.socket() as occupied:
+            occupied.bind(("127.0.0.1", 0))
+            occupied.listen()
+            port = occupied.getsockname()[1]
+            (data / "desktop-port.json").write_text(json.dumps({"port": port}))
+            # What a copy writes once it holds the port, before it can answer.
+            (data / "desktop-instance.json").write_text(
+                json.dumps({"port": port, "token": "starting", "pid": os.getpid()})
+            )
+            process, log_path = self.start_without_port(data)
+            self.assertNotEqual(process.wait(timeout=15), 0)
+        self.assertIn(f"port {port}", log_path.read_text())
+        self.assertFalse((data / "starts").exists())
+
+
+def published_port(data: Path) -> int:
+    return json.loads((data / "desktop-instance.json").read_text())["port"]

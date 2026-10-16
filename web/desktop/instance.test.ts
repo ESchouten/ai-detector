@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { createHmac } from 'node:crypto';
-import { fork } from 'node:child_process';
+import { fork, spawnSync } from 'node:child_process';
 import { once } from 'node:events';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -143,4 +143,18 @@ test('shutdown receipts apply only to the connected owner', async (t) => {
 	const replacement = new DesktopInstance(directory);
 	replacement.completeShutdown(true);
 	assert.equal(menu.shutdownResult(), undefined);
+});
+
+test('a published copy that still runs keeps its port, even before it can answer', async (t) => {
+	const directory = await mkdtemp(path.join(tmpdir(), 'ai-instance-'));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const instance = new DesktopInstance(directory);
+	const record = path.join(directory, 'desktop-instance.json');
+	assert.equal(instance.running(8080), false);
+	await writeFile(record, JSON.stringify({ port: 8080, token: 'starting', pid: process.pid }));
+	assert.equal(instance.running(8080), true);
+	assert.equal(instance.running(8081), false);
+	const ended = spawnSync(process.execPath, ['-e', '']).pid;
+	await writeFile(record, JSON.stringify({ port: 8080, token: 'crashed', pid: ended }));
+	assert.equal(instance.running(8080), false);
 });

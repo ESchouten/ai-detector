@@ -22,17 +22,44 @@ export class DesktopInstance {
 	private token = randomBytes(32).toString('hex');
 	private file: string;
 	private shutdownFile: string;
+	private portFile: string;
 	private connected?: SavedInstance;
 
 	constructor(directory: string) {
 		mkdirSync(directory, { recursive: true, mode: 0o700 });
 		this.file = path.join(directory, 'desktop-instance.json');
 		this.shutdownFile = path.join(directory, 'desktop-shutdown.json');
+		this.portFile = path.join(directory, 'desktop-port.json');
 	}
 
 	/** Publish only after successfully binding the server; the OS port is the instance lock. */
 	publish(port: number): void {
 		writePrivate(this.file, { port, token: this.token, pid: process.pid });
+	}
+
+	/** The port the dashboard moved to when its usual one was taken. */
+	savedPort(): number | undefined {
+		try {
+			return JSON.parse(readFileSync(this.portFile, 'utf8')).port;
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+		}
+	}
+
+	savePort(port: number): void {
+		writePrivate(this.portFile, { port });
+	}
+
+	/** A copy that published this port and still runs, even while it is too busy starting to answer. */
+	running(port: number): boolean {
+		try {
+			const saved = this.readRecord(port);
+			if (saved) process.kill(saved.pid, 0);
+			return Boolean(saved);
+		} catch (error) {
+			// No record, or its process has ended; EPERM is a process that exists.
+			return !['ENOENT', 'ESRCH'].includes((error as NodeJS.ErrnoException).code ?? '');
+		}
 	}
 
 	/** A reattached menu must distinguish a completed Quit from a vanished/crashed owner. */

@@ -26,7 +26,7 @@ Monitoring keeps running when you close the browser. While it is on, the Windows
 
 ## Good to know
 
-- **Other devices.** Phones and computers on the same network open `http://aidetector.local/` or `http://<computer-IP>/` and connect with the code under **Settings → Devices**. A phone can keep the application on its home screen. The connection is not encrypted, so use a network you trust.
+- **Other devices.** Phones and computers on the same network open `http://aidetector.local/` or `http://<computer-IP>/` and connect with the code under **Settings → Devices**. If another program on the computer already uses that address, the application moves to the same address ending in `:8080`, or the next number up, and keeps it. The QR code under **Settings → Devices** always opens the right one. A phone can keep the application on its home screen. The connection is not encrypted, so use a network you trust.
 - **Starting at login.** Windows asks at first launch, macOS has **Open at login** in the menu-bar menu, and the Ubuntu package adds a login entry.
 - **Updates.** Mac and Windows have **Check for Updates** in the AI Detector menu; Linux upgrades by installing the new package. A detector made from a preset gets newer models by itself.
 - **Your data.** Settings, models and recordings live outside the program, and uninstalling leaves them in place. Back up the whole folder:

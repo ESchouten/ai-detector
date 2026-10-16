@@ -6,20 +6,27 @@ import { dataDirectory } from './paths.ts';
 
 type Handler = (request: Request, server: Bun.Server<undefined>) => Response | Promise<Response>;
 
+/** Tried in order when another program has the port, or only administrators may use it. */
+const DASHBOARD_PORTS = [80, ...Array.from({ length: 10 }, (_, index) => 8080 + index)];
+
+const browserUrl = (port: number) => new URL(`http://127.0.0.1:${port}/`).href;
+
 /** Bind before initializing SvelteKit: only the port owner may start monitoring. */
 export async function startDesktop(initialize: () => Promise<Handler>): Promise<void> {
 	if (process.argv.includes('--background')) process.env.OPEN_BROWSER = 'false';
 	process.env.AIDETECTOR_DATA_DIR = dataDirectory(true);
 	const instance = new DesktopInstance(process.env.AIDETECTOR_DATA_DIR);
-	const port = Number(process.env.PORT ?? 80);
+	// A port the dashboard moved to is tried first, so its address and the instance lock stay.
+	const ports = process.env.PORT
+		? [Number(process.env.PORT)]
+		: [...new Set([instance.savedPort() ?? 80, ...DASHBOARD_PORTS])];
 	const host = process.env.HOST || '0.0.0.0';
-	const browserUrl = new URL(`http://127.0.0.1:${port}/`).href;
-	if (process.argv.includes('--quit')) process.exit((await instance.existing(port, true)) ? 0 : 1);
+	if (process.argv.includes('--quit'))
+		process.exit((await instance.existing(ports[0], true)) ? 0 : 1);
 	let handler: Handler | undefined;
 	let closeHost: (() => void) | undefined;
 	let closeDiscovery: (() => Promise<void>) | undefined;
 	let shutdown: Promise<void> | undefined;
-	let server: Bun.Server<undefined>;
 	const terminate = () => quit('SIGTERM');
 	const interrupt = () => quit('SIGINT');
 
@@ -57,8 +64,8 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 		})();
 	}
 
-	try {
-		server = Bun.serve({
+	const bound = await listen(instance, ports, (port) =>
+		Bun.serve({
 			port,
 			hostname: host,
 			idleTimeout: 255,
@@ -73,18 +80,11 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 				console.error(error);
 				return Response.json({ message: 'Something went wrong' }, { status: 500 });
 			}
-		});
-	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === 'EADDRINUSE' && (await instance.existing(port))) {
-			openDashboard(browserUrl);
-			if (process.env.AIDETECTOR_DESKTOP_HOST === '1') await attachDesktopHost(instance, port);
-			return;
-		}
-		await reportFailure(
-			`AI Detector cannot open its dashboard on port ${port}. Another application may be using that port. Close the other application and reopen AI Detector.`
-		);
-		throw error;
-	}
+		})
+	);
+	if (!bound) return;
+	const server = bound;
+	if (server.port !== ports[0]) instance.savePort(server.port!);
 	instance.publish(server.port!);
 	process.once('exit', () => instance.remove());
 	// The native shell keeps the computer awake while monitoring is on.
@@ -107,8 +107,36 @@ export async function startDesktop(initialize: () => Promise<Handler>): Promise<
 				listener.call(process);
 		});
 	if (host === '0.0.0.0') closeDiscovery = advertiseDashboard(server.port!);
-	console.info(`AI Detector is ready at ${browserUrl}`);
-	openDashboard(browserUrl);
+	console.info(`AI Detector is ready at ${browserUrl(server.port!)}`);
+	openDashboard(browserUrl(server.port!));
+}
+
+/** The server on the first port it can have, or nothing when this installation already runs one. */
+async function listen(
+	instance: DesktopInstance,
+	ports: number[],
+	serve: (port: number) => Bun.Server<undefined>
+): Promise<Bun.Server<undefined> | undefined> {
+	for (let index = 0; ; index++) {
+		const port = ports[index];
+		try {
+			return serve(port);
+		} catch (error) {
+			const code = (error as NodeJS.ErrnoException).code ?? '';
+			if (code === 'EADDRINUSE' && (await instance.existing(port))) {
+				openDashboard(browserUrl(port));
+				if (process.env.AIDETECTOR_DESKTOP_HOST === '1') await attachDesktopHost(instance, port);
+				return;
+			}
+			// A copy that is still starting cannot answer yet; another port would run a second one.
+			const taken = ['EADDRINUSE', 'EACCES'].includes(code) && !instance.running(port);
+			if (taken && index < ports.length - 1) continue;
+			await reportFailure(
+				`AI Detector cannot open its dashboard on port ${port}. Another application may be using that port. Close the other application and reopen AI Detector.`
+			);
+			throw error;
+		}
+	}
 }
 
 /** A reopened native menu controls the existing server through its authenticated endpoint. */

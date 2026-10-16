@@ -55,7 +55,7 @@ A connection is saved once and used by any number of detectors, each with its ow
 
 ### Other devices
 
-The application listens on `0.0.0.0:80`, so other devices open `http://aidetector.local/` or `http://<computer-IP>/`. The computer it runs on is trusted; every other browser needs a one-use code from **Settings → Devices** (scan the QR code, then tap Connect). Codes expire after five minutes or ten wrong attempts. A connected browser is remembered for a year and can be removed there. A first start without a screen prints a code on the console.
+The application listens on port 80 of every network address, so other devices open `http://aidetector.local/` or `http://<computer-IP>/`. When another program has that port, it takes the first free one from 8080 to 8089 and keeps it. The computer it runs on is trusted; every other browser needs a one-use code from **Settings → Devices** (scan the QR code, then tap Connect). Codes expire after five minutes or ten wrong attempts. A connected browser is remembered for a year and can be removed there. A first start without a screen prints a code on the console.
 
 An iPhone or iPad is offered once to put the application on its home screen, with the steps for that device; **Settings → Home screen** shows them again. It then opens like an app. An iPhone older than iOS 17.2 must connect once more from the icon.
 

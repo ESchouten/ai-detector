@@ -167,6 +167,8 @@ const pairedDevice = v.object({
 export const appSchema = v.object({
 	// The interface language of this installation; absent until setup or a choice records one.
 	language: v.optional(v.picklist(LOCALES)),
+	// Camera outage notices are opt-in, including for installations saved before this setting.
+	notifyCameraOutages: v.optional(v.boolean()),
 	streams: v.optional(v.array(streamMeta), []),
 	telegrams: v.optional(v.array(telegramMeta), []),
 	llms: v.optional(v.array(llmConnection), []),

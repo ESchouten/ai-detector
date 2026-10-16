@@ -240,6 +240,12 @@ export class ConfigurationStore {
 		});
 	}
 
+	saveOutageNotifications(enabled: boolean): Promise<void> {
+		return this.update((document) => {
+			document.app.notifyCameraOutages = enabled;
+		});
+	}
+
 	/** Turn the detector's heartbeat on, change it, or turn it off with `null`. */
 	saveHeartbeat(input: v.InferOutput<typeof heartbeatInput>): Promise<void> {
 		return this.update((document) => {

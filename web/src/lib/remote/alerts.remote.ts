@@ -34,6 +34,14 @@ export const discoverTelegramChats = command(tokenInput, ({ token }) =>
 
 export const getTelegrams = query(async () => (await configuration.read()).app.telegrams);
 
+export const getOutageNotifications = query(
+	async () => (await configuration.read()).app.notifyCameraOutages === true
+);
+
+export const saveOutageNotifications = command(v.boolean(), (enabled) =>
+	configurationAction(() => configuration.saveOutageNotifications(enabled))
+);
+
 export const connectTelegram = command(telegramInput, (input) =>
 	configurationAction(() => configuration.saveTelegram(input))
 );

@@ -292,7 +292,9 @@ export function outageWatch(
 ): () => void {
 	// A note that cannot be read is no memory at all.
 	const noted = v.safeParse(savedOutages, watch.noted);
-	const outages = new OutageAlerts(noted.success ? noted.output : {}, lastRunning);
+	let outages = new OutageAlerts(noted.success ? noted.output : {}, lastRunning);
+	let enabled: boolean | undefined;
+	let generation = 0;
 	let written = JSON.stringify(outages.kept);
 	const keep = () => {
 		const kept = JSON.stringify(outages.kept);
@@ -304,20 +306,38 @@ export function outageWatch(
 				watch.warn(/* @wc-ignore */ 'Could not note the outages for the next start', error)
 			);
 	};
-	const deliver = outageDelivery(watch.send, (error) =>
-		watch.warn(
-			/* @wc-ignore */ 'Could not send an outage notice through Telegram; trying each minute',
-			error
-		)
-	);
+	const delivery = () => {
+		const current = generation;
+		return outageDelivery(
+			async (...args) => {
+				// Switching off also cancels queued retries, including after a later switch on.
+				if (current === generation && known?.app.notifyCameraOutages === true)
+					await watch.send(...args);
+			},
+			(error) =>
+				watch.warn(
+					/* @wc-ignore */ 'Could not send an outage notice through Telegram; trying each minute',
+					error
+				)
+		);
+	};
+	let deliver = delivery();
 	return () => {
 		if (known) {
+			const next = known.app.notifyCameraOutages === true;
+			if (!next && enabled !== false) {
+				generation++;
+				outages = new OutageAlerts();
+			} else if (next && enabled === false) deliver = delivery();
+			enabled = next;
 			const cameras = watch.monitored.monitoring
 				? watchedCameras(known, watch.monitored.status(), watch.directory)
 				: [];
-			for (const notice of outages.sample(cameras, Date.now()))
+			const current = generation;
+			for (const notice of next ? outages.sample(cameras, Date.now()) : [])
 				deliver(notice).then(
 					() => {
+						if (current !== generation || known?.app.notifyCameraOutages !== true) return;
 						outages.delivered(notice);
 						keep();
 					},

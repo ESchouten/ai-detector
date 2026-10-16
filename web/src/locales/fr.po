@@ -3703,3 +3703,15 @@ msgstr "Il a peut-être été supprimé ou renommé."
 #: src/routes/(admin)/streams/[id]/+page.svelte
 msgid "It may have been removed."
 msgstr "Elle a peut-être été retirée."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Camera notifications could not be saved. Try again."
+msgstr "Impossible d’enregistrer les notifications des caméras. Réessayez."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Camera offline notifications"
+msgstr "Notifications de caméra hors ligne"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Send a Telegram message to the camera’s alert recipients after five minutes without monitoring, and when monitoring resumes."
+msgstr "Envoyer un message Telegram aux destinataires des alertes de la caméra après cinq minutes sans surveillance, puis lorsque la surveillance reprend."

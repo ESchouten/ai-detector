@@ -63,6 +63,26 @@ async function fixture(
 	return { files, store };
 }
 
+test('camera outage notifications are opt-in and saved only in app.json without restarting detection', async (t) => {
+	const { calls, runtime } = fakeRuntime();
+	const { files, store } = await settingsStore(t, runtime);
+	await writeJson(files.config, { detectors: [detector] });
+	const outages = { barn: '2026-10-16T12:00:00.000Z' };
+	await writeJson(files.app, { monitoring: true, outages });
+	assert.equal((await store.read()).app.notifyCameraOutages, undefined);
+	const config = await readFile(files.config, 'utf8');
+	for (const enabled of [true, false]) {
+		await store.saveOutageNotifications(enabled);
+		const app = JSON.parse(await readFile(files.app, 'utf8'));
+		assert.equal(app.notifyCameraOutages, enabled);
+		assert.equal(app.monitoring, true);
+		assert.deepEqual(app.outages, outages);
+		assert.equal((await new ConfigurationStore(files).read()).app.notifyCameraOutages, enabled);
+		assert.equal(await readFile(files.config, 'utf8'), config);
+	}
+	assert.deepEqual(calls, []);
+});
+
 test('missing saved settings preserve recovery across restarts, including camera metadata', async (t) => {
 	for (const missing of ['config', 'app'] as const) {
 		const { files, store } = await fixture(t);

@@ -9,6 +9,7 @@ import {
 	outageWatch,
 	watchedCameras,
 	type Recipient,
+	type OutageWatch,
 	type SavedOutages,
 	type WatchedCamera
 } from '../src/lib/server/outage-alerts.ts';
@@ -383,6 +384,7 @@ function watching(t: TestContext, lastRunning?: number, known = true) {
 			detectors: [{ detection: { source: [source] }, exporters: { telegram: [farmer] } }]
 		},
 		app: {
+			notifyCameraOutages: true,
 			streams: [{ id: 'barn', label: 'Barn', source }],
 			telegrams: [],
 			llms: [],
@@ -393,6 +395,10 @@ function watching(t: TestContext, lastRunning?: number, known = true) {
 	const sent: string[] = [];
 	/** What was noted for the next start, each time it changed. */
 	const notes: SavedOutages[] = [];
+	const delivery: Pick<OutageWatch, 'send' | 'warn'> = {
+		send: async (_recipient, text) => void sent.push(text),
+		warn: (message) => assert.fail(message)
+	};
 	const watch = (noted?: unknown) =>
 		outageWatch(
 			{
@@ -423,8 +429,7 @@ function watching(t: TestContext, lastRunning?: number, known = true) {
 				noted,
 				note: async (outages) => void notes.push(outages),
 				settings: async () => settings,
-				send: async (_recipient, text) => void sent.push(text),
-				warn: (message) => assert.fail(message)
+				...delivery
 			},
 			known ? settings : undefined,
 			lastRunning
@@ -438,8 +443,61 @@ function watching(t: TestContext, lastRunning?: number, known = true) {
 			t.mock.timers.tick(10000);
 		}
 	}
-	return { state, sent, notes, watch, run };
+	return { state, sent, notes, watch, run, settings, delivery };
 }
+
+for (const preference of [undefined, false])
+	test(`camera outage notifications stay off when the preference is ${preference}`, async (t) => {
+		const { settings, state, sent, notes, watch, run } = watching(t, start - 3600000);
+		settings.app.notifyCameraOutages = preference;
+		const sample = watch({ barn: new Date(start - 3600000).toISOString() });
+		await run(sample, 600);
+		state.watched = true;
+		await run(sample, 120);
+		assert.deepEqual(sent, []);
+		assert.deepEqual(notes, [{}]);
+	});
+
+test('switching outage notices on starts a new watch, and off suppresses recovery messages', async (t) => {
+	const { settings, state, sent, watch, run } = watching(t);
+	settings.app.notifyCameraOutages = false;
+	const sample = watch();
+	await run(sample, 600);
+	assert.deepEqual(sent, []);
+	settings.app.notifyCameraOutages = true;
+	await run(sample, 310);
+	assert.deepEqual(sent, [stopped('Barn', 600)]);
+	settings.app.notifyCameraOutages = false;
+	state.watched = true;
+	await run(sample, 120);
+	settings.app.notifyCameraOutages = true;
+	await run(sample, 120);
+	assert.deepEqual(sent, [stopped('Barn', 600)]);
+});
+
+test('switching outage notices off cancels queued retries even if notices are enabled again', async (t) => {
+	const { settings, sent, watch, run, delivery } = watching(t);
+	t.mock.timers.reset();
+	t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: start });
+	let attempts = 0;
+	delivery.send = async (_recipient, text) => {
+		if (++attempts === 1) throw new Error('No internet');
+		sent.push(text);
+	};
+	delivery.warn = () => undefined;
+	const sample = watch();
+	await run(sample, 310);
+	assert.equal(attempts, 1);
+	settings.app.notifyCameraOutages = false;
+	await run(sample, 20);
+	settings.app.notifyCameraOutages = true;
+	await run(sample, 300);
+	assert.equal(attempts, 1);
+	assert.deepEqual(sent, []);
+	await run(sample, 20);
+	assert.equal(attempts, 2);
+	assert.deepEqual(sent, [stopped('Barn', 330)]);
+});
 
 test('the watch warns, notes what it told through a pause and a restart, and reports the return', async (t) => {
 	const { state, sent, notes, watch, run } = watching(t);

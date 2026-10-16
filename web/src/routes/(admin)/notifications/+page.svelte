@@ -3,12 +3,38 @@
 	import { Bell, Plus } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Empty from '$lib/components/ui/empty';
+	import * as Field from '$lib/components/ui/field';
+	import { Switch } from '$lib/components/ui/switch';
 	import LinkRows from '$lib/components/link-rows.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
-	import { getTelegrams } from '$lib/remote/alerts.remote';
+	import {
+		getTelegrams,
+		getOutageNotifications,
+		saveOutageNotifications
+	} from '$lib/remote/alerts.remote';
+	import { errorMessage, refresh } from '$lib/remote-calls';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
 	const [detectors, telegrams] = $derived(await Promise.all([getDetectors(), getTelegrams()]));
+	const savedNotifications = $derived(await getOutageNotifications());
+	let savingNotifications = $state<boolean | null>(null);
+	let notificationError = $state('');
+
+	async function setOutageNotifications(enabled: boolean) {
+		savingNotifications = enabled;
+		notificationError = '';
+		try {
+			await saveOutageNotifications(enabled);
+			await refresh(getOutageNotifications());
+		} catch (cause) {
+			notificationError = errorMessage(
+				cause,
+				'Camera notifications could not be saved. Try again.'
+			);
+		} finally {
+			savingNotifications = null;
+		}
+	}
 </script>
 
 <section class="page-narrow">
@@ -25,6 +51,27 @@
 			{/if}
 		{/snippet}
 	</PageHeader>
+	<Field.Group class="panel p-4">
+		<Field.Field orientation="horizontal" data-disabled={savingNotifications !== null}>
+			<Field.Content>
+				<Field.Label for="camera-offline-notifications">Camera offline notifications</Field.Label>
+				<Field.Description id="camera-offline-notifications-help">
+					Send a Telegram message to the camera’s alert recipients after five minutes without
+					monitoring, and when monitoring resumes.
+				</Field.Description>
+			</Field.Content>
+			<Switch
+				id="camera-offline-notifications"
+				checked={savingNotifications ?? savedNotifications}
+				onCheckedChange={setOutageNotifications}
+				disabled={savingNotifications !== null}
+				aria-describedby="camera-offline-notifications-help"
+			/>
+		</Field.Field>
+		{#if notificationError}
+			<p role="alert" class="text-sm text-danger-foreground">{notificationError}</p>
+		{/if}
+	</Field.Group>
 	{#if telegrams.length}
 		<LinkRows
 			items={telegrams.map((telegram) => {

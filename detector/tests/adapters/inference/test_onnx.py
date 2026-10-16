@@ -1,5 +1,5 @@
 import json
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -19,9 +19,14 @@ ONNX_MODELS = (ModelRequirements("model.onnx", image_size=640, batch_size=1),)
 
 
 @pytest.fixture
-def windows_ml(monkeypatch):
+def windows_ml(monkeypatch, tmp_path):
     import faulthandler
 
+    import onnxruntime as ort
+
+    monkeypatch.setattr(
+        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
+    )
     state = SimpleNamespace(libraries={}, lifecycle=[], watchdog=[])
     monkeypatch.setattr(
         faulthandler,
@@ -36,7 +41,7 @@ def windows_ml(monkeypatch):
 
     def prepare(requested):
         return {
-            name: path
+            name: str(tmp_path / path)
             for name, path in state.libraries.items()
             if requested is None or name == requested
         }
@@ -49,11 +54,16 @@ def windows_ml(monkeypatch):
 
 @pytest.fixture
 def unavailable_windows_ml(monkeypatch):
+    import onnxruntime as ort
+
     def prepare(requested):
         raise OSError("Windows acceleration package is unavailable offline")
 
     monkeypatch.delenv("CI", raising=False)
     monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+    monkeypatch.setattr(
+        ort, "get_available_providers", lambda: ["CPUExecutionProvider"]
+    )
     monkeypatch.setattr(
         "aidetector.adapters.inference.onnx.prepare_windows_ml", prepare
     )
@@ -184,6 +194,184 @@ def test_registered_devices_define_provider_order_and_inference_options():
     )
     assert selection.inference_options.half is True
     assert selection.inference_options.rectangular is False
+
+
+@pytest.mark.parametrize("order", [(0, 1, 2, 3), (3, 2, 1, 0)])
+@pytest.mark.parametrize("openvino_device", ["GPU", "CPU"])
+def test_webgpu_follows_vendor_gpus_and_precedes_cpu_devices(order, openvino_device):
+    devices = [
+        SimpleNamespace(ep_name=name, device=SimpleNamespace(type=kind))
+        for name, kind in [
+            ("NvTensorRTRTXExecutionProvider", "GPU"),
+            ("OpenVINOExecutionProvider", openvino_device),
+            ("WebGpuExecutionProvider", "GPU"),
+            ("DmlExecutionProvider", "GPU"),
+        ]
+    ]
+    selection = select_providers(
+        ["CPUExecutionProvider"], [devices[i] for i in order], None
+    )
+    expected = [devices[0], devices[1], devices[3], devices[2]]
+    if openvino_device == "CPU":
+        expected = [devices[0], devices[3], devices[2], devices[1]]
+    assert selection.devices == tuple(expected)
+    assert selection.names == tuple(device.ep_name for device in expected)
+
+
+@pytest.mark.parametrize("failure", [None, "preparation", "registration"])
+@pytest.mark.parametrize("has_device", [False, True])
+@pytest.mark.parametrize("explicit", [False, True])
+def test_builtin_directml_survives_optional_windows_ml_failure(
+    monkeypatch, windows_ml, caplog, failure, has_device, explicit
+):
+    import logging
+    import sys
+
+    import onnxruntime as real_ort
+    from onnxruntime.capi.onnxruntime_pybind11_state import Fail
+
+    sessions, device_options, reports, preparations = [], [], [], []
+    device = SimpleNamespace(
+        ep_name="DmlExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+
+    class SessionOptions(real_ort.SessionOptions):
+        def add_provider_for_devices(self, devices, settings):
+            device_options.append((devices, settings))
+
+    def session(path, **kwargs):
+        sessions.append(kwargs)
+        return "DirectML session"
+
+    def prepare(requested):
+        assert requested is None
+        preparations.append(requested)
+        if failure == "preparation":
+            raise OSError("Optional Windows ML provider unavailable")
+        if failure == "registration":
+            return {"WebGpuExecutionProvider": "onnxruntime_providers_webgpu.dll"}
+        return {}
+
+    def register(name, path):
+        raise Fail(f'Error loading "{path}" which is missing. (Error 126)')
+
+    ort = SimpleNamespace(
+        SessionOptions=SessionOptions,
+        ExecutionMode=real_ort.ExecutionMode,
+        InferenceSession=session,
+        get_available_providers=lambda: [
+            "CPUExecutionProvider",
+            "DmlExecutionProvider",
+        ],
+        get_ep_devices=lambda: [device] if has_device else [],
+        register_execution_provider_library=register,
+    )
+    monkeypatch.setattr(
+        "aidetector.adapters.inference.onnx.prepare_windows_ml", prepare
+    )
+    monkeypatch.setitem(sys.modules, "onnxruntime", ort)
+    caplog.set_level(logging.INFO)
+    supplied = SessionOptions()
+    supplied.enable_mem_pattern = True
+    supplied.execution_mode = real_ort.ExecutionMode.ORT_PARALLEL
+    with inference_runtime(
+        OnnxConfig(provider="DmlExecutionProvider" if explicit else None),
+        ONNX_MODELS,
+        "windowsml",
+        reports.append,
+    ) as options:
+        assert options.half is True
+        assert (
+            ort.InferenceSession("model.onnx", sess_options=supplied)
+            == "DirectML session"
+        )
+        assert supplied.enable_mem_pattern is False
+        assert supplied.execution_mode == real_ort.ExecutionMode.ORT_SEQUENTIAL
+        if has_device:
+            assert device_options == [([device], {})]
+            assert "providers" not in sessions[0]
+        else:
+            assert sessions[0]["providers"] == [
+                ("DmlExecutionProvider", {}),
+            ] + ([] if explicit else [("CPUExecutionProvider", {})])
+    assert "Built-in ONNX execution providers" in caplog.text
+    notices = [report for report in reports if report.kind == "notice"]
+    assert preparations == ([] if explicit else [None])
+    assert len(notices) == int(failure is not None and not explicit)
+    if notices:
+        assert "built-in hardware acceleration" in notices[0].message
+
+
+@pytest.mark.parametrize("failure", [None, "directory", "registration"])
+@pytest.mark.parametrize("inference_fails", [False, True])
+def test_windows_provider_dll_directories_survive_registration_until_runtime_cleanup(
+    monkeypatch, windows_ml, tmp_path, failure, inference_fails
+):
+    import os
+    import sys
+
+    from onnxruntime.capi.onnxruntime_pybind11_state import Fail
+
+    first, second = "WebGpuExecutionProvider", "OpenVINOExecutionProvider"
+    directories = {name: str(tmp_path / name) for name in (first, second)}
+    windows_ml.libraries = {
+        name: str(Path(directory) / "provider.dll")
+        for name, directory in directories.items()
+    }
+    active, events = [], []
+
+    @contextmanager
+    def add_directory(directory):
+        if directory == directories[first] and failure == "directory":
+            raise OSError("DLL directory unavailable")
+        active.append(directory)
+        events.append(("open", directory))
+        try:
+            yield
+        finally:
+            active.remove(directory)
+            events.append(("close", directory))
+
+    def register(name, path):
+        assert str(Path(path).parent) in active
+        if name == first and failure == "registration":
+            raise Fail("Provider unavailable")
+        events.append(("register", name))
+
+    def unregister(name):
+        assert directories[name] in active
+        events.append(("unregister", name))
+
+    device = SimpleNamespace(ep_name=second, device=SimpleNamespace(type="GPU"))
+    ort = SimpleNamespace(
+        InferenceSession=object(),
+        get_available_providers=lambda: ["CPUExecutionProvider"],
+        get_ep_devices=lambda: [device],
+        register_execution_provider_library=register,
+        unregister_execution_provider_library=unregister,
+    )
+    monkeypatch.setitem(sys.modules, "onnxruntime", ort)
+    monkeypatch.setattr(sys, "platform", "win32")
+    monkeypatch.setattr(os, "add_dll_directory", add_directory, raising=False)
+    outcome = (
+        pytest.raises(RuntimeError, match="inference failed")
+        if inference_fails
+        else nullcontext()
+    )
+    with (
+        outcome,
+        inference_runtime(OnnxConfig(), ONNX_MODELS, "windowsml") as options,
+    ):
+        assert options.half is False
+        assert active == ([directories[first]] if failure is None else []) + [
+            directories[second]
+        ]
+        if inference_fails:
+            raise RuntimeError("inference failed")
+    assert active == []
+    last = first if failure is None else second
+    assert events[-2:] == [("unregister", last), ("close", directories[last])]
+    assert (("unregister", first) in events) is (failure is None)
 
 
 @pytest.mark.parametrize("inference_fails", [False, True])

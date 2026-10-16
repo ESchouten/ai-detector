@@ -88,7 +88,19 @@ def test_sdk_preparation_exits_before_registration_without_importing_winrt_in_pa
     assert "Windows ML helper diagnostics" in caplog.text
 
 
-@pytest.mark.parametrize("behavior", ["timeout", "failed", "error", "missing_library"])
+@pytest.mark.parametrize(
+    "behavior",
+    [
+        "timeout",
+        "failed",
+        "error",
+        "missing_library",
+        "missing_file",
+        "relative_missing",
+        "relative_package_error",
+        "relative_package_disappeared",
+    ],
+)
 @pytest.mark.parametrize("explicit", [False, True])
 def test_failed_preparation_is_observable_and_other_providers_remain_available(
     sdk_directory, caplog, behavior, explicit
@@ -112,9 +124,35 @@ def test_failed_preparation_is_observable_and_other_providers_remain_available(
         if behavior == "timeout"
         else "did not supply a library path"
         if behavior == "missing_library"
+        else "provider library is missing"
+        if behavior in {"missing_file", "relative_missing"}
+        else "Package lookup failed"
+        if behavior.startswith("relative_package_")
         else "Provider download failed"
     )
     assert expected in caplog.text
+
+
+@pytest.mark.parametrize("behavior", ["relative_ready", "relative_pending"])
+@pytest.mark.parametrize("explicit", [False, True])
+def test_helper_resolves_package_relative_dll_before_its_dependency_graph_closes(
+    sdk_directory, caplog, behavior, explicit
+):
+    trace = write_windows_ml_sdk(sdk_directory, [(PROVIDER, behavior)])
+    libraries = prepare_windows_ml(PROVIDER if explicit else None)
+    path = Path(libraries[PROVIDER])
+    assert path == sdk_directory / "Installed packages é" / PROVIDER / (
+        PROVIDER + ".dll"
+    )
+    assert path.is_absolute()
+    assert path.is_file()
+    events = [json.loads(line)[1] for line in trace.read_text().splitlines()]
+    assert events[-3:] == [
+        "package-size:" + PROVIDER,
+        "package-path:" + PROVIDER,
+        "close",
+    ]
+    assert str(path) in caplog.text
 
 
 def test_no_usable_provider_is_a_failure_not_an_empty_success(sdk_directory, caplog):

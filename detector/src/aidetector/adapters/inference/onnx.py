@@ -136,26 +136,34 @@ def _register_windows_ml(
                 message="Loading hardware acceleration…",
             )
         )
-        # A native DLL load has no cancellation API. Preserve evidence if it stalls.
-        faulthandler.dump_traceback_later(REGISTRATION_TRACE_DELAY)
-        try:
-            logger.info("Registering Windows ML provider %s: %s", name, library_path)
-            started = perf_counter()
-            ort.register_execution_provider_library(name, library_path)
-            logger.info(
-                "Windows ML provider %s registered in %.2fs",
-                name,
-                perf_counter() - started,
-            )
-        except (OSError, RuntimeError, registration_error) as error:
-            if requested is not None:
-                raise
-            logger.warning("Windows ML provider %s unavailable: %s", name, error)
-            failed = True
-            continue
-        finally:
-            faulthandler.cancel_dump_traceback_later()
-        resources.callback(ort.unregister_execution_provider_library, name)
+        with ExitStack() as provider_resources:
+            # A native DLL load has no cancellation API. Preserve evidence if it stalls.
+            faulthandler.dump_traceback_later(REGISTRATION_TRACE_DELAY)
+            try:
+                if sys.platform == "win32":
+                    provider_resources.enter_context(
+                        os.add_dll_directory(str(Path(library_path).parent))
+                    )
+                logger.info(
+                    "Registering Windows ML provider %s: %s", name, library_path
+                )
+                started = perf_counter()
+                ort.register_execution_provider_library(name, library_path)
+                logger.info(
+                    "Windows ML provider %s registered in %.2fs",
+                    name,
+                    perf_counter() - started,
+                )
+            except (OSError, RuntimeError, registration_error) as error:
+                if requested is not None:
+                    raise
+                logger.warning("Windows ML provider %s unavailable: %s", name, error)
+                failed = True
+                continue
+            finally:
+                faulthandler.cancel_dump_traceback_later()
+            provider_resources.callback(ort.unregister_execution_provider_library, name)
+            resources.enter_context(provider_resources.pop_all())
         registered.add(name)
     if failed and not registered:
         raise RuntimeError("No Windows ML execution provider could be prepared")
@@ -164,13 +172,20 @@ def _register_windows_ml(
 
 
 def select_devices(devices: list[Any]) -> list[Any]:
-    """Use one device per provider, preferring its GPU over its CPU."""
+    """Prefer GPUs to CPUs, with experimental WebGPU after vendor GPU providers."""
     selected: dict[str, Any] = {}
     for device in devices:
         if device.ep_name not in selected or str(device.device.type).endswith("GPU"):
             selected[device.ep_name] = device
     names = sorted(
-        selected, key=lambda name: (name == "OpenVINOExecutionProvider", name)
+        selected,
+        key=lambda name: (
+            str(selected[name].device.type).endswith("CPU"),
+            name == "WebGpuExecutionProvider",
+            name == "DmlExecutionProvider",
+            name == "OpenVINOExecutionProvider",
+            name,
+        ),
     )
     return [selected[name] for name in names]
 
@@ -275,11 +290,9 @@ def _providers(
     report_status: ReportStatus = ignore_status,
 ) -> ProviderSelection:
     registered: set[str] = set()
-    if (
-        build_type == "windowsml"
-        and config.winml
-        and config.provider != "CPUExecutionProvider"
-    ):
+    available = ort.get_available_providers()
+    logger.info("Built-in ONNX execution providers: %s", available)
+    if build_type == "windowsml" and config.winml and config.provider not in available:
         try:
             registered = _register_windows_ml(
                 resources, ort, config.provider, report_status
@@ -288,19 +301,35 @@ def _providers(
             # Windows-managed acceleration is optional in automatic mode. This
             # boundary runs before model loading, so model/configuration errors
             # are never swallowed as a hardware fallback.
-            if (
-                config.provider is not None
-                or "CPUExecutionProvider" not in ort.get_available_providers()
-            ):
+            if config.provider is not None or "CPUExecutionProvider" not in available:
                 raise
-            message = "Hardware acceleration could not be prepared. Detection will use the CPU."
+            built_in_acceleration = any(
+                name not in {"CPUExecutionProvider", "AzureExecutionProvider"}
+                for name in available
+            )
+            message = (
+                "Windows ML providers could not be prepared. Detection will use built-in hardware acceleration."
+                if built_in_acceleration
+                else "Hardware acceleration could not be prepared. Detection will use the CPU."
+            )
             logger.warning(message, exc_info=True)
             report_status(StatusEvent("notice", message=message))
-            return ProviderSelection(("CPUExecutionProvider",))
+            if not built_in_acceleration:
+                return ProviderSelection(("CPUExecutionProvider",))
+    if build_type == "windowsml":
+        available = sorted(
+            available,
+            key=lambda name: name in {"CPUExecutionProvider", "AzureExecutionProvider"},
+        )
+    device_providers = registered | (
+        set(available) - {"CPUExecutionProvider", "AzureExecutionProvider"}
+        if build_type == "windowsml"
+        else set()
+    )
     devices = [
-        device for device in ort.get_ep_devices() if device.ep_name in registered
+        device for device in ort.get_ep_devices() if device.ep_name in device_providers
     ]
-    return select_providers(ort.get_available_providers(), devices, config.provider)
+    return select_providers(available, devices, config.provider)
 
 
 def _install_sessions(
@@ -319,6 +348,10 @@ def _install_sessions(
         # Camera capture and other detectors need the CPU while this session waits.
         options.add_session_config_entry("session.intra_op.allow_spinning", "0")
         options.add_session_config_entry("session.inter_op.allow_spinning", "0")
+        if "DmlExecutionProvider" in selection.names:
+            # DirectML does not support memory patterns or parallel execution.
+            options.enable_mem_pattern = False
+            options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
         if selection.devices:
             for device in selection.devices:
                 options.add_provider_for_devices(

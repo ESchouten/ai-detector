@@ -5,6 +5,7 @@ import logging
 import subprocess
 import sys
 from importlib import import_module
+from pathlib import Path
 from time import perf_counter
 from typing import Any
 
@@ -75,9 +76,7 @@ def _discover_windows_ml(requested: str | None) -> dict[str, str]:
                 continue
             try:
                 _prepare_provider(provider, winml, foundation)
-                if not provider.library_path:
-                    raise RuntimeError("Ready provider did not supply a library path")
-                libraries[provider.name] = provider.library_path
+                libraries[provider.name] = _provider_library_path(provider)
             except (OSError, RuntimeError) as error:
                 if requested is not None:
                     raise
@@ -88,6 +87,44 @@ def _discover_windows_ml(requested: str | None) -> dict[str, str]:
         if failed and not libraries:
             raise RuntimeError("No Windows ML execution provider could be prepared")
         return libraries
+
+
+def _provider_library_path(provider: Any) -> str:
+    if not provider.library_path:
+        raise RuntimeError("Ready provider did not supply a library path")
+    path = Path(provider.library_path)
+    if not path.is_absolute():
+        # EnsureReadyAsync adds the package to this helper's dependency graph.
+        # The inference process cannot use that graph to resolve a bare DLL name.
+        path = _package_path(provider.package_id.full_name) / path
+    if not path.is_file():
+        raise FileNotFoundError(f"Windows ML provider library is missing: {path}")
+    logger.info("Windows ML provider %s library: %s", provider.name, path)
+    return str(path)
+
+
+def _package_path(full_name: str) -> Path:
+    """Locate the exact installed MSIX package without loading its provider DLL."""
+    import ctypes
+
+    if sys.platform != "win32":
+        raise OSError("Windows ML package paths require Windows")
+    get_path = ctypes.WinDLL("kernel32", use_last_error=True).GetPackagePathByFullName
+    get_path.argtypes = [
+        ctypes.c_wchar_p,
+        ctypes.POINTER(ctypes.c_uint32),
+        ctypes.c_wchar_p,
+    ]
+    get_path.restype = ctypes.c_long
+    size = ctypes.c_uint32()
+    error = get_path(full_name, ctypes.byref(size), None)
+    if error != 122:  # ERROR_INSUFFICIENT_BUFFER supplies the required length.
+        raise ctypes.WinError(error)
+    buffer = ctypes.create_unicode_buffer(size.value)
+    error = get_path(full_name, ctypes.byref(size), buffer)
+    if error:
+        raise ctypes.WinError(error)
+    return Path(buffer.value)
 
 
 def _prepare_provider(provider: Any, winml: Any, foundation: Any) -> None:

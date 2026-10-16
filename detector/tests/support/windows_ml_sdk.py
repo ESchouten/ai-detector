@@ -7,6 +7,7 @@ from textwrap import dedent
 def write_windows_ml_sdk(directory: Path, providers: list[tuple[str, str]]) -> Path:
     trace = directory / "sdk-events.jsonl"
     implementation = f"PROVIDERS = {providers!r}\nTRACE = {str(trace)!r}\n" + dedent("""
+        import ctypes
         import json
         import logging
         import os
@@ -38,8 +39,17 @@ def write_windows_ml_sdk(directory: Path, providers: list[tuple[str, str]]) -> P
             def __init__(self, name, behavior):
                 self.name = name
                 self.behavior = behavior
-                self.ready_state = "ready" if behavior in {"ready", "missing_library"} else "pending"
+                self.ready_state = "ready" if behavior in {"ready", "missing_library", "relative_ready"} else "pending"
                 self.library_path = "" if behavior == "missing_library" else str(Path(TRACE).parent / (name + ".dll"))
+                self.package_id = SimpleNamespace(full_name=name + "_1.0.0.0_x64__test")
+                if behavior.startswith("relative_"):
+                    self.library_path = name + ".dll"
+                    library = package_directory(name) / self.library_path
+                else:
+                    library = Path(self.library_path)
+                if self.library_path and behavior not in {"relative_missing", "missing_file"}:
+                    library.parent.mkdir(parents=True, exist_ok=True)
+                    library.touch()
 
             def ensure_ready_async(self):
                 record("prepare:" + self.name)
@@ -65,6 +75,37 @@ def write_windows_ml_sdk(directory: Path, providers: list[tuple[str, str]]) -> P
                     status="failure" if self.behavior == "failed" else "success",
                     diagnostic_text="Provider download failed",
                 )
+
+        def package_directory(name):
+            return Path(TRACE).parent / "Installed packages é" / name
+
+        class GetPackagePathByFullName:
+            def __call__(self, full_name, size, output):
+                name = full_name.removesuffix("_1.0.0.0_x64__test")
+                behavior = dict(PROVIDERS)[name]
+                record(("package-size:" if output is None else "package-path:") + name)
+                if behavior == "relative_package_error":
+                    return 1168
+                path = str(package_directory(name))
+                length = ctypes.cast(size, ctypes.POINTER(ctypes.c_uint32))
+                if output is None:
+                    length[0] = len(path) + 1
+                    return 122
+                if behavior == "relative_package_disappeared":
+                    return 1168
+                assert length[0] == len(path) + 1
+                output.value = path
+                return 0
+
+        def load_kernel32(name, *, use_last_error):
+            assert name == "kernel32"
+            assert use_last_error
+            return SimpleNamespace(GetPackagePathByFullName=GetPackagePathByFullName())
+
+        ctypes.WinDLL = load_kernel32
+        ctypes.WinError = lambda code: OSError(code, "Package lookup failed")
+        if any(behavior.startswith("relative_") for _, behavior in PROVIDERS):
+            sys.platform = "win32"
 
         ExecutionProviderCatalog = SimpleNamespace(
             get_default=lambda: SimpleNamespace(

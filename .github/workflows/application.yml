@@ -2,7 +2,7 @@ name: Application download
 
 on:
   push:
-    tags: ['app/v*', 'app/test-*']
+    tags: ['v*', 'test-*']
   workflow_dispatch:
 
 permissions:
@@ -444,7 +444,7 @@ jobs:
         with: &image-metadata
           images: ${{ env.IMAGE }}
           tags: |
-            type=semver,pattern={{version}},match=^app/v(.*)$
+            type=semver,pattern={{version}},match=^v(.*)$
       - name: Build and push by digest
         id: build
         uses: docker/build-push-action@v6

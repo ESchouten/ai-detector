@@ -123,11 +123,11 @@ Regenerate the artwork with `swift distribution/macos/render-artwork.swift` and 
 
 ## GitHub Actions previews
 
-Push an `app/test-*` tag at the commit to test, with a new name for each build:
+Push an `test-*` tag at the commit to test, with a new name for each build:
 
 ```sh
-git tag app/test-2026-09-25-1
-git push origin app/test-2026-09-25-1
+git tag test-2026-09-25-1
+git push origin test-2026-09-25-1
 ```
 
 GitHub runs **Application download** from that commit. When every platform passes, the installers are on the resulting **prerelease**: a Windows ZIP holding the setup EXE, a Mac DMG and a Linux DEB. The `.nupkg` and `.delta` files beside them are for automatic updates. The run can also be started by hand for a branch, which publishes to the same preview channel.
@@ -142,9 +142,9 @@ Prefer a pushed tag when the branch changes workflow files. Creating the release
 
 ## Publishing a release
 
-Push an increasing `app/vX.Y.Z` tag. A version with a build suffix is rejected.
+Push an increasing `vX.Y.Z` tag. A version with a build suffix is rejected.
 
-A version with a prerelease suffix, such as `app/v1.0.0-rc.0`, is a release candidate. It is published on the preview channel under that name, which the release page and the application's sidebar show. Windows, macOS and Linux show its preview version `0.0.N`, by which updaters order it among the previews, so test builds pushed after it still reach its installations. Its installations receive the official release as any preview installation does. Like any preview it keeps the presets it was built with and publishes no container image.
+A version with a prerelease suffix, such as `v1.0.0-rc.0`, is a release candidate. It is published on the preview channel under that name, which the release page and the application's sidebar show. Windows, macOS and Linux show its preview version `0.0.N`, by which updaters order it among the previews, so test builds pushed after it still reach its installations. Its installations receive the official release as any preview installation does. Like any preview it keeps the presets it was built with and publishes no container image.
 
 The workflow reads the signed history of the channel, builds the Mac deltas and the Windows packages, and combines both channels into one newly signed feed. When every platform has succeeded it publishes the versioned release and promotes the feeds to the fixed **app-update-channels** release, which the launchers read; **app-updates** and **app-preview-updates** hold each channel's own history, from which the Mac deltas and the combined feed are built. Release runs are serialized because both channels write the same feeds. Never edit or delete a published version: installed applications and retained deltas refer to it.
 
@@ -161,7 +161,7 @@ Before the first real pair of versions, try a signed update on a Mac and on Wind
 
 | Workflow | Runs on | Does |
 | --- | --- | --- |
-| [Application download](../.github/workflows/application.yml) | `app/v*`, `app/test-*`, manual | Checks all three systems, builds and tests the native applications, then publishes signed official or preview updates; an official release also publishes the container image. |
+| [Application download](../.github/workflows/application.yml) | `v*`, `test-*`, manual | Checks all three systems, builds and tests the native applications, then publishes signed official or preview updates; an official release also publishes the container image. |
 | [Detector Tests](../.github/workflows/detector-tests.yml) | Relevant pull requests and pushes to `main`, manual, and every application build | Lint, formatting and types; tests on three systems, with branch coverage on Linux; schemas and the wheel. |
 | [Web and setup tests](../.github/workflows/web-tests.yml) | The same | Unit tests on three systems; static checks, the production server and Compose checks on Linux. |
 | [Desktop distribution tests](../.github/workflows/distribution-tests.yml) | Relevant pull requests and pushes to `main`, manual | Native launchers, the compiled web process, installers and update packages. |
@@ -170,7 +170,7 @@ Before the first real pair of versions, try a signed update on a Mac and on Wind
 
 An application build runs the detector and web checks for the exact commit it releases. After the release configuration, these start together: native compilation per system, those checks, and a real installation of the Windows NVIDIA runtime. Each installer waits only for its own system's binaries, and the desktop tests for those binaries run beside packaging. Publication needs every installer, test and check to succeed. Runs are serialized across official and preview releases because both write the same update feeds.
 
-Freezing the detector is the slowest step, and its result depends only on the detector's sources, its locked dependencies and the build scripts. A preview build therefore first looks for an earlier application build of this repository that froze and smoke-tested the same inputs, takes that build's binaries, and writes its own reference into `aidetector/version.py`, which the freeze keeps as a plain file for this purpose. If none is found, or anything on that path fails, it freezes and smoke-tests as usual. Official `app/v*` releases always freeze afresh. Editing `application.yml`, `build.py` or the PyInstaller hooks changes those inputs, so the next build freezes again. `tested_detector.py` accepts an earlier build only from this repository's own tag or manual runs, never from a pull request.
+Freezing the detector is the slowest step, and its result depends only on the detector's sources, its locked dependencies and the build scripts. A preview build therefore first looks for an earlier application build of this repository that froze and smoke-tested the same inputs, takes that build's binaries, and writes its own reference into `aidetector/version.py`, which the freeze keeps as a plain file for this purpose. If none is found, or anything on that path fails, it freezes and smoke-tests as usual. Official `v*` releases always freeze afresh. Editing `application.yml`, `build.py` or the PyInstaller hooks changes those inputs, so the next build freezes again. `tested_detector.py` accepts an earlier build only from this repository's own tag or manual runs, never from a pull request.
 
 Artifacts of a run:
 

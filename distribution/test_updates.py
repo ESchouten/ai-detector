@@ -140,7 +140,7 @@ class UpdateFeedTest(unittest.TestCase):
         windows(
             self.output,
             "1.0.1",
-            "https://github.com/example/app/releases/download/app/v1.0.1",
+            "https://github.com/example/app/releases/download/v1.0.1",
             PRIVATE_KEY,
             PUBLIC_KEY,
             "42.0.0",
@@ -151,7 +151,7 @@ class UpdateFeedTest(unittest.TestCase):
         self.assertEqual(result[0], previous)
         self.assertTrue(
             result[1]["FileName"].startswith(
-                "https://github.com/example/app/releases/download/app/v1.0.1/"
+                "https://github.com/example/app/releases/download/v1.0.1/"
             )
         )
         self.assertEqual((self.output / "1.0.1-Full.nupkg").read_bytes(), b"Full")
@@ -165,7 +165,7 @@ class UpdateFeedTest(unittest.TestCase):
         (stable / "releases.win.json").write_bytes(sentinel)
         for number in (42, 43):
             release = release_config(
-                f"refs/tags/app/test-{number}", "example/app", number, number
+                f"refs/tags/test-{number}", "example/app", number, number
             )
             output = self.root / str(number)
             output.mkdir()

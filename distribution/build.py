@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import platform as host
+import re
 import shutil
 import subprocess
 import tempfile
@@ -199,7 +200,7 @@ def build_web(args) -> Path:
     with build_metadata(
         ROOT / "web/src/lib/version.ts",
         # Official releases and release candidates read as their version, as on the release page.
-        f"export const version = {json.dumps(args.ref.removeprefix('app/v'))};\n"
+        f"export const version = {json.dumps(re.sub(r'^v(?=\d)', '', args.ref))};\n"
         f"export const preview = {json.dumps(args.channel == 'preview')};\n",
     ):
         run("pnpm", "build", cwd=ROOT / "web", env=env)

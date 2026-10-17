@@ -16,28 +16,28 @@ class ReleaseConfigTest(unittest.TestCase):
         return release_config(ref, "example/detector", run_number, run_id)
 
     def test_stable_releases_keep_the_existing_feed(self):
-        release = self.config("refs/tags/app/v1.2.3")
+        release = self.config("refs/tags/v1.2.3")
         self.assertEqual(release["version"], "1.2.3")
         self.assertEqual(release["channel"], "stable")
         self.assertEqual(release["feed_tag"], "app-updates")
 
     def test_build_versions_order_stable_and_preview_releases_together(self):
-        stable = self.config("refs/tags/app/v2.0.0", run_number=42)
-        preview = self.config("refs/tags/app/test-next", run_number=43)
+        stable = self.config("refs/tags/v2.0.0", run_number=42)
+        preview = self.config("refs/tags/test-next", run_number=43)
         newer_than(preview["build_version"], [stable["build_version"]])
         self.assertEqual(stable["channels_url"], preview["channels_url"])
         self.assertEqual(preview["version"], "0.0.43")
 
     def test_stable_asset_urls_are_immutable(self):
-        release = self.config("refs/tags/app/v1.2.3")
+        release = self.config("refs/tags/v1.2.3")
         self.assertEqual(
             release["release_url"],
-            "https://github.com/example/detector/releases/download/app%2Fv1.2.3",
+            "https://github.com/example/detector/releases/download/v1.2.3",
         )
 
     def test_preview_tags_have_increasing_versions_and_a_separate_feed(self):
-        first = self.config("refs/tags/app/test-first")
-        second = self.config("refs/tags/app/test-second", run_number=43)
+        first = self.config("refs/tags/test-first")
+        second = self.config("refs/tags/test-second", run_number=43)
         newer_than(second["version"], [first["version"]])
         with self.assertRaises(ValueError):
             newer_than(first["version"], [second["version"]])
@@ -47,41 +47,41 @@ class ReleaseConfigTest(unittest.TestCase):
         self.assertEqual(first["feed_tag"], "app-preview-updates")
         self.assertEqual(first["feed_url"], second["feed_url"])
         self.assertNotEqual(
-            first["feed_url"], self.config("refs/tags/app/v1.2.3")["feed_url"]
+            first["feed_url"], self.config("refs/tags/v1.2.3")["feed_url"]
         )
-        self.assertTrue(first["release_url"].endswith("app%2Ftest-first"))
+        self.assertTrue(first["release_url"].endswith("test-first"))
 
     def test_manual_branch_runs_use_an_immutable_preview_tag(self):
         release = self.config("refs/heads/rework-stars")
-        self.assertEqual(release["tag"], "app/test-run-123456")
+        self.assertEqual(release["tag"], "test-run-123456")
         self.assertEqual(release["channel"], "preview")
         self.assertEqual(release["version"], "0.0.42")
-        self.assertTrue(release["release_url"].endswith("app%2Ftest-run-123456"))
+        self.assertTrue(release["release_url"].endswith("test-run-123456"))
         # Retrying a failed run keeps its identity rather than making another release.
         self.assertEqual(release, self.config("refs/heads/rework-stars"))
 
     def test_release_candidates_are_previews_under_their_own_name(self):
-        candidate = self.config("refs/tags/app/v1.0.0-rc.0", run_number=44)
+        candidate = self.config("refs/tags/v1.0.0-rc.0", run_number=44)
         self.assertEqual(candidate["name"], "1.0.0-rc.0")
-        self.assertEqual(candidate["tag"], "app/v1.0.0-rc.0")
+        self.assertEqual(candidate["tag"], "v1.0.0-rc.0")
         self.assertEqual(candidate["channel"], "preview")
         self.assertEqual(candidate["feed_tag"], "app-preview-updates")
         # Updaters order it among the previews, so later test builds still follow it.
         self.assertEqual(candidate["version"], "0.0.44")
         newer_than(
-            self.config("refs/tags/app/test-next", run_number=45)["version"],
+            self.config("refs/tags/test-next", run_number=45)["version"],
             [candidate["version"]],
         )
-        self.assertEqual(self.config("refs/tags/app/v1.2.3")["name"], "1.2.3")
-        self.assertEqual(self.config("refs/tags/app/test-first")["name"], "0.0.42")
+        self.assertEqual(self.config("refs/tags/v1.2.3")["name"], "1.2.3")
+        self.assertEqual(self.config("refs/tags/test-first")["name"], "0.0.42")
 
     def test_unrelated_refs_and_malformed_versions_are_rejected(self):
         for ref in (
             "refs/tags/web/v1.0.0",
             "refs/pull/10/merge",
-            "refs/tags/app/v1.2.3+build.1",
-            "refs/tags/app/v1.2-rc.1",
-            "refs/tags/app/v1.2.3-",
+            "refs/tags/v1.2.3+build.1",
+            "refs/tags/v1.2-rc.1",
+            "refs/tags/v1.2.3-",
         ):
             with self.subTest(ref=ref), self.assertRaises(ValueError):
                 self.config(ref)
@@ -93,7 +93,7 @@ class ReleaseConfigTest(unittest.TestCase):
                 [sys.executable, str(Path(__file__).with_name("release_config.py"))],
                 env={
                     **os.environ,
-                    "GITHUB_REF": "refs/tags/app/test-first",
+                    "GITHUB_REF": "refs/tags/test-first",
                     "GITHUB_REPOSITORY": "example/detector",
                     "GITHUB_RUN_NUMBER": "42",
                     "GITHUB_RUN_ID": "123456",
@@ -103,5 +103,5 @@ class ReleaseConfigTest(unittest.TestCase):
             )
             self.assertEqual(
                 dict(line.split("=", 1) for line in output.read_text().splitlines()),
-                self.config("refs/tags/app/test-first"),
+                self.config("refs/tags/test-first"),
             )

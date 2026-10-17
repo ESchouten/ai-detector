@@ -159,7 +159,7 @@ class PackageTest(unittest.TestCase):
     def test_preview_downloads_embed_the_public_key_both_channels_and_the_initial_preference(
         self,
     ):
-        release = release_config("refs/tags/app/test-first", "example/app", 42, 123)
+        release = release_config("refs/tags/test-first", "example/app", 42, 123)
         for platform in ("macos-arm64", "windows-x64"):
             if platform == "macos-arm64" and os.name == "nt":
                 continue

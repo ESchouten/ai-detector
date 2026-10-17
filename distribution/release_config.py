@@ -7,31 +7,29 @@ from urllib.parse import quote
 
 from updates import numeric_version
 
-CANDIDATE = re.compile(
-    r"app/v((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)-[0-9A-Za-z.-]+)"
-)
+CANDIDATE = re.compile(r"v((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)-[0-9A-Za-z.-]+)")
 
 
 def release_config(
     ref: str, repository: str, run_number: int, run_id: int
 ) -> dict[str, str]:
     tag = ref.removeprefix("refs/tags/")
-    if tag.startswith("app/v") and "-" not in tag:
-        version = name = tag.removeprefix("app/v")
+    if tag.startswith("v") and "-" not in tag:
+        version = name = tag.removeprefix("v")
         channel = "stable"
         feed_tag = "app-updates"
     else:
         version = name = f"0.0.{run_number}"
-        if tag.startswith("app/v"):
-            # A release candidate, such as app/v1.0.0-rc.0, is a preview under its own name.
+        if tag.startswith("v"):
+            # A release candidate, such as v1.0.0-rc.0, is a preview under its own name.
             candidate = CANDIDATE.fullmatch(tag)
             if not candidate:
-                raise ValueError("Name a release candidate like app/v1.0.0-rc.0")
+                raise ValueError("Name a release candidate like v1.0.0-rc.0")
             name = candidate[1]
         elif ref.startswith("refs/heads/"):
-            tag = f"app/test-run-{run_id}"
-        elif not tag.startswith("app/test-"):
-            raise ValueError("Use an app/v* tag, an app/test-* tag or a branch run")
+            tag = f"test-run-{run_id}"
+        elif not tag.startswith("test-"):
+            raise ValueError("Use a v* tag, a test-* tag or a branch run")
         channel = "preview"
         feed_tag = "app-preview-updates"
     numeric_version(version)

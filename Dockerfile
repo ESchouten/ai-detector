@@ -23,8 +23,8 @@ COPY config /app/config
 
 # As the desktop build does: name the version, and keep the bundled presets unless this is a release.
 ARG REF_NAME=main
-RUN case "$REF_NAME" in app/v*) preview=false ;; *) preview=true ;; esac \
-    && printf "export const version = '%s';\nexport const preview = %s;\n" "$REF_NAME" "$preview" > src/lib/version.ts
+RUN case "$REF_NAME" in v[0-9]*) preview=false version="${REF_NAME#v}" ;; *) preview=true version="$REF_NAME" ;; esac \
+    && printf "export const version = '%s';\nexport const preview = %s;\n" "$version" "$preview" > src/lib/version.ts
 
 # The build needs more memory than Node allows itself on a host with 8 GB.
 RUN pnpm exec svelte-kit sync \

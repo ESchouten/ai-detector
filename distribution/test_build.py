@@ -27,9 +27,9 @@ class BuildTest(unittest.TestCase):
     def test_the_web_build_knows_its_version_and_whether_it_is_a_test_build(self):
         built = []
         for ref, channel in (
-            ("app/v1.2.3", "stable"),
-            ("app/v1.2.3-rc.0", "preview"),
-            ("app/test-first", "preview"),
+            ("v1.2.3", "stable"),
+            ("v1.2.3-rc.0", "preview"),
+            ("test-first", "preview"),
         ):
             args = argparse.Namespace(
                 platform="linux-x64",
@@ -49,7 +49,7 @@ class BuildTest(unittest.TestCase):
             [
                 'export const version = "1.2.3";\nexport const preview = false;\n',
                 'export const version = "1.2.3-rc.0";\nexport const preview = true;\n',
-                'export const version = "app/test-first";\nexport const preview = true;\n',
+                'export const version = "test-first";\nexport const preview = true;\n',
             ],
         )
         self.assertEqual(self.version.read_bytes(), b"original version\r\n")
@@ -150,7 +150,7 @@ class BuildTest(unittest.TestCase):
         nvidia = folder / "nvidia-runtime/app/aidetector/version.py"
         for path, kind in ((frozen, "'windowsml'"), (nvidia, "'cuda'")):
             path.parent.mkdir(parents=True)
-            path.write_text(f"TYPE = {kind}\nREF_NAME = 'app/test-1'\n")
+            path.write_text(f"TYPE = {kind}\nREF_NAME = 'test-1'\n")
         if os.name != "nt":
             # A Mac bundle reaches the same file through a symbolic link.
             (folder / "link").mkdir()
@@ -158,13 +158,13 @@ class BuildTest(unittest.TestCase):
                 frozen.parent, target_is_directory=True
             )
 
-        build.stamp_detector(folder, "app/test-2")
+        build.stamp_detector(folder, "test-2")
 
         # Each copy keeps its own backend; only the reference changes.
         self.assertEqual(
-            frozen.read_text(), "TYPE = 'windowsml'\nREF_NAME = 'app/test-2'\n"
+            frozen.read_text(), "TYPE = 'windowsml'\nREF_NAME = 'test-2'\n"
         )
-        self.assertEqual(nvidia.read_text(), "TYPE = 'cuda'\nREF_NAME = 'app/test-2'\n")
+        self.assertEqual(nvidia.read_text(), "TYPE = 'cuda'\nREF_NAME = 'test-2'\n")
 
     def test_detector_dependency_selection_matches_the_platform(self):
         version = self.root / "detector/src/aidetector/version.py"

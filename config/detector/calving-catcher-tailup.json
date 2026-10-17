@@ -5,7 +5,7 @@
         "frames_width": 2560
     },
     "yolo": {
-        "model": "https://github.com/CowCatcherAI/CalvingCatcherAI/releases/download/CalvingcatcherV1/calvingcatcherV10.pt",
+        "model": "https://github.com/CowCatcherAI/CalvingCatcherAI/releases/download/CalvingcatcherV1/calvingcatcherV11.pt",
         "confidence": {
             "tail_up": 0.7
         },

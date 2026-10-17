@@ -62,11 +62,11 @@
 		editingDetector = undefined;
 	}
 	async function imported() {
+		await refresh(getCameras(), getDetectors());
+		await goto(resolve('/setup?step=cameras&imported=1'));
 		importing = false;
 		addingCamera = false;
 		addingDetector = false;
-		await refresh(getCameras(), getDetectors());
-		await goto(resolve('/setup?step=cameras&imported=1'));
 	}
 </script>
 

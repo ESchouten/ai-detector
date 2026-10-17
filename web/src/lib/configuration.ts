@@ -176,7 +176,8 @@ export function normalizeConfiguration(configInput: unknown, appInput: unknown):
 		(detector) => detector.exporters?.telegram ?? []
 	)) {
 		if (!app.telegrams.some((item) => sameTelegram(item, telegram))) {
-			app.telegrams.push({ label: telegram.chat, token: telegram.token, chat: telegram.chat });
+			const label = `Telegram ${app.telegrams.length + 1}`;
+			app.telegrams.push({ label, token: telegram.token, chat: telegram.chat });
 		}
 	}
 	labels.clear();

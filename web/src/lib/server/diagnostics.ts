@@ -30,7 +30,7 @@ function diagnosticRedactor(...documents: unknown[]) {
 					settings(
 						item,
 						// Whoever has the health check's address can ping it.
-						// A Telegram recipient without a name of its own is named by its chat number.
+						// A Telegram recipient someone named by its chat number would show that number.
 						sensitive ||
 							SECRET_FIELD.test(key) ||
 							(parent === 'health' && key === 'url') ||

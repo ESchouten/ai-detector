@@ -267,8 +267,25 @@ test('metadata reconciles stale labels and shared identities without mutating so
 	const normalized = normalizeConfiguration(config, app);
 	assert.deepEqual(normalized.app.detectors, [{ label: 'Barn' }, { label: 'Barn (2)' }]);
 	assert.deepEqual(normalized.app.streams, [{ label: 'Camera', source }]);
-	assert.deepEqual(normalized.app.telegrams, [{ label: 'shared', token: 'one', chat: 'shared' }]);
+	assert.deepEqual(normalized.app.telegrams, [
+		{ label: 'Telegram 1', token: 'one', chat: 'shared' }
+	]);
 	assert.deepEqual({ config, app }, before);
+});
+
+test('alerts without a saved recipient, as in a 0.7 configuration, are named without their chat number', () => {
+	const telegram = [
+		{ token: 'one', chat: '123456789' },
+		{ token: 'two', chat: '987654321' }
+	];
+	const { app } = normalizeConfiguration(
+		{ detectors: [{ detection: { source }, exporters: { telegram } }] },
+		{ telegrams: [{ label: 'My phone', token: 'three', chat: '555' }] }
+	);
+	assert.deepEqual(
+		app.telegrams.map(({ label }) => label),
+		['My phone', 'Telegram 2', 'Telegram 3']
+	);
 });
 
 test('missing setup files remain distinct from malformed or null configuration', async (t) => {
@@ -417,7 +434,7 @@ test('metadata-only edits persist without rewriting config or restarting detecti
 	await store.saveCamera({ source: other, label: 'Unused camera' });
 	await store.saveCamera({ id: camera.id, source, label: 'Renamed camera' });
 	await store.saveTelegram({ label: 'Unused channel', token: 'other', chat: 'other' });
-	await store.saveTelegram({ original: 'chat', label: 'Renamed channel', ...telegram });
+	await store.saveTelegram({ original: 'Telegram 1', label: 'Renamed channel', ...telegram });
 	const { config } = await store.read();
 	await store.saveDetector({
 		original: 'Detector 1',

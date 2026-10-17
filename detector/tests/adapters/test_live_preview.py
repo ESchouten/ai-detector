@@ -115,12 +115,13 @@ def test_slow_write_does_not_block_inference_and_keeps_only_latest_pending(
     values = []
 
     def write(path, record):
+        if "ruleId" in record and not entered.is_set():
+            entered.set()
+            assert release.wait(5)
+        _atomic_json(path, record)
+        # Counted once in place: Windows refuses to open a file while it is replaced.
         if "ruleId" in record:
             values.append(record["boxes"][0]["trackId"])
-            if len(values) == 1:
-                entered.set()
-                assert release.wait(5)
-        _atomic_json(path, record)
 
     monkeypatch.setattr("aidetector.adapters.live_preview._atomic_json", write)
     publisher = LivePreview(tmp_path, interval=0.01)
@@ -130,7 +131,7 @@ def test_slow_write_does_not_block_inference_and_keeps_only_latest_pending(
             wait_for(lambda: (publish("camera", observation(1)), entered.is_set())[1])
             for value in range(2, 100):
                 publish("camera", observation(value))
-            assert values == [1]
+            assert values == []
         finally:
             release.set()
         wait_for(lambda: len(values) == 2)

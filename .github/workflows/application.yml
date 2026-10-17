@@ -423,8 +423,8 @@ jobs:
           fi
           gh release upload app-update-channels update-feeds/channels/appcast.xml update-feeds/channels/releases.win.json --clobber
 
-  # An official release also publishes the container image, which holds the web
-  # application and the detector it runs.
+  # Every build also publishes the container image, which holds the web application
+  # and the detector it runs.
   image:
     name: Image / ${{ matrix.platform }}
     needs: configuration

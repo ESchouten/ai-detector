@@ -1,10 +1,15 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { test } from 'node:test';
 import { DetectionArchive } from '../src/lib/server/archive.ts';
-import { clearModelCache, recordingCleanup, removeRecordings } from '../src/lib/server/storage.ts';
+import {
+	clearModelCache,
+	diskSpace,
+	recordingCleanup,
+	removeRecordings
+} from '../src/lib/server/storage.ts';
 import { temporaryDirectory } from './support/files.ts';
 
 test('recording cleanup requires an unchanged preview and preserves recent and unfinished events', async (t) => {
@@ -53,4 +58,11 @@ test('model cleanup removes prepared and unused downloads while keeping referenc
 		(await readdir(path.join(directory, 'models'))).sort(),
 		[current, 'custom', 'yolo.pt'].sort()
 	);
+});
+
+test('checking free space before the first recording leaves the recordings folder absent', async (t) => {
+	const recordings = path.join(await temporaryDirectory(t, 'ai-storage-'), 'detections');
+	assert.ok((await diskSpace(recordings)).total > 0);
+	// Importing an earlier installation refuses to replace an existing recordings folder.
+	await assert.rejects(stat(recordings), { code: 'ENOENT' });
 });

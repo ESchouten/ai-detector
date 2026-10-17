@@ -1,13 +1,17 @@
 import { createHash } from 'node:crypto';
-import { mkdir, readdir, rm, statfs } from 'node:fs/promises';
+import { readdir, rm, statfs } from 'node:fs/promises';
 import path from 'node:path';
 import type { Config } from '../schema.ts';
 import { archivePath, type DetectionArchive } from './archive.ts';
 import { isMissingFile } from './json-file.ts';
 
+/** Free space where recordings go; before the first one, the folder they will be made in. */
 export async function diskSpace(directory: string) {
-	await mkdir(directory, { recursive: true });
-	const { bsize, bavail, blocks } = await statfs(directory);
+	// Checking must not create the folder: importing an earlier installation needs it absent.
+	const { bsize, bavail, blocks } = await statfs(directory).catch((error) => {
+		if (isMissingFile(error)) return statfs(path.dirname(directory));
+		throw error;
+	});
 	const available = bsize * bavail;
 	const total = bsize * blocks;
 	return { available, total, low: available < Math.max(2 * 1024 ** 3, total * 0.05) };

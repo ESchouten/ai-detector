@@ -29,11 +29,24 @@ jobs:
       feed_url: ${{ steps.release.outputs.feed_url }}
       channels_url: ${{ steps.release.outputs.channels_url }}
       release_url: ${{ steps.release.outputs.release_url }}
+      branch_tags: ${{ steps.branches.outputs.tags }}
     steps:
       - uses: actions/checkout@v6
       - name: Choose version and update channel
         id: release
         run: python distribution/release_config.py
+      - name: Name the branches this commit is the newest of
+        # Each of those branches' images moves to this build.
+        id: branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo 'tags<<END'
+            gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/branches-where-head" \
+              --jq '.[].name | "type=raw,value=" + gsub("[^A-Za-z0-9_.-]"; "-")'
+            echo END
+          } >> "$GITHUB_OUTPUT"
       - name: Check required secrets and public key
         # Only presence flags reach this job. Keys stay in the signing steps below.
         env:
@@ -415,7 +428,6 @@ jobs:
   image:
     name: Image / ${{ matrix.platform }}
     needs: configuration
-    if: needs.configuration.outputs.channel == 'stable'
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
     permissions: &image-permissions
@@ -443,8 +455,11 @@ jobs:
         uses: docker/metadata-action@v5
         with: &image-metadata
           images: ${{ env.IMAGE }}
+          flavor: latest=${{ needs.configuration.outputs.channel == 'stable' }}
           tags: |
             type=semver,pattern={{version}},match=^v(.*)$
+            type=ref,event=tag,enable=${{ startsWith(github.ref, 'refs/tags/test-') }}
+            ${{ needs.configuration.outputs.branch_tags }}
       - name: Build and push by digest
         id: build
         uses: docker/build-push-action@v6
@@ -476,7 +491,7 @@ jobs:
 
   manifest:
     name: Publish image
-    needs: [workflow-checks, image, detector-checks, web-checks]
+    needs: [configuration, workflow-checks, image, detector-checks, web-checks]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: *image-permissions

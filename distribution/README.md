@@ -123,14 +123,14 @@ Regenerate the artwork with `swift distribution/macos/render-artwork.swift` and 
 
 ## GitHub Actions previews
 
-Push an `test-*` tag at the commit to test, with a new name for each build:
+Push a `test-*` tag at the commit to test, with a new name for each build:
 
 ```sh
 git tag test-2026-09-25-1
 git push origin test-2026-09-25-1
 ```
 
-GitHub runs **Application download** from that commit. When every platform passes, the installers are on the resulting **prerelease**: a Windows ZIP holding the setup EXE, a Mac DMG and a Linux DEB. The `.nupkg` and `.delta` files beside them are for automatic updates. The run can also be started by hand for a branch, which publishes to the same preview channel.
+GitHub runs **Application download** from that commit. When every platform passes, the installers are on the resulting **prerelease**: a Windows ZIP holding the setup EXE, a Mac DMG and a Linux DEB. The `.nupkg` and `.delta` files beside them are for automatic updates. The container image is published under the tag's name, and as the branch whose newest commit was tagged, such as `rework-stars`. The run can also be started by hand for a branch, which publishes to the same preview channel and that branch's image.
 
 Previews show version `0.0.N`, where `N` is the workflow's run number. Every release also has an internal build version `N.0.0` that orders builds across both channels, so a preview can follow an official release with a higher display version. Keep the workflow's file name and its run-number sequence.
 
@@ -144,7 +144,7 @@ Prefer a pushed tag when the branch changes workflow files. Creating the release
 
 Push an increasing `vX.Y.Z` tag. A version with a build suffix is rejected.
 
-A version with a prerelease suffix, such as `v1.0.0-rc.0`, is a release candidate. It is published on the preview channel under that name, which the release page and the application's sidebar show. Windows, macOS and Linux show its preview version `0.0.N`, by which updaters order it among the previews, so test builds pushed after it still reach its installations. Its installations receive the official release as any preview installation does. Like any preview it keeps the presets it was built with and publishes no container image.
+A version with a prerelease suffix, such as `v1.0.0-rc.0`, is a release candidate. It is published on the preview channel under that name, which the release page and the application's sidebar show. Windows, macOS and Linux show its preview version `0.0.N`, by which updaters order it among the previews, so test builds pushed after it still reach its installations. Its installations receive the official release as any preview installation does. Like any preview it keeps the presets it was built with. Its container image is published as `1.0.0-rc.0`, never as `latest`.
 
 The workflow reads the signed history of the channel, builds the Mac deltas and the Windows packages, and combines both channels into one newly signed feed. When every platform has succeeded it publishes the versioned release and promotes the feeds to the fixed **app-update-channels** release, which the launchers read; **app-updates** and **app-preview-updates** hold each channel's own history, from which the Mac deltas and the combined feed are built. Release runs are serialized because both channels write the same feeds. Never edit or delete a published version: installed applications and retained deltas refer to it.
 
@@ -161,7 +161,7 @@ Before the first real pair of versions, try a signed update on a Mac and on Wind
 
 | Workflow | Runs on | Does |
 | --- | --- | --- |
-| [Application download](../.github/workflows/application.yml) | `v*`, `test-*`, manual | Checks all three systems, builds and tests the native applications, then publishes signed official or preview updates; an official release also publishes the container image. |
+| [Application download](../.github/workflows/application.yml) | `v*`, `test-*`, manual | Checks all three systems, builds and tests the native applications, then publishes signed official or preview updates and the container image. |
 | [Detector Tests](../.github/workflows/detector-tests.yml) | Relevant pull requests and pushes to `main`, manual, and every application build | Lint, formatting and types; tests on three systems, with branch coverage on Linux; schemas and the wheel. |
 | [Web and setup tests](../.github/workflows/web-tests.yml) | The same | Unit tests on three systems; static checks, the production server and Compose checks on Linux. |
 | [Desktop distribution tests](../.github/workflows/distribution-tests.yml) | Relevant pull requests and pushes to `main`, manual | Native launchers, the compiled web process, installers and update packages. |
@@ -178,7 +178,7 @@ Artifacts of a run:
 - `AI-Detector-PLATFORM`: one installer each, a Mac `.dmg`, a Windows setup `.exe` or a Linux `.deb`.
 - `update-files-PLATFORM` (Mac and Windows): update packages, deltas and signed feeds for the publishing job.
 
-An official release also builds `ghcr.io/eschouten/ai-detector` for amd64 and arm64 on native runners. It publishes the image as `X.Y.Z` and `latest` only after both architectures pass the container smoke check and the detector, web and workflow checks succeed. The image and the desktop release do not wait for each other.
+Every build also builds `ghcr.io/eschouten/ai-detector` for amd64 and arm64 on native runners, and publishes it only after both architectures pass the container smoke check and the detector, web and workflow checks succeed: an official release as `X.Y.Z` and `latest`, a release candidate as `X.Y.Z-rc.N`, and a test build under its tag. Every build also moves the image of each branch whose newest commit it was built from, such as `rework-stars` or `main`. The image and the desktop release do not wait for each other, but the next build waits for both.
 
 Python is pinned in [`detector/.python-version`](../detector/.python-version); the other tool versions are in `toolchain.json`, `web/package.json` and the lockfiles. The workflows call the same `build.py` stages as a local build, through these actions:
 

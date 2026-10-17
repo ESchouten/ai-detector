@@ -1,0 +1,22 @@
+#!/bin/sh
+set -eu
+# Close exactly the installed web executable before replacing/removing its files.
+# Its normal SIGTERM path drains detection and preserves automatic resume.
+case "$1" in
+    remove|upgrade|deconfigure)
+        executable='/opt/ai-detector/AI Detector'
+        if fuser -s "$executable"; then
+            # It may finish between the probe and signal; the loop verifies exit.
+            fuser -k -TERM "$executable" || true
+            remaining=45
+            while fuser -s "$executable"; do
+                if [ "$remaining" -eq 0 ]; then
+                    echo 'AI Detector is still finishing work. Close it and retry the package operation.' >&2
+                    exit 1
+                fi
+                sleep 1
+                remaining=$((remaining - 1))
+            done
+        fi
+        ;;
+esac

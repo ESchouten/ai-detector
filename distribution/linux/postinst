@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+# Allow the dashboard to bind port 80 while the application runs as the desktop user.
+# Reapply after upgrades because replacing the executable removes file capabilities.
+case "$1" in
+    configure)
+        setcap cap_net_bind_service=+ep '/opt/ai-detector/AI Detector'
+        ;;
+esac

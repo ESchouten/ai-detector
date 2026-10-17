@@ -1,23 +1,18 @@
-import json
 import os
-import shutil
-import tempfile
-from pathlib import Path
+import socket
 
-ORIGINAL_CWD = Path.cwd()
-RUNTIME_DIR: Path | None = None
+import pytest
 
-
-def pytest_configure():
-    global RUNTIME_DIR
-
-    RUNTIME_DIR = Path(tempfile.mkdtemp(prefix="aidetector-tests-"))
-    config = {"detectors": [{"detection": {"source": ["test-source"]}}]}
-    (RUNTIME_DIR / "config.json").write_text(json.dumps(config), encoding="utf-8")
-    os.chdir(RUNTIME_DIR)
+# Configure SDK imports without reading credentials or fetching provider metadata.
+os.environ["LITELLM_LOCAL_MODEL_COST_MAP"] = "true"
+os.environ["ULTRALYTICS_SKIP_REQUIREMENTS_CHECKS"] = "1"
+os.environ["YOLO_AUTOINSTALL"] = "false"
 
 
-def pytest_unconfigure():
-    os.chdir(ORIGINAL_CWD)
-    if RUNTIME_DIR is not None:
-        shutil.rmtree(RUNTIME_DIR, ignore_errors=True)
+@pytest.fixture(autouse=True)
+def no_external_network(monkeypatch):
+    def blocked(*args, **kwargs):
+        raise AssertionError("Tests must replace external I/O at the adapter boundary")
+
+    monkeypatch.setattr(socket.socket, "connect", blocked)
+    monkeypatch.setattr(socket.socket, "connect_ex", blocked)

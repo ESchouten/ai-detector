@@ -2,51 +2,102 @@ name: Detector Tests
 
 on:
   pull_request:
-    paths:
+    paths: &paths
       - "detector/**"
-      - ".github/workflows/detector-tests.yml"
+      - "config/**"
+      - "example/config.json"
+      - "ruff.toml"
+      - ".github/**"
   push:
     branches:
-      - "**"
-    paths:
-      - "detector/**"
-      - ".github/workflows/detector-tests.yml"
+      - "main"
+    paths: *paths
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
 
+concurrency:
+  group: detector-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')) }}
+
 jobs:
   test:
-    name: Python ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        python-version:
-          - "3.10"
-          - "3.11"
+        os: [ubuntu-latest, windows-latest, macos-latest]
     env:
-      UV_PYTHON: ${{ matrix.python-version }}
+      LITELLM_LOCAL_MODEL_COST_MAP: "true"
     defaults:
       run:
         working-directory: detector
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
+      - uses: ./.github/actions/setup-detector
 
-      - name: Set up Python
-        run: uv python install
+      - name: Isolate model-library caches
+        shell: bash
+        run: |
+          echo "YOLO_CONFIG_DIR=$RUNNER_TEMP/yolo" >> "$GITHUB_ENV"
+          echo "MPLCONFIGDIR=$RUNNER_TEMP/matplotlib" >> "$GITHUB_ENV"
 
       - name: Ruff
-        run: uv run ruff check src/aidetector tests
+        if: matrix.os == 'ubuntu-latest'
+        run: uv run --no-sync ruff check src/aidetector tests
 
-      - name: Compile
-        run: uv run python -m compileall src/aidetector
+      - name: Formatting
+        if: matrix.os == 'ubuntu-latest'
+        run: uv run --no-sync ruff format --check src/aidetector tests
 
-      - name: Pytest
-        run: uv run pytest
+      - name: Types
+        if: matrix.os == 'ubuntu-latest'
+        run: uv run --no-sync ty check src/aidetector
+
+      - name: Pytest with branch coverage
+        if: runner.os == 'Linux'
+        run: uv run --no-sync coverage run -m pytest --junitxml=.reports/tests.xml
+
+      - name: Pytest platform behavior
+        if: runner.os != 'Linux'
+        run: uv run --no-sync pytest --junitxml=.reports/tests.xml
+
+      - name: Coverage report
+        if: runner.os == 'Linux'
+        run: |
+          uv run --no-sync coverage combine
+          uv run --no-sync coverage report
+          uv run --no-sync coverage html
+
+      - name: Upload quality reports
+        if: always() && matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v7
+        with:
+          name: detector-quality
+          path: detector/.reports/
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Schemas
+        if: matrix.os == 'ubuntu-latest'
+        run: uv run --no-sync generate-schema --check
+
+      - name: Build wheel
+        if: matrix.os == 'ubuntu-latest'
+        run: uv build --wheel
+
+      - name: Upload test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: detector-test-diagnostics-${{ runner.os }}
+          path: detector/.reports/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn

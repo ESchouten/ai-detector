@@ -1,0 +1,128 @@
+import { appendFile, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import {
+	watchStretches,
+	type WatchChange,
+	type WatchState,
+	type WatchStretch
+} from '../camera-history.ts';
+import { calendarDay } from '../format.ts';
+import { isMissingFile } from './json-file.ts';
+
+const DAYS_KEPT = 30;
+
+/**
+ * When each camera was really watched. Every change of a camera's state is one line in the
+ * file of its day, and each day's file starts with the states the day began in, so a day can
+ * be read by itself. `alive` holds the last moment the application was running: what follows
+ * it until the next start is time nothing was watched.
+ */
+export class WatchHistory {
+	private readonly directory: string;
+	private states = new Map<string, WatchState>();
+	private today = '';
+
+	constructor(directory: string) {
+		this.directory = directory;
+	}
+
+	private file(name: string): string {
+		return path.join(this.directory, name);
+	}
+
+	private async changes(name: string): Promise<WatchChange[]> {
+		try {
+			const text = await readFile(this.file(`${name}.jsonl`), 'utf8');
+			// A power cut can leave the last line cut short; the rest of the day still reads.
+			return text.split('\n').flatMap((line) => {
+				try {
+					return line ? [JSON.parse(line) as WatchChange] : [];
+				} catch {
+					return [];
+				}
+			});
+		} catch (error) {
+			if (isMissingFile(error)) return [];
+			throw error;
+		}
+	}
+
+	private async alive(): Promise<Date | undefined> {
+		try {
+			const at = new Date(await readFile(this.file('alive'), 'utf8'));
+			// A power cut can leave the file empty.
+			return Number.isNaN(at.getTime()) ? undefined : at;
+		} catch (error) {
+			if (isMissingFile(error)) return undefined;
+			throw error;
+		}
+	}
+
+	/**
+	 * Close what was open when the application last stopped, however it stopped, and say when
+	 * that was.
+	 */
+	async start(): Promise<Date | undefined> {
+		await mkdir(this.directory, { recursive: true });
+		const stopped = await this.alive();
+		if (!stopped) return;
+		this.today = calendarDay(stopped);
+		for (const change of await this.changes(this.today))
+			this.states.set(change.camera, change.state);
+		await this.write(
+			Array.from(this.states.keys(), (camera) => ({ camera, state: 'stopped' as const })),
+			stopped
+		);
+		return stopped;
+	}
+
+	/** Keep the state of every camera at this moment; cameras no longer listed have stopped. */
+	async sample(cameras: { id: string; state: WatchState }[], now = new Date()): Promise<void> {
+		if (calendarDay(now) !== this.today) {
+			const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+			const carried = Array.from(this.states, ([camera, state]) => ({ camera, state }));
+			this.states.clear();
+			this.today = calendarDay(now);
+			await this.write(carried, midnight);
+			await this.prune(now);
+		}
+		const listed = new Set(cameras.map((camera) => camera.id));
+		await this.write(
+			[
+				...cameras.map(({ id, state }) => ({ camera: id, state })),
+				...Array.from(this.states.keys())
+					.filter((camera) => !listed.has(camera))
+					.map((camera) => ({ camera, state: 'stopped' as const }))
+			],
+			now
+		);
+		for (const camera of this.states.keys()) if (!listed.has(camera)) this.states.delete(camera);
+		await writeFile(this.file('alive'), now.toISOString());
+	}
+
+	private async write(states: { camera: string; state: WatchState }[], at: Date): Promise<void> {
+		const changed = states.filter(({ camera, state }) => this.states.get(camera) !== state);
+		if (!changed.length) return;
+		const lines = changed.map((change) => JSON.stringify({ at: at.toISOString(), ...change }));
+		await appendFile(this.file(`${this.today}.jsonl`), lines.join('\n') + '\n');
+		for (const { camera, state } of changed) this.states.set(camera, state);
+	}
+
+	private async prune(now: Date): Promise<void> {
+		const oldest = calendarDay(new Date(now.getTime() - DAYS_KEPT * 86400000));
+		for (const name of await readdir(this.directory))
+			if (name.endsWith('.jsonl') && name.slice(0, 10) < oldest) await rm(this.file(name));
+	}
+
+	async read(from: Date, to: Date): Promise<Map<string, WatchStretch[]>> {
+		const changes: WatchChange[] = [];
+		const last = calendarDay(to);
+		for (
+			let date = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+			calendarDay(date) <= last;
+			date.setDate(date.getDate() + 1)
+		)
+			changes.push(...(await this.changes(calendarDay(date))));
+		return watchStretches(changes, from, to, (await this.alive()) ?? from);
+	}
+}

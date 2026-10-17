@@ -1,6 +1,7 @@
 {
 	"extends": "./.svelte-kit/tsconfig.json",
 	"compilerOptions": {
+		"types": ["node", "vite/client"],
 		"rewriteRelativeImportExtensions": true,
 		"allowJs": true,
 		"checkJs": true,

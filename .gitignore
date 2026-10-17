@@ -2,26 +2,33 @@ detections
 config.json
 config.**.json
 yolo11**
+yolo26**
 app.json
+/application-dist/
 !example/config.json
 !web/src/routes/(admin)/detections
-web/static/_internal/ffmpeg
-web/static/_internal/ffmpeg.exe
 
 # Local tooling and download caches
 .DS_Store
+.mcp.json
 .cache/
 .pytest_cache/
 .ruff_cache/
+.pnpm-store/
+__pycache__/
 .venv-test/
+
+# .NET build output of the Windows launcher and its tests
+/distribution/windows/**/bin/
+/distribution/windows/**/obj/
+/distribution/windows/**/TestResults/
 
 # Downloaded datasets and ordinary video recordings
 /datasets/
 /videos/
 /detector/videos/
 
-# Inference caches, replay output and local identity catalogs
-/detector/benchmark-cache/
+# Replay output and local identity catalogs
 /detector/passage-runs/
 /detector/identities/
 /web/identities
@@ -40,4 +47,4 @@ web/static/_internal/ffmpeg.exe
 /detector/docs/
 /detector/examples/
 /detector/fixtures/
-/docs/
+/docs/*

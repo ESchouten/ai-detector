@@ -1,0 +1,96 @@
+using System;
+using System.Drawing;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
+namespace AIDetector.Desktop;
+
+internal sealed class TrayApplication : ApplicationContext
+{
+    private readonly TrayMenu menu;
+    private readonly NotifyIcon tray;
+    private readonly Icon icon;
+    private readonly DesktopProcess web;
+    private readonly UpdateMenuItem updates;
+    private readonly Timer updateTimer = new() { Interval = 24 * 60 * 60 * 1000 };
+    private Action afterShutdown;
+    public int ExitCode { get; private set; }
+
+    internal const uint Continuous = 0x80000000, SystemRequired = 0x00000001;
+
+    [DllImport("kernel32.dll")]
+    internal static extern uint SetThreadExecutionState(uint flags);
+
+    // While monitoring is on, Windows must not go to sleep by itself. The request belongs to the
+    // thread that makes it: the menu's, which lives as long as the application.
+    internal static void StayAwake(bool monitoring) =>
+        SetThreadExecutionState(monitoring ? Continuous | SystemRequired : Continuous);
+
+    public TrayApplication(StartupPreference startup, string executable, VerifiedUpdateManager updater, Action<bool> savePreviewPreference)
+    {
+        web = new DesktopProcess(executable, StayAwake);
+        using var artwork = Assembly.GetExecutingAssembly().GetManifestResourceStream("app.ico");
+        icon = new Icon(artwork, 32, 32);
+        menu = new TrayMenu(startup, web.OpenDashboard, Stop);
+        tray = new NotifyIcon { Icon = icon, Text = "AI Detector — Starting…", ContextMenuStrip = menu, Visible = true };
+        updates = new UpdateMenuItem(updater, apply => { afterShutdown = apply; Stop(); }, () =>
+            tray.ShowBalloonTip(5000, "AI Detector update available", "Choose Check for Updates in the AI Detector menu.", ToolTipIcon.Info), savePreviewPreference);
+        menu.Items.Insert(3, updates);
+        if (updates.PreviewItem != null) menu.Items.Insert(3, updates.PreviewItem);
+        tray.DoubleClick += (_, _) => web.OpenDashboard();
+        updateTimer.Tick += async (_, _) => await updates.CheckInBackgroundAsync();
+        Application.Idle += Run;
+    }
+
+    private async void Run(object sender, EventArgs args)
+    {
+        Application.Idle -= Run;
+        try
+        {
+            ExitCode = await web.RunAsync(() =>
+            {
+                tray.Text = "AI Detector — Open dashboard";
+                updateTimer.Start();
+                _ = updates.CheckInBackgroundAsync();
+            });
+            // Nothing is monitored any more, also while a message below waits to be read.
+            StayAwake(false);
+            // Start Velopack's exit wait only after the detector has finished draining.
+            if (ExitCode == 0) afterShutdown?.Invoke();
+            else MessageBox.Show(web.ErrorMessage ?? "AI Detector stopped unexpectedly. Reopen it to resume monitoring.", "AI Detector", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        catch (Exception error)
+        {
+            StayAwake(false);
+            DesktopProcess.Log(error.ToString());
+            ExitCode = 1;
+            MessageBox.Show("AI Detector could not start or restart. Reopen the application to retry. Your settings and recordings are preserved.", "AI Detector", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        ExitThread();
+    }
+
+    private void Stop()
+    {
+        menu.Enabled = false;
+        tray.Text = "AI Detector — Stopping monitoring…";
+        updateTimer.Stop();
+        updates.CancelDownload();
+        web.Stop();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Application.Idle -= Run;
+            updateTimer.Dispose();
+            tray.Visible = false;
+            tray.Dispose();
+            menu.Dispose();
+            icon.Dispose();
+            web.Dispose();
+        }
+        base.Dispose(disposing);
+    }
+}

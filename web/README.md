@@ -1,40 +1,81 @@
-# AI Detector — Web
+# AI Detector web application
 
-The frontend for the AI Detector project. Built with [SvelteKit](https://kit.svelte.dev/).
+The interface of AI Detector: setup, cameras, detectors, recordings and settings. In the [complete application](../README.md) it also starts and supervises the detector. This guide covers using it after setup; the [architecture guide](ARCHITECTURE.md) covers working on it.
 
-> **Status: In development.** Not yet ready for production use.
+## Using the application
 
-## What it does
+There are three main pages, **Recordings**, **Cameras** and **Detectors**; everything else is under **Settings**. The monitoring state is always visible and opens a status page.
 
-- Displays a live view of active detection streams.
-- Shows a history of past detections with images and video clips.
+### Monitoring
 
-## Development
+- A camera counts as monitored only when fresh pictures are being analysed by every detector assigned to it. A started program is not proof.
+- Closing the browser leaves monitoring running. **Pause monitoring** also keeps it paused at the next launch.
+- **Camera offline notifications** under **Settings → Alerts** is off by default. When enabled, a camera that has not been watched for five minutes is reported to its Telegram alert recipients, and reported again once it has been watched for a minute. Time in which the computer slept or AI Detector was not running counts, and is reported when the cameras are back. Pausing monitoring is not reported. A recipient's quiet hours apply, and a notice that cannot be sent is tried again every minute for a day. Switching the setting off cancels queued notices. This needs the complete application, which starts the detector itself.
+- **Heartbeat** on the status page is an address the detector calls while it runs, so a service such as Healthchecks.io can warn you when the computer stops. It is the only warning that works while the computer is off or has no internet.
+- A detector that stops is started again by itself. From the fifth failure in a row until a detector has started properly, every page shows that monitoring has stopped, and Recordings, Cameras, Detectors, the status page and setup say why; for a stop without a known cause they also say what to do. The attempts continue meanwhile.
+- Alert and AI check failures stay visible in the status until a later attempt succeeds.
 
-```bash
-npm install
-npm run dev
-```
+### Cameras
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Camera pictures show the latest detection boxes over live video; the boxes can lag behind moving objects. At most four live pictures run per browser tab, and hidden ones are released. A camera shows its first picture at its next keyframe, which can take a few seconds; after that the picture stays ready for twenty seconds.
 
-## Building
+**History** on the same page shows, per camera, when it was really watched over the last hour, day or week, with every recording as a mark on the same line; a mark opens the recording. A gap is time in which nothing would have been noticed, and it says why: the camera was offline, monitoring was paused, or AI Detector was not running. History is kept for thirty days, and a gap is known to within about ten seconds. With a separately managed detector only the recordings are shown.
 
-```bash
-npm run build
-npm run preview
-```
+### Detectors and presets
 
-The default build targets the Node server package. To build the Windows executable locally, use `AI_DETECTOR_WEB_TARGET=windows-x64-baseline pnpm build`. To build the macOS executable locally, use `AI_DETECTOR_WEB_TARGET=darwin-arm64 pnpm build`. The build target also controls whether the server reads `config.json`, `app.json`, and `detections/` from the working directory or next to the packaged executable.
+A detector made from a preset follows it. When a newer model is published for that preset, the detector takes it within a day or at the next start: monitoring restarts by itself and is interrupted while the model is downloaded and prepared. Cameras, alerts and the AI check stay as you set them. For this the application asks GitHub once a day; without internet nothing changes.
 
-When the executable starts, it serves port 80 by default, prints the local browser URL plus LAN URLs for the computer's IPv4 network addresses, starts an mDNS responder for the computer's `.local` name, and opens the `.local` URL in the default browser when available. For example, it opens `http://my-pc.local` and also prints `http://192.168.1.23` as a fallback. Set `PORT` to override the default or `OPEN_BROWSER=false` to skip opening the browser. The `.local` address requires UDP multicast on the local network. If the `.local` URL fails on another device, try the printed IP URL; if the IP URL also fails, allow the executable through Windows Firewall on Private networks and check that the Wi-Fi network does not isolate clients.
+**Update automatically** in a detector's settings switches this off for that detector: it then keeps the model it has until you switch it on again or choose the preset anew.
 
-## Docker
+A preset can come in more than one mode, chosen under the preset in a detector's settings. **Default** is the preset's own settings. Calving Catcher also has **Low Power**, which looks less often: it asks less of the computer and can notice an event later. A detector follows the mode it is in.
 
-From the repository root:
+A detector whose detection settings you changed keeps them and is not updated. Choose the preset again to follow it.
 
-```bash
-docker compose up -d aidetector web
-```
+### Recordings
 
-The container serves the app on [http://localhost](http://localhost).
+- Selecting a recording opens a viewer; the arrow keys step through recordings.
+- The thumbs record your own verdict. Pressing your choice again removes it and restores the AI check's result.
+- The chips filter by category and by result; pressing a chosen chip clears it.
+- The bin in the viewer deletes that recording from the computer, after asking once.
+- **Export** downloads a ZIP of the current filter, optionally between two dates, laid out as `detections/<category>/<stage>/<timestamp>/` with images, clips and `metadata.json`. In that file `review` is the person's decision and `validated` the AI check's. **Only the original photos** leaves out videos and pictures with boxes, for a small ZIP to share with the people who train the model. A confirmed event is not a checked bounding box: annotate the original images before training a model with them.
+
+### Telegram alerts
+
+**Connect Telegram** opens inside the detector editor. Paste a BotFather token once, choose **My phone**, **A group** or **A channel**, and confirm the test alert in that chat. Recipients belong to detectors, so one bot can send different detectors' alerts to different chats.
+
+- Alerts carry 👍 and 👎 buttons that save a review; the thumb you press stays coloured on that alert. The application must be running for this, and the bot must be used by this installation only.
+- **Quiet hours** on a recipient make alerts between two times of day arrive without sound, for example at night. They still arrive.
+- **Enter chat ID manually** is for a bot that another application also reads. Setup never removes another application's webhook.
+
+### AI check
+
+An **AI check** connection lets a vision language model confirm or reject each event. Under **Settings → AI check**, connect Google Gemini with a key from AI Studio; other providers are set under **Advanced → AI connections**.
+
+A connection is saved once and used by any number of detectors, each with its own question. Turning the AI check off for a detector keeps its question and clears its keys. A connection in use cannot be removed.
+
+### Other devices
+
+The application listens on port 80 of every network address, so other devices open `http://aidetector.local/` or `http://<computer-IP>/`. When another program has that port, it takes the first free one from 8080 to 8089 and keeps it. The computer it runs on is trusted; every other browser needs a one-use code from **Settings → Devices** (scan the QR code, then tap Connect). Codes expire after five minutes or ten wrong attempts. A connected browser is remembered for a year and can be removed there. A first start without a screen prints a code on the console.
+
+An iPhone or iPad is offered once to put the application on its home screen, with the steps for that device; **Settings → Home screen** shows them again. It then opens like an app. An iPhone older than iOS 17.2 must connect once more from the icon.
+
+Android makes a web page an app only over HTTPS. Over plain HTTP nothing is offered, and **Settings → Home screen shortcut** tells how to add a link that opens the dashboard in the browser.
+
+Plain HTTP is not encrypted: use a trusted network, or an HTTPS reverse proxy with `ORIGIN` set.
+
+### Bring an existing installation into setup
+
+Before adding a camera, choose **Use existing setup**, close the old application, select its folder containing `config.json`, review the counts and import. Importing starts nothing and sends nothing, never replaces an existing setup, and resumes if it is interrupted. It works only on the computer the application runs on.
+
+The import copies settings, `detections/`, local `presets/` and referenced local model and video files, and leaves the old files as they were. **Keep recordings in their current folder** links to the old archive instead: keep that drive available, because new recordings, reviews and deletions then happen there.
+
+### Backup, recovery and storage
+
+- **Settings → Back up** downloads `config.json` and `app.json`. It contains camera passwords and alert tokens, and no recordings, models, own presets or paired devices. Restore it with **Use existing setup** in a new installation.
+- When a settings file cannot be read, every page names the damaged file and offers **Recover settings**: the last valid settings are restored and the damaged files are kept beside them with an `.invalid` suffix.
+- **Logs → Download diagnostics** bundles logs, system details and redacted settings, also when settings cannot be read. Review paths and camera addresses before sharing it.
+- **Settings → Storage** shows free space and removes recordings older than a date you choose. Nothing deletes recordings automatically.
+
+### Language
+
+English, Nederlands, Deutsch and Français. An installation takes the language of the browser that sets it up, for every device and for its Telegram replies; change it under **Settings → Language**. Logs, the Advanced JSON editor's hints and the detector's own messages stay in English; the logs repeat a status or error message in the language it was shown in.

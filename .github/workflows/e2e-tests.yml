@@ -1,0 +1,49 @@
+name: End-to-end test
+
+on:
+  pull_request:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')) }}
+
+permissions:
+  contents: read
+
+jobs:
+  cow-catcher:
+    name: Cow Catcher from setup to alert
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # The RTSP server that plays the example clip as a camera.
+      MEDIAMTX_VERSION: v1.21.2
+      MEDIAMTX_SHA256: 121be6e00397e473a95d83c75f4fcd3819a6af3b0e1a50889cba43ab4fab6a27
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-web
+      - uses: ./.github/actions/setup-detector
+      - name: Install mediamtx
+        run: |
+          archive="$RUNNER_TEMP/mediamtx.tar.gz"
+          curl -sSfL -o "$archive" "https://github.com/bluenviron/mediamtx/releases/download/$MEDIAMTX_VERSION/mediamtx_${MEDIAMTX_VERSION}_linux_amd64.tar.gz"
+          echo "$MEDIAMTX_SHA256  $archive" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/mediamtx"
+          tar -xzf "$archive" -C "$RUNNER_TEMP/mediamtx"
+          echo "$RUNNER_TEMP/mediamtx" >> "$GITHUB_PATH"
+      - name: Build the web application
+        run: pnpm --dir web build
+      - name: Set up Cow Catcher in the browser and receive its alerts
+        run: pnpm --dir web test:e2e
+      - name: Upload test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-test-diagnostics
+          path: web/.reports/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn

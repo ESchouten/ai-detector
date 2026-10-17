@@ -1,0 +1,170 @@
+import { plural } from './format.ts';
+import type { CameraRuntimeStatus, RuntimeStatus } from './runtime.ts';
+
+export type StatusTone = 'ok' | 'busy' | 'warn' | 'bad' | 'idle';
+export type MonitoringAction = 'start' | 'retry' | 'cancel' | 'pause';
+
+export interface MonitoringSummary {
+	tone: StatusTone;
+	/** The state in two or three words, for navigation and headings. */
+	label: string;
+	/** One sentence saying what the state means or what to do next. */
+	detail: string;
+	/** Worth interrupting every page for: detection is not protecting the cameras. */
+	attention: boolean;
+	action: MonitoringAction | null;
+}
+
+type Runtime = Pick<
+	RuntimeStatus,
+	'managed' | 'phase' | 'failing' | 'readiness' | 'message' | 'preparation' | 'cameras' | 'issues'
+>;
+
+/** Whether a camera is analysed and recorded right now. */
+export function monitoredNow(camera: CameraRuntimeStatus): boolean {
+	return camera.state === 'monitoring' && !camera.error && !camera.recordingError;
+}
+
+function problem(runtime: Runtime): string {
+	const offline = runtime.cameras.filter((camera) => camera.state === 'offline').length;
+	if (offline) return plural(offline, ['# camera offline.', '# cameras offline.']);
+	const camera = runtime.cameras.find((camera) => camera.recordingError || camera.error);
+	if (camera) return `${camera.label}: ${camera.recordingError ?? camera.error}`;
+	return runtime.issues?.[0] ?? runtime.message;
+}
+
+/** States in which the detector's own progress says nothing useful. */
+function unavailable(
+	runtime: Runtime,
+	{ stale, configured }: { stale: boolean; configured: boolean }
+): MonitoringSummary | undefined {
+	if (stale)
+		return {
+			tone: 'warn',
+			label: 'Connection lost',
+			detail: 'This page has not heard from AI Detector. Reopen the app if it does not reconnect.',
+			attention: true,
+			action: null
+		};
+	if (!configured)
+		return {
+			tone: 'idle',
+			label: 'Live view only',
+			detail: 'Add a detector to start monitoring your cameras.',
+			attention: false,
+			action: null
+		};
+	if (!runtime.managed)
+		return {
+			tone: 'idle',
+			label: 'Runs separately',
+			detail: 'Detection is started and stopped outside this app, so its status is not shown here.',
+			attention: false,
+			action: null
+		};
+}
+
+/** The process is not running, is on its way up or down, or keeps failing. */
+function lifecycle(runtime: Runtime): MonitoringSummary | undefined {
+	if (runtime.phase === 'stopping')
+		return {
+			tone: 'busy',
+			label: 'Stopping…',
+			detail: runtime.message,
+			attention: false,
+			action: null
+		};
+	if (runtime.phase === 'failed' || runtime.readiness === 'failed')
+		return {
+			tone: 'bad',
+			label: 'Monitoring stopped',
+			detail: runtime.message,
+			attention: true,
+			action: 'retry'
+		};
+	// Another attempt after five that failed is not a start worth waiting for.
+	if (runtime.failing)
+		return {
+			tone: 'bad',
+			label: 'Monitoring stopped',
+			detail: runtime.failing,
+			attention: true,
+			action: 'pause'
+		};
+	if (runtime.phase === 'checking' || runtime.phase === 'starting')
+		return {
+			tone: 'busy',
+			label: 'Starting…',
+			detail: runtime.preparation ?? runtime.message,
+			attention: false,
+			action: runtime.phase === 'checking' ? 'cancel' : null
+		};
+	if (runtime.phase === 'stopped')
+		return {
+			tone: 'warn',
+			label: 'Paused',
+			detail: 'Nothing is detected or recorded while monitoring is paused.',
+			attention: true,
+			action: 'start'
+		};
+}
+
+/** One reading of the detector's state, shared by navigation, banners and the status page. */
+export function monitoringSummary(
+	runtime: Runtime,
+	scope: { stale: boolean; configured: boolean }
+): MonitoringSummary {
+	const special = unavailable(runtime, scope) ?? lifecycle(runtime);
+	if (special) return special;
+	if (runtime.readiness === 'degraded')
+		return {
+			tone: 'warn',
+			label: 'Needs attention',
+			detail: problem(runtime),
+			attention: true,
+			action: 'pause'
+		};
+	if (runtime.readiness === 'monitoring')
+		return {
+			tone: 'ok',
+			label: 'Monitoring',
+			detail: plural(runtime.cameras.filter(monitoredNow).length, [
+				'Watching # camera.',
+				'Watching # cameras.'
+			]),
+			attention: false,
+			action: 'pause'
+		};
+	return {
+		tone: 'busy',
+		label: runtime.readiness === 'connecting' ? 'Connecting cameras…' : 'Preparing…',
+		detail: runtime.preparation ?? runtime.message,
+		attention: false,
+		action: 'pause'
+	};
+}
+
+export type CameraTone = 'neutral' | 'ok' | 'warn' | 'bad';
+
+/** One camera's state in two words, for its badge. */
+export function cameraStatusBadge(
+	camera: CameraRuntimeStatus | undefined,
+	runtime: Pick<RuntimeStatus, 'managed' | 'readiness' | 'failing'>,
+	stale: boolean
+): { label: string; tone: CameraTone } {
+	if (stale || !runtime.managed) return { label: 'Status unavailable', tone: 'warn' };
+	if (runtime.readiness === 'idle') return { label: 'Paused', tone: 'neutral' };
+	if (runtime.readiness === 'failed' || runtime.failing)
+		return { label: 'Detection stopped', tone: 'bad' };
+	if (!camera) return { label: 'Preparing', tone: 'neutral' };
+	if (camera.state === 'paused') return { label: 'Paused', tone: 'neutral' };
+	if (camera.state === 'failed') return { label: 'Detection stopped', tone: 'bad' };
+	if (camera.state === 'offline') return { label: 'Camera offline', tone: 'bad' };
+	if (camera.recordingError) return { label: 'Recording failed', tone: 'bad' };
+	if (camera.error) return { label: 'Detection delayed', tone: 'warn' };
+	if (camera.state === 'monitoring') return { label: 'Monitoring', tone: 'ok' };
+	return {
+		label: camera.state === 'connecting' ? 'Connecting' : 'Preparing',
+		tone: 'neutral'
+	};
+}

@@ -1,0 +1,15 @@
+name: Build desktop launcher
+description: Compile the native launcher.
+inputs:
+  version:
+    description: Application version embedded in the launcher
+    default: '0.0.0'
+runs:
+  using: composite
+  steps:
+    - name: Compile native launcher
+      if: runner.os != 'Linux'
+      shell: bash
+      env:
+        APP_VERSION: ${{ inputs.version }}
+      run: python distribution/build.py launcher --version "$APP_VERSION" --output "$RUNNER_TEMP"

@@ -4,3 +4,6 @@
 dist
 build/
 .ruff_cache/
+.coverage*
+.reports/
+.import_linter_cache/

@@ -1,0 +1,82 @@
+import assert from 'node:assert/strict';
+import { mkdir, readFile, readdir, symlink, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { test, type TestContext } from 'node:test';
+import ffmpeg from 'ffmpeg-static';
+import { DetectionArchive } from '../src/lib/server/archive.ts';
+import { verifyCameraArchive } from '../src/lib/server/cameras/archive-check.ts';
+import { sampleClip, temporaryDirectory } from './support/files.ts';
+
+async function fixture(t: TestContext) {
+	assert.ok(ffmpeg);
+	const directory = await temporaryDirectory(t, 'ai-archive-check-');
+	return { directory, clip: await sampleClip(directory), executable: ffmpeg };
+}
+
+test('archive check saves and decodes in every destination without creating detection events', async (t) => {
+	const { directory, clip, executable } = await fixture(t);
+	const original = await readFile(clip);
+	await verifyCameraArchive(
+		directory,
+		'camera-one',
+		clip,
+		['calving', 'yard', 'calving', ''],
+		executable
+	);
+	for (const category of ['calving', 'yard'])
+		assert.deepEqual(await readdir(path.join(directory, 'detections', category)), []);
+	assert.deepEqual(await readFile(clip), original);
+	const archive = new DetectionArchive(path.join(directory, 'detections'));
+	assert.deepEqual(await archive.types(), ['calving', 'yard']);
+	assert.deepEqual(await readdir(path.join(directory, 'detections')), ['calving', 'yard']);
+	assert.deepEqual(await archive.page({ offset: 0, limit: 10 }), {
+		items: [],
+		nextOffset: 0,
+		hasMore: false,
+		warnings: 0
+	});
+});
+
+test('archive check rejects unreadable video and removes the incomplete test', async (t) => {
+	const { directory, clip, executable } = await fixture(t);
+	await writeFile(clip, 'not a video');
+	await assert.rejects(
+		verifyCameraArchive(directory, 'camera-one', clip, ['calving'], executable),
+		/could not be played/
+	);
+	assert.deepEqual(await readdir(path.join(directory, 'detections/calving')), []);
+});
+
+test('archive check rejects traversal and linked output folders without writing through them', async (t) => {
+	const { directory, clip, executable } = await fixture(t);
+	await assert.rejects(
+		verifyCameraArchive(directory, 'camera-one', clip, ['../outside'], executable),
+		/location is invalid/
+	);
+	const outside = path.join(directory, 'outside');
+	await mkdir(outside);
+	await mkdir(path.join(directory, 'detections'));
+	await symlink(outside, path.join(directory, 'detections/calving'), 'junction');
+	await assert.rejects(
+		verifyCameraArchive(directory, 'camera-one', clip, ['calving'], executable),
+		/linked folder/
+	);
+	assert.deepEqual(await readdir(outside), []);
+});
+
+test('archive check reports an occupied destination and honors cancellation', async (t) => {
+	const { directory, clip, executable } = await fixture(t);
+	await mkdir(path.join(directory, 'detections'));
+	await writeFile(path.join(directory, 'detections/calving'), 'existing file');
+	await assert.rejects(
+		verifyCameraArchive(directory, 'camera-one', clip, ['calving'], executable),
+		/contains a file/
+	);
+	const controller = new AbortController();
+	controller.abort();
+	await assert.rejects(
+		verifyCameraArchive(directory, 'camera-one', clip, ['yard'], executable, controller.signal),
+		{ name: 'AbortError' }
+	);
+	assert.deepEqual(await readdir(path.join(directory, 'detections')), ['calving']);
+});

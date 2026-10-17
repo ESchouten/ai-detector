@@ -1,0 +1,388 @@
+import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
+import path from 'node:path';
+import { createInterface } from 'node:readline';
+import { setTimeout as delay } from 'node:timers/promises';
+import { plural } from '../format.ts';
+import type { RuntimeStatus } from '../runtime.ts';
+import * as v from 'valibot';
+import { normalizeConfig } from '../configuration.ts';
+import { appSchema, type AppConfig, type LlmConnection } from '../schema.ts';
+import { readJson } from './json-file.ts';
+import { monitoringEnabled, setMonitoringEnabled } from './installation-notes.ts';
+import { DetectorLog, sanitizeTextForLogs as redact } from './logs.ts';
+import type { DetectorCommand } from './nvidia-runtime.ts';
+import { DetectorPreparation, type DetectorOptions } from './detector-preparation.ts';
+import { RuntimeProgress, STATUS_PREFIX } from './runtime-status.ts';
+import { SetupError } from './setup-error.ts';
+import { serialQueue } from './serial.ts';
+
+const INITIAL_RESTART_DELAY_MS = 2000;
+const MAX_RESTART_DELAY_MS = 30000;
+const STABLE_RUN_MS = 10 * 60 * 1000;
+
+/** One owner for the detector process. Commands are serialized; polling has no side effects. */
+export class ManagedDetector {
+	readonly log: DetectorLog;
+	private child: ChildProcessWithoutNullStreams | null = null;
+	private stoppingChild = false;
+	private finished: Promise<number | null> = Promise.resolve(0);
+	private readonly enqueue = serialQueue();
+	private startup = new AbortController();
+	private restartDelay = INITIAL_RESTART_DELAY_MS;
+	/** Whether monitoring resumes with the application: `monitoring` in app.json. */
+	private enabled = false;
+	private state: RuntimeStatus;
+	private readonly appPath: string;
+	private readonly preparation: DetectorPreparation;
+	private readonly options: DetectorOptions;
+	private progress = new RuntimeProgress();
+	/** Why the detector last failed, from the fifth failure in a row until one is ready again. */
+	private failing: string | undefined;
+
+	constructor(options: DetectorOptions) {
+		this.options = options;
+		this.log = new DetectorLog(options.dataDirectory);
+		this.appPath = path.join(options.dataDirectory, 'app.json');
+		this.preparation = new DetectorPreparation(options, this.log, (message) => {
+			this.state.message = message;
+		});
+		this.state = {
+			managed: true,
+			phase: 'stopped',
+			message: 'Ready to set up your camera.',
+			dataDirectory: options.dataDirectory,
+			readiness: 'idle',
+			cameras: []
+		};
+	}
+
+	status(): RuntimeStatus {
+		const progress = this.progress.snapshot();
+		const readiness =
+			this.state.phase === 'failed'
+				? 'failed'
+				: this.state.phase === 'stopped' || this.state.phase === 'stopping'
+					? 'idle'
+					: progress.readiness;
+		const cameras = progress.cameras.map((camera) => ({
+			...camera,
+			...(readiness === 'failed' ? { state: 'failed' as const } : {}),
+			...(readiness === 'idle' ? { state: 'paused' as const } : {})
+		}));
+		const message =
+			readiness === 'monitoring'
+				? plural(cameras.length, ['Watching # camera.', 'Watching # cameras.'])
+				: readiness === 'degraded'
+					? 'Monitoring needs attention.'
+					: readiness === 'failed'
+						? (this.progress.preparationFailure ?? this.state.message)
+						: this.state.message;
+		return {
+			...this.state,
+			message,
+			readiness,
+			cameras,
+			preparation: readiness === 'preparing' ? this.progress.preparation : undefined,
+			failing: this.enabled ? this.failing : undefined,
+			notice: this.progress.notice,
+			issues: this.progress.issues,
+			backends: this.progress.backends
+		};
+	}
+
+	/**
+	 * Whether monitoring is switched on: from the moment someone starts it, through a first
+	 * preparation that can take half an hour, and while the detector restarts or cannot start.
+	 */
+	get monitoring(): boolean {
+		return this.enabled || this.state.phase === 'checking';
+	}
+
+	async refreshMetadata(): Promise<void> {
+		this.progress.updateMetadata(await this.readApp());
+	}
+
+	/** Camera and detector names; until app.json is readable, the status shows its own names. */
+	private async readApp(): Promise<AppConfig> {
+		const parsed = v.safeParse(appSchema, (await readJson(this.appPath)) ?? {});
+		return parsed.success ? parsed.output : v.parse(appSchema, {});
+	}
+
+	initialize(): Promise<void> {
+		const signal = this.startup.signal;
+		return this.enqueue(async () => {
+			this.enabled = await monitoringEnabled(this.appPath);
+			if (this.enabled) {
+				await this.log.resume();
+				await this.startChild(signal, true);
+			}
+		});
+	}
+
+	validate(config: unknown, signal?: AbortSignal): Promise<void> {
+		return this.preparation.validate(config, signal);
+	}
+	testLlm(connection: LlmConnection, signal?: AbortSignal): Promise<void> {
+		return this.preparation.testLlm(connection, signal);
+	}
+
+	start(): Promise<void> {
+		const signal = this.startup.signal;
+		return this.enqueue(() => {
+			if (!this.child) {
+				this.restartDelay = INITIAL_RESTART_DELAY_MS;
+				this.failing = undefined;
+			}
+			return this.startChild(signal);
+		});
+	}
+
+	whileStopped<T>(operation: () => Promise<T>): Promise<T> {
+		return this.enqueue(() => {
+			if (this.enabled || this.child)
+				throw new SetupError('Pause monitoring before clearing the model cache.');
+			return operation();
+		});
+	}
+
+	private async startChild(signal: AbortSignal, preserveLog = false): Promise<void> {
+		if (this.child || signal.aborted) return;
+		if (!preserveLog) this.log.begin();
+		this.progress = new RuntimeProgress();
+		this.state = {
+			...this.state,
+			phase: 'checking',
+			helpUrl: undefined,
+			message: 'Checking this computer…'
+		};
+		try {
+			const saved = await readJson(path.join(this.options.dataDirectory, 'config.json'));
+			if (!saved) throw new SetupError('Add a camera and choose what to detect first.');
+			const config = normalizeConfig(saved);
+			await this.validate(config, signal);
+			this.progress.configure(config, await this.readApp(), this.options.dataDirectory);
+			signal.throwIfAborted();
+			const command = await this.preparation.command(config, signal);
+			signal.throwIfAborted();
+			this.enabled = true;
+			await setMonitoringEnabled(this.appPath, true);
+			signal.throwIfAborted();
+			this.launch(command, signal);
+		} catch (error) {
+			if (signal.aborted) {
+				this.state.phase = 'stopped';
+				this.state.message = 'Start cancelled.';
+			} else {
+				this.fail(error);
+				if (this.enabled) this.scheduleRestart(signal);
+			}
+		}
+	}
+
+	private launch(command: DetectorCommand, signal: AbortSignal): void {
+		const startedAt = Date.now();
+		this.state.phase = 'starting';
+		this.state.message = 'Starting the detector…';
+		const child = spawn(command.file, command.args, {
+			cwd: this.options.dataDirectory,
+			windowsHide: true,
+			stdio: 'pipe',
+			env: { ...process.env, ...command.env, PYTHONUNBUFFERED: '1' }
+		});
+		this.child = child;
+		this.stoppingChild = false;
+		let lastCheck = Date.now();
+		let resumeGraceUntil = 0;
+		let recovering = false;
+		const watchdog = setInterval(() => {
+			const now = Date.now();
+			// Give cameras and GPU drivers time to recover after suspend or an event-loop pause.
+			if (now - lastCheck > 30000) resumeGraceUntil = now + 120000;
+			lastCheck = now;
+			if (recovering || this.stoppingChild || signal.aborted || now < resumeGraceUntil) return;
+			const silent = this.progress.silentDetector(now);
+			const stalled = this.progress.stalledDetector(now);
+			if (!silent && !stalled) return;
+			recovering = true;
+			void this.enqueue(async () => {
+				if (this.child !== child || this.stoppingChild) return;
+				// The reason is written to the log, which stays in English.
+				if (silent)
+					await this.restartChild(
+						signal,
+						'the detector reported nothing for a minute',
+						'The detector stopped responding. Restarting monitoring…'
+					);
+				else
+					await this.restartChild(
+						signal,
+						/* @wc-ignore */ `${stalled} stopped processing fresh camera frames`
+					);
+			}).catch((error) => this.fail(error));
+		}, 5000);
+		watchdog.unref();
+		child.stdin.on('error', (error: NodeJS.ErrnoException) => {
+			if (error.code !== 'EPIPE') this.fail(error);
+		});
+		const records = createInterface({ input: child.stdout, crlfDelay: Infinity });
+		records.on('line', (line) => {
+			if (!line.startsWith(STATUS_PREFIX)) {
+				this.log.append(line + '\n');
+				return;
+			}
+			const event = this.progress.accept(line);
+			if (event?.event === 'ready') this.failing = undefined;
+			if (event?.event === 'models_ready')
+				void this.enqueue(async () => {
+					// Ignore duplicate/stale requests from a process already being replaced.
+					if (this.child !== child || this.stoppingChild) return;
+					await this.restartChild(signal, /* @wc-ignore */ 'TensorRT models are ready');
+				}).catch((error) => this.fail(error));
+		});
+		createInterface({ input: child.stderr, crlfDelay: Infinity }).on('line', (line) =>
+			this.log.append(line + '\n')
+		);
+		child.on('spawn', () => {
+			if (this.state.phase !== 'starting') return;
+			this.state.phase = 'running';
+			this.state.message =
+				'Preparing detection and connecting cameras. Monitoring will be confirmed after frames are processed.';
+		});
+		child.on('error', (error) => this.fail(error));
+		this.finished = new Promise((resolve) =>
+			child.on('close', (code, exitSignal) => {
+				clearInterval(watchdog);
+				records.close();
+				this.log.append(`${new Date().toISOString()} Detector exited: ${exitSignal ?? code}\n`);
+				this.child = null;
+				// A good run however it ended: a restart for new settings is not a stop in a row.
+				if (Date.now() - startedAt >= STABLE_RUN_MS) this.restartDelay = INITIAL_RESTART_DELAY_MS;
+				if (this.enabled && !this.stoppingChild && !signal.aborted) {
+					if (this.state.phase !== 'failed')
+						this.fail(
+							new SetupError(
+								this.progress.preparationFailure ??
+									(this.repeated
+										? `The detector keeps stopping unexpectedly (${exitSignal ?? code}). Restart this computer. If it keeps happening, download the diagnostics in Settings → Logs and ask for help.`
+										: `The detector stopped unexpectedly (${exitSignal ?? code}).`)
+							)
+						);
+					this.scheduleRestart(signal);
+				} else if (code === 0 && this.state.phase !== 'failed') {
+					this.state.phase = 'stopped';
+					this.state.message = 'Detector stopped.';
+				} else if (this.state.phase !== 'failed')
+					this.fail(
+						new SetupError(
+							this.progress.preparationFailure ??
+								'The detector stopped unexpectedly. Check the details below, then try again.'
+						)
+					);
+				void this.log.flush().then(() => resolve(code));
+			})
+		);
+	}
+
+	/** The fifth failure in a row is the first to wait the longest; none has been ready since. */
+	private get repeated(): boolean {
+		return this.failing !== undefined || this.restartDelay === MAX_RESTART_DELAY_MS;
+	}
+
+	private scheduleRestart(signal: AbortSignal): void {
+		if (this.repeated) this.failing = this.state.message;
+		const wait = this.restartDelay;
+		this.restartDelay = Math.min(wait * 2, MAX_RESTART_DELAY_MS);
+		this.progress = new RuntimeProgress();
+		this.state.phase = 'starting';
+		const restarting = `Restarting monitoring in ${wait / 1000} seconds…`;
+		this.state.message = `${this.state.message} ${restarting}`;
+		this.log.append(
+			`${new Date().toISOString()} Restarting the detector in ${wait / 1000} seconds.\n`
+		);
+		void this.enqueue(async () => {
+			try {
+				await delay(wait, undefined, { signal });
+				await this.startChild(signal, true);
+			} catch (error) {
+				if (signal.aborted) {
+					this.state.phase = 'stopped';
+					this.state.message = 'Restart cancelled.';
+				} else this.fail(error);
+			}
+		});
+	}
+
+	stop(
+		disable = true,
+		reason = disable ? 'Monitoring disabled' : 'Application shutdown'
+	): Promise<void> {
+		// A stop cancels both the active check and starts already waiting in the queue.
+		this.startup.abort();
+		this.startup = new AbortController();
+		return this.enqueue(async () => {
+			this.log.append(`${new Date().toISOString()} Stop requested: ${reason}\n`);
+			if (disable) this.enabled = false;
+			try {
+				if (disable) await setMonitoringEnabled(this.appPath, false);
+			} finally {
+				try {
+					await this.stopChild();
+				} finally {
+					await this.log.flush();
+				}
+			}
+		});
+	}
+
+	private async stopChild(message?: string): Promise<void> {
+		const child = this.child;
+		if (!child) return;
+		this.stoppingChild = true;
+		this.state.phase = 'stopping';
+		this.state.message = message ?? 'Finishing detections and stopping…';
+		child.stdin.end('stop\n');
+		let timedOut = false;
+		const timer = setTimeout(() => {
+			timedOut = true;
+			this.fail(
+				new SetupError(
+					'The detector did not finish shutting down within 30 seconds. It was forced to stop; the last detection may be incomplete.'
+				)
+			);
+			child.kill('SIGKILL');
+		}, 30000);
+		try {
+			const code = await this.finished;
+			if (code !== 0 || timedOut) throw new SetupError(this.state.message);
+		} finally {
+			clearTimeout(timer);
+		}
+	}
+
+	apply(): Promise<void> {
+		const signal = this.startup.signal;
+		return this.enqueue(async () => {
+			await this.restartChild(signal, 'detector settings changed');
+		});
+	}
+
+	private async restartChild(signal: AbortSignal, reason: string, message?: string): Promise<void> {
+		if (!this.enabled || signal.aborted) return;
+		this.log.append(`${new Date().toISOString()} Restart requested: ${reason}\n`);
+		try {
+			await this.stopChild(message);
+		} catch (error) {
+			this.fail(error);
+		}
+		await this.startChild(signal, true);
+	}
+
+	fail(error: unknown): void {
+		this.state.phase = 'failed';
+		this.state.message =
+			error instanceof Error ? redact(error.message) : 'The detector could not start.';
+		this.state.helpUrl = error instanceof SetupError ? error.helpUrl : undefined;
+		this.log.append(`${new Date().toISOString()} ERROR ${this.state.message}\n`);
+		void this.log.flush();
+	}
+}

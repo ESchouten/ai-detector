@@ -147,10 +147,37 @@ def _video(arguments: argparse.Namespace) -> None:
     )
 
 
-def parser() -> argparse.ArgumentParser:
-    root = argparse.ArgumentParser(prog="reid", description=__doc__)
-    commands = root.add_subparsers(required=True)
+def _tracks(arguments: argparse.Namespace) -> None:
+    from reid.tracking import tracks_from_video
 
+    crops = tracks_from_video(
+        arguments.video,
+        arguments.out,
+        session=arguments.session,
+        model=arguments.model,
+        every=arguments.every,
+        imgsz=arguments.imgsz,
+        confidence=arguments.confidence,
+        min_size=arguments.min_size,
+        max_covered=arguments.max_covered,
+        min_crops=arguments.min_crops,
+        mask_background=not arguments.no_mask,
+        device=arguments.device,
+    )
+    existing = (
+        read_manifest(arguments.manifest)
+        if arguments.append and arguments.manifest.exists()
+        else ()
+    )
+    write_manifest(arguments.manifest, [*existing, *crops])
+    print(
+        f"{len(crops)} crops in {len({crop.track for crop in crops})} tracks added to "
+        f"{arguments.manifest}",
+        file=sys.stderr,
+    )
+
+
+def _add_scoring(commands: argparse._SubParsersAction) -> None:
     bench = commands.add_parser("benchmark", help="score models on a manifest")
     bench.add_argument("manifest", type=Path)
     bench.add_argument(
@@ -178,6 +205,8 @@ def parser() -> argparse.ArgumentParser:
     report.add_argument("results", type=Path, nargs="+")
     report.set_defaults(run=_report)
 
+
+def _add_imports(commands: argparse._SubParsersAction) -> None:
     pattern = commands.add_parser(
         "manifest-from-pattern", help="manifest from labels in picture paths"
     )
@@ -208,6 +237,37 @@ def parser() -> argparse.ArgumentParser:
     video.add_argument("--min-size", type=int, default=96)
     video.add_argument("--night-from-colour", action="store_true")
     video.set_defaults(run=_video)
+
+
+def _add_tracking(commands: argparse._SubParsersAction) -> None:
+    tracks = commands.add_parser(
+        "tracks-from-video", help="unlabelled cow tracks from farm video"
+    )
+    tracks.add_argument("video", type=Path)
+    tracks.add_argument("--out", type=Path, required=True, help="folder for crops")
+    tracks.add_argument("--manifest", type=Path, required=True)
+    tracks.add_argument("--append", action="store_true")
+    tracks.add_argument("--session", required=True, help="recording day, sortable")
+    tracks.add_argument("--model", default="yolo26x-seg.pt")
+    tracks.add_argument("--every", type=int, default=5, help="use every Nth frame")
+    tracks.add_argument("--imgsz", type=int, default=1280)
+    tracks.add_argument("--confidence", type=float, default=0.5)
+    tracks.add_argument("--min-size", type=int, default=128)
+    tracks.add_argument(
+        "--max-covered", type=float, default=0.3, help="share hidden by other cows"
+    )
+    tracks.add_argument("--min-crops", type=int, default=3)
+    tracks.add_argument("--no-mask", action="store_true", help="keep the background")
+    tracks.add_argument("--device", help="mps, cuda or cpu")
+    tracks.set_defaults(run=_tracks)
+
+
+def parser() -> argparse.ArgumentParser:
+    root = argparse.ArgumentParser(prog="reid", description=__doc__)
+    commands = root.add_subparsers(required=True)
+    _add_scoring(commands)
+    _add_imports(commands)
+    _add_tracking(commands)
     return root
 
 

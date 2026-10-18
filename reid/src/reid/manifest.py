@@ -125,14 +125,18 @@ def crops_from_pattern(
     return tuple(crops)
 
 
-def is_grayscale(path: Path, tolerance: float = 4.0) -> bool:
+def is_grayscale(path: Path) -> bool:
     """Infrared night pictures carry no colour: all channels nearly equal."""
     with Image.open(path) as picture:
         if picture.mode in {"L", "LA", "I", "I;16", "1"}:
             return True
-        pixels = np.asarray(picture.convert("RGB").reduce(4), dtype=np.int16)
-    spread = pixels.max(axis=2) - pixels.min(axis=2)
-    return float(spread.mean()) <= tolerance
+        return lacks_colour(np.asarray(picture.convert("RGB")))
+
+
+def lacks_colour(pixels: np.ndarray, tolerance: float = 4.0) -> bool:
+    """True when every pixel's channels are within `tolerance` of each other."""
+    sample = pixels[::4, ::4].astype(np.int16)
+    return float((sample.max(axis=2) - sample.min(axis=2)).mean()) <= tolerance
 
 
 def identities(crops: Sequence[Crop]) -> tuple[str, ...]:

@@ -22,6 +22,13 @@ models = [
 video = [
     "opencv-python>=4.10",
 ]
+# Tracking cows in unlabelled farm video with a stock YOLO model.
+tracking = [
+    "opencv-python>=4.10",
+    "ultralytics>=8.4.80",
+    # The trackers' assignment solver, which Ultralytics installs only on first use.
+    "lap>=0.5.12",
+]
 
 [dependency-groups]
 dev = [

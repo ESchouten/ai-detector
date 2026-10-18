@@ -6,7 +6,7 @@ A standalone package for choosing and training a network that recognises individ
 
 ```sh
 cd reid
-uv sync --extra models --extra video
+uv sync --extra models --extra video --extra tracking
 ```
 
 PyPI's PyTorch uses the Apple GPU (MPS) on a Mac and CUDA on an NVIDIA computer; the benchmark picks CUDA, then MPS, then the processor, and warns when it falls back to the processor. `--device` overrides it.
@@ -42,6 +42,15 @@ uv run reid crops-from-video video3.mp4 video3_labels/ --session 2023-08-25 \
 ```
 
 It keeps every 30th frame, skips boxes cut by the picture's edge or smaller than `--min-size`, and writes `<video>-preview.jpg` with the boxes drawn so you can check they line up with the frames (`--frame-offset` shifts them).
+
+Unlabelled farm video becomes tracks with a stock YOLO26 segmentation model and ByteTrack (install the `tracking` extra). Each track is its own provisional identity until a person names it:
+
+```sh
+uv run reid tracks-from-video barn-2026-10-18.mp4 --session 2026-10-18 \
+    --out ~/reid-cache/data/farm --manifest farm-tracks.csv --append --device mps
+```
+
+It keeps crops that are large (`--min-size`), clear of the picture's edge and at most 30% hidden behind other cows (`--max-covered`), and grays out everything outside the cow's mask so neighbours don't leak into her embedding (`--no-mask` keeps them). Night is judged on the whole frame. On the 11-second Cow Catcher clip it kept 4 clean tracks of the 10 cows in view; the others stood behind neighbours or at the edge.
 
 Datasets and results stay out of git.
 

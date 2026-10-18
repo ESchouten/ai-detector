@@ -19,6 +19,10 @@ from aidetector.configuration import Config, DetectorConfig, source_kind
 
 logger = logging.getLogger(__name__)
 _URL = re.compile(r"(?:https?|rtsps?|tcp|udp)://[^\s\"'<>]+", re.IGNORECASE)
+# Header values this short are settings such as "2" or "gzip", and replacing them would
+# garble every log line; a header named like a credential is redacted whatever its length.
+_SHORT_HEADER = 8
+_CREDENTIAL_HEADER = re.compile(r"auth|cookie|key|token|secret|password", re.IGNORECASE)
 _FORMAT = "%(asctime)s %(levelname)s [%(threadName)s] %(name)s: %(message)s"
 
 
@@ -54,7 +58,8 @@ def _secrets(config: Config) -> tuple[str, ...]:
         headers.append(config.health.headers or {})
     for fields in headers:
         for name, value in fields.items():
-            values.add(value)
+            if len(value) >= _SHORT_HEADER or _CREDENTIAL_HEADER.search(name):
+                values.add(value)
             if name.lower() == "authorization":
                 values.add(value.partition(" ")[2])
     return tuple(sorted(filter(None, values), key=len, reverse=True))

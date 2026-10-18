@@ -174,3 +174,16 @@ def test_unwritable_log_directory_keeps_console_diagnostics(
     output = capsys.readouterr().err
     assert "Could not open diagnostic log" in output
     assert "Monitoring can still start" in output
+
+
+def test_short_ordinary_header_values_stay_readable_in_the_log(
+    tmp_path, configuration, capsys
+):
+    health = configuration.health.model_copy(
+        update={"headers": {"X-Api-Version": "2", "X-Token": "t1"}}
+    )
+    configuration = configuration.model_copy(update={"health": health})
+    with diagnostic_logging(configuration, tmp_path, "INFO"):
+        logging.getLogger("aidetector.test").info("Read 2026 frames with t1")
+    saved = (tmp_path / "logs/detector.log").read_text()
+    assert "Read 2026 frames with [redacted]" in saved

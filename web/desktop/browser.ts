@@ -27,9 +27,10 @@ export async function reportFailure(message: string): Promise<void> {
 		[
 			'-NoProfile',
 			'-Command',
-			`Add-Type -AssemblyName PresentationFramework; [System.Windows.MessageBox]::Show('${summary.replaceAll("'", "''")}', 'AI Detector')`
+			// The text travels in the environment: PowerShell also ends a quoted string at ’ and ‘.
+			"Add-Type -AssemblyName PresentationFramework; [System.Windows.MessageBox]::Show($env:AIDETECTOR_FAILURE, 'AI Detector')"
 		],
-		{ stdio: 'ignore', windowsHide: true }
+		{ env: { ...process.env, AIDETECTOR_FAILURE: summary }, stdio: 'ignore', windowsHide: true }
 	);
 	await new Promise<void>((resolve) => {
 		dialog.once('exit', () => resolve());

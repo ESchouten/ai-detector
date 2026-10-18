@@ -139,7 +139,7 @@ class TorchEmbedder:
     def embed(self, paths: Sequence[Path]) -> NDArray[np.float32]:
         import torch
 
-        rows = []
+        chunks = []
         with torch.inference_mode():
             for start in range(0, len(paths), self.batch_size):
                 batch = np.stack(
@@ -149,16 +149,15 @@ class TorchEmbedder:
                     ]
                 )
                 output = self.network(torch.from_numpy(batch).to(self.device))
-                features = _features(output).float()
-                rows.append(
-                    torch.nn.functional.normalize(features, dim=1).cpu().numpy()
-                )
-        if not rows:
+                rows = features(output).float()
+                chunks.append(torch.nn.functional.normalize(rows, dim=1).cpu().numpy())
+        if not chunks:
             return np.empty((0, 0), dtype=np.float32)
-        return np.concatenate(rows).astype(np.float32, copy=False)
+        return np.concatenate(chunks).astype(np.float32, copy=False)
 
 
-def _features(output: Any) -> torch.Tensor:
+def features(output: Any) -> torch.Tensor:
+    """The embedding rows inside whatever a network returns."""
     import torch
 
     if isinstance(output, torch.Tensor):
@@ -168,7 +167,7 @@ def _features(output: Any) -> torch.Tensor:
         if isinstance(value, torch.Tensor):
             return value.flatten(1) if value.ndim <= 2 else value[:, 0]
     if isinstance(output, (tuple, list)) and output:
-        return _features(output[0])
+        return features(output[0])
     raise TypeError(f"Cannot find embeddings in a {type(output).__name__}")
 
 
@@ -221,6 +220,11 @@ _LOADERS: dict[str, Callable[[str, Path | None, dict[str, Any]], torch.nn.Module
 }
 
 
+def load_network(chosen: Preset, checkpoint: Path | None = None) -> torch.nn.Module:
+    """The preset's network with its published weights, or with `checkpoint`'s."""
+    return _LOADERS[chosen.loader](chosen.model, checkpoint, chosen.options)
+
+
 def build(
     spec: str,
     *,
@@ -230,7 +234,7 @@ def build(
     device: str | None = None,
 ) -> TorchEmbedder:
     chosen = preset(spec)
-    network = _LOADERS[chosen.loader](chosen.model, checkpoint, chosen.options)
+    network = load_network(chosen, checkpoint)
     name = (
         spec
         + ("+gray" if grayscale else "")

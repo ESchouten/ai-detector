@@ -78,6 +78,17 @@ The table reports, per model and level (crop or track):
 - **Right when named, strangers named**: at the carried threshold.
 - **Day, night**: coverage of day and night queries separately, when the manifest says which is which.
 
+## Fine-tuning
+
+```sh
+uv run reid train ~/reid-cache/manifests/multicam.csv --model megadescriptor-b-224 \
+    --until 2023Aug19 --epochs 10 --out ~/reid-cache/models/md-b-multicam.safetensors
+uv run reid benchmark ~/reid-cache/manifests/eth-tracks.csv \
+    --model megadescriptor-b-224 --checkpoint ~/reid-cache/models/md-b-multicam.safetensors
+```
+
+Training uses sub-centre ArcFace on P×K batches (16 animals × 4 crops by default) with random crops and brightness changes but no mirroring, since a mirrored cow has a coat that doesn't exist. `--until` keeps later sessions out of training so they stay fair for testing. Only the backbone is saved; a JSON file beside it records the settings and the loss per epoch. Any timm preset can be trained; MiewID can't yet, because it loads through transformers.
+
 ## Caching
 
 - Model weights download once into the Hugging Face and timm caches.

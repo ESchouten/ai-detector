@@ -262,12 +262,68 @@ def _add_tracking(commands: argparse._SubParsersAction) -> None:
     tracks.set_defaults(run=_tracks)
 
 
+def _train(arguments: argparse.Namespace) -> None:
+    from reid.training import TrainOptions, train
+
+    crops = read_manifest(arguments.manifest)
+    if arguments.until:
+        if any(not crop.session for crop in crops):
+            raise ValueError("--until needs a session on every crop")
+        crops = tuple(crop for crop in crops if crop.session < arguments.until)
+    crops = subsample(crops, arguments.max_per_identity, arguments.seed)
+    options = TrainOptions(
+        epochs=arguments.epochs,
+        identities_per_batch=arguments.identities_per_batch,
+        crops_per_identity=arguments.crops_per_identity,
+        learning_rate=arguments.learning_rate,
+        grayscale=arguments.grayscale,
+        seed=arguments.seed,
+    )
+    print(
+        f"Training {arguments.model} on {len(crops)} crops of "
+        f"{len({crop.identity for crop in crops})} animals",
+        file=sys.stderr,
+    )
+    path = train(
+        crops,
+        arguments.model,
+        arguments.out,
+        options,
+        checkpoint=arguments.checkpoint,
+        device=arguments.device,
+    )
+    print(
+        f"Saved {path}; benchmark it with --model {arguments.model} --checkpoint {path}"
+    )
+
+
+def _add_training(commands: argparse._SubParsersAction) -> None:
+    training = commands.add_parser("train", help="fine-tune a timm model on cows")
+    training.add_argument("manifest", type=Path)
+    training.add_argument("--model", required=True)
+    training.add_argument("--out", type=Path, required=True, help="a .safetensors file")
+    training.add_argument("--checkpoint", type=Path, help="start from these weights")
+    training.add_argument(
+        "--until", help="train only on sessions before this one, to test on the rest"
+    )
+    training.add_argument("--epochs", type=int, default=10)
+    training.add_argument("--identities-per-batch", type=int, default=16)
+    training.add_argument("--crops-per-identity", type=int, default=4)
+    training.add_argument("--learning-rate", type=float, default=3e-5)
+    training.add_argument("--max-per-identity", type=int)
+    training.add_argument("--grayscale", action="store_true")
+    training.add_argument("--seed", type=int, default=0)
+    training.add_argument("--device", help="mps, cuda or cpu")
+    training.set_defaults(run=_train)
+
+
 def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(prog="reid", description=__doc__)
     commands = root.add_subparsers(required=True)
     _add_scoring(commands)
     _add_imports(commands)
     _add_tracking(commands)
+    _add_training(commands)
     return root
 
 

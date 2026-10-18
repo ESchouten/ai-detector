@@ -131,6 +131,9 @@ def main(argv: list[str] | None = None) -> int:
 
         # Connection checks and monitoring use the same bundled HTTPS roots.
         os.environ.setdefault("SSL_CERT_FILE", certifi.where())
+    # LiteLLM downloads its price list when imported unless told to use the copy
+    # it ships with; the AI check never prices a call, and farms may be offline.
+    os.environ.setdefault("LITELLM_LOCAL_MODEL_COST_MAP", "true")
     if args.prepare_windows_ml is not None:
         from aidetector.adapters.inference.windows_ml import run_helper
 

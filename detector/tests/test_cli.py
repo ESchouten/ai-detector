@@ -45,6 +45,13 @@ def test_init_is_offline_and_does_not_overwrite_existing_config(tmp_path):
     assert path.read_bytes() == original
 
 
+def test_the_ai_check_uses_the_price_list_litellm_ships_with(tmp_path, monkeypatch):
+    # Otherwise importing LiteLLM downloads it, and waits for it on an offline farm.
+    monkeypatch.delenv("LITELLM_LOCAL_MODEL_COST_MAP")
+    assert main(["--config", str(tmp_path / "config.json"), "--init-config"]) == 0
+    assert os.environ["LITELLM_LOCAL_MODEL_COST_MAP"] == "true"
+
+
 def test_invalid_and_missing_config_have_actionable_exit_status(tmp_path):
     assert run_cli(tmp_path).returncode == 2
     path = tmp_path / "config.json"

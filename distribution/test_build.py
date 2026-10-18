@@ -3,8 +3,10 @@
 import argparse
 import json
 import os
+import re
 import subprocess
 import tempfile
+import tomllib
 import unittest
 import xml.etree.ElementTree as ET
 from contextlib import chdir
@@ -202,3 +204,12 @@ class BuildConfigurationTest(unittest.TestCase):
         tools = json.loads((build.ROOT / "distribution/toolchain.json").read_text())
         package = json.loads((build.ROOT / "web/package.json").read_text())
         self.assertEqual(package["devDependencies"]["@types/bun"], tools["bun"])
+
+    def test_the_container_uses_the_pinned_uv_and_node(self):
+        dockerfile = (build.ROOT / "Dockerfile").read_text()
+        project = tomllib.loads((build.ROOT / "detector/pyproject.toml").read_text())
+        uv = re.search(r"ghcr\.io/astral-sh/uv:([\d.]+)", dockerfile)
+        self.assertIsNotNone(uv)
+        self.assertEqual(f"=={uv[1]}", project["tool"]["uv"]["required-version"])
+        tools = json.loads((build.ROOT / "distribution/toolchain.json").read_text())
+        self.assertRegex(dockerfile, rf"FROM node:{tools['node']}-")

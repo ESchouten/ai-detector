@@ -2,7 +2,7 @@ name: Web and setup tests
 
 on:
   pull_request:
-    paths: &paths ['web/**', 'config/**', 'distribution/toolchain.json', 'example/compose*.yml', '.github/**', '.gitattributes']
+    paths: &paths ['web/**', 'config/**', 'distribution/toolchain.json', 'example/compose*.yml', '.github/workflows/web-tests.yml', '.github/actions/setup-web/**', '.gitattributes']
   push:
     branches: ['main']
     paths: *paths

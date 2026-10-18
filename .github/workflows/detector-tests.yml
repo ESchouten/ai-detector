@@ -7,7 +7,8 @@ on:
       - "config/**"
       - "example/config.json"
       - "ruff.toml"
-      - ".github/**"
+      - ".github/workflows/detector-tests.yml"
+      - ".github/actions/setup-detector/**"
   push:
     branches:
       - "main"

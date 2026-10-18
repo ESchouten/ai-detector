@@ -715,6 +715,18 @@ def test_cuda_onnx_preloads_runtime_libraries(
         assert calls == [{"directory": ""}]
 
 
+def test_cuda_onnx_runs_on_the_onnx_runtime_of_older_nvidia_drivers(
+    monkeypatch, cpu_provider_only
+):
+    # nvidia-cuda12 keeps ONNX Runtime 1.20, which can neither preload nor list devices.
+    monkeypatch.delattr(ort, "preload_dlls", raising=False)
+    monkeypatch.delattr(ort, "get_ep_devices", raising=False)
+    original_session = ort.InferenceSession
+    models = (ModelRequirements("model.onnx", image_size=640, batch_size=1),)
+    with inference_runtime(OnnxConfig(), models, "cuda"):
+        assert ort.InferenceSession is not original_session
+
+
 def test_signed_onnx_url_still_checks_the_configured_provider(
     monkeypatch, cpu_provider_only
 ):

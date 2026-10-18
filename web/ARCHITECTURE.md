@@ -87,7 +87,7 @@ Services take their dependencies as constructor arguments and are tested with No
 
 One consumer per bot token: `telegram-service.ts` polls for reviews while the server runs, and pairing reserves the bot for its five-minute session. `telegram-inbox.ts` remembers how far each bot was read only while the server runs; Telegram keeps that position itself and delivers again only what was never confirmed. After saving a review, `telegram-reviews.ts` redraws the buttons of the pressed alert with the choice coloured; their format is the one the detector sends in `adapters/exporters/telegram.py`. Neither holds the settings queue.
 
-**Access.** `authorizeRequest` runs before every dynamic route, remote command and media request. The dashboard on this computer is trusted when the peer and the URL host are both loopback and the request is not cross-site; that decision is recorded in `locals.deviceId` and asked for with `isLocalDashboard`. Other browsers pair with a one-use code and receive a revocable cookie; only its hash is stored. Reading the paired devices looks at no other setting and does not wait for the settings queue, so access and recovery keep working with broken settings or a slow detector.
+**Access.** `authorizeRequest` runs before every dynamic route, remote command and media request. The dashboard on this computer is trusted when the peer and the URL host are both loopback, the request is not cross-site and it carries no proxy headers such as `X-Forwarded-For`; that decision is recorded in `locals.deviceId` and asked for with `isLocalDashboard`. Other browsers pair with a one-use code and receive a revocable cookie; only its hash is stored. Reading the paired devices looks at no other setting and does not wait for the settings queue, so access and recovery keep working with broken settings or a slow detector.
 
 **Import** copies into a staging folder outside the settings queue, then publishes folders and settings in one queued step that refuses an existing setup. A manifest lets a restart finish an interrupted import; a damaged manifest is discarded with its staged copies.
 
@@ -145,7 +145,7 @@ What each command checks is under [quality commands](#quality-commands) and [whe
 | `AIDETECTOR_PRESETS_URL`       | Where newer presets are published, as a folder listing in GitHub's format. Empty switches following them off.        |
 | `FFMPEG_PATH`                  | FFmpeg for camera checks and live pictures.                                                                          |
 | `HOST`, `PORT`, `OPEN_BROWSER` | Listening address and port, and whether a browser opens. `HOST=127.0.0.1` also turns network discovery off.          |
-| `ORIGIN`                       | The public address behind an HTTPS reverse proxy, such as `https://detector.example.com`.                            |
+| `ORIGIN`                       | The public address behind an HTTPS reverse proxy, such as `https://detector.example.com`. Set it behind any proxy.   |
 
 Missing settings files start an empty setup. A separately started detector needs `--live-preview` and the same data folder for detection boxes to appear.
 

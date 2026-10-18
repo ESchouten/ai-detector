@@ -76,9 +76,13 @@ export class DeviceAccess {
 	}
 }
 
+/** A reverse proxy on this computer forwards from loopback; what it forwards is not local. */
+const PROXY_HEADERS = ['forwarded', 'x-forwarded-for', 'x-forwarded-host', 'x-real-ip', 'via'];
+
 export function localDashboard(peer: string, url: URL, request: Request): boolean {
 	return (
 		['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(peer) &&
+		!PROXY_HEADERS.some((header) => request.headers.has(header)) &&
 		['localhost', '127.0.0.1', '[::1]'].includes(url.hostname) &&
 		!['cross-site', 'same-site'].includes(request.headers.get('sec-fetch-site') ?? '') &&
 		(!request.headers.has('origin') || request.headers.get('origin') === url.origin)

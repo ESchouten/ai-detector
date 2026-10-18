@@ -6,7 +6,7 @@ const checkInput = v.object({ source: v.pipe(v.string(), v.trim(), v.minLength(1
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const input = v.safeParse(checkInput, await request.json());
+		const input = v.safeParse(checkInput, await request.json().catch(() => null));
 		if (!input.success)
 			return json(
 				{ message: 'Choose a camera stream before checking its picture.' },

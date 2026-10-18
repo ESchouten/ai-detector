@@ -28,11 +28,6 @@ __pycache__/
 /videos/
 /detector/videos/
 
-# Replay output and local identity catalogs
-/detector/passage-runs/
-/detector/identities/
-/web/identities
-
 # Downloaded/exported detector weights
 /detector/*.onnx
 /detector/*.pt
@@ -42,9 +37,3 @@ __pycache__/
 # Local research reports and generated evidence
 /reports/
 /detector/reports/
-
-# Local cow identity implementation and supporting material
-/detector/docs/
-/detector/examples/
-/detector/fixtures/
-/docs/*

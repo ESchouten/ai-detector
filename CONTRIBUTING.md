@@ -80,6 +80,7 @@ To build a complete desktop preview with the same stages used in CI, follow the 
 | `web/` | Browser application, server services, desktop web runtime and their checks |
 | `config/` | Generated shared schemas, bundled presets and configuration guidance |
 | `distribution/` | Build stages, native launchers, installers, toolchain pins and packaging tests |
+| `reid/` | Cow re-identification research: embedding benchmarks, independent of the detector until a model is chosen |
 | `ruff.toml` | Shared Python formatting, import and complexity rules |
 | `.github/` | CI orchestration using those same build stages and quality tools |
 | `.vscode/` | Editor tasks that run the existing commands |

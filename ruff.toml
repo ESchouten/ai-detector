@@ -1,6 +1,6 @@
 # Shared by detector source, tests and distribution scripts.
 target-version = "py312"
-src = ["detector", "detector/src", "distribution"]
+src = ["detector", "detector/src", "distribution", "reid/src", "reid/tests"]
 
 [lint]
 select = ["E4", "E7", "E9", "F", "I", "UP", "B", "C901", "PLR0912", "PLR0915", "TID252"]

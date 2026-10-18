@@ -17,7 +17,7 @@ const inputSchema = v.object({ checkId: v.optional(v.string()) });
 
 export const POST: RequestHandler = async ({ request, params }) => {
 	try {
-		const input = v.safeParse(inputSchema, await request.json());
+		const input = v.safeParse(inputSchema, await request.json().catch(() => null));
 		if (!input.success)
 			return json({ message: 'The recording check request was not valid.' }, { status: 400 });
 		const { camera, categories, signature } = cameraArchiveSelection(

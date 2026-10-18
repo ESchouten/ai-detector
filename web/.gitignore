@@ -30,3 +30,17 @@ vite.config.ts.timestamp-*
 
 # Local quality evidence
 .reports/
+
+# Settings, recordings and logs that `pnpm dev` keeps in this folder
+/.camera-checks/
+/cache/
+/history/
+/live/
+/logs/
+/models/
+/presets/
+/runtimes/
+/app.json.*
+/config.json.*
+/desktop-instance.json
+/desktop-shutdown.json

@@ -10,6 +10,16 @@ bun.lockb
 
 # Local settings and recordings (never format user data)
 /config.json
+/config.json.*
 /app.json
+/app.json.*
+/.camera-checks/
 /detections/
+/history/
+/live/
+/logs/
 /models/
+/presets/
+/runtimes/
+/desktop-instance.json
+/desktop-shutdown.json

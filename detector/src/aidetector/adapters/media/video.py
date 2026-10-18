@@ -1,6 +1,7 @@
 """Prepare event frames and encode bounded MP4 attachments through FFmpeg."""
 
 import subprocess
+import sys
 import tempfile
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
@@ -106,6 +107,9 @@ class _RawVideo:
                     stderr=subprocess.PIPE,
                     timeout=120,
                     check=False,
+                    creationflags=subprocess.CREATE_NO_WINDOW
+                    if sys.platform == "win32"
+                    else 0,
                 )
         except (OSError, subprocess.TimeoutExpired) as error:
             raise MediaError("FFmpeg could not finish encoding the event") from error

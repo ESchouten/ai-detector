@@ -149,6 +149,12 @@ test('local access requires both the actual loopback peer and a loopback host; f
 		false
 	);
 	assert.equal(localDashboard('', url, new Request(url)), false);
+	for (const header of ['Forwarded', 'X-Forwarded-For', 'X-Forwarded-Host', 'X-Real-IP', 'Via'])
+		assert.equal(
+			localDashboard('127.0.0.1', url, new Request(url, { headers: { [header]: '203.0.113.7' } })),
+			false,
+			`a proxy on this computer that sends ${header} is not the local dashboard`
+		);
 	assert.equal(
 		localDashboard('127.0.0.1', new URL('http://camera.example.test'), new Request(url)),
 		false

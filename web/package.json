@@ -11,7 +11,7 @@
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync",
 		"check": "svelte-kit sync && wuchale && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"check:watch": "svelte-kit sync && wuchale && svelte-check --tsconfig ./tsconfig.json --watch",
 		"schema:generate": "node tools/generate-schema-types.mjs",
 		"schema:check": "node tools/generate-schema-types.mjs --check",
 		"i18n": "wuchale --clean",

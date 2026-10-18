@@ -1,0 +1,62 @@
+name: Container image
+
+on:
+  pull_request:
+    # What the image build reads beyond the sources the other checks already test.
+    paths: &paths
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'web/package.json'
+      - 'web/pnpm-lock.yaml'
+      - 'web/pnpm-workspace.yaml'
+      - 'web/.npmrc'
+      - 'web/patches/**'
+      - 'web/tests/container-smoke.mjs'
+      - 'detector/pyproject.toml'
+      - '.github/workflows/container-tests.yml'
+      - '.github/actions/setup-container/**'
+  push:
+    branches: ['main']
+    paths: *paths
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # Read the layer cache that release builds leave in the registry.
+  packages: read
+
+concurrency:
+  group: container-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  image:
+    name: Image / ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    env:
+      IMAGE: ghcr.io/eschouten/ai-detector
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            arch: amd64
+            runner: ubuntu-24.04
+          - platform: linux/arm64
+            arch: arm64
+            runner: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-container
+      - name: Build without publishing
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          tags: ai-detector:test
+          load: true
+          cache-from: type=registry,ref=${{ env.IMAGE }}:cache-${{ matrix.arch }}
+      - name: Check the container serves setup, has working FFmpeg and can run its detector
+        timeout-minutes: 5
+        run: docker run --rm --entrypoint node --volume "$GITHUB_WORKSPACE/web/tests/container-smoke.mjs:/smoke.mjs:ro" ai-detector:test /smoke.mjs

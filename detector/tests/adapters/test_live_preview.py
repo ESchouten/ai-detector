@@ -25,6 +25,9 @@ def read_record(file):
         return json.loads(file.read_text())
     except FileNotFoundError:
         return None
+    except PermissionError:
+        # Windows refuses to open a file while the publisher replaces it.
+        return None
 
 
 def lease(directory, source, value=None):

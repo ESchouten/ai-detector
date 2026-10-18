@@ -25,7 +25,8 @@ def wait_for(
     while time.monotonic() < deadline:
         if predicate():
             return
-        if process.poll() is not None:
+        # Re-check after an exit: the process may have met the condition just before exiting.
+        if process.poll() is not None and not predicate():
             raise AssertionError(
                 f"Process exited with status {process.returncode}:\n{log.read_text(errors='replace')}"
             )

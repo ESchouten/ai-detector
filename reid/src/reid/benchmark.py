@@ -89,8 +89,34 @@ class _Scored:
     levels: dict[str, _Level]
 
 
+@dataclass(frozen=True)
+class _Fold:
+    scored: _Scored
+    oracle: dict[str, float | None]
+    self_set: dict[str, float | None]
+
+
+@dataclass(frozen=True)
+class Scores:
+    """Every fold's decisions and thresholds on one farm.
+
+    Kept apart from the report so a threshold from other farms can be tried on
+    the same decisions without matching everything again.
+    """
+
+    crops: int
+    identities: int
+    sessions: int
+    time_disjoint: bool
+    folds: list[_Fold]
+
+
 def _score(
-    crops: Sequence[Crop], vectors: NDArray[np.float32], split: Split, k: int
+    crops: Sequence[Crop],
+    vectors: NDArray[np.float32],
+    split: Split,
+    k: int,
+    ranking: bool = True,
 ) -> _Scored:
     gallery = [crops[i].identity for i in split.gallery]
     queries = [crops[i] for i in split.queries]
@@ -118,26 +144,50 @@ def _score(
         )
     return _Scored(
         split,
-        rank1(names, scores, truth),
-        mean_average_precision(similarity, gallery, truth),
+        rank1(names, scores, truth) if ranking else None,
+        mean_average_precision(similarity, gallery, truth) if ranking else None,
         levels,
     )
 
 
-def _naming(decisions: Decisions, threshold: float | None) -> dict[str, Any] | None:
-    return None if threshold is None else decisions.at(threshold).as_dict()
+def _self_set(
+    crops: Sequence[Crop],
+    vectors: NDArray[np.float32],
+    split: Split,
+    options: Options,
+) -> dict[str, float | None]:
+    """The threshold a farm can set from its own enrolled photos, without queries.
 
-
-def evaluate(
-    crops: Sequence[Crop], vectors: NDArray[np.float32], options: Options
-) -> dict[str, Any]:
-    """Report each fold, and a threshold carried over from the other folds.
-
-    The oracle threshold is chosen on the fold it is scored on, so its coverage is
-    a ceiling. The carried-over threshold is the median of the other folds'
-    oracle thresholds, which is closer to what a fixed setting does on a new day
-    with new strangers.
+    The gallery is split again by time with some of its animals withheld, as the
+    benchmark does with the whole manifest, and the threshold is chosen there.
+    On a farm the gallery is what the farmer named, so no label beyond it is used.
     """
+    enrolled = [crops[i] for i in split.gallery]
+    try:
+        inner = open_set_splits(
+            enrolled,
+            options.strangers,
+            options.folds,
+            options.seed + 1,
+            options.gallery_fraction,
+        )
+    except ValueError:
+        return {}
+    inner_vectors = vectors[list(split.gallery)]
+    found: dict[str, list[float]] = {}
+    for inner_split in inner:
+        scored = _score(enrolled, inner_vectors, inner_split, options.k, False)
+        for level, scored_level in scored.levels.items():
+            threshold = scored_level.decisions.threshold_for(options.precision)
+            if threshold is not None:
+                found.setdefault(level, []).append(threshold)
+    return {level: median(values) for level, values in found.items()}
+
+
+def score(
+    crops: Sequence[Crop], vectors: NDArray[np.float32], options: Options
+) -> Scores:
+    """Match every fold's queries and find its thresholds."""
     splits = open_set_splits(
         crops,
         options.strangers,
@@ -146,35 +196,98 @@ def evaluate(
         options.gallery_fraction,
         options.gap_sessions,
     )
-    scored = [_score(crops, vectors, split, options.k) for split in splits]
-    oracle = [
-        {
-            level: scored_level.decisions.threshold_for(options.precision)
-            for level, scored_level in result.levels.items()
-        }
-        for result in scored
-    ]
     folds = []
-    for index, result in enumerate(scored):
+    for split in splits:
+        scored = _score(crops, vectors, split, options.k)
+        folds.append(
+            _Fold(
+                scored,
+                {
+                    level: scored_level.decisions.threshold_for(options.precision)
+                    for level, scored_level in scored.levels.items()
+                },
+                _self_set(crops, vectors, split, options),
+            )
+        )
+    return Scores(
+        len(crops),
+        len({crop.identity for crop in crops}),
+        len({crop.session for crop in crops} - {""}),
+        splits[0].time_disjoint,
+        folds,
+    )
+
+
+def own_thresholds(scores: Scores) -> dict[str, float]:
+    """This farm's threshold per level: the median of its folds' oracle thresholds."""
+    found: dict[str, list[float]] = {}
+    for fold in scores.folds:
+        for level, threshold in fold.oracle.items():
+            if threshold is not None:
+                found.setdefault(level, []).append(threshold)
+    return {level: median(values) for level, values in found.items()}
+
+
+def other_farms(thresholds: Sequence[dict[str, float]]) -> dict[str, float]:
+    """One setting for a farm nobody measured: the median of the others' thresholds."""
+    levels = {level for farm in thresholds for level in farm}
+    return {
+        level: median(farm[level] for farm in thresholds if level in farm)
+        for level in levels
+    }
+
+
+def _naming(decisions: Decisions, threshold: float | None) -> dict[str, Any] | None:
+    return None if threshold is None else decisions.at(threshold).as_dict()
+
+
+def report(
+    scores: Scores,
+    options: Options,
+    from_other_farms: dict[str, float] | None = None,
+) -> dict[str, Any]:
+    """Each fold's naming at four thresholds, from most to least informed.
+
+    - oracle: chosen on the fold it is scored on; its coverage is a ceiling.
+    - carried: the median of the other folds' oracle thresholds, as a fixed
+      setting does on the same farm on a new day with new strangers.
+    - self_set: chosen on the gallery alone (see `_self_set`), as a farm can do
+      after naming its cows.
+    - other_farms: chosen on other farms, as a shipped default does.
+    """
+    folds = []
+    for index, fold in enumerate(scores.folds):
+        result = fold.scored
         levels = {}
         for level, scored_level in result.levels.items():
             decisions, night = scored_level.decisions, scored_level.night
             others = [
                 threshold
-                for other, thresholds in enumerate(oracle)
-                if other != index and (threshold := thresholds.get(level)) is not None
+                for position, other in enumerate(scores.folds)
+                if position != index
+                and (threshold := other.oracle.get(level)) is not None
             ]
             carried = median(others) if others else None
-            report: dict[str, Any] = {
+            self_set = fold.self_set.get(level)
+            entry: dict[str, Any] = {
                 "top3": scored_level.top3,
-                "oracle": _naming(decisions, oracle[index][level]),
+                "oracle": _naming(decisions, fold.oracle[level]),
                 "carried": _naming(decisions, carried),
+                "self_set": _naming(decisions, self_set),
+                "other_farms": _naming(decisions, (from_other_farms or {}).get(level)),
             }
-            applied = carried if carried is not None else oracle[index][level]
+            applied = next(
+                (
+                    threshold
+                    for threshold in (self_set, carried, fold.oracle[level])
+                    if threshold is not None
+                ),
+                None,
+            )
             if night is not None:
-                report["day"] = _naming(decisions.subset(~night), applied)
-                report["night"] = _naming(decisions.subset(night), applied)
-            levels[level] = report
+                entry["day"] = _naming(decisions.subset(~night), applied)
+                entry["night"] = _naming(decisions.subset(night), applied)
+            levels[level] = entry
         folds.append(
             {
                 "name": result.split.name,
@@ -187,14 +300,25 @@ def evaluate(
             }
         )
     return {
-        "crops": len(crops),
-        "identities": len({crop.identity for crop in crops}),
-        "sessions": len({crop.session for crop in crops} - {""}),
-        "time_disjoint": splits[0].time_disjoint,
+        "crops": scores.crops,
+        "identities": scores.identities,
+        "sessions": scores.sessions,
+        "time_disjoint": scores.time_disjoint,
         "options": asdict(options),
+        "thresholds": {
+            "own": own_thresholds(scores),
+            "other_farms": from_other_farms,
+        },
         "folds": folds,
         "summary": summarise(folds),
     }
+
+
+def evaluate(
+    crops: Sequence[Crop], vectors: NDArray[np.float32], options: Options
+) -> dict[str, Any]:
+    """Score one farm on its own; see `report` for the thresholds."""
+    return report(score(crops, vectors, options), options)
 
 
 def _mean(values: list[float | None]) -> float | None:
@@ -212,7 +336,7 @@ def summarise(folds: list[dict[str, Any]]) -> dict[str, Any]:
         entry: dict[str, float | None] = {
             "top3": _mean([report["top3"] for report in reports])
         }
-        for kind in ("oracle", "carried", "day", "night"):
+        for kind in ("oracle", "carried", "self_set", "other_farms", "day", "night"):
             namings = [report.get(kind) for report in reports]
             for field in ("coverage", "precision", "strangers_named"):
                 entry[f"{kind}_{field}"] = _mean(

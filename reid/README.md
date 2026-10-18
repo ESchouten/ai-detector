@@ -1,6 +1,6 @@
 # Cow re-identification research
 
-A standalone package for choosing and training a network that recognises individual cows, before any of it goes into the detector. It imports nothing from `detector/` and the detector imports nothing from it. The plan and the reasons behind it are in the project's `cow-reid/reid-plan.md`.
+A standalone package for choosing and training a network that recognises individual cows on any user's farm, before any of it goes into the detector. It imports nothing from `detector/` and the detector imports nothing from it. The plan and the reasons behind it are in the project's `cow-reid/reid-plan.md`.
 
 ## Setup
 
@@ -56,38 +56,46 @@ Datasets and results stay out of git.
 
 ## Benchmark
 
+The model has to work on farms it has never seen, so give the benchmark one manifest per farm and keep sets from one farm together when holding a farm out (the Bristol sets OpenCows2020, Cows2021 and MultiCamCows2024 probably come from the same university farm).
+
 ```sh
-uv run reid benchmark ~/datasets/eth-barn/manifest.csv \
-    --model megadescriptor-l-384 --model miewid-msv3 --model dinov2-b --out results
+uv run reid benchmark ~/reid-cache/manifests/{eth-tracks,multicam,mmcows,opencows2020}.csv \
+    --model megadescriptor-b-224 --model miewid-msv3 --model dinov2-b --half --out results
 uv run reid report results/*.json
 ```
 
-What happens:
+What happens on each farm:
 
 1. **Time split.** The earliest sessions holding half of the crops become the gallery (the enrolled photos), later sessions the queries. `--gap-sessions 1` leaves a session out in between.
 2. **Strangers.** In each of `--folds` folds, a different quarter (`--strangers`) of the animals loses its gallery photos. A correct answer for them is no name.
 3. **Matching.** A query scores each enrolled animal by the mean similarity to her `--k` most similar gallery photos, and takes the best-scoring animal. With tracks, crop scores are averaged per track first.
-4. **Naming.** A name is shown only above a threshold. The threshold is the lowest one at which names are right `--precision` (99%) of the time.
+4. **Naming.** A name is shown only above a threshold. Each threshold below is the lowest at which names are right `--precision` (99%) of the time on the data it was chosen on; they differ in what that data is.
 
-The table reports, per model and level (crop or track):
+The table reports, per model, farm and level (crop or track):
 
 - **Rank-1, mAP**: closed-set ranking, comparable with papers.
 - **In top 3**: the cow is among the three best suggestions, for when a person confirms one with a tap.
-- **Named, own fold**: share of enrolled queries named correctly, at the threshold chosen on that same fold. A ceiling.
-- **Named, carried**: the same with the median threshold of the other folds, as a fixed setting would behave on a new day with new strangers. This is the number to trust.
-- **Right when named, strangers named**: at the carried threshold.
-- **Day, night**: coverage of day and night queries separately, when the manifest says which is which.
+- The naming columns read `named (right when named)`, in percent. Names given to strangers count as wrong.
+  - **Own fold**: threshold chosen on the queries it is scored on. A ceiling.
+  - **Other days**: the median threshold of the other folds, as a fixed setting behaves on the same farm on a new day with new strangers.
+  - **Self-set**: chosen on the gallery alone, split again by time with some of its cows withheld. This is what an install can do by itself once the farmer has named their cows, so it is the number that matters for users' farms.
+  - **Other farms**: the median of the other manifests' own thresholds, as a default shipped with the model would behave. Only filled in when several manifests are benchmarked together.
+- **Day, night**: coverage of day and night queries separately at the self-set threshold, when the manifest says which is which.
+
+Each run's JSON also keeps every fold's details and the thresholds themselves.
 
 ## Fine-tuning
 
+One backbone is trained on every farm but one, then tested on the farm it never saw:
+
 ```sh
-uv run reid train ~/reid-cache/manifests/multicam.csv --model megadescriptor-b-224 \
-    --until 2023Aug19 --epochs 10 --out ~/reid-cache/models/md-b-multicam.safetensors
+uv run reid train ~/reid-cache/manifests/{multicam,mmcows,opencows2020}.csv \
+    --model megadescriptor-b-224 --epochs 10 --out ~/reid-cache/models/md-b-not-eth.safetensors
 uv run reid benchmark ~/reid-cache/manifests/eth-tracks.csv \
-    --model megadescriptor-b-224 --checkpoint ~/reid-cache/models/md-b-multicam.safetensors
+    --model megadescriptor-b-224 --checkpoint ~/reid-cache/models/md-b-not-eth.safetensors
 ```
 
-Training uses sub-centre ArcFace on P×K batches (16 animals × 4 crops by default) with random crops and brightness changes but no mirroring, since a mirrored cow has a coat that doesn't exist. `--until` keeps later sessions out of training so they stay fair for testing. Only the backbone is saved; a JSON file beside it records the settings and the loss per epoch. Any timm preset can be trained; MiewID can't yet, because it loads through transformers.
+Training uses sub-centre ArcFace on P×K batches (16 animals × 4 crops by default) with random crops and brightness changes but no mirroring, since a mirrored cow has a coat that doesn't exist. With several manifests, cow names are prefixed with the manifest's name and each batch holds cows of one farm only; cows from different barns are told apart by the barn, which teaches the network nothing about cows. With one manifest, `--until` keeps later sessions out of training so they stay fair for testing. Only the backbone is saved; a JSON file beside it records the settings, the farms and the loss per epoch. Any timm preset can be trained; MiewID can't yet, because it loads through transformers.
 
 ## Caching
 

@@ -22,6 +22,25 @@ def test_batches_hold_p_animals_with_k_crops_each(herd):
         assert all(identities.count(name) == 3 for name in set(identities))
 
 
+def test_batches_never_mix_farms_and_keep_small_farms(herd):
+    farms = ["north" if int(crop.identity[3:]) < 5 else "south" for crop in herd]
+
+    epoch = list(
+        batches(
+            herd,
+            TrainOptions(identities_per_batch=4, crops_per_identity=2),
+            np.random.default_rng(0),
+            farms,
+        )
+    )
+
+    assert len(epoch) == 2
+    sizes = sorted(len({herd[i].identity for i in batch}) for batch in epoch)
+    assert sizes == [3, 4]
+    for batch in epoch:
+        assert len({farms[i] for i in batch}) == 1
+
+
 def test_training_saves_a_backbone_the_benchmark_can_load(herd, tmp_path: Path):
     start = tmp_path / "start.pt"
     torch.save(

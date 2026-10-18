@@ -1,7 +1,16 @@
 from pathlib import Path
 
 from conftest import FakeEmbedder
-from reid.benchmark import Options, embeddings, evaluate, subsample
+from reid.benchmark import (
+    Options,
+    embeddings,
+    evaluate,
+    other_farms,
+    own_thresholds,
+    report,
+    score,
+    subsample,
+)
 
 
 def test_a_separable_herd_is_named_and_strangers_are_refused(herd, tmp_path: Path):
@@ -19,6 +28,29 @@ def test_a_separable_herd_is_named_and_strangers_are_refused(herd, tmp_path: Pat
     assert summary["crop"]["carried_strangers_named"] < 0.05
     assert {"track", "crop"} <= set(summary)
     assert summary["crop"]["night_coverage"] is not None
+    assert summary["crop"]["self_set_precision"] >= 0.95
+    assert summary["crop"]["self_set_coverage"] > 0.5
+    assert summary["crop"]["other_farms_coverage"] is None
+
+
+def test_a_threshold_from_other_farms_is_applied_to_every_fold(herd, tmp_path: Path):
+    options = Options()
+    farm = score(herd, embeddings(herd, FakeEmbedder(noise=0.1)), options)
+    noisy = score(herd, embeddings(herd, FakeEmbedder(noise=0.3, seed=1)), options)
+    strict = score(herd, embeddings(herd, FakeEmbedder(noise=0.05, seed=2)), options)
+
+    shared = other_farms([own_thresholds(noisy), own_thresholds(strict)])
+    result = report(farm, options, shared)
+
+    assert set(shared) == {"crop", "track"}
+    assert (
+        shared["crop"]
+        == (own_thresholds(noisy)["crop"] + own_thresholds(strict)["crop"]) / 2
+    )
+    assert result["thresholds"]["other_farms"] == shared
+    for fold in result["folds"]:
+        assert fold["levels"]["crop"]["other_farms"]["threshold"] == shared["crop"]
+    assert result["summary"]["track"]["other_farms_coverage"] is not None
 
 
 def test_embeddings_are_cached_per_model_and_pictures(herd, tmp_path: Path):

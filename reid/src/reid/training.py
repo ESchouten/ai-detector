@@ -40,22 +40,37 @@ class TrainOptions:
 
 
 def batches(
-    crops: Sequence[Crop], options: TrainOptions, rng: np.random.Generator
+    crops: Sequence[Crop],
+    options: TrainOptions,
+    rng: np.random.Generator,
+    farms: Sequence[str] | None = None,
 ) -> Iterator[list[int]]:
     """One epoch of P×K batches: P animals with K crops each, every animal once.
 
-    Animals with a single crop give no positive pair and are left out.
+    With `farms`, a batch holds cows of one farm only: cows from another barn are
+    told apart by the barn, which teaches the network nothing about cows. A farm
+    with fewer than P animals gives one smaller batch. Animals with a single
+    crop give no positive pair and are left out.
     """
     by_identity: dict[str, list[int]] = {}
     for index, crop in enumerate(crops):
         by_identity.setdefault(crop.identity, []).append(index)
-    eligible = [indices for indices in by_identity.values() if len(indices) > 1]
-    order = rng.permutation(len(eligible))
+    by_farm: dict[str, list[list[int]]] = {}
+    for indices in by_identity.values():
+        if len(indices) > 1:
+            farm = farms[indices[0]] if farms is not None else ""
+            by_farm.setdefault(farm, []).append(indices)
     step = options.identities_per_batch
-    for start in range(0, len(order) - step + 1, step):
+    groups: list[list[list[int]]] = []
+    for animals in by_farm.values():
+        order = rng.permutation(len(animals))
+        for start in range(0, len(order), step):
+            chunk = order[start : start + step]
+            if len(chunk) == step or (start == 0 and len(chunk) > 1):
+                groups.append([animals[position] for position in chunk])
+    for group in rng.permutation(len(groups)):
         batch: list[int] = []
-        for position in order[start : start + step]:
-            indices = eligible[position]
+        for indices in groups[group]:
             batch.extend(
                 rng.choice(
                     indices,
@@ -118,8 +133,12 @@ def train(
     *,
     checkpoint: Path | None = None,
     device: str | None = None,
+    farms: Sequence[str] | None = None,
 ) -> Path:
-    """Fine-tune `spec` on the crops' identities; returns the saved backbone."""
+    """Fine-tune `spec` on the crops' identities; returns the saved backbone.
+
+    `farms` names each crop's farm, so batches never mix farms.
+    """
     import torch
     from safetensors.torch import save_file
 
@@ -147,7 +166,7 @@ def train(
     )
     steps = options.epochs * max(
         1,
-        sum(1 for _ in batches(crops, options, np.random.default_rng(0))),
+        sum(1 for _ in batches(crops, options, np.random.default_rng(0), farms)),
     )
     schedule = torch.optim.lr_scheduler.LambdaLR(
         optimiser, lambda step: 0.5 * (1 + math.cos(math.pi * min(step / steps, 1)))
@@ -156,7 +175,7 @@ def train(
     for epoch in range(options.epochs):
         network.train()
         losses = []
-        for batch in batches(crops, options, rng):
+        for batch in batches(crops, options, rng, farms):
             pixels = torch.from_numpy(
                 np.stack(
                     [
@@ -200,6 +219,7 @@ def train(
                 "start": str(checkpoint) if checkpoint else None,
                 "crops": len(crops),
                 "identities": len(names),
+                "farms": sorted(set(farms)) if farms is not None else None,
                 "options": asdict(options),
                 "loss": history,
             },

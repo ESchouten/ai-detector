@@ -1,5 +1,6 @@
 import zlib
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -13,6 +14,7 @@ class FakeEmbedder:
 
     def __init__(self, dimensions: int = 16, noise: float = 0.15, seed: int = 0):
         self.name = "fake"
+        self.device = SimpleNamespace(type="fake")
         self.calls = 0
         self.noise = noise
         self.dimensions = dimensions

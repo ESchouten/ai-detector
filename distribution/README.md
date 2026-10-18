@@ -190,7 +190,7 @@ Python is pinned in [`detector/.python-version`](../detector/.python-version); t
 | [build-launcher](../.github/actions/build-launcher/action.yml) | Compiles the native launcher |
 | [test-distribution](../.github/actions/test-distribution/action.yml) | Packaging and process lifecycle checks against the compiled web application, and the .NET tests on Windows |
 | [package-application](../.github/actions/package-application/action.yml) | Assembles tested binaries, smoke-tests the application, creates installers and update feeds |
-| [setup-container](../.github/actions/setup-container/action.yml) | Buildx, registry login, and disk cleanup when space is short |
+| [setup-container](../.github/actions/setup-container/action.yml) | Buildx and registry login |
 
 To debug a failure, open the first failing step, not the jobs skipped after it; `gh run view RUN_ID --log-failed` prints its log. Failure diagnostics are kept for seven days. Run the matching check locally: `actionlint` for the workflow files, and the [local checks](#local-builds-and-tests) for the rest.
 

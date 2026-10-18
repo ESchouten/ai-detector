@@ -448,8 +448,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-container
-        with:
-          minimum-free-gb: '35'
       - name: Image tags and labels
         id: meta
         uses: docker/metadata-action@v5

@@ -258,7 +258,9 @@ def inference_runtime(
 
         import onnxruntime as ort
 
-        if uses_cuda:
+        # The ONNX Runtime 1.20 of the nvidia-cuda12 runtime cannot preload; it
+        # finds the libraries _cuda_libraries put on the search path.
+        if uses_cuda and hasattr(ort, "preload_dlls"):
             ort.preload_dlls(directory="")
 
         providers = _providers(config, build_type, resources, ort, report_status)
@@ -326,9 +328,16 @@ def _providers(
         if build_type == "windowsml"
         else set()
     )
-    devices = [
-        device for device in ort.get_ep_devices() if device.ep_name in device_providers
-    ]
+    # Only ONNX Runtime 1.22 and later list devices.
+    devices = (
+        [
+            device
+            for device in ort.get_ep_devices()
+            if device.ep_name in device_providers
+        ]
+        if device_providers
+        else []
+    )
     return select_providers(available, devices, config.provider)
 
 

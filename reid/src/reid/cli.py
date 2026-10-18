@@ -70,6 +70,7 @@ def _benchmark(arguments: argparse.Namespace) -> None:
             grayscale=arguments.grayscale,
             batch_size=arguments.batch_size,
             device=arguments.device,
+            half=arguments.half,
         )
         print(
             f"Embedding {len(crops)} crops with {embedder.name} on {embedder.device}…",
@@ -198,6 +199,9 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
     bench.add_argument("--max-per-identity", type=int)
     bench.add_argument("--batch-size", type=int, default=32)
     bench.add_argument("--device", help="cuda, mps or cpu; detected when left out")
+    bench.add_argument(
+        "--half", action="store_true", help="run the network in float16 on the GPU"
+    )
     bench.add_argument("--out", type=Path, default=Path("results"))
     bench.set_defaults(run=_benchmark)
 

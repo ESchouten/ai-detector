@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import os
 from collections.abc import Callable, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol
@@ -111,10 +113,12 @@ class TorchEmbedder:
         grayscale: bool = False,
         batch_size: int = 32,
         device: str | None = None,
+        half: bool = False,
     ):
         import torch
 
         self.name = name
+        self.half = half
         self.size = size
         self.grayscale = grayscale
         self.batch_size = batch_size
@@ -136,19 +140,35 @@ class TorchEmbedder:
         normalised = (pixels - self.mean) / self.std
         return normalised.transpose(2, 0, 1).astype(np.float32, copy=False)
 
+    def _batch(self, pool: ThreadPoolExecutor, paths: Sequence[Path]) -> np.ndarray:
+        return np.stack(list(pool.map(self._pixels, paths)))
+
     def embed(self, paths: Sequence[Path]) -> NDArray[np.float32]:
+        """Decode pictures on all cores while the network runs the previous batch.
+
+        Decoding and resizing on one thread left the GPU waiting most of the time.
+        """
         import torch
 
+        size = self.batch_size
         chunks = []
-        with torch.inference_mode():
-            for start in range(0, len(paths), self.batch_size):
-                batch = np.stack(
-                    [
-                        self._pixels(path)
-                        for path in paths[start : start + self.batch_size]
-                    ]
+        with (
+            ThreadPoolExecutor(os.cpu_count() or 4) as pool,
+            ThreadPoolExecutor(1) as loader,
+            torch.inference_mode(),
+        ):
+            pending = loader.submit(self._batch, pool, paths[:size]) if paths else None
+            for start in range(0, len(paths), size):
+                assert pending is not None
+                batch = pending.result()
+                following = paths[start + size : start + 2 * size]
+                pending = (
+                    loader.submit(self._batch, pool, following) if following else None
                 )
-                output = self.network(torch.from_numpy(batch).to(self.device))
+                with torch.autocast(
+                    self.device.type, dtype=torch.float16, enabled=self.half
+                ):
+                    output = self.network(torch.from_numpy(batch).to(self.device))
                 rows = features(output).float()
                 chunks.append(torch.nn.functional.normalize(rows, dim=1).cpu().numpy())
         if not chunks:
@@ -232,12 +252,14 @@ def build(
     grayscale: bool = False,
     batch_size: int = 32,
     device: str | None = None,
+    half: bool = False,
 ) -> TorchEmbedder:
     chosen = preset(spec)
     network = load_network(chosen, checkpoint)
     name = (
         spec
         + ("+gray" if grayscale else "")
+        + ("+fp16" if half else "")
         + (f"+{checkpoint.name}" if checkpoint else "")
     )
     return TorchEmbedder(
@@ -248,4 +270,5 @@ def build(
         grayscale=grayscale,
         batch_size=batch_size,
         device=device,
+        half=half,
     )

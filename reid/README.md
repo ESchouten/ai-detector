@@ -94,6 +94,7 @@ Training uses sub-centre ArcFace on P×K batches (16 animals × 4 crops by defau
 - Model weights download once into the Hugging Face and timm caches.
 - Each model's embeddings of a manifest are saved under `<out>/cache/`, keyed by model, weights and the pictures' paths and modification times. A second run with other split or matching options takes seconds.
 - `--max-per-identity N` takes a fixed sample per animal for quick comparisons.
+- Pictures are decoded on all processor cores while the GPU runs the previous batch. `--half` runs the network in float16 on the GPU, roughly doubling speed; it is cached separately (`+fp16`).
 
 ## Models
 

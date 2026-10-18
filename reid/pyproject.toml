@@ -15,8 +15,9 @@ models = [
     "torch>=2.6",
     "timm>=1.0.15",
     "safetensors>=0.5",
-    # MiewID loads through transformers with the code published beside its weights.
-    "transformers>=4.50",
+    # MiewID loads through transformers with the code published beside its weights;
+    # that code fails on transformers 5 (no all_tied_weights_keys).
+    "transformers>=4.50,<5",
 ]
 # Cutting crops out of labelled videos.
 video = [

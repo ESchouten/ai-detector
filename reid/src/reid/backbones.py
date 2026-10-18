@@ -52,6 +52,11 @@ PRESETS: dict[str, Preset] = {
     "miewid-msv3": Preset(
         "transformers", "conservationxlabs/miewid-msv3", 440, IMAGENET
     ),
+    # The same network with timm's Apache 2.0 ImageNet weights, as a start for
+    # fine-tuning that can be shipped without asking anyone.
+    "efficientnetv2-m-440": Preset(
+        "timm", "efficientnetv2_rw_m.agc_in1k", 440, IMAGENET
+    ),
     "dinov2-s": Preset(
         "timm",
         "vit_small_patch14_dinov2.lvd142m",
@@ -209,10 +214,11 @@ def _transformers_network(
 ) -> torch.nn.Module:
     from transformers import AutoModel
 
-    if checkpoint is not None:
-        raise ValueError("A checkpoint replaces timm weights only")
     # The model card's own loading code; it runs code published with the weights.
-    return AutoModel.from_pretrained(model, trust_remote_code=True, **options)
+    network = AutoModel.from_pretrained(model, trust_remote_code=True, **options)
+    if checkpoint is not None:
+        _load_checkpoint(network, checkpoint)
+    return network
 
 
 def _load_checkpoint(network: torch.nn.Module, path: Path) -> None:

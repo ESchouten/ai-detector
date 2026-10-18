@@ -1,9 +1,10 @@
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
 import pytest
 
-from reid.backbones import build
+from reid.backbones import PRESETS, build
 from reid.training import TrainOptions, batches, train
 
 torch = pytest.importorskip("torch")
@@ -64,4 +65,32 @@ def test_training_saves_a_backbone_the_benchmark_can_load(herd, tmp_path: Path):
     assert vectors.shape == (3, 512)
     tuned = build("timm:resnet18@32", checkpoint=out, device="cpu").network.state_dict()
     original = torch.load(start)
+    assert not torch.equal(tuned["conv1.weight"], original["conv1.weight"])
+
+
+def test_miewid_loaded_through_transformers_can_be_fine_tuned(
+    herd, tmp_path: Path, monkeypatch
+):
+    transformers = pytest.importorskip("transformers")
+
+    def published(model, **options):
+        torch.manual_seed(0)
+        return timm.create_model("resnet18", pretrained=False, num_classes=0)
+
+    monkeypatch.setattr(transformers.AutoModel, "from_pretrained", published)
+    monkeypatch.setitem(
+        PRESETS, "miewid-msv3", replace(PRESETS["miewid-msv3"], size=32)
+    )
+    out = tmp_path / "miewid-cows.safetensors"
+
+    train(
+        herd,
+        "miewid-msv3",
+        out,
+        TrainOptions(epochs=1, identities_per_batch=4, crops_per_identity=2, chunk=3),
+        device="cpu",
+    )
+
+    tuned = build("miewid-msv3", checkpoint=out, device="cpu").network.state_dict()
+    original = published("conservationxlabs/miewid-msv3").state_dict()
     assert not torch.equal(tuned["conv1.weight"], original["conv1.weight"])

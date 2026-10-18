@@ -8,8 +8,10 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import sys
 from collections.abc import Iterator, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -37,6 +39,9 @@ class TrainOptions:
     subcentres: int = 3
     grayscale: bool = False
     seed: int = 0
+    # Pictures through the network at once. A smaller chunk saves memory; every
+    # picture's loss stands alone, so only batch-norm statistics change.
+    chunk: int | None = None
 
 
 def batches(
@@ -143,8 +148,6 @@ def train(
     from safetensors.torch import save_file
 
     chosen = preset(spec)
-    if chosen.loader != "timm":
-        raise ValueError("Fine-tuning supports timm models")
     rng = np.random.default_rng(options.seed)
     torch.manual_seed(options.seed)
     names = sorted({crop.identity for crop in crops})
@@ -172,38 +175,51 @@ def train(
         optimiser, lambda step: 0.5 * (1 + math.cos(math.pi * min(step / steps, 1)))
     )
     history = []
-    for epoch in range(options.epochs):
-        network.train()
-        losses = []
-        for batch in batches(crops, options, rng, farms):
-            pixels = torch.from_numpy(
-                np.stack(
-                    [
-                        _augmented(
-                            crops[i].path,
-                            chosen.size,
-                            chosen.normalisation,
-                            options.grayscale,
-                            rng,
+    size = options.chunk or options.identities_per_batch * options.crops_per_identity
+    with ThreadPoolExecutor(os.cpu_count() or 4) as pool:
+        for epoch in range(options.epochs):
+            network.train()
+            losses = []
+            for batch in batches(crops, options, rng, farms):
+                # One seed per picture keeps augmentation reproducible across threads.
+                seeds = rng.integers(2**32, size=len(batch)).tolist()
+                optimiser.zero_grad()
+                total = 0.0
+                for start in range(0, len(batch), size):
+                    part = batch[start : start + size]
+                    pixels = np.stack(
+                        list(
+                            pool.map(
+                                lambda index, seed: _augmented(
+                                    crops[index].path,
+                                    chosen.size,
+                                    chosen.normalisation,
+                                    options.grayscale,
+                                    np.random.default_rng(seed),
+                                ),
+                                part,
+                                seeds[start : start + size],
+                            )
                         )
-                        for i in batch
-                    ]
-                )
-            ).to(target)
-            truth = torch.tensor(
-                [labels[crops[i].identity] for i in batch], device=target
+                    )
+                    truth = torch.tensor(
+                        [labels[crops[i].identity] for i in part], device=target
+                    )
+                    embedded = features(network(torch.from_numpy(pixels).to(target)))
+                    # Chunk losses add up to the batch's mean loss.
+                    loss = _arcface_loss(centres, embedded, truth, options)
+                    loss = loss * len(part) / len(batch)
+                    loss.backward()
+                    total += loss.item()
+                optimiser.step()
+                schedule.step()
+                losses.append(total)
+            average = float(np.mean(losses)) if losses else math.nan
+            history.append(average)
+            print(
+                f"epoch {epoch + 1}/{options.epochs}: loss {average:.3f}",
+                file=sys.stderr,
             )
-            loss = _arcface_loss(centres, features(network(pixels)), truth, options)
-            optimiser.zero_grad()
-            loss.backward()
-            optimiser.step()
-            schedule.step()
-            losses.append(loss.item())
-        average = float(np.mean(losses)) if losses else math.nan
-        history.append(average)
-        print(
-            f"epoch {epoch + 1}/{options.epochs}: loss {average:.3f}", file=sys.stderr
-        )
     out.parent.mkdir(parents=True, exist_ok=True)
     save_file(
         {

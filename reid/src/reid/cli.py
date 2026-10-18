@@ -222,7 +222,9 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
         required=True,
         help="preset name or timm:<name>[@size]; repeat to compare models",
     )
-    bench.add_argument("--checkpoint", type=Path, help="weights for a timm model")
+    bench.add_argument(
+        "--checkpoint", type=Path, help="fine-tuned weights for the model"
+    )
     bench.add_argument("--grayscale", action="store_true")
     bench.add_argument("--strangers", type=float, default=0.25)
     bench.add_argument("--folds", type=int, default=3)
@@ -351,6 +353,7 @@ def _train(arguments: argparse.Namespace) -> None:
         learning_rate=arguments.learning_rate,
         grayscale=arguments.grayscale,
         seed=arguments.seed,
+        chunk=arguments.chunk,
     )
     print(
         f"Training {arguments.model} on {len(crops)} crops of "
@@ -373,7 +376,9 @@ def _train(arguments: argparse.Namespace) -> None:
 
 
 def _add_training(commands: argparse._SubParsersAction) -> None:
-    training = commands.add_parser("train", help="fine-tune a timm model on cows")
+    training = commands.add_parser(
+        "train", help="fine-tune an embedding network on cows"
+    )
     training.add_argument(
         "manifests",
         type=Path,
@@ -391,6 +396,11 @@ def _add_training(commands: argparse._SubParsersAction) -> None:
     training.add_argument("--crops-per-identity", type=int, default=4)
     training.add_argument("--learning-rate", type=float, default=3e-5)
     training.add_argument("--max-per-identity", type=int)
+    training.add_argument(
+        "--chunk",
+        type=int,
+        help="pictures through the network at once; smaller saves memory",
+    )
     training.add_argument("--grayscale", action="store_true")
     training.add_argument("--seed", type=int, default=0)
     training.add_argument("--device", help="mps, cuda or cpu")

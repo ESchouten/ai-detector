@@ -95,7 +95,9 @@ uv run reid benchmark ~/reid-cache/manifests/eth-tracks.csv \
     --model megadescriptor-b-224 --checkpoint ~/reid-cache/models/md-b-not-eth.safetensors
 ```
 
-Training uses sub-centre ArcFace on P×K batches (16 animals × 4 crops by default) with random crops and brightness changes but no mirroring, since a mirrored cow has a coat that doesn't exist. With several manifests, cow names are prefixed with the manifest's name and each batch holds cows of one farm only; cows from different barns are told apart by the barn, which teaches the network nothing about cows. With one manifest, `--until` keeps later sessions out of training so they stay fair for testing. Only the backbone is saved; a JSON file beside it records the settings, the farms and the loss per epoch. Any timm preset can be trained; MiewID can't yet, because it loads through transformers.
+Training uses sub-centre ArcFace on P×K batches (16 animals × 4 crops by default) with random crops and brightness changes but no mirroring, since a mirrored cow has a coat that doesn't exist. With several manifests, cow names are prefixed with the manifest's name and each batch holds cows of one farm only; cows from different barns are told apart by the barn, which teaches the network nothing about cows. With one manifest, `--until` keeps later sessions out of training so they stay fair for testing. Only the backbone is saved; a JSON file beside it records the settings, the farms and the loss per epoch. Any preset can be trained, MiewID included. Pictures are decoded on all processor cores; if the network runs out of memory, `--chunk 16` sends a batch through in parts and adds up their gradients, which changes only the batch-norm statistics.
+
+MiewID's weights come without a licence, so `efficientnetv2-m-440` is the same network starting from timm's Apache 2.0 ImageNet weights. Fine-tuning both on the same farms shows whether MiewID's animal pretraining still matters once the network has seen cows; if it doesn't, the second can be shipped without asking anyone.
 
 ## Caching
 
@@ -110,6 +112,7 @@ Training uses sub-centre ArcFace on P×K batches (16 animals × 4 crops by defau
 |---|---|---|
 | `megadescriptor-l-384`, `-b-224`, `-t-224` | BVRA MegaDescriptor (Swin), trained on wildlife re-ID datasets | CC BY-NC 4.0 |
 | `miewid-msv3` | Wild Me MiewID v3 (EfficientNetV2, 440 px), loaded with the code published beside the weights | None stated |
+| `efficientnetv2-m-440` | The same EfficientNetV2 with ImageNet weights, as a start for fine-tuning | Apache 2.0 |
 | `dinov2-s`, `-b`, `-l` | DINOv2 at 224 px | Apache 2.0 |
 | `dinov3-s`, `-b`, `-l` | DINOv3 at 224 px; Hugging Face may ask to accept Meta's licence first | DINOv3 licence |
 | `timm:<name>[@size]` | Any timm model; with `--checkpoint`, weights from a file (`.safetensors` or a PyTorch state dict) | — |

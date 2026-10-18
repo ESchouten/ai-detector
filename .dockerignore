@@ -10,8 +10,17 @@ web/build
 web/.reports
 web/.vscode
 web/live
+web/logs
+web/history
+web/presets
+web/cache
+web/runtimes
+web/.camera-checks
 web/config.json
+web/config.json.*
 web/app.json
+web/app.json.*
+web/desktop-*.json
 web/detections
 web/models
 web/.env*

@@ -38,7 +38,8 @@ def test_report_prints_saved_results(herd, tmp_path: Path, capsys):
 
     output = capsys.readouterr().out
     assert output.strip() == table([json.loads(saved.read_text())])
-    assert "| fake | herd | 100.0 |" in output
+    assert "| fake | herd | crop | 100.0 |" in output
+    assert "| fake | herd | track | 100.0 | – |" in output
 
 
 def test_benchmark_scores_each_farm_at_the_other_farms_threshold(

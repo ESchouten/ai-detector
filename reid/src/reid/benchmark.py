@@ -78,6 +78,7 @@ def embeddings(
 class _Level:
     decisions: Decisions
     night: NDArray[np.bool_] | None
+    rank1: float | None
     top3: float | None
 
 
@@ -131,6 +132,7 @@ def _score(
         "crop": _Level(
             Decisions.of(names, scores, truth),
             night if known_light else None,
+            top_k(names, scores, truth, 1),
             top_k(names, scores, truth, 3),
         )
     }
@@ -140,6 +142,7 @@ def _score(
         levels["track"] = _Level(
             Decisions.of(names, averaged, track_truth),
             night[list(firsts)] if known_light else None,
+            top_k(names, averaged, track_truth, 1),
             top_k(names, averaged, track_truth, 3),
         )
     return _Scored(
@@ -270,6 +273,7 @@ def report(
             carried = median(others) if others else None
             self_set = fold.self_set.get(level)
             entry: dict[str, Any] = {
+                "rank1": scored_level.rank1,
                 "top3": scored_level.top3,
                 "oracle": _naming(decisions, fold.oracle[level]),
                 "carried": _naming(decisions, carried),
@@ -334,7 +338,8 @@ def summarise(folds: list[dict[str, Any]]) -> dict[str, Any]:
     for level in folds[0]["levels"]:
         reports = [fold["levels"][level] for fold in folds]
         entry: dict[str, float | None] = {
-            "top3": _mean([report["top3"] for report in reports])
+            "rank1": _mean([report["rank1"] for report in reports]),
+            "top3": _mean([report["top3"] for report in reports]),
         }
         for kind in ("oracle", "carried", "self_set", "other_farms", "day", "night"):
             namings = [report.get(kind) for report in reports]

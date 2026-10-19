@@ -23,6 +23,8 @@ def test_a_separable_herd_is_named_and_strangers_are_refused(herd, tmp_path: Pat
     assert [len(fold["strangers"]) for fold in result["folds"]] == [2, 2, 2]
     summary = result["summary"]
     assert summary["rank1"] == 1.0
+    assert summary["track"]["rank1"] == 1.0
+    assert result["folds"][0]["levels"]["track"]["rank1"] is not None
     assert summary["crop"]["oracle_precision"] >= 0.99
     assert summary["crop"]["oracle_coverage"] > 0.9
     assert summary["crop"]["carried_strangers_named"] < 0.05

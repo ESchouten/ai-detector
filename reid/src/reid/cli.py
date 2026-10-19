@@ -36,9 +36,12 @@ def _naming(entry: dict[str, Any], kind: str) -> str:
 
 
 def table(results: Sequence[dict[str, Any]]) -> str:
-    """One Markdown row per run and level: ranking, then naming at each threshold."""
+    """One Markdown row per run and level: ranking, then naming at each threshold.
+
+    mAP compares single pictures, so track rows leave it out.
+    """
     lines = [
-        "| Model | Data | Rank-1 | mAP | Level | In top 3 | Own fold | Other days "
+        "| Model | Data | Level | Rank-1 | mAP | In top 3 | Own fold | Other days "
         "| Self-set | Other farms | Day | Night |",
         "|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
@@ -49,8 +52,10 @@ def table(results: Sequence[dict[str, Any]]) -> str:
                 continue
             entry = summary[level]
             lines.append(
-                f"| {result['model']} | {result['manifest']} "
-                f"| {_percent(summary['rank1'])} | {_percent(summary['map'])} | {level} "
+                f"| {result['model']} | {result['manifest']} | {level} "
+                # Results saved before rank-1 was split by level carry only one.
+                f"| {_percent(entry.get('rank1', summary['rank1']))} "
+                f"| {_percent(summary['map']) if level == 'crop' else '–'} "
                 f"| {_percent(entry['top3'])} "
                 f"| {_naming(entry, 'oracle')} | {_naming(entry, 'carried')} "
                 f"| {_naming(entry, 'self_set')} | {_naming(entry, 'other_farms')} "

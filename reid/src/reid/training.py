@@ -145,7 +145,6 @@ def train(
     `farms` names each crop's farm, so batches never mix farms.
     """
     import torch
-    from safetensors.torch import save_file
 
     chosen = preset(spec)
     rng = np.random.default_rng(options.seed)
@@ -174,7 +173,15 @@ def train(
     schedule = torch.optim.lr_scheduler.LambdaLR(
         optimiser, lambda step: 0.5 * (1 + math.cos(math.pi * min(step / steps, 1)))
     )
-    history = []
+    record = {
+        "model": spec,
+        "start": str(checkpoint) if checkpoint else None,
+        "crops": len(crops),
+        "identities": len(names),
+        "farms": sorted(set(farms)) if farms is not None else None,
+        "options": asdict(options),
+    }
+    history: list[float] = []
     size = options.chunk or options.identities_per_batch * options.crops_per_identity
     with ThreadPoolExecutor(os.cpu_count() or 4) as pool:
         for epoch in range(options.epochs):
@@ -220,28 +227,26 @@ def train(
                 f"epoch {epoch + 1}/{options.epochs}: loss {average:.3f}",
                 file=sys.stderr,
             )
+            # Saved every epoch, so a crash late in a long run keeps the last one.
+            _save(network, out, {**record, "loss": history})
+    return out
+
+
+def _save(network: torch.nn.Module, out: Path, record: dict) -> None:
+    """Write the backbone and its record, replacing the previous epoch's whole."""
+    from safetensors.torch import save_file
+
     out.parent.mkdir(parents=True, exist_ok=True)
+    partial = out.with_name(out.name + ".partial")
     save_file(
         {
             name: tensor.detach().cpu().contiguous()
             for name, tensor in network.state_dict().items()
         },
-        out,
+        partial,
     )
+    os.replace(partial, out)
     out.with_suffix(".json").write_text(
-        json.dumps(
-            {
-                "model": spec,
-                "start": str(checkpoint) if checkpoint else None,
-                "crops": len(crops),
-                "identities": len(names),
-                "farms": sorted(set(farms)) if farms is not None else None,
-                "options": asdict(options),
-                "loss": history,
-            },
-            indent=2,
-        )
-        + "\n",
+        json.dumps({**record, "epochs": len(record["loss"])}, indent=2) + "\n",
         encoding="utf-8",
     )
-    return out

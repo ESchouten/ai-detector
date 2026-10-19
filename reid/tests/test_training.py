@@ -1,3 +1,4 @@
+import json
 from dataclasses import replace
 from pathlib import Path
 
@@ -60,6 +61,9 @@ def test_training_saves_a_backbone_the_benchmark_can_load(herd, tmp_path: Path):
     )
 
     assert out.exists() and out.with_suffix(".json").exists()
+    record = json.loads(out.with_suffix(".json").read_text())
+    assert record["epochs"] == 2 and len(record["loss"]) == 2
+    assert not out.with_name(out.name + ".partial").exists()
     embedder = build("timm:resnet18@32", checkpoint=out, device="cpu")
     vectors = embedder.embed([crop.path for crop in herd[:3]])
     assert vectors.shape == (3, 512)

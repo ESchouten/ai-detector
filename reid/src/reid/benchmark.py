@@ -16,8 +16,10 @@ from numpy.typing import NDArray
 from reid.backbones import Embedder
 from reid.manifest import Crop
 from reid.matching import identity_scores, similarities, track_scores
-from reid.metrics import Decisions, mean_average_precision, rank1, top_k
+from reid.metrics import Decisions, mean_average_precision, top_k
 from reid.splits import Split, open_set_splits
+
+MAP_QUERIES = 4000
 
 
 @dataclass(frozen=True)
@@ -112,20 +114,59 @@ class Scores:
     folds: list[_Fold]
 
 
-def _score(
+@dataclass(frozen=True)
+class _Matched:
+    """Every query of one time split scored against every enrolled animal."""
+
+    names: tuple[str, ...]
+    scores: NDArray[np.float32]
+    queries: list[Crop]
+    map: float | None
+
+
+def _match(
     crops: Sequence[Crop],
     vectors: NDArray[np.float32],
-    split: Split,
+    gallery: Sequence[int],
+    queries: Sequence[int],
     k: int,
-    ranking: bool = True,
-) -> _Scored:
-    gallery = [crops[i].identity for i in split.gallery]
-    queries = [crops[i] for i in split.queries]
+    ranking: bool,
+) -> _Matched:
+    identities = [crops[i].identity for i in gallery]
+    asked = [crops[i] for i in queries]
+    similarity = similarities(vectors[list(queries)], vectors[list(gallery)])
+    names, scores = identity_scores(similarity, identities, k)
+    truth = [crop.identity for crop in asked]
+    ranked = None
+    if ranking:
+        # mAP is only there to compare with papers; queries spread evenly over
+        # the list estimate it closely without sorting every row.
+        sample = np.unique(
+            np.linspace(0, len(asked) - 1, min(len(asked), MAP_QUERIES)).astype(int)
+        )
+        ranked = mean_average_precision(
+            similarity[sample], identities, [truth[i] for i in sample]
+        )
+    return _Matched(names, scores, asked, ranked)
+
+
+def _levels(
+    matched: _Matched,
+    strangers: frozenset[str],
+    absent: frozenset[str] = frozenset(),
+) -> dict[str, _Level]:
+    """Decisions per crop and per track.
+
+    Strangers lose their enrolled photos but are still asked about; absent
+    animals are left out altogether.
+    """
+    hidden = strangers | absent
+    keep = [i for i, name in enumerate(matched.names) if name not in hidden]
+    rows = [i for i, crop in enumerate(matched.queries) if crop.identity not in absent]
+    names = tuple(matched.names[i] for i in keep)
+    scores = matched.scores[np.ix_(rows, keep)]
+    queries = [matched.queries[i] for i in rows]
     truth = [crop.identity for crop in queries]
-    similarity = similarities(
-        vectors[list(split.queries)], vectors[list(split.gallery)]
-    )
-    names, scores = identity_scores(similarity, gallery, k)
     night = np.array([crop.night is True for crop in queries])
     known_light = any(crop.night is not None for crop in queries)
     levels = {
@@ -145,27 +186,50 @@ def _score(
             top_k(names, averaged, track_truth, 1),
             top_k(names, averaged, track_truth, 3),
         )
-    return _Scored(
-        split,
-        rank1(names, scores, truth) if ranking else None,
-        mean_average_precision(similarity, gallery, truth) if ranking else None,
-        levels,
-    )
+    return levels
+
+
+def _scored_folds(
+    crops: Sequence[Crop],
+    vectors: NDArray[np.float32],
+    splits: Sequence[Split],
+    k: int,
+    ranking: bool = True,
+) -> list[_Scored]:
+    """Score every fold of one time split from a single match.
+
+    Folds share their queries and differ only in whose gallery photos are
+    withheld, and an animal's score depends on her own photos alone, so every
+    enrolled animal is scored once and each fold drops its strangers. mAP is
+    closed-set: queries against the whole gallery.
+    """
+    first = splits[0]
+    gallery = sorted((*first.gallery, *first.withheld))
+    matched = _match(crops, vectors, gallery, first.queries, k, ranking)
+    scored = []
+    for split in splits:
+        levels = _levels(matched, split.strangers)
+        rank = levels["crop"].rank1 if ranking else None
+        scored.append(_Scored(split, rank, matched.map, levels))
+    return scored
 
 
 def _self_set(
     crops: Sequence[Crop],
     vectors: NDArray[np.float32],
-    split: Split,
+    splits: Sequence[Split],
     options: Options,
-) -> dict[str, float | None]:
-    """The threshold a farm can set from its own enrolled photos, without queries.
+) -> list[dict[str, float | None]]:
+    """Per fold, the threshold a farm can set from its own enrolled photos alone.
 
     The gallery is split again by time with some of its animals withheld, as the
     benchmark does with the whole manifest, and the threshold is chosen there.
     On a farm the gallery is what the farmer named, so no label beyond it is used.
+    The inner split is matched once; each fold then leaves out its own strangers,
+    who are not enrolled on that farm at all.
     """
-    enrolled = [crops[i] for i in split.gallery]
+    full = sorted((*splits[0].gallery, *splits[0].withheld))
+    enrolled = [crops[i] for i in full]
     try:
         inner = open_set_splits(
             enrolled,
@@ -175,16 +239,26 @@ def _self_set(
             options.gallery_fraction,
         )
     except ValueError:
-        return {}
-    inner_vectors = vectors[list(split.gallery)]
-    found: dict[str, list[float]] = {}
-    for inner_split in inner:
-        scored = _score(enrolled, inner_vectors, inner_split, options.k, False)
-        for level, scored_level in scored.levels.items():
-            threshold = scored_level.decisions.threshold_for(options.precision)
-            if threshold is not None:
-                found.setdefault(level, []).append(threshold)
-    return {level: median(values) for level, values in found.items()}
+        return [{} for _ in splits]
+    matched = _match(
+        enrolled,
+        vectors[full],
+        sorted((*inner[0].gallery, *inner[0].withheld)),
+        inner[0].queries,
+        options.k,
+        ranking=False,
+    )
+    thresholds: list[dict[str, float | None]] = []
+    for split in splits:
+        found: dict[str, list[float]] = {}
+        for inner_split in inner:
+            levels = _levels(matched, inner_split.strangers, split.strangers)
+            for level, scored_level in levels.items():
+                threshold = scored_level.decisions.threshold_for(options.precision)
+                if threshold is not None:
+                    found.setdefault(level, []).append(threshold)
+        thresholds.append({level: median(values) for level, values in found.items()})
+    return thresholds
 
 
 def score(
@@ -199,19 +273,21 @@ def score(
         options.gallery_fraction,
         options.gap_sessions,
     )
-    folds = []
-    for split in splits:
-        scored = _score(crops, vectors, split, options.k)
-        folds.append(
-            _Fold(
-                scored,
-                {
-                    level: scored_level.decisions.threshold_for(options.precision)
-                    for level, scored_level in scored.levels.items()
-                },
-                _self_set(crops, vectors, split, options),
-            )
+    folds = [
+        _Fold(
+            scored,
+            {
+                level: scored_level.decisions.threshold_for(options.precision)
+                for level, scored_level in scored.levels.items()
+            },
+            self_set,
         )
+        for scored, self_set in zip(
+            _scored_folds(crops, vectors, splits, options.k),
+            _self_set(crops, vectors, splits, options),
+            strict=True,
+        )
+    ]
     return Scores(
         len(crops),
         len({crop.identity for crop in crops}),

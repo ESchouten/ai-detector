@@ -41,16 +41,38 @@ def mean_average_precision(
     similarity: NDArray[np.float32],
     gallery_identities: Sequence[str],
     truth: Sequence[str],
+    chunk: int = 512,
 ) -> float | None:
-    """Mean average precision over queries with at least one gallery picture."""
+    """Mean average precision over queries with at least one gallery picture.
+
+    Queries of one animal share their relevant pictures, so each block of them
+    is sorted at once: an own picture's rank is its place among the animal's
+    pictures plus the other pictures scoring above it.
+    """
     labels = np.asarray(gallery_identities)
-    precisions = []
-    for row, identity in zip(similarity, truth, strict=True):
-        relevant = labels[np.argsort(-row, kind="stable")] == identity
-        hits = np.flatnonzero(relevant)
-        if hits.size:
-            precisions.append(float((np.arange(1, hits.size + 1) / (hits + 1)).mean()))
-    return float(np.mean(precisions)) if precisions else None
+    asked = np.asarray(truth)
+    precisions: list[NDArray[np.float64]] = []
+    for identity in np.unique(asked):
+        relevant = labels == identity
+        count = int(relevant.sum())
+        if count == 0:
+            continue
+        positions = np.arange(1, count + 1)
+        rows = np.flatnonzero(asked == identity)
+        for start in range(0, len(rows), chunk):
+            block = similarity[rows[start : start + chunk]].astype(np.float64)
+            own = -np.sort(-block[:, relevant], axis=1)
+            others = np.sort(block[:, ~relevant], axis=1)
+            # Cosine similarities lie in [-1, 1]; shifting each row 3 apart makes
+            # the flattened rows one sorted array for a single searchsorted.
+            offsets = 3.0 * np.arange(len(block))[:, None]
+            at_or_below = (
+                np.searchsorted((others + offsets).ravel(), own + offsets, side="right")
+                - np.arange(len(block))[:, None] * others.shape[1]
+            )
+            above = others.shape[1] - at_or_below
+            precisions.append((positions / (positions + above)).mean(axis=1))
+    return float(np.concatenate(precisions).mean()) if precisions else None
 
 
 @dataclass(frozen=True)

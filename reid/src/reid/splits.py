@@ -26,6 +26,8 @@ class Split:
     queries: tuple[int, ...]
     strangers: frozenset[str]
     time_disjoint: bool
+    # The strangers' gallery crops, left out of this fold.
+    withheld: tuple[int, ...] = ()
 
 
 def time_split(
@@ -109,6 +111,7 @@ def open_set_splits(
                 queries,
                 strangers,
                 disjoint,
+                tuple(i for i in gallery if crops[i].identity in strangers),
             )
         )
     return splits

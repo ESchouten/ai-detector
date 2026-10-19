@@ -57,3 +57,20 @@ def test_equal_scores_are_named_together():
 
     assert decisions.threshold_for(1.0) is None
     assert decisions.threshold_for(0.5) == pytest.approx(0.9)
+
+
+def test_mean_average_precision_matches_ranking_each_query_alone():
+    rng = np.random.default_rng(0)
+    similarity = np.tanh(rng.normal(size=(50, 40))).astype(np.float32)
+    gallery = [f"cow{i % 6}" for i in range(40)]
+    truth = [f"cow{i % 7}" for i in range(50)]
+    labels = np.asarray(gallery)
+    expected = []
+    for row, identity in zip(similarity, truth, strict=True):
+        hits = np.flatnonzero(labels[np.argsort(-row, kind="stable")] == identity)
+        if hits.size:
+            expected.append((np.arange(1, hits.size + 1) / (hits + 1)).mean())
+
+    value = mean_average_precision(similarity, gallery, truth, chunk=4)
+
+    assert value == pytest.approx(np.mean(expected))

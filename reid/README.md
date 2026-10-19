@@ -73,7 +73,7 @@ What happens on each farm:
 
 The table reports, per model, farm and level (crop or track):
 
-- **Rank-1, mAP**: closed-set ranking, comparable with papers. Rank-1 is per crop or per track like the rest of the row; mAP compares single pictures and is shown on crop rows only.
+- **Rank-1, mAP**: closed-set ranking, comparable with papers. Rank-1 is per crop or per track like the rest of the row; mAP compares single pictures against the whole gallery, strangers' photos included, and is shown on crop rows only; on large sets it is estimated from 4,000 queries spread evenly over the list.
 - **In top 3**: the cow is among the three best suggestions, for when a person confirms one with a tap.
 - The naming columns read `named (right when named)`, in percent. Names given to strangers count as wrong.
   - **Own fold**: threshold chosen on the queries it is scored on. A ceiling.

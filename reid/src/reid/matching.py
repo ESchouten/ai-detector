@@ -29,7 +29,9 @@ def identity_scores(
     for column, name in enumerate(names):
         own = similarity[:, labels == name]
         top = min(k, own.shape[1])
-        scores[:, column] = np.sort(own, axis=1)[:, -top:].mean(axis=1)
+        # Only the top k are needed, so partition instead of sorting whole rows.
+        nearest = np.partition(own, own.shape[1] - top, axis=1)[:, -top:]
+        scores[:, column] = nearest.mean(axis=1)
     return names, scores
 
 

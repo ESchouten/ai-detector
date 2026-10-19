@@ -3,6 +3,9 @@ from pathlib import Path
 from conftest import FakeEmbedder
 from reid.benchmark import (
     Options,
+    _levels,
+    _match,
+    _scored_folds,
     embeddings,
     evaluate,
     other_farms,
@@ -11,6 +14,7 @@ from reid.benchmark import (
     score,
     subsample,
 )
+from reid.splits import open_set_splits
 
 
 def test_a_separable_herd_is_named_and_strangers_are_refused(herd, tmp_path: Path):
@@ -72,3 +76,22 @@ def test_subsample_keeps_at_most_n_per_animal(herd):
     assert len(kept) == 8 * 5
     assert kept == subsample(herd, 5)
     assert subsample(herd, None) == tuple(herd)
+
+
+def test_one_match_per_time_split_gives_each_fold_its_own_decisions(herd):
+    vectors = embeddings(herd, FakeEmbedder(noise=0.3))
+    splits = open_set_splits(herd, folds=3)
+
+    shared = _scored_folds(herd, vectors, splits, k=2)
+
+    for split, scored in zip(splits, shared, strict=True):
+        alone = _levels(
+            _match(herd, vectors, split.gallery, split.queries, 2, False),
+            frozenset(),
+        )
+        for level in ("crop", "track"):
+            mine, theirs = scored.levels[level], alone[level]
+            assert (mine.decisions.best_scores == theirs.decisions.best_scores).all()
+            assert (mine.decisions.correct == theirs.decisions.correct).all()
+            assert (mine.decisions.known == theirs.decisions.known).all()
+            assert mine.top3 == theirs.top3

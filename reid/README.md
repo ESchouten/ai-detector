@@ -117,7 +117,7 @@ MiewID's weights come without a licence, so `efficientnetv2-m-440` is the same n
 | `dinov3-s`, `-b`, `-l` | DINOv3 at 224 px; Hugging Face may ask to accept Meta's licence first | DINOv3 licence |
 | `timm:<name>[@size]` | Any timm model; with `--checkpoint`, weights from a file (`.safetensors` or a PyTorch state dict) | — |
 
-`--grayscale` drops colour before embedding. In the earlier herd study this kept red strangers from passing as the herd's red cow and made daylight and infrared pictures alike.
+`--grayscale` drops colour before embedding. In the earlier herd study this kept red strangers from passing as the herd's red cow and made daylight and infrared pictures alike. For training, `--gray-chance 0.3` turns that share of pictures gray at random, so one network learns daylight colour and infrared night; the public sets hold few night pictures.
 
 ## Checks
 

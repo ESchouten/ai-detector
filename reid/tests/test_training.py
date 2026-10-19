@@ -5,8 +5,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from reid.backbones import PRESETS, build
-from reid.training import TrainOptions, batches, train
+from reid.backbones import IMAGENET, PRESETS, build
+from reid.training import TrainOptions, _augmented, batches, train
 
 torch = pytest.importorskip("torch")
 timm = pytest.importorskip("timm")
@@ -98,3 +98,20 @@ def test_miewid_loaded_through_transformers_can_be_fine_tuned(
     tuned = build("miewid-msv3", checkpoint=out, device="cpu").network.state_dict()
     original = published("conservationxlabs/miewid-msv3").state_dict()
     assert not torch.equal(tuned["conv1.weight"], original["conv1.weight"])
+
+
+def test_gray_chance_turns_that_share_of_pictures_gray(tmp_path: Path):
+    from PIL import Image
+
+    path = tmp_path / "red-cow.png"
+    Image.new("RGB", (40, 30), (200, 40, 30)).save(path)
+    mean, std = (np.asarray(value).reshape(3, 1, 1) for value in IMAGENET)
+
+    def gray(chance: float, seed: int) -> bool:
+        pixels = _augmented(path, 16, IMAGENET, chance, np.random.default_rng(seed))
+        raw = pixels * std + mean
+        return bool(np.allclose(raw[0], raw[1], atol=1e-5))
+
+    assert not any(gray(0.0, seed) for seed in range(20))
+    assert all(gray(1.0, seed) for seed in range(20))
+    assert 5 < sum(gray(0.5, seed) for seed in range(40)) < 35

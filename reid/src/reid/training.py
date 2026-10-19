@@ -38,6 +38,9 @@ class TrainOptions:
     scale: float = 30.0
     subcentres: int = 3
     grayscale: bool = False
+    # Share of pictures turned gray at random, so daylight colour and infrared
+    # night are learnt by one network. `grayscale` turns every picture gray.
+    gray_chance: float = 0.0
     seed: int = 0
     # Pictures through the network at once. A smaller chunk saves memory; every
     # picture's loss stands alone, so only batch-norm statistics change.
@@ -90,12 +93,14 @@ def _augmented(
     path: Path,
     size: int,
     normalisation: tuple[tuple[float, ...], tuple[float, ...]],
-    grayscale: bool,
+    gray_chance: float,
     rng: np.random.Generator,
 ) -> np.ndarray:
-    """Random crop, scale and brightness; no mirroring, which would invent a coat."""
+    """Random crop, scale, brightness and grayscale; no mirroring, which would
+    invent a coat."""
+    gray = gray_chance >= 1 or (gray_chance > 0 and rng.random() < gray_chance)
     with Image.open(path) as picture:
-        picture = picture.convert("L" if grayscale else "RGB").convert("RGB")
+        picture = picture.convert("L" if gray else "RGB").convert("RGB")
         width, height = picture.size
         keep = rng.uniform(0.75, 1.0)
         w, h = max(1, round(width * keep)), max(1, round(height * keep))
@@ -201,7 +206,7 @@ def train(
                                     crops[index].path,
                                     chosen.size,
                                     chosen.normalisation,
-                                    options.grayscale,
+                                    1.0 if options.grayscale else options.gray_chance,
                                     np.random.default_rng(seed),
                                 ),
                                 part,

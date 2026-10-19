@@ -357,6 +357,7 @@ def _train(arguments: argparse.Namespace) -> None:
         crops_per_identity=arguments.crops_per_identity,
         learning_rate=arguments.learning_rate,
         grayscale=arguments.grayscale,
+        gray_chance=arguments.gray_chance,
         seed=arguments.seed,
         chunk=arguments.chunk,
     )
@@ -407,6 +408,12 @@ def _add_training(commands: argparse._SubParsersAction) -> None:
         help="pictures through the network at once; smaller saves memory",
     )
     training.add_argument("--grayscale", action="store_true")
+    training.add_argument(
+        "--gray-chance",
+        type=float,
+        default=0.0,
+        help="share of pictures turned gray at random, e.g. 0.3 for infrared nights",
+    )
     training.add_argument("--seed", type=int, default=0)
     training.add_argument("--device", help="mps, cuda or cpu")
     training.set_defaults(run=_train)

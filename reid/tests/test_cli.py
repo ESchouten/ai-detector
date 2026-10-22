@@ -72,6 +72,41 @@ def test_benchmark_scores_each_farm_at_the_other_farms_threshold(
     assert "| fake | north |" in capsys.readouterr().out
 
 
+def test_enroll_saves_the_simulation_and_prints_a_row_per_grouping(
+    herd, tmp_path: Path, monkeypatch, capsys
+):
+    write_manifest(tmp_path / "farm.csv", herd)
+    monkeypatch.setattr(
+        "reid.backbones.build", lambda model, **options: FakeEmbedder(noise=0.1)
+    )
+    out = tmp_path / "results"
+
+    main(
+        [
+            "enroll",
+            str(tmp_path / "farm.csv"),
+            "--model",
+            "fake",
+            "--merge",
+            "0.8",
+            "0.9",
+            "--goal",
+            "1",
+            "--out",
+            str(out),
+        ]
+    )
+
+    saved = json.loads((out / "enrol-farm.fake.json").read_text())
+    assert [entry["merge"] for entry in saved["grouped"]] == [0.8, 0.9]
+    output = capsys.readouterr().out
+    assert output.startswith("8 cows in 32 sightings while enrolling")
+    assert (
+        "| labelled | – | – | – | – | – | 100.0 (100.0) | 100.0 | 100.0 | 0 |" in output
+    )
+    assert "| grouped at 0.8 | 8 | 100.0 | 8 | 8 | 8 |" in output
+
+
 def test_training_crops_keep_cows_of_different_farms_apart(herd, tmp_path: Path):
     write_manifest(tmp_path / "north.csv", herd)
     write_manifest(tmp_path / "south.csv", herd[:24])

@@ -214,7 +214,7 @@ def _scored_folds(
     return scored
 
 
-def _self_set(
+def self_set_thresholds(
     crops: Sequence[Crop],
     vectors: NDArray[np.float32],
     splits: Sequence[Split],
@@ -284,7 +284,7 @@ def score(
         )
         for scored, self_set in zip(
             _scored_folds(crops, vectors, splits, options.k),
-            _self_set(crops, vectors, splits, options),
+            self_set_thresholds(crops, vectors, splits, options),
             strict=True,
         )
     ]
@@ -330,7 +330,7 @@ def report(
     - oracle: chosen on the fold it is scored on; its coverage is a ceiling.
     - carried: the median of the other folds' oracle thresholds, as a fixed
       setting does on the same farm on a new day with new strangers.
-    - self_set: chosen on the gallery alone (see `_self_set`), as a farm can do
+    - self_set: chosen on the gallery alone (see `self_set_thresholds`), as a farm can do
       after naming its cows.
     - other_farms: chosen on other farms, as a shipped default does.
     """

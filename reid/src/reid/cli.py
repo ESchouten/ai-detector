@@ -133,6 +133,78 @@ def _benchmark(arguments: argparse.Namespace) -> None:
     print(table(results))
 
 
+def enrolment_table(result: dict[str, Any]) -> str:
+    """One Markdown row per grouping similarity, after the labelled ceiling.
+
+    Day columns are means over the test days: sightings named (right when named),
+    cows recognised at least once that day, and the right cow in the top 3.
+    """
+    lines = [
+        "| Gallery | Groups | Pure | Taps | Taps 90% | Taps 100% | Named | "
+        "Cows a day | In top 3 | Wrong |",
+        "|---|---|---|---|---|---|---|---|---|---|",
+    ]
+    rows = [("labelled", {}, result["labelled"])] + [
+        (f"grouped at {entry['merge']}", entry, entry) for entry in result["grouped"]
+    ]
+    for label, enrolment, scored in rows:
+        days = scored["mean"]
+        milestones = enrolment.get("milestones", {})
+        lines.append(
+            f"| {label} | {enrolment.get('groups', '–')} "
+            f"| {_percent(enrolment.get('purity'))} | {enrolment.get('taps', '–')} "
+            f"| {milestones.get('0.9') or '–'} | {milestones.get('1.0') or '–'} "
+            f"| {_percent(days['named'])} ({_percent(days['right'])}) "
+            f"| {_percent(days['recognised'])} | {_percent(days['top3'])} "
+            f"| {days['wrong']} |"
+        )
+    return "\n".join(lines)
+
+
+def _enroll(arguments: argparse.Namespace) -> None:
+    from reid.backbones import build
+    from reid.enrollment import Options as EnrolOptions
+    from reid.enrollment import simulate
+
+    options = EnrolOptions(
+        enrol_sessions=arguments.enrol_sessions,
+        merges=tuple(arguments.merge),
+        goal=arguments.goal,
+        k=arguments.k,
+        precision=arguments.precision,
+    )
+    crops = read_manifest(arguments.manifest)
+    embedder = build(
+        arguments.model,
+        checkpoint=arguments.checkpoint,
+        grayscale=arguments.grayscale,
+        batch_size=arguments.batch_size,
+        device=arguments.device,
+        half=arguments.half,
+    )
+    print(
+        f"Embedding {len(crops)} crops of {arguments.manifest.stem} with "
+        f"{embedder.name} on {embedder.device}…",
+        file=sys.stderr,
+    )
+    vectors = embeddings(crops, embedder, arguments.out / "cache")
+    result = {
+        "model": embedder.name,
+        "manifest": arguments.manifest.stem,
+        "created": datetime.now(UTC).isoformat(timespec="seconds"),
+        **simulate(crops, vectors, options),
+    }
+    arguments.out.mkdir(parents=True, exist_ok=True)
+    path = arguments.out / f"enrol-{arguments.manifest.stem}.{embedder.name}.json"
+    path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    print(
+        f"{result['herd']} cows in {result['sightings']} sightings while enrolling "
+        f"({', '.join(result['enrol_sessions'])}); "
+        f"tested on {len(result['test_sessions'])} later sessions"
+    )
+    print(enrolment_table(result))
+
+
 def _report(arguments: argparse.Namespace) -> None:
     results = [
         json.loads(path.read_text(encoding="utf-8")) for path in arguments.results
@@ -246,6 +318,42 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
     )
     bench.add_argument("--out", type=Path, default=Path("results"))
     bench.set_defaults(run=_benchmark)
+
+    enroll = commands.add_parser(
+        "enroll",
+        help="simulate a farmer naming groups of a farm's first sightings, then "
+        "name later days against them",
+    )
+    enroll.add_argument("manifest", type=Path, help="one farm, with sessions")
+    enroll.add_argument("--model", required=True)
+    enroll.add_argument("--checkpoint", type=Path)
+    enroll.add_argument("--grayscale", action="store_true")
+    enroll.add_argument(
+        "--enrol-sessions",
+        type=int,
+        default=2,
+        help="the first N sessions are for enrolling, later ones for testing",
+    )
+    enroll.add_argument(
+        "--merge",
+        type=float,
+        nargs="+",
+        default=[0.5, 0.6, 0.7, 0.8],
+        help="similarities at which sightings are grouped; each is tried",
+    )
+    enroll.add_argument(
+        "--goal",
+        type=float,
+        default=0.9,
+        help="the farmer names groups until this share of the cows has a name",
+    )
+    enroll.add_argument("--k", type=int, default=2)
+    enroll.add_argument("--precision", type=float, default=0.99)
+    enroll.add_argument("--batch-size", type=int, default=32)
+    enroll.add_argument("--device")
+    enroll.add_argument("--half", action="store_true")
+    enroll.add_argument("--out", type=Path, default=Path("results"))
+    enroll.set_defaults(run=_enroll)
 
     report = commands.add_parser("report", help="table of earlier results")
     report.add_argument("results", type=Path, nargs="+")

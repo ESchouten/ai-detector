@@ -84,6 +84,23 @@ The table reports, per model, farm and level (crop or track):
 
 Each run's JSON also keeps every fold's details and the thresholds themselves.
 
+## Enrolment
+
+The benchmark's gallery is labelled; a user's farm has none. `enroll` plays out how an install gets its gallery:
+
+```sh
+uv run reid enroll ~/reid-cache/manifests/eth-tracks.csv --model miewid-msv3 \
+    --checkpoint ~/reid-cache/models/miewid-not-eth-6sets.safetensors \
+    --enrol-sessions 2 --merge 0.5 0.6 0.7 0.8 --half --out results
+```
+
+1. **Sightings.** The crops of the first `--enrol-sessions` sessions are grouped into sightings, one per track; a crop without a track stands alone.
+2. **Groups.** Sightings are grouped by look with average linkage, once for each `--merge` similarity.
+3. **The farmer.** Groups with the most sightings come first, and each is named with one tap after the cow most of its pictures show, so the rest of a mixed group gets a wrong name. The farmer stops once `--goal` (90%) of the cows seen have a name. The labels are used only here and for scoring.
+4. **Later days.** Each later session's sightings are named against that gallery at the threshold the install sets from it, as the benchmark's self-set threshold does.
+
+The table shows, per grouping: groups formed, the share of sightings in a group named after their own cow, taps to the goal, to 90% and to every cow, then means over the later days: sightings named (right when named), cows recognised at least once that day, the right cow in the top 3, and wrong names in total. The first row is the same gallery named from the true labels, the ceiling for perfect naming. Each day's numbers are in the JSON.
+
 ## Fine-tuning
 
 One backbone is trained on every farm but one, then tested on the farm it never saw:

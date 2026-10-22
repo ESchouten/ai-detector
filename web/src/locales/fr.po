@@ -195,6 +195,7 @@ msgstr "Ouvrez le tableau de bord via localhost sur l’ordinateur qui exécute 
 #: src/lib/remote/camera.remote.ts
 #: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
+#: src/lib/server/installation-import/metadata.ts
 msgid "Camera"
 msgstr "Caméra"
 
@@ -3720,3 +3721,24 @@ msgstr "Envoyer un message Telegram aux destinataires des alertes de la caméra 
 #: src/lib/configuration.ts
 msgid "Telegram {0}"
 msgstr "Telegram {0}"
+
+#. 0: file; 1: fields
+#: src/lib/server/installation-import/configuration.ts
+msgid "Check {0}: {1}. These settings are invalid or missing."
+msgstr "Vérifiez {0} : {1}. Ces paramètres sont manquants ou invalides."
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Detector"
+msgstr "Détecteur"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Telegram"
+msgstr "Telegram"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "AI connection"
+msgstr "Connexion IA"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Filled in missing names and ignored empty optional settings in app.json."
+msgstr "Les noms manquants ont été ajoutés et les paramètres facultatifs vides dans app.json ont été ignorés."

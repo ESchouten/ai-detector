@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { test, type TestContext } from 'node:test';
+import { isValiError } from 'valibot';
 import { mkdir, readFile, rm, stat, symlink, utimes, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { InstallationImport } from '../src/lib/server/installation-import/service.ts';
@@ -9,6 +10,7 @@ import { DetectionArchive, archivePath } from '../src/lib/server/archive.ts';
 import { availableSpace, exists } from '../src/lib/server/installation-import/files.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
 import { monitoringEnabled } from '../src/lib/server/installation-notes.ts';
+import { normalizeConfiguration } from '../src/lib/configuration.ts';
 import type { Configuration } from '../src/lib/schema.ts';
 import { fakeRuntime } from './support/configuration.ts';
 import { recordingMetadata, temporaryDirectory } from './support/files.ts';
@@ -180,6 +182,253 @@ test('relocates shared local camera files and ONNX tensors and preserves standal
 		await readFile(path.join(destination, first.detection.source[0]), 'utf8'),
 		'camera clip'
 	);
+});
+
+test('imports empty legacy names and optional metadata without changing credentials or source files', async (t) => {
+	const { source, importer, store } = await fixture(t);
+	const app = {
+		language: ' ',
+		streams: [
+			{
+				id: '',
+				label: '\t',
+				source: camera,
+				connection: { address: 'http://camera.example.test', profileToken: '' },
+				setup: { completedAt: '', oldVerification: true }
+			},
+			{ id: null, label: 'Camera 1', source: 'rtsp://camera.example.test/second' }
+		],
+		detectors: [{ label: null, preset: '', mode: ' ', presetVersion: null, llmConnection: '\t' }],
+		telegrams: [{ label: '', token: 'private-token', chat: '1234' }],
+		llms: [{ label: null, model: 'vision-model', key: ' private-api-key ', url: '' }],
+		devices: [{ legacyDevice: true }]
+	};
+	await writeJson(path.join(source, 'app.json'), app);
+	const originals = await Promise.all(
+		['config.json', 'app.json'].map((file) => readFile(path.join(source, file), 'utf8'))
+	);
+	const summary = await importer.inspect(source);
+	assert.equal(summary.cameras, 2);
+	assert.ok(summary.notes.some((note) => note.includes('empty optional settings')));
+	await finish(importer, summary.id);
+	const saved = await store.read();
+	assert.equal(saved.app.streams[0].label, 'Camera 1 (2)');
+	assert.equal(saved.app.streams[1].label, 'Camera 1');
+	assert.ok(saved.app.streams.every((stream) => stream.id));
+	assert.equal(saved.app.streams[0].source, camera);
+	assert.equal(saved.app.streams[0].setup, undefined);
+	assert.deepEqual(saved.app.streams[0].connection, { address: 'http://camera.example.test' });
+	assert.deepEqual(saved.app.detectors, [{ label: 'Detector 1' }]);
+	assert.deepEqual(saved.app.telegrams, [
+		{ label: 'Telegram 1', token: 'private-token', chat: '1234' }
+	]);
+	assert.deepEqual(saved.app.llms, [
+		{ label: 'AI connection 1', model: 'vision-model', key: ' private-api-key ' }
+	]);
+	assert.deepEqual(saved.app.devices ?? [], []);
+	assert.equal(saved.app.language, undefined);
+	assert.deepEqual(saved.config.detectors[0].exporters?.telegram?.[0], {
+		token: 'private-token',
+		chat: '1234',
+		include_video: false,
+		alert_every: 3
+	});
+	assert.deepEqual(
+		await Promise.all(
+			['config.json', 'app.json'].map((file) => readFile(path.join(source, file), 'utf8'))
+		),
+		originals
+	);
+	// The tolerance belongs to importing; an invalid saved document still needs recovery.
+	assert.throws(() => normalizeConfiguration(saved.config, app), isValiError);
+});
+
+test('null or empty metadata collections recover settings from config.json', async (t) => {
+	for (const app of [
+		null,
+		{ language: null, streams: null, detectors: null, telegrams: null, llms: null },
+		{ streams: [], detectors: [], telegrams: [], llms: [], devices: [] }
+	]) {
+		await t.test(JSON.stringify(app), async (t) => {
+			const { source, importer, store } = await fixture(t);
+			await writeJson(path.join(source, 'app.json'), app);
+			const original = await readFile(path.join(source, 'app.json'), 'utf8');
+			const summary = await importer.inspect(source);
+			await finish(importer, summary.id);
+			const saved = await store.read();
+			assert.equal(saved.config.detectors.length, 1);
+			assert.equal(saved.app.streams[0].source, camera);
+			assert.equal(saved.app.detectors[0].label, 'Detector 1');
+			assert.equal(saved.app.telegrams[0].token, 'private-token');
+			assert.deepEqual(saved.app.llms, []);
+			assert.equal(await readFile(path.join(source, 'app.json'), 'utf8'), original);
+		});
+	}
+});
+
+test('imports an empty setup and its recordings without starting or validating detection', async (t) => {
+	const { source, destination, importer, store, calls } = await fixture(t);
+	await writeJson(path.join(source, 'config.json'), { detectors: [] });
+	await writeJson(path.join(source, 'app.json'), {
+		streams: [],
+		detectors: [],
+		telegrams: [],
+		llms: []
+	});
+	const summary = await importer.inspect(source);
+	assert.deepEqual([summary.cameras, summary.detectors, summary.recordings], [0, 0, 1]);
+	assert.deepEqual(summary.notes, []);
+	await finish(importer, summary.id);
+	const saved = await store.read();
+	assert.deepEqual(saved.config.detectors, []);
+	assert.deepEqual(saved.app.streams, []);
+	assert.deepEqual(saved.app.detectors, []);
+	assert.deepEqual(saved.app.telegrams, []);
+	assert.deepEqual(saved.app.llms, []);
+	assert.deepEqual(calls, []);
+	assert.equal(
+		await readFile(path.join(destination, event, 'video.mp4'), 'utf8'),
+		'original recording'
+	);
+	assert.equal(await monitoringEnabled(path.join(destination, 'app.json')), false);
+});
+
+test('imports empty optional detector and exporter lists without enabling them', async (t) => {
+	const { source, importer, store } = await fixture(t);
+	await writeJson(path.join(source, 'config.json'), {
+		detectors: [
+			{
+				detection: { source: [camera] },
+				vlm: [],
+				exporters: { disk: [], telegram: [], webhook: [] }
+			}
+		]
+	});
+	await writeJson(path.join(source, 'app.json'), { telegrams: [], llms: [] });
+	const original = await readFile(path.join(source, 'config.json'), 'utf8');
+	const summary = await importer.inspect(source);
+	await finish(importer, summary.id);
+	const saved = await store.read();
+	assert.deepEqual(saved.config.detectors[0].vlm, []);
+	assert.deepEqual(saved.config.detectors[0].exporters, { disk: [], telegram: [], webhook: [] });
+	assert.deepEqual(saved.app.telegrams, []);
+	assert.deepEqual(saved.app.llms, []);
+	assert.equal(await readFile(path.join(source, 'config.json'), 'utf8'), original);
+});
+
+test('invalid required metadata names its file and field without exposing settings or skipping entries', async (t) => {
+	const cases = [
+		{ field: 'streams.0.source', overrides: { streams: [{ label: 'Barn', source: '' }] } },
+		{
+			field: 'telegrams.0.token',
+			overrides: { telegrams: [{ label: 'Phone', token: '', chat: '1234' }] }
+		},
+		{
+			field: 'telegrams.0.chat',
+			overrides: { telegrams: [{ label: 'Phone', token: 'private-token', chat: '' }] }
+		},
+		{ field: 'llms.0.model', overrides: { llms: [{ label: 'Vision', model: '' }] } },
+		{
+			name: 'empty model list',
+			field: 'llms.0.model',
+			overrides: { llms: [{ label: 'Vision', model: [] }] }
+		},
+		{
+			field: 'llms.0.url',
+			overrides: { llms: [{ label: 'Vision', model: 'vision-model', url: 'private-api-key' }] }
+		},
+		{
+			name: 'invalid header name',
+			field: 'llms.0.headers',
+			overrides: {
+				llms: [
+					{
+						label: 'Vision',
+						model: 'vision-model',
+						headers: { 'private-header-key\ninjected': 'private-api-key' }
+					}
+				]
+			}
+		},
+		{
+			name: 'invalid header value',
+			field: 'llms.0.headers',
+			overrides: {
+				llms: [
+					{
+						label: 'Vision',
+						model: 'vision-model',
+						headers: { 'private-header-key': 'private-api-key\ninjected' }
+					}
+				]
+			}
+		},
+		{
+			field: 'streams.0.connection.address',
+			overrides: {
+				streams: [
+					{
+						source: camera,
+						connection: { address: 'http://private-user:private-password@camera.example.test' }
+					}
+				]
+			}
+		},
+		{ field: 'detectors.0.preset', overrides: { detectors: [{ label: 'Detector', preset: 123 }] } }
+	];
+	for (const { name, field, overrides } of cases) {
+		await t.test(name ?? field, async (t) => {
+			const { source, destination, app, importer, calls } = await fixture(t);
+			await writeJson(path.join(source, 'app.json'), { ...app, ...overrides });
+			const original = await readFile(path.join(source, 'app.json'), 'utf8');
+			await assert.rejects(importer.inspect(source), (error: Error) => {
+				assert.match(error.message, /app\.json/);
+				assert.ok(error.message.includes(field), error.message);
+				assert.doesNotMatch(
+					error.message,
+					/private-password|private-token|private-api-key|private-header-key/
+				);
+				return true;
+			});
+			assert.equal(await readFile(path.join(source, 'app.json'), 'utf8'), original);
+			assert.equal(await exists(path.join(destination, 'config.json')), false);
+			assert.equal(await exists(path.join(destination, 'detections')), false);
+			assert.deepEqual(calls, []);
+		});
+	}
+});
+
+test('invalid legacy detector options name config.json and their field without quoting input', async (t) => {
+	const { source, config, importer } = await fixture(t);
+	await writeJson(path.join(source, 'config.json'), {
+		...config,
+		detectors: [
+			{
+				...config.detectors[0],
+				yolo: { ...config.detectors[0].yolo, strategy: 'private-strategy' }
+			}
+		]
+	});
+	const original = await readFile(path.join(source, 'config.json'), 'utf8');
+	await assert.rejects(importer.inspect(source), (error: Error) => {
+		assert.match(error.message, /config\.json/);
+		assert.ok(error.message.includes('detectors.0.yolo.strategy'));
+		assert.doesNotMatch(error.message, /private-strategy/);
+		return true;
+	});
+	assert.equal(await readFile(path.join(source, 'config.json'), 'utf8'), original);
+});
+
+test('an empty required camera source list blocks import and identifies its field', async (t) => {
+	const { source, destination, importer, calls } = await fixture(t);
+	await writeJson(path.join(source, 'config.json'), {
+		detectors: [{ detection: { source: [] } }]
+	});
+	const original = await readFile(path.join(source, 'config.json'), 'utf8');
+	await assert.rejects(importer.inspect(source), /config\.json:.*detectors\/0\/detection\/source/);
+	assert.equal(await readFile(path.join(source, 'config.json'), 'utf8'), original);
+	assert.equal(await exists(path.join(destination, 'config.json')), false);
+	assert.deepEqual(calls, []);
 });
 
 test('unknown configuration settings and missing explicit model paths block import without modifying data', async (t) => {

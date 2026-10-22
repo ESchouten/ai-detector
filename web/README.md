@@ -67,6 +67,8 @@ Plain HTTP is not encrypted: use a trusted network, or an HTTPS reverse proxy wi
 
 Before adding a camera, choose **Use existing setup**, close the old application, select its folder containing `config.json`, review the counts and import. Importing starts nothing and sends nothing, never replaces an existing setup, and resumes if it is interrupted. It works only on the computer the application runs on.
 
+Import fills in missing or empty names and treats empty optional settings in the old `app.json` as unset, with a note before copying. Optional lists may be empty, and a setup may have no detectors; an existing detector still needs at least one camera source. Old paired devices and camera verification are not imported. Camera sources, detector rules and alert credentials still have to be valid. Invalid app metadata is reported with its file and field instead of a raw validator message. The original settings files stay unchanged.
+
 The import copies settings, `detections/`, local `presets/` and referenced local model and video files, and leaves the old files as they were. **Keep recordings in their current folder** links to the old archive instead: keep that drive available, because new recordings, reviews and deletions then happen there.
 
 ### Backup, recovery and storage

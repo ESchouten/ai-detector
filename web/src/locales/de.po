@@ -195,6 +195,7 @@ msgstr "Öffnen Sie das Dashboard über localhost auf dem Computer, auf dem AI D
 #: src/lib/remote/camera.remote.ts
 #: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
+#: src/lib/server/installation-import/metadata.ts
 msgid "Camera"
 msgstr "Kamera"
 
@@ -3707,3 +3708,24 @@ msgstr "Die Empfänger der Kamerabenachrichtigungen erhalten eine Telegram-Nachr
 #: src/lib/configuration.ts
 msgid "Telegram {0}"
 msgstr "Telegram {0}"
+
+#. 0: file; 1: fields
+#: src/lib/server/installation-import/configuration.ts
+msgid "Check {0}: {1}. These settings are invalid or missing."
+msgstr "Prüfen Sie {0}: {1}. Diese Einstellungen fehlen oder sind ungültig."
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Detector"
+msgstr "Detektor"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Telegram"
+msgstr "Telegram"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "AI connection"
+msgstr "KI-Verbindung"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Filled in missing names and ignored empty optional settings in app.json."
+msgstr "Fehlende Namen wurden ergänzt und leere optionale Einstellungen in app.json wurden übersprungen."

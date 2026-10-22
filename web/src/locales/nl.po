@@ -195,6 +195,7 @@ msgstr "Open het dashboard via localhost op de computer waarop AI Detector draai
 #: src/lib/remote/camera.remote.ts
 #: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
+#: src/lib/server/installation-import/metadata.ts
 msgid "Camera"
 msgstr "Camera"
 
@@ -3707,3 +3708,24 @@ msgstr "Stuur de ontvangers van de camerameldingen een Telegram-bericht na vijf 
 #: src/lib/configuration.ts
 msgid "Telegram {0}"
 msgstr "Telegram {0}"
+
+#. 0: file; 1: fields
+#: src/lib/server/installation-import/configuration.ts
+msgid "Check {0}: {1}. These settings are invalid or missing."
+msgstr "Controleer {0}: {1}. Deze instellingen ontbreken of zijn ongeldig."
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Detector"
+msgstr "Detector"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Telegram"
+msgstr "Telegram"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "AI connection"
+msgstr "AI-verbinding"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Filled in missing names and ignored empty optional settings in app.json."
+msgstr "Ontbrekende namen zijn aangevuld en lege optionele instellingen in app.json zijn overgeslagen."

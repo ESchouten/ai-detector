@@ -115,3 +115,13 @@ def test_enrolment_needs_sessions_to_test_on(herd):
 
     with pytest.raises(ValueError, match="more than 4"):
         simulate(herd, vectors, Options(enrol_sessions=4))
+
+
+def test_a_runner_up_margin_still_names_a_separable_herd(herd):
+    vectors = embeddings(herd, FakeEmbedder(noise=0.1))
+
+    result = simulate(herd, vectors, Options(merges=(0.8,), goal=1.0, margin=0.5))
+
+    assert result["options"]["margin"] == 0.5
+    assert result["grouped"][0]["mean"]["recognised"] == 1.0
+    assert result["grouped"][0]["mean"]["wrong"] == 0

@@ -49,3 +49,18 @@ def track_scores(
     return firsts, np.stack(
         [scores[indices].mean(axis=0) for indices in groups.values()]
     )
+
+
+def runner_up_margin(scores: NDArray[np.float32], weight: float) -> NDArray[np.float32]:
+    """Lower each animal's score by `weight` times the best other animal's score.
+
+    The order of the animals stays the same, but a best animal with a close
+    runner-up loses confidence: at weight 1 her score is her lead over the
+    runner-up, at 0 it is unchanged. Aimed at look-alikes and at strangers who
+    resemble several cows at once.
+    """
+    if weight == 0 or scores.shape[1] < 2:
+        return scores
+    best = scores.max(axis=1, keepdims=True)
+    second = np.partition(scores, -2, axis=1)[:, -2:-1]
+    return scores - weight * np.where(scores >= best, second, best)

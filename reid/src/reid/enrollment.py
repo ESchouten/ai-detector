@@ -20,7 +20,12 @@ from numpy.typing import NDArray
 from reid.benchmark import Options as BenchmarkOptions
 from reid.benchmark import self_set_thresholds
 from reid.manifest import Crop
-from reid.matching import identity_scores, similarities, track_scores
+from reid.matching import (
+    identity_scores,
+    runner_up_margin,
+    similarities,
+    track_scores,
+)
 from reid.splits import Split
 
 MILESTONES = (0.5, 0.8, 0.9, 1.0)
@@ -36,6 +41,8 @@ class Options:
     goal: float = 0.9
     k: int = 2
     precision: float = 0.99
+    # Share of the runner-up's score taken off the best cow's before naming.
+    margin: float = 0.0
     strangers: float = 0.25
     folds: int = 3
     seed: int = 0
@@ -196,6 +203,7 @@ def _threshold(
             seed=options.seed,
             k=options.k,
             precision=options.precision,
+            margin=options.margin,
         ),
     )
     return found[0].get(level)
@@ -233,7 +241,7 @@ def _days(
     cows = np.array([asked[i].identity for i in firsts])
     best = ranked[:, 0]
     named = (
-        averaged.max(axis=1) >= threshold
+        runner_up_margin(averaged, options.margin).max(axis=1) >= threshold
         if threshold is not None
         else np.zeros(len(firsts), dtype=bool)
     )
@@ -348,6 +356,7 @@ def simulate(
             "goal": options.goal,
             "k": options.k,
             "precision": options.precision,
+            "margin": options.margin,
         },
         "labelled": labelled,
         "grouped": grouped,

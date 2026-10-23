@@ -1,6 +1,6 @@
 import numpy as np
 
-from reid.matching import identity_scores, track_scores
+from reid.matching import identity_scores, runner_up_margin, track_scores
 
 
 def test_an_animal_scores_by_her_nearest_pictures():
@@ -27,3 +27,17 @@ def test_tracks_average_their_crops_and_lone_crops_stay_apart():
 
     assert firsts == (0, 1, 3)
     np.testing.assert_allclose(averaged, [[0.75, 0.25], [0.0, 1.0], [0.2, 0.8]])
+
+
+def test_the_runner_up_margin_takes_the_closest_rival_off_each_score():
+    scores = np.array([[0.9, 0.7, 0.1], [0.5, 0.5, 0.2]], np.float32)
+
+    np.testing.assert_allclose(
+        runner_up_margin(scores, 1.0), [[0.2, -0.2, -0.8], [0.0, 0.0, -0.3]], atol=1e-6
+    )
+    np.testing.assert_allclose(
+        runner_up_margin(scores, 0.5)[0], [0.55, 0.25, -0.35], atol=1e-6
+    )
+    assert runner_up_margin(scores, 0.0) is scores
+    single = scores[:, :1]
+    assert runner_up_margin(single, 1.0) is single

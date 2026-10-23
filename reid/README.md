@@ -69,7 +69,7 @@ What happens on each farm:
 1. **Time split.** The earliest sessions holding half of the crops become the gallery (the enrolled photos), later sessions the queries. `--gap-sessions 1` leaves a session out in between.
 2. **Strangers.** In each of `--folds` folds, a different quarter (`--strangers`) of the animals loses its gallery photos. A correct answer for them is no name.
 3. **Matching.** A query scores each enrolled animal by the mean similarity to her `--k` most similar gallery photos, and takes the best-scoring animal. With tracks, crop scores are averaged per track first.
-4. **Naming.** A name is shown only above a threshold. Each threshold below is the lowest at which names are right `--precision` (99%) of the time on the data it was chosen on; they differ in what that data is.
+4. **Naming.** A name is shown only above a threshold. With `--margin 0.5`, half the runner-up's score is first taken off the best animal's, so an animal that barely beats a look-alike is not named; rankings stay the same. Each threshold below is the lowest at which names are right `--precision` (99%) of the time on the data it was chosen on; they differ in what that data is.
 
 The table reports, per model, farm and level (crop or track):
 
@@ -97,7 +97,7 @@ uv run reid enroll ~/reid-cache/manifests/eth-tracks.csv --model miewid-msv3 \
 1. **Sightings.** The crops of the first `--enrol-sessions` sessions are grouped into sightings, one per track; a crop without a track stands alone.
 2. **Groups.** Sightings are grouped by look with average linkage, once for each `--merge` similarity.
 3. **The farmer.** Groups with the most sightings come first, and each is named with one tap after the cow most of its pictures show, so the rest of a mixed group gets a wrong name. The farmer stops once `--goal` (90%) of the cows seen have a name. The labels are used only here and for scoring.
-4. **Later days.** Each later session's sightings are named against that gallery at the threshold the install sets from it, as the benchmark's self-set threshold does.
+4. **Later days.** Each later session's sightings are named against that gallery at the threshold the install sets from it, as the benchmark's self-set threshold does, with the same `--precision` and `--margin`.
 
 The table shows, per grouping: groups formed, the share of sightings in a group named after their own cow, taps to the goal, to 90% and to every cow, then means over the later days: sightings named (right when named), cows recognised at least once that day, the right cow in the top 3, and wrong names in total. The first row is the same gallery named from the true labels, the ceiling for perfect naming. Each day's numbers are in the JSON.
 

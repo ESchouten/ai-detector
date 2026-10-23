@@ -15,7 +15,12 @@ from numpy.typing import NDArray
 
 from reid.backbones import Embedder
 from reid.manifest import Crop
-from reid.matching import identity_scores, similarities, track_scores
+from reid.matching import (
+    identity_scores,
+    runner_up_margin,
+    similarities,
+    track_scores,
+)
 from reid.metrics import Decisions, mean_average_precision, top_k
 from reid.splits import Split, open_set_splits
 
@@ -32,6 +37,8 @@ class Options:
     gap_sessions: int = 0
     precision: float = 0.99
     max_per_identity: int | None = None
+    # Share of the runner-up's score taken off the best animal's before naming.
+    margin: float = 0.0
 
 
 def subsample(
@@ -154,11 +161,13 @@ def _levels(
     matched: _Matched,
     strangers: frozenset[str],
     absent: frozenset[str] = frozenset(),
+    margin: float = 0.0,
 ) -> dict[str, _Level]:
     """Decisions per crop and per track.
 
     Strangers lose their enrolled photos but are still asked about; absent
-    animals are left out altogether.
+    animals are left out altogether. `margin` is taken off after any averaging,
+    see `runner_up_margin`.
     """
     hidden = strangers | absent
     keep = [i for i, name in enumerate(matched.names) if name not in hidden]
@@ -171,7 +180,7 @@ def _levels(
     known_light = any(crop.night is not None for crop in queries)
     levels = {
         "crop": _Level(
-            Decisions.of(names, scores, truth),
+            Decisions.of(names, runner_up_margin(scores, margin), truth),
             night if known_light else None,
             top_k(names, scores, truth, 1),
             top_k(names, scores, truth, 3),
@@ -181,7 +190,7 @@ def _levels(
         firsts, averaged = track_scores(scores, [crop.track for crop in queries])
         track_truth = [truth[i] for i in firsts]
         levels["track"] = _Level(
-            Decisions.of(names, averaged, track_truth),
+            Decisions.of(names, runner_up_margin(averaged, margin), track_truth),
             night[list(firsts)] if known_light else None,
             top_k(names, averaged, track_truth, 1),
             top_k(names, averaged, track_truth, 3),
@@ -195,6 +204,7 @@ def _scored_folds(
     splits: Sequence[Split],
     k: int,
     ranking: bool = True,
+    margin: float = 0.0,
 ) -> list[_Scored]:
     """Score every fold of one time split from a single match.
 
@@ -208,7 +218,7 @@ def _scored_folds(
     matched = _match(crops, vectors, gallery, first.queries, k, ranking)
     scored = []
     for split in splits:
-        levels = _levels(matched, split.strangers)
+        levels = _levels(matched, split.strangers, margin=margin)
         rank = levels["crop"].rank1 if ranking else None
         scored.append(_Scored(split, rank, matched.map, levels))
     return scored
@@ -252,7 +262,9 @@ def self_set_thresholds(
     for split in splits:
         found: dict[str, list[float]] = {}
         for inner_split in inner:
-            levels = _levels(matched, inner_split.strangers, split.strangers)
+            levels = _levels(
+                matched, inner_split.strangers, split.strangers, options.margin
+            )
             for level, scored_level in levels.items():
                 threshold = scored_level.decisions.threshold_for(options.precision)
                 if threshold is not None:
@@ -283,7 +295,7 @@ def score(
             self_set,
         )
         for scored, self_set in zip(
-            _scored_folds(crops, vectors, splits, options.k),
+            _scored_folds(crops, vectors, splits, options.k, margin=options.margin),
             self_set_thresholds(crops, vectors, splits, options),
             strict=True,
         )

@@ -77,6 +77,7 @@ def _benchmark(arguments: argparse.Namespace) -> None:
         gap_sessions=arguments.gap_sessions,
         precision=arguments.precision,
         max_per_identity=arguments.max_per_identity,
+        margin=arguments.margin,
     )
     farms = {
         manifest: subsample(
@@ -172,6 +173,7 @@ def _enroll(arguments: argparse.Namespace) -> None:
         goal=arguments.goal,
         k=arguments.k,
         precision=arguments.precision,
+        margin=arguments.margin,
     )
     crops = read_manifest(arguments.manifest)
     embedder = build(
@@ -310,6 +312,13 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
     bench.add_argument("--gallery-fraction", type=float, default=0.5)
     bench.add_argument("--gap-sessions", type=int, default=0)
     bench.add_argument("--precision", type=float, default=0.99)
+    bench.add_argument(
+        "--margin",
+        type=float,
+        default=0.0,
+        help="share of the runner-up cow's score taken off the best one's before "
+        "naming; 1 names by the lead over the runner-up",
+    )
     bench.add_argument("--max-per-identity", type=int)
     bench.add_argument("--batch-size", type=int, default=32)
     bench.add_argument("--device", help="cuda, mps or cpu; detected when left out")
@@ -349,6 +358,13 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
     )
     enroll.add_argument("--k", type=int, default=2)
     enroll.add_argument("--precision", type=float, default=0.99)
+    enroll.add_argument(
+        "--margin",
+        type=float,
+        default=0.0,
+        help="share of the runner-up cow's score taken off the best one's before "
+        "naming; 1 names by the lead over the runner-up",
+    )
     enroll.add_argument("--batch-size", type=int, default=32)
     enroll.add_argument("--device")
     enroll.add_argument("--half", action="store_true")

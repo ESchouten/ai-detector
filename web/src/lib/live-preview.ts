@@ -68,6 +68,34 @@ export function identityLabel(identity: DetectionBox['identity']): string | null
 	return identity.candidates.length ? `${identity.candidates[0].name}?` : null;
 }
 
+/** Recognised, only resembling a name, or not named at all. */
+export type IdentityState = 'recognised' | 'resembles' | 'unnamed';
+
+export function identityState(identity: NonNullable<DetectionBox['identity']>): IdentityState {
+	if (identity.name !== null) return 'recognised';
+	return identity.candidates.length ? 'resembles' : 'unnamed';
+}
+
+/** A box shows who it is as a pill once it resembles someone, and while naming always. */
+export function showsPill(box: DetectionBox, naming: boolean): boolean {
+	return box.identity !== null && (naming || identityState(box.identity) !== 'unnamed');
+}
+
+/** Where a box's pill points: the top of its outline nearest the middle, so an
+ * outline cut off along the picture's top edge points at its middle; without an
+ * outline, the middle of the box's top side. */
+export function pillAnchor(box: DetectionBox): [number, number] {
+	const middle = (box.x1 + box.x2) / 2;
+	if (box.outline.length <= 2) return [middle, box.y1];
+	const top = Math.min(...box.outline.map(([, y]) => y));
+	const near = Math.max(2, (box.y2 - box.y1) * 0.03);
+	return box.outline
+		.filter(([, y]) => y <= top + near)
+		.reduce((best, point) =>
+			Math.abs(point[0] - middle) < Math.abs(best[0] - middle) ? point : best
+		);
+}
+
 export function detectionBoxLabel(box: DetectionBox): string {
 	const identity = identityLabel(box.identity);
 	return [

@@ -7,6 +7,7 @@
 <script lang="ts">
 	import { detectionBoxLabel, type CameraOverlayFrame, type DetectionBox } from '$lib/live-preview';
 	import DetectionBoxes from './detection-boxes.svelte';
+	import IdentityPills from './identity-pills.svelte';
 	let {
 		id,
 		label,
@@ -51,6 +52,7 @@
 					{selected}
 				/>
 			</svg>
+			<IdentityPills {frame} {width} {height} {onselect} {selected} />
 		{/if}
 	{/each}
 </div>

@@ -3,6 +3,7 @@
 	import {
 		boxOutline,
 		detectionBoxLabel,
+		showsPill,
 		type DetectionBox,
 		type LivePreviewFrame
 	} from '$lib/live-preview';
@@ -57,15 +58,18 @@
 			vector-effect="non-scaling-stroke"
 		/>
 	{/if}
-	<text
-		x={box.x1 + 4}
-		y={Math.max(fontSize + 3, box.y1 - 5)}
-		font-size={fontSize}
-		font-weight="600"
-		fill="white"
-		stroke="black"
-		stroke-width="3"
-		paint-order="stroke"
-		stroke-linejoin="round">{detectionBoxLabel(box)}</text
-	>
+	<!-- While naming, an outline waits for its pill without a label. -->
+	{#if !onselect && !showsPill(box, false)}
+		<text
+			x={box.x1 + 4}
+			y={Math.max(fontSize + 3, box.y1 - 5)}
+			font-size={fontSize}
+			font-weight="600"
+			fill="white"
+			stroke="black"
+			stroke-width="3"
+			paint-order="stroke"
+			stroke-linejoin="round">{detectionBoxLabel(box)}</text
+		>
+	{/if}
 {/each}

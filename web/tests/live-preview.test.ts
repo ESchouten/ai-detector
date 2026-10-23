@@ -5,7 +5,7 @@ import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
 import writeFileAtomic from 'write-file-atomic';
-import { boxOutline, detectionBoxLabel } from '../src/lib/live-preview.ts';
+import { boxOutline, detectionBoxLabel, pillAnchor, showsPill } from '../src/lib/live-preview.ts';
 import {
 	createCameraOverlayStream,
 	type LivePreviewCamera
@@ -214,6 +214,34 @@ test('a box shows the name it is recognised by, and only suggests one when unsur
 		detectionBoxLabel({ ...box, identity: { ...identity, candidates: [] } }),
 		'cow · 90% · #17'
 	);
+});
+
+test('a pill shows who a box is once it resembles someone, and while naming even before', () => {
+	const unnamed = { sighting: 'a'.repeat(32), name: null, candidates: [] };
+	const resembles = { ...unnamed, candidates: [{ name: '412', score: 0.4 }] };
+	assert.equal(showsPill(box, true), false);
+	assert.equal(showsPill({ ...box, identity: unnamed }, false), false);
+	assert.equal(showsPill({ ...box, identity: unnamed }, true), true);
+	assert.equal(showsPill({ ...box, identity: resembles }, false), true);
+});
+
+test('a pill points at the top of the outline nearest its middle', () => {
+	assert.deepEqual(pillAnchor(box), [5.5, 2]);
+	const head: [number, number][] = [
+		[1, 6],
+		[2, 3],
+		[8, 6],
+		[10, 12]
+	];
+	assert.deepEqual(pillAnchor({ ...box, outline: head }), [2, 3]);
+	// Cut off along the picture's top edge.
+	const cut: [number, number][] = [
+		[1, 2],
+		[5, 2],
+		[10, 2],
+		[10, 12]
+	];
+	assert.deepEqual(pillAnchor({ ...box, outline: cut }), [5, 2]);
 });
 
 test('an outlined box is drawn along its outline, any other along its sides', () => {

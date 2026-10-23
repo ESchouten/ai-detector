@@ -147,6 +147,18 @@ Training uses sub-centre ArcFace on P×K batches (16 animals × 4 crops by defau
 
 MiewID's weights come without a licence, so `efficientnetv2-m-440` is the same network starting from timm's Apache 2.0 ImageNet weights. Fine-tuning both on the same farms shows whether MiewID's animal pretraining still matters once the network has seen cows; if it doesn't, the second can be shipped without asking anyone.
 
+## Using a model in ai-detector
+
+`export-onnx` writes a preset, with its published weights or a fine-tuned checkpoint, as the ONNX model ai-detector's `individuals` setting takes, and checks that ONNX Runtime gives the same embeddings as PyTorch:
+
+```sh
+uv run --extra models --extra export reid export-onnx --model miewid-msv3 \
+    --checkpoint ~/reid-cache/models/miewid-allfarms-100ep.safetensors \
+    --out ~/reid-cache/onnx/miewid-allfarms-100ep.onnx
+```
+
+The model takes `images` (float32 RGB, N×3×H×W at the preset's size) and returns `embeddings`; its metadata holds the preset's `mean` and `std`. Share a fine-tuned MiewID only once Wild Me agrees.
+
 ## Caching
 
 - Model weights download once into the Hugging Face and timm caches.

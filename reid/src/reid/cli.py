@@ -757,6 +757,31 @@ def _add_training(commands: argparse._SubParsersAction) -> None:
     training.set_defaults(run=_train)
 
 
+def _export(arguments: argparse.Namespace) -> None:
+    from reid.export import export_preset
+
+    difference = export_preset(
+        arguments.model, arguments.checkpoint, arguments.out, arguments.opset
+    )
+    print(
+        f"Saved {arguments.out}; ONNX Runtime matches PyTorch within {difference:.2g}. "
+        'Give it to ai-detector as "individuals": {"model": ...}.'
+    )
+
+
+def _add_export(commands: argparse._SubParsersAction) -> None:
+    export = commands.add_parser(
+        "export-onnx", help="write a network as an ONNX model for ai-detector"
+    )
+    export.add_argument("--model", required=True, help="a preset, e.g. miewid-msv3")
+    export.add_argument(
+        "--checkpoint", type=Path, help="fine-tuned weights from reid train"
+    )
+    export.add_argument("--out", type=Path, required=True, help="an .onnx file")
+    export.add_argument("--opset", type=int, default=18)
+    export.set_defaults(run=_export)
+
+
 def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(prog="reid", description=__doc__)
     commands = root.add_subparsers(required=True)
@@ -766,6 +791,7 @@ def parser() -> argparse.ArgumentParser:
     _add_tracking(commands)
     _add_naming(commands)
     _add_training(commands)
+    _add_export(commands)
     return root
 
 

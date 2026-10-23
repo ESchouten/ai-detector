@@ -33,7 +33,7 @@ def group_sightings(
     return seen, cut(merge_tree(similarities(means, means)), len(seen), merge).tolist()
 
 
-def _spread(items: Sequence[int], count: int) -> list[int]:
+def spread(items: Sequence[int], count: int) -> list[int]:
     """`count` items spread evenly over the list, all of them if it is shorter."""
     if len(items) <= count:
         return list(items)
@@ -71,7 +71,7 @@ def write_page(
     for number, group in enumerate(order, start=1):
         numbers[group] = number
         ordered = sorted(members[group], key=lambda s: crops[seen[s][0]].session)
-        shown = _spread(ordered, per_group)
+        shown = spread(ordered, per_group)
         hidden = sorted(set(ordered) - set(shown), key=ordered.index)
         for sighting in shown:
             middle = crops[seen[sighting][len(seen[sighting]) // 2]]

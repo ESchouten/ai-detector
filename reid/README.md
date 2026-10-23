@@ -101,6 +101,18 @@ uv run reid enroll ~/reid-cache/manifests/eth-tracks.csv --model miewid-msv3 \
 
 The table shows, per grouping: groups formed, the share of sightings in a group named after their own cow, taps to the goal, to 90% and to every cow, then means over the later days: sightings named (right when named), cows recognised at least once that day, the right cow in the top 3, and wrong names in total. The first row is the same gallery named from the true labels, the ceiling for perfect naming. Each day's numbers are in the JSON.
 
+## Coat details
+
+The embedding sums up a whole cow, so two cows with similar coats can score alike. `rerank` re-checks each sighting's best `--top` candidates by matching coat details: ALIKED keypoints matched by LightGlue (install the `local` extra), between pictures of the sighting and each candidate's gallery pictures most similar to it. The count of confident matches, scaled to 0 to 1 at 100 matches, is added to the embedding's score with each `--weight`; weight 0 is the embedding alone.
+
+```sh
+uv sync --extra models --extra local
+uv run reid rerank ~/reid-cache/manifests/eth-tracks.csv --model miewid-msv3 \
+    --checkpoint ~/reid-cache/models/miewid-not-eth-6sets.safetensors --gallery-fraction 0.3 --out results
+```
+
+It uses one time split with a quarter of the cows as strangers, like the benchmark, and names at the threshold that is right 99% of the time on those same queries, with and without a 0.75 runner-up margin. That threshold flatters every row equally, so rows can be compared but are not what an install would get. Match counts are saved in `<out>/cache/`.
+
 ## Naming a farm's cows
 
 `groups` is the page a farmer would use: it groups every sighting in a manifest, for example the tracks `tracks-from-video` cut from a few days of barn video, and writes a page to name them.

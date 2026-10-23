@@ -243,6 +243,69 @@ def _apply_names(arguments: argparse.Namespace) -> None:
     )
 
 
+def rerank_table(result: dict[str, Any]) -> str:
+    """One Markdown row per margin and coat weight; weight 0 is the embedding alone."""
+    lines = [
+        "| Margin | Coat weight | Rank-1 | Named (right) | Strangers named |",
+        "|---|---|---|---|---|",
+    ]
+    for row in result["rows"]:
+        lines.append(
+            f"| {row['margin']} | {row['weight']} | {_percent(row['rank1'])} "
+            f"| {_percent(row['named'])} ({_percent(row['right'])}) "
+            f"| {_percent(row['strangers_named'])} |"
+        )
+    return "\n".join(lines)
+
+
+def _rerank(arguments: argparse.Namespace) -> None:
+    from reid.backbones import build
+    from reid.local import KeypointMatcher
+    from reid.rerank import Options as RerankOptions
+    from reid.rerank import candidates, evaluate
+
+    options = RerankOptions(
+        top=arguments.top,
+        query_crops=arguments.query_crops,
+        gallery_crops=arguments.gallery_crops,
+        k=arguments.k,
+        gallery_fraction=arguments.gallery_fraction,
+        precision=arguments.precision,
+        weights=tuple(arguments.weight),
+    )
+    crops = read_manifest(arguments.manifest)
+    embedder = build(
+        arguments.model,
+        checkpoint=arguments.checkpoint,
+        grayscale=arguments.grayscale,
+        batch_size=arguments.batch_size,
+        device=arguments.device,
+        half=arguments.half,
+    )
+    vectors = embeddings(crops, embedder, arguments.out / "cache")
+    matcher = KeypointMatcher(
+        grayscale=arguments.grayscale,
+        device=arguments.device,
+        cache=arguments.out / "cache",
+    )
+    result: dict[str, Any] = {
+        "model": embedder.name,
+        "matcher": matcher.name,
+        "manifest": arguments.manifest.stem,
+        "created": datetime.now(UTC).isoformat(timespec="seconds"),
+        **evaluate(candidates(crops, vectors, matcher, options), options),
+    }
+    arguments.out.mkdir(parents=True, exist_ok=True)
+    path = arguments.out / f"rerank-{arguments.manifest.stem}.{embedder.name}.json"
+    path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    print(
+        f"{result['queries']} query sightings, {result['known']} of enrolled cows; "
+        f"their cow is among the best {options.top} for "
+        f"{_percent(result['in_top'])}%"
+    )
+    print(rerank_table(result))
+
+
 def _report(arguments: argparse.Namespace) -> None:
     results = [
         json.loads(path.read_text(encoding="utf-8")) for path in arguments.results
@@ -410,6 +473,40 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
     report = commands.add_parser("report", help="table of earlier results")
     report.add_argument("results", type=Path, nargs="+")
     report.set_defaults(run=_report)
+
+
+def _add_rerank(commands: argparse._SubParsersAction) -> None:
+    rerank = commands.add_parser(
+        "rerank",
+        help="re-check each sighting's best candidate cows by matching coat "
+        "details, and compare with the embedding alone",
+    )
+    rerank.add_argument("manifest", type=Path, help="one farm, with sessions")
+    rerank.add_argument("--model", required=True)
+    rerank.add_argument("--checkpoint", type=Path)
+    rerank.add_argument("--grayscale", action="store_true")
+    rerank.add_argument("--top", type=int, default=3, help="candidate cows re-checked")
+    rerank.add_argument(
+        "--query-crops", type=int, default=3, help="pictures per sighting matched"
+    )
+    rerank.add_argument(
+        "--gallery-crops", type=int, default=3, help="pictures per candidate matched"
+    )
+    rerank.add_argument(
+        "--weight",
+        type=float,
+        nargs="+",
+        default=[0.0, 0.1, 0.2, 0.3, 0.5, 1.0],
+        help="weights of the coat score (0 to 1 at 100 matches); each is tried",
+    )
+    rerank.add_argument("--k", type=int, default=2)
+    rerank.add_argument("--gallery-fraction", type=float, default=0.5)
+    rerank.add_argument("--precision", type=float, default=0.99)
+    rerank.add_argument("--batch-size", type=int, default=32)
+    rerank.add_argument("--device")
+    rerank.add_argument("--half", action="store_true")
+    rerank.add_argument("--out", type=Path, default=Path("results"))
+    rerank.set_defaults(run=_rerank)
 
 
 def _add_imports(commands: argparse._SubParsersAction) -> None:
@@ -617,6 +714,7 @@ def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(prog="reid", description=__doc__)
     commands = root.add_subparsers(required=True)
     _add_scoring(commands)
+    _add_rerank(commands)
     _add_imports(commands)
     _add_tracking(commands)
     _add_naming(commands)

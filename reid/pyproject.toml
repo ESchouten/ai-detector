@@ -19,6 +19,10 @@ models = [
     # that code fails on transformers 5 (no all_tied_weights_keys).
     "transformers>=4.50,<5",
 ]
+# Matching coat details: ALIKED keypoints and LightGlue.
+local = [
+    "kornia>=0.8.3",
+]
 # Cutting crops out of labelled videos.
 video = [
     "opencv-python>=4.10",

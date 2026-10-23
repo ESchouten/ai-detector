@@ -51,7 +51,7 @@
 						alt=""
 						loading="lazy"
 						decoding="async"
-						class={['size-full object-cover transition-opacity', out && 'opacity-30']}
+						class={['size-full object-contain transition-opacity', out && 'opacity-30']}
 					/>
 					{#if out}
 						<span

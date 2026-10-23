@@ -84,7 +84,7 @@
 											alt=""
 											loading="lazy"
 											decoding="async"
-											class="size-full object-cover"
+											class="size-full object-contain"
 										/>
 										<form
 											method="POST"

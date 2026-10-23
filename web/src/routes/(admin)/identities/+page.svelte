@@ -10,6 +10,7 @@
 	import type { DetectionBox } from '$lib/live-preview';
 	import LiveNaming from './live-naming.svelte';
 	import SightingGroup from './sighting-group.svelte';
+	import SightingPicture from './sighting-picture.svelte';
 
 	let { data, form } = $props();
 	const overview = $derived(data.overview);
@@ -115,13 +116,7 @@
 							<ul class="flex flex-wrap gap-2 px-4 pb-4">
 								{#each identity.shown as sighting (sighting.id)}
 									<li class="relative size-24 overflow-hidden rounded-lg bg-media">
-										<img
-											src={resolve(`/identities/${sighting.id}/crop-1.jpg`)}
-											alt=""
-											loading="lazy"
-											decoding="async"
-											class="size-full object-contain"
-										/>
+										<SightingPicture {sighting} loading="lazy" />
 										<form
 											method="POST"
 											action="?/unname"

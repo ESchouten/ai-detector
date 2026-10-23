@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { resolve } from '$app/paths';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import { identityLabel, type DetectionBox } from '$lib/live-preview';
 	import { errorMessage } from '$lib/remote-calls';
 	import { getSighting, nameSighting } from '$lib/remote/identities.remote';
+	import SightingPicture from './sighting-picture.svelte';
 
 	let {
 		box = $bindable(),
@@ -70,13 +70,8 @@
 				{#if sighting}
 					<ul class="grid grid-cols-4 gap-2">
 						{#each { length: sighting.crops }, index (index)}
-							<li class="aspect-square overflow-hidden rounded-lg bg-media">
-								<img
-									src={resolve(`/identities/${sighting.id}/crop-${index + 1}.jpg`)}
-									alt=""
-									decoding="async"
-									class="size-full object-contain"
-								/>
+							<li class="relative aspect-square overflow-hidden rounded-lg bg-media">
+								<SightingPicture {sighting} {index} />
 							</li>
 						{/each}
 					</ul>

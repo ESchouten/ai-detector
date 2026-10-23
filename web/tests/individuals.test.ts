@@ -7,6 +7,13 @@ import { temporaryDirectory } from './support/files.ts';
 
 const id = (digit: string) => digit.repeat(32);
 
+/** The outline of its one picture, as a segmentation model gave it. */
+const outline: [number, number][] = [
+	[1, 2],
+	[30, 2],
+	[30, 40]
+];
+
 /** A sighting as the detector publishes it. */
 async function sighting(directory: string, sightingId: string, seen: string) {
 	const folder = path.join(directory, 'sightings', sightingId);
@@ -22,7 +29,8 @@ async function sighting(directory: string, sightingId: string, seen: string) {
 			track: 1,
 			seen,
 			event_id: 'e'.repeat(32),
-			crops: 1
+			crops: 1,
+			outlines: [outline]
 		})
 	);
 }
@@ -74,7 +82,7 @@ test('unnamed sightings are listed in the look-alike groups the detector made, t
 		{
 			name: '233',
 			ids: [id('3')],
-			shown: [{ id: id('3'), seen: '2026-10-02T08:00:00', crops: 1 }]
+			shown: [{ id: id('3'), seen: '2026-10-02T08:00:00', crops: 1, outlines: [outline] }]
 		}
 	]);
 });
@@ -107,6 +115,7 @@ test('naming writes the whole names file the detector reads, and a name can be t
 		id: id('3'),
 		seen: '2026-10-02T13:00:00',
 		crops: 1,
+		outlines: [outline],
 		name: '87'
 	});
 

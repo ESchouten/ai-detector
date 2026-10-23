@@ -47,6 +47,7 @@ from aidetector.domain.models import (
 
 logger = logging.getLogger(__name__)
 Image = NDArray[np.uint8]
+Outline = tuple[tuple[int, int], ...]
 SIGHTING_CROPS = 4
 CANDIDATES = 3
 # Smaller pictures carry too little coat for an embedding.
@@ -55,8 +56,11 @@ SIDE_MIN = 48
 SIDE_MAX = 512
 EDGE = 2
 COVERED = 0.25
-# Outside an outline is painted this grey, as in the pictures the models were tested on.
+# Outside an outline is painted this grey for the model, as in the pictures the
+# models were tested on; people see the pictures whole, with the outline drawn.
 BACKGROUND = 127
+# Pixels a saved outline may stray from the segmentation's.
+OUTLINE_TOLERANCE = 1.0
 # The latest unnamed sightings grouped for naming; grouping takes n² memory.
 GROUPED_MAX = 1000
 # Older unnamed sightings are removed; named ones are kept.
@@ -115,22 +119,36 @@ def _covered(box: BoundingBox, others: Sequence[BoundingBox]) -> bool:
     return False
 
 
-def _cut(image: Image, box: BoundingBox) -> Image:
-    """The box's pixels; with an outline, everything outside it is grey, so
-    neighbours in the box do not count towards this individual."""
+def _cut(image: Image, box: BoundingBox) -> tuple[Image, Outline]:
+    """The box's pixels, and the outline within them when a segmentation model
+    gave one."""
     height, width = image.shape[:2]
     top, left = max(0, box.y1), max(0, box.x1)
     crop = image[top : min(height, box.y2), left : min(width, box.x2)].copy()
-    if box.outline:
-        inside = np.zeros(crop.shape[:2], np.uint8)
-        points = np.asarray(box.outline, np.int32) - (left, top)
-        cv2.drawContours(inside, [points], -1, 255, cv2.FILLED)
-        crop[inside == 0] = BACKGROUND
-    scale = SIDE_MAX / max(crop.shape[:2])
-    if scale >= 1:
-        return crop
-    size = (max(1, round(crop.shape[1] * scale)), max(1, round(crop.shape[0] * scale)))
-    return cv2.resize(crop, size, interpolation=cv2.INTER_AREA)
+    scale = min(1.0, SIDE_MAX / max(crop.shape[:2]))
+    if scale < 1:
+        size = (
+            max(1, round(crop.shape[1] * scale)),
+            max(1, round(crop.shape[0] * scale)),
+        )
+        crop = cv2.resize(crop, size, interpolation=cv2.INTER_AREA)
+    if not box.outline:
+        return crop, ()
+    points = np.rint((np.asarray(box.outline) - (left, top)) * scale).astype(np.int32)
+    simple = cv2.approxPolyDP(points, OUTLINE_TOLERANCE, closed=True).reshape(-1, 2)
+    return crop, tuple((int(x), int(y)) for x, y in simple)
+
+
+def _masked(picture: Image, outline: Sequence[Sequence[int]]) -> Image:
+    """What the model sees: everything outside the outline grey, so neighbours
+    in the box do not count towards this individual."""
+    if not outline:
+        return picture
+    inside = np.zeros(picture.shape[:2], np.uint8)
+    cv2.drawContours(inside, [np.asarray(outline, np.int32)], -1, 255, cv2.FILLED)
+    masked = picture.copy()
+    masked[inside == 0] = BACKGROUND
+    return masked
 
 
 @dataclass(frozen=True)
@@ -138,6 +156,7 @@ class _Seen:
     area: int
     moment: datetime
     picture: Image
+    outline: Outline
 
 
 class _Pictures:
@@ -145,8 +164,8 @@ class _Pictures:
 
     Whole pictures, away from the frame's edge and not largely covered by
     another box, come first, largest first and spread over time so they show
-    different moments; others only make up the number. Outside a box's
-    outline, when a segmentation model gave one, pictures are grey.
+    different moments; others only make up the number. Each keeps its
+    outline, when a segmentation model gave one.
     """
 
     def __init__(self, count: int = SIGHTING_CROPS):
@@ -173,7 +192,7 @@ class _Pictures:
         if len(kept) == room and width * height <= kept[-1].area:
             return
         kept.append(
-            _Seen(width * height, observation.date, _cut(observation.image, box))
+            _Seen(width * height, observation.date, *_cut(observation.image, box))
         )
         kept.sort(key=lambda seen: seen.area, reverse=True)
         del kept[room:]
@@ -182,12 +201,11 @@ class _Pictures:
     def whole(self) -> bool:
         return bool(self._clear)
 
-    def chosen(self) -> list[Image]:
+    def chosen(self) -> list[_Seen]:
         pool = sorted(self._clear, key=lambda seen: seen.moment)
         picks = np.linspace(0, len(pool) - 1, min(self.count, len(pool))).round()
         chosen = [pool[int(index)] for index in np.unique(picks)]
-        chosen += self._other[: self.count - len(chosen)]
-        return [seen.picture for seen in chosen]
+        return chosen + self._other[: self.count - len(chosen)]
 
 
 def _tracked(
@@ -267,7 +285,13 @@ class Herd:
             raise IdentificationUnavailable(
                 f"Pictures of named sighting {record.id} cannot be read"
             )
-        vectors = self.model.embed(images)
+        outlines = record.outlines or [[]] * record.crops
+        vectors = self.model.embed(
+            [
+                _masked(image, outline)
+                for image, outline in zip(images, outlines, strict=True)
+            ]
+        )
         np.save(stored, vectors)
         return vectors
 
@@ -493,7 +517,9 @@ class TrackIdentifier:
         def save() -> _Sighting | None:
             if not pictures:
                 return None
-            vectors = self.herd.model.embed(pictures)
+            vectors = self.herd.model.embed(
+                [_masked(seen.picture, seen.outline) for seen in pictures]
+            )
             record = SightingRecord(
                 id=uuid4().hex,
                 camera=camera_id(source),
@@ -502,8 +528,9 @@ class TrackIdentifier:
                 seen=track.first.isoformat(),
                 event_id=event_id,
                 crops=len(pictures),
+                outlines=[list(seen.outline) for seen in pictures],
             )
-            self.herd.save(record, pictures, vectors)
+            self.herd.save(record, [seen.picture for seen in pictures], vectors)
             return _Sighting(record.id, vectors)
 
         track.sighting = self.herd.submit(save)

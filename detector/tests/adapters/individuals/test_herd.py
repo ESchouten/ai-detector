@@ -209,7 +209,7 @@ def test_whole_uncovered_pictures_are_chosen_before_larger_cut_off_ones(tmp_path
     ]
 
 
-def test_outside_a_segmentation_outline_pictures_are_grey(tmp_path):
+def test_pictures_stay_whole_and_the_model_sees_only_inside_the_outline(tmp_path):
     herd = herd_of(tmp_path)
     image = np.full((240, 320, 3), 128, np.uint8)
     image[40:100, 100:130] = COATS["412"]
@@ -223,12 +223,25 @@ def test_outside_a_segmentation_outline_pictures_are_grey(tmp_path):
         DetectionEvent(SOURCE, (seen,)), "e" * 32
     )
 
+    # People see the neighbour too, with the outline of the one this is.
     [picture] = pictures(herd, individual)
     assert picture.shape == (60, 60, 3)
     # JPEG blurs the edge between the halves; their middles keep their colour.
     assert np.abs(picture[30, 10].astype(int) - COATS["412"]).max() < 12
-    assert np.abs(picture[30, 50].astype(int) - 127).max() < 12
-    assert image[50, 140].tolist() == list(COATS["233"])
+    assert np.abs(picture[30, 50].astype(int) - COATS["233"]).max() < 12
+    folder = herd.sightings / individual.sighting
+    record = SightingRecord.model_validate_json((folder / "sighting.json").read_text())
+    assert sorted(record.outlines[0]) == [(0, 0), (0, 59), (29, 0), (29, 59)]
+    # The model saw the neighbour grey, also when it embeds the pictures again.
+    masked = image[40:100, 100:160].copy()
+    masked[:, 30:] = 127
+    expected = herd.model.embed([masked])
+    [vectors] = folder.glob("vectors-*.npy")
+    np.testing.assert_allclose(np.load(vectors), expected, atol=0.02)
+    vectors.unlink()
+    name(herd, {individual.sighting: "412"})
+    herd.known()
+    np.testing.assert_allclose(np.load(vectors), expected, atol=0.02)
 
 
 def watch(identifier, seconds, cows, start=0):

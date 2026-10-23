@@ -53,7 +53,9 @@ export class IndividualsFolder {
 
 	async #record(id: string): Promise<Sighting | null> {
 		const record = await readJson<Sighting>(path.join(this.#sighting(id), 'sighting.json'));
-		return record && { id, seen: record.seen, crops: record.crops };
+		return (
+			record && { id, seen: record.seen, crops: record.crops, outlines: record.outlines ?? [] }
+		);
 	}
 
 	async #records(ids: string[]): Promise<Sighting[]> {

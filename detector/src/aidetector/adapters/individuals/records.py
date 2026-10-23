@@ -6,7 +6,7 @@ individuals/
 ├── groups.json                written by the detector: unnamed look-alikes
 └── sightings/<sighting ID>/
     ├── sighting.json          written once by the detector
-    ├── crop-1.jpg, ...        the track's best pictures
+    ├── crop-1.jpg, ...        the track's best pictures, whole
     └── vectors-<model>.npy    their embeddings, per model file
 ```
 """
@@ -34,6 +34,9 @@ class SightingRecord(BaseModel):
     # The event that saved it; tracks seen before their event are saved without.
     event_id: str | None = Field(default=None, pattern=r"^[a-f0-9]{32}$")
     crops: int = Field(ge=1)
+    # Each picture's outline as [x, y] points in its pixels, empty without a
+    # segmentation model; the model sees the pictures grey outside them.
+    outlines: list[list[tuple[int, int]]] = []
 
 
 class NamesFile(BaseModel):

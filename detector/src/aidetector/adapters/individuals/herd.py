@@ -29,8 +29,10 @@ from aidetector.adapters.individuals.records import (
     Suggestion,
 )
 from aidetector.adapters.individuals.scoring import (
+    Decision,
     Gallery,
     NamedSighting,
+    decide_together,
     self_set_threshold,
 )
 from aidetector.adapters.media import MediaError
@@ -223,19 +225,25 @@ class _Sighting:
 
 
 def _individual(
-    track_id: int, label: str, sighting: _Sighting, known: Known
+    track_id: int,
+    label: str,
+    sighting: _Sighting,
+    names: Sequence[str],
+    decision: Decision,
+    given: int | None,
 ) -> Individual:
-    given = known.names.get(sighting.id)
-    candidates = tuple(
-        Candidate(name, score)
-        for name, score in _ranked(known.gallery, sighting.vectors, given)
-    )
+    order = [
+        int(i)
+        for i in np.argsort(-decision.scores, kind="stable")
+        if np.isfinite(decision.scores[i])
+    ]
     # A name a person gave this very sighting outranks any comparison.
-    recognised = bool(candidates) and (
-        candidates[0].name == given
-        or (known.threshold is not None and candidates[0].score >= known.threshold)
+    if given is not None:
+        order = [given, *(i for i in order if i != given)]
+    candidates = tuple(
+        Candidate(names[i], float(decision.scores[i])) for i in order[:CANDIDATES]
     )
-    return Individual(track_id, label, sighting.id, candidates, recognised)
+    return Individual(track_id, label, sighting.id, candidates, decision.recognised)
 
 
 class Herd:
@@ -486,8 +494,69 @@ class _Track:
         self.last = seen
         self.pictures = _Pictures()
         self.sighting: Future[_Sighting | None] | None = None
-        # The comparison shown live, with the names it was made against.
-        self.shown: tuple[Known, Individual] | None = None
+        # Tracks seen in the same picture: other individuals.
+        self.beside: set[int] = set()
+        # The sighting's similarity to each named individual, with the names it
+        # was compared against.
+        self.compared: tuple[Known, NDArray[np.float32]] | None = None
+
+    def similarities(self, known: Known, sighting: _Sighting) -> NDArray[np.float32]:
+        if self.compared is None or self.compared[0] is not known:
+            self.compared = (known, known.gallery.similarities(sighting.vectors))
+        return self.compared[1]
+
+    @property
+    def saved(self) -> _Sighting | None:
+        if (
+            self.sighting is None
+            or not self.sighting.done()
+            or self.sighting.exception() is not None
+        ):
+            return None
+        return self.sighting.result()
+
+
+def _decide(
+    saved: dict[int, tuple[_Track, _Sighting]], known: Known
+) -> dict[int, Individual]:
+    names = known.gallery.names
+    if not names:
+        return {
+            track_id: Individual(track_id, track.label, sighting.id)
+            for track_id, (track, sighting) in saved.items()
+        }
+    order = list(saved)
+    position = {track_id: index for index, track_id in enumerate(order)}
+    number = {name: index for index, name in enumerate(names)}
+    given = []
+    for track_id in order:
+        name = known.names.get(saved[track_id][1].id)
+        given.append(None if name is None else number.get(name))
+    decisions = decide_together(
+        [track.similarities(known, sighting) for track, sighting in saved.values()],
+        [
+            {position[other] for other in track.beside if other in position}
+            for track, _ in saved.values()
+        ],
+        given,
+        known.threshold,
+    )
+    return {
+        track_id: _individual(track_id, track.label, sighting, names, decision, number)
+        for (track_id, (track, sighting)), decision, number in zip(
+            saved.items(), decisions, given, strict=True
+        )
+    }
+
+
+@dataclass(frozen=True)
+class _Naming:
+    """A source's saved tracks as last decided together."""
+
+    known: Known
+    together: int
+    saved: frozenset[int]
+    individuals: dict[int, Individual]
 
 
 class TrackIdentifier:
@@ -497,12 +566,17 @@ class TrackIdentifier:
     it has been seen for a few seconds, or has gone, its best pictures are
     saved as a sighting on the herd's thread. Live pictures and
     events then compare that sighting with the named individuals; an event
-    saves its tracks that are not saved yet, and waits for them.
+    saves its tracks that are not saved yet, and waits for them. A source's
+    saved tracks are decided together, since tracks seen in one picture are
+    different individuals.
     """
 
     def __init__(self, herd: Herd):
         self.herd = herd
         self._tracks: dict[str, dict[int, _Track]] = {}
+        # Per source, how often a track was first seen beside another.
+        self._together: dict[str, int] = {}
+        self._named: dict[str, _Naming] = {}
         self._lock = Lock()
         self._known = _NOTHING_KNOWN
         self._looked = -LOOKING
@@ -537,22 +611,34 @@ class TrackIdentifier:
         track.sighting.add_done_callback(_report_failure)
         return track.sighting
 
+    def _seen_together(
+        self, source: str, tracks: dict[int, _Track], seen: set[int]
+    ) -> None:
+        for track_id in seen:
+            beside = seen - {track_id}
+            if not beside <= tracks[track_id].beside:
+                tracks[track_id].beside |= beside
+                self._together[source] = self._together.get(source, 0) + 1
+
     def observe(self, source: str, observation: Observation) -> None:
         """Watch an observation's tracks; cheap enough to call for every one."""
         now = observation.date
         with self._lock:
             tracks = self._tracks.setdefault(source, {})
+            seen = set()
             for track_id, label, box in _tracked(observation, self.herd.labels):
+                seen.add(track_id)
                 track = tracks.get(track_id)
                 if track is None:
                     track = tracks[track_id] = _Track(label, now)
                 track.last = now
                 if track.sighting is None:
                     track.pictures.add(observation, box)
-                    seen = (now - track.first).total_seconds()
+                    since = (now - track.first).total_seconds()
                     # One coming in from the edge waits for a whole picture.
-                    if seen >= SETTLED and (track.pictures.whole or seen >= PARTIAL):
+                    if since >= SETTLED and (track.pictures.whole or since >= PARTIAL):
                         self._save(source, track_id, track)
+            self._seen_together(source, tracks, seen)
             for track_id, track in list(tracks.items()):
                 away = (now - track.last).total_seconds()
                 if away >= FORGOTTEN:
@@ -573,28 +659,40 @@ class TrackIdentifier:
                     self._failure = str(error)
         return self._known
 
+    def _decided(self, source: str, known: Known) -> dict[int, Individual]:
+        """A source's saved tracks, compared with the named individuals and
+        decided together; decided again only after something changed."""
+        with self._lock:
+            tracks = dict(self._tracks.get(source, {}))
+            together = self._together.get(source, 0)
+        saved = {
+            track_id: (track, sighting)
+            for track_id, track in tracks.items()
+            if (sighting := track.saved) is not None
+        }
+        naming = self._named.get(source)
+        if (
+            naming is not None
+            and naming.known is known
+            and naming.together == together
+            and naming.saved == frozenset(saved)
+        ):
+            return naming.individuals
+        individuals = _decide(saved, known)
+        self._named[source] = _Naming(known, together, frozenset(saved), individuals)
+        return individuals
+
     def identity(self, source: str, track_id: int) -> Individual | None:
         """What the live pictures show for a track; None until it is saved.
 
         Meant for one live-picture thread: names.json is looked at once a
-        second, and a track is compared again only after it changed.
+        second, and tracks are decided again only after something changed.
         """
         with self._lock:
             track = self._tracks.get(source, {}).get(track_id)
-        if (
-            track is None
-            or track.sighting is None
-            or not track.sighting.done()
-            or track.sighting.exception() is not None
-        ):
+        if track is None or track.saved is None:
             return None
-        sighting = track.sighting.result()
-        if sighting is None:
-            return None
-        known = self._latest_known()
-        if track.shown is None or track.shown[0] is not known:
-            track.shown = (known, _individual(track_id, track.label, sighting, known))
-        return track.shown[1]
+        return self._decided(source, self._latest_known()).get(track_id)
 
     def _event_tracks(self, event: DetectionEvent) -> dict[int, _Track]:
         """The event's tracks, in the order they appear. Those live pictures
@@ -603,17 +701,23 @@ class TrackIdentifier:
             watched = set(self._tracks.get(event.source, {}))
         order: dict[int, None] = {}
         fresh: dict[int, _Track] = {}
+        pictures = []
         for observation in event.observations:
+            seen = set()
             for track_id, label, box in _tracked(observation, self.herd.labels):
+                seen.add(track_id)
                 order[track_id] = None
                 if track_id not in watched:
                     track = fresh.setdefault(track_id, _Track(label, observation.date))
                     track.last = observation.date
                     track.pictures.add(observation, box)
+            pictures.append(seen)
         with self._lock:
             tracks = self._tracks.setdefault(event.source, {})
             for track_id, track in fresh.items():
                 tracks.setdefault(track_id, track)
+            for seen in pictures:
+                self._seen_together(event.source, tracks, seen)
             return {track_id: tracks[track_id] for track_id in order}
 
     def identify(self, event: DetectionEvent, event_id: str) -> tuple[Individual, ...]:
@@ -623,24 +727,18 @@ class TrackIdentifier:
             pending = [
                 (
                     track_id,
-                    track.label,
                     track.sighting
                     or self._save(event.source, track_id, track, event_id),
                 )
                 for track_id, track in tracks.items()
             ]
         saved = [
-            (track_id, label, sighting)
-            for track_id, label, future in pending
-            if (sighting := future.result()) is not None
+            track_id for track_id, future in pending if future.result() is not None
         ]
         if not saved:
             return ()
-        known = self.herd.known()
-        individuals = tuple(
-            _individual(track_id, label, sighting, known)
-            for track_id, label, sighting in saved
-        )
+        decided = self._decided(event.source, self.herd.known())
+        individuals = tuple(decided[track_id] for track_id in saved)
         logger.info(
             "Compared %d track(s) with the named individuals in %.0fms",
             len(individuals),

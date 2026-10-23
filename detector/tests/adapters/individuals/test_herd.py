@@ -119,6 +119,31 @@ def test_names_given_on_two_days_recognise_later_tracks_without_a_restart(tmp_pa
     assert sure.sighting == unsure.sighting
 
 
+def test_tracks_in_one_picture_are_never_recognised_as_the_same_individual(
+    tmp_path,
+):
+    herd = herd_of(tmp_path)
+    named = {}
+    for day in (1, 2):
+        individuals = TrackIdentifier(herd).identify(event(day, whole_herd()), "e" * 32)
+        named |= {i.sighting: list(COATS)[i.track_id - 1] for i in individuals}
+    name(herd, named)
+    identifier = TrackIdentifier(herd)
+
+    # Seen at different times, two cows with one coat are each taken for 412.
+    first = identifier.identify(event(3, [(8, "412", PLACES[0])]), "a" * 32)
+    second = identifier.identify(event(4, [(9, "412", PLACES[1])]), "b" * 32)
+    assert [first[0].name, second[0].name] == ["412", "412"]
+
+    # Seen together, only one of them can be 412.
+    twins = identifier.identify(
+        event(5, [(10, "412", PLACES[0]), (11, "412", PLACES[1])]), "c" * 32
+    )
+    assert [twin.name for twin in twins] == ["412", None]
+    assert "412" not in [candidate.name for candidate in twins[1].candidates]
+    assert identifier.identity(SOURCE, 11) == twins[1]
+
+
 def groups(herd):
     herd.flush()
     return GroupsFile.model_validate_json(

@@ -10,6 +10,7 @@ import ScrollTextIcon from '@lucide/svelte/icons/scroll-text';
 import SettingsIcon from '@lucide/svelte/icons/settings';
 import SmartphoneIcon from '@lucide/svelte/icons/smartphone';
 import SparklesIcon from '@lucide/svelte/icons/sparkles';
+import TagIcon from '@lucide/svelte/icons/tag';
 
 export interface NavItem {
 	title: string;
@@ -33,9 +34,19 @@ export function mainNavigation(): NavItem[] {
 	];
 }
 
-/** What people set once and return to occasionally. */
-export function settingsNavigation(): NavItem[] {
+/** What people set once and return to occasionally. Animals only when individuals are recognised. */
+export function settingsNavigation({ individuals = false } = {}): NavItem[] {
 	return [
+		...(individuals
+			? [
+					{
+						title: 'Animals',
+						href: resolve('/animals'),
+						icon: TagIcon,
+						description: 'Name the animals the cameras recognise.'
+					}
+				]
+			: []),
 		{
 			title: 'Alerts',
 			href: resolve('/notifications'),
@@ -87,6 +98,8 @@ function matches(item: NavItem, pathname: string): boolean {
 /** Whether an item is lit. Settings stands for every settings and support page. */
 export function isActive(item: NavItem, pathname: string): boolean {
 	return item.area === 'settings'
-		? [item, ...settingsNavigation(), logsNavigation()].some((entry) => matches(entry, pathname))
+		? [item, ...settingsNavigation({ individuals: true }), logsNavigation()].some((entry) =>
+				matches(entry, pathname)
+			)
 		: matches(item, pathname);
 }

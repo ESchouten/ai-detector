@@ -1305,6 +1305,7 @@ msgstr "Aktuelle Verbindung behalten"
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
+#: src/routes/(admin)/animals/sighting-group.svelte
 msgid "Saving…"
 msgstr "Wird gespeichert…"
 
@@ -2177,6 +2178,7 @@ msgstr "Test erneut senden"
 
 #: src/lib/navigation.ts
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/animals/+page.svelte
 #: src/routes/(admin)/devices/+page.svelte
 #: src/routes/(admin)/logs/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
@@ -2249,6 +2251,7 @@ msgid "Please wait…"
 msgstr "Bitte warten…"
 
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/animals/sighting-group.svelte
 msgid "Save"
 msgstr "Speichern"
 
@@ -3729,3 +3732,121 @@ msgstr "KI-Verbindung"
 #: src/lib/server/installation-import/metadata.ts
 msgid "Filled in missing names and ignored empty optional settings in app.json."
 msgstr "Fehlende Namen wurden ergänzt und leere optionale Einstellungen in app.json wurden übersprungen."
+
+#: src/lib/individuals.ts
+msgid "Enter a name or number."
+msgstr "Geben Sie einen Namen oder eine Nummer ein."
+
+#: src/lib/individuals.ts
+msgid "Use at most 40 characters."
+msgstr "Verwenden Sie höchstens 40 Zeichen."
+
+#: src/lib/individuals.ts
+msgid "Keep at least one picture to name."
+msgstr "Behalten Sie mindestens ein Bild, das benannt werden soll."
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/animals/+page.svelte
+msgid "Animals"
+msgstr "Tiere"
+
+#: src/lib/navigation.ts
+msgid "Name the animals the cameras recognise."
+msgstr "Benennen Sie die Tiere, die die Kameras erkennen."
+
+#: src/lib/server/individuals-folder.ts
+msgid "A picture to name no longer exists. Reload the page."
+msgstr "Ein Bild, das Sie benennen wollten, gibt es nicht mehr. Laden Sie die Seite neu."
+
+#: src/routes/(admin)/animals/+page.server.ts
+msgid "Reload the page and try again."
+msgstr "Laden Sie die Seite neu und versuchen Sie es erneut."
+
+#: src/routes/(admin)/animals/[sighting]/[picture]/+server.ts
+msgid "Picture not found."
+msgstr "Bild nicht gefunden."
+
+#: src/routes/(admin)/animals/+page.svelte
+msgid "Each group holds sightings that look alike. Give it the animal’s name or number once; alerts then name the animals they recognise."
+msgstr "Jede Gruppe enthält Sichtungen, die sich ähneln. Geben Sie ihr einmal den Namen oder die Nummer des Tieres; Benachrichtigungen nennen dann die Tiere, die sie erkennen."
+
+#: src/routes/(admin)/animals/+page.svelte
+msgid "Could not save the name"
+msgstr "Name konnte nicht gespeichert werden"
+
+#: src/routes/(admin)/animals/+page.svelte
+msgid "Name sightings from one more day"
+msgstr "Benennen Sie Sichtungen von einem weiteren Tag"
+
+#: src/routes/(admin)/animals/+page.svelte
+msgid "Alerts only suggest names until named sightings come from at least two days. From then on they name the animals they are sure of."
+msgstr "Solange die benannten Sichtungen nicht von mindestens zwei Tagen stammen, schlagen Benachrichtigungen nur Namen vor. Danach nennen sie die Tiere, bei denen sie sicher sind."
+
+#: src/routes/(admin)/animals/+page.svelte
+msgid "# more group follows once these are named."
+msgid_plural "# more groups follow once these are named."
+msgstr[0] "# weitere Gruppe folgt, sobald diese benannt sind."
+msgstr[1] "# weitere Gruppen folgen, sobald diese benannt sind."
+
+#: src/routes/(admin)/animals/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking records an animal."
+msgstr "Nichts zu benennen. Neue Sichtungen erscheinen hier, sobald ein Detektor mit Tracking ein Tier aufnimmt."
+
+#: src/routes/(admin)/animals/+page.svelte
+msgid "To name"
+msgstr "Zu benennen"
+
+#: src/routes/(admin)/animals/+page.svelte
+#: src/routes/(admin)/animals/sighting-group.svelte
+msgid "# sighting"
+msgid_plural "# sightings"
+msgstr[0] "# Sichtung"
+msgstr[1] "# Sichtungen"
+
+#. 0: animal.name
+#: src/routes/(admin)/animals/+page.svelte
+msgid "Not {0}: remove the name from this picture"
+msgstr "Nicht {0}: Namen von diesem Bild entfernen"
+
+#: src/routes/(admin)/animals/+page.svelte
+msgid "No animals named yet."
+msgstr "Noch keine Tiere benannt."
+
+#: src/routes/(admin)/animals/+page.svelte
+msgid "Named animals"
+msgstr "Benannte Tiere"
+
+#. 0: recentMoment(group.shown[0].seen)
+#: src/routes/(admin)/animals/sighting-group.svelte
+msgid "Last seen {0}"
+msgstr "Zuletzt gesehen {0}"
+
+#: src/routes/(admin)/animals/sighting-group.svelte
+msgid "Left out: another animal"
+msgstr "Ausgelassen: anderes Tier"
+
+#: src/routes/(admin)/animals/sighting-group.svelte
+msgid "Leave this picture out"
+msgstr "Dieses Bild auslassen"
+
+#: src/routes/(admin)/animals/sighting-group.svelte
+msgid "Left out"
+msgstr "Ausgelassen"
+
+#: src/routes/(admin)/animals/sighting-group.svelte
+msgid "# more sighting looks like these."
+msgid_plural "# more sightings look like these."
+msgstr[0] "# weitere Sichtung sieht ähnlich aus."
+msgstr[1] "# weitere Sichtungen sehen ähnlich aus."
+
+#: src/routes/(admin)/animals/sighting-group.svelte
+msgid "Looks most like"
+msgstr "Ähnelt am meisten"
+
+#: src/routes/(admin)/animals/sighting-group.svelte
+msgid "Name or number"
+msgstr "Name oder Nummer"
+
+#: src/routes/(admin)/animals/sighting-group.svelte
+msgid "Tap a picture of another animal to leave it out."
+msgstr "Tippen Sie auf das Bild eines anderen Tieres, um es auszulassen."

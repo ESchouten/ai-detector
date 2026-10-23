@@ -10,8 +10,7 @@ import { ManagedDetector } from './managed-detector';
 import { installationNotes, noteOutages } from './installation-notes';
 import type { RuntimeStatus } from '../runtime';
 import type { Configuration } from '../schema';
-import { CameraRelocation } from './cameras/relocation';
-import { configuration } from './configuration';
+import { CameraRelocation, type RelocationWatch } from './cameras/relocation';
 import { outageWatch } from './outage-alerts';
 import { diskSpace } from './storage';
 import { recordings } from './recordings';
@@ -52,14 +51,18 @@ async function keepHistory(): Promise<Date | undefined> {
 	return stopped;
 }
 
+/** How the settings follow a camera to a new address; the settings store does it. */
+export type CameraMoves = Pick<RelocationWatch, 'remember' | 'relocate'>;
+
 /**
  * While monitoring is on, the native shell keeps the computer awake, and the people who get a
- * camera's alerts hear when it is not watched. `known` are the settings as read at the start,
- * and `stopped` is when the application last ran.
+ * camera's alerts hear when it is not watched, and cameras are followed to a new address.
+ * `known` are the settings as read at the start, and `stopped` is when the application last ran.
  */
 async function followMonitoring(
 	monitored: ManagedDetector,
 	settings: () => Promise<Configuration>,
+	cameras: CameraMoves,
 	known: Configuration | undefined,
 	stopped: Date | undefined
 ): Promise<void> {
@@ -85,8 +88,8 @@ async function followMonitoring(
 		monitored,
 		directory: DATA_DIRECTORY,
 		settings,
-		remember: (id, source, device) => configuration.rememberCameraDevice(id, source, device),
-		relocate: (moves) => configuration.relocateCameras(moves),
+		remember: cameras.remember,
+		relocate: cameras.relocate,
 		send: ({ token, chat }, text, silent) => sendTelegramNotice(token, chat, text, silent),
 		log: (message) => webLog.info(message),
 		warn: (message, error) => webLog.warn(message, error)
@@ -112,12 +115,16 @@ async function followMonitoring(
 }
 
 export function initializeDetector(
-	prepareConfiguration: () => Promise<Configuration>
+	prepareConfiguration: () => Promise<Configuration>,
+	cameras: CameraMoves
 ): Promise<void> {
-	return (initialization ??= initialize(prepareConfiguration));
+	return (initialization ??= initialize(prepareConfiguration, cameras));
 }
 
-async function initialize(prepareConfiguration: () => Promise<Configuration>): Promise<void> {
+async function initialize(
+	prepareConfiguration: () => Promise<Configuration>,
+	cameras: CameraMoves
+): Promise<void> {
 	const executable =
 		process.env.AIDETECTOR_EXECUTABLE ??
 		path.join(
@@ -135,7 +142,7 @@ async function initialize(prepareConfiguration: () => Promise<Configuration>): P
 	} catch (error) {
 		detector.fail(error);
 	}
-	await followMonitoring(detector, prepareConfiguration, known, await keepHistory());
+	await followMonitoring(detector, prepareConfiguration, cameras, known, await keepHistory());
 	process.once('sveltekit:shutdown', (reason?: string) => detector?.stop(false, reason));
 	process.once('aidetector:launcher-disconnected', () => {
 		detector?.log.append(

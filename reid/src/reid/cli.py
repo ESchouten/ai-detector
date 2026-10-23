@@ -782,7 +782,9 @@ def _add_tracking(commands: argparse._SubParsersAction) -> None:
     pictures.add_argument("--pictures", type=Path, required=True, help="a .csv file")
     pictures.add_argument("--session", required=True, help="recording day, sortable")
     pictures.add_argument("--model", default="yolo26m-seg.pt")
-    pictures.add_argument("--every", type=int, default=10, help="use every Nth frame")
+    pictures.add_argument(
+        "--every", type=int, default=10, help="keep pictures of every Nth frame"
+    )
     pictures.add_argument("--imgsz", type=int, default=1280)
     pictures.add_argument("--confidence", type=float, default=0.5)
     pictures.add_argument("--tracker", default="botsort.yaml")

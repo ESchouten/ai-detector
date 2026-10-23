@@ -115,11 +115,11 @@ def pictures_from_video(
     tracker: str = "botsort.yaml",
     device: str | None = None,
 ) -> list[Picture]:
-    """Track cows through a video and keep every picture of every track.
+    """Track cows through a video and keep the pictures of every `every`th frame.
 
     Pictures go to `<out>/<session>-<video>-<track>/<frame>.jpg`, grey outside
-    the outline as the model sees them. Tracking runs on every `every`th frame,
-    with ai-detector's tracker by default.
+    the outline as the model sees them. The tracker sees every frame, as in
+    ai-detector, with its tracker by default.
     """
     import cv2
     from ultralytics import YOLO
@@ -136,14 +136,13 @@ def pictures_from_video(
         classes=[COCO_COW],
         conf=confidence,
         imgsz=imgsz,
-        vid_stride=every,
         tracker=tracker,
         device=device,
         verbose=False,
     )
-    for index, result in enumerate(results):
+    for frame, result in enumerate(results):
         boxes = result.boxes
-        if boxes is None or boxes.id is None or result.masks is None:
+        if frame % every or boxes is None or boxes.id is None or result.masks is None:
             continue
         masks = result.masks.data.cpu().numpy() > 0.5
         detections = [
@@ -158,7 +157,6 @@ def pictures_from_video(
         ]
         scores = boxes.conf.tolist()
         height, width = result.orig_shape
-        frame = index * every
         for row, detection in enumerate(detections):
             if min(detection.x2 - detection.x1, detection.y2 - detection.y1) < SIDE_MIN:
                 continue

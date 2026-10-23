@@ -125,7 +125,7 @@ It uses one time split with a quarter of the cows as strangers, like the benchma
 
 ## Choosing a sighting's pictures
 
-ai-detector keeps four pictures per track: the largest ones clear of the frame's edge and not largely under another box, spread over time. On a barn camera many of those still show only part of a cow, cut up by stall rails or merged with a neighbour. `track-pictures` keeps every tracked picture of a video (every `--every`th frame, with ai-detector's BoT-SORT tracker) and measures each: size, edge, the largest share under one other box, detection confidence, and the segmentation mask's pieces, solidity (its area over its convex hull's) and fill. `picture-choice` then compares ways of choosing, without labels:
+ai-detector keeps four pictures per track: the largest ones clear of the frame's edge and not largely under another box, spread over time. On a barn camera many of those still show only part of a cow, cut up by stall rails or merged with a neighbour. `track-pictures` tracks a video frame by frame with ai-detector's BoT-SORT tracker, keeps every tracked picture of every `--every`th frame and measures each: size, edge, the largest share under one other box, detection confidence, and the segmentation mask's pieces, solidity (its area over its convex hull's) and fill. `picture-choice` then compares ways of choosing, without labels:
 
 ```sh
 uv run reid track-pictures ~/Downloads/barn.mp4 --session 2026-10-23 \

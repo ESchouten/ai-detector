@@ -286,6 +286,46 @@ def rerank_table(result: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def choice_table(result: dict[str, Any]) -> str:
+    """One Markdown row per way of choosing pictures, then how single pictures
+    fare by what is known of them, then what a later, better sighting would win."""
+    lines = [
+        f"{result['windows']} sightings of {result['window']:g} s from "
+        f"{result['tracks']} tracks; {result['same_pairs']} same-cow pairs at least "
+        f"{result['gap']:g} s apart, {result['different_pairs']} pairs in view "
+        "together",
+        "",
+        "| Choice | Best pictures found | Own cow first | Same cow above 1% of "
+        "others | Same cow above other |",
+        "|---|---|---|---|---|",
+    ]
+    for row in result["choices"]:
+        lines.append(
+            f"| {row['choice']} | {_percent(row['best_found'])} "
+            f"| {_percent(row['rank1'])} | {_percent(row['kept_at_1pct'])} "
+            f"| {_percent(row['auc'])} |"
+        )
+    lines += [
+        "",
+        "| Picture | Value | Pictures | Own cow first | Mean margin |",
+        "|---|---|---|---|---|",
+    ]
+    for name, buckets in result["features"].items():
+        for bucket in buckets:
+            lines.append(
+                f"| {name} | {bucket['value']} | {bucket['pictures']} "
+                f"| {_percent(bucket['first'])} | {bucket['margin']:+.3f} |"
+            )
+    later = result["later"]
+    lines += [
+        "",
+        f"{later['first_window_without_whole']} of {later['tracks']} tracks have no "
+        f"whole picture in their first sighting; {later['whole_later']} of those "
+        "show one later.",
+    ]
+    return "\n".join(lines)
+
+
 def _rerank(arguments: argparse.Namespace) -> None:
     from reid.backbones import build
     from reid.local import KeypointMatcher
@@ -409,6 +449,69 @@ def _tracks(arguments: argparse.Namespace) -> None:
         f"{arguments.manifest}",
         file=sys.stderr,
     )
+
+
+def _track_pictures(arguments: argparse.Namespace) -> None:
+    from reid.pictures import pictures_from_video, write_pictures
+
+    pictures = pictures_from_video(
+        arguments.video,
+        arguments.out,
+        session=arguments.session,
+        model=arguments.model,
+        every=arguments.every,
+        imgsz=arguments.imgsz,
+        confidence=arguments.confidence,
+        tracker=arguments.tracker,
+        device=arguments.device,
+    )
+    write_pictures(arguments.pictures, pictures)
+    print(
+        f"{len(pictures)} pictures of {len({p.track for p in pictures})} tracks "
+        f"in {arguments.pictures}",
+        file=sys.stderr,
+    )
+
+
+def _picture_choice(arguments: argparse.Namespace) -> None:
+    from reid.backbones import build
+    from reid.pictures import choices, compare, read_pictures
+
+    pictures = read_pictures(arguments.pictures)
+    embedder = build(
+        arguments.model,
+        checkpoint=arguments.checkpoint,
+        batch_size=arguments.batch_size,
+        device=arguments.device,
+        half=arguments.half,
+    )
+    print(
+        f"Embedding {len(pictures)} pictures with {embedder.name} on "
+        f"{embedder.device}…",
+        file=sys.stderr,
+    )
+    vectors = embeddings(
+        [Crop(p.path, p.track, track=p.track) for p in pictures],
+        embedder,
+        arguments.out / "cache",
+    )
+    result = {
+        "model": embedder.name,
+        "pictures_file": str(arguments.pictures),
+        "created": datetime.now(UTC).isoformat(timespec="seconds"),
+        **compare(
+            pictures,
+            vectors,
+            choices(arguments.solidity),
+            window=arguments.window,
+            gap=arguments.gap,
+            solidity=arguments.solidity[0],
+        ),
+    }
+    arguments.out.mkdir(parents=True, exist_ok=True)
+    path = arguments.out / f"choice-{arguments.pictures.stem}.{embedder.name}.json"
+    path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    print(choice_table(result))
 
 
 def _add_scoring(commands: argparse._SubParsersAction) -> None:
@@ -670,6 +773,45 @@ def _add_tracking(commands: argparse._SubParsersAction) -> None:
     tracks.add_argument("--no-mask", action="store_true", help="keep the background")
     tracks.add_argument("--device", help="mps, cuda or cpu")
     tracks.set_defaults(run=_tracks)
+
+    pictures = commands.add_parser(
+        "track-pictures", help="every tracked cow picture of a video, measured"
+    )
+    pictures.add_argument("video", type=Path)
+    pictures.add_argument("--out", type=Path, required=True, help="folder for crops")
+    pictures.add_argument("--pictures", type=Path, required=True, help="a .csv file")
+    pictures.add_argument("--session", required=True, help="recording day, sortable")
+    pictures.add_argument("--model", default="yolo26m-seg.pt")
+    pictures.add_argument("--every", type=int, default=10, help="use every Nth frame")
+    pictures.add_argument("--imgsz", type=int, default=1280)
+    pictures.add_argument("--confidence", type=float, default=0.5)
+    pictures.add_argument("--tracker", default="botsort.yaml")
+    pictures.add_argument("--device", help="mps, cuda or cpu")
+    pictures.set_defaults(run=_track_pictures)
+    choice = commands.add_parser(
+        "picture-choice", help="compare ways of choosing a sighting's pictures"
+    )
+    choice.add_argument("pictures", type=Path, help="from track-pictures")
+    choice.add_argument("--model", required=True)
+    choice.add_argument("--checkpoint", type=Path)
+    choice.add_argument(
+        "--window", type=float, default=10.0, help="seconds of track per sighting"
+    )
+    choice.add_argument(
+        "--gap", type=float, default=60.0, help="seconds between same-cow sightings"
+    )
+    choice.add_argument(
+        "--solidity",
+        type=float,
+        nargs="+",
+        default=[0.8],
+        help="masks at least this solid count as whole",
+    )
+    choice.add_argument("--batch-size", type=int, default=32)
+    choice.add_argument("--device")
+    choice.add_argument("--half", action="store_true")
+    choice.add_argument("--out", type=Path, default=Path("results"))
+    choice.set_defaults(run=_picture_choice)
 
 
 def _training_crops(

@@ -123,6 +123,19 @@ uv run reid rerank ~/reid-cache/manifests/eth-tracks.csv --model miewid-msv3 \
 
 It uses one time split with a quarter of the cows as strangers, like the benchmark, and names at the threshold that is right 99% of the time on those same queries, with and without a 0.75 runner-up margin. That threshold flatters every row equally, so rows can be compared but are not what an install would get. Match counts are saved in `<out>/cache/`.
 
+## Choosing a sighting's pictures
+
+ai-detector keeps four pictures per track: the largest ones clear of the frame's edge and not largely under another box, spread over time. On a barn camera many of those still show only part of a cow, cut up by stall rails or merged with a neighbour. `track-pictures` keeps every tracked picture of a video (every `--every`th frame, with ai-detector's BoT-SORT tracker) and measures each: size, edge, the largest share under one other box, detection confidence, and the segmentation mask's pieces, solidity (its area over its convex hull's) and fill. `picture-choice` then compares ways of choosing, without labels:
+
+```sh
+uv run reid track-pictures ~/Downloads/barn.mp4 --session 2026-10-23 \
+    --model yolo26m-seg.pt --out ~/reid-cache/pictures/barn --pictures barn-pictures.csv --device mps
+uv run reid picture-choice barn-pictures.csv --model miewid-msv3 \
+    --checkpoint ~/reid-cache/models/miewid-allfarms-100ep.safetensors --solidity 0.7 0.8 0.9 --out results
+```
+
+Each track is cut into `--window`-second stretches standing in for sightings. Two stretches of one track at least `--gap` seconds apart are the same cow; stretches of tracks seen in the same frame are different cows. Per way of choosing, the table gives how often a stretch's own cow outscores every cow in view with it, and how many same-cow pairs score above all but 1% of the different-cow pairs. A second table shows how single pictures fare by each measure, and a last line counts tracks whose first sighting has no whole picture but which show one later. Stretches of one track are easier to match than days apart, so the numbers rank the choices rather than predict naming.
+
 ## Naming a farm's cows
 
 `groups` is the page a farmer would use: it groups every sighting in a manifest, for example the tracks `tracks-from-video` cut from a few days of barn video, and writes a page to name them.

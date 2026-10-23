@@ -72,6 +72,10 @@ class Options:
     # Let the groups the farmer left unnamed compete as anonymous cows, so a
     # sighting most like one of them stays unnamed; each is simulated in turn.
     anonymous: tuple[bool, ...] = (False,)
+    # Raise the install's threshold above every score at which an enrolment
+    # sighting would be named after a cow seen beside it, which is certainly
+    # another cow; each is simulated in turn. Needs `times`.
+    floor: tuple[bool, ...] = (False,)
     strangers: float = 0.25
     folds: int = 3
     seed: int = 0
@@ -435,6 +439,57 @@ def _thresholds(
     return found
 
 
+def _floors(
+    crops: Sequence[Crop],
+    vectors: NDArray[np.float32],
+    seen: Sequence[Sequence[int]],
+    named: Sequence[str],
+    matcher: Matcher | None,
+    options: Options,
+) -> dict[float | str, float | None]:
+    """Per coat variant, the highest score at which an enrolment sighting would
+    be named after a cow seen beside it; None when that never happens.
+
+    `named` is each enrolment sighting's name, empty where it was left unnamed.
+    A named sighting is scored without its own cow, as a stranger would be.
+    """
+    others = together(crops, seen, options.times)
+    floors: dict[float | str, float | None] = dict.fromkeys(_variants(options))
+    for own in sorted(set(named)):
+        asked = [
+            s
+            for s, name in enumerate(named)
+            if name == own and any(named[o] not in ("", own) for o in others[s])
+        ]
+        if not asked:
+            continue
+        rest = [
+            (s, name)
+            for s, name in zip(seen, named, strict=True)
+            if name not in ("", own)
+        ]
+        scored = _score(
+            crops,
+            vectors,
+            [i for s, _ in rest for i in s],
+            [name for s, name in rest for _ in s],
+            [i for s in asked for i in seen[s]],
+            matcher,
+            options,
+        )
+        position = {seen[s][0]: s for s in asked}
+        order = [position[found[0]] for found in scored.seen]
+        for variant in floors:
+            fused = scored.fused(variant, options)
+            for row, sighting in enumerate(order):
+                best = int(fused[row].argmax())
+                if scored.names[best] in {named[o] for o in others[sighting]}:
+                    score = float(fused[row, best])
+                    floor = floors[variant]
+                    floors[variant] = score if floor is None else max(floor, score)
+    return floors
+
+
 def _anonymous(name: str) -> bool:
     """An unnamed group of enrolment sightings, competing as a cow of its own."""
     return name.startswith("\0")
@@ -449,10 +504,12 @@ def _days(
     matcher: Matcher | None,
     adaptation: Adaptation,
     transform: Transform,
+    floors: dict[float | str, float | None],
     options: Options,
 ) -> list[dict[str, Any]]:
     """Per coat variant and way of naming, each later day's sightings named
-    against the gallery at the install's own threshold.
+    against the gallery at the install's own threshold, raised above its
+    `floors` when simulating them.
 
     `transform` is the adaptation as learnt from every enrolment sighting.
     Anonymous cows in the gallery (see `_anonymous`) compete for sightings but
@@ -481,11 +538,15 @@ def _days(
     alone: list[set[int]] = [set() for _ in scored.seen]
     others = together(crops, scored.seen, options.times) if options.times else alone
     results = []
-    for variant, jointly in product(_variants(options), options.jointly):
+    for variant, jointly, floored in product(
+        _variants(options), options.jointly, options.floor
+    ):
         coated = scored.coated(variant, options)
         ranks = np.argsort(-np.where(real, coated, -np.inf), axis=1, kind="stable")
         ranked = scored.names[ranks[:, :3]]
-        threshold = thresholds[variant]
+        threshold = _raised(
+            thresholds[variant], floors.get(variant) if floored else None
+        )
         given = named_jointly(
             coated, real, threshold, options.margin, others if jointly else alone
         )
@@ -520,6 +581,8 @@ def _days(
             {
                 "coat": variant,
                 "jointly": jointly,
+                "floored": floored,
+                "floor": floors.get(variant) if floored else None,
                 # Sightings named otherwise than each on its own would be.
                 "changed": int((given != apart).sum()),
                 "level": level,
@@ -535,6 +598,13 @@ def _days(
             }
         )
     return results
+
+
+def _raised(threshold: float | None, floor: float | None) -> float | None:
+    """The threshold, raised just above the floor."""
+    if threshold is None or floor is None:
+        return threshold
+    return max(threshold, float(np.nextafter(np.float32(floor), np.float32(np.inf))))
 
 
 def _labelled_pairs(
@@ -578,8 +648,8 @@ def simulate(
         raise ValueError("A coat weight above 0 or a calibration needs a matcher")
     if options.check not in ("split", "rotate"):
         raise ValueError(f"Unknown threshold check {options.check!r}")
-    if any(options.jointly) and not options.times:
-        raise ValueError("Naming jointly needs the times pattern")
+    if (any(options.jointly) or any(options.floor)) and not options.times:
+        raise ValueError("Naming jointly or a floor needs the times pattern")
     period = set(sessions[: options.enrol_sessions])
     enrol = [i for i, crop in enumerate(crops) if crop.session in period]
     later = [i for i, crop in enumerate(crops) if crop.session not in period]
@@ -620,6 +690,11 @@ def simulate(
             ]
             for adaptation in options.adapts:
                 transform = fit(adaptation, vectors, seen, named)
+                floors = (
+                    _floors(crops, transform(vectors), seen, named, matcher, options)
+                    if any(options.floor)
+                    else {}
+                )
                 results.extend(
                     {"adapt": str(adaptation), "anonymous": anonymous, **entry}
                     for entry in _days(
@@ -631,6 +706,7 @@ def simulate(
                         matcher,
                         adaptation,
                         transform,
+                        floors,
                         options,
                     )
                 )
@@ -694,6 +770,7 @@ def _record(options: Options, matcher: Matcher | None) -> dict[str, Any]:
         "jointly": list(options.jointly),
         "times": options.times,
         "anonymous": list(options.anonymous),
+        "floor": list(options.floor),
         "calibrated_on": list(options.calibration.farms)
         if options.calibration
         else None,

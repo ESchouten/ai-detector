@@ -156,10 +156,14 @@ def enrolment_table(result: dict[str, Any]) -> str:
         days = scored["mean"]
         milestones = enrolment.get("milestones", {})
         naming = (
-            f"jointly ({scored['changed']} changed)"
-            if scored.get("jointly")
-            else "alone"
-        ) + (", anonymous" if scored.get("anonymous") else "")
+            (
+                f"jointly ({scored['changed']} changed)"
+                if scored.get("jointly")
+                else "alone"
+            )
+            + (", anonymous" if scored.get("anonymous") else "")
+            + (", floor" if scored.get("floored") else "")
+        )
         lines.append(
             f"| {label} | {scored['adapt']} | {scored['coat']} | {naming} "
             f"| {enrolment.get('groups', '–')} "
@@ -211,6 +215,7 @@ def _enroll(arguments: argparse.Namespace) -> None:
         jointly=(False, True) if arguments.jointly else (False,),
         times=arguments.times or "",
         anonymous=(False, True) if arguments.anonymous else (False,),
+        floor=(False, True) if arguments.floor else (False,),
         calibration=_calibration(arguments.calibrate_from),
     )
     crops = read_manifest(arguments.manifest)
@@ -651,6 +656,12 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
         "--anonymous",
         action="store_true",
         help="also let the groups the farmer left unnamed compete as anonymous cows",
+    )
+    enroll.add_argument(
+        "--floor",
+        action="store_true",
+        help="also raise the install's threshold above every score at which an "
+        "enrolment sighting would be named after a cow seen beside it (needs --times)",
     )
     enroll.add_argument(
         "--calibrate-from",

@@ -109,6 +109,8 @@ With `--jointly`, later sightings in view at the same time are also named togeth
 
 With `--anonymous`, the groups the farmer left unnamed also compete as anonymous cows: a later sighting most like one of them is not named, and one that beats them must also beat them as runner-up. The install's threshold check leaves them out.
 
+With `--floor`, the install also raises its threshold just above every score at which one of its enrolment sightings would be named after a cow seen beside it (found with `--times`), since that is certainly another cow. A named sighting is scored without its own cow for this, as a stranger would be. The table marks those rows `floor`, and the JSON keeps the floor.
+
 `--check rotate` changes how the install checks its threshold: instead of asking the later half of its named sightings against the earlier half and taking the median of the folds' thresholds, it asks every enrolment session against all the others and sets one threshold on all the answers pooled, so a farm with a few days of sightings checks on every one of them.
 
 The table shows, per grouping, adaptation and coat weight or mix: groups formed, the share of sightings in a group named after their own cow, taps to the goal, to 90% and to every cow, then means over the later days: sightings named (right when named), cows recognised at least once that day, the right cow in the top 3, and wrong names in total. The first row is the same gallery named from the true labels, the ceiling for perfect naming. Each day's numbers are in the JSON.

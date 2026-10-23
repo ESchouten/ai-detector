@@ -197,6 +197,23 @@ def test_a_calibrated_mix_of_another_farm_is_tried_beside_the_coat_weights(herd)
     assert result["options"]["calibrated_on"] == ["other farm"]
 
 
+def test_a_floor_from_cows_seen_together_only_raises_the_threshold(herd):
+    vectors = embeddings(herd, FakeEmbedder(noise=0.9))
+    options = Options(merges=(0.8,), goal=1.0, margin=0.75, times=TIMES)
+
+    result = simulate(herd, vectors, replace(options, floor=(False, True)))
+
+    plain, floored = result["labelled"]
+    assert (plain["floored"], floored["floored"]) == (False, True)
+    # Look-alikes seen beside each other while enrolling set the floor.
+    assert floored["floor"] is not None
+    assert floored["threshold"] > plain["threshold"]
+    assert floored["mean"]["wrong"] <= plain["mean"]["wrong"]
+    assert floored["mean"]["named"] <= plain["mean"]["named"]
+    with pytest.raises(ValueError, match="times"):
+        simulate(herd, vectors, Options(floor=(True,)))
+
+
 def test_a_coat_weight_needs_a_matcher(herd):
     vectors = embeddings(herd, FakeEmbedder())
 

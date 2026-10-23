@@ -250,6 +250,52 @@
       "title": "HealthcheckConfig",
       "type": "object"
     },
+    "IndividualsConfig": {
+      "additionalProperties": false,
+      "description": "Recognise individual animals of tracked classes, shared by every detector.",
+      "properties": {
+        "model": {
+          "description": "ONNX embedding model, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Model",
+          "type": "string"
+        },
+        "labels": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "items": {
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Detection classes whose tracked objects are individuals.",
+          "title": "Labels"
+        },
+        "precision": {
+          "default": 0.99,
+          "description": "Share of names that must be right when the installation sets its naming threshold from its own named sightings.",
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Precision",
+          "type": "number"
+        }
+      },
+      "required": [
+        "model",
+        "labels"
+      ],
+      "title": "IndividualsConfig",
+      "type": "object"
+    },
     "OnnxConfig": {
       "additionalProperties": false,
       "properties": {
@@ -914,6 +960,17 @@
       "anyOf": [
         {
           "$ref": "#/$defs/HealthcheckConfig"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "individuals": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/IndividualsConfig"
         },
         {
           "type": "null"

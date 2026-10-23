@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import signal
 import subprocess
 import sys
@@ -280,6 +281,61 @@ def test_launcher_inference_status_follows_real_onnx_prediction(
         "Event delivered to disk-1",
     ):
         assert (diagnostic in logs) is (level == "DEBUG"), logs
+
+
+def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
+    tmp_path,
+):
+    from tests.support.onnx_model import write_detection_model, write_embedding_model
+
+    source = tmp_path / "input.png"
+    image = np.full((64, 64, 3), 90, dtype=np.uint8)
+    image[6:58, 6:58] = (40, 160, 200)
+    assert cv2.imwrite(str(source), image)
+    write_detection_model(tmp_path / "model.onnx", box=(6, 6, 58, 58))
+    write_embedding_model(tmp_path / "herd.onnx")
+    (tmp_path / "config.json").write_text(
+        json.dumps(
+            {
+                "onnx": {"provider": "CPUExecutionProvider"},
+                "individuals": {"model": "herd.onnx", "labels": "cow"},
+                "detectors": [
+                    {
+                        "detection": {"source": str(source)},
+                        "yolo": {
+                            "model": "model.onnx",
+                            "imgsz": 64,
+                            "frames_min": 1,
+                            "tracking": True,
+                        },
+                        "exporters": {"disk": {}},
+                    }
+                ],
+            }
+        )
+    )
+
+    def run():
+        process = run_cli(tmp_path)
+        assert process.returncode == 0, process.stderr
+        [path] = tmp_path.glob("detections/cow/unvalidated/*/metadata.json")
+        metadata = json.loads(path.read_text())
+        shutil.rmtree(path.parent)
+        return metadata["individuals"], process.stderr
+
+    [unnamed], _ = run()
+    assert (unnamed["track"], unnamed["name"], unnamed["candidates"]) == (1, None, [])
+    sighting = tmp_path / "individuals" / "sightings" / unnamed["sighting"]
+    assert (sighting / "crop-1.jpg").is_file()
+
+    (tmp_path / "individuals" / "names.json").write_text(
+        json.dumps({"version": 1, "names": {unnamed["sighting"]: "412"}})
+    )
+    [suggested], logs = run()
+    # One day of names suggests; the threshold needs a second day.
+    assert suggested["name"] is None
+    assert [candidate["name"] for candidate in suggested["candidates"]] == ["412"]
+    assert "Individuals: 412" in logs
 
 
 def test_launcher_keeps_shared_camera_rule_and_archive_failures_distinct(tmp_path):

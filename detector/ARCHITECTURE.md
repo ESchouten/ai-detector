@@ -20,7 +20,7 @@ cli -> bootstrap -> runtime + concrete adapters
 | --- | --- |
 | `domain` | Frozen observation and event records, confidence rules, event windows, cooldown, verification outcomes. No I/O; time comes from the caller. |
 | `application` | The order of inference, event assembly, verification and export, through narrow protocols. |
-| `adapters` | Video input, YOLO, VLM requests, image and video encoding, event files, HTTP and Telegram, health pings, platform inference setup. |
+| `adapters` | Video input, YOLO, VLM requests, recognising individuals, image and video encoding, event files, HTTP and Telegram, health pings, platform inference setup. |
 | `configuration` | Pydantic input models, normalization, file loading and schema production. Models do not inspect hardware or read files at import. |
 | `runtime` | Execution and supervision: one aggregation owner and one ordered delivery worker per detector, plus the optional health monitor. |
 | `bootstrap` | Turning validated configuration into policies and concrete integrations, and their cleanup scopes. |
@@ -35,6 +35,7 @@ adapters/
 ├── exporters/     disk, archive_metadata, telegram, webhook
 ├── sources/       files, streams
 ├── inference/     model assets, ONNX providers, YOLO, prepared models and engines
+├── individuals/   embedding model, sightings, names, grouping and the naming threshold
 ├── media/         images, video, event attachments
 ├── health.py      periodic pings, supervised by runtime
 ├── diagnostics.py log formatting, redaction, rotation, configuration summaries
@@ -43,7 +44,7 @@ adapters/
 └── vlm.py         event verification and its connection check
 ```
 
-Exporters, sources and inference never import one another, directly or indirectly; bootstrap connects them through application ports. Media and HTTP are shared. Archive metadata sits beside the disk exporter because it defines the public archive format. Package initializers do not re-export their children: import the module that owns an operation.
+Exporters, sources, inference and individuals never import one another, directly or indirectly; bootstrap connects them through application ports. Media and HTTP are shared. Archive metadata sits beside the disk exporter because it defines the public archive format. Package initializers do not re-export their children: import the module that owns an operation.
 
 [`.importlinter`](.importlinter) declares the layers, the forbidden imports, adapter-group independence and acyclic siblings, including imports inside functions and type-checking-only imports. Two test files add what the contracts cannot see. `tests/test_architecture.py` checks that every source file is in the import graph; a folder without `__init__.py` would otherwise escape the rules. `tests/test_import_safety.py` imports the core in a child process and fails if that reads configuration, writes files, opens sockets, starts threads or processes, or loads an inference library. These checks establish structure, not that every responsibility is well placed.
 
@@ -59,6 +60,7 @@ flowchart LR
     Pipeline --> Detector["ObjectDetector<br/>Optional: YoloDetector"]
     Pipeline --> Assembler["EventAssembler"]
     Delivery --> Validator["EventValidator<br/>Optional: VlmValidator"]
+    Delivery --> Identifier["EventIdentifier<br/>Optional: TrackIdentifier"]
     Delivery --> Destinations["Destination<br/>Exporter and ExportPolicy"]
     Delivery --> Cooldown["Cooldown"]
 ```
@@ -84,6 +86,7 @@ Tests mirror the `domain`, `application` and `adapters` packages.
 | Model conversion or prepared cache | [export settings](src/aidetector/adapters/inference/export_settings.py), [prepared models](src/aidetector/adapters/inference/prepared_models.py) | [conversion/cache contracts](tests/adapters/inference/test_prepared_models.py), [model loading](tests/adapters/inference/test_model_loading.py), [real SDK export](tests/integration/test_model_export.py) |
 | Automatic direct TensorRT | [GPU engine cache and background preparation](src/aidetector/adapters/inference/prepared_engines.py), [export worker](src/aidetector/adapters/inference/tensorrt_worker.py), [desktop preparation](../web/src/lib/server/nvidia-runtime.ts) | [preparation, concurrent monitoring, cancellation and fallback](tests/adapters/inference/test_prepared_engines.py), [runtime installation](../web/tests/nvidia-runtime.test.ts), [planned restart and shutdown](../web/tests/runtime-recovery.test.ts) |
 | Cropping, annotations, or encoded media | [media adapters](src/aidetector/adapters/media/) | [media](tests/adapters/media/test_media.py) |
+| Recognising individuals, sightings, grouping or the naming threshold | [individuals adapters](src/aidetector/adapters/individuals/), [delivery](src/aidetector/application/delivery.py) | [herd and sightings](tests/adapters/individuals/test_herd.py), [scoring](tests/adapters/individuals/test_scoring.py), [grouping](tests/adapters/individuals/test_grouping.py), [delivery](tests/application/test_delivery.py), [CLI wiring](tests/test_cli.py) |
 | VLM responses, fallback or connection check | [VLM adapter](src/aidetector/adapters/vlm.py) | [VLM validation and connection check](tests/adapters/test_vlm.py) |
 | Archive format or publication | [disk](src/aidetector/adapters/exporters/disk.py), [metadata](src/aidetector/adapters/exporters/archive_metadata.py) | [disk](tests/adapters/exporters/test_disk.py), [reference flow](tests/test_reference_flow.py), [schemas](tests/test_schemas.py) |
 | Telegram, webhooks, or health requests | [Telegram](src/aidetector/adapters/exporters/telegram.py), [webhook](src/aidetector/adapters/exporters/webhook.py), [health](src/aidetector/adapters/health.py) | [exporters and HTTP](tests/adapters/exporters/test_exporters.py), [health](tests/adapters/test_health.py) |
@@ -102,7 +105,9 @@ The detector has one model: turn footage from a source into a completed event, o
 | Event window | The assembler's mutable, per-source collection while an event is active. |
 | `DetectionEvent` | A completed, nonempty sequence of observations from one source in source-time order. Its best observation has the highest score; ties keep the first. |
 | `ValidationResult` | Approved, rejected, unvalidated (no verifier) or failed (verifiers could not answer). |
-| `EventResult` | An event, its verification outcome and its ID. Delivery outcomes belong to the application's `DeliveryReport`. |
+| `EventResult` | An event, its verification outcome, its ID and, when individuals are recognised, its `Identification`. Delivery outcomes belong to the application's `DeliveryReport`. |
+| Sighting | One track's best pictures from one event, kept so a person can name them. |
+| `Individual` | A tracked object of an event with the named individuals it resembles most; recognised when the best clears the installation's own threshold. |
 | Cooldown | The interval since an accepted event's best observation, per source and class within one detector. |
 
 How the main records relate, with a selection of their fields:
@@ -170,7 +175,7 @@ flowchart TB
         Queue["Bounded queue<br/>Completed events"]
         Allowed{"Cooldown.allows?"}
         Skip["Skip"]
-        Verify["EventDelivery<br/>Optional verification and EventResult"]
+        Verify["EventDelivery<br/>Optional verification, individuals and EventResult"]
         Record["Cooldown.record<br/>Take the outcome into account"]
         Policy["ExportPolicy<br/>Decision per destination"]
         Export["Disk, Telegram and webhook<br/>Through the configured adapters"]
@@ -209,6 +214,32 @@ Fallback is finite and specific. Provider errors and invalid answers move to the
 
 Media is encoded once per requested variant and shared between destinations; the cache weakly references its event and is dropped with it. Video is written incrementally to temporary input rather than held as a second clip in memory. Disk events get unique directories and become visible only when media and metadata are complete. Raw pixels are never modified by overlays.
 
+## Individuals
+
+`individuals` in `config.json` names an ONNX embedding model and the classes whose tracked objects are individuals, such as cows. It is off without it, and it needs at least one detector with `yolo.tracking`, because an individual is named per track, not per picture. Nothing about a species is built in: the model and the classes come from the configuration.
+
+- **Model.** A bring-your-own file or URL, downloaded into `models/` like a YOLO URL. It takes float32 RGB pictures as N×3×H×W with a fixed height and width and returns one embedding per picture; its ONNX metadata may set `mean` and `std` (three values on the 0 to 1 scale), and ImageNet's apply otherwise. It joins the YOLO models when execution providers are prepared, so it runs on the same hardware, through the same session factory.
+- **When.** Delivery asks the `EventIdentifier` port after verification and before the destinations, on the delivery thread, so a slow embedding delays the alert, never detection. Rejected events are not identified. An expected failure (an unreadable `names.json`, a sighting that cannot be saved) is `IdentificationUnavailable`: the event is still delivered, with the error in `individuals_error` instead of names.
+- **Sightings.** For each track of a configured class, `TrackIdentifier` takes up to four pictures: whole boxes away from the frame's edge and not largely covered by another box come first, largest first and spread over the event; others only make up the number, and boxes under 48 pixels are skipped. With a segmentation model, YOLO adds each tracked box's outline for these classes only, and everything outside it is grey (127), so a neighbour inside the box does not count towards the individual. The first event a track appears in saves them as a sighting; later events reuse it. Tracker IDs belong to one detector's tracking run, so each detector has its own `TrackIdentifier`.
+- **One herd.** `Herd` is shared by every detector and camera of a run. It reads `names.json` again when its size or modification time changes, so names given while monitoring apply to the next event, and a lock keeps that reload to one delivery thread at a time.
+- **Scores.** A sighting's score for an individual is the mean similarity of the individual's two most similar named pictures to each of the sighting's pictures, averaged over those pictures, less three quarters of the runner-up's score. The three best are the candidates.
+- **Threshold.** The installation sets it from its own named sightings: each day's sightings are asked in turn against the other days', with a quarter of the individuals withheld as strangers in three draws, and the threshold is the lowest score whose names are right at least `precision` (0.99) of the time over all answers pooled. Until two days have names there is no threshold: candidates are suggestions and nobody is recognised.
+- **Grouping.** After an event saves a new sighting, the latest 1000 unnamed sightings are grouped by look (average linkage of their mean embeddings, cut at a similarity of 0.6) and written to `groups.json`, largest group first, each with the three named individuals it resembles most. A person names a whole group at once instead of each sighting.
+
+The folder is shared with the web application, which writes `names.json`; the detector writes each sighting once, afterwards only adds embeddings for another model, and replaces `groups.json` whole.
+
+```text
+DATA_DIR/individuals/
+├── names.json                  {"version": 1, "names": {"<sighting ID>": "412"}}
+├── groups.json                 version, model key, groups of sighting IDs with suggested names
+└── sightings/<sighting ID>/
+    ├── sighting.json           version, id, camera, label, track, seen, event_id, crops
+    ├── crop-1.jpg …            at most 512 pixels on the longest side
+    └── vectors-<model key>.npy embeddings, per model file
+```
+
+A model key is the start of the model file's SHA-256. After the model changes, a named sighting without embeddings for the new key is embedded again from its pictures, so names survive a change of model.
+
 ## Configuration boundary
 
 `config.json` accepts a single value or a list for sources, verifiers and exporters, and the boundary normalizes them once. Reading or checking configuration never rewrites the file. Defaults are deterministic and do not depend on hardware.
@@ -227,7 +258,7 @@ Shutdown attempts every registered stop before joining, so one failed stop canno
 
 ## Inference backends
 
-Backend selection lives in the inference adapters; the domain and application never see it.
+Backend selection lives in the inference adapters; the domain and application never see it. The [individuals model](#individuals) is an ONNX model like any other here, so it alone also selects ONNX execution providers when every YOLO model is a checkpoint.
 
 - **macOS**: without a configured ONNX provider, `.pt` checkpoints are exported once to Core ML, which the SDK runs on the processor and the Neural Engine. The model is FP16 with a fixed square `imgsz` input, and the SDK passes a batch to Core ML as separate pictures.
 - **Prepared ONNX and Core ML models** (`prepared_models.py`): a `.pt` checkpoint is exported once into `models/prepared/`, keyed by checkpoint contents, task, export settings and library versions, and published atomically. ONNX exports are checked first. The original checkpoint is never modified, and a failed export publishes nothing.

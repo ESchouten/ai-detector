@@ -4,7 +4,7 @@ What someone replacing an older detector, or reading its files from other softwa
 
 ## What stays compatible
 
-- `config.json` keeps its top-level `detectors`, `onnx` and `health`. Sources, VLM configurations, model names and exporters accept one value or a list.
+- `config.json` keeps its top-level `detectors`, `onnx` and `health`, and gains an optional `individuals`. Sources, VLM configurations, model names and exporters accept one value or a list.
 - Archives stay readable: `detections/<category>/<stage>/<timestamp>/` with `best.jpg`, `clean.jpg`, an optional `video.mp4` and `metadata.json` with its existing required fields.
 - Runtime data lives outside the installed program. An upgrade does not rewrite configuration or recordings.
 - Docker, macOS, Windows CUDA and Windows ML builds remain supported. Whether a GPU provider actually runs can only be checked on that hardware.
@@ -29,6 +29,8 @@ Run `--check-config` against the saved file and correct what it reports. These a
 
 - Each delivered event has an `event_id` in `metadata.json`; metadata written before that has none and stays valid.
 - A person's review is the optional `review` object in `metadata.json` (`validated`, `source`, `reviewed_at`), written by the web application. `validated` stays the validator's own result.
+- `metadata.json` may carry `individuals` (track, label, sighting, `name` when recognised, and candidates with scores) and `individuals_error`. Both are null when individuals are not recognised; archives without them stay valid.
+- With `individuals` configured, the data folder gains `individuals/`: sightings the detector writes once, `groups.json` of look-alike unnamed sightings, which the detector replaces after new sightings, and `names.json`, which people write. Write `names.json` by replacing the whole file, so the detector never reads it half written. See [individuals](ARCHITECTURE.md#individuals).
 - Status records for the launcher (`--status-json`) and live pictures (`--live-preview`) are versioned protocols between the detector and the web application of the same release. Deploy both from one release.
 
 ## Docker

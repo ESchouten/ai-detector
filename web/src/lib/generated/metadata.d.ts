@@ -14,6 +14,15 @@ export type Y1 = number;
 export type X2 = number;
 export type Y2 = number;
 export type ValidationError = string | null;
+export type Individuals = IndividualMetadata[] | null;
+export type Track = number;
+export type Label = string;
+export type Sighting = string;
+export type Name = string | null;
+export type Name1 = string;
+export type Score = number;
+export type Candidates = CandidateMetadata[];
+export type IndividualsError = string | null;
 export type Validated1 = boolean;
 export type Source = 'web' | 'telegram';
 export type ReviewedAt = string;
@@ -31,6 +40,8 @@ export interface EventMetadata {
 	duration: Duration;
 	crop?: CropMetadata | null;
 	validation_error?: ValidationError;
+	individuals?: Individuals;
+	individuals_error?: IndividualsError;
 	review?: ManualReview | null;
 }
 export interface Confidences {
@@ -42,6 +53,20 @@ export interface CropMetadata {
 	x2: X2;
 	y2: Y2;
 	[k: string]: unknown;
+}
+/**
+ * A tracked object of the event and the named individuals it resembles most.
+ */
+export interface IndividualMetadata {
+	track: Track;
+	label: Label;
+	sighting: Sighting;
+	name: Name;
+	candidates: Candidates;
+}
+export interface CandidateMetadata {
+	name: Name1;
+	score: Score;
 }
 /**
  * A person's verdict on the event, from the web application or Telegram.

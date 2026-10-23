@@ -1,5 +1,24 @@
 {
   "$defs": {
+    "CandidateMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "score": {
+          "title": "Score",
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "score"
+      ],
+      "title": "CandidateMetadata",
+      "type": "object"
+    },
     "CropMetadata": {
       "properties": {
         "x1": {
@@ -26,6 +45,52 @@
         "y2"
       ],
       "title": "CropMetadata",
+      "type": "object"
+    },
+    "IndividualMetadata": {
+      "additionalProperties": false,
+      "description": "A tracked object of the event and the named individuals it resembles most.",
+      "properties": {
+        "track": {
+          "title": "Track",
+          "type": "integer"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "sighting": {
+          "pattern": "^[a-f0-9]{32}$",
+          "title": "Sighting",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
+        "candidates": {
+          "items": {
+            "$ref": "#/$defs/CandidateMetadata"
+          },
+          "title": "Candidates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "track",
+        "label",
+        "sighting",
+        "name",
+        "candidates"
+      ],
+      "title": "IndividualMetadata",
       "type": "object"
     },
     "ManualReview": {
@@ -154,6 +219,33 @@
       ],
       "default": null,
       "title": "Validation Error"
+    },
+    "individuals": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/IndividualMetadata"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Individuals"
+    },
+    "individuals_error": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Individuals Error"
     },
     "review": {
       "anyOf": [

@@ -60,13 +60,20 @@ class InMemoryStreamBatch(LoadStreams):
 
 
 def map_observations(
-    result: Results, frames: tuple[Frame, ...], classes: dict[int, tuple[str, float]]
+    result: Results,
+    frames: tuple[Frame, ...],
+    classes: dict[int, tuple[str, float]],
+    outlined: frozenset[str] = frozenset(),
 ) -> tuple[Observation, ...]:
+    """Observations of a result; tracked boxes of `outlined` classes carry the
+    outline a segmentation model found."""
     boxes: list[BoundingBox] = []
     confidences: dict[str, float] = {}
+    # Tracing every mask costs time on each frame, so only when asked.
+    outlines = result.masks.xy if outlined and result.masks is not None else None
     # Detect and segment results always have boxes; the SDK annotation spans all tasks.
     # Transfer once: reading individual GPU scalars repeatedly synchronizes MPS/CUDA.
-    for box in cast(Boxes, result.boxes).cpu():
+    for index, box in enumerate(cast(Boxes, result.boxes).cpu()):
         class_id = int(box.cls.item())
         configured = classes.get(class_id)
         if configured is None:
@@ -77,7 +84,11 @@ def map_observations(
             continue
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         track_id = int(box.id.item()) if box.id is not None else None
-        boxes.append(BoundingBox(x1, y1, x2, y2, name, score, track_id))
+        outline: tuple[tuple[int, int], ...] = ()
+        if outlines is not None and track_id is not None and name in outlined:
+            points = np.rint(outlines[index]).astype(int).tolist()
+            outline = tuple((x, y) for x, y in points)
+        boxes.append(BoundingBox(x1, y1, x2, y2, name, score, track_id, outline))
         confidences[name] = max(confidences.get(name, 0), score)
     detected_boxes = tuple(boxes)
     context = tuple(
@@ -101,9 +112,12 @@ class YoloDetector:
         config: YoloConfig,
         sources: tuple[str, ...],
         options: InferenceOptions,
+        outlined: frozenset[str] = frozenset(),
     ):
         self.model = model
         self.tracking = config.tracking
+        # Individuals are named per track, so only tracked boxes need outlines.
+        self.outlined = outlined if config.tracking else frozenset()
         self.sources = sources
         self.classes = resolve_classes(model.names, config.confidence)
         self._arguments: dict[str, Any] = {
@@ -158,7 +172,9 @@ class YoloDetector:
             )
         predicted = perf_counter()
         mapped = {
-            source: map_observations(result, frames[source], self.classes)
+            source: map_observations(
+                result, frames[source], self.classes, self.outlined
+            )
             for source, result in zip(sources, results, strict=True)
             if source in frames
         }
@@ -239,8 +255,13 @@ def open_detector(
     cache_directory: pathlib.Path,
     report_status: ReportStatus = ignore_status,
     engines: EnginePreparation | None = None,
+    outlined: frozenset[str] = frozenset(),
 ) -> Generator[YoloDetector]:
-    """Prepare inference and own its model and tracking frames until shutdown."""
+    """Prepare inference and own its model and tracking frames until shutdown.
+
+    Tracked boxes of `outlined` classes carry their outline when the model
+    segments.
+    """
     loaded: YOLO | None = None
     detector: YoloDetector | None = None
     try:
@@ -275,7 +296,7 @@ def open_detector(
                 loaded = _load_model(model_path, config.task, report_status)
             if loaded.predictor is None:
                 initialize_predictor(loaded, options, report_status)
-        detector = YoloDetector(loaded, config, sources, options)
+        detector = YoloDetector(loaded, config, sources, options, outlined)
         yield detector
     finally:
         if detector is not None:

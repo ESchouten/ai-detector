@@ -78,6 +78,39 @@ def test_tracker_ids_are_preserved_without_changing_context_frame_scores():
     assert observations[1].boxes[0].track_id == 7
 
 
+def test_tracked_boxes_of_outlined_classes_carry_their_segmentation_outline():
+    import torch
+
+    masks = torch.zeros((3, 64, 64))
+    masks[0, 22:38, 12:28] = 1
+    masks[1, 22:38, 36:48] = 1
+    masks[2, 22:38, 12:28] = 1
+    segmented = Results(
+        orig_img=np.zeros((64, 64, 3), dtype=np.uint8),
+        path="frame.jpg",
+        names={0: "cow", 1: "horse"},
+        boxes=np.asarray(
+            [
+                [10, 20, 30, 40, 7, 0.8, 0],
+                [35, 20, 50, 40, 8, 0.8, 1],
+                [10, 20, 30, 40, 9, 0.8, 0],
+            ],
+            dtype=np.float32,
+        ),
+        masks=masks,
+    )
+    classes = {0: ("cow", 0.5), 1: ("horse", 0.5)}
+
+    [cow, horse, _] = map_observations(
+        segmented, (frame(),), classes, frozenset({"cow"})
+    )[0].boxes
+    xs, ys = zip(*cow.outline, strict=True)
+    assert (min(xs), min(ys), max(xs), max(ys)) == (12, 22, 27, 37)
+    assert horse.outline == ()
+    unrequested = map_observations(segmented, (frame(),), classes)[0].boxes
+    assert all(box.outline == () for box in unrequested)
+
+
 def test_no_boxes_still_produce_unscored_observations_for_trailing_footage():
     observations = map_observations(result(), (frame(0), frame(1)), {0: ("cow", 0.5)})
     assert len(observations) == 2

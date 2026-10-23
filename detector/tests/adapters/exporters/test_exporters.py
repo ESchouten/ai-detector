@@ -16,8 +16,11 @@ from aidetector.application.delivery import Destination, EventDelivery
 from aidetector.application.ports import DeliveryError
 from aidetector.configuration import TelegramConfig, WebhookConfig
 from aidetector.domain.models import (
+    Candidate,
     DetectionEvent,
     EventResult,
+    Identification,
+    Individual,
     Observation,
     ValidationResult,
     ValidationStatus,
@@ -405,3 +408,46 @@ def test_request_exception_reports_its_kind_without_credential_details(
 
     assert str(failure.value) == f"HTTP request failed ({error_type.__name__})"
     assert request.call_count == 1
+
+
+@pytest.mark.parametrize(
+    "identification, names",
+    [
+        (None, None),
+        (Identification(error="disk full"), None),
+        (
+            Identification(
+                (
+                    Individual(
+                        1, "cow", "a" * 32, (Candidate("412", 0.9),), recognised=True
+                    ),
+                    Individual(
+                        2,
+                        "cow",
+                        "b" * 32,
+                        (
+                            Candidate("233", 0.5),
+                            Candidate("87", 0.4),
+                            Candidate("15", 0.3),
+                        ),
+                    ),
+                    Individual(3, "cow", "c" * 32, (Candidate("9", 0.2),)),
+                    Individual(4, "cow", "d" * 32),
+                )
+            ),
+            "412 · 233, 87 or 15? · 9?",
+        ),
+    ],
+)
+def test_telegram_caption_names_recognised_individuals_and_asks_about_others(
+    result, requests_sent, identification, names
+):
+    exporter = TelegramExporter(
+        TelegramConfig(token="token", chat="chat", include_video=False), EventMedia()
+    )
+    exporter.export(
+        EventResult(result.event, result.validation, result.id, identification)
+    )
+    lines = requests_sent[0][2]["data"]["text"].splitlines()
+    assert lines[:2] == ["90%", "0 second(s)"]
+    assert lines[2:] == ([names] if names else [])

@@ -109,7 +109,7 @@ With `--jointly`, later sightings in view at the same time are also named togeth
 
 With `--anonymous`, the groups the farmer left unnamed also compete as anonymous cows: a later sighting most like one of them is not named, and one that beats them must also beat them as runner-up. The install's threshold check leaves them out.
 
-With `--floor`, the install also raises its threshold just above every score at which one of its enrolment sightings would be named after a cow seen beside it (found with `--times`), since that is certainly another cow. A named sighting is scored without its own cow for this, as a stranger would be. The table marks those rows `floor`, and the JSON keeps the floor.
+With `--floor`, the install also raises its threshold just above every score at which one of its enrolment sightings, asked against the rest of the gallery, would be named after a cow seen beside it (found with `--times`), since that is certainly another cow. The table marks those rows `floor`, and the JSON keeps the floor. Scoring named sightings without their whole cow instead, as strangers, set the floor so high on ETH that only 2-13% of sightings were named.
 
 `--check rotate` changes how the install checks its threshold: instead of asking the later half of its named sightings against the earlier half and taking the median of the folds' thresholds, it asks every enrolment session against all the others and sets one threshold on all the answers pooled, so a farm with a few days of sightings checks on every one of them.
 

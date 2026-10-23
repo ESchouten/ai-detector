@@ -73,8 +73,9 @@ class Options:
     # sighting most like one of them stays unnamed; each is simulated in turn.
     anonymous: tuple[bool, ...] = (False,)
     # Raise the install's threshold above every score at which an enrolment
-    # sighting would be named after a cow seen beside it, which is certainly
-    # another cow; each is simulated in turn. Needs `times`.
+    # sighting, asked against the rest of the gallery, would be named after a
+    # cow seen beside it, which is certainly another cow; each is simulated in
+    # turn. Needs `times`.
     floor: tuple[bool, ...] = (False,)
     strangers: float = 0.25
     folds: int = 3
@@ -447,46 +448,39 @@ def _floors(
     matcher: Matcher | None,
     options: Options,
 ) -> dict[float | str, float | None]:
-    """Per coat variant, the highest score at which an enrolment sighting would
-    be named after a cow seen beside it; None when that never happens.
+    """Per coat variant, the highest score at which an enrolment sighting,
+    asked against the rest of the gallery, would be named after a cow seen
+    beside it; None when that never happens.
 
     `named` is each enrolment sighting's name, empty where it was left unnamed.
-    A named sighting is scored without its own cow, as a stranger would be.
     """
     others = together(crops, seen, options.times)
     floors: dict[float | str, float | None] = dict.fromkeys(_variants(options))
-    for own in sorted(set(named)):
-        asked = [
-            s
-            for s, name in enumerate(named)
-            if name == own and any(named[o] not in ("", own) for o in others[s])
-        ]
-        if not asked:
+    for sighting, beside in enumerate(others):
+        wrong = {named[other] for other in beside} - {"", named[sighting]}
+        if not wrong:
             continue
         rest = [
             (s, name)
-            for s, name in zip(seen, named, strict=True)
-            if name not in ("", own)
+            for position, (s, name) in enumerate(zip(seen, named, strict=True))
+            if name and position != sighting
         ]
         scored = _score(
             crops,
             vectors,
             [i for s, _ in rest for i in s],
             [name for s, name in rest for _ in s],
-            [i for s in asked for i in seen[s]],
+            seen[sighting],
             matcher,
             options,
         )
-        position = {seen[s][0]: s for s in asked}
-        order = [position[found[0]] for found in scored.seen]
         for variant in floors:
-            fused = scored.fused(variant, options)
-            for row, sighting in enumerate(order):
-                best = int(fused[row].argmax())
-                if scored.names[best] in {named[o] for o in others[sighting]}:
-                    score = float(fused[row, best])
-                    floor = floors[variant]
-                    floors[variant] = score if floor is None else max(floor, score)
+            fused = scored.fused(variant, options)[0]
+            best = int(fused.argmax())
+            if scored.names[best] in wrong:
+                floor = floors[variant]
+                score = float(fused[best])
+                floors[variant] = score if floor is None else max(floor, score)
     return floors
 
 

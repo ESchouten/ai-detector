@@ -101,6 +101,19 @@ uv run reid enroll ~/reid-cache/manifests/eth-tracks.csv --model miewid-msv3 \
 
 The table shows, per grouping: groups formed, the share of sightings in a group named after their own cow, taps to the goal, to 90% and to every cow, then means over the later days: sightings named (right when named), cows recognised at least once that day, the right cow in the top 3, and wrong names in total. The first row is the same gallery named from the true labels, the ceiling for perfect naming. Each day's numbers are in the JSON.
 
+## Naming a farm's cows
+
+`groups` is the page a farmer would use: it groups every sighting in a manifest, for example the tracks `tracks-from-video` cut from a few days of barn video, and writes a page to name them.
+
+```sh
+uv run reid groups farm-tracks.csv --model miewid-msv3 \
+    --checkpoint ~/reid-cache/models/miewid-allfarms-100ep.safetensors --merge 0.7 --out naming
+open naming/index.html
+uv run reid apply-names farm-tracks.csv naming/groups.csv ~/Downloads/names.csv --out farm-named.csv
+```
+
+The page shows the groups with the most sightings first, up to `--per-group` sightings each spread over the days. Type a cow's number and press Enter; click a picture of another cow to leave that sighting out. Names are kept in the browser until **Download names** saves `names.csv`. `apply-names` turns it into a manifest with the cows' numbers as identities, leaving out what wasn't named, so a test farm labelled this way can go straight into `enroll` or `benchmark`. A higher `--merge` gives smaller, purer groups at the cost of more typing.
+
 ## Fine-tuning
 
 One backbone is trained on every farm but one, then tested on the farm it never saw:

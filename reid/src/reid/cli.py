@@ -207,6 +207,42 @@ def _enroll(arguments: argparse.Namespace) -> None:
     print(enrolment_table(result))
 
 
+def _groups(arguments: argparse.Namespace) -> None:
+    from reid.backbones import build
+    from reid.naming import group_sightings, write_page
+
+    crops = read_manifest(arguments.manifest)
+    embedder = build(
+        arguments.model,
+        checkpoint=arguments.checkpoint,
+        grayscale=arguments.grayscale,
+        batch_size=arguments.batch_size,
+        device=arguments.device,
+        half=arguments.half,
+    )
+    vectors = embeddings(crops, embedder, arguments.out / "cache")
+    seen, groups = group_sightings(crops, vectors, arguments.merge)
+    count = write_page(crops, seen, groups, arguments.out, arguments.per_group)
+    print(
+        f"{len(seen)} sightings in {count} groups; open "
+        f"{arguments.out / 'index.html'} to name them"
+    )
+
+
+def _apply_names(arguments: argparse.Namespace) -> None:
+    from reid.naming import apply_names
+
+    crops = apply_names(
+        read_manifest(arguments.manifest), arguments.groups, arguments.names
+    )
+    write_manifest(arguments.out, crops)
+    print(
+        f"{len(crops)} crops of {len({crop.identity for crop in crops})} named cows "
+        f"written to {arguments.out}",
+        file=sys.stderr,
+    )
+
+
 def _report(arguments: argparse.Namespace) -> None:
     results = [
         json.loads(path.read_text(encoding="utf-8")) for path in arguments.results
@@ -409,6 +445,40 @@ def _add_imports(commands: argparse._SubParsersAction) -> None:
     video.set_defaults(run=_video)
 
 
+def _add_naming(commands: argparse._SubParsersAction) -> None:
+    groups = commands.add_parser(
+        "groups", help="group a farm's sightings and write a page to name them"
+    )
+    groups.add_argument("manifest", type=Path)
+    groups.add_argument("--model", required=True)
+    groups.add_argument("--checkpoint", type=Path)
+    groups.add_argument("--grayscale", action="store_true")
+    groups.add_argument(
+        "--merge",
+        type=float,
+        default=0.7,
+        help="similarity at which sightings are grouped; higher gives smaller, "
+        "purer groups",
+    )
+    groups.add_argument(
+        "--per-group", type=int, default=12, help="sightings shown per group"
+    )
+    groups.add_argument("--batch-size", type=int, default=32)
+    groups.add_argument("--device")
+    groups.add_argument("--half", action="store_true")
+    groups.add_argument("--out", type=Path, required=True)
+    groups.set_defaults(run=_groups)
+
+    names = commands.add_parser(
+        "apply-names", help="manifest of the sightings named on the groups page"
+    )
+    names.add_argument("manifest", type=Path)
+    names.add_argument("groups", type=Path, help="groups.csv written with the page")
+    names.add_argument("names", type=Path, help="names.csv downloaded from the page")
+    names.add_argument("--out", type=Path, required=True)
+    names.set_defaults(run=_apply_names)
+
+
 def _add_tracking(commands: argparse._SubParsersAction) -> None:
     tracks = commands.add_parser(
         "tracks-from-video", help="unlabelled cow tracks from farm video"
@@ -549,6 +619,7 @@ def parser() -> argparse.ArgumentParser:
     _add_scoring(commands)
     _add_imports(commands)
     _add_tracking(commands)
+    _add_naming(commands)
     _add_training(commands)
     return root
 

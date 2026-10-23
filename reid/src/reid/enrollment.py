@@ -58,6 +58,14 @@ def sightings(crops: Sequence[Crop], indices: Sequence[int]) -> list[list[int]]:
     return list(groups.values())
 
 
+def sighting_vectors(
+    vectors: NDArray[np.float32], seen: Sequence[Sequence[int]]
+) -> NDArray[np.float32]:
+    """One L2-normalised embedding per sighting: the mean of its crops'."""
+    means = np.stack([vectors[list(indices)].mean(axis=0) for indices in seen])
+    return means / np.linalg.norm(means, axis=1, keepdims=True)
+
+
 def merge_tree(similarity: NDArray[np.floating]) -> list[tuple[int, int, float]]:
     """Every average-linkage merge of the items, with the similarity it joined at.
 
@@ -305,8 +313,7 @@ def simulate(
     seen = sightings(crops, enrol)
     cows = [Counter(crops[i].identity for i in s).most_common(1)[0][0] for s in seen]
     sizes = [len(s) for s in seen]
-    means = np.stack([vectors[s].mean(axis=0) for s in seen])
-    means /= np.linalg.norm(means, axis=1, keepdims=True)
+    means = sighting_vectors(vectors, seen)
     merges = merge_tree(similarities(means, means))
     labelled = _days(
         crops, vectors, enrol, [crops[i].identity for i in enrol], later, options

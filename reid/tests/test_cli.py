@@ -3,7 +3,7 @@ from pathlib import Path
 
 from PIL import Image
 
-from conftest import FakeEmbedder
+from conftest import FakeEmbedder, FakeMatcher
 from reid.benchmark import Options, embeddings, evaluate
 from reid.cli import _training_crops, main, table
 from reid.manifest import write_manifest
@@ -79,6 +79,7 @@ def test_enroll_saves_the_simulation_and_prints_a_row_per_grouping(
     monkeypatch.setattr(
         "reid.backbones.build", lambda model, **options: FakeEmbedder(noise=0.1)
     )
+    monkeypatch.setattr("reid.local.KeypointMatcher", lambda **options: FakeMatcher())
     out = tmp_path / "results"
 
     main(
@@ -92,19 +93,29 @@ def test_enroll_saves_the_simulation_and_prints_a_row_per_grouping(
             "0.9",
             "--goal",
             "1",
+            "--coat",
+            "0",
+            "0.5",
             "--out",
             str(out),
         ]
     )
 
     saved = json.loads((out / "enrol-farm.fake.json").read_text())
-    assert [entry["merge"] for entry in saved["grouped"]] == [0.8, 0.9]
+    assert [(entry["merge"], entry["coat"]) for entry in saved["grouped"]] == [
+        (0.8, 0.0),
+        (0.8, 0.5),
+        (0.9, 0.0),
+        (0.9, 0.5),
+    ]
     output = capsys.readouterr().out
     assert output.startswith("8 cows in 32 sightings while enrolling")
     assert (
-        "| labelled | – | – | – | – | – | 100.0 (100.0) | 100.0 | 100.0 | 0 |" in output
+        "| labelled | 0.0 | – | – | – | – | – | 100.0 (100.0) | 100.0 | 100.0 | 0 |"
+        in output
     )
-    assert "| grouped at 0.8 | 8 | 100.0 | 8 | 8 | 8 |" in output
+    assert "| grouped at 0.8 | 0.0 | 8 | 100.0 | 8 | 8 | 8 |" in output
+    assert "| grouped at 0.8 | 0.5 | 8 | 100.0 | 8 | 8 | 8 |" in output
 
 
 def test_training_crops_keep_cows_of_different_farms_apart(herd, tmp_path: Path):

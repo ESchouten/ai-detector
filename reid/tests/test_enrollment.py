@@ -1,10 +1,20 @@
 import numpy as np
 import pytest
 
-from conftest import FakeEmbedder
-from reid.benchmark import embeddings
-from reid.enrollment import Options, cut, merge_tree, play_farmer, sightings, simulate
+from conftest import FakeEmbedder, FakeMatcher
+from reid.benchmark import Options as BenchmarkOptions
+from reid.benchmark import embeddings, self_set_thresholds
+from reid.enrollment import (
+    Options,
+    _thresholds,
+    cut,
+    merge_tree,
+    play_farmer,
+    sightings,
+    simulate,
+)
 from reid.manifest import Crop
+from reid.splits import Split
 
 
 def _partition(labels) -> set[frozenset[int]]:
@@ -92,7 +102,7 @@ def test_a_separable_herd_is_enrolled_with_a_tap_per_cow_and_named_later(herd):
     assert result["test_sessions"] == ["2026-10-03", "2026-10-04"]
     assert result["herd"] == 8
     assert result["sightings"] == 32
-    labelled = result["labelled"]
+    (labelled,) = result["labelled"]
     assert labelled["level"] == "track"
     assert labelled["mean"]["recognised"] == 1.0
     assert labelled["mean"]["wrong"] == 0
@@ -125,3 +135,43 @@ def test_a_runner_up_margin_still_names_a_separable_herd(herd):
     assert result["options"]["margin"] == 0.5
     assert result["grouped"][0]["mean"]["recognised"] == 1.0
     assert result["grouped"][0]["mean"]["wrong"] == 0
+
+
+def test_the_install_sets_its_threshold_as_the_benchmark_does(herd):
+    vectors = embeddings(herd, FakeEmbedder(noise=0.4))
+    enrolled = [i for i, crop in enumerate(herd) if crop.session < "2026-10-03"]
+    crops = [herd[i] for i in enrolled]
+    whole = Split("enrolled", tuple(range(len(crops))), (), frozenset(), True)
+
+    benchmark = self_set_thresholds(
+        crops, vectors[enrolled], [whole], BenchmarkOptions()
+    )[0]
+
+    assert _thresholds(crops, vectors[enrolled], None, Options()) == {
+        0.0: pytest.approx(benchmark["track"])
+    }
+
+
+def test_coat_matches_name_more_of_a_blurry_herd_and_rightly(herd):
+    vectors = embeddings(herd, FakeEmbedder(noise=0.6))
+    matcher = FakeMatcher()
+
+    result = simulate(
+        herd, vectors, Options(merges=(0.8,), goal=1.0, coats=(0.0, 0.5)), matcher
+    )
+
+    alone, coat = result["labelled"]
+    assert (alone["coat"], coat["coat"]) == (0.0, 0.5)
+    assert alone["mean"]["wrong"] > 0
+    assert coat["mean"]["wrong"] == 0
+    assert coat["mean"]["named"] > alone["mean"]["named"]
+    assert [entry["coat"] for entry in result["grouped"]] == [0.0, 0.5]
+    assert result["options"]["matcher"] == "fake-matcher"
+    assert matcher.pairs
+
+
+def test_a_coat_weight_needs_a_matcher(herd):
+    vectors = embeddings(herd, FakeEmbedder())
+
+    with pytest.raises(ValueError, match="matcher"):
+        simulate(herd, vectors, Options(coats=(0.5,)))

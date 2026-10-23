@@ -99,7 +99,9 @@ uv run reid enroll ~/reid-cache/manifests/eth-tracks.csv --model miewid-msv3 \
 3. **The farmer.** Groups with the most sightings come first, and each is named with one tap after the cow most of its pictures show, so the rest of a mixed group gets a wrong name. The farmer stops once `--goal` (90%) of the cows seen have a name. The labels are used only here and for scoring.
 4. **Later days.** Each later session's sightings are named against that gallery at the threshold the install sets from it, as the benchmark's self-set threshold does, with the same `--precision` and `--margin`.
 
-The table shows, per grouping: groups formed, the share of sightings in a group named after their own cow, taps to the goal, to 90% and to every cow, then means over the later days: sightings named (right when named), cows recognised at least once that day, the right cow in the top 3, and wrong names in total. The first row is the same gallery named from the true labels, the ceiling for perfect naming. Each day's numbers are in the JSON.
+With `--coat 0 0.3`, every gallery is also scored with the coat-detail check below at each weight, in the install's threshold too; weight 0 is the embedding alone. It needs the `local` extra and matches about ten picture pairs a second on an M2 Max, so a farm with thousands of later sightings takes an hour or more; the counts are saved in `<out>/cache/` as it goes.
+
+The table shows, per grouping and coat weight: groups formed, the share of sightings in a group named after their own cow, taps to the goal, to 90% and to every cow, then means over the later days: sightings named (right when named), cows recognised at least once that day, the right cow in the top 3, and wrong names in total. The first row is the same gallery named from the true labels, the ceiling for perfect naming. Each day's numbers are in the JSON.
 
 ## Coat details
 

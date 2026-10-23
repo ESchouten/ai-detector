@@ -10,6 +10,8 @@ through kornia.
 from __future__ import annotations
 
 import json
+import sys
+import time
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Protocol
@@ -17,6 +19,11 @@ from typing import Any, Protocol
 import numpy as np
 from numpy.typing import NDArray
 from PIL import Image
+
+from reid.manifest import Crop
+
+# Seconds between saves of the pair counts and progress lines during a long match.
+SAVE_EVERY = 300
 
 
 class Matcher(Protocol):
@@ -101,6 +108,11 @@ class KeypointMatcher:
             self._described[path] = (found.keypoints, found.descriptors, size)
         return self._described[path]
 
+    def _save(self) -> None:
+        if self._cache is not None:
+            self._cache.parent.mkdir(parents=True, exist_ok=True)
+            self._cache.write_text(json.dumps(self._counts), encoding="utf-8")
+
     def matches(self, pairs: Sequence[tuple[Path, Path]]) -> NDArray[np.float32]:
         import torch
 
@@ -113,6 +125,9 @@ class KeypointMatcher:
                     todo.setdefault(count, []).append(position)
                 else:
                     todo.setdefault(-position - 1, []).append(position)
+        total = sum(len(positions) for positions in todo.values())
+        done = 0
+        saved = time.monotonic()
         for positions in todo.values():
             for start in range(0, len(positions), self.batch_size):
                 batch = positions[start : start + self.batch_size]
@@ -131,7 +146,60 @@ class KeypointMatcher:
                 counts = (scores >= self.confidence).sum(dim=1).cpu().tolist()
                 for position, count in zip(batch, counts, strict=True):
                     self._counts[keys[position]] = float(count)
-        if todo and self._cache is not None:
-            self._cache.parent.mkdir(parents=True, exist_ok=True)
-            self._cache.write_text(json.dumps(self._counts), encoding="utf-8")
+                done += len(batch)
+                if time.monotonic() - saved > SAVE_EVERY:
+                    self._save()
+                    saved = time.monotonic()
+                    print(f"Matched {done} of {total} new pairs…", file=sys.stderr)
+        if todo:
+            self._save()
         return np.array([self._counts[key] for key in keys], dtype=np.float32)
+
+
+def spread(items: Sequence[int], count: int) -> list[int]:
+    """`count` items spread evenly over the list, all of them if it is shorter."""
+    if len(items) <= count:
+        return list(items)
+    return [items[i] for i in np.linspace(0, len(items) - 1, count).round().astype(int)]
+
+
+def coat_matches(
+    matcher: Matcher,
+    crops: Sequence[Crop],
+    vectors: NDArray[np.float32],
+    seen: Sequence[Sequence[int]],
+    gallery: Sequence[int],
+    names: Sequence[str],
+    candidates: NDArray[np.str_],
+    query_crops: int = 3,
+    gallery_crops: int = 3,
+) -> NDArray[np.float32]:
+    """Coat matches of each sighting with each of its candidate cows.
+
+    `seen` holds the sightings' crops and `candidates` a row of cow names per
+    sighting; `names` is the name of each `gallery` crop. `query_crops` pictures
+    spread over the sighting are matched with the cow's `gallery_crops` gallery
+    pictures most like the sighting; a picture counts its best match and the
+    sighting the mean over its pictures.
+    """
+    labels = np.asarray(names)
+    pictures = np.asarray(gallery)
+    pairs = []
+    shapes = []
+    for row, sighting in enumerate(seen):
+        asked = spread(sighting, query_crops)
+        mean = vectors[list(sighting)].mean(axis=0)
+        for cow in candidates[row]:
+            own = pictures[labels == cow]
+            order = np.argsort(-(vectors[own] @ mean), kind="stable")
+            chosen = own[order[:gallery_crops]]
+            pairs.extend((crops[q].path, crops[g].path) for q in asked for g in chosen)
+            shapes.append((len(asked), len(chosen)))
+    counts = matcher.matches(pairs)
+    found = np.empty(len(shapes), dtype=np.float32)
+    start = 0
+    for cell, (asked, chosen) in enumerate(shapes):
+        block = counts[start : start + asked * chosen].reshape(asked, chosen)
+        found[cell] = block.max(axis=1).mean()
+        start += asked * chosen
+    return found.reshape(candidates.shape)

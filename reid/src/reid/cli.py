@@ -135,24 +135,25 @@ def _benchmark(arguments: argparse.Namespace) -> None:
 
 
 def enrolment_table(result: dict[str, Any]) -> str:
-    """One Markdown row per grouping similarity, after the labelled ceiling.
+    """One Markdown row per grouping similarity and coat weight, after the
+    labelled ceiling.
 
     Day columns are means over the test days: sightings named (right when named),
     cows recognised at least once that day, and the right cow in the top 3.
     """
     lines = [
-        "| Gallery | Groups | Pure | Taps | Taps 90% | Taps 100% | Named | "
+        "| Gallery | Coat | Groups | Pure | Taps | Taps 90% | Taps 100% | Named | "
         "Cows a day | In top 3 | Wrong |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
-    rows = [("labelled", {}, result["labelled"])] + [
+    rows = [("labelled", {}, entry) for entry in result["labelled"]] + [
         (f"grouped at {entry['merge']}", entry, entry) for entry in result["grouped"]
     ]
     for label, enrolment, scored in rows:
         days = scored["mean"]
         milestones = enrolment.get("milestones", {})
         lines.append(
-            f"| {label} | {enrolment.get('groups', '–')} "
+            f"| {label} | {scored['coat']} | {enrolment.get('groups', '–')} "
             f"| {_percent(enrolment.get('purity'))} | {enrolment.get('taps', '–')} "
             f"| {milestones.get('0.9') or '–'} | {milestones.get('1.0') or '–'} "
             f"| {_percent(days['named'])} ({_percent(days['right'])}) "
@@ -174,6 +175,10 @@ def _enroll(arguments: argparse.Namespace) -> None:
         k=arguments.k,
         precision=arguments.precision,
         margin=arguments.margin,
+        coats=tuple(arguments.coat),
+        top=arguments.top,
+        query_crops=arguments.query_crops,
+        gallery_crops=arguments.gallery_crops,
     )
     crops = read_manifest(arguments.manifest)
     embedder = build(
@@ -190,11 +195,20 @@ def _enroll(arguments: argparse.Namespace) -> None:
         file=sys.stderr,
     )
     vectors = embeddings(crops, embedder, arguments.out / "cache")
+    matcher = None
+    if any(options.coats):
+        from reid.local import KeypointMatcher
+
+        matcher = KeypointMatcher(
+            grayscale=arguments.grayscale,
+            device=arguments.device,
+            cache=arguments.out / "cache",
+        )
     result = {
         "model": embedder.name,
         "manifest": arguments.manifest.stem,
         "created": datetime.now(UTC).isoformat(timespec="seconds"),
-        **simulate(crops, vectors, options),
+        **simulate(crops, vectors, options, matcher),
     }
     arguments.out.mkdir(parents=True, exist_ok=True)
     path = arguments.out / f"enrol-{arguments.manifest.stem}.{embedder.name}.json"
@@ -463,6 +477,21 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
         default=0.0,
         help="share of the runner-up cow's score taken off the best one's before "
         "naming; 1 names by the lead over the runner-up",
+    )
+    enroll.add_argument(
+        "--coat",
+        type=float,
+        nargs="+",
+        default=[0.0],
+        help="weights of the coat score (0 to 1 at 100 matches) added for each "
+        "sighting's best cows; each is tried, 0 being the embedding alone",
+    )
+    enroll.add_argument("--top", type=int, default=3, help="candidate cows re-checked")
+    enroll.add_argument(
+        "--query-crops", type=int, default=3, help="pictures per sighting matched"
+    )
+    enroll.add_argument(
+        "--gallery-crops", type=int, default=3, help="pictures per candidate matched"
     )
     enroll.add_argument("--batch-size", type=int, default=32)
     enroll.add_argument("--device")

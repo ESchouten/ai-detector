@@ -9,6 +9,22 @@ from PIL import Image
 from reid.manifest import Crop
 
 
+class FakeMatcher:
+    """Pictures of one cow share many coat details, of different cows few."""
+
+    name = "fake-matcher"
+
+    def __init__(self):
+        self.pairs = []
+
+    def matches(self, pairs):
+        self.pairs.extend(pairs)
+        return np.array(
+            [100.0 if Path(a).parent == Path(b).parent else 5.0 for a, b in pairs],
+            dtype=np.float32,
+        )
+
+
 class FakeEmbedder:
     """Each animal points one way; pictures scatter a little around it."""
 

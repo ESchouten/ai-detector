@@ -18,6 +18,7 @@ from numpy.typing import NDArray
 from PIL import Image
 
 from reid.enrollment import cut, merge_tree, sighting_vectors, sightings
+from reid.local import spread
 from reid.manifest import Crop
 from reid.matching import similarities
 
@@ -31,13 +32,6 @@ def group_sightings(
     seen = sightings(crops, range(len(crops)))
     means = sighting_vectors(vectors, seen)
     return seen, cut(merge_tree(similarities(means, means)), len(seen), merge).tolist()
-
-
-def spread(items: Sequence[int], count: int) -> list[int]:
-    """`count` items spread evenly over the list, all of them if it is shorter."""
-    if len(items) <= count:
-        return list(items)
-    return [items[i] for i in np.linspace(0, len(items) - 1, count).round().astype(int)]
 
 
 def write_page(

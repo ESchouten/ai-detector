@@ -16,12 +16,11 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
-from reid.enrollment import sighting_vectors, sightings
-from reid.local import Matcher
+from reid.enrollment import sightings
+from reid.local import Matcher, coat_matches
 from reid.manifest import Crop
 from reid.matching import identity_scores, similarities
 from reid.metrics import Decisions
-from reid.naming import spread
 from reid.splits import open_set_splits
 
 
@@ -79,33 +78,24 @@ def candidates(
     position = {index: row for row, index in enumerate(split.queries)}
     seen = sightings(crops, split.queries)
     deep_all = np.stack([scores[[position[i] for i in s]].mean(axis=0) for s in seen])
-    means = sighting_vectors(vectors, seen)
     order = np.argsort(-deep_all, axis=1, kind="stable")[:, : options.top]
-    pairs = []
-    shapes = []
-    for row, sighting in enumerate(seen):
-        asked = spread(sighting, options.query_crops)
-        for column in order[row]:
-            own = np.flatnonzero(labels == names[column])
-            nearest = own[
-                np.argsort(-(vectors[[gallery[i] for i in own]] @ means[row]))
-            ]
-            chosen = [gallery[i] for i in nearest[: options.gallery_crops]]
-            pairs.extend((crops[q].path, crops[g].path) for q in asked for g in chosen)
-            shapes.append((len(asked), len(chosen)))
-    counts = matcher.matches(pairs)
-    local = np.empty(len(shapes), dtype=np.float32)
-    start = 0
-    for cell, (asked, chosen) in enumerate(shapes):
-        block = counts[start : start + asked * chosen].reshape(asked, chosen)
-        local[cell] = block.max(axis=1).mean()
-        start += asked * chosen
-    truth = np.array([crops[s[0]].identity for s in seen])
     top_names = np.asarray(names)[order]
+    local = coat_matches(
+        matcher,
+        crops,
+        vectors,
+        seen,
+        gallery,
+        labels.tolist(),
+        top_names,
+        options.query_crops,
+        options.gallery_crops,
+    )
+    truth = np.array([crops[s[0]].identity for s in seen])
     return Candidates(
         top_names,
         np.take_along_axis(deep_all, order, axis=1),
-        local.reshape(len(seen), options.top),
+        local,
         truth,
         np.isin(truth, names),
         (top_names == truth[:, None]).any(axis=1),

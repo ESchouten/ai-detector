@@ -1,26 +1,8 @@
-from pathlib import Path
-
 import numpy as np
 
-from conftest import FakeEmbedder
+from conftest import FakeEmbedder, FakeMatcher
 from reid.benchmark import embeddings
 from reid.rerank import Candidates, Options, _named, candidates, evaluate
-
-
-class FakeMatcher:
-    """Pictures of one cow share many coat details, of different cows few."""
-
-    name = "fake-matcher"
-
-    def __init__(self):
-        self.pairs = []
-
-    def matches(self, pairs):
-        self.pairs.extend(pairs)
-        return np.array(
-            [100.0 if Path(a).parent == Path(b).parent else 5.0 for a, b in pairs],
-            dtype=np.float32,
-        )
 
 
 def test_coat_matches_fix_what_a_blurry_embedding_confuses(herd):

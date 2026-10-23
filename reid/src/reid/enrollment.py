@@ -11,22 +11,17 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
-from statistics import mean
+from statistics import mean, median
 from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
 
-from reid.benchmark import Options as BenchmarkOptions
-from reid.benchmark import self_set_thresholds
+from reid.local import Matcher, coat_matches
 from reid.manifest import Crop
-from reid.matching import (
-    identity_scores,
-    runner_up_margin,
-    similarities,
-    track_scores,
-)
-from reid.splits import Split
+from reid.matching import identity_scores, runner_up_margin, similarities
+from reid.metrics import Decisions
+from reid.splits import open_set_splits
 
 MILESTONES = (0.5, 0.8, 0.9, 1.0)
 
@@ -43,6 +38,14 @@ class Options:
     precision: float = 0.99
     # Share of the runner-up's score taken off the best cow's before naming.
     margin: float = 0.0
+    # Weights of the coat score, keypoint matches with each sighting's `top`
+    # best cows by embedding; each is simulated in turn, 0 being the embedding
+    # alone. The score reaches 1 at `saturation` matches.
+    coats: tuple[float, ...] = (0.0,)
+    top: int = 3
+    query_crops: int = 3
+    gallery_crops: int = 3
+    saturation: float = 100.0
     strangers: float = 0.25
     folds: int = 3
     seed: int = 0
@@ -196,25 +199,100 @@ def play_farmer(
     )
 
 
-def _threshold(
-    crops: Sequence[Crop], vectors: NDArray[np.float32], level: str, options: Options
-) -> float | None:
-    """The threshold an install sets from its own named gallery."""
-    whole = Split("enrolled", tuple(range(len(crops))), (), frozenset(), True)
-    found = self_set_thresholds(
-        crops,
-        vectors,
-        [whole],
-        BenchmarkOptions(
-            strangers=options.strangers,
-            folds=options.folds,
-            seed=options.seed,
-            k=options.k,
-            precision=options.precision,
-            margin=options.margin,
-        ),
+@dataclass(frozen=True)
+class _Scored:
+    """Sightings scored against a gallery, per cow by embedding, with the coat
+    matches of each sighting's `top` best cows.
+    """
+
+    seen: list[list[int]]
+    names: NDArray[np.str_]
+    deep: NDArray[np.float32]
+    top: NDArray[np.intp]
+    matches: NDArray[np.float32] | None
+
+    def fused(self, weight: float, options: Options) -> NDArray[np.float32]:
+        """Scores with the coat score added at `weight` and the margin taken off."""
+        scores = self.deep.copy()
+        if weight and self.matches is not None:
+            coat = np.minimum(self.matches, options.saturation) / options.saturation
+            scores[np.arange(len(scores))[:, None], self.top] += weight * coat
+        return runner_up_margin(scores, options.margin)
+
+
+def _score(
+    crops: Sequence[Crop],
+    vectors: NDArray[np.float32],
+    gallery: Sequence[int],
+    names: Sequence[str],
+    queries: Sequence[int],
+    matcher: Matcher | None,
+    options: Options,
+) -> _Scored:
+    """A sighting's score for a cow is the mean of its crops' scores."""
+    seen = sightings(crops, queries)
+    enrolled, scores = identity_scores(
+        similarities(vectors[list(queries)], vectors[list(gallery)]), names, options.k
     )
-    return found[0].get(level)
+    row = {index: position for position, index in enumerate(queries)}
+    deep = np.stack([scores[[row[i] for i in s]].mean(axis=0) for s in seen])
+    top = np.argsort(-deep, axis=1, kind="stable")[:, : options.top]
+    matches = None
+    if matcher is not None and any(options.coats):
+        matches = coat_matches(
+            matcher,
+            crops,
+            vectors,
+            seen,
+            gallery,
+            names,
+            np.asarray(enrolled)[top],
+            options.query_crops,
+            options.gallery_crops,
+        )
+    return _Scored(seen, np.asarray(enrolled), deep, top, matches)
+
+
+def _thresholds(
+    crops: Sequence[Crop],
+    vectors: NDArray[np.float32],
+    matcher: Matcher | None,
+    options: Options,
+) -> dict[float, float | None]:
+    """Per coat weight, the threshold an install sets from its own named gallery.
+
+    The gallery is split again by time with some of its cows withheld, as the
+    benchmark does with a whole manifest, and each fold's sightings are scored
+    the way later days will be. The threshold is the median over the folds.
+    """
+    try:
+        inner = open_set_splits(
+            crops, options.strangers, options.folds, options.seed + 1
+        )
+    except ValueError:
+        return dict.fromkeys(options.coats)
+    found: dict[float, list[float]] = {weight: [] for weight in options.coats}
+    for split in inner:
+        scored = _score(
+            crops,
+            vectors,
+            split.gallery,
+            [crops[i].identity for i in split.gallery],
+            split.queries,
+            matcher,
+            options,
+        )
+        truth = [crops[s[0]].identity for s in scored.seen]
+        for weight in options.coats:
+            decisions = Decisions.of(
+                tuple(scored.names), scored.fused(weight, options), truth
+            )
+            threshold = decisions.threshold_for(options.precision)
+            if threshold is not None:
+                found[weight].append(threshold)
+    return {
+        weight: median(values) if values else None for weight, values in found.items()
+    }
 
 
 def _days(
@@ -223,83 +301,89 @@ def _days(
     gallery: Sequence[int],
     names: Sequence[str],
     queries: Sequence[int],
+    matcher: Matcher | None,
     options: Options,
-) -> dict[str, Any]:
-    """Each later day's sightings named against the gallery at its own threshold."""
+) -> list[dict[str, Any]]:
+    """Per coat weight, each later day's sightings named against the gallery at
+    the install's own threshold.
+    """
     level = "track" if any(crops[i].track for i in queries) else "crop"
-    threshold = _threshold(
+    thresholds = _thresholds(
         [
             replace(crops[i], identity=name)
             for i, name in zip(gallery, names, strict=True)
         ],
         vectors[list(gallery)],
-        level,
+        matcher,
         options,
     )
-    enrolled, scores = identity_scores(
-        similarities(vectors[list(queries)], vectors[list(gallery)]), names, options.k
-    )
-    asked = [crops[i] for i in queries]
-    firsts, averaged = track_scores(
-        scores,
-        [f"{crop.session}\0{crop.track}" if crop.track else "" for crop in asked],
-    )
-    ranked = np.asarray(enrolled)[np.argsort(-averaged, axis=1, kind="stable")[:, :3]]
-    sessions = np.array([asked[i].session for i in firsts])
-    cows = np.array([asked[i].identity for i in firsts])
-    best = ranked[:, 0]
-    named = (
-        runner_up_margin(averaged, options.margin).max(axis=1) >= threshold
-        if threshold is not None
-        else np.zeros(len(firsts), dtype=bool)
-    )
-    right = named & (best == cows)
-    in_gallery = np.isin(cows, enrolled)
-    top3 = (ranked == cows[:, None]).any(axis=1)
-    days: list[dict[str, Any]] = []
-    for session in sorted(set(sessions)):
-        day = sessions == session
-        present = set(cows[day])
-        days.append(
+    scored = _score(crops, vectors, gallery, names, queries, matcher, options)
+    sessions = np.array([crops[s[0]].session for s in scored.seen])
+    cows = np.array([crops[s[0]].identity for s in scored.seen])
+    in_gallery = np.isin(cows, scored.names)
+    results = []
+    for weight in options.coats:
+        fused = scored.fused(weight, options)
+        ranked = scored.names[np.argsort(-fused, axis=1, kind="stable")[:, :3]]
+        threshold = thresholds[weight]
+        named = (
+            fused.max(axis=1) >= threshold
+            if threshold is not None
+            else np.zeros(len(cows), dtype=bool)
+        )
+        right = named & (ranked[:, 0] == cows)
+        top3 = (ranked == cows[:, None]).any(axis=1)
+        days: list[dict[str, Any]] = []
+        for session in sorted(set(sessions)):
+            day = sessions == session
+            present = set(cows[day])
+            days.append(
+                {
+                    "session": session,
+                    "sightings": int(day.sum()),
+                    "named": float(named[day].mean()),
+                    "right": float(right[day].sum() / named[day].sum())
+                    if named[day].any()
+                    else None,
+                    "wrong": int((named & ~right)[day].sum()),
+                    "cows": len(present),
+                    "recognised": len(set(cows[day & right])) / len(present),
+                    "misnamed_cows": len(set(cows[day & named & ~right])),
+                    "top3": float(top3[day & in_gallery].mean())
+                    if (day & in_gallery).any()
+                    else None,
+                }
+            )
+        rights = [day["right"] for day in days if day["right"] is not None]
+        tops = [day["top3"] for day in days if day["top3"] is not None]
+        results.append(
             {
-                "session": session,
-                "sightings": int(day.sum()),
-                "named": float(named[day].mean()),
-                "right": float(right[day].sum() / named[day].sum())
-                if named[day].any()
-                else None,
-                "wrong": int((named & ~right)[day].sum()),
-                "cows": len(present),
-                "recognised": len(set(cows[day & right])) / len(present),
-                "misnamed_cows": len(set(cows[day & named & ~right])),
-                "top3": float(top3[day & in_gallery].mean())
-                if (day & in_gallery).any()
-                else None,
+                "coat": weight,
+                "level": level,
+                "threshold": threshold,
+                "days": days,
+                "mean": {
+                    "named": mean(day["named"] for day in days),
+                    "right": mean(rights) if rights else None,
+                    "recognised": mean(day["recognised"] for day in days),
+                    "top3": mean(tops) if tops else None,
+                    "wrong": sum(day["wrong"] for day in days),
+                },
             }
         )
-    rights = [day["right"] for day in days if day["right"] is not None]
-    tops = [day["top3"] for day in days if day["top3"] is not None]
-    return {
-        "level": level,
-        "threshold": threshold,
-        "days": days,
-        "mean": {
-            "named": mean(day["named"] for day in days),
-            "right": mean(rights) if rights else None,
-            "recognised": mean(day["recognised"] for day in days),
-            "top3": mean(tops) if tops else None,
-            "wrong": sum(day["wrong"] for day in days),
-        },
-    }
+    return results
 
 
 def simulate(
-    crops: Sequence[Crop], vectors: NDArray[np.float32], options: Options
+    crops: Sequence[Crop],
+    vectors: NDArray[np.float32],
+    options: Options,
+    matcher: Matcher | None = None,
 ) -> dict[str, Any]:
     """Enrol on the first sessions at each grouping similarity; test on the rest.
 
     A gallery named from the true labels is scored too, as the ceiling that
-    perfect naming would give.
+    perfect naming would give. Every gallery is scored at each coat weight.
     """
     sessions = sorted({crop.session for crop in crops})
     if "" in sessions or len(sessions) <= options.enrol_sessions:
@@ -307,6 +391,8 @@ def simulate(
             f"Enrolment needs sessions on every crop and more than "
             f"{options.enrol_sessions} of them"
         )
+    if any(options.coats) and matcher is None:
+        raise ValueError("A coat weight above 0 needs a matcher")
     period = set(sessions[: options.enrol_sessions])
     enrol = [i for i, crop in enumerate(crops) if crop.session in period]
     later = [i for i, crop in enumerate(crops) if crop.session not in period]
@@ -316,7 +402,13 @@ def simulate(
     means = sighting_vectors(vectors, seen)
     merges = merge_tree(similarities(means, means))
     labelled = _days(
-        crops, vectors, enrol, [crops[i].identity for i in enrol], later, options
+        crops,
+        vectors,
+        enrol,
+        [crops[i].identity for i in enrol],
+        later,
+        matcher,
+        options,
     )
     grouped = []
     for merge in options.merges:
@@ -332,25 +424,26 @@ def simulate(
             if name
             for _ in s
         ]
-        grouped.append(
-            {
-                "merge": merge,
-                "groups": enrolment.groups,
-                "purity": enrolment.purity,
-                "taps": enrolment.taps,
-                "milestones": {
-                    str(share): taps for share, taps in enrolment.milestones.items()
-                },
-                "gallery_right": float(
-                    np.mean(
-                        [
-                            crops[i].identity == n
-                            for i, n in zip(gallery, names, strict=True)
-                        ]
-                    )
-                ),
-                **_days(crops, vectors, gallery, names, later, options),
-            }
+        farmer = {
+            "merge": merge,
+            "groups": enrolment.groups,
+            "purity": enrolment.purity,
+            "taps": enrolment.taps,
+            "milestones": {
+                str(share): taps for share, taps in enrolment.milestones.items()
+            },
+            "gallery_right": float(
+                np.mean(
+                    [
+                        crops[i].identity == n
+                        for i, n in zip(gallery, names, strict=True)
+                    ]
+                )
+            ),
+        }
+        grouped.extend(
+            {**farmer, **scored}
+            for scored in _days(crops, vectors, gallery, names, later, matcher, options)
         )
     return {
         "crops": len(crops),
@@ -364,6 +457,12 @@ def simulate(
             "k": options.k,
             "precision": options.precision,
             "margin": options.margin,
+            "coats": list(options.coats),
+            "top": options.top,
+            "query_crops": options.query_crops,
+            "gallery_crops": options.gallery_crops,
+            "saturation": options.saturation,
+            "matcher": matcher.name if matcher is not None else None,
         },
         "labelled": labelled,
         "grouped": grouped,

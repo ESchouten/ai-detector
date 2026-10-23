@@ -290,6 +290,11 @@ def test_a_track_coming_in_from_the_edge_waits_for_a_whole_picture(tmp_path):
     assert saved is not None
     assert [picture.shape for picture in pictures(herd, saved)][0] == (60, 60, 3)
 
+    # One that never shows whole is saved after a while all the same.
+    watch(identifier, 16, [(2, "233", (0, 40, 60, 100))], start=7)
+    herd.flush()
+    assert identifier.identity(SOURCE, 2) is not None
+
 
 def test_a_track_gone_before_it_settled_is_saved_with_what_was_seen(tmp_path):
     herd = herd_of(tmp_path)

@@ -65,7 +65,7 @@ KEPT_MAX = 2 * GROUPED_MAX
 # this long with a whole picture, this long with only partial ones, or once it
 # has been gone this long; it is forgotten after the last.
 SETTLED = 4.0
-PARTIAL = 60.0
+PARTIAL = 15.0
 GONE = 10.0
 FORGOTTEN = 600.0
 # Seconds between rewrites of groups.json while new sightings keep coming.

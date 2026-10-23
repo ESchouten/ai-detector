@@ -1,6 +1,7 @@
 import type * as v from 'valibot';
 import { isDeepStrictEqual } from 'node:util';
 import type {
+	CameraDevice,
 	Config,
 	Configuration,
 	DetectorPreset,
@@ -9,6 +10,7 @@ import type {
 	PairedDevice
 } from '../../schema.ts';
 import type { Locale } from '../../locales.ts';
+import type { CameraMove } from '../cameras/identity.ts';
 import { serialQueue } from '../serial.ts';
 import {
 	alertsInput,
@@ -20,7 +22,13 @@ import {
 	telegramInput,
 	heartbeatInput
 } from '../../configuration.ts';
-import { identifyCameras, saveCamera, removeCamera } from './cameras.ts';
+import {
+	identifyCameras,
+	relocateCameras,
+	rememberCameraDevice,
+	removeCamera,
+	saveCamera
+} from './cameras.ts';
 import { SettingsFiles, type SettingsPaths } from './settings-files.ts';
 import { saveDetector, deleteDetector } from './detectors.ts';
 import { saveTelegram, deleteTelegram, saveAlerts } from './telegrams.ts';
@@ -190,6 +198,14 @@ export class ConfigurationStore {
 
 	removeCamera(id: string): Promise<void> {
 		return this.update((document) => removeCamera(document, id));
+	}
+
+	rememberCameraDevice(id: string, source: string, device: CameraDevice): Promise<void> {
+		return this.update((document) => rememberCameraDevice(document, id, source, device));
+	}
+
+	relocateCameras(moves: CameraMove[]): Promise<CameraMove[]> {
+		return this.update((document) => relocateCameras(document, moves));
 	}
 
 	/** `presets` give the Telegram settings of the detectors that follow them. */

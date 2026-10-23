@@ -90,3 +90,14 @@ export function finishCameraSetup(document: Configuration, id: string, monitorin
 		completionSignature: completionSignature(camera.source, rules)
 	};
 }
+
+/** Keeps a camera's checked and finished setup through `change`, which only moves its address. */
+export function keepCameraSetup(document: Configuration, id: string, change: () => void): void {
+	const before = cameraSetupStatus(document, id);
+	change();
+	const { camera, rules, signature } = cameraArchiveSelection(document, id);
+	if (!camera.setup) return;
+	if (before.archiveVerifiedAt) camera.setup.archiveSignature = signature;
+	if (before.completedAt)
+		camera.setup.completionSignature = completionSignature(camera.source, rules);
+}

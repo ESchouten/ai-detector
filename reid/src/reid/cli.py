@@ -163,6 +163,11 @@ def enrolment_table(result: dict[str, Any]) -> str:
             )
             + (", anonymous" if scored.get("anonymous") else "")
             + (", floor" if scored.get("floored") else "")
+            + (
+                f", for {_percent(scored['stranger_share'])} strangers"
+                if scored.get("stranger_share") is not None
+                else ""
+            )
         )
         lines.append(
             f"| {label} | {scored['adapt']} | {scored['coat']} | {naming} "
@@ -206,6 +211,7 @@ def _enroll(arguments: argparse.Namespace) -> None:
         k=arguments.k,
         precision=arguments.precision,
         strangers=arguments.strangers,
+        mix=(False, True) if arguments.mix else (False,),
         margin=arguments.margin,
         coats=tuple(arguments.coat),
         top=arguments.top,
@@ -583,6 +589,14 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
     bench.add_argument("--out", type=Path, default=Path("results"))
     bench.set_defaults(run=_benchmark)
 
+    _add_enroll(commands)
+
+    report = commands.add_parser("report", help="table of earlier results")
+    report.add_argument("results", type=Path, nargs="+")
+    report.set_defaults(run=_report)
+
+
+def _add_enroll(commands: argparse._SubParsersAction) -> None:
     enroll = commands.add_parser(
         "enroll",
         help="simulate a farmer naming groups of a farm's first sightings, then "
@@ -619,6 +633,12 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
         default=0.25,
         help="share of the named cows the install's threshold check withholds "
         "as strangers in each draw",
+    )
+    enroll.add_argument(
+        "--mix",
+        action="store_true",
+        help="also set the install's threshold for the share of strangers its "
+        "unnamed enrolment sightings suggest (needs --check rotate)",
     )
     enroll.add_argument(
         "--margin",
@@ -690,10 +710,6 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
     enroll.add_argument("--half", action="store_true")
     enroll.add_argument("--out", type=Path, default=Path("results"))
     enroll.set_defaults(run=_enroll)
-
-    report = commands.add_parser("report", help="table of earlier results")
-    report.add_argument("results", type=Path, nargs="+")
-    report.set_defaults(run=_report)
 
 
 def _add_rerank(commands: argparse._SubParsersAction) -> None:

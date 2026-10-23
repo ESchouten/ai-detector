@@ -10,6 +10,7 @@ from reid.benchmark import embeddings, self_set_thresholds
 from reid.calibration import Calibration, Pairs
 from reid.enrollment import (
     Options,
+    _threshold,
     _thresholds,
     cut,
     merge_tree,
@@ -153,9 +154,13 @@ def test_the_install_sets_its_threshold_as_the_benchmark_does(herd):
         crops, vectors[enrolled], [whole], BenchmarkOptions()
     )[0]
 
-    assert _thresholds(crops, vectors[enrolled], None, Adaptation(), Options()) == {
-        0.0: pytest.approx(benchmark["track"])
-    }
+    [check] = _thresholds(
+        crops, vectors[enrolled], None, Adaptation(), Options()
+    ).values()
+    assert _threshold(check, None, Options()) == (
+        pytest.approx(benchmark["track"]),
+        None,
+    )
 
 
 def test_coat_matches_name_more_of_a_blurry_herd_and_rightly(herd):
@@ -212,6 +217,21 @@ def test_a_floor_from_cows_seen_together_only_raises_the_threshold(herd):
     assert floored["mean"]["named"] <= plain["mean"]["named"]
     with pytest.raises(ValueError, match="times"):
         simulate(herd, vectors, Options(floor=(True,)))
+
+
+def test_the_install_can_set_its_threshold_for_its_own_share_of_strangers(herd):
+    vectors = embeddings(herd, FakeEmbedder(noise=0.9))
+    options = Options(merges=(0.8,), goal=0.5, margin=0.75, check="rotate")
+
+    result = simulate(herd, vectors, replace(options, mix=(False, True)))
+
+    # The labelled gallery leaves nothing unnamed to guess the share from.
+    assert [entry["stranger_share"] for entry in result["labelled"]] == [None, None]
+    plain, mixed = result["grouped"]
+    assert (plain["mixed"], mixed["mixed"]) == (False, True)
+    assert 0 <= mixed["stranger_share"] <= 1
+    with pytest.raises(ValueError, match="rotate"):
+        simulate(herd, vectors, Options(mix=(True,)))
 
 
 def test_a_coat_weight_needs_a_matcher(herd):

@@ -113,6 +113,8 @@ With `--floor`, the install also raises its threshold just above every score at 
 
 `--check rotate` changes how the install checks its threshold: instead of asking the later half of its named sightings against the earlier half and taking the median of the folds' thresholds, it asks every enrolment session against all the others and sets one threshold on all the answers pooled, so a farm with a few days of sightings checks on every one of them.
 
+With `--mix` (and `--check rotate`), the install also sets its threshold for its own share of strangers. The check withholds a fixed share of the named cows, which suits no farm exactly: a fully named herd has no strangers, and a farm whose unnamed cows are the hard ones has more. `--mix` scores the unnamed enrolment sightings against the gallery, estimates which share of them are strangers from how their best scores compare with the check's known cows and withheld strangers, and takes the lowest threshold whose names stay right `--precision` of the time at that share. The table marks those rows `for X strangers`, and the JSON keeps the share.
+
 The table shows, per grouping, adaptation and coat weight or mix: groups formed, the share of sightings in a group named after their own cow, taps to the goal, to 90% and to every cow, then means over the later days: sightings named (right when named), cows recognised at least once that day, the right cow in the top 3, and wrong names in total. The first row is the same gallery named from the true labels, the ceiling for perfect naming. Each day's numbers are in the JSON.
 
 ## Coat details

@@ -78,6 +78,10 @@ class Options:
     # turn. Needs `times`.
     floor: tuple[bool, ...] = (False,)
     strangers: float = 0.25
+    # Set the install's threshold for the share of strangers its unnamed
+    # enrolment sightings suggest, instead of the check's own share; each is
+    # simulated in turn. Needs the rotating check.
+    mix: tuple[bool, ...] = (False,)
     folds: int = 3
     seed: int = 0
 
@@ -385,8 +389,9 @@ def _thresholds(
     adaptation: Adaptation,
     options: Options,
     centre: NDArray[np.float64] | None = None,
-) -> dict[float | str, float | None]:
-    """Per coat variant, the threshold an install sets from its own named gallery.
+) -> dict[float | str, Decisions | None]:
+    """Per coat variant, the answers an install's check of its own named
+    gallery gives, from which it sets its threshold (see `_threshold`).
 
     The gallery is split again by time with some of its cows withheld, as the
     benchmark does with a whole manifest, and each fold's sightings are scored
@@ -427,19 +432,43 @@ def _thresholds(
             decided[variant].append(
                 Decisions.of(tuple(scored.names), scored.fused(variant, options), truth)
             )
-    found: dict[float | str, float | None] = {}
-    for variant, decisions in decided.items():
-        if options.check == "rotate":
-            found[variant] = Decisions(
-                np.concatenate([d.best_scores for d in decisions]),
-                np.concatenate([d.correct for d in decisions]),
-                np.concatenate([d.known for d in decisions]),
-            ).threshold_for(options.precision)
-        else:
-            each = [d.threshold_for(options.precision) for d in decisions]
-            kept = [threshold for threshold in each if threshold is not None]
-            found[variant] = median(kept) if kept else None
-    return found
+    return {
+        variant: Decisions(
+            np.concatenate([d.best_scores for d in decisions]),
+            np.concatenate([d.correct for d in decisions]),
+            np.concatenate([d.known for d in decisions]),
+        )
+        if options.check == "rotate"
+        else _Folds(decisions)
+        for variant, decisions in decided.items()
+    }
+
+
+@dataclass(frozen=True)
+class _Folds:
+    """The split check's answers, fold by fold."""
+
+    decisions: list[Decisions]
+
+
+def _threshold(
+    check: Decisions | _Folds | None,
+    unnamed: NDArray[np.float32] | None,
+    options: Options,
+) -> tuple[float | None, float | None]:
+    """The install's threshold from its check, and the share of strangers it
+    was set for when `unnamed`, the best scores of the enrolment sightings
+    nobody named, are given and the check pooled its answers."""
+    if check is None:
+        return None, None
+    if isinstance(check, _Folds):
+        each = [d.threshold_for(options.precision) for d in check.decisions]
+        kept = [threshold for threshold in each if threshold is not None]
+        return (median(kept) if kept else None), None
+    if unnamed is None or not len(unnamed) or check.known.all():
+        return check.threshold_for(options.precision), None
+    share = check.stranger_share(unnamed)
+    return check.mixed_threshold_for(options.precision, share), share
 
 
 def _floors(
@@ -502,10 +531,12 @@ def _days(
     transform: Transform,
     floors: dict[float | str, float | None],
     options: Options,
+    unnamed: Sequence[int] = (),
 ) -> list[dict[str, Any]]:
     """Per coat variant and way of naming, each later day's sightings named
     against the gallery at the install's own threshold, raised above its
-    `floors` when simulating them.
+    `floors` when simulating them. `unnamed` holds the enrolment crops nobody
+    named, from which the install guesses its share of strangers (`Options.mix`).
 
     `transform` is the adaptation as learnt from every enrolment sighting.
     Anonymous cows in the gallery (see `_anonymous`) compete for sightings but
@@ -517,7 +548,7 @@ def _days(
         for i, name in zip(gallery, names, strict=True)
         if not _anonymous(name)
     ]
-    thresholds = _thresholds(
+    checks = _thresholds(
         [replace(crops[i], identity=name) for i, name in checked],
         vectors[[i for i, _ in checked]],
         matcher,
@@ -534,16 +565,25 @@ def _days(
     in_gallery = np.isin(cows, scored.names[real])
     alone: list[set[int]] = [set() for _ in scored.seen]
     others = together(crops, scored.seen, options.times) if options.times else alone
+    left = (
+        _score(crops, transform(vectors), gallery, names, unnamed, matcher, options)
+        if any(options.mix) and unnamed
+        else None
+    )
     results = []
-    for variant, jointly, floored in product(
-        _variants(options), options.jointly, options.floor
+    for variant, jointly, floored, mixed in product(
+        _variants(options), options.jointly, options.floor, options.mix
     ):
         coated = scored.coated(variant, options)
         ranks = np.argsort(-np.where(real, coated, -np.inf), axis=1, kind="stable")
         ranked = scored.names[ranks[:, :3]]
-        threshold = _raised(
-            thresholds[variant], floors.get(variant) if floored else None
+        best = (
+            np.where(real, left.fused(variant, options), -np.inf).max(axis=1)
+            if mixed and left is not None
+            else None
         )
+        set_at, share = _threshold(checks[variant], best, options)
+        threshold = _raised(set_at, floors.get(variant) if floored else None)
         given = named_jointly(
             coated, real, threshold, options.margin, others if jointly else alone
         )
@@ -580,6 +620,8 @@ def _days(
                 "jointly": jointly,
                 "floored": floored,
                 "floor": floors.get(variant) if floored else None,
+                "mixed": mixed,
+                "stranger_share": share,
                 # Sightings named otherwise than each on its own would be.
                 "changed": int((given != apart).sum()),
                 "level": level,
@@ -623,6 +665,19 @@ def _labelled_pairs(
     return found.pairs(np.array([crops[s[0]].identity for s in found.seen])).record()
 
 
+def _validate(options: Options, matcher: Matcher | None) -> None:
+    if _rechecks(options) and matcher is None:
+        raise ValueError("A coat weight above 0 or a calibration needs a matcher")
+    if options.check not in ("split", "rotate"):
+        raise ValueError(f"Unknown threshold check {options.check!r}")
+    if (any(options.jointly) or any(options.floor)) and not options.times:
+        raise ValueError("Naming jointly or a floor needs the times pattern")
+    if any(options.mix) and options.check != "rotate":
+        raise ValueError(
+            "A threshold for the farm's share of strangers needs --check rotate"
+        )
+
+
 def simulate(
     crops: Sequence[Crop],
     vectors: NDArray[np.float32],
@@ -641,12 +696,7 @@ def simulate(
             f"Enrolment needs sessions on every crop and more than "
             f"{options.enrol_sessions} of them"
         )
-    if _rechecks(options) and matcher is None:
-        raise ValueError("A coat weight above 0 or a calibration needs a matcher")
-    if options.check not in ("split", "rotate"):
-        raise ValueError(f"Unknown threshold check {options.check!r}")
-    if (any(options.jointly) or any(options.floor)) and not options.times:
-        raise ValueError("Naming jointly or a floor needs the times pattern")
+    _validate(options, matcher)
     period = set(sessions[: options.enrol_sessions])
     enrol = [i for i, crop in enumerate(crops) if crop.session in period]
     later = [i for i, crop in enumerate(crops) if crop.session not in period]
@@ -677,6 +727,9 @@ def simulate(
                 )
                 for anonymous in options.anonymous
             ]
+        unnamed = [
+            i for s, name in zip(seen, named, strict=True) if not name for i in s
+        ]
         results = []
         for anonymous, competing in variants:
             gallery = [
@@ -705,6 +758,7 @@ def simulate(
                         transform,
                         floors,
                         options,
+                        unnamed,
                     )
                 )
         return results
@@ -756,6 +810,7 @@ def _record(options: Options, matcher: Matcher | None) -> dict[str, Any]:
         "k": options.k,
         "precision": options.precision,
         "strangers": options.strangers,
+        "mix": list(options.mix),
         "margin": options.margin,
         "coats": list(options.coats),
         "top": options.top,

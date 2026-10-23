@@ -74,3 +74,35 @@ def test_mean_average_precision_matches_ranking_each_query_alone():
     value = mean_average_precision(similarity, gallery, truth, chunk=4)
 
     assert value == pytest.approx(np.mean(expected))
+
+
+def test_the_share_of_strangers_is_fitted_from_how_unnamed_sightings_score():
+    rng = np.random.default_rng(0)
+    # Known queries score high, strangers low.
+    known = rng.normal(0.6, 0.05, 400)
+    strangers = rng.normal(0.3, 0.05, 400)
+    check = Decisions(
+        np.concatenate([known, strangers]).astype(np.float32),
+        np.concatenate([np.ones(400, bool), np.zeros(400, bool)]),
+        np.concatenate([np.ones(400, bool), np.zeros(400, bool)]),
+    )
+    unnamed = np.concatenate(
+        [rng.normal(0.6, 0.05, 300), rng.normal(0.3, 0.05, 100)]
+    ).astype(np.float32)
+
+    assert check.stranger_share(unnamed) == pytest.approx(0.25, abs=0.05)
+
+
+def test_a_threshold_for_more_strangers_is_stricter():
+    # Known queries: right at 0.9 and 0.7, wrong at 0.5; a stranger at 0.6.
+    check = Decisions(
+        np.array([0.9, 0.7, 0.5, 0.6], np.float32),
+        np.array([True, True, False, False]),
+        np.array([True, True, True, False]),
+    )
+
+    # Without strangers, a cut at the stranger's score names no one more.
+    assert check.mixed_threshold_for(0.99, 0.0) == pytest.approx(0.6)
+    assert check.mixed_threshold_for(0.99, 0.5) == pytest.approx(0.7)
+    assert check.mixed_threshold_for(0.6, 0.0) == pytest.approx(0.5)
+    assert check.mixed_threshold_for(0.6, 0.9) == pytest.approx(0.7)

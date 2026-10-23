@@ -130,6 +130,49 @@ class Decisions:
             else None,
         )
 
+    def stranger_share(self, scores: NDArray[np.float32], bins: int = 20) -> float:
+        """How many of a farm's sightings `scores` come from animals it has no
+        name for, from how known and stranger queries scored here.
+
+        `scores` are the best scores of sightings nobody named. They are taken
+        as a mix of the two kinds of query, and the mix is fitted by
+        expectation maximisation over a histogram of all scores.
+        """
+        edges = np.histogram_bin_edges(np.concatenate([self.best_scores, scores]), bins)
+
+        def density(values: NDArray[np.float32]) -> NDArray[np.float64]:
+            counts = np.histogram(values, edges)[0] + 1.0
+            return counts / counts.sum()
+
+        known = density(self.best_scores[self.known])[
+            np.clip(np.searchsorted(edges, scores, "right") - 1, 0, bins - 1)
+        ]
+        strange = density(self.best_scores[~self.known])[
+            np.clip(np.searchsorted(edges, scores, "right") - 1, 0, bins - 1)
+        ]
+        share = 0.5
+        for _ in range(200):
+            share = float(
+                np.mean(share * strange / (share * strange + (1 - share) * known))
+            )
+        return share
+
+    def mixed_threshold_for(self, precision: float, share: float) -> float | None:
+        """Lowest threshold whose names would be right at least `precision` of
+        the time if `share` of the sightings came from strangers, whatever the
+        share of strangers among these queries."""
+        order = np.argsort(-self.best_scores, kind="stable")
+        scores = self.best_scores[order]
+        known = self.known[order]
+        right = np.cumsum(self.correct[order] & known) / max(1, known.sum())
+        named = np.cumsum(known) / max(1, known.sum())
+        strangers = np.cumsum(~known) / max(1, (~known).sum())
+        given = (1 - share) * named + share * strangers
+        precise = (1 - share) * right >= precision * given
+        cuts = np.append(scores[1:] < scores[:-1], True)
+        good = np.flatnonzero(cuts & precise)
+        return float(scores[good[-1]]) if good.size else None
+
     def threshold_for(self, precision: float) -> float | None:
         """Lowest threshold whose names are right at least `precision` of the time."""
         order = np.argsort(-self.best_scores, kind="stable")

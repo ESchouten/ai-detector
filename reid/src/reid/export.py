@@ -19,6 +19,28 @@ if TYPE_CHECKING:
     import torch
 
 
+def _global_pooling(network: torch.nn.Module) -> None:
+    """Swap GeM pooling that takes its kernel from the feature map's size, as
+    MiewID's does, for the same pooling as a mean over the whole map: the
+    exporter cannot make a kernel from a size a constant."""
+    import torch
+
+    class GlobalGeM(torch.nn.Module):
+        def __init__(self, pooling: torch.nn.Module) -> None:
+            super().__init__()
+            self.p = pooling.p
+            self.eps = pooling.eps
+
+        def forward(self, x: torch.Tensor) -> torch.Tensor:
+            pooled = x.clamp(min=self.eps).pow(self.p).mean(dim=(-2, -1), keepdim=True)
+            return pooled.pow(1.0 / self.p)
+
+    for parent in list(network.modules()):
+        for name, child in list(parent.named_children()):
+            if type(child).__name__ == "GeM":
+                setattr(parent, name, GlobalGeM(child))
+
+
 def _embeddings(network: torch.nn.Module) -> torch.nn.Module:
     import torch
 
@@ -51,6 +73,9 @@ def export_network(
     pictures = torch.randn(2, 3, size, size, generator=torch.Generator().manual_seed(0))
     out.parent.mkdir(parents=True, exist_ok=True)
     with torch.no_grad():
+        # Before the pooling is swapped, so the check covers the swap too.
+        expected = model(pictures).numpy()
+        _global_pooling(network)
         torch.onnx.export(
             model,
             (pictures,),
@@ -61,7 +86,6 @@ def export_network(
             opset_version=opset,
             dynamo=False,
         )
-        expected = model(pictures).numpy()
     graph = onnx.load(str(out))
     mean, std = normalisation
     onnx.helper.set_model_props(

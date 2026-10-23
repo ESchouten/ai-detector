@@ -3846,10 +3846,6 @@ msgid "Alerts only suggest names until named sightings come from at least two da
 msgstr "Zolang de benoemde waarnemingen niet van minstens twee dagen komen, stellen meldingen alleen namen voor. Daarna noemen ze de identiteiten waarvan ze zeker zijn."
 
 #: src/routes/(admin)/identities/+page.svelte
-msgid "Nothing to name. New sightings appear here when a detector with tracking records an individual."
-msgstr "Niets te benoemen. Nieuwe waarnemingen verschijnen hier zodra een detector met tracking een individu opneemt."
-
-#: src/routes/(admin)/identities/+page.svelte
 msgid "No identities named yet."
 msgstr "Nog geen identiteiten benoemd."
 
@@ -3895,3 +3891,7 @@ msgstr "De foto’s ervan zijn verwijderd. Wacht tot het kader het opnieuw toont
 #: src/routes/(admin)/identities/+page.svelte
 msgid "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
 msgstr "Tik er een aan in het beeld om te zeggen wie het is. Een paar seconden nadat het in beeld komt, kan het een naam krijgen."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
+msgstr "Niets te benoemen. Nieuwe waarnemingen verschijnen hier zodra een detector met tracking en een segmentatiemodel een individu opneemt."

@@ -8,11 +8,15 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
 	const { app, config } = await configuration.read();
-	// Identities are recognised per track, so only cameras a tracking detector watches show them.
+	// Identities are recognised per outlined track, so only cameras a tracking detector with a
+	// segmentation model watches show them.
 	const cameras = app.streams
 		.filter((camera) =>
 			config.detectors.some(
-				(rule) => rule.yolo?.tracking && rule.detection.source.includes(camera.source)
+				(rule) =>
+					rule.yolo?.tracking &&
+					rule.yolo.task === 'segment' &&
+					rule.detection.source.includes(camera.source)
 			)
 		)
 		.map((camera) => ({ id: camera.id, label: camera.label ?? 'Camera' }));

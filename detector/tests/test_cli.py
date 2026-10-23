@@ -292,7 +292,7 @@ def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
     image = np.full((64, 64, 3), 90, dtype=np.uint8)
     image[6:58, 6:58] = (40, 160, 200)
     assert cv2.imwrite(str(source), image)
-    write_detection_model(tmp_path / "model.onnx", box=(6, 6, 58, 58))
+    write_detection_model(tmp_path / "model.onnx", box=(6, 6, 58, 58), segment=True)
     write_embedding_model(tmp_path / "herd.onnx")
     (tmp_path / "config.json").write_text(
         json.dumps(
@@ -304,6 +304,7 @@ def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
                         "detection": {"source": str(source)},
                         "yolo": {
                             "model": "model.onnx",
+                            "task": "segment",
                             "imgsz": 64,
                             "frames_min": 1,
                             "tracking": True,
@@ -327,6 +328,14 @@ def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
     assert (unnamed["track"], unnamed["name"], unnamed["candidates"]) == (1, None, [])
     sighting = tmp_path / "individuals" / "sightings" / unnamed["sighting"]
     assert (sighting / "crop-1.jpg").is_file()
+    # The segmentation's outline around the whole box, in the picture's pixels.
+    record = json.loads((sighting / "sighting.json").read_text())
+    assert sorted(map(tuple, record["outlines"][0])) == [
+        (0, 0),
+        (0, 51),
+        (51, 0),
+        (51, 51),
+    ]
 
     (tmp_path / "individuals" / "names.json").write_text(
         json.dumps({"version": 1, "names": {unnamed["sighting"]: "412"}})

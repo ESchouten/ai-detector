@@ -92,8 +92,8 @@
 			{/if}
 		{:else}
 			<p class="text-sm text-muted-foreground">
-				Nothing to name. New sightings appear here when a detector with tracking records an
-				individual.
+				Nothing to name. New sightings appear here when a detector with tracking and a segmentation
+				model records an individual.
 			</p>
 		{/if}
 	</section>

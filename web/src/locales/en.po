@@ -3846,10 +3846,6 @@ msgid "Alerts only suggest names until named sightings come from at least two da
 msgstr "Alerts only suggest names until named sightings come from at least two days. From then on they name the identities they are sure of."
 
 #: src/routes/(admin)/identities/+page.svelte
-msgid "Nothing to name. New sightings appear here when a detector with tracking records an individual."
-msgstr "Nothing to name. New sightings appear here when a detector with tracking records an individual."
-
-#: src/routes/(admin)/identities/+page.svelte
 msgid "No identities named yet."
 msgstr "No identities named yet."
 
@@ -3895,3 +3891,7 @@ msgstr "Its pictures were removed. Wait for the box to show it again."
 #: src/routes/(admin)/identities/+page.svelte
 msgid "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
 msgstr "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
+msgstr "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."

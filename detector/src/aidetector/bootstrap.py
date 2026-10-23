@@ -317,7 +317,7 @@ def run_application(
                 validator = VlmValidator(settings.active_vlm, media)
             identifier = (
                 TrackIdentifier(herd)
-                if herd is not None and settings.yolo and settings.yolo.tracking
+                if herd is not None and settings.yolo and settings.yolo.outlines_tracks
                 else None
             )
             cooldown = Cooldown(

@@ -10,8 +10,9 @@ learnt from:
 - `tracks`: the pictures within each track, which show one cow (no labels);
 - `names`: one cow's sightings on different occasions, by the farmer's names.
 
-`named` is `names` as ai-detector does it: the centre too comes from the named
-sightings only, and until a cow is named on two occasions nothing changes.
+`named` is `names` as ai-detector does it: the install's threshold check centres
+on every enrolment sighting too, not only the named ones it checks, and until a
+cow is named on two occasions nothing changes.
 
 Nothing is retrained, so an install can do this in seconds on any computer.
 """
@@ -104,22 +105,20 @@ def fit(
     vectors: NDArray[np.float32],
     seen: Sequence[Sequence[int]],
     names: Sequence[str] = (),
+    centre: NDArray[np.float64] | None = None,
 ) -> Transform:
     """Learn the farm's transform from its enrolment sightings.
 
     `seen` holds each sighting's crops; `names` a name per sighting, empty where
-    the farmer left it unnamed, and is only used by `names`.
+    the farmer left it unnamed, and is only used by `names` and `named`.
+    `centre` replaces the mean of `seen`'s sightings.
     """
     nothing = np.zeros((vectors.shape[1], 0)), np.zeros(0)
     if adaptation.kind == "none":
         return Transform(None, *nothing)
-    if adaptation.kind == "named":
-        named = [i for i, name in enumerate(names) if name]
-        seen, names = [seen[i] for i in named], [names[i] for i in named]
-        if not seen:
-            return Transform(None, *nothing)
     means = np.stack([vectors[list(s)].mean(axis=0) for s in seen]).astype(np.float64)
-    centre = means.mean(axis=0)
+    if centre is None:
+        centre = means.mean(axis=0)
     parts = _deviations(adaptation.kind, vectors, seen, names, means)
     if not parts:
         return Transform(None if adaptation.kind == "named" else centre, *nothing)

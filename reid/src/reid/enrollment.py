@@ -384,6 +384,7 @@ def _thresholds(
     matcher: Matcher | None,
     adaptation: Adaptation,
     options: Options,
+    centre: NDArray[np.float64] | None = None,
 ) -> dict[float | str, float | None]:
     """Per coat variant, the threshold an install sets from its own named gallery.
 
@@ -391,7 +392,8 @@ def _thresholds(
     benchmark does with a whole manifest, and each fold's sightings are scored
     the way later days will be (see `Options.check`). Each fold learns the
     adaptation again from the names of its own gallery only, so the check never
-    learns from the sightings it checks.
+    learns from the sightings it checks. `centre`, when given, is the centre of
+    every enrolment sighting, as an install's own check has it.
     """
     try:
         if options.check == "rotate":
@@ -413,7 +415,7 @@ def _thresholds(
         named = [crops[s[0]].identity if s[0] in known else "" for s in seen]
         scored = _score(
             crops,
-            fit(adaptation, vectors, seen, named)(vectors),
+            fit(adaptation, vectors, seen, named, centre)(vectors),
             split.gallery,
             [crops[i].identity for i in split.gallery],
             split.queries,
@@ -521,6 +523,7 @@ def _days(
         matcher,
         adaptation,
         options,
+        transform.centre if adaptation.kind == "named" else None,
     )
     scored = _score(
         crops, transform(vectors), gallery, names, queries, matcher, options

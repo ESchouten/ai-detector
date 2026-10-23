@@ -103,6 +103,8 @@ With `--coat 0 0.3`, every gallery is also scored with the coat-detail check bel
 
 With `--adapt`, the embedding is first adapted to the farm from its own enrolment sightings, without retraining, so an install can do it in seconds. Every kind takes the farm's mean sighting off each embedding, so the barn's shared look (floor, light, camera angle) stops making its cows alike, then damps the directions in which pictures vary on that farm: `whiten` learns them from all sightings, `tracks` from the pictures within each track (one cow, no labels needed), `names` from one cow's sightings on different occasions, by the farmer's names. `:shrink` sets how hard (`names:0.3` damps more than `names:3`); `center` only centres. Grouping still uses the plain embedding, so the taps are the same, and the install's threshold check learns the adaptation again from its own gallery part only.
 
+`--check rotate` changes how the install checks its threshold: instead of asking the later half of its named sightings against the earlier half and taking the median of the folds' thresholds, it asks every enrolment session against all the others and sets one threshold on all the answers pooled, so a farm with a few days of sightings checks on every one of them.
+
 The table shows, per grouping, adaptation and coat weight: groups formed, the share of sightings in a group named after their own cow, taps to the goal, to 90% and to every cow, then means over the later days: sightings named (right when named), cows recognised at least once that day, the right cow in the top 3, and wrong names in total. The first row is the same gallery named from the true labels, the ceiling for perfect naming. Each day's numbers are in the JSON.
 
 ## Coat details

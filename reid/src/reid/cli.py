@@ -182,6 +182,7 @@ def _enroll(arguments: argparse.Namespace) -> None:
         query_crops=arguments.query_crops,
         gallery_crops=arguments.gallery_crops,
         adapts=tuple(Adaptation.parse(text) for text in arguments.adapt),
+        check=arguments.check,
     )
     crops = read_manifest(arguments.manifest)
     embedder = build(
@@ -495,6 +496,13 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
         default=["none"],
         help="ways to adapt the embedding to the farm, each tried: none, center, "
         "whiten, tracks or names, with :shrink to set the damping (names:0.3)",
+    )
+    enroll.add_argument(
+        "--check",
+        choices=("split", "rotate"),
+        default="split",
+        help="how the install checks its threshold: the later half of its named "
+        "sightings against the earlier, or every session against the others",
     )
     enroll.add_argument("--top", type=int, default=3, help="candidate cows re-checked")
     enroll.add_argument(

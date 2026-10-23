@@ -176,3 +176,19 @@ def test_a_coat_weight_needs_a_matcher(herd):
 
     with pytest.raises(ValueError, match="matcher"):
         simulate(herd, vectors, Options(coats=(0.5,)))
+
+
+def test_the_install_can_check_its_threshold_on_every_enrolment_day(herd):
+    vectors = embeddings(herd, FakeEmbedder(noise=0.1))
+
+    result = simulate(
+        herd, vectors, Options(merges=(0.8,), goal=1.0, check="rotate", margin=0.75)
+    )
+
+    assert result["options"]["check"] == "rotate"
+    for entry in (*result["labelled"], *result["grouped"]):
+        assert entry["threshold"] is not None
+        assert entry["mean"]["recognised"] > 0.9
+        assert entry["mean"]["wrong"] == 0
+    with pytest.raises(ValueError, match="threshold check"):
+        simulate(herd, vectors, Options(check="guess"))

@@ -1,7 +1,9 @@
 from pathlib import Path
 
+import pytest
+
 from reid.manifest import Crop
-from reid.splits import open_set_splits, time_split
+from reid.splits import open_set_splits, rotating_splits, time_split
 
 
 def _crops(sessions: dict[str, list[str]]) -> list[Crop]:
@@ -62,3 +64,23 @@ def test_no_strangers_is_one_closed_split():
 
     assert split.name == "closed"
     assert not split.strangers
+
+
+def test_rotating_asks_every_session_against_all_the_others():
+    cows = [f"cow{n}" for n in range(8)]
+    crops = _crops({"d1": cows, "d2": cows, "d3": cows})
+
+    splits = rotating_splits(crops, strangers_fraction=0.25, folds=2)
+
+    assert len(splits) == 6
+    asked = [{crops[i].session for i in split.queries} for split in splits]
+    assert asked == [{"d1"}, {"d1"}, {"d2"}, {"d2"}, {"d3"}, {"d3"}]
+    for split, sessions in zip(splits, asked, strict=True):
+        assert not sessions & {crops[i].session for i in split.gallery}
+        assert len(split.strangers) == 2
+        assert not split.strangers & {crops[i].identity for i in split.gallery}
+
+
+def test_rotating_needs_two_sessions():
+    with pytest.raises(ValueError, match="at least two"):
+        rotating_splits(_crops({"d1": ["a", "b"]}))

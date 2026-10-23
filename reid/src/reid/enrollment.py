@@ -22,7 +22,7 @@ from reid.local import Matcher, coat_matches
 from reid.manifest import Crop
 from reid.matching import identity_scores, runner_up_margin, similarities
 from reid.metrics import Decisions
-from reid.splits import open_set_splits
+from reid.splits import open_set_splits, rotating_splits
 
 MILESTONES = (0.5, 0.8, 0.9, 1.0)
 
@@ -51,6 +51,11 @@ class Options:
     # is simulated in turn. Grouping always uses the embedding as it is, so the
     # farmer's taps stay the same.
     adapts: tuple[Adaptation, ...] = (Adaptation(),)
+    # How the install checks its threshold on its named gallery: `split` asks
+    # the later half against the earlier and takes the median of the folds'
+    # thresholds; `rotate` asks every session against the others and sets one
+    # threshold on all the answers pooled.
+    check: str = "split"
     strangers: float = 0.25
     folds: int = 3
     seed: int = 0
@@ -269,19 +274,24 @@ def _thresholds(
 
     The gallery is split again by time with some of its cows withheld, as the
     benchmark does with a whole manifest, and each fold's sightings are scored
-    the way later days will be. The threshold is the median over the folds.
-    Each fold learns the adaptation again from the names of its own gallery
-    only, so the check never learns from the sightings it checks.
+    the way later days will be (see `Options.check`). Each fold learns the
+    adaptation again from the names of its own gallery only, so the check never
+    learns from the sightings it checks.
     """
     try:
-        inner = open_set_splits(
-            crops, options.strangers, options.folds, options.seed + 1
-        )
+        if options.check == "rotate":
+            checks = rotating_splits(
+                crops, options.strangers, options.folds, options.seed + 1
+            )
+        else:
+            checks = open_set_splits(
+                crops, options.strangers, options.folds, options.seed + 1
+            )
     except ValueError:
         return dict.fromkeys(options.coats)
     seen = sightings(crops, range(len(crops)))
-    found: dict[float, list[float]] = {weight: [] for weight in options.coats}
-    for split in inner:
+    decided: dict[float, list[Decisions]] = {weight: [] for weight in options.coats}
+    for split in checks:
         known = set(split.gallery)
         named = [crops[s[0]].identity if s[0] in known else "" for s in seen]
         scored = _score(
@@ -295,15 +305,22 @@ def _thresholds(
         )
         truth = [crops[s[0]].identity for s in scored.seen]
         for weight in options.coats:
-            decisions = Decisions.of(
-                tuple(scored.names), scored.fused(weight, options), truth
+            decided[weight].append(
+                Decisions.of(tuple(scored.names), scored.fused(weight, options), truth)
             )
-            threshold = decisions.threshold_for(options.precision)
-            if threshold is not None:
-                found[weight].append(threshold)
-    return {
-        weight: median(values) if values else None for weight, values in found.items()
-    }
+    found: dict[float, float | None] = {}
+    for weight, decisions in decided.items():
+        if options.check == "rotate":
+            found[weight] = Decisions(
+                np.concatenate([d.best_scores for d in decisions]),
+                np.concatenate([d.correct for d in decisions]),
+                np.concatenate([d.known for d in decisions]),
+            ).threshold_for(options.precision)
+        else:
+            each = [d.threshold_for(options.precision) for d in decisions]
+            kept = [threshold for threshold in each if threshold is not None]
+            found[weight] = median(kept) if kept else None
+    return found
 
 
 def _days(
@@ -412,6 +429,8 @@ def simulate(
         )
     if any(options.coats) and matcher is None:
         raise ValueError("A coat weight above 0 needs a matcher")
+    if options.check not in ("split", "rotate"):
+        raise ValueError(f"Unknown threshold check {options.check!r}")
     period = set(sessions[: options.enrol_sessions])
     enrol = [i for i, crop in enumerate(crops) if crop.session in period]
     later = [i for i, crop in enumerate(crops) if crop.session not in period]
@@ -492,6 +511,7 @@ def simulate(
             "saturation": options.saturation,
             "matcher": matcher.name if matcher is not None else None,
             "adapts": [str(adaptation) for adaptation in options.adapts],
+            "check": options.check,
         },
         "labelled": labelled,
         "grouped": grouped,

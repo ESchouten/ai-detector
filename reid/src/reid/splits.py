@@ -78,6 +78,43 @@ def _random_split(
     return tuple(sorted(gallery)), tuple(sorted(queries))
 
 
+def _with_strangers(
+    crops: Sequence[Crop],
+    gallery: tuple[int, ...],
+    queries: tuple[int, ...],
+    disjoint: bool,
+    strangers_fraction: float,
+    folds: int,
+    rng: np.random.Generator,
+    prefix: str = "",
+) -> list[Split]:
+    """One split per fold, each withholding its own random share of the animals."""
+    enrolled = {crops[i].identity for i in gallery}
+    candidates = sorted({crops[i].identity for i in queries} & enrolled)
+    count = round(strangers_fraction * len(candidates))
+    if strangers_fraction > 0 and len(candidates) > 1:
+        count = min(max(1, count), len(candidates) - 1)
+    if count == 0:
+        return [Split(f"{prefix}closed", gallery, queries, frozenset(), disjoint)]
+    splits = []
+    for fold in range(folds):
+        strangers = frozenset(
+            str(identity)
+            for identity in rng.choice(candidates, size=count, replace=False)
+        )
+        splits.append(
+            Split(
+                f"{prefix}fold-{fold + 1}",
+                tuple(i for i in gallery if crops[i].identity not in strangers),
+                queries,
+                strangers,
+                disjoint,
+                tuple(i for i in gallery if crops[i].identity in strangers),
+            )
+        )
+    return splits
+
+
 def open_set_splits(
     crops: Sequence[Crop],
     strangers_fraction: float = 0.25,
@@ -90,28 +127,47 @@ def open_set_splits(
     gallery, queries, disjoint = time_split(crops, gallery_fraction, gap_sessions)
     if not gallery or not queries:
         raise ValueError("The split left no gallery or no queries")
-    enrolled = {crops[i].identity for i in gallery}
-    candidates = sorted({crops[i].identity for i in queries} & enrolled)
-    count = round(strangers_fraction * len(candidates))
-    if strangers_fraction > 0 and len(candidates) > 1:
-        count = min(max(1, count), len(candidates) - 1)
-    if count == 0:
-        return [Split("closed", gallery, queries, frozenset(), disjoint)]
+    return _with_strangers(
+        crops,
+        gallery,
+        queries,
+        disjoint,
+        strangers_fraction,
+        folds,
+        np.random.default_rng(seed),
+    )
+
+
+def rotating_splits(
+    crops: Sequence[Crop],
+    strangers_fraction: float = 0.25,
+    folds: int = 3,
+    seed: int = 0,
+) -> list[Split]:
+    """Every session in turn asked against all the others, each with folds of
+    withheld animals.
+
+    Every picture is asked once per fold instead of only the later half, which
+    is what a farm with a few days of named sightings needs.
+    """
+    sessions = sorted({crop.session for crop in crops})
+    if "" in sessions or len(sessions) < 2:
+        raise ValueError("Rotating needs sessions on every crop and at least two")
     rng = np.random.default_rng(seed)
     splits = []
-    for fold in range(folds):
-        strangers = frozenset(
-            str(identity)
-            for identity in rng.choice(candidates, size=count, replace=False)
-        )
-        splits.append(
-            Split(
-                f"fold-{fold + 1}",
-                tuple(i for i in gallery if crops[i].identity not in strangers),
+    for session in sessions:
+        queries = tuple(i for i, crop in enumerate(crops) if crop.session == session)
+        gallery = tuple(i for i, crop in enumerate(crops) if crop.session != session)
+        splits.extend(
+            _with_strangers(
+                crops,
+                gallery,
                 queries,
-                strangers,
-                disjoint,
-                tuple(i for i in gallery if crops[i].identity in strangers),
+                True,
+                strangers_fraction,
+                folds,
+                rng,
+                f"{session}-",
             )
         )
     return splits

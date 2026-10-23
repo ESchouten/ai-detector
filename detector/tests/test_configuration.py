@@ -10,6 +10,7 @@ from aidetector.configuration import (
     DetectorConfig,
     DiskConfig,
     HealthcheckConfig,
+    IndividualsConfig,
     SourceConfig,
     TelegramConfig,
     VLMConfig,
@@ -263,3 +264,43 @@ def test_invalid_file_encoding_is_a_config_error_without_exposing_contents(tmp_p
         load_config(path)
     assert "private-secret" not in str(error.value)
     assert path.read_bytes() == original
+
+
+def tracked(tracking=True):
+    return {
+        "detection": {"source": "barn.mp4"},
+        "yolo": {"model": "cows.pt", "tracking": tracking},
+    }
+
+
+def test_individuals_are_recognised_only_with_a_tracking_detector():
+    individuals = {"model": "herd.onnx", "labels": "cow"}
+    config = Config.model_validate(
+        {"detectors": [tracked(False), tracked()], "individuals": individuals}
+    )
+    assert config.individuals == IndividualsConfig(
+        model="herd.onnx", labels=("cow",), precision=0.99
+    )
+    with pytest.raises(ValidationError, match="needs object tracking"):
+        Config.model_validate(
+            {"detectors": [tracked(False)], "individuals": individuals}
+        )
+
+
+@pytest.mark.parametrize(
+    "model, valid",
+    [
+        ("models/herd.ONNX", True),
+        ("https://example.invalid/herd.onnx?download=1", True),
+        ("herd.pt", False),
+        ("https://example.invalid/herd", False),
+    ],
+)
+def test_the_individuals_model_must_be_onnx(model, valid):
+    try:
+        IndividualsConfig(model=model, labels=("cow",))
+    except ValidationError as error:
+        assert not valid
+        assert "must be an ONNX file" in str(error)
+    else:
+        assert valid

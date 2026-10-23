@@ -8,6 +8,7 @@ from aidetector.domain.models import (
     DetectionEvent,
     EventResult,
     Frame,
+    Individual,
     Observation,
     ValidationResult,
 )
@@ -91,6 +92,10 @@ class DeliveryError(RuntimeError):
     pass
 
 
+class IdentificationUnavailable(RuntimeError):
+    pass
+
+
 class FrameSource(Protocol):
     """Yield nonempty, time-ordered frame tuples for each source in a batch.
 
@@ -128,6 +133,19 @@ class EventValidator(Protocol):
     """
 
     def validate(self, event: DetectionEvent) -> ValidationResult: ...
+
+
+class EventIdentifier(Protocol):
+    """Recognise an event's tracked individuals and keep their pictures as sightings.
+
+    Called for every verified or unverified event, never for a rejected one.
+    Raise IdentificationUnavailable for expected failures; the event is still
+    delivered, with the error recorded instead of names.
+    """
+
+    def identify(
+        self, event: DetectionEvent, event_id: str
+    ) -> tuple[Individual, ...]: ...
 
 
 class EventExporter(Protocol):

@@ -111,9 +111,50 @@ class ValidationResult:
 
 
 @dataclass(frozen=True)
+class Candidate:
+    """A named individual and how much a tracked object resembles it."""
+
+    name: str
+    score: float
+
+
+@dataclass(frozen=True)
+class Individual:
+    """One tracked object of an event, compared with the named individuals.
+
+    Candidates are the most similar named individuals, best first; there are
+    none before anything is named. The best is recognised only when its score
+    clears the threshold the installation set from its own named sightings.
+    `sighting` names the saved pictures of this track that a person can name.
+    """
+
+    track_id: int
+    label: str
+    sighting: str
+    candidates: tuple[Candidate, ...] = ()
+    recognised: bool = False
+
+    @property
+    def name(self) -> str | None:
+        return self.candidates[0].name if self.recognised else None
+
+
+@dataclass(frozen=True)
+class Identification:
+    """The individuals of an event, or why they could not be recognised."""
+
+    individuals: tuple[Individual, ...] = ()
+    error: str | None = None
+
+
+@dataclass(frozen=True)
 class EventResult:
-    """An event and its verification outcome, independent of delivery."""
+    """An event and its verification outcome, independent of delivery.
+
+    `identification` is None when no individuals were looked for.
+    """
 
     event: DetectionEvent
     validation: ValidationResult
     id: str
+    identification: Identification | None = None

@@ -13,6 +13,27 @@ class CropMetadata(BaseModel):
     y2: int
 
 
+class CandidateMetadata(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    score: float
+
+
+class IndividualMetadata(BaseModel):
+    """A tracked object of the event and the named individuals it resembles most."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    track: int
+    label: str
+    # The sighting under individuals/sightings/ that holds this track's pictures.
+    sighting: str = Field(pattern=r"^[a-f0-9]{32}$")
+    # Set when the best candidate cleared the installation's naming threshold.
+    name: str | None
+    candidates: list[CandidateMetadata]
+
+
 class ManualReview(BaseModel):
     """A person's verdict on the event, from the web application or Telegram."""
 
@@ -39,6 +60,9 @@ class EventMetadata(BaseModel):
     duration: float = Field(ge=0)
     crop: CropMetadata | None = None
     validation_error: str | None = None
+    # Absent when individuals are not recognised for this event.
+    individuals: list[IndividualMetadata] | None = None
+    individuals_error: str | None = None
     # The web application adds this to a published metadata.json when someone reviews
     # the event, leaving `validated` as the validator's own result. The detector
     # describes it here for the shared schema and never writes it.
@@ -49,6 +73,7 @@ class EventMetadata(BaseModel):
         event = result.event
         best = event.best
         box = best.enclosing_box
+        identification = result.identification
         return cls(
             timestamp=timestamp,
             event_id=result.id,
@@ -64,4 +89,20 @@ class EventMetadata(BaseModel):
             if box
             else None,
             validation_error=result.validation.error,
+            individuals=None
+            if identification is None or identification.error is not None
+            else [
+                IndividualMetadata(
+                    track=individual.track_id,
+                    label=individual.label,
+                    sighting=individual.sighting,
+                    name=individual.name,
+                    candidates=[
+                        CandidateMetadata(name=candidate.name, score=candidate.score)
+                        for candidate in individual.candidates
+                    ],
+                )
+                for individual in identification.individuals
+            ],
+            individuals_error=identification.error if identification else None,
         )

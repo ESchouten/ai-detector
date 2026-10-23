@@ -6,7 +6,7 @@ from PIL import Image
 from conftest import FakeEmbedder, FakeMatcher
 from reid.benchmark import Options, embeddings, evaluate
 from reid.cli import _training_crops, main, table
-from reid.manifest import write_manifest
+from reid.manifest import read_manifest, write_manifest
 
 
 def test_manifest_from_pattern_writes_a_manifest(tmp_path: Path):
@@ -134,3 +134,18 @@ def test_training_crops_keep_cows_of_different_farms_apart(herd, tmp_path: Path)
     single, _ = _training_crops([tmp_path / "north.csv"], "2026-10-03", None, 0)
     assert {crop.identity for crop in single} == {f"cow{n}" for n in range(8)}
     assert {crop.session for crop in single} == {"2026-10-01", "2026-10-02"}
+
+
+def test_hide_copies_a_manifest_with_every_picture_partly_hidden(herd, tmp_path: Path):
+    manifest = tmp_path / "herd.csv"
+    write_manifest(manifest, herd)
+
+    main(["hide", str(manifest), "--out", str(tmp_path / "hidden")])
+
+    hidden = read_manifest(tmp_path / "hidden" / "manifest.csv")
+    assert [crop.identity for crop in hidden] == [crop.identity for crop in herd]
+    assert [crop.session for crop in hidden] == [crop.session for crop in herd]
+    for original, copy in zip(herd, hidden, strict=True):
+        assert copy.path.parent == tmp_path / "hidden"
+        with Image.open(original.path) as before, Image.open(copy.path) as after:
+            assert after.size == before.size

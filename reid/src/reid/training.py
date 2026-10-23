@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from reid.backbones import default_device, features, load_network, preset
 from reid.manifest import Crop
@@ -41,6 +41,9 @@ class TrainOptions:
     # Share of pictures turned gray at random, so daylight colour and infrared
     # night are learnt by one network. `grayscale` turns every picture gray.
     gray_chance: float = 0.0
+    # Share of pictures showing only part of the cow, as a barn camera often
+    # does (see `hide`).
+    partial: float = 0.0
     seed: int = 0
     # Pictures through the network at once. A smaller chunk saves memory; every
     # picture's loss stands alone, so only batch-norm statistics change.
@@ -89,16 +92,68 @@ def batches(
         yield batch
 
 
+# The gray ai-detector paints outside a cow's outline.
+HIDDEN = 127
+
+
+def hide(picture: Image.Image, rng: np.random.Generator) -> Image.Image:
+    """The picture as a barn camera often sees a cow: only a band of her, as at
+    the feed fence; crossed by rails; or with a patch hidden behind another cow.
+
+    A band fills the picture, as her own box would. Rails and patches are gray,
+    as outside an outline, or for rails half the time a shade of steel.
+    """
+    width, height = picture.size
+    kind = int(rng.integers(3))
+    if kind == 0:
+        share = rng.uniform(0.35, 0.7)
+        if rng.random() < 0.5:
+            w = max(1, round(width * share))
+            left = int(rng.integers(0, width - w + 1))
+            box = (left, 0, left + w, height)
+        else:
+            h = max(1, round(height * share))
+            top = int(rng.integers(0, height - h + 1))
+            box = (0, top, width, top + h)
+        return picture.crop(box).resize(picture.size, Image.Resampling.BICUBIC)
+    picture = picture.copy()
+    draw = ImageDraw.Draw(picture)
+    side = max(width, height)
+    if kind == 1:
+        for _ in range(int(rng.integers(1, 4))):
+            # Mostly lying rails, sometimes posts, never quite level.
+            angle = rng.uniform(-0.6, 0.6) + (np.pi / 2 if rng.random() < 0.3 else 0)
+            x, y = rng.uniform(0, width), rng.uniform(0, height)
+            dx, dy = np.cos(angle) * side, np.sin(angle) * side
+            shade = HIDDEN if rng.random() < 0.5 else int(rng.integers(90, 200))
+            draw.line(
+                [(x - dx, y - dy), (x + dx, y + dy)],
+                fill=(shade,) * 3,
+                width=max(1, round(side * rng.uniform(0.04, 0.12))),
+            )
+    else:
+        area = rng.uniform(0.15, 0.4) * width * height
+        aspect = np.exp(rng.uniform(np.log(0.5), np.log(2)))
+        w = min(width, max(1, round(np.sqrt(area * aspect))))
+        h = min(height, max(1, round(np.sqrt(area / aspect))))
+        left = int(rng.integers(0, width - w + 1))
+        top = int(rng.integers(0, height - h + 1))
+        draw.rectangle((left, top, left + w - 1, top + h - 1), fill=(HIDDEN,) * 3)
+    return picture
+
+
 def _augmented(
     path: Path,
     size: int,
     normalisation: tuple[tuple[float, ...], tuple[float, ...]],
     gray_chance: float,
     rng: np.random.Generator,
+    partial: float = 0.0,
 ) -> np.ndarray:
     """Random crop, scale, brightness and grayscale; no mirroring, which would
-    invent a coat."""
+    invent a coat. A `partial` share of pictures is hidden in part (`hide`)."""
     gray = gray_chance >= 1 or (gray_chance > 0 and rng.random() < gray_chance)
+    hidden = partial > 0 and rng.random() < partial
     with Image.open(path) as picture:
         picture = picture.convert("L" if gray else "RGB").convert("RGB")
         width, height = picture.size
@@ -109,6 +164,8 @@ def _augmented(
         picture = picture.crop((left, top, left + w, top + h)).resize(
             (size, size), Image.Resampling.BICUBIC
         )
+        if hidden:
+            picture = hide(picture, rng)
         pixels = np.asarray(picture, dtype=np.float32) / 255
     pixels = np.clip(pixels * rng.uniform(0.7, 1.3) + rng.uniform(-0.1, 0.1), 0, 1)
     mean, std = (np.asarray(value, dtype=np.float32) for value in normalisation)
@@ -208,6 +265,7 @@ def train(
                                     chosen.normalisation,
                                     1.0 if options.grayscale else options.gray_chance,
                                     np.random.default_rng(seed),
+                                    options.partial,
                                 ),
                                 part,
                                 seeds[start : start + size],

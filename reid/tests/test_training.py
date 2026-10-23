@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from reid.backbones import IMAGENET, PRESETS, build
-from reid.training import TrainOptions, _augmented, batches, train
+from reid.training import TrainOptions, _augmented, batches, hide, train
 
 torch = pytest.importorskip("torch")
 timm = pytest.importorskip("timm")
@@ -115,3 +115,44 @@ def test_gray_chance_turns_that_share_of_pictures_gray(tmp_path: Path):
     assert not any(gray(0.0, seed) for seed in range(20))
     assert all(gray(1.0, seed) for seed in range(20))
     assert 5 < sum(gray(0.5, seed) for seed in range(40)) < 35
+
+
+def test_hidden_pictures_show_only_part_of_the_cow():
+    from PIL import Image
+
+    coat = np.random.default_rng(0).integers(0, 256, (30, 40, 3), np.uint8)
+    picture = Image.fromarray(coat)
+    hidden = [
+        np.asarray(hide(picture, np.random.default_rng(seed))) for seed in range(30)
+    ]
+
+    assert all(pixels.shape == coat.shape for pixels in hidden)
+    assert not any(np.array_equal(pixels, coat) for pixels in hidden)
+    # Rails and patches are painted in a flat gray; a band shows the coat alone.
+    painted = [
+        ((pixels[..., 0] == pixels[..., 1]) & (pixels[..., 1] == pixels[..., 2])).mean()
+        > 0.03
+        for pixels in hidden
+    ]
+    assert any(painted)
+    assert not all(painted)
+
+
+def test_partial_hides_part_of_that_share_of_pictures(tmp_path: Path):
+    from PIL import Image
+
+    path = tmp_path / "coat.png"
+    rng = np.random.default_rng(0)
+    Image.fromarray(rng.integers(0, 256, (30, 40, 3), np.uint8)).save(path)
+    mean, std = (np.asarray(value).reshape(3, 1, 1) for value in IMAGENET)
+
+    def painted(partial: float, seed: int) -> bool:
+        raw = _augmented(path, 16, IMAGENET, 0.0, np.random.default_rng(seed), partial)
+        raw = raw * std + mean
+        flat = np.isclose(raw[0], raw[1], atol=1e-4) & np.isclose(
+            raw[1], raw[2], atol=1e-4
+        )
+        return bool(flat.mean() > 0.03)
+
+    assert not any(painted(0.0, seed) for seed in range(20))
+    assert 5 < sum(painted(1.0, seed) for seed in range(40)) < 40

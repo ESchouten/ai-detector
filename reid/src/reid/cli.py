@@ -927,6 +927,7 @@ def _train(arguments: argparse.Namespace) -> None:
         learning_rate=arguments.learning_rate,
         grayscale=arguments.grayscale,
         gray_chance=arguments.gray_chance,
+        partial=arguments.partial,
         seed=arguments.seed,
         chunk=arguments.chunk,
     )
@@ -983,9 +984,46 @@ def _add_training(commands: argparse._SubParsersAction) -> None:
         default=0.0,
         help="share of pictures turned gray at random, e.g. 0.3 for infrared nights",
     )
+    training.add_argument(
+        "--partial",
+        type=float,
+        default=0.0,
+        help="share of pictures showing only part of the cow: a band of her, "
+        "rails across her or a patch hidden, as a barn camera often sees her",
+    )
     training.add_argument("--seed", type=int, default=0)
     training.add_argument("--device", help="mps, cuda or cpu")
     training.set_defaults(run=_train)
+
+    hidden = commands.add_parser(
+        "hide",
+        help="copy a manifest with every picture partly hidden, as --partial "
+        "trains on, to test how a network copes with partial cows",
+    )
+    hidden.add_argument("manifest", type=Path)
+    hidden.add_argument(
+        "--out", type=Path, required=True, help="a folder for the pictures and manifest"
+    )
+    hidden.add_argument("--seed", type=int, default=0)
+    hidden.set_defaults(run=_hide)
+
+
+def _hide(arguments: argparse.Namespace) -> None:
+    import numpy as np
+    from PIL import Image
+
+    from reid.training import hide
+
+    arguments.out.mkdir(parents=True, exist_ok=True)
+    crops = []
+    for index, crop in enumerate(read_manifest(arguments.manifest)):
+        path = arguments.out / f"{index:06d}.jpg"
+        with Image.open(crop.path) as picture:
+            rng = np.random.default_rng([arguments.seed, index])
+            hide(picture.convert("RGB"), rng).save(path, quality=95)
+        crops.append(replace(crop, path=path))
+    write_manifest(arguments.out / "manifest.csv", crops)
+    print(f"Saved {len(crops)} partly hidden pictures in {arguments.out}")
 
 
 def _export(arguments: argparse.Namespace) -> None:

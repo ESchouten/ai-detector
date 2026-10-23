@@ -20,6 +20,7 @@ from reid.benchmark import (
     score,
     subsample,
 )
+from reid.calibration import Calibration, Pairs
 from reid.manifest import Crop, crops_from_pattern, read_manifest, write_manifest
 
 
@@ -171,6 +172,23 @@ def enrolment_table(result: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _calibration(results: Sequence[Path] | None) -> Calibration | None:
+    """Fitted on the pairs that earlier `enroll` runs on other farms wrote."""
+    if not results:
+        return None
+    runs = [json.loads(path.read_text(encoding="utf-8")) for path in results]
+    if missing := [
+        path.name
+        for path, run in zip(results, runs, strict=True)
+        if not run.get("pairs")
+    ]:
+        raise SystemExit(f"No pairs in {', '.join(missing)}; run them with --coat")
+    return Calibration.fit(
+        Pairs.of(run["pairs"] for run in runs),
+        tuple(run["manifest"] for run in runs),
+    )
+
+
 def _enroll(arguments: argparse.Namespace) -> None:
     from reid.adapt import Adaptation
     from reid.backbones import build
@@ -193,6 +211,7 @@ def _enroll(arguments: argparse.Namespace) -> None:
         jointly=(False, True) if arguments.jointly else (False,),
         times=arguments.times or "",
         anonymous=(False, True) if arguments.anonymous else (False,),
+        calibration=_calibration(arguments.calibrate_from),
     )
     crops = read_manifest(arguments.manifest)
     embedder = build(
@@ -210,7 +229,7 @@ def _enroll(arguments: argparse.Namespace) -> None:
     )
     vectors = embeddings(crops, embedder, arguments.out / "cache")
     matcher = None
-    if any(options.coats):
+    if any(options.coats) or options.calibration:
         from reid.local import KeypointMatcher
 
         matcher = KeypointMatcher(
@@ -632,6 +651,13 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
         "--anonymous",
         action="store_true",
         help="also let the groups the farmer left unnamed compete as anonymous cows",
+    )
+    enroll.add_argument(
+        "--calibrate-from",
+        type=Path,
+        nargs="+",
+        help="earlier enroll results on other farms; their pairs calibrate a mix "
+        "of the embedding and the coat check, tried as one more coat variant",
     )
     enroll.add_argument("--top", type=int, default=3, help="candidate cows re-checked")
     enroll.add_argument(

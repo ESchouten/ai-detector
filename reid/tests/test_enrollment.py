@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 import numpy as np
 import pytest
 
@@ -5,6 +7,7 @@ from conftest import FakeEmbedder, FakeMatcher
 from reid.adapt import Adaptation
 from reid.benchmark import Options as BenchmarkOptions
 from reid.benchmark import embeddings, self_set_thresholds
+from reid.calibration import Calibration, Pairs
 from reid.enrollment import (
     Options,
     _thresholds,
@@ -171,6 +174,27 @@ def test_coat_matches_name_more_of_a_blurry_herd_and_rightly(herd):
     assert [entry["coat"] for entry in result["grouped"]] == [0.0, 0.5]
     assert result["options"]["matcher"] == "fake-matcher"
     assert matcher.pairs
+
+
+def test_a_calibrated_mix_of_another_farm_is_tried_beside_the_coat_weights(herd):
+    vectors = embeddings(herd, FakeEmbedder(noise=0.6))
+    options = Options(merges=(0.8,), goal=1.0, coats=(0.0, 0.5))
+    other = simulate(herd, vectors, options, FakeMatcher())
+    pairs = Pairs.of([other["pairs"]])
+    # Every later sighting with its three re-checked cows.
+    assert len(pairs.same) == 3 * 8 * 2 * 2
+    assert pairs.same.sum() == 8 * 2 * 2
+
+    calibration = Calibration.fit(pairs, ("other farm",))
+    result = simulate(
+        herd, vectors, replace(options, calibration=calibration), FakeMatcher()
+    )
+
+    alone, _, mixed = result["labelled"]
+    assert mixed["coat"] == "calibrated"
+    assert mixed["mean"]["wrong"] == 0
+    assert mixed["mean"]["named"] > alone["mean"]["named"]
+    assert result["options"]["calibrated_on"] == ["other farm"]
 
 
 def test_a_coat_weight_needs_a_matcher(herd):

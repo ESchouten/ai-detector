@@ -20,6 +20,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from reid.adapt import Adaptation, Transform, fit
+from reid.calibration import Calibration, Pairs
 from reid.local import Matcher, coat_matches
 from reid.manifest import Crop
 from reid.matching import identity_scores, runner_up_margin, similarities
@@ -27,6 +28,8 @@ from reid.metrics import Decisions
 from reid.splits import open_set_splits, rotating_splits
 
 MILESTONES = (0.5, 0.8, 0.9, 1.0)
+# The coat variant mixing the embedding and the coat check by `Options.calibration`.
+CALIBRATED = "calibrated"
 
 
 @dataclass(frozen=True)
@@ -49,6 +52,9 @@ class Options:
     query_crops: int = 3
     gallery_crops: int = 3
     saturation: float = 100.0
+    # Mix the embedding and the coat check by their chances of the same cow,
+    # fitted on other farms, as one more coat variant (`CALIBRATED`).
+    calibration: Calibration | None = None
     # Ways to adapt the embedding to the farm from its enrolment sightings; each
     # is simulated in turn. Grouping always uses the embedding as it is, so the
     # farmer's taps stay the same.
@@ -292,17 +298,46 @@ class _Scored:
     top: NDArray[np.intp]
     matches: NDArray[np.float32] | None
 
-    def coated(self, weight: float, options: Options) -> NDArray[np.float32]:
-        """Scores with the coat score added at `weight`."""
+    def coated(self, variant: float | str, options: Options) -> NDArray[np.float32]:
+        """Scores with the coat score added at a weight, or mixed with the
+        embedding's by the calibration (`CALIBRATED`); cows not re-checked
+        count as having no coat matches."""
+        rows = np.arange(len(self.deep))[:, None]
+        if variant == CALIBRATED:
+            if options.calibration is None or self.matches is None:
+                raise ValueError("The calibrated mix needs a calibration and matches")
+            matches = np.zeros_like(self.deep)
+            matches[rows, self.top] = self.matches
+            return options.calibration.fuse(self.deep, matches)
         scores = self.deep.copy()
-        if weight and self.matches is not None:
+        if variant and self.matches is not None:
             coat = np.minimum(self.matches, options.saturation) / options.saturation
-            scores[np.arange(len(scores))[:, None], self.top] += weight * coat
+            scores[rows, self.top] += float(variant) * coat
         return scores
 
-    def fused(self, weight: float, options: Options) -> NDArray[np.float32]:
-        """Scores with the coat score added at `weight` and the margin taken off."""
-        return runner_up_margin(self.coated(weight, options), options.margin)
+    def fused(self, variant: float | str, options: Options) -> NDArray[np.float32]:
+        """Scores of a coat variant with the margin taken off."""
+        return runner_up_margin(self.coated(variant, options), options.margin)
+
+    def pairs(self, cows: NDArray[np.str_]) -> Pairs:
+        """Each sighting with its re-checked cows, `cows` being its own."""
+        if self.matches is None:
+            raise ValueError("Pairs need coat matches")
+        rows = np.arange(len(self.deep))[:, None]
+        return Pairs(
+            self.deep[rows, self.top].ravel(),
+            self.matches.ravel(),
+            (self.names[self.top] == cows[:, None]).ravel(),
+        )
+
+
+def _variants(options: Options) -> tuple[float | str, ...]:
+    """The coat weights, and the calibrated mix when there is a calibration."""
+    return options.coats + ((CALIBRATED,) if options.calibration else ())
+
+
+def _rechecks(options: Options) -> bool:
+    return any(options.coats) or options.calibration is not None
 
 
 def _score(
@@ -323,7 +358,7 @@ def _score(
     deep = np.stack([scores[[row[i] for i in s]].mean(axis=0) for s in seen])
     top = np.argsort(-deep, axis=1, kind="stable")[:, : options.top]
     matches = None
-    if matcher is not None and any(options.coats):
+    if matcher is not None and _rechecks(options):
         matches = coat_matches(
             matcher,
             crops,
@@ -344,8 +379,8 @@ def _thresholds(
     matcher: Matcher | None,
     adaptation: Adaptation,
     options: Options,
-) -> dict[float, float | None]:
-    """Per coat weight, the threshold an install sets from its own named gallery.
+) -> dict[float | str, float | None]:
+    """Per coat variant, the threshold an install sets from its own named gallery.
 
     The gallery is split again by time with some of its cows withheld, as the
     benchmark does with a whole manifest, and each fold's sightings are scored
@@ -363,9 +398,11 @@ def _thresholds(
                 crops, options.strangers, options.folds, options.seed + 1
             )
     except ValueError:
-        return dict.fromkeys(options.coats)
+        return dict.fromkeys(_variants(options))
     seen = sightings(crops, range(len(crops)))
-    decided: dict[float, list[Decisions]] = {weight: [] for weight in options.coats}
+    decided: dict[float | str, list[Decisions]] = {
+        variant: [] for variant in _variants(options)
+    }
     for split in checks:
         known = set(split.gallery)
         named = [crops[s[0]].identity if s[0] in known else "" for s in seen]
@@ -379,14 +416,14 @@ def _thresholds(
             options,
         )
         truth = [crops[s[0]].identity for s in scored.seen]
-        for weight in options.coats:
-            decided[weight].append(
-                Decisions.of(tuple(scored.names), scored.fused(weight, options), truth)
+        for variant in decided:
+            decided[variant].append(
+                Decisions.of(tuple(scored.names), scored.fused(variant, options), truth)
             )
-    found: dict[float, float | None] = {}
-    for weight, decisions in decided.items():
+    found: dict[float | str, float | None] = {}
+    for variant, decisions in decided.items():
         if options.check == "rotate":
-            found[weight] = Decisions(
+            found[variant] = Decisions(
                 np.concatenate([d.best_scores for d in decisions]),
                 np.concatenate([d.correct for d in decisions]),
                 np.concatenate([d.known for d in decisions]),
@@ -394,7 +431,7 @@ def _thresholds(
         else:
             each = [d.threshold_for(options.precision) for d in decisions]
             kept = [threshold for threshold in each if threshold is not None]
-            found[weight] = median(kept) if kept else None
+            found[variant] = median(kept) if kept else None
     return found
 
 
@@ -414,7 +451,7 @@ def _days(
     transform: Transform,
     options: Options,
 ) -> list[dict[str, Any]]:
-    """Per coat weight and way of naming, each later day's sightings named
+    """Per coat variant and way of naming, each later day's sightings named
     against the gallery at the install's own threshold.
 
     `transform` is the adaptation as learnt from every enrolment sighting.
@@ -444,11 +481,11 @@ def _days(
     alone: list[set[int]] = [set() for _ in scored.seen]
     others = together(crops, scored.seen, options.times) if options.times else alone
     results = []
-    for weight, jointly in product(options.coats, options.jointly):
-        coated = scored.coated(weight, options)
+    for variant, jointly in product(_variants(options), options.jointly):
+        coated = scored.coated(variant, options)
         ranks = np.argsort(-np.where(real, coated, -np.inf), axis=1, kind="stable")
         ranked = scored.names[ranks[:, :3]]
-        threshold = thresholds[weight]
+        threshold = thresholds[variant]
         given = named_jointly(
             coated, real, threshold, options.margin, others if jointly else alone
         )
@@ -481,7 +518,7 @@ def _days(
         tops = [day["top3"] for day in days if day["top3"] is not None]
         results.append(
             {
-                "coat": weight,
+                "coat": variant,
                 "jointly": jointly,
                 # Sightings named otherwise than each on its own would be.
                 "changed": int((given != apart).sum()),
@@ -498,6 +535,25 @@ def _days(
             }
         )
     return results
+
+
+def _labelled_pairs(
+    crops: Sequence[Crop],
+    vectors: NDArray[np.float32],
+    seen: Sequence[Sequence[int]],
+    cows: Sequence[str],
+    later: Sequence[int],
+    matcher: Matcher | None,
+    options: Options,
+) -> dict[str, list] | None:
+    """The later sightings with their re-checked cows of the labelled gallery,
+    for calibrating the runs on other farms; none without re-checks."""
+    if matcher is None or not _rechecks(options):
+        return None
+    gallery = [i for s in seen for i in s]
+    names = [cow for s, cow in zip(seen, cows, strict=True) for _ in s]
+    found = _score(crops, vectors, gallery, names, later, matcher, options)
+    return found.pairs(np.array([crops[s[0]].identity for s in found.seen])).record()
 
 
 def simulate(
@@ -518,8 +574,8 @@ def simulate(
             f"Enrolment needs sessions on every crop and more than "
             f"{options.enrol_sessions} of them"
         )
-    if any(options.coats) and matcher is None:
-        raise ValueError("A coat weight above 0 needs a matcher")
+    if _rechecks(options) and matcher is None:
+        raise ValueError("A coat weight above 0 or a calibration needs a matcher")
     if options.check not in ("split", "rotate"):
         raise ValueError(f"Unknown threshold check {options.check!r}")
     if any(options.jointly) and not options.times:
@@ -581,6 +637,7 @@ def simulate(
         return results
 
     labelled = scored(cows)
+    pairs = _labelled_pairs(crops, vectors, seen, cows, later, matcher, options)
     grouped = []
     for merge in options.merges:
         groups = cut(merges, len(seen), merge).tolist()
@@ -613,23 +670,31 @@ def simulate(
         "test_sessions": sorted(set(sessions) - period),
         "herd": len(set(cows)),
         "sightings": len(seen),
-        "options": {
-            "goal": options.goal,
-            "k": options.k,
-            "precision": options.precision,
-            "margin": options.margin,
-            "coats": list(options.coats),
-            "top": options.top,
-            "query_crops": options.query_crops,
-            "gallery_crops": options.gallery_crops,
-            "saturation": options.saturation,
-            "matcher": matcher.name if matcher is not None else None,
-            "adapts": [str(adaptation) for adaptation in options.adapts],
-            "check": options.check,
-            "jointly": list(options.jointly),
-            "times": options.times,
-            "anonymous": list(options.anonymous),
-        },
+        "options": _record(options, matcher),
         "labelled": labelled,
         "grouped": grouped,
+        "pairs": pairs,
+    }
+
+
+def _record(options: Options, matcher: Matcher | None) -> dict[str, Any]:
+    return {
+        "goal": options.goal,
+        "k": options.k,
+        "precision": options.precision,
+        "margin": options.margin,
+        "coats": list(options.coats),
+        "top": options.top,
+        "query_crops": options.query_crops,
+        "gallery_crops": options.gallery_crops,
+        "saturation": options.saturation,
+        "matcher": matcher.name if matcher is not None else None,
+        "adapts": [str(adaptation) for adaptation in options.adapts],
+        "check": options.check,
+        "jointly": list(options.jointly),
+        "times": options.times,
+        "anonymous": list(options.anonymous),
+        "calibrated_on": list(options.calibration.farms)
+        if options.calibration
+        else None,
     }

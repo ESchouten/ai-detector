@@ -35,7 +35,7 @@ adapters/
 ├── exporters/     disk, archive_metadata, telegram, webhook
 ├── sources/       files, streams
 ├── inference/     model assets, ONNX providers, YOLO, prepared models and engines
-├── individuals/   embedding model, sightings, names and the naming threshold
+├── individuals/   embedding model, sightings, names, grouping and the naming threshold
 ├── media/         images, video, event attachments
 ├── health.py      periodic pings, supervised by runtime
 ├── diagnostics.py log formatting, redaction, rotation, configuration summaries
@@ -86,7 +86,7 @@ Tests mirror the `domain`, `application` and `adapters` packages.
 | Model conversion or prepared cache | [export settings](src/aidetector/adapters/inference/export_settings.py), [prepared models](src/aidetector/adapters/inference/prepared_models.py) | [conversion/cache contracts](tests/adapters/inference/test_prepared_models.py), [model loading](tests/adapters/inference/test_model_loading.py), [real SDK export](tests/integration/test_model_export.py) |
 | Automatic direct TensorRT | [GPU engine cache and background preparation](src/aidetector/adapters/inference/prepared_engines.py), [export worker](src/aidetector/adapters/inference/tensorrt_worker.py), [desktop preparation](../web/src/lib/server/nvidia-runtime.ts) | [preparation, concurrent monitoring, cancellation and fallback](tests/adapters/inference/test_prepared_engines.py), [runtime installation](../web/tests/nvidia-runtime.test.ts), [planned restart and shutdown](../web/tests/runtime-recovery.test.ts) |
 | Cropping, annotations, or encoded media | [media adapters](src/aidetector/adapters/media/) | [media](tests/adapters/media/test_media.py) |
-| Recognising individuals, sightings or the naming threshold | [individuals adapters](src/aidetector/adapters/individuals/), [delivery](src/aidetector/application/delivery.py) | [herd and sightings](tests/adapters/individuals/test_herd.py), [scoring](tests/adapters/individuals/test_scoring.py), [delivery](tests/application/test_delivery.py), [CLI wiring](tests/test_cli.py) |
+| Recognising individuals, sightings, grouping or the naming threshold | [individuals adapters](src/aidetector/adapters/individuals/), [delivery](src/aidetector/application/delivery.py) | [herd and sightings](tests/adapters/individuals/test_herd.py), [scoring](tests/adapters/individuals/test_scoring.py), [grouping](tests/adapters/individuals/test_grouping.py), [delivery](tests/application/test_delivery.py), [CLI wiring](tests/test_cli.py) |
 | VLM responses, fallback or connection check | [VLM adapter](src/aidetector/adapters/vlm.py) | [VLM validation and connection check](tests/adapters/test_vlm.py) |
 | Archive format or publication | [disk](src/aidetector/adapters/exporters/disk.py), [metadata](src/aidetector/adapters/exporters/archive_metadata.py) | [disk](tests/adapters/exporters/test_disk.py), [reference flow](tests/test_reference_flow.py), [schemas](tests/test_schemas.py) |
 | Telegram, webhooks, or health requests | [Telegram](src/aidetector/adapters/exporters/telegram.py), [webhook](src/aidetector/adapters/exporters/webhook.py), [health](src/aidetector/adapters/health.py) | [exporters and HTTP](tests/adapters/exporters/test_exporters.py), [health](tests/adapters/test_health.py) |
@@ -222,14 +222,16 @@ Media is encoded once per requested variant and shared between destinations; the
 - **When.** Delivery asks the `EventIdentifier` port after verification and before the destinations, on the delivery thread, so a slow embedding delays the alert, never detection. Rejected events are not identified. An expected failure (an unreadable `names.json`, a sighting that cannot be saved) is `IdentificationUnavailable`: the event is still delivered, with the error in `individuals_error` instead of names.
 - **Sightings.** For each track of a configured class, `TrackIdentifier` takes up to four pictures: whole boxes away from the frame's edge and not largely covered by another box come first, largest first and spread over the event; others only make up the number, and boxes under 48 pixels are skipped. The first event a track appears in saves them as a sighting; later events reuse it. Tracker IDs belong to one detector's tracking run, so each detector has its own `TrackIdentifier`.
 - **One herd.** `Herd` is shared by every detector and camera of a run. It reads `names.json` again when its size or modification time changes, so names given while monitoring apply to the next event, and a lock keeps that reload to one delivery thread at a time.
-- **Scores.** A sighting's score for an individual is the mean of her two most similar named pictures, averaged over the sighting's pictures, less three quarters of the runner-up's score. The three best are the candidates.
+- **Scores.** A sighting's score for an individual is the mean similarity of the individual's two most similar named pictures to each of the sighting's pictures, averaged over those pictures, less three quarters of the runner-up's score. The three best are the candidates.
 - **Threshold.** The installation sets it from its own named sightings: each day's sightings are asked in turn against the other days', with a quarter of the individuals withheld as strangers in three draws, and the threshold is the lowest score whose names are right at least `precision` (0.99) of the time over all answers pooled. Until two days have names there is no threshold: candidates are suggestions and nobody is recognised.
+- **Grouping.** After an event saves a new sighting, the latest 1000 unnamed sightings are grouped by look (average linkage of their mean embeddings, cut at a similarity of 0.6) and written to `groups.json`, largest group first, each with the three named individuals it resembles most. A person names a whole group at once instead of each sighting.
 
-The folder is shared with the web application, which writes `names.json`; the detector writes each sighting once and afterwards only adds embeddings for another model.
+The folder is shared with the web application, which writes `names.json`; the detector writes each sighting once, afterwards only adds embeddings for another model, and replaces `groups.json` whole.
 
 ```text
 DATA_DIR/individuals/
 ├── names.json                  {"version": 1, "names": {"<sighting ID>": "412"}}
+├── groups.json                 version, model key, groups of sighting IDs with suggested names
 └── sightings/<sighting ID>/
     ├── sighting.json           version, id, camera, label, track, seen, event_id, crops
     ├── crop-1.jpg …            at most 512 pixels on the longest side

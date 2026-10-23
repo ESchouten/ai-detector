@@ -6,7 +6,7 @@ import pytest
 
 from aidetector.adapters.individuals.embedding import EmbeddingModel, model_key
 from aidetector.adapters.individuals.herd import Herd, TrackIdentifier, track_crops
-from aidetector.adapters.individuals.records import SightingRecord
+from aidetector.adapters.individuals.records import GroupsFile, SightingRecord
 from aidetector.application.ports import IdentificationUnavailable, camera_id
 from aidetector.configuration import IndividualsConfig
 from aidetector.domain.models import BoundingBox, DetectionEvent, Observation
@@ -115,6 +115,36 @@ def test_names_given_on_two_days_recognise_later_tracks_without_a_restart(tmp_pa
     assert sure.recognised
     assert sure.name == "412"
     assert sure.sighting == unsure.sighting
+
+
+def groups(herd):
+    return GroupsFile.model_validate_json(
+        (herd.directory / "groups.json").read_text()
+    ).groups
+
+
+def test_unnamed_look_alike_sightings_are_grouped_for_naming(tmp_path):
+    herd = herd_of(tmp_path)
+    sightings: dict[str, list[str]] = {}
+    for day in (1, 2):
+        for individual in TrackIdentifier(herd).identify(
+            event(day, whole_herd()), "e" * 32
+        ):
+            coat = list(COATS)[individual.track_id - 1]
+            sightings.setdefault(coat, []).append(individual.sighting)
+    assert sorted(sorted(g.sightings) for g in groups(herd)) == sorted(
+        sorted(both) for both in sightings.values()
+    )
+    assert all(g.suggestions == [] for g in groups(herd))
+
+    name(herd, {sightings["412"][0]: "412", sightings["233"][0]: "233"})
+    later = TrackIdentifier(herd).identify(event(3, [(1, "412", PLACES[0])]), "a" * 32)
+    listed = groups(herd)
+    named = {sightings["412"][0], sightings["233"][0]}
+    assert not any(named & set(g.sightings) for g in listed)
+    joined = next(g for g in listed if later[0].sighting in g.sightings)
+    assert sorted(joined.sightings) == sorted([sightings["412"][1], later[0].sighting])
+    assert [suggestion.name for suggestion in joined.suggestions] == ["412", "233"]
 
 
 def test_invalid_names_make_identification_unavailable(tmp_path):

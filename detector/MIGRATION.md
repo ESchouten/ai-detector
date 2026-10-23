@@ -30,7 +30,7 @@ Run `--check-config` against the saved file and correct what it reports. These a
 - Each delivered event has an `event_id` in `metadata.json`; metadata written before that has none and stays valid.
 - A person's review is the optional `review` object in `metadata.json` (`validated`, `source`, `reviewed_at`), written by the web application. `validated` stays the validator's own result.
 - `metadata.json` may carry `individuals` (track, label, sighting, `name` when recognised, and candidates with scores) and `individuals_error`. Both are null when individuals are not recognised; archives without them stay valid.
-- With `individuals` configured, the data folder gains `individuals/`: sightings the detector writes once, and `names.json`, which people write. Write `names.json` by replacing the whole file, so the detector never reads it half written. See [individuals](ARCHITECTURE.md#individuals).
+- With `individuals` configured, the data folder gains `individuals/`: sightings the detector writes once, `groups.json` of look-alike unnamed sightings, which the detector replaces after new sightings, and `names.json`, which people write. Write `names.json` by replacing the whole file, so the detector never reads it half written. See [individuals](ARCHITECTURE.md#individuals).
 - Status records for the launcher (`--status-json`) and live pictures (`--live-preview`) are versioned protocols between the detector and the web application of the same release. Deploy both from one release.
 
 ## Docker

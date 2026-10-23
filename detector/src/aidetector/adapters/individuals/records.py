@@ -3,6 +3,7 @@
 ```text
 individuals/
 ├── names.json                 written by people: sighting ID -> name
+├── groups.json                written by the detector: unnamed look-alikes
 └── sightings/<sighting ID>/
     ├── sighting.json          written once by the detector
     ├── crop-1.jpg, ...        the track's best pictures
@@ -41,3 +42,33 @@ class NamesFile(BaseModel):
 
     version: Literal[1] = 1
     names: dict[SightingId, Annotated[str, Field(min_length=1, pattern=r"\S")]] = {}
+
+
+class Suggestion(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    score: float
+
+
+class SightingGroup(BaseModel):
+    """Unnamed sightings that look alike, and the named individuals they resemble."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    sightings: list[SightingId] = Field(min_length=1)
+    suggestions: list[Suggestion]
+
+
+class GroupsFile(BaseModel):
+    """The latest unnamed sightings in look-alike groups, largest first.
+
+    Rewritten after new sightings; a sighting named since may still be listed.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    version: Literal[1] = 1
+    # The model file whose embeddings were grouped.
+    model: str
+    groups: list[SightingGroup]

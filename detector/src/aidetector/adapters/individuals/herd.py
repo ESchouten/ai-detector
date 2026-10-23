@@ -16,7 +16,14 @@ from numpy.typing import NDArray
 from pydantic import ValidationError
 
 from aidetector.adapters.individuals.embedding import EmbeddingModel
-from aidetector.adapters.individuals.records import NamesFile, SightingRecord
+from aidetector.adapters.individuals.grouping import group
+from aidetector.adapters.individuals.records import (
+    GroupsFile,
+    NamesFile,
+    SightingGroup,
+    SightingRecord,
+    Suggestion,
+)
 from aidetector.adapters.individuals.scoring import (
     Gallery,
     NamedSighting,
@@ -44,13 +51,32 @@ SIDE_MIN = 48
 SIDE_MAX = 512
 EDGE = 2
 COVERED = 0.25
+# The latest unnamed sightings grouped for naming; grouping takes n² memory.
+GROUPED_MAX = 1000
 
 
 @dataclass(frozen=True)
 class _Known:
     signature: tuple[int, int] | None
+    names: dict[str, str]
     gallery: Gallery
     threshold: float | None
+
+
+_NOTHING_KNOWN = _Known(None, {}, Gallery.of(()), None)
+
+
+def _mean(vectors: NDArray[np.float32]) -> NDArray[np.float32]:
+    mean = vectors.mean(axis=0)
+    return mean / np.linalg.norm(mean)
+
+
+def _ranked(gallery: Gallery, vectors: NDArray[np.float32]) -> list[tuple[str, float]]:
+    if not gallery.names:
+        return []
+    scores = gallery.scores(vectors)
+    order = np.argsort(-scores, kind="stable")[:CANDIDATES]
+    return [(gallery.names[i], float(scores[i])) for i in order]
 
 
 def _covered(box: BoundingBox, others: Sequence[BoundingBox]) -> bool:
@@ -161,7 +187,8 @@ class Herd:
             model.key,
         )
         self._lock = Lock()
-        self._known = _Known(None, Gallery.of(()), None)
+        self._known = _NOTHING_KNOWN
+        self._index: dict[str, tuple[str, NDArray[np.float32]]] | None = None
 
     @property
     def sightings(self) -> Path:
@@ -188,7 +215,7 @@ class Herd:
         try:
             status = path.stat()
         except FileNotFoundError:
-            return _Known(None, Gallery.of(()), None)
+            return _NOTHING_KNOWN
         signature = (status.st_mtime_ns, status.st_size)
         if signature == self._known.signature:
             return self._known
@@ -214,21 +241,80 @@ class Herd:
             len(named),
             "not set yet" if threshold is None else f"{threshold:.3f}",
         )
-        return _Known(signature, gallery, threshold)
+        return _Known(signature, names, gallery, threshold)
+
+    def _refresh(self) -> _Known:
+        try:
+            self._known = self._load()
+        except OSError as error:
+            raise IdentificationUnavailable(
+                f"Cannot read named sightings: {error}"
+            ) from error
+        except ValidationError as error:
+            raise IdentificationUnavailable("Named sightings are invalid") from error
+        return self._known
 
     def known(self) -> tuple[Gallery, float | None]:
         with self._lock:
+            known = self._refresh()
+            return known.gallery, known.threshold
+
+    def _sighting_index(self) -> dict[str, tuple[str, NDArray[np.float32]]]:
+        """When each sighting with the current model's embeddings was seen, and
+        its mean embedding; read from the folder once, then kept up to date."""
+        if self._index is None:
+            self._index = {}
+            folders = self.sightings.iterdir() if self.sightings.is_dir() else ()
+            for folder in folders:
+                stored = folder / f"vectors-{self.model.key}.npy"
+                if folder.name.startswith(".") or not stored.exists():
+                    continue
+                record = SightingRecord.model_validate_json(
+                    (folder / "sighting.json").read_bytes()
+                )
+                self._index[record.id] = (record.seen, _mean(np.load(stored)))
+        return self._index
+
+    def regroup(self) -> None:
+        """Write groups.json from the latest unnamed sightings."""
+        with self._lock:
+            known = self._refresh()
             try:
-                self._known = self._load()
-            except OSError as error:
+                index = self._sighting_index()
+                unnamed = sorted(
+                    (
+                        (seen, sighting)
+                        for sighting, (seen, _) in index.items()
+                        if sighting not in known.names
+                    ),
+                    reverse=True,
+                )[:GROUPED_MAX]
+                groups = []
+                if unnamed:
+                    vectors = np.stack([index[sighting][1] for _, sighting in unnamed])
+                    for members in group(vectors):
+                        groups.append(
+                            SightingGroup(
+                                sightings=[unnamed[i][1] for i in members],
+                                suggestions=[
+                                    Suggestion(name=name, score=score)
+                                    for name, score in _ranked(
+                                        known.gallery, vectors[members]
+                                    )
+                                ],
+                            )
+                        )
+                path = self.directory / "groups.json"
+                pending = path.with_suffix(f".{uuid4().hex}.tmp")
+                pending.write_text(
+                    GroupsFile(model=self.model.key, groups=groups).model_dump_json(),
+                    encoding="utf-8",
+                )
+                pending.replace(path)
+            except (OSError, ValidationError) as error:
                 raise IdentificationUnavailable(
-                    f"Cannot read named sightings: {error}"
+                    f"Cannot group sightings for naming: {error}"
                 ) from error
-            except ValidationError as error:
-                raise IdentificationUnavailable(
-                    "Named sightings are invalid"
-                ) from error
-            return self._known.gallery, self._known.threshold
 
     def save(self, record: SightingRecord, images: Sequence[Image], vectors) -> None:
         """Publish a sighting's folder whole, so readers never see it half written."""
@@ -248,6 +334,9 @@ class Herd:
                 folder.rename(self.sightings / record.id)
         except (OSError, MediaError) as error:
             raise IdentificationUnavailable(f"Cannot save sighting: {error}") from error
+        with self._lock:
+            if self._index is not None:
+                self._index[record.id] = (record.seen, _mean(vectors))
 
 
 class TrackIdentifier:
@@ -267,6 +356,7 @@ class TrackIdentifier:
             return ()
         gallery, threshold = self.herd.known()
         individuals = []
+        saved = False
         for track_id, (label, images) in tracks.items():
             vectors = self.herd.model.embed(images)
             key = (event.source, track_id)
@@ -282,18 +372,20 @@ class TrackIdentifier:
                 )
                 self.herd.save(record, images, vectors)
                 self._sightings[key] = record.id
-            candidates: tuple[Candidate, ...] = ()
-            recognised = False
-            if gallery.names:
-                scores = gallery.scores(vectors)
-                order = np.argsort(-scores, kind="stable")[:CANDIDATES]
-                candidates = tuple(
-                    Candidate(gallery.names[i], float(scores[i])) for i in order
-                )
-                recognised = threshold is not None and candidates[0].score >= threshold
+                saved = True
+            candidates = tuple(
+                Candidate(name, score) for name, score in _ranked(gallery, vectors)
+            )
+            recognised = (
+                bool(candidates)
+                and threshold is not None
+                and candidates[0].score >= threshold
+            )
             individuals.append(
                 Individual(
                     track_id, label, self._sightings[key], candidates, recognised
                 )
             )
+        if saved:
+            self.herd.regroup()
         return tuple(individuals)

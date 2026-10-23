@@ -8,6 +8,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from threading import Lock
+from time import perf_counter
 from uuid import uuid4
 
 import cv2
@@ -51,6 +52,8 @@ SIDE_MIN = 48
 SIDE_MAX = 512
 EDGE = 2
 COVERED = 0.25
+# Outside an outline is painted this grey, as in the pictures the models were tested on.
+BACKGROUND = 127
 # The latest unnamed sightings grouped for naming; grouping takes n² memory.
 GROUPED_MAX = 1000
 
@@ -92,13 +95,19 @@ def _covered(box: BoundingBox, others: Sequence[BoundingBox]) -> bool:
 
 
 def _cut(image: Image, box: BoundingBox) -> Image:
+    """The box's pixels; with an outline, everything outside it is grey, so
+    neighbours in the box do not count towards this individual."""
     height, width = image.shape[:2]
-    crop = image[
-        max(0, box.y1) : min(height, box.y2), max(0, box.x1) : min(width, box.x2)
-    ]
+    top, left = max(0, box.y1), max(0, box.x1)
+    crop = image[top : min(height, box.y2), left : min(width, box.x2)].copy()
+    if box.outline:
+        inside = np.zeros(crop.shape[:2], np.uint8)
+        points = np.asarray(box.outline, np.int32) - (left, top)
+        cv2.drawContours(inside, [points], -1, 255, cv2.FILLED)
+        crop[inside == 0] = BACKGROUND
     scale = SIDE_MAX / max(crop.shape[:2])
     if scale >= 1:
-        return np.ascontiguousarray(crop)
+        return crop
     size = (max(1, round(crop.shape[1] * scale)), max(1, round(crop.shape[0] * scale)))
     return cv2.resize(crop, size, interpolation=cv2.INTER_AREA)
 
@@ -126,7 +135,8 @@ def track_crops(
 
     Whole pictures, away from the frame's edge and not largely covered by
     another box, come first, largest first and spread over the event so they
-    show different moments; others only make up the number.
+    show different moments; others only make up the number. Outside a box's
+    outline, when a segmentation model gave one, pictures are grey.
     """
     found: dict[int, list[_Seen]] = {}
     labelled: dict[int, str] = {}
@@ -182,9 +192,10 @@ class Herd:
         self.labels = frozenset(config.labels)
         self.precision = config.precision
         logger.info(
-            "Recognising individuals of %s in tracking detectors; model %s",
+            "Recognising individuals of %s in tracking detectors; model %s on %s",
             ", ".join(sorted(self.labels)),
             model.key,
+            ", ".join(model.providers),
         )
         self._lock = Lock()
         self._known = _NOTHING_KNOWN
@@ -351,6 +362,7 @@ class TrackIdentifier:
         self._sightings: dict[tuple[str, int], str] = {}
 
     def identify(self, event: DetectionEvent, event_id: str) -> tuple[Individual, ...]:
+        started = perf_counter()
         tracks = track_crops(event, self.herd.labels)
         if not tracks:
             return ()
@@ -388,4 +400,9 @@ class TrackIdentifier:
             )
         if saved:
             self.herd.regroup()
+        logger.info(
+            "Compared %d track(s) with the named individuals in %.0fms",
+            len(tracks),
+            (perf_counter() - started) * 1000,
+        )
         return tuple(individuals)

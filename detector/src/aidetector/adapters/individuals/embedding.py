@@ -65,6 +65,7 @@ class EmbeddingModel:
 
         self.key = key
         self._session: Any = ort.InferenceSession(path)
+        self.providers: tuple[str, ...] = tuple(self._session.get_providers())
         model_input = self._session.get_inputs()[0]
         self._input = model_input.name
         batch, _, height, width = model_input.shape

@@ -266,6 +266,7 @@ def run_application(
                         cache_directory=data_directory / "models" / "prepared",
                         report_status=rule_status,
                         engines=engines,
+                        outlined=herd.labels if herd is not None else frozenset(),
                     )
                 )
                 event_policy = EventPolicy(

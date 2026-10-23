@@ -22,6 +22,9 @@ class BoundingBox:
     label: str | None = None
     confidence: float | None = None
     track_id: int | None = None
+    # The object's outline from a segmentation model, as image-space points;
+    # only for classes whose pictures are kept to recognise individuals.
+    outline: tuple[tuple[int, int], ...] = ()
 
     @classmethod
     def enclosing(cls, boxes: Sequence[BoundingBox]) -> BoundingBox | None:

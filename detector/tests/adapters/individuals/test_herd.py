@@ -193,3 +193,22 @@ def test_whole_uncovered_pictures_are_chosen_before_larger_cut_off_ones():
     label, crops = tracks[1]
     assert label == "cow"
     assert [crop.shape for crop in crops] == [(60, 60, 3)]
+
+
+def test_outside_a_segmentation_outline_pictures_are_grey():
+    image = np.full((240, 320, 3), 128, np.uint8)
+    image[40:100, 100:130] = COATS["412"]
+    image[40:100, 130:160] = COATS["233"]
+    # The box holds both coats; the outline only the first.
+    outline = ((100, 40), (129, 40), (129, 99), (100, 99))
+    box = BoundingBox(100, 40, 160, 100, "cow", 0.9, 1, outline)
+    observation = Observation(datetime(2026, 10, 1), image, {"cow": 0.9}, (box,))
+
+    [crop] = track_crops(DetectionEvent(SOURCE, (observation,)), frozenset({"cow"}))[1][
+        1
+    ]
+
+    assert crop.shape == (60, 60, 3)
+    assert crop[30, 15].tolist() == list(COATS["412"])
+    assert crop[30, 45].tolist() == [127, 127, 127]
+    assert image[50, 140].tolist() == list(COATS["233"])

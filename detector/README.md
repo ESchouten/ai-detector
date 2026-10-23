@@ -142,7 +142,7 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 | `labels` | required | Detection classes whose tracked objects are individuals |
 | `precision` | `0.99` | Share of names that must be right when the installation sets its naming threshold |
 
-- Each track of those classes is saved once as a sighting, its best pictures, under `individuals/sightings/` in the data folder. People name sightings in `individuals/names.json`; a name covers every sighting given it, from every camera. Unnamed sightings that look alike are listed together in `individuals/groups.json`, so a whole group can be named at once.
+- Each track of those classes is saved once as a sighting, its best pictures (cut out along the object's outline when the detector's model segments, `"task": "segment"`), under `individuals/sightings/` in the data folder. People name sightings in `individuals/names.json`; a name covers every sighting given it, from every camera. Unnamed sightings that look alike are listed together in `individuals/groups.json`, so a whole group can be named at once.
 - Alerts show `412` for a recognised individual and `412, 233 or 87?` when the herd only suggests names. `metadata.json` lists them under `individuals`, or the reason they could not be recognised under `individuals_error`.
 - Recognition starts once the named sightings come from at least two days, the least from which an installation can check its own threshold; until then alerts only suggest names. See [individuals](ARCHITECTURE.md#individuals) for the model contract, the files and the scoring.
 

@@ -989,6 +989,37 @@ def _add_export(commands: argparse._SubParsersAction) -> None:
     export.set_defaults(run=_export)
 
 
+def _export_coat(arguments: argparse.Namespace) -> None:
+    from reid.coat_export import export_coat_check
+
+    differences = export_coat_check(
+        arguments.out, arguments.pictures, arguments.size, arguments.keypoints
+    )
+    print(
+        f"Saved keypoints.onnx and matcher.onnx in {arguments.out}; against kornia, "
+        f"keypoints differ by at most {differences['keypoints']:.2g} px and matches "
+        f"by {differences['matches']:g} per pair."
+    )
+
+
+def _add_export_coat(commands: argparse._SubParsersAction) -> None:
+    export = commands.add_parser(
+        "export-coat",
+        help="write the coat check's ALIKED and LightGlue as ONNX models",
+    )
+    export.add_argument("--out", type=Path, required=True, help="a folder")
+    export.add_argument(
+        "--pictures",
+        type=Path,
+        nargs="+",
+        required=True,
+        help="pictures to compare ONNX Runtime with kornia on, matched in pairs",
+    )
+    export.add_argument("--size", type=int, default=512)
+    export.add_argument("--keypoints", type=int, default=512)
+    export.set_defaults(run=_export_coat)
+
+
 def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(prog="reid", description=__doc__)
     commands = root.add_subparsers(required=True)
@@ -999,6 +1030,7 @@ def parser() -> argparse.ArgumentParser:
     _add_naming(commands)
     _add_training(commands)
     _add_export(commands)
+    _add_export_coat(commands)
     return root
 
 

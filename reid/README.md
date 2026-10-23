@@ -180,6 +180,15 @@ uv run --extra models --extra export reid export-onnx --model miewid-msv3 \
 
 The model takes `images` (float32 RGB, N×3×H×W at the preset's size) and returns `embeddings`; its metadata holds the preset's `mean` and `std`. Share a fine-tuned MiewID only once Wild Me agrees.
 
+`export-coat` writes the coat check's two networks, ALIKED (BSD 3-Clause) and LightGlue for ALIKED (Apache 2.0), as `keypoints.onnx` and `matcher.onnx`, then matches the given pictures in pairs with ONNX Runtime and with kornia and prints the largest differences:
+
+```sh
+uv run --extra local --extra export reid export-coat --out ~/reid-cache/onnx/coat \
+    --pictures ~/reid-cache/crops/*.jpg
+```
+
+`keypoints.onnx` takes `image`, one float32 RGB picture as 1×3×H×W in 0 to 1 with its longer side 512, and returns `keypoints` (N×2 pixels) and `descriptors` (N×128). `matcher.onnx` takes `keypoints0`, `descriptors0`, `size0` (width, height) and the same for the second picture, each with a batch of one, and returns `scores`, each first keypoint's match confidence; the coat check counts those of at least 0.5. Both give kornia's keypoints and matches; only the keypoints' order differs.
+
 ## Caching
 
 - Model weights download once into the Hugging Face and timm caches.

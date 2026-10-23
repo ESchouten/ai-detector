@@ -10,6 +10,9 @@ learnt from:
 - `tracks`: the pictures within each track, which show one cow (no labels);
 - `names`: one cow's sightings on different occasions, by the farmer's names.
 
+`named` is `names` as ai-detector does it: the centre too comes from the named
+sightings only, and until a cow is named on two occasions nothing changes.
+
 Nothing is retrained, so an install can do this in seconds on any computer.
 """
 
@@ -21,7 +24,7 @@ from dataclasses import dataclass
 import numpy as np
 from numpy.typing import NDArray
 
-KINDS = ("none", "center", "whiten", "tracks", "names")
+KINDS = ("none", "center", "whiten", "tracks", "names", "named")
 
 
 @dataclass(frozen=True)
@@ -85,7 +88,7 @@ def _deviations(
             if len(sighting) > 1:
                 pictures = vectors[list(sighting)].astype(np.float64)
                 parts.append(pictures - pictures.mean(axis=0))
-    elif kind == "names":
+    elif kind in ("names", "named"):
         by_name: dict[str, list[int]] = {}
         for sighting, name in enumerate(names):
             if name:
@@ -110,17 +113,22 @@ def fit(
     nothing = np.zeros((vectors.shape[1], 0)), np.zeros(0)
     if adaptation.kind == "none":
         return Transform(None, *nothing)
+    if adaptation.kind == "named":
+        named = [i for i, name in enumerate(names) if name]
+        seen, names = [seen[i] for i in named], [names[i] for i in named]
+        if not seen:
+            return Transform(None, *nothing)
     means = np.stack([vectors[list(s)].mean(axis=0) for s in seen]).astype(np.float64)
     centre = means.mean(axis=0)
     parts = _deviations(adaptation.kind, vectors, seen, names, means)
     if not parts:
-        return Transform(centre, *nothing)
+        return Transform(None if adaptation.kind == "named" else centre, *nothing)
     deviations = np.concatenate(parts)
     _, values, axes = np.linalg.svd(deviations, full_matrices=False)
     variance = values**2 / len(deviations)
     kept = variance > variance.max() * 1e-10
     if not kept.any():
-        return Transform(centre, *nothing)
+        return Transform(None if adaptation.kind == "named" else centre, *nothing)
     variance = variance[kept]
     floor = adaptation.shrink * variance.mean()
     return Transform(centre, axes[kept].T, np.sqrt(floor / (variance + floor)) - 1)

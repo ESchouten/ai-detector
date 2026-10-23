@@ -59,6 +59,23 @@ def test_the_farmers_names_damp_what_changes_from_day_to_day():
     assert unnamed(vectors) == pytest.approx(centred)
 
 
+def test_named_learns_only_from_named_sightings_as_ai_detector_does():
+    vectors = _unit(COWS + DAYS + BARN)
+
+    # Unnamed sightings shift neither the centre nor the damping.
+    some = fit(Adaptation("named", 1e-6), vectors, SEEN, ["a", "a", "b", "b"])
+    more = fit(
+        Adaptation("named", 1e-6),
+        np.concatenate([vectors, _unit([BARN + np.eye(5)[4]])]),
+        [*SEEN, [4]],
+        ["a", "a", "b", "b", ""],
+    )
+    assert more(vectors) == pytest.approx(some(vectors))
+    # Until a cow is named twice, the embedding stays as it is.
+    once = fit(Adaptation("named"), vectors, SEEN, ["a", "", "b", ""])
+    assert once(vectors) is vectors
+
+
 def test_tracks_damp_what_changes_within_one_cows_track():
     vectors = _unit(COWS + DAYS + BARN)
 

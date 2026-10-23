@@ -118,6 +118,13 @@ export class IndividualsFolder {
 		};
 	}
 
+	/** One sighting and the name a person gave it, or null once it is gone. */
+	async sighting(id: string): Promise<(Sighting & { name: string | null }) | null> {
+		if (!SIGHTING_ID.test(id)) return null;
+		const [record, names] = await Promise.all([this.#record(id), this.#readNames()]);
+		return record && { ...record, name: names[id] ?? null };
+	}
+
 	#change(update: (names: Record<string, string>) => Promise<void>): Promise<void> {
 		const change = this.#changes.then(async () => {
 			const names = await this.#readNames();

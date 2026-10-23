@@ -196,6 +196,8 @@ msgstr "Ouvrez le tableau de bord via localhost sur l’ordinateur qui exécute 
 #: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "Caméra"
 
@@ -1305,6 +1307,7 @@ msgstr "Conserver la connexion actuelle"
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Enregistrement…"
@@ -2251,6 +2254,7 @@ msgid "Please wait…"
 msgstr "Veuillez patienter…"
 
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Enregistrer"
@@ -3822,10 +3826,12 @@ msgstr[0] "# autre observation leur ressemble."
 msgstr[1] "# autres observations leur ressemblent."
 msgstr[2] "# autres observations leur ressemblent."
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "Ressemble le plus à"
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "Nom ou numéro"
@@ -3866,3 +3872,42 @@ msgstr "Aucune identité nommée pour l’instant."
 #: src/routes/(admin)/identities/+page.svelte
 msgid "Named identities"
 msgstr "Identités nommées"
+
+#. 0: detectionBoxLabel(box)
+#: src/lib/components/detection-boxes.svelte
+msgid "Name {0}"
+msgstr "Nommer {0}"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "On camera now"
+msgstr "À l’image maintenant"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Tap a box to say who it is. A box can be named a few seconds after it appears."
+msgstr "Touchez un cadre pour dire de qui il s’agit. Un cadre peut être nommé quelques secondes après son apparition."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Could not save the name. Try again."
+msgstr "Impossible d’enregistrer le nom. Réessayez."
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Shown as {0}. Enter another name or number if that is wrong."
+msgstr "Affiché comme {0}. Saisissez un autre nom ou numéro si ce n’est pas le bon."
+
+#. 0: identity.candidates[0].name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Looks most like {0}, but not enough to be sure."
+msgstr "Ressemble le plus à {0}, mais pas assez pour en être sûr."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Give it a name or number; the camera then recognises it."
+msgstr "Donnez-lui un nom ou un numéro ; la caméra le reconnaîtra ensuite."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Who is this?"
+msgstr "Qui est-ce ?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Its pictures were removed. Wait for the box to show it again."
+msgstr "Ses photos ont été supprimées. Attendez que le cadre l’affiche de nouveau."

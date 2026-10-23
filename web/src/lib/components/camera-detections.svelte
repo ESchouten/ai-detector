@@ -5,9 +5,18 @@
 </script>
 
 <script lang="ts">
-	import { detectionBoxLabel, type CameraOverlayFrame } from '$lib/live-preview';
+	import { detectionBoxLabel, type CameraOverlayFrame, type DetectionBox } from '$lib/live-preview';
 	import DetectionBoxes from './detection-boxes.svelte';
-	let { id, label }: { id: string; label: string } = $props();
+	let {
+		id,
+		label,
+		onselect
+	}: {
+		id: string;
+		label: string;
+		/** Makes boxes with an identity buttons, for naming who they are. */
+		onselect?: (box: DetectionBox) => void;
+	} = $props();
 	let frames = $state<CameraOverlayFrame[]>([]);
 	let width = $state(0);
 	let height = $state(0);
@@ -29,12 +38,13 @@
 				viewBox={`0 0 ${frame.image.width} ${frame.image.height}`}
 				preserveAspectRatio="xMidYMid meet"
 				class="absolute inset-0 size-full"
-				role="img"
+				role={onselect ? 'group' : 'img'}
 				aria-label={`${label} · ${frame.ruleLabel}: ${frame.boxes.map(detectionBoxLabel).join('; ')}`}
 			>
 				<DetectionBoxes
 					{frame}
 					displayWidth={Math.min(width, (height * frame.image.width) / frame.image.height)}
+					{onselect}
 				/>
 			</svg>
 		{/if}

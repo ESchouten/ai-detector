@@ -5,6 +5,7 @@ import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
 import writeFileAtomic from 'write-file-atomic';
+import { detectionBoxLabel } from '../src/lib/live-preview.ts';
 import {
 	createCameraOverlayStream,
 	type LivePreviewCamera
@@ -17,7 +18,16 @@ const rules = [
 	{ id: 'detector-2', label: 'Vehicles', interval: 1 }
 ];
 const sourceKey = keyOf('rtsp://user:secret@camera/live', '/data');
-const box = { x1: 1, y1: 2, x2: 10, y2: 12, label: 'cow', confidence: 0.9, trackId: 17 };
+const box = {
+	x1: 1,
+	y1: 2,
+	x2: 10,
+	y2: 12,
+	label: 'cow',
+	confidence: 0.9,
+	trackId: 17,
+	identity: null
+};
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-live-'));
@@ -174,6 +184,36 @@ test(
 		assert.equal((await readdir(path.join(directory, 'leases'))).length, 0);
 	}
 );
+
+test('tracked boxes carry who they are to the camera picture', { timeout: 5000 }, async (t) => {
+	const { session, frame, open } = await fixture(t);
+	await session();
+	const identity = { sighting: 'a'.repeat(32), name: '412', candidates: [] };
+	await frame('detector-1', { boxes: [{ ...box, identity }] });
+	await frame('detector-2', { boxes: [{ ...box, identity: { ...identity, sighting: '..' } }] });
+	const { reader } = open();
+	const output = await chunk(reader);
+	assert.ok(output.includes(`"identity":${JSON.stringify(identity)}`));
+	assert.ok(output.endsWith(status('detector-2')));
+});
+
+test('a box shows the name it is recognised by, and only suggests one when unsure', () => {
+	const identity = {
+		sighting: 'a'.repeat(32),
+		name: null,
+		candidates: [
+			{ name: '412', score: 0.4 },
+			{ name: '233', score: 0.1 }
+		]
+	};
+	assert.equal(detectionBoxLabel(box), 'cow · 90% · #17');
+	assert.equal(detectionBoxLabel({ ...box, identity }), '412? · #17');
+	assert.equal(detectionBoxLabel({ ...box, identity: { ...identity, name: '412' } }), '412 · #17');
+	assert.equal(
+		detectionBoxLabel({ ...box, identity: { ...identity, candidates: [] } }),
+		'cow · 90% · #17'
+	);
+});
 
 test(
 	'a slow reader skips intermediate pictures and receives the newest available record',

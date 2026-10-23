@@ -3,12 +3,19 @@
 	import { resolve } from '$app/paths';
 	import { X } from '@lucide/svelte';
 	import * as Alert from '$lib/components/ui/alert';
+	import CameraPicture from '$lib/components/camera-picture.svelte';
+	import FilterChips from '$lib/components/filter-chips.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import { plural } from '$lib/format';
+	import type { DetectionBox } from '$lib/live-preview';
+	import LiveNaming from './live-naming.svelte';
 	import SightingGroup from './sighting-group.svelte';
 
 	let { data, form } = $props();
 	const overview = $derived(data.overview);
+	let cameraId = $state<string>();
+	const camera = $derived(data.cameras.find((item) => item.id === cameraId) ?? data.cameras.at(0));
+	let naming = $state<DetectionBox | null>(null);
 </script>
 
 <section class="page-narrow">
@@ -39,6 +46,33 @@
 			<option value={identity.name}></option>
 		{/each}
 	</datalist>
+
+	{#if camera}
+		<section class="flex flex-col gap-3" aria-labelledby="identities-live">
+			<h2 id="identities-live" class="text-base font-semibold">On camera now</h2>
+			<p class="text-sm text-muted-foreground">
+				Tap a box to say who it is. A box can be named a few seconds after it appears.
+			</p>
+			{#if data.cameras.length > 1}
+				<FilterChips
+					label="Camera"
+					required
+					options={data.cameras.map((item) => ({ value: item.id, label: item.label }))}
+					value={camera.id}
+					onChange={(value) => (cameraId = value)}
+				/>
+			{/if}
+			{#key camera.id}
+				<CameraPicture
+					id={camera.id}
+					label={camera.label}
+					monitored
+					onselect={(box) => (naming = box)}
+				/>
+			{/key}
+		</section>
+		<LiveNaming bind:box={naming} names="identity-names" />
+	{/if}
 
 	<section class="flex flex-col gap-3" aria-labelledby="identities-unnamed">
 		<h2 id="identities-unnamed" class="text-base font-semibold">To name</h2>

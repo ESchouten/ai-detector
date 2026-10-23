@@ -102,6 +102,14 @@ test('naming writes the whole names file the detector reads, and a name can be t
 	);
 	assert.equal(overview.namedDays, 2);
 
+	// A box on the live picture looks up the sighting it shows.
+	assert.deepEqual(await folder.sighting(id('3')), {
+		id: id('3'),
+		seen: '2026-10-02T13:00:00',
+		crops: 1,
+		name: '87'
+	});
+
 	await folder.unname([id('2')]);
 	assert.deepEqual(
 		(await folder.overview()).named.map((identity) => identity.ids),
@@ -116,6 +124,8 @@ test('only existing sightings can be named and only their pictures are served', 
 	await sighting(directory, id('1'), '2026-10-01T12:00:00');
 	await assert.rejects(folder.name([id('1'), id('9')], '412'), SightingMissingError);
 	await assert.rejects(readFile(path.join(directory, 'names.json')), { code: 'ENOENT' });
+	assert.equal(await folder.sighting(id('9')), null);
+	assert.equal(await folder.sighting('../sightings'), null);
 
 	assert.equal(
 		folder.picture(id('1'), 'crop-1.jpg'),

@@ -19,7 +19,7 @@ SightingId = Annotated[str, Field(pattern=r"^[a-f0-9]{32}$")]
 
 
 class SightingRecord(BaseModel):
-    """One tracked object's best pictures from one event."""
+    """One tracked object's best pictures, saved once it has been seen a while."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -29,9 +29,10 @@ class SightingRecord(BaseModel):
     camera: str = Field(pattern=r"^[a-f0-9]{12}$")
     label: str
     track: int
-    # Source time of the event's best observation, in this computer's local time.
+    # Source time the track was first seen, in this computer's local time.
     seen: str
-    event_id: str = Field(pattern=r"^[a-f0-9]{32}$")
+    # The event that saved it; tracks seen before their event are saved without.
+    event_id: str | None = Field(default=None, pattern=r"^[a-f0-9]{32}$")
     crops: int = Field(ge=1)
 
 

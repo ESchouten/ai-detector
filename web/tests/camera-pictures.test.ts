@@ -239,7 +239,16 @@ test('each camera retains its own rules and clears boxes on empty inference or a
 	await Promise.resolve();
 	const source = connections[0].source;
 	const boxes = [
-		{ x1: 10, y1: 20, x2: 300, y2: 400, label: 'mounting', confidence: 0.93, trackId: 7 }
+		{
+			x1: 10,
+			y1: 20,
+			x2: 300,
+			y2: 400,
+			label: 'mounting',
+			confidence: 0.93,
+			trackId: 7,
+			identity: null
+		}
 	];
 	source.frame('shed', 'detector-1', boxes);
 	source.frame('shed', 'detector-2');

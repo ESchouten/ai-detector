@@ -7,7 +7,7 @@ from time import monotonic, sleep, time
 import numpy as np
 
 from aidetector.adapters.live_preview import LivePreview, _atomic_json
-from aidetector.domain.models import BoundingBox, Observation
+from aidetector.domain.models import BoundingBox, Candidate, Individual, Observation
 
 
 def wait_for(condition):
@@ -94,6 +94,7 @@ def test_multiple_rules_publish_picture_size_and_boxes_and_overwrite(tmp_path):
                 "label": "cow",
                 "confidence": 0.9,
                 "trackId": 20,
+                "identity": None,
             }
         ]
         assert record["image"] == {"width": 24, "height": 16}
@@ -108,6 +109,49 @@ def test_multiple_rules_publish_picture_size_and_boxes_and_overwrite(tmp_path):
         )
         assert updated["boxes"][0]["trackId"] == 120
         assert len(list((tmp_path / "frames").iterdir())) == 2
+
+
+class Herd:
+    def __init__(self):
+        self.asked = []
+
+    def identity(self, source, track_id):
+        self.asked.append((source, track_id))
+        if track_id != 7:
+            return None
+        return Individual(
+            7, "cow", "a" * 32, (Candidate("412", 0.61), Candidate("233", 0.2)), True
+        )
+
+
+def test_tracked_boxes_carry_who_they_are(tmp_path):
+    key = lease(tmp_path, "camera")
+    herd = Herd()
+    publisher = LivePreview(tmp_path, interval=0.01)
+    publish = publisher.observer("detector-1", ("camera",), herd)
+    file = tmp_path / "frames" / f"{key}.detector-1.json"
+    with publisher.open():
+        wait_for(lambda: read_record(tmp_path / "session.json"))
+        publish("camera", observation(7))
+        record = wait_for(lambda: read_record(file))
+        assert record["boxes"][0]["identity"] == {
+            "sighting": "a" * 32,
+            "name": "412",
+            "candidates": [
+                {"name": "412", "score": 0.61},
+                {"name": "233", "score": 0.2},
+            ],
+        }
+        publish("camera", observation(None))
+        untracked = wait_for(
+            lambda: (
+                (result := read_record(file))
+                and result["boxes"][0]["trackId"] is None
+                and result
+            )
+        )
+        assert untracked["boxes"][0]["identity"] is None
+    assert herd.asked == [("camera", 7)]
 
 
 def test_slow_write_does_not_block_inference_and_keeps_only_latest_pending(

@@ -135,16 +135,18 @@ def _benchmark(arguments: argparse.Namespace) -> None:
 
 
 def enrolment_table(result: dict[str, Any]) -> str:
-    """One Markdown row per grouping similarity, adaptation and coat weight,
-    after the labelled ceiling.
+    """One Markdown row per grouping similarity, adaptation, coat weight and way
+    of naming, after the labelled ceiling.
 
     Day columns are means over the test days: sightings named (right when named),
     cows recognised at least once that day, and the right cow in the top 3.
+    Naming is `alone` or `jointly` with sightings in view at the same time, with
+    how many sightings that changed, and `anonymous` when unnamed groups compete.
     """
     lines = [
-        "| Gallery | Adapt | Coat | Groups | Pure | Taps | Taps 90% | Taps 100% "
-        "| Named | Cows a day | In top 3 | Wrong |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| Gallery | Adapt | Coat | Naming | Groups | Pure | Taps | Taps 90% "
+        "| Taps 100% | Named | Cows a day | In top 3 | Wrong |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     rows = [("labelled", {}, entry) for entry in result["labelled"]] + [
         (f"grouped at {entry['merge']}", entry, entry) for entry in result["grouped"]
@@ -152,8 +154,13 @@ def enrolment_table(result: dict[str, Any]) -> str:
     for label, enrolment, scored in rows:
         days = scored["mean"]
         milestones = enrolment.get("milestones", {})
+        naming = (
+            f"jointly ({scored['changed']} changed)"
+            if scored.get("jointly")
+            else "alone"
+        ) + (", anonymous" if scored.get("anonymous") else "")
         lines.append(
-            f"| {label} | {scored['adapt']} | {scored['coat']} "
+            f"| {label} | {scored['adapt']} | {scored['coat']} | {naming} "
             f"| {enrolment.get('groups', '–')} "
             f"| {_percent(enrolment.get('purity'))} | {enrolment.get('taps', '–')} "
             f"| {milestones.get('0.9') or '–'} | {milestones.get('1.0') or '–'} "
@@ -183,6 +190,9 @@ def _enroll(arguments: argparse.Namespace) -> None:
         gallery_crops=arguments.gallery_crops,
         adapts=tuple(Adaptation.parse(text) for text in arguments.adapt),
         check=arguments.check,
+        jointly=(False, True) if arguments.jointly else (False,),
+        times=arguments.times or "",
+        anonymous=(False, True) if arguments.anonymous else (False,),
     )
     crops = read_manifest(arguments.manifest)
     embedder = build(
@@ -503,6 +513,22 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
         default="split",
         help="how the install checks its threshold: the later half of its named "
         "sightings against the earlier, or every session against the others",
+    )
+    enroll.add_argument(
+        "--jointly",
+        action="store_true",
+        help="also name sightings in view at the same time together, so a name "
+        "goes to at most one of them (needs --times)",
+    )
+    enroll.add_argument(
+        "--times",
+        help="regular expression with named groups clip and frame, found in a "
+        "crop's path, telling which sightings are in view at the same time",
+    )
+    enroll.add_argument(
+        "--anonymous",
+        action="store_true",
+        help="also let the groups the farmer left unnamed compete as anonymous cows",
     )
     enroll.add_argument("--top", type=int, default=3, help="candidate cows re-checked")
     enroll.add_argument(

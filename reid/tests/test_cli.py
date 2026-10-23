@@ -111,11 +111,11 @@ def test_enroll_saves_the_simulation_and_prints_a_row_per_grouping(
     output = capsys.readouterr().out
     assert output.startswith("8 cows in 32 sightings while enrolling")
     assert (
-        "| labelled | none | 0.0 | – | – | – | – | – | 100.0 (100.0) | 100.0 "
-        "| 100.0 | 0 |" in output
+        "| labelled | none | 0.0 | alone | – | – | – | – | – | 100.0 (100.0) "
+        "| 100.0 | 100.0 | 0 |" in output
     )
-    assert "| grouped at 0.8 | none | 0.0 | 8 | 100.0 | 8 | 8 | 8 |" in output
-    assert "| grouped at 0.8 | none | 0.5 | 8 | 100.0 | 8 | 8 | 8 |" in output
+    assert "| grouped at 0.8 | none | 0.0 | alone | 8 | 100.0 | 8 | 8 | 8 |" in output
+    assert "| grouped at 0.8 | none | 0.5 | alone | 8 | 100.0 | 8 | 8 | 8 |" in output
 
 
 def test_training_crops_keep_cows_of_different_farms_apart(herd, tmp_path: Path):

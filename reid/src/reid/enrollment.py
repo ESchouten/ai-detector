@@ -8,9 +8,11 @@ after the cow most of it shows, and to score what happens on later days.
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
+from itertools import product
 from statistics import mean, median
 from typing import Any
 
@@ -56,6 +58,14 @@ class Options:
     # thresholds; `rotate` asks every session against the others and sets one
     # threshold on all the answers pooled.
     check: str = "split"
+    # Name sightings in view at the same time together, so that a name goes to
+    # at most one of them; each is simulated in turn. `times` finds a crop's
+    # `clip` and `frame` in its path, as named groups of a regular expression.
+    jointly: tuple[bool, ...] = (False,)
+    times: str = ""
+    # Let the groups the farmer left unnamed compete as anonymous cows, so a
+    # sighting most like one of them stays unnamed; each is simulated in turn.
+    anonymous: tuple[bool, ...] = (False,)
     strangers: float = 0.25
     folds: int = 3
     seed: int = 0
@@ -77,6 +87,67 @@ def sighting_vectors(
     """One L2-normalised embedding per sighting: the mean of its crops'."""
     means = np.stack([vectors[list(indices)].mean(axis=0) for indices in seen])
     return means / np.linalg.norm(means, axis=1, keepdims=True)
+
+
+def together(
+    crops: Sequence[Crop], seen: Sequence[Sequence[int]], times: str
+) -> list[set[int]]:
+    """For each sighting, the others in view at the same time: in the same clip
+    of the same session, with overlapping frames.
+
+    `times` finds a crop's `clip` and `frame` in its path; a sighting with a
+    crop it doesn't match is in view with none.
+    """
+    pattern = re.compile(times)
+    spans: dict[tuple[str, str], list[tuple[int, int, int]]] = {}
+    for sighting, indices in enumerate(seen):
+        found = [pattern.search(crops[i].path.as_posix()) for i in indices]
+        matches = [match for match in found if match is not None]
+        if len(matches) < len(indices):
+            continue
+        frames = [int(match["frame"]) for match in matches]
+        clip = (crops[indices[0]].session, matches[0]["clip"])
+        spans.setdefault(clip, []).append((min(frames), max(frames), sighting))
+    others: list[set[int]] = [set() for _ in seen]
+    for span in spans.values():
+        for position, (start, end, sighting) in enumerate(span):
+            for other_start, other_end, other in span[position + 1 :]:
+                if start <= other_end and other_start <= end:
+                    others[sighting].add(other)
+                    others[other].add(sighting)
+    return others
+
+
+def named_jointly(
+    scores: NDArray[np.float32],
+    real: NDArray[np.bool_],
+    threshold: float | None,
+    margin: float,
+    others: Sequence[set[int]],
+) -> NDArray[np.intp]:
+    """The name each sighting gets, -1 for none; none at all without a threshold.
+
+    The surest sightings are named first, and a name given to one is out of
+    the running for those in view at the same time (`others`), also as their
+    runner-up. Without others in view this is naming each sighting alone.
+    `scores` are before the runner-up margin; only `real` names are given, the
+    others are anonymous cows that compete.
+    """
+    given = np.full(len(scores), -1)
+    if threshold is None:
+        return given
+    floor = scores.min()
+    taken = np.zeros(scores.shape, dtype=bool)
+    order = np.argsort(-runner_up_margin(scores, margin).max(axis=1), kind="stable")
+    for sighting in order:
+        row = np.where(taken[sighting], floor, scores[sighting])
+        row = runner_up_margin(row[None], margin)[0]
+        best = int(np.argmax(row))
+        if row[best] >= threshold and real[best]:
+            given[sighting] = best
+            for other in others[sighting]:
+                taken[other, best] = True
+    return given
 
 
 def merge_tree(similarity: NDArray[np.floating]) -> list[tuple[int, int, float]]:
@@ -221,13 +292,17 @@ class _Scored:
     top: NDArray[np.intp]
     matches: NDArray[np.float32] | None
 
-    def fused(self, weight: float, options: Options) -> NDArray[np.float32]:
-        """Scores with the coat score added at `weight` and the margin taken off."""
+    def coated(self, weight: float, options: Options) -> NDArray[np.float32]:
+        """Scores with the coat score added at `weight`."""
         scores = self.deep.copy()
         if weight and self.matches is not None:
             coat = np.minimum(self.matches, options.saturation) / options.saturation
             scores[np.arange(len(scores))[:, None], self.top] += weight * coat
-        return runner_up_margin(scores, options.margin)
+        return scores
+
+    def fused(self, weight: float, options: Options) -> NDArray[np.float32]:
+        """Scores with the coat score added at `weight` and the margin taken off."""
+        return runner_up_margin(self.coated(weight, options), options.margin)
 
 
 def _score(
@@ -323,6 +398,11 @@ def _thresholds(
     return found
 
 
+def _anonymous(name: str) -> bool:
+    """An unnamed group of enrolment sightings, competing as a cow of its own."""
+    return name.startswith("\0")
+
+
 def _days(
     crops: Sequence[Crop],
     vectors: NDArray[np.float32],
@@ -334,18 +414,22 @@ def _days(
     transform: Transform,
     options: Options,
 ) -> list[dict[str, Any]]:
-    """Per coat weight, each later day's sightings named against the gallery at
-    the install's own threshold.
+    """Per coat weight and way of naming, each later day's sightings named
+    against the gallery at the install's own threshold.
 
     `transform` is the adaptation as learnt from every enrolment sighting.
+    Anonymous cows in the gallery (see `_anonymous`) compete for sightings but
+    are never given, and the install checks its threshold without them.
     """
     level = "track" if any(crops[i].track for i in queries) else "crop"
+    checked = [
+        (i, name)
+        for i, name in zip(gallery, names, strict=True)
+        if not _anonymous(name)
+    ]
     thresholds = _thresholds(
-        [
-            replace(crops[i], identity=name)
-            for i, name in zip(gallery, names, strict=True)
-        ],
-        vectors[list(gallery)],
+        [replace(crops[i], identity=name) for i, name in checked],
+        vectors[[i for i, _ in checked]],
         matcher,
         adaptation,
         options,
@@ -355,18 +439,22 @@ def _days(
     )
     sessions = np.array([crops[s[0]].session for s in scored.seen])
     cows = np.array([crops[s[0]].identity for s in scored.seen])
-    in_gallery = np.isin(cows, scored.names)
+    real = np.array([not _anonymous(name) for name in scored.names])
+    in_gallery = np.isin(cows, scored.names[real])
+    alone: list[set[int]] = [set() for _ in scored.seen]
+    others = together(crops, scored.seen, options.times) if options.times else alone
     results = []
-    for weight in options.coats:
-        fused = scored.fused(weight, options)
-        ranked = scored.names[np.argsort(-fused, axis=1, kind="stable")[:, :3]]
+    for weight, jointly in product(options.coats, options.jointly):
+        coated = scored.coated(weight, options)
+        ranks = np.argsort(-np.where(real, coated, -np.inf), axis=1, kind="stable")
+        ranked = scored.names[ranks[:, :3]]
         threshold = thresholds[weight]
-        named = (
-            fused.max(axis=1) >= threshold
-            if threshold is not None
-            else np.zeros(len(cows), dtype=bool)
+        given = named_jointly(
+            coated, real, threshold, options.margin, others if jointly else alone
         )
-        right = named & (ranked[:, 0] == cows)
+        apart = named_jointly(coated, real, threshold, options.margin, alone)
+        named = given >= 0
+        right = named & (scored.names[given] == cows)
         top3 = (ranked == cows[:, None]).any(axis=1)
         days: list[dict[str, Any]] = []
         for session in sorted(set(sessions)):
@@ -394,6 +482,9 @@ def _days(
         results.append(
             {
                 "coat": weight,
+                "jointly": jointly,
+                # Sightings named otherwise than each on its own would be.
+                "changed": int((given != apart).sum()),
                 "level": level,
                 "threshold": threshold,
                 "days": days,
@@ -431,6 +522,8 @@ def simulate(
         raise ValueError("A coat weight above 0 needs a matcher")
     if options.check not in ("split", "rotate"):
         raise ValueError(f"Unknown threshold check {options.check!r}")
+    if any(options.jointly) and not options.times:
+        raise ValueError("Naming jointly needs the times pattern")
     period = set(sessions[: options.enrol_sessions])
     enrol = [i for i, crop in enumerate(crops) if crop.session in period]
     later = [i for i, crop in enumerate(crops) if crop.session not in period]
@@ -440,37 +533,58 @@ def simulate(
     means = sighting_vectors(vectors, seen)
     merges = merge_tree(similarities(means, means))
 
-    def scored(named: Sequence[str]) -> list[dict[str, Any]]:
-        """Every adaptation and coat weight, with `named` the name of each
-        enrolment sighting, empty where it was left unnamed.
+    def scored(
+        named: Sequence[str], groups: Sequence[int] | None = None
+    ) -> list[dict[str, Any]]:
+        """Every adaptation, coat weight and way of naming, with `named` the name
+        of each enrolment sighting, empty where it was left unnamed. With the
+        sightings' `groups`, unnamed groups can compete as anonymous cows.
         """
-        gallery = [i for s, name in zip(seen, named, strict=True) if name for i in s]
-        names = [name for s, name in zip(seen, named, strict=True) if name for _ in s]
-        results = []
-        for adaptation in options.adapts:
-            transform = fit(adaptation, vectors, seen, named)
-            results.extend(
-                {"adapt": str(adaptation), **entry}
-                for entry in _days(
-                    crops,
-                    vectors,
-                    gallery,
-                    names,
-                    later,
-                    matcher,
-                    adaptation,
-                    transform,
-                    options,
+        variants = [(False, named)]
+        if groups is not None:
+            variants = [
+                (
+                    anonymous,
+                    [
+                        name or f"\0{group}"
+                        for name, group in zip(named, groups, strict=True)
+                    ]
+                    if anonymous
+                    else named,
                 )
-            )
+                for anonymous in options.anonymous
+            ]
+        results = []
+        for anonymous, competing in variants:
+            gallery = [
+                i for s, name in zip(seen, competing, strict=True) if name for i in s
+            ]
+            names = [
+                name for s, name in zip(seen, competing, strict=True) if name for _ in s
+            ]
+            for adaptation in options.adapts:
+                transform = fit(adaptation, vectors, seen, named)
+                results.extend(
+                    {"adapt": str(adaptation), "anonymous": anonymous, **entry}
+                    for entry in _days(
+                        crops,
+                        vectors,
+                        gallery,
+                        names,
+                        later,
+                        matcher,
+                        adaptation,
+                        transform,
+                        options,
+                    )
+                )
         return results
 
     labelled = scored(cows)
     grouped = []
     for merge in options.merges:
-        enrolment = play_farmer(
-            cut(merges, len(seen), merge).tolist(), cows, sizes, options.goal
-        )
+        groups = cut(merges, len(seen), merge).tolist()
+        enrolment = play_farmer(groups, cows, sizes, options.goal)
         farmer = {
             "merge": merge,
             "groups": enrolment.groups,
@@ -491,7 +605,7 @@ def simulate(
                 )
             ),
         }
-        grouped.extend({**farmer, **entry} for entry in scored(enrolment.names))
+        grouped.extend({**farmer, **entry} for entry in scored(enrolment.names, groups))
     return {
         "crops": len(crops),
         "identities": len({crop.identity for crop in crops}),
@@ -512,6 +626,9 @@ def simulate(
             "matcher": matcher.name if matcher is not None else None,
             "adapts": [str(adaptation) for adaptation in options.adapts],
             "check": options.check,
+            "jointly": list(options.jointly),
+            "times": options.times,
+            "anonymous": list(options.anonymous),
         },
         "labelled": labelled,
         "grouped": grouped,

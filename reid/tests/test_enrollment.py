@@ -10,9 +10,11 @@ from reid.enrollment import (
     _thresholds,
     cut,
     merge_tree,
+    named_jointly,
     play_farmer,
     sightings,
     simulate,
+    together,
 )
 from reid.manifest import Crop
 from reid.splits import Split
@@ -192,3 +194,75 @@ def test_the_install_can_check_its_threshold_on_every_enrolment_day(herd):
         assert entry["mean"]["wrong"] == 0
     with pytest.raises(ValueError, match="threshold check"):
         simulate(herd, vectors, Options(check="guess"))
+
+
+# In the herd's paths, the day is the clip and the track number the moment.
+TIMES = r"/d(?P<clip>\d)-t(?P<frame>\d)-"
+
+
+def test_sightings_of_the_same_moment_are_in_view_together(herd):
+    seen = sightings(herd, range(len(herd)))
+    others = together(herd, seen, TIMES)
+
+    # cow0's first track on the first day is seen with every other cow's first
+    # track that day, and with nothing else.
+    first = seen.index([0, 1, 2])
+    assert {herd[seen[other][0]].path.name for other in others[first]} == {
+        "d0-t0-0.png"
+    }
+    assert len(others[first]) == 7
+    assert together(herd, seen, r"/nothing-matches") == [set()] * len(seen)
+
+
+def test_a_name_goes_to_one_of_the_sightings_in_view_together():
+    # Both sightings look most like 412; the first more so. The third is seen
+    # at another time.
+    scores = np.array(
+        [[0.9, 0.2, 0.1], [0.7, 0.6, 0.1], [0.7, 0.6, 0.1]], dtype=np.float32
+    )
+    real = np.array([True, True, True])
+    others = [{1}, {0}, set()]
+
+    jointly = named_jointly(scores, real, 0.45, 0.5, others)
+    alone = named_jointly(scores, real, 0.45, 0.5, [set(), set(), set()])
+
+    # Alone, the second is too close between 412 and 233 to be named. With 412
+    # taken by the first, 233 is left without a rival.
+    assert alone.tolist() == [0, -1, -1]
+    assert jointly.tolist() == [0, 1, -1]
+
+
+def test_an_anonymous_cow_competes_but_is_never_given():
+    scores = np.array([[0.9, 0.2], [0.2, 0.9]], dtype=np.float32)
+    real = np.array([True, False])
+
+    assert named_jointly(scores, real, 0.5, 0.0, [set(), set()]).tolist() == [0, -1]
+
+
+def test_naming_jointly_and_with_anonymous_cows_is_simulated_beside_naming_alone(
+    herd,
+):
+    vectors = embeddings(herd, FakeEmbedder(noise=0.5))
+    options = Options(
+        merges=(0.8,),
+        goal=0.7,
+        margin=0.75,
+        jointly=(False, True),
+        times=TIMES,
+        anonymous=(False, True),
+    )
+
+    result = simulate(herd, vectors, options)
+
+    assert [(e["jointly"], e["anonymous"]) for e in result["labelled"]] == [
+        (False, False),
+        (True, False),
+    ]
+    entries = {(e["jointly"], e["anonymous"]): e for e in result["grouped"]}
+    assert set(entries) == {(False, False), (True, False), (False, True), (True, True)}
+    assert entries[(False, False)]["changed"] == 0
+    alone, jointly = entries[(False, False)], entries[(True, False)]
+    assert jointly["changed"] > 0
+    assert jointly["mean"]["named"] >= alone["mean"]["named"]
+    with pytest.raises(ValueError, match="times"):
+        simulate(herd, vectors, Options(jointly=(True,)))

@@ -51,7 +51,7 @@
 		<section class="flex flex-col gap-3" aria-labelledby="identities-live">
 			<h2 id="identities-live" class="text-base font-semibold">On camera now</h2>
 			<p class="text-sm text-muted-foreground">
-				Tap a box to say who it is. A box can be named a few seconds after it appears.
+				Tap one in the picture to say who it is. It can be named a few seconds after it appears.
 			</p>
 			{#if data.cameras.length > 1}
 				<FilterChips
@@ -68,6 +68,7 @@
 					label={camera.label}
 					monitored
 					onselect={(box) => (naming = box)}
+					selected={naming?.identity?.sighting}
 				/>
 			{/key}
 		</section>

@@ -29,6 +29,8 @@ export const frameSchema = v.object({
 			label: v.nullable(v.string()),
 			confidence: v.nullable(coordinate),
 			trackId: v.nullable(v.pipe(v.number(), v.integer())),
+			/** Points around a tracked individual when the detector's model segments. */
+			outline: v.array(v.tuple([coordinate, coordinate])),
 			identity: v.nullable(identitySchema)
 		})
 	)
@@ -44,6 +46,20 @@ export type LivePreviewFrame = v.InferOutput<typeof frameSchema> & {
 export type CameraOverlayFrame = LivePreviewFrame & { cameraId: string };
 
 export type DetectionBox = LivePreviewFrame['boxes'][number];
+
+/** The points to draw around a box: its outline, or else its corners. */
+export function boxOutline(box: DetectionBox): string {
+	const points =
+		box.outline.length > 2
+			? box.outline
+			: [
+					[box.x1, box.y1],
+					[box.x2, box.y1],
+					[box.x2, box.y2],
+					[box.x1, box.y2]
+				];
+	return points.map(([x, y]) => `${x},${y}`).join(' ');
+}
 
 /** `412` when recognised, `412?` when it only resembles 412, nothing before anything is named. */
 export function identityLabel(identity: DetectionBox['identity']): string | null {

@@ -15,7 +15,8 @@
 		label,
 		monitored = false,
 		caption,
-		onselect
+		onselect,
+		selected
 	}: {
 		id: string;
 		label: string;
@@ -24,6 +25,8 @@
 		caption?: Snippet;
 		/** Makes detection boxes with an identity buttons, for naming who they are. */
 		onselect?: (box: DetectionBox) => void;
+		/** The sighting being named; its outline stands out. */
+		selected?: string;
 	} = $props();
 	let failed = $state(false);
 	let picture = $state<string>();
@@ -76,7 +79,7 @@
 	{#if active && picture && !failed}
 		<img src={picture} alt={`${label} live picture`} class="size-full object-contain" />
 	{/if}
-	{#if active && !failed && monitored}<CameraDetections {id} {label} {onselect} />{/if}
+	{#if active && !failed && monitored}<CameraDetections {id} {label} {onselect} {selected} />{/if}
 	{#if active && !failed && !picture}
 		<p
 			role="status"

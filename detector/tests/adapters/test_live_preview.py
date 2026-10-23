@@ -42,12 +42,12 @@ def lease(directory, source, value=None):
     return source_key
 
 
-def observation(track_id=17):
+def observation(track_id=17, outline=()):
     return Observation(
         datetime(2026, 1, 1),
         np.zeros((16, 24, 3), dtype=np.uint8),
         {"cow": 0.9},
-        (BoundingBox(1, 2, 10, 12, "cow", 0.9, track_id),),
+        (BoundingBox(1, 2, 10, 12, "cow", 0.9, track_id, outline),),
     )
 
 
@@ -94,6 +94,7 @@ def test_multiple_rules_publish_picture_size_and_boxes_and_overwrite(tmp_path):
                 "label": "cow",
                 "confidence": 0.9,
                 "trackId": 20,
+                "outline": [],
                 "identity": None,
             }
         ]
@@ -152,6 +153,25 @@ def test_tracked_boxes_carry_who_they_are(tmp_path):
         )
         assert untracked["boxes"][0]["identity"] is None
     assert herd.asked == [("camera", 7)]
+
+
+def test_outlines_are_drawn_with_fewer_points(tmp_path):
+    key = lease(tmp_path, "camera")
+    publisher = LivePreview(tmp_path, interval=0.01)
+    publish = publisher.observer("detector-1", ("camera",))
+    file = tmp_path / "frames" / f"{key}.detector-1.json"
+    # A square traced pixel by pixel along its sides.
+    square = (
+        *((x, 2) for x in range(2, 12)),
+        *((12, y) for y in range(2, 12)),
+        *((x, 12) for x in range(12, 2, -1)),
+        *((2, y) for y in range(12, 2, -1)),
+    )
+    with publisher.open():
+        wait_for(lambda: read_record(tmp_path / "session.json"))
+        publish("camera", observation(outline=square))
+        outline = wait_for(lambda: read_record(file))["boxes"][0]["outline"]
+    assert sorted(outline) == [[2, 2], [2, 12], [12, 2], [12, 12]]
 
 
 def test_slow_write_does_not_block_inference_and_keeps_only_latest_pending(

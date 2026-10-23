@@ -10,12 +10,15 @@
 	let {
 		id,
 		label,
-		onselect
+		onselect,
+		selected
 	}: {
 		id: string;
 		label: string;
 		/** Makes boxes with an identity buttons, for naming who they are. */
 		onselect?: (box: DetectionBox) => void;
+		/** The sighting being named; its outline stands out. */
+		selected?: string;
 	} = $props();
 	let frames = $state<CameraOverlayFrame[]>([]);
 	let width = $state(0);
@@ -45,6 +48,7 @@
 					{frame}
 					displayWidth={Math.min(width, (height * frame.image.width) / frame.image.height)}
 					{onselect}
+					{selected}
 				/>
 			</svg>
 		{/if}

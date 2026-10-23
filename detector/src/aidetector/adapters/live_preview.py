@@ -11,11 +11,16 @@ from threading import Event, Lock, Thread
 from time import monotonic, time
 from uuid import uuid4
 
+import cv2
+import numpy as np
+
 from aidetector.application import ports
 from aidetector.domain.models import Individual, Observation
 
 logger = logging.getLogger(__name__)
 _FRAME_NAME = re.compile(r"[a-f0-9]{64}\.detector-[1-9]\d*\.(?:json|[a-f0-9]{32}\.tmp)")
+# Pixels an outline may stray from the segmentation's, to draw it with fewer points.
+OUTLINE_TOLERANCE = 2.0
 
 
 def _identity(individual: Individual | None) -> dict | None:
@@ -29,6 +34,15 @@ def _identity(individual: Individual | None) -> dict | None:
             for candidate in individual.candidates
         ],
     }
+
+
+def _outline(points: tuple[tuple[int, int], ...]) -> list[list[int]]:
+    if not points:
+        return []
+    simple = cv2.approxPolyDP(
+        np.asarray(points, np.int32), OUTLINE_TOLERANCE, closed=True
+    )
+    return simple.reshape(-1, 2).tolist()
 
 
 def _atomic_json(path: Path, record: dict) -> None:
@@ -199,6 +213,7 @@ class LivePreview:
                     "label": box.label,
                     "confidence": box.confidence,
                     "trackId": box.track_id,
+                    "outline": _outline(box.outline),
                     "identity": _identity(
                         identities.identity(source, box.track_id)
                         if identities is not None and box.track_id is not None

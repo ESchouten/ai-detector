@@ -5,7 +5,7 @@ import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
 import writeFileAtomic from 'write-file-atomic';
-import { detectionBoxLabel } from '../src/lib/live-preview.ts';
+import { boxOutline, detectionBoxLabel } from '../src/lib/live-preview.ts';
 import {
 	createCameraOverlayStream,
 	type LivePreviewCamera
@@ -26,6 +26,7 @@ const box = {
 	label: 'cow',
 	confidence: 0.9,
 	trackId: 17,
+	outline: [],
 	identity: null
 };
 
@@ -213,6 +214,16 @@ test('a box shows the name it is recognised by, and only suggests one when unsur
 		detectionBoxLabel({ ...box, identity: { ...identity, candidates: [] } }),
 		'cow · 90% · #17'
 	);
+});
+
+test('an outlined box is drawn along its outline, any other along its sides', () => {
+	assert.equal(boxOutline(box), '1,2 10,2 10,12 1,12');
+	const outline: [number, number][] = [
+		[3, 2],
+		[10, 7],
+		[3, 12]
+	];
+	assert.equal(boxOutline({ ...box, outline }), '3,2 10,7 3,12');
 });
 
 test(

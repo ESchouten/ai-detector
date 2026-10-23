@@ -3866,10 +3866,6 @@ msgstr "{0} benennen"
 msgid "On camera now"
 msgstr "Jetzt im Bild"
 
-#: src/routes/(admin)/identities/+page.svelte
-msgid "Tap a box to say who it is. A box can be named a few seconds after it appears."
-msgstr "Tippen Sie auf einen Rahmen, um zu sagen, wer es ist. Ein Rahmen lässt sich einige Sekunden nach seinem Erscheinen benennen."
-
 #: src/routes/(admin)/identities/live-naming.svelte
 msgid "Could not save the name. Try again."
 msgstr "Name konnte nicht gespeichert werden. Versuchen Sie es erneut."
@@ -3895,3 +3891,7 @@ msgstr "Wer ist das?"
 #: src/routes/(admin)/identities/live-naming.svelte
 msgid "Its pictures were removed. Wait for the box to show it again."
 msgstr "Die Bilder dazu wurden entfernt. Warten Sie, bis der Rahmen es wieder zeigt."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
+msgstr "Tippen Sie im Bild auf eines, um zu sagen, wer es ist. Ein paar Sekunden nach dem Erscheinen kann es benannt werden."

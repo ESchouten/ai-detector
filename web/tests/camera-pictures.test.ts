@@ -247,6 +247,7 @@ test('each camera retains its own rules and clears boxes on empty inference or a
 			label: 'mounting',
 			confidence: 0.93,
 			trackId: 7,
+			outline: [],
 			identity: null
 		}
 	];

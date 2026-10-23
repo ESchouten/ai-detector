@@ -1,4 +1,5 @@
 import logging
+from collections.abc import Sequence
 from contextlib import ExitStack
 from dataclasses import replace
 from pathlib import Path
@@ -25,9 +26,9 @@ from aidetector.adapters.sources.streams import StreamPool, StreamSource
 from aidetector.application.delivery import Destination, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import (
-    EventIdentifier,
     EventValidator,
     ObjectDetector,
+    PublishObservation,
     ReportStatus,
     StatusEvent,
     ignore_observation,
@@ -40,6 +41,7 @@ from aidetector.configuration import (
     SourceConfig,
     source_kind,
 )
+from aidetector.domain.models import Observation
 from aidetector.domain.policy import Cooldown, EventPolicy, ExportPolicy
 from aidetector.runtime import DetectorWorker, RunStats, run_detectors
 from aidetector.version import TYPE
@@ -166,6 +168,44 @@ def _model_requirements(
     )
 
 
+def _open_herd(
+    config: IndividualsConfig | None,
+    model: str | None,
+    data_directory: Path,
+    resources: ExitStack,
+) -> Herd | None:
+    if config is None or model is None:
+        return None
+    herd = Herd(
+        data_directory / "individuals", EmbeddingModel(model, model_key(model)), config
+    )
+    # Registered before the detectors, so it saves their last sightings after them.
+    resources.callback(herd.close)
+    return herd
+
+
+def _publisher(
+    preview: LivePreview | None,
+    rule_id: str,
+    sources: Sequence[str],
+    identifier: TrackIdentifier | None,
+) -> PublishObservation:
+    """Live pictures for viewers, and every track for recognising individuals."""
+    show = (
+        preview.observer(rule_id, sources, identifier)
+        if preview is not None
+        else ignore_observation
+    )
+    if identifier is None:
+        return show
+
+    def publish(source: str, observation: Observation) -> None:
+        identifier.observe(source, observation)
+        show(source, observation)
+
+    return publish
+
+
 def run_application(
     config: Config,
     config_directory: Path,
@@ -210,14 +250,8 @@ def run_application(
                     "TensorRT was preferred but no NVIDIA GPU is available to this "
                     "process; detection continues without it"
                 )
-        herd = (
-            Herd(
-                data_directory / "individuals",
-                EmbeddingModel(individuals_model, model_key(individuals_model)),
-                config.individuals,
-            )
-            if config.individuals is not None and individuals_model is not None
-            else None
+        herd = _open_herd(
+            config.individuals, individuals_model, data_directory, resources
         )
         streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None
@@ -281,18 +315,16 @@ def run_application(
                 from aidetector.adapters.vlm import VlmValidator
 
                 validator = VlmValidator(settings.active_vlm, media)
-            identifier: EventIdentifier | None = (
+            identifier = (
                 TrackIdentifier(herd)
-                if herd is not None and settings.yolo and settings.yolo.tracking
+                if herd is not None and settings.yolo and settings.yolo.outlines_tracks
                 else None
             )
             cooldown = Cooldown(
                 settings.yolo.cooldown if settings.yolo is not None else 0
             )
-            publish = (
-                preview.observer(f"detector-{index}", source.sources)
-                if preview is not None
-                else ignore_observation
+            publish = _publisher(
+                preview, f"detector-{index}", source.sources, identifier
             )
             pipeline = DetectionPipeline(detector, event_policy, rule_status, publish)
             delivery = EventDelivery(

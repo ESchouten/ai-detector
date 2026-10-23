@@ -196,6 +196,8 @@ msgstr "Öffnen Sie das Dashboard über localhost auf dem Computer, auf dem AI D
 #: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "Kamera"
 
@@ -1305,6 +1307,7 @@ msgstr "Aktuelle Verbindung behalten"
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Wird gespeichert…"
@@ -2251,6 +2254,7 @@ msgid "Please wait…"
 msgstr "Bitte warten…"
 
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Speichern"
@@ -3806,10 +3810,12 @@ msgid_plural "# more sightings look like these."
 msgstr[0] "# weitere Sichtung sieht ähnlich aus."
 msgstr[1] "# weitere Sichtungen sehen ähnlich aus."
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "Ähnelt am meisten"
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "Name oder Nummer"
@@ -3840,13 +3846,52 @@ msgid "Alerts only suggest names until named sightings come from at least two da
 msgstr "Solange die benannten Sichtungen nicht von mindestens zwei Tagen stammen, schlagen Benachrichtigungen nur Namen vor. Danach nennen sie die Identitäten, bei denen sie sicher sind."
 
 #: src/routes/(admin)/identities/+page.svelte
-msgid "Nothing to name. New sightings appear here when a detector with tracking records an individual."
-msgstr "Nichts zu benennen. Neue Sichtungen erscheinen hier, sobald ein Detektor mit Tracking ein Individuum aufnimmt."
-
-#: src/routes/(admin)/identities/+page.svelte
 msgid "No identities named yet."
 msgstr "Noch keine Identitäten benannt."
 
 #: src/routes/(admin)/identities/+page.svelte
 msgid "Named identities"
 msgstr "Benannte Identitäten"
+
+#. 0: detectionBoxLabel(box)
+#: src/lib/components/detection-boxes.svelte
+msgid "Name {0}"
+msgstr "{0} benennen"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "On camera now"
+msgstr "Jetzt im Bild"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Could not save the name. Try again."
+msgstr "Name konnte nicht gespeichert werden. Versuchen Sie es erneut."
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Shown as {0}. Enter another name or number if that is wrong."
+msgstr "Angezeigt als {0}. Geben Sie einen anderen Namen oder eine andere Nummer ein, falls das nicht stimmt."
+
+#. 0: identity.candidates[0].name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Looks most like {0}, but not enough to be sure."
+msgstr "Ähnelt am meisten {0}, aber nicht genug, um sicher zu sein."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Give it a name or number; the camera then recognises it."
+msgstr "Geben Sie ihm einen Namen oder eine Nummer; die Kamera erkennt es dann wieder."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Who is this?"
+msgstr "Wer ist das?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Its pictures were removed. Wait for the box to show it again."
+msgstr "Die Bilder dazu wurden entfernt. Warten Sie, bis der Rahmen es wieder zeigt."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
+msgstr "Tippen Sie im Bild auf eines, um zu sagen, wer es ist. Ein paar Sekunden nach dem Erscheinen kann es benannt werden."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
+msgstr "Nichts zu benennen. Neue Sichtungen erscheinen hier, sobald ein Detektor mit Tracking und einem Segmentierungsmodell ein Individuum aufnimmt."

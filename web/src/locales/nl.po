@@ -196,6 +196,8 @@ msgstr "Open het dashboard via localhost op de computer waarop AI Detector draai
 #: src/lib/remote/camera.remote.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "Camera"
 
@@ -1305,6 +1307,7 @@ msgstr "Huidige verbinding behouden"
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Opslaan…"
@@ -2251,6 +2254,7 @@ msgid "Please wait…"
 msgstr "Even geduld…"
 
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Opslaan"
@@ -3806,10 +3810,12 @@ msgid_plural "# more sightings look like these."
 msgstr[0] "Nog # waarneming lijkt hierop."
 msgstr[1] "Nog # waarnemingen lijken hierop."
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "Lijkt het meest op"
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "Naam of nummer"
@@ -3840,13 +3846,52 @@ msgid "Alerts only suggest names until named sightings come from at least two da
 msgstr "Zolang de benoemde waarnemingen niet van minstens twee dagen komen, stellen meldingen alleen namen voor. Daarna noemen ze de identiteiten waarvan ze zeker zijn."
 
 #: src/routes/(admin)/identities/+page.svelte
-msgid "Nothing to name. New sightings appear here when a detector with tracking records an individual."
-msgstr "Niets te benoemen. Nieuwe waarnemingen verschijnen hier zodra een detector met tracking een individu opneemt."
-
-#: src/routes/(admin)/identities/+page.svelte
 msgid "No identities named yet."
 msgstr "Nog geen identiteiten benoemd."
 
 #: src/routes/(admin)/identities/+page.svelte
 msgid "Named identities"
 msgstr "Benoemde identiteiten"
+
+#. 0: detectionBoxLabel(box)
+#: src/lib/components/detection-boxes.svelte
+msgid "Name {0}"
+msgstr "{0} een naam geven"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "On camera now"
+msgstr "Nu in beeld"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Could not save the name. Try again."
+msgstr "Naam kon niet worden opgeslagen. Probeer het opnieuw."
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Shown as {0}. Enter another name or number if that is wrong."
+msgstr "Getoond als {0}. Vul een andere naam of een ander nummer in als dat niet klopt."
+
+#. 0: identity.candidates[0].name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Looks most like {0}, but not enough to be sure."
+msgstr "Lijkt het meest op {0}, maar niet genoeg om zeker te zijn."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Give it a name or number; the camera then recognises it."
+msgstr "Geef het een naam of nummer; de camera herkent het daarna."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Who is this?"
+msgstr "Wie is dit?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Its pictures were removed. Wait for the box to show it again."
+msgstr "De foto’s ervan zijn verwijderd. Wacht tot het kader het opnieuw toont."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
+msgstr "Tik er een aan in het beeld om te zeggen wie het is. Een paar seconden nadat het in beeld komt, kan het een naam krijgen."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
+msgstr "Niets te benoemen. Nieuwe waarnemingen verschijnen hier zodra een detector met tracking en een segmentatiemodel een individu opneemt."

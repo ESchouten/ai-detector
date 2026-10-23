@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { resolve } from '$app/paths';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { plural, recentMoment } from '$lib/format';
 	import type { SightingGroup } from '$lib/individuals';
+	import SightingPicture from './sighting-picture.svelte';
 
 	let {
 		group,
@@ -46,12 +46,10 @@
 					onclick={() => toggle(sighting.id)}
 					class="relative block aspect-square w-full overflow-hidden rounded-lg bg-media outline-none focus-visible:ring-[3px] focus-visible:ring-ring/60"
 				>
-					<img
-						src={resolve(`/identities/${sighting.id}/crop-1.jpg`)}
-						alt=""
+					<SightingPicture
+						{sighting}
 						loading="lazy"
-						decoding="async"
-						class={['size-full object-contain transition-opacity', out && 'opacity-30']}
+						class={['transition-opacity', out && 'opacity-30']}
 					/>
 					{#if out}
 						<span

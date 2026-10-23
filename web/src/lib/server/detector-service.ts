@@ -10,6 +10,8 @@ import { ManagedDetector } from './managed-detector';
 import { installationNotes, noteOutages } from './installation-notes';
 import type { RuntimeStatus } from '../runtime';
 import type { Configuration } from '../schema';
+import { CameraRelocation } from './cameras/relocation';
+import { configuration } from './configuration';
 import { outageWatch } from './outage-alerts';
 import { diskSpace } from './storage';
 import { recordings } from './recordings';
@@ -79,6 +81,16 @@ async function followMonitoring(
 		// The time the application did not run is an outage only if monitoring was switched on.
 		notes.monitoring === true ? stopped?.getTime() : undefined
 	);
+	const relocation = new CameraRelocation({
+		monitored,
+		directory: DATA_DIRECTORY,
+		settings,
+		remember: (id, source, device) => configuration.rememberCameraDevice(id, source, device),
+		relocate: (moves) => configuration.relocateCameras(moves),
+		send: ({ token, chat }, text, silent) => sendTelegramNotice(token, chat, text, silent),
+		log: (message) => webLog.info(message),
+		warn: (message, error) => webLog.warn(message, error)
+	});
 	// Unknown at first, so that a shell that outlived an earlier server always hears the state.
 	let awake: boolean | undefined;
 	const timer = setInterval(() => {
@@ -94,6 +106,7 @@ async function followMonitoring(
 		} catch (error) {
 			webLog.warn('Could not follow the cameras for outage notices', error);
 		}
+		void relocation.sample();
 	}, 10000);
 	timer.unref();
 }

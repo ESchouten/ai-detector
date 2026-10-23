@@ -87,3 +87,10 @@ export function cameraSoftwareMissing(): CameraConnectionError {
 		'The camera software is missing. Repair or reinstall AI Detector and try again.'
 	);
 }
+
+/** A camera address or stream at another host, with its port, path and login kept. */
+export function movedSource(value: string, host: string): string {
+	const moved = new URL(value);
+	moved.hostname = host;
+	return moved.toString();
+}

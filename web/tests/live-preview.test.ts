@@ -30,6 +30,19 @@ const box = {
 	identity: null
 };
 
+/** Windows refuses to replace a file the stream is reading at that moment; the
+ * detector's next picture would replace it instead. */
+async function replace(file: string, data: string) {
+	for (let attempt = 1; ; attempt++) {
+		try {
+			return await writeFileAtomic(file, data);
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== 'EPERM' || attempt === 10) throw error;
+			await delay(20);
+		}
+	}
+}
+
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-live-'));
 	await mkdir(path.join(directory, 'frames'));
@@ -41,13 +54,13 @@ async function fixture(t: TestContext) {
 		await rm(directory, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
 	});
 	const session = async (runId = 'run-1', updatedAt = new Date().toISOString()) => {
-		await writeFileAtomic(
+		await replace(
 			path.join(directory, 'session.json'),
 			JSON.stringify({ version: 1, runId, updatedAt })
 		);
 	};
 	const frame = async (ruleId: string, changes = {}, key = sourceKey) => {
-		await writeFileAtomic(
+		await replace(
 			path.join(directory, 'frames', `${key}.${ruleId}.json`),
 			JSON.stringify({
 				version: 1,
